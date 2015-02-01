@@ -301,7 +301,7 @@ class Catalog_local extends Catalog
 
         if (AmpConfig::get('no_symlinks')) {
             if (is_link($full_file)) {
-                debug_event('read', "Skipping symbolic link $path", 5);
+                debug_event('read', "Skipping symbolic link $full_file", 5);
                 return false;
             }
         }
@@ -311,7 +311,7 @@ class Catalog_local extends Catalog
             $this->add_files($full_file,$options);
 
             /* Change the dir so is_dir works correctly */
-            if (!chdir($path)) {
+            if (!chdir($full_file)) {
                 debug_event('read', "Unable to chdir to $path", 2);
                 Error::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
             }
