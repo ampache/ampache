@@ -1578,7 +1578,7 @@ class Art extends database_object
                 $size['width']    = 128;
             break;
             case 3:
-                /* This is used by the flash player */
+                /* This is used by the embedded web player */
                 $size['height']    = 80;
                 $size['width']    = 80;
             break;
