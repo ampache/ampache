@@ -259,7 +259,7 @@ class WebPlayer
         $js['filetype'] = $types['player'];
         $js['url'] = $url;
         if ($urlinfo['type'] == 'song') {
-            $js['poster'] = $item->image_url . (!AmpConfig::get('ajax_load') ? '&thumb=4' : '&thumb=3');
+            $js['poster'] = $item->image_url;
         }
 
         debug_event("webplayer.class.php", "Return get_media_js_param {".json_encode($js)."}", 5);

@@ -779,7 +779,7 @@ class Art extends database_object
      * @param string $sid
      * @return string
      */
-    public static function url($uid,$type,$sid=null)
+    public static function url($uid,$type,$sid=null,$thumb=null)
     {
         $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
         if (!Core::is_library_item($type))
@@ -816,9 +816,16 @@ class Art extends database_object
             if (empty($extension)) {
                 $extension = 'jpg';
             }
-            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . scrub_out($uid) . '/thumb.' . $extension;
+            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . scrub_out($uid) . '/thumb';
+            if ($thumb) {
+                $url .= $thumb;
+            }
+            $url .= '.' . $extension;
         } else {
             $url = AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
+            if ($thumb) {
+                $url .= '&thumb=' . $thumb;
+            }
             if (!empty($extension)) {
                 $name = 'art.' . $extension;
                 $url .= '&name=' . $name;
