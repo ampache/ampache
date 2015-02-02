@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 26
+config_version = 27
 
 ;###################
 ; Path Vars        #
@@ -502,6 +502,18 @@ wanted_types = "album,official"
 ; This feature requires advanced server configuration, please take a look on the wiki for more information.
 ; DEFAULT: false
 ;broadcast = "false"
+
+; Channels
+; Set this to true to enable channels and the
+; possibility for users to create channels from playlists
+; DEFAULT: true
+channel = "true"
+
+; Live Streams
+; Set this to true to enable live streams (radio) and the
+; possibility for users to add new live streams.
+; DEFAULT: true
+live_stream = "true"
 
 ; Web Socket address
 ; Declare the web socket server address

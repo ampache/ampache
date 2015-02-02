@@ -425,6 +425,8 @@ function install_config_use_case($case)
         'notify' => 'true',
         'licensing' => 'false',
         'wanted' => 'true',
+        'channel' => 'true',
+        'live_stream' => 'true',
         'allow_public_registration' => 'false',
         'cookie_disclaimer' => 'false'
     );
@@ -444,6 +446,8 @@ function install_config_use_case($case)
             $trconfig['sociable'] = 'false';
             $trconfig['notify'] = 'false';
             $trconfig['wanted'] = 'false';
+            $trconfig['channel'] = 'false';
+            $trconfig['live_stream'] = 'false';
 
             $dbconfig['download'] = '0';
             $dbconfig['allow_video'] = '0';
@@ -455,6 +459,7 @@ function install_config_use_case($case)
             $trconfig['use_auth'] = 'false';
             $trconfig['licensing'] = 'true';
             $trconfig['wanted'] = 'false';
+            $trconfig['live_stream'] = 'false';
             $trconfig['allow_public_registration'] = 'true';
             $trconfig['cookie_disclaimer'] = 'true';
 

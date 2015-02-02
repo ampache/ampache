@@ -22,6 +22,11 @@
 
 require_once 'lib/init.php';
 
+if (!AmpConfig::get('live_stream')) {
+    UI::access_denied();
+    exit;
+}
+
 UI::show_header();
 
 // Switch on Action
