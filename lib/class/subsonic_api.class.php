@@ -91,6 +91,11 @@ class Subsonic_Api
             if ($rhpart[0] != "Transfer-Encoding") {
                 header($rheader);
             }
+        } else {
+            if (substr($header, 0, 5) === "HTTP/") {
+                // if $header starts with HTTP/ assume it's the status line
+                http_response_code(curl_getinfo($ch,CURLINFO_HTTP_CODE));
+            }
         }
         return strlen($header);
     }
