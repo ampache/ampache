@@ -80,6 +80,13 @@ class Error
             $_SESSION['errors'][$name] .=  "<br />\n" . $message;
         }
 
+        // If on SSE worker, output the error directly.
+        if (defined('SSE_OUTPUT')) {
+            echo "data: display_sse_error('" . addslashes($message) . "')\n\n";
+            ob_flush();
+            flush();
+        }
+
     } // add
 
     /**

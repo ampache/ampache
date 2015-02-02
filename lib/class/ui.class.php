@@ -326,11 +326,22 @@ END;
             return;
         }
 
-        echo '<script type="text/javascript">';
-        echo "updateText('$field', '$value');";
-        echo "</script>\n";
+        static $id = 1;
+
+        if (defined('SSE_OUTPUT')) {
+            echo "id: " . $id . "\n";
+            echo "data: displayNotification('" . addslashes($value) . "', 5000)\n\n";
+        } else {
+            if (!empty($field)) {
+                echo "<script>updateText('" . $field . "', '" . addslashes($value) ."');</script>\n";
+            } else {
+                echo "<br />" . $value . "<br /><br />\n";
+            }
+        }
+
         ob_flush();
         flush();
+        $id++;
     }
 
     public static function get_logo_url()

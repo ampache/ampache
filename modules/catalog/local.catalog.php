@@ -426,8 +426,10 @@ class Catalog_local extends Catalog
         $this->added_songs_to_gather = array();
         $this->added_videos_to_gather = array();
 
-        require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
+            flush();
+        }
 
         /* Set the Start time */
         $start_time = time();
@@ -457,8 +459,10 @@ class Catalog_local extends Catalog
 
         if ($options['gather_art']) {
             $catalog_id = $this->id;
-            require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
-            flush();
+            if (!defined('SSE_OUTPUT')) {
+                require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
+                flush();
+            }
             $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
         }
 
@@ -468,12 +472,13 @@ class Catalog_local extends Catalog
         $time_diff = ($current_time - $start_time) ?: 0;
         $rate = intval(($time_diff > 0) ? $this->count / $time_diff : false) ?: T_('N/A');
 
-        UI::show_box_top();
-        echo "\n<br />" .
-        printf(T_('Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'),
-            date('i:s', $time_diff), $this->count, $rate);
-        echo '<br /><br />';
-        UI::show_box_bottom();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top();
+        }
+        UI::update_text('', sprintf(T_('Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
     } // add_to_catalog
 
@@ -491,7 +496,10 @@ class Catalog_local extends Catalog
         $total_updated = 0;
         $this->count = 0;
 
-        require_once AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
+        if (!defined('SSE_OUTPUT')) {
+            require_once AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
+            flush();
+        }
 
         foreach (array('video', 'song') as $media_type) {
             $total = $stats[$media_type . 's']; // UGLY

@@ -219,9 +219,13 @@ class Catalog_soundcloud extends Catalog
             $this->authcode = $options['authcode'];
         }
 
-        UI::show_box_top(T_('Running SoundCloud Remote Update') . '. . .');
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top(T_('Running SoundCloud Remote Update') . '. . .');
+        }
         $this->update_remote_catalog();
-        UI::show_box_bottom();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         return true;
     } // add_to_catalog
@@ -278,8 +282,6 @@ class Catalog_soundcloud extends Catalog
                                 if (!Song::insert($data)) {
                                     debug_event('soundcloud_catalog', 'Insert failed for ' . $data['file'], 1);
                                     Error::add('general', T_('Unable to Insert Song - %s'), $data['file']);
-                                    Error::display('general');
-                                    flush();
                                 } else {
                                     $songsadded++;
                                 }
@@ -287,21 +289,18 @@ class Catalog_soundcloud extends Catalog
                         }
                     }
 
-                    echo "<p>" . T_('Completed updating SoundCloud catalog(s).') . " " . $songsadded . " " . T_('Songs added.') . "</p><hr />\n";
-                    flush();
+                    UI::update_text('', T_('Completed updating SoundCloud catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
 
                     // Update the last update value
                     $this->update_last_update();
                 } else {
-                    echo "<p>" . T_('API Error: cannot get song list.') . "</p><hr />\n";
-                    flush();
+                    Error::add('general', T_('API Error: cannot get song list.'));
                 }
             } else {
-                echo "<p>" . T_('API Error: cannot connect to SoundCloud.') . "</p><hr />\n";
-                flush();
+                Error::add('general', T_('API Error: cannot connect to SoundCloud.'));
             }
         } catch (Exception $ex) {
-            echo "<p>" . T_('SoundCloud exception: ') . $ex->getMessage() . "</p><hr />\n";
+            Error::add('general', T_('SoundCloud exception: ') . $ex->getMessage());
         }
 
         return true;

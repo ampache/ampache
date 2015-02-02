@@ -35,7 +35,7 @@
  * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
  * @return    void
  */
-function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation')
+function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation',$visible=true)
 {
     if (substr_count($next_url,AmpConfig::get('web_path'))) {
         $path = $next_url;
@@ -45,6 +45,13 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 
     require AmpConfig::get('prefix') . '/templates/show_confirmation.inc.php';
 } // show_confirmation
+
+function sse_worker($url)
+{
+    echo '<script type="text/javascript">';
+    echo "sse_worker('$url');";
+    echo "</script>\n";
+}
 
 /**
  * return_referer
