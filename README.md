@@ -152,6 +152,7 @@ more features, encounter bugs, etc.
 
 * [Public Repository](http://github.com/ampache)
 * IRC: chat.freenode.net #ampache
+* [Forum](https://groups.google.com/forum/#!forum/ampache)
 * [Issue Tracker](https://github.com/ampache/ampache/issues)
 * [Documentation](https://github.com/ampache/ampache/wiki)
 
