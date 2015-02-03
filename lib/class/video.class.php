@@ -595,7 +595,7 @@ class Video extends database_object implements media, library_item
         } else {
             $release_date = $this->release_date;
         }
-        $title = $data['title'] ?: $this->title;
+        $title = isset($data['title']) ? $data['title'] : $this->title;
 
         $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
         Dba::write($sql, array($title, $release_date, $this->id));

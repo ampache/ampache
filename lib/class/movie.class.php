@@ -94,8 +94,8 @@ class Movie extends Video
             $name = $this->original_name;
             $prefix = $this->prefix;
         }
-        $summary = $data['summary'] ?: $this->summary;
-        $year = $data['year'] ?: $this->year;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $year = isset($data['year']) ? $data['summary'] : $this->year;
 
         $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));

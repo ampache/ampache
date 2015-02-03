@@ -321,9 +321,9 @@ class TVShow extends database_object implements library_item
     {
         // Save our current ID
         $current_id = $this->id;
-        $name = $data['name'] ?: $this->name;
-        $year = $data['year'] ?: $this->year;
-        $summary = $data['summary'] ?: $this->summary;
+        $name = isset($data['name']) ? $data['name'] : $this->name;
+        $year = isset($data['year']) ? $data['year'] : $this->year;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
 
         // Check if name is different than current name
         if ($this->name != $name || $this->year != $year) {
