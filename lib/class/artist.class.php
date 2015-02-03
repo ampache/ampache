@@ -661,11 +661,11 @@ class Artist extends database_object implements library_item
     public function update(array $data)
     {
         // Save our current ID
-        $name = $data['name'] ?: $this->name;
-        $mbid = $data['mbid'] ?: $this->mbid;
-        $summary = $data['summary'] ?: $this->summary;
-        $placeformed = $data['placeformed'] ?: $this->placeformed;
-        $yearformed = $data['yearformed'] ?: $this->yearformed;
+        $name = isset($data['name']) ? $data['name'] : $this->name;
+        $mbid = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $placeformed = isset($data['placeformed']) ? $data['placeformed'] : $this->placeformed;
+        $yearformed = isset($data['yearformed']) ? $data['yearformed'] : $this->yearformed;
 
         $current_id = $this->id;
 

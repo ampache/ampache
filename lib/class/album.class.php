@@ -771,14 +771,14 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $year = $data['year'] ?: $this->year;
-        $artist = $data['artist'] ? intval($data['artist']) : $this->artist_id;
-        $album_artist = $data['album_artist'] ? intval($data['album_artist']) : $this->album_artist;
-        $name = $data['name'] ?: $this->name;
-        $disk = $data['disk'] ?: $this->disk;
-        $mbid = $data['mbid'] ?: $this->mbid;
-        $mbid_group = $data['mbid_group'] ?: $this->mbid_group;
-        $release_type = $data['release_type'] ?: $this->release_type;
+        $year = isset($data['year']) ? $data['year'] : $this->year;
+        $artist = isset($data['artist']) ? intval($data['artist']) : $this->artist_id;
+        $album_artist = isset($data['album_artist']) ? intval($data['album_artist']) : $this->album_artist;
+        $name = isset($data['name']) ? $data['name'] : $this->name;
+        $disk = isset($data['disk']) ? $data['disk']: $this->disk;
+        $mbid = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
+        $mbid_group = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
+        $release_type = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
 
         $current_id = $this->id;
 

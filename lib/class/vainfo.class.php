@@ -926,7 +926,7 @@ class vainfo
         foreach ($tags as $tag => $data) {
             switch ($tag) {
                 case 'creation_date':
-                    $parsed['release_date'] = strtotime($data[0]);
+                    $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
                         $data[0] = date('Y', $parsed['release_date']);
                     }
