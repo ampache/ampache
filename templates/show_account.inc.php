@@ -94,7 +94,23 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API Key')); ?></a>
             </td>
             <td>
-                <span><?php echo $client->apikey; ?></span>
+                <span>
+                    <?php if ($client->apikey) {
+                        $urlinfo = parse_url(AmpConfig::get('web_path'));
+                        $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
+                        if ($urlinfo['port'] && $urlinfo['port'] != 80) {
+                            $apikey_qrcode .= ":" . $urlinfo['port'];
+                        }
+                        $apikey_qrcode .= $urlinfo['path'];
+                        if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
+                            $apikey_qrcode .= "#ssl=true";
+                        }
+                    ?>
+                    <a href="<?php echo $apikey_qrcode; ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
+                    <script language="javascript" type="text/javascript">$('#apikey_qrcode').qrcode({text: '<?php echo $apikey_qrcode; ?>', width: 96, height: 96});</script>
+                    <?php echo $client->apikey; ?>
+                    <?php } ?>
+                </span>
             </td>
         </tr>
         <tr>
