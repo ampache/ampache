@@ -428,7 +428,8 @@ function install_config_use_case($case)
         'channel' => 'true',
         'live_stream' => 'true',
         'allow_public_registration' => 'false',
-        'cookie_disclaimer' => 'false'
+        'cookie_disclaimer' => 'false',
+        'share' => 'false'
     );
 
     $dbconfig = array(
@@ -462,6 +463,7 @@ function install_config_use_case($case)
             $trconfig['live_stream'] = 'false';
             $trconfig['allow_public_registration'] = 'true';
             $trconfig['cookie_disclaimer'] = 'true';
+            $trconfig['share'] = 'true';
 
             $dbconfig['download'] = '0';
             $dbconfig['share'] = '1';
