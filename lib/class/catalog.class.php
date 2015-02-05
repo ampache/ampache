@@ -1518,9 +1518,11 @@ abstract class Catalog extends database_object
 
         debug_event('clean', 'Starting on ' . $this->name, 5);
 
-        require AmpConfig::get('prefix') . '/templates/show_clean_catalog.inc.php';
-        ob_flush();
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            require AmpConfig::get('prefix') . '/templates/show_clean_catalog.inc.php';
+            ob_flush();
+            flush();
+        }
 
         $dead_total = $this->clean_catalog_proc();
 
@@ -1529,14 +1531,13 @@ abstract class Catalog extends database_object
         // Remove any orphaned artists/albums/etc.
         self::gc();
 
-        UI::show_box_top();
-        echo "<strong>";
-        printf(ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
-        echo "</strong><br />\n\n";
-        echo "<br />\n";
-        UI::show_box_bottom();
-        ob_flush();
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top();
+        }
+        UI::update_text('', sprintf(ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total));
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         $this->update_last_clean();
     } // clean_catalog
@@ -1547,20 +1548,21 @@ abstract class Catalog extends database_object
      */
     public function verify_catalog()
     {
-        require AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
-        ob_flush();
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            require AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
+            ob_flush();
+            flush();
+        }
 
         $verified = $this->verify_catalog_proc();
 
-        UI::show_box_top();
-        echo '<strong>';
-        printf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']);
-        echo "</strong><br />\n";
-        echo "<br />\n";
-        UI::show_box_bottom();
-        ob_flush();
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top();
+        }
+        UI::update_text('', sprintf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']));
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         return true;
     } // verify_catalog

@@ -104,10 +104,10 @@ switch ($_REQUEST['action']) {
     case 'clean_all_catalogs':
         $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=clean_all_catalogs";
         sse_worker($sse_url);
-        show_confirmation(T_('Catalog Clean sStarted...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('Catalog Clean started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'clean_catalog':
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=clean_catalog&catalogs" . $sse_catalogs;
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=clean_catalog&catalogs=" . $sse_catalogs;
         sse_worker($sse_url);
         show_confirmation(T_('Catalog Clean started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;

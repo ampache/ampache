@@ -470,7 +470,10 @@ class Catalog_local extends Catalog
         $this->update_last_add();
 
         $time_diff = ($current_time - $start_time) ?: 0;
-        $rate = intval(($time_diff > 0) ? $this->count / $time_diff : false) ?: T_('N/A');
+        $rate = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
+        if ($rate <= 0) {
+            $rate = T_('N/A');
+        }
 
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
