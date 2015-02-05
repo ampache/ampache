@@ -123,6 +123,7 @@ class AmpacheHeadphones {
         
         debug_event($this->name, 'Headphones api call: ' . $url, '5');
         try {
+            // We assume Headphone server is local, don't use proxy here
             $request = Requests::get($url, array(), array(
                 'timeout' => 600
             ));

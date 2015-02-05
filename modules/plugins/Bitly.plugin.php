@@ -94,7 +94,7 @@ class AmpacheBitly {
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
             debug_event($this->name, 'Bit.ly api call: ' . $apiurl, '5');
-            $request = Requests::get($apiurl);
+            $request = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = json_decode($request->body)->data->url;
         } catch (Exception $e) {
             debug_event($this->name, 'Bit.ly api http exception: ' . $e->getMessage(), '1');

@@ -570,12 +570,14 @@ class Plex_Api
                 // May be ok on Apple & UPnP world but that's really ugly for a server...
                 // Yes, it's a little hack but it works.
                 $localrs = "http://127.0.0.1:32400/";
+                $options = Core::requests_options();
                 if (strpos($url, $localrs) !== false) {
+                    $options = array(); // In case proxy is set, no proxy for local addresses
                     $url = "http://127.0.0.1:" . Plex_XML_Data::getServerPort() . "/" . substr($url, strlen($localrs));
                 }
 
                 if ($width && $height && $url) {
-                    $request = Requests::get($url);
+                    $request = Requests::get($url, array, $options);
                     if ($request->status_code == 200) {
                         ob_clean();
                         $mime = $request->headers['content-type'];

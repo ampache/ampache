@@ -303,4 +303,26 @@ class Core
     {
         return (AmpConfig::get('play_type') == "stream" || !AmpConfig::get('ajax_load')) ? "reloadUtil" : "reloadDivUtil";
     }
+
+    public static function requests_options($options = null)
+    {
+        if ($options == null) {
+            $options = array();
+        }
+
+        if (!isset($options['proxy'])) {
+            if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
+                $proxy = array();
+                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+                if (AmpConfig::get('proxy_user')) {
+                    $proxy[] = AmpConfig::get('proxy_user');
+                    $proxy[] = AmpConfig::get('proxy_pass');
+                }
+
+                $options['proxy'] = $proxy;
+            }
+        }
+
+        return $options;
+    }
 } // Core

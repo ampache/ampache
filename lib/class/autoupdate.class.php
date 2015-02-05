@@ -77,7 +77,7 @@ class AutoUpdate
     {
         try {
             $url = "https://api.github.com/repos/ampache/ampache" . $action;
-            $request = Requests::get($url);
+            $request = Requests::get($url, array(), Core::requests_options());
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {

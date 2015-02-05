@@ -76,7 +76,7 @@ class AmpacheGoogleMaps {
         $name = "";
         try {
             $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
-            $request = Requests::get($url);
+            $request = Requests::get($url, array(), Core::requests_options());
 
             $place = json_decode($request->body, true);
             if (count($place['results']) > 0) {

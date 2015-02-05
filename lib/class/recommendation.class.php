@@ -48,17 +48,7 @@ class Recommendation
     {
         debug_event('Recommendation', 'search url : ' . $url, 5);
 
-        $options = array();
-        if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-            $proxy = array();
-            $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-            if (AmpConfig::get('proxy_user')) {
-                $proxy[] = AmpConfig::get('proxy_user');
-                $proxy[] = AmpConfig::get('proxy_pass');
-            }
-            $options['proxy'] = $proxy;
-        }
-        $request = Requests::get($url, array(), $options);
+        $request = Requests::get($url, array(), Core::requests_options());
         $content = $request->body;
 
         return simplexml_load_string($content);

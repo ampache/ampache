@@ -722,18 +722,9 @@ class Art extends database_object
         // Check to see if it's a URL
         if (isset($data['url'])) {
             $options = array();
-            if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-                $proxy = array();
-                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-                if (AmpConfig::get('proxy_user')) {
-                    $proxy[] = AmpConfig::get('proxy_user');
-                    $proxy[] = AmpConfig::get('proxy_pass');
-                }
-                $options['proxy'] = $proxy;
-            }
             try {
                 $options['timeout'] = 3;
-                $request = Requests::get($data['url'], array(), $options);
+                $request = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw = $request->body;
             } catch (Exception $e) {
                 debug_event('Art', 'Error getting art: ' . $e->getMessage(), '1');
@@ -1048,17 +1039,7 @@ class Art extends database_object
                 // to avoid complicating things even further, we only look for large cover art
                 $url = 'http://' . $base_url . '/images/P/' . $asin . '.' . $server_num . '.LZZZZZZZ.jpg';
                 debug_event('mbz-gatherart', "Evaluating Amazon URL: " . $url, '5');
-                $options = array();
-                if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-                    $proxy = array();
-                    $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-                    if (AmpConfig::get('proxy_user')) {
-                        $proxy[] = AmpConfig::get('proxy_user');
-                        $proxy[] = AmpConfig::get('proxy_pass');
-                    }
-                    $options['proxy'] = $proxy;
-                }
-                $request = Requests::get($url, array(), $options);
+                $request = Requests::get($url, array(), Core::requests_options());
                 if ($request->status_code == 200) {
                     $num_found++;
                     debug_event('mbz-gatherart', "Amazon URL added: " . $url, '5');
@@ -1422,7 +1403,7 @@ class Art extends database_object
             $headers = array(
                 'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11',
             );
-            $query = Requests::get($url, $headers);
+            $query = Requests::get($url, $headers, Core::requests_options());
             $html = $query->body;
 
             if (preg_match_all("|imgres\?imgurl\=(http.+?)&|", $html, $matches, PREG_PATTERN_ORDER)) {
