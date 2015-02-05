@@ -577,7 +577,7 @@ class Plex_Api
                 }
 
                 if ($width && $height && $url) {
-                    $request = Requests::get($url, array, $options);
+                    $request = Requests::get($url, array(), $options);
                     if ($request->status_code == 200) {
                         ob_clean();
                         $mime = $request->headers['content-type'];
