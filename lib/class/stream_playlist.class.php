@@ -480,6 +480,16 @@ class Stream_Playlist
             $localplay->add_url($url);
         }
         if (!$append) {
+            // We don't have metadata on Stream_URL to know its kind
+            // so we check the content to know if it is democratic
+            if (count($this->urls) == 1) {
+                $furl = $this->urls[0];
+                if (strpos($furl->url, "&demo_id=1") !== false && $furl->time == -1) {
+                    // If democratic, repeat the song to get the next voted one.
+                    debug_event('stream_playlist', 'Playing democratic on localplay, enabling repeat...', 5);
+                    $localplay->repeat(true);
+                }
+            }
             $localplay->play();
         }
 

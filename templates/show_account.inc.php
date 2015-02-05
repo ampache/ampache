@@ -106,8 +106,10 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
                             $apikey_qrcode .= "#ssl=true";
                         }
                     ?>
+                    <br />
                     <a href="<?php echo $apikey_qrcode; ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
-                    <script language="javascript" type="text/javascript">$('#apikey_qrcode').qrcode({text: '<?php echo $apikey_qrcode; ?>', width: 96, height: 96});</script>
+                    <br />
+                    <script language="javascript" type="text/javascript">$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>'});</script>
                     <?php echo $client->apikey; ?>
                     <?php } ?>
                 </span>
