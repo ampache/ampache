@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2015-01-28 02:57+0100\n"
+"POT-Creation-Date: 2015-02-06 14:38+0100\n"
 "PO-Revision-Date: 2014-10-09 23:10+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: Arabic\n"
@@ -37,7 +37,7 @@ msgid "Are you sure you want to permanently delete"
 msgstr ""
 
 #: ../../admin/access.php:72 ../../lib/class/search.class.php:331
-#: ../../templates/show_song.inc.php:131
+#: ../../templates/show_song.inc.php:137
 #: ../../templates/show_video.inc.php:124
 msgid "Added"
 msgstr ""
@@ -56,108 +56,108 @@ msgstr "تحديث المستخدم"
 msgid "Access List Entry updated"
 msgstr ""
 
-#: ../../admin/catalog.php:48 ../../admin/catalog.php:68
-#: ../../admin/catalog.php:92 ../../admin/catalog.php:165
+#: ../../admin/catalog.php:40 ../../admin/catalog.php:47
+#: ../../admin/catalog.php:52 ../../admin/catalog.php:59
+#: ../../admin/catalog.php:66
 #, fuzzy
-msgid "Catalog Updated"
+msgid "Catalog Update started..."
 msgstr "نوع التسويقي"
 
-#: ../../admin/catalog.php:111
+#: ../../admin/catalog.php:81
 #, fuzzy
 msgid "Catalog Deleted"
 msgstr "حذف"
 
-#: ../../admin/catalog.php:111
+#: ../../admin/catalog.php:81
 msgid "The Catalog and all associated records have been deleted"
 msgstr ""
 
-#: ../../admin/catalog.php:115
+#: ../../admin/catalog.php:85
 #, fuzzy
 msgid "Catalog Delete"
 msgstr "حذف"
 
-#: ../../admin/catalog.php:115 ../../admin/users.php:210
-#: ../../broadcast.php:34 ../../channel.php:69 ../../share.php:94
+#: ../../admin/catalog.php:85 ../../admin/users.php:210 ../../broadcast.php:38
+#: ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
 msgstr ""
 
-#: ../../admin/catalog.php:126
+#: ../../admin/catalog.php:96
 #, fuzzy
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
 msgstr[0] "عنوان الأغنية"
 msgstr[1] "عنوان الأغنية"
 
-#: ../../admin/catalog.php:128
+#: ../../admin/catalog.php:98
 #, fuzzy
 msgid "No Disabled Songs selected"
 msgstr "بحث المعاقين أغاني"
 
-#: ../../admin/catalog.php:131
+#: ../../admin/catalog.php:101
 #, fuzzy
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
 msgstr[0] "بحث المعاقين أغاني"
 msgstr[1] "بحث المعاقين أغاني"
 
-#: ../../admin/catalog.php:152
+#: ../../admin/catalog.php:107 ../../admin/catalog.php:112
 #, fuzzy
-msgid "Catalog Cleaned"
+msgid "Catalog Clean started..."
 msgstr "نوع التسويقي"
 
-#: ../../admin/catalog.php:190
-msgid "Subdirectory update completed."
+#: ../../admin/catalog.php:122
+#, fuzzy
+msgid "Catalog Updated"
+msgstr "نوع التسويقي"
+
+#: ../../admin/catalog.php:131
+msgid "Subdirectory update started..."
 msgstr ""
 
-#: ../../admin/catalog.php:192
-msgid ""
-"This subdirectory is not part of an existing catalog. Update cannot be "
-"processed."
-msgstr ""
-
-#: ../../admin/catalog.php:203
+#: ../../admin/catalog.php:140
 msgid "Error: Please select a catalog type"
 msgstr ""
 
-#: ../../admin/catalog.php:207
+#: ../../admin/catalog.php:144
 #, fuzzy
 msgid "Error: Name not specified"
 msgstr "خطأ : تعذر الاتصال لجعل قاعدة البيانات"
 
-#: ../../admin/catalog.php:230 ../../admin/catalog.php:231
+#: ../../admin/catalog.php:165
 #, fuzzy
-msgid "Catalog Created"
+msgid "Catalog Creation started..."
 msgstr "نوع التسويقي"
 
-#: ../../admin/catalog.php:246
+#: ../../admin/catalog.php:174
 msgid "Catalog statistics cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:256
+#: ../../admin/catalog.php:184
 msgid "Now Playing Cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:256
+#: ../../admin/catalog.php:184
 msgid "All now playing data has been cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:266
+#: ../../admin/catalog.php:194
 #, fuzzy
 msgid "No Disabled songs found"
 msgstr "لا توجد سجلات"
 
-#: ../../admin/catalog.php:275
+#: ../../admin/catalog.php:203
 #, fuzzy
 msgid "Delete Catalog"
 msgstr "إحصائيات واضحة"
 
-#: ../../admin/catalog.php:275
+#: ../../admin/catalog.php:203
 msgid "Do you really want to delete this catalog?"
 msgstr ""
 
-#: ../../admin/catalog.php:296
+#: ../../admin/catalog.php:213
 #, fuzzy
-msgid "Media Art Search Finished"
+msgid "Media Art Search started..."
 msgstr "بدءا من البحث في الفنون الألبوم"
 
 #: ../../admin/license.php:39
@@ -324,7 +324,7 @@ msgid "Guest"
 msgstr "ضيف"
 
 #: ../../admin/users.php:160 ../../lib/class/democratic.class.php:161
-#: ../../lib/preferences.php:284 ../../templates/show_access_list.inc.php:50
+#: ../../lib/preferences.php:285 ../../templates/show_access_list.inc.php:50
 #: ../../templates/show_add_access.inc.php:42
 #: ../../templates/show_add_user.inc.php:86
 #: ../../templates/show_create_democratic.inc.php:42
@@ -342,7 +342,7 @@ msgid "User"
 msgstr "مستخدم"
 
 #: ../../admin/users.php:160 ../../lib/class/democratic.class.php:170
-#: ../../lib/preferences.php:286 ../../templates/show_add_user.inc.php:89
+#: ../../lib/preferences.php:287 ../../templates/show_add_user.inc.php:89
 #: ../../templates/show_create_democratic.inc.php:45
 #: ../../templates/show_democratic_playlist.inc.php:62
 #: ../../templates/show_democratic_playlist.inc.php:109
@@ -978,23 +978,23 @@ msgstr ""
 msgid "Dumps all Artists as individual playlists"
 msgstr ""
 
-#: ../../broadcast.php:34
+#: ../../broadcast.php:38
 #, fuzzy
 msgid "Broadcast Delete"
 msgstr "الفنان والعنوان"
 
-#: ../../broadcast.php:48
+#: ../../broadcast.php:51
 #, fuzzy
 msgid "Broadcast Deleted"
 msgstr "الفنان والعنوان"
 
-#: ../../broadcast.php:48
+#: ../../broadcast.php:51
 msgid "The Broadcast has been deleted"
 msgstr ""
 
 #: ../../browse.php:90 ../../lib/class/browse.class.php:264
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../templates/sidebar_home.inc.php:55
+#: ../../templates/sidebar_home.inc.php:59
 msgid "Tag Cloud"
 msgstr "الوسم الغيمة"
 
@@ -1002,12 +1002,12 @@ msgstr "الوسم الغيمة"
 msgid "Unauthorized."
 msgstr ""
 
-#: ../../channel.php:59
+#: ../../channel.php:61
 #, fuzzy
 msgid "Channel Created"
 msgstr "حذف"
 
-#: ../../channel.php:69
+#: ../../channel.php:70
 #, fuzzy
 msgid "Channel Delete"
 msgstr "حذف"
@@ -1026,11 +1026,11 @@ msgstr "حذف"
 msgid "The Requested Playlist has been deleted."
 msgstr ""
 
-#: ../../install.php:107
+#: ../../install.php:121
 msgid "Error: Ampache SQL Username or Password missing"
 msgstr ""
 
-#: ../../install.php:153
+#: ../../install.php:167
 #, fuzzy
 msgid "Error: Config files not found or unreadable"
 msgstr "خطأ : لم يتم العثور على ملف أو غير صالح"
@@ -1049,7 +1049,8 @@ msgid "Duplicate ACL defined"
 msgstr ""
 
 #: ../../lib/class/access.class.php:453 ../../lib/class/access.class.php:474
-#: ../../lib/ui.lib.php:433 ../../templates/list_header.inc.php:117
+#: ../../lib/ui.lib.php:440 ../../scripts/tests/list_header.inc.php:166
+#: ../../templates/list_header.inc.php:117
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_add_access.inc.php:61
@@ -1130,13 +1131,13 @@ msgid "Disk"
 msgstr ""
 
 #: ../../lib/class/album.class.php:622 ../../lib/class/browse.class.php:227
-#: ../../lib/class/upnp_api.class.php:319 ../../lib/ui.lib.php:158
+#: ../../lib/class/upnp_api.class.php:319 ../../lib/ui.lib.php:165
 #: ../../server/search.ajax.php:55 ../../templates/header.inc.php:352
 #: ../../templates/show_random.inc.php:29
 #: ../../templates/show_search_form.inc.php:30
 #: ../../templates/show_stats.inc.php:34
 #: ../../templates/sidebar_home.inc.php:34
-#: ../../templates/sidebar_home.inc.php:127
+#: ../../templates/sidebar_home.inc.php:131
 #: ../../templates/sidebar.light.inc.php:28
 msgid "Artists"
 msgstr "الفنانون"
@@ -1185,12 +1186,12 @@ msgstr ""
 #: ../../templates/show_recommended_artists.inc.php:30
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_search_bar.inc.php:33
-#: ../../templates/show_song.inc.php:102
+#: ../../templates/show_song.inc.php:108
 #: ../../templates/show_song_previews.inc.php:33
 #: ../../templates/show_songs.inc.php:33 ../../templates/show_songs.inc.php:82
 #: ../../templates/show_tagcloud.inc.php:26
 #: ../../templates/show_wanted_albums.inc.php:27
-#: ../../templates/sidebar_home.inc.php:89
+#: ../../templates/sidebar_home.inc.php:93
 msgid "Artist"
 msgstr "الفنان"
 
@@ -1212,12 +1213,12 @@ msgstr "الفنان"
 #: ../../templates/show_recently_played.inc.php:32
 #: ../../templates/show_recently_played.inc.php:147
 #: ../../templates/show_search_bar.inc.php:32
-#: ../../templates/show_song.inc.php:106
+#: ../../templates/show_song.inc.php:112
 #: ../../templates/show_song_previews.inc.php:34
 #: ../../templates/show_songs.inc.php:34 ../../templates/show_songs.inc.php:83
 #: ../../templates/show_tagcloud.inc.php:25
 #: ../../templates/show_wanted_albums.inc.php:26
-#: ../../templates/sidebar_home.inc.php:88
+#: ../../templates/sidebar_home.inc.php:92
 msgid "Album"
 msgstr "الألبوم"
 
@@ -1315,12 +1316,12 @@ msgstr "إحصائيات واضحة"
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1209
+#: ../../lib/class/art.class.php:1197
 #, fuzzy
 msgid "Error: Unable to open"
 msgstr "خطأ : تعذر الاتصال لجعل قاعدة البيانات"
 
-#: ../../lib/class/art.class.php:1677 ../../lib/class/shoutbox.class.php:254
+#: ../../lib/class/art.class.php:1665 ../../lib/class/shoutbox.class.php:254
 #: ../../templates/rightbar.inc.php:25
 #: ../../templates/show_album_group_disks.inc.php:61
 #: ../../templates/show_album_group_disks.inc.php:62
@@ -1350,16 +1351,16 @@ msgstr "خطأ : تعذر الاتصال لجعل قاعدة البيانات"
 msgid "Play"
 msgstr "تشغيل"
 
-#: ../../lib/class/art.class.php:1683
+#: ../../lib/class/art.class.php:1671
 #, fuzzy
 msgid "Edit/Find Art"
 msgstr "الفنان"
 
-#: ../../lib/class/art.class.php:1686
+#: ../../lib/class/art.class.php:1674
 msgid "Do you really want to reset art?"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1687
+#: ../../lib/class/art.class.php:1675
 #, fuzzy
 msgid "Reset Art"
 msgstr "البوم الفن"
@@ -1416,7 +1417,7 @@ msgstr "الفنان والعنوان"
 #: ../../templates/show_playlist_row.inc.php:73
 #: ../../templates/show_search_row.inc.php:55
 #: ../../templates/show_shout_row.inc.php:31
-#: ../../templates/show_song.inc.php:90 ../../templates/show_song.inc.php:91
+#: ../../templates/show_song.inc.php:91 ../../templates/show_song.inc.php:92
 #: ../../templates/show_song_row.inc.php:82
 #: ../../templates/show_tagcloud.inc.php:59
 #: ../../templates/show_tvshow.inc.php:72
@@ -1449,6 +1450,8 @@ msgstr "تحرير"
 #: ../../templates/show_search.inc.php:47
 #: ../../templates/show_search_row.inc.php:57
 #: ../../templates/show_shout_row.inc.php:34
+#: ../../templates/show_song.inc.php:102
+#: ../../templates/show_song_row.inc.php:94
 #: ../../templates/show_tagcloud.inc.php:63
 #: ../../templates/show_user_row.inc.php:54
 msgid "Delete"
@@ -1476,12 +1479,12 @@ msgstr "لا توجد سجلات"
 #: ../../templates/show_recommended_artists.inc.php:81
 #: ../../templates/show_search_form.inc.php:28
 #: ../../templates/show_stats.inc.php:35 ../../templates/show_stats.inc.php:75
-#: ../../templates/sidebar_home.inc.php:125
+#: ../../templates/sidebar_home.inc.php:129
 msgid "Songs"
 msgstr "الأغاني"
 
 #: ../../lib/class/browse.class.php:211 ../../lib/class/upnp_api.class.php:343
-#: ../../lib/ui.lib.php:154 ../../server/search.ajax.php:88
+#: ../../lib/ui.lib.php:161 ../../server/search.ajax.php:88
 #: ../../templates/browse_filters.inc.php:63
 #: ../../templates/show_artist.inc.php:149
 #: ../../templates/show_artists.inc.php:39
@@ -1492,7 +1495,7 @@ msgstr "الأغاني"
 #: ../../templates/show_search_form.inc.php:29
 #: ../../templates/show_stats.inc.php:33
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:126
+#: ../../templates/sidebar_home.inc.php:130
 msgid "Albums"
 msgstr "البوم"
 
@@ -1502,14 +1505,14 @@ msgid "Manage Users"
 msgstr "تحديث المستخدم"
 
 #: ../../lib/class/browse.class.php:233
-#: ../../templates/sidebar_home.inc.php:42
+#: ../../templates/sidebar_home.inc.php:45
 msgid "Radio Stations"
 msgstr "محطات إذاعية"
 
 #: ../../lib/class/browse.class.php:238 ../../lib/class/upnp_api.class.php:391
 #: ../../server/search.ajax.php:146 ../../templates/header.inc.php:358
 #: ../../templates/sidebar_home.inc.php:36
-#: ../../templates/sidebar_home.inc.php:128
+#: ../../templates/sidebar_home.inc.php:132
 #: ../../templates/sidebar.light.inc.php:29
 msgid "Playlists"
 msgstr "التشغيل"
@@ -1543,7 +1546,7 @@ msgstr ""
 #: ../../lib/class/browse.class.php:270
 #: ../../templates/show_search_form.inc.php:31
 #: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:76
-#: ../../templates/sidebar_home.inc.php:129
+#: ../../templates/sidebar_home.inc.php:133
 msgid "Videos"
 msgstr "الفيديو"
 
@@ -1559,20 +1562,20 @@ msgid "Wanted Albums"
 msgstr "البوم"
 
 #: ../../lib/class/browse.class.php:282
-#: ../../templates/sidebar_home.inc.php:111
+#: ../../templates/sidebar_home.inc.php:115
 #, fuzzy
 msgid "Shared Objects"
 msgstr "حذف"
 
-#: ../../lib/class/browse.class.php:290 ../../templates/show_song.inc.php:118
+#: ../../lib/class/browse.class.php:290 ../../templates/show_song.inc.php:124
 #: ../../templates/show_video.inc.php:117
-#: ../../templates/sidebar_home.inc.php:38
+#: ../../templates/sidebar_home.inc.php:39
 #, fuzzy
 msgid "Channels"
 msgstr "حفظ التغييرات"
 
 #: ../../lib/class/browse.class.php:294
-#: ../../templates/sidebar_home.inc.php:40
+#: ../../templates/sidebar_home.inc.php:42
 #, fuzzy
 msgid "Broadcasts"
 msgstr "الفنان والعنوان"
@@ -1582,7 +1585,7 @@ msgid "Media Licenses"
 msgstr ""
 
 #: ../../lib/class/browse.class.php:302 ../../lib/class/upnp_api.class.php:623
-#: ../../templates/sidebar_home.inc.php:52
+#: ../../templates/sidebar_home.inc.php:56
 #, fuzzy
 msgid "TV Shows"
 msgstr "عنوان الأغنية"
@@ -1604,7 +1607,7 @@ msgid "Episodes"
 msgstr ""
 
 #: ../../lib/class/browse.class.php:315 ../../lib/class/upnp_api.class.php:687
-#: ../../templates/sidebar_home.inc.php:53
+#: ../../templates/sidebar_home.inc.php:57
 msgid "Movies"
 msgstr ""
 
@@ -1613,7 +1616,7 @@ msgid "Clips"
 msgstr ""
 
 #: ../../lib/class/browse.class.php:325 ../../lib/class/upnp_api.class.php:711
-#: ../../templates/sidebar_home.inc.php:54
+#: ../../templates/sidebar_home.inc.php:58
 msgid "Personal Videos"
 msgstr ""
 
@@ -1624,7 +1627,7 @@ msgstr ""
 
 #: ../../lib/class/catalog.class.php:480 ../../lib/class/catalog.class.php:483
 #: ../../lib/class/catalog.class.php:486 ../../lib/class/user.class.php:971
-#: ../../lib/preferences.php:311 ../../templates/show_user.inc.php:23
+#: ../../lib/preferences.php:312 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:57
 msgid "Never"
 msgstr "أبدا"
@@ -1657,7 +1660,7 @@ msgstr ""
 msgid "No Update Needed"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1532
+#: ../../lib/class/catalog.class.php:1537
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
@@ -1668,17 +1671,17 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: ../../lib/class/catalog.class.php:1556
+#: ../../lib/class/catalog.class.php:1562
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1711
+#: ../../lib/class/catalog.class.php:1715
 #, fuzzy
 msgid "Failed to create playlist."
 msgstr "إدارة التشغيل الديمقراطية"
 
-#: ../../lib/class/catalog.class.php:1728
+#: ../../lib/class/catalog.class.php:1732
 msgid "No valid songs found in playlist file."
 msgstr ""
 
@@ -1912,7 +1915,7 @@ msgstr ""
 #: ../../templates/show_edit_song_row.inc.php:27
 #: ../../templates/show_edit_video_row.inc.php:31
 #: ../../templates/show_search_bar.inc.php:31
-#: ../../templates/show_song.inc.php:101
+#: ../../templates/show_song.inc.php:107
 #: ../../templates/show_video.inc.php:105
 #: ../../templates/show_videos.inc.php:33
 #: ../../templates/show_videos.inc.php:85
@@ -1921,14 +1924,14 @@ msgstr "العنوان"
 
 #: ../../lib/class/search.class.php:229
 #: ../../templates/show_edit_song_row.inc.php:59
-#: ../../templates/show_song.inc.php:107
+#: ../../templates/show_song.inc.php:113
 msgid "Composer"
 msgstr ""
 
 #: ../../lib/class/search.class.php:236
 #: ../../templates/show_manage_shoutbox.inc.php:31
 #: ../../templates/show_manage_shoutbox.inc.php:60
-#: ../../templates/show_song.inc.php:113
+#: ../../templates/show_song.inc.php:119
 #, fuzzy
 msgid "Comment"
 msgstr "ID3 التعليق"
@@ -1945,7 +1948,7 @@ msgstr "الوسم"
 #: ../../templates/show_duplicates.inc.php:34
 #: ../../templates/show_duplicates.inc.php:73
 #: ../../templates/show_import_playlist.inc.php:28
-#: ../../templates/show_song.inc.php:126
+#: ../../templates/show_song.inc.php:132
 #: ../../templates/show_video.inc.php:119
 msgid "Filename"
 msgstr "اسم الملف"
@@ -1961,7 +1964,7 @@ msgstr "اسم الملف"
 #: ../../templates/show_partial_edit_movie_row.inc.php:32
 #: ../../templates/show_partial_movie.inc.php:22
 #: ../../templates/show_partial_movies.inc.php:24
-#: ../../templates/show_song.inc.php:109
+#: ../../templates/show_song.inc.php:115
 #: ../../templates/show_wanted_albums.inc.php:28
 msgid "Year"
 msgstr "سنة"
@@ -1999,7 +2002,7 @@ msgstr "تصنيف"
 #: ../../templates/show_albums.inc.php:98
 #: ../../templates/show_artists.inc.php:42
 #: ../../templates/show_artists.inc.php:100
-#: ../../templates/show_song.inc.php:133 ../../templates/show_songs.inc.php:38
+#: ../../templates/show_song.inc.php:139 ../../templates/show_songs.inc.php:38
 #: ../../templates/show_songs.inc.php:87
 #: ../../templates/show_video.inc.php:126
 #: ../../templates/show_videos.inc.php:44
@@ -2014,7 +2017,7 @@ msgstr "تشغيل"
 #: ../../templates/show_duplicates.inc.php:32
 #: ../../templates/show_duplicates.inc.php:71
 #: ../../templates/show_edit_channel_row.inc.php:84
-#: ../../templates/show_song.inc.php:117
+#: ../../templates/show_song.inc.php:123
 msgid "Bitrate"
 msgstr ""
 
@@ -2032,11 +2035,11 @@ msgstr "تشغيل"
 msgid "Catalog"
 msgstr "نوع التسويقي"
 
-#: ../../lib/class/search.class.php:364 ../../lib/ui.lib.php:113
+#: ../../lib/class/search.class.php:364 ../../lib/ui.lib.php:120
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_search_bar.inc.php:34
-#: ../../templates/sidebar_home.inc.php:63
-#: ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar_home.inc.php:67
+#: ../../templates/sidebar_home.inc.php:94
 msgid "Playlist"
 msgstr "التشغيل"
 
@@ -2156,7 +2159,7 @@ msgstr "وتظهر قائمة التشغيل"
 msgid "Track MusicBrainzID"
 msgstr ""
 
-#: ../../lib/class/stream_playlist.class.php:506
+#: ../../lib/class/stream_playlist.class.php:516
 msgid "Vote added"
 msgstr ""
 
@@ -2193,19 +2196,19 @@ msgstr "عنوان الأغنية"
 msgid "Episode"
 msgstr ""
 
-#: ../../lib/class/update.class.php:529
+#: ../../lib/class/update.class.php:532
 msgid "No updates needed."
 msgstr ""
 
-#: ../../lib/class/update.class.php:531
+#: ../../lib/class/update.class.php:534
 msgid "Return to main page"
 msgstr ""
 
-#: ../../lib/class/update.class.php:2558 ../../lib/class/update.class.php:2574
+#: ../../lib/class/update.class.php:2561 ../../lib/class/update.class.php:2577
 msgid "File copy error."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2565 ../../lib/class/update.class.php:2581
+#: ../../lib/class/update.class.php:2568 ../../lib/class/update.class.php:2584
 msgid "Cannot copy default .htaccess file."
 msgstr ""
 
@@ -3101,13 +3104,13 @@ msgstr ""
 msgid "Unable to create local account"
 msgstr "إدارة التشغيل الديمقراطية"
 
-#: ../../lib/preferences.php:203 ../../lib/preferences.php:325
+#: ../../lib/preferences.php:204 ../../lib/preferences.php:326
 #: ../../templates/show_disabled_songs.inc.php:64
 #: ../../templates/show_user_row.inc.php:49
 msgid "Enable"
 msgstr "يمكن"
 
-#: ../../lib/preferences.php:204 ../../lib/preferences.php:326
+#: ../../lib/preferences.php:205 ../../lib/preferences.php:327
 #: ../../templates/show_catalog_types.inc.php:43
 #: ../../templates/show_duplicates.inc.php:27
 #: ../../templates/show_duplicates.inc.php:66
@@ -3116,115 +3119,116 @@ msgstr "يمكن"
 msgid "Disable"
 msgstr "يعطل"
 
-#: ../../lib/preferences.php:225 ../../lib/preferences.php:262
-#: ../../lib/ui.lib.php:370 ../../lib/ui.lib.php:460
+#: ../../lib/preferences.php:226 ../../lib/preferences.php:263
+#: ../../lib/ui.lib.php:377 ../../lib/ui.lib.php:467
 #: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_gather_art.inc.php:25
-#: ../../templates/show_install_config.inc.php:119
+#: ../../templates/show_install_config.inc.php:135
 #: ../../templates/show_search_row.inc.php:45
 #: ../../templates/show_video.inc.php:40
 #: ../../templates/sidebar_localplay.inc.php:50
 msgid "None"
 msgstr "بلا"
 
-#: ../../lib/preferences.php:227 ../../templates/show_edit_user.inc.php:144
+#: ../../lib/preferences.php:228 ../../templates/show_edit_user.inc.php:144
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
 msgstr "يتدفق"
 
-#: ../../lib/preferences.php:230
+#: ../../lib/preferences.php:231
 #: ../../modules/localplay/httpq.controller.php:470
 #: ../../modules/localplay/mpd.controller.php:470
 #: ../../modules/localplay/vlc.controller.php:480
 #: ../../templates/show_edit_user.inc.php:141
 #: ../../templates/show_playtype_switch.inc.php:37
-#: ../../templates/sidebar_home.inc.php:69
+#: ../../templates/sidebar_home.inc.php:73
 #: ../../templates/sidebar_modules.inc.php:39
 msgid "Democratic"
 msgstr "الديمقراطية"
 
-#: ../../lib/preferences.php:233 ../../templates/show_edit_user.inc.php:142
+#: ../../lib/preferences.php:234 ../../templates/show_edit_user.inc.php:142
 #: ../../templates/show_playtype_switch.inc.php:35
-#: ../../templates/sidebar_home.inc.php:78 ../../templates/sidebar.inc.php:34
+#: ../../templates/sidebar_home.inc.php:82 ../../templates/sidebar.inc.php:34
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Localplay"
 msgstr "لعب المحلية"
 
-#: ../../lib/preferences.php:235
+#: ../../lib/preferences.php:236
 #: ../../templates/show_playtype_switch.inc.php:39
 #, fuzzy
 msgid "Web Player"
 msgstr "الشبكة الدرب"
 
-#: ../../lib/preferences.php:242
+#: ../../lib/preferences.php:243
 msgid "M3U"
 msgstr ""
 
-#: ../../lib/preferences.php:243
+#: ../../lib/preferences.php:244
 msgid "Simple M3U"
 msgstr ""
 
-#: ../../lib/preferences.php:244
+#: ../../lib/preferences.php:245
 msgid "PLS"
 msgstr ""
 
-#: ../../lib/preferences.php:245
+#: ../../lib/preferences.php:246
 msgid "Asx"
 msgstr ""
 
-#: ../../lib/preferences.php:246
+#: ../../lib/preferences.php:247
 msgid "RAM"
 msgstr ""
 
-#: ../../lib/preferences.php:247
+#: ../../lib/preferences.php:248
 msgid "XSPF"
 msgstr ""
 
-#: ../../lib/preferences.php:283
+#: ../../lib/preferences.php:284
 #, fuzzy
 msgid "Disabled"
 msgstr "يعطل"
 
-#: ../../lib/preferences.php:285
+#: ../../lib/preferences.php:286
 #, fuzzy
 msgid "Manager"
 msgstr "إدارة المحتوى"
 
-#: ../../lib/preferences.php:302
+#: ../../lib/preferences.php:303
 msgid "Send on Add"
 msgstr ""
 
-#: ../../lib/preferences.php:303
+#: ../../lib/preferences.php:304
 msgid "Send and Clear on Add"
 msgstr ""
 
-#: ../../lib/preferences.php:304
+#: ../../lib/preferences.php:305
 msgid "Clear on Send"
 msgstr ""
 
-#: ../../lib/preferences.php:305 ../../lib/preferences.php:312
-#: ../../lib/preferences.php:348
+#: ../../lib/preferences.php:306 ../../lib/preferences.php:313
+#: ../../lib/preferences.php:349
+#: ../../templates/show_install_config.inc.php:113
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
 msgstr "افتراضي"
 
-#: ../../lib/preferences.php:313
+#: ../../lib/preferences.php:314
 msgid "Always"
 msgstr ""
 
-#: ../../lib/preferences.php:349
+#: ../../lib/preferences.php:350
 msgid "Year ascending"
 msgstr ""
 
-#: ../../lib/preferences.php:350
+#: ../../lib/preferences.php:351
 msgid "Year descending"
 msgstr ""
 
-#: ../../lib/preferences.php:351
+#: ../../lib/preferences.php:352
 msgid "Name ascending"
 msgstr ""
 
-#: ../../lib/preferences.php:352
+#: ../../lib/preferences.php:353
 msgid "Name descending"
 msgstr ""
 
@@ -3257,86 +3261,86 @@ msgstr "درجة نشطة"
 msgid "Off the Charts!"
 msgstr ""
 
-#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:346
+#: ../../lib/ui.lib.php:108 ../../templates/header.inc.php:346
 #: ../../templates/sidebar.inc.php:33 ../../templates/sidebar.light.inc.php:27
 msgid "Home"
 msgstr "منزل"
 
-#: ../../lib/ui.lib.php:104 ../../templates/show_add_upload.inc.php:26
-#: ../../templates/sidebar_home.inc.php:44
+#: ../../lib/ui.lib.php:111 ../../templates/show_add_upload.inc.php:26
+#: ../../templates/sidebar_home.inc.php:48
 msgid "Upload"
 msgstr ""
 
-#: ../../lib/ui.lib.php:107
+#: ../../lib/ui.lib.php:114
 #, fuzzy
 msgid "Local Play"
 msgstr "لعب المحلية"
 
-#: ../../lib/ui.lib.php:110
+#: ../../lib/ui.lib.php:117
 #, fuzzy
 msgid "Random Play"
 msgstr "قاعدة التشغيل"
 
-#: ../../lib/ui.lib.php:116 ../../templates/show_search_bar.inc.php:38
+#: ../../lib/ui.lib.php:123 ../../templates/show_search_bar.inc.php:38
 #: ../../templates/show_search_form.inc.php:53
-#: ../../templates/sidebar_home.inc.php:123
+#: ../../templates/sidebar_home.inc.php:127
 #, fuzzy
 msgid "Search"
 msgstr "بدءا من البحث في الفنون الألبوم"
 
-#: ../../lib/ui.lib.php:119 ../../templates/show_user_row.inc.php:45
+#: ../../lib/ui.lib.php:126 ../../templates/show_user_row.inc.php:45
 #: ../../templates/sidebar.inc.php:35
 #: ../../templates/sidebar_preferences.inc.php:30
 #, fuzzy
 msgid "Preferences"
 msgstr "الأفضلية"
 
-#: ../../lib/ui.lib.php:122 ../../lib/ui.lib.php:126
+#: ../../lib/ui.lib.php:129 ../../lib/ui.lib.php:133
 #, fuzzy
 msgid "Admin-Catalog"
 msgstr "نوع التسويقي"
 
-#: ../../lib/ui.lib.php:130
+#: ../../lib/ui.lib.php:137
 msgid "Admin-User Management"
 msgstr ""
 
-#: ../../lib/ui.lib.php:134
+#: ../../lib/ui.lib.php:141
 msgid "Admin-Mail Users"
 msgstr ""
 
-#: ../../lib/ui.lib.php:138
+#: ../../lib/ui.lib.php:145
 msgid "Admin-Manage Access Lists"
 msgstr ""
 
-#: ../../lib/ui.lib.php:142
+#: ../../lib/ui.lib.php:149
 #, fuzzy
 msgid "Admin-Site Preferences"
 msgstr "تحديث تفضيلات"
 
-#: ../../lib/ui.lib.php:146
+#: ../../lib/ui.lib.php:153
 #, fuzzy
 msgid "Admin-Manage Modules"
 msgstr "المدير التسويقي"
 
-#: ../../lib/ui.lib.php:150 ../../templates/sidebar_home.inc.php:24
+#: ../../lib/ui.lib.php:157 ../../templates/sidebar_home.inc.php:24
 #, fuzzy
 msgid "Browse Music"
 msgstr "تصفح"
 
-#: ../../lib/ui.lib.php:162 ../../templates/show_stats.inc.php:26
-#: ../../templates/sidebar_home.inc.php:117
+#: ../../lib/ui.lib.php:169 ../../templates/show_stats.inc.php:26
+#: ../../templates/sidebar_home.inc.php:121
 msgid "Statistics"
 msgstr "احصاءات"
 
-#: ../../lib/ui.lib.php:221
+#: ../../lib/ui.lib.php:228
 msgid "Add New"
 msgstr ""
 
-#: ../../lib/ui.lib.php:684
+#: ../../lib/ui.lib.php:691
 msgid "On"
 msgstr ""
 
-#: ../../lib/ui.lib.php:686
+#: ../../lib/ui.lib.php:693
 msgid "Off"
 msgstr ""
 
@@ -3370,9 +3374,9 @@ msgid "Running Beets Update"
 msgstr ""
 
 #: ../../modules/Beets/Catalog.php:159
-#: ../../modules/catalog/remote.catalog.php:270
-#: ../../modules/catalog/soundcloud.catalog.php:280
-#: ../../modules/catalog/subsonic.catalog.php:245
+#: ../../modules/catalog/remote.catalog.php:273
+#: ../../modules/catalog/soundcloud.catalog.php:284
+#: ../../modules/catalog/subsonic.catalog.php:249
 #, fuzzy, php-format
 msgid "Unable to Insert Song - %s"
 msgstr "خطأ : تعذر الاتصال لجعل قاعدة البيانات"
@@ -3436,21 +3440,21 @@ msgstr "بعد لالكتالوجات"
 msgid "Invalid <dropbox-path>: "
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:243
+#: ../../modules/catalog/dropbox.catalog.php:244
 msgid "Running Dropbox Remote Update"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:283
+#: ../../modules/catalog/dropbox.catalog.php:286
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:286
+#: ../../modules/catalog/dropbox.catalog.php:288
 msgid "No media updated, do you respect the patterns?"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:290
-#: ../../modules/catalog/dropbox.catalog.php:435
+#: ../../modules/catalog/dropbox.catalog.php:291
+#: ../../modules/catalog/dropbox.catalog.php:434
 msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
@@ -3478,54 +3482,54 @@ msgid "Error: Unable to open %s"
 msgstr "خطأ : تعذر الاتصال لجعل قاعدة البيانات"
 
 #: ../../modules/catalog/local.catalog.php:253
-#: ../../modules/catalog/local.catalog.php:299
+#: ../../modules/catalog/local.catalog.php:316
 #, fuzzy, php-format
 msgid "Error: Unable to change to directory %s"
 msgstr "خطأ : تعذر الاتصال لجعل قاعدة البيانات"
 
 #. HINT: FullFile
-#: ../../modules/catalog/local.catalog.php:324
+#: ../../modules/catalog/local.catalog.php:341
 #, fuzzy, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "خطأ : تعذر الاتصال لجعل قاعدة البيانات"
 
 #. HINT: FullFile
-#: ../../modules/catalog/local.catalog.php:331
+#: ../../modules/catalog/local.catalog.php:348
 #, php-format
 msgid "%s is not readable by ampache"
 msgstr ""
 
 #. HINT: FullFile
-#: ../../modules/catalog/local.catalog.php:353
+#: ../../modules/catalog/local.catalog.php:370
 #, php-format
 msgid "%s does not match site charset"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:467
+#: ../../modules/catalog/local.catalog.php:475
 msgid "N/A"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:471
+#: ../../modules/catalog/local.catalog.php:481
 #, php-format
 msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
 "Second: [%s]"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:548
+#: ../../modules/catalog/local.catalog.php:561
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:578
+#: ../../modules/catalog/local.catalog.php:591
 msgid "Catalog Root unreadable, stopping clean"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:602
+#: ../../modules/catalog/local.catalog.php:615
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:641
+#: ../../modules/catalog/local.catalog.php:654
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
 msgstr ""
@@ -3540,7 +3544,7 @@ msgstr ""
 #: ../../templates/show_add_user.inc.php:29
 #: ../../templates/show_edit_user.inc.php:32
 #: ../../templates/show_install_account.inc.php:51
-#: ../../templates/show_login_form.inc.php:59
+#: ../../templates/show_login_form.inc.php:60
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_now_playing_video_row.inc.php:27
 #: ../../templates/show_recently_played.inc.php:34
@@ -3559,7 +3563,7 @@ msgstr "اسم المستخدم"
 #: ../../templates/show_add_user.inc.php:63
 #: ../../templates/show_edit_user.inc.php:84
 #: ../../templates/show_install_account.inc.php:57
-#: ../../templates/show_login_form.inc.php:63
+#: ../../templates/show_login_form.inc.php:64
 #: ../../templates/show_user_registration.inc.php:121
 msgid "Password"
 msgstr "كلمة السر"
@@ -3573,20 +3577,20 @@ msgstr ""
 msgid "Error: Username and Password Required for Remote Catalogs"
 msgstr "بعد لالكتالوجات"
 
-#: ../../modules/catalog/remote.catalog.php:184
+#: ../../modules/catalog/remote.catalog.php:185
 msgid "Running Remote Update"
 msgstr ""
 
-#: ../../modules/catalog/remote.catalog.php:215
+#: ../../modules/catalog/remote.catalog.php:219
 msgid "Error connecting to remote server"
 msgstr ""
 
-#: ../../modules/catalog/remote.catalog.php:242
+#: ../../modules/catalog/remote.catalog.php:246
 #, php-format
 msgid "%u remote catalog(s) found (%u songs)"
 msgstr ""
 
-#: ../../modules/catalog/remote.catalog.php:278
+#: ../../modules/catalog/remote.catalog.php:281
 msgid "Completed updating remote catalog(s)."
 msgstr ""
 
@@ -3600,33 +3604,33 @@ msgstr "مستخدم"
 msgid "Error: UserID and Secret Required for SoundCloud Catalogs"
 msgstr "بعد لالكتالوجات"
 
-#: ../../modules/catalog/soundcloud.catalog.php:222
+#: ../../modules/catalog/soundcloud.catalog.php:223
 msgid "Running SoundCloud Remote Update"
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:290
+#: ../../modules/catalog/soundcloud.catalog.php:292
 msgid "Completed updating SoundCloud catalog(s)."
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:290
+#: ../../modules/catalog/soundcloud.catalog.php:292
 #: ../../modules/catalog/subsonic.catalog.php:267
 #, fuzzy
 msgid "Songs added."
 msgstr "عنوان الأغنية"
 
-#: ../../modules/catalog/soundcloud.catalog.php:296
+#: ../../modules/catalog/soundcloud.catalog.php:297
 msgid "API Error: cannot get song list."
 msgstr ""
 
 #: ../../modules/catalog/soundcloud.catalog.php:300
-#: ../../modules/catalog/soundcloud.catalog.php:358
-#: ../../modules/catalog/soundcloud.catalog.php:431
+#: ../../modules/catalog/soundcloud.catalog.php:357
+#: ../../modules/catalog/soundcloud.catalog.php:430
 msgid "API Error: cannot connect to SoundCloud."
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:304
-#: ../../modules/catalog/soundcloud.catalog.php:362
-#: ../../modules/catalog/soundcloud.catalog.php:435
+#: ../../modules/catalog/soundcloud.catalog.php:303
+#: ../../modules/catalog/soundcloud.catalog.php:361
+#: ../../modules/catalog/soundcloud.catalog.php:434
 msgid "SoundCloud exception: "
 msgstr ""
 
@@ -3643,16 +3647,16 @@ msgstr ""
 msgid "Error: Username and Password Required for Subsonic Catalogs"
 msgstr "بعد لالكتالوجات"
 
-#: ../../modules/catalog/subsonic.catalog.php:188
+#: ../../modules/catalog/subsonic.catalog.php:189
 msgid "Running Subsonic Remote Update"
 msgstr ""
 
-#: ../../modules/catalog/subsonic.catalog.php:255
+#: ../../modules/catalog/subsonic.catalog.php:257
 #, fuzzy
 msgid "Song Error."
 msgstr "البوم الفن"
 
-#: ../../modules/catalog/subsonic.catalog.php:261
+#: ../../modules/catalog/subsonic.catalog.php:262
 #, fuzzy
 msgid "Album Error."
 msgstr "البوم الفن"
@@ -3661,7 +3665,7 @@ msgstr "البوم الفن"
 msgid "Completed updating Subsonic catalog(s)."
 msgstr ""
 
-#: ../../modules/catalog/subsonic.catalog.php:273
+#: ../../modules/catalog/subsonic.catalog.php:272
 #, fuzzy
 msgid "Artist Error."
 msgstr "الكتابة التهيئة"
@@ -3702,7 +3706,7 @@ msgstr ""
 #: ../../templates/show_localplay_status.inc.php:48
 #: ../../templates/show_searches.inc.php:39
 #: ../../templates/show_searches.inc.php:67
-#: ../../templates/sidebar_home.inc.php:85
+#: ../../templates/sidebar_home.inc.php:89
 msgid "Random"
 msgstr "عشوائية"
 
@@ -3817,7 +3821,7 @@ msgstr ""
 msgid "User updated successfully"
 msgstr ""
 
-#: ../../radio.php:55
+#: ../../radio.php:60
 #, fuzzy
 msgid "Radio Station Added"
 msgstr "محطات إذاعية"
@@ -3852,6 +3856,40 @@ msgstr "كلمة السر لا تعمل"
 msgid "Access Control not Enabled"
 msgstr ""
 
+#: ../../scripts/tests/list_header.inc.php:147
+#: ../../templates/list_header.inc.php:109
+#, fuzzy
+msgid "Prev"
+msgstr "السابق"
+
+#: ../../scripts/tests/list_header.inc.php:153
+#: ../../templates/list_header.inc.php:111
+msgid "Page"
+msgstr ""
+
+#: ../../scripts/tests/list_header.inc.php:164
+#: ../../templates/list_header.inc.php:115
+#: ../../templates/show_localplay_control.inc.php:28
+msgid "Next"
+msgstr "التالي"
+
+#: ../../scripts/tests/list_header.inc.php:173
+#: ../../templates/list_header.inc.php:143
+#, fuzzy
+msgid "Item Count"
+msgstr "الحد الأدنى للتعداد"
+
+#: ../../scripts/tests/list_header.inc.php:176
+#: ../../templates/browse_filters.inc.php:30
+#: ../../templates/list_header.inc.php:124
+msgid "Filters"
+msgstr "الفلاتر"
+
+#: ../../scripts/tests/list_header.inc.php:185
+#: ../../templates/list_header.inc.php:135
+msgid "Limit"
+msgstr ""
+
 #: ../../search.php:43
 msgid "View on MusicBrainz"
 msgstr ""
@@ -3871,6 +3909,13 @@ msgstr ""
 msgid "Your Search has been saved as a Smart Playlist with name %s"
 msgstr ""
 
+#: ../../server/index.ajax.php:42
+#, php-format
+msgid ""
+"No catalog configured yet. To start streaming your media, you now need to %s "
+"add a catalog %s"
+msgstr ""
+
 #: ../../server/player.ajax.php:41
 #: ../../templates/show_html5_player.inc.php:415
 #, fuzzy
@@ -3887,6 +3932,12 @@ msgstr "استيراد قائمة التشغيل"
 #, fuzzy
 msgid "Missing Artists"
 msgstr "البوم"
+
+#: ../../server/sse.server.php:119
+msgid ""
+"This subdirectory is not part of an existing catalog. Update cannot be "
+"processed."
+msgstr ""
 
 #: ../../server/xml.server.php:54
 msgid "Session Expired"
@@ -3944,10 +3995,23 @@ msgstr ""
 msgid "Invalid Object Selected"
 msgstr ""
 
-#: ../../templates/browse_filters.inc.php:30
-#: ../../templates/list_header.inc.php:124
-msgid "Filters"
-msgstr "الفلاتر"
+#: ../../song.php:34 ../../song.php:48 ../../song.php:50
+#, fuzzy
+msgid "Song Deletion"
+msgstr "عنوان الأغنية"
+
+#: ../../song.php:35
+msgid "Are you sure you want to permanently delete this song?"
+msgstr ""
+
+#: ../../song.php:48
+#, fuzzy
+msgid "Song has been deleted."
+msgstr "حذف"
+
+#: ../../song.php:50
+msgid "Cannot delete this song."
+msgstr ""
 
 #: ../../templates/browse_filters.inc.php:34
 msgid "Starts With"
@@ -4065,21 +4129,21 @@ msgstr ""
 msgid "Error messages"
 msgstr ""
 
-#: ../../templates/footer.inc.php:38
+#: ../../templates/footer.inc.php:39
 msgid "Donate"
 msgstr ""
 
-#: ../../templates/footer.inc.php:42
+#: ../../templates/footer.inc.php:44
 #: ../../templates/show_lostpassword_form.inc.php:72
 msgid "Queries:"
 msgstr "الأسئلة :"
 
-#: ../../templates/footer.inc.php:42
+#: ../../templates/footer.inc.php:44
 #: ../../templates/show_lostpassword_form.inc.php:73
 msgid "Cache Hits:"
 msgstr "مخبأ عدد الزيارات :"
 
-#: ../../templates/footer.inc.php:47
+#: ../../templates/footer.inc.php:49
 msgid "Load time:"
 msgstr ""
 
@@ -4114,16 +4178,16 @@ msgid "Log out"
 msgstr ""
 
 #: ../../templates/header.inc.php:321
-#: ../../templates/show_login_form.inc.php:74
+#: ../../templates/show_login_form.inc.php:75
 msgid "Login"
 msgstr ""
 
 #: ../../templates/header.inc.php:323
-#: ../../templates/show_login_form.inc.php:79
+#: ../../templates/show_login_form.inc.php:80
 msgid "Register"
 msgstr ""
 
-#: ../../templates/header.inc.php:364 ../../templates/sidebar_home.inc.php:105
+#: ../../templates/header.inc.php:364 ../../templates/sidebar_home.inc.php:109
 #: ../../templates/sidebar.light.inc.php:30
 #, fuzzy
 msgid "Favorites"
@@ -4149,32 +4213,9 @@ msgstr "إنشاء حساب"
 msgid "Ampache Installation"
 msgstr "Ampache التثبيت"
 
-#: ../../templates/list_header.inc.php:109
-#, fuzzy
-msgid "Prev"
-msgstr "السابق"
-
-#: ../../templates/list_header.inc.php:111
-msgid "Page"
-msgstr ""
-
 #: ../../templates/list_header.inc.php:113
 msgid "of"
 msgstr ""
-
-#: ../../templates/list_header.inc.php:115
-#: ../../templates/show_localplay_control.inc.php:28
-msgid "Next"
-msgstr "التالي"
-
-#: ../../templates/list_header.inc.php:135
-msgid "Limit"
-msgstr ""
-
-#: ../../templates/list_header.inc.php:143
-#, fuzzy
-msgid "Item Count"
-msgstr "الحد الأدنى للتعداد"
 
 #: ../../templates/rightbar.inc.php:29
 #, fuzzy
@@ -4386,13 +4427,13 @@ msgstr "تأكيد كلمة السر"
 msgid "Avatar"
 msgstr ""
 
-#: ../../templates/show_account.inc.php:101
+#: ../../templates/show_account.inc.php:119
 #: ../../templates/show_edit_user.inc.php:155
 #: ../../templates/show_manage_catalogs.inc.php:45
 msgid "Clear Stats"
 msgstr "إحصائيات واضحة"
 
-#: ../../templates/show_account.inc.php:111
+#: ../../templates/show_account.inc.php:129
 #, fuzzy
 msgid "Update Account"
 msgstr "إنشاء حساب"
@@ -4730,7 +4771,6 @@ msgid "Target folder"
 msgstr ""
 
 #: ../../templates/show_add_upload.inc.php:175
-#: ../../templates/show_install_config.inc.php:139
 #, fuzzy
 msgid "Files"
 msgstr "اسم الملف"
@@ -4761,7 +4801,7 @@ msgstr "مستخدم"
 #: ../../templates/show_album_group_disks.inc.php:45
 #: ../../templates/show_album.inc.php:46
 #: ../../templates/show_artist.inc.php:44
-#: ../../templates/show_song.inc.php:110
+#: ../../templates/show_song.inc.php:116
 msgid "Search on Google ..."
 msgstr ""
 
@@ -4774,7 +4814,7 @@ msgstr ""
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:48
 #: ../../templates/show_artist.inc.php:46
-#: ../../templates/show_song.inc.php:111
+#: ../../templates/show_song.inc.php:117
 msgid "Search on Last.fm ..."
 msgstr ""
 
@@ -4861,9 +4901,9 @@ msgstr "استيراد قائمة التشغيل"
 #: ../../templates/show_album.inc.php:141
 #: ../../templates/show_artist.inc.php:124
 #: ../../templates/show_artist.inc.php:125
-#: ../../templates/show_install_config.inc.php:149
-#: ../../templates/show_install_config.inc.php:164
-#: ../../templates/show_install_config.inc.php:180
+#: ../../templates/show_install_config.inc.php:191
+#: ../../templates/show_install_config.inc.php:206
+#: ../../templates/show_install_config.inc.php:222
 #: ../../templates/show_playlist_song_row.inc.php:60
 #: ../../templates/show_share.inc.php:33 ../../templates/show_share.inc.php:34
 #: ../../templates/show_song.inc.php:83
@@ -5173,7 +5213,7 @@ msgstr "لا توجد سجلات"
 #: ../../templates/show_broadcasts.inc.php:30
 #: ../../templates/show_edit_broadcast_row.inc.php:39
 #: ../../templates/show_edit_channel_row.inc.php:88
-#: ../../templates/show_song.inc.php:108
+#: ../../templates/show_song.inc.php:114
 msgid "Genre"
 msgstr ""
 
@@ -5601,7 +5641,7 @@ msgstr "العثور على مكررات"
 #: ../../templates/show_recently_played.inc.php:30
 #: ../../templates/show_recently_played.inc.php:145
 #: ../../templates/show_tagcloud.inc.php:24
-#: ../../templates/sidebar_home.inc.php:87
+#: ../../templates/sidebar_home.inc.php:91
 #, fuzzy
 msgid "Song"
 msgstr "الأغاني"
@@ -5609,7 +5649,7 @@ msgstr "الأغاني"
 #: ../../templates/show_duplicates.inc.php:31
 #: ../../templates/show_duplicates.inc.php:70
 #: ../../templates/show_random.inc.php:54
-#: ../../templates/show_song.inc.php:112
+#: ../../templates/show_song.inc.php:118
 #: ../../templates/show_video.inc.php:106
 msgid "Length"
 msgstr ""
@@ -5665,7 +5705,7 @@ msgid "Edit Access Control List"
 msgstr ""
 
 #: ../../templates/show_edit_album_row.inc.php:43
-#: ../../templates/show_song.inc.php:104
+#: ../../templates/show_song.inc.php:110
 #, fuzzy
 msgid "Album Artist"
 msgstr "البوم الفن"
@@ -5779,7 +5819,7 @@ msgid "Track"
 msgstr ""
 
 #: ../../templates/show_edit_song_row.inc.php:63
-#: ../../templates/show_song.inc.php:114
+#: ../../templates/show_song.inc.php:120
 msgid "Label"
 msgstr ""
 
@@ -5928,7 +5968,7 @@ msgstr ""
 #: ../../templates/show_newest.inc.php:23
 #: ../../templates/show_popular.inc.php:23
 #: ../../templates/show_recent.inc.php:23
-#: ../../templates/sidebar_home.inc.php:95
+#: ../../templates/sidebar_home.inc.php:99
 msgid "Information"
 msgstr "معلومات"
 
@@ -6159,103 +6199,161 @@ msgid "MySQL Password"
 msgstr "MySQL كلمة المرور"
 
 #: ../../templates/show_install_config.inc.php:108
+#, fuzzy
+msgid "Installation type"
+msgstr "Ampache التثبيت"
+
+#: ../../templates/show_install_config.inc.php:109
+msgid ""
+"Configure Ampache at best for your use case, enabling / disabling features "
+"automatically."
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:113
+msgid "Ampache is configured for personal use with most greatest features."
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:116
+msgid "Minimalist"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:116
+msgid ""
+"only essential features are enabled to stream simply your music from a web "
+"interface."
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:119
+#, fuzzy
+msgid "Community"
+msgstr "ID3 التعليق"
+
+#: ../../templates/show_install_config.inc.php:119
+msgid ""
+"use recommended settings when using Ampache as a frontend for a music "
+"community."
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:124
 msgid "Transcoding"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:110
+#: ../../templates/show_install_config.inc.php:126
 msgid ""
 "Transcoding allows you to convert one type of file to another. Ampache "
-"supports on the fly transcoding of all file types based on user, IP address "
-"or available bandwidth. In order to transcode Ampache takes advantage of "
-"existing binary applications such as ffmpeg. In order for transcoding to "
-"work you must first install the supporting applications and ensure that they "
-"are executable by the webserver."
+"supports on the fly transcoding of all file types based on user, player, IP "
+"address or available bandwidth. In order to transcode, Ampache takes "
+"advantage of existing binary applications such as ffmpeg. In order for "
+"transcoding to work you must first install the supporting applications and "
+"ensure that they are executable by the web server."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:112
+#: ../../templates/show_install_config.inc.php:128
 msgid ""
 "This section apply default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once this "
 "setup ended"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:112
+#: ../../templates/show_install_config.inc.php:128
+#: ../../templates/show_install_config.inc.php:154
 msgid "See wiki page"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:116
+#: ../../templates/show_install_config.inc.php:132
 #, fuzzy
 msgid "Template Configuration"
 msgstr "بدء التهيئة"
 
-#: ../../templates/show_install_config.inc.php:130
+#: ../../templates/show_install_config.inc.php:146
 msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:146
+#: ../../templates/show_install_config.inc.php:152
+#, fuzzy
+msgid "Players"
+msgstr "تشغيل"
+
+#: ../../templates/show_install_config.inc.php:153
+msgid ""
+"Ampache is more than only a web interface. Several backends are implemented "
+"to ensure you can stream your media from anywhere."
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:154
+msgid ""
+"Select backends to enable. Depending the backend, you may need to perform "
+"additional configuration."
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:181
+msgid "File Insight"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:188
 msgid "rest/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:151
-#: ../../templates/show_install_config.inc.php:166
-#: ../../templates/show_install_config.inc.php:182
+#: ../../templates/show_install_config.inc.php:193
+#: ../../templates/show_install_config.inc.php:208
+#: ../../templates/show_install_config.inc.php:224
 #, fuzzy
 msgid "Write"
 msgstr "قراءة وكتابة"
 
-#: ../../templates/show_install_config.inc.php:154
+#: ../../templates/show_install_config.inc.php:196
 msgid "rest/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:156
+#: ../../templates/show_install_config.inc.php:198
 #, fuzzy
 msgid "rest/.htaccess configured?"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:161
+#: ../../templates/show_install_config.inc.php:203
 #, fuzzy
 msgid "play/.htaccess action"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:169
+#: ../../templates/show_install_config.inc.php:211
 #, fuzzy
 msgid "play/.htaccess exists?"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:171
+#: ../../templates/show_install_config.inc.php:213
 #, fuzzy
 msgid "play/.htaccess configured?"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:177
+#: ../../templates/show_install_config.inc.php:219
 #, fuzzy
 msgid "config/ampache.cfg.php action"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:185
+#: ../../templates/show_install_config.inc.php:227
 #, fuzzy
 msgid "config/ampache.cfg.php exists?"
 msgstr "يجد Ampache.cfg.php"
 
-#: ../../templates/show_install_config.inc.php:187
+#: ../../templates/show_install_config.inc.php:229
 #, fuzzy
 msgid "config/ampache.cfg.php configured?"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:194
+#: ../../templates/show_install_config.inc.php:236
 #, fuzzy
 msgid "Recheck Config"
 msgstr "شيك التهيئة"
 
-#: ../../templates/show_install_config.inc.php:202
+#: ../../templates/show_install_config.inc.php:244
 #: ../../templates/show_install.inc.php:130
 msgid "Skip"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:205
+#: ../../templates/show_install_config.inc.php:247
 #, fuzzy
 msgid "Create config"
 msgstr "إنشاء حساب"
@@ -6440,16 +6538,16 @@ msgstr ""
 msgid "Repeat"
 msgstr ""
 
-#: ../../templates/show_login_form.inc.php:67
+#: ../../templates/show_login_form.inc.php:68
 msgid "Remember Me"
 msgstr ""
 
-#: ../../templates/show_login_form.inc.php:73
+#: ../../templates/show_login_form.inc.php:74
 #, fuzzy
 msgid "Lost password"
 msgstr "كلمة السر"
 
-#: ../../templates/show_login_form.inc.php:89
+#: ../../templates/show_login_form.inc.php:90
 msgid "Message of the Day"
 msgstr ""
 
@@ -6687,7 +6785,7 @@ msgid "No playlist found"
 msgstr "وتظهر قائمة التشغيل"
 
 #: ../../templates/show_playlist_song_row.inc.php:74
-#: ../../templates/show_song_row.inc.php:95
+#: ../../templates/show_song_row.inc.php:100
 msgid "Reorder"
 msgstr ""
 
@@ -7040,39 +7138,39 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
-#: ../../templates/show_song.inc.php:110 ../../templates/show_song.inc.php:111
+#: ../../templates/show_song.inc.php:116 ../../templates/show_song.inc.php:117
 msgid "Links"
 msgstr ""
 
-#: ../../templates/show_song.inc.php:115
+#: ../../templates/show_song.inc.php:121
 #, fuzzy
 msgid "Song Language"
 msgstr "عنوان الأغنية"
 
-#: ../../templates/show_song.inc.php:116
+#: ../../templates/show_song.inc.php:122
 #, fuzzy
 msgid "Catalog Number"
 msgstr "نوع التسويقي"
 
-#: ../../templates/show_song.inc.php:120
+#: ../../templates/show_song.inc.php:126
 msgid "ReplayGain Track Gain"
 msgstr ""
 
-#: ../../templates/show_song.inc.php:123
+#: ../../templates/show_song.inc.php:129
 msgid "ReplayGain Album Gain"
 msgstr ""
 
-#: ../../templates/show_song.inc.php:129
+#: ../../templates/show_song.inc.php:135
 #: ../../templates/show_video.inc.php:122
 #, fuzzy
 msgid "Last Updated"
 msgstr "تحديث Ampache"
 
-#: ../../templates/show_song.inc.php:137
+#: ../../templates/show_song.inc.php:143
 msgid "Lyrics"
 msgstr ""
 
-#: ../../templates/show_song.inc.php:144
+#: ../../templates/show_song.inc.php:150
 msgid "Licensing"
 msgstr ""
 
@@ -7469,7 +7567,7 @@ msgid "Update from Tags Complete"
 msgstr ""
 
 #: ../../templates/show_uploads.inc.php:23
-#: ../../templates/sidebar_home.inc.php:114
+#: ../../templates/sidebar_home.inc.php:118
 msgid "Uploads"
 msgstr ""
 
@@ -7628,7 +7726,7 @@ msgid "No video found"
 msgstr "لا توجد سجلات"
 
 #: ../../templates/show_wanted.inc.php:23
-#: ../../templates/sidebar_home.inc.php:108
+#: ../../templates/sidebar_home.inc.php:112
 #, fuzzy
 msgid "Wanted List"
 msgstr "محطات إذاعية"
@@ -7639,11 +7737,11 @@ msgstr "محطات إذاعية"
 #: ../../templates/sidebar_admin.inc.php:43
 #: ../../templates/sidebar_admin.inc.php:57
 #: ../../templates/sidebar_home.inc.php:24
-#: ../../templates/sidebar_home.inc.php:49
-#: ../../templates/sidebar_home.inc.php:63
-#: ../../templates/sidebar_home.inc.php:85
-#: ../../templates/sidebar_home.inc.php:95
-#: ../../templates/sidebar_home.inc.php:123
+#: ../../templates/sidebar_home.inc.php:53
+#: ../../templates/sidebar_home.inc.php:67
+#: ../../templates/sidebar_home.inc.php:89
+#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:127
 #: ../../templates/sidebar_localplay.inc.php:38
 #: ../../templates/sidebar_localplay.inc.php:48
 #: ../../templates/sidebar_localplay.inc.php:66
@@ -7700,40 +7798,40 @@ msgstr "شيك التهيئة"
 msgid "Song Titles"
 msgstr "الاغنية العنوان"
 
-#: ../../templates/sidebar_home.inc.php:49
+#: ../../templates/sidebar_home.inc.php:53
 #, fuzzy
 msgid "Browse Video"
 msgstr "تصفح"
 
-#: ../../templates/sidebar_home.inc.php:51
+#: ../../templates/sidebar_home.inc.php:55
 msgid "Music Clips"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:66
+#: ../../templates/sidebar_home.inc.php:70
 msgid "Currently Playing"
 msgstr "اللعب في الوقت الحاضر"
 
-#: ../../templates/sidebar_home.inc.php:80
+#: ../../templates/sidebar_home.inc.php:84
 msgid "Import"
 msgstr "الواردات"
 
-#: ../../templates/sidebar_home.inc.php:91
+#: ../../templates/sidebar_home.inc.php:95
 msgid "Advanced"
 msgstr "المتقدمة"
 
-#: ../../templates/sidebar_home.inc.php:97
+#: ../../templates/sidebar_home.inc.php:101
 msgid "Recent"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:98
+#: ../../templates/sidebar_home.inc.php:102
 msgid "Newest"
 msgstr "أحدث"
 
-#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:103
 msgid "Popular"
 msgstr "الشعبية"
 
-#: ../../templates/sidebar_home.inc.php:102
+#: ../../templates/sidebar_home.inc.php:106
 #, fuzzy
 msgid "Top Rated"
 msgstr "صنف"
@@ -8159,6 +8257,14 @@ msgstr "تنزيل"
 #: Database words id 140
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player(s)"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Catalog Clean sStarted..."
+#~ msgstr "نوع التسويقي"
+
+#, fuzzy
+#~ msgid "add a catalog"
+#~ msgstr "إحصائيات واضحة"
 
 #, fuzzy
 #~ msgid "- Catalog Clean"
