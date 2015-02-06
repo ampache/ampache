@@ -58,7 +58,6 @@ var AudioHandler = function() {
 	var buffer;
 	var audioBuffer;
 	var dropArea;
-	var audioContext;
 	var processor;
 	var analyser;
 
@@ -70,13 +69,6 @@ var AudioHandler = function() {
 		//EVENT HANDLERS
 		events.on("update", update);
 
-        if (typeof AudioContext !== 'undefined') {
-            audioContext = new AudioContext();
-        } else if (typeof webkitAudioContext !== 'undefined') {
-            audioContext = new webkitAudioContext();
-        } else {
-            audioContext = null;
-        }
 		processor = audioContext.createScriptProcessor(2048 , 1 , 1 );
 		
 		analyser = audioContext.createAnalyser();
@@ -256,7 +248,9 @@ var AudioHandler = function() {
     
     function loadMediaSource(mediaElement) {
         if (mediaElement != undefined) {
-            var mediaSource = audioContext.createMediaElementSource(mediaElement);
+			if (mediaSource == null) {
+				mediaSource = audioContext.createMediaElementSource(mediaElement);
+			}
             source = mediaSource;
             source.connect(analyser);
             analyser.connect(gainNode);

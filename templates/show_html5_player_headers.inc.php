@@ -140,6 +140,17 @@ function SwapSlideshow()
     swap_slideshow();
 }
 
+function initAudioContext()
+{
+    if (typeof AudioContext !== 'undefined') {
+        audioContext = new AudioContext();
+    } else if (typeof webkitAudioContext !== 'undefined') {
+        audioContext = new webkitAudioContext();
+    } else {
+        audioContext = null;
+    }
+}
+
 function isVisualizerEnabled()
 {
     return ($('#uberviz').css('visibility') == 'visible');
@@ -222,23 +233,19 @@ function SavePlaylist()
     handlePlaylistAction(url, 'rb_append_dplaylist_new');
 }
 
+var audioContext = null;
+var mediaSource = null;
 var replaygainEnabled = false;
 var replaygainNode = null;
+initAudioContext();
+
 function ToggleReplayGain()
 {
     if (replaygainNode == null) {
         var mediaElement = $('.jp-jplayer').find('audio').get(0);
         if (mediaElement) {
-            var audioContext = null;
-            if (typeof AudioContext !== 'undefined') {
-                audioContext = new AudioContext();
-            } else if (typeof webkitAudioContext !== 'undefined') {
-                audioContext = new webkitAudioContext();
-            } else {
-                audioContext = null;
-            }
             if (audioContext !== null) {
-                var mediaSource = audioContext.createMediaElementSource(mediaElement);
+                mediaSource = audioContext.createMediaElementSource(mediaElement);
                 replaygainNode = audioContext.createGain();
                 replaygainNode.gain.value = 1;
                 mediaSource.connect(replaygainNode);
@@ -252,9 +259,9 @@ function ToggleReplayGain()
         ApplyReplayGain();
 
         if (replaygainEnabled) {
-            $('#replaygainbtn').css('filter', 'drop-shadow(2px -2px 1px orange)');
+            $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px orange');
         } else {
-            $('#replaygainbtn').css('filter', '');
+            $('#replaygainbtn').css('box-shadow', '');
         }
     }
 }
