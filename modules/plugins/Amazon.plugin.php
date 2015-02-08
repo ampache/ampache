@@ -129,7 +129,7 @@ class AmpacheAmazon {
      * get_arts
      * Returns arts for what we're passed in.
      */
-    public static function gather_arts($type, $options = array(), $limit = 5) {
+    public function gather_arts($type, $options = array(), $limit = 5) {
         
         $images     = array();
         $final_results  = array();
@@ -146,7 +146,7 @@ class AmpacheAmazon {
 
         // Create the Search Object
         $amazon = new AmazonSearch($this->amazon_developer_public_key, $this->amazon_developer_private_api_key, $this->amazon_developer_associate_tag, $this->amazon_base_url);
-            if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
+            if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
                 $proxyhost = AmpConfig::get('proxy_host');
                 $proxyport = AmpConfig::get('proxy_port');
                 $proxyuser = AmpConfig::get('proxy_user');
@@ -189,11 +189,6 @@ class AmpacheAmazon {
 
         /* Log this if we're doin debug */
         debug_event('amazon-xml',"Searched using " . $options['keyword'] . ", results: " . count($final_results), 5);
-
-        // If we've hit our limit
-        if (!empty($limit) && count($final_results) >= $limit) {
-            break;
-        }
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {

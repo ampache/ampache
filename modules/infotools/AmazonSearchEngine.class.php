@@ -148,6 +148,7 @@ class AmazonSearch
         // get the proxy config 
         $options = $this->getProxyConfig();
 
+        debug_event('amazon-search-results', 'Amazon request: ' . $url, 5);
         // make the request and retrieve the response
         $request = Requests::get($url, array(), $options);
         $contents = $request->body;
