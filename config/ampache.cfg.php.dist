@@ -456,7 +456,7 @@ notify = "true"
 ; method unless you want it to overwrite what's already in the
 ; database
 ; POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
-; POSSIBLE VALUES (plugins): amazon,TheAudioDb,Tmdb,Omdb,Flickr
+; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
 ; DEFAULT: db,tags,folder,musicbrainz,lastfm,google
 art_order = "db,tags,folder,musicbrainz,lastfm,google"
 

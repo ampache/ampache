@@ -941,9 +941,6 @@ class Art extends database_object
                 debug_event('Art', "Method used: $method_name", 3);
                 // Some of these take options!
                 switch ($method_name) {
-                    case 'gather_amazon':
-                        $data = $this->{$method_name}($limit, $options);
-                    break;
                     case 'gather_lastfm':
                         $data = $this->{$method_name}($limit, $options);
                     break;
