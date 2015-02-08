@@ -95,6 +95,9 @@ if ($iframed) {
 <script type="text/javascript">
 function NotifyOfNewSong(title, artist, icon)
 {
+    if (artist === null) {
+        artist = '';
+    }
     if (!("Notification" in window)) {
         console.error("This browser does not support desktop notification");
     } else {

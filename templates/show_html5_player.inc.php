@@ -180,7 +180,9 @@ if (!$isVideo && !$isRadio && !$is_share) {
     }
 }
 if (AmpConfig::get('song_page_title') && !$is_share) {
-    echo "document.title = obj.title + ' - ' + obj.artist + ' | " . addslashes(AmpConfig::get('site_title')) . "';";
+    echo "var mediaTitle = obj.title;\n";
+    echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
+    echo "document.title = mediaTitle + ' | " . addslashes(AmpConfig::get('site_title')) . "';";
 }
 ?>
             }
