@@ -390,6 +390,8 @@ class Wanted extends database_object
             $wantedid = Dba::insert_id();
             $wanted = new Wanted($wantedid);
             $wanted->accept();
+
+            database_object::remove_from_cache('wanted', $wantedid);
         }
     }
 
