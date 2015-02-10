@@ -371,6 +371,11 @@ class Catalog_local extends Catalog
                     return false;
                 }
                 $full_file = $enc_full_file;
+
+                // Check again with good encoding
+                if (isset($this->_filecache[strtolower($full_file)])) {
+                    return false;
+                }
             } // end if iconv
 
             if ($is_playlist) {
