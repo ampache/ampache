@@ -1188,9 +1188,9 @@ class Query
         $order_sql = "";
         if (!isset($this->_state['custom']) || !$this->_state['custom']) {
             $filter_sql = $this->get_filter_sql();
+            $order_sql = $this->get_sort_sql();
             $join_sql = $this->get_join_sql();
             $having_sql = $this->get_having_sql();
-            $order_sql = $this->get_sort_sql();
         }
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
@@ -1785,7 +1785,7 @@ class Query
                 } // end switch
             break;
             case 'video':
-                $sql = $this->sql_sort_video('video', $field);
+                $sql = $this->sql_sort_video($field, 'video');
             break;
             case 'wanted':
                 switch ($field) {
@@ -1915,12 +1915,12 @@ class Query
                         $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                     break;
                     default:
-                        $sql = $this->sql_sort_video('tvshow_episode', $field);
+                        $sql = $this->sql_sort_video($field, 'tvshow_episode');
                     break;
                 }
             break;
             case 'movie':
-                $sql = $this->sql_sort_video('movie', $field);
+                $sql = $this->sql_sort_video($field, 'movie');
             break;
             case 'clip':
                 switch ($field) {
@@ -1928,7 +1928,7 @@ class Query
                         $sql = "`clip`.`artist`";
                     break;
                     default:
-                        $sql = $this->sql_sort_video('clip', $field);
+                        $sql = $this->sql_sort_video($field, 'clip');
                     break;
                 }
             break;
@@ -1938,7 +1938,7 @@ class Query
                         $sql = "`personal_video`.`location`";
                     break;
                     default:
-                        $sql = $this->sql_sort_video('personal_video', $field);
+                        $sql = $this->sql_sort_video($field, 'personal_video');
                     break;
                 }
             break;
@@ -1959,7 +1959,7 @@ class Query
      * @param string $table
      * @return string
      */
-    private function sql_sort_video($field, $table)
+    private function sql_sort_video($field, $table = 'video')
     {
         $sql = "";
         switch ($field) {
@@ -1967,13 +1967,13 @@ class Query
                 $sql = "`video`.`title`";
             break;
             case 'resolution':
-                $sql = "`video`.`resolution`";
+                $sql = "`video`.`resolution_x`";
             break;
             case 'length':
-                $sql = "`video`.`length`";
+                $sql = "`video`.`time`";
             break;
             case 'codec':
-                $sql = "`video`.`codec`";
+                $sql = "`video`.`video_codec`";
             break;
             case 'release_date':
                 $sql = "`video`.`release_date`";
