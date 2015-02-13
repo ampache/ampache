@@ -319,7 +319,7 @@ class Query
                 'year'
             ),
             'tvshow_season' => array(
-                'season_number',
+                'season',
                 'tvshow'
             ),
             'tvshow_episode' => array(
@@ -327,6 +327,7 @@ class Query
                 'resolution',
                 'length',
                 'codec',
+                'episode',
                 'season',
                 'tvshow'
             ),
@@ -1894,7 +1895,7 @@ class Query
             break;
             case 'tvshow_season':
                 switch ($field) {
-                    case 'season_number':
+                    case 'season':
                         $sql = "`tvshow_season`.`season_number`";
                     break;
                     case 'tvshow':
@@ -1905,6 +1906,9 @@ class Query
             break;
             case 'tvshow_episode':
                 switch ($field) {
+                    case 'episode':
+                        $sql = "`tvshow_episode`.`episode_number`";
+                    break;
                     case 'season':
                         $sql = "`tvshow_season`.`season_number`";
                         $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
