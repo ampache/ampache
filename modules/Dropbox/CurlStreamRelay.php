@@ -33,7 +33,6 @@ class CurlStreamRelay
             $this->errorData[] = $data;
         } else {
             fwrite($this->outStream, $data);
-            ob_flush();
         }
 
         return strlen($data);
@@ -44,4 +43,3 @@ class CurlStreamRelay
         return implode($this->errorData);
     }
 }
-

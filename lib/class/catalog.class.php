@@ -158,6 +158,31 @@ abstract class Catalog extends database_object
     abstract public function prepare_media($media);
 
     /**
+     * Check if the catalog is ready to perform actions (configuration completed, ...)
+     * @return boolean
+     */
+    public function isReady()
+    {
+        return true;
+    }
+
+    /**
+     * Show a message to make the catalog ready.
+     */
+    public function show_ready_process()
+    {
+        // Do nothing.
+    }
+
+    /**
+     * Perform the last step process to make the catalog ready.
+     */
+    public function perform_ready()
+    {
+        // Do nothing.
+    }
+
+    /**
      * uninstall
      * This removes the remote catalog
      * @return boolean

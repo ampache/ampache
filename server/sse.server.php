@@ -58,7 +58,9 @@ switch ($worker) {
                 if ($_REQUEST['catalogs']) {
                     foreach ($_REQUEST['catalogs'] as $catalog_id) {
                         $catalog = Catalog::create_from_id($catalog_id);
-                        $catalog->add_to_catalog($_POST);
+                        if ($catalog !== null) {
+                            $catalog->add_to_catalog($_POST);
+                        }
                     }
                 }
                 break;
@@ -68,7 +70,9 @@ switch ($worker) {
                 if (isset($_REQUEST['catalogs'])) {
                     foreach ($_REQUEST['catalogs'] as $catalog_id) {
                         $catalog = Catalog::create_from_id($catalog_id);
-                        $catalog->verify_catalog();
+                        if ($catalog !== null) {
+                            $catalog->verify_catalog();
+                        }
                     }
                 }
                 break;
@@ -80,9 +84,11 @@ switch ($worker) {
                 /* This runs the clean/verify/add in that order */
                 foreach ($_REQUEST['catalogs'] as $catalog_id) {
                     $catalog = Catalog::create_from_id($catalog_id);
-                    $catalog->clean_catalog();
-                    $catalog->verify_catalog();
-                    $catalog->add_to_catalog();
+                    if ($catalog !== null) {
+                        $catalog->clean_catalog();
+                        $catalog->verify_catalog();
+                        $catalog->add_to_catalog();
+                    }
                 }
                 Dba::optimize_tables();
                 break;
@@ -93,7 +99,9 @@ switch ($worker) {
                 if (isset($_REQUEST['catalogs'])) {
                     foreach ($_REQUEST['catalogs'] as $catalog_id) {
                         $catalog = Catalog::create_from_id($catalog_id);
-                        $catalog->clean_catalog();
+                        if ($catalog !== null) {
+                            $catalog->clean_catalog();
+                        }
                     } // end foreach catalogs
                     Dba::optimize_tables();
                 }
@@ -104,7 +112,9 @@ switch ($worker) {
                 if ($_REQUEST['add_path'] != '/' AND strlen($_REQUEST['add_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($_REQUEST['add_path'])) {
                         $catalog = Catalog::create_from_id($catalog_id);
-                        $catalog->add_to_catalog(array('subdirectory'=>$_REQUEST['add_path']));
+                        if ($catalog !== null) {
+                            $catalog->add_to_catalog(array('subdirectory'=>$_REQUEST['add_path']));
+                        }
                     }
                 } // end if add
 
@@ -123,11 +133,13 @@ switch ($worker) {
             case 'add_catalog':
                 $catalog_id = intval($_REQUEST['catalog_id']);
                 $catalog = Catalog::create_from_id($catalog_id);
-                // Run our initial add
-                $catalog->add_to_catalog($options);
+                if ($catalog !== null) {
+                    // Run our initial add
+                    $catalog->add_to_catalog($options);
 
-                if (!defined('SSE_OUTPUT')) {
-                    Error::display('catalog_add');
+                    if (!defined('SSE_OUTPUT')) {
+                        Error::display('catalog_add');
+                    }
                 }
                 break;
             case 'gather_media_art':
@@ -136,9 +148,11 @@ switch ($worker) {
                 // Iterate throught the catalogs and gather as needed
                 foreach ($catalogs as $catalog_id) {
                     $catalog = Catalog::create_from_id($catalog_id);
-                    require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
-                    flush();
-                    $catalog->gather_art();
+                    if ($catalog !== null) {
+                        require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
+                        flush();
+                        $catalog->gather_art();
+                    }
                 }
                 break;
         }

@@ -130,6 +130,8 @@ class WebAuth extends WebAuthBase
      * the constructor.  This CSRF token will be checked on {@link finish()} to prevent
      * request forgery.
      *
+     * See <a href="https://www.dropbox.com/developers/core/docs#oa2-authorize">/oauth2/authorize</a>.
+     *
      * @param string|null $urlState
      *    Any data you would like to keep in the URL through the authorization process.
      *    This exact state will be returned to you by {@link finish()}.
@@ -159,14 +161,11 @@ class WebAuth extends WebAuthBase
         return strtr(base64_encode($string), '+/', '-_');
     }
 
-    private static function decodeCsrfToken($string)
-    {
-        return base64_decode(strtr($string, '-_', '+/'));
-    }
-
     /**
      * Call this after the user has visited the authorize URL ({@link start()}), approved your app,
      * and was redirected to your redirect URI.
+     *
+     * See <a href="https://www.dropbox.com/developers/core/docs#oa2-token">/oauth2/token</a>.
      *
      * @param array $queryParams
      *    The query parameters on the GET request to your redirect URI.
@@ -201,10 +200,10 @@ class WebAuth extends WebAuthBase
         Checker::argString("queryParams['state']", $state);
 
         $error = null;
+        $errorDescription = null;
         if (isset($queryParams['error'])) {
             $error = $queryParams['error'];
             Checker::argString("queryParams['error']", $error);
-            $errorDescription = null;
             if (isset($queryParams['error_description'])) {
                 $errorDescription = $queryParams['error_description'];
                 Checker::argString("queryParams['error_description']", $errorDescription);
@@ -230,8 +229,6 @@ class WebAuth extends WebAuthBase
         if ($csrfTokenFromSession === null) {
             throw new WebAuthException_BadState();
         }
-        // Sanity check to make sure something hasn't gone terribly wrong.
-        assert(strlen($csrfTokenFromSession) > 20);
 
         $splitPos = strpos($state, "|");
         if ($splitPos === false) {

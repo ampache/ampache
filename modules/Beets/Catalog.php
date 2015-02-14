@@ -114,17 +114,23 @@ abstract class Catalog extends \Catalog
      */
     public function add_to_catalog($options = null)
     {
-        require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
+            flush();
+        }
         set_time_limit(0);
-        UI::show_box_top(T_('Running Beets Update') . '. . .');
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top(T_('Running Beets Update') . '. . .');
+        }
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'added', $this->last_add));
         $this->updateUi('add', $this->addedSongs, null, true);
         $this->update_last_add();
 
-        UI::show_box_bottom();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
     }
 
     /**

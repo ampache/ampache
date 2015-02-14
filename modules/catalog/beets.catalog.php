@@ -143,4 +143,11 @@ class Catalog_beets extends Beets\Catalog
         return $this->beetsdb;
     }
 
+    public function format()
+    {
+        parent::format();
+        $this->f_info = $this->beetsdb;
+        $this->f_full_info = $this->f_info;
+    }
+
 }

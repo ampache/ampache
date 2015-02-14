@@ -148,6 +148,19 @@ final class Path
      * @param mixed $value
      * @throws \InvalidArgumentException
      */
+    static function checkArgOrNull($argName, $value)
+    {
+        if ($value === null) return;
+        self::checkArg($argName, $value);
+    }
+
+    /**
+     * @internal
+     *
+     * @param string $argName
+     * @param mixed $value
+     * @throws \InvalidArgumentException
+     */
     static function checkArgNonRoot($argName, $value)
     {
         if ($value === null) throw new \InvalidArgumentException("'$argName' must not be null");
