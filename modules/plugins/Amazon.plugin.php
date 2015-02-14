@@ -126,7 +126,7 @@ class AmpacheAmazon {
     } // load
 
     /**
-     * get_arts
+     * gather_arts
      * Returns arts for what we're passed in.
      */
     public function gather_arts($type, $options = array(), $limit = 5) {
@@ -192,7 +192,6 @@ class AmpacheAmazon {
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {
-
             $key = '';
             /* Recurse through the images found */
             foreach ($possible_keys as $k) {
@@ -201,28 +200,31 @@ class AmpacheAmazon {
                     break;
                 }
             } // foreach
+            
+            if (!empty($key)) {
+                // Rudimentary image type detection, only JPG and GIF allowed.
+                if (substr($result[$key], -4) == '.jpg') {
+                    $mime = "image/jpeg";
+                } elseif (substr($result[$key], -4) == '.gif') {
+                    $mime = "image/gif";
+                } elseif (substr($result[$key], -4) == '.png') {
+                    $mime = "image/png";
+                } else {
+                    /* Just go to the next result */
+                    continue;
+                }
 
-            // Rudimentary image type detection, only JPG and GIF allowed.
-            if (substr($result[$key], -4) == '.jpg') {
-                $mime = "image/jpeg";
-            } elseif (substr($result[$key], -4) == '.gif') {
-                $mime = "image/gif";
-            } elseif (substr($result[$key], -4) == '.png') {
-                $mime = "image/png";
-            } else {
-                /* Just go to the next result */
-                continue;
-            }
+                $data = array();
+                $data['url']    = $result[$key];
+                $data['mime']   = $mime;
+                $data['title']  = $this->name;
 
-            $data = array();
-            $data['url']    = $result[$key];
-            $data['mime']   = $mime;
+                $images[] = $data;
 
-            $images[] = $data;
-
-            if (!empty($limit)) {
-                if (count($images) >= $limit) {
-                    return $images;
+                if (!empty($limit)) {
+                    if (count($images) >= $limit) {
+                        return $images;
+                    }
                 }
             }
 
@@ -230,7 +232,7 @@ class AmpacheAmazon {
 
         return $images;
         
-    } // get_metadata
+    } // gather_arts
 
 } // end AmpacheAmazon
 ?>
