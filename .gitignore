@@ -9,3 +9,4 @@ play/.htaccess
 logs
 /nbproject/private/
 .pc
+/tmp

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -25,7 +25,7 @@
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td><?php echo T_('Name'); ?>: </td>
-            <td colspan="3"><input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" /></td>
+            <td colspan="3"><input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" autofocus /></td>
         </tr>
         <tr>
             <td><?php echo T_('ACL Type'); ?>: </td>

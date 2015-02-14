@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -106,7 +106,7 @@ switch ($_REQUEST['action']) {
 
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
-            $track = 1;
+            $track = $_GET['offset'] ? (intval($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     $playlist->update_track_number($song_id, $track);
@@ -136,16 +136,48 @@ switch ($_REQUEST['action']) {
         $body  = '';
         show_confirmation($title,$body,$url);
     break;
+    case 'remove_duplicates':
+        debug_event('playlist', 'Remove duplicates called.', '5');
+
+        $playlist = new Playlist($_REQUEST['playlist_id']);
+        /* Make sure they have permission */
+        if (!$playlist->has_access()) {
+            UI::access_denied();
+            break;
+        }
+
+        $tracks_to_rm = array();
+        $map = array();
+        $items = $playlist->get_items();
+        foreach ($items as $item) {
+            if (!array_key_exists($item['object_type'], $map)) {
+                $map[$item['object_type']] = array();
+            }
+            if (!in_array($item['object_id'], $map[$item['object_type']])) {
+                $map[$item['object_type']][] = $item['object_id'];
+            } else {
+                $tracks_to_rm[] = $item['track_id'];
+            }
+        }
+
+        foreach ($tracks_to_rm as $track_id) {
+            $playlist->delete_track($track_id);
+        }
+        $object_ids = $playlist->get_items();
+        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+    break;
     case 'sort_tracks':
         $playlist = new Playlist($_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
-                access_denied();
-                break;
+            access_denied();
+            break;
         }
 
         /* Sort the tracks */
         $playlist->sort_tracks();
         $object_ids = $playlist->get_items();
+        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+    break;
     default:
         require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
     break;

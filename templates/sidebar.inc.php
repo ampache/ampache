@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -62,7 +62,7 @@ if (User::is_registered()) {
     }
     ?>
         <li id="sb_tab_logout" class="sb1">
-            <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" >
+            <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" rel="nohtml" >
             <?php echo UI::get_icon('logout', T_('Logout')); ?>
             </a>
         </li>
@@ -90,12 +90,12 @@ $(function() {
         $content = $header.next();
         //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
         $content.slideToggle(500, function() {
-            $header.children(".sprite").toggleClass("expanded collapsed");
+            $header.children(".header-img").toggleClass("expanded collapsed");
             var sbstate = "expanded";
-            if ($header.children(".sprite").hasClass("collapsed")) {
+            if ($header.children(".header-img").hasClass("collapsed")) {
                 sbstate = "collapsed";
             }
-            $.cookie('sb_' + $header.children(".sprite").attr('id'), sbstate, { expires: 30, path: '/'});
+            $.cookie('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/'});
         });
 
     });

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -24,7 +24,8 @@ $web_path = AmpConfig::get('web_path');
 
 $album->allow_group_disks = true;
 // Title for this album
-$title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' . $album->f_artist_link;
+$title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
+$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', '25');
@@ -77,7 +78,7 @@ if ($directplay_limit > 0) {
             <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to temporary playlist'), 'play_random_text_'); ?>
         </li>
         <?php } ?>
-        <?php if (Access::check_function('batch_download')) { ?>
+        <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
         <li>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>
@@ -90,6 +91,7 @@ if ($directplay_limit > 0) {
 &nbsp;
 </div>
 <?php
+    define('TABLE_RENDERED', 1);
     $album_suite = $album->get_group_disks_ids();
     foreach ($album_suite as $album_id) {
         $c_album = new Album($album_id);
@@ -123,16 +125,19 @@ if ($directplay_limit > 0) {
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
             <?php } ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+                <?php Share::display_ui('album', $c_album->id, false); ?>
             <?php } ?>
         <?php } ?>
-        <?php if (Access::check_function('batch_download')) { ?>
+        <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id; ?>', 'reorder_songs_table_<?php echo $c_album->id; ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
                 <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
+            </a>
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
+                <?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?>
             </a>
             <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_'.$c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>

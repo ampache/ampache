@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -150,7 +150,7 @@ class Broadcast_Server implements MessageComponentInterface
             $broadcast = $this->broadcasters[$from->resourceId];
             $clients = $this->getListeners($broadcast);
 
-            Session::extend(Stream::$session, 'stream');
+            Session::extend(Stream::get_session(), 'stream');
 
             $broadcast->update_song($song_id);
             $this->broadcastMessage($clients, self::BROADCAST_SONG, base64_encode($this->getSongJS($song_id)));
@@ -197,10 +197,29 @@ class Broadcast_Server implements MessageComponentInterface
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
             $clients = $this->getListeners($broadcast);
-            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play);
+            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play ? 'true' : 'false');
 
             if ($this->verbose) {
                 echo "[" . time() ."][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n";
+            }
+        } else {
+            debug_event('broadcast', 'Action unauthorized.', '3');
+        }
+    }
+
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     */
+    protected function notifyEnded(ConnectionInterface $from)
+    {
+        if ($this->isBroadcaster($from)) {
+            $broadcast = $this->broadcasters[$from->resourceId];
+            $clients = $this->getListeners($broadcast);
+            $this->broadcastMessage($clients, self::BROADCAST_ENDED);
+
+            if ($this->verbose) {
+                echo "[" . time() ."][info]Broadcast " . $broadcast->id . " ended." . "\r\n";
             }
         } else {
             debug_event('broadcast', 'Action unauthorized.', '3');

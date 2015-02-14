@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,6 +22,7 @@
 
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\Clients\RequestsMbClient;
+use MusicBrainz\Filters\ArtistFilter;
 
 class Wanted extends database_object
 {
@@ -127,14 +128,15 @@ class Wanted extends database_object
             $albums = $artist->get_albums();
             foreach ($albums as $id) {
                 $album = new Album($id);
-                if ($album->mbid_group) {
+                if (trim($album->mbid_group)) {
                     $owngroups[] = $album->mbid_group;
                 } else {
-                    if ($album->mbid) {
+                    if (trim($album->mbid)) {
                         $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
-                        if ($malbum->{'release-group'}) {
-                            if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
-                                $owngroups[] = $malbum->{'release-group'}->id;
+                        debug_event('aaaa', print_r($malbum, true), 5);
+                        if ($malbum['release-group']) {
+                            if (!in_array($malbum['release-group']['id'], $owngroups)) {
+                                $owngroups[] = $malbum['release-group']['id'];
                             }
                         }
                     }
@@ -142,43 +144,43 @@ class Wanted extends database_object
             }
         } else {
             $wartist['mbid'] = $mbid;
-            $wartist['name'] = $martist->name;
+            $wartist['name'] = $martist['name'];
             parent::add_to_cache('missing_artist', $mbid, $wartist);
             $wartist = self::get_missing_artist($mbid);
         }
 
         $results = array();
-        foreach ($martist->{'release-groups'} as $group) {
-            if (in_array(strtolower($group->{'primary-type'}), $types)) {
+        foreach ($martist['release-groups'] as $group) {
+            if (in_array(strtolower($group['primary-type']), $types)) {
                 $add = true;
 
-                for ($i = 0; $i < count($group->{'secondary-types'}) && $add; ++$i) {
-                    $add = in_array(strtolower($group->{'secondary-types'}[$i]), $types);
+                for ($i = 0; $i < count($group['secondary-types']) && $add; ++$i) {
+                    $add = in_array(strtolower($group['secondary-types'][$i]), $types);
                 }
 
                 if ($add) {
-                    if (!in_array($group->id, $owngroups)) {
-                        $wantedid = self::get_wanted($group->id);
+                    if (!in_array($group['id'], $owngroups)) {
+                        $wantedid = self::get_wanted($group['id']);
                         $wanted = new Wanted($wantedid);
                         if ($wanted->id) {
                             $wanted->format();
                         } else {
-                            $wanted->mbid = $group->id;
+                            $wanted->mbid = $group['id'];
                             if ($artist) {
                                 $wanted->artist = $artist->id;
                             } else {
                                 $wanted->artist_mbid = $mbid;
                             }
-                            $wanted->name = $group->title;
-                            if (!empty($group->{'first-release-date'})) {
-                                if (strlen($group->{'first-release-date'}) == 4) {
-                                    $wanted->year = $group->{'first-release-date'};
+                            $wanted->name = $group['title'];
+                            if (!empty($group['first-release-date'])) {
+                                if (strlen($group['first-release-date']) == 4) {
+                                    $wanted->year = $group['first-release-date'];
                                 } else {
-                                    $wanted->year = date("Y", strtotime($group->{'first-release-date'}));
+                                    $wanted->year = date("Y", strtotime($group['first-release-date']));
                                 }
                             }
                             $wanted->accepted = false;
-                            $wanted->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
+                            $wanted->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group['id'];
                             if ($artist) {
                                 $wanted->f_name_link .= "&artist=" . $wanted->artist;
                             } else {
@@ -219,13 +221,31 @@ class Wanted extends database_object
                 return $wartist;
             }
 
-            $wartist['name'] = $martist->name;
+            $wartist['name'] = $martist['name'];
             parent::add_to_cache('missing_artist', $mbid, $wartist);
         }
 
         $wartist['link'] = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $wartist['mbid'] . "\" title=\"" . $wartist['name'] . "\">" . $wartist['name'] . "</a>";
 
         return $wartist;
+    }
+
+    public static function search_missing_artists($name)
+    {
+        $args = array(
+            'artist' => $name
+        );
+        $filter = new ArtistFilter($args);
+        $mb = new MusicBrainz(new RequestsMbClient());
+        $res = $mb->search($filter);
+        $wartists = array();
+        foreach ($res as $r) {
+            $wartists[] = array(
+                'mbid' => $r->id,
+                'name' => $r->name,
+            );
+        }
+        return $wartists;
     }
 
     /**
@@ -284,8 +304,8 @@ class Wanted extends database_object
         if (self::get_accepted_wanted_count() > 0) {
             $mb = new MusicBrainz(new RequestsMbClient());
             $malbum = $mb->lookup('release', $mbid, array('release-groups'));
-            if ($malbum->{'release-group'}) {
-                self::delete_wanted($malbum->{'release-group'}->id);
+            if ($malbum['release-group']) {
+                self::delete_wanted($malbum['release-group']);
             }
         }
     }
@@ -370,6 +390,8 @@ class Wanted extends database_object
             $wantedid = Dba::insert_id();
             $wanted = new Wanted($wantedid);
             $wanted->accept();
+
+            database_object::remove_from_cache('wanted', $wantedid);
         }
     }
 
@@ -404,24 +426,23 @@ class Wanted extends database_object
         try {
             $group = $mb->lookup('release-group', $this->mbid, array( 'releases' ));
             // Set fresh data
-            $this->name = $group->title;
-            $this->year = date("Y", strtotime($group->{'first-release-date'}));
+            $this->name = $group['title'];
+            $this->year = date("Y", strtotime($group['first-release-date']));
 
             // Load from database if already cached
             $this->songs = Song_preview::get_song_previews($this->mbid);
-
-            if (count($group->releases) > 0) {
-                $this->release_mbid = $group->releases[0]->id;
+            if (count($group['releases']) > 0) {
+                $this->release_mbid = $group['releases'][0]['id'];
                 if ($track_details && count($this->songs) == 0) {
                     // Use the first release as reference for track content
                     $release = $mb->lookup('release', $this->release_mbid, array( 'recordings' ));
-                    foreach ($release->media as $media) {
-                        foreach ($media->tracks as $track) {
+                    foreach ($release['media'] as $media) {
+                        foreach ($media['tracks'] as $track) {
                             $song = array();
-                            $song['disk'] = $media->position;
-                            $song['track'] = $track->number;
-                            $song['title'] = $track->title;
-                            $song['mbid'] = $track->id;
+                            $song['disk'] = $media['position'];
+                            $song['track'] = $track['number'];
+                            $song['title'] = $track['title'];
+                            $song['mbid'] = $track['id'];
                             if ($this->artist) {
                                 $song['artist'] = $this->artist;
                             }
@@ -441,7 +462,7 @@ class Wanted extends database_object
                             foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
                                 $plugin = new Plugin($plugin_name);
                                 if ($plugin->load($GLOBALS['user'])) {
-                                    $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
+                                    $song['file'] = $plugin->_plugin->get_song_preview($track['id'], $artist_name, $track['title']);
                                     if ($song['file'] != null)
                                         break;
                                 }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,7 +22,7 @@
 
 class Stream
 {
-    public static $session;
+    private static $session;
 
     private function __construct()
     {
@@ -40,6 +40,38 @@ class Stream
     {
         self::$session=$sid;
     } // set_session
+
+    public static function get_session()
+    {
+        if (!self::$session) {
+            // Generate the session ID.  This is slightly wasteful.
+            $data = array();
+            $data['type'] = 'stream';
+            // This shouldn't be done here but at backend endpoint side
+            if (isset($_REQUEST['client'])) {
+                $data['agent'] = $_REQUEST['client'];
+            }
+
+            // Copy session geolocation
+            // Same thing, should be done elsewhere
+            $sid = session_id();
+            if ($sid) {
+                $location = Session::get_geolocation($sid);
+                if (isset($location['latitude'])) {
+                    $data['geo_latitude'] = $location['latitude'];
+                }
+                if (isset($location['longitude'])) {
+                    $data['geo_longitude'] = $location['longitude'];
+                }
+                if (isset($location['name'])) {
+                    $data['geo_name'] = $location['name'];
+                }
+            }
+
+            self::$session = Session::create($data);
+        }
+        return self::$session;
+    }
 
     /**
      *
@@ -104,11 +136,11 @@ class Stream
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
      */
-    public static function start_transcode($media, $type = null, $options = array())
+    public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
         debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Options: ' . print_r($options, true) . '}...', 5);
 
-        $transcode_settings = $media->get_transcode_settings($type, $options);
+        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
@@ -186,9 +218,9 @@ class Stream
         $sec = ($media->time >= 30) ? 30 : intval($media->time / 2);
         $frame = gmdate("H:i:s", $sec);
 
-        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('encode_get_image')) {
+        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
 
-            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('encode_get_image');
+            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
                 '%FILE%'   => scrub_arg($media->file),
                 '%TIME%' => $frame
@@ -364,21 +396,6 @@ class Stream
     }
 
     /**
-     * auto_init
-     * This is called on class load it sets the session
-     */
-    public static function _auto_init()
-    {
-        // Generate the session ID.  This is slightly wasteful.
-        $data = array();
-        $data['type'] = 'stream';
-        if (isset($_REQUEST['client'])) {
-            $data['agent'] = $_REQUEST['client'];
-        }
-        self::$session = Session::create($data);
-    }
-
-    /**
      * run_playlist_method
      *
      * This takes care of the different types of 'playlist methods'. The
@@ -420,7 +437,7 @@ class Stream
     {
         $session_string = '';
         if (AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . self::$session . '&';
+            $session_string = 'ssid=' . self::get_session() . '&';
         }
 
         if ($local) {

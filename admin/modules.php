@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -48,7 +48,11 @@ switch ($_REQUEST['action']) {
         Preference::update('localplay_level',$GLOBALS['user']->id,'100');
         Preference::update('localplay_controller',$GLOBALS['user']->id,$localplay->type);
 
-        header("Location:" . AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay');
+        /* Show Confirmation */
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
+        $title  = T_('Localplay Installed');
+        $body   = '';
+        show_confirmation($title ,$body, $url);
     break;
     case 'install_catalog_type':
         $type = (string) scrub_in($_REQUEST['type']);

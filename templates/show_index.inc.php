@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -27,9 +27,11 @@ foreach (Plugin::get_plugins('display_home') as $plugin_name) {
     }
 }
 ?>
+<?php if (AmpConfig::get('home_now_playing')) { ?>
 <div id="now_playing">
     <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
+<?php } ?>
 <!-- Randomly selected albums of the moment -->
 <?php
 if (Art::is_enabled()) {

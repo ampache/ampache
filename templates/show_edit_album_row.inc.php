@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -25,7 +25,7 @@
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->full_name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->full_name); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
@@ -42,7 +42,10 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Album Artist') ?></td>
                 <td>
-                    <?php show_artist_select('album_artist', $libitem->album_artist, false, 0, true); ?>
+                    <?php show_artist_select('album_artist', $libitem->album_artist, true, $libitem->id, true); ?>
+                    <div id="album_artist_select_album_<?php echo $libitem->id ?>">
+                        <?php echo Ajax::observe('album_artist_select_'.$libitem->id, 'change', 'check_inline_song_edit("album_artist", '.$libitem->id.')'); ?>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -73,7 +76,11 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="apply_childs" value="checked" /><?php echo T_(' Apply tags to all childs (override tags for songs)') ?></td>
+                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub songs') ?></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub songs') ?></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

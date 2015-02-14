@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -27,6 +27,9 @@
         <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id,'play', T_('Play'),'play_playlist_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_playlist_' . $libitem->id); ?>
+        <?php } ?>
+        <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $libitem->id); ?>
         <?php } ?>
 <?php } ?>
     </div>
@@ -55,14 +58,14 @@
     <?php } ?>
 <?php } ?>
 <td class="cel_action">
-    <?php if (Access::check_function('batch_download')) { ?>
+    <?php if (Access::check_function('batch_download') && check_can_zip('playlist')) { ?>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
                     <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
             </a>
     <?php } ?>
     <?php if (Access::check('interface', '25')) { ?>
         <?php if (AmpConfig::get('share')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=playlist&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+            <?php Share::display_ui('playlist', $libitem->id, false); ?>
         <?php } ?>
     <?php } ?>
     <?php if ($libitem->has_access()) { ?>

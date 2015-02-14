@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -236,7 +236,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
                   Rightbar
 ***********************************************/
 #rightbar {
-    background-color: rgba(0,0,0,0.15);
+    //background-color: rgba(0,0,0,0.15);
+	background-color: #222;
     border-color: gba(0,0,0,0.15);
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -499,6 +500,10 @@ dl.media_details dt {
 ***********************************************/
 #footer a:hover {
     color: #09c;
+}
+
+#ampache_link {
+	color: #555;
 }
 
 /***********************************************

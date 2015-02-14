@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -30,72 +30,42 @@ if (!Access::check('interface','100')) {
 
 UI::show_header();
 
+$sse_catalogs = urlencode(serialize($_REQUEST['catalogs']));
+
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
     case 'add_to_all_catalogs':
-        $_REQUEST['catalogs'] = Catalog::get_catalogs();
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=add_to_all_catalogs";
+        sse_worker($sse_url);
+        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+    break;
     case 'add_to_catalog':
-        toggle_visible('ajax-loading');
-        ob_end_flush();
         if (AmpConfig::get('demo_mode')) { break; }
-        if ($_REQUEST['catalogs']) {
-            foreach ($_REQUEST['catalogs'] as $catalog_id) {
-                $catalog = Catalog::create_from_id($catalog_id);
-                $catalog->add_to_catalog($_POST);
-            }
-        }
-        $url = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title = T_('Catalog Updated');
-        $body = '';
-        show_confirmation($title, $body, $url);
-        toggle_visible('ajax-loading');
+
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=add_to_catalog&catalogs=" . $sse_catalogs;
+        sse_worker($sse_url);
+        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_all_catalogs':
-        $_REQUEST['catalogs'] = Catalog::get_catalogs();
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_all_catalogs";
+        sse_worker($sse_url);
+        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+    break;
     case 'update_catalog':
-        toggle_visible('ajax-loading');
-        ob_end_flush();
-            /* If they are in demo mode stop here */
-            if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
-        if (isset($_REQUEST['catalogs'])) {
-            foreach ($_REQUEST['catalogs'] as $catalog_id) {
-                $catalog = Catalog::create_from_id($catalog_id);
-                $catalog->verify_catalog();
-            }
-        }
-        $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = T_('Catalog Updated');
-        $body    = '';
-        show_confirmation($title,$body,$url);
-        toggle_visible('ajax-loading');
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_catalog&catalogs=" . $sse_catalogs;
+        sse_worker($sse_url);
+        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'full_service':
-        toggle_visible('ajax-loading');
-        ob_end_flush();
-        /* Make sure they aren't in demo mode */
         if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
 
-        if (!$_REQUEST['catalogs']) {
-            $_REQUEST['catalogs'] = Catalog::get_catalogs();
-        }
-
-        /* This runs the clean/verify/add in that order */
-        foreach ($_REQUEST['catalogs'] as $catalog_id) {
-            $catalog = Catalog::create_from_id($catalog_id);
-            $catalog->clean_catalog();
-            $catalog->verify_catalog();
-            $catalog->add_to_catalog();
-        }
-        Dba::optimize_tables();
-        $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = T_('Catalog Updated');
-        $body    = '';
-        show_confirmation($title,$body,$url);
-        toggle_visible('ajax-loading');
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=full_service&catalogs=" . $sse_catalogs;
+        sse_worker($sse_url);
+        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'delete_catalog':
-        /* Make sure they aren't in demo mode */
         if (AmpConfig::get('demo_mode')) { break; }
 
         if (!Core::form_verify('delete_catalog')) {
@@ -132,27 +102,14 @@ switch ($_REQUEST['action']) {
         show_confirmation($title,$body,$url);
     break;
     case 'clean_all_catalogs':
-        $_REQUEST['catalogs'] = Catalog::get_catalogs();
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=clean_all_catalogs";
+        sse_worker($sse_url);
+        show_confirmation(T_('Catalog Clean started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+    break;
     case 'clean_catalog':
-        toggle_visible('ajax-loading');
-        ob_end_flush();
-            /* If they are in demo mode stop them here */
-            if (AmpConfig::get('demo_mode')) { break; }
-
-        // Make sure they checked something
-        if (isset($_REQUEST['catalogs'])) {
-            foreach ($_REQUEST['catalogs'] as $catalog_id) {
-                $catalog = Catalog::create_from_id($catalog_id);
-                $catalog->clean_catalog();
-            } // end foreach catalogs
-            Dba::optimize_tables();
-        }
-
-        $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = T_('Catalog Cleaned');
-        $body    = '';
-        show_confirmation($title,$body,$url);
-        toggle_visible('ajax-loading');
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=clean_catalog&catalogs=" . $sse_catalogs;
+        sse_worker($sse_url);
+        show_confirmation(T_('Catalog Clean started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_catalog_settings':
         /* No Demo Here! */
@@ -169,23 +126,9 @@ switch ($_REQUEST['action']) {
     case 'update_from':
         if (AmpConfig::get('demo_mode')) { break; }
 
-        // First see if we need to do an add
-        if ($_POST['add_path'] != '/' AND strlen($_POST['add_path'])) {
-            if ($catalog_id = Catalog_local::get_from_path($_POST['add_path'])) {
-                $catalog = Catalog::create_from_id($catalog_id);
-                $catalog->add_to_catalog(array('subdirectory'=>$_POST['add_path']));
-            }
-        } // end if add
-
-        // Now check for an update
-        if ($_POST['update_path'] != '/' AND strlen($_POST['update_path'])) {
-            if ($catalog_id = Catalog_local::get_from_path($_POST['update_path'])) {
-                $songs = Song::get_from_path($_POST['update_path']);
-                foreach ($songs as $song_id) { Catalog::update_single_item('song',$song_id); }
-            }
-        } // end if update
-
-        echo T_("Done.");
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_from&add_path" . scrub_in($_POST['add_path']) . "&update_path=" . $_POST['update_path'];
+        sse_worker($sse_url);
+        show_confirmation(T_('Subdirectory update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'add_catalog':
         /* Wah Demo! */
@@ -216,19 +159,10 @@ switch ($_REQUEST['action']) {
                 break;
             }
 
-            $catalog = Catalog::create_from_id($catalog_id);
+            $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=add_catalog&catalog_id=" . $catalog_id . "&options=" . urlencode(serialize($_POST));
+            sse_worker($sse_url);
 
-            // Run our initial add
-            $catalog->add_to_catalog($_POST);
-
-            UI::show_box_top(T_('Catalog Created'), 'box box_catalog_created');
-            echo "<h2>" .  T_('Catalog Created') . "</h2>";
-            Error::display('general');
-            Error::display('catalog_add');
-            UI::show_box_bottom();
-
-            show_confirmation('','', AmpConfig::get('web_path').'/admin/catalog.php');
-
+            show_confirmation(T_('Catalog Creation started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
         } else {
             require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
         }
@@ -274,22 +208,9 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . '/templates/show_edit_catalog.inc.php';
     break;
     case 'gather_media_art':
-        toggle_visible('ajax-loading');
-        ob_end_flush();
-
-        $catalogs = $_REQUEST['catalogs'] ? $_REQUEST['catalogs'] : Catalog::get_catalogs();
-
-        // Iterate throught the catalogs and gather as needed
-        foreach ($catalogs as $catalog_id) {
-            $catalog = Catalog::create_from_id($catalog_id);
-            require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
-            flush();
-            $catalog->gather_art();
-        }
-        $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title     = T_('Media Art Search Finished');
-        $body    = '';
-        show_confirmation($title,$body,$url);
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=gather_media_art&catalogs=" . $sse_catalogs;
+        sse_worker($sse_url);
+        show_confirmation(T_('Media Art Search started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'show_catalogs':
     default:

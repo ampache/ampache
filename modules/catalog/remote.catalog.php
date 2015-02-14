@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -181,9 +181,13 @@ class Catalog_remote extends Catalog
      */
     public function add_to_catalog($options = null)
     {
-        UI::show_box_top(T_('Running Remote Update') . '. . .');
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top(T_('Running Remote Update') . '. . .');
+        }
         $this->update_remote_catalog();
-        UI::show_box_bottom();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         return true;
     } // add_to_catalog
@@ -239,8 +243,7 @@ class Catalog_remote extends Catalog
         $remote_catalog_info = $remote_handle->info();
 
         // Tell 'em what we've found, Johnny!
-        printf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']);
-        flush();
+        UI::update_text('', sprintf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step = 500;
@@ -275,8 +278,7 @@ class Catalog_remote extends Catalog
             }
         } // end while
 
-        echo "<p>" . T_('Completed updating remote catalog(s).') . "</p><hr />\n";
-        flush();
+        UI::update_text('', T_('Completed updating remote catalog(s).'));
 
         // Update the last update value
         $this->update_last_update();

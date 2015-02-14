@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -174,10 +174,10 @@ class Artist extends database_object implements library_item
     public static function gc()
     {
         Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ' .
-            'LEFT JOIN `song` AS `song2` ON `song2`.`album_artist` = `artist`.`id` ' .
+            'LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` ' .
             'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' .
             'LEFT JOIN `clip` ON `clip`.`artist` = `artist`.`id` ' .
-            'WHERE `song`.`id` IS NULL AND `song2`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
+            'WHERE `song`.`id` IS NULL AND `album`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
     }
 
     /**
@@ -186,7 +186,7 @@ class Artist extends database_object implements library_item
      * @param boolean $extra
      * @return boolean
      */
-    public static function build_cache($ids,$extra=false)
+    public static function build_cache($ids, $extra=false, $limit_threshold = '')
     {
         if (!is_array($ids) OR !count($ids)) { return false; }
 
@@ -201,14 +201,14 @@ class Artist extends database_object implements library_item
 
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
         if ($extra) {
-            $sql = "SELECT `song`.`artist`, COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE (`song`.`artist` IN $idlist OR `song`.`album_artist` IN $idlist) GROUP BY `song`.`artist`";
+            $sql = "SELECT `song`.`artist`, COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 
             debug_event("Artist", "build_cache sql: " . $sql, "6");
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 if (AmpConfig::get('show_played_times')) {
-                    $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
+                    $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
                 }
                 parent::add_to_cache('artist_extra',$row['artist'],$row);
             }
@@ -279,7 +279,7 @@ class Artist extends database_object implements library_item
         $sql_group = "COALESCE($sql_group_type, `album`.`id`)";
 
         $sql = "SELECT `album`.`id`, `album`.`release_type` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-            "WHERE (`song`.`artist`='$this->id' OR `song`.`album_artist`='$this->id') $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
+            "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
 
         debug_event("Artist", "$sql", "6");
         $db_results = Dba::read($sql);
@@ -327,12 +327,12 @@ class Artist extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE (`song`.`artist`='" . Dba::escape($this->id) . "' || `song`.`album_artist`='" . Dba::escape($this->id) . "') ";
+        $sql .= "WHERE `song`.`artist` = ? ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY album, track";
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($this->id));
 
         $results = array();
         while ($r = Dba::fetch_assoc($db_results)) {
@@ -356,12 +356,12 @@ class Artist extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE (`song`.`artist`='$this->id' OR `song`.`album_artist`='$this->id') ";
+        $sql .= "WHERE `song`.`artist` = ? ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY RAND()";
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = $r['id'];
@@ -377,7 +377,7 @@ class Artist extends database_object implements library_item
      * @param int $catalog
      * @return array
      */
-    private function _get_extra_info($catalog=0)
+    private function _get_extra_info($catalog=0, $limit_threshold ='')
     {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('artist_extra',$this->id) ) {
@@ -385,7 +385,7 @@ class Artist extends database_object implements library_item
         } else {
             $uid = Dba::escape($this->id);
             $sql = "SELECT `song`.`artist`,COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-                "WHERE (`song`.`artist`='$uid' || `song`.`album_artist`='$uid') ";
+                "WHERE `song`.`artist`='$uid' ";
             if ($catalog) {
                 $sql .= "AND (`song`.`catalog` = '$catalog') ";
             }
@@ -398,7 +398,7 @@ class Artist extends database_object implements library_item
             $db_results = Dba::read($sql);
             $row = Dba::fetch_assoc($db_results);
             if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
+                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
             }
             parent::add_to_cache('artist_extra',$row['artist'],$row);
         }
@@ -421,7 +421,7 @@ class Artist extends database_object implements library_item
      * it changes the title into a full link.
      * @return boolean
       */
-    public function format()
+    public function format($details = true, $limit_threshold = '')
     {
         /* Combine prefix and name, trim then add ... if needed */
         $name = trim($this->prefix . " " . $this->name);
@@ -438,21 +438,24 @@ class Artist extends database_object implements library_item
             $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
             $this->f_name_link = "<a href=\"" . $this->f_link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
         }
-        // Get the counts
-        $extra_info = $this->_get_extra_info($this->catalog_id);
 
-        //Format the new time thingy that we just got
-        $min = sprintf("%02d",(floor($extra_info['time']/60)%60));
+        if ($details) {
+            // Get the counts
+            $extra_info = $this->_get_extra_info($this->catalog_id, $limit_threshold);
 
-        $sec = sprintf("%02d",($extra_info['time']%60));
-        $hours = floor($extra_info['time']/3600);
+            //Format the new time thingy that we just got
+            $min = sprintf("%02d",(floor($extra_info['time']/60)%60));
 
-        $this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
+            $sec = sprintf("%02d",($extra_info['time']%60));
+            $hours = floor($extra_info['time']/3600);
 
-        $this->tags = Tag::get_top_tags('artist', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'artist');
+            $this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
 
-        $this->object_cnt = $extra_info['object_cnt'];
+            $this->tags = Tag::get_top_tags('artist', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'artist');
+
+            $this->object_cnt = $extra_info['object_cnt'];
+        }
 
         return true;
 
@@ -658,11 +661,11 @@ class Artist extends database_object implements library_item
     public function update(array $data)
     {
         // Save our current ID
-        $name = $data['name'] ?: $this->name;
-        $mbid = $data['mbid'] ?: $this->mbid;
-        $summary = $data['summary'] ?: $this->summary;
-        $placeformed = $data['placeformed'] ?: $this->placeformed;
-        $yearformed = $data['yearformed'] ?: $this->yearformed;
+        $name = isset($data['name']) ? $data['name'] : $this->name;
+        $mbid = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $placeformed = isset($data['placeformed']) ? $data['placeformed'] : $this->placeformed;
+        $yearformed = isset($data['yearformed']) ? $data['yearformed'] : $this->yearformed;
 
         $current_id = $this->id;
 
@@ -713,11 +716,17 @@ class Artist extends database_object implements library_item
         $this->mbid = $mbid;
 
         $override_childs = false;
-        if ($data['apply_childs'] == 'checked') {
+        if ($data['overwrite_childs'] == 'checked') {
             $override_childs = true;
         }
+
+        $add_to_childs = false;
+        if ($data['add_to_childs'] == 'checked') {
+            $add_to_childs = true;
+        }
+
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
         }
 
         return $current_id;
@@ -732,19 +741,19 @@ class Artist extends database_object implements library_item
      * @param boolean $override_childs
      * @param int|null $current_id
      */
-    public function update_tags($tags_comma, $override_childs, $current_id = null)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
         if ($current_id == null) {
             $current_id = $this->id;
         }
 
-        Tag::update_tag_list($tags_comma, 'artist', $current_id);
+        Tag::update_tag_list($tags_comma, 'artist', $current_id, $force_update ? true : $override_childs);
 
-        if ($override_childs) {
+        if ($override_childs || $add_to_childs) {
             $albums = $this->get_albums(null, true);
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
-                $album->update_tags($tags_comma, $override_childs);
+                $album->update_tags($tags_comma, $override_childs, $add_to_childs);
             }
         }
     }

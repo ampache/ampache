@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -43,6 +43,12 @@ class JsonHandler extends Handler
      * @var
      */
     protected $handlerCommand;
+
+    /**
+     * Seperator between command and arguments
+     * @var string
+     */
+    protected $commandSeperator = '/';
 
     /**
      * Defines the differences between beets and ampache fields
@@ -103,7 +109,7 @@ class JsonHandler extends Handler
             $command
         );
 
-        return implode('/', $uriParts) . '/'; // The last Slash is important! The Server would redirect without it, but fopen would not follow.
+        return implode('/', $uriParts);
     }
 
     /**

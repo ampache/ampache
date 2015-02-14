@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -76,49 +76,42 @@ function get_media_files($media_ids)
  */
 function send_zip($name, $media_files)
 {
-    // Check if they want to save it to a file, if so then make sure they've
-    // got a defined path as well and that it's writable.
-    $basedir = '';
-    if (AmpConfig::get('file_zip_download') && AmpConfig::get('tmp_dir_path')) {
-        // Check writeable
-        if (!is_writable(AmpConfig::get('tmp_dir_path'))) {
-            $in_memory = '1';
-            debug_event('Error','File Zip Path:' . AmpConfig::get('tmp_dir_path') . ' is not writable','1');
-        } else {
-            $in_memory = '0';
-            $basedir = AmpConfig::get('tmp_dir_path');
-        }
-    } else {
-        $in_memory = '1';
-    } // if file downloads
-
     /* Require needed library */
-    require_once AmpConfig::get('prefix') . '/modules/archive/archive.lib.php';
-    $arc = new zip_file($name . ".zip" );
+    require_once AmpConfig::get('prefix') . '/modules/ZipStream/ZipStream.php';
+    $arc = new ZipStream\ZipStream($name . ".zip" );
     $options = array(
-        'inmemory'      => $in_memory,  // create archive in memory
-        'basedir'       => $basedir,
-        'storepaths'    => 0,           // only store file name, not full path
-        'level'         => 0,           // no compression
         'comment'       => AmpConfig::get('file_zip_comment'),
-        'type'          => "zip"
     );
 
-    $arc->set_options( $options );
     foreach ($media_files as $dir => $files) {
-        $arc->add_files($files, $dir);
+        foreach ($files as $file) {
+            $arc->addFileFromPath($dir . "/" . basename($file), $file, $options);
+        }
     }
 
-    if (count($arc->error)) {
-        debug_event('archive',"Error: unable to add songs",'3');
-        return false;
-    } // if failed to add songs
-
-    if (!$arc->create_archive()) {
-        debug_event('archive',"Error: unable to create archive",'3');
-        return false;
-    } // if failed to create archive
-
-    $arc->download_file();
-
+    $arc->finish();
 } // send_zip
+
+/**
+ * check_can_zip
+ *
+ * Check that an object type is allowed to be zipped.
+ *
+ * @param string $object_type
+ */
+function check_can_zip($object_type)
+{
+    $allowed = true;
+    if (AmpConfig::get('allow_zip_types')) {
+        $allowed = false;
+        $allowed_types = explode(',', AmpConfig::get('allow_zip_types'));
+        foreach ($allowed_types as $atype) {
+            if (trim($atype) == $object_type) {
+                $allowed = true;
+                break;
+            }
+        }
+    }
+
+    return $allowed;
+}

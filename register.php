@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -55,12 +55,14 @@ switch ($_REQUEST['action']) {
          * possibly by logging them in right then and there with their current info
          * and 'click here to login' would just be a link back to index.php
          */
-        $fullname         = scrub_in($_POST['fullname']);
-        $username        = scrub_in($_POST['username']);
-        $email             = scrub_in($_POST['email']);
-        $website             = scrub_in($_POST['website']);
-        $pass1             = scrub_in($_POST['password_1']);
-        $pass2             = scrub_in($_POST['password_2']);
+        $fullname       = scrub_in($_POST['fullname']);
+        $username       = scrub_in($_POST['username']);
+        $email          = scrub_in($_POST['email']);
+        $website        = scrub_in($_POST['website']);
+        $pass1          = $_POST['password_1'];
+        $pass2          = $_POST['password_2'];
+        $state          = (string) scrub_in($_POST['state']);
+        $city           = (string) scrub_in($_POST['city']);
 
         /* If we're using the captcha stuff */
         if (AmpConfig::get('captcha_public_reg')) {
@@ -87,13 +89,23 @@ switch ($_REQUEST['action']) {
             Error::add('username', T_("You did not enter a username"));
         }
 
-        if (!$fullname) {
-            Error::add('fullname', T_("Please fill in your full name (Firstname Lastname)"));
-        }
-
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
             Error::add('email', T_('Invalid email address'));
+        }
+
+        $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
+        if (in_array('fullname', $mandatory_fields) && !$fullname) {
+            Error::add('fullname', T_("Please fill in your full name (Firstname Lastname)"));
+        }
+        if (in_array('website', $mandatory_fields) && !$website) {
+            Error::add('website', T_("Please fill in your website"));
+        }
+        if (in_array('state', $mandatory_fields) && !$state) {
+            Error::add('state', T_("Please fill in your state"));
+        }
+        if (in_array('city', $mandatory_fields) && !$city) {
+            Error::add('city', T_("Please fill in your city"));
         }
 
         if (!$pass1) {
@@ -131,7 +143,7 @@ switch ($_REQUEST['action']) {
 
 
         $new_user = User::create($username, $fullname, $email, $website, $pass1,
-            $access, AmpConfig::get('admin_enable_required'));
+            $access, $state, $city, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
             Error::add('duplicate_user', T_("Error: Insert Failed"));

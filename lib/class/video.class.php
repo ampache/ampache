@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -245,7 +245,7 @@ class Video extends database_object implements media, library_item
      * format
      * This formats a video object so that it is human readable
      */
-    public function format()
+    public function format($details = true)
     {
         $this->f_title = scrub_out($this->title);
         $this->f_full_title = $this->f_title;
@@ -274,9 +274,11 @@ class Video extends database_object implements media, library_item
         $min_h = sprintf("%02d", ($min%60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
 
-        // Get the top tags
-        $this->tags = Tag::get_top_tags('video', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'video');
+        if ($details) {
+            // Get the top tags
+            $this->tags = Tag::get_top_tags('video', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'video');
+        }
 
         $this->f_length = floor($this->time/60) . ' ' .  T_('minutes');
         $this->f_file = $this->f_title . '.' . $this->type;
@@ -426,9 +428,9 @@ class Video extends database_object implements media, library_item
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, 'video', $options);
+        return Song::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
 
     /**
@@ -593,13 +595,13 @@ class Video extends database_object implements media, library_item
         } else {
             $release_date = $this->release_date;
         }
-        $title = $data['title'] ?: $this->title;
+        $title = isset($data['title']) ? $data['title'] : $this->title;
 
         $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
         Dba::write($sql, array($title, $release_date, $this->id));
 
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'video', $this->id);
+            Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
         }
 
         $this->title = $title;
@@ -675,11 +677,12 @@ class Video extends database_object implements media, library_item
      * if not then it sets it to played. In any case it updates stats.
      * @param int $user
      * @param string $agent
+     * @param array $location
      * @return boolean
      */
-    public function set_played($user, $agent)
+    public function set_played($user, $agent, $location)
     {
-        Stats::insert('video', $this->id, $user, $agent);
+        Stats::insert('video', $this->id, $user, $agent, $location);
 
         if ($this->played) {
             return true;
@@ -948,7 +951,7 @@ class Video extends database_object implements media, library_item
      */
     public static function update_played($new_played, $song_id)
     {
-        self::_update_item('played',$new_played,$song_id,'25');
+        self::_update_item('played', ($new_played ? 1 : 0),$song_id,'25');
 
     } // update_played
 

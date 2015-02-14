@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -145,7 +145,7 @@ class Channel extends database_object implements media, library_item
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'channel', $this->id);
+            Tag::update_tag_list($data['edit_tags'], 'channel', $this->id, true);
         }
 
         $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " .
@@ -182,10 +182,12 @@ class Channel extends database_object implements media, library_item
         }
     }
 
-    public function format()
+    public function format($details = true)
     {
-        $this->tags = Tag::get_top_tags('channel', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'channel');
+        if ($details) {
+            $this->tags = Tag::get_top_tags('channel', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'channel');
+        }
     }
 
     public function get_keywords()
@@ -394,7 +396,7 @@ class Channel extends database_object implements media, library_item
                     $options = array(
                         'bitrate' => $this->bitrate
                     );
-                    $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, $options);
+                    $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, null, $options);
                     $this->media_bytes_streamed = 0;
                 }
 
@@ -405,7 +407,7 @@ class Channel extends database_object implements media, library_item
 
                     // End of file, prepare to move on for next call
                     if (feof($this->transcoder['handle'])) {
-                        $this->media->set_played();
+                        $this->media->set_played(-1, 'Ampache', array());
                         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
                             fread($this->transcoder['stderr'], 4096);
                             fclose($this->transcoder['stderr']);
@@ -458,12 +460,12 @@ class Channel extends database_object implements media, library_item
         return $this->get_fullname();
     }
 
-    public function set_played($user, $agent)
+    public function set_played($user, $agent, $location)
     {
         // Do nothing
     }
 
-    public function get_transcode_settings($array, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
         return false;
     }

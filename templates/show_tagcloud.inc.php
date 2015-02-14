@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -20,8 +20,31 @@
  *
  */
 
+$tag_types = array(
+    'song' => T_('Song'),
+    'album' => T_('Album'),
+    'artist' => T_('Artist'),
+    'video' => T_('Video'),
+);
 ?>
 <?php Ajax::start_container('tag_filter'); ?>
+
+<form action="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=tag" method="POST">
+    <?php echo T_('View'); ?>:
+    <select name="type">
+        <?php
+        foreach ($tag_types as $tag_type => $tag_name) {
+            echo "<option value='" . $tag_type . "'";
+            if ($tag_type == $_REQUEST['type']) {
+                echo " selected";
+            }
+            echo ">" . $tag_name . "</option>";
+        }
+        ?>
+    </select>
+<input type="submit" value="Ok" />
+</form>
+
 <?php foreach ($object_ids as $data) { ?>
     <div class="tag_container">
         <div class="tag_button">
@@ -44,6 +67,7 @@
     <?php } ?>
     </div>
 <?php } ?>
+
 <br /><br /><br />
 <?php
 if (isset($_GET['show_tag'])) {

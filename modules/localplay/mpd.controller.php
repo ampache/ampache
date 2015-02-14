@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -459,7 +459,8 @@ class AmpacheMpd extends localplay_controller
 
             switch ($url_data['primary_key']) {
                 case 'oid':
-                    $song = new Song($url_data['oid']);
+                    $data['oid'] = $url_data['oid'];
+                    $song = new Song($data['oid']);
                     $song->format();
                     $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                     $data['link']   = $song->f_link;

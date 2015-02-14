@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 ?>
                 </div>
                 <div style="clear:both;">
@@ -37,14 +38,16 @@
         <?php if (AmpConfig::get('show_donate')) { ?>
             <a id="donate" href="//ampache.github.io/donate.html" title="Donate" target="_blank"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> |
         <?php } ?>
-            <a href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2014 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
+            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2015 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
+        <?php if (AmpConfig::get('show_footer_statistics')) { ?>
             <br />
             <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
-        <?php
-            $load_time_end = microtime(true);
-            $load_time = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4);
-        ?>
+            <?php
+                $load_time_end = microtime(true);
+                $load_time = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4);
+            ?>
             | <?php echo T_('Load time:'); ?><?php echo $load_time; ?>
+        <?php } ?>
         </div>
         <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
         <div id="webplayer"></div>

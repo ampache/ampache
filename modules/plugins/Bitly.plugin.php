@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -94,7 +94,7 @@ class AmpacheBitly {
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
             debug_event($this->name, 'Bit.ly api call: ' . $apiurl, '5');
-            $request = Requests::get($apiurl);
+            $request = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = json_decode($request->body)->data->url;
         } catch (Exception $e) {
             debug_event($this->name, 'Bit.ly api http exception: ' . $e->getMessage(), '1');

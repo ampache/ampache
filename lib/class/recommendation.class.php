@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -48,17 +48,7 @@ class Recommendation
     {
         debug_event('Recommendation', 'search url : ' . $url, 5);
 
-        $options = array();
-        if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-            $proxy = array();
-            $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-            if (AmpConfig::get('proxy_user')) {
-                $proxy[] = AmpConfig::get('proxy_user');
-                $proxy[] = AmpConfig::get('proxy_pass');
-            }
-            $options['proxy'] = $proxy;
-        }
-        $request = Requests::get($url, array(), $options);
+        $request = Requests::get($url, array(), Core::requests_options());
         $content = $request->body;
 
         return simplexml_load_string($content);
@@ -330,6 +320,8 @@ class Recommendation
                 $results['placeformed'] = $artist->placeformed;
                 $results['yearformed'] = $artist->yearformed;
                 $results['largephoto'] = Art::url($artist->id, 'artist');
+                $results['smallphoto'] = $results['largephoto'];    // TODO: Change to thumb size?
+                $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto'] = $results['largephoto'];
                 return $results;
             }
@@ -343,6 +335,8 @@ class Recommendation
         $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed'] = (string) $xml->artist->bio->yearformed;
+        $results['smallphoto'] = $xml->artist->image[0];
+        $results['mediumphoto'] = $xml->artist->image[1];
         $results['largephoto'] = $xml->artist->image[2];
         $results['megaphoto'] = $xml->artist->image[4];
 

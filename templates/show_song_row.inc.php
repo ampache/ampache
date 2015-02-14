@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -28,6 +28,9 @@
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $libitem->id); ?>
         <?php } ?>
+        <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $libitem->id); ?>
+        <?php } ?>
     <?php } ?>
     </div>
 </td>
@@ -50,6 +53,9 @@
 <td class="cel_album"><?php echo $libitem->f_album_link; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+<td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
+<?php } ?>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_song"><?php Rating::show($libitem->id,'song'); ?></td>
@@ -65,11 +71,12 @@
             <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
         <?php } ?>
         <?php if (AmpConfig::get('share')) { ?>
-            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=song&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+            <?php Share::display_ui('song', $libitem->id, false); ?>
         <?php } ?>
     <?php } ?>
     <?php if (Access::check_function('download')) { ?>
-    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&song_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a><?php } ?>
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&song_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+    <?php } ?>
     <?php if (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <a id="<?php echo 'edit_song_'.$libitem->id ?>" onclick="showEditDialog('song_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_song_'.$libitem->id ?>', '<?php echo T_('Song edit') ?>', 'song_')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
@@ -77,10 +84,15 @@
     <?php } ?>
     <?php if (Access::check('interface','75') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <?php $icon = $libitem->enabled ? 'disable' : 'enable'; ?>
-        <?php $button_flip_state_id = 'button_flip_state_' . $libitem_id; ?>
+        <?php $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
         <span id="<?php echo($button_flip_state_id); ?>">
         <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id,$icon, T_(ucfirst($icon)),'flip_song_' . $libitem->id); ?>
         </span>
+    <?php } ?>
+    <?php if ($libitem->user_upload > 0 && (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_remove')))) { ?>
+        <a id="<?php echo 'delete_song_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/song.php?action=delete&song_id=<?php echo $libitem->id; ?>">
+            <?php echo UI::get_icon('delete', T_('Delete')); ?>
+        </a>
     <?php } ?>
 </td>
 <?php if (Access::check('interface', '50') && isset($argument) && $argument) { ?>

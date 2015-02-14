@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -94,8 +94,8 @@ class Movie extends Video
             $name = $this->original_name;
             $prefix = $this->prefix;
         }
-        $summary = $data['summary'] ?: $this->summary;
-        $year = $data['year'] ?: $this->year;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $year = isset($data['year']) ? $data['summary'] : $this->year;
 
         $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
@@ -114,9 +114,9 @@ class Movie extends Video
      * this function takes the object and reformats some values
      */
 
-    public function format()
+    public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
         $this->f_original_name = trim($this->prefix . " " . $this->f_title);
         $this->f_title = ($this->f_original_name ?: $this->f_title);

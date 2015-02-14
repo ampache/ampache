@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -56,6 +56,9 @@ foreach ($data as $row) {
 
     if ($is_allowed || $has_allowed_agent) {
         $agent = $row['agent'];
+        if (!empty($row['geo_name'])) {
+            $agent .= ' - ' . $row['geo_name'];
+        }
     }
 
     if ($is_allowed || $has_allowed_time) {
@@ -96,6 +99,9 @@ foreach ($data as $row) {
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id,'play', T_('Play'),'play_song_' . $nb . '_' . $song->id); ?>
                 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                     <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $nb . '_' . $song->id); ?>
+                <?php } ?>
+                <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $nb . '_' . $song->id); ?>
                 <?php } ?>
         <?php } ?>
             </div>

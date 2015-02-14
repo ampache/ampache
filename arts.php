@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -24,6 +24,9 @@ require_once 'lib/init.php';
 
 require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
 
+// If not a content manager user then kick em out
+if (!Access::check('interface','50')) { UI::access_denied(); exit; }
+
 $object_type = $_GET['object_type'];
 $object_id = $_GET['object_id'];
 $burl = '';
@@ -34,7 +37,6 @@ if (isset($_GET['burl'])) {
 /* Switch on Action */
 switch ($_REQUEST['action']) {
     case 'clear_art':
-        if (!$GLOBALS['user']->has_access('75')) { UI::access_denied(); }
         $art = new Art($object_id, $object_type);
         $art->reset();
         show_confirmation(T_('Art Cleared'), T_('Art information has been removed from the database'), $burl);
@@ -64,9 +66,6 @@ switch ($_REQUEST['action']) {
 
     break;
     case 'find_art':
-        // If not a user then kick em out
-        if (!Access::check('interface','25')) { UI::access_denied(); exit; }
-
         // Prevent the script from timing out
         set_time_limit(0);
 

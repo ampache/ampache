@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -86,6 +86,7 @@ class vainfo
             $this->_getID3->option_extra_info = true;
             $this->_getID3->option_tag_lyrics3 = true;
             $this->_getID3->option_tags_process = true;
+            $this->_getID3->option_tag_apetag = true;
             $this->_getID3->encoding = $this->encoding;
 
             // get id3tag encoding (try to work around off-spec id3v1 tags)
@@ -94,6 +95,7 @@ class vainfo
             } catch (Exception $error) {
                 debug_event('getID3', "Broken file detected: $file: " . $error->getMessage(), 1);
                 $this->_broken = true;
+
                 return false;
             }
 
@@ -130,7 +132,7 @@ class vainfo
                 }
 
                 $this->encoding_id3v2 = self::_detect_encoding($tags, $mb_order);
-                $this->_getID3->encoding_id3v2 = $this->encoding_id3v2;
+                $this->_getID3->encoding = $this->encoding_id3v2;
             }
 
             $this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
@@ -174,9 +176,9 @@ class vainfo
                 return 'ISO-8859-1';
             }
         }
+
         return 'ISO-8859-1';
     }
-
 
     /**
      * get_info
@@ -189,6 +191,7 @@ class vainfo
         // time, just return their rotting carcass of a media file.
         if ($this->_broken) {
             $this->tags = $this->set_broken();
+
             return true;
         }
 
@@ -214,7 +217,6 @@ class vainfo
         }
 
         $this->_get_plugin_tags();
-
     } // get_info
 
     /*
@@ -256,8 +258,9 @@ class vainfo
                 if (!empty($tagWriter->warnings)) {
                     debug_event('vainfo' , 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
                 }
-            } else
+            } else {
                 debug_event('vainfo' , 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
+            }
         }
     } // write_id3
 
@@ -373,10 +376,11 @@ class vainfo
             $info['language'] = $info['language'] ?: trim($tags['language']);
 
             $info['lyrics']    = $info['lyrics']
-                    ?: str_replace(
-                        array("\r\n","\r","\n"),
-                        '<br />',
-                        strip_tags($tags['lyrics']));
+                    ?: strip_tags(nl2br($tags['lyrics']), "<br>");
+            $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: floatval($tags['replaygain_track_gain']);
+            $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: floatval($tags['replaygain_track_peak']);
+            $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
+            $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: floatval($tags['replaygain_album_peak']);
 
             $info['track'] = $info['track'] ?: intval($tags['track']);
             $info['resolution_x'] = $info['resolution_x'] ?: intval($tags['resolution_x']);
@@ -466,7 +470,6 @@ class vainfo
 
         // The tags can come in many different shapes and colors
         // depending on the encoding time of day and phase of the moon.
-
         if (is_array($this->_raw['tags'])) {
             foreach ($this->_raw['tags'] as $key => $tag_array) {
                 switch ($key) {
@@ -533,8 +536,9 @@ class vainfo
 
     private function get_metadata_order_key()
     {
-        if (!in_array('music', $this->gather_types))
+        if (!in_array('music', $this->gather_types)) {
             return 'metadata_order_video';
+        }
 
         return 'metadata_order';
     }
@@ -601,6 +605,21 @@ class vainfo
         $parsed['frame_rate'] = $tags['video']['frame_rate'];
         $parsed['video_bitrate'] = $tags['video']['bitrate'];
 
+        if (isset($tags['ape'])) {
+            if (isset($tags['ape']['items'])) {
+                foreach ($tags['ape']['items'] as $key => $tag) {
+                    switch (strtolower($key)) {
+                        case 'replaygain_track_gain':
+                        case 'replaygain_track_peak':
+                        case 'replaygain_album_gain':
+                        case 'replaygain_album_peak':
+                            $parsed[$key] = floatval($tag['data'][0]);
+                            break;
+                    }
+                }
+            }
+        }
+
         return $parsed;
     }
 
@@ -634,6 +653,7 @@ class vainfo
             default:
                 /* Log the fact that we couldn't figure it out */
                 debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
+
                 return $type;
         }
     }
@@ -650,8 +670,8 @@ class vainfo
             switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tagname] = $data;
-                break;
+                    $parsed[$tagname] = $this->parseGenres($data);
+                    break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
@@ -689,11 +709,12 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            if ($tag == 'unsynchedlyrics' || $tag == 'unsynchronised lyric') {
+            if ($tag == 'unsyncedlyrics' || $tag == 'unsynced lyrics' || $tag == 'unsynchronised lyric') {
                 $tag = 'lyrics';
             }
             $parsed[$tag] = $data[0];
         }
+
         return $parsed;
     }
 
@@ -710,8 +731,8 @@ class vainfo
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tag] = $data;
-                break;
+                    $parsed[$tag] = $this->parseGenres($data);
+                    break;
                 case 'tracknumber':
                     $parsed['track'] = $data[0];
                 break;
@@ -741,6 +762,8 @@ class vainfo
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = $data[0];
                     break;
+                case 'unsyncedlyrics':
+                case 'unsynced lyrics':
                 case 'lyrics':
                     $parsed['lyrics'] = $data[0];
                     break;
@@ -781,12 +804,10 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-
             switch ($tag) {
                 case 'genre':
-                    // Pass the array through
-                    $parsed['genre'] = $data;
-                break;
+                    $parsed['genre'] = $this->parseGenres($data);
+                    break;
                 case 'part_of_a_set':
                     $elements = explode('/', $data[0]);
                     $parsed['disk'] = $elements[0];
@@ -822,54 +843,39 @@ class vainfo
                 // Find the MBIDs for the album and artist
                 // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
                 foreach ($id3v2['TXXX'] as $txxx) {
-                    switch ($this->trimAscii($txxx['description'])) {
-                        case 'MusicBrainz Album Id':
+                    switch (strtolower($this->trimAscii($txxx['description']))) {
+                        case 'musicbrainz album id':
                             $parsed['mb_albumid'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'MusicBrainz Release Group Id':
+                        case 'musicbrainz release group id':
                             $parsed['mb_albumid_group'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'MusicBrainz Artist Id':
+                        case 'musicbrainz artist id':
                             $parsed['mb_artistid'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'MusicBrainz Album Artist Id':
+                        case 'musicbrainz album artist id':
                             $parsed['mb_albumartistid'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'MusicBrainz Album Type':
+                        case 'musicbrainz album type':
                             $parsed['release_type'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'CATALOGNUMBER':
+                        case 'catalognumber':
                             $parsed['catalog_number'] = $this->trimAscii($txxx['data']);
+                        break;
+                        case 'replaygain_track_gain':
+                            $parsed['replaygain_track_gain'] = floatval($txxx['data']);
+                        break;
+                        case 'replaygain_track_peak':
+                            $parsed['replaygain_track_peak'] = floatval($txxx['data']);
+                        break;
+                        case 'replaygain_album_gain':
+                            $parsed['replaygain_album_gain'] = floatval($txxx['data']);
+                        break;
+                        case 'replaygain_album_peak':
+                            $parsed['replaygain_album_peak'] = floatval($txxx['data']);
                         break;
                     }
                 }
-            }
-        }
-
-        // Find all genre
-        if (!empty($id3v2['TCON'])) {
-            foreach ($id3v2['TCON'] as $tcid) {
-                if ($tcid['framenameshort'] == "genre") {
-                    // Removing unwanted UTF-8 charaters
-                    $tcid['data'] = str_replace("\xFF", "", $tcid['data']);
-                    $tcid['data'] = str_replace("\xFE", "", $tcid['data']);
-
-                    if (!empty($tcid['data'])) {
-                        // Parsing string with the null character
-                        $genres = explode("\0", $tcid['data']);
-                        $parsed_genres = array();
-                        foreach ($genres as $g) {
-                            if (strlen($g) > 2) {   // Only allow tags with at least 3 characters
-                                $parsed_genres[] = $g;
-                            }
-                        }
-
-                        if (count($parsed_genres)) {
-                            $parsed['genre'] = $parsed_genres;
-                        }
-                    }
-                }
-                break;
             }
         }
 
@@ -920,7 +926,7 @@ class vainfo
         foreach ($tags as $tag => $data) {
             switch ($tag) {
                 case 'creation_date':
-                    $parsed['release_date'] = strtotime($data[0]);
+                    $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
                         $data[0] = date('Y', $parsed['release_date']);
                     }
@@ -947,6 +953,21 @@ class vainfo
                 case 'track_number':
                     $parsed['track'] = $data[0];
                 break;
+                case 'disc_number':
+                    $parsed['disk'] = $data[0];
+                break;
+                case 'album_artist':
+                    $parsed['albumartist'] = $data[0];
+                break;
+                case 'tv_episode':
+                    $parsed['tvshow_episode'] = $data[0];
+                    break;
+                case 'tv_season':
+                    $parsed['tvshow_season'] = $data[0];
+                    break;
+                case 'tv_show_name':
+                    $parsed['tvshow'] = $data[0];
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
@@ -981,7 +1002,7 @@ class vainfo
             $pattern = preg_quote($this->_dir_pattern) . $slash_type_preg . preg_quote($this->_file_pattern);
 
             // Remove first left directories from filename to match pattern
-            $cntslash = substr_count($pattern, $slash_type) + 1;
+            $cntslash = substr_count($pattern, preg_quote($slash_type)) + 1;
             $filepart = explode($slash_type, $filename);
             if (count($filepart) > $cntslash) {
                 $filename = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
@@ -1079,14 +1100,15 @@ class vainfo
         $results = array();
         for ($i=0;$i<count($patterns);$i++) {
             if (preg_match($patterns[$i], $filetitle, $matches)) {
-
                 $name = $this->fixSerieName($matches[1]);
-                if(empty($name))
+                if (empty($name)) {
                     continue;
+                }
 
                 $season = floatval($matches[2]);
-                if ($season == 0)
+                if ($season == 0) {
                     continue;
+                }
 
                 $episode = floatval($matches[3]);
                 $leftover = $matches[4];
@@ -1142,25 +1164,29 @@ class vainfo
 
     private function removeStartingDashesAndSpaces($name)
     {
-        if (empty($name))
+        if (empty($name)) {
             return $name;
+        }
 
         while (strpos($name, ' ') === 0 || strpos($name, '-') === 0) {
             $name = preg_replace('/^ /', '', $name);
             $name = preg_replace('/^-/', '', $name);
         }
+
         return $name;
     }
 
     private function removeEndingDashesAndSpaces($name)
     {
-        if (empty($name))
+        if (empty($name)) {
             return $name;
+        }
 
         while (strrpos($name, ' ') === strlen($name) - 1 || strrpos($name, '-') === strlen($name) - 1) {
             $name = preg_replace('/ $/', '', $name);
             $name = preg_replace('/-$/', '', $name);
         }
+
         return $name;
     }
 
@@ -1169,7 +1195,7 @@ class vainfo
      *
      * This fills all tag types with Unknown (Broken)
      *
-     * @return    array    Return broken title, album, artist
+     * @return array Return broken title, album, artist
      */
     public function set_broken()
     {
@@ -1189,7 +1215,28 @@ class vainfo
         $broken[$key]['artist'] = 'Unknown (Broken)';
 
         return $broken;
+    }
+    // set_broken
 
-    } // set_broken
+    /**
+     *
+     * @param  array     $data
+     * @return array
+     * @throws Exception
+     */
+    private function parseGenres($data)
+    {
+        // read additional id3v2 delimiters from config
+        $delimiters = AmpConfig::get('additional_genre_delimiters');
+        if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
+            $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
+            $genres = preg_split($pattern, reset($data));
+            if ($genres === false) {
+                throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~).');
+            }
+            $data = $genres;
+        }
 
+        return $data;
+    }
 } // end class vainfo

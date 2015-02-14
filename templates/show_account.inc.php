@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -21,39 +21,61 @@
  */
 
 // Because this is a reset of the persons password make the form a little more secure
+
+$display_fields = (array) AmpConfig::get('registration_display_fields');
 ?>
 <?php Error::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
-        <tr>
-            <td><?php echo T_('Full Name'); ?>:</td>
-            <td>
-                <input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
-            </td>
-        </tr>
+        <?php if (in_array('fullname', $display_fields)) { ?>
+            <tr>
+                <td><?php echo T_('Full Name'); ?>:</td>
+                <td>
+                    <input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+                </td>
+            </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('E-mail'); ?>:</td>
             <td>
-                <input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
+                <input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" />
             </td>
         </tr>
-        <tr>
-            <td><?php echo T_('Website'); ?>:</td>
-            <td>
-                <input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
-            </td>
-        </tr>
+        <?php if (in_array('website', $display_fields)) { ?>
+            <tr>
+                <td><?php echo T_('Website'); ?>:</td>
+                <td>
+                    <input type="text" name="website" id="website" value="<?php echo scrub_out($client->website); ?>" />
+                </td>
+            </tr>
+        <?php } ?>
+        <?php if (in_array('state', $display_fields)) { ?>
+            <tr>
+                <td><?php echo T_('State'); ?>:</td>
+                <td>
+                    <input type="text" name="state" id="state" value="<?php echo scrub_out($client->state); ?>" />
+                </td>
+            </tr>
+        <?php } ?>
+        <?php if (in_array('city', $display_fields)) { ?>
+            <tr>
+                <td><?php echo T_('City'); ?>:</td>
+                <td>
+                    <input type="text" name="city" id="city" value="<?php echo scrub_out($client->city); ?>" />
+                </td>
+            </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
             <td>
                 <?php Error::display('password'); ?>
-                <input type="password" name="password1" />
+                <input type="password" name="password1" id="password1" />
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
             <td>
-                <input type="password" name="password2" />
+                <input type="password" name="password2" id="password2" />
             </td>
         </tr>
         <tr>
@@ -72,7 +94,27 @@
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API Key')); ?></a>
             </td>
             <td>
-                <span><?php echo $client->apikey; ?></span>
+                <span>
+                    <?php if ($client->apikey) {
+                        $urlinfo = parse_url(AmpConfig::get('web_path'));
+                        $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
+                        if ($urlinfo['port'] && $urlinfo['port'] != 80) {
+                            $apikey_qrcode .= ":" . $urlinfo['port'];
+                        }
+                        $apikey_qrcode .= $urlinfo['path'];
+                        if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
+                            $apikey_qrcode .= "#ssl=true";
+                        }
+                    ?>
+                    <br />
+                    <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
+                        <a href="<?php echo $apikey_qrcode; ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
+                    </div>
+                    <br />
+                    <script language="javascript" type="text/javascript">$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <?php echo $client->apikey; ?>
+                    <?php } ?>
+                </span>
             </td>
         </tr>
         <tr>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -62,7 +62,7 @@
     <?php } ?>
     <?php if (Access::check('interface', '25')) { ?>
         <?php if (AmpConfig::get('share')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=song&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+            <?php Share::display_ui('song', $libitem->id, false); ?>
         <?php } ?>
     <?php } ?>
     <?php if (get_class($playlist) == "Playlist" && $playlist->has_access()) { ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -182,7 +182,7 @@ class Catalog_soundcloud extends Catalog
         $api = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
         $authurl = $api->getAuthorizeUrl(array('scope' => 'non-expiring'));
         echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
-        echo "<form action='' method='post' enctype='multipart/form-data'>";
+        echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
         if ($_POST['action']) {
             echo "<input type='hidden' name='action' value='add_to_catalog' />";
             echo "<input type='hidden' name='catalogs[]' value='". $this->id ."' />";
@@ -219,9 +219,13 @@ class Catalog_soundcloud extends Catalog
             $this->authcode = $options['authcode'];
         }
 
-        UI::show_box_top(T_('Running SoundCloud Remote Update') . '. . .');
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top(T_('Running SoundCloud Remote Update') . '. . .');
+        }
         $this->update_remote_catalog();
-        UI::show_box_bottom();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         return true;
     } // add_to_catalog
@@ -278,8 +282,6 @@ class Catalog_soundcloud extends Catalog
                                 if (!Song::insert($data)) {
                                     debug_event('soundcloud_catalog', 'Insert failed for ' . $data['file'], 1);
                                     Error::add('general', T_('Unable to Insert Song - %s'), $data['file']);
-                                    Error::display('general');
-                                    flush();
                                 } else {
                                     $songsadded++;
                                 }
@@ -287,21 +289,18 @@ class Catalog_soundcloud extends Catalog
                         }
                     }
 
-                    echo "<p>" . T_('Completed updating SoundCloud catalog(s).') . " " . $songsadded . " " . T_('Songs added.') . "</p><hr />\n";
-                    flush();
+                    UI::update_text('', T_('Completed updating SoundCloud catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
 
                     // Update the last update value
                     $this->update_last_update();
                 } else {
-                    echo "<p>" . T_('API Error: cannot get song list.') . "</p><hr />\n";
-                    flush();
+                    Error::add('general', T_('API Error: cannot get song list.'));
                 }
             } else {
-                echo "<p>" . T_('API Error: cannot connect to SoundCloud.') . "</p><hr />\n";
-                flush();
+                Error::add('general', T_('API Error: cannot connect to SoundCloud.'));
             }
         } catch (Exception $ex) {
-            echo "<p>" . T_('SoundCloud exception: ') . $ex->getMessage() . "</p><hr />\n";
+            Error::add('general', T_('SoundCloud exception: ') . $ex->getMessage());
         }
 
         return true;

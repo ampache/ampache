@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -45,7 +45,7 @@ class Stream_Playlist
                 Stream::set_session($id);
             }
 
-            $this->id = Stream::$session;
+            $this->id = Stream::get_session();
 
             if (!Session::exists('stream', $this->id)) {
                 debug_event('stream_playlist', 'Session::exists failed', 2);
@@ -130,7 +130,7 @@ class Stream_Playlist
                 //FIXME: play_url shouldn't be static
                 $url['url'] = $type::play_url($object->id, $additional_params);
 
-                $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
+                $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
 
                 // Set a default which can be overridden
                 $url['author'] = 'Ampache';
@@ -140,7 +140,7 @@ class Stream_Playlist
                         $url['title'] = $object->title;
                         $url['author'] = $object->f_artist_full;
                         $url['info_url'] = $object->f_link;
-                        $url['image_url'] = Art::url($object->album, 'album', $api_session);
+                        $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                         $url['album'] = $object->f_album_full;
                     break;
                     case 'video':
@@ -186,6 +186,12 @@ class Stream_Playlist
         );
     }
 
+    public static function check_autoplay_next()
+    {
+        // Currently only supported for web player
+        return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
+    }
+
     public function generate_playlist($type, $redirect = false)
     {
         if (!count($this->urls)) {
@@ -207,7 +213,7 @@ class Stream_Playlist
                 unset($ext);
             break;
             case 'asx':
-                $ct = 'video/x-ms-wmv';
+                $ct = 'video/x-ms-asf';
             break;
             case 'pls':
                 $ct = 'audio/x-scpls';
@@ -474,6 +480,16 @@ class Stream_Playlist
             $localplay->add_url($url);
         }
         if (!$append) {
+            // We don't have metadata on Stream_URL to know its kind
+            // so we check the content to know if it is democratic
+            if (count($this->urls) == 1) {
+                $furl = $this->urls[0];
+                if (strpos($furl->url, "&demo_id=1") !== false && $furl->time == -1) {
+                    // If democratic, repeat the song to get the next voted one.
+                    debug_event('stream_playlist', 'Playing democratic on localplay, enabling repeat...', 5);
+                    $localplay->repeat(true);
+                }
+            }
             $localplay->play();
         }
 
@@ -497,7 +513,7 @@ class Stream_Playlist
         }
 
         $democratic->add_vote($items);
-        mouse_message(T_('Vote added'));
+        display_notification(T_('Vote added'));
     }
 
     /**

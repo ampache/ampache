@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,13 +74,13 @@ class Random
      */
     public static function get_single_song($type)
     {
-        $song_id = 0;
         $method_name = 'get_' . $type;
 
-        if (method_exists('Random', $method_name)) {
-            $song_ids = self::$method_name(1);
-            $song_id = array_pop($song_ids);
+        if (!method_exists('Random', $method_name)) {
+            $method_name = 'get_default';
         }
+        $song_ids = self::$method_name(1);
+        $song_id = array_pop($song_ids);
 
         return $song_id;
 

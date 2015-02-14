@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -129,19 +129,21 @@ class TVShow_Season extends database_object implements library_item
      * format
      * this function takes the object and reformats some values
      */
-    public function format()
+    public function format($details = true)
     {
         $this->f_name = T_('Season') . ' ' . $this->season_number;
 
         $tvshow = new TVShow($this->tvshow);
-        $tvshow->format();
+        $tvshow->format($details);
         $this->f_tvshow = $tvshow->f_name;
         $this->f_tvshow_link = $tvshow->f_link;
 
         $this->link = AmpConfig::get('web_path') . '/tvshow_seasons.php?action=show&season=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $tvshow->f_name . ' - ' . $this->f_name . '">' . $this->f_name . '</a>';
 
-        $this->_get_extra_info();
+        if ($details) {
+            $this->_get_extra_info();
+        }
 
         return true;
     }

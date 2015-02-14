@@ -1,8 +1,70 @@
 CHANGELOG
 =========
 
-3.7.1
+3.8.0
 ----------
+- Added ability to store images on disk
+- Added new setting to define album art min and max width/height
+- Fixed Subsonic API getAlbum returned artist id on songs
+- Fixed Subsonic API cover art when PHP-GD unavailable
+- Fixed localplay playlist refresh on volume changes (thanks essagl)
+- Fixed web player equalizer option if visualizer is not enabled (thanks brownl)
+- Fixed asx file mime type (thanks thinca)
+- Added song genre parsing options (thanks Razrael and lotan)
+- Added sort on languages list (thanks brownl)
+- Added placeholder text to search box (thanks brownl)
+- Added web player Play Next feature (thanks tan-ce)
+- Fixed Plex backend administration page uri (thanks a9k)
+- Fixed expired shared objects clean (thanks eephyne)
+- Added missing artist search results (thanks bliptec)
+- Fixed song genre id parsing (thanks lotan)
+- Added Scrobble method to Subsonic API
+- Added an option to add tags to child without overwriting
+- Added image dimension info to image tables (thanks tsquare66)
+- Replaced ArchiveLib by StreamZip-PHP to avoid temporary zip file
+- Added Year field in song details and edition
+- Added Subsonic API create/delete user, jukebox control and search auto suggestion
+- Added few optional install tests
+- Improved Share features with modal dialog choices
+- Added new action on playlists to remove duplicates
+- Fixed playlist addition to another playlist (thanks kszulc)
+- Fixed Various Artist link on album page (thanks Jucgshu)
+- Added session_destroy call when a session should be destroyed
+- Added HTML5 ReplayGain track feature
+- Added display and mandatory user registration fields settings
+- Added .htaccess IfModule mod_access.c directives
+- Fixed SmartPlayer results per user (thanks nakinigit)
+- Fixed XSS vulnerability CVE-2014-8620 (thanks g0blin)
+- Fixed playlist import setting on catalog update to be disabled by default (thanks DaPike)
+- Added ability to browse my tags other library items than songs
+- Added Stream Control plugins
+- Added transcode settings per player type
+- Added ability to write directly the new configuration file when it version changed
+- Added `quick play url` to have permanent authenticated stream link without session
+- Fixed unresponsive website on batch download (thanks Rouzax)
+- Added batch download item granularity
+- Fixed 'guest' user site rendering
+- Added Aurora.js support in webplayer
+- Added Google Maps geolocation analyze plugin
+- Added statistical graphs
+- Added user geolocation
+- Added 'Missing Artist' search
+- Fixed Ampache installation with FastCGI
+- Added a new RSS Feed plugin
+- Added a new 'display home' plugin type
+- Added Favorite and Rating features to playlists
+- Added user feedback near mouse cursor on democratic votes
+- Changed header page position to be fixed
+- Added external links on song page details
+- Fixed Subsonic API getAlbumList2 byGenre and byYear order (thanks rrjk)
+- Added html5 desktop notification
+- Added album group order setting
+- Fixed unwanted album merge when one of the album doesn't have mbid
+- Changed video player to go outside the footer
+- Added ip address in authentication failure for fail2ban scripts (thanks popindavibe)
+- Added parameter to hide directplay button if number of items is above a limit
+- Added Tag split (thanks jcwmoore)
+- Fixed album/artist arts and stats migration on rename (thanks jcwmoore)
 - Fixed get lyrics from files (thanks apastuszak)
 - Fixed verify local catalog (thanks JoeDat)
 - Removed Twitter code
@@ -44,7 +106,7 @@ CHANGELOG
 - Added beautiful url on arts
 - Improved browse list header (thanks Psy-Virus)
 - Fixed user online/offline information on Reborn theme (thanks thorsforge)
-- Added UPnP backend
+- Added UPnP backend (thanks SeregaPru)
 - Added DAAP backend
 - Added sort options on playlists (thanks Shdwdrgn)
 - Fixed XML-API tag information (thanks jcwmoore)

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,13 +22,16 @@
 
 require_once 'lib/init.php';
 
+if (!AmpConfig::get('channel')) {
+    UI::access_denied();
+    exit;
+}
+
 UI::show_header();
 
 /* Switch on the action passed in */
 switch ($_REQUEST['action']) {
     case 'show_create':
-        UI::show_header();
-
         $type = Channel::format_type($_REQUEST['type']);
         if (!empty($type) && !empty($_REQUEST['id'])) {
             $object = new $type($_REQUEST['id']);
@@ -50,7 +53,6 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        UI::show_header();
         $created = Channel::create($_REQUEST['name'], $_REQUEST['description'], $_REQUEST['url'], $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['interface'], $_REQUEST['port'], $_REQUEST['admin_password'], $_REQUEST['private'] ?: 0, $_REQUEST['max_listeners'], $_REQUEST['random'] ?: 0, $_REQUEST['loop'] ?: 0, $_REQUEST['stream_type'], $_REQUEST['bitrate']);
 
         if (!$created) {
@@ -62,7 +64,6 @@ switch ($_REQUEST['action']) {
         UI::show_footer();
         exit;
     case 'show_delete':
-        UI::show_header();
         $id = $_REQUEST['id'];
 
         $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($id);
@@ -75,7 +76,6 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        UI::show_header();
         $id = $_REQUEST['id'];
         $channel = new Channel($id);
         if ($channel->delete()) {

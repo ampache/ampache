@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,6 +22,11 @@
 
 $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
+
+$display_fields = (array) AmpConfig::get('registration_display_fields');
+$mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
+
+$_SESSION['login'] = true;
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
@@ -41,11 +46,7 @@ $web_path = AmpConfig::get('web_path');
 
         <div id="maincontainer">
             <div id="header">
-                <h1 id="headerlogo">
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>">
-                        <img src="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                    </a>
-                </h1>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>"><h1 id="headerlogo"></h1></a>
                 <span><?php echo T_('Registration'); ?>...</span>
             </div>
             <?php
@@ -54,6 +55,8 @@ $web_path = AmpConfig::get('web_path');
             $username = scrub_in($_REQUEST['username']);
             $email = scrub_in($_REQUEST['email']);
             $website = scrub_in($_REQUEST['website']);
+            $state = scrub_in($_REQUEST['state']);
+            $city = scrub_in($_REQUEST['city']);
             ?>
             <div id="registerbox">
                 <form name="update_user" method="post" action="<?php echo $web_path; ?>/register.php" enctype="multipart/form-data">
@@ -74,36 +77,54 @@ $web_path = AmpConfig::get('web_path');
                     <?php } // end if user_agreement ?>
                     <h3><?php echo T_('User Information'); ?></h3>
                     <div class="registerfield require">
-                        <label for="username"><?php echo T_('Username'); ?>: <span class="asterix">*</span></label>
+                        <label for="username"><?php echo T_('Username'); ?>:</label>
                         <input type='text' name='username' id='username' value='<?php echo scrub_out($username); ?>' />
                         <?php Error::display('username'); ?>
                         <?php Error::display('duplicate_user'); ?>
                     </div>
-                    <div class="registerfield require">
-                        <label for="fullname"><?php echo T_('Full Name'); ?>: <span class="asterix">*</span></label>
-                        <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
-                        <?php Error::display('fullname'); ?>
-                    </div>
+                    <?php if (in_array('fullname', $display_fields)) { ?>
+                        <div class="registerfield <?php if (in_array('fullname', $mandatory_fields)) echo 'require'; ?>">
+                            <label for="fullname"><?php echo T_('Full Name'); ?>:</label>
+                            <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
+                            <?php Error::display('fullname'); ?>
+                        </div>
+                    <?php } ?>
 
                     <div class="registerfield require">
-                        <label for="email"><?php echo T_('E-mail'); ?>: <span class="asterix">*</span></label>
+                        <label for="email"><?php echo T_('E-mail'); ?>:</label>
                         <input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
                         <?php Error::display('email'); ?>
                     </div>
-                    <div class="registerfield require">
-                        <label for="email"><?php echo T_('Website'); ?>:</label>
-                        <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
-                        <?php Error::display('website'); ?>
-                    </div>
+                    <?php if (in_array('website', $display_fields)) { ?>
+                        <div class="registerfield <?php if (in_array('website', $mandatory_fields)) echo 'require'; ?>">
+                            <label for="website"><?php echo T_('Website'); ?>:</label>
+                            <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
+                            <?php Error::display('website'); ?>
+                        </div>
+                    <?php } ?>
+                    <?php if (in_array('state', $display_fields)) { ?>
+                        <div class="registerfield <?php if (in_array('state', $mandatory_fields)) echo 'require'; ?>">
+                            <label for="state"><?php echo T_('State'); ?>:</label>
+                            <input type='text' name='state' id='state' value='<?php echo scrub_out($state); ?>' />
+                            <?php Error::display('state'); ?>
+                        </div>
+                    <?php } ?>
+                    <?php if (in_array('city', $display_fields)) { ?>
+                        <div class="registerfield <?php if (in_array('city', $mandatory_fields)) echo 'require'; ?>">
+                            <label for="city"><?php echo T_('City'); ?>:</label>
+                            <input type='text' name='city' id='city' value='<?php echo scrub_out($city); ?>' />
+                            <?php Error::display('city'); ?>
+                        </div>
+                    <?php } ?>
 
                     <div class="registerfield require">
-                        <label for="password"><?php echo T_('Password'); ?>: <span class="asterix">*</span></label>
+                        <label for="password"><?php echo T_('Password'); ?>:</label>
                         <input type='password' name='password_1' id='password_1' />
                         <?php Error::display('password'); ?>
                     </div>
 
                     <div class="registerfield require">
-                        <label for="confirm_passord"><?php echo T_('Confirm Password'); ?>: <span class="asterix">*</span></label>
+                        <label for="confirm_passord"><?php echo T_('Confirm Password'); ?>:</label>
                         <input type='password' name='password_2' id='password_2' />
                     </div>
 

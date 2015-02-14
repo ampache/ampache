@@ -47,12 +47,20 @@ if (AmpConfig::get('webplayer_html5')) {
 if (AmpConfig::get('webplayer_flash')) {
     $solutions[] = 'flash';
 }
+if (AmpConfig::get('webplayer_aurora')) {
+    $solutions[] = 'aurora';
+}
 echo implode(',', $solutions);
+
+$supplied = WebPlayer::get_supplied_types($playlist);
 ?>",
             nativeSupport:true,
             oggSupport: false,
-            supplied: "<?php echo implode(", ", WebPlayer::get_supplied_types($playlist)); ?>",
+            supplied: "<?php echo implode(", ", $supplied); ?>",
             volume: jp_volume,
+<?php if (AmpConfig::get('webplayer_aurora')) { ?>
+            auroraFormats: 'flac, m4a, mp3, oga, wav',
+<?php } ?>
 <?php if (!$is_share) { ?>
             size: {
 <?php
@@ -116,6 +124,7 @@ if ($isVideo) {
 <?php if (AmpConfig::get('browser_notify')) { ?>
                     NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
 <?php } ?>
+                    ApplyReplayGain();
                 }
                 if (brkey != '') {
                     sendBroadcastMessage('SONG', currenti.attr("data-media_id"));
@@ -171,7 +180,9 @@ if (!$isVideo && !$isRadio && !$is_share) {
     }
 }
 if (AmpConfig::get('song_page_title') && !$is_share) {
-    echo "document.title = obj.title + ' - ' + obj.artist + ' | " . addslashes(AmpConfig::get('site_title')) . "';";
+    echo "var mediaTitle = obj.title;\n";
+    echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
+    echo "document.title = mediaTitle + ' | " . addslashes(AmpConfig::get('site_title')) . "';";
 }
 ?>
             }
@@ -240,10 +251,41 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
         }
     });
 
+    replaygainNode = null;
+    replaygainEnabled = false;
 <?php echo WebPlayer::add_media_js($playlist); ?>
 
 });
 </script>
+<?php
+// Load Aurora.js scripts
+if (AmpConfig::get('webplayer_aurora')) {
+    $atypes = array();
+    foreach ($supplied as $stype) {
+        if ($stype == 'ogg') {
+            // Ogg could requires vorbis/opus codecs
+            if (!in_array('ogg', $atypes)) $atypes[] = 'ogg';
+            if (!in_array('vorbis', $atypes)) $atypes[] = 'vorbis';
+            if (!in_array('opus', $atypes)) $atypes[] = 'opus';
+        } else if ($stype == 'm4a') {
+            // m4a could requires aac / alac codecs
+            if (!in_array('aac', $atypes)) $atypes[] = 'aac';
+            if (!in_array('alac', $atypes)) $atypes[] = 'alac';
+        } else {
+            // We support that other filetypes requires a codec name matching the filetype
+            if (!in_array($stype, $atypes)) $atypes[] = $stype;
+        }
+    }
+
+    // Load only existing codec scripts
+    foreach ($atypes as $atype) {
+        $spath = '/modules/aurora.js/' . $atype . '.js';
+        if (Core::is_readable(AmpConfig::get('prefix') . $spath)) {
+            echo '<script src="' . AmpConfig::get('web_path') . $spath . '" language="javascript" type="text/javascript"></script>' . "\n";
+        }
+    }
+}
+?>
 </head>
 <body>
 <?php
@@ -397,7 +439,7 @@ if ($isVideo) {
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
         </div>
 <?php if (AmpConfig::get('webplayer_html5')) { ?>
-        <div id="equalizerbtn" class="action_button">
+        <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
             <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')); ?></a>
         </div>
         <div class="action_button">
@@ -405,6 +447,9 @@ if ($isVideo) {
         </div>
         <div class="action_button">
             <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer Full-Screen')); ?></a>
+        </div>
+        <div id="replaygainbtn" class="action_button">
+            <a href="javascript:ToggleReplayGain();"><?php echo UI::get_icon('replaygain', T_('ReplayGain')); ?></a>
         </div>
 <?php } ?>
 <?php } ?>
@@ -427,5 +472,7 @@ if (!$iframed || $is_share) {
     require_once AmpConfig::get('prefix') . '/templates/uberviz.inc.php';
 }
 ?>
+<?php if (!$is_share) { ?>
 </body>
 </html>
+<?php } ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -25,7 +25,7 @@
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
-                <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" /></td>
+                <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <?php if (Access::check('interface','75')) { ?>
             <tr>
@@ -34,15 +34,6 @@
                     <?php show_artist_select('artist', $libitem->artist, true, $libitem->id); ?>
                     <div id="artist_select_song_<?php echo $libitem->id ?>">
                         <?php echo Ajax::observe('artist_select_'.$libitem->id, 'change', 'check_inline_song_edit("artist", '.$libitem->id.')'); ?>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Album Artist') ?></td>
-                <td>
-                    <?php show_artist_select('album_artist', $libitem->album_artist, true, $libitem->id, true); ?>
-                    <div id="album_artist_select_song_<?php echo $libitem->id ?>">
-                        <?php echo Ajax::observe('album_artist_select_'.$libitem->id, 'change', 'check_inline_song_edit("album_artist", '.$libitem->id.')'); ?>
                     </div>
                 </td>
             </tr>
@@ -71,6 +62,10 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Label') ?></td>
                 <td><input type="text" name="label" value="<?php echo scrub_out($libitem->label); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
+                <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -78,6 +78,13 @@ class Error
             Error::$state = true;
             Error::$errors[$name] .= "<br />\n" . $message;
             $_SESSION['errors'][$name] .=  "<br />\n" . $message;
+        }
+
+        // If on SSE worker, output the error directly.
+        if (defined('SSE_OUTPUT')) {
+            echo "data: display_sse_error('" . addslashes($message) . "')\n\n";
+            ob_flush();
+            flush();
         }
 
     } // add

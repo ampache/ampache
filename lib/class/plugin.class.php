@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -88,7 +88,7 @@ class Plugin
         }
 
         // Recurse the directory
-        while ($file = readdir($handle)) {
+        while (false !== ($file = readdir($handle))) {
             // Ignore non-plugin files
             if (substr($file,-10,10) != 'plugin.php') { continue; }
             if (is_dir($file)) { continue; }
@@ -96,15 +96,15 @@ class Plugin
             if ($type != '') {
                 $plugin = new Plugin($plugin_name);
                 if (! Plugin::is_installed($plugin->_plugin->name)) {
-                    debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 5);
+                    debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (! $plugin->is_valid()) {
-                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' is not valid, skipping', 5);
+                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' is not valid, skipping', 6);
                     continue;
                 }
                 if (! method_exists($plugin->_plugin, $type)) {
-                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' does not support ' . $type . ', skipping', 5);
+                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }

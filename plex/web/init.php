@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,7 +23,7 @@
 require_once('../../lib/class/plex_xml_data.class.php');
 
 $ow_config = array(
-    'http_host' => Plex_XML_Data::getServerAddress() . ':' . Plex_XML_Data::getServerPort(),
+    'http_host' => $_SERVER["SERVER_NAME"] . ':' . $_SERVER["SERVER_PORT"],
     'web_path' => '/web'
  );
 
@@ -35,6 +35,6 @@ if (!AmpConfig::get('plex_backend')) {
 }
 
 if (!defined('NO_SESSION') && !Access::check('interface', '100')) {
-    Error::add('general', T_('Unauthorized.'));
+    echo T_('Unauthorized.');
     exit();
 }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -167,6 +167,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         $user->update_website($auth['website']);
     }
 
+    $GLOBALS['user'] = $user;
     // If an admin, check for update
     if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
         AutoUpdate::is_update_available(true);

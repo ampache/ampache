@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -31,6 +31,7 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 
 $_SESSION['login'] = true;
+define('TABLE_RENDERED', 1);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -50,11 +51,7 @@ $_SESSION['login'] = true;
     <body id="loginPage" onload="focus();">
         <div id="maincontainer">
             <div id="header"><!-- This is the header -->
-                <h1 id="headerlogo">
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>">
-                        <img src="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                    </a>
-                </h1>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>"><h1 id="headerlogo"></h1></a>
             </div>
             <div id="loginbox">
                 <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
@@ -74,13 +71,13 @@ $_SESSION['login'] = true;
                     <?php Error::display('general'); ?>
 
                     <div class="formValidation">
-                        <a class="button" id="lostpasswordbutton" href="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
+                        <a rel="nohtml" class="button" id="lostpasswordbutton" href="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
                         <input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
                         <input type="hidden" name="action" value="login" />
 
                         <?php if (AmpConfig::get('allow_public_registration')) { ?>
-                            <a class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
+                            <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                         <?php } // end if allow_public_registration ?>
                     </div>
                 </form>

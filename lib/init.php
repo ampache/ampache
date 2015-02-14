@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -34,7 +34,7 @@ require_once $prefix . '/lib/class/session.class.php';
 Session::_auto_init();
 
 // Set up for redirection on important error cases
-$path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $_SERVER['PHP_SELF']);
+$path = get_web_path();
 $path = $http_type . $_SERVER['HTTP_HOST'] . $path;
 
 // Check to make sure the config file exists. If it doesn't then go ahead and
@@ -65,8 +65,8 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']        = '3.7.1-develop';
-$results['int_config_version']    = '19';
+$results['version']        = '3.8.0-develop';
+$results['int_config_version'] = '27';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -89,7 +89,7 @@ $results['web_path'] = $http_type . $results['http_host'] . $results['web_path']
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
-$results['max_upload_size'] = $results['max_upload_size'] ?: 102400;
+$results['max_upload_size'] = $results['max_upload_size'] ?: 1048576;
 $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
 
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
@@ -111,6 +111,10 @@ require_once $prefix . '/modules/musicbrainz/MusicBrainz.php';
 require_once $prefix . '/modules/musicbrainz/Exception.php';
 require_once $prefix . '/modules/musicbrainz/Clients/MbClient.php';
 require_once $prefix . '/modules/musicbrainz/Clients/RequestsMbClient.php';
+require_once $prefix . '/modules/musicbrainz/Artist.php';
+require_once $prefix . '/modules/musicbrainz/Filters/AbstractFilter.php';
+require_once $prefix . '/modules/musicbrainz/Filters/FilterInterface.php';
+require_once $prefix . '/modules/musicbrainz/Filters/ArtistFilter.php';
 require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
 require_once $prefix . '/modules/EchoNest/Autoloader.php';

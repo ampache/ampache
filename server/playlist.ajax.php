@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -98,19 +98,21 @@ switch ($_REQUEST['action']) {
             case 'artist':
                 debug_event('playlist', 'Adding all songs of artist {'.$item_id.'}...', '5');
                 $artist = new Artist($item_id);
-                $asongs = $artist->get_songs();
-                foreach ($asongs as $song_id) {
-                    $songs[] = $song_id;
-                }
+                $songs[] = $artist->get_songs();
             break;
             case 'song_preview':
             case 'song':
                 debug_event('playlist', 'Adding song {'.$item_id.'}...', '5');
                 $songs = explode(',', $item_id);
             break;
+            case 'playlist':
+                $pl = new Playlist($item_id);
+                $songs = $pl->get_songs();
+            break;
             default:
                 debug_event('playlist', 'Adding all songs of current playlist...', '5');
                 $objects = $GLOBALS['user']->playlist->get_items();
+
                 foreach ($objects as $object_data) {
                     $type = array_shift($object_data);
                     if ($type == 'song') {
@@ -132,7 +134,7 @@ switch ($_REQUEST['action']) {
             ob_end_clean();*/
             debug_event('playlist', 'Items added successfully!', '5');
             ob_start();
-            mouse_message(T_('Added to playlist'));
+            display_notification(T_('Added to playlist'));
             $results['rfc3514'] = ob_get_clean();
         } else {
             debug_event('playlist', 'No item to add. Aborting...', '5');

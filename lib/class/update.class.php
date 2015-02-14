@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -463,6 +463,33 @@ class Update
 
         $update_string = '- Add rating to playlists, tvshows and tvshows seasons.<br />';
         $version[] = array('version' => '370021','description' => $update_string);
+
+        $update_string = '- Add users geolocation.<br />';
+        $version[] = array('version' => '370022','description' => $update_string);
+
+        $update_string = " - Add Aurora.js webplayer option.<br />";
+        $version[] = array('version' => '370023','description' => $update_string);
+
+        $update_string = " - Add count_type column to object_count table.<br />";
+        $version[] = array('version' => '370024','description' => $update_string);
+
+        $update_string = " - Add state and city fields to user table.<br />";
+        $version[] = array('version' => '370025','description' => $update_string);
+
+        $update_string = " - Add replay gain fields to song_data table.<br />";
+        $version[] = array('version' => '370026','description' => $update_string);
+
+        $update_string = " - Move column album_artist from table song to table album.<br />";
+        $version[] = array('version' => '370027','description' => $update_string);
+
+        $update_string = " - Add width and height in table image.<br />";
+        $version[] = array('version' => '370028','description' => $update_string);
+
+        $update_string = " - Set image column from image table as nullable.<br />";
+        $version[] = array('version' => '370029','description' => $update_string);
+
+        $update_string = " - Add an option to allow users to remove uploaded songs.<br />";
+        $version[] = array('version' => '370030','description' => $update_string);
 
         return $version;
     }
@@ -3124,6 +3151,184 @@ class Update
 
         $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist','album','song','stream','video','playlist','tvshow','tvshow_season') NULL";
         $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370022
+     *
+     * Add users geolocation
+     */
+    public static function update_370022()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `session` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` VARCHAR(255) NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `object_count` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` VARCHAR(255) NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('geolocation','0','Allow geolocation',25,'integer','options')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370023
+     *
+     * Add Aurora.js webplayer option
+     */
+    public static function update_370023()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('webplayer_aurora','1','Authorize JavaScript decoder (Aurora.js) in Web Player(s)',25,'boolean','streaming')";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370024
+     *
+     * Add count_type column to object_count table
+     */
+    public static function update_370024()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `object_count` ADD COLUMN `count_type` VARCHAR(16) NOT NULL DEFAULT 'stream'";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370025
+     *
+     * Add state and city fields to user table
+     */
+    public static function update_370025()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `user` ADD COLUMN `state` VARCHAR(64) NULL, ADD COLUMN `city` VARCHAR(64) NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370026
+     *
+     * Add replay gain fields to song_data table
+     */
+    public static function update_370026()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `song_data` ADD COLUMN `replaygain_track_gain` DECIMAL(10,6) NULL,  ADD COLUMN `replaygain_track_peak` DECIMAL(10,6) NULL, " .
+                "ADD COLUMN `replaygain_album_gain` DECIMAL(10,6) NULL,  ADD COLUMN `replaygain_album_peak` DECIMAL(10,6) NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370027
+     *
+     * Move column album_artist from table song to table album
+     *
+     */
+    public static function update_370027()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `album` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `release_type`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "UPDATE `album` INNER JOIN `song` ON `album`.`id` = `song`.`album` SET `album`.`album_artist` = `song`.`album_artist`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `song` DROP COLUMN `album_artist`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+
+
+    /**
+     * update_370028
+     *
+     * Add width and height in table image
+     *
+     */
+    public static function update_370028()
+    {
+        $retval = true;
+
+        $sql = "select `width` from `image`";
+        $db_results = Dba::read($sql);
+        if (!$db_results) {
+            $sql = "ALTER TABLE `image` ADD `width` int(4) unsigned DEFAULT 0 AFTER `image`";
+            $retval = Dba::write($sql) ? $retval : false;
+        }
+
+        $sql = "select `height` from `image`";
+        $db_results = Dba::read($sql);
+        if (!$db_results) {
+            $sql = "ALTER TABLE `image` ADD `height` int(4) unsigned DEFAULT 0 AFTER `width`";
+            $retval = Dba::write($sql) ? $retval : false;
+        }
+
+        return $retval;
+    }
+
+    /**
+     * update_370029
+     *
+     * Set image column from image table as nullable.
+     *
+     */
+    public static function update_370029()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `image` CHANGE COLUMN `image` `image` MEDIUMBLOB NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370030
+     *
+     * Add an option to allow users to remove uploaded songs.
+     */
+    public static function update_370030()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('upload_allow_remove','1','Upload: allow users to remove uploaded songs',25,'boolean','system')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
     }

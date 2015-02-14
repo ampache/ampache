@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -36,6 +36,7 @@ class Share extends database_object
     public $secret;
     public $public_url;
 
+    public $f_name;
     public $f_object_link;
     public $f_user;
     public $f_allow_stream;
@@ -71,6 +72,12 @@ class Share extends database_object
         }
 
         return Dba::write($sql, $params);
+    }
+
+    public static function gc()
+    {
+        $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
+        Dba::write($sql);
     }
 
     public static function delete_shares($object_type, $object_id)
@@ -194,13 +201,16 @@ class Share extends database_object
         }
     }
 
-    public function format()
+    public function format($details = true)
     {
-        $object = new $this->object_type($this->object_id);
-        $object->format();
-        $this->f_object_link = $object->f_link;
-        $user = new User($this->user);
-        $this->f_user = $user->fullname;
+        if ($details) {
+            $object = new $this->object_type($this->object_id);
+            $object->format();
+            $this->f_name = $object->get_fullname();
+            $this->f_object_link = $object->f_link;
+            $user = new User($this->user);
+            $this->f_user = $user->fullname;
+        }
         $this->f_allow_stream = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
         $this->f_creation_date = date("Y-m-d H:i:s", $this->creation_date);
@@ -301,6 +311,45 @@ class Share extends database_object
         }
 
         return $is_shared;
+    }
+
+    public static function display_ui($object_type, $object_id, $show_text = true)
+    {
+        echo "<a onclick=\"showShareDialog(event, '" . $object_type . "', " . $object_id . ");\">" . UI::get_icon('share', T_('Share'));
+        if ($show_text) {
+            echo " &nbsp;" . T_('Share');
+        }
+        echo "</a>";
+    }
+
+    public static function display_ui_links($object_type, $object_id)
+    {
+        echo "<ul>";
+        echo "<li><a onclick=\"handleShareAction('". AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . UI::get_icon('share', T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
+        if (AmpConfig::get('download')) {
+            $dllink = "";
+            if ($object_type == "song" || $object_type == "video") {
+                $dllink = AmpConfig::get('web_path') . "/play/index.php?action=download&type=" . $object_type . "&oid=" . $object_id . "&uid=-1";
+            } else {
+                if (Access::check_function('batch_download') && check_can_zip($object_type)) {
+                    $dllink = AmpConfig::get('web_path') . "/batch.php?action=" . $object_type . "&id=" . $object_id;
+                }
+            }
+            if (!empty($dllink)) {
+                if (AmpConfig::get('require_session')) {
+                    // Add session information to the link to avoid authentication
+                    $dllink .= "&ssid=" . Stream::get_session();
+                }
+                echo "<li><a rel=\"nohtml\" href=\"" . $dllink . "\">" . UI::get_icon('download', T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
+            }
+        }
+        echo "<li style='padding-top: 8px; text-align: right;'>";
+        $plugins = Plugin::get_plugins('external_share');
+        foreach ($plugins as $plugin_name) {
+            echo "<a onclick=\"handleShareAction('". AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower($plugin_name), $plugin_name) . "</a>&nbsp;";
+        }
+        echo "</li>";
+        echo "</ul>";
     }
 
 } // end of recommendation class

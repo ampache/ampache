@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -302,5 +302,27 @@ class Core
     public static function get_reloadutil()
     {
         return (AmpConfig::get('play_type') == "stream" || !AmpConfig::get('ajax_load')) ? "reloadUtil" : "reloadDivUtil";
+    }
+
+    public static function requests_options($options = null)
+    {
+        if ($options == null) {
+            $options = array();
+        }
+
+        if (!isset($options['proxy'])) {
+            if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
+                $proxy = array();
+                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+                if (AmpConfig::get('proxy_user')) {
+                    $proxy[] = AmpConfig::get('proxy_user');
+                    $proxy[] = AmpConfig::get('proxy_pass');
+                }
+
+                $options['proxy'] = $proxy;
+            }
+        }
+
+        return $options;
     }
 } // Core

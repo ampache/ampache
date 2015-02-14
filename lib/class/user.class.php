@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -71,6 +71,14 @@ class User extends database_object
      * @var string $website
      */
     public $website;
+    /**
+     * @var string $state
+     */
+    public $state;
+    /**
+     * @var string city
+     */
+    public $city;
     /**
      * @var string $apikey
      */
@@ -595,6 +603,8 @@ class User extends database_object
                 case 'username':
                 case 'fullname':
                 case 'website':
+                case 'state':
+                case 'city':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -670,6 +680,26 @@ class User extends database_object
         Dba::write($sql, array($new_website, $this->id));
 
     } // update_website
+
+    /**
+     * update_state
+     * updates their state
+     */
+    public function update_state($new_state)
+    {
+        $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
+        Dba::write($sql, array($new_state, $this->id));
+    } // update_state
+
+    /**
+     * update_city
+     * updates their city
+     */
+    public function update_city($new_city)
+    {
+        $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
+        Dba::write($sql, array($new_city, $this->id));
+    } // update_city
 
     /**
      * update_apikey
@@ -775,9 +805,9 @@ class User extends database_object
      * update_user_stats
      * updates the playcount mojo for this specific user
      */
-    public function update_stats($media_type, $media_id, $agent = '')
+    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false)
     {
-        debug_event('user.class.php', 'Updating stats for {'.$media_type.'/'.$media_id.'} {'.$agent.'}...', '5');
+        debug_event('user.class.php', 'Updating stats for {'.$media_type.'/'.$media_id.'} {'.$agent.'}...', 5);
         $media = new $media_type($media_id);
         $media->format();
         $user = $this->id;
@@ -785,22 +815,25 @@ class User extends database_object
         // We shouldn't test on file only
         if (!strlen($media->file)) { return false; }
 
-        $this->set_preferences();
-
-        // If pthreads available, we call save_songplay in a new thread to quickly return
-        if (class_exists("Thread", false)) {
-            debug_event('user.class.php', 'Calling save_mediaplay plugins in a new thread...', '5');
-            $thread = new scrobbler_async($GLOBALS['user'], $media);
-            if ($thread->start()) {
-                //$thread->join();
+        if (!$noscrobble) {
+            $this->set_preferences();
+            // If pthreads available, we call save_songplay in a new thread to quickly return
+            if (class_exists("Thread", false)) {
+                debug_event('user.class.php', 'Calling save_mediaplay plugins in a new thread...', 5);
+                $thread = new scrobbler_async($GLOBALS['user'], $media);
+                if ($thread->start()) {
+                    //$thread->join();
+                } else {
+                    debug_event('user.class.php', 'Error when starting the thread.', 1);
+                }
             } else {
-                debug_event('user.class.php', 'Error when starting the thread.', '1');
+                User::save_mediaplay($GLOBALS['user'], $media);
             }
         } else {
-            User::save_mediaplay($GLOBALS['user'], $media);
+            debug_event('user.class.php', 'Scrobbling explicitly skipped', 5);
         }
 
-        $media->set_played($user, $agent);
+        $media->set_played($user, $agent, $location);
 
         return true;
 
@@ -858,7 +891,7 @@ class User extends database_object
      * create
      * inserts a new user into ampache
      */
-    public static function create($username, $fullname, $email, $website, $password, $access, $disabled = false)
+    public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false)
     {
         $website     = rtrim($website, "/");
         $password    = hash('sha256', $password);
@@ -868,14 +901,32 @@ class User extends database_object
         $sql = "INSERT INTO `user` (`username`, `disabled`, " .
             "`fullname`, `email`, `password`, `access`, `create_date`";
         $params = array($username, $disabled, $fullname, $email, $password, $access, time());
+
         if (!empty($website)) {
             $sql .= ", `website`";
             $params[] = $website;
         }
+        if (!empty($state)) {
+            $sql .= ", `state`";
+            $params[] = $state;
+        }
+        if (!empty($city)) {
+            $sql .= ", `city`";
+            $params[] = $city;
+        }
+
         $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?";
+
         if (!empty($website)) {
             $sql .= ", ?";
         }
+        if (!empty($state)) {
+            $sql .= ", ?";
+        }
+        if (!empty($city)) {
+            $sql .= ", ?";
+        }
+
         $sql .= ")";
         $db_results = Dba::write($sql, $params);
 
@@ -1177,9 +1228,9 @@ class User extends database_object
     {
         if (!$type) { $type = 'song'; }
 
-        $sql = "SELECT * FROM `object_count` WHERE `object_type`='$type' AND `user`='$this->id' " .
-            "ORDER BY `date` DESC LIMIT $limit";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
+            "ORDER BY `date` DESC LIMIT " . $limit;
+        $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1227,14 +1278,14 @@ class User extends database_object
      * get_avatar
      * Get the user avatar
      */
-    public function get_avatar()
+    public function get_avatar($local = false)
     {
         $avatar = array();
 
         $avatar['title'] = T_('User avatar');
         $upavatar = new Art($this->id, 'user');
         if ($upavatar->get_db()) {
-            $avatar['url'] = AmpConfig::get('web_path') . '/image.php?object_type=user&object_id=' . $this->id;
+            $avatar['url'] = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
             $avatar['url_mini'] = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
             $avatar['url'] .= '&thumb=4';
@@ -1366,5 +1417,30 @@ class User extends database_object
         return true;
 
     } // rebuild_all_preferences
+
+    /**
+     * stream_control
+     * Check all stream control plugins
+     * @param array $media_ids
+     * @param User $user
+     * @return boolean
+     */
+    public static function stream_control($media_ids, User $user = null)
+    {
+        if ($user == null) {
+            $user = $GLOBALS['user'];
+        }
+
+        foreach (Plugin::get_plugins('stream_control') as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($user)) {
+                if (!$plugin->_plugin->stream_control($media_ids)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
 } //end user class

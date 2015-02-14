@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -56,11 +56,15 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('statistics',_('Sort Tracks by Artist, Album, Song')); ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('sort',_('Sort Tracks by Artist, Album, Song')); ?>
             &nbsp;&nbsp;<?php echo T_('Sort Tracks by Artist, Album, Song'); ?></a>
         </li>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('wand',_('Remove duplicates')); ?>
+            &nbsp;&nbsp;<?php echo T_('Remove duplicates'); ?></a>
+        </li>
     <?php } ?>
-    <?php if (Access::check_function('batch_download')) { ?>
+    <?php if (Access::check_function('batch_download') && check_can_zip('playlist')) { ?>
         <li>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
@@ -88,7 +92,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Random all to temporary playlist'),'play_playlist_random'); ?>
             <?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id, T_('Random all to temporary playlist'),'play_playlist_random_text'); ?>
         </li>
-    <?php if ($GLOBALS['user']->has_access('50')) { ?>
+    <?php if ($GLOBALS['user']->has_access('50') && AmpConfig::get('channel')) { ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('flow'); ?>
@@ -98,7 +102,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php } ?>
     <?php if ($playlist->has_access()) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
                 <?php echo UI::get_icon('delete'); ?>
                 &nbsp;&nbsp;<?php echo T_('Delete'); ?>
             </a>
@@ -113,7 +117,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     $browse->set_type('playlist_song');
     $browse->add_supplemental_object('playlist', $playlist->id);
     $browse->set_static_content(true);
-    $browse->show_objects($object_ids);
+    $browse->show_objects($object_ids, true);
     $browse->store();
 ?>
 </div>

@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -188,12 +188,42 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-position: right; 
 }
 
-#mouse_message {
-    z-index: 9999;
-    position: fixed;
-    color: #303335;
-    text-shadow: 2px 2px 9px #fff;
-    font-weight: bold;
+#notification {
+	position: fixed;
+    top: auto;
+	bottom: 20px;
+	left: 50%;
+	z-index: 8888;
+	width: 50%;
+	padding: 5px 20px;
+	margin: 0;
+	background-color: #000;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,.5);
+	box-shadow: 0 4px 12px rgba(0,0,0,.5);
+	-webkit-transition: all .5s;
+	transition: all .5s;
+	-webkit-transform: translate(-50%,0);
+	-ms-transform: translate(-50%,0);
+	transform: translate(-50%,0);
+}
+
+#notification.notification-out {
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-webkit-transform: translate(-50%,80px);
+	-ms-transform: translate(-50%,80px);
+	transform: translate(-50%,80px);
+}
+
+#notification img {
+	height: 100%;
+	vertical-align: middle;
+	margin-top: -3px;
+}
+
+#notification-content {
+	margin-left: 10px;
 }
 
 /***********************************************
@@ -373,6 +403,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-sizing: border-box;
     border-radius: 7px;
     height: 32px;
+}
+
+#registerbox .require label::after {
+	content: " *";
 }
 
 #loginPage #loginbox #usernamefield input:focus,
@@ -648,7 +682,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
-    z-index: 0;
+    z-index: 10;
     overflow-y: auto;
 }
 
@@ -662,7 +696,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 .fixedrightbarsubmenu {
     position: fixed !important;
     top: 33px !important;
-    right: 70px !important;
+    right: 15px !important;
 }
 /******************************/
 
@@ -706,13 +740,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     display: none;
     position: fixed;
     top: 120px;
-    right: 70px;
+    right: 15px;
     border: 2px solid;
-    width: 120px;
+    width: 210px;
     padding: 0.6em;
     font-size: 12px;
     z-index: 99;
-    overflow: hidden;
+	overflow: hidden;
+    overflow-y: scroll;
+	max-height: 350px;
 }
 
 #rightbar #rb_action .submenu li {
@@ -847,8 +883,8 @@ table.tabledata .th-bottom:focus {
 }
 
 table.tabledata tbody .cel_play {
-    max-width: 40px;
-    min-width: 40px;
+    max-width: 60px;
+    min-width: 60px;
     width: 40px !important;
     text-align: right;
 }
@@ -940,6 +976,10 @@ table.tabledata .cel_agent {
 
 table.tabledata .cel_agent img:hover {
     cursor: help;
+}
+
+#shoutbox-input {
+    font-size: 14px;
 }
 
 .box_preferences h4 {
@@ -1037,6 +1077,8 @@ div.box.box_rules {
 .cel_song, .cel_album, .cel_artist {
     max-width: 350px;
     white-space: normal !important;
+    text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 /***********************************************
@@ -1276,6 +1318,10 @@ span.fatalerror {
     margin: 2px;
 }
 
+.item_art_actions img {
+    float: none;
+}
+
 .item_art:hover {
     border: 2px solid;
     margin: 0px;
@@ -1353,6 +1399,7 @@ span.fatalerror {
 .dynamic-star-rating {
     width:95px;
 }
+
 .star-rating ul,
 .star-rating a:hover,
 .star-rating .current-rating {
@@ -1539,4 +1586,8 @@ a.option-list {
 
 a.option-list:hover {
 	border: 1px solid;
+}
+
+.stats_graph {
+    text-align: center;
 }

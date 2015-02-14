@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -108,6 +108,15 @@
     </td>
     <td>
     <?php echo T_('This tests whether you have the zlib extension enabled. This is not strictly necessary, but may result in a better experience (zip download).'); ?>
+    </td>
+</tr>
+<tr>
+    <td valign="top"><?php echo T_('PHP simplexml extension'); ?></td>
+    <td valign="top">
+    <?php echo debug_wresult(check_php_simplexml()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether you have the simplexml extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
     </td>
 </tr>
 <tr>

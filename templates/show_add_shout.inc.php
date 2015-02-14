@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -32,7 +32,7 @@ if ($data) {
 UI::show_box_top($boxtitle, 'box box_add_shout');
 ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=add_shout">
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table id="shoutbox-input" cellpadding="0" cellspacing="0">
 <tr>
     <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>

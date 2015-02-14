@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -65,6 +65,20 @@ if (isset($_REQUEST['transcode_template'])) {
     install_config_transcode_mode($mode);
 }
 
+if (isset($_REQUEST['usecase'])) {
+    $case = $_REQUEST['usecase'];
+    if (Dba::check_database()) {
+        install_config_use_case($case);
+    }
+}
+
+if (isset($_REQUEST['backends'])) {
+    $backends = $_REQUEST['backends'];
+    if (Dba::check_database()) {
+        install_config_backends($backends);
+    }
+}
+
 // Charset and gettext setup
 $htmllang = $_REQUEST['htmllang'];
 $charset  = $_REQUEST['charset'];
@@ -89,7 +103,7 @@ load_gettext();
 header ('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 
 // Correct potential \ or / in the dirname
-$safe_dirname = rtrim(dirname($_SERVER['PHP_SELF']),"/\\");
+$safe_dirname = get_web_path();
 
 $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 
@@ -173,7 +187,13 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        header ("Location: " . $web_path . '/login.php');
+        // Automatically log-in the newly created user
+        Session::create_cookie();
+        Session::create(array('type' => 'mysql', 'username' => $username));
+        $_SESSION['userdata']['username'] = $username;
+        Session::check();
+
+        header ("Location: " . $web_path . '/index.php');
     break;
     case 'init':
         require_once 'templates/show_install.inc.php';

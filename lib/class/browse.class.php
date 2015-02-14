@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -101,6 +101,35 @@ class Browse extends Query
     } // get_supplemental_objects
 
     /**
+     * update_browse_from_session
+     * Restore the previous start index from something saved into the current session.
+     */
+    public function update_browse_from_session()
+    {
+        if ($this->is_simple() && $this->get_start() == 0) {
+            $name = 'browse_current_' . $this->get_type();
+            if (isset($_SESSION[$name]) && isset($_SESSION[$name]['start']) && $_SESSION[$name]['start'] > 0) {
+
+                // Checking if value is suitable
+                $start = $_SESSION[$name]['start'];
+                if ($this->get_offset() > 0) {
+
+                    $set_page = floor($start / $this->get_offset());
+                    if ($this->get_total() > $this->get_offset()) {
+                        $total_pages = ceil($this->get_total() / $this->get_offset());
+                    } else {
+                        $total_pages = 0;
+                    }
+
+                    if ($set_page >= 0 && $set_page <= $total_pages) {
+                        $this->set_start($start);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * show_objects
      * This takes an array of objects
      * and requires the correct template based on the
@@ -118,7 +147,7 @@ class Browse extends Query
 
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
-        if ((count($object_ids) > $this->get_start()) &&
+        if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) &&
             ! $this->is_simple()) {
             $object_ids = array_slice(
                 $object_ids,
@@ -156,16 +185,25 @@ class Browse extends Query
 
         $type = $this->get_type();
 
+        // Update the session value only if it's allowed on the current browser
+        if ($this->get_update_session()) {
+            $_SESSION['browse_current_' . $type]['start'] = $browse->get_start();
+        }
+
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
-        debug_event('browse', 'Called for type {'.$type.'}', '5');
+        $argument_param = ($argument ? '&argument=' . scrub_in($argument) : '');
+
+        debug_event('browse', 'Show objects called for type {'.$type.'}', '5');
+
+        $limit_threshold = $this->get_threshold();
 
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
                 $box_title = T_('Songs') . $match;
-                Song::build_cache($object_ids);
+                Song::build_cache($object_ids, $limit_threshold);
                 $box_req = AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
             break;
             case 'album':
@@ -187,7 +225,7 @@ class Browse extends Query
             break;
             case 'artist':
                 $box_title = T_('Artists') . $match;
-                Artist::build_cache($object_ids, true);
+                Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = AmpConfig::get('prefix') . '/templates/show_artists.inc.php';
             break;
             case 'live_stream':
@@ -309,25 +347,25 @@ class Browse extends Query
                 UI::show_box_bottom();
             }
             echo '<script type="text/javascript">';
-            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id, '');
+            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
         } else {
             if (!$this->get_use_pages()) {
-                $this->show_next_link();
+                $this->show_next_link($argument);
             }
         }
         Ajax::end_container();
 
     } // show_object
 
-    public function show_next_link()
+    public function show_next_link($argument = null)
     {
-        $limit    = $this->get_offset();
-        $start    = $this->get_start();
-        $total    = $this->get_total();
+        $limit = $this->get_offset();
+        $start = $this->get_start();
+        $total = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false' . $argument . '">' . T_('More') . '</a>';
         }
     }
 
@@ -444,12 +482,48 @@ class Browse extends Query
     }
 
     /**
+     * Allow the current page to be save into the current session
+     * @param boolean $update_session
+     */
+    public function set_update_session($update_session)
+    {
+        $this->_state['update_session'] = $update_session;
+    }
+
+    /**
      *
      * @return boolean
      */
     public function get_show_header()
     {
         return $this->show_header;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function get_update_session()
+    {
+        return $this->_state['update_session'];
+    }
+
+    /**
+     *
+     * @param string $threshold
+     */
+    public function set_threshold($threshold)
+    {
+        $this->_state['threshold'] = $threshold;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function get_threshold()
+    {
+        return $this->_state['threshold'];
     }
 
 } // browse

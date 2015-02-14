@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,6 +23,10 @@
 require_once 'lib/init.php';
 
 UI::show_header();
+define('TABLE_RENDERED', 1);
+
+// Temporary workaround to avoid sorting on custom base requests
+define('NO_BROWSE_SORTING', true);
 
 /* Switch on the action to be performed */
 switch ($_REQUEST['action']) {
@@ -57,9 +61,14 @@ switch ($_REQUEST['action']) {
     case 'upload':
         require_once AmpConfig::get('prefix') . '/templates/show_uploads.inc.php';
     break;
+    case 'graph':
+        Graph::display_from_request();
+        break;
     case 'show':
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';
+        if (Access::check('interface','50')) {
+            require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';
+        }
     break;
 } // end switch on action
 

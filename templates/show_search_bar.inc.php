@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,7 +22,7 @@
 ?>
 <div id="sb_Subsearch">
     <form name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data" style="Display:inline">
-        <input type="text" name="rule_1_input" id="searchString"/>
+        <input type="text" name="rule_1_input" id="searchString" placeholder="<?php echo T_('Search...'); ?>" />
         <input type="hidden" name="action" value="search" />
         <input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
@@ -33,6 +33,7 @@
             <option value="artist"><?php echo T_('Artist')?></option>
             <option value="playlist_name"><?php echo T_('Playlist')?></option>
             <option value="tag"><?php echo T_('Tag')?></option>
+            <option value="missing_artist"><?php echo T_('Missing Artist')?></option>
         </select>
         <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
         <a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -97,7 +97,7 @@ class AmpacheYourls {
         $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
         try {
             debug_event($this->name, 'YOURLS api call: ' . $apiurl, '5');
-            $request = Requests::get($apiurl);
+            $request = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = $request->body;
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.

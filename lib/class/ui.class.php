@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -284,6 +284,9 @@ END;
      */
     public static function show_footer()
     {
+        if (!defined("TABLE_RENDERED")) {
+            show_table_render();
+        }
         require_once AmpConfig::get('prefix') . '/templates/footer.inc.php';
         if (isset($_REQUEST['profiling'])) {
             Dba::show_profile();
@@ -323,11 +326,22 @@ END;
             return;
         }
 
-        echo '<script type="text/javascript">';
-        echo "updateText('$field', '$value');";
-        echo "</script>\n";
+        static $id = 1;
+
+        if (defined('SSE_OUTPUT')) {
+            echo "id: " . $id . "\n";
+            echo "data: displayNotification('" . addslashes($value) . "', 5000)\n\n";
+        } else {
+            if (!empty($field)) {
+                echo "<script>updateText('" . $field . "', '" . addslashes($value) ."');</script>\n";
+            } else {
+                echo "<br />" . $value . "<br /><br />\n";
+            }
+        }
+
         ob_flush();
         flush();
+        $id++;
     }
 
     public static function get_logo_url()

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -166,26 +166,31 @@ class Ajax
      * @param string $action
      * @param string $text
      * @param string $source
-     * @param string $port
+     * @param string $post
      * @param string $class
      * @return string
      */
     public static function text($action, $text, $source, $post='', $class='')
     {
-        // Avoid duplicate id
-        $source .= '_' . time() . '_' . self::$counter++;
+        // Temporary workaround to avoid sorting on custom base requests
+        if (!defined("NO_BROWSE_SORTING") || strpos($source, "sort_") === false) {
+            // Avoid duplicate id
+            $source .= '_' . time() . '_' . self::$counter++;
 
-        // Format the string we wanna use
-        $ajax_string = self::action($action, $source, $post);
+            // Format the string we wanna use
+            $ajax_string = self::action($action, $source, $post);
 
-        // If they passed a span class
-        if ($class) {
-            $class = ' class="' . $class . '"';
+            // If they passed a span class
+            if ($class) {
+                $class = ' class="' . $class . '"';
+            }
+
+            $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
+
+            $string .= self::observe($source, 'click', $ajax_string);
+        } else {
+            $string = $text;
         }
-
-        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
-
-        $string .= self::observe($source, 'click', $ajax_string);
 
         return $string;
 

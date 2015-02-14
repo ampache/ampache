@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -601,7 +601,8 @@ class AmpacheXbmc extends localplay_controller
 
                 $url_data = $this->parse_url($data['link']);
                 if ($url_data != null) {
-                    $song = new Song($url_data['oid']);
+                    $data['oid'] = $url_data['oid'];
+                    $song = new Song($data['oid']);
                     if ($song != null) {
                         $data['name'] = $song->get_artist_name() . ' - ' . $song->title;
                     }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -27,6 +27,9 @@
         <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id,'play', T_('Play'),'play_artist_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_artist_' . $libitem->id); ?>
+        <?php } ?>
+        <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_artist_' . $libitem->id); ?>
         <?php } ?>
     <?php } ?>
     </div>
@@ -56,6 +59,9 @@ if (Art::is_enabled()) {
 <td class="cel_songs"><?php echo $libitem->songs; ?></td>
 <td class="cel_albums"><?php echo $libitem->albums; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+<td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
+<?php } ?>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
@@ -73,7 +79,7 @@ if (Art::is_enabled()) {
     </a>
     <?php } ?>
 <?php } ?>
-<?php if (Access::check_function('batch_download')) { ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('artist')) { ?>
     <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>

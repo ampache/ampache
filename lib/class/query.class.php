@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -34,6 +34,7 @@ class Query
      * @var int|string $id
      */
     public $id;
+
     /**
      * @var int $catalog
      */
@@ -43,6 +44,7 @@ class Query
      * @var array $_state
      */
     protected $_state = array();
+
     /**
      * @var array $_cache
      */
@@ -52,6 +54,7 @@ class Query
      * @var array $allowed_filters
      */
     private static $allowed_filters;
+
     /**
      * @var array $allowed_sorts
      */
@@ -67,32 +70,31 @@ class Query
     {
         $sid = session_id();
 
-        if (is_null($id)) {
-            $this->reset();
-            if ($cached) {
-                $data = serialize($this->_state);
-
-                $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) ' .
-                    'VALUES(?, ?)';
-                Dba::write($sql, array($sid, $data));
-                $this->id = Dba::insert_id();
-
-            } else {
-                $this->id = 'nocache';
-            }
+        if (!$cached) {
+            $this->id = 'nocache';
             return true;
         }
 
-        $this->id = $id;
+        if (is_null($id)) {
+            $this->reset();
+            $data = self::_serialize($this->_state);
 
-        $sql = 'SELECT `data` FROM `tmp_browse` ' .
-            'WHERE `id` = ? AND `sid` = ?';
+            $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
+            Dba::write($sql, array($sid, $data));
+            $this->id = Dba::insert_id();
 
-        $db_results = Dba::read($sql, array($id, $sid));
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $this->_state = unserialize($results['data']);
             return true;
+        } else {
+            $sql = 'SELECT `data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
+
+            $db_results = Dba::read($sql, array($id, $sid));
+            if ($results = Dba::fetch_assoc($db_results)) {
+
+                $this->id = $id;
+                $this->_state = (array) self::_unserialize($results['data']);
+
+                return true;
+            }
         }
 
         Error::add('browse', T_('Browse not found or expired, try reloading the page'));
@@ -317,7 +319,7 @@ class Query
                 'year'
             ),
             'tvshow_season' => array(
-                'season_number',
+                'season',
                 'tvshow'
             ),
             'tvshow_episode' => array(
@@ -325,6 +327,7 @@ class Query
                 'resolution',
                 'length',
                 'codec',
+                'episode',
                 'season',
                 'tvshow'
             ),
@@ -378,33 +381,7 @@ class Query
      */
     private static function _serialize($data)
     {
-        if (count($data) > 1000 && is_int($data[0])) {
-            $last = -17;
-            $in_range = false;
-            $idx = -1;
-            $cooked = array();
-            foreach ($data as $id) {
-                if ($id == ($last + 1)) {
-                    if ($in_range) {
-                        $cooked[$idx][1] = $id;
-                    } else {
-                        $in_range = true;
-                        $cooked[$idx] = array($last, $id);
-                    }
-                } else {
-                    $in_range = false;
-                    $idx++;
-                    $cooked[$idx] = $id;
-                }
-                $last = $id;
-            }
-            $data = json_encode($cooked);
-            debug_event('Query', 'cooked serialize length: ' . strlen($data), 5);
-        } else {
-            $data = json_encode($data);
-        }
-
-        return $data;
+        return json_encode($data);
     }
 
     /*
@@ -416,20 +393,7 @@ class Query
      */
     private static function _unserialize($data)
     {
-        $raw = array();
-        $cooked = json_decode($data);
-        if ($cooked) {
-            foreach ($cooked as $grain) {
-                if (is_array($grain)) {
-                    foreach (range($grain[0], $grain[1]) as $id) {
-                        $raw[] = $id;
-                    }
-                } else {
-                    $raw[] = $grain;
-                }
-            }
-        }
-        return $raw;
+        return json_decode($data, true);
     }
 
     /**
@@ -834,7 +798,6 @@ class Query
     {
         $start = intval($start);
         $this->_state['start'] = $start;
-
     } // set_start
 
     /**
@@ -905,7 +868,7 @@ class Query
 
             $row = Dba::fetch_assoc($db_results);
 
-            $this->_cache = self::_unserialize($row['object_data']);
+            $this->_cache = (array) self::_unserialize($row['object_data']);
             return $this->_cache;
         } else {
             $objects = $this->get_objects();
@@ -1226,9 +1189,9 @@ class Query
         $order_sql = "";
         if (!isset($this->_state['custom']) || !$this->_state['custom']) {
             $filter_sql = $this->get_filter_sql();
+            $order_sql = $this->get_sort_sql();
             $join_sql = $this->get_join_sql();
             $having_sql = $this->get_having_sql();
-            $order_sql = $this->get_sort_sql();
         }
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
@@ -1691,7 +1654,7 @@ class Query
      * to sort the results as best we can, there is also
      * a logic based sort that will come later as that's
      * a lot more complicated
-     * @param string $filed
+     * @param string $field
      * @param string $order
      * @return string
      */
@@ -1740,12 +1703,11 @@ class Query
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
                         $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('left', '`artist`', 'COALESCE(`song`.`album_artist`, `song`.`artist`)', '`artist`.`id`', 100);
+                        $this->set_join('left', '`artist`', 'COALESCE(`album`.`album_artist`, `song`.`artist`)', '`artist`.`id`', 100);
                     break;
                     case 'album_artist':
                         $sql = "`artist`.`name`";
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('left', '`artist`', '`song`.`album_artist`', '`artist`.`id`', 100);
+                        $this->set_join('left', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                     break;
                     case 'artist':
                         $sql = "`artist`.`name`";
@@ -1824,7 +1786,7 @@ class Query
                 } // end switch
             break;
             case 'video':
-                $sql = $this->sql_sort_video('video', $field);
+                $sql = $this->sql_sort_video($field, 'video');
             break;
             case 'wanted':
                 switch ($field) {
@@ -1933,7 +1895,7 @@ class Query
             break;
             case 'tvshow_season':
                 switch ($field) {
-                    case 'season_number':
+                    case 'season':
                         $sql = "`tvshow_season`.`season_number`";
                     break;
                     case 'tvshow':
@@ -1944,6 +1906,9 @@ class Query
             break;
             case 'tvshow_episode':
                 switch ($field) {
+                    case 'episode':
+                        $sql = "`tvshow_episode`.`episode_number`";
+                    break;
                     case 'season':
                         $sql = "`tvshow_season`.`season_number`";
                         $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
@@ -1954,12 +1919,12 @@ class Query
                         $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                     break;
                     default:
-                        $sql = $this->sql_sort_video('tvshow_episode', $field);
+                        $sql = $this->sql_sort_video($field, 'tvshow_episode');
                     break;
                 }
             break;
             case 'movie':
-                $sql = $this->sql_sort_video('movie', $field);
+                $sql = $this->sql_sort_video($field, 'movie');
             break;
             case 'clip':
                 switch ($field) {
@@ -1967,7 +1932,7 @@ class Query
                         $sql = "`clip`.`artist`";
                     break;
                     default:
-                        $sql = $this->sql_sort_video('clip', $field);
+                        $sql = $this->sql_sort_video($field, 'clip');
                     break;
                 }
             break;
@@ -1977,7 +1942,7 @@ class Query
                         $sql = "`personal_video`.`location`";
                     break;
                     default:
-                        $sql = $this->sql_sort_video('personal_video', $field);
+                        $sql = $this->sql_sort_video($field, 'personal_video');
                     break;
                 }
             break;
@@ -1998,7 +1963,7 @@ class Query
      * @param string $table
      * @return string
      */
-    private function sql_sort_video($field, $table)
+    private function sql_sort_video($field, $table = 'video')
     {
         $sql = "";
         switch ($field) {
@@ -2006,13 +1971,13 @@ class Query
                 $sql = "`video`.`title`";
             break;
             case 'resolution':
-                $sql = "`video`.`resolution`";
+                $sql = "`video`.`resolution_x`";
             break;
             case 'length':
-                $sql = "`video`.`length`";
+                $sql = "`video`.`time`";
             break;
             case 'codec':
-                $sql = "`video`.`codec`";
+                $sql = "`video`.`video_codec`";
             break;
             case 'release_date':
                 $sql = "`video`.`release_date`";
@@ -2097,10 +2062,9 @@ class Query
     {
         $id = $this->id;
         if ($id != 'nocache') {
-            $data = serialize($this->_state);
+            $data = self::_serialize($this->_state);
 
-            $sql = 'UPDATE `tmp_browse` SET `data` = ? ' .
-                'WHERE `sid` = ? AND `id` = ?';
+            $sql = 'UPDATE `tmp_browse` SET `data` = ? WHERE `sid` = ? AND `id` = ?';
             Dba::write($sql, array($data, session_id(), $id));
         }
     }

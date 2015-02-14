@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -28,12 +28,17 @@
 function PlayerFrame()
 {
     var appendmedia = false;
+    var playnext = false;
     var $webplayer = $("#webplayer");
     if ($webplayer.is(':visible')) {
 <?php
 if ($_REQUEST['append']) {
 ?>
         appendmedia = true;
+<?php
+} else if ($_REQUEST['playnext']) {
+?>
+        playnext = true;
 <?php
 }
 ?>
@@ -45,6 +50,8 @@ if ($_REQUEST['append']) {
 
     if (appendmedia) {
         <?php echo WebPlayer::add_media_js($this); ?>
+    } else if (playnext) {
+        <?php echo WebPlayer::play_next_js($this); ?>
     } else {
         $webplayer.show();
         $.get('<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>', function (data) {

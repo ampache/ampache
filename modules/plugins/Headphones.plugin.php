@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -123,6 +123,7 @@ class AmpacheHeadphones {
         
         debug_event($this->name, 'Headphones api call: ' . $url, '5');
         try {
+            // We assume Headphone server is local, don't use proxy here
             $request = Requests::get($url, array(), array(
                 'timeout' => 600
             ));

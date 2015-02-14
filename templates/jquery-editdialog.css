@@ -255,3 +255,64 @@
 .broadcastsdialogstyle.ui-dialog .ui-dialog-buttonset button:focus:active {
     display: none;
 }
+
+/***********************************************
+           jQuery share dialog                         
+***********************************************/
+.sharedialogstyle.ui-dialog {
+    background-color: #222;
+    font-size: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    border-color: #1d1d1d;
+    border: 2px solid rgba(0,0,0,0.15);
+    z-index: 9999;
+}
+
+.sharedialogstyle.ui-widget-content a {
+    background-color: #222;
+	color: #eee;
+	text-decoration: none;
+	text-align: left;
+	padding: 0.4em;
+}
+
+.sharedialogstyle.ui-widget-content a:hover {
+	color: #ff9d00;
+    cursor: pointer;
+}
+
+.sharedialogstyle.ui-dialog  .ui-dialog-titlebar {
+    display: none;
+}
+
+.sharedialogstyle.ui-dialog  .ui-dialog-title {
+    display: none;
+}
+
+.sharedialogstyle.ui-dialog .ui-dialog-content {
+    background-color: #222;
+    color: #999;
+    border: 0;
+}
+
+.sharedialogstyle.ui-dialog .ui-dialog-buttonpane {
+    display: none;
+}
+
+.sharedialogstyle.ui-dialog .ui-dialog-buttonset button {
+    display: none;
+}
+
+.sharedialogstyle.ui-dialog .ui-dialog-buttonset button:hover {
+    display: none;
+}
+
+.sharedialogstyle.ui-dialog .ui-dialog-buttonset button:focus:active {
+    display: none;
+}

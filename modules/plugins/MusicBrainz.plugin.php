@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -94,15 +94,15 @@ class AmpacheMusicBrainz {
 
         $results = array();
 
-        if (count($track->{'artist-credit'}) > 0) {
-            $artist = $track->{'artist-credit'}[0];
-            $artist = $artist->artist;
-            $results['mb_artistid'] = $artist->id;
-            $results['artist'] = $artist->name;
-            $results['title'] = $track->title;
-            if (count($track->releases) == 1) {
-                $release = $track->releases[0];
-                $results['album'] = $release->title;
+        if (count($track['artist-credit']) > 0) {
+            $artist = $track['artist-credit'][0];
+            $artist = $artist['artist'];
+            $results['mb_artistid'] = $artist['id'];
+            $results['artist'] = $artist['name'];
+            $results['title'] = $track['title'];
+            if (count($track['releases']) == 1) {
+                $release = $track['releases'][0];
+                $results['album'] = $release['title'];
             }
         }
         return $results;

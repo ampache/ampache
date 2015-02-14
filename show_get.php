@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -20,15 +20,17 @@
  *
  */
 
+require_once 'lib/init.php';
+
  if (isset($_REQUEST['param_name'])) {
-    $name = $_REQUEST['param_name'];
+    $name = scrub_in($_REQUEST['param_name']);
     if (isset($_REQUEST[$name])) {
-        echo $name . ": ". $_REQUEST[$name];
+        echo $name . ": ". scrub_in($_REQUEST[$name]);
     }
  }
 
  if (isset($_REQUEST['error'])) {
-    $error = $_REQUEST['error'];
-    $error_description = $_REQUEST['error_description'];
+    $error = scrub_in($_REQUEST['error']);
+    $error_description = scrub_in($_REQUEST['error_description']);
     echo $error . " error: " . $error_description;
 }

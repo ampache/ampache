@@ -7,7 +7,7 @@
  *
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -35,7 +35,7 @@
  * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
  * @return    void
  */
-function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation')
+function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation',$visible=true)
 {
     if (substr_count($next_url,AmpConfig::get('web_path'))) {
         $path = $next_url;
@@ -45,6 +45,13 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 
     require AmpConfig::get('prefix') . '/templates/show_confirmation.inc.php';
 } // show_confirmation
+
+function sse_worker($url)
+{
+    echo '<script type="text/javascript">';
+    echo "sse_worker('$url');";
+    echo "</script>\n";
+}
 
 /**
  * return_referer
@@ -666,10 +673,10 @@ function toggle_visible($element)
 
 } // toggle_visible
 
-function mouse_message($message, $timeout = 1000)
+function display_notification($message, $timeout = 5000)
 {
     echo "<script type='text/javascript'>";
-    echo "mouseMessage('" . $message . "', " . $timeout . ");";
+    echo "displayNotification('" . $message . "', " . $timeout . ");";
     echo "</script>\n";
 }
 
@@ -705,3 +712,17 @@ function show_now_playing()
     require_once AmpConfig::get('prefix') . '/templates/show_now_playing.inc.php';
 
 } // show_now_playing
+
+function show_table_render($render = false, $force = false)
+{
+    // Include table render javascript only once
+    if ($force || !defined('TABLE_RENDERED')) {
+        define('TABLE_RENDERED', 1);
+    ?>
+        <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
+        <?php if (isset($render) && $render) { ?>
+            <script language="javascript" type="text/javascript">sortPlaylistRender();</script>
+        <?php
+        }
+    }
+}

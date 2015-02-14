@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -94,6 +94,37 @@ if (empty($oid) && empty($demo_id) && empty($random)) {
     exit;
 }
 
+// Authenticate the user if specified
+$u = $_SERVER['PHP_AUTH_USER'];
+if (empty($u)) {
+    $u = $_REQUEST['u'];
+}
+$p = $_SERVER['PHP_AUTH_PW'];
+if (empty($p)) {
+    $p = $_REQUEST['p'];
+}
+$apikey = $_REQUEST['apikey'];
+
+// If explicit user authentification was passed
+$user_authenticated = false;
+if (!empty($apikey)) {
+    $user = User::get_from_apikey($apikey);
+    if ($user != null) {
+        $GLOBALS['user'] = $user;
+        $uid = $GLOBALS['user']->id;
+        Preference::init();
+        $user_authenticated = true;
+    }
+} elseif (!empty($u) && !empty($p)) {
+    $auth = Auth::login($u, $p);
+    if ($auth['success']) {
+        $GLOBALS['user'] = User::get_from_username($auth['username']);
+        $uid = $GLOBALS['user']->id;
+        Preference::init();
+        $user_authenticated = true;
+    }
+}
+
 if (empty($uid)) {
     debug_event('play', 'No user specified', 2);
     header('HTTP/1.1 400 No User Specified');
@@ -109,33 +140,36 @@ if (empty($uid)) {
 }
 
 if (!$share_id) {
-    $GLOBALS['user'] = new User($uid);
-    Preference::init();
+    // No explicit authentication, use session
+    if (!$user_authenticated) {
+        $GLOBALS['user'] = new User($uid);
+        Preference::init();
 
-    /* If the user has been disabled (true value) */
-    if (make_bool($GLOBALS['user']->disabled)) {
-        debug_event('UI::access_denied', $GLOBALS['user']->username . " is currently disabled, stream access denied", '3');
-        header('HTTP/1.1 403 User Disabled');
-        exit;
-    }
-
-    // If require session is set then we need to make sure we're legit
-    if (AmpConfig::get('require_session')) {
-        if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
-            debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
-        } else if (!Session::exists('stream', $sid)) {
-            // No valid session id given, try with cookie session from web interface
-            $sid = $_COOKIE[AmpConfig::get('session_name')];
-            if (!Session::exists('interface', $sid)) {
-                debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
-                header('HTTP/1.1 403 Session Expired');
-                exit;
-            }
+        /* If the user has been disabled (true value) */
+        if (make_bool($GLOBALS['user']->disabled)) {
+            debug_event('UI::access_denied', $GLOBALS['user']->username . " is currently disabled, stream access denied", '3');
+            header('HTTP/1.1 403 User Disabled');
+            exit;
         }
 
-        // Now that we've confirmed the session is valid
-        // extend it
-        Session::extend($sid, 'stream');
+        // If require session is set then we need to make sure we're legit
+        if (AmpConfig::get('require_session')) {
+            if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
+                debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
+            } else if (!Session::exists('stream', $sid)) {
+                // No valid session id given, try with cookie session from web interface
+                $sid = $_COOKIE[AmpConfig::get('session_name')];
+                if (!Session::exists('interface', $sid)) {
+                    debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
+                    header('HTTP/1.1 403 Session Expired');
+                    exit;
+                }
+            }
+
+            // Now that we've confirmed the session is valid
+            // extend it
+            Session::extend($sid, 'stream');
+        }
     }
 
     /* Update the users last seen information */
@@ -222,9 +256,16 @@ if ($demo_id) {
  */
 if ($random) {
     if ($_REQUEST['start'] < 1) {
-        $oid = Random::get_single_song($_REQUEST['random_type']);
-        // Save this one in case we do a seek
-        $_SESSION['random']['last'] = $oid;
+        if (isset($_REQUEST['random_type'])) {
+            $rtype = $_REQUEST['random_type'];
+        } else {
+            $rtype = $type;
+        }
+        $oid = Random::get_single_song($rtype);
+        if ($oid) {
+            // Save this one in case we do a seek
+            $_SESSION['random']['last'] = $oid;
+        }
     } else {
         $oid = $_SESSION['random']['last'];
     }
@@ -244,6 +285,12 @@ if ($type == 'song') {
         $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
     }
     $media->format();
+}
+
+if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
+    debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username . ' on ' . $media->get_stream_name(), 3);
+    UI::access_denied();
+    exit;
 }
 
 if ($media->catalog) {
@@ -329,6 +376,16 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
     if (!is_resource($fp)) {
         debug_event('Play',"Error: Unable to open $media->file for downloading",'2');
         exit();
+    }
+
+    if (!$share_id) {
+        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            debug_event('play', 'Registering download stats for {' . $media->get_stream_name() . '}...', '5');
+            $sessionkey = $sid ?: Stream::get_session();
+            $agent = Session::agent($sessionkey);
+            $location = Session::get_geolocation($sessionkey);
+            Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+        }
     }
 
     // Check to see if we should be throttling because we can get away with it
@@ -443,7 +500,7 @@ if ($transcode) {
         }
     }
 
-    $transcoder = Stream::start_transcode($media, $transcode_to, $troptions);
+    $transcoder = Stream::start_transcode($media, $transcode_to, null, $troptions);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else if ($cpaction) {
@@ -528,10 +585,11 @@ if (!isset($_REQUEST['segment'])) {
     } else {
         if (!$share_id) {
             if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-                debug_event('play', 'Registering stats for {'.$media->get_stream_name() .'}...', '5');
-                $sessionkey = Stream::$session;
+                debug_event('play', 'Registering stream stats for {'.$media->get_stream_name() .'}...', 5);
+                $sessionkey = $sid ?: Stream::get_session();
                 $agent = Session::agent($sessionkey);
-                $GLOBALS['user']->update_stats($type, $media->id, $agent);
+                $location = Session::get_geolocation($sessionkey);
+                $GLOBALS['user']->update_stats($type, $media->id, $agent, $location, isset($_REQUEST['noscrobble']));
             }
         }
     }
@@ -543,9 +601,14 @@ if ($transcode || $demo_id) {
     header('Accept-Ranges: bytes');
 }
 
-$mime = ($transcode && isset($transcoder))
-    ? $media->type_to_mime($transcoder['format'])
-    : $media->mime;
+$mime = $media->mime;
+if ($transcode && isset($transcoder)) {
+    $mime = $media->type_to_mime($transcoder['format']);
+    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+        // This to avoid hang, see http://php.net/manual/es/function.proc-open.php#89338
+        fclose($transcoder['stderr']);
+    }
+};
 
 $browser->downloadHeaders($media_name, $mime, false, $stream_size);
 
@@ -553,20 +616,32 @@ $bytes_streamed = 0;
 
 // Actually do the streaming
 $buf_all = '';
-ob_end_clean();
-do {
-    $read_size = $transcode
-        ? 2048
-        : min(2048, $stream_size - $bytes_streamed);
-    $buf = fread($fp, $read_size);
-    if ($send_all_in_once) {
-        $buf_all .= $buf;
-    } else {
-        print($buf);
-        ob_flush();
-    }
-    $bytes_streamed += strlen($buf);
-} while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+$r_arr = array($fp);
+$w_arr = $e_arr = null;
+$status = stream_select($r_arr, $w_arr, $e_arr, 2);
+if ($status === false) {
+    debug_event('play', 'stream_select failed.', 1);
+} elseif ($status > 0) {
+    do {
+        $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
+        if ($buf = fread($fp, $read_size)) {
+            if ($send_all_in_once) {
+                $buf_all .= $buf;
+            } else {
+                if (!empty($buf)) {
+                    print($buf);
+                    if (ob_get_length()) {
+                        ob_flush();
+                        flush();
+                        ob_end_flush();
+                    }
+                    ob_start();
+                }
+            }
+            $bytes_streamed += strlen($buf);
+        }
+    } while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+}
 
 if ($send_all_in_once && connection_status() == 0) {
     header("Content-Length: " . strlen($buf_all));
@@ -586,10 +661,6 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
 if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
 
 if ($transcode && isset($transcoder)) {
-    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-        fread($transcoder['stderr'], 8192);
-        fclose($transcoder['stderr']);
-    }
     fclose($fp);
     proc_terminate($transcoder['process']);
 } else {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -148,7 +148,7 @@ class Democratic extends Tmp_Playlist
      * format
      * This makes the variables all purrty so that they can be displayed
      */
-    public function format()
+    public function format($details = true)
     {
         $this->f_cooldown    = $this->cooldown . ' ' . T_('minutes');
         $this->f_primary    = $this->primary ? T_('Primary') : '';
@@ -636,8 +636,8 @@ class Democratic extends Tmp_Playlist
         }
 
         $sql = 'SELECT COUNT(`user`) AS `count` FROM `user_vote` ' .
-            "WHERE `object_id`='" . Dba::escape($id) . "'";
-        $db_results = Dba::read($sql);
+            "WHERE `object_id` = ?";
+        $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
         parent::add_to_cache('democratic_vote', $id, $results['count']);
@@ -652,8 +652,19 @@ class Democratic extends Tmp_Playlist
      */
     public function get_voters($object_id)
     {
-        return parent::get_from_cache('democratic_voters',$object_id);
+        if (parent::is_cached('democratic_voters', $object_id)) {
+            return parent::get_from_cache('democratic_voters', $object_id);
+        }
 
+        $sql = "SELECT `user` FROM `user_vote` WHERE `object_id` = ?";
+        $db_results = Dba::read($sql, array($object_id));
+
+        $voters = array();
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $voters[] = $results['user'];
+        }
+        parent::add_to_cache('democratic_vote', $object_id, $voters);
+        return $voters;
     } // get_voters
 
 

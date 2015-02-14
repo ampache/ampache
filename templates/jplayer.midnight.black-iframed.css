@@ -469,7 +469,12 @@ div.jp-title {
 	font-weight: bold;
 	text-align: center;
 	color: #FFF;
-	background: #343433 url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x
+	background: #343433 url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;
+	
+	left: -80%;
+	position: absolute;
+	top: 10px;
+	width: 300px !important;
 }
 
 div.playing_info {
@@ -677,7 +682,7 @@ a.jp-video-play-icon {
 	left: 50%;
 	top: 50%;
 
-	background: url("../modules/jquery-jplayer-midnight-black/jquery-jplayer.midnight.black.video.play.png") 0 0 no-repeat;
+	background: url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 0 no-repeat;
 	text-indent: -9999px;
 }
 div.jp-video-play:hover a.jp-video-play-icon {

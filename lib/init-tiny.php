@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,9 +22,9 @@
 
 // Minimal init for use in install
 
-// Do a check for PHP5 because nothing will work without it
-if (floatval(phpversion()) < 5) {
-    echo "ERROR: Ampache requires PHP5";
+// Do a check for PHP5.4 because nothing will work without it
+if (version_compare(phpversion(), '5.4.0', '<')) {
+    echo "ERROR: Ampache requires PHP version >= 5.4";
     exit;
 }
 

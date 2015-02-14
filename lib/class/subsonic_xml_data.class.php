@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,7 +30,7 @@
  */
 class Subsonic_XML_Data
 {
-    const API_VERSION = "1.10.1";
+    const API_VERSION = "1.11.0";
 
     const SSERROR_GENERIC = 0;
     const SSERROR_MISSINGPARAM = 10;
@@ -140,6 +140,7 @@ class Subsonic_XML_Data
         if (empty($version)) $version = Subsonic_XML_Data::API_VERSION;
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
+        $response->addAttribute('type', 'ampache');
         $response->addAttribute('version', $version);
         return $response;
     }
@@ -157,7 +158,7 @@ class Subsonic_XML_Data
      *
      * @param    SimpleXMLElement   $xml    Parent node
      * @param    integer    $code    Error code
-     * @param    string    $string    Error message
+     * @param    string     $message Error message
      */
     public static function setError($xml, $code, $message = "")
     {
@@ -327,7 +328,7 @@ class Subsonic_XML_Data
         $xsong->addAttribute('albumId', self::getAlbumId($album->id));
         $xsong->addAttribute('album', $album->name);
         $artist = new Artist($song->artist);
-        $xsong->addAttribute('artistId', self::getArtistId($album->id));
+        $xsong->addAttribute('artistId', self::getArtistId($song->artist));
         $xsong->addAttribute('artist', $artist->name);
         $xsong->addAttribute('coverArt', self::getAlbumId($album->id));
         $xsong->addAttribute('duration', $song->time);
@@ -350,9 +351,9 @@ class Subsonic_XML_Data
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $transcode_mode = AmpConfig::get('transcode_' . $song->type);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
-            $transcode_settings = $song->get_transcode_settings(null);
+        $valid_types = Song::get_stream_types_for_type($song->type, 'api');
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+            $transcode_settings = $song->get_transcode_settings(null, 'api');
             if ($transcode_settings) {
                 $transcode_type = $transcode_settings['format'];
                 $xsong->addAttribute('transcodedSuffix', $transcode_type);
@@ -448,9 +449,9 @@ class Subsonic_XML_Data
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $transcode_mode = AmpConfig::get('transcode_' . $video->type);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
-            $transcode_settings = $video->get_transcode_settings(null);
+        $valid_types = Song::get_stream_types_for_type($video->type, 'api');
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+            $transcode_settings = $video->get_transcode_settings(null, 'api');
             if ($transcode_settings) {
                 $transcode_type = $transcode_settings['format'];
                 $xvideo->addAttribute('transcodedSuffix', $transcode_type);
@@ -586,7 +587,7 @@ class Subsonic_XML_Data
         $isManager = ($user->access >= 75);
         $isAdmin = ($user->access >= 100);
         $xuser->addAttribute('adminRole', $isAdmin ? 'true' : 'false');
-        $xuser->addAttribute('settingsRole', $isAdmin ? 'true' : 'false');
+        $xuser->addAttribute('settingsRole', 'true');
         $xuser->addAttribute('downloadRole', Preference::get_by_user($user->id, 'download') ? 'true' : 'false');
         $xuser->addAttribute('playlistRole', 'true');
         $xuser->addAttribute('coverArtRole', $isManager ? 'true' : 'false');
@@ -594,7 +595,7 @@ class Subsonic_XML_Data
         $xuser->addAttribute('podcastRole', 'false');
         $xuser->addAttribute('streamRole', 'true');
         $xuser->addAttribute('jukeboxRole', 'false');
-        $xuser->addAttribute('shareRole', 'false');
+        $xuser->addAttribute('shareRole', Preference::get_by_user($user->id, 'share') ? 'true' : 'false');
     }
 
     public static function addUsers($xml, $users)
@@ -626,7 +627,7 @@ class Subsonic_XML_Data
 
     public static function addShare($xml, $share)
     {
-        $xshare = $xml->addChild('share ');
+        $xshare = $xml->addChild('share');
         $xshare->addAttribute('id', $share->id);
         $xshare->addAttribute('url', $share->public_url);
         $xshare->addAttribute('description', $share->description);
@@ -669,6 +670,81 @@ class Subsonic_XML_Data
             // Don't add share with max counter already reached
             if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);
+            }
+        }
+    }
+
+    public static function addJukeboxPlaylist($xml, Localplay $localplay)
+    {
+        $xjbox = self::createJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
+        $tracks = $localplay->get();
+        foreach ($tracks as $track) {
+            if ($track['oid']) {
+                $song = new Song($track['oid']);
+                self::createSong($xjbox, $song, 'entry');
+            }
+        }
+    }
+
+    public static function createJukeboxStatus($xml, Localplay $localplay, $elementName = 'jukeboxStatus')
+    {
+        $xjbox = $xml->addChild($elementName);
+        $status = $localplay->status();
+        $xjbox->addAttribute('currentIndex', 0);    // Not supported
+        $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
+        $xjbox->addAttribute('gain', $status['volume']);
+        $xjbox->addAttribute('position', 0);    // Not supported
+
+        return $xjbox;
+    }
+
+    public static function addLyrics($xml, $artist, $title, $song_id)
+    {
+        $song = new Song($song_id);
+        $song->format();
+        $song->fill_ext_info();
+        $lyrics = $song->get_lyrics();
+
+        if ($lyrics && $lyrics['text']) {
+            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text = str_replace("\r", '', $text);
+            $xlyrics = $xml->addChild("lyrics", $text);
+            if ($artist) {
+                $xlyrics->addAttribute("artist", $artist);
+            }
+            if ($title) {
+                $xlyrics->addAttribute("title", $title);
+            }
+        }
+    }
+
+    public static function addArtistInfo($xml, $info, $similars)
+    {
+        $artist = new Artist($info['id']);
+
+        $xartist = $xml->addChild("artistInfo");
+        $xartist->addChild("biography", trim($info['summary']));
+        $xartist->addChild("musicBrainzId", $artist->mbid);
+        //$xartist->addChild("lastFmUrl", "");
+        $xartist->addChild("smallImageUrl", htmlentities($info['smallphoto']));
+        $xartist->addChild("mediumImageUrl", htmlentities($info['mediumphoto']));
+        $xartist->addChild("largeImageUrl", htmlentities($info['largephoto']));
+
+        foreach ($similars as $similar) {
+            $xsimilar = $xartist->addChild("similarArtist");
+            $xsimilar->addAttribute("id", ($similar['id'] !== null ? self::getArtistId($similar['id']) : "-1"));
+            $xsimilar->addAttribute("name", $similar['name']);
+        }
+    }
+
+    public static function addSimilarSongs($xml, $similar_songs)
+    {
+        $xsimilar = $xml->addChild("similarSongs");
+        foreach ($similar_songs as $similar_song) {
+            $song = new Song($similar_song['id']);
+            $song->format();
+            if ($song->id) {
+                self::addSong($xsimilar, $song);
             }
         }
     }

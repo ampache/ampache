@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -30,6 +30,12 @@ namespace Beets;
  */
 abstract class Handler
 {
+    /**
+     * Seperator between command and arguments
+     * @var string
+     */
+    protected $commandSeperator;
+
     abstract protected function start($command);
 
     public function setHandler(Catalog $handler, $command)
@@ -48,7 +54,6 @@ abstract class Handler
         return call_user_func(array($this->handler, $this->handlerCommand), $data);
     }
 
-
     /**
      * Resolves the differences between Beets and Ampache properties
      * @param type $song
@@ -60,9 +65,31 @@ abstract class Handler
             list($key, $format) = $to;
             $song[$key] = sprintf($format, $song[$from]);
         }
-        $song['genre'] = explode(',', $song['genre']);
+        $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', $song['genre']);
 
         return $song;
+    }
+
+    /**
+     * Get a command to get songs with a timestamp in $tag newer than $time.
+     * For example: 'ls added:2014-10-02..'
+     * @param string $command
+     * @param string $tag
+     * @param integer $time
+     * @return string
+     */
+    public function getTimedCommand($command, $tag, $time)
+    {
+        $commandParts = array(
+            $command
+        );
+        if ($time) {
+            $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
+        } else {
+            // Add an empty part so we get a trailing slash if needed
+            $commandParts[] = '';
+        }
+        return implode($this->commandSeperator, $commandParts);
     }
 
 }

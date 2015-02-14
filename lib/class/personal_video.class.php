@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -92,9 +92,9 @@ class Personal_Video extends Video
      * this function takes the object and reformats some values
      */
 
-    public function format()
+    public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
         $this->f_location = $this->location;
 

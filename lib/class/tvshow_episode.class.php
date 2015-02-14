@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -123,10 +123,10 @@ class TVShow_Episode extends Video
     {
         parent::update($data);
 
-        $original_name = $data['original_name'] ?: $this->original_name;
-        $tvshow_season = $data['tvshow_season'] ?: $this->season;
-        $tvshow_episode = $data['tvshow_episode'] ?: $this->episode_number;
-        $summary = $data['summary'] ?: $this->summary;
+        $original_name = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
+        $tvshow_season = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
+        $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->episode_number;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
         Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
@@ -144,12 +144,12 @@ class TVShow_Episode extends Video
      * format
      * this function takes the object and reformats some values
      */
-    public function format()
+    public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
         $season = new TVShow_Season($this->season);
-        $season->format();
+        $season->format($details);
 
         $this->f_title = ($this->original_name ?: $this->f_title);
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';

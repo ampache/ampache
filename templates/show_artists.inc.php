@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -38,6 +38,9 @@ $thcount = 8;
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="cel_time optional"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
@@ -62,7 +65,7 @@ $thcount = 8;
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
             $libitem = new Artist($artist_id, $_SESSION['catalog']);
-            $libitem->format();
+            $libitem->format(true, $limit_threshold);
             $show_direct_play = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', '25');
             if ($directplay_limit > 0) {
@@ -93,6 +96,9 @@ $thcount = 8;
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="cel_time essential"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
@@ -106,5 +112,6 @@ $thcount = 8;
         </tr>
     </tfoot>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
+
+<?php show_table_render(); ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

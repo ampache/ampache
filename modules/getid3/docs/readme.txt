@@ -77,7 +77,7 @@ Reads & parses (to varying degrees):
  ¤ audio-lossy:
   * MP3/MP2/MP1
   * MPC / Musepack
-  * Ogg (Vorbis, OggFLAC, Speex)
+  * Ogg (Vorbis, OggFLAC, Speex, Opus)
   * AAC / MP4
   * AC3
   * DTS
@@ -432,6 +432,8 @@ Known Bugs/Issues in other programs
 -----------------------------------
 http://www.getid3.org/phpBB3/viewtopic.php?t=25
 
+* PZ TagEditor v4.53.408 has been known to insert ID3v2.3 frames
+  into an existing ID3v2.2 tag which, of course, breaks things
 * Windows Media Player (up to v11) and iTunes (up to v10+) do
     not correctly handle ID3v2.3 tags with UTF-16BE+BOM
     encoding (they assume the data is UTF-16LE+BOM and either

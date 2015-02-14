@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -175,15 +175,17 @@ class TVShow extends database_object implements library_item
      * format
      * this function takes the object and reformats some values
      */
-    public function format()
+    public function format($details = true)
     {
         $this->f_name = trim($this->prefix . " " . $this->name);
         $this->link = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
 
-        $this->_get_extra_info();
-        $this->tags = Tag::get_top_tags('tvshow', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
+        if ($details) {
+            $this->_get_extra_info();
+            $this->tags = Tag::get_top_tags('tvshow', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
+        }
 
         return true;
     }
@@ -319,9 +321,9 @@ class TVShow extends database_object implements library_item
     {
         // Save our current ID
         $current_id = $this->id;
-        $name = $data['name'] ?: $this->name;
-        $year = $data['year'] ?: $this->year;
-        $summary = $data['summary'] ?: $this->summary;
+        $name = isset($data['name']) ? $data['name'] : $this->name;
+        $year = isset($data['year']) ? $data['year'] : $this->year;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
 
         // Check if name is different than current name
         if ($this->name != $name || $this->year != $year) {
@@ -353,11 +355,17 @@ class TVShow extends database_object implements library_item
         $this->summary = $summary;
 
         $override_childs = false;
-        if ($data['apply_childs'] == 'checked') {
+        if ($data['overwrite_childs'] == 'checked') {
             $override_childs = true;
         }
+
+        $add_to_childs = false;
+        if ($data['add_to_childs'] == 'checked') {
+            $add_to_childs = true;
+        }
+
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
         }
 
         return $current_id;
@@ -369,18 +377,18 @@ class TVShow extends database_object implements library_item
      *
      * Update tags of tv shows
      */
-    public function update_tags($tags_comma, $override_childs, $current_id = null)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
         if ($current_id == null) {
             $current_id = $this->id;
         }
 
-        Tag::update_tag_list($tags_comma, 'tvshow', $current_id);
+        Tag::update_tag_list($tags_comma, 'tvshow', $current_id, $force_update ? true : $override_childs);
 
-        if ($override_childs) {
+        if ($override_childs || $add_to_childs) {
             $episodes = $this->get_episodes();
             foreach ($episodes as $ep_id) {
-                Tag::update_tag_list($tags_comma, 'episode', $ep_id);
+                Tag::update_tag_list($tags_comma, 'episode', $ep_id, $override_childs);
             }
         }
     }

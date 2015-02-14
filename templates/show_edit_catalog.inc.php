@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -26,7 +26,7 @@ UI::show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalo
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td><?php echo T_('Name'); ?>:</td>
-            <td><input type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>"></input></td>
+            <td><input type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>" autofocus></input></td>
             <td style="vertical-align:top; font-family: monospace;" rowspan="5">
                 <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
                 <span class="format-specifier">%A</span>= <?php echo T_('album name'); ?><br />

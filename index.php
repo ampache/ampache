@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -36,7 +36,7 @@ $_SESSION['catalog'] = 0;
  * refresh_javascript include. Must be greater then 5, I'm not
  * going to let them break their servers
  */
-if (AmpConfig::get('refresh_limit') > 5) {
+if (AmpConfig::get('refresh_limit') > 5 && AmpConfig::get('home_now_playing')) {
     $refresh_limit = AmpConfig::get('refresh_limit');
     $ajax_url = '?page=index&action=reloadnp';
     require_once AmpConfig::get('prefix') . '/templates/javascript_refresh.inc.php';

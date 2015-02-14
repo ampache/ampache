@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -200,6 +200,18 @@ class Api
                 $data['username'] = $client->username;
                 $data['type'] = 'api';
                 $data['value'] = $timestamp;
+                if (isset($input['client'])) {
+                    $data['agent'] = $input['client'];
+                }
+                if (isset($input['geo_latitude'])) {
+                    $data['geo_latitude'] = $input['geo_latitude'];
+                }
+                if (isset($input['geo_longitude'])) {
+                    $data['geo_longitude'] = $input['geo_longitude'];
+                }
+                if (isset($input['geo_name'])) {
+                    $data['geo_name'] = $input['geo_name'];
+                }
                 $token = Session::create($data);
 
                 debug_event('API', 'Login Success, passphrase matched', 1);
@@ -662,7 +674,7 @@ class Api
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $song = new Playlist($input['song']);
+        $song = $input['song'];
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {

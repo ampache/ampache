@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -192,7 +192,7 @@ class Song_Preview extends database_object implements media, playable_item
      * and does a ton of formating on it creating f_??? variables on the current
      * object
      */
-    public function format()
+    public function format($details = true)
     {
         // Format the artist name
         if ($this->artist) {
@@ -303,7 +303,7 @@ class Song_Preview extends database_object implements media, playable_item
      *
      * FIXME: Song Preview transcoding is not implemented
      */
-    public function get_transcode_settings($target = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
         return false;
     }
@@ -313,7 +313,7 @@ class Song_Preview extends database_object implements media, playable_item
         return $this->title;
     }
 
-    public function set_played($user, $agent)
+    public function set_played($user, $agent, $location)
     {
         // Do nothing
     }

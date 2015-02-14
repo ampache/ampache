@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -30,6 +30,8 @@ class Ampacheflickr {
     public $min_ampache = '360045';
     public $max_ampache = '999999';
 
+    private $api_key;
+    
     /**
      * Constructor
      * This function does nothing...
@@ -73,7 +75,7 @@ class Ampacheflickr {
         $photos = array();
         $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
         debug_event($this->name, 'Calling ' . $url, '5');
-        $request = Requests::get($url);
+        $request = Requests::get($url, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
             if ($xml && $xml->photos) {

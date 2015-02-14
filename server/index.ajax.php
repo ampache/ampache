@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -35,6 +35,13 @@ switch ($_REQUEST['action']) {
             $results['random_selection'] = ob_get_clean();
         } else {
             $results['random_selection'] = '<!-- None found -->';
+
+            if (Access::check('interface', '100')) {
+                $catalogs = Catalog::get_catalogs();
+                if (count($catalogs) == 0) {
+                    $results['random_selection'] = sprintf(T_('No catalog configured yet. To start streaming your media, you now need to %s add a catalog %s'), '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">', '</a>.<br /><br />');
+                }
+            }
         }
     break;
     case 'random_videos':
@@ -214,6 +221,7 @@ switch ($_REQUEST['action']) {
                 exit;
         } // end switch on button
 
+        Ajax::set_include_override(true);
         ob_start();
         $_SESSION['state']['sidebar_tab'] = $button;
         require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php';

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -564,7 +564,7 @@ class Tag extends database_object implements library_item
      * update_tag_list
      * Update the tags list based on commated list (ex. tag1,tag2,tag3,..)
      */
-    public static function update_tag_list($tags_comma, $type, $object_id)
+    public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
         debug_event('tag.class', 'Updating tags for values {'.$tags_comma.'} type {'.$type.'} object_id {'.$object_id.'}', '5');
 
@@ -588,7 +588,7 @@ class Tag extends database_object implements library_item
                     if ($found) {
                         debug_event('tag.class', 'Already found. Do nothing.', '5');
                         unset($editedTags[$tk]);
-                    } else {
+                    } else if ($overwrite) {
                         debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
                         $ctag->remove_map($type, $object_id);
                     }
@@ -598,8 +598,8 @@ class Tag extends database_object implements library_item
 
         // Look if we need to add some new tags
         foreach ($editedTags as  $tk => $tv) {
-            debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
             if ($tv != '') {
+                debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
                 Tag::add($type, $object_id, $tv, false);
             }
         }
@@ -634,19 +634,21 @@ class Tag extends database_object implements library_item
      * remove_map
      * This will only remove tag maps for the current user
      */
-    public function remove_map($type,$object_id)
+    public function remove_map($type, $object_id)
     {
         if (!Core::is_library_item($type))
             return false;
 
-        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
-        Dba::write($sql, array($this->id, $type, $object_id, $GLOBALS['user']->id));
+        // TODO: Review the tag edition per user.
+
+        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? "; //AND `user` = ?";
+        Dba::write($sql, array($this->id, $type, $object_id));//, $GLOBALS['user']->id));
 
         return true;
 
     } // remove_map
 
-    public function format()
+    public function format($details = true)
     {
 
     }

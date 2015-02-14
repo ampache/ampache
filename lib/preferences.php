@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -191,6 +191,9 @@ function create_preference_input($name,$value)
         case 'home_now_playing':
         case 'browser_notify':
         case 'allow_video':
+        case 'geolocation':
+        case 'webplayer_aurora':
+        case 'upload_allow_remove':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {
