@@ -27,9 +27,36 @@
  */
 class UPnPPlayer 
 {
-    private $_description_url;
-    private $_playlist = array();
+    /* @var UPnPPlaylist $object */
+    private $_playlist = null;
+
+    /* @var UPnPDevice $object */
     private $_device;
+
+    private $_description_url = null;
+
+    /**
+     * Lazy initialization for UPNP device property
+     * @return UPnPDevice
+     */
+    private function Device()
+    {
+        if (is_null($this->_device))
+            $this->_device = new UPnPDevice($this->_description_url);
+        return $this->_device;
+    }
+
+    /**
+     * Lazy initialization for UPNP playlist property
+     * @return UPnPPlaylist
+     */
+    private function Playlist()
+    {
+        if (is_null($this->_playlist))
+            $this->_playlist = new UPnPPlaylist();
+        return $this->_playlist;
+    }
+
     
     /**
      * UPnPPlayer
@@ -38,21 +65,21 @@ class UPnPPlayer
     public function UPnPPlayer($name = "noname", $description_url = "http://localhost") 
     {
         debug_event('upnpPlayer', 'constructor: ' . $name . ' | ' . $description_url, 5);
-        require_once AmpConfig::get('prefix') . '/modules/upnp/upnpdevice.php';
+        $this->_description_url = $description_url;
 
-        $this->_description_url = $description_url;		
-        $this->_device = new upnpdevice($this->_description_url);
+        require_once AmpConfig::get('prefix') . '/modules/upnp/upnpdevice.php';
+        require_once AmpConfig::get('prefix') . '/modules/upnp/upnpplaylist.php';
     }
 
     /**
      * add
      * append a song to the playlist
      * $name    Name to be shown in the playlist
-     * $url     URL of the song
+     * $link    URL of the song
      */      
-    public function PlayListAdd($name, $url) 
+    public function PlayListAdd($name, $link) 
     {
-        $this->_playlist[] = array('name' => $name, 'url' => $url);
+        $this->Playlist()->Add($name, $link);
         return true;
     }
 
@@ -61,20 +88,46 @@ class UPnPPlayer
      * This deletes a specific track
      */
     public function PlaylistRemove($track) 
-    { 
-        $this->_playlist[] = array('name' => $name, 'url' => $url);
-        return true; 
+    {
+        $this->Playlist()->RemoveTrack($track);
+        return true;
     }
     
 
     /**
-     * clear_playlist
+     * clear playlist
      * this flushes the playlist cache (I hope this means clear)
      */
-    public function PlayListClear() 
+    public function PlaylistClear() 
     { 
-        $this->_playlist = array();
+        $this->Playlist()->Clear();
         return true; 
+    }
+
+     /**
+     * GetPlayListItems
+     * This returns a delimited string of all of the filenames
+     * current in your playlist, only url's at the moment
+     */
+    public function GetPlaylistItems() 
+    { 
+        return $this->Playlist()->AllItems();
+    }
+
+    public function GetCurrentItem()
+    {
+        return $this->Playlist()->CurrentItem();
+    }
+
+    public function GetState()
+    {
+        $response = $this->Device()->instanceOnly('GetTransportInfo');
+        $responseXML = simplexml_load_string($response);
+        list($state) = $responseXML->xpath('//CurrentTransportState');
+
+        debug_event('upnpPlayer', 'GetState = ' . $state, 5);
+
+        return $state;
     }
 
     /**
@@ -84,8 +137,9 @@ class UPnPPlayer
     public function Next() 
     {
         debug_event('upnpPlayer', 'Next', 5);
-        $this->_device->instanceOnly('Next');
-        return true; 
+        $this->Playlist()->Next();
+        $this->Play();
+        return true;
     }
 
     /**
@@ -95,7 +149,8 @@ class UPnPPlayer
     public function Prev() 
     {
         debug_event('upnpPlayer', 'Prev', 5);
-        $this->_device->instanceOnly('Previous');
+        $this->Playlist()->Prev();
+        $this->Play();
         return true;
     }
 
@@ -106,7 +161,9 @@ class UPnPPlayer
     public function Skip($pos) 
     { 
         debug_event('upnpPlayer', 'Skip', 5);
-        return true; 
+        $this->Playlist()->Skip($pos);
+        $this->Play();
+        return true;
     }
 
     /** 
@@ -115,9 +172,10 @@ class UPnPPlayer
      */
     public function Play() 
     {
-        $songUrl = $this->_playlist[0]['url'];
-        $songName = $this->_playlist[0]['name'];
-        
+        $current = $this->Playlist()->CurrentItem();
+        $songUrl = $current['link'];
+        $songName = $current['name'];
+
         $songId = preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
         debug_event('upnpPlayer', 'Play: ' . $songName . ' | ' . $songUrl . ' | ' . $songId, 5);
         
@@ -134,78 +192,88 @@ class UPnPPlayer
             'CurrentURI' => $songUrl,
             'CurrentURIMetaData' => htmlentities($xmlDIDL)
         );
-        $response = $this->_device->sendRequestToDevice('SetAVTransportURI', $args, 'AVTransport');
+        $response = $this->Device()->sendRequestToDevice('SetAVTransportURI', $args, 'AVTransport');
 
         $args = array( 'InstanceID' => 0, 'Speed' => 1);
-        $response = $this->_device->sendRequestToDevice('Play', $args, 'AVTransport');
+        $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
+
+        $sid = $this->Device()->Subscribe();
+        $_SESSION['upnp_SID'] = $sid;
 
         return true; 
     }
 
-    /** 
-     * pause
-     * toggle pause mode on current song
-     */      
-    public function Pause() 
-    {
-        debug_event('upnpPlayer', 'Pause', 5);
-        $response = $this->_device->instanceOnly('Pause');
-        return true; 
-    }
-
-    /** 
-     * stop
+    /**
+     * Stop
      * stops the current song amazing!
      */      
     public function Stop() 
     {
         debug_event('upnpPlayer', 'Stop', 5);
-        $args = array( 'InstanceID' => 0, 'Speed' => 1);
-        $response = $this->_device->sendRequestToDevice('Stop', $args, 'AVTransport');
+
+        $response = $this->Device()->instanceOnly('Stop');
+
+        $sid = $_SESSION['upnp_SID'];
+        $this->Device()->UnSubscribe($sid);
+        $_SESSION['upnp_SID'] = "";
+
+        return true;
+    }
+
+    /**
+     * pause
+     * toggle pause mode on current song
+     */
+    public function Pause()
+    {
+        $state = $this->GetState();
+        debug_event('upnpPlayer', 'Pause. prev state = ' . $state, 5);
+
+        if ($state == 'PLAYING') {
+            $response = $this->Device()->instanceOnly('Pause');
+        }
+        else {
+            $args = array( 'InstanceID' => 0, 'Speed' => 1);
+            $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
+        }
+
         return true;
     }
 
     /** 
-      * repeat
+     * Repeat
      * This toggles the repeat state
      */
     public function Repeat($value) 
-    { 
+    {
+        //!! TODO not implemented yet
         return true;  
     }
 
     /** 
-     * random
+     * Random
      * this toggles the random state
      */
     public function Random($value) 
-    { 
-        return true; 
+    {
+        //!! TODO not implemented yet
+        return true;
     }
 
     /**
-     * state
-     * This returns the current state of the player
-     */
-    public function State() 
-    { 
-        $state = 'play';
-        return $state; 
-    }
-
-    /**
-     * extract the full state from the xml file and send to status in vlccontroller for further parsing.
+     *
      *  
      */
     public function FullState() 
     {
-        return $results;
+        //!! TODO not implemented yet
+        return "";
     }
    
 
     /**
-     * volume_up
-     * This increases the volume of vlc , set to +20 can be changed to your preference
+     * VolumeUp
+     * increases the volume
      */
     public function VolumeUp() 
     { 
@@ -214,8 +282,8 @@ class UPnPPlayer
     }
 
     /**
-     * volume_down
-     * This decreases the volume, can be set to your preference
+     * VolumeDown
+     * decreases the volume
      */
     public function VolumeDown() 
     { 
@@ -224,7 +292,7 @@ class UPnPPlayer
     }
 
     /**
-     * set_volume
+     * SetVolume
      */
     public function SetVolume($value) 
     { 
@@ -232,7 +300,7 @@ class UPnPPlayer
         $channel = 'Master';
         $instanceId = 0;
 
-        $response = $this->_device->sendRequestToDevice( 'SetVolume', array(
+        $response = $this->Device()->sendRequestToDevice( 'SetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel,
             'DesiredVolume' => $desiredVolume
@@ -241,34 +309,25 @@ class UPnPPlayer
         return true; 
     }
 
-    public function GetVolume() 
+    /**
+     * GetVolume
+     */
+    public function GetVolume()
     { 
         $instanceId = 0;
         $channel = 'Master';
         
-        $response = $this->_device->sendRequestToDevice( 'GetVolume', array(
+        $response = $this->Device()->sendRequestToDevice( 'GetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel
         ));
 
         $responseXML = simplexml_load_string($response);
-        
         list($volume) = ($responseXML->xpath('//CurrentVolume'));
         debug_event('upnpPlayer', 'GetVolume:' . $volume, 5);
         
         return $volume; 
     }
-
-     /**
-     * GetPlayListItems
-     * This returns a delimiated string of all of the filenames
-     * current in your playlist, only url's at the moment
-     */
-    public function GetPlayListItems() 
-    { 
-        return $results; 
-    }
-
 
 } // End UPnPPlayer Class
 ?>

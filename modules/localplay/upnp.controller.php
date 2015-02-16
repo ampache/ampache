@@ -34,7 +34,7 @@ class AmpacheUPnP extends localplay_controller
 
     private $_description = 'Controls a UPnP instance';
 
-    /* Constructed variables */
+    /* @var UPnPPlayer $object */
     private $_upnp;
     
 
@@ -238,13 +238,8 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            $this->_upnp->PlaylistAdd($url->title, $url->url);
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'add_url failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->PlaylistAdd($url->title, $url->url);
+        return true;
     }
 
     /**
@@ -259,13 +254,8 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            $this->_upnp->PlaylistRemove($track);
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'delete_track failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->PlaylistRemove($track);
+        return true;
     }
 
     /**
@@ -280,13 +270,8 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            $this->_upnp->PlayListClear();
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'clear_playlist failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->PlaylistClear();
+        return true;
     }
 
     /**
@@ -302,12 +287,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            return $this->_upnp->Play();
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'play failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        return $this->_upnp->Play();
     }
 
     /**
@@ -322,12 +302,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            return $this->_upnp->Pause();
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'pause failed, is the player started? ' . $ex->getMessage(), 1);
-            return false;
-        }
+        return $this->_upnp->Pause();
     }
 
     /**
@@ -343,33 +318,23 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            return $this->_upnp->Stop();
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'stop failed, is the player started? ' . $ex->getMessage(), 1);
-            return false;
-        }
+        return $this->_upnp->Stop();
     }
 
     /**
      * skip
      * This tells upnp to skip to the specified song
      */
-    public function skip($song)
+    public function skip($pos)
     {
-        debug_event('upnp', 'skip', 5);
+        debug_event('upnp', 'skip ' . $pos, 5);
 
         if (!$this->_upnp) {
             return false;
         }
 
-        try {
-            $this->_upnp->Skip($song);
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'skip failed, is the player started?: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->Skip($pos);
+        return true;
     }
 
     /**
@@ -384,13 +349,8 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            $this->_upnp->PlaySkip('next');
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'next failed, is the player started? ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->Next();
+        return true;
     }
 
     /**
@@ -405,13 +365,8 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            $this->_upnp->PlaySkip('previous');
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'prev failed, is the player started? ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->Prev();
+        return true;
     }
 
     /**
@@ -426,13 +381,8 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            $this->_upnp->SetVolume($volume);
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'volume failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->SetVolume($volume);
+        return true;
     }
 
     /**
@@ -446,12 +396,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            return $this->_upnp->VolumeUp();
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'volume_up failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        return $this->_upnp->VolumeUp();
     }
     
     /**
@@ -465,12 +410,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            return $this->_upnp->VolumeDown();            
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'volume_down failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        return $this->_upnp->VolumeDown();
     }
     
     /**
@@ -485,15 +425,10 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            $this->_upnp->Repeat(array(
-                'repeat' => ($state ? 'all' : 'off')
-            ));
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'repeat failed, is the player started? ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->Repeat(array(
+            'repeat' => ($state ? 'all' : 'off')
+        ));
+        return true;
     }
 
     /**
@@ -508,13 +443,8 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        try {
-            $this->_upnp->PlayShuffle($onoff);
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'random failed, is the player started? ' . $ex->getMessage(), 1);
-            return false;
-        }
+        $this->_upnp->PlayShuffle($onoff);
+        return true;
     }
 
     /**
@@ -531,33 +461,29 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
+        $playlist = $this->_upnp->GetPlaylistItems();
+
         $results = array();
+        $idx = 1;
+        foreach ($playlist as $key => $item) {
+            $data = array();
+            $data['link'] = $item['link'];
+            $data['id'] = $idx;
+            $data['track'] = $idx;
 
-        try {
-            $playlist = $this->_upnp->GetPlayListItems();
-
-            for ($i = $playlist['limits']['start']; $i < $playlist['limits']['end']; ++$i) {
-                $item = $playlist['items'][$i];
-
-                $data = array();
-                $data['link'] = $item['file'];
-                $data['id'] = $i;
-                $data['track'] = $i + 1;
-
-                $url_data = $this->parse_url($data['link']);
-                if ($url_data != null) {
-                    $song = new Song($url_data['oid']);
-                    if ($song != null) {
-                        $data['name'] = $song->get_artist_name() . ' - ' . $song->title;
-                    }
+            $url_data = Stream_URL::parse($item['link']);
+            if ($url_data != null) {
+                $song = new Song($url_data['id']);
+                if ($song != null) {
+                    $data['name'] = $song->get_artist_name() . ' - ' . $song->title;
                 }
-                if (!$data['name']) {
-                    $data['name'] = $item['label'];
-                }
-                $results[] = $data;
             }
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'get failed: ' . $ex->getMessage(), 1);
+            if (!$data['name']) {
+                $data['name'] = $item['name'];
+            }
+
+            $results[] = $data;
+            $idx++;
         }
 
         return $results;
@@ -577,22 +503,28 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        $array = array();
-        try {
-            $array['state'] = 'play';
-            $array['volume'] = $this->_upnp->GetVolume();
-            $array['repeat'] = false;
-            $array['random'] = false;
-            $array['track'] = 'TrackName';
+        $item = $this->_upnp->GetCurrentItem();
 
-            $array['track_title'] = 'Songtitle';
-            $array['track_artist'] = 'ArtistName';
-            $array['track_album'] = 'AlbumName';
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'status failed: ' . $ex->getMessage(), 1);
+        $status = array();
+
+        $status['state'] = $this->_upnp->GetState();
+        $status['volume'] = $this->_upnp->GetVolume();
+        $status['repeat'] = false;
+        $status['random'] = false;
+        $status['track'] = $item['link'];
+        $status['track_title'] = $item['name'];
+
+        $url_data = Stream_URL::parse($item['link']);
+        if ($url_data != null) {
+            $song = new Song($url_data['id']);
+            if ($song != null) {
+                $status['track_artist'] = $song->get_artist_name();
+                $status['track_album'] = $song->get_album_name();
+            }
         }
-        return $array;
-    } 
+
+        return $status;
+    }
 
     /**
      * connect
@@ -603,15 +535,10 @@ class AmpacheUPnP extends localplay_controller
     public function connect()
     {
         $options = self::get_instance();
-        try {
-            debug_event('upnp', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', '5');
-            $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
-            debug_event('upnp', 'Connected.', '5');
-            return true;
-        } catch (UPNP_ConnectionException $ex) {
-            debug_event('upnp', 'upnp connection failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
+        debug_event('upnp', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', '5');
+        $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
+        debug_event('upnp', 'Connected.', '5');
+        return true;
     }
 
 }

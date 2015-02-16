@@ -185,7 +185,7 @@ class Upnp_Api
                 continue;
             }
 
-            if ($item['upnp:class']    == 'object.container') {
+            if ($item['upnp:class'] == 'object.container') {
                 $ndItem = $xmlDoc->createElement('container');
             } else {
                 $ndItem = $xmlDoc->createElement('item');
@@ -313,10 +313,10 @@ class Upnp_Api
                         $counts = Catalog::count_medias();
                         $meta = array(
                             'id'            => $root . '/artists',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts['artists'],
-                            'dc:title'        => T_('Artists'),
+                            'dc:title'      => T_('Artists'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -337,10 +337,10 @@ class Upnp_Api
                         $counts = Catalog::count_medias();
                         $meta = array(
                             'id'            => $root . '/albums',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts['albums'],
-                            'dc:title'        => T_('Albums'),
+                            'dc:title'      => T_('Albums'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -361,10 +361,10 @@ class Upnp_Api
                         $counts = Catalog::count_medias();
                         $meta = array(
                             'id'            => $root . '/songs',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts['songs'],
-                            'dc:title'        => T_('Songs'),
+                            'dc:title'      => T_('Songs'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -385,10 +385,10 @@ class Upnp_Api
                         $counts = Catalog::count_medias();
                         $meta = array(
                             'id'            => $root . '/playlists',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts['playlists'],
-                            'dc:title'        => T_('Playlists'),
+                            'dc:title'      => T_('Playlists'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -409,10 +409,10 @@ class Upnp_Api
                         $counts = Catalog::count_medias();
                         $meta = array(
                             'id'            => $root . '/smartplaylists',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts['smartplaylists'],
-                            'dc:title'        => T_('Smart Playlists'),
+                            'dc:title'      => T_('Smart Playlists'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -430,10 +430,10 @@ class Upnp_Api
             default:
                 $meta = array(
                     'id'            => $root,
-                    'parentID'        => '0',
+                    'parentID'      => '0',
                     'restricted'    => '1',
                     'childCount'    => '5',
-                    'dc:title'        => T_('Music'),
+                    'dc:title'      => T_('Music'),
                     'upnp:class'    => 'object.container',
                 );
             break;
@@ -617,10 +617,10 @@ class Upnp_Api
                         $counts = count(Catalog::get_tvshows());
                         $meta = array(
                             'id'            => $root . '/tvshows',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts,
-                            'dc:title'        => T_('TV Shows'),
+                            'dc:title'      => T_('TV Shows'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -657,10 +657,10 @@ class Upnp_Api
                         $counts = Catalog::get_videos_count(null, 'clip');
                         $meta = array(
                             'id'            => $root . '/clips',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts,
-                            'dc:title'        => T_('Clips'),
+                            'dc:title'      => T_('Clips'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -681,10 +681,10 @@ class Upnp_Api
                         $counts = Catalog::get_videos_count(null, 'movie');
                         $meta = array(
                             'id'            => $root . '/movies',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts,
-                            'dc:title'        => T_('Movies'),
+                            'dc:title'      => T_('Movies'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -705,10 +705,10 @@ class Upnp_Api
                         $counts = Catalog::get_videos_count(null, 'personal_video');
                         $meta = array(
                             'id'            => $root . '/personal_videos',
-                            'parentID'        => $root,
+                            'parentID'      => $root,
                             'restricted'    => '1',
                             'childCount'    => $counts,
-                            'dc:title'        => T_('Personal Videos'),
+                            'dc:title'      => T_('Personal Videos'),
                             'upnp:class'    => 'object.container',
                         );
                     break;
@@ -726,10 +726,10 @@ class Upnp_Api
             default:
                 $meta = array(
                     'id'            => $root,
-                    'parentID'        => '0',
+                    'parentID'      => '0',
                     'restricted'    => '1',
                     'childCount'    => '4',
-                    'dc:title'        => T_('Video'),
+                    'dc:title'      => T_('Video'),
                     'upnp:class'    => 'object.container',
                 );
             break;
