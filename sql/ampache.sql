@@ -591,7 +591,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (71, 'httpq_active', '0', 'HTTPQ Active Instance', 25, 'integer', 'internal'),
 (72, 'shoutcast_active', '0', 'Shoutcast Active Instance', 25, 'integer', 'internal'),
 (73, 'lastfm_user', '', 'Last.FM Username', 25, 'string', 'plugins'),
-(74, 'lastfm_pass', '', 'Last.FM Password', 25, 'string', 'plugins'),
+(74, 'lastfm_md5_pass', '', 'Last.FM Password', 25, 'string', 'plugins'),
 (75, 'lastfm_port', '', 'Last.FM Submit Port', 25, 'string', 'internal'),
 (76, 'lastfm_host', '', 'Last.FM Submit Host', 25, 'string', 'internal'),
 (77, 'lastfm_url', '', 'Last.FM Submit URL', 25, 'string', 'internal'),
@@ -648,7 +648,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (131, 'browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface'),
 (132, 'browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)', 25, 'integer', 'interface'),
 (133, 'geolocation', '0', 'Allow geolocation', 25, 'integer', 'options'),
-(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming');
+(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming'),
+(135, 'upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 25, 'boolean', 'system');
 
 -- --------------------------------------------------------
 
@@ -1067,8 +1068,8 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '370029'),
-('Plugin_Last.FM', '000003');
+('db_version', '370030'),
+('Plugin_Last.FM', '000004');
 
 -- --------------------------------------------------------
 
@@ -1238,6 +1239,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 132, '10'),
 (-1, 133, '0'),
 (-1, 134, '1'),
+(-1, 135, '1'),
 (-1, 96, ''),
 (-1, 97, ''),
 (-1, 98, '');
