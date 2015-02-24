@@ -3,6 +3,25 @@ CHANGELOG
 
 3.8.0
 ----------
+- Fixed image thumb on webplayer and search preview (thanks RobertoCarlo and eephyne)
+- Fixed proxy setting on all external http requests (thanks brendankearney)
+- Added QRCode view of user API key 
+- Fixed http status code on Subsonic API streams when using curl (thanks nicklan)
+- Added Server-Sent Events on catalog actions
+- Added option to enable/disable channel and live stream features
+- Removed official PHP 5.3 support
+- Added option to show/hide footer statistics (thanks brownl)
+- Added delete from disk option on user uploaded files
+- Added installation type and players helper at installation process
+- Added tv_episode tag on quicktime files (thanks wagnered)
+- Added new option to disable deferred extended metadata, e.g. artist details
+- Added Subsonic API getAvatar function
+- Fixed unsynced lyrics tags
+- Fixed ldap_filter setting deactivation on ampache.cfg.php update (thanks Rouzax)
+- Added Subsonic API similar artists & songs functions
+- Added Subsonic API getLyrics function
+- Fixed disk number and album artist metadata on quicktime files (thanks JoeDat)
+- Fixed Ampache API playlist_add_song function
 - Added ability to store images on disk
 - Added new setting to define album art min and max width/height
 - Fixed Subsonic API getAlbum returned artist id on songs
