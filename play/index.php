@@ -606,6 +606,10 @@ if ($transcode && isset($transcoder)) {
     $mime = $media->type_to_mime($transcoder['format']);
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
         // This to avoid hang, see http://php.net/manual/es/function.proc-open.php#89338
+        $transcode_error = fread($this->transcoder['stderr'], 4096);
+        if (!empty($transcode_error)) {
+            debug_event('play', 'Transcode stderr: ' . $transcode_error, 1);
+        }
         fclose($transcoder['stderr']);
     }
 };
