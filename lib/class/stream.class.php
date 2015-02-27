@@ -264,6 +264,10 @@ class Stream
             'stderr' => $pipes[2]
         );
 
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+        }
+
         return array_merge($parray, $settings);
     }
 
