@@ -300,11 +300,11 @@ class XML_Data
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
                     "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
                     $tag_string .
-                    "\t<albums>" . $artist->albums . "</albums>\n" .
-                    "\t<songs>" . $artist->songs . "</songs>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
-                    "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
+                    "\t<albums>" . ($artist->albums ?: 0) . "</albums>\n" .
+                    "\t<songs>" . ($artist->songs ?: 0) . "</songs>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
+                    "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<mbid>" . $artist->mbid . "</mbid>\n" .
                     "\t<summary>" . $artist->summary . "</summary>\n" .
                     "\t<yearformed>" . $artist->summary . "</yearformed>\n" .
@@ -461,9 +461,9 @@ class XML_Data
                 "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n".
                 "\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n".
                 "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-                "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
-                "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
+                "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
+                "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
+                "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                 "</song>\n";
 
         } // end foreach
