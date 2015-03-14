@@ -2,6 +2,7 @@
 
 class UPnPDevice
 {
+    private $_descrUrl = "";
     private $_host = "";
     private $_controlURLs = array();
     private $_eventURLs = array();
@@ -9,6 +10,7 @@ class UPnPDevice
 
     public function UPnPDevice($descrUrl)
     {
+        $this->_descrUrl = $descrUrl;
         if (! $this->restoreDescriptionUrl($descrUrl))
             $this->parseDescriptionUrl($descrUrl);
     }
@@ -40,7 +42,7 @@ class UPnPDevice
         $response = curl_exec($ch);
         curl_close($ch);
 
-        debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
+        //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string($response);
         $services = $responseXML->device->serviceList->service;
@@ -173,7 +175,7 @@ class UPnPDevice
     public function Subscribe($type = 'AVTransport')
     {
         $web_path = AmpConfig::get('web_path');
-        $eventSubsUrl = $web_path . '/upnp/play-event.php';
+        $eventSubsUrl = $web_path . '/upnp/play-event.php?device=' . urlencode($this->_descrUrl);
         $eventUrl = $this->_host . $this->_eventURLs[$type];
 
         $header = array(

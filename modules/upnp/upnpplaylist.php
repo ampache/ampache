@@ -56,6 +56,15 @@ class UPnPPlaylist
         }
     }
 
+    public function NextItem()
+    {
+        if ($this->_current < count($this->_songs) - 1) {
+            $nxt = $this->_current + 1;
+            return $this->_songs[$nxt];
+        }
+        return null;
+    }
+
     public function Prev()
     {
         if ($this->_current > 0) {

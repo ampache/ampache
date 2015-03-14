@@ -166,33 +166,41 @@ class UPnPPlayer
         return true;
     }
 
-    /** 
-     * play
-     * play the current song
-     */
-    public function Play() 
+    private function prepareURIRequest($song, $prefix)
     {
-        $current = $this->Playlist()->CurrentItem();
-        $songUrl = $current['link'];
-        $songName = $current['name'];
+        if ($song == null) return null;
 
+        $songUrl = $song['link'];
+        $songName = $song['name'];
         $songId = preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
-        debug_event('upnpPlayer', 'Play: ' . $songName . ' | ' . $songUrl . ' | ' . $songId, 5);
-        
+
         $song = new song($songId);
         $song->format();
         $songItem = Upnp_Api::_itemSong($song, '');
         $domDIDL = Upnp_Api::createDIDL($songItem);
         $xmlDIDL = $domDIDL->saveXML();
 
+        return array(
+            'InstanceID' => 0,
+            $prefix . 'URI' => $songUrl,
+            $prefix . 'URIMetaData' => htmlentities($xmlDIDL)
+        );
+    }
+
+    /** 
+     * play
+     * play the current song
+     */
+    public function Play() 
+    {
+        $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current");
+        //!!$nextSongArgs = $this->prepareURIRequest($this->Playlist()->NextItem(), "Next");
+
         $this->Stop();
 
-        $args = array(
-            'InstanceID' => 0,
-            'CurrentURI' => $songUrl,
-            'CurrentURIMetaData' => htmlentities($xmlDIDL)
-        );
-        $response = $this->Device()->sendRequestToDevice('SetAVTransportURI', $args, 'AVTransport');
+        $response = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
+        //!!if ($nextSongArgs != null)
+            //!!$response = $this->Device()->sendRequestToDevice('SetNextAVTransportURI', $nextSongArgs, 'AVTransport');
 
         $args = array( 'InstanceID' => 0, 'Speed' => 1);
         $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
@@ -214,8 +222,8 @@ class UPnPPlayer
         $response = $this->Device()->instanceOnly('Stop');
 
         $sid = $_SESSION['upnp_SID'];
-        $this->Device()->UnSubscribe($sid);
         $_SESSION['upnp_SID'] = "";
+        $this->Device()->UnSubscribe($sid);
 
         return true;
     }
