@@ -10,8 +10,6 @@ namespace Dropbox;
 class WebAuthException_BadState extends \Exception
 {
     /**
-     * @param string $message
-     *
      * @internal
      */
     function __construct()

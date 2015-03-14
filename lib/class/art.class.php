@@ -768,6 +768,7 @@ class Art extends database_object
      * @param int $uid
      * @param string $type
      * @param string $sid
+     * @param int|null $thumb
      * @return string
      */
     public static function url($uid,$type,$sid=null,$thumb=null)
@@ -1596,6 +1597,11 @@ class Art extends database_object
                 /* Video preview size */
                  $size['height'] = 100;
                  $size['width'] = 235;
+            break;
+            case 10:
+                /* Search preview size */
+                 $size['height'] = 24;
+                 $size['width'] = 24;
             break;
             default:
                 $size['height'] = 275;

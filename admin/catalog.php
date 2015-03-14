@@ -30,7 +30,22 @@ if (!Access::check('interface','100')) {
 
 UI::show_header();
 
-$sse_catalogs = urlencode(serialize($_REQUEST['catalogs']));
+$catalogs = $_REQUEST['catalogs'];
+// If only one catalog, check it is ready.
+if (is_array($catalogs) && count($catalogs) == 1 && $_REQUEST['action'] !== 'delete_catalog' && $_REQUEST['action'] !== 'show_delete_catalog') {
+    // If not ready, display the data to make it ready / stop the action.
+    $catalog = Catalog::create_from_id($catalogs[0]);
+    if (!$catalog->isReady()) {
+        if (!isset($_REQUEST['perform_ready'])) {
+            $catalog->show_ready_process();
+            UI::show_footer();
+            exit;
+        } else {
+            $catalog->perform_ready();
+        }
+    }
+}
+$sse_catalogs = urlencode(serialize($catalogs));
 
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
@@ -74,14 +89,14 @@ switch ($_REQUEST['action']) {
         }
 
         /* Delete the sucker, we don't need to check perms as thats done above */
-        foreach ($_REQUEST['catalogs'] as $catalog_id) {
+        foreach ($catalogs as $catalog_id) {
             Catalog::delete($catalog_id);
         }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         show_confirmation(T_('Catalog Deleted'), T_('The Catalog and all associated records have been deleted'),$next_url);
     break;
     case 'show_delete_catalog':
-        $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $_REQUEST['catalogs']);
+        $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);
         show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
     break;
     case 'enable_disabled':

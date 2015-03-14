@@ -832,20 +832,27 @@ class Subsonic_Api
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
 
-        if (!is_array($songsIdToAdd)) {
-            $songsIdToAdd = array($songsIdToAdd);
-        }
-        if (count($songsIdToAdd) > 0) {
-            $playlist->add_songs(Subsonic_XML_Data::getAmpacheIds($songsIdToAdd));
+        if ($songsIdToAdd) {
+            if (!is_array($songsIdToAdd)) {
+                $songsIdToAdd = array($songsIdToAdd);
+            }
+            if (count($songsIdToAdd) > 0) {
+                for ($i = 0; $i < count($songsIdToAdd); ++$i) {
+                    $songsIdToAdd[$i] = Subsonic_XML_Data::getAmpacheId($songsIdToAdd[$i]);
+                }
+                $playlist->add_songs($songsIdToAdd);
+            }
         }
 
-        if (!is_array($songIndexToRemove)) {
-            $songIndexToRemove = array($songIndexToRemove);
-        }
-        if (is_array($songIndexToRemove) && count($songIndexToRemove) > 0) {
-            $tracks = Subsonic_XML_Data::getAmpacheIds($songIndexToRemove);
-            foreach ($tracks as $track) {
-                $playlist->delete_track_number($track);
+        if ($songIndexToRemove) {
+            if (!is_array($songIndexToRemove)) {
+                $songIndexToRemove = array($songIndexToRemove);
+            }
+            if (count($songIndexToRemove) > 0) {
+                foreach ($songIndexToRemove as $track) {
+                    $playlist->delete_track_number($track);
+                }
+                $playlist->regenerate_track_numbers();
             }
         }
     }
@@ -863,11 +870,13 @@ class Subsonic_Api
 
         $name = $input['name'];
         $comment = $input['comment'];   // Not supported.
-        $public = boolean($input['public']);
+        $public = ($input['public'] === "true");
 
         if (!Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
             $songIdToAdd = $input['songIdToAdd'];
             $songIndexToRemove = $input['songIndexToRemove'];
+
+            self::_updatePlaylist(Subsonic_XML_Data::getAmpacheId($playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
 
             $r = Subsonic_XML_Data::createSuccessResponse();
         } else {
@@ -885,13 +894,13 @@ class Subsonic_Api
     {
         self::check_version($input, "1.2.0");
 
-        $playlistId = self::check_parameter($input, 'playlistId');
+        $playlistId = self::check_parameter($input, 'id');
 
         if (Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
             $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistId), 'song');
             $playlist->delete();
         } else {
-            $playlist = new Playlist($playlistId);
+            $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($playlistId));
             $playlist->delete();
         }
 

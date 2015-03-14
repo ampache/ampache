@@ -23,7 +23,8 @@ namespace Dropbox;
  * print("1. Go to: $authorizeUrl\n");
  * print("2. Click "Allow" (you might have to log in first).\n");
  * print("3. Copy the authorization code.\n");
- * $code = \trim(\readline("4. Enter the authorization code here: "));
+ * print("Enter the authorization code here: ");
+ * $code = \trim(\fgets(STDIN));
  *
  * try {
  *    list($accessToken, $userId) = $webAuth->finish($code);
@@ -43,8 +44,10 @@ class WebAuthNoRedirect extends WebAuthBase
      * copy/paste that code into your application so your app can pass it to
      * {@link finish}.
      *
+     * See <a href="https://www.dropbox.com/developers/core/docs#oa2-authorize">/oauth2/authorize</a>.
+     *
      * @return string
-     *    An authorization URL.  Redirect the user's browser to this URL.  After the user decides
+     *    An authorization URL.  Direct the user's browser to this URL.  After the user decides
      *    whether to authorize your app or not, Dropbox will show the user an authorization code,
      *    which the user will need to give to your application (e.g. via copy/paste).
      */
@@ -57,6 +60,8 @@ class WebAuthNoRedirect extends WebAuthBase
      * Call this after the user has visited the authorize URL returned by {@link start()},
      * approved your app, was presented with an authorization code by Dropbox, and has copy/paste'd
      * that authorization code into your app.
+     *
+     * See <a href="https://www.dropbox.com/developers/core/docs#oa2-token">/oauth2/token</a>.
      *
      * @param string $code
      *    The authorization code provided to the user by Dropbox.
@@ -75,4 +80,3 @@ class WebAuthNoRedirect extends WebAuthBase
         return $this->_finish($code, null);
     }
 }
-

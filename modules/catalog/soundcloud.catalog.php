@@ -117,6 +117,22 @@ class Catalog_soundcloud extends Catalog
 
     }
 
+    public function isReady()
+    {
+        return (!empty($this->authtoken));
+    }
+
+    public function show_ready_process()
+    {
+        $this->showAuthToken();
+    }
+
+    public function perform_ready()
+    {
+        $this->authcode = $_REQUEST['authcode'];
+        $this->completeAuthToken();
+    }
+
     public $userid;
     public $secret;
     public $authtoken;
@@ -183,10 +199,11 @@ class Catalog_soundcloud extends Catalog
         $authurl = $api->getAuthorizeUrl(array('scope' => 'non-expiring'));
         echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
         echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
-        if ($_POST['action']) {
-            echo "<input type='hidden' name='action' value='add_to_catalog' />";
+        if ($_REQUEST['action']) {
+            echo "<input type='hidden' name='action' value='" . scrub_in($_REQUEST['action']) . "' />";
             echo "<input type='hidden' name='catalogs[]' value='". $this->id ."' />";
         }
+        echo "<input type='hidden' name='perform_ready' value='true' />";
         echo "<input type='text' name='authcode' />";
         echo "<input type='submit' value='Ok' />";
         echo "</form>";

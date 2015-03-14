@@ -97,7 +97,7 @@ require $prefix . '/templates/install_header.inc.php';
 <div class="form-group">
     <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Password'); ?></label>
     <div class="col-sm-8">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="Password">
+        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="Password (Required)">
     </div>
 </div>
 
