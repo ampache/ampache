@@ -8,6 +8,7 @@ if (!AmpConfig::get('upnp_backend')) {
 }
 
 if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
+    $msIP = 1;
     Upnp_Api::sddpSend($msIP);
 }
 ?>

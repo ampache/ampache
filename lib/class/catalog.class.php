@@ -923,7 +923,7 @@ abstract class Catalog extends database_object
      * @param array|null $catalogs
      * @return \Artist[]
     */
-    public static function get_artists($catalogs = null)
+    public static function get_artists($size = 0, $offset = 0, $catalogs = null)
     {
         $sql_where = "";
         if (is_array($catalogs) && count($catalogs)) {
@@ -931,7 +931,18 @@ abstract class Catalog extends database_object
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
         }
 
-        $sql = "SELECT `artist`.id, `artist`.`name`, `artist`.`summary` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.artist ORDER BY `artist`.`name`";
+        $sql_limit = "";
+        if ($offset > 0 && $size > 0) {
+            $sql_limit = "LIMIT $offset, $size";
+        } elseif ($size > 0) {
+            $sql_limit = "LIMIT $size";
+        } elseif ($offset > 0) {
+            // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html
+            $sql_limit = "LIMIT $offset, 18446744073709551615";
+        }
+
+        $sql = "SELECT `artist`.id, `artist`.`name`, `artist`.`summary` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.artist ORDER BY `artist`.`name` $sql_limit";
 
         $results = array();
         $db_results = Dba::read($sql);

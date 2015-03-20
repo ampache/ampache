@@ -18,7 +18,8 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     $requestRaw = file_get_contents('php://input');
     if ($requestRaw != '') {
         $upnpRequest = Upnp_Api::parseUPnPRequest($requestRaw);
-        debug_event('upnp', 'Request: ' . $requestRaw, '5');
+        //debug_event('upnp', 'Request: ' . $requestRaw, '5');
+        //debug_event('upnp', 'Request: ' . print_r($upnpRequest, true), '5');
     } else {
         echo 'Error: no UPnP request.';
         debug_event('upnp', 'No request', '5');
@@ -41,9 +42,9 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
                     $items[] = array(
                         'id'            => '0',
-                        'parentID'        => '-1',
+                        'parentID'      => '-1',
                         'childCount'    => '2',
-                        'dc:title'        => T_('root'),
+                        'dc:title'      => T_('root'),
                         'upnp:class'    => 'object.container',
                     );
                 } else {
@@ -100,5 +101,5 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     $soapXML = $domSOAP->saveXML();
 
     echo $soapXML;
-    debug_event('upnp', 'Response: ' . $soapXML, '5');
+    //!!debug_event('upnp', 'Response: ' . $soapXML, '5');
 ?>
