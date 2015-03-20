@@ -1,11 +1,16 @@
 <?php
 class UPnPPlaylist
 {
+    private $_deviceGUID = "";
     private $_songs;
     private $_current = 0;
 
-    public function UPnPPlaylist()
+    /*
+     * Playlist is its own for each UPnP device
+     */
+    public function UPnPPlaylist($deviceGUID)
     {
+        $this->_deviceGUID = $deviceGUID;
         $this->PlayListRead();
         if (! is_array($this->_songs))
             $this->Clear();
@@ -19,9 +24,7 @@ class UPnPPlaylist
 
     public function RemoveTrack($track)
     {
-        debug_event('upnpPlayer DEL1', print_r($this->_playlist, true), 5);
         unset($this->_songs[$track - 1]);
-        debug_event('upnpPlayer DEL2', print_r($this->_playlist, true), 5);
         $this->PlayListSave();
     }
 
@@ -53,7 +56,9 @@ class UPnPPlaylist
         if ($this->_current < count($this->_songs) - 1) {
             $this->_current++;
             $this->PlayListSave();
+            return true;
         }
+        return false;
     }
 
     public function NextItem()
@@ -70,7 +75,9 @@ class UPnPPlaylist
         if ($this->_current > 0) {
             $this->_current--;
             $this->PlayListSave();
+            return true;
         }
+        return false;
     }
 
     public function Skip($pos)
@@ -79,19 +86,31 @@ class UPnPPlaylist
         if (($pos >= 1) && ($pos <= count($this->_songs))) {
             $this->_current = $pos - 1;
             $this->PlayListSave();
+            return true;
         }
+        return false;
     }
 
     private function PlayListRead()
     {
-        $this->_songs = $_SESSION['upnp_playlist'];
-        $this->_current = $_SESSION['upnp_current'];
+        $sid = 'upnp_pls_' . $this->_deviceGUID;
+        $pls_data = unserialize(Session::read($sid));
+
+        $this->_songs = $pls_data['upnp_playlist'];
+        $this->_current = $pls_data['upnp_current'];
     }
 
     private function PlayListSave()
     {
-        $_SESSION['upnp_playlist'] = $this->_songs;
-        $_SESSION['upnp_current'] = $this->_current;
+        $sid = 'upnp_pls_' . $this->_deviceGUID;
+        if (! Session::exists('api', $sid))
+            Session::create(array('type' => 'api', 'sid' => $sid, 'value' => "" ));
+
+        $pls_data = array(
+            'upnp_playlist' => $this->_songs,
+            'upnp_current' => $this->_current
+        );
+        Session::write($sid, serialize($pls_data));
     }
 
 }

@@ -193,7 +193,6 @@ class AmpacheUPnP extends localplay_controller
 
         $sql = "SELECT * FROM `localplay_upnp` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($instance));
-
         $row = Dba::fetch_assoc($db_results);
     
         return $row;
@@ -225,8 +224,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get_active_instance()
     {
-        $instance = AmpConfig::get('upnp_active');
-        return $instance;
     }
 
     
@@ -248,8 +245,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function delete_track($track)
     {
-        debug_event('upnp', 'delete_track: ' . $track, 5);
-        
         if (!$this->_upnp) {
             return false;
         }
@@ -264,8 +259,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function clear_playlist()
     {
-        debug_event('upnp', 'clear_playlist', 5);
-
         if (!$this->_upnp) {
             return false;
         }
@@ -281,8 +274,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function play()
     {
-        debug_event('upnp', 'play', 5);
-
         if (!$this->_upnp) {
             return false;
         }
@@ -296,8 +287,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function pause()
     {
-        debug_event('upnp', 'pause', 5);
-
         if (!$this->_upnp) {
             return false;
         }
@@ -312,8 +301,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function stop()
     {
-        debug_event('upnp', 'stop', 5);
-
         if (!$this->_upnp) {
             return false;
         }
@@ -327,8 +314,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function skip($pos)
     {
-        debug_event('upnp', 'skip ' . $pos, 5);
-
         if (!$this->_upnp) {
             return false;
         }
@@ -343,8 +328,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function next()
     {
-        debug_event('upnp', 'next', 5);
-
         if (!$this->_upnp) {
             return false;
         }
@@ -359,8 +342,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function prev()
     {
-        debug_event('upnp', 'prev', 5);
-
         if (!$this->_upnp) {
             return false;
         }
@@ -375,8 +356,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function volume($volume)
     {
-        debug_event('upnp', 'volume: ' . $volume, 5);
-        
         if (!$this->_upnp) {
             return false;
         }
@@ -390,8 +369,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function volume_up()
     {
-        debug_event('upnp', 'volume+', 5);
-        
         if (!$this->_upnp) {
             return false;
         }
@@ -404,8 +381,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function volume_down()
     {
-        debug_event('upnp', 'volume-', 5);
-        
         if (!$this->_upnp) {
             return false;
         }

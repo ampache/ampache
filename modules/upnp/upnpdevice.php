@@ -2,46 +2,44 @@
 
 class UPnPDevice
 {
-    private $_descrUrl = "";
-    private $_host = "";
-    private $_controlURLs = array();
-    private $_eventURLs = array();
+    private $_settings = array(
+        "descriptionURL" => "",
+        "host" => "",
+        "controlURLs" => array(),
+        "eventURLs" => array()
+    );
 
 
-    public function UPnPDevice($descrUrl)
+    public function UPnPDevice($descriptionUrl)
     {
-        $this->_descrUrl = $descrUrl;
-        if (! $this->restoreDescriptionUrl($descrUrl))
-            $this->parseDescriptionUrl($descrUrl);
+        if (! $this->restoreDescriptionUrl($descriptionUrl))
+            $this->parseDescriptionUrl($descriptionUrl);
     }
 
     /*
      * Reads description URL from session
      */
-    private function restoreDescriptionUrl($descrUrl)
+    private function restoreDescriptionUrl($descriptionUrl)
     {
-        debug_event('upnpdevice', 'readDescriptionUrl: ' . $descrUrl, 5);
+        debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
+        $this->_settings = unserialize(Session::read('upnp_dev_' . $descriptionUrl));
 
-        if ($descrUrl == $_SESSION['upnp_DescriptionUrl']) {
-            $this->_host = $_SESSION['upnp_host'];
-            $this->_controlURLs = $_SESSION['upnp_controlURLs'];
-            $this->_eventURLs = $_SESSION['upnp_eventURLs'];
-            debug_event('upnpdevice', 'service Urls restored from session', 5);
+        if ($this->_settings['descriptionURL'] == $descriptionUrl) {
+            debug_event('upnpdevice', 'service Urls restored from session.', 5);
             return true;
         }
         return false;
     }
 
-    private function parseDescriptionUrl($descrUrl)
+    private function parseDescriptionUrl($descriptionUrl)
     {
-        debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descrUrl, 5);
+        debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $descrUrl);
+        curl_setopt($ch, CURLOPT_URL, $descriptionUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         curl_close($ch);
-
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string($response);
@@ -51,17 +49,20 @@ class UPnPDevice
             $serviceType = $service->serviceType;
             $serviceTypeNames = explode(":", $serviceType);
             $serviceTypeName = $serviceTypeNames[3];
-            $this->_controlURLs[$serviceTypeName] = (string)$service->controlURL;
-            $this->_eventURLs[$serviceTypeName] = (string)$service->eventSubURL;
+            $this->_settings['controlURLs'][$serviceTypeName] = (string)$service->controlURL;
+            $this->_settings['eventURLs'][$serviceTypeName] = (string)$service->eventSubURL;
         }
 
-        $urldata = parse_url($descrUrl);
-        $this->_host = $urldata['scheme'] . '://' . $urldata['host'] . ':' . $urldata['port'];
+        $urldata = parse_url($descriptionUrl);
+        $this->_settings['host'] = $urldata['scheme'] . '://' . $urldata['host'] . ':' . $urldata['port'];
 
-        $_SESSION['upnp_DescriptionUrl'] = $descrUrl;
-        $_SESSION['upnp_host'] = $this->_host;
-        $_SESSION['upnp_controlURLs'] = $this->_controlURLs;
-        $_SESSION['upnp_eventURLs'] = $this->_eventURLs;
+        $this->_settings['descriptionURL'] = $descriptionUrl;
+
+        Session::create(array(
+            'type' => 'api',
+            'sid' => 'upnp_dev_' . $descriptionUrl,
+            'value' => serialize($this->_settings)
+        ));
     }
 
     /**
@@ -81,18 +82,19 @@ class UPnPDevice
         $body .='  </u:' . $method . '>';
         $body .='</s:Body></s:Envelope>';
 
-        $controlUrl = $this->_host . $this->_controlURLs[$type];
+        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != "/") ? "/" : "") . $this->_settings['controlURLs'][$type];
 
-        //!! todo - need to use scheme in header ??
+        //!! TODO - need to use scheme in header ??
         $header = array(
             'SOAPACTION: "urn:schemas-upnp-org:service:' . $type . ':1#' . $method . '"',
             'CONTENT-TYPE: text/xml; charset="utf-8"',
-            'HOST: ' . $this->_host,
+            'HOST: ' . $this->_settings['host'],
             'Connection: close',
             'Content-Length: ' . mb_strlen($body),
         );
-        debug_event('upnpdevice', 'sendRequestToDevice Met: ' . $method . ' | ' . $controlUrl . ' | ' . $body, 5);
-        debug_event('upnpdevice', 'sendRequestToDevice Hdr: ' . print_r($header, true), 5);
+        //debug_event('upnpdevice', 'sendRequestToDevice Met: ' . $method . ' | ' . $controlUrl, 5);
+        //debug_event('upnpdevice', 'sendRequestToDevice Body: ' . $body, 5);
+        //debug_event('upnpdevice', 'sendRequestToDevice Hdr: ' . print_r($header, true), 5);
 
         $ch = curl_init();
         curl_setopt( $ch, CURLOPT_URL, $controlUrl );
@@ -105,12 +107,12 @@ class UPnPDevice
 
         $response = curl_exec( $ch );
         curl_close( $ch );
-        debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
+        //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = array();
         $tmp = explode("\r\n\r\n", $response);
 
-        foreach($tmp as $key => $value) 
+        foreach($tmp as $key => $value)
         {
             if(substr($value, 0, 8) == 'HTTP/1.1') 
             {
@@ -119,23 +121,21 @@ class UPnPDevice
             }
         }
 
-        $lastHeaders = $headers[count($headers) - 1];
-
         $response = join("\r\n", $tmp);
 
+        /*
+        $lastHeaders = $headers[count($headers) - 1];
         $responseCode = $this->getResponseCode($lastHeaders);
         debug_event('upnpdevice', 'sendRequestToDevice responseCode: ' . $responseCode, 5);
-
-        if($responseCode == 500) 
+        if ($responseCode == 500)
         {
             debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code 500 - Create error response', 5);
-            //$response = $this->parseResponseError($response);
-        } 
+        }
         else 
         {
             debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code OK - Create response', 5);
-            //$response = $this->parseResponse($method, $response);
         }
+        */
         
         return $response;
     }
@@ -145,6 +145,7 @@ class UPnPDevice
     * @param string $headers    HTTP response headers
     * @return mixed             Response code (int) or null if not found
     */
+    /*
     private function getResponseCode($headers) 
     {
         $tmp = explode("\n", $headers);
@@ -156,22 +157,28 @@ class UPnPDevice
 
         return null;
     }
+    */
 
     // helper function for calls that require only an instance id
     public function instanceOnly($command, $type = 'AVTransport', $id = 0)
     {
         $args = array( 'InstanceID' => $id );
         $response = $this->sendRequestToDevice($command, $args, $type);
+
         ///$response = \Format::forge($response,'xml:ns')->to_array();
         ///return $response['s:Body']['u:' . $command . 'Response'];
+
         return $response;
     }
 
 
+    //!! UPNP subscription work not for all renderers, and works strange
+    //!! so now is not used
     /**
      * Subscribe
      * Subscribe to UPnP event
      */
+    /*
     public function Subscribe($type = 'AVTransport')
     {
         $web_path = AmpConfig::get('web_path');
@@ -184,7 +191,7 @@ class UPnPDevice
             'NT: upnp:event',
             'TIMEOUT: Second-180',
         );
-        debug_event('upnpdevice', 'Subscribe to $this->device->getId()  with: ' . "\n" . print_r($header, true), 5);
+        debug_event('upnpdevice', 'Subscribe with: ' . print_r($header, true), 5);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $eventUrl);
@@ -213,11 +220,15 @@ class UPnPDevice
 
         return null;
     }
+    */
 
+    //!! UPNP subscription work not for all renderers, and works strange
+    //!! so now is not used
     /**
      * UnSubscribe
      * Unsubscribe from UPnP event
      */
+    /*
     public function UnSubscribe($sid, $type = 'AVTransport')
     {
         if (empty($sid))
@@ -243,5 +254,6 @@ class UPnPDevice
         $response = curl_exec($ch);
         curl_close( $ch );
     }
+    */
 
 }

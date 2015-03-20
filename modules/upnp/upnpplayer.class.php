@@ -53,7 +53,7 @@ class UPnPPlayer
     private function Playlist()
     {
         if (is_null($this->_playlist))
-            $this->_playlist = new UPnPPlaylist();
+            $this->_playlist = new UPnPPlaylist($this->_description_url);
         return $this->_playlist;
     }
 
@@ -125,7 +125,7 @@ class UPnPPlayer
         $responseXML = simplexml_load_string($response);
         list($state) = $responseXML->xpath('//CurrentTransportState');
 
-        debug_event('upnpPlayer', 'GetState = ' . $state, 5);
+        //!!debug_event('upnpPlayer', 'GetState = ' . $state, 5);
 
         return $state;
     }
@@ -136,10 +136,11 @@ class UPnPPlayer
      */      
     public function Next() 
     {
-        debug_event('upnpPlayer', 'Next', 5);
-        $this->Playlist()->Next();
-        $this->Play();
-        return true;
+        if ($this->Playlist()->Next()) {
+            $this->Play();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -148,10 +149,11 @@ class UPnPPlayer
      */      
     public function Prev() 
     {
-        debug_event('upnpPlayer', 'Prev', 5);
-        $this->Playlist()->Prev();
-        $this->Play();
-        return true;
+        if ($this->Playlist()->Prev()) {
+            $this->Play();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -160,10 +162,11 @@ class UPnPPlayer
      */
     public function Skip($pos) 
     { 
-        debug_event('upnpPlayer', 'Skip', 5);
-        $this->Playlist()->Skip($pos);
-        $this->Play();
-        return true;
+        if ($this->Playlist()->Skip($pos)) {
+            $this->Play();
+            return true;
+        }
+        return false;
     }
 
     private function prepareURIRequest($song, $prefix)
@@ -187,26 +190,37 @@ class UPnPPlayer
         );
     }
 
+    private function CallAsyncURL($url) {
+        $ch = curl_init();
+        curl_setopt( $ch, CURLOPT_URL, $url );
+        curl_setopt( $ch, CURLOPT_FRESH_CONNECT, true );
+        curl_setopt( $ch, CURLOPT_HEADER, false );
+        curl_exec( $ch );
+        curl_close( $ch );
+    }
+
     /** 
      * play
      * play the current song
      */
     public function Play() 
     {
+        //!!$this->Stop();
+
         $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current");
-        //!!$nextSongArgs = $this->prepareURIRequest($this->Playlist()->NextItem(), "Next");
-
-        $this->Stop();
-
         $response = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
-        //!!if ($nextSongArgs != null)
-            //!!$response = $this->Device()->sendRequestToDevice('SetNextAVTransportURI', $nextSongArgs, 'AVTransport');
 
         $args = array( 'InstanceID' => 0, 'Speed' => 1);
         $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
 
-        $sid = $this->Device()->Subscribe();
-        $_SESSION['upnp_SID'] = $sid;
+        //!! UPNP subscription work not for all renderers, and works strange
+        //!! so now is not used
+        //$sid = $this->Device()->Subscribe();
+        //$_SESSION['upnp_SID'] = $sid;
+
+        // launch special page in background for periodically check play status
+        $url = AmpConfig::get('local_web_path') . "/upnp/playstatus.php";
+        $this->CallAsyncURL($url);
 
         return true; 
     }
@@ -221,9 +235,11 @@ class UPnPPlayer
 
         $response = $this->Device()->instanceOnly('Stop');
 
-        $sid = $_SESSION['upnp_SID'];
-        $_SESSION['upnp_SID'] = "";
-        $this->Device()->UnSubscribe($sid);
+        //!! UPNP subscription work not for all renderers, and works strange
+        //!! so now is not used
+        //$sid = $_SESSION['upnp_SID'];
+        //$_SESSION['upnp_SID'] = "";
+        //$this->Device()->UnSubscribe($sid);
 
         return true;
     }
