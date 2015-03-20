@@ -1180,7 +1180,7 @@ class Art extends database_object
 
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-            $dir = dirname($song->file);
+            $dir = Core::conv_lc_file( dirname($song->file) );
 
             if (isset($processed[$dir])) {
                 continue;
