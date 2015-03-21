@@ -442,12 +442,14 @@ class getid3_id3v2 extends getid3_handler
 		} // end footer
 
 		if (isset($thisfile_id3v2['comments']['genre'])) {
-			$genre = array();
+			$genres = array();
 			foreach ($thisfile_id3v2['comments']['genre'] as $key => $value) {
-				unset($thisfile_id3v2['comments']['genre'][$key]);
-				$genre = getid3_lib::flipped_array_merge_noclobber($genre, $this->ParseID3v2GenreString($value));
+				foreach ($this->ParseID3v2GenreString($value) as $genre) {
+					$genres[] = $genre;
+				}
 			}
-			$thisfile_id3v2['comments']['genre'] = getid3_lib::flipped_array_merge_noclobber($thisfile_id3v2['comments']['genre'], $genre);
+			$thisfile_id3v2['comments']['genre'] = array_unique($genres);
+			unset($key, $value, $genres, $genre);
 		}
 
 		if (isset($thisfile_id3v2['comments']['track'])) {
@@ -505,6 +507,13 @@ class getid3_id3v2 extends getid3_handler
 		if (strpos($genrestring, "\x00") === false) {
 			$genrestring = preg_replace('#\(([0-9]{1,3})\)#', '$1'."\x00", $genrestring);
 		}
+
+		// note: MusicBrainz Picard incorrectly stores plaintext genres separated by "/" when writing in ID3v2.3 mode, hack-fix here:
+		// replace / with NULL, then replace back the two ID3v1 genres that legitimately have "/" as part of the single genre name
+		$genrestring = str_replace('/', "\x00", $genrestring);
+		$genrestring = str_replace('Pop'."\x00".'Funk', 'Pop/Funk', $genrestring);
+		$genrestring = str_replace('Rock'."\x00".'Rock', 'Folk/Rock', $genrestring);
+
 		$genre_elements = explode("\x00", $genrestring);
 		foreach ($genre_elements as $element) {
 			$element = trim($element);
@@ -981,7 +990,6 @@ class getid3_id3v2 extends getid3_handler
 			$parsedFrame['encodingid']   = $frame_textencoding;
 			$parsedFrame['encoding']     = $this->TextEncodingNameLookup($frame_textencoding);
 
-			$parsedFrame['data']         = $parsedFrame['data'];
 			$parsedFrame['language']     = $frame_language;
 			$parsedFrame['languagename'] = $this->LanguageLookup($frame_language, false);
 			$parsedFrame['description']  = $frame_description;
