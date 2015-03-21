@@ -55,6 +55,10 @@ class Preference extends database_object
 
         $sql = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='$user_id'";
         $db_results = Dba::read($sql);
+        if (Dba::num_rows($db_results) < 1) {
+            $sql = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='-1'";
+            $db_results = Dba::read($sql);
+        }
         $data = Dba::fetch_assoc($db_results);
 
         parent::add_to_cache('get_by_user', $user_id, $data['value']);
