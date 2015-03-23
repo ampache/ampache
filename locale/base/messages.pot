@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2015-02-06 14:38+0100\n"
+"POT-Creation-Date: 2015-03-23 07:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Your new Access Control List(s) have been created"
 msgstr ""
 
-#: ../../admin/access.php:86 ../../lib/class/catalog.class.php:1325
+#: ../../admin/access.php:86 ../../lib/class/catalog.class.php:1350
 #: ../../lib/class/search.class.php:338 ../../preferences.php:143
 msgid "Updated"
 msgstr ""
@@ -53,94 +53,94 @@ msgstr ""
 msgid "Access List Entry updated"
 msgstr ""
 
-#: ../../admin/catalog.php:40 ../../admin/catalog.php:47
-#: ../../admin/catalog.php:52 ../../admin/catalog.php:59
-#: ../../admin/catalog.php:66
+#: ../../admin/catalog.php:55 ../../admin/catalog.php:62
+#: ../../admin/catalog.php:67 ../../admin/catalog.php:74
+#: ../../admin/catalog.php:81
 msgid "Catalog Update started..."
 msgstr ""
 
-#: ../../admin/catalog.php:81
+#: ../../admin/catalog.php:96
 msgid "Catalog Deleted"
 msgstr ""
 
-#: ../../admin/catalog.php:81
+#: ../../admin/catalog.php:96
 msgid "The Catalog and all associated records have been deleted"
 msgstr ""
 
-#: ../../admin/catalog.php:85
+#: ../../admin/catalog.php:100
 msgid "Catalog Delete"
 msgstr ""
 
-#: ../../admin/catalog.php:85 ../../admin/users.php:210 ../../broadcast.php:38
-#: ../../channel.php:70 ../../share.php:94
+#: ../../admin/catalog.php:100 ../../admin/users.php:210
+#: ../../broadcast.php:38 ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
 msgstr ""
 
-#: ../../admin/catalog.php:96
+#: ../../admin/catalog.php:111
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../admin/catalog.php:98
+#: ../../admin/catalog.php:113
 msgid "No Disabled Songs selected"
 msgstr ""
 
-#: ../../admin/catalog.php:101
+#: ../../admin/catalog.php:116
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../admin/catalog.php:107 ../../admin/catalog.php:112
+#: ../../admin/catalog.php:122 ../../admin/catalog.php:127
 msgid "Catalog Clean started..."
 msgstr ""
 
-#: ../../admin/catalog.php:122
+#: ../../admin/catalog.php:137
 msgid "Catalog Updated"
 msgstr ""
 
-#: ../../admin/catalog.php:131
+#: ../../admin/catalog.php:146
 msgid "Subdirectory update started..."
 msgstr ""
 
-#: ../../admin/catalog.php:140
+#: ../../admin/catalog.php:155
 msgid "Error: Please select a catalog type"
 msgstr ""
 
-#: ../../admin/catalog.php:144
+#: ../../admin/catalog.php:159
 msgid "Error: Name not specified"
 msgstr ""
 
-#: ../../admin/catalog.php:165
+#: ../../admin/catalog.php:180
 msgid "Catalog Creation started..."
 msgstr ""
 
-#: ../../admin/catalog.php:174
+#: ../../admin/catalog.php:189
 msgid "Catalog statistics cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:184
+#: ../../admin/catalog.php:199
 msgid "Now Playing Cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:184
+#: ../../admin/catalog.php:199
 msgid "All now playing data has been cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:194
+#: ../../admin/catalog.php:209
 msgid "No Disabled songs found"
 msgstr ""
 
-#: ../../admin/catalog.php:203
+#: ../../admin/catalog.php:218
 msgid "Delete Catalog"
 msgstr ""
 
-#: ../../admin/catalog.php:203
+#: ../../admin/catalog.php:218
 msgid "Do you really want to delete this catalog?"
 msgstr ""
 
-#: ../../admin/catalog.php:213
+#: ../../admin/catalog.php:228
 msgid "Media Art Search started..."
 msgstr ""
 
@@ -969,8 +969,7 @@ msgid "Duplicate ACL defined"
 msgstr ""
 
 #: ../../lib/class/access.class.php:453 ../../lib/class/access.class.php:474
-#: ../../lib/ui.lib.php:440 ../../scripts/tests/list_header.inc.php:166
-#: ../../templates/list_header.inc.php:117
+#: ../../lib/ui.lib.php:440 ../../templates/list_header.inc.php:117
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_add_access.inc.php:61
@@ -1225,11 +1224,11 @@ msgstr ""
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1197
+#: ../../lib/class/art.class.php:1195
 msgid "Error: Unable to open"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1665 ../../lib/class/shoutbox.class.php:254
+#: ../../lib/class/art.class.php:1668 ../../lib/class/shoutbox.class.php:254
 #: ../../templates/rightbar.inc.php:25
 #: ../../templates/show_album_group_disks.inc.php:61
 #: ../../templates/show_album_group_disks.inc.php:62
@@ -1259,15 +1258,15 @@ msgstr ""
 msgid "Play"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1671
+#: ../../lib/class/art.class.php:1674
 msgid "Edit/Find Art"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1674
+#: ../../lib/class/art.class.php:1677
 msgid "Do you really want to reset art?"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1675
+#: ../../lib/class/art.class.php:1678
 msgid "Reset Art"
 msgstr ""
 
@@ -1339,7 +1338,7 @@ msgstr ""
 #: ../../templates/rightbar.inc.php:122
 #: ../../templates/show_access_list.inc.php:71
 #: ../../templates/show_account.inc.php:87
-#: ../../templates/show_catalog_row.inc.php:41
+#: ../../templates/show_catalog_row.inc.php:46
 #: ../../templates/show_democratic_playlist.inc.php:92
 #: ../../templates/show_edit_user.inc.php:120
 #: ../../templates/show_license_row.inc.php:31
@@ -1514,50 +1513,50 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:480 ../../lib/class/catalog.class.php:483
-#: ../../lib/class/catalog.class.php:486 ../../lib/class/user.class.php:971
+#: ../../lib/class/catalog.class.php:505 ../../lib/class/catalog.class.php:508
+#: ../../lib/class/catalog.class.php:511 ../../lib/class/user.class.php:971
 #: ../../lib/preferences.php:312 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:57
 msgid "Never"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:560
+#: ../../lib/class/catalog.class.php:585
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:562
+#: ../../lib/class/catalog.class.php:587
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:607
+#: ../../lib/class/catalog.class.php:632
 msgid "Catalog Insert Failed check debug logs"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1332
+#: ../../lib/class/catalog.class.php:1357
 msgid "No Update Needed"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1537
+#: ../../lib/class/catalog.class.php:1568
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:1562
+#: ../../lib/class/catalog.class.php:1593
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1715
+#: ../../lib/class/catalog.class.php:1746
 msgid "Failed to create playlist."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1732
+#: ../../lib/class/catalog.class.php:1763
 msgid "No valid songs found in playlist file."
 msgstr ""
 
@@ -1983,7 +1982,7 @@ msgstr ""
 
 #: ../../lib/class/shoutbox.class.php:255
 #: ../../templates/show_add_live_stream.inc.php:62
-#: ../../templates/show_catalog_row.inc.php:36
+#: ../../templates/show_catalog_row.inc.php:40
 #: ../../templates/show_live_stream.inc.php:28
 #: ../../templates/show_searches.inc.php:27
 msgid "Add"
@@ -2022,7 +2021,7 @@ msgstr ""
 #: ../../lib/class/tvshow.class.php:197
 #: ../../lib/class/tvshow_episode.class.php:179
 #: ../../lib/class/tvshow_season.class.php:155
-#: ../../templates/show_add_catalog.inc.php:73
+#: ../../templates/show_add_catalog.inc.php:75
 #: ../../templates/show_edit_tvshow_season_row.inc.php:31
 #: ../../templates/show_partial_tvshow_episode.inc.php:23
 #: ../../templates/show_partial_tvshow_episodes.inc.php:25
@@ -2067,7 +2066,7 @@ msgid "Cannot copy default .htaccess file."
 msgstr ""
 
 #: ../../lib/class/upnp_api.class.php:436
-#: ../../templates/show_add_catalog.inc.php:70
+#: ../../templates/show_add_catalog.inc.php:72
 msgid "Music"
 msgstr ""
 
@@ -2826,16 +2825,16 @@ msgstr ""
 msgid "Unknown Artist"
 msgstr ""
 
-#: ../../lib/class/wanted.class.php:404
+#: ../../lib/class/wanted.class.php:406
 msgid "Accept"
 msgstr ""
 
-#: ../../lib/class/wanted.class.php:408
+#: ../../lib/class/wanted.class.php:410
 #: ../../lib/javascript/search-data.php:51
 msgid "Remove"
 msgstr ""
 
-#: ../../lib/class/wanted.class.php:411
+#: ../../lib/class/wanted.class.php:413
 msgid "Add to wanted list"
 msgstr ""
 
@@ -3192,13 +3191,13 @@ msgstr ""
 msgid "The password has been set to: %s"
 msgstr ""
 
-#: ../../modules/Beets/Catalog.php:120
+#: ../../modules/Beets/Catalog.php:123
 msgid "Running Beets Update"
 msgstr ""
 
-#: ../../modules/Beets/Catalog.php:159
+#: ../../modules/Beets/Catalog.php:165
 #: ../../modules/catalog/remote.catalog.php:273
-#: ../../modules/catalog/soundcloud.catalog.php:284
+#: ../../modules/catalog/soundcloud.catalog.php:301
 #: ../../modules/catalog/subsonic.catalog.php:249
 #, php-format
 msgid "Unable to Insert Song - %s"
@@ -3214,10 +3213,10 @@ msgstr ""
 
 #: ../../modules/catalog/beets.catalog.php:111
 #: ../../modules/catalog/beetsremote.catalog.php:112
-#: ../../modules/catalog/dropbox.catalog.php:185
+#: ../../modules/catalog/dropbox.catalog.php:201
 #: ../../modules/catalog/local.catalog.php:207
 #: ../../modules/catalog/remote.catalog.php:168
-#: ../../modules/catalog/soundcloud.catalog.php:171
+#: ../../modules/catalog/soundcloud.catalog.php:187
 #: ../../modules/catalog/subsonic.catalog.php:169
 #, php-format
 msgid "Error: Catalog with %s already exists"
@@ -3231,55 +3230,100 @@ msgstr ""
 msgid "Error: Beets selected, but path is not a URL"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:122
+#: ../../modules/catalog/dropbox.catalog.php:73
+msgid "Go to https://www.dropbox.com/developers/apps/create"
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:74
+msgid "Select 'Dropbox API app'"
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:75
+msgid "Select 'Files and datastores'"
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:76
+msgid "Select 'No' at 'Can your app be limited to its own, private folder?'"
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:77
+msgid ""
+"Select 'Specific file types' at 'What type of files does your app need "
+"access to?'"
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:78
+msgid "Check Videos and Audio files"
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:79
+msgid "Give a name to your application and create it"
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:81
+msgid "Copy your App key and App secret in the following fields."
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:82
+msgid ""
+"After preparing the catalog with pressing the 'Add catalog' button,<br /> "
+"you have to 'Make it ready' on the catalog table."
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:123
 #: ../../templates/show_account.inc.php:93
 #: ../../templates/show_edit_user.inc.php:129
 msgid "API Key"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:123
+#: ../../modules/catalog/dropbox.catalog.php:124
 #: ../../modules/catalog/soundcloud.catalog.php:114
 #: ../../templates/show_add_share.inc.php:35
 msgid "Secret"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:124
+#: ../../modules/catalog/dropbox.catalog.php:125
 #: ../../modules/catalog/local.catalog.php:111
 #: ../../templates/show_stats.inc.php:71
 msgid "Path"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:125
+#: ../../modules/catalog/dropbox.catalog.php:126
 msgid "Get chunked files on analyze"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:169
+#: ../../modules/catalog/dropbox.catalog.php:185
 msgid "Error: API Key and Secret Required for Dropbox Catalogs"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:175
+#: ../../modules/catalog/dropbox.catalog.php:191
 msgid "Invalid <dropbox-path>: "
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:244
+#: ../../modules/catalog/dropbox.catalog.php:222
+#, php-format
+msgid "Go to %s to generate the authorization code, then enter it bellow."
+msgstr ""
+
+#: ../../modules/catalog/dropbox.catalog.php:261
 msgid "Running Dropbox Remote Update"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:286
+#: ../../modules/catalog/dropbox.catalog.php:303
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:288
+#: ../../modules/catalog/dropbox.catalog.php:305
 msgid "No media updated, do you respect the patterns?"
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:291
-#: ../../modules/catalog/dropbox.catalog.php:434
+#: ../../modules/catalog/dropbox.catalog.php:308
+#: ../../modules/catalog/dropbox.catalog.php:451
 msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
-#: ../../modules/catalog/dropbox.catalog.php:324
+#: ../../modules/catalog/dropbox.catalog.php:341
 msgid "API Error: Cannot access file/folder at "
 msgstr ""
 
@@ -3325,31 +3369,31 @@ msgstr ""
 msgid "%s does not match site charset"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:475
+#: ../../modules/catalog/local.catalog.php:480
 msgid "N/A"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:481
+#: ../../modules/catalog/local.catalog.php:486
 #, php-format
 msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
 "Second: [%s]"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:561
+#: ../../modules/catalog/local.catalog.php:566
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:591
+#: ../../modules/catalog/local.catalog.php:596
 msgid "Catalog Root unreadable, stopping clean"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:615
+#: ../../modules/catalog/local.catalog.php:620
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
-#: ../../modules/catalog/local.catalog.php:654
+#: ../../modules/catalog/local.catalog.php:659
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
 msgstr ""
@@ -3417,36 +3461,36 @@ msgstr ""
 msgid "User ID"
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:161
+#: ../../modules/catalog/soundcloud.catalog.php:177
 msgid "Error: UserID and Secret Required for SoundCloud Catalogs"
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:223
+#: ../../modules/catalog/soundcloud.catalog.php:240
 msgid "Running SoundCloud Remote Update"
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:292
+#: ../../modules/catalog/soundcloud.catalog.php:309
 msgid "Completed updating SoundCloud catalog(s)."
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:292
+#: ../../modules/catalog/soundcloud.catalog.php:309
 #: ../../modules/catalog/subsonic.catalog.php:267
 msgid "Songs added."
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:297
+#: ../../modules/catalog/soundcloud.catalog.php:314
 msgid "API Error: cannot get song list."
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:300
-#: ../../modules/catalog/soundcloud.catalog.php:357
-#: ../../modules/catalog/soundcloud.catalog.php:430
+#: ../../modules/catalog/soundcloud.catalog.php:317
+#: ../../modules/catalog/soundcloud.catalog.php:374
+#: ../../modules/catalog/soundcloud.catalog.php:447
 msgid "API Error: cannot connect to SoundCloud."
 msgstr ""
 
-#: ../../modules/catalog/soundcloud.catalog.php:303
-#: ../../modules/catalog/soundcloud.catalog.php:361
-#: ../../modules/catalog/soundcloud.catalog.php:434
+#: ../../modules/catalog/soundcloud.catalog.php:320
+#: ../../modules/catalog/soundcloud.catalog.php:378
+#: ../../modules/catalog/soundcloud.catalog.php:451
 msgid "SoundCloud exception: "
 msgstr ""
 
@@ -3653,38 +3697,6 @@ msgstr ""
 msgid "Access Control not Enabled"
 msgstr ""
 
-#: ../../scripts/tests/list_header.inc.php:147
-#: ../../templates/list_header.inc.php:109
-msgid "Prev"
-msgstr ""
-
-#: ../../scripts/tests/list_header.inc.php:153
-#: ../../templates/list_header.inc.php:111
-msgid "Page"
-msgstr ""
-
-#: ../../scripts/tests/list_header.inc.php:164
-#: ../../templates/list_header.inc.php:115
-#: ../../templates/show_localplay_control.inc.php:28
-msgid "Next"
-msgstr ""
-
-#: ../../scripts/tests/list_header.inc.php:173
-#: ../../templates/list_header.inc.php:143
-msgid "Item Count"
-msgstr ""
-
-#: ../../scripts/tests/list_header.inc.php:176
-#: ../../templates/browse_filters.inc.php:30
-#: ../../templates/list_header.inc.php:124
-msgid "Filters"
-msgstr ""
-
-#: ../../scripts/tests/list_header.inc.php:185
-#: ../../templates/list_header.inc.php:135
-msgid "Limit"
-msgstr ""
-
 #: ../../search.php:43
 msgid "View on MusicBrainz"
 msgstr ""
@@ -3711,7 +3723,7 @@ msgid ""
 msgstr ""
 
 #: ../../server/player.ajax.php:41
-#: ../../templates/show_html5_player.inc.php:415
+#: ../../templates/show_html5_player.inc.php:417
 msgid "My Broadcast"
 msgstr ""
 
@@ -3724,7 +3736,7 @@ msgstr ""
 msgid "Missing Artists"
 msgstr ""
 
-#: ../../server/sse.server.php:119
+#: ../../server/sse.server.php:130
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -3794,6 +3806,11 @@ msgstr ""
 
 #: ../../song.php:50
 msgid "Cannot delete this song."
+msgstr ""
+
+#: ../../templates/browse_filters.inc.php:30
+#: ../../templates/list_header.inc.php:124
+msgid "Filters"
 msgstr ""
 
 #: ../../templates/browse_filters.inc.php:34
@@ -3989,8 +4006,29 @@ msgstr ""
 msgid "Ampache Installation"
 msgstr ""
 
+#: ../../templates/list_header.inc.php:109
+msgid "Prev"
+msgstr ""
+
+#: ../../templates/list_header.inc.php:111
+msgid "Page"
+msgstr ""
+
 #: ../../templates/list_header.inc.php:113
 msgid "of"
+msgstr ""
+
+#: ../../templates/list_header.inc.php:115
+#: ../../templates/show_localplay_control.inc.php:28
+msgid "Next"
+msgstr ""
+
+#: ../../templates/list_header.inc.php:135
+msgid "Limit"
+msgstr ""
+
+#: ../../templates/list_header.inc.php:143
+msgid "Item Count"
 msgstr ""
 
 #: ../../templates/rightbar.inc.php:29
@@ -3998,7 +4036,7 @@ msgid "Add to Playlist"
 msgstr ""
 
 #: ../../templates/rightbar.inc.php:32
-#: ../../templates/show_html5_player.inc.php:433
+#: ../../templates/show_html5_player.inc.php:435
 #: ../../templates/show_playlists_dialog.inc.php:27
 msgid "Add to New Playlist"
 msgstr ""
@@ -4192,13 +4230,13 @@ msgstr ""
 msgid "Avatar"
 msgstr ""
 
-#: ../../templates/show_account.inc.php:119
+#: ../../templates/show_account.inc.php:121
 #: ../../templates/show_edit_user.inc.php:155
 #: ../../templates/show_manage_catalogs.inc.php:45
 msgid "Clear Stats"
 msgstr ""
 
-#: ../../templates/show_account.inc.php:129
+#: ../../templates/show_account.inc.php:131
 msgid "Update Account"
 msgstr ""
 
@@ -4313,7 +4351,7 @@ msgid "(no leading or ending '/')"
 msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:60
-#: ../../templates/show_catalog_row.inc.php:40
+#: ../../templates/show_catalog_row.inc.php:44
 msgid "Gather Art"
 msgstr ""
 
@@ -4325,19 +4363,19 @@ msgstr ""
 msgid "Gather media types"
 msgstr ""
 
-#: ../../templates/show_add_catalog.inc.php:72
+#: ../../templates/show_add_catalog.inc.php:74
 msgid "Music Clip"
 msgstr ""
 
-#: ../../templates/show_add_catalog.inc.php:74
+#: ../../templates/show_add_catalog.inc.php:76
 msgid "Movie"
 msgstr ""
 
-#: ../../templates/show_add_catalog.inc.php:75
+#: ../../templates/show_add_catalog.inc.php:77
 msgid "Personal Video"
 msgstr ""
 
-#: ../../templates/show_add_catalog.inc.php:85
+#: ../../templates/show_add_catalog.inc.php:88
 msgid "Add Catalog"
 msgstr ""
 
@@ -4944,16 +4982,20 @@ msgstr ""
 msgid "No broadcast found"
 msgstr ""
 
-#: ../../templates/show_catalog_row.inc.php:37
+#: ../../templates/show_catalog_row.inc.php:35
+msgid "Make it ready ..."
+msgstr ""
+
+#: ../../templates/show_catalog_row.inc.php:41
 msgid "Verify"
 msgstr ""
 
-#: ../../templates/show_catalog_row.inc.php:38
+#: ../../templates/show_catalog_row.inc.php:42
 #: ../../templates/show_shares.inc.php:27
 msgid "Clean"
 msgstr ""
 
-#: ../../templates/show_catalog_row.inc.php:39
+#: ../../templates/show_catalog_row.inc.php:43
 #: ../../templates/show_create_democratic.inc.php:60
 #: ../../templates/show_edit_access.inc.php:78
 #: ../../templates/show_edit_shout.inc.php:41
@@ -4962,7 +5004,7 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: ../../templates/show_catalog_row.inc.php:43
+#: ../../templates/show_catalog_row.inc.php:48
 msgid "Go"
 msgstr ""
 
@@ -5630,31 +5672,31 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-#: ../../templates/show_html5_player_headers.inc.php:182
+#: ../../templates/show_html5_player_headers.inc.php:196
 msgid "Your browser doesn't support this feature."
 msgstr ""
 
-#: ../../templates/show_html5_player_headers.inc.php:465
+#: ../../templates/show_html5_player_headers.inc.php:475
 msgid "Media is currently playing. Are you sure you want to close"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:437
+#: ../../templates/show_html5_player.inc.php:439
 msgid "Slideshow"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:441
+#: ../../templates/show_html5_player.inc.php:443
 msgid "Equalizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:444
+#: ../../templates/show_html5_player.inc.php:446
 msgid "Visualizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:447
+#: ../../templates/show_html5_player.inc.php:449
 msgid "Visualizer Full-Screen"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:450
+#: ../../templates/show_html5_player.inc.php:452
 msgid "ReplayGain"
 msgstr ""
 
