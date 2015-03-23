@@ -739,6 +739,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar .submenu {
     display: none;
     position: fixed;
+    top: 120px;
     right: 15px;
     border: 2px solid;
     width: 210px;
