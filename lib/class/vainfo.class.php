@@ -152,32 +152,39 @@ class vainfo
      */
     private static function _detect_encoding($tags, $mb_order)
     {
-        if (function_exists('mb_detect_encoding')) {
-            $encodings = array();
-            if (is_array($tags)) {
-                foreach ($tags as $tag) {
-                    $encodings[mb_detect_encoding($tag, $mb_order, true)]++;
-                }
-            }
+        if (!function_exists('mb_detect_encoding'))
+            return 'ISO-8859-1';
 
-            debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
-            $high = 0;
-            $encoding = '';
-            foreach ($encodings as $key => $value) {
-                if ($value > $high) {
-                    $encoding = $key;
-                    $high = $value;
-                }
+        $encodings = array();
+        if (is_array($tags)) {
+            foreach ($tags as $tag) {
+                if (is_array($tag))
+                    $tag = implode(" ", $tag);
+                $enc = mb_detect_encoding($tag, $mb_order, true);
+                if ($enc != false)
+                    $encodings[$enc]++;
             }
+        } else {
+            $enc = mb_detect_encoding($tags, $mb_order, true);
+            if ($enc != false)
+                $encodings[$enc]++;
+        }
 
-            if ($encoding != 'ASCII' && $encoding != '0') {
-                return (string) $encoding;
-            } else {
-                return 'ISO-8859-1';
+        //!!debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
+        $high = 0;
+        $encoding = 'ISO-8859-1';
+        foreach ($encodings as $key => $value) {
+            if ($value > $high) {
+                $encoding = $key;
+                $high = $value;
             }
         }
 
-        return 'ISO-8859-1';
+        if ($encoding != 'ASCII') {
+            return (string) $encoding;
+        } else {
+            return 'ISO-8859-1';
+        }
     }
 
     /**
