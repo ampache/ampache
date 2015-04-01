@@ -36,7 +36,7 @@ class AmpacheUPnP extends localplay_controller
 
     /* @var UPnPPlayer $object */
     private $_upnp;
-    
+
 
     /**
      * Constructor
@@ -47,7 +47,7 @@ class AmpacheUPnP extends localplay_controller
     {
         /* Do a Require Once On the needed Libraries */
         require_once AmpConfig::get('prefix') . '/modules/upnp/upnpplayer.class.php';
-    } 
+    }
 
     /**
      * get_description
@@ -56,7 +56,7 @@ class AmpacheUPnP extends localplay_controller
     public function get_description()
     {
         return $this->_description;
-    } 
+    }
 
     /**
      * get_version
@@ -65,7 +65,7 @@ class AmpacheUPnP extends localplay_controller
     public function get_version()
     {
         return $this->_version;
-    } 
+    }
 
     /**
      * is_installed
@@ -77,7 +77,7 @@ class AmpacheUPnP extends localplay_controller
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-    } 
+    }
 
     /**
      * install
@@ -194,7 +194,7 @@ class AmpacheUPnP extends localplay_controller
         $sql = "SELECT * FROM `localplay_upnp` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($instance));
         $row = Dba::fetch_assoc($db_results);
-    
+
         return $row;
     }
 
@@ -226,11 +226,11 @@ class AmpacheUPnP extends localplay_controller
     {
     }
 
-    
+
     public function add_url(Stream_URL $url)
     {
         debug_event('upnp', 'add_url: ' . $url->title . " | " . $url->url, 5);
-        
+
         if (!$this->_upnp) {
             return false;
         }
@@ -375,7 +375,7 @@ class AmpacheUPnP extends localplay_controller
 
         return $this->_upnp->VolumeUp();
     }
-    
+
     /**
      * This tells upnp to decrease the volume
      */
@@ -387,7 +387,7 @@ class AmpacheUPnP extends localplay_controller
 
         return $this->_upnp->VolumeDown();
     }
-    
+
     /**
      * repeat
      * This tells upnp to set the repeating the playlist (i.e. loop) to either on or off

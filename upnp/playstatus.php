@@ -38,8 +38,7 @@ echo "STATE = " . $state . "\n";
 
 // If the song was played and then finished, start to play next song in list.
 // Do not start anything if playback was stopped from beginning
-if ($played)
-{
+if ($played) {
     echo "UPnP play next" . "\n";
     if ($player->Next(false))
         echo "Next song started" . "\n";

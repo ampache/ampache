@@ -158,7 +158,7 @@ class vainfo
         $encodings = array();
         if (is_array($tags)) {
             foreach ($tags as $tag) {
-                if (is_array($tag))	
+                if (is_array($tag))
                     $tag = implode(" ", $tag);
                 $enc = mb_detect_encoding($tag, $mb_order, true);
                 if ($enc != false)
