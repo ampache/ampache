@@ -241,7 +241,7 @@ class Live_Stream extends database_object implements media, library_item
      * get_stream_types
      * This is needed by the media interface
      */
-    public function get_stream_types()
+    public function get_stream_types($player = null)
     {
         return array('foreign');
     } // native_stream
@@ -250,7 +250,7 @@ class Live_Stream extends database_object implements media, library_item
      * play_url
      * This is needed by the media interface
      */
-    public static function play_url($oid, $additional_params='', $local=false, $sid='', $force_http='')
+    public static function play_url($oid, $additional_params='', $player=null, $local=false, $sid='', $force_http='')
     {
         $radio = new Live_Stream($oid);
 

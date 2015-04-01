@@ -620,7 +620,7 @@ class Plex_Api
                         $urlparams .= '&bitrate=' . $br;
                     }
 
-                    $url = Song::play_url($song_id, $urlparams, true);
+                    $url = Song::play_url($song_id, $urlparams, 'api', true);
                     self::stream_url($url);
                 }
             }
@@ -720,9 +720,9 @@ class Plex_Api
 
                     if ($id) {
                         if (Plex_XML_Data::isSong($id)) {
-                            $url = Song::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
+                            $url = Song::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params, 'api');
                         } elseif (Plex_XML_Data::isVideo($id)) {
-                            $url = Video::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
+                            $url = Video::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params, 'api');
                         }
 
                         if ($url) {
@@ -1090,7 +1090,7 @@ class Plex_Api
                 if (Plex_XML_Data::isSong($key)) {
                     $media = new Song($id);
                     if ($media->id) {
-                        $url = Song::play_url($id, '', true);
+                        $url = Song::play_url($id, '', 'api', true);
                         self::stream_url($url);
                     } else {
                         self::createError(404);
@@ -1098,7 +1098,7 @@ class Plex_Api
                 } elseif (Plex_XML_Data::isVideo($key)) {
                     $media = new Video($id);
                     if ($media->id) {
-                        $url = Video::play_url($id, '', true);
+                        $url = Video::play_url($id, '', 'api', true);
                         self::stream_url($url);
                     } else {
                         self::createError(404);

@@ -390,11 +390,12 @@ class Broadcast extends database_object implements library_item
      *
      * @param int $oid
      * @param string $additional_params
+     * @param string $player
      * @param boolean $local
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function play_url($oid, $additional_params='', $local=false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         return $oid;
     }

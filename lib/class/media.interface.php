@@ -34,7 +34,7 @@ interface media
      * Returns an array of strings; current types are 'native'
      * and 'transcode'
      */
-    public function get_stream_types();
+    public function get_stream_types($player = null);
 
     /**
      * play_url
@@ -42,7 +42,7 @@ interface media
      * Returns the url to stream the specified object
      *
      */
-    public static function play_url($oid, $additional_params='', $local=false);
+    public static function play_url($oid, $additional_params='', $player=null, $local=false);
 
     /**
      * get_transcode_settings

@@ -40,10 +40,15 @@ $sid            = scrub_in($_REQUEST['ssid']);
 $type           = scrub_in($_REQUEST['type']);
 
 $transcode_to = null;
+$player = null;
 $bitrate = 0;
 $maxbitrate = 0;
 $resolution = '';
 $quality = 0;
+
+if (isset($_REQUEST['player'])) {
+    $player = $_REQUEST['player'];
+}
 
 if (AmpConfig::get('transcode_player_customize')) {
     $transcode_to = scrub_in($_REQUEST['transcode_to']);
@@ -436,7 +441,7 @@ debug_event('play', 'Transcode to {'.$transcode_to.'}', 5);
 // If custom play action, do not try to transcode
 if (!$cpaction) {
     $transcode_cfg = AmpConfig::get('transcode');
-    $valid_types = $media->get_stream_types();
+    $valid_types = $media->get_stream_types($player);
     if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
         if ($transcode_to) {
             $transcode = true;
@@ -500,7 +505,7 @@ if ($transcode) {
         }
     }
 
-    $transcoder = Stream::start_transcode($media, $transcode_to, null, $troptions);
+    $transcoder = Stream::start_transcode($media, $transcode_to, $player, $troptions);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else if ($cpaction) {

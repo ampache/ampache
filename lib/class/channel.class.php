@@ -443,13 +443,13 @@ class Channel extends database_object implements media, library_item
         return array();
     }
 
-    public static function play_url($oid, $additional_params='', $local=false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         $channel = new Channel($oid);
         return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
     }
 
-    public function get_stream_types()
+    public function get_stream_types($player = null)
     {
         // Transcode is mandatory to keep a consistant stream
         return array('transcode');

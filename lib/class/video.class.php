@@ -394,9 +394,9 @@ class Video extends database_object implements media, library_item
      * Get stream types.
      * @return array
      */
-    public function get_stream_types()
+    public function get_stream_types($player = null)
     {
-        return Song::get_stream_types_for_type($this->type);
+        return Song::get_stream_types_for_type($this->type, $player);
     }
 
     /**
@@ -405,12 +405,13 @@ class Video extends database_object implements media, library_item
      * like a hack, might need to adjust it in the future
      * @param int $oid
      * @param string $additional_params
+     * @param string $player
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params='', $local=false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
-        return Song::generic_play_url('video', $oid, $additional_params, $local);
+        return Song::generic_play_url('video', $oid, $additional_params, $player, $local);
     }
 
     /**

@@ -333,7 +333,7 @@ class Daap_Api
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
-                    $url = Song::play_url($id, $params, true);
+                    $url = Song::play_url($id, $params, 'api', true);
                     self::follow_stream($url);
                     exit;
                 }

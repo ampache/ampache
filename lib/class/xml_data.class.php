@@ -455,7 +455,7 @@ class XML_Data
                 "\t<bitrate>" . $song->bitrate . "</bitrate>\n".
                 "\t<mode>" . $song->mode . "</mode>\n".
                 "\t<mime>" . $song->mime . "</mime>\n" .
-                "\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
+                "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api') . "]]></url>\n" .
                 "\t<size>" . $song->size . "</size>\n".
                 "\t<mbid>" . $song->mbid . "</mbid>\n".
                 "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n".
@@ -497,7 +497,7 @@ class XML_Data
                     "\t<resolution>" . $video->f_resolution . "</resolution>\n" .
                     "\t<size>" . $video->size . "</size>\n" .
                     self::tags_string($video->tags) .
-                    "\t<url><![CDATA[" . Video::play_url($video->id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api') . "]]></url>\n" .
                     "</video>\n";
 
         } // end foreach
@@ -549,7 +549,7 @@ class XML_Data
                     "\t<track>" . $song->track . "</track>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api') . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                     "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .

@@ -583,7 +583,7 @@ class Subsonic_XML_Data
         $xuser = $xml->addChild('user');
         $xuser->addAttribute('username', $user->username);
         $xuser->addAttribute('email', $user->email);
-        $xuser->addAttribute('scrobblingEnabled', 'false');
+        $xuser->addAttribute('scrobblingEnabled', 'true');
         $isManager = ($user->access >= 75);
         $isAdmin = ($user->access >= 100);
         $xuser->addAttribute('adminRole', $isAdmin ? 'true' : 'false');

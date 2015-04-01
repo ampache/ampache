@@ -1488,7 +1488,7 @@ class Song extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function generic_play_url($object_type, $object_id, $additional_params, $local=false)
+    public static function generic_play_url($object_type, $object_id, $additional_params, $player=null, $local=false)
     {
         $media = new $object_type($object_id);
         if (!$media->id) return null;
@@ -1499,7 +1499,7 @@ class Song extends database_object implements media, library_item
         // Checking if the media is gonna be transcoded into another type
         // Some players doesn't allow a type streamed into another without giving the right extension
         $transcode_cfg = AmpConfig::get('transcode');
-        $valid_types = Song::get_stream_types_for_type($type, 'api');
+        $valid_types = Song::get_stream_types_for_type($type, $player);
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $media->get_transcode_settings(null);
             if ($transcode_settings) {
@@ -1515,6 +1515,9 @@ class Song extends database_object implements media, library_item
         $media_name = rawurlencode($media_name);
 
         $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params . "&name=" . $media_name;
+        if ($player) {
+            $url .= "&player=" . $player;
+        }
 
         return Stream_URL::format($url);
     }
@@ -1529,9 +1532,9 @@ class Song extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params='', $local=false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
-        return self::generic_play_url('song', $oid, $additional_params, $local);
+        return self::generic_play_url('song', $oid, $additional_params, $player, $local);
     }
 
     /**
@@ -1592,9 +1595,9 @@ class Song extends database_object implements media, library_item
      * Get stream types.
      * @return array
      */
-    public function get_stream_types()
+    public function get_stream_types($player = null)
     {
-        return Song::get_stream_types_for_type($this->type);
+        return Song::get_stream_types_for_type($this->type, $player);
     }
 
     /**

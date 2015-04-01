@@ -265,7 +265,7 @@ class Song_Preview extends database_object implements media, playable_item
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
      */
-    public static function play_url($oid, $additional_params='', $local=false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         $song = new Song_Preview($oid);
         $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
@@ -293,7 +293,7 @@ class Song_Preview extends database_object implements media, playable_item
         return $data;
     }
 
-    public function get_stream_types()
+    public function get_stream_types($player = null)
     {
         return array('native');
     }

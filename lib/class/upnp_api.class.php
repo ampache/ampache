@@ -933,7 +933,7 @@ class Upnp_Api
             //'dc:date'                   => date("c", $song->addition_time),
             'upnp:originalTrackNumber'    => $song->track,
 
-            'res'                       => Song::play_url($song->id),
+            'res'                       => Song::play_url($song->id, '', 'api'),
             'protocolInfo'              => $arrFileType['mime'],
             'size'                      => $song->size,
             'duration'                  => $song->f_time_h . '.0',
@@ -985,7 +985,7 @@ class Upnp_Api
             'upnp:albumArtURI'          => $art_url,
             'upnp:genre'                => Tag::get_display($video->tags, false, 'video'),
 
-            'res'                       => Video::play_url($video->id),
+            'res'                       => Video::play_url($video->id, '', 'api'),
             'protocolInfo'              => $arrFileType['mime'],
             'size'                      => $video->size,
             'duration'                  => $video->f_time_h . '.0',

@@ -941,9 +941,9 @@ class Subsonic_Api
 
         $url = '';
         if (Subsonic_XML_Data::isVideo($fileid)) {
-            $url = Video::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, function_exists('curl_version'));
+            $url = Video::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'));
         } else if (Subsonic_XML_Data::isSong($fileid)) {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, function_exists('curl_version'));
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'));
         }
 
         if (!empty($url)) {
@@ -962,7 +962,7 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', function_exists('curl_version'));
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
         self::follow_stream($url);
     }
 
@@ -1511,9 +1511,9 @@ class Subsonic_Api
                         foreach ($id as $i) {
                             $url = null;
                             if (Subsonic_XML_Data::isSong($i)) {
-                                $url = Song::generic_play_url('song', Subsonic_XML_Data::getAmpacheId($i), '');
+                                $url = Song::generic_play_url('song', Subsonic_XML_Data::getAmpacheId($i), '', 'api');
                             } elseif (Subsonic_XML_Data::isVideo($i)) {
-                                $url = Song::generic_play_url('video', Subsonic_XML_Data::getAmpacheId($i), '');
+                                $url = Song::generic_play_url('video', Subsonic_XML_Data::getAmpacheId($i), '', 'api');
                             }
 
                             if ($url) {
