@@ -41,7 +41,6 @@ class Catalog_dropbox extends Catalog
     public function get_description()
     {
         return $this->description;
-
     } // get_description
 
     /**
@@ -51,7 +50,6 @@ class Catalog_dropbox extends Catalog
     public function get_version()
     {
         return $this->version;
-
     } // get_version
 
     /**
@@ -61,7 +59,6 @@ class Catalog_dropbox extends Catalog
     public function get_type()
     {
         return $this->type;
-
     } // get_type
 
     /**
@@ -70,17 +67,17 @@ class Catalog_dropbox extends Catalog
      */
     public function get_create_help()
     {
-        $help = "<ul><li>Go to https://www.dropbox.com/developers/apps/create</li>" .
-            "<li>Select 'Dropbox API app'</li>" .
-            "<li>Select 'Files and datastores'</li>" .
-            "<li>Select 'No' at 'Can your app be limited to its own, private folder?'</li>" .
-            "<li>Select 'Specific file types' at 'What type of files does your app need access to?'</li>" .
-            "<li>Check Videos and Audio files</li>" .
-            "<li>Give a name to your application and create it</li>" .
+        $help = "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li>" .
+            "<li>" . T_("Select 'Dropbox API app'") . "</li>" .
+            "<li>" . T_("Select 'Files and datastores'") . "</li>" .
+            "<li>" . T_("Select 'No' at 'Can your app be limited to its own, private folder?'") . "</li>" .
+            "<li>" . T_("Select 'Specific file types' at 'What type of files does your app need access to?'") . "</li>" .
+            "<li>" . T_("Check Videos and Audio files") . "</li>" .
+            "<li>" . T_("Give a name to your application and create it") . "</li>" .
             //"<li>Add the following OAuth redirect URIs: <i>" . AmpConfig::get('web_path') . "/admin/catalog.php</i></li>" .
-            "<li>Copy your App key and App secret here</li></ul>";
+            "<li>" . T_("Copy your App key and App secret in the following fields.") . "</li>" .
+            "<li>&rArr;&nbsp;" . T_("After preparing the catalog with pressing the 'Add catalog' button,<br /> you have to 'Make it ready' on the catalog table.") . "</li></ul>";
         return $help;
-
     } // get_create_help
 
     /**
@@ -93,8 +90,6 @@ class Catalog_dropbox extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-
-
     } // is_installed
 
     /**
@@ -114,7 +109,6 @@ class Catalog_dropbox extends Catalog
         $db_results = Dba::query($sql);
 
         return true;
-
     } // install
 
     public function catalog_fields()
@@ -125,7 +119,6 @@ class Catalog_dropbox extends Catalog
         $fields['getchunk']      = array('description' => T_('Get chunked files on analyze'), 'type'=>'checkbox', 'value' => true);
 
         return $fields;
-
     }
 
     public function isReady()
@@ -219,14 +212,14 @@ class Catalog_dropbox extends Catalog
     {
         $webAuth = $this->getWebAuth();
         $authurl = $webAuth->start();
-        echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
+        printf('<br />' . T_('Go to %s to generate the authorization code, then enter it bellow.') . '<br />', '<strong><a href="' . $authurl . '"target="_blank">' . $authurl . '</a></strong>');
         echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
         if ($_REQUEST['action']) {
             echo "<input type='hidden' name='action' value='" . scrub_in($_REQUEST['action']) . "' />";
             echo "<input type='hidden' name='catalogs[]' value='". $this->id ."' />";
         }
         echo "<input type='hidden' name='perform_ready' value='true' />";
-        echo "<input type='text' name='authcode' />";
+        echo "<input type='text' name='authcode' />&nbsp;";
         echo "<input type='submit' value='Ok' />";
         echo "</form>";
         echo "<br />";
@@ -309,7 +302,6 @@ class Catalog_dropbox extends Catalog
         }
 
         return true;
-
     }
 
     /**
@@ -502,7 +494,6 @@ class Catalog_dropbox extends Catalog
     {
         $client = $this->createClient();
         if ($client != null) {
-
             set_time_limit(0);
 
             // Generate browser class for sending headers
@@ -521,5 +512,4 @@ class Catalog_dropbox extends Catalog
 
         return null;
     }
-
 } // end of catalog class
