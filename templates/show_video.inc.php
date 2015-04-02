@@ -30,7 +30,7 @@ if (strtolower(get_class($video)) != 'movie') {
     $gart = Art::display('video', $video->id, $video->f_title, 8, null, false, 'preview');
 }
 if (!$gart) {
-    $gart = Art::display('video', $video->id, $video->f_title, 7, null, false);
+    $gart = Art::display('video', $video->id, $video->f_title, 7);
 }
 ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
