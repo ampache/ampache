@@ -265,7 +265,7 @@ function install_create_config($download = false)
     Dba::dbh();
 
     $params = AmpConfig::get_all();
-    if (empty($params['database_username']) || empty($params['database_password'])) {
+    if (empty($params['database_username']) || (empty($params['database_password']) && strpos($params['database_hostname'], '/') !== 0)) {
         Error::add('general', T_("Invalid configuration settings"));
         return false;
     }

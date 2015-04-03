@@ -38,6 +38,7 @@ config_version = 27
 ;##############################
 
 ; Hostname of your database
+; For socket authentication, set the path to socket file (e.g. /var/run/mysqld/mysqld.sock)
 ; DEFAULT: localhost
 database_hostname = localhost
 
@@ -55,7 +56,7 @@ database_username = username
 
 ; Password for your ampache database, this can not be blank
 ; this is a 'forced' security precaution, the default value
-; will not work
+; will not work (except if using socket authentication)
 ; DEFAULT: ""
 database_password = password
 
