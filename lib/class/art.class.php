@@ -1155,11 +1155,6 @@ class Art extends database_object
             $limit = 5;
         }
 
-        if ($this->type != 'album')
-            return array();
-
-        $media = new Album($this->uid);
-        $songs = $media->get_songs();
         $results = array();
         $preferred = false;
         // For storing which directories we've already done
@@ -1178,10 +1173,20 @@ class Art extends database_object
             'png'
         );
 
-        foreach ($songs as $song_id) {
-            $song = new Song($song_id);
-            $dir = Core::conv_lc_file( dirname($song->file) );
+        $dirs = array();
+        if ($this->type == 'album') {
+            $media = new Album($this->uid);
+            $songs = $media->get_songs();
+            foreach ($songs as $song_id) {
+                $song = new Song($song_id);
+                $dirs[] = Core::conv_lc_file( dirname($song->file) );
+            }
+        } else if ($this->type == 'video') {
+            $media = new Video($this->uid);
+            $dirs[] = Core::conv_lc_file( dirname($media->file) );
+        }
 
+        foreach ($dirs as $dir) {
             if (isset($processed[$dir])) {
                 continue;
             }
@@ -1248,7 +1253,7 @@ class Art extends database_object
             } // end while reading dir
             closedir($handle);
 
-        } // end foreach songs
+        } // end foreach dirs
 
         if (is_array($preferred)) {
             // We found our favourite filename somewhere, so we need

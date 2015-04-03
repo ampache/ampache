@@ -39,8 +39,7 @@ if (!$_REQUEST['html']) {
 }
 
 $worker = isset($_REQUEST['worker']) ? $_REQUEST['worker'] : null;
-$options = unserialize(urldecode(scrub_in($_REQUEST['options'])));
-
+$options = unserialize(urldecode($_REQUEST['options']));
 $_REQUEST['catalogs'] = scrub_in(unserialize(urldecode($_REQUEST['catalogs'])));
 
 switch ($worker) {
