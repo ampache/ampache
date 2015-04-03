@@ -468,7 +468,7 @@ class Upnp_Api
                     case 1: // Get artists list
                         //$artists = Catalog::get_artists();
                         //list($maxCount, $artists) = self::_slice($artists, $start, $count);
-                        $artists = Catalog::get_artists($count, $start);
+                        $artists = Catalog::get_artists(null, $count, $start);
                         list($maxCount, $artists) = array(999999, $artists);
                         foreach ($artists as $artist) {
                             $artist->format();
