@@ -604,8 +604,18 @@ class Search extends playlist_object
         }
 
         $search_info = $search->to_sql();
-        $sql = $search_info['base'] . ' ' . $search_info['table_sql'] .
-            ' WHERE ' . $search_info['where_sql'] . " $limit_sql";
+        $sql = $search_info['base'] . ' ' . $search_info['table_sql'];
+        if (!empty($search_info['where_sql'])) {
+            $sql .= ' WHERE ' . $search_info['where_sql'];
+        }
+        if (!empty($search_info['group_sql'])) {
+            $sql .= ' GROUP BY ' . $search_info['group_sql'];
+            if (!empty($search_info['having_sql'])) {
+                $sql .= ' HAVING ' . $search_info['having_sql'];
+            }
+        }
+        $sql .= ' ' . $limit_sql;
+        $sql = trim($sql);
 
         $db_results = Dba::read($sql);
 

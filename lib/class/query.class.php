@@ -210,6 +210,9 @@ class Query
                 'season_lt',
                 'season_lg',
                 'season_eq'
+            ),
+            'user' => array(
+                'starts_with'
             )
         );
 
@@ -1622,6 +1625,13 @@ class Query
                 break;
                 default:
                     // Rien a faire
+                break;
+            } // end filter
+        break;
+        case 'user':
+            switch ($filter) {
+                case 'starts_with':
+                    $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%' ) AND ";
                 break;
             } // end filter
         break;
