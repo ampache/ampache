@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
                 $artist->format(false);
                 $results[] = array(
                     'type' => T_('Artists'),
-                    'link' => $artist->f_link,
+                    'link' => $artist->link,
                     'label' => $artist->name,
                     'value' => $artist->name,
                     'rels' => '',
@@ -86,7 +86,7 @@ switch ($_REQUEST['action']) {
                 }
                 $results[] = array(
                     'type' => T_('Albums'),
-                    'link' => $album->f_link_src,
+                    'link' => $album->link,
                     'label' => $a_title,
                     'value' => $album->f_title,
                     'rels' => $album->f_artist,

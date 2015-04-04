@@ -264,7 +264,7 @@ class Ampache_RSS
             $album->format();
 
             $xml_array = array('title' => $album->f_name,
-                    'link' => $album->f_link_src,
+                    'link' => $album->link,
                     'description' => $album->f_artist_name . ' - ' . $album->f_name,
                     'image' => Art::url($album->id, 'album'),
                     'comments' => '',

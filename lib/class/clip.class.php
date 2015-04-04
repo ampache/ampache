@@ -99,7 +99,7 @@ class Clip extends Video
             if ($this->artist) {
                 $artist = new Artist($this->artist);
                 $artist->format();
-                $this->f_artist = $artist->f_link;
+                $this->f_artist = $artist->link;
             }
 
             if ($this->song) {

@@ -228,23 +228,6 @@ switch ($_REQUEST['action']) {
         $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
     break;
-    case 'shoutbox':
-        ob_start();
-        $since = $_REQUEST['since'];
-        if ($since) {
-            $shouts = Shoutbox::get_shouts_since(intval($since / 1000));
-            echo "<script language='javascript' type='text/javascript'>";
-            foreach ($shouts as $id) {
-                $shout = new Shoutbox($id);
-                echo "noty({text: '" . addslashes($shout->get_display(true)) . "',
-                    type: 'alert', layout: 'bottomRight',
-                    template: '<div class=\"noty_message noty_ampache\"><span class=\"noty_text noty_ampache\"></span><div class=\"noty_close noty_ampache\"></div></div>',
-                });";
-            }
-            echo "</script>";
-        }
-        $results['live_shoutbox'] = ob_get_clean();
-    break;
     case 'start_channel':
         if (Access::check('interface','75')) {
             ob_start();

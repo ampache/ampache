@@ -44,7 +44,7 @@
             <?php if (AmpConfig::get('live_stream')) { ?>
             <li id="sb_home_browse_music_radioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?></a></li>
             <?php } ?>
-            <?php if (AmpConfig::get('allow_upload')) { ?>
+            <?php if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) { ?>
             <li id="sb_home_browse_music_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
             <?php } ?>
         </ul>

@@ -258,21 +258,6 @@ $_SESSION['login'] = false;
         </script>
     </head>
     <body>
-        <?php if (AmpConfig::get('sociable') && AmpConfig::get('notify')) { ?>
-        <script type="text/javascript" language="javascript">
-            var lastrefresh = new Date().getTime();
-            var refresh_sociable_interval=<?php echo AmpConfig::get('refresh_limit') ?>;
-            function refresh_sociable()
-            {
-                <?php echo Ajax::action('?page=index&action=shoutbox&since=\' + lastrefresh + \'', ''); ?>;
-                lastrefresh = new Date().getTime();
-            }
-            $(document).ready(function() {
-                window.setInterval(function(){refresh_sociable();}, refresh_sociable_interval * 1000);
-            });
-        </script>
-        <div id="live_shoutbox"></div>
-        <?php } ?>
         <div id="aslideshow">
             <div id="aslideshow_container">
                 <div id="fslider"></div>

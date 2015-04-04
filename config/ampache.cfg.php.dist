@@ -360,11 +360,6 @@ directplay = "true"
 ; DEFAULT: true
 sociable = "true"
 
-; Notify
-; This turns on / off all Ampache notifications
-; DEFAULT: true
-notify = "true"
-
 ; License
 ; This turns on / off all licensing features on Ampache
 ; DEFAULT: false

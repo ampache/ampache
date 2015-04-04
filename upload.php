@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-if (!AmpConfig::get('allow_upload')) {
+if (!AmpConfig::get('allow_upload') || !Access::check('interface', '25')) {
     UI::access_denied();
     exit;
 }

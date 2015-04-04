@@ -452,8 +452,8 @@ class Preference extends database_object
         /* Get Global Preferences */
         $sql = "SELECT `preference`.`name`,`user_preference`.`value`,`syspref`.`value` AS `system_value` FROM `preference` " .
             "LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' " .
-            "LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user`='$user_id' AND `preference`.`catagory`!='system'";
-        $db_results = Dba::read($sql);
+            "LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory`!='system'";
+        $db_results = Dba::read($sql, array($user_id));
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -466,7 +466,7 @@ class Preference extends database_object
         if (strlen($results['theme_name']) > 0) {
             $results['theme_path'] = '/themes/' . $results['theme_name'];
             // In case the theme was removed
-            if (Core::is_readable(AmpConfig::get('prefix') . $results['theme_path'])) {
+            if (!Core::is_readable(AmpConfig::get('prefix') . $results['theme_path'])) {
                 unset($results['theme_path']);
             }
         }

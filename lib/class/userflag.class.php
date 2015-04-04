@@ -165,21 +165,33 @@ class Userflag extends database_object
             $user_id = $GLOBALS['user']->id;
         }
         $user_id = intval($user_id);
-        $type = Stats::validate_type($type);
 
-        $sql = "SELECT `object_id` as `id` FROM user_flag" .
-                " WHERE object_type = '" . $type . "' AND `user` = '" . $user_id . "'";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
+        if (!is_null($type)) {
+            if ($user_id <= 0) {
+                // Get latest only from user rights >= content manager
+                $sql .= "LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
+                        " WHERE `user`.`access` >= 50";
+            } else {
+                $sql .= " WHERE";
+            }
+            $type = Stats::validate_type($type);
+            $sql .= " `user_flag`.`object_type` = '" . $type . "'";
+            if ($user_id > 0) {
+                $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
+            }
+            if (AmpConfig::get('catalog_disable')) {
+                $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+            }
         }
-        $sql .= " ORDER BY `date` DESC ";
+        $sql .= " ORDER BY `user_flag`.`date` DESC ";
         return $sql;
     }
     /**
      * get_latest
      * Get the latest user flagged objects
      */
-    public static function get_latest($type, $user_id=null, $count='', $offset='')
+    public static function get_latest($type=null, $user_id=null, $count='', $offset='')
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
@@ -194,12 +206,16 @@ class Userflag extends database_object
         /* Select Top objects counting by # of rows */
         $sql = self::get_latest_sql($type, $user_id);
         $sql .= "LIMIT $limit";
-        $db_results = Dba::read($sql, array($type, $user_id));
+        $db_results = Dba::read($sql);
 
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            if (is_null($type)) {
+                $results[] = $row;
+            } else {
+                $results[] = $row['id'];
+            }
         }
 
         return $results;

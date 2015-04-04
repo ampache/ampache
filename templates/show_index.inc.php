@@ -61,14 +61,3 @@ if (Art::is_enabled()) {
     ?>
 </div>
 <?php } ?>
-<!-- Shoutbox Objects, if shoutbox is enabled -->
-<?php if (AmpConfig::get('sociable')) { ?>
-<div id="shout_objects">
-    <?php
-        $shouts = Shoutbox::get_top('5');
-        if (count($shouts)) {
-            require_once AmpConfig::get('prefix') . '/templates/show_shoutbox.inc.php';
-        }
-    ?>
-</div>
-<?php } ?>

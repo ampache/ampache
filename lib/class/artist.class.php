@@ -98,6 +98,10 @@ class Artist extends database_object implements library_item
      */
     public $f_full_name;
     /**
+     *  @var string $link
+     */
+    public $link;
+    /**
      *  @var string $f_link
      */
     public $f_link;
@@ -432,11 +436,11 @@ class Artist extends database_object implements library_item
         if (!$this->id) { return true; }
 
         if ($this->catalog_id) {
-            $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
-            $this->f_name_link = "<a href=\"" . $this->f_link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->link = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
+            $this->f_link = $this->f_name_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
         } else {
-            $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-            $this->f_name_link = "<a href=\"" . $this->f_link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->link = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
+            $this->f_link = $this->f_name_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
         }
 
         if ($details) {

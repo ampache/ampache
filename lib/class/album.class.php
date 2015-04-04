@@ -134,9 +134,9 @@ class Album extends database_object implements library_item
      */
     public $f_name_link;
     /**
-     *  @var string $f_link_src
+     *  @var string $link
      */
-    public $f_link_src;
+    public $link;
     /**
      *  @var string $f_link
      */
@@ -601,8 +601,8 @@ class Album extends database_object implements library_item
         /* Truncate the string if it's to long */
         $this->f_name = $this->full_name;
 
-        $this->f_link_src = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_name_link    = "<a href=\"" . $this->f_link_src . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
+        $this->link = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
+        $this->f_name_link    = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to combine or display disks
         if ($this->disk && (!$this->allow_group_disks || ($this->allow_group_disks && !AmpConfig::get('album_group')))) {

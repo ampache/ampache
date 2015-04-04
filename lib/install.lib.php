@@ -422,7 +422,6 @@ function install_config_use_case($case)
         'ratings' => 'true',
         'userflags' => 'true',
         'sociable' => 'true',
-        'notify' => 'true',
         'licensing' => 'false',
         'wanted' => 'true',
         'channel' => 'true',
@@ -445,7 +444,6 @@ function install_config_use_case($case)
             $trconfig['ratings'] = 'false';
             $trconfig['userflags'] = 'false';
             $trconfig['sociable'] = 'false';
-            $trconfig['notify'] = 'false';
             $trconfig['wanted'] = 'false';
             $trconfig['channel'] = 'false';
             $trconfig['live_stream'] = 'false';
