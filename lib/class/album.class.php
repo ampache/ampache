@@ -620,7 +620,7 @@ class Album extends database_object implements library_item
             $this->f_artist = $artist;
         } else {
             $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
-            $this->f_artist = T_('Various');
+            $this->f_artist = ($this->f_album_artist_name) ? $this->f_album_artist_name : T_('Various');
             $this->f_artist_name =  $this->f_artist;
         }
 
