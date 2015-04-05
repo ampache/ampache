@@ -2552,6 +2552,7 @@ class Update
 
         $htaccess_play_file = AmpConfig::get('prefix') . '/play/.htaccess';
         $htaccess_rest_file = AmpConfig::get('prefix') . '/rest/.htaccess';
+        $htaccess_channel_file = AmpConfig::get('prefix') . '/channel/.htaccess';
 
         $ret = true;
         if (!is_readable($htaccess_play_file)) {
@@ -2582,6 +2583,22 @@ class Update
 
             if (!$created) {
                 Error::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_rest_file . '.dist</b> to <b>' . $htaccess_rest_file . '</b>.');
+                $ret = false;
+            }
+        }
+
+        if (!is_readable($htaccess_channel_file)) {
+            $created = false;
+            if (check_htaccess_channel_writable()) {
+                if (!install_rewrite_rules($htaccess_channel_file, AmpConfig::get('raw_web_path'), false)) {
+                    Error::add('general', T_('File copy error.'));
+                } else {
+                    $created = true;
+                }
+            }
+
+            if (!$created) {
+                Error::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_channel_file . '.dist</b> to <b>' . $htaccess_channel_file . '</b>.');
                 $ret = false;
             }
         }

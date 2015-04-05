@@ -37,6 +37,7 @@ class Channel extends database_object implements media, library_item
     public $loop;
     public $bitrate;
     public $name;
+    public $description;
 
     public $tags;
     public $f_tags;
@@ -230,6 +231,18 @@ class Channel extends database_object implements media, library_item
     public function get_default_art_kind()
     {
         return 'default';
+    }
+
+    public function get_description()
+    {
+        return $this->description;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        if (Art::has_db($this->id, 'channel')) {
+            Art::display('channel', $this->id, $this->get_fullname(), $thumb, $this->link);
+        }
     }
 
     public function get_target_object()

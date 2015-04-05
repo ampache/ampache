@@ -156,6 +156,18 @@ class Live_Stream extends database_object implements media, library_item
         return 'default';
     }
 
+    public function get_description()
+    {
+        return null;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        if (Art::has_db($this->id, 'live_stream')) {
+            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
+
     /**
      * update
      * This is a static function that takes a key'd array for input

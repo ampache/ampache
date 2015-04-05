@@ -185,6 +185,21 @@ require $prefix . '/templates/install_header.inc.php';
                 <?php if (install_check_server_apache()) { ?>
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
+                        <?php echo T_('channel/.htaccess action'); ?>
+                    </div>
+                    <div class="col-sm-8">
+                        <button type="submit" class="btn btn-warning" name="download_htaccess_channel"><?php echo T_('Download'); ?></button>
+                        <button type="submit" class="btn btn-warning" name="write_htaccess_channel" <?php if (!check_htaccess_channel_writable()) { echo "disabled "; } ?>>
+                            <?php echo T_('Write'); ?>
+                        </button>
+                    </div>
+                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess exists?'); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_channel_file)); ?></div>
+                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess configured?'); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_channel_file, $web_path_guess)); ?></div>
+
+                    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
+                    <div class="col-sm-4 control-label">
                         <?php echo T_('rest/.htaccess action'); ?>
                     </div>
                     <div class="col-sm-8">
