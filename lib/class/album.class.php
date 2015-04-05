@@ -130,10 +130,6 @@ class Album extends database_object implements library_item
      */
     public $f_name;
     /**
-     *  @var string $f_name_link
-     */
-    public $f_name_link;
-    /**
      *  @var string $link
      */
     public $link;
@@ -602,16 +598,15 @@ class Album extends database_object implements library_item
         $this->f_name = $this->full_name;
 
         $this->link = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_name_link    = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
+        $this->f_link    = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to combine or display disks
         if ($this->disk && (!$this->allow_group_disks || ($this->allow_group_disks && !AmpConfig::get('album_group')))) {
-            $this->f_name_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
+            $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
 
-        $this->f_name_link .="</a>";
+        $this->f_link .="</a>";
 
-        $this->f_link = $this->f_name_link;
         $this->f_title = $this->full_name;
         if ($this->artist_count == '1') {
             $artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
@@ -733,6 +728,31 @@ class Album extends database_object implements library_item
     public function get_default_art_kind()
     {
         return 'default';
+    }
+
+    public function get_description()
+    {
+        // Album description is not supported yet, always return artist description
+        $artist = new Artist($this->artist_id);
+        return $artist->get_description();
+    }
+
+    public function display_art($thumb = 2)
+    {
+        $id = null;
+        $type = null;
+
+        if (Art::has_db($this->id, 'album')) {
+            $id = $this->id;
+            $type = 'album';
+        } else if (Art::has_db($this->artist_id, 'artist')) {
+            $id = $this->artist_id;
+            $type = 'artist';
+        }
+
+        if ($id !== null && $type !== null) {
+            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        }
     }
 
     /**

@@ -75,9 +75,13 @@ abstract class Catalog extends database_object
      */
     public $f_name;
     /**
-     * @var string $f_name_link
+     * @var string $link
      */
-    public $f_name_link;
+    public $link;
+    /**
+     * @var string $f_link
+     */
+    public $f_link;
     /**
      * @var string $f_update
      */
@@ -496,9 +500,8 @@ abstract class Catalog extends database_object
     public function format()
     {
         $this->f_name = $this->name;
-        $this->f_name_link = '<a href="' . AmpConfig::get('web_path') .
-            '/admin/catalog.php?action=show_customize_catalog&catalog_id=' .
-            $this->id . '" title="' . scrub_out($this->name) . '">' .
+        $this->link = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
+        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' .
             scrub_out($this->f_name) . '</a>';
         $this->f_update = $this->last_update
             ? date('d/m/Y h:i', $this->last_update)

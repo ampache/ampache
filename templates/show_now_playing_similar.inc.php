@@ -37,7 +37,7 @@
                 } else {
                     $artist = new Artist($a['id']);
                     $artist->format();
-                    echo $artist->f_name_link;
+                    echo $artist->f_link;
                 }
             ?>
             </div>

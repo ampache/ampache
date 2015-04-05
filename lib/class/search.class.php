@@ -37,8 +37,8 @@ class Search extends playlist_object
     public $basetypes;
     public $types;
 
+    public $link;
     public $f_link;
-    public $f_name_link;
 
     /**
      * constructor
@@ -650,8 +650,8 @@ class Search extends playlist_object
     {
         parent::format();
 
-        $this->f_link = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
-        $this->f_name_link = '<a href="' . $this->f_link . '">' . $this->f_name . '</a>';
+        $this->link = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
+        $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
     }
 
     /**

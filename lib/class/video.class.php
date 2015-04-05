@@ -375,6 +375,18 @@ class Video extends database_object implements media, library_item
         return 'preview';
     }
 
+    public function get_description()
+    {
+        return '';
+    }
+
+    public function display_art($thumb = 2)
+    {
+        if (Art::has_db($this->id, 'video')) {
+            Art::display('video', $this->id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
+
     /**
      * gc
      *

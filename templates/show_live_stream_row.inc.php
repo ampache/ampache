@@ -28,7 +28,7 @@
 <?php } ?>
     </div>
 </td>
-<td class="cel_streamname"><?php echo $libitem->f_name_link; ?></td>
+<td class="cel_streamname"><?php echo $libitem->f_link; ?></td>
 <td class="cel_streamurl"><?php echo $libitem->f_url_link; ?></td>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">

@@ -25,7 +25,7 @@ $web_path = AmpConfig::get('web_path');
 $icon = $libitem->enabled ? 'disable' : 'enable';
 $button_flip_state_id = 'button_flip_state_' . $libitem->id;
 ?>
-<td class="cel_catalog"><?php echo $libitem->f_name_link; ?></td>
+<td class="cel_catalog"><?php echo $libitem->f_link; ?></td>
 <td class="cel_info"><?php echo scrub_out($libitem->f_info); ?></td>
 <td class="cel_lastverify"><?php echo scrub_out($libitem->f_update); ?></td>
 <td class="cel_lastadd"><?php echo scrub_out($libitem->f_add); ?></td>

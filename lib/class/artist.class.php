@@ -106,10 +106,6 @@ class Artist extends database_object implements library_item
      */
     public $f_link;
     /**
-     *  @var string $f_name_link
-     */
-    public $f_name_link;
-    /**
      *  @var string $f_time
      */
     public $f_time;
@@ -437,10 +433,10 @@ class Artist extends database_object implements library_item
 
         if ($this->catalog_id) {
             $this->link = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
-            $this->f_link = $this->f_name_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
         } else {
             $this->link = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-            $this->f_link = $this->f_name_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
         }
 
         if ($details) {
@@ -564,6 +560,26 @@ class Artist extends database_object implements library_item
     public function get_default_art_kind()
     {
         return 'default';
+    }
+
+    public function get_description()
+    {
+        return $this->summary;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        $id = null;
+        $type = null;
+
+        if (Art::has_db($this->id, 'artist')) {
+            $id = $this->id;
+            $type = 'artist';
+        }
+
+        if ($id !== null && $type !== null) {
+            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        }
     }
 
     /**

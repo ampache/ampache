@@ -33,8 +33,8 @@ class Playlist extends playlist_object
     public $genre;
     public $date;
 
+    public $link;
     public $f_link;
-    public $f_name_link;
 
     /* Generated Elements */
     public $items = array();
@@ -121,8 +121,8 @@ class Playlist extends playlist_object
     public function format($details = true)
     {
         parent::format($details);
-        $this->f_link = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
-        $this->f_name_link = '<a href="' . $this->f_link . '">' . $this->f_name . '</a>';
+        $this->link = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
+        $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
 
     } // format
 

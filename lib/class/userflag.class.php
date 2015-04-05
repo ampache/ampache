@@ -171,7 +171,7 @@ class Userflag extends database_object
             if ($user_id <= 0) {
                 // Get latest only from user rights >= content manager
                 $sql .= "LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
-                        " WHERE `user`.`access` >= 50";
+                        " WHERE `user`.`access` >= 50 AND";
             } else {
                 $sql .= " WHERE";
             }

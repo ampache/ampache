@@ -255,6 +255,18 @@ class TVShow extends database_object implements library_item
         return 'default';
     }
 
+    public function get_description()
+    {
+        return $this->summary;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        if (Art::has_db($this->id, 'tvshow')) {
+            Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
+
     /**
      * check
      *

@@ -216,6 +216,31 @@ class TVShow_Season extends database_object implements library_item
         return 'default';
     }
 
+    public function get_description()
+    {
+        // No season description for now, always return tvshow description
+        $tvshow = new TVShow($this->tvshow);
+        return $tvshow->get_description();
+    }
+
+    public function display_art($thumb = 2)
+    {
+        $id = null;
+        $type = null;
+
+        if (Art::has_db($this->id, 'tvshow_season')) {
+            $id = $this->id;
+            $type = 'tvshow_season';
+        } else if (Art::has_db($this->tvshow, 'tvshow')) {
+            $id = $this->tvshow;
+            $type = 'tvshow';
+        }
+
+        if ($id !== null && $type !== null) {
+            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
+
     /**
      * check
      *

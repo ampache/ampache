@@ -241,7 +241,7 @@ class Shoutbox
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
-            $html .= "<div class='shoutbox-object'>" . ($object->f_name_link ?: $object->f_link) . "</div>";
+            $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
             $html .= "<div class='shoutbox-date'>".date("Y/m/d H:i:s", $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text) . "</div>";

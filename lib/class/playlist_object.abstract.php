@@ -148,6 +148,16 @@ abstract class playlist_object extends database_object implements library_item
         return 'default';
     }
 
+    public function get_description()
+    {
+        return null;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        // no art
+    }
+
     /**
      * get_catalogs
      *

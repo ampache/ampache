@@ -1408,6 +1408,37 @@ class Song extends database_object implements media, library_item
         return 'default';
     }
 
+    public function get_description()
+    {
+        if (!empty($this->comment))
+            return $this->comment;
+
+        $album = new Album($this->album);
+        $album->format();
+        return $album->get_description();
+    }
+
+    public function display_art($thumb = 2)
+    {
+        $id = null;
+        $type = null;
+
+        if (Art::has_db($this->id, 'song')) {
+            $id = $this->id;
+            $type = 'song';
+        } else if (Art::has_db($this->album, 'album')) {
+            $id = $this->album;
+            $type = 'album';
+        } else if (Art::has_db($this->artist, 'artist')) {
+            $id = $this->artist;
+            $type = 'artist';
+        }
+
+        if ($id !== null && $type !== null) {
+            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
+
     /**
      * get_fields
      * This returns all of the 'data' fields for this object, we need to filter out some that we don't

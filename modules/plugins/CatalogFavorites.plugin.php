@@ -109,12 +109,11 @@ class AmpacheCatalogFavorites {
                     echo '</div><br />';
 
                     echo '<div style="margin-left: 30px;">';
-                    if (Art::has_db($userflag['id'], $userflag['type'])) {
-                        echo '<div style="float: left; margin-right: 20px;">';
-                        Art::display($userflag['type'], $userflag['id'], $item->get_fullname(), 2, $item->link);
-                        echo '</div>';
-                    }
-                    echo '<div style="white-space: normal;">'. $item->summary .'</div>';
+                    echo '<div style="float: left; margin-right: 20px;">';
+                    $item->display_art(2);
+                    echo '</div>';
+
+                    echo '<div style="white-space: normal;">'. $item->get_description() .'</div>';
                     echo '</div>';
 
                     echo '</td></tr>';

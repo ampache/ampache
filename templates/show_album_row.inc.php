@@ -44,7 +44,7 @@ if (Art::is_enabled()) {
     ?>
 </td>
 <?php } ?>
-<td class="cel_album"><?php echo $libitem->f_name_link; ?></td>
+<td class="cel_album"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php if ($show_playlist_add) { ?>

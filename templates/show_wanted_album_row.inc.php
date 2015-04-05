@@ -21,7 +21,7 @@
  */
 ?>
 
-<td class="cel_album"><?php echo $libitem->f_name_link; ?></td>
+<td class="cel_album"><?php echo $libitem->f_link; ?></td>
 <td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
 <td class="cel_year"><?php echo $libitem->year; ?></td>
 <td class="cel_user"><?php echo $libitem->f_user; ?></td>

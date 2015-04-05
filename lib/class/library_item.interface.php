@@ -34,6 +34,10 @@ interface library_item extends playable_item
 
     public function get_default_art_kind();
 
+    public function get_description();
+
+    public function display_art($thumb);
+
     public function update(array $data);
 
     public static function gc();

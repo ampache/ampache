@@ -489,12 +489,8 @@ class Graph
                 if (Core::is_library_item($object_type)) {
                     $libitem = new $object_type($object_id);
                     $libitem->format();
-                    if (isset($libitem->f_name_link)) {
-                        $blink = $libitem->f_name_link;
-                    } else {
-                        if (isset($libitem->f_link)) {
-                            $blink = $libitem->f_link;
-                        }
+                    if (isset($libitem->f_link)) {
+                        $blink = $libitem->f_link;
                     }
                 }
             } else if ($user_id) {

@@ -32,7 +32,7 @@
 <td class="cel_name"><?php echo $libitem->name; ?></td>
 <td class="cel_interface"><?php echo $libitem->interface; ?></td>
 <td class="cel_port"><?php echo $libitem->port; ?></td>
-<td class="cel_data"><?php echo $libitem->get_target_object()->f_name_link; ?></td>
+<td class="cel_data"><?php echo $libitem->get_target_object()->f_link; ?></td>
 <!--<td class="cel_random"><?php echo ($libitem->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_loop"><?php echo ($libitem->loop ? T_('Yes') : T_('No')); ?></td>-->
 <td class="cel_streamtype"><?php echo $libitem->stream_type; ?></td>
