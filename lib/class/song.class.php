@@ -360,11 +360,25 @@ class Song extends database_object implements media, library_item
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
 
         $albumartist_id = null;
-        if ($albumartist) {
-            $albumartist_id = Artist::check($albumartist, $albumartist_mbid);
+        if (!isset($results['albumartist_id'])) {
+            if ($albumartist) {
+                $albumartist_id = Artist::check($albumartist, $albumartist_mbid);
+            }
+        } else {
+            $albumartist_id = $results['albumartist_id'];
         }
-        $artist_id = Artist::check($artist, $artist_mbid);
-        $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type);
+        $artist_id = null;
+        if (!isset($results['artist_id'])) {
+            $artist_id = Artist::check($artist, $artist_mbid);
+        } else {
+            $artist_id = $results['artist_id'];
+        }
+        $album_id = null;
+        if (!isset($results['album_id'])) {
+            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type);
+        } else {
+            $album_id = $results['album_id'];
+        }
 
         $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
