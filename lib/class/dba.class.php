@@ -173,7 +173,7 @@ class Dba
             return array();
         }
 
-        $result = $resource->fetch(PDO::FETCH_NUM);;
+        $result = $resource->fetch(PDO::FETCH_NUM);
 
         if (!$result) {
             if ($finish) {

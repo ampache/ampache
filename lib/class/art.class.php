@@ -322,6 +322,19 @@ class Art extends database_object
     }
 
     /**
+     * This insert art from file on disk.
+     * @param string $filepath
+     */
+    public function insert_from_file($filepath)
+    {
+        debug_event('art', 'Insert art from file on disk ' . $filepath, '5');
+        $image = Art::get_from_source(array('file' => $filepath), $this->type);
+        $rfile = pathinfo($filepath);
+        $mime = "image/" . $rfile['extension'];
+        $this->insert($image, $mime);
+    }
+
+    /**
      * insert
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
