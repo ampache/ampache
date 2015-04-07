@@ -295,6 +295,13 @@ class Subsonic_XML_Data
         $xalbum->addAttribute('artistId', self::getArtistId($album->artist_id));
         $xalbum->addAttribute('parent', self::getArtistId($album->artist_id));
         $xalbum->addAttribute('artist', $album->artist_name);
+        if ($album->year > 0) {
+            $xalbum->addAttribute('year', $album->year);
+        }
+        if (count($album->tags) > 0) {
+            $tag = array_shift(array_values($album->tags));
+            $xalbum->addAttribute('genre', $tag['name']);
+        }
 
         $rating = new Rating($album->id, "album");
         $rating_value = $rating->get_average_rating();
