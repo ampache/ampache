@@ -786,9 +786,15 @@ class Art extends database_object
      */
     public static function url($uid,$type,$sid=null,$thumb=null)
     {
-        $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
         if (!Core::is_library_item($type))
             return null;
+
+        $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
+        if ($sid == null) {
+            $sid = Session::create(array(
+                'type' => 'api'
+            ));
+        }
 
         $key = $type . $uid;
 
