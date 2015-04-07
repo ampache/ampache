@@ -96,9 +96,10 @@ function check_config_values($conf)
     if (!$conf['database_username']) {
         return false;
     }
-    if (!$conf['database_password']) {
+    /* Don't check for password to support mysql socket auth
+     * if (!$conf['database_password']) {
         return false;
-    }
+    }*/
     if (!$conf['session_length']) {
         return false;
     }
