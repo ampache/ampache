@@ -404,7 +404,9 @@ class Subsonic_XML_Data
         $xdir->addAttribute('id', self::getAlbumId($album->id));
         $xdir->addAttribute('name', self::formatAlbum($album));
         $album->format();
-        //$xdir->addAttribute('parent', self::getArtistId($album->artist_id));
+        if ($album->artist_id) {
+            $xdir->addAttribute('parent', self::getArtistId($album->artist_id));
+        }
 
         $allsongs = $album->get_songs();
         foreach ($allsongs as $id) {
