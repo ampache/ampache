@@ -23,7 +23,10 @@
 $web_path = AmpConfig::get('web_path');
 
 // Title for this album
-$title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
+$title = scrub_out($album->name);
+if ($album->year > 0) {
+    $title .= '&nbsp;(' . $album->year . ')';
+}
 if ($album->disk) {
     $title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";
 }
