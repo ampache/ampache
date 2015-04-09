@@ -188,7 +188,7 @@ if (!$share_id) {
         exit;
     }
 
-    if ($type != 'song' || !$share->is_shared_song($oid)) {
+    if (!$share->is_shared_media($oid)) {
         header('HTTP/1.1 403 Access Unauthorized');
         exit;
     }

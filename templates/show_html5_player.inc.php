@@ -285,6 +285,19 @@ if (AmpConfig::get('webplayer_aurora')) {
         }
     }
 }
+
+// TODO: avoid share style here
+if ($is_share && $isVideo) {
+?>
+<style>
+    div.jp-jplayer
+    {
+        bottom: 0px !important;
+        top: 100px !important;
+    }
+</style>
+<?php
+}
 ?>
 </head>
 <body>

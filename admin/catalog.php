@@ -88,12 +88,18 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
+        $deleted = true;
         /* Delete the sucker, we don't need to check perms as thats done above */
         foreach ($catalogs as $catalog_id) {
-            Catalog::delete($catalog_id);
+            $deleted = Catalog::delete($catalog_id);
+            if (!$deleted) break;
         }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
-        show_confirmation(T_('Catalog Deleted'), T_('The Catalog and all associated records have been deleted'),$next_url);
+        if ($deleted) {
+            show_confirmation(T_('Catalog Deleted'), T_('The Catalog and all associated records have been deleted'), $next_url);
+        } else {
+            show_confirmation(T_('Error'), T_('Cannot delete the catalog'), $next_url);
+        }
     break;
     case 'show_delete_catalog':
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);

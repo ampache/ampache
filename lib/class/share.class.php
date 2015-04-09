@@ -274,10 +274,7 @@ class Share extends database_object
                 $object = new $this->object_type($this->object_id);
                 $songs = $object->get_medias('song');
                 foreach ($songs as $song) {
-                    $medias[] = array(
-                        'object_type' => $song['object_type'],
-                        'object_id' => $song['object_id'],
-                    );
+                    $medias[] = $song;
                 }
             break;
             default:
@@ -292,7 +289,7 @@ class Share extends database_object
         return $playlist;
     }
 
-    public function is_shared_song($song_id)
+    public function is_shared_media($media_id)
     {
         $is_shared = false;
         switch ($this->object_type) {
@@ -301,12 +298,12 @@ class Share extends database_object
                 $object = new $this->object_type($this->object_id);
                 $songs = $object->get_songs();
                 foreach ($songs as $id) {
-                    $is_shared = ($song_id == $id);
+                    $is_shared = ($media_id == $id);
                     if ($is_shared) { break; }
                 }
             break;
             default:
-                $is_shared = ($this->object_type == 'song' && $this->object_id == $song_id);
+                $is_shared = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
             break;
         }
 
