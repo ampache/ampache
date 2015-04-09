@@ -196,6 +196,7 @@ class Share extends database_object
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75') || $this->user == $GLOBALS['user']->id) {
+                echo "<a id=\"edit_share_ " . $this->id ."\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
@@ -215,6 +216,21 @@ class Share extends database_object
         $this->f_allow_download = $this->allow_download;
         $this->f_creation_date = date("Y-m-d H:i:s", $this->creation_date);
         $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", $this->creation_date) : '';
+    }
+
+    public function update(array $data)
+    {
+        $this->max_counter = intval($data['max_counter']);
+        $this->expire_days = intval($data['expire']);
+        $this->allow_stream = $data['allow_stream'] == '1';
+        $this->allow_download = $data['allow_download'] == '1';
+
+        $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ? " .
+            "WHERE `id` = ?";
+        $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->id);
+        Dba::write($sql, $params);
+
+        return $this->id;
     }
 
     public function save_access()
@@ -308,6 +324,11 @@ class Share extends database_object
         }
 
         return $is_shared;
+    }
+
+    public function get_user_owner()
+    {
+        return $this->user;
     }
 
     public static function display_ui($object_type, $object_id, $show_text = true)

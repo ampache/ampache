@@ -57,7 +57,7 @@
         <input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
-<?php if (($_REQUEST['type'] == 'song' && Access::check_function('download')) || Access::check_function('batch_download')) { ?>
+<?php if ((($_REQUEST['type'] == 'song' || $_REQUEST['type'] == 'video') && Access::check_function('download')) || Access::check_function('batch_download')) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
     <td>
