@@ -313,6 +313,19 @@ END;
         require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
     }
 
+    public static function show_custom_style()
+    {
+        $favicon = "favicon.ico";
+        if (AmpConfig::get('custom_logo')) {
+            if (file_exists(AmpConfig::get('prefix') . "/favicon_custom.ico")) {
+                $favicon = "favicon_custom.ico";
+            }
+            echo "<style>#headerlogo { background-image: url('" . AmpConfig::get('custom_logo') . "') !important; }</style>";
+        }
+
+        echo "<link rel='shortcut icon' href='" . AmpConfig::get('web_path') . "/" . $favicon . "' />\n";
+    }
+
     /**
      * update_text
      *

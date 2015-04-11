@@ -29,7 +29,7 @@ $web_path = AmpConfig::get('web_path');
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
 <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
-<link rel="shortcut icon" href="<?php echo AmpConfig::get('web_path'); ?>/favicon.ico" />
+<?php UI::show_custom_style(); ?>
 </head>
 <body>
 <div id="header">

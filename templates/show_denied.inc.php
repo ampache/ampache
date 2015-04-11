@@ -25,7 +25,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Ampache -- Debug Page</title>
-        <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
+        <?php UI::show_custom_style(); ?>
         <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/install-doped.css" type="text/css" media="screen" />
