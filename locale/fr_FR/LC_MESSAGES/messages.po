@@ -947,7 +947,7 @@ msgstr "La diffusion a été supprimée."
 #: ../../templates/sidebar_home.inc.php:35
 #: ../../templates/sidebar_home.inc.php:59
 msgid "Tag Cloud"
-msgstr "Nuage d'étiquettes"
+msgstr "Genres"
 
 #: ../../channel/index.php:75 ../../plex/web/init.php:38
 msgid "Unauthorized."
@@ -1856,7 +1856,7 @@ msgstr "Commentaire"
 #: ../../lib/class/search.class.php:488 ../../lib/class/tag.class.php:660
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
-msgstr "Étiquette"
+msgstr "Genre"
 
 #: ../../lib/class/search.class.php:251 ../../lib/class/search.class.php:474
 #: ../../templates/show_disabled_songs.inc.php:32
@@ -4891,7 +4891,7 @@ msgstr "Jaquette"
 #: ../../templates/show_videos.inc.php:46
 #: ../../templates/show_videos.inc.php:98
 msgid "Tags"
-msgstr "Etiquettes"
+msgstr "Genres"
 
 #: ../../templates/show_albums.inc.php:48
 #: ../../templates/show_albums.inc.php:106
@@ -5644,7 +5644,7 @@ msgstr "Piste"
 #: ../../templates/show_edit_song_row.inc.php:63
 #: ../../templates/show_song.inc.php:120
 msgid "Label"
-msgstr "Libellé"
+msgstr "Label"
 
 #: ../../templates/show_edit_tag_row.inc.php:32
 msgid "Re-tag"
@@ -6486,7 +6486,7 @@ msgstr "Aucun album manquant trouvé"
 
 #: ../../templates/show_missing_artists.inc.php:46
 msgid "No missing artists found"
-msgstr "Aucun artistes manquantes trouvé"
+msgstr "Aucun artistes manquants trouvé"
 
 #: ../../templates/show_now_playing_row.inc.php:76
 #: ../../templates/show_now_playing_similar.inc.php:52
@@ -6785,7 +6785,7 @@ msgstr "N'importe où"
 
 #: ../../templates/show_search_bar.inc.php:36
 msgid "Missing Artist"
-msgstr "manquant Artiste"
+msgstr "Artiste manquant"
 
 #: ../../templates/show_search_bar.inc.php:39
 msgid "Advanced Search"
@@ -7973,11 +7973,11 @@ msgstr "Autoriser le décodeur JavaScript (Aurora.js) dans le WebPlayer"
 #~ msgstr "Démarrage de la recherche des jaquettes"
 
 #~ msgid " Apply tags to all childs (override tags for songs)"
-#~ msgstr " Appliquer à tous les enfants (écrase les étiquettes des pistes)"
+#~ msgstr " Appliquer à tous les enfants (écrase les genres des pistes)"
 
 #~ msgid " Apply tags to all childs (override tags for albums and songs)"
 #~ msgstr ""
-#~ " Appliquer à tous les enfants (écrase les étiquettes des albums et pistes)"
+#~ " Appliquer à tous les enfants (écrase les genres des albums et pistes)"
 
 #~ msgid " Apply tags to all childs (override tags for episodes)"
 #~ msgstr ""

@@ -227,7 +227,7 @@ class Share extends database_object
         $this->allow_download = $data['allow_download'] == '1';
         $this->description = isset($data['description']) ? $data['description'] : $this->description;
 
-        $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, description = ? " .
+        $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .
             "WHERE `id` = ?";
         $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->description, $this->id);
         if (!$GLOBALS['user']->has_access('75')) {
