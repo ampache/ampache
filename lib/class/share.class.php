@@ -35,6 +35,7 @@ class Share extends database_object
     public $counter;
     public $secret;
     public $public_url;
+    public $description;
 
     public $f_name;
     public $f_object_link;
@@ -224,13 +225,17 @@ class Share extends database_object
         $this->expire_days = intval($data['expire']);
         $this->allow_stream = $data['allow_stream'] == '1';
         $this->allow_download = $data['allow_download'] == '1';
+        $this->description = isset($data['description']) ? $data['description'] : $this->description;
 
-        $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ? " .
+        $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, description = ? " .
             "WHERE `id` = ?";
-        $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->id);
-        Dba::write($sql, $params);
+        $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->description, $this->id);
+        if (!$GLOBALS['user']->has_access('75')) {
+            $sql .= " AND `user` = ?";
+            $params[] = $GLOBALS['user']->id;
+        }
 
-        return $this->id;
+        return Dba::write($sql, $params);
     }
 
     public function save_access()

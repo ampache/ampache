@@ -1298,11 +1298,15 @@ class Subsonic_Api
 
         $id = self::check_parameter($input, 'id');
         $description = $input['description'];
-        $expires = $input['expires'];
 
         if (AmpConfig::get('share')) {
-            if ($expires) {
-                $expire_days = round((($expires / 1000) - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
+            if (isset($input['expires'])) {
+                $expires = $input['expires'];
+                // Parse as a string to work on 32-bit computers
+                if (strlen($expires) > 3) {
+                    $expires = intval(substr($expires, 0, - 3));
+                }
+                $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
             } else {
                 $expire_days = AmpConfig::get('share_expire');
             }
@@ -1348,6 +1352,57 @@ class Subsonic_Api
         } else {
             $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
         }
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * updateShare
+     * Update the description and/or expiration date for an existing share.
+     * Takes the share id to update with optional description and expires parameters.
+     * Not supported.
+     */
+    public static function updateshare($input)
+    {
+        self::check_version($input, "1.6.0");
+
+        $id = self::check_parameter($input, 'id');
+        $description = $input['description'];
+
+        if (AmpConfig::get('share')) {
+            $share = new Share($id);
+            if ($share->id > 0) {
+                $expires = $share->expire_days;
+                if (isset($input['expires'])) {
+                    // Parse as a string to work on 32-bit computers
+                    $expires = $input['expires'];
+                    if (strlen($expires) > 3) {
+                        $expires = intval(substr($expires, 0, - 3));
+                    }
+                    if ($expires > 0) {
+                        $expires = ($expires - $share->creation_date) / 86400;
+                        $expires = ceil($expires);
+                    }
+                }
+
+                $data = array(
+                    'max_counter' => $share->max_counter,
+                    'expire' => $expires,
+                    'allow_stream' => $share->allow_stream,
+                    'allow_download' => $share->allow_download,
+                    'description' => $description ?: $share->description,
+                );
+                if ($share->update($data)) {
+                    $r = Subsonic_XML_Data::createSuccessResponse();
+                } else {
+                    $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+                }
+            } else {
+                $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+        }
+
         self::apiOutput($input, $r);
     }
 
@@ -1710,20 +1765,6 @@ class Subsonic_Api
     }
 
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
-
-    /**
-     * updateShare
-     * Update the description and/or expiration date for an existing share.
-     * Takes the share id to update with optional description and expires parameters.
-     * Not supported.
-     */
-    public static function updateshare($input)
-    {
-        self::check_version($input, "1.6.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
 
     /**
      * getPodcasts
