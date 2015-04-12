@@ -320,7 +320,7 @@ END;
             if (file_exists(AmpConfig::get('prefix') . "/favicon_custom.ico")) {
                 $favicon = "favicon_custom.ico";
             }
-            echo "<style>#headerlogo { background-image: url('" . AmpConfig::get('custom_logo') . "') !important; }</style>";
+            echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_logo') . "') !important; }</style>";
         }
 
         echo "<link rel='shortcut icon' href='" . AmpConfig::get('web_path') . "/" . $favicon . "' />\n";
