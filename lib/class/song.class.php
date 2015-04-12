@@ -400,6 +400,9 @@ class Song extends database_object implements media, library_item
         $song_id = Dba::insert_id();
 
         if (is_array($tags)) {
+            if ($user_upload && !Access::check('interface', 50, $user_upload)) {
+                $tags = Tag::clean_to_existing($tags);
+            }
             foreach ($tags as $tag) {
                 $tag = trim($tag);
                 if (!empty($tag)) {

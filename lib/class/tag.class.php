@@ -606,6 +606,33 @@ class Tag extends database_object implements library_item
     } // update_tag_list
 
     /**
+     * clean_to_existing
+     * Clean tag list to existing tag list only
+     * @param array|string $tags
+     * @return array|string
+     */
+    public static function clean_to_existing($tags)
+    {
+        if (is_array($tags)) {
+            $ar = $tags;
+        } else {
+            $ar = explode(",", $tags);
+        }
+
+        $ret = array();
+        foreach ($ar as $tag) {
+            $tag = trim($tag);
+            if (!empty($tag)) {
+                if (Tag::tag_exists($tag)) {
+                    $ret[] = $tag;
+                }
+            }
+        }
+
+        return (is_array($tags) ? $ret : implode(",", $ret));
+    }
+
+    /**
      * count
      * This returns the count for the all objects associated with this tag
      * If a type is specific only counts for said type are returned
