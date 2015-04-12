@@ -59,13 +59,28 @@ if ($client->f_avatar) {
     </dd>
 </dl><br />
 <?php UI::show_box_bottom(); ?>
-<?php UI::show_box_top(T_('Active Playlist')); ?>
+<?php
+if (AmpConfig::get('allow_upload') &&!AmpConfig::get('upload_user_artist')) {
+    $sql = Catalog::get_uploads_sql('artist', $client->id);
+    $browse = new Browse();
+    $browse->set_type('artist', $sql);
+    $browse->set_simple_browse(true);
+    if ($browse->get_total() > 0) {
+        $browse->show_objects();
+        $browse->store();
+    }
+}
+?>
+<?php
+$tmp_playlist = new Tmp_Playlist(Tmp_Playlist::get_from_userid($client->id));
+$object_ids = $tmp_playlist->get_items();
+if (count($object_ids) > 0) {
+    UI::show_box_top(T_('Active Playlist'));
+?>
 <table cellspacing="0">
     <tr>
         <td valign="top">
             <?php
-                $tmp_playlist = new Tmp_Playlist(Tmp_Playlist::get_from_userid($client->id));
-                $object_ids = $tmp_playlist->get_items();
                 foreach ($object_ids as $object_data) {
                     $type = array_shift($object_data);
                     $object = new $type(array_shift($object_data));
@@ -77,6 +92,7 @@ if ($client->f_avatar) {
     </tr>
 </table><br />
 <?php UI::show_box_bottom(); ?>
+<?php } ?>
 <?php
     $data = Song::get_recently_played($client->id);
     Song::build_cache(array_keys($data));
