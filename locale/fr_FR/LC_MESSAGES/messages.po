@@ -5572,11 +5572,11 @@ msgstr "Résumé"
 
 #: ../../templates/show_edit_artist_row.inc.php:39
 msgid "Place Formed"
-msgstr "Placez Formé"
+msgstr "Lieu de formation"
 
 #: ../../templates/show_edit_artist_row.inc.php:43
 msgid "Year Formed"
-msgstr "année Formé"
+msgstr "Année de formation"
 
 #: ../../templates/show_edit_artist_row.inc.php:52
 msgid "Overwrite tags of sub albums and sub songs"
@@ -5584,7 +5584,7 @@ msgstr "Ecraser les balises de sous albums et sous chansons"
 
 #: ../../templates/show_edit_artist_row.inc.php:56
 msgid "Add tags to sub albums and sub songs"
-msgstr "Ajouter des balises à des sous albums et sous chansons"
+msgstr "Ajouter des balises aux sous albums et sous chansons"
 
 #: ../../templates/show_edit_catalog.inc.php:23
 #, php-format

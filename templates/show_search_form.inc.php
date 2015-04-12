@@ -51,7 +51,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 
 <div class="formValidation">
             <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
-<?php if ($_REQUEST['type'] == 'song' || ! $_REQUEST['type']) { ?>
+<?php if (($_REQUEST['type'] == 'song' || ! $_REQUEST['type']) && Access::check('interface', 25)) { ?>
         <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
 <?php } ?>
             <input type="hidden" id="hiddenaction" name="action" value="search" />

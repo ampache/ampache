@@ -83,13 +83,13 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function has_access()
     {
-        if (!Access::check('interface','25')) {
+        if (!Access::check('interface', 25)) {
             return false;
         }
         if ($this->user == $GLOBALS['user']->id) {
             return true;
         } else {
-            return Access::check('interface','100');
+            return Access::check('interface', 75);
         }
 
     } // has_access

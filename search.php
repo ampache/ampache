@@ -43,12 +43,11 @@ switch ($_REQUEST['action']) {
             echo '<a href="http://musicbrainz.org/search?query=' . rawurlencode($_REQUEST['rule_1_input']) . '&type=artist&method=indexed" target="_blank">' . T_('View on MusicBrainz') . '</a><br />';
         }
     break;
-    case 'save_as_track':
-        $playlist_id = save_search($_REQUEST);
-        $playlist = new Playlist($playlist_id);
-        show_confirmation(T_('Search Saved'),sprintf(T_('Your Search has been saved as a track in %s'), $playlist->name), AmpConfig::get('web_path') . "/search.php");
-    break;
     case 'save_as_smartplaylist':
+        if (!Access::check('interface', 25)) {
+            UI::access_denied();
+            exit();
+        }
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();

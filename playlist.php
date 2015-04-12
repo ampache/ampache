@@ -41,7 +41,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'create_playlist':
         /* Check rights */
-        if (!Access::check('interface','25')) {
+        if (!Access::check('interface', 25)) {
             UI::access_denied();
             break;
         }
