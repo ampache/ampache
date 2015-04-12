@@ -87,13 +87,21 @@ switch ($_REQUEST['action']) {
             $_POST[$key] = unhtmlentities(scrub_in($data));
         }
 
-        // this break generic layer, we should move it somewhere else
-        if ($type == 'song_row') {
-            $song = new Song($_POST['id']);
-            if ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface','75')) {
-                if (isset($_POST['artist'])) unset($_POST['artist']);
-                if (isset($_POST['album'])) unset($_POST['album']);
-                $levelok = true;
+        $libitem = new $object_type($_POST['id']);
+        if ($libitem->get_user_owner() == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+            // TODO: improve this uniqueless check
+            if (isset($_POST['artist'])) unset($_POST['artist']);
+            if (isset($_POST['artist_name'])) unset($_POST['artist_name']);
+            if (isset($_POST['album'])) unset($_POST['album']);
+            if (isset($_POST['album_name'])) unset($_POST['album_name']);
+            if (isset($_POST['album_artist'])) unset($_POST['album_artist']);
+            if (isset($_POST['album_artist_name'])) unset($_POST['album_artist_name']);
+            // Check mbid and *_mbid match as it is used as identifier
+            if (isset($_POST['mbid'])) {
+                $_POST['mbid'] = $libitem->mbid;
+            }
+            if (isset($_POST['mbid_group'])) {
+                $_POST['mbid_group'] = $libitem->mbid_group;
             }
         }
 

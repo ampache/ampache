@@ -336,6 +336,31 @@ class Album extends database_object implements library_item
 
     } // _get_extra_info
 
+    public function can_edit($user = null)
+    {
+        if (!$user) {
+            $user = $GLOBALS['user']->id;
+        }
+
+        if (!$user)
+            return false;
+
+        if ($this->user !== null && $user == $this->user)
+            return true;
+
+        if (Access::check('interface', 50, $user))
+            return true;
+
+        if (!$this->album_artist)
+            return false;
+
+        if (!AmpConfig::get('upload_allow_edit'))
+            return false;
+
+        $owner = $this->get_user_owner();
+        return ($owner && $owner === $user);
+    }
+
     /**
      * check
      *
@@ -718,7 +743,11 @@ class Album extends database_object implements library_item
      */
     public function get_user_owner()
     {
-        return null;
+        if (!$this->album_artist)
+            return null;
+
+        $artist = new Artist($this->album_artist);
+        return $artist->get_user_owner();
     }
 
     /**

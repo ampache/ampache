@@ -133,6 +133,16 @@ if (AmpConfig::get('show_played_times')) {
                     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo T_('Graphs'); ?></a>
                 </li>
             <?php } ?>
+        <?php } ?>
+        <?php if ($artist->can_edit()) { ?>
+            <?php if (AmpConfig::get('allow_upload')) { ?>
+                <li>
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
+                        <?php echo UI::get_icon('upload', T_('Upload')); ?>
+                        &nbsp;&nbsp;<?php echo T_('Upload'); ?>
+                    </a>
+                </li>
+            <?php } ?>
             <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>

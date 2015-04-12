@@ -192,7 +192,7 @@ function show_preference_box($preferences)
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_album_select($name='album',$album_id=0,$allow_add=false,$song_id=0)
+function show_album_select($name='album', $album_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
 {
     static $album_id_cnt = 0;
 
@@ -206,8 +206,18 @@ function show_album_select($name='album',$album_id=0,$allow_add=false,$song_id=0
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
 
-    $sql = "SELECT `id`, `name`, `prefix`, `disk` FROM `album` ORDER BY `name`";
-    $db_results = Dba::read($sql);
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
+
+    $sql = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
+    $params = array();
+    if ($user) {
+        $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
+        $params[] = $user;
+    }
+    $sql .= "ORDER BY `album`.`name`";
+    $db_results = Dba::read($sql, $params);
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -237,7 +247,7 @@ function show_album_select($name='album',$album_id=0,$allow_add=false,$song_id=0
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  */
-function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $song_id=0, $allow_none=false)
+function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -253,8 +263,14 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    $sql = "SELECT `id`, `name`, `prefix` FROM `artist` ORDER BY `name`";
-    $db_results = Dba::read($sql);
+    $sql = "SELECT `id`, `name`, `prefix` FROM `artist` ";
+    $params = array();
+    if ($user) {
+        $sql .= "WHERE `user` = ? ";
+        $params[] = $user;
+    }
+    $sql .= "ORDER BY `name`";
+    $db_results = Dba::read($sql, $params);
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -269,7 +285,7 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
 
     if ($allow_add) {
         // Append additional option to the end with value=-1
-        echo "\t<option value=\"-1\">Add New...</option>\n";
+        echo "\t<option value=\"-1\">" . T_('Add New') . "...</option>\n";
     }
 
     echo "</select>\n";

@@ -129,14 +129,24 @@ if (AmpConfig::get('show_played_times')) {
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
         </li>
-        <li>
-            <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
-            </a>
-            <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
-                <?php echo T_('Edit Album'); ?>
-            </a>
-        </li>
+        <?php } ?>
+        <?php if ($album->can_edit()) { ?>
+            <?php if (AmpConfig::get('allow_upload')) { ?>
+                <li>
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo ($album->album_artist ? $album->album_artist : $album->artist_id); ?>&album=<?php echo $album->id ?>">
+                        <?php echo UI::get_icon('upload', T_('Upload')); ?>
+                        &nbsp;&nbsp;<?php echo T_('Upload'); ?>
+                    </a>
+                </li>
+            <?php } ?>
+            <li>
+                <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
+                    <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                </a>
+                <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
+                    <?php echo T_('Edit Album'); ?>
+                </a>
+            </li>
         <?php } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
         <li>

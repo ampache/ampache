@@ -374,9 +374,10 @@ class Access
      * always used.
      * @param string $type
      * @param int $level
+     * @param int|null $user
      * @return boolean
      */
-    public static function check($type, $level)
+    public static function check($type, $level, $user_id=null)
     {
         if (AmpConfig::get('demo_mode')) {
             return true;
@@ -385,6 +386,10 @@ class Access
             return true;
         }
 
+        $user = $GLOBALS['user'];
+        if ($user_id) {
+            $user = new User($user_id);
+        }
         $level = intval($level);
 
         // Switch on the type
@@ -392,10 +397,10 @@ class Access
             case 'localplay':
                 // Check their localplay_level
                 return (AmpConfig::get('localplay_level') >= $level
-                    || $GLOBALS['user']->access >= 100);
+                    || $user->access >= 100);
             case 'interface':
                 // Check their standard user level
-                return ($GLOBALS['user']->access >= $level);
+                return ($user->access >= $level);
             default:
                 return false;
         }

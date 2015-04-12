@@ -688,29 +688,19 @@ class Catalog_local extends Catalog
 
         if (isset($options['user_upload'])) {
             $results['user_upload'] = $options['user_upload'];
-
-            // Override artist information with artist's user
-            if (AmpConfig::get('upload_user_artist')) {
-                $user = new User($options['user_upload']);
-                if ($user->id) {
-                    $artists = $user->get_artists();
-                    $artist = null;
-                    // No associated artist yet, we create a default one for the user sender
-                    if (count($artists) == 0) {
-                        $artists[] = Artist::check($user->fullname);
-                        $artist = new Artist($artists[0]);
-                        $artist->update_artist_user($user->id);
-                    } else {
-                        $artist = new Artist($artists[0]);
-                    }
-                    $results['artist'] = $artist->name;
-                    $results['mb_artistid'] = $artist->mbid;
-                }
-            }
         }
 
         if (isset($options['license'])) {
             $results['license'] = $options['license'];
+        }
+
+        if (isset($options['artist_id'])) {
+            $results['artist_id'] = $options['artist_id'];
+            $results['albumartist_id'] = $options['artist_id'];
+        }
+
+        if (isset($options['album_id'])) {
+            $results['album_id'] = $options['album_id'];
         }
 
         $id = Song::insert($results);

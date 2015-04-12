@@ -30,11 +30,14 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
                 <td>
-                    <?php
-                    if ($libitem->artist_count == '1') {
-                        show_artist_select('artist', $libitem->artist_id);
+                    <?php if (Access::check('interface', 50)) {
+                        if ($libitem->artist_count == '1') {
+                            show_artist_select('artist', $libitem->artist_id);
+                        } else {
+                            echo T_('Various');
+                        }
                     } else {
-                        echo T_('Various');
+                        echo $libitem->f_artist_name;
                     }
                     ?>
                 </td>
@@ -42,10 +45,16 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Album Artist') ?></td>
                 <td>
+                    <?php if (Access::check('interface', 50)) { ?>
                     <?php show_artist_select('album_artist', $libitem->album_artist, true, $libitem->id, true); ?>
                     <div id="album_artist_select_album_<?php echo $libitem->id ?>">
                         <?php echo Ajax::observe('album_artist_select_'.$libitem->id, 'change', 'check_inline_song_edit("album_artist", '.$libitem->id.')'); ?>
                     </div>
+                    <?php
+                    } else {
+                        echo $libitem->f_album_artist_name;
+                    }
+                    ?>
                 </td>
             </tr>
             <tr>
@@ -58,11 +67,23 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
-                <td><input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" /></td>
+                <td>
+                    <?php if (Access::check('interface', 50)) { ?>
+                    <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
+                    <?php } else { ?>
+                    <?php echo $libitem->mbid; ?>
+                    <?php } ?>
+                </td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID') ?></td>
-                <td><input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" /></td>
+                <td>
+                    <?php if (Access::check('interface', 50)) { ?>
+                    <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
+                    <?php } else { ?>
+                    <?php echo $libitem->mbid_group; ?>
+                    <?php } ?>
+                </td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Type') ?></td>

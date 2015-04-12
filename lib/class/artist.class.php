@@ -582,6 +582,23 @@ class Artist extends database_object implements library_item
         }
     }
 
+    public function can_edit($user = null)
+    {
+        if (!$user) {
+            $user = $GLOBALS['user']->id;
+        }
+
+        if (!$user)
+            return false;
+
+        if (AmpConfig::get('upload_allow_edit')) {
+            if ($this->user !== null && $user == $this->user)
+                return true;
+        }
+
+        return Access::check('interface', 50, $user);
+    }
+
     /**
      * check
      *
@@ -691,13 +708,13 @@ class Artist extends database_object implements library_item
 
         // Check if name is different than current name
         if ($this->name != $name) {
-            $artist_id = self::check($name, $mbid);
+            $artist_id = self::check($name, $mbid, true);
 
             $updated = false;
             $songs = array();
 
             // If it's changed we need to update
-            if ($artist_id != $this->id) {
+            if ($artist_id != null && $artist_id != $this->id) {
                 $songs = $this->get_songs();
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id,$song_id);

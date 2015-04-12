@@ -1843,7 +1843,7 @@ msgstr "Titre"
 #: ../../templates/show_edit_song_row.inc.php:59
 #: ../../templates/show_song.inc.php:113
 msgid "Composer"
-msgstr "compositeur"
+msgstr "Compositeur"
 
 #: ../../lib/class/search.class.php:236
 #: ../../templates/show_manage_shoutbox.inc.php:31
@@ -4643,7 +4643,7 @@ msgstr "Commentaire:"
 #: ../../templates/show_add_shout.inc.php:44
 #: ../../templates/show_edit_shout.inc.php:37
 msgid "Stick this comment"
-msgstr "Collez ce commentaire"
+msgstr "Epingler ce commentaire"
 
 #: ../../templates/show_add_shout.inc.php:62
 #: ../../templates/show_shoutbox.inc.php:23
@@ -4829,7 +4829,7 @@ msgstr "fois"
 #: ../../templates/show_song.inc.php:87 ../../templates/show_user.inc.php:48
 #: ../../templates/show_video.inc.php:97
 msgid "Graphs"
-msgstr "graphiques"
+msgstr "Graphiques"
 
 #: ../../templates/show_album.inc.php:134
 msgid "Edit Album"
@@ -4843,7 +4843,7 @@ msgstr "Editer l'album"
 #: ../../templates/show_song_row.inc.php:32
 #: ../../templates/show_video_row.inc.php:37
 msgid "Play next"
-msgstr "jouer prochaine"
+msgstr "Jouer en suivant"
 
 #: ../../templates/show_album_row.inc.php:54
 #: ../../templates/show_artist_row.inc.php:54
@@ -6469,7 +6469,7 @@ msgstr "Objet"
 #: ../../templates/show_manage_shoutbox.inc.php:30
 #: ../../templates/show_manage_shoutbox.inc.php:59
 msgid "Sticky"
-msgstr "Permanent"
+msgstr "Epinglé"
 
 #: ../../templates/show_manage_shoutbox.inc.php:32
 #: ../../templates/show_manage_shoutbox.inc.php:61
@@ -6914,7 +6914,7 @@ msgstr "Paroles"
 
 #: ../../templates/show_song.inc.php:150
 msgid "Licensing"
-msgstr "licences"
+msgstr "Licences"
 
 #: ../../templates/show_song_row.inc.php:68
 msgid "Song Information"

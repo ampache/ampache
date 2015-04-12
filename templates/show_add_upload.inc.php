@@ -25,6 +25,9 @@
 <?php
 UI::show_box_top(T_('Upload'));
 $ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
+
+$artist = intval($_REQUEST['artist']);
+$album = intval($_REQUEST['album']);
 ?>
 <div id="container" role="main">
     <div id="tree"></div>
@@ -160,6 +163,26 @@ $(function () {
 <input type="hidden" name="actionp" value="upload" />
 <input type="hidden" id="folder" name="folder" value="" />
 <table class="tabledata" cellpadding="0" cellspacing="0">
+<?php if (!AmpConfig::get('upload_user_artist')) { ?>
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
+    <td>
+        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $GLOBALS['user']->id); ?>
+        <div id="artist_select_album_1">
+            <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
+        </div>
+    </td>
+</tr>
+<?php } ?>
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
+    <td>
+        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $GLOBALS['user']->id); ?>
+        <div id="album_select_upload_1">
+            <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
+        </div>
+    </td>
+</tr>
 <?php if (AmpConfig::get('licensing')) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
