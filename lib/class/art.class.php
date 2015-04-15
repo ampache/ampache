@@ -1661,6 +1661,9 @@ class Art extends database_object
      */
     public static function display($object_type, $object_id, $name, $thumb, $link = null, $show_default = true, $kind = 'default')
     {
+        if (!Core::is_library_item($object_type))
+            return false;
+
         if (!$show_default) {
             // Don't show any image if not available
             if (!self::has_db($object_id, $object_type, $kind)) {
@@ -1692,8 +1695,10 @@ class Art extends database_object
                 echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' .$object_id);
                 echo "</div>";
             }
+
+            $libitem = new $object_type($object_id);
             echo "<div class=\"item_art_actions\">";
-            if ($GLOBALS['user']->has_access(50)) {
+            if ($GLOBALS['user']->has_access(50) || ($GLOBALS['user']->has_access(25) && $GLOBALS['user']->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";

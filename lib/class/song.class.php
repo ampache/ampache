@@ -965,9 +965,9 @@ class Song extends database_object implements media, library_item
      * @param int $new_year
      * @param int $song_id
      */
-    public static function update_year($new_year,$song_id)
+    public static function update_year($new_year, $song_id)
     {
-        self::_update_item('year',$new_year,$song_id,'50');
+        self::_update_item('year', $new_year, $song_id, '50', true);
 
     } // update_year
 
@@ -977,9 +977,9 @@ class Song extends database_object implements media, library_item
      * @param string $new_value
      * @param int $song_id
      */
-    public static function update_label($new_value,$song_id)
+    public static function update_label($new_value, $song_id)
     {
-        self::_update_ext_item('label',$new_value,$song_id,'50');
+        self::_update_ext_item('label', $new_value, $song_id, '50', true);
 
     } // update_label
 
@@ -989,9 +989,9 @@ class Song extends database_object implements media, library_item
      * @param string $new_lang
      * @param int $song_id
      */
-    public static function update_language($new_lang,$song_id)
+    public static function update_language($new_lang, $song_id)
     {
-        self::_update_ext_item('language',$new_lang,$song_id,'50');
+        self::_update_ext_item('language', $new_lang, $song_id, '50', true);
 
     } // update_language
 
@@ -1001,9 +1001,9 @@ class Song extends database_object implements media, library_item
      * @param string $new_comment
      * @param int $song_id
      */
-    public static function update_comment($new_comment,$song_id)
+    public static function update_comment($new_comment, $song_id)
     {
-        self::_update_ext_item('comment',$new_comment,$song_id,'50');
+        self::_update_ext_item('comment', $new_comment, $song_id, '50', true);
 
     } // update_comment
 
@@ -1013,9 +1013,9 @@ class Song extends database_object implements media, library_item
      * @param string $new_lyrics
      * @param int $song_id
      */
-    public static function update_lyrics($new_lyrics,$song_id)
+    public static function update_lyrics($new_lyrics, $song_id)
     {
-        self::_update_ext_item('lyrics',$new_lyrics,$song_id,'50');
+        self::_update_ext_item('lyrics', $new_lyrics, $song_id, '50', true);
 
     } // update_lyrics
 
@@ -1027,7 +1027,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_title($new_title,$song_id)
     {
-        self::_update_item('title',$new_title,$song_id,'50');
+        self::_update_item('title', $new_title, $song_id, '50', true);
 
     } // update_title
 
@@ -1039,7 +1039,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_composer($new_value, $song_id)
     {
-        self::_update_item('composer', $new_value, $song_id, '50');
+        self::_update_item('composer', $new_value, $song_id, '50', true);
 
     } // update_composer
 
@@ -1051,7 +1051,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_publisher($new_value, $song_id)
     {
-        self::_update_item('publisher', $new_value, $song_id, '50');
+        self::_update_item('publisher', $new_value, $song_id, '50', true);
 
     } // update_publisher
 
@@ -1061,9 +1061,9 @@ class Song extends database_object implements media, library_item
      * @param int $new_bitrate
      * @param int $song_id
      */
-    public static function update_bitrate($new_bitrate,$song_id)
+    public static function update_bitrate($new_bitrate, $song_id)
     {
-        self::_update_item('bitrate',$new_bitrate,$song_id,'50');
+        self::_update_item('bitrate', $new_bitrate, $song_id, '50', true);
 
     } // update_bitrate
 
@@ -1073,9 +1073,9 @@ class Song extends database_object implements media, library_item
      * @param int $new_rate
      * @param int $song_id
      */
-    public static function update_rate($new_rate,$song_id)
+    public static function update_rate($new_rate, $song_id)
     {
-        self::_update_item('rate',$new_rate,$song_id,'50');
+        self::_update_item('rate', $new_rate, $song_id, '50', true);
 
     } // update_rate
 
@@ -1085,9 +1085,9 @@ class Song extends database_object implements media, library_item
      * @param string $new_mode
      * @param int $song_id
      */
-    public static function update_mode($new_mode,$song_id)
+    public static function update_mode($new_mode, $song_id)
     {
-        self::_update_item('mode',$new_mode,$song_id,'50');
+        self::_update_item('mode', $new_mode, $song_id, '50', true);
 
     } // update_mode
 
@@ -1097,9 +1097,9 @@ class Song extends database_object implements media, library_item
      * @param int $new_size
      * @param int $song_id
      */
-    public static function update_size($new_size,$song_id)
+    public static function update_size($new_size, $song_id)
     {
-        self::_update_item('size',$new_size,$song_id,'50');
+        self::_update_item('size', $new_size, $song_id, '50');
 
     } // update_size
 
@@ -1109,9 +1109,9 @@ class Song extends database_object implements media, library_item
      * @param int $new_time
      * @param int $song_id
      */
-    public static function update_time($new_time,$song_id)
+    public static function update_time($new_time, $song_id)
     {
-        self::_update_item('time',$new_time,$song_id,'50');
+        self::_update_item('time', $new_time, $song_id, '50', true);
 
     } // update_time
 
@@ -1121,9 +1121,9 @@ class Song extends database_object implements media, library_item
      * @param int $new_track
      * @param int $song_id
      */
-    public static function update_track($new_track,$song_id)
+    public static function update_track($new_track, $song_id)
     {
-        self::_update_item('track',$new_track,$song_id,'50');
+        self::_update_item('track', $new_track, $song_id, '50', true);
 
     } // update_track
 
@@ -1147,7 +1147,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_license($new_license, $song_id)
     {
-        self::_update_item('license', $new_license, $song_id, '50');
+        self::_update_item('license', $new_license, $song_id, '50', true);
 
     } // update_license
 
@@ -1157,9 +1157,9 @@ class Song extends database_object implements media, library_item
      * @param int $new_artist
      * @param int $song_id
      */
-    public static function update_artist($new_artist,$song_id)
+    public static function update_artist($new_artist, $song_id)
     {
-        self::_update_item('artist',$new_artist,$song_id,'50');
+        self::_update_item('artist', $new_artist, $song_id, '50');
 
     } // update_artist
 
@@ -1169,9 +1169,9 @@ class Song extends database_object implements media, library_item
      * @param int $new_album
      * @param int $song_id
      */
-    public static function update_album($new_album,$song_id)
+    public static function update_album($new_album, $song_id)
     {
-        self::_update_item('album',$new_album,$song_id,'50');
+        self::_update_item('album', $new_album, $song_id, '50', true);
 
     } // update_album
 
@@ -1181,11 +1181,11 @@ class Song extends database_object implements media, library_item
      * @param int $song_id
      * @param int $time
      */
-    public static function update_utime($song_id,$time=0)
+    public static function update_utime($song_id, $time=0)
     {
         if (!$time) { $time = time(); }
 
-        self::_update_item('update_time',$time,$song_id,'75');
+        self::_update_item('update_time', $time, $song_id, '75', true);
 
     } // update_utime
 
@@ -1195,9 +1195,9 @@ class Song extends database_object implements media, library_item
      * @param boolean $new_played
      * @param int $song_id
      */
-    public static function update_played($new_played,$song_id)
+    public static function update_played($new_played, $song_id)
     {
-        self::_update_item('played', ($new_played ? 1 : 0),$song_id,'25');
+        self::_update_item('played', ($new_played ? 1 : 0), $song_id, '25');
 
     } // update_played
 
@@ -1209,7 +1209,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_enabled($new_enabled, $song_id)
     {
-        self::_update_item('enabled', ($new_enabled ? 1 : 0),$song_id,'75');
+        self::_update_item('enabled', ($new_enabled ? 1 : 0), $song_id, '75', true);
 
     } // update_enabled
 
@@ -1225,10 +1225,16 @@ class Song extends database_object implements media, library_item
      * @param int $level
      * @return boolean
      */
-    private static function _update_item($field, $value, $song_id, $level)
+    private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
     {
+        if ($check_owner) {
+            $item = new Song($song_id);
+            if ($item->id && $item->get_user_owner() == $GLOBALS['user']->id) {
+                $level = 25;
+            }
+        }
         /* Check them Rights! */
-        if (!Access::check('interface',$level)) { return false; }
+        if (!Access::check('interface', $level)) { return false; }
 
         /* Can't update to blank */
         if (!strlen(trim($value)) && $field != 'comment') { return false; }
