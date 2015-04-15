@@ -491,6 +491,9 @@ class Update
         $update_string = " - Add an option to allow users to remove uploaded songs.<br />";
         $version[] = array('version' => '370030','description' => $update_string);
 
+        $update_string = " - Add an option to customize login art, favicon and text footer.<br />";
+        $version[] = array('version' => '370031','description' => $update_string);
+
         return $version;
     }
 
@@ -2673,42 +2676,42 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_catalog','-1','Uploads catalog destination',25,'integer','system')";
+            "VALUES ('upload_catalog','-1','Uploads catalog destination',75,'integer','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'-1')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_upload','0','Allow users to upload media',25,'boolean','system')";
+            "VALUES ('allow_upload','0','Allow users to upload media',75,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_subdir','1','Upload: create a subdirectory per user (recommended)',25,'boolean','system')";
+            "VALUES ('upload_subdir','1','Upload: create a subdirectory per user (recommended)',75,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_user_artist','0','Upload: consider the user sender as the track\'s artist',25,'boolean','system')";
+            "VALUES ('upload_user_artist','0','Upload: consider the user sender as the track\'s artist',75,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_script','','Upload: run the following script after upload (current directory = upload target directory)',25,'string','system')";
+            "VALUES ('upload_script','','Upload: run the following script after upload (current directory = upload target directory)',75,'string','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_allow_edit','1','Upload: allow users to edit uploaded songs',25,'boolean','system')";
+            "VALUES ('upload_allow_edit','1','Upload: allow users to edit uploaded songs',75,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -3341,10 +3344,43 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_allow_remove','1','Upload: allow users to remove uploaded songs',25,'boolean','system')";
+            "VALUES ('upload_allow_remove','1','Upload: allow users to remove uploaded songs',75,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370031
+     *
+     * Add an option to customize login art, favicon and text footer.
+     */
+    public static function update_370031()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('custom_login_logo','','Custom login page logo url',75,'string','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('custom_favicon','','Custom favicon url',75,'string','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('custom_text_footer','','Custom text footer',75,'string','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;

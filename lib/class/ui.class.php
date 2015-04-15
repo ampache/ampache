@@ -315,15 +315,12 @@ END;
 
     public static function show_custom_style()
     {
-        $favicon = "favicon.ico";
-        if (AmpConfig::get('custom_logo')) {
-            if (file_exists(AmpConfig::get('prefix') . "/favicon_custom.ico")) {
-                $favicon = "favicon_custom.ico";
-            }
-            echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_logo') . "') !important; }</style>";
+        if (AmpConfig::get('custom_login_logo')) {
+            echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        echo "<link rel='shortcut icon' href='" . AmpConfig::get('web_path') . "/" . $favicon . "' />\n";
+        $favicon = AmpConfig::get('custom_favicon') ?: AmpConfig::get('web_path') . "/favicon.ico";
+        echo "<link rel='shortcut icon' href='" .  $favicon . "' />\n";
     }
 
     /**
