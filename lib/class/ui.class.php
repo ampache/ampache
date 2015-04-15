@@ -340,10 +340,10 @@ END;
 
         if (defined('SSE_OUTPUT')) {
             echo "id: " . $id . "\n";
-            echo "data: displayNotification('" . addslashes($value) . "', 5000)\n\n";
+            echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
         } else {
             if (!empty($field)) {
-                echo "<script>updateText('" . $field . "', '" . addslashes($value) ."');</script>\n";
+                echo "<script>updateText('" . $field . "', '" . json_encode($value) ."');</script>\n";
             } else {
                 echo "<br />" . $value . "<br /><br />\n";
             }

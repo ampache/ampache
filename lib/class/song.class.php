@@ -1899,7 +1899,11 @@ class Song extends database_object implements media, library_item
      */
     public function remove_from_disk()
     {
-        $deleted = unlink($this->file);
+        if (file_exists($this->file)) {
+            $deleted = unlink($this->file);
+        } else {
+            $deleted = true;
+        }
         if ($deleted === true) {
             $sql = "DELETE FROM `song` WHERE `id` = ?";
             Dba::write($sql, array($this->id));

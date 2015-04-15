@@ -27,6 +27,17 @@ if (!AmpConfig::get('allow_upload') || !Access::check('interface', '25')) {
     exit;
 }
 
+$upload_max = return_bytes(ini_get('upload_max_filesize'));
+$post_max = return_bytes(ini_get('post_max_size'));
+if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
+    $upload_max = $post_max;
+}
+// Check to handle POST requests exceeding max post size.
+if ($_SERVER['CONTENT_LENGTH'] > 0 && $post_max > 0 && $_SERVER['CONTENT_LENGTH'] > $post_max) {
+    Upload::rerror();
+    exit;
+}
+
 /* Switch on the action passed in */
 switch ($_REQUEST['actionp']) {
     case 'upload':

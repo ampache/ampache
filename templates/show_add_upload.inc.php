@@ -153,7 +153,7 @@ $(function () {
                 });
             } else {
                 $('#data .treecontent').hide();
-                $('#data .default').html('Target Folder').show();
+                $('#data .default').html('<?php echo T_('Target folder'); ?>').show();
             }
         });
 });
@@ -162,6 +162,14 @@ $(function () {
 <form id="uploadfile" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/upload.php">
 <input type="hidden" name="actionp" value="upload" />
 <input type="hidden" id="folder" name="folder" value="" />
+<?php
+// Display a max file size client side if we know it
+if ($upload_max > 0) {
+?>
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
+<?php
+}
+?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <?php if (!AmpConfig::get('upload_user_artist')) { ?>
 <tr>
@@ -195,7 +203,14 @@ $(function () {
 </tr>
 <?php } ?>
 <tr>
-    <td><?php echo T_('Files'); ?></td>
+    <td>
+        <?php echo T_('Files'); ?>
+        <?php
+        if ($upload_max > 0) {
+            echo " (< " . UI::format_bytes($upload_max) . ")";
+        }
+        ?>
+    </td>
     <td>
         <div id="dropfile">
             <?php echo T_('Drop File Here'); ?>

@@ -34,6 +34,10 @@ class Upload
 
     public static function process()
     {
+        header('Content-Type: application/json');
+        ob_start();
+        define('CLI', true);
+
         $catalog_id = AmpConfig::get('upload_catalog');
         if ($catalog_id > 0) {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -45,8 +49,7 @@ class Upload
 
                     if (!in_array(strtolower($extension), $allowed)) {
                         debug_event('upload', 'File extension `' . $extension . '` not allowed.', '2');
-                        echo '{"status":"error"}';
-                        return false;
+                        return self::rerror();
                     }
 
                     $rootdir = self::get_root($catalog);
@@ -62,8 +65,7 @@ class Upload
                     $targetdir = realpath($targetdir);
                     if (strpos($targetdir, $rootdir) === FALSE) {
                         debug_event('upload', 'Something wrong with final upload path.', '1');
-                        echo '{"status":"error"}';
-                        return false;
+                        return self::rerror();
                     }
 
                     $targetfile = $targetdir . DIRECTORY_SEPARATOR . time() . '_' . $_FILES['upl']['name'];
@@ -156,6 +158,8 @@ class Upload
 
                         $catalog->add_file($targetfile, $options);
 
+                        ob_get_contents();
+                        ob_end_clean();
                         echo '{"status":"success"}';
                         return true;
                     } else {
@@ -172,11 +176,14 @@ class Upload
         return self::rerror();
     }
 
-    private static function rerror($file = null)
+    public static function rerror($file = null)
     {
         if ($file) {
-
+            @unlink($file);
         }
+        @header($_SERVER['SERVER_PROTOCOL'] . ' 500 File Upload Error', true, 500);
+        ob_get_contents();
+        ob_end_clean();
         echo '{"status":"error"}';
         return false;
     }
