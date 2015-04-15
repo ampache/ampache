@@ -4914,7 +4914,7 @@ msgstr "Genres"
 #: ../../templates/show_videos.inc.php:52
 #: ../../templates/show_videos.inc.php:104
 msgid "Fav."
-msgstr "fav."
+msgstr "Fav."
 
 #: ../../templates/show_albums.inc.php:82
 msgid "No album found"
@@ -6885,7 +6885,7 @@ msgstr "Lien"
 
 #: ../../templates/show_song.inc.php:116 ../../templates/show_song.inc.php:117
 msgid "Links"
-msgstr "links"
+msgstr "Liens"
 
 #: ../../templates/show_song.inc.php:121
 msgid "Song Language"
