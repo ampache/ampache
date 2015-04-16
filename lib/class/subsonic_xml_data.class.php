@@ -283,7 +283,7 @@ class Subsonic_XML_Data
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', self::getAlbumId($album->id));
         $xalbum->addAttribute('album', $album->name);
-        $xalbum->addAttribute('title', self::formatAlbum($album));
+        $xalbum->addAttribute('title', self::formatAlbum($album, $elementName === "album"));
         $xalbum->addAttribute('name', $album->name);
         $xalbum->addAttribute('isDir', 'true');
         $album->format();
@@ -372,14 +372,14 @@ class Subsonic_XML_Data
         return $xsong;
     }
 
-    private static function formatAlbum($album)
+    private static function formatAlbum($album, $checkDisk = true)
     {
         $name = $album->name;
         if ($album->year > 0) {
             $name .= " [" . $album->year . "]";
         }
 
-        if ($album->disk) {
+        if (($checkDisk || !AmpConfig::get('album_group')) && $album->disk) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
@@ -392,7 +392,7 @@ class Subsonic_XML_Data
         $xdir->addAttribute('id', self::getArtistId($artist->id));
         $xdir->addAttribute('name', $artist->name);
 
-        $allalbums = $artist->get_albums(null, true);
+        $allalbums = $artist->get_albums();
         foreach ($allalbums as $id) {
             $album = new Album($id);
             self::addAlbum($xdir, $album, false, "child");
@@ -403,16 +403,20 @@ class Subsonic_XML_Data
     {
         $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', self::getAlbumId($album->id));
-        $xdir->addAttribute('name', self::formatAlbum($album));
+        $xdir->addAttribute('name', self::formatAlbum($album, false));
         $album->format();
         if ($album->artist_id) {
             $xdir->addAttribute('parent', self::getArtistId($album->artist_id));
         }
 
-        $allsongs = $album->get_songs();
-        foreach ($allsongs as $id) {
-            $song = new Song($id);
-            self::addSong($xdir, $song, "child");
+        $disc_ids = $album->get_group_disks_ids();
+        foreach ($disc_ids as $id) {
+            $disc = new Album($id);
+            $allsongs = $disc->get_songs();
+            foreach ($allsongs as $id) {
+                $song = new Song($id);
+                self::addSong($xdir, $song, "child");
+            }
         }
     }
 
