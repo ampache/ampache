@@ -210,6 +210,9 @@ if ($upload_max > 0) {
             echo " (< " . UI::format_bytes($upload_max) . ")";
         }
         ?>
+        <br /><br />
+        <?php echo T_('Allowed file type'); ?>:<br />
+        <?php echo str_replace("|", ", ", AmpConfig::get('catalog_file_pattern')); ?>
     </td>
     <td>
         <div id="dropfile">
