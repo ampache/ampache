@@ -599,17 +599,20 @@ class Subsonic_Api
             if (Subsonic_XML_Data::isArtist($musicFolderId)) {
                 $artist = new Artist(Subsonic_XML_Data::getAmpacheId($musicFolderId));
                 $finput = $artist->name;
+                $operator = 4;
                 $ftype = "artist";
             } else if (Subsonic_XML_Data::isAlbum($musicFolderId)) {
                 $album = new Album(Subsonic_XML_Data::getAmpacheId($musicFolderId));
                 $finput = $album->name;
+                $operator = 4;
                 $ftype = "artist";
             } else {
-                $finput = "";
-                $ftype = "";
+                $finput = intval($musicFolderId);
+                $operator = 0;
+                $ftype = "catalog";
             }
             $search['rule_'.$i.'_input'] = $finput;
-            $search['rule_'.$i.'_operator'] = 4;
+            $search['rule_'.$i.'_operator'] = $operator;
             $search['rule_'.$i.''] = $ftype;
             ++$i;
         }
