@@ -167,11 +167,14 @@ class Userflag extends database_object
         $user_id = intval($user_id);
 
         $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
+        if ($user_id <= 0) {
+            // Get latest only from user rights >= content manager
+            $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
+                    " WHERE `user`.`access` >= 50";
+        }
         if (!is_null($type)) {
             if ($user_id <= 0) {
-                // Get latest only from user rights >= content manager
-                $sql .= "LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
-                        " WHERE `user`.`access` >= 50 AND";
+                $sql .= " AND";
             } else {
                 $sql .= " WHERE";
             }
