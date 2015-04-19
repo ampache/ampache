@@ -36,7 +36,7 @@ $server = new DAV\Server($rootDir);
 $server->setBaseUri(AmpConfig::get('raw_web_path') . '/webdav/index.php');
 if (AmpConfig::get('use_auth')) {
     $authBackend = new WebDAV_Auth();
-    $authPlugin = new DAV\Auth\Plugin($authBackend, 'SabreDAV');
+    $authPlugin = new DAV\Auth\Plugin($authBackend, 'Ampache');
     $server->addPlugin($authPlugin);
 }
 
