@@ -138,7 +138,6 @@ class Wanted extends database_object
                 } else {
                     if (trim($album->mbid)) {
                         $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
-                        debug_event('aaaa', print_r($malbum, true), 5);
                         if ($malbum['release-group']) {
                             if (!in_array($malbum['release-group']['id'], $owngroups)) {
                                 $owngroups[] = $malbum['release-group']['id'];

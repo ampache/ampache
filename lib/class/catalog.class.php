@@ -960,6 +960,30 @@ abstract class Catalog extends database_object
         return $results;
     }
 
+    public static function search_childrens($name, $catalog_id = 0)
+    {
+        $search = array();
+        $search['type'] = "artist";
+        $search['rule_0_input'] = $name;
+        $search['rule_0_operator'] = 4;
+        $search['rule_0'] = "title";
+        if ($catalog_id > 0) {
+            $search['rule_1_input'] = $catalog_id;
+            $search['rule_1_operator'] = 0;
+            $search['rule_1'] = "catalog";
+        }
+        $artists = Search::run($search);
+
+        $childrens = array();
+        foreach ($artists as $artist) {
+            $childrens[] = array(
+                'object_type' => 'artist',
+                'object_id' => $artist
+            );
+        }
+        return $childrens;
+    }
+
     /**
      * get_albums
      *

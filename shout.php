@@ -38,6 +38,14 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
+        // Remove unauthorized defined values from here
+        if (isset($_POST['user'])) {
+            unset($_POST['user']);
+        }
+        if (isset($_POST['date'])) {
+            unset($_POST['date']);
+        }
+
         $shout_id = Shoutbox::create($_POST);
         header("Location:" . AmpConfig::get('web_path'));
     break;

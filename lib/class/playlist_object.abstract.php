@@ -138,6 +138,11 @@ abstract class playlist_object extends database_object implements library_item
         return $this->get_items();
     }
 
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
     public function get_user_owner()
     {
         return $this->user;

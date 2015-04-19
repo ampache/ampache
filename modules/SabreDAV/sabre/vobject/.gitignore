@@ -1,0 +1,18 @@
+# Composer stuff
+vendor/
+composer.lock
+tests/cov/
+tests/temp
+
+#vim
+.*.swp
+
+#binaries
+bin/phpunit
+bin/phpcs
+
+# Development stuff
+testdata/
+
+# OS X
+.DS_Store

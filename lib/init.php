@@ -120,6 +120,8 @@ require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 require_once $prefix . '/modules/EchoNest/Autoloader.php';
 EchoNest_Autoloader::register();
 
+require_once $prefix . '/modules/SabreDAV/autoload.php';
+
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
 

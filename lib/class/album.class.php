@@ -707,6 +707,30 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Search for item childrens.
+     * @param string $name
+     * @return array
+     */
+    public function search_childrens($name)
+    {
+        $search['type'] = "song";
+        $search['rule_0_input'] = $name;
+        $search['rule_0_operator'] = 4;
+        $search['rule_0'] = "title";
+        $songs = Search::run($search);
+
+        $childrens = array();
+        foreach ($songs as $song) {
+            $childrens[] = array(
+                'object_type' => 'song',
+                'object_id' => $song
+            );
+        }
+
+        return $childrens;
+    }
+
+    /**
      * Get all childrens and sub-childrens medias.
      * @param string $filter_type
      * @return array

@@ -223,6 +223,16 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
+     * Search for item childrens.
+     * @param string $name
+     * @return array
+     */
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
+    /**
      * Get all childrens and sub-childrens medias.
      * @param string $filter_type
      * @return array

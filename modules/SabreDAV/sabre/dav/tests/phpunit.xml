@@ -1,0 +1,40 @@
+<phpunit
+  colors="true"
+  bootstrap="bootstrap.php"
+  convertErrorsToExceptions="true"
+  convertNoticesToExceptions="true"
+  convertWarningsToExceptions="true"
+  strict="true"
+  >
+  <testsuite name="sabre-vobject">
+      <directory>../vendor/sabre/vobject/tests/VObject</directory>
+  </testsuite>
+  <testsuite name="sabre-event">
+      <directory>../vendor/sabre/event/tests/</directory>
+  </testsuite>
+  <testsuite name="sabre-http">
+      <directory>../vendor/sabre/http/tests/HTTP</directory>
+  </testsuite>
+  <testsuite name="sabre-dav">
+      <directory>Sabre/DAV</directory>
+  </testsuite>
+  <testsuite name="sabre-davacl">
+      <directory>Sabre/DAVACL</directory>
+  </testsuite>
+  <testsuite name="sabre-caldav">
+      <directory>Sabre/CalDAV</directory>
+  </testsuite>
+  <testsuite name="sabre-carddav">
+      <directory>Sabre/CardDAV</directory>
+  </testsuite>
+
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true">
+       <directory suffix=".php">../lib/</directory>
+       <exclude>
+         <file>../lib/Sabre/autoload.php</file>
+         <file>../lib/Sabre/VObject/includes.php</file>
+       </exclude>
+    </whitelist>
+  </filter>
+</phpunit>

@@ -236,6 +236,11 @@ class Song_Preview extends database_object implements media, playable_item
         return array();
     }
 
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
     public function get_medias($filter_type = null)
     {
         $medias = array();

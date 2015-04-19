@@ -211,6 +211,11 @@ class Channel extends database_object implements media, library_item
         return array();
     }
 
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
     public function get_medias($filter_type = null)
     {
         $medias = array();

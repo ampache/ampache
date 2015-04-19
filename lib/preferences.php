@@ -194,6 +194,7 @@ function create_preference_input($name,$value)
         case 'geolocation':
         case 'webplayer_aurora':
         case 'upload_allow_remove':
+        case 'webdav_backend':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {

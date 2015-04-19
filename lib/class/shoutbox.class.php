@@ -177,9 +177,11 @@ class Shoutbox
     public static function create(array $data)
     {
         $sticky     = isset($data['sticky']) ? 1 : 0;
+        $user       = intval($data['user'] ?: $GLOBALS['user']->id);
+        $date       = intval($data['date'] ?: time());
         $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .
             "VALUES (? , ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($GLOBALS['user']->id, time(), strip_tags($data['comment']), $sticky, $data['object_id'], $data['object_type'], $data['data']));
+        Dba::write($sql, array($user, $date, strip_tags($data['comment']), $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
         $insert_id = Dba::insert_id();
 

@@ -494,6 +494,9 @@ class Update
         $update_string = " - Add an option to customize login art, favicon and text footer.<br />";
         $version[] = array('version' => '370031','description' => $update_string);
 
+        $update_string = " - Add WebDAV backend preference.<br />";
+        $version[] = array('version' => '370032','description' => $update_string);
+
         return $version;
     }
 
@@ -1916,7 +1919,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('subsonic_backend','1','Use SubSonic backend',25,'boolean','system')";
+            "VALUES ('subsonic_backend','1','Use SubSonic backend',100,'boolean','system')";
         $retval = Dba::write($sql) ? $retval: false;
 
         $id = Dba::insert_id();
@@ -1925,7 +1928,7 @@ class Update
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('plex_backend','0','Use Plex backend',25,'boolean','system')";
+            "VALUES ('plex_backend','0','Use Plex backend',100,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
 
         $id = Dba::insert_id();
@@ -2795,14 +2798,14 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('daap_backend','0','Use DAAP backend',25,'boolean','system')";
+            "VALUES ('daap_backend','0','Use DAAP backend',100,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('daap_pass','','DAAP backend password',25,'string','system')";
+            "VALUES ('daap_pass','','DAAP backend password',100,'string','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
@@ -2828,7 +2831,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upnp_backend','0','Use UPnP backend',25,'boolean','system')";
+            "VALUES ('upnp_backend','0','Use UPnP backend',100,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -3381,6 +3384,25 @@ class Update
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370032
+     *
+     * Add WebDAV backend preference.
+     */
+    public static function update_370032()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('webdav_backend','0','Use WebDAV backend',100,'boolean','system')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;

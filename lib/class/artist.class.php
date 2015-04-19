@@ -514,6 +514,29 @@ class Artist extends database_object implements library_item
     }
 
     /**
+     * Search for item childrens.
+     * @param string $name
+     * @return array
+     */
+    public function search_childrens($name)
+    {
+        $search['type'] = "album";
+        $search['rule_0_input'] = $name;
+        $search['rule_0_operator'] = 4;
+        $search['rule_0'] = "title";
+        $albums = Search::run($search);
+
+        $childrens = array();
+        foreach ($albums as $album) {
+            $childrens[] = array(
+                'object_type' => 'album',
+                'object_id' => $album
+            );
+        }
+        return $childrens;
+    }
+
+    /**
      * Get all childrens and sub-childrens medias.
      * @param string $filter_type
      * @return array
