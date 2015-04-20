@@ -166,6 +166,9 @@ if (AmpConfig::get('show_played_times')) {
 <?php if (AmpConfig::get('show_concerts')) { ?>
             <li><a id="concerts_link" href="#concerts"><?php echo T_('Events'); ?></a></li>
 <?php } ?>
+<?php if (AmpConfig::get('label')) { ?>
+            <li><a id="labels_link" href="#labels"><?php echo T_('Labels'); ?></a></li>
+<?php } ?>
             <!-- Needed to avoid the 'only one' bug -->
             <li></li>
         </ul>
@@ -211,6 +214,14 @@ if (AmpConfig::get('show_concerts')) {
 ?>
         <div id="concerts" class="tab_content">
         <?php UI::show_box_top(T_('Events'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
+        </div>
+<?php } ?>
+<?php
+if (AmpConfig::get('label')) {
+    echo Ajax::observe('labels_link','click', Ajax::action('?page=index&action=labels&artist='.$artist->id, 'labels'));
+?>
+        <div id="labels" class="tab_content">
+        <?php UI::show_box_top(T_('Labels'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
         </div>
 <?php } ?>
     </div>

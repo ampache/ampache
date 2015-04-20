@@ -238,6 +238,13 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
 
+            $this->types[] = array(
+                'name'   => 'label',
+                'label'  =>  T_('Label'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+
 
             $this->types[] = array(
                 'name'   => 'tag',
@@ -494,6 +501,20 @@ class Search extends playlist_object
             $this->types[] = array(
                 'name'   => 'name',
                 'label'  => T_('Name'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+        break;
+        case 'label':
+            $this->types[] = array(
+                'name'   => 'name',
+                'label'  => T_('Name'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+            $this->types[] = array(
+                'name'   => 'category',
+                'label'  => T_('Category'),
                 'type'   => 'text',
                 'widget' => array('input', 'text')
             );
@@ -1112,7 +1133,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'anywhere':
-                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR `album`.`name` $sql_match_operator '$input' OR `song_data`.`comment` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input')";
+                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR `album`.`name` $sql_match_operator '$input' OR `song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input')";
                     $join['album'] = true;
                     $join['artist'] = true;
                     $join['song_data'] = true;
@@ -1148,6 +1169,10 @@ class Search extends playlist_object
                 break;
                 case 'comment':
                     $where[] = "`song_data`.`comment` $sql_match_operator '$input'";
+                    $join['song_data'] = true;
+                break;
+                case 'label':
+                    $where[] = "`song_data`.`label` $sql_match_operator '$input'";
                     $join['song_data'] = true;
                 break;
                 case 'played':
@@ -1403,6 +1428,56 @@ class Search extends playlist_object
             'table_sql' => $table_sql,
             'group_sql' => $group_sql,
             'having_sql' => $having_sql
+        );
+    }
+
+    /**
+     * label_to_sql
+     *
+     * Handles the generation of the SQL for label searches.
+     */
+    private function label_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $where = array();
+        $table = array();
+
+        foreach ($this->rules as $rule) {
+            $type = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'name':
+                    $where[] = "`label`.`name` $sql_match_operator '$input'";
+                break;
+                case 'category':
+                    $where[] = "`label`.`category` $sql_match_operator '$input'";
+                break;
+                default:
+                    // Nihil
+                break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`label`.`id`) FROM `label`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => '',
+            'group_sql' => '',
+            'having_sql' => ''
         );
     }
 }

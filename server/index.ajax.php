@@ -127,6 +127,25 @@ switch ($_REQUEST['action']) {
             $results['concerts'] = ob_get_clean();
         }
     break;
+    case 'labels':
+        if (AmpConfig::get('label') && isset($_REQUEST['artist'])) {
+            $labels = Label::get_labels($_REQUEST['artist']);
+            $object_ids = array();
+            if (count($labels) > 0) {
+                foreach ($labels as $id => $label) {
+                    $object_ids[] = $id;
+                }
+            }
+            $browse = new Browse();
+            $browse->set_type('label');
+            $browse->set_simple_browse(true);
+            $browse->save_objects($object_ids);
+            $browse->store();
+            ob_start();
+            require_once AmpConfig::get('prefix') . '/templates/show_labels.inc.php';
+            $results['labels'] = ob_get_clean();
+        }
+    break;
     case 'wanted_missing_albums':
         if (AmpConfig::get('wanted') && (isset($_REQUEST['artist']) || isset($_REQUEST['artist_mbid']))) {
             if (isset($_REQUEST['artist'])) {

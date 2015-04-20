@@ -34,6 +34,10 @@ switch ($_REQUEST['action']) {
         $tags = Tag::get_display(Tag::get_tags());
         $results['tags'] = $tags;
     break;
+    case 'get_labels':
+        $labels = Label::get_display(Label::get_all_labels());
+        $results['labels'] = $labels;
+    break;
     case 'add_tag':
         debug_event('tag.ajax', 'Adding new tag...', '5');
         Tag::add_tag_map($_GET['type'],$_GET['object_id'],$_GET['tag_id']);

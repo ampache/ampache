@@ -213,6 +213,12 @@ class Query
             ),
             'user' => array(
                 'starts_with'
+            ),
+            'label' => array(
+                'alpha_match',
+                'regex_match',
+                'regex_not_match',
+                'starts_with'
             )
         );
 
@@ -356,6 +362,11 @@ class Query
                 'length',
                 'codec',
                 'release_date'
+            ),
+            'label' => array(
+                'name',
+                'category',
+                'user'
             )
         );
 
@@ -675,6 +686,7 @@ class Query
             case 'movie':
             case 'personal_video':
             case 'clip':
+            case 'label':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -1017,6 +1029,10 @@ class Query
                 case 'personal_video':
                     $this->set_select("`personal_video`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `personal_video` ";
+                break;
+                case 'label':
+                    $this->set_select("`label`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `label` ";
                 break;
                 case 'playlist_song':
                 case 'song':
@@ -1635,6 +1651,25 @@ class Query
                 break;
             } // end filter
         break;
+        case 'label':
+            switch ($filter) {
+                case 'alpha_match':
+                    $filter_sql = " `label`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    if (!empty($value)) $filter_sql = " `label`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    if (!empty($value)) $filter_sql = " `label`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'starts_with':
+                    $filter_sql = " `label`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
         } // end switch on type
 
         return $filter_sql;
@@ -1953,6 +1988,19 @@ class Query
                     break;
                     default:
                         $sql = $this->sql_sort_video($field, 'personal_video');
+                    break;
+                }
+            break;
+            case 'label':
+                switch ($field) {
+                    case 'name':
+                        $sql = "`label`.`name`";
+                    break;
+                    case 'category':
+                        $sql = "`label`.`category`";
+                    break;
+                    case 'user':
+                        $sql = "`label`.`user`";
                     break;
                 }
             break;

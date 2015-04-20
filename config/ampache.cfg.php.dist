@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 27
+config_version = 28
 
 ;###################
 ; Path Vars        #
@@ -492,6 +492,11 @@ wanted_types = "album,official"
 ; EchoNest API key
 ; EchoNest provides several music services. Currently used for missing song 30 seconds preview.
 ;echonest_api_key = ""
+
+; Labels
+; Use labels to browse artists per label membership.
+; DEFAULT: false
+;label = "false"
 
 ; Broadcasts
 ; Allow users to broadcast music.

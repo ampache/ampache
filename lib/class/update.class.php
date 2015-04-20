@@ -497,6 +497,9 @@ class Update
         $update_string = " - Add WebDAV backend preference.<br />";
         $version[] = array('version' => '370032','description' => $update_string);
 
+        $update_string = " - Add Label tables.<br />";
+        $version[] = array('version' => '370033','description' => $update_string);
+
         return $version;
     }
 
@@ -3404,6 +3407,39 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370033
+     *
+     * Add Label tables.
+     */
+    public static function update_370033()
+    {
+        $retval = true;
+
+        $sql = "CREATE TABLE `label` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`name` varchar(80) NOT NULL," .
+            "`category` varchar(40) NULL," .
+            "`summary` TEXT CHARACTER SET utf8 NULL," .
+            "`address` varchar(256) NULL," .
+            "`email` varchar(128) NULL," .
+            "`website` varchar(256) NULL," .
+            "`user` int(11) unsigned NULL," .
+            "`creation_date` int(11) unsigned NULL," .
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "CREATE TABLE `label_asso` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`label` int(11) unsigned NOT NULL," .
+            "`artist` int(11) unsigned NOT NULL," .
+            "`creation_date` int(11) unsigned NULL," .
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
     }

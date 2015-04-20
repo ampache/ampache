@@ -86,6 +86,14 @@ class Artist extends database_object implements library_item
      */
     public $f_tags;
     /**
+     *  @var array $labels
+     */
+    public $labels;
+    /**
+     *  @var string $f_labels
+     */
+    public $f_labels;
+    /**
      *  @var int $object_cnt
      */
     public $object_cnt;
@@ -331,7 +339,7 @@ class Artist extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
-        $sql .= "ORDER BY album, track";
+        $sql .= "ORDER BY `song`.`album`, `song`.`track`";
         $db_results = Dba::read($sql, array($this->id));
 
         $results = array();
@@ -453,6 +461,11 @@ class Artist extends database_object implements library_item
 
             $this->tags = Tag::get_top_tags('artist', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'artist');
+
+            if (AmpConfig::get('label')) {
+                $this->labels = Label::get_labels($this->id);
+                $this->f_labels = Label::get_display($this->labels, true);
+            }
 
             $this->object_cnt = $extra_info['object_cnt'];
         }
@@ -787,6 +800,10 @@ class Artist extends database_object implements library_item
 
         if (isset($data['edit_tags'])) {
             $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
+        }
+
+        if (AmpConfig::get('label') && isset($data['edit_labels'])) {
+            Label::update_label_list($data['edit_labels'], $this->id, true);
         }
 
         return $current_id;

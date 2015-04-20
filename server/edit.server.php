@@ -90,6 +90,7 @@ switch ($_REQUEST['action']) {
         $libitem = new $object_type($_POST['id']);
         if ($libitem->get_user_owner() == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
             // TODO: improve this uniqueless check
+            if (isset($_POST['user'])) unset($_POST['user']);
             if (isset($_POST['artist'])) unset($_POST['artist']);
             if (isset($_POST['artist_name'])) unset($_POST['artist_name']);
             if (isset($_POST['album'])) unset($_POST['album']);
@@ -98,6 +99,9 @@ switch ($_REQUEST['action']) {
             if (isset($_POST['album_artist_name'])) unset($_POST['album_artist_name']);
             if (isset($_POST['edit_tags'])) {
                 $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);
+            }
+            if (isset($_POST['edit_labels'])) {
+                $_POST['edit_labels'] = Label::clean_to_existing($_POST['edit_labels']);
             }
             // Check mbid and *_mbid match as it is used as identifier
             if (isset($_POST['mbid'])) {

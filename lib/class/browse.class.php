@@ -326,6 +326,10 @@ class Browse extends Query
                 $video_type = $type;
                 $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
             break;
+            case 'label':
+                $box_title = T_('Labels');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_labels.inc.php';
+            break;
             default:
                 // Rien a faire
             break;

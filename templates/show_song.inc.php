@@ -117,7 +117,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   $songprops[gettext_noop('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
   $songprops[gettext_noop('Length')]  = scrub_out($song->f_time);
   $songprops[gettext_noop('Comment')] = scrub_out($song->comment);
-  $songprops[gettext_noop('Label')]   = scrub_out($song->label);
+  $songprops[gettext_noop('Label')]   = AmpConfig::get('label') ? "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($song->label) . "\">" . scrub_out($song->label) . "</a>" : scrub_out($song->label);
   $songprops[gettext_noop('Song Language')]= scrub_out($song->language);
   $songprops[gettext_noop('Catalog Number')]   = scrub_out($song->catalog_number);
   $songprops[gettext_noop('Bitrate')]   = scrub_out($song->f_bitrate);
