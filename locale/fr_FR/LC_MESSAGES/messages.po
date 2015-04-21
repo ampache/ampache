@@ -5041,7 +5041,7 @@ msgstr "Genres"
 #: ../../templates/show_videos.inc.php:52
 #: ../../templates/show_videos.inc.php:104
 msgid "Fav."
-msgstr "Fav."
+msgstr "Favori"
 
 #: ../../templates/show_albums.inc.php:82
 msgid "No album found"

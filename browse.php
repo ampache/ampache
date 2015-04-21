@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
         // This one's a doozy
         $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'song';
         $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags($browse_type /*, AmpConfig::get('offset_limit')*/));   // Should add a pager?
+        $browse->save_objects(Tag::get_tags($browse_type, 0, 'name'));   // Should add a pager?
         $object_ids = $browse->get_saved();
         $keys = array_keys($object_ids);
         Tag::build_cache($keys);

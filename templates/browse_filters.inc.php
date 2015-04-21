@@ -71,7 +71,7 @@ if (!Core::is_session_started()) {
         <form method="post" id="catalog_choice" action="javascript.void(0);">
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
-                <option value="0">All</option>
+                <option value="0"><?php echo T_('All'); ?></option>
                 <?php
                     $sql = 'SELECT `id`,`name` FROM `catalog`';
                     $db_results = Dba::read($sql);

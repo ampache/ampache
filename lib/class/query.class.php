@@ -248,7 +248,8 @@ class Query
                 'album'
             ),
             'tag' => array(
-                'tag'
+                'tag',
+                'name'
             ),
             'album' => array(
                 'name',
@@ -1807,10 +1808,13 @@ class Query
                     break;
                 } // end switch
             break;
-            case 'genre':
+            case 'tag':
                 switch ($field) {
+                    case 'tag':
+                        $sql = "`tag`.`id`";
+                    break;
                     case 'name':
-                        $sql = "`genre`.`name`";
+                        $sql = "`tag`.`name`";
                     break;
                 } // end switch
             break;

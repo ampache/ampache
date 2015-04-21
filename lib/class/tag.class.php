@@ -491,7 +491,7 @@ class Tag extends database_object implements library_item
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
      */
-    public static function get_tags($type = '', $limit = 0)
+    public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
         //debug_event('tag.class.php', 'Get tags list called...', '5');
         if (parent::is_cached('tags_list', 'no_name')) {
@@ -508,7 +508,11 @@ class Tag extends database_object implements library_item
         if (!empty($type)) {
             $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
         }
-        $sql .="GROUP BY `tag`.`name` ORDER BY `count` DESC ";
+        $order = "`" . $order . "`";
+        if ($order == 'count') {
+            $order .= " DESC";
+        }
+        $sql .="GROUP BY `tag`.`name` ORDER BY " . $order;
 
         if ($limit > 0) {
             $sql .= " LIMIT $limit";
