@@ -471,7 +471,7 @@ function stopBroadcast()
 
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$is_share) { ?>
 window.parent.onbeforeunload = function (evt) {
-    if (!$("#jquery_jplayer_1").data("jPlayer").status.paused && (document.activeElement === undefined || (document.activeElement.href.indexOf('/batch.php') < 0 && document.activeElement.href.indexOf('/stream.php') < 0))) {
+    if ($("#jquery_jplayer_1") !== undefined && !$("#jquery_jplayer_1").data("jPlayer").status.paused && (document.activeElement === undefined || (document.activeElement.href.indexOf('/batch.php') < 0 && document.activeElement.href.indexOf('/stream.php') < 0))) {
         var message = '<?php echo T_('Media is currently playing. Are you sure you want to close') . ' ' . AmpConfig::get('site_title') . '?'; ?>';
         if (typeof evt == 'undefined') {
             evt = window.event;
