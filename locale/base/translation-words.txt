@@ -329,3 +329,15 @@ msgstr ""
 #: Database words id 140
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player(s)"
 msgstr ""
+
+#: Database words id 141
+msgid "Custom favicon url"
+msgstr ""
+
+#: Database words id 142
+msgid "Custom text footer"
+msgstr ""
+
+#: Database words id 143
+msgid "Use WebDAV backend"
+msgstr ""
