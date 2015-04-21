@@ -313,22 +313,22 @@ class Label extends database_object implements library_item
 
     /**
      * get_songs
-     * gets the songs for this label
+     * gets the songs for this label, based on label name
      * @return int[]
      */
     public function get_songs()
     {
         $sql = "SELECT `song`.`id` FROM `song` " .
-               "LEFT JOIN `label_asso` ON `label_asso`.`artist` = `song`.`artist` ";
+               "LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE `label_asso`.`label` = ? ";
+        $sql .= "WHERE `song_data`.`label` = ? ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($this->name));
 
         $results = array();
         while ($r = Dba::fetch_assoc($db_results)) {

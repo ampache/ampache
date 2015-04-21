@@ -138,7 +138,7 @@ switch ($_REQUEST['action']) {
             }
             $browse = new Browse();
             $browse->set_type('label');
-            $browse->set_simple_browse(true);
+            $browse->set_simple_browse(false);
             $browse->save_objects($object_ids);
             $browse->store();
             ob_start();
@@ -300,6 +300,28 @@ switch ($_REQUEST['action']) {
             echo "</script>";
         }
         $results['fslider_script'] = ob_get_clean();
+    break;
+    case 'songs':
+        $label_id = intval($_REQUEST['label']);
+
+        ob_start();
+        if ($label_id > 0) {
+            $label = new Label($label_id);
+            $object_ids = $label->get_songs();
+
+            $browse = new Browse();
+            $browse->set_type('song');
+            $browse->set_simple_browse(false);
+            $browse->save_objects($object_ids);
+            $browse->store();
+
+            UI::show_box_top(T_('Songs'), 'info-box');
+            require_once AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
+            UI::show_box_bottom();
+        }
+
+        $results['songs'] = ob_get_contents();
+        ob_end_clean();
     break;
     default:
         $results['rfc3514'] = '0x1';

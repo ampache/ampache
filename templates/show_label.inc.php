@@ -26,6 +26,8 @@ $browse = new Browse();
 $browse->set_type($object_type);
 
 UI::show_box_top($label->f_name, 'info-box');
+if ($label->website)
+    echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
 ?>
 <div class="item_right_info">
     <div class="external_links">
@@ -37,14 +39,7 @@ UI::show_box_top($label->f_name, 'info-box');
         <div class="item_info">
             <?php Art::display('label', $label->id, $label->f_name, 2); ?>
             <div class="item_properties">
-                <?php
-                if ($label->address)
-                    echo scrub_out($label->address) . "<br />";
-                if ($label->email)
-                    echo "<a href=\"mailto:" . scrub_out($label->email) . "\">" . scrub_out($label->email) . "</a><br />";
-                if ($label->website)
-                    echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
-                ?>
+                <?php echo scrub_out($label->address); ?>
             </div>
         </div>
         <div id="item_summary">
@@ -64,13 +59,11 @@ UI::show_box_top($label->f_name, 'info-box');
             </li>
             <?php } ?>
         <?php } ?>
-        <?php if (Access::check('interface','50')) { ?>
-            <?php if (AmpConfig::get('statistical_graphs')) { ?>
-                <li>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=label&object_id=<?php echo $label->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=label&object_id=<?php echo $label->id; ?>"><?php echo T_('Graphs'); ?></a>
-                </li>
-            <?php } ?>
+        <?php if ($label->email) { ?>
+        <li>
+            <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo UI::get_icon('mail', T_('Send e-mail')); ?></a>
+            <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo T_('Send e-mail'); ?></a>
+        </li>
         <?php } ?>
         <?php if ($label->can_edit()) { ?>
         <li>
@@ -89,8 +82,7 @@ UI::show_box_top($label->f_name, 'info-box');
     <div id="tabs_container">
         <ul id="tabs">
             <li class="tab_active"><a href="#artists"><?php echo T_('Artists'); ?></a></li>
-            <!-- Needed to avoid the 'only one' bug -->
-            <li></li>
+            <li><a id="songs_link" href="#songs"><?php echo T_('Songs'); ?></a></li>
         </ul>
     </div>
     <div id="tabs_content">
@@ -99,6 +91,12 @@ UI::show_box_top($label->f_name, 'info-box');
     $browse->show_objects($object_ids, true);
     $browse->store();
 ?>
+        </div>
+<?php
+    echo Ajax::observe('songs_link','click', Ajax::action('?page=index&action=songs&label='.$label->id, 'songs'));
+?>
+        <div id="songs" class="tab_content">
+        <?php UI::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
         </div>
     </div>
 </div>
