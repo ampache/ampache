@@ -43,17 +43,19 @@ switch ($_REQUEST['action']) {
 
         $song = new Song($_REQUEST['song_id']);
         if ($song->id && $song->user_upload > 0) {
-            if (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_remove'))) {
+            if (Access::check('interface','50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_remove'))) {
                 if ($song->remove_from_disk()) {
                     show_confirmation(T_('Song Deletion'), T_('Song has been deleted.'), AmpConfig::get('web_path'));
                 } else {
                     show_confirmation(T_('Song Deletion'), T_('Cannot delete this song.'), AmpConfig::get('web_path'));
                 }
             } else {
+                debug_event('song', 'Unauthorized to remove this song.', 1);
                 UI::access_denied();
                 exit;
             }
         } else {
+            debug_event('song', 'Cannot remove a song that wasn\'t uploaded.', 1);
             UI::access_denied();
             exit;
         }

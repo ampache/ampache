@@ -203,13 +203,6 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
         $key = "album_select_c" . ++$album_id_cnt;
     }
 
-    // Added ID field so we can easily observe this element
-    echo "<select name=\"$name\" id=\"$key\">\n";
-
-    if ($allow_none) {
-        echo "\t<option value=\"-2\"></option>\n";
-    }
-
     $sql = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
     $params = array();
     if ($user) {
@@ -218,6 +211,14 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
     }
     $sql .= "ORDER BY `album`.`name`";
     $db_results = Dba::read($sql, $params);
+    $count = Dba::num_rows($db_results);
+
+    // Added ID field so we can easily observe this element
+    echo "<select name=\"$name\" id=\"$key\">\n";
+
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -240,6 +241,10 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
 
     echo "</select>\n";
 
+    if ($count === 0) {
+        echo "<script type='text/javascript'>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+    }
+
 } // show_album_select
 
 /**
@@ -257,12 +262,6 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
         $key = $name . "_select_c" . ++$artist_id_cnt;
     }
 
-    echo "<select name=\"$name\" id=\"$key\">\n";
-
-    if ($allow_none) {
-        echo "\t<option value=\"-2\"></option>\n";
-    }
-
     $sql = "SELECT `id`, `name`, `prefix` FROM `artist` ";
     $params = array();
     if ($user) {
@@ -271,6 +270,13 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
     }
     $sql .= "ORDER BY `name`";
     $db_results = Dba::read($sql, $params);
+    $count = Dba::num_rows($db_results);
+
+    echo "<select name=\"$name\" id=\"$key\">\n";
+
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -289,6 +295,10 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
     }
 
     echo "</select>\n";
+
+    if ($count === 0) {
+        echo "<script type='text/javascript'>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+    }
 
 } // show_artist_select
 

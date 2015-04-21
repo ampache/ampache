@@ -989,11 +989,11 @@ msgstr "Erreur: Les fichiers de configuration sont introuvables ou illisible"
 
 #: ../../labels.php:53
 msgid "Label Added"
-msgstr "étiquette Ajouté"
+msgstr "Label ajouté"
 
 #: ../../labels.php:78
 msgid "Label cannot be found."
-msgstr "Étiquette ne peut pas être trouvé."
+msgstr "Le label ne peut pas être trouvé."
 
 #: ../../lib/class/access.class.php:155 ../../lib/class/access.class.php:159
 msgid "Invalid IPv4 / IPv6 Address Entered"
@@ -1562,7 +1562,7 @@ msgstr "Vidéos personnelles"
 #: ../../templates/show_edit_artist_row.inc.php:58
 #: ../../templates/sidebar_home.inc.php:36
 msgid "Labels"
-msgstr "Étiquettes d'étiquetage"
+msgstr "Labels"
 
 #: ../../lib/class/browse.class.php:372 ../../templates/rightbar.inc.php:129
 #: ../../templates/show_recently_played.inc.php:162
@@ -2067,11 +2067,11 @@ msgstr "Nom"
 #: ../../templates/show_labels.inc.php:40
 #: ../../templates/show_labels.inc.php:68
 msgid "Category"
-msgstr "catégorie"
+msgstr "Catégorie"
 
 #: ../../lib/class/share.class.php:200
 msgid "Share edit"
-msgstr "Partager modifier"
+msgstr "Modifier partage"
 
 #: ../../lib/class/share.class.php:341 ../../lib/class/share.class.php:343
 #: ../../templates/show_shares.inc.php:23
@@ -2080,7 +2080,7 @@ msgstr "Partager"
 
 #: ../../lib/class/share.class.php:351
 msgid "Advanced Share"
-msgstr "Partager avancée"
+msgstr "Partage avancé"
 
 #: ../../lib/class/share.class.php:366
 msgid "Temporary direct link"
@@ -3991,7 +3991,7 @@ msgstr "Objet non valide sélectionnés"
 
 #: ../../song.php:34 ../../song.php:48 ../../song.php:50
 msgid "Song Deletion"
-msgstr "chanson Suppression"
+msgstr "Suppression d'une chanson"
 
 #: ../../song.php:35
 msgid "Are you sure you want to permanently delete this song?"
@@ -3999,7 +3999,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer définitivement cette chanson?"
 
 #: ../../song.php:48
 msgid "Song has been deleted."
-msgstr "Chanson a été supprimé."
+msgstr "La chanson a été supprimée."
 
 #: ../../song.php:50
 msgid "Cannot delete this song."
@@ -4660,22 +4660,22 @@ msgstr "Créer"
 
 #: ../../templates/show_add_label.inc.php:23
 msgid "Add Label"
-msgstr "Ajouter une étiquette"
+msgstr "Ajouter un un label"
 
 #: ../../templates/show_add_label.inc.php:37
 #: ../../templates/show_edit_label_row.inc.php:34
 msgid "Personal"
-msgstr "personnel"
+msgstr "Personnel"
 
 #: ../../templates/show_add_label.inc.php:38
 #: ../../templates/show_edit_label_row.inc.php:35
 msgid "Association"
-msgstr "association"
+msgstr "Association"
 
 #: ../../templates/show_add_label.inc.php:39
 #: ../../templates/show_edit_label_row.inc.php:36
 msgid "Company"
-msgstr "société"
+msgstr "Société"
 
 #: ../../templates/show_add_label.inc.php:44
 #: ../../templates/show_edit_artist_row.inc.php:41
@@ -6396,19 +6396,19 @@ msgstr "Envoyer un email"
 #: ../../templates/show_label.inc.php:70 ../../templates/show_label.inc.php:73
 #: ../../templates/show_label_row.inc.php:45
 msgid "Label edit"
-msgstr "étiquette modifier"
+msgstr "Edition label"
 
 #: ../../templates/show_label.inc.php:74
 msgid "Edit Label"
-msgstr "Modifier le libellé"
+msgstr "Modifier le label"
 
 #: ../../templates/show_labels.inc.php:28
 msgid "Create a new label"
-msgstr "Modifier étiquette"
+msgstr "Créer un nouveau label"
 
 #: ../../templates/show_labels.inc.php:58
 msgid "No label found"
-msgstr "No label found"
+msgstr "Aucun label trouvé"
 
 #: ../../templates/show_live_stream.inc.php:24
 msgid "Manage Radio Stations"

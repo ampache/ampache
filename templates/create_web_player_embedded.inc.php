@@ -47,7 +47,6 @@ if ($_REQUEST['append']) {
 <?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
     document.onbeforeunload = null;
 <?php } ?>
-
     if (appendmedia) {
         <?php echo WebPlayer::add_media_js($this); ?>
     } else if (playnext) {
