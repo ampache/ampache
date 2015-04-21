@@ -37,6 +37,10 @@ $_SESSION['login'] = false;
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_artist" />
+        <?php if (AmpConfig::get('sociable')) { ?>
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
+        <?php } ?>
         <?php } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
@@ -273,7 +277,10 @@ $_SESSION['login'] = false;
         </script>
         <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) { ?>
         <script type="text/javascript" language="javascript">
-            noty({text: '<?php echo T_("We have placed cookies on your computer to help make this website better. You can change your") . " <a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_("cookie settings") . "</a> " . T_("at any time. Otherwise, we\'ll assume you\'re OK to continue.<br /><br />Click on this message do not display it again."); ?>',
+            noty({text: '<?php echo json_encode(T_("We have placed cookies on your computer to help make this website better. You can change your") .
+                    " <a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_("cookie settings") . "</a> " .
+                    T_("at any time. Otherwise, we will assume you are OK to continue.") . "<br /><br />" .
+                    T_("Click on this message do not display it again.")); ?>',
                 type: 'warning',
                 layout: 'bottom',
                 timeout: false,

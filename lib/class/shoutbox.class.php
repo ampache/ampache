@@ -32,6 +32,8 @@ class Shoutbox
     public $date;
 
     public $f_link;
+    public $f_date;
+    public $f_text;
 
     /**
      * Constructor
@@ -210,7 +212,8 @@ class Shoutbox
     public function format()
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $this->date = date("m\/d\/Y - H:i", $this->date);
+        $this->f_date = date("m\/d\/Y - H:i", $this->date);
+        $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
         return true;
 
     } //format
@@ -246,7 +249,7 @@ class Shoutbox
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
             $html .= "<div class='shoutbox-date'>".date("Y/m/d H:i:s", $this->date) . "</div>";
         }
-        $html .= "<div class='shoutbox-text'>" . preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text) . "</div>";
+        $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";
         $html .= "</div>";
         $html .= "<div class='shoutbox-footer'>";

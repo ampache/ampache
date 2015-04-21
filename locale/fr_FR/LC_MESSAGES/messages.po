@@ -4178,8 +4178,8 @@ msgid ""
 "at any time. Otherwise, we\\'ll assume you\\'re OK to continue.<br /><br /"
 ">Click on this message do not display it again."
 msgstr ""
-"à n'importe quel moment. Sinon, nous supposons que vous êtes OK pour "
-"continuer. <br /> <br /> Cliquez sur ce message ne pas afficher à nouveau."
+"à tout moment. Sinon, nous supposons que vous êtes OK pour "
+"continuer. <br /> <br /> Cliquez sur ce message pour ne plus l\\'afficher."
 
 #: ../../templates/header.inc.php:303
 msgid "Log out"
