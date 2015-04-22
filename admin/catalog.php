@@ -147,7 +147,7 @@ switch ($_REQUEST['action']) {
     case 'update_from':
         if (AmpConfig::get('demo_mode')) { break; }
 
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_from&add_path" . scrub_in($_POST['add_path']) . "&update_path=" . $_POST['update_path'];
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_from&add_path=" . scrub_in($_POST['add_path']) . "&update_path=" . $_POST['update_path'];
         sse_worker($sse_url);
         show_confirmation(T_('Subdirectory update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
