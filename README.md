@@ -24,7 +24,7 @@ Currently, the recommended version is [git HEAD](https://github.com/ampache/ampa
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=master)
-[![Codacy Badge](https://www.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80](https://www.codacy.com/app/afterster_2222/ampache)
+[![Codacy Badge](https://www.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ee067d0e-3432-4062-a969-01b4ee037f48/mini.png)](https://insight.sensiolabs.com/projects/ee067d0e-3432-4062-a969-01b4ee037f48)
 
 Latest changes but unstable is [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
