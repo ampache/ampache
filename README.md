@@ -22,6 +22,7 @@ Recommended Version
 
 Currently, the recommended version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
+[![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=master)
 
 Latest changes but unstable is [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
