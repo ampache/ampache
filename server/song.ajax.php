@@ -55,6 +55,7 @@ switch ($_REQUEST['action']) {
             echo "shouts = {};\r\n";
             foreach ($shouts as $id) {
                 $shout = new Shoutbox($id);
+                $shout->format();
                 $key = intval($shout->data);
                 echo "if (shouts['" . $key. "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
                 echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
