@@ -80,7 +80,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
         </tr>
         <tr>
             <td>
-                <?php echo T_('Avatar'); ?>
+                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />

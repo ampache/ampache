@@ -49,7 +49,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo T_('Local Image'); ?>
+                <?php echo T_('Local Image'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="file" name="file" value="" />
