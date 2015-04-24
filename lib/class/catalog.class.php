@@ -346,9 +346,7 @@ abstract class Catalog extends database_object
     public static function is_audio_file($file)
     {
         $pattern = "/\.(" . AmpConfig::get('catalog_file_pattern') . ")$/i";
-        $match = preg_match($pattern, $file);
-
-        return $match;
+        return (preg_match($pattern, $file) === 1);
     }
 
     /**
@@ -359,7 +357,7 @@ abstract class Catalog extends database_object
     public static function is_video_file($file)
     {
         $video_pattern = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
-        return preg_match($video_pattern, $file);
+        return (preg_match($video_pattern, $file) === 1);
     }
 
     /**

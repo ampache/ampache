@@ -290,7 +290,7 @@ class Playlist extends playlist_object
      */
     private function update_type($new_type)
     {
-        if ($this->_update_item('type',$new_type,'50')) {
+        if ($this->_update_item('type',$new_type,50)) {
             $this->type = $new_type;
         }
 
@@ -302,7 +302,7 @@ class Playlist extends playlist_object
      */
     private function update_name($new_name)
     {
-        if ($this->_update_item('name',$new_name,'50')) {
+        if ($this->_update_item('name',$new_name,50)) {
             $this->name = $new_name;
         }
 
@@ -403,12 +403,18 @@ class Playlist extends playlist_object
     /**
      * create
      * This function creates an empty playlist, gives it a name and type
-     * Assumes $GLOBALS['user']->id as the user
      */
-    public static function create($name,$type)
+    public static function create($name, $type, $user_id = null, $date = null)
     {
+        if ($user_id == null) {
+            $user_id = $GLOBALS['user']->id;
+        }
+        if ($date == null) {
+            $date = time();
+        }
+
         $sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`) VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($name, $GLOBALS['user']->id, $type, time()));
+        Dba::write($sql, array($name, $user_id, $type, $date));
 
         $insert_id = Dba::insert_id();
         return $insert_id;

@@ -557,6 +557,7 @@ class Search extends playlist_object
             case 'video':
             case 'song':
             case 'playlist':
+            case 'label':
                 $request['type'] = $data['type'];
             break;
             default:

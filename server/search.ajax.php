@@ -153,7 +153,37 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        if ($target == 'missing_artist') {
+        if (($target == 'anywhere' || $target == 'label') && AmpConfig::get('label')) {
+            $searchreq = array(
+                'limit' => $limit,
+                'type' => 'label',
+                'rule_1_input' => $search,
+                'rule_1_operator' => '2',   // Starts with...
+                'rule_1' => 'name',
+            );
+            $sres = Search::run($searchreq);
+            debug_event('aaaaa', print_r($sres, true), 5);
+            // Litmit not reach, new search with another operator
+            if (count($sres) < $limit) {
+                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['rule_1_operator'] = '0';
+                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+            }
+            foreach ($sres as $id) {
+                $label = new Label($id);
+                $label->format(false);
+                $results[] = array(
+                    'type' => T_('Labels'),
+                    'link' => $label->link,
+                    'label' => $label->name,
+                    'value' => $label->name,
+                    'rels' => '',
+                    'image' => Art::url($label->id, 'label', null, 10),
+                );
+            }
+        }
+
+        if ($target == 'missing_artist' && AmpConfig::get('wanted')) {
             $sres = Wanted::search_missing_artists($search);
             $i = 0;
             foreach ($sres as $r) {

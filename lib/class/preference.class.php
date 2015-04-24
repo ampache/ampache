@@ -286,13 +286,13 @@ class Preference extends database_object
         $name = Dba::escape($name);
         $description = Dba::escape($description);
         $default = Dba::escape($default);
-        $level = Dba::escape($level);
+        $level = intval($level);
         $type = Dba::escape($type);
         $catagory = Dba::escape($catagory);
 
         $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`) " .
-            "VALUES ('$name','$description','$default','$level','$type','$catagory')";
-        $db_results = Dba::write($sql);
+            "VALUES (?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, param($name, $description, $default, intval($level), $type, $catagory));
 
         if (!$db_results) {
             return false;

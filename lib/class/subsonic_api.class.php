@@ -815,7 +815,7 @@ class Subsonic_Api
             self::_updatePlaylist($playlistId, $name, $songId);
             $r = Subsonic_XML_Data::createSuccessResponse();
         } else if (!empty($name)) {
-            $playlistId = Playlist::create($name, 'public');
+            $playlistId = Playlist::create($name, 'private');
             if (count($songId) > 0) {
                 self::_updatePlaylist($playlistId, "", $songId);
             }

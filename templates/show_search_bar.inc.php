@@ -33,6 +33,9 @@
             <option value="artist"><?php echo T_('Artist')?></option>
             <option value="playlist_name"><?php echo T_('Playlist')?></option>
             <option value="tag"><?php echo T_('Tag')?></option>
+            <?php if (AmpConfig::get('label')) { ?>
+                <option value="label"><?php echo T_('Label')?></option>
+            <?php } ?>
             <?php if (AmpConfig::get('wanted')) { ?>
                 <option value="missing_artist"><?php echo T_('Missing Artist')?></option>
             <?php } ?>
