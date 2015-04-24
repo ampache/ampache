@@ -1051,7 +1051,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_publisher($new_value, $song_id)
     {
-        self::_update_item('publisher', $new_value, $song_id, '50', true);
+        self::_update_item('publisher', $new_value, $song_id, 50, true);
 
     } // update_publisher
 
@@ -1223,6 +1223,7 @@ class Song extends database_object implements media, library_item
      * @param mixed $value
      * @param int $song_id
      * @param int $level
+     * @param boolean $check_owner
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
@@ -1252,10 +1253,18 @@ class Song extends database_object implements media, library_item
      * @param mixed $value
      * @param int $song_id
      * @param int $level
+     * @param boolean $check_owner
      * @return boolean
      */
-    private static function _update_ext_item($field, $value, $song_id, $level)
+    private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false)
     {
+        if ($check_owner) {
+            $item = new Song($song_id);
+            if ($item->id && $item->get_user_owner() == $GLOBALS['user']->id) {
+                $level = 25;
+            }
+        }
+        
         /* Check them rights boy! */
         if (!Access::check('interface',$level)) { return false; }
 
