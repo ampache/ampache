@@ -1264,7 +1264,7 @@ class Song extends database_object implements media, library_item
                 $level = 25;
             }
         }
-        
+
         /* Check them rights boy! */
         if (!Access::check('interface',$level)) { return false; }
 

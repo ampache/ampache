@@ -305,8 +305,14 @@ class Subsonic_XML_Data
         }
 
         $rating = new Rating($album->id, "album");
-        $rating_value = $rating->get_average_rating();
-        $xalbum->addAttribute('averageRating', ($rating_value) ? $rating_value : 0);
+        $user_rating = $rating->get_user_rating();
+        if ($user_rating > 0) {
+            $xalbum->addAttribute('userRating', ceil($user_rating));
+        }
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $xalbum->addAttribute('averageRating', ceil($avg_rating));
+        }
 
         if ($songs) {
             $allsongs = $album->get_songs();
@@ -341,6 +347,15 @@ class Subsonic_XML_Data
         $xsong->addAttribute('coverArt', self::getAlbumId($album->id));
         $xsong->addAttribute('duration', $song->time);
         $xsong->addAttribute('bitRate', intval($song->bitrate / 1000));
+        $rating = new Rating($song->id, "song");
+        $user_rating = $rating->get_user_rating();
+        if ($user_rating > 0) {
+            $xsong->addAttribute('userRating', ceil($user_rating));
+        }
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $xsong->addAttribute('averageRating', ceil($avg_rating));
+        }
         if ($song->track > 0) {
             $xsong->addAttribute('track', $song->track);
         }
