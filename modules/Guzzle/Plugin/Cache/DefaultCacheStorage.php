@@ -43,7 +43,7 @@ class DefaultCacheStorage implements CacheStorageInterface
 
         if ($cacheControl = $response->getHeader('Cache-Control')) {
             $stale = $cacheControl->getDirective('stale-if-error');
-            $ttl += $stale == true ? $ttl : $stale;
+            $ttl += $stale === true ? $ttl : $stale;
         }
 
         // Determine which manifest key should be used

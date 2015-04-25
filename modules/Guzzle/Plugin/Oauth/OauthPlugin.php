@@ -190,7 +190,7 @@ class OauthPlugin implements EventSubscriberInterface
         );
 
         foreach ($optionalParams as $optionName => $oauthName) {
-            if (isset($this->config[$optionName]) == true) {
+            if (isset($this->config[$optionName]) === true) {
                 $params[$oauthName] = $this->config[$optionName];
             }
         }

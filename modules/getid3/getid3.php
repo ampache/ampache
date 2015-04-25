@@ -1754,7 +1754,7 @@ abstract class getid3_handler {
 				$dest = $dir.DIRECTORY_SEPARATOR.$name.($image_mime ? '.'.getid3_lib::ImageExtFromMime($image_mime) : '');
 
 				// create dest file
-				if (($fp_dest = fopen($dest, 'wb')) == false) {
+				if (($fp_dest = fopen($dest, 'wb')) === false) {
 					throw new Exception('failed to create file '.$dest);
 				}
 
