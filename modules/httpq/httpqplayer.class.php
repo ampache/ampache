@@ -434,4 +434,3 @@ class HttpQPlayer {
     } // sendCommand
 
 } // End HttpQPlayer Class
-?>

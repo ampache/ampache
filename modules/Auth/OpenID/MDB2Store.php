@@ -409,5 +409,3 @@ class Auth_OpenID_MDB2Store extends Auth_OpenID_OpenIDStore {
     }
 
 }
-
-?>

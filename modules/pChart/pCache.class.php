@@ -277,4 +277,3 @@
      return($Picture);
     }
   }
-?>
