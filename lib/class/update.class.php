@@ -500,6 +500,9 @@ class Update
         $update_string = " - Add Label tables.<br />";
         $version[] = array('version' => '370033','description' => $update_string);
 
+        $update_string = " - Add User messages and user follow tables.<br />";
+        $version[] = array('version' => '370034','description' => $update_string);
+
         return $version;
     }
 
@@ -3440,6 +3443,44 @@ class Update
             "`creation_date` int(11) unsigned NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370034
+     *
+     * Add User messages and user follow tables.
+     */
+    public static function update_370034()
+    {
+        $retval = true;
+
+        $sql = "CREATE TABLE `user_pvmsg` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`subject` varchar(80) NOT NULL," .
+            "`message` TEXT CHARACTER SET utf8 NULL," .
+            "`from_user` int(11) unsigned NOT NULL," .
+            "`to_user` int(11) unsigned NOT NULL," .
+            "`is_read` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
+            "`creation_date` int(11) unsigned NULL," .
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "CREATE TABLE `user_follower` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`user` int(11) unsigned NOT NULL," .
+            "`follow_user` int(11) unsigned NOT NULL," .
+            "`follow_date` int(11) unsigned  NULL," .
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('notify_email','0','Receive notifications by email (shouts, private messages, ...)',25,'boolean','options')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
     }

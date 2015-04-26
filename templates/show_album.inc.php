@@ -44,6 +44,7 @@ if ($directplay_limit > 0) {
 }
 ?>
 <?php UI::show_box_top($title,'info-box'); ?>
+
 <div class="item_right_info">
     <div class="external_links">
         <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
@@ -75,6 +76,18 @@ if (AmpConfig::get('show_played_times')) {
 <?php
 }
 ?>
+
+<?php
+$owner_id = $album->get_user_owner();
+if (AmpConfig::get('sociable') && $owner_id > 0) {
+    $owner = new User($owner_id);
+    $owner->format();
+?>
+<div class="item_uploaded_by">
+    <?php echo T_('Uploaded by'); ?> <?php echo $owner->f_link; ?>
+</div>
+<?php } ?>
+
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>

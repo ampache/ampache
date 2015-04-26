@@ -220,7 +220,7 @@ class Browse extends Query
                 $box_req = AmpConfig::get('prefix') . '/templates/show_albums.inc.php';
             break;
             case 'user':
-                $box_title = T_('Manage Users') . $match;
+                $box_title = T_('Users') . $match;
                 $box_req = AmpConfig::get('prefix') . '/templates/show_users.inc.php';
             break;
             case 'artist':
@@ -329,6 +329,10 @@ class Browse extends Query
             case 'label':
                 $box_title = T_('Labels');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_labels.inc.php';
+            break;
+            case 'pvmsg':
+                $box_title = T_('Private Messages');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_pvmsgs.inc.php';
             break;
             default:
                 // Rien a faire

@@ -974,7 +974,8 @@ class User extends database_object
         if (!$this->create_date) { $this->f_create_date = T_('Unknown'); } else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
 
         // Base link
-        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id . '">' . $this->fullname . '</a>';
+        $this->link = AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id;
+        $this->f_link = '<a href="' . $this->link . '">' . $this->fullname . '</a>';
 
         /* Calculate their total Bandwidth Usage */
         $sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
@@ -1128,16 +1129,16 @@ class User extends database_object
           admin
         */
         if ($this->has_access(100)) {
-            $sql = "SELECT `id` FROM `user` WHERE `access`='100' AND id !='" . Dba::escape($this->id) . "'";
-            $db_results = Dba::read($sql);
+            $sql = "SELECT `id` FROM `user` WHERE `access`='100' AND id != ?";
+            $db_results = Dba::read($sql, array($this->id));
             if (!Dba::num_rows($db_results)) {
                 return false;
             }
         } // if this is an admin check for others
 
         // Delete their playlists
-        $sql = "DELETE FROM `playlist` WHERE `user`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `playlist` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
 
         // Clean up the playlist data table
         $sql = "DELETE FROM `playlist_data` USING `playlist_data` " .
@@ -1146,47 +1147,55 @@ class User extends database_object
         Dba::write($sql);
 
         // Delete any stats they have
-        $sql = "DELETE FROM `object_count` WHERE `user`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `object_count` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
 
         // Clear the IP history for this user
-        $sql = "DELETE FROM `ip_history` WHERE `user`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `ip_history` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
 
         // Nuke any access lists that are specific to this user
-        $sql = "DELETE FROM `access_list` WHERE `user`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `access_list` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
 
         // Delete their ratings
-        $sql = "DELETE FROM `rating` WHERE `user`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `rating` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
 
         // Delete their tags
-        $sql = "DELETE FROM `tag_map` WHERE `user`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `tag_map` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
 
         // Clean out the tags
         $sql = "DELETE FROM `tags` USING `tag_map` LEFT JOIN `tag_map` ON tag_map.id=tags.map_id AND tag_map.id IS NULL";
         Dba::write($sql);
 
         // Delete their preferences
-        $sql = "DELETE FROM `user_preference` WHERE `user`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `user_preference` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
 
         // Delete their voted stuff in democratic play
-        $sql = "DELETE FROM `user_vote` WHERE `user`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `user_vote` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
 
         // Delete their shoutbox posts
-        $sql = "DELETE FROM `user_shout` WHERE `user='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `user_shout` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
+
+        // Delete their private messages posts
+        $sql = "DELETE FROM `user_pvmsg` WHERE `from_user` = ? OR `to_user` = ?";
+        Dba::write($sql, array($this->id, $this->id));
+
+        // Delete their following/followers
+        $sql = "DELETE FROM `user_follow` WHERE `user` = ? OR `follow_user` = ?";
+        Dba::write($sql, array($this->id, $this->id));
 
         // Delete the user itself
-        $sql = "DELETE FROM `user` WHERE `id`='$this->id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `user` WHERE `id` = ?";
+        Dba::write($sql, array($this->id));
 
-        $sql = "DELETE FROM `session` WHERE `username`='" . Dba::escape($this->username) . "'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `session` WHERE `username` = ?";
+        Dba::write($sql, array($this->username));
 
         return true;
 
@@ -1378,6 +1387,108 @@ class User extends database_object
         return true;
 
     } // is_xmlrpc
+
+    /**
+     * get_followers
+     * Get users following this user
+     * @return int[]
+     */
+    public function get_followers()
+    {
+        $sql = "SELECT `user` FROM `user_follower` WHERE `follow_user` = ?";
+        $db_results = Dba::read($sql, array($this->id));
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['user'];
+        }
+        return $results;
+    }
+
+    /**
+     * get_following
+     * Get users followed by this user
+     * @return int[]
+     */
+    public function get_following()
+    {
+        $sql = "SELECT `follow_user` FROM `user_follower` WHERE `user` = ?";
+        $db_results = Dba::read($sql, array($this->id));
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['follow_user'];
+        }
+        return $results;
+    }
+
+    /**
+     * is_followed_by
+     * Get if an user is followed by this user
+     * @param integer $user_id
+     * @return boolean
+     */
+    public function is_followed_by($user_id)
+    {
+        $sql = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
+        $db_results = Dba::read($sql, array($user_id, $this->id));
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    /**
+     * is_following
+     * Get if this user is following an user
+     * @param integer $user_id
+     * @return boolean
+     */
+    public function is_following($user_id)
+    {
+        $sql = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
+        $db_results = Dba::read($sql, array($this->id, $user_id));
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    /**
+     * toggle_follow
+     * @param integer $user_id
+     * @return boolean
+     */
+    public function toggle_follow($user_id)
+    {
+        if (!$user_id || $user_id === $this->id)
+            return false;
+
+        $params = array($this->id, $user_id);
+        if ($this->is_following($user_id)) {
+            $sql = "DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
+        } else {
+            $sql = "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)";
+            $params[] = time();
+        }
+
+        return Dba::write($sql, $params);
+    }
+
+    /**
+     * get_display_follow
+     * Get html code to display the follow/unfollow link
+     * @param $display_user_id int|null
+     * @return string
+     */
+    public function get_display_follow($user_id = null)
+    {
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
+        }
+
+        if ($user_id === $this->id)
+            return "";
+
+        $followed = $this->is_followed_by($user_id);
+
+        $html = "<span id='button_follow_" . $this->id . "' class='followbtn'>";
+        $html .= Ajax::text('?page=user&action=flip_follow&user_id=' . $this->id, ($followed ? T_('Unfollow') : T_('Follow')) . ' (' . count($this->get_followers()) . ')', 'flip_follow_' . $this->id);
+        $html .= "</span>";
+        return $html;
+    }
 
     /**
      * check_username

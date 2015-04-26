@@ -124,7 +124,7 @@ class Ampache_RSS
         // Default to now playing
         $type = self::validate_type($type);
 
-        $string = '<a href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . '">' . UI::get_icon('feed', T_('RSS Feed')) . '</a>';
+        $string = '<a rel="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . '">' . UI::get_icon('feed', T_('RSS Feed')) . '</a>';
 
         return $string;
 

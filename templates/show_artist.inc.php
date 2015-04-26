@@ -73,6 +73,18 @@ if (AmpConfig::get('show_played_times')) {
 <?php
 }
 ?>
+
+<?php
+$owner_id = $artist->get_user_owner();
+if (AmpConfig::get('sociable') && $owner_id > 0) {
+    $owner = new User($owner_id);
+    $owner->format();
+?>
+<div class="item_uploaded_by">
+    <?php echo T_('Uploaded by'); ?> <?php echo $owner->f_link; ?>
+</div>
+<?php } ?>
+
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>

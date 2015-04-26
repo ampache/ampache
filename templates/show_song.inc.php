@@ -143,20 +143,28 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
      $songprops[gettext_noop('Lyrics')]   = $song->f_lyrics;
   }
 
-    if (AmpConfig::get('licensing')) {
-        if ($song->license) {
-            $license = new License($song->license);
-            $license->format();
-            $songprops[gettext_noop('Licensing')]   = $license->f_link;
-        }
-    }
+  if (AmpConfig::get('licensing')) {
+      if ($song->license) {
+          $license = new License($song->license);
+          $license->format();
+          $songprops[gettext_noop('Licensing')]   = $license->f_link;
+      }
+  }
 
-    foreach ($songprops as $key => $value) {
-        if (trim($value)) {
-              $rowparity = UI::flip_class();
-              echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
-        }
-    }
+  $owner_id = $song->get_user_owner();
+  if (AmpConfig::get('sociable') && $owner_id > 0) {
+      $owner = new User($owner_id);
+      $owner->format();
+      $songprops[gettext_noop('Uploaded by')]  = $owner->f_link;
+  }
+
+
+  foreach ($songprops as $key => $value) {
+      if (trim($value)) {
+            $rowparity = UI::flip_class();
+            echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
+      }
+  }
 ?>
 </dl>
 <?php UI::show_box_bottom(); ?>

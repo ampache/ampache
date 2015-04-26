@@ -189,14 +189,46 @@ class Shoutbox
      */
     public static function create(array $data)
     {
+        if (!Core::is_library_item($data['object_type']))
+            return false;
+
         $sticky     = isset($data['sticky']) ? 1 : 0;
         $user       = intval($data['user'] ?: $GLOBALS['user']->id);
         $date       = intval($data['date'] ?: time());
+        $comment    = strip_tags($data['comment']);
+
         $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .
             "VALUES (? , ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($user, $date, strip_tags($data['comment']), $sticky, $data['object_id'], $data['object_type'], $data['data']));
+        Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
         $insert_id = Dba::insert_id();
+
+        // Never send email in case of user impersonation
+        if (!isset($data['user']) && $insert_id) {
+            $libitem = new $data['object_type']($data['object_id']);
+            $item_owner_id = $libitem->get_user_owner();
+            if ($item_owner_id) {
+                if (Preference::get_by_user($item_owner_id, 'notify_email')) {
+                    $item_owner = new User($item_owner_id);
+                    if (!empty($item_owner->email)) {
+                        $libitem->format();
+                        $mailer = new Mailer();
+                        $mailer->set_default_sender();
+                        $mailer->recipient = $item_owner->email;
+                        $mailer->recipient_name = $item_owner->fullname;
+                        $mailer->subject = T_('New shout on your content');
+                        $mailer->message = sprintf(T_("You just received a new shout from %s on your content `%s`.\n\n
+    ----------------------
+    %s
+    ----------------------
+
+    %s
+    "), $GLOBALS['user']->fullname, $libitem->get_fullname(), $comment, AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $data['object_type'] . "&id=" . $data['object_id'] . "#shout" . $insert_id);
+                        $mailer->send();
+                    }
+                }
+            }
+        }
 
         return $insert_id;
 

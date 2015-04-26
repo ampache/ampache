@@ -19,17 +19,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+UI::show_box_top($pvmsg->f_subject, 'info-box');
 ?>
-<?php UI::show_box_top(T_('Shoutbox')); ?>
-<div id="shoutbox">
-<?php
-  foreach ($shouts as $shout_id) {
-    $shout = new Shoutbox($shout_id);
-    $shout->format();
-?>
-<div id="shout<?php echo $shout->id; ?>" class="shout <?php echo UI::flip_class(); ?>">
-    <?php echo $shout->get_display(true, true); ?>
+<div>
+    <?php echo T_('Sent by') . ' ' . $pvmsg->f_from_user_link . ' at ' . $pvmsg->f_creation_date; ?>
 </div>
-<?php } ?>
+<div id="information_actions">
+    <h3><?php echo T_('Actions'); ?>:</h3>
+
+    <ul>
+        <li>
+            <a id="<?php echo 'reply_pvmsg_'.$label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $pvmsg->id; ?>">
+                <?php echo UI::get_icon('mail', T_('Reply')); ?> <?php echo T_('Reply'); ?>
+            </a>
+        </li>
+    </ul>
 </div>
+
+<hr />
+<div>
+    <?php echo nl2br($pvmsg->f_message); ?>
+</div>
+
 <?php UI::show_box_bottom(); ?>

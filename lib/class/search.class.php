@@ -519,6 +519,14 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
         break;
+        case 'user':
+            $this->types[] = array(
+                'name'   => 'username',
+                'label'  => T_('Username'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+        break;
         } // end switch on searchtype
 
     } // end constructor
@@ -558,6 +566,7 @@ class Search extends playlist_object
             case 'song':
             case 'playlist':
             case 'label':
+            case 'user':
                 $request['type'] = $data['type'];
             break;
             default:
@@ -1472,6 +1481,53 @@ class Search extends playlist_object
 
         return array(
             'base' => 'SELECT DISTINCT(`label`.`id`) FROM `label`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => '',
+            'group_sql' => '',
+            'having_sql' => ''
+        );
+    }
+
+    /**
+     * user_to_sql
+     *
+     * Handles the generation of the SQL for user searches.
+     */
+    private function user_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $where = array();
+        $table = array();
+
+        foreach ($this->rules as $rule) {
+            $type = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'username':
+                    $where[] = "`user`.`username` $sql_match_operator '$input'";
+                break;
+                default:
+                    // Nihil
+                break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`user`.`id`) FROM `user`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

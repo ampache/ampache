@@ -282,17 +282,9 @@ class Preference extends database_object
      */
     public static function insert($name,$description,$default,$level,$type,$catagory)
     {
-        // Clean em up
-        $name = Dba::escape($name);
-        $description = Dba::escape($description);
-        $default = Dba::escape($default);
-        $level = intval($level);
-        $type = Dba::escape($type);
-        $catagory = Dba::escape($catagory);
-
         $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`) " .
             "VALUES (?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, param($name, $description, $default, intval($level), $type, $catagory));
+        $db_results = Dba::write($sql, array($name, $description, $default, intval($level), $type, $catagory));
 
         if (!$db_results) {
             return false;

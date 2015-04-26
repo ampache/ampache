@@ -188,44 +188,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-position: right; 
 }
 
-#notification {
-	position: fixed;
-    top: auto;
-	bottom: 20px;
-	left: 50%;
-	z-index: 8888;
-	width: 50%;
-	padding: 5px 20px;
-	margin: 0;
-	background-color: #000;
-	border-radius: 10px;
-	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,.5);
-	box-shadow: 0 4px 12px rgba(0,0,0,.5);
-	-webkit-transition: all .5s;
-	transition: all .5s;
-	-webkit-transform: translate(-50%,0);
-	-ms-transform: translate(-50%,0);
-	transform: translate(-50%,0);
-}
-
-#notification.notification-out {
-	opacity: 0;
-	filter: alpha(opacity=0);
-	-webkit-transform: translate(-50%,80px);
-	-ms-transform: translate(-50%,80px);
-	transform: translate(-50%,80px);
-}
-
-#notification img {
-	height: 100%;
-	vertical-align: middle;
-	margin-top: -3px;
-}
-
-#notification-content {
-	margin-left: 10px;
-}
-
 /***********************************************
            Header
 ***********************************************/
@@ -904,6 +866,10 @@ table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus
     display: none;
 }
 
+table.tabledata tbody tr.unread {
+	font-weight: bold;
+}
+
 table.tabledata tbody .cel_add {
     max-width: 60px;
     min-width: 60px;
@@ -1370,6 +1336,12 @@ span.fatalerror {
     vertical-align: bottom;
 }
 
+.item_uploaded_by {
+	padding-left: 0px;
+	padding-top: 10px;
+	font-size: small;
+}
+
 .item_right_info {
     float: right;
     max-width: 60%;
@@ -1592,4 +1564,21 @@ a.option-list:hover {
 
 .stats_graph {
     text-align: center;
+}
+
+.followbtn {
+	background-repeat: repeat-x;
+	position: relative;
+	padding: 5px 12px 4px;
+	font-size: 15px;
+	line-height: normal;
+	border: 0px none;
+	cursor: pointer;
+	border-radius: 2px;
+	background-position: 0px -10px;
+	transition: background-position 0.1s linear 0s;
+	text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
+	text-decoration: none;
+	min-width: 100px;
+	background-color: #363F4A;
 }

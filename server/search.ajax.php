@@ -162,7 +162,7 @@ switch ($_REQUEST['action']) {
                 'rule_1' => 'name',
             );
             $sres = Search::run($searchreq);
-            debug_event('aaaaa', print_r($sres, true), 5);
+
             // Litmit not reach, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit'] = $limit - count($sres);
@@ -199,6 +199,37 @@ switch ($_REQUEST['action']) {
 
                 if ($i >= $limit)
                     break;
+            }
+        }
+
+        if ($target == 'user' && AmpConfig::get('sociable')) {
+            $searchreq = array(
+                'limit' => $limit,
+                'type' => 'user',
+                'rule_1_input' => $search,
+                'rule_1_operator' => '2',   // Starts with...
+                'rule_1' => 'username',
+            );
+            $sres = Search::run($searchreq);
+
+            // Litmit not reach, new search with another operator
+            if (count($sres) < $limit) {
+                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['rule_1_operator'] = '0';
+                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+            }
+            foreach ($sres as $id) {
+                $user = new User($id);
+                $user->format();
+                $avatar = $user->get_avatar();
+                $results[] = array(
+                    'type' => T_('Users'),
+                    'link' => '',
+                    'label' => $user->username,
+                    'value' => $user->username,
+                    'rels' => '',
+                    'image' => $avatar['url'] ?: '',
+                );
             }
         }
 

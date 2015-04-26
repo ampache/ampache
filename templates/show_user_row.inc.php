@@ -27,20 +27,29 @@ if ($libitem->f_avatar_mini) {
     echo $libitem->f_avatar_mini;
 }
 ?>
-            <?php echo $libitem->fullname; ?> (<?php echo $libitem->username; ?>)
+        <?php echo $libitem->fullname; ?> (<?php echo $libitem->username; ?>)
         </a>
     </td>
-  <td class="cel_lastseen"><?php echo $last_seen; ?></td>
-  <td class="cel_registrationdate"><?php echo $create_date; ?></td>
-  <td class="cel_activity"><?php echo $libitem->f_useage; ?></td>
+    <td class="cel_lastseen"><?php echo $last_seen; ?></td>
+    <td class="cel_registrationdate"><?php echo $create_date; ?></td>
+    <?php if (Access::check('interface', 50)) { ?>
+    <td class="cel_activity"><?php echo $libitem->f_useage; ?></td>
     <?php if (AmpConfig::get('track_user_ip')) { ?>
-        <td class="cel_lastip">
-        <a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $libitem->id; ?>">
-            <?php echo $libitem->ip_history; ?>
-        </a>
-        </td>
+      <td class="cel_lastip">
+      <a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $libitem->id; ?>">
+          <?php echo $libitem->ip_history; ?>
+      </a>
+      </td>
+    <?php } ?>
+    <?php } ?>
+    <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+    <td class="cel_follow"><?php echo $libitem->get_display_follow(); ?></td>
     <?php } ?>
     <td class="cel_action">
+        <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+        <a id="<?php echo 'reply_pvmsg_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $libitem->username; ?>"><?php echo UI::get_icon('mail', T_('Send private message')); ?></a>
+        <?php } ?>
+        <?php if (Access::check('interface', 100)) { ?>
         <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
         <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&amp;user_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('preferences', T_('Preferences')); ?></a>
     <?php
@@ -52,8 +61,9 @@ if ($libitem->f_avatar_mini) {
     }
     ?>
         <a href="<?php echo $web_path; ?>/admin/users.php?action=delete&user_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+        <?php } ?>
     </td>
-       <?php
+    <?php
     if (($libitem->is_logged_in()) AND ($libitem->is_online())) {
         echo "<td class=\"cel_online user_online\"> &nbsp; </td>";
     } elseif ($libitem->disabled == 1) {

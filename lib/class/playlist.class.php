@@ -88,24 +88,23 @@ class Playlist extends playlist_object
 
     /**
      * get_playlists
-     * Returns a list of playlists accessible by the current user.
+     * Returns a list of playlists accessible by the user.
      */
-    public static function get_playlists()
+    public static function get_playlists($incl_public = true, $user_id = null)
     {
-        $sql = 'SELECT `id` from `playlist`';
-        $sql_order = ' ORDER BY `name`';
-
-        if (!Access::check('interface','100')) {
-            $sql .= " WHERE `type`='public' OR " .
-            "`user`='" . $GLOBALS['user']->id . "'";
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
         }
 
-        $sql .= $sql_order;
+        $sql = 'SELECT `id` FROM `playlist`' .
+               ' WHERE `user` = ?';
+        if ($incl_public) {
+            $sql .= " OR `type` = 'public'";
+        }
+        $sql .= ' ORDER BY `name`';
 
-        $db_results = Dba::read($sql);
-
+        $db_results = Dba::read($sql, array($user_id));
         $results = array();
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }

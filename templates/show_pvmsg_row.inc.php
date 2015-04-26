@@ -19,17 +19,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 ?>
-<?php UI::show_box_top(T_('Shoutbox')); ?>
-<div id="shoutbox">
-<?php
-  foreach ($shouts as $shout_id) {
-    $shout = new Shoutbox($shout_id);
-    $shout->format();
-?>
-<div id="shout<?php echo $shout->id; ?>" class="shout <?php echo UI::flip_class(); ?>">
-    <?php echo $shout->get_display(true, true); ?>
-</div>
-<?php } ?>
-</div>
-<?php UI::show_box_bottom(); ?>
+<td class="cel_subject"><?php echo $libitem->f_link; ?></td>
+<td class="cel_from_user"><?php echo $libitem->f_from_user_link; ?></td>
+<td class="cel_to_user"><?php echo $libitem->f_to_user_link; ?></td>
+<td class="cel_creation_date"><?php echo $libitem->f_creation_date; ?></td>
+<td class="cel_action">
+<a id="<?php echo 'reply_pvmsg_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->id; ?>">
+    <?php echo UI::get_icon('mail', T_('Reply')); ?>
+</a>
+</td>

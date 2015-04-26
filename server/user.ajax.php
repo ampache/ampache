@@ -1,4 +1,5 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -19,17 +20,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-?>
-<?php UI::show_box_top(T_('Shoutbox')); ?>
-<div id="shoutbox">
-<?php
-  foreach ($shouts as $shout_id) {
-    $shout = new Shoutbox($shout_id);
-    $shout->format();
-?>
-<div id="shout<?php echo $shout->id; ?>" class="shout <?php echo UI::flip_class(); ?>">
-    <?php echo $shout->get_display(true, true); ?>
-</div>
-<?php } ?>
-</div>
-<?php UI::show_box_bottom(); ?>
+
+/**
+ * Sub-Ajax page, requires AJAX_INCLUDE
+ */
+if (!defined('AJAX_INCLUDE')) { exit; }
+
+$user_id = intval($_REQUEST['user_id']);
+
+switch ($_REQUEST['action']) {
+    case 'flip_follow':
+        if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
+            $fuser = new User($user_id);
+            if ($fuser->id > 0 && $user_id !== $GLOBALS['user']->id) {
+                $GLOBALS['user']->toggle_follow($user_id);
+                $results['button_follow_' . $user_id] = $fuser->get_display_follow();
+            }
+        }
+    break;
+    default:
+        $results['rfc3514'] = '0x1';
+    break;
+} // switch on action;
+
+// We always do this
+echo xoutput_from_array($results);

@@ -56,6 +56,7 @@ switch ($_REQUEST['action']) {
     case 'clip':
     case 'personal_video':
     case 'label':
+    case 'pvmsg':
         $browse->set_type($_REQUEST['action']);
         $browse->set_simple_browse(true);
     break;
@@ -187,6 +188,17 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();
+        $browse->show_objects();
+        break;
+    case 'pvmsg':
+        $browse->set_sort('creation_date','DESC');
+        $folder = $_REQUEST['folder'];
+        if ($folder === "sent") {
+            $browse->set_filter('user', $GLOBALS['user']->id);
+        } else {
+            $browse->set_filter('to_user', $GLOBALS['user']->id);
+        }
         $browse->update_browse_from_session();
         $browse->show_objects();
         break;

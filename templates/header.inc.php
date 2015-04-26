@@ -134,11 +134,17 @@ $_SESSION['login'] = false;
         <script type="text/javascript">
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 _renderItem: function( ul, item ) {
-                        var itemhtml = "<a href='" + item.link + "'>";
+                        var itemhtml = "";
+                        if (item.link !== '') {
+                            itemhtml += "<a href='" + item.link + "'>";
+                        } else {
+                            itemhtml += "<a>";
+                        }
                         if (item.image != '') {
                             itemhtml += "<img src='" + item.image + "' class='searchart' />";
                         }
-                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</span></a>"
+                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</span>";
+                        itemhtml += "</a>";
 
                         return $( "<li class='ui-menu-item'>" )
                             .data("ui-autocomplete-item", item)
@@ -307,7 +313,13 @@ $_SESSION['login'] = false;
                     <?php require_once AmpConfig::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
                     <?php if (User::is_registered()) { ?>
                         <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
-                        <span id="loginInfo"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
+                        <span id="loginInfo">
+                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id; ?>"><?php echo $GLOBALS['user']->fullname; ?></a>
+                            <?php if (AmpConfig::get('sociable')) { ?>
+                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true)); ?>)</a>
+                            <?php } ?>
+                            <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
+                        </span>
                     <?php } else { ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
