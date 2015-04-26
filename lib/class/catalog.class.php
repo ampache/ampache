@@ -2049,6 +2049,21 @@ abstract class Catalog extends database_object
         }
         return $tags;
     }
+
+    public static function can_remove($libitem, $user = null)
+    {
+        if (!$user) {
+            $user = $GLOBALS['user']->id;
+        }
+
+        if (!$user)
+            return false;
+
+        if (!AmpConfig::get('delete_from_disk'))
+            return false;
+
+        return (Access::check('interface','75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
+    }
 }
 
 // end of catalog class

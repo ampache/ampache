@@ -89,4 +89,9 @@ if (Art::is_enabled()) {
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php } ?>
+<?php if (Catalog::can_remove($artist)) { ?>
+    <a id="<?php echo 'delete_artist_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
+        <?php echo UI::get_icon('delete', T_('Delete')); ?>
+    </a>
+<?php } ?>
 </td>

@@ -73,10 +73,21 @@ class Shoutbox
      *
      * Cleans out orphaned shoutbox items
      */
-    public static function gc()
+    public static function gc($object_type = null, $object_id = null)
     {
-        foreach (array('song', 'album', 'artist') as $object_type) {
-            Dba::write("DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `$object_type` ON `$object_type`.`id` = `user_shout`.`object_id` WHERE `$object_type`.`id` IS NULL AND `user_shout`.`object_type` = '$object_type'");
+        $types = array('song', 'album', 'artist', 'label');
+
+        if ($object_type != null) {
+            if (in_array($object_type, $types)) {
+                $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
+                Dba::write($sql, array($object_type, $object_id));
+            } else {
+                debug_event('shoutbox', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+            }
+        } else {
+            foreach ($types as $type) {
+                Dba::write("DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `$type` ON `$type`.`id` = `user_shout`.`object_id` WHERE `$type`.`id` IS NULL AND `user_shout`.`object_type` = '$type'");
+            }
         }
     }
 

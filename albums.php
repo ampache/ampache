@@ -26,6 +26,34 @@ require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
+    case 'delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $album_id = scrub_in($_REQUEST['album_id']);
+        show_confirmation(
+            T_('Album Deletion'),
+            T_('Are you sure you want to permanently delete this album?'),
+            AmpConfig::get('web_path')."/albums.php?action=confirm_delete&album_id=" . $album_id,
+            1,
+            'delete_album'
+        );
+    break;
+    case 'confirm_delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $album = new Album($_REQUEST['album_id']);
+        if (!Catalog::can_remove($album)) {
+            debug_event('album', 'Unauthorized to remove the album `.' . $album->id . '`.', 1);
+            UI::access_denied();
+            exit;
+        }
+
+        if ($album->remove_from_disk()) {
+            show_confirmation(T_('Album Deletion'), T_('Album has been deleted.'), AmpConfig::get('web_path'));
+        } else {
+            show_confirmation(T_('Album Deletion'), T_('Cannot delete this album.'), AmpConfig::get('web_path'));
+        }
+    break;
     case 'update_from_tags':
         // Make sure they are a 'power' user at least
         if (!Access::check('interface','75')) {

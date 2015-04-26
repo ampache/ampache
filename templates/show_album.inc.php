@@ -154,6 +154,13 @@ if (AmpConfig::get('show_played_times')) {
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>
         </li>
         <?php } ?>
+        <?php if (Catalog::can_remove($album)) { ?>
+        <li>
+            <a id="<?php echo 'delete_album_'.$album->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
+                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
+            </a>
+        </li>
+        <?php } ?>
     </ul>
 </div>
 <?php UI::show_box_bottom(); ?>

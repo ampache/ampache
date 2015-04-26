@@ -169,6 +169,10 @@ class Waveform
        */
     protected static function create_waveform($filename)
     {
+        if (!file_exists($filename)) {
+            return null;
+        }
+
         $detail = 5;
         $width = 400;
         $height = 32;

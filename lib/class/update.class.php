@@ -2197,7 +2197,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('stream_beautiful_url','0','Use beautiful stream url',25,'boolean','streaming')";
+            "VALUES ('stream_beautiful_url','0','Use beautiful stream url',100,'boolean','streaming')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -2261,14 +2261,14 @@ class Update
         $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('share','0','Allow Share',25,'boolean','system')";
+            "VALUES ('share','0','Allow Share',100,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('share_expire','7','Share links default expiration days (0=never)',25,'integer','system')";
+            "VALUES ('share_expire','7','Share links default expiration days (0=never)',100,'integer','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'7')";

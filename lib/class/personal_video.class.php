@@ -102,4 +102,18 @@ class Personal_Video extends Video
 
     } //format
 
+    /**
+     * Remove the video from disk.
+     */
+    public function remove_from_disk()
+    {
+        $deleted = parent::remove_from_disk();
+        if ($deleted) {
+            $sql = "DELETE FROM `personal_video` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+        }
+
+        return $deleted;
+    }
+
 } // Personal_Video class

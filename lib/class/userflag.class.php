@@ -89,10 +89,21 @@ class Userflag extends database_object
      *
      * Remove userflag for items that no longer exist.
      */
-    public static function gc()
+    public static function gc($object_type = null, $object_id = null)
     {
-        foreach (array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season') as $object_type) {
-            Dba::write("DELETE FROM `user_flag` USING `user_flag` LEFT JOIN `$object_type` ON `$object_type`.`id` = `user_flag`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
+
+        if ($object_type != null) {
+            if (in_array($object_type, $types)) {
+                $sql = "DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?";
+                Dba::write($sql, array($object_type, $object_id));
+            } else {
+                debug_event('userflag', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+            }
+        } else {
+            foreach ($types as $type) {
+                Dba::write("DELETE FROM `user_flag` USING `user_flag` LEFT JOIN `$type` ON `$type`.`id` = `user_flag`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
+            }
         }
     }
 

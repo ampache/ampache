@@ -26,6 +26,34 @@ UI::show_header();
 
 // Switch on the incomming action
 switch ($_REQUEST['action']) {
+    case 'delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $label_id = scrub_in($_REQUEST['label_id']);
+        show_confirmation(
+            T_('Label Deletion'),
+            T_('Are you sure you want to permanently delete this label?'),
+            AmpConfig::get('web_path')."/labels.php?action=confirm_delete&label_id=" . $label_id,
+            1,
+            'delete_label'
+        );
+    break;
+    case 'confirm_delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $label = new Label($_REQUEST['label_id']);
+        if (!Catalog::can_remove($label)) {
+            debug_event('label', 'Unauthorized to remove the label `.' . $label->id . '`.', 1);
+            UI::access_denied();
+            exit;
+        }
+
+        if ($label->remove()) {
+            show_confirmation(T_('Label Deletion'), T_('Label has been deleted.'), AmpConfig::get('web_path'));
+        } else {
+            show_confirmation(T_('Label Deletion'), T_('Cannot delete this label.'), AmpConfig::get('web_path'));
+        }
+    break;
     case 'add_label':
         // Must be at least a content manager or edit upload enabled
         if (!Access::check('interface','50') && !AmpConfig::get('upload_allow_edit')) {

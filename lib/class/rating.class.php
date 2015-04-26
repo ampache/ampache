@@ -53,8 +53,19 @@ class Rating extends database_object
      */
     public static function gc()
     {
-        foreach (array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'playlist') as $object_type) {
-            Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$object_type` ON `$object_type`.`id` = `rating`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'playlist', 'label');
+
+        if ($object_type != null) {
+            if (in_array($object_type, $types)) {
+                $sql = "DELETE FROM `rating` WHERE `object_type` = ? AND `object_id` = ?";
+                Dba::write($sql, array($object_type, $object_id));
+            } else {
+                debug_event('rating', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+            }
+        } else {
+            foreach ($types as $type) {
+                Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$type` ON `$type`.`id` = `rating`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
+            }
         }
     }
 

@@ -28,6 +28,34 @@ UI::show_header();
  * Display Switch
  */
 switch ($_REQUEST['action']) {
+    case 'delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $tvshow_id = scrub_in($_REQUEST['tvshow_id']);
+        show_confirmation(
+            T_('TVShow Deletion'),
+            T_('Are you sure you want to permanently delete this tvshow?'),
+            AmpConfig::get('web_path')."/tvshows.php?action=confirm_delete&tvshow_id=" . $tvshow_id,
+            1,
+            'delete_tvshow'
+        );
+    break;
+    case 'confirm_delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $tvshow = new TVShow($_REQUEST['tvshow_id']);
+        if (!Catalog::can_remove($tvshow)) {
+            debug_event('tvshow', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
+            UI::access_denied();
+            exit;
+        }
+
+        if ($tvshow->remove_from_disk()) {
+            show_confirmation(T_('TVShow Deletion'), T_('TVShow has been deleted.'), AmpConfig::get('web_path'));
+        } else {
+            show_confirmation(T_('TVShow Deletion'), T_('Cannot delete this tvshow.'), AmpConfig::get('web_path'));
+        }
+    break;
     case 'show':
         $tvshow = new TVShow($_REQUEST['tvshow']);
         $tvshow->format();

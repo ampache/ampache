@@ -143,12 +143,21 @@ if (AmpConfig::get('show_played_times')) {
                     </a>
                 </li>
             <?php } ?>
-            <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                <li>
+                    <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
+                        <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                    </a>
+                    <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
+                        <?php echo T_('Edit Artist'); ?>
+                    </a>
+                </li>
+        <?php } ?>
+        <?php if (Catalog::can_remove($artist)) { ?>
+        <li>
+            <a id="<?php echo 'delete_artist_'.$artist->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
+                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
             </a>
-            <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
-                <?php echo T_('Edit Artist'); ?>
-            </a>
+        </li>
         <?php } ?>
     </ul>
 </div>

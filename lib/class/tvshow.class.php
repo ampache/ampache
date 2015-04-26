@@ -410,4 +410,31 @@ class TVShow extends database_object implements library_item
         }
     }
 
+    public function remove_from_disk()
+    {
+        $deleted = true;
+        $season_ids = $this->get_seasons();
+        foreach ($season_ids as $id) {
+            $season = new TVShow_Season($id);
+            $deleted = $season->remove_from_disk();
+            if (!$deleted) {
+                debug_event('tvshow', 'Error when deleting the season `' . $id .'`.', 1);
+                break;
+            }
+        }
+
+        if ($deleted) {
+            $sql = "DELETE FROM `tvshow` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+            if ($deleted) {
+                Art::gc('tvshow', $this->id);
+                Userflag::gc('tvshow', $this->id);
+                Rating::gc('tvshow', $this->id);
+                Shoutbox::gc('tvshow', $this->id);
+            }
+        }
+
+        return $deleted;
+    }
+
 } // end of tvshow class

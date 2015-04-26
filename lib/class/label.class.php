@@ -339,6 +339,20 @@ class Label extends database_object implements library_item
 
     } // get_songs
 
+    public function remove()
+    {
+        $sql = "DELETE FROM `label` WHERE `id` = ?";
+        $deleted = Dba::write($sql, array($this->id));
+        if ($deleted) {
+            Art::gc('label', $this->id);
+            Userflag::gc('label', $this->id);
+            Rating::gc('label', $this->id);
+            Shoutbox::gc('label', $this->id);
+        }
+
+        return $deleted;
+    }
+
     public static function get_all_labels()
     {
         $sql = "SELECT `id`, `name` FROM `label`";

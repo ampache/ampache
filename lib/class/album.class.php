@@ -951,6 +951,33 @@ class Album extends database_object implements library_item
         }
     }
 
+    public function remove_from_disk()
+    {
+        $deleted = true;
+        $song_ids = $this->get_songs();
+        foreach ($song_ids as $id) {
+            $song = new Song($id);
+            $deleted = $song->remove_from_disk();
+            if (!$deleted) {
+                debug_event('album', 'Error when deleting the song `' . $id .'`.', 1);
+                break;
+            }
+        }
+
+        if ($deleted) {
+            $sql = "DELETE FROM `album` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+            if ($deleted) {
+                Art::gc('album', $this->id);
+                Userflag::gc('album', $this->id);
+                Rating::gc('album', $this->id);
+                Shoutbox::gc('album', $this->id);
+            }
+        }
+
+        return $deleted;
+    }
+
     /**
      * Update album year.
      * @param int $year

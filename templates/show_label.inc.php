@@ -75,6 +75,13 @@ if ($label->website)
             </a>
         </li>
         <?php } ?>
+        <?php if (Catalog::can_remove($label)) { ?>
+        <li>
+            <a id="<?php echo 'delete_label_'.$label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
+                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
+            </a>
+        </li>
+        <?php } ?>
     </ul>
 </div>
 <?php UI::show_box_bottom(); ?>

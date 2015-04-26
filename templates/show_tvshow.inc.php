@@ -68,12 +68,21 @@ UI::show_box_top($tvshow->f_name, 'info-box');
         </li>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
+        <li>
             <a id="<?php echo 'edit_tvshow_'.$tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_'.$tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
             <a id="<?php echo 'edit_tvshow_'.$tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_'.$tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">
                 <?php echo T_('Edit TV Show'); ?>
             </a>
+        </li>
+        <?php } ?>
+        <?php if (Catalog::can_remove($tvshow)) { ?>
+        <li>
+            <a id="<?php echo 'delete_tvshow_'.$tvshow->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
+                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
+            </a>
+        </li>
         <?php } ?>
     </ul>
 </div>

@@ -63,12 +63,21 @@ UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box');
         </li>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
+        <li>
             <a id="<?php echo 'edit_tvshow_season_'.$season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_'.$season->id ?>', '<?php echo T_('Season edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
             <a id="<?php echo 'edit_tvshow_season_'.$season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_'.$season->id ?>', '<?php echo T_('Season edit') ?>', '')">
                 <?php echo T_('Edit Season'); ?>
             </a>
+        </li>
+        <?php } ?>
+        <?php if (Catalog::can_remove($season)) { ?>
+        <li>
+            <a id="<?php echo 'delete_tvshow_season_'.$season->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
+                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
+            </a>
+        </li>
         <?php } ?>
     </ul>
 </div>

@@ -55,4 +55,9 @@ if (Art::is_enabled()) {
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php } ?>
+<?php if (Catalog::can_remove($libitem)) { ?>
+    <a id="<?php echo 'delete_tvshow_season_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $libitem->id; ?>">
+        <?php echo UI::get_icon('delete', T_('Delete')); ?>
+    </a>
+<?php } ?>
 </td>

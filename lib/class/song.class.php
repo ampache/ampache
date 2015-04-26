@@ -400,8 +400,11 @@ class Song extends database_object implements media, library_item
         $song_id = Dba::insert_id();
 
         if (is_array($tags)) {
-            if ($user_upload && !Access::check('interface', 50, $user_upload)) {
-                $tags = Tag::clean_to_existing($tags);
+            // Allow scripts to populate new tags when injecting user uploads
+            if (!defined('NO_SESSION')) {
+                if ($user_upload && !Access::check('interface', 50, $user_upload)) {
+                    $tags = Tag::clean_to_existing($tags);
+                }
             }
             foreach ($tags as $tag) {
                 $tag = trim($tag);
@@ -1925,9 +1928,13 @@ class Song extends database_object implements media, library_item
         }
         if ($deleted === true) {
             $sql = "DELETE FROM `song` WHERE `id` = ?";
-            Dba::write($sql, array($this->id));
-
-            Song::gc();
+            $deleted = Dba::write($sql, array($this->id));
+            if ($deleted) {
+                Art::gc('song', $this->id);
+                Userflag::gc('song', $this->id);
+                Rating::gc('song', $this->id);
+                Shoutbox::gc('song', $this->id);
+            }
         } else {
             debug_event('song', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
         }

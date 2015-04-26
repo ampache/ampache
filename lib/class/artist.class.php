@@ -865,4 +865,31 @@ class Artist extends database_object implements library_item
         return Dba::write($sql, array($user, $this->id));
     }
 
+    public function remove_from_disk()
+    {
+        $deleted = true;
+        $album_ids = $this->get_albums();
+        foreach ($album_ids as $id) {
+            $album = new Album($id);
+            $deleted = $album->remove_from_disk();
+            if (!$deleted) {
+                debug_event('artist', 'Error when deleting the album `' . $id .'`.', 1);
+                break;
+            }
+        }
+
+        if ($deleted) {
+            $sql = "DELETE FROM `artist` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+            if ($deleted) {
+                Art::gc('artist', $this->id);
+                Userflag::gc('artist', $this->id);
+                Rating::gc('artist', $this->id);
+                Shoutbox::gc('artist', $this->id);
+            }
+        }
+
+        return $deleted;
+    }
+
 } // end of artist class

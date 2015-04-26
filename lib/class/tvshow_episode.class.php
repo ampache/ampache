@@ -238,4 +238,18 @@ class TVShow_Episode extends Video
             Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
         }
     }
+
+    /**
+     * Remove the video from disk.
+     */
+    public function remove_from_disk()
+    {
+        $deleted = parent::remove_from_disk();
+        if ($deleted) {
+            $sql = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+        }
+
+        return $deleted;
+    }
 }

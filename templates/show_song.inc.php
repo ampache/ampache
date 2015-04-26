@@ -97,7 +97,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id); ?>
             </span>
         <?php } ?>
-        <?php if ($song->user_upload > 0 && (Access::check('interface','50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_remove')))) { ?>
+        <?php if (Catalog::can_remove($song)) { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/song.php?action=delete&song_id=<?php echo $song->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?>
             </a>

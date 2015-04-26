@@ -851,26 +851,40 @@ class Art extends database_object
      * gc
      * This cleans up art that no longer has a corresponding object
      */
-    public static function gc()
+    public static function gc($object_type = null, $object_id = null)
     {
-        // iterate over our types and delete the images
-        foreach (array('album', 'artist','tvshow','tvshow_season','video','user') as $type) {
-            if (AmpConfig::get('album_art_store_disk')) {
-                $sql = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" .
+        $types = array('album', 'artist','tvshow','tvshow_season','video','user');
+
+        if ($object_type != null) {
+            if (in_array($object_type, $types)) {
+                if (AmpConfig::get('album_art_store_disk')) {
+                    self::delete_from_dir($object_type, $object_id);
+                }
+                $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+                Dba::write($sql, array($object_type, $object_id));
+            } else {
+                debug_event('art', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+            }
+        } else {
+            // iterate over our types and delete the images
+            foreach ($types as $type) {
+                if (AmpConfig::get('album_art_store_disk')) {
+                    $sql = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" .
+                        $type . "` ON `" . $type . "`.`id`=" .
+                        "`image`.`object_id` WHERE `object_type`='" .
+                        $type . "' AND `" . $type . "`.`id` IS NULL";
+                    $db_results = Dba::read($sql);
+                    while ($row = Dba::fetch_row($db_results)) {
+                        self::delete_from_dir($row[1], $row[0]);
+                    }
+                }
+                $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
                     $type . "` ON `" . $type . "`.`id`=" .
                     "`image`.`object_id` WHERE `object_type`='" .
                     $type . "' AND `" . $type . "`.`id` IS NULL";
-                $db_results = Dba::read($sql);
-                while ($row = Dba::fetch_row($db_results)) {
-                    self::delete_from_dir($row[1], $row[0]);
-                }
-            }
-            $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
-                $type . "` ON `" . $type . "`.`id`=" .
-                "`image`.`object_id` WHERE `object_type`='" .
-                $type . "' AND `" . $type . "`.`id` IS NULL";
-            Dba::write($sql);
-        } // foreach
+                Dba::write($sql);
+            } // foreach
+        }
     }
 
     /**

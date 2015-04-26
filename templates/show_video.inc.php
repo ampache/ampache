@@ -100,6 +100,11 @@ foreach ($subtitles as $subtitle) {
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php } ?>
+        <?php if (Catalog::can_remove($video)) { ?>
+            <a id="<?php echo 'delete_video_'.$video->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
+                <?php echo UI::get_icon('delete', T_('Delete')); ?>
+            </a>
+        <?php } ?>
     </dd>
 <?php
   $videoprops[gettext_noop('Title')]   = scrub_out($video->f_title);

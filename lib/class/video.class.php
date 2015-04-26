@@ -967,6 +967,32 @@ class Video extends database_object implements media, library_item
     }
 
     /**
+     * Remove the video from disk.
+     */
+    public function remove_from_disk()
+    {
+        if (file_exists($this->file)) {
+            $deleted = unlink($this->file);
+        } else {
+            $deleted = true;
+        }
+        if ($deleted === true) {
+            $sql = "DELETE FROM `video` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+            if ($deleted) {
+                Art::gc('video', $this->id);
+                Userflag::gc('video', $this->id);
+                Rating::gc('video', $this->id);
+                Shoutbox::gc('video', $this->id);
+            }
+        } else {
+            debug_event('video', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+        }
+
+        return $deleted;
+    }
+
+    /**
      * update_played
      * sets the played flag
      * @param boolean $new_played
