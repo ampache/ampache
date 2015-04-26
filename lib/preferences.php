@@ -195,6 +195,7 @@ function create_preference_input($name,$value)
         case 'webplayer_aurora':
         case 'upload_allow_remove':
         case 'webdav_backend':
+        case 'notify_email':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {

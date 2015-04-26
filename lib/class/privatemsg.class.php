@@ -145,24 +145,27 @@ class PrivateMsg extends database_object
             if (Dba::write($sql, array($subject, $message, $from_user, $to_user->id, time(), '0'))) {
                 $insert_id = Dba::insert_id();
 
-                if (Preference::get_by_user($to_user->id, 'notify_email')) {
-                    if (!empty($to_user->id->email)) {
-                        $libitem->format();
-                        $domain = parse_url(AmpConfig::get('web_path'), PHP_URL_HOST);
+                // Never send email in case of user impersonation
+                if (!isset($data['from_user']) && $insert_id) {
+                    if (Preference::get_by_user($to_user->id, 'notify_email')) {
+                        if (!empty($to_user->email)) {
+                            $libitem->format();
+                            $domain = parse_url(AmpConfig::get('web_path'), PHP_URL_HOST);
 
-                        $mailer = new Mailer();
-                        $mailer->set_default_sender();
-                        $mailer->recipient = $to_user->email;
-                        $mailer->recipient_name = $to_user->fullname;
-                        $mailer->subject = "[" . $domain . "] " . $subject;
-                        $mailer->message = sprintf(T_("You just received a new private message from %s.\n\n
-    ----------------------
-    %s
-    ----------------------
+                            $mailer = new Mailer();
+                            $mailer->set_default_sender();
+                            $mailer->recipient = $to_user->email;
+                            $mailer->recipient_name = $to_user->fullname;
+                            $mailer->subject = "[" . $domain . "] " . $subject;
+                            $mailer->message = sprintf(T_("You just received a new private message from %s.\n\n
+        ----------------------
+        %s
+        ----------------------
 
-    %s
-    "), $GLOBALS['user']->fullname, $message, AmpConfig::get('web_path') . "/shout.php?action=show&pvmsg_id=" . $insert_id);
-                        $mailer->send();
+        %s
+        "), $GLOBALS['user']->fullname, $message, AmpConfig::get('web_path') . "/shout.php?action=show&pvmsg_id=" . $insert_id);
+                            $mailer->send();
+                        }
                     }
                 }
 
