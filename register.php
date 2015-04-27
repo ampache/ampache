@@ -34,6 +34,7 @@ if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode'))
 /* Don't even include it if we aren't going to use it */
 if (AmpConfig::get('captcha_public_reg')) {
     define ("CAPTCHA_INVERSE", 1);
+    define ("CAPTCHA_BASE_URL", AmpConfig::get('web_path') . '/modules/captcha/captcha.php');
     require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
 }
 

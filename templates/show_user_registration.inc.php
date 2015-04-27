@@ -133,10 +133,12 @@ $_SESSION['login'] = true;
                         <span><?php echo T_('* Required fields'); ?></span>
                     </div>
 
-                    <?php if (AmpConfig::get('captcha_public_reg')) { ?>
-                                <?php  echo captcha::form("&rarr;&nbsp;"); ?>
-                                <?php Error::display('captcha'); ?>
-                    <?php } ?>
+                    <?php
+                    if (AmpConfig::get('captcha_public_reg')) {
+                        echo captcha::form("&rarr;&nbsp;");
+                        Error::display('captcha');
+                    }
+                    ?>
 
                     <div class="registerButtons">
                         <input type="hidden" name="action" value="add_user" />
