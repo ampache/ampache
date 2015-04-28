@@ -15,4 +15,5 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
 $fromurl = rawurlencode($scheme . "://" . $domain . $_SERVER[REQUEST_URI]);
 
 header("Location: http://ampache.org/maintenance/?from=" . $fromurl);
+exit;
 ?>
