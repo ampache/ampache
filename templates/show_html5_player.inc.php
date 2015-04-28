@@ -147,7 +147,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
         if (AmpConfig::get('waveform') && !$is_share) {
             echo "var waveformobj = '';";
             if (AmpConfig::get('sociable') && Access::check('interface','25')) {
-                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
+                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Double click to post a new shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
             }
             echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
             echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + currenti.attr('data-media_id') + '\" onLoad=\"ShowWaveform();\">';";

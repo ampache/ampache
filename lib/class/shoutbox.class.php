@@ -279,8 +279,6 @@ class Shoutbox
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
         $object->format();
-        $user = new User($this->user);
-        $user->format();
         $img = $this->get_image();
         $html = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
@@ -308,10 +306,17 @@ class Shoutbox
             $html .= "</div>";
         }
         $html .= "<div class='shoutbox-user'>by ";
-        if ($details) {
-            $html .= $user->f_link;
+
+        if ($this->user > 0) {
+            $user = new User($this->user);
+            $user->format();
+            if ($details) {
+                $html .= $user->f_link;
+            } else {
+                $html .= $user->username;
+            }
         } else {
-            $html .= $user->username;
+            $html .= T_('Guest');
         }
         $html .= "</div>";
         $html .= "</div>";
