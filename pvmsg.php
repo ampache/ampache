@@ -49,6 +49,12 @@ switch ($action) {
         if (isset($_POST['from_user'])) {
             unset($_POST['from_user']);
         }
+        if (isset($_POST['creation_date'])) {
+            unset($_POST['creation_date']);
+        }
+        if (isset($_POST['is_read'])) {
+            unset($_POST['is_read']);
+        }
 
         $pvmsg_id = PrivateMsg::create($_POST);
         if (!$pvmsg_id) {

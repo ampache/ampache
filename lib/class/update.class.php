@@ -2200,7 +2200,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('stream_beautiful_url','0','Use beautiful stream url',100,'boolean','streaming')";
+            "VALUES ('stream_beautiful_url','0','Enable url rewriting',100,'boolean','streaming')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";

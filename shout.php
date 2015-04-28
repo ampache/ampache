@@ -46,8 +46,14 @@ switch ($_REQUEST['action']) {
             unset($_POST['date']);
         }
 
+        if (!Core::is_library_item($_POST['object_type'])) {
+            UI::access_denied();
+            exit;
+        }
+
         $shout_id = Shoutbox::create($_POST);
-        header("Location:" . AmpConfig::get('web_path'));
+        header("Location:" . AmpConfig::get('web_path') . '/shout.php?action=show_add_shout&type=' . $_POST['object_type'] . '&id=' . intval($_POST['object_id']));
+        exit;
     break;
     case 'show_add_shout':
         // Get our object first
