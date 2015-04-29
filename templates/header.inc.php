@@ -283,10 +283,8 @@ $_SESSION['login'] = false;
         </script>
         <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) { ?>
         <script type="text/javascript" language="javascript">
-            noty({text: '<?php echo json_encode(T_("We have placed cookies on your computer to help make this website better. You can change your") .
-                    " <a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_("cookie settings") . "</a> " .
-                    T_("at any time. Otherwise, we will assume you are OK to continue.") . "<br /><br />" .
-                    T_("Click on this message do not display it again.")); ?>',
+        noty({text: '<?php printf(json_encode(nl2br(/* HINT: Translator, "%s" is replaced by "cookie settings" */T_("We have placed cookies on your computer to help make this website better. You can change your %s at any time.\nOtherwise, we will assume you are OK to continue.\n\nClick on this message to not display it again."))),
+                    "<a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_('cookie settings') . "</a>"); ?>',
                 type: 'warning',
                 layout: 'bottom',
                 timeout: false,
