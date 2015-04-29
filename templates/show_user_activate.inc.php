@@ -26,6 +26,7 @@ $web_path = AmpConfig::get('web_path');
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
+<!-- Propulsed by Ampache | ampache.org -->
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
 <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />

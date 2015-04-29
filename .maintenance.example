@@ -4,6 +4,9 @@
  * This example redirect your visitors to a default maintenance information page hosted in ampache.org
 */
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST");
+
 $domain = $_SERVER['HTTP_HOST'];
 if (empty($domain)) {
     $domain = $_SERVER['SERVER_NAME'];
