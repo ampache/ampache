@@ -1372,7 +1372,7 @@ msgstr "Jouer"
 
 #: ../../lib/class/art.class.php:1717
 msgid "Edit/Find Art"
-msgstr "Editer / Rechercher jaquette"
+msgstr "Éditer / Rechercher jaquette"
 
 #: ../../lib/class/art.class.php:1720
 msgid "Do you really want to reset art?"
@@ -1446,7 +1446,7 @@ msgstr "Mofifier la diffusion"
 #: ../../templates/show_video.inc.php:100
 #: ../../templates/show_video_row.inc.php:94
 msgid "Edit"
-msgstr "Editer"
+msgstr "Éditer"
 
 #: ../../lib/class/broadcast.class.php:357
 #: ../../lib/class/channel.class.php:181 ../../lib/class/share.class.php:201
@@ -1712,7 +1712,7 @@ msgstr "Arrêter le canal"
 
 #: ../../lib/class/channel.class.php:180
 msgid "Channel edit"
-msgstr "Edition du canal"
+msgstr "Édition du canal"
 
 #: ../../lib/class/channel.class.php:331
 msgid "Running"
@@ -3263,7 +3263,7 @@ msgstr "Aucun"
 #: ../../lib/preferences.php:230 ../../templates/show_edit_user.inc.php:144
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
-msgstr "Stream"
+msgstr "Flux"
 
 #: ../../lib/preferences.php:233
 #: ../../modules/localplay/httpq.controller.php:470
@@ -3286,7 +3286,7 @@ msgstr "Localplay"
 #: ../../lib/preferences.php:238
 #: ../../templates/show_playtype_switch.inc.php:39
 msgid "Web Player"
-msgstr "Web Player"
+msgstr "Lecteur web"
 
 #: ../../lib/preferences.php:245
 msgid "M3U"
@@ -5148,7 +5148,7 @@ msgstr "fois"
 #: ../../templates/show_artist.inc.php:84
 #: ../../templates/show_song.inc.php:158
 msgid "Uploaded by"
-msgstr "Téléchargé par"
+msgstr "Envoyé par"
 
 #: ../../templates/show_album.inc.php:131
 #: ../../templates/show_album.inc.php:132
@@ -5161,7 +5161,7 @@ msgstr "Graphiques"
 
 #: ../../templates/show_album.inc.php:160
 msgid "Edit Album"
-msgstr "Editer l'album"
+msgstr "Éditer l'album"
 
 #: ../../templates/show_album_row.inc.php:32
 #: ../../templates/show_artist_row.inc.php:32
@@ -5171,7 +5171,7 @@ msgstr "Editer l'album"
 #: ../../templates/show_song_row.inc.php:32
 #: ../../templates/show_video_row.inc.php:37
 msgid "Play next"
-msgstr "Jouer en suivant"
+msgstr "Lecture à la suite"
 
 #: ../../templates/show_album_row.inc.php:54
 #: ../../templates/show_artist_row.inc.php:54
@@ -5318,7 +5318,7 @@ msgstr "Edition artiste"
 
 #: ../../templates/show_artist.inc.php:163
 msgid "Edit Artist"
-msgstr "Editer l'artiste"
+msgstr "Éditer l'artiste"
 
 #: ../../templates/show_artist.inc.php:182
 #: ../../templates/show_artist.inc.php:221
@@ -5949,7 +5949,7 @@ msgstr "Limite d'objet (0 = illimité)"
 
 #: ../../templates/show_edit_shout.inc.php:23
 msgid "Edit existing Shoutbox Post"
-msgstr "Editer un commentaire"
+msgstr "Éditer un commentaire"
 
 #. HINT: Client link, Object link
 #: ../../templates/show_edit_shout.inc.php:28
@@ -5986,7 +5986,7 @@ msgstr "Ajouter des balises à des sous épisodes"
 
 #: ../../templates/show_edit_user.inc.php:23
 msgid "Editing existing User"
-msgstr "Editer un utilisateur"
+msgstr "Éditer un utilisateur"
 
 #: ../../templates/show_edit_user.inc.php:28
 msgid "User Properties"
@@ -6110,7 +6110,7 @@ msgstr "Un média est en cours de lecture. Voulez-vous vraiment fermer ?"
 
 #: ../../templates/show_html5_player.inc.php:150
 msgid "Double click to post a new shout"
-msgstr "Double-cliquez pour poster un nouveau Shout"
+msgstr "Double-cliquez pour poster un nouveau commentaire"
 
 #: ../../templates/show_html5_player.inc.php:452
 msgid "Slideshow"
@@ -6122,11 +6122,11 @@ msgstr "Equalizer"
 
 #: ../../templates/show_html5_player.inc.php:459
 msgid "Visualizer"
-msgstr "Visualizer"
+msgstr "Visualiser"
 
 #: ../../templates/show_html5_player.inc.php:462
 msgid "Visualizer Full-Screen"
-msgstr "Visualizer plein écran"
+msgstr "Visualiser plein écran"
 
 #: ../../templates/show_html5_player.inc.php:465
 msgid "ReplayGain"
@@ -6604,7 +6604,7 @@ msgstr "Envoyer un email"
 #: ../../templates/show_label.inc.php:70 ../../templates/show_label.inc.php:73
 #: ../../templates/show_label_row.inc.php:45
 msgid "Label edit"
-msgstr "Edition label"
+msgstr "Édition label"
 
 #: ../../templates/show_label.inc.php:74
 msgid "Edit Label"
@@ -6628,7 +6628,7 @@ msgstr "Jouer la station"
 
 #: ../../templates/show_live_stream_row.inc.php:36
 msgid "Live Stream edit"
-msgstr "Edition de stations"
+msgstr "Édition de stations"
 
 #: ../../templates/show_live_streams.inc.php:48
 msgid "No live stream found"
@@ -6657,7 +6657,7 @@ msgstr "Pause"
 
 #: ../../templates/show_localplay_edit_instance.inc.php:23
 msgid "Edit Localplay Instance"
-msgstr "Editer l'instance Localplay"
+msgstr "Éditer l'instance Localplay"
 
 #: ../../templates/show_localplay_edit_instance.inc.php:34
 msgid "Update Instance"
@@ -6669,7 +6669,7 @@ msgstr "Afficher les instances Localplay"
 
 #: ../../templates/show_localplay_instances.inc.php:39
 msgid "Edit Instance"
-msgstr "Editer l'instance"
+msgstr "Éditer l'instance"
 
 #: ../../templates/show_localplay_status.inc.php:30
 msgid "Localplay Control"
@@ -6945,7 +6945,7 @@ msgstr "Niveau d'accès"
 #: ../../templates/show_user_preferences.inc.php:29
 #, php-format
 msgid "Editing %s preferences"
-msgstr "Edition de %s préférences"
+msgstr "Édition de %s préférences"
 
 #: ../../templates/show_preferences.inc.php:35
 #: ../../templates/show_user_preferences.inc.php:51
@@ -7022,7 +7022,7 @@ msgstr "Queue de lecture"
 #: ../../templates/show_recently_played.inc.php:35
 #: ../../templates/show_recently_played.inc.php:150
 msgid "Last Played"
-msgstr "Derniers joués"
+msgstr "Dernièrement joués"
 
 #: ../../templates/show_recently_played.inc.php:36
 #: ../../templates/show_recently_played.inc.php:151
@@ -7609,21 +7609,21 @@ msgstr ""
 #: ../../templates/show_tvshow.inc.php:75
 #: ../../templates/show_tvshow_row.inc.php:55
 msgid "TV Show edit"
-msgstr "Edition série TV"
+msgstr "Édition série TV"
 
 #: ../../templates/show_tvshow.inc.php:76
 msgid "Edit TV Show"
-msgstr "Edition série TV "
+msgstr "Édition série TV "
 
 #: ../../templates/show_tvshow_season.inc.php:67
 #: ../../templates/show_tvshow_season.inc.php:70
 #: ../../templates/show_tvshow_season_row.inc.php:54
 msgid "Season edit"
-msgstr "Edition de saison"
+msgstr "Édition de saison"
 
 #: ../../templates/show_tvshow_season.inc.php:71
 msgid "Edit Season"
-msgstr "Editer saison"
+msgstr "Éditer la saison"
 
 #: ../../templates/show_tvshow_seasons.inc.php:63
 msgid "No season found"
@@ -7680,7 +7680,7 @@ msgstr "membre Depuis"
 #: ../../templates/show_user.inc.php:57 ../../templates/show_users.inc.php:44
 #: ../../templates/show_users.inc.php:75
 msgid "Last Seen"
-msgstr "Derniers vus"
+msgstr "Vu dernièrement"
 
 #: ../../templates/show_user.inc.php:61 ../../templates/show_users.inc.php:47
 #: ../../templates/show_users.inc.php:78
@@ -7693,20 +7693,20 @@ msgstr "Statut"
 
 #: ../../templates/show_user.inc.php:73
 msgid "User is Online Now"
-msgstr "Utilisateur est en ligne"
+msgstr "Utilisateur en ligne"
 
 #: ../../templates/show_user.inc.php:75
 msgid "User is Offline Now"
-msgstr "Utilisateur est hors ligne "
+msgstr "Utilisateur hors ligne "
 
 #: ../../templates/show_user.inc.php:90 ../../templates/show_users.inc.php:53
 #: ../../templates/show_users.inc.php:84
 msgid "Following"
-msgstr "suivant"
+msgstr "Abonnements"
 
 #: ../../templates/show_user.inc.php:91
 msgid "Followers"
-msgstr "Abonnements"
+msgstr "Abonnés"
 
 #: ../../templates/show_user.inc.php:101
 msgid "Active Playlist"

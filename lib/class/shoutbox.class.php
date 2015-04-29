@@ -305,7 +305,7 @@ class Shoutbox
             }
             $html .= "</div>";
         }
-        $html .= "<div class='shoutbox-user'>by ";
+        $html .= "<div class='shoutbox-user'>" . T_('by') . " ";
 
         if ($this->user > 0) {
             $user = new User($this->user);
