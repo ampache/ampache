@@ -7675,7 +7675,7 @@ msgstr "Envoyer un message privé"
 
 #: ../../templates/show_user.inc.php:54
 msgid "Member Since"
-msgstr "membre Depuis"
+msgstr "Membre Depuis"
 
 #: ../../templates/show_user.inc.php:57 ../../templates/show_users.inc.php:44
 #: ../../templates/show_users.inc.php:75
