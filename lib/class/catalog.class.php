@@ -1938,6 +1938,7 @@ abstract class Catalog extends database_object
 
         // Run the cleaners...
         self::gc();
+        return true;
     } // delete
 
     /**
