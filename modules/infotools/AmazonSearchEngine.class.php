@@ -391,4 +391,3 @@ class AmazonSearch
     } // endElement
 
 } // end AmazonSearch
-?>

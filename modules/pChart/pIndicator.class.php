@@ -238,4 +238,3 @@
      $this->pChartObject->Shadow = $RestoreShadow;
     }
   }
-?>
