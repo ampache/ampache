@@ -243,7 +243,7 @@ class Image_XMP
 		// We would like to remove unneccessary white space, but this will also
 		// remove things like newlines (&#xA;) in the XML values, so white space
 		// will have to be removed later
-		if (xml_parser_set_option($xml_parser, XML_OPTION_SKIP_WHITE, 0) === false)
+		if (xml_parser_set_option($xml_parser, XML_OPTION_SKIP_WHITE, 0) == false)
 		{
 			// Error setting case folding - destroy the parser and return
 			xml_parser_free($xml_parser);
@@ -253,7 +253,7 @@ class Image_XMP
 		// to use XML code correctly we have to turn case folding
 		// (uppercasing) off. XML is case sensitive and upper
 		// casing is in reality XML standards violation
-		if (xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, 0) === false)
+		if (xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, 0) == false)
 		{
 			// Error setting case folding - destroy the parser and return
 			xml_parser_free($xml_parser);

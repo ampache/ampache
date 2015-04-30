@@ -48,7 +48,7 @@ final class StaticClient
         if (isset($options['stream'])) {
             if ($options['stream'] instanceof StreamRequestFactoryInterface) {
                 return $options['stream']->fromRequest($request);
-            } elseif ($options['stream'] === true) {
+            } elseif ($options['stream'] == true) {
                 $streamFactory = new PhpStreamRequestFactory();
                 return $streamFactory->fromRequest($request);
             }

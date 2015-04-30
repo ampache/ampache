@@ -95,7 +95,7 @@
      $RecordImageMap	= isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : FALSE;
 
      /* Cancel default tick length if ticks not enabled */
-     if ( $DrawTicks === FALSE ) { $TicksLength = 0; }
+     if ( $DrawTicks == FALSE ) { $TicksLength = 0; }
 
      /* Data Processing */
      $Data    = $Values->getData();
@@ -460,7 +460,7 @@
      if ( $AxisBoxRounded ) { $DrawAxisValues = TRUE; }
 
      /* Cancel default tick length if ticks not enabled */
-     if ( $DrawTicks === FALSE ) { $TicksLength = 0; }
+     if ( $DrawTicks == FALSE ) { $TicksLength = 0; }
 
      /* Data Processing */
      $Data    = $Values->getData();
@@ -580,7 +580,7 @@
         {
          $LabelX = cos(deg2rad($i+$AxisRotation)) * ($EdgeHeight+$LabelPadding+$TicksLength) + $CenterX;
          $LabelY = sin(deg2rad($i+$AxisRotation)) * ($EdgeHeight+$LabelPadding+$TicksLength) + $CenterY;
-         $Label = $i."ï¿½";
+         $Label = $i."°";
 
          if ( $LabelPos == RADAR_LABELS_ROTATED )
           $Object->drawText($LabelX,$LabelY,$Label,array("Angle"=>(360-$i),"Align"=>TEXT_ALIGN_BOTTOMMIDDLE));

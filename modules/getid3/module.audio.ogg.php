@@ -65,7 +65,7 @@ class getid3_ogg extends getid3_handler
 
 		} elseif (substr($filedata, 0, 8) == 'OpusHead') {
 
-			if( $this->ParseOpusPageHeader($filedata, $filedataoffset, $oggpageinfo) === false ) {
+			if( $this->ParseOpusPageHeader($filedata, $filedataoffset, $oggpageinfo) == false ) {
 				return false;
 			}
 

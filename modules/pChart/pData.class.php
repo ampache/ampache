@@ -251,7 +251,7 @@
 
      foreach($this->Data["Series"] as $Key => $Value)
       {
-       if ( $this->Data["Abscissa"] != $Key && $this->Data["Series"][$Key]["isDrawable"] === TRUE)
+       if ( $this->Data["Abscissa"] != $Key && $this->Data["Series"][$Key]["isDrawable"] == TRUE)
         {
          if ( $GlobalMin > $this->Data["Series"][$Key]["Min"] ) { $GlobalMin = $this->Data["Series"][$Key]["Min"]; }
          if ( $GlobalMax < $this->Data["Series"][$Key]["Max"] ) { $GlobalMax = $this->Data["Series"][$Key]["Max"]; }
@@ -400,7 +400,7 @@
 
      $Result = FALSE;
      foreach($this->Data["Series"] as $Key => $Value)
-      { if ( $this->Data["Abscissa"] != $Key && $this->Data["Series"][$Key]["isDrawable"]===TRUE) { $Result=TRUE; } }
+      { if ( $this->Data["Abscissa"] != $Key && $this->Data["Series"][$Key]["isDrawable"]==TRUE) { $Result=TRUE; } }
      return($Result);
     }
 
@@ -619,7 +619,7 @@
 
        foreach($this->Data["Series"] as $SerieName => $Serie)
         {
-         if ($Serie["Axis"] == $AxisID && $Serie["isDrawable"] === TRUE && $SerieName != $Abscissa)
+         if ($Serie["Axis"] == $AxisID && $Serie["isDrawable"] == TRUE && $SerieName != $Abscissa)
           {
            $SelectedSeries[$SerieName] = $SerieName;
 

@@ -398,7 +398,7 @@
 
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE )
+       if ( $Series["isDrawable"] == TRUE )
         {
          $SerieX = $Series["X"]; $SerieValuesX = $Data["Series"][$SerieX]["Data"]; $SerieXAxis = $Data["Series"][$SerieX]["Axis"];
          $SerieY = $Series["Y"]; $SerieValuesY = $Data["Series"][$SerieY]["Data"]; $SerieYAxis = $Data["Series"][$SerieY]["Axis"];
@@ -454,7 +454,7 @@
      /* Parse all the series to draw */
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE )
+       if ( $Series["isDrawable"] == TRUE )
         {
          $SerieX = $Series["X"]; $SerieValuesX = $Data["Series"][$SerieX]["Data"]; $SerieXAxis = $Data["Series"][$SerieX]["Axis"];
          $SerieY = $Series["Y"]; $SerieValuesY = $Data["Series"][$SerieY]["Data"]; $SerieYAxis = $Data["Series"][$SerieY]["Axis"];
@@ -504,7 +504,7 @@
 
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE )
+       if ( $Series["isDrawable"] == TRUE )
         {
          $SerieX = $Series["X"]; $SerieValuesX = $Data["Series"][$SerieX]["Data"]; $SerieXAxis = $Data["Series"][$SerieX]["Axis"];
          $SerieY = $Series["Y"]; $SerieValuesY = $Data["Series"][$SerieY]["Data"]; $SerieYAxis = $Data["Series"][$SerieY]["Axis"];
@@ -623,7 +623,7 @@
 
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE && isset($Series["Picture"]))
+       if ( $Series["isDrawable"] == TRUE && isset($Series["Picture"]))
         {
          list($PicWidth,$PicHeight) = $this->pChartObject->getPicInfo($Series["Picture"]);
          if ( $IconAreaWidth < $PicWidth ) { $IconAreaWidth = $PicWidth; }
@@ -638,7 +638,7 @@
      $Boundaries = ""; $Boundaries["L"] = $X; $Boundaries["T"] = $Y; $Boundaries["R"] = 0; $Boundaries["B"] = 0; $vY = $Y; $vX = $X;
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE )
+       if ( $Series["isDrawable"] == TRUE )
         {
          if ( $Mode == LEGEND_VERTICAL )
           {
@@ -683,7 +683,7 @@
      $RestoreShadow = $this->pChartObject->Shadow; $this->Shadow = FALSE;
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE )
+       if ( $Series["isDrawable"] == TRUE )
         {
          $R = $Series["Color"]["R"]; $G = $Series["Color"]["G"]; $B = $Series["Color"]["B"];
          $Ticks = $Series["Ticks"]; $Weight = $Series["Weight"];
@@ -762,7 +762,7 @@
 
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE && isset($Series["Picture"]))
+       if ( $Series["isDrawable"] == TRUE && isset($Series["Picture"]))
         {
          list($PicWidth,$PicHeight) = $this->pChartObject->getPicInfo($Series["Picture"]);
          if ( $IconAreaWidth < $PicWidth ) { $IconAreaWidth = $PicWidth; }
@@ -777,7 +777,7 @@
      $Boundaries = ""; $Boundaries["L"] = $X; $Boundaries["T"] = $Y; $Boundaries["R"] = 0; $Boundaries["B"] = 0; $vY = $Y; $vX = $X;
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE )
+       if ( $Series["isDrawable"] == TRUE )
         {
          if ( $Mode == LEGEND_VERTICAL )
           {
@@ -829,7 +829,7 @@
 
      foreach($Data["ScatterSeries"] as $Key => $Series)
       {
-       if ( $Series["isDrawable"] === TRUE )
+       if ( $Series["isDrawable"] == TRUE )
         {
          $SerieX = $Series["X"]; $SerieValuesX = $Data["Series"][$SerieX]["Data"]; $SerieXAxis = $Data["Series"][$SerieX]["Axis"];
          $SerieY = $Series["Y"]; $SerieValuesY = $Data["Series"][$SerieY]["Data"]; $SerieYAxis = $Data["Series"][$SerieY]["Axis"];

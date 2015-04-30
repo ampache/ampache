@@ -279,7 +279,7 @@ class Catalog_soundcloud extends Catalog
                 $songs = json_decode($api->get('me/favorites'));
                 if ($songs) {
                     foreach ($songs as $song) {
-                        if ($song->streamable === true && $song->kind == 'track') {
+                        if ($song->streamable == true && $song->kind == 'track') {
                             $data = Array();
                             $data['artist'] = $song->user->username;
                             $data['album'] = $data['artist'];
