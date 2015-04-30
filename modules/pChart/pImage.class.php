@@ -469,3 +469,4 @@
      imagecopy($this->Picture,$Picture,0,0,0,0,$this->XSize,$this->YSize);
     }
   }
+?>

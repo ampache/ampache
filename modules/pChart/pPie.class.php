@@ -1497,3 +1497,4 @@
     return(array($Data,$NewPalette));
    }
   }
+?>

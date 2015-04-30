@@ -197,3 +197,4 @@
    function right($value,$NbChar) { return substr($value,strlen($value)-$NbChar,$NbChar); }  
    function mid($value,$Depart,$NbChar) { return substr($value,$Depart-1,$NbChar); }  
   }
+?>
