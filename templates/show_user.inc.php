@@ -42,7 +42,7 @@ if ($client->f_avatar) {
         $plugin = new Plugin($plugin_name);
         if ($plugin->load($client)) {
 ?>
-        <li><?php $plugin->_plugin->display_user_field($client); ?> </li>
+        <li><?php $plugin->_plugin->display_user_field(); ?> </li>
 <?php
         }
     }

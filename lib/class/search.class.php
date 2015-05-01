@@ -491,6 +491,18 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
             $this->types[] = array(
+                'name'   => 'yearformed',
+                'label'  => T_('Year'),
+                'type'   => 'numeric',
+                'widget' => array('input', 'text')
+            );
+            $this->types[] = array(
+                'name'   => 'placeformed',
+                'label'  => T_('Place'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+            $this->types[] = array(
                 'name'   => 'tag',
                 'label'  => T_('Tag'),
                 'type'   => 'text',
@@ -1060,6 +1072,12 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'name':
                     $where[] = "`artist`.`name` $sql_match_operator '$input'";
+                break;
+                case 'yearformed':
+                    $where[] = "`artist`.`yearformed` $sql_match_operator '$input'";
+                break;
+                case 'placeformed':
+                    $where[] = "`artist`.`placeformed` $sql_match_operator '$input'";
                 break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);

@@ -257,7 +257,9 @@ class Query
             ),
             'artist' => array(
                 'name',
-                'album'
+                'album',
+                'placeformed',
+                'yearformed'
             ),
             'tag' => array(
                 'tag',
@@ -1842,6 +1844,12 @@ class Query
                 switch ($field) {
                     case 'name':
                         $sql = "`artist`.`name`";
+                    break;
+                case 'placeformed':
+                        $sql = "`artist`.`placeformed`";
+                    break;
+                case 'yearformed':
+                        $sql = "`artist`.`yearformed`";
                     break;
                 } // end switch
             break;
