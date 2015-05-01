@@ -381,6 +381,7 @@ class vainfo
             $info['release_type'] = $info['release_type'] ?: trim($tags['release_type']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
+            $info['comment'] = $info['comment'] ?: trim($tags['comment']);
 
             $info['lyrics']    = $info['lyrics']
                     ?: strip_tags(nl2br($tags['lyrics']), "<br>");
