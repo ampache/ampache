@@ -31,6 +31,7 @@ class AmpachePaypal {
 
     // These are internal settings used by this class, run this->load to
     // fill them out
+    private $user;
     private $business;
     private $currency_code;
 
@@ -81,8 +82,8 @@ class AmpachePaypal {
      * display_user_field
      * This display the module in user page
      */
-    public function display_user_field(User $user, library_item $libitem = null) {
-        $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
+    public function display_user_field(library_item $libitem = null) {
+        $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
         $lang = substr(AmpConfig::get('lang'), 0, 2);
         if (empty($lang)) $lang = 'US';
 
@@ -105,6 +106,7 @@ class AmpachePaypal {
      * from the preferences.
      */
     public function load($user) {
+        $this->user = $user;
         $user->set_preferences();
         $data = $user->prefs;
 

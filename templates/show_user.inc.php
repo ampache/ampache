@@ -40,7 +40,7 @@ if ($client->f_avatar) {
 <?php
     foreach ($plugins as $plugin_name) {
         $plugin = new Plugin($plugin_name);
-        if ($plugin->load($GLOBALS['user'])) {
+        if ($plugin->load($client)) {
 ?>
         <li><?php $plugin->_plugin->display_user_field($client); ?> </li>
 <?php

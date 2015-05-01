@@ -389,8 +389,7 @@ while(true)
     
     if ($channel->bitrate) {
         $time_offset = microtime(true) - $last_stream;
-        //$mtime = ($last_stream > 0 && $time_offset < 1000000) ? $time_offset : 1;
-        $mtime = 1;
+        $mtime = ($last_stream > 0 && $time_offset < 1) ? $time_offset : 1;
         if ($last_stream > 0 && $time_offset < 1) {
             usleep(1000000 - ($time_offset * 1000000));
         } elseif ($last_stream > 0) {

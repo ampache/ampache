@@ -1534,6 +1534,10 @@ ol, ul, #rightbar ul {
     float: right;
 }
 
+#plugins_user_field {
+	margin-top: 15px;
+}
+
 .list-header-navmenu-border {
 	border: 1px solid;
 	border-radius: 2px;
