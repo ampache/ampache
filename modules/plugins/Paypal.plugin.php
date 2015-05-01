@@ -87,17 +87,17 @@ class AmpachePaypal {
         $lang = substr(AmpConfig::get('lang'), 0, 2);
         if (empty($lang)) $lang = 'US';
 
-        echo "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'>";
-        echo "<input type='hidden' name='cmd' value='_donations'>";
-        echo "<input type='hidden' name='business' value='" . scrub_out($this->business) . "'>";
-        echo "<input type='hidden' name='lc' value='" . $lang . "'>";
-        echo "<input type='hidden' name='item_name' value='" . $name . "'>";
-        echo "<input type='hidden' name='no_note' value='0'>";
-        echo "<input type='hidden' name='currency_code' value='" . scrub_out($this->currency_code) . "'>";
-        echo "<input type='hidden' name='bn' value='PP-DonationsBF:btn_donate_SM.gif:NonHostedGuest'>";
-        echo "<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'>";
-        echo "<img alt='' border='0' src='https://www.paypalobjects.com/fr_XC/i/scr/pixel.gif' width='1' height='1'>";
-        echo "</form>";
+        echo "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'>\n";
+        echo "<input type='hidden' name='cmd' value='_donations'>\n";
+        echo "<input type='hidden' name='business' value='" . scrub_out($this->business) . "'>\n";
+        echo "<input type='hidden' name='lc' value='" . $lang . "'>\n";
+        echo "<input type='hidden' name='item_name' value='" . $name . "'>\n";
+        echo "<input type='hidden' name='no_note' value='0'>\n";
+        echo "<input type='hidden' name='currency_code' value='" . scrub_out($this->currency_code) . "'>\n";
+        echo "<input type='hidden' name='bn' value='PP-DonationsBF:btn_donate_SM.gif:NonHostedGuest'>\n";
+        echo "<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'>\n";
+        echo "<img alt='' border='0' src='https://www.paypalobjects.com/fr_XC/i/scr/pixel.gif' width='1' height='1'>\n";
+        echo "</form>\n";
     }
 
     /**

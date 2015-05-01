@@ -287,6 +287,15 @@ END;
         if (!defined("TABLE_RENDERED")) {
             show_table_render();
         }
+
+        $plugins = Plugin::get_plugins('display_on_footer');
+        foreach ($plugins as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($GLOBALS['user'])) {
+                $plugin->_plugin->display_on_footer();
+            }
+        }
+
         require_once AmpConfig::get('prefix') . '/templates/footer.inc.php';
         if (isset($_REQUEST['profiling'])) {
             Dba::show_profile();

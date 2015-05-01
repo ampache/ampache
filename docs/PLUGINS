@@ -38,3 +38,4 @@ should be implemented as a public method:
     display_home()
 	external_share(string $url, string $text)
     display_user_field(library_item $libitem = null)
+	display_on_footer
