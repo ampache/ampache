@@ -25,24 +25,25 @@ $web_path = AmpConfig::get('web_path');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
-<head>
-<!-- Propulsed by Ampache | ampache.org -->
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-<title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
-<?php UI::show_custom_style(); ?>
-</head>
-<body>
-<div id="header">
-<h1><?php echo AmpConfig::get('site_title'); ?></h1>
-<?php echo T_('Registration'); ?>...
-</div>
-
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
-
-<div id="maincontainer">
+    <head>
+        <!-- Propulsed by Ampache | ampache.org -->
+        <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
+        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/print.css" type="text/css" media="print" />
+        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/dark.css" type="text/css" media="screen" />
+        <?php UI::show_custom_style(); ?>
+    </head>
+    <body id="registerPage">
+        <div id="maincontainer">
+            <div id="header">
+                <a href="<?php echo AmpConfig::get('web_path'); ?>"><h1 id="headerlogo"></h1></a>
+                <span><?php echo T_('Registration Validation'); ?>.</span>
+            </div>
+            <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
+            <div>
 <?php
     if ($validation == User::get_validation($username) AND strlen($validation)) {
     User::activate_user($username);
@@ -57,10 +58,8 @@ $web_path = AmpConfig::get('web_path');
 <h3><?php echo T_('Validation Failed'); ?></h3>
 <p><?php echo T_("The validation key used isn't correct"); ?></p>
 <?php } ?>
-</div><!--end <div>id="maincontainer-->
-<div id="bottom">
-<p><strong>Ampache</strong><br />
-For the love of Music.</p>
-</div>
-</body>
-</html>
+            </div>
+        </div>
+<?php
+UI::show_footer();
+?>

@@ -56,8 +56,7 @@ $_SESSION['login'] = true;
                 ?>
                 <br /><br />
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/login.php"><?php echo T_('Return to Login Page'); ?></a>
-                <p><strong>Ampache</strong><br />
-                For the love of Music.</p>
+                <p><?php echo T_('site_title'); ?></p>
             </div>
         </div>
 <?php

@@ -1857,21 +1857,21 @@ msgid ""
 "\n"
 "Thank you for registering\n"
 msgstr ""
-"Merci de votre inscription\n"
+"Merci pour votre inscription.\n"
 "\n"
 "\n"
-"S'il vous plaît garder cet e-mail pour vos dossiers. Vos informations de "
-"compte est le suivant:\n"
+"Veuillez garder cet e-mail dans vos dossiers. Les informations de "
+"votre compte sont les suivantes :\n"
 "----------------------\n"
-" Nom d'utilisateur: %s\n"
+" Nom d'utilisateur : %s\n"
 " ----------------------\n"
 "\n"
 "Votre compte est actuellement inactif. Vous ne pouvez pas l'utiliser tant "
-"que vous n'avez pas visité le lien suivant:\n"
+"que vous n'avez pas visité le lien suivant :\n"
 "\n"
 "%s\n"
 "\n"
-"Merci de votre inscription\n"
+"Merci pour votre inscription\n"
 
 #: ../../lib/class/registration.class.php:78
 #, php-format
@@ -7654,7 +7654,7 @@ msgstr "Utilisateur activé"
 #: ../../templates/show_user_activate.inc.php:53
 #, php-format
 msgid "This User ID is activated and can be used %sLogin%s"
-msgstr "Cet identifiant d'utilisateur est actif et peut etre utilisé %sLogin%s"
+msgstr "Cet utilisateur est à présent activé et peut être utilisé en allant sur la %spage de connexion%s"
 
 #: ../../templates/show_user_activate.inc.php:56
 msgid "Validation Failed"

@@ -19,6 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+$logo_url = AmpConfig::get('custom_login_logo');
+if (empty($logo_url)) {
+    $logo_url = AmpConfig::get('web_path') . "/themes/reborn/images/ampache.png";
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html lang="en-US">
@@ -35,8 +40,8 @@
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="<?php echo AmpConfig::get('web_path'); ?>/themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
-                    <?php echo T_('Ampache'); ?> - For the love of Music
+                    <img src="<?php echo $logo_url; ?>" title="Ampache" alt="Ampache">
+                    <?php echo T_('site_title'); ?>
                 </a>
             </div>
         </div>
