@@ -99,7 +99,6 @@ class AmpacheHttpq extends localplay_controller
 
         // Add an internal preference for the users current active instance
         Preference::insert('httpq_active','HTTPQ Active Instance','0','25','integer','internal');
-        User::rebuild_all_preferences();
 
         return true;
 

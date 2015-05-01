@@ -1047,6 +1047,8 @@ class User extends database_object
 
         $results = array();
 
+        debug_event();
+
         while ($r = Dba::fetch_assoc($db_results)) {
             $pref_id = $r['preference'];
             /* Check for duplicates */
@@ -1097,23 +1099,6 @@ class User extends database_object
                 Dba::write($sql);
             }
         } // while preferences
-
-        /* Let's also clean out any preferences garbage left over */
-        $sql = "SELECT DISTINCT(user_preference.user) FROM user_preference " .
-            "LEFT JOIN user ON user_preference.user = user.id " .
-            "WHERE user_preference.user!='-1' AND user.id IS NULL";
-        $db_results = Dba::read($sql);
-
-        $results = array();
-
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['user'];
-        }
-
-        foreach ($results as $data) {
-            $sql = "DELETE FROM user_preference WHERE user='$data'";
-            Dba::write($sql);
-        }
 
     } // fix_preferences
 
@@ -1516,13 +1501,20 @@ class User extends database_object
      */
     public static function rebuild_all_preferences()
     {
-        $sql = "SELECT * FROM `user`";
+        // Clean out any preferences garbage left over
+        $sql = "DELETE `user_preference`.* FROM `user_preference` " .
+            "LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` " .
+            "WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL";
+        Dba::write($sql);
+
+        // Get only users who has less preferences than excepted
+        // otherwise it would have significant performance issue with large user database
+        $sql = "SELECT `user` FROM `user_preference` " .
+            "GROUP BY `user` HAVING COUNT(*) < (" .
+            "SELECT COUNT(`id`) FROM `preference` WHERE `catagory` != 'system')";
         $db_results = Dba::read($sql);
-
-        User::fix_preferences('-1');
-
         while ($row = Dba::fetch_assoc($db_results)) {
-            User::fix_preferences($row['id']);
+            User::fix_preferences($row['user']);
         }
 
         return true;

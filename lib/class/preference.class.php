@@ -289,6 +289,18 @@ class Preference extends database_object
         if (!$db_results) {
             return false;
         }
+        $id = Dba::insert_id();
+        $params = array($id, $default);
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,?)";
+        $db_results = Dba::write($sql, $params);
+        if (!$db_results)
+            return false;
+        if ($catagory !== "system") {
+            $sql = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
+            $db_results = Dba::write($sql, $params);
+            if (!$db_results)
+                return false;
+        }
 
         return true;
     } // insert
@@ -301,16 +313,14 @@ class Preference extends database_object
     {
         // First prepare
         if (!is_numeric($preference)) {
-            $name = Dba::escape($preference);
-            $sql = "DELETE FROM `preference` WHERE `name`='$name'";
+            $sql = "DELETE FROM `preference` WHERE `name` = ?";
         } else {
-            $id = Dba::escape($preference);
-            $sql = "DELETE FROM `preference` WHERE `id`='$id'";
+            $sql = "DELETE FROM `preference` WHERE `id` = ?";
         }
 
-        Dba::write($sql);
+        Dba::write($sql, array($preference));
 
-        self::rebuild_preferences();
+        self::clean_preferences();
     } // delete
 
     /**
@@ -319,27 +329,20 @@ class Preference extends database_object
      */
     public static function rename($old, $new)
     {
-        $old = Dba::escape($old);
-        $new = Dba::escape($new);
-
-        $sql = "UPDATE `preference` SET `name`='$new' WHERE `name`='$old'";
-        Dba::write($sql);
+        $sql = "UPDATE `preference` SET `name` = ? WHERE `name` = ?";
+        Dba::write($sql, array($new, $old));
     }
 
     /**
-     * rebuild_preferences
-     * This removes any garbage and then adds back in anything missing preferences wise
+     * clean_preferences
+     * This removes any garbage
      */
-    public static function rebuild_preferences()
+    public static function clean_preferences()
     {
         // First remove garbage
         $sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` " .
             "WHERE `preference`.`id` IS NULL";
         Dba::write($sql);
-
-        // Now add anything that we are missing back in, except System
-        //$sql = "SELECT * FROM `preference` WHERE `type`!='system'";
-        //FIXME: Uhh WTF shouldn't there be something here??
     } // rebuild_preferences
 
     /**

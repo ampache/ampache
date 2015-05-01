@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface','25') OR !AmpConfig::get('use_auth')) {
+        if (!Access::check('interface','25') && $GLOBALS['user']->id > 0) {
             UI::access_denied();
             exit;
         }

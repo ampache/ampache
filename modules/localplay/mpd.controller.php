@@ -89,22 +89,21 @@ class AmpacheMpd extends localplay_controller
      */
     public function install()
     {
-                /* We need to create the MPD table */
-                $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                        "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                        "`owner` INT( 11 ) NOT NULL , " .
-                        "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                        "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
-                        "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                        "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-                        ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-                $db_results = Dba::write($sql);
+        /* We need to create the MPD table */
+        $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+                "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`owner` INT( 11 ) NOT NULL , " .
+                "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
+                "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
+                ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+        $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
         Preference::insert('mpd_active','MPD Active Instance','0','25','integer','internal');
-        User::rebuild_all_preferences();
 
-                return true;
+        return true;
 
     } // install
 
@@ -114,12 +113,12 @@ class AmpacheMpd extends localplay_controller
      */
     public function uninstall()
     {
-                $sql = "DROP TABLE `localplay_mpd`";
-                $db_results = Dba::write($sql);
+        $sql = "DROP TABLE `localplay_mpd`";
+        $db_results = Dba::write($sql);
 
         Preference::delete('mpd_active');
 
-                return true;
+        return true;
 
     } // uninstall
 

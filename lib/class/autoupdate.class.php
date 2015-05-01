@@ -99,7 +99,6 @@ class AutoUpdate
     {
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
-            User::rebuild_all_preferences();
             Preference::update('autoupdate_lastcheck', $GLOBALS['user']->id, '1');
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
