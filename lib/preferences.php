@@ -71,7 +71,7 @@ function update_preferences($pref_id=0)
             Preference::update($id,$pref_id,$value,$_REQUEST[$apply_to_all]);
         }
 
-        if (Access::check('interface','100') AND $_REQUEST[$new_level]) {
+        if (Access::check('interface','100') && $_REQUEST[$new_level]) {
             Preference::update_level($id,$_REQUEST[$new_level]);
         }
 
