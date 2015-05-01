@@ -2368,7 +2368,7 @@ msgstr "Se désabonner"
 
 #: ../../lib/class/user.class.php:1488
 msgid "Follow"
-msgstr "suivre"
+msgstr "S'abonner"
 
 #: ../../lib/class/video.class.php:760
 msgid "Afar"
@@ -5171,7 +5171,7 @@ msgstr "Éditer l'album"
 #: ../../templates/show_song_row.inc.php:32
 #: ../../templates/show_video_row.inc.php:37
 msgid "Play next"
-msgstr "Lecture à la suite"
+msgstr "Jouer à la suite"
 
 #: ../../templates/show_album_row.inc.php:54
 #: ../../templates/show_artist_row.inc.php:54
@@ -7675,7 +7675,7 @@ msgstr "Envoyer un message privé"
 
 #: ../../templates/show_user.inc.php:54
 msgid "Member Since"
-msgstr "Membre Depuis"
+msgstr "Membre depuis"
 
 #: ../../templates/show_user.inc.php:57 ../../templates/show_users.inc.php:44
 #: ../../templates/show_users.inc.php:75

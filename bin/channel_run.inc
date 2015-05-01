@@ -187,7 +187,7 @@ while(true)
                             $genre = $channel->get_genre();                            
                             // Send Shoutcast metadata on demand
                             if ($options['metadata']) {
-                                fwrite($sock, "icy-notice1: " . AmpConfig::get('title') . "\r\n");
+                                fwrite($sock, "icy-notice1: " . AmpConfig::get('site_title') . "\r\n");
                                 fwrite($sock, "icy-name: " . $channel->name . "\r\n");
                                 if (!empty($genre)) {
                                     fwrite($sock, "icy-genre: " . $genre . "\r\n");

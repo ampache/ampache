@@ -31,7 +31,24 @@ if ($client->f_avatar) {
     echo $client->f_avatar . "<br /><br />";
 }
 ?>
-<?php echo $client->get_display_follow(); ?>
+<?php if (AmpConfig::get('sociable')) {
+    echo $client->get_display_follow();
+
+    $plugins = Plugin::get_plugins('display_user_field');
+?>
+    <ul id="plugins_user_field">
+<?php
+    foreach ($plugins as $plugin_name) {
+        $plugin = new Plugin($plugin_name);
+        if ($plugin->load($GLOBALS['user'])) {
+?>
+        <li><?php $plugin->_plugin->display_user_field($client); ?> </li>
+<?php
+        }
+    }
+?>
+    </ul>
+<?php } ?>
 </div>
 <dl class="media_details">
     <?php $rowparity = UI::flip_class(); ?>
