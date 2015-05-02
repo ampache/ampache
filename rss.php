@@ -32,5 +32,12 @@ if (!AmpConfig::get('use_rss') || AmpConfig::get('demo_mode')) {
 // Add in our base hearder defining the content type
 header("Content-Type: application/xml; charset=" . AmpConfig::get('site_charset'));
 
-$rss = new Ampache_RSS($_REQUEST['type']);
-echo $rss->get_xml();
+$type = $_REQUEST['type'];
+$rss = new Ampache_RSS($type);
+$params = null;
+if ($type === "podcast") {
+    $params = array();
+    $params['object_type'] = $_REQUEST['object_type'];
+    $params['object_id'] = $_REQUEST['object_id'];
+}
+echo $rss->get_xml($params);

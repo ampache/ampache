@@ -158,7 +158,7 @@ if (!$share_id) {
         }
 
         // If require session is set then we need to make sure we're legit
-        if (AmpConfig::get('require_session')) {
+        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
                 debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
             } else if (!Session::exists('stream', $sid)) {

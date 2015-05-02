@@ -440,7 +440,7 @@ class Stream
     public static function get_base_url($local=false)
     {
         $session_string = '';
-        if (AmpConfig::get('require_session')) {
+        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $session_string = 'ssid=' . self::get_session() . '&';
         }
 

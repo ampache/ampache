@@ -82,7 +82,7 @@ class AmpachePiwik {
      * This display the module in user page
      */
     public function display_on_footer() {
-        $currentUrl = scrub_out("http" . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . "/" . $_SERVER['REQUEST_URI']);
+        $currentUrl = scrub_out("http" . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 
         echo "<!-- Piwik -->\n";
         echo "<script type='text/javascript'>\n";

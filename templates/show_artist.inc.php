@@ -126,6 +126,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random all to temporary playlist'),'random_text_' . $artist->id); ?>
         </li>
         <?php } ?>
+        <?php if (AmpConfig::get('use_rss')) { ?>
+        <li>
+            <?php echo Ampache_RSS::get_display('podcast', T_('Podcast'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
+        </li>
+        <?php } ?>
         <?php if (Access::check('interface','25')) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
