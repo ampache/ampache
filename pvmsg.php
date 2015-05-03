@@ -45,6 +45,8 @@ switch ($action) {
         require_once AmpConfig::get('prefix') . '/templates/show_add_pvmsg.inc.php';
     break;
     case 'add_message':
+        if (AmpConfig::get('demo_mode')) { break; }
+
         // Remove unauthorized defined values from here
         if (isset($_POST['from_user'])) {
             unset($_POST['from_user']);
@@ -65,14 +67,69 @@ switch ($action) {
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=pvmsg');
         }
     break;
+    case 'set_is_read':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $msgs = split(",", $_REQUEST['msgs']);
+        foreach ($msgs as $msg_id) {
+            $pvmsg = new PrivateMsg(intval($msg_id));
+            if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
+                $read = intval($_REQUEST['read']) !== 0;
+                $pvmsg->set_is_read($read);
+            } else {
+                debug_event('UI::access_denied', 'Unknown or unauthorized private message `' . $pvmsg->id . '`.', '3');
+                UI::access_denied();
+                exit();
+            }
+        }
+
+        show_confirmation(T_('Messages State Changed'), T_('Messages state have been changed.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+    break;
+    case 'delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $msgs = scrub_out($_REQUEST['msgs']);
+        show_confirmation(
+            T_('Message Deletion'),
+            T_('Are you sure you want to permanently delete the selected messages?'),
+            AmpConfig::get('web_path')."/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
+            1,
+            'delete_message'
+        );
+    break;
+    case 'confirm_delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $msgs = split(",", $_REQUEST['msgs']);
+        foreach ($msgs as $msg_id) {
+            $msg_id = intval($msg_id);
+            $pvmsg = new PrivateMsg($msg_id);
+            if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
+                $pvmsg->delete();
+            } else {
+                debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
+                UI::access_denied();
+                exit();
+            }
+        }
+
+        show_confirmation(T_('Messages Deletion'), T_('Messages have been deleted.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+    break;
     case 'show':
     default:
-        $pvmsg = new PrivateMsg($_REQUEST['pvmsg_id']);
-        $pvmsg->format();
-        if (!$pvmsg->is_read) {
-            $pvmsg->set_is_read(true);
+        $msg_id = intval($_REQUEST['pvmsg_id']);
+        $pvmsg = new PrivateMsg($msg_id);
+        if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
+            $pvmsg->format();
+            if (!$pvmsg->is_read) {
+                $pvmsg->set_is_read(true);
+            }
+            require_once AmpConfig::get('prefix') . '/templates/show_pvmsg.inc.php';
+        } else {
+            debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
+            UI::access_denied();
+            exit();
         }
-        require_once AmpConfig::get('prefix') . '/templates/show_pvmsg.inc.php';
     break;
 }
 

@@ -41,11 +41,11 @@ if (empty($logo_url)) {
             <div class="container">
                 <a class="navbar-brand" href="#">
                     <img src="<?php echo $logo_url; ?>" title="Ampache" alt="Ampache">
-                    <?php echo T_('site_title'); ?>
+                    <?php echo AmpConfig::get('site_title'); ?>
                 </a>
             </div>
         </div>
-        <div class="container" role="main">
+        <div id="guts" class="container" role="main">
             <div class="jumbotron">
                 <h1><?php echo T_('Access Denied'); ?></h1>
                 <p><?php echo T_('This event has been logged.'); ?></p>

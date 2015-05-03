@@ -21,6 +21,7 @@
  */
 
 ?>
+<td class="cel_select"><input type="checkbox" name="pvmsg_select[]" value="<?php echo $libitem->id; ?>" title="<?php echo T_('Select'); ?>" /></td>
 <td class="cel_subject"><?php echo $libitem->f_link; ?></td>
 <td class="cel_from_user"><?php echo $libitem->f_from_user_link; ?></td>
 <td class="cel_to_user"><?php echo $libitem->f_to_user_link; ?></td>
@@ -28,5 +29,8 @@
 <td class="cel_action">
 <a id="<?php echo 'reply_pvmsg_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->id; ?>">
     <?php echo UI::get_icon('mail', T_('Reply')); ?>
+</a>
+<a id="<?php echo 'delete_pvmsg_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=<?php echo $libitem->id; ?>">
+    <?php echo UI::get_icon('delete', T_('Delete')); ?>
 </a>
 </td>

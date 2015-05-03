@@ -124,6 +124,12 @@ class PrivateMsg extends database_object
         return Dba::write($sql, array($read ? 1 : 0, $this->id));
     }
 
+    public function delete()
+    {
+        $sql = "DELETE FROM `user_pvmsg` WHERE `id` = ?";
+        return Dba::write($sql, array($this->id));
+    }
+
     public static function create(array $data)
     {
         $subject = trim(strip_tags($data['subject']));
