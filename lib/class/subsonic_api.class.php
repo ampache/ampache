@@ -340,7 +340,7 @@ class Subsonic_Api
             if ($catalog->last_clean > $clastmodified) $clastmodified = $catalog->last_clean;
 
             if ($clastmodified > $lastmodified) $lastmodified = $clastmodified;
-            if (!empty($ifModifiedSince) && $clastmodified > $ifModifiedSince) $fcatalogs[] = $id;
+            if (!empty($ifModifiedSince) && $clastmodified > ($ifModifiedSince / 1000)) $fcatalogs[] = $id;
         }
         if (empty($ifModifiedSince)) $fcatalogs = $catalogs;
 
