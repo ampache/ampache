@@ -135,6 +135,8 @@
           <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a></li>
           <?php if (AmpConfig::get('allow_video')) { ?>
             <li id="sb_home_search_video"><a href="<?php echo $web_path; ?>/search.php?type=video"><?php echo T_('Videos'); ?></a></li>
+            <li id="sb_home_search_movie"><a href="<?php echo $web_path; ?>/search.php?type=movie"><?php echo T_('Movies'); ?></a></li>
+            <li id="sb_home_search_tvshow"><a href="<?php echo $web_path; ?>/search.php?type=tvshow"><?php echo T_('TV Shows'); ?></a></li>
           <?php } ?>
         </ul>
     </li>

@@ -73,7 +73,7 @@ class TVShow_Episode extends Video
         }
         $tags = $data['genre'];
 
-        $tvshow = TVShow::check($data['tvshow'], $data['year']);
+        $tvshow = TVShow::check($data['tvshow'], $data['year'], $data['content_rating'], $data['overview']);
         if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db($tvshow, 'tvshow')) {
             $art = new Art($tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
@@ -109,7 +109,7 @@ class TVShow_Episode extends Video
     {
         $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " .
             "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']));
+        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['description']));
 
         return $data['id'];
 
@@ -127,8 +127,8 @@ class TVShow_Episode extends Video
         $tvshow_season = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
         $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->episode_number;
         $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
-
-        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
+        $content_rating = isset($data['content_rating']) ? $data['content_rating'] : $this->content_rating;
+        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ?  WHERE `id` = ?";
         Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
 
         $this->original_name = $original_name;
@@ -162,6 +162,7 @@ class TVShow_Episode extends Video
         if ($this->episode_number) {
             $this->f_file .= ' - S'. sprintf('%02d', $season->season_number) . 'E'. sprintf('%02d', $this->episode_number);
         }
+
         $this->f_file .= ' - ' . $this->f_title;
         $this->f_full_title = $this->f_file;
 
@@ -204,52 +205,5 @@ class TVShow_Episode extends Video
         return array('object_type' => 'tvshow_season',
             'object_id' => $this->season
         );
-    }
-
-    public function get_description()
-    {
-        if (!empty($this->summary))
-            return $this->summary;
-
-        $season = new TVShow_Season($this->season);
-        return $season->get_description();
-    }
-
-    public function display_art($thumb = 2)
-    {
-        $id = null;
-        $type = null;
-
-        if (Art::has_db($this->id, 'video')) {
-            $id = $this->id;
-            $type = 'video';
-        } else if (Art::has_db($this->season, 'tvshow_season')) {
-            $id = $this->season;
-            $type = 'tvshow_season';
-        } else {
-            $season = new TVShow_Season($this->season);
-            if (Art::has_db($season->tvshow, 'tvshow')) {
-                $id = $season->tvshow;
-                $type = 'tvshow';
-            }
-        }
-
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
-        }
-    }
-
-    /**
-     * Remove the video from disk.
-     */
-    public function remove_from_disk()
-    {
-        $deleted = parent::remove_from_disk();
-        if ($deleted) {
-            $sql = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
-        }
-
-        return $deleted;
     }
 }

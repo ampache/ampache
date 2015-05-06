@@ -25,6 +25,10 @@
                 <td><input type="text" name="original_name" value="<?php echo scrub_out($libitem->f_original_name); ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Certification') ?></td>
+                <td><input type="text" name="certification" value="<?php echo scrub_out($libitem->content_rating); ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
                 <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
             </tr>

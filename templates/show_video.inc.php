@@ -130,8 +130,7 @@ if (!strtolower(get_class($video)) != 'video') {
   if (AmpConfig::get('show_played_times')) {
     $videoprops[gettext_noop('# Played')]   = scrub_out($video->object_cnt);
   }
-
-    foreach ($videoprops as $key => $value) {
+   foreach ($videoprops as $key => $value) {
         if (trim($value)) {
               $rowparity = UI::flip_class();
               echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";

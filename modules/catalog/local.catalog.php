@@ -35,6 +35,7 @@ class Catalog_local extends Catalog
     private $count;
     private $added_songs_to_gather;
     private $added_videos_to_gather;
+    private $art_added      = false;
 
     /**
      * get_description
@@ -462,7 +463,8 @@ class Catalog_local extends Catalog
         /* Do a little stats mojo here */
         $current_time = time();
 
-        if ($options['gather_art']) {
+        if (($options['gather_art']) && ($this->art_added == false)) {
+            $this->art_added = true;
             $catalog_id = $this->id;
             if (!defined('SSE_OUTPUT')) {
                 require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
@@ -735,6 +737,7 @@ class Catalog_local extends Catalog
 
         $id = Video::insert($results, $gtypes, $options);
         if ($results['art']) {
+            $this->art_added = true;
             $art = new Art($id, 'video');
             $art->insert_url($results['art']);
 
