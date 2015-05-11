@@ -33,7 +33,7 @@ while ($i <= $rows) {
     $j=0;
     while ($j < 4) {
         $key = $i*4+$j;
-        $image_url = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key;
+        $image_url = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
         if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) { echo "<td>&nbsp;</td>\n"; } else {
 ?>
