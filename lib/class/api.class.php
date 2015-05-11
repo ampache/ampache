@@ -693,7 +693,7 @@ class Api
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $track = new Playlist($input['track']);
+        $track = scrub_in($input['track']);
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
