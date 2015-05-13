@@ -28,14 +28,19 @@ use Tmdb\Model\Common\ExternalIds;
 class Tv extends AbstractModel
 {
     /**
-     * @var Image
+     * @var string
      */
     private $backdropPath;
 
     /**
-     * @var Collection
+     * @var GenericCollection
      */
     private $createdBy = null;
+
+    /**
+     * @var GenericCollection
+     */
+    private $contentRatings;
 
     /**
      * @var array
@@ -85,7 +90,7 @@ class Tv extends AbstractModel
     private $name;
 
     /**
-     * @var Network[]
+     * @var GenericCollection|Network[]
      */
     private $networks;
 
@@ -105,7 +110,12 @@ class Tv extends AbstractModel
     private $originalName;
 
     /**
-     * @var Collection
+     * @var string
+     */
+    private $originalLanguage;
+
+    /**
+     * @var GenericCollection
      */
     private $originCountry;
 
@@ -120,12 +130,12 @@ class Tv extends AbstractModel
     private $popularity;
 
     /**
-     * @var Image
+     * @var string
      */
     private $posterPath;
 
     /**
-     * @var Collection
+     * @var GenericCollection
      */
     private $seasons;
 
@@ -147,7 +157,7 @@ class Tv extends AbstractModel
     /**
      * Credits
      *
-     * @var Credits
+     * @var CreditsCollection
      */
     protected $credits;
 
@@ -166,7 +176,7 @@ class Tv extends AbstractModel
     protected $images;
 
     /**
-     * @var Collection
+     * @var GenericCollection
      */
     protected $translations;
 
@@ -186,34 +196,52 @@ class Tv extends AbstractModel
     protected $videos;
 
     /**
+     * @var GenericCollection
+     */
+    protected $changes;
+
+    /**
+     * @var GenericCollection
+     */
+    protected $keywords;
+
+    /**
+     * @var GenericCollection
+     */
+    protected $similar;
+
+    /**
+     * @var GenericCollection
+     */
+    protected $productionCompanies;
+
+    /**
      * Properties that are available in the API
      *
      * These properties are hydrated by the ObjectHydrator, all the other properties are handled by the factory.
      *
      * @var array
      */
-    public static $properties = array(
+    public static $properties = [
         'backdrop_path',
-        'created_by',
         'episode_run_time',
         'first_air_date',
         'homepage',
         'id',
         'in_production',
-        'languages',
         'last_air_date',
         'name',
         'number_of_episodes',
         'number_of_seasons',
         'original_name',
-        'origin_country',
+        'original_language',
         'overview',
         'popularity',
         'poster_path',
         'status',
         'vote_average',
         'vote_count',
-    );
+    ];
 
     /**
      * Constructor
@@ -222,19 +250,19 @@ class Tv extends AbstractModel
      */
     public function __construct()
     {
-        $this->createdBy      = new Images();
-        $this->episodeRunTime = new GenericCollection();
         $this->genres         = new Genres();
-        $this->languages      = new GenericCollection();
         $this->networks       = new GenericCollection();
         $this->originCountry  = new GenericCollection();
         $this->seasons        = new GenericCollection();
-
         $this->credits        = new CreditsCollection();
         $this->externalIds    = new ExternalIds();
         $this->images         = new Images();
         $this->translations   = new GenericCollection();
         $this->videos         = new Videos();
+        $this->changes        = new GenericCollection();
+        $this->keywords       = new GenericCollection();
+        $this->similar        = new GenericCollection();
+        $this->contentRatings = new GenericCollection();
     }
 
     /**
@@ -257,7 +285,26 @@ class Tv extends AbstractModel
     }
 
     /**
-     * @param  \Tmdb\Model\Common\Collection $createdBy
+     * @return GenericCollection
+     */
+    public function getContentRatings()
+    {
+        return $this->contentRatings;
+    }
+
+    /**
+     * @param  GenericCollection $contentRatings
+     * @return $this
+     */
+    public function setContentRatings($contentRatings)
+    {
+        $this->contentRatings = $contentRatings;
+
+        return $this;
+    }
+
+    /**
+     * @param  GenericCollection $createdBy
      * @return $this
      */
     public function setCreatedBy($createdBy)
@@ -268,7 +315,7 @@ class Tv extends AbstractModel
     }
 
     /**
-     * @return \Tmdb\Model\Common\Collection
+     * @return GenericCollection
      */
     public function getCreatedBy()
     {
@@ -394,7 +441,7 @@ class Tv extends AbstractModel
     }
 
     /**
-     * @param  array $languages
+     * @param  GenericCollection $languages
      * @return $this
      */
     public function setLanguages($languages)
@@ -405,7 +452,7 @@ class Tv extends AbstractModel
     }
 
     /**
-     * @return array
+     * @return GenericCollection
      */
     public function getLanguages()
     {
@@ -512,7 +559,7 @@ class Tv extends AbstractModel
     }
 
     /**
-     * @param  \Tmdb\Model\Common\Collection $originCountry
+     * @param  GenericCollection $originCountry
      * @return $this
      */
     public function setOriginCountry($originCountry)
@@ -523,7 +570,7 @@ class Tv extends AbstractModel
     }
 
     /**
-     * @return \Tmdb\Model\Common\Collection
+     * @return GenericCollection
      */
     public function getOriginCountry()
     {
@@ -547,6 +594,25 @@ class Tv extends AbstractModel
     public function getOriginalName()
     {
         return $this->originalName;
+    }
+
+    /**
+     * @param  string $originalLanguage
+     * @return $this
+     */
+    public function setOriginalLanguage($originalLanguage)
+    {
+        $this->originalLanguage = $originalLanguage;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginalLanguage()
+    {
+        return $this->originalLanguage;
     }
 
     /**
@@ -618,7 +684,7 @@ class Tv extends AbstractModel
     }
 
     /**
-     * @return \Tmdb\Model\Common\Collection
+     * @return GenericCollection
      */
     public function getSeasons()
     {
@@ -694,7 +760,7 @@ class Tv extends AbstractModel
     }
 
     /**
-     * @return \Tmdb\Model\Common\Collection
+     * @return GenericCollection
      */
     public function getTranslations()
     {
@@ -813,5 +879,81 @@ class Tv extends AbstractModel
     public function getVideos()
     {
         return $this->videos;
+    }
+
+    /**
+     * @param  GenericCollection $changes
+     * @return $this
+     */
+    public function setChanges($changes)
+    {
+        $this->changes = $changes;
+
+        return $this;
+    }
+
+    /**
+     * @return GenericCollection
+     */
+    public function getChanges()
+    {
+        return $this->changes;
+    }
+
+    /**
+     * @param  GenericCollection $keywords
+     * @return $this
+     */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = $keywords;
+
+        return $this;
+    }
+
+    /**
+     * @return GenericCollection
+     */
+    public function getKeywords()
+    {
+        return $this->keywords;
+    }
+
+    /**
+     * @param  GenericCollection $similar
+     * @return $this
+     */
+    public function setSimilar($similar)
+    {
+        $this->similar = $similar;
+
+        return $this;
+    }
+
+    /**
+     * @return GenericCollection
+     */
+    public function getSimilar()
+    {
+        return $this->similar;
+    }
+
+    /**
+     * @return GenericCollection
+     */
+    public function getProductionCompanies()
+    {
+        return $this->productionCompanies;
+    }
+
+    /**
+     * @param  GenericCollection $productionCompanies
+     * @return $this
+     */
+    public function setProductionCompanies($productionCompanies)
+    {
+        $this->productionCompanies = $productionCompanies;
+
+        return $this;
     }
 }

@@ -491,17 +491,10 @@ class Update
         $update_string = " - Add an option to allow users to remove uploaded songs.<br />";
         $version[] = array('version' => '370030','description' => $update_string);
 
-        $update_string = " - Add an option to customize login art, favicon and text footer.<br />";
-        $version[] = array('version' => '370031','description' => $update_string);
-
-        $update_string = " - Add WebDAV backend preference.<br />";
-        $version[] = array('version' => '370032','description' => $update_string);
-
-        $update_string = " - Add Label tables.<br />";
-        $version[] = array('version' => '370033','description' => $update_string);
-
-        $update_string = " - Add User messages and user follow tables.<br />";
-        $version[] = array('version' => '370034','description' => $update_string);
+        $update_string = " - Add movie MPAA and TV content Rating from TmdB and TVdb.<br />" .
+                 " - Changes Movie and TV show summary to overview and expands size of<br />" .
+                 " - the overview and TV episode columns. Dropped movie.prefix and tvshow.prefix columns.<br />" ;
+        $version[] = array('version' => '380000', 'description' => $update_string);
 
         return $version;
     }
@@ -1925,7 +1918,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('subsonic_backend','1','Use SubSonic backend',100,'boolean','system')";
+            "VALUES ('subsonic_backend','1','Use SubSonic backend',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval: false;
 
         $id = Dba::insert_id();
@@ -1934,7 +1927,7 @@ class Update
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('plex_backend','0','Use Plex backend',100,'boolean','system')";
+            "VALUES ('plex_backend','0','Use Plex backend',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
 
         $id = Dba::insert_id();
@@ -2200,7 +2193,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('stream_beautiful_url','0','Enable url rewriting',100,'boolean','streaming')";
+            "VALUES ('stream_beautiful_url','0','Use beautiful stream url',25,'boolean','streaming')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -2264,14 +2257,14 @@ class Update
         $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('share','0','Allow Share',100,'boolean','system')";
+            "VALUES ('share','0','Allow Share',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('share_expire','7','Share links default expiration days (0=never)',100,'integer','system')";
+            "VALUES ('share_expire','7','Share links default expiration days (0=never)',25,'integer','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'7')";
@@ -2685,42 +2678,42 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_catalog','-1','Uploads catalog destination',75,'integer','system')";
+            "VALUES ('upload_catalog','-1','Uploads catalog destination',25,'integer','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'-1')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_upload','0','Allow users to upload media',75,'boolean','system')";
+            "VALUES ('allow_upload','0','Allow users to upload media',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_subdir','1','Upload: create a subdirectory per user (recommended)',75,'boolean','system')";
+            "VALUES ('upload_subdir','1','Upload: create a subdirectory per user (recommended)',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_user_artist','0','Upload: consider the user sender as the track\'s artist',75,'boolean','system')";
+            "VALUES ('upload_user_artist','0','Upload: consider the user sender as the track\'s artist',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_script','','Upload: run the following script after upload (current directory = upload target directory)',75,'string','system')";
+            "VALUES ('upload_script','','Upload: run the following script after upload (current directory = upload target directory)',25,'string','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_allow_edit','1','Upload: allow users to edit uploaded songs',75,'boolean','system')";
+            "VALUES ('upload_allow_edit','1','Upload: allow users to edit uploaded songs',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -2804,14 +2797,14 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('daap_backend','0','Use DAAP backend',100,'boolean','system')";
+            "VALUES ('daap_backend','0','Use DAAP backend',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('daap_pass','','DAAP backend password',100,'string','system')";
+            "VALUES ('daap_pass','','DAAP backend password',25,'string','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
@@ -2837,7 +2830,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upnp_backend','0','Use UPnP backend',100,'boolean','system')";
+            "VALUES ('upnp_backend','0','Use UPnP backend',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -3353,7 +3346,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_allow_remove','1','Upload: allow users to remove uploaded songs',75,'boolean','system')";
+            "VALUES ('upload_allow_remove','1','Upload: allow users to remove uploaded songs',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -3362,126 +3355,41 @@ class Update
         return $retval;
     }
 
-    /**
-     * update_370031
+    /*
+     * update_380000
      *
-     * Add an option to customize login art, favicon and text footer.
+     * Adds ability to store movie MPAA and TV content ratings
+     * Chamged  tvshow 'summary' to "overview" and Increased size to 1024
+     * Changed tvshow_episode summary size to 1024.
+     *
      */
-    public static function update_370031()
+    public static function update_380000()
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('custom_login_logo','','Custom login page logo url',75,'string','interface')";
-        $retval = Dba::write($sql) ? $retval : false;
-        $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
-        $retval = Dba::write($sql, array($id)) ? $retval : false;
-
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('custom_favicon','','Custom favicon url',75,'string','interface')";
-        $retval = Dba::write($sql) ? $retval : false;
-        $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
-        $retval = Dba::write($sql, array($id)) ? $retval : false;
-
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('custom_text_footer','','Custom text footer',75,'string','interface')";
-        $retval = Dba::write($sql) ? $retval : false;
-        $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
-        $retval = Dba::write($sql, array($id)) ? $retval : false;
-
-        return $retval;
-    }
-
-    /**
-     * update_370032
-     *
-     * Add WebDAV backend preference.
-     */
-    public static function update_370032()
-    {
-        $retval = true;
-
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webdav_backend','0','Use WebDAV backend',100,'boolean','system')";
-        $retval = Dba::write($sql) ? $retval : false;
-        $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
-        $retval = Dba::write($sql, array($id)) ? $retval : false;
-
-        return $retval;
-    }
-
-    /**
-     * update_370033
-     *
-     * Add Label tables.
-     */
-    public static function update_370033()
-    {
-        $retval = true;
-
-        $sql = "CREATE TABLE `label` (" .
-            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
-            "`name` varchar(80) NOT NULL," .
-            "`category` varchar(40) NULL," .
-            "`summary` TEXT CHARACTER SET utf8 NULL," .
-            "`address` varchar(256) NULL," .
-            "`email` varchar(128) NULL," .
-            "`website` varchar(256) NULL," .
-            "`user` int(11) unsigned NULL," .
-            "`creation_date` int(11) unsigned NULL," .
-            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        $sql = "ALTER TABLE `movie` DROP COLUMN `prefix`";
         $retval = Dba::write($sql) ? $retval : false;
 
-        $sql = "CREATE TABLE `label_asso` (" .
-            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
-            "`label` int(11) unsigned NOT NULL," .
-            "`artist` int(11) unsigned NOT NULL," .
-            "`creation_date` int(11) unsigned NULL," .
-            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        $sql = "ALTER TABLE `movie` ADD COLUMN `content_rating` VARCHAR(12) NULL DEFAULT NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `movie` CHANGE COLUMN `summary` `summary` VARCHAR(1024) CHARACTER SET 'utf8' NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow` ADD COLUMN `content_rating` VARCHAR(12) NULL AFTER `summary`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow` CHANGE COLUMN `summary` `overview` VARCHAR(1024) CHARACTER SET 'utf8' NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow` DROP COLUMN `prefix`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow_episode` CHANGE COLUMN `summary` `summary` VARCHAR(1024) CHARACTER SET 'utf8' NULL DEFAULT NULL" ;
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
     }
 
-    /**
-     * update_370034
-     *
-     * Add User messages and user follow tables.
-     */
-    public static function update_370034()
-    {
-        $retval = true;
 
-        $sql = "CREATE TABLE `user_pvmsg` (" .
-            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
-            "`subject` varchar(80) NOT NULL," .
-            "`message` TEXT CHARACTER SET utf8 NULL," .
-            "`from_user` int(11) unsigned NOT NULL," .
-            "`to_user` int(11) unsigned NOT NULL," .
-            "`is_read` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
-            "`creation_date` int(11) unsigned NULL," .
-            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "CREATE TABLE `user_follower` (" .
-            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
-            "`user` int(11) unsigned NOT NULL," .
-            "`follow_user` int(11) unsigned NOT NULL," .
-            "`follow_date` int(11) unsigned  NULL," .
-            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('notify_email','0','Receive notifications by email (shouts, private messages, ...)',25,'boolean','options')";
-        $retval = Dba::write($sql) ? $retval : false;
-        $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
-        $retval = Dba::write($sql, array($id)) ? $retval : false;
-
-        return $retval;
-    }
 }

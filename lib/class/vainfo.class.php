@@ -400,6 +400,8 @@ class vainfo
             $info['audio_codec'] = $info['audio_codec'] ?: trim($tags['audio_codec']);
             $info['video_codec'] = $info['video_codec'] ?: trim($tags['video_codec']);
             $info['description'] = $info['description'] ?: trim($tags['description']);
+            $info['overview'] = $info['overview'] ?: trim($tags['overview']);
+            $info['content_rating'] = $info['content_rating'] ?: trim($tags['content_rating']);
 
             $info['tvshow'] = $info['tvshow'] ?: trim($tags['tvshow']);
             $info['tvshow_year'] = $info['tvshow_year'] ?: trim($tags['tvshow_year']);

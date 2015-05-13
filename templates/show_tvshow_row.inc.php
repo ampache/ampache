@@ -35,12 +35,13 @@
 if (Art::is_enabled()) {
 ?>
 <td class="cel_cover">
-    <?php Art::display('tvshow', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
+    <?php Art::display('tvshow', $libitem->id, $libitem->overview, 6, $libitem->link); ?>
 </td>
 <?php } ?>
 <td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
+<td class="cel_content"><?php echo $libitem->content_rating; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>

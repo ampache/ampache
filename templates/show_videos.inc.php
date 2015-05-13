@@ -31,11 +31,14 @@ if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/l
             <th class="cel_cover"><?php echo T_('Art'); ?></th>
         <?php } ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
-<?php
+       <?php
 if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . 's.inc.php';
 }
 ?>
+<?php if ($video_type != 'tvshow_episode') { ?>
+            <th class="cel_certification optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=certification', T_('Certification'),'sort_video_certificaton'); ?></th>
+<?php } ?>
             <th class="cel_release_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'),'sort_video_release_date'); ?></th>
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>
             <th class="cel_resolution optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'),'sort_video_rez'); ?></th>
@@ -88,6 +91,7 @@ if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . 's.inc.php';
 }
 ?>
+            <th class="cel_certification optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=certification', T_('Certification'),'sort_video_certification'); ?></th>
             <th class="cel_release_date"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'),'sort_video_release_date'); ?></th>
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>
             <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'),'sort_video_rez'); ?></th>

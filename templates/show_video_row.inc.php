@@ -46,10 +46,10 @@ if (Art::is_enabled()) {
     <?php
     $art_showed = false;
     if ($libitem->get_default_art_kind() == 'preview') {
-        $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
+        $art_showed = Art::display('video', $libitem->id, htmlspecialchars($libitem->summary), 9, $libitem->link, false, 'preview');
     }
     if (!$art_showed) {
-        Art::display('video', $libitem->id, $libitem->f_title, 6, $libitem->link);
+        Art::display('video', $libitem->id, htmlspecialchars($libitem->summary), 6, $libitem->link);
     }
     ?>
 </td>
@@ -60,6 +60,9 @@ if ($video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . '_row.inc.php';
 }
 ?>
+<?php if ($video_type != 'tvshow_episode') { ?>
+<td class="cel_content"><?php echo $libitem->content_rating; ?></td>
+<?php } ?>
 <td class="cel_release_date"><?php echo $libitem->f_release_date; ?></td>
 <td class="cel_codec"><?php echo $libitem->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
@@ -92,11 +95,6 @@ if ($video_type != 'video') {
 <?php if (Access::check('interface','50')) { ?>
     <a id="<?php echo 'edit_video_'.$libitem->id ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_video_'.$libitem->id ?>', '<?php echo T_('Video edit') ?>', 'video_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
-    </a>
-<?php } ?>
-<?php if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_video_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/video.php?action=delete&video_id=<?php echo $libitem->id; ?>">
-        <?php echo UI::get_icon('delete', T_('Delete')); ?>
     </a>
 <?php } ?>
 </td>
