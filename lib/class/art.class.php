@@ -789,11 +789,13 @@ class Art extends database_object
         if (!Core::is_library_item($type))
             return null;
 
-        $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
-        if ($sid == null) {
-            $sid = Session::create(array(
-                'type' => 'api'
-            ));
+        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+            $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
+            if ($sid == null) {
+                $sid = Session::create(array(
+                    'type' => 'api'
+                ));
+            }
         }
 
         $key = $type . $uid;
@@ -1687,7 +1689,10 @@ class Art extends database_object
         $size = self::get_thumb_size($thumb);
         $prettyPhoto = ($link == null);
         if ($link == null) {
-            $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&auth=" . session_id();
+            $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
+            if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+                $link .= "&auth=" . session_id();
+            }
             if ($kind != 'default') {
                 $link .= '&kind=' . $kind;
             }
