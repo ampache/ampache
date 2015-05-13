@@ -359,7 +359,7 @@ class Ampache_RSS
             $user = new User($shout->user);
             $user->format();
 
-            $xml_array = array('title' => T_('Shout by') . ' ' . $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
+            $xml_array = array('title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->link,
                     'description' => $shout->text,
                     'image' => Art::url($shout->object_id, $shout->object_type),
