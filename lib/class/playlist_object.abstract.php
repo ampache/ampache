@@ -71,7 +71,8 @@ abstract class playlist_object extends database_object implements library_item
 
         if ($details) {
             $client = new User($this->user);
-            $this->f_user = $client->fullname;
+            $client->format();
+            $this->f_user = $client->f_name;
         }
 
     } // format

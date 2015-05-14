@@ -96,7 +96,7 @@ class Upload
                             $artist = null;
                             // No associated artist yet, we create a default one for the user sender
                             if (count($artists) == 0) {
-                                $artists[] = Artist::check($GLOBALS['user']->fullname);
+                                $artists[] = Artist::check($GLOBALS['user']->f_name);
                                 $artist = new Artist($artists[0]);
                                 $artist->update_artist_user($GLOBALS['user']->id);
                             } else {

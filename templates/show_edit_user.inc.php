@@ -40,6 +40,7 @@
             <td><?php echo T_('Full Name'); ?>:</td>
             <td>
                 <input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+                <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) echo "checked" ?> /> <?php echo T_('Public'); ?>
                 <?php Error::display('fullname'); ?>
             </td>
         </tr>

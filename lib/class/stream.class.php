@@ -368,6 +368,7 @@ class Stream
             $media = new $type($row['object_id']);
             $media->format();
             $client = new User($row['user']);
+            $client->format();
             $results[] = array(
                 'media' => $media,
                 'client' => $client,

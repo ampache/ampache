@@ -224,6 +224,8 @@ else {
 
 } // If NO_SESSION passed
 
+$GLOBALS['user']->format(false);
+
 // Load the Preferences from the database
 Preference::init();
 

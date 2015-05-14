@@ -44,6 +44,10 @@ class User extends database_object
      */
     public $fullname;
     /**
+     * @var boolean $fullname_public
+     */
+    public $fullname_public;
+    /**
      * @var int $access
      */
     public $access;
@@ -95,6 +99,10 @@ class User extends database_object
      */
     public $playlist;
 
+    /**
+     * @var string $f_name
+     */
+    public $f_name;
     /**
      * @var string $f_last_seen
      */
@@ -589,6 +597,10 @@ class User extends database_object
             return false;
         }
 
+        if (!isset($data['fullname_public'])) {
+            $data['fullname_public'] = false;
+        }
+
         foreach ($data as $name => $value) {
             if ($name == 'password1') {
                 $name = 'password';
@@ -602,6 +614,7 @@ class User extends database_object
                 case 'email':
                 case 'username':
                 case 'fullname':
+                case 'fullname_public':
                 case 'website':
                 case 'state':
                 case 'city':
@@ -657,6 +670,17 @@ class User extends database_object
         Dba::write($sql, array($new_fullname, $this->id));
 
     } // update_fullname
+
+    /**
+     * update_fullname_public
+     * updates their fullname public
+     */
+    public function update_fullname_public($new_fullname_public)
+    {
+        $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
+        Dba::write($sql, array($new_fullname_public ? '1' : '0', $this->id));
+
+    } // update_fullname_public
 
     /**
      * update_email
@@ -965,7 +989,7 @@ class User extends database_object
      * user for an admin, these should not be normally called when creating a
      * user object
      */
-    public function format()
+    public function format($details = true)
     {
         /* If they have a last seen date */
         if (!$this->last_seen) { $this->f_last_seen = T_('Never'); } else { $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen); }
@@ -973,27 +997,31 @@ class User extends database_object
         /* If they have a create date */
         if (!$this->create_date) { $this->f_create_date = T_('Unknown'); } else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
 
+        $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
+
         // Base link
         $this->link = AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '">' . $this->fullname . '</a>';
+        $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
 
-        /* Calculate their total Bandwidth Usage */
-        $sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
-            "WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
-        $db_results = Dba::read($sql);
+        if ($details) {
+            /* Calculate their total Bandwidth Usage */
+            $sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
+                "WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
+            $db_results = Dba::read($sql);
 
-        $total = 0;
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $total = $total + $r['size'];
-        }
+            $total = 0;
+            while ($r = Dba::fetch_assoc($db_results)) {
+                $total = $total + $r['size'];
+            }
 
-        $this->f_useage = UI::format_bytes($total);
+            $this->f_useage = UI::format_bytes($total);
 
-        /* Get Users Last ip */
-        if (count($data = $this->get_ip_history(1))) {
-            $this->ip_history = inet_ntop($data['0']['ip']);
-        } else {
-            $this->ip_history = T_('Not Enough Data');
+            /* Get Users Last ip */
+            if (count($data = $this->get_ip_history(1))) {
+                $this->ip_history = inet_ntop($data['0']['ip']);
+            } else {
+                $this->ip_history = T_('Not Enough Data');
+            }
         }
 
         $avatar = $this->get_avatar();

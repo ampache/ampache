@@ -27,7 +27,10 @@ if ($libitem->f_avatar_mini) {
     echo $libitem->f_avatar_mini;
 }
 ?>
-        <?php echo $libitem->fullname; ?> (<?php echo $libitem->username; ?>)
+        <?php echo $libitem->username; ?>
+        <?php if ($libitem->fullname_public || Access::check('interface', 100)) {
+            echo "(" . $libitem->fullname . ")";
+        } ?>
         </a>
     </td>
     <td class="cel_lastseen"><?php echo $last_seen; ?></td>

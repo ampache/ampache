@@ -53,6 +53,7 @@ $_SESSION['login'] = true;
             <?php
             $action = scrub_in($_REQUEST['action']);
             $fullname = scrub_in($_REQUEST['fullname']);
+            $fullname_public = ($_REQUEST['fullname_public'] === "1");
             $username = scrub_in($_REQUEST['username']);
             $email = scrub_in($_REQUEST['email']);
             $website = scrub_in($_REQUEST['website']);

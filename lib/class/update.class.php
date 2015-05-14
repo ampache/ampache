@@ -503,6 +503,9 @@ class Update
         $update_string = " - Add User messages and user follow tables.<br />";
         $version[] = array('version' => '370034','description' => $update_string);
 
+        $update_string = " - Add option on user fullname to show/hide it publicly.<br />";
+        $version[] = array('version' => '370035','description' => $update_string);
+
         return $version;
     }
 
@@ -3481,6 +3484,21 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370035
+     *
+     * Add option on user fullname to show/hide it publicly
+     */
+    public static function update_370035()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `user` ADD COLUMN `fullname_public` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
+        $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
     }

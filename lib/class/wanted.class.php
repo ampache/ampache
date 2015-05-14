@@ -192,7 +192,7 @@ class Wanted extends database_object
                             }
                             $wanted->f_link = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                             $wanted->f_artist_link = $artist ? $artist->f_link : $wartist['link'];
-                            $wanted->f_user = $GLOBALS['user']->fullname;
+                            $wanted->f_user = $GLOBALS['user']->f_name;
                         }
                         $results[] = $wanted;
                     }
@@ -505,7 +505,8 @@ class Wanted extends database_object
         $this->link = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name;
         $this->f_link = "<a href=\"" . $this->link . "\">" . $this->name . "</a>";
         $user = new User($this->user);
-        $this->f_user = $user->fullname;
+        $user->format();
+        $this->f_user = $user->f_name;
 
     }
 

@@ -211,7 +211,8 @@ class Share extends database_object
             $this->f_name = $object->get_fullname();
             $this->f_object_link = $object->f_link;
             $user = new User($this->user);
-            $this->f_user = $user->fullname;
+            $user->format();
+            $this->f_user = $user->f_name;
         }
         $this->f_allow_stream = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;

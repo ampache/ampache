@@ -196,7 +196,7 @@ class Ampache_RSS
                     'title' => $title,
                     'link' => $song->link,
                     'description' => $description,
-                    'comments' => $client->fullname . ' - ' . $element['agent'],
+                    'comments' => $client->f_name . ' - ' . $element['agent'],
                     'pubDate' => date('r', $element['expire'])
                     );
             $results[] = $xml_array;

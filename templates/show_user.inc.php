@@ -24,7 +24,7 @@ $last_seen = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) : T_(
 $create_date = $client->create_date ? date("m\/d\/y - H:i",$client->create_date) : T_('Unknown');
 $client->format();
 ?>
-<?php UI::show_box_top($client->fullname); ?>
+<?php UI::show_box_top($client->f_name); ?>
 <div class="user_avatar">
 <?php
 if ($client->f_avatar) {
@@ -52,9 +52,9 @@ if ($client->f_avatar) {
 </div>
 <dl class="media_details">
     <?php $rowparity = UI::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Full Name'); ?></dt>
+    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Display Name'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-        <?php echo $client->fullname; ?>
+        <?php echo $client->f_name; ?>
         <?php if (Access::check('interface','25') && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_'.$client->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo UI::get_icon('mail', T_('Send private message')); ?>

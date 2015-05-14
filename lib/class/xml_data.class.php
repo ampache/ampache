@@ -701,7 +701,7 @@ class XML_Data
             $user_owner = new User($owner);
             $user_owner->format();
             $xowner = $xitem->addChild("xmlns:itunes:owner");
-            $xowner->addChild("xmlns:itunes:name", $user_owner->fullname);
+            $xowner->addChild("xmlns:itunes:name", $user_owner->f_name);
         }
 
         $medias = $libitem->get_medias();

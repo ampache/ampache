@@ -50,6 +50,7 @@ switch ($_REQUEST['action']) {
         $pass2          = $_POST['password_2'];
         $state          = scrub_in($_POST['state']);
         $city           = scrub_in($_POST['city']);
+        $fullname_public = isset($_POST['fullname_public']);
 
         /* Setup the temp user */
         $client = new User($user_id);
@@ -93,6 +94,9 @@ switch ($_REQUEST['action']) {
         }
         if ($fullname != $client->fullname) {
             $client->update_fullname($fullname);
+        }
+        if ($fullname_public != $client->fullname_public) {
+            $client->update_fullname_public($fullname_public);
         }
         if ($pass1 == $pass2 && strlen($pass1)) {
             $client->update_password($pass1);
