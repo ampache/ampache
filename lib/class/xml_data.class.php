@@ -581,8 +581,10 @@ class XML_Data
      */
     public static function rss_feed($data,$title,$description,$date)
     {
-        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t" .
-            "<pubDate>" . date("r",$date) . "</pubDate>\n";
+        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
+        if ($date != null) {
+            $string .= "<pubDate>" . date("r",$date) . "</pubDate>\n";
+        }
 
         // Pass it to the keyed array xml function
         foreach ($data as $item) {

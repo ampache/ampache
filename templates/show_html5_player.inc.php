@@ -1,4 +1,9 @@
 <?php
+$autoplay = true;
+if ($is_share) {
+    $autoplay = ($_REQUEST['autoplay'] === 'true');
+}
+
 if (!$iframed) {
     require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
 }
@@ -25,7 +30,7 @@ var currentAudioElement = undefined;
             cssSelectorAncestor: "#jp_container_1"
         }, [], {
             playlistOptions: {
-                autoPlay: true,
+                autoPlay: <?php echo $autoplay ? 'true' : 'false'; ?>,
                 loopOnPrevious: false,
                 shuffleOnLoop: true,
                 enableRemoveControls: true,
