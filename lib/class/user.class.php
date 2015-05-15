@@ -1075,8 +1075,6 @@ class User extends database_object
 
         $results = array();
 
-        debug_event();
-
         while ($r = Dba::fetch_assoc($db_results)) {
             $pref_id = $r['preference'];
             /* Check for duplicates */
