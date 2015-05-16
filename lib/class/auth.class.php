@@ -305,6 +305,13 @@ class Auth
             return $results;
         }
 
+        if (strpos($ldap_filter, "%v") >= 0) {
+            $ldap_filter = str_replace("%v", $username, $ldap_filter);
+        } else {
+            // This to support previous configuration where only the fieldname was set
+            $ldap_filter = "($ldap_filter=$username)";
+        }
+
         $ldap_name_field    = AmpConfig::get('ldap_name_field');
         $ldap_email_field    = AmpConfig::get('ldap_email_field');
 
@@ -320,7 +327,7 @@ class Auth
                 return $results;
             } // If bind fails
 
-            $sr = ldap_search($ldap_link, $ldap_dn, "(&(objectclass=$ldap_class)($ldap_filter=$username))");
+            $sr = ldap_search($ldap_link, $ldap_dn, "(&(objectclass=$ldap_class)$ldap_filter)");
             $info = ldap_get_entries($ldap_link, $sr);
 
             if ($info["count"] == 1) {

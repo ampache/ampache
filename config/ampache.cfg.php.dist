@@ -613,7 +613,7 @@ show_footer_statistics = true
 ; For OpenLDAP use "uid"
 ; For Microsoft Active Directory (MAD) use "sAMAccountName"
 ; DEFAULT: null
-;ldap_filter = "sAMAccountName"
+;ldap_filter = "(sAMAccountName=%v)"
 
 ; LDAP objectclass (required)
 ; OpanLDAP objectclass = "*"
