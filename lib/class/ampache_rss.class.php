@@ -301,7 +301,7 @@ class Ampache_RSS
             $xml_array = array('title' => $album->f_name,
                     'link' => $album->link,
                     'description' => $album->f_artist_name . ' - ' . $album->f_name,
-                    'image' => Art::url($album->id, 'album'),
+                    'image' => Art::url($album->id, 'album', null, 2),
                     'comments' => '',
                     'pubDate' => date("c", $album->get_addtime_first_song())
             );
