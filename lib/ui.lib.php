@@ -439,8 +439,6 @@ function show_license_select($name='license',$license_id=0,$song_id=0)
     $sql = "SELECT `id`, `name` FROM `license` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
-    echo "\t<option value=\"-1\"></option>\n";
-
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
         if ($r['id'] == $license_id) {

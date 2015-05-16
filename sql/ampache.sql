@@ -325,19 +325,20 @@ CREATE TABLE IF NOT EXISTS `license` (
 --
 
 INSERT INTO `license` (`id`, `name`, `description`, `external_link`) VALUES
-(1, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/3.0/'),
-(2, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/3.0/'),
-(3, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/3.0/'),
-(4, 'CC BY NC SA', NULL, 'https://creativecommons.org/licenses/by-nc-sa/3.0/'),
-(5, 'CC BY ND', NULL, 'https://creativecommons.org/licenses/by-nd/3.0/'),
-(6, 'CC BY SA', NULL, 'https://creativecommons.org/licenses/by-sa/3.0/'),
-(7, 'Licence Art Libre', NULL, 'http://artlibre.org/licence/lal/'),
-(8, 'Yellow OpenMusic', NULL, 'http://openmusic.linuxtag.org/yellow.html'),
-(9, 'Green OpenMusic', NULL, 'http://openmusic.linuxtag.org/green.html'),
-(10, 'Gnu GPL Art', NULL, 'http://gnuart.org/english/gnugpl.html'),
-(11, 'WTFPL', NULL, 'https://en.wikipedia.org/wiki/WTFPL'),
-(12, 'FMPL', NULL, 'http://www.fmpl.org/fmpl.html'),
-(13, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm');
+(1, '_default', NULL, ''),
+(2, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/3.0/'),
+(3, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/3.0/'),
+(4, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/3.0/'),
+(5, 'CC BY NC SA', NULL, 'https://creativecommons.org/licenses/by-nc-sa/3.0/'),
+(6, 'CC BY ND', NULL, 'https://creativecommons.org/licenses/by-nd/3.0/'),
+(7, 'CC BY SA', NULL, 'https://creativecommons.org/licenses/by-sa/3.0/'),
+(8, 'Licence Art Libre', NULL, 'http://artlibre.org/licence/lal/'),
+(9, 'Yellow OpenMusic', NULL, 'http://openmusic.linuxtag.org/yellow.html'),
+(10, 'Green OpenMusic', NULL, 'http://openmusic.linuxtag.org/green.html'),
+(11, 'Gnu GPL Art', NULL, 'http://gnuart.org/english/gnugpl.html'),
+(12, 'WTFPL', NULL, 'https://en.wikipedia.org/wiki/WTFPL'),
+(13, 'FMPL', NULL, 'http://www.fmpl.org/fmpl.html'),
+(14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm');
 
 -- --------------------------------------------------------
 
