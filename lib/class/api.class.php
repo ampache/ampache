@@ -627,7 +627,7 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::songs($songs);
+        echo XML_Data::songs($songs,$items);
 
     } // playlist_songs
 

@@ -43,7 +43,6 @@ class XML_Data
     private function __construct()
     {
         // Rien a faire
-
     } // constructor
 
     /**
@@ -58,7 +57,6 @@ class XML_Data
     {
         $offset = intval($offset);
         self::$offset = $offset;
-
     } // set_offset
 
     /**
@@ -71,11 +69,12 @@ class XML_Data
      */
     public static function set_limit($limit)
     {
-        if (!$limit) { return false; }
+        if (!$limit) {
+            return false;
+        }
 
         $limit = intval($limit);
         self::$limit = $limit;
-
     } // set_limit
 
     /**
@@ -88,10 +87,11 @@ class XML_Data
      */
     public static function set_type($type)
     {
-        if (!in_array($type,array('rss','xspf','itunes'))) { return false; }
+        if (!in_array($type,array('rss','xspf','itunes'))) {
+            return false;
+        }
 
         self::$type = $type;
-
     } // set_type
 
     /**
@@ -108,7 +108,6 @@ class XML_Data
     {
         $string = self::_header() . "\t<error code=\"$code\"><![CDATA[$string]]></error>" . self::_footer();
         return $string;
-
     } // error
 
     /**
@@ -131,7 +130,6 @@ class XML_Data
         $final .= self::_footer();
 
         return $final;
-
     } // single_string
 
     /**
@@ -145,7 +143,6 @@ class XML_Data
     public static function header()
     {
         return self::_header();
-
     } // header
 
     /**
@@ -159,7 +156,6 @@ class XML_Data
     public static function footer()
     {
         return self::_footer();
-
     } // footer
 
     /**
@@ -173,7 +169,6 @@ class XML_Data
         $string = '';
 
         if (is_array($tags)) {
-
             $atags = array();
             foreach ($tags as $tag_id => $data) {
                 if (array_key_exists($data['id'], $atags)) {
@@ -192,8 +187,28 @@ class XML_Data
         }
 
         return $string;
-
     } // tags_string
+
+
+    /**
+     * playlist_song_tracks_string
+     *
+     * This returns the formatted 'playlistTrack' string for an xml document
+     *
+     */
+    private static function playlist_song_tracks_string($song,$playlist_data)
+    {
+        if ($playlist_data == "") {
+            return "";
+        }
+        $playlist_track = "";
+        foreach ($playlist as $playlist_data) {
+            if ($playlist_data["object_id"] == $song->id) {
+                return "\t<playlisttrack>" . $playlist_data["track"] . "</playlisttrack>\n";
+            }
+        }
+        return "";
+    } // playlist_song_tracks_string
 
     /**
      * keyed_array
@@ -224,7 +239,6 @@ class XML_Data
             } else {
                 $string .= "\t<$key$attribute><![CDATA[$value]]></$key>\n";
             }
-
         } // end foreach
 
         if (!$callback) {
@@ -232,7 +246,6 @@ class XML_Data
         }
 
         return $string;
-
     } // keyed_array
 
     /**
@@ -268,7 +281,6 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-
     } // tags
 
     /**
@@ -315,7 +327,6 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-
     } // artists
 
     /**
@@ -369,7 +380,6 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-
     } // albums
 
     /**
@@ -401,15 +411,12 @@ class XML_Data
                 "\t<items>$item_total</items>\n" .
                 "\t<type>$playlist->type</type>\n" .
                 "</playlist>\n";
-
-
         } // end foreach
 
         // Build the final and then send her off
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-
     } // playlists
 
     /**
@@ -418,7 +425,7 @@ class XML_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs)
+    public static function songs($songs,$playlist_data='')
     {
         if (count($songs) > self::$limit OR self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -433,8 +440,10 @@ class XML_Data
             $song = new Song($song_id);
 
             // If the song id is invalid/null
-            if (!$song->id) { continue; }
-
+            if (!$song->id) {
+                continue;
+            }
+            $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating = new Rating($song_id, 'song');
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
@@ -450,6 +459,7 @@ class XML_Data
                 $tag_string .
                 "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
                 "\t<track>" . $song->track . "</track>\n" .
+                $playlist_track_string  .
                 "\t<time>" . $song->time . "</time>\n" .
                 "\t<year>" . $song->year . "</year>\n" .
                 "\t<bitrate>" . $song->bitrate . "</bitrate>\n".
@@ -465,11 +475,9 @@ class XML_Data
                 "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
                 "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                 "</song>\n";
-
         } // end foreach
 
         return self::_header() . $string . self::_footer();
-
     } // songs
 
     /**
@@ -499,13 +507,11 @@ class XML_Data
                     self::tags_string($video->tags) .
                     "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api') . "]]></url>\n" .
                     "</video>\n";
-
         } // end foreach
 
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-
     } // videos
 
     /**
@@ -519,7 +525,9 @@ class XML_Data
      */
     public static function democratic($object_ids=array())
     {
-        if (!is_array($object_ids)) { $object_ids = array(); }
+        if (!is_array($object_ids)) {
+            $object_ids = array();
+        }
 
         $democratic = Democratic::get_current_playlist();
 
@@ -557,13 +565,11 @@ class XML_Data
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
                     "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
                     "</song>\n";
-
         } // end foreach
 
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-
     } // democratic
 
     /**
@@ -595,7 +601,6 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-
     } // rss_feed
 
     /**
@@ -644,7 +649,6 @@ class XML_Data
         } // end switch
 
         return $header;
-
     } // _header
 
     /**
@@ -673,7 +677,6 @@ class XML_Data
 
 
         return $footer;
-
     } // _footer
 
     public static function podcast(library_item $libitem)
@@ -738,5 +741,4 @@ class XML_Data
         $dom->formatOutput = true;
         return $dom->saveXML($dom->documentElement);
     }
-
 } // XML_Data
