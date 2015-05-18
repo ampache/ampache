@@ -113,6 +113,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'),'random', T_('Random to temporary playlist'),'play_random_' . $album->id); ?>
             <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to temporary playlist'), 'play_random_text_' . $album->id); ?>
         </li>
+        <li>
+            <a id="<?php echo 'add_playlist_'.$album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
+                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            </a>
+            <a id="<?php echo 'add_playlist_'.$album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
+                <?php echo T_('Add to existing playlist') ?>
+            </a>
+        </li>
         <?php } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
