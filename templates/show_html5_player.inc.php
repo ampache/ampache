@@ -450,8 +450,11 @@ if ($isVideo) {
 <?php if ($iframed) { ?>
         <?php if (Access::check('interface', '25')) { ?>
             <div class="action_button">
-                <a href="javascript:SavePlaylist();"><?php echo UI::get_icon('playlist_add', T_('Add to New Playlist')); ?></a>
+                <a onclick="javascript:SaveToExistingPlaylist(event);">
+                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                </a>
             </div>
+
         <?php } ?>
         <div id="slideshow" class="slideshow action_button">
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
