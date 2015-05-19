@@ -331,7 +331,7 @@ class Ampache_RSS
             $xml_array = array('title' => $artist->f_name,
                     'link' => $artist->link,
                     'description' => $artist->summary,
-                    'image' => Art::url($artist->id, 'artist'),
+                    'image' => Art::url($artist->id, 'artist', null, 2),
                     'comments' => '',
                     'pubDate' => ''
             );
@@ -365,7 +365,7 @@ class Ampache_RSS
             $xml_array = array('title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->link,
                     'description' => $shout->text,
-                    'image' => Art::url($shout->object_id, $shout->object_type),
+                    'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
                     'comments' => '',
                     'pubDate' => date("c", $shout->date)
             );

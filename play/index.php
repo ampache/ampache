@@ -621,6 +621,14 @@ if ($transcode && isset($transcoder)) {
     }
 };
 
+// If this is a democratic playlist remove the entry.
+// We do this regardless of play amount.
+if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
+
+// Close sql connection
+// Warning: do not call functions requiring sql after this point
+Dba::disconnect();
+
 $browser->downloadHeaders($media_name, $mime, false, $stream_size);
 
 $bytes_streamed = 0;
@@ -666,10 +674,6 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
     print(str_repeat(' ', $stream_size - $bytes_streamed));
     $bytes_streamed = $stream_size;
 }
-
-// If this is a democratic playlist remove the entry.
-// We do this regardless of play amount.
-if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
 
 if ($transcode && isset($transcoder)) {
     fclose($fp);

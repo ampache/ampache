@@ -91,8 +91,14 @@ class Session
 
         debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
 
+        $session_name = AmpConfig::get('session_name');
+        $cookie_path = AmpConfig::get('cookie_path');
+        $cookie_domain = null;
+        $cookie_secure = AmpConfig::get('cookie_secure');
+
         // Destroy our cookie!
-        setcookie(AmpConfig::get('session_name'), null, -1);
+        setcookie($session_name, null, -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_user', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
 
         return true;
     }
@@ -438,6 +444,23 @@ class Session
         /* Start the session */
         self::ungimp_ie();
         session_start();
+    }
+
+    /**
+     * create_user_cookie
+     *
+     * This function just creates the user cookie wich contains current username.
+     * It must be used for information only.
+     */
+    public static function create_user_cookie($username)
+    {
+        $cookie_life = AmpConfig::get('cookie_life');
+        $session_name = AmpConfig::get('session_name');
+        $cookie_path = AmpConfig::get('cookie_path');
+        $cookie_domain = null;
+        $cookie_secure = AmpConfig::get('cookie_secure');
+
+        setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
     }
 
     /**

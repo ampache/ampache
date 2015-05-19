@@ -152,8 +152,11 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         $user->insert_ip_history();
     }
 
-    if ($_POST['rememberme'] && isset($username)) {
-        Session::create_remember_cookie($username);
+    if (isset($username)) {
+        Session::create_user_cookie($username);
+        if ($_POST['rememberme']) {
+            Session::create_remember_cookie($username);
+        }
     }
 
     // Update data from this auth if ours are empty

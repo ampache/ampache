@@ -32,6 +32,11 @@
             <td><?php echo T_('Ampache session.'); ?></td>
         </tr>
         <tr>
+            <td>Session username</td>
+            <td><?php echo AmpConfig::get('session_name'); ?>_user</td>
+            <td><?php echo T_('Ampache session username (if authenticated, information only).'); ?></td>
+        </tr>
+        <tr>
             <td>Remember Me</td>
             <td><?php echo AmpConfig::get('session_name'); ?>_remember</td>
             <td><?php echo T_('Automatically authenticate users.'); ?></td>
