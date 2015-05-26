@@ -218,7 +218,9 @@ class vainfo
         if (in_array('filename', $enabled_sources)) {
             $this->tags['filename'] = $this->_parse_filename($this->filename);
         }
-
+        if (isset($this->_raw['tags']['quicktime'])) {
+            $this->_raw['tags']['quicktime']['picture'] = $this->_raw['comments']['picture'];
+        }
         if (in_array('getID3', $enabled_sources) && $this->islocal) {
             $this->tags['getID3'] = $this->_get_tags();
         }
@@ -355,6 +357,7 @@ class vainfo
             // This because video title are almost always bad...
             $info['original_name'] = $info['original_name'] ?: stripslashes(trim($tags['original_name']));
             $info['title'] = $info['title'] ?: stripslashes(trim($tags['title']));
+            $info['episode_title'] = $info['episode_title'] ?: stripslashes(trim($tags['episode_title']));
 
             $info['year'] = $info['year'] ?: intval($tags['year']);
 
@@ -400,6 +403,8 @@ class vainfo
             $info['audio_codec'] = $info['audio_codec'] ?: trim($tags['audio_codec']);
             $info['video_codec'] = $info['video_codec'] ?: trim($tags['video_codec']);
             $info['description'] = $info['description'] ?: trim($tags['description']);
+            $info['overview'] = $info['overview'] ?: trim($tags['overview']);
+            $info['content_rating'] = $info['content_rating'] ?: trim($tags['content_rating']);
 
             $info['tvshow'] = $info['tvshow'] ?: trim($tags['tvshow']);
             $info['tvshow_year'] = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
@@ -410,6 +415,7 @@ class vainfo
             $info['tvshow_art'] = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
             $info['art'] = $info['art'] ?: trim($tags['art']);
+            $info['picture'] = $info['picture'] ?: $tags['picture'];
         }
 
         // Some things set the disk number even though there aren't multiple
@@ -975,6 +981,19 @@ class vainfo
                     break;
                 case 'tv_show_name':
                     $parsed['tvshow'] = $data[0];
+                    break;
+                case 'tv_episode_id':
+                    $parsed['episode_title'] = $data[0];
+                    break;
+                case 'iTunEXTC':
+                    $temp = explode('|',$data[0]);
+                    $parsed['content_rating'] = $temp[1];
+                    break;
+                case 'description_long':
+                    $parsed['summary'] = $data[0];
+                    break;
+                case 'picture':
+                    $parsed['picture'] = $data[0];
                     break;
                 default:
                     $parsed[$tag] = $data[0];

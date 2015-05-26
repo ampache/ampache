@@ -506,6 +506,12 @@ class Update
         $update_string = " - Add option on user fullname to show/hide it publicly.<br />";
         $version[] = array('version' => '370035','description' => $update_string);
 
+        $update_string = " - Add movie MPAA and TV content Rating from TmdB and Tvdb.<br />" .
+                         " - Changes Movie and TV show summary to overview and expands size of<br />" .
+                         " - the overview and TV episode columns. Dropped movie.prefix and tvshow.prefix columns.<br />" ;
+        $version[] = array('version' => '380000', 'description' => $update_string);
+
+
         return $version;
     }
 
@@ -3504,4 +3510,44 @@ class Update
 
         return $retval;
     }
+
+    /*
+     * update_380000
+     *
+     * Adds ability to store movie MPAA and TV content ratings
+     * Chamged  tvshow 'summary' to "overview" and Increased size to 1024
+     * Changed tvshow_episode summary size to 1024.
+     *
+     */
+    public static function update_380000()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `movie` DROP COLUMN `prefix`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `movie` ADD COLUMN `content_rating` VARCHAR(12) NULL DEFAULT NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `movie` CHANGE COLUMN `summary` `summary` VARCHAR(1024) CHARACTER SET 'utf8' NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow` ADD COLUMN `content_rating` VARCHAR(12) NULL AFTER `summary`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow` CHANGE COLUMN `summary` `overview` VARCHAR(1024) CHARACTER SET 'utf8' NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow` DROP COLUMN `prefix`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow_episode` CHANGE COLUMN `summary` `summary` VARCHAR(1024) CHARACTER SET 'utf8' NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tvshow_episode` CHANGE COLUMN `original_name` `episode_title` VARCHAR(1024) CHARACTER SET 'utf8' NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
 }

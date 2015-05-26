@@ -27,27 +27,19 @@
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->f_name); ?>" autofocus /></td>
             </tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
-                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
+           <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Content Rating') ?></td>
+                <td><input type="text" name="content_rating" value="<?php echo scrub_out($libitem->content_rating); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
-                <td><input type="number" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Overview') ?></td>
+                <td><textarea name="overview" cols="44" rows="4"><?php echo scrub_out($libitem->overview); ?></textarea></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
-            <tr>
-                <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub episodes') ?></td>
-            </tr>
-            <tr>
-                <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub episodes') ?></td>
-            </tr>
-        </table>
+         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="tvshow_row" />
     </form>

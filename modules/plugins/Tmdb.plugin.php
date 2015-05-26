@@ -26,7 +26,7 @@ class AmpacheTmdb {
     public $categories     = 'metadata';
     public $description    = 'Tmdb metadata integration';
     public $url            = 'https://www.themoviedb.org';
-    public $version        = '000001';
+    public $version        = '000002';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
     
@@ -106,79 +106,90 @@ class AmpacheTmdb {
             $configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
             $config = $configRepository->load();
             $imageHelper = new \Tmdb\Helper\ImageHelper($config);
-            
-            $title = $media_info['original_name'] ?: $media_info['title'];
-            
             $results = array();
+            $release_info = $this->parseFileName($media_info['file'], $gather_types);
+            if (empty($release_info[0])) {
+                debug_event('tmdb', 'Could not parse title, skipped.', '5');
+                return null;
+            }
+            if (in_array('tvshow', $gather_types)) {
+               $results['tvshow'] = trim($release_info[0]);
+               $results['tvshow_season'] = $release_info[1];
+               $results['tvshow_episode'] = $release_info[2];
+               $results['year'] = $release_info[3];
+            }
+            else {
+                $results['title'] = $release_info[0];
+                $results['year'] = $release_info[1];
+           }
+           if (in_array('movie', $gather_types)) {
+                $apires = $client->getSearchApi()->searchMovies($results['title']);
+           }
+           else {
+                $apires = $client->getSearchApi()->searchTv($results['tvshow']);
+            }
+            $result = $apires['results'][0];
+            $title = in_array('movie', $gather_types) ? $results['title'] : $results['tvshow'];
+            $result = $this->getResultByTitle($apires['results'], $title, $gather_types, $results['year']);
             if (in_array('movie', $gather_types)) {
-                if (!empty($title)) {
-                    $apires = $client->getSearchApi()->searchMovies($title);
-                    if (count($apires['results']) > 0) {
-                        $results['tmdb_id'] = $apires['results'][0]['id'];
-                        $release = $client->getMoviesApi()->getMovie($results['tmdb_id']);
-                        $results['imdb_id'] = $release['imdb_id'];
-                        $results['original_name'] = $release['original_title'];
-                        if (!empty($release['release_date'])) {
-                            $results['release_date'] = strtotime($release['release_date']);
-                            $results['year'] = date("Y", $results['release_date']);  // Production year shouldn't be the release date
+                $results['tmdb_id'] = $result['id'];
+                $repository = new \Tmdb\Repository\MovieRepository($client);
+                $movie = $repository->load($results['tmdb_id']);
+                $results['original_name'] = $movie->getOriginalTitle();
+                if ($datetime = $movie->getReleaseDate()) {
+                    $results['release_date'] = $datetime->getTimestamp();
+                    $results['year'] = date_format($datetime, 'Y');
+                }
+                if ($movie->getPosterPath()) {
+                    $results['art'] = $imageHelper->getUrl($movie->getPosterPath());
+                }
+                if ($movie->getBackdropPath()) {
+                    $results['background_art'] = $imageHelper->getUrl($movie->getBackdropPath());
+                }
+                $results['overview'] = $movie->getOverview();
+                $results['genre'] = self::get_genres($movie);
+                $results['content_rating'] = $this->get_release($movie, $gather_types);
+              }
+
+            if (in_array('tvshow', $gather_types)) {
+                $results['tmdb_tvshow_id'] = $result['id'];
+                $repository = new \Tmdb\Repository\TvRepository($client);
+                $tvshow  = $repository->load($results['tmdb_tvshow_id']);
+                $results['tvshow'] = $tvshow->getName();
+                if ($tvshow->getFirstAirDate()) {
+                    $release_date = $tvshow->getFirstAirDate();
+                    $results['year'] = date_format($release_date, 'Y');
+                }
+                if ($tvshow->getPosterPath()) {
+                    $results['tvshow_art'] = $imageHelper->getUrl($tvshow->getPosterPath());
+                }
+                if ($tvshow->getBackDropPath()) {
+                    $results['tvshow_background_art'] = $imageHelper->getUrl($tvshow->getBackdropPath());
+                }
+                $results['overview'] = $tvshow->getOverview();
+                $results['genre'] = self::get_genres($tvshow);
+                $results['content_rating'] = $this->get_release($tvshow, $gather_types);
+
+                if ($results['tvshow_season']) {
+                    $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'], $results['tvshow_season']);
+                    if ($release['id']) {
+                         if ($release['poster_path']) {
+                            $results['tvshow_season_art'] = $imageHelper->getUrl($release['poster_path']);
                         }
-                        if ($release['poster_path']) {
+                        $episode = $release['episodes'][$results['tvshow_episode'] - 1];
+                        $results['tmdb_id'] = $episode['id]'];
+                        $results['episode_title'] = $episode['name'];
+                        if ($episode['air_date']) {
+                            $results['release_date'] = strtotime($episode['air_date']);
+                        }
+                        $results['description'] = $episode['overview'];
+                        if ($episode['still_path']) {
+                            $results['art'] = $imageHelper->getUrl($episode['still_path']);
+                        } else {
                             $results['art'] = $imageHelper->getUrl($release['poster_path']);
                         }
-                        if ($release['backdrop_path']) {
-                            $results['background_art'] = $imageHelper->getUrl($release['backdrop_path']);
-                        }
-                        $results['genre'] = self::get_genres($release);
-                    }
-                }
-            }
-            
-            if (in_array('tvshow', $gather_types)) {
-                if (!empty($media_info['tvshow'])) {
-                    $apires = $client->getSearchApi()->searchTv($media_info['tvshow']);
-                    if (count($apires['results']) > 0) {
-                        // Get first match
-                        $results['tmdb_tvshow_id'] = $apires['results'][0]['id'];
-                        $release = $client->getTvApi()->getTvshow($results['tmdb_tvshow_id']);
-                        $results['tvshow'] = $release['original_name'];
-                        if (!empty($release['first_air_date'])) {
-                            $results['tvshow_year'] = date("Y", strtotime($release['first_air_date']));
-                        }
-                        if ($release['poster_path']) {
-                            $results['tvshow_art'] = $imageHelper->getUrl($release['poster_path']);
-                        }
-                        if ($release['backdrop_path']) {
-                            $results['tvshow_background_art'] = $imageHelper->getUrl($release['backdrop_path']);
-                        }
-                        $results['genre'] = self::get_genres($release);
-                        
-                        if ($media_info['tvshow_season']) {
-                            $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'], $media_info['tvshow_season']);
-                            if ($release['id']) {
-                                if ($release['poster_path']) {
-                                    $results['tvshow_season_art'] = $imageHelper->getUrl($release['poster_path']);
-                                }
-                                if ($media_info['tvshow_episode']) {
-                                    $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
-                                    if ($release['id']) {
-                                        $results['tmdb_id'] = $release['id'];
-                                        $results['tvshow_season'] = $release['season_number'];
-                                        $results['tvshow_episode'] = $release['episode_number'];
-                                        $results['original_name'] = $release['name'];
-                                        if (!empty($release['air_date'])) {
-                                            $results['release_date'] = strtotime($release['release_date']);
-                                            $results['year'] = date("Y", $results['release_date']);
-                                        }
-                                        $results['description'] = $release['overview'];
-                                        if ($release['still_path']) {
-                                            $results['art'] = $imageHelper->getUrl($release['still_path']);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                   }
+               }
             }
         } catch (Exception $e) {
             debug_event('tmdb', 'Error getting metadata: ' . $e->getMessage(), '1');
@@ -187,24 +198,141 @@ class AmpacheTmdb {
         return $results;
     } // get_metadata
     
+    private function getResultByTitle($results, $title, $gather_type, $year)
+    {
+         $titles = array();   
+        
+        foreach ($results as $index)
+        {
+            if (in_array('movie', $gather_type)) {
+                if ((strtoupper($title) == strtoupper($index['title'])) && (strtoupper($index['original_title']) == strtoupper($title))) {
+                    $titles[] = $index;
+                }
+            }
+            else {
+                if ((strtoupper($title) == strtoupper($index['name'])) && (strtoupper($index['original_name']) == strtoupper($title))) {
+                    $titles[] = $index;
+                }
+            }
+        }
+        if ((count($titles) > 1) && ($year != null)) {
+            foreach ($titles as $index)
+            {
+                $y = in_array('movie', $gather_type) ? date("Y",strtotime($index['release_date'])) : date("Y",strtotime($index['first_air_date']));
+                if ($year == $y) {
+                    return $index;
+                }
+            }
+        }
+        return count($titles) > 0 ? $titles[0] : $results[0];
+    }
+    
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('Tmdb', 'gather_arts for type `' . $type . '`', 5);
         return Art::gather_metadata_plugin($this, $type, $options);
     }
     
-    private static function get_genres($release)
+    private function get_release($show, $gather_type)
     {
-        $genres = array();
-        if (is_array($release['genres'])) {
-            foreach ($release['genres'] as $genre) {
-                if (!empty($genre['name'])) {
-                    $genres[] = $genre['name'];
+        $releases = in_array('movie', $gather_type) ? $show->getReleases()  : $show->getContentRatings();
+        $data = $releases->toArray();
+        $iso31661 = AmpConfig::get('certification_country') ? : "US";
+        foreach ($data as $country) {
+            if ($iso31661 == $country->getIso31661()) {
+                if (in_array('movie', $gather_type)) {
+                    $certification = $country->getCertification();
+                   return (empty($certification)) ? "NR" : $certification;
+                } else {
+                    return $country->getRating();
                 }
             }
         }
+        return "NR";
+    }
+    
+    private static function get_genres($show)
+    {
+        $genres = array();
+        $data = $show->getGenres();
+        $Genres = $data->getGenres();
+            foreach ($Genres as $genre) {
+                if (!$genre->getName() == false) {
+                    $genres[] = $genre->getName();
+                }
+            }
         return $genres;
     }
+    
+   /**
+    *  parses TV show name variations:
+    *    1. title[date].S#[#]E#[#].ext		(Upper/lower case)
+    *    2. title[date].#[#]X#[#].ext		(both upper/lower case letters
+    *    3. title[date].Season #[#] Episode #[#].ext
+    *    4. title[date].###.ext		(maximum of 9 seasons)
+    *  parse directory  path for name, season and episode numbers
+    *     /show name/season #/## episode name.ext
+    *  parse movie names:
+    *    title.[date].ext
+    */
+    private function parseFileName($filename, $gather_types)
+    {
+    	$file = pathinfo($filename,PATHINFO_FILENAME);
+        
+        if (in_array('tvshow', $gather_types)) {
+            if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
+                $temp = preg_split("~([1|2][0-9]{3})?(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+)|((\.|_|\s)\d+[x|X]\d+))~",$file,2);
+                preg_match("~[sS](\d+)[eE](\d+)~",$seasonEpisode[0],$tmp);
+            }
+            else {
+  	             if (preg_match("~[\.\s](\d)[xX](\d{2})[\.\s]~", $file, $seasonEpisode)) {
+                    $temp = preg_split("~([1|2][0-9]{3})?[\._\s]\d[xX]\d{2}[\.\s]~",$file,2);
+                    preg_match("~[\.\s](\d)[xX](\d+)[\.\s]~",$seasonEpisode[0],$tmp);
+                 }
+                else {
+                    if (preg_match("~[S|s]eason[-\.\s](\d+)[\.\-\s\,]?\s?[e|E]pisode[\s-\.\s](\d+)[\.\s-]?~", $file, $seasonEpisode)) {
+                        $temp = preg_split("~[\s\.-]?([1|2][0-9]{3})?[\.\s-][S|s]eason[\s-\.\,](\d+)[\.\s-,]?\s?[e|E]pisode[\s-\.](\d+)~",$file,2);
+                        $tmp = $seasonEpisode;
+                    }
+                    else {
+            	       if (preg_match("~\.(\d)(\d\d)[\.\z]~", $file, $seasonEpisode)) {
+                            $temp = preg_split("~([1|2][0-9]{3})?\.(\d){3}[\.\z]~",$file,3);
+                            preg_match("~\.(\d)(\d\d)\.?~",$seasonEpisode[0],$tmp);
+                     }
+                     else {
+                        	if (strpos($filename, '/') !== false) {
+                             	$slash_type = '~/~';
+							} else {
+								$slash_type = "~\\\\~";
+						}
+                               $matches = preg_split($slash_type,$filename, -1,PREG_SPLIT_DELIM_CAPTURE);
+								$rmatches = array_reverse($matches);
+								$episode = preg_split('~^(\d{1,2})~',$rmatches[0], 0,  PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+								$episode[0] = ltrim($episode[0], "0");
+								preg_match('~\d{1,2}\z~', $rmatches[1], $season);
+								$season[0] = ltrim($season[0], "0");
+								$title = ucwords($rmatches[2]);
+        						return [$title, $season[0], $episode[0], null];                          
+                   }
+                }
+              }
+        }
+        preg_match("~[1|2][0-9]{3}~", $file, $tyear);
+        $year = isset($tyear[0]) ? $tyear[0] : null;
+        $seasonEpisode = array_reverse($tmp);
+        $episode = ltrim($seasonEpisode[0],"0");
+        $season = ltrim($seasonEpisode[1],"0");
+        $title = str_replace(['.','_'], ' ',trim($temp[0], " \t\n\r\0\x0B\.\_"));
+        return [ucwords($title), $season, $episode, $year];
+   }
 
+    if (in_array('movie', $gather_types)) {
+	    $temp = preg_split("~(\.(\(([12][0-9]{3})\)))?(?(1)|\.[12][0-9]{3})~",$file,2);
+	    $title = str_replace(['.','_'], ' ',trim($temp[0], " \t\n\r\0\x0B\.\_"));
+	    preg_match("~[1|2][0-9]{3}~", $file, $tyear);
+	    $year = isset($tyear[0]) ? $tyear[0] : null; 
+	    return [ucwords($title), $year];
+    }
+  }
 } // end AmpacheTmdb
 ?>

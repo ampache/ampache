@@ -21,7 +21,13 @@
  */
 
 ?>
-<?php UI::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
+<?php
+if (strtolower(get_class($video)) != 'movie') {
+  UI::show_box_top($video->f_tvshow . ' ' . T_('Details'), 'box box_video_details');
+} else {
+    UI::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details');
+}
+?>
 <div class="item_right_info">
 <?php
 $gart = false;
@@ -107,7 +113,11 @@ foreach ($subtitles as $subtitle) {
         <?php } ?>
     </dd>
 <?php
-  $videoprops[gettext_noop('Title')]   = scrub_out($video->f_title);
+if (strtolower(get_class($video)) != 'movie') {
+   $videoprops[gettext_noop('Episode Title')]   = scrub_out($video->episode_title);
+} else {
+   $videoprops[gettext_noop('Title')]   = scrub_out($video->f_title);
+}
   $videoprops[gettext_noop('Length')]  = scrub_out($video->f_time);
 if (!strtolower(get_class($video)) != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . strtolower(get_class($video)) . '.inc.php';
@@ -130,8 +140,7 @@ if (!strtolower(get_class($video)) != 'video') {
   if (AmpConfig::get('show_played_times')) {
     $videoprops[gettext_noop('# Played')]   = scrub_out($video->object_cnt);
   }
-
-    foreach ($videoprops as $key => $value) {
+   foreach ($videoprops as $key => $value) {
         if (trim($value)) {
               $rowparity = UI::flip_class();
               echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";

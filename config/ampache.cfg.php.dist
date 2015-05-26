@@ -972,3 +972,12 @@ encode_ss_duration = "-t %DURATION%"
 ; so that the ordering is sane.
 ; DEFAULT: auto
 ;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"
+
+;#####################################
+;   Content Certification Settings   #
+;#####################################
+; This setting will enable retrieving the movie certifications
+; or TV content ratings for your country if the info exists in the Db.
+; The value is the two-letter country code for your country.
+; DEFAULT: US
+;certification_country = "US"

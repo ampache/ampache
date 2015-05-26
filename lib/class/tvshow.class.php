@@ -25,7 +25,6 @@ class TVShow extends database_object implements library_item
     /* Variables from DB */
     public $id;
     public $name;
-    public $prefix;
     public $summary;
     public $year;
 
@@ -180,7 +179,6 @@ class TVShow extends database_object implements library_item
         $this->f_name = trim($this->prefix . " " . $this->name);
         $this->link = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
-
         if ($details) {
             $this->_get_extra_info();
             $this->tags = Tag::get_top_tags('tvshow', $this->id);
@@ -277,7 +275,7 @@ class TVShow extends database_object implements library_item
      *
      * Checks for an existing tv show; if none exists, insert one.
      */
-    public static function check($name, $year, $readonly = false)
+    public static function check($name, $year, $content_rating, $overview, $readonly = false)
     {
         // null because we don't have any unique id like mbid for now
         if (isset(self::$_mapcache[$name]['null'])) {
@@ -286,10 +284,6 @@ class TVShow extends database_object implements library_item
 
         $id = 0;
         $exists = false;
-
-        $trimmed = Catalog::trim_prefix(trim($name));
-        $name = $trimmed['string'];
-        $prefix = $trimmed['prefix'];
 
         if (!$exists) {
             $sql = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
@@ -316,10 +310,10 @@ class TVShow extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`) ' .
-            'VALUES(?, ?, ?)';
+        $sql = 'INSERT INTO `tvshow` (`name`, `year`, `content_rating`, `overview`) ' .
+            'VALUES(?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array($name, $prefix, $year));
+        $db_results = Dba::write($sql, array($name, $year, $content_rating, $overview));
         if (!$db_results) {
             return null;
         }
@@ -327,9 +321,7 @@ class TVShow extends database_object implements library_item
 
         self::$_mapcache[$name]['null'] = $id;
         return $id;
-
     }
-
     /**
      * update
      * This takes a key'd array of data and updates the current tv show
@@ -340,11 +332,12 @@ class TVShow extends database_object implements library_item
         $current_id = $this->id;
         $name = isset($data['name']) ? $data['name'] : $this->name;
         $year = isset($data['year']) ? $data['year'] : $this->year;
-        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $content_rating = isset($data['content_rating']) ? $data['content_rating'] : $this->content_rating;
+        $overview = isset($data['overview']) ? $data['overview'] : $this->summary;
 
         // Check if name is different than current name
         if ($this->name != $name || $this->year != $year) {
-            $tvshow_id = self::check($name, $year, true);
+            $tvshow_id = self::check($name, $year, $content_rating, $overview, true);
 
             // If it's changed we need to update
             if ($tvshow_id != $this->id && $tvshow_id != null) {
@@ -359,15 +352,10 @@ class TVShow extends database_object implements library_item
             } // end if it changed
         }
 
-        $trimmed = Catalog::trim_prefix(trim($name));
-        $name = $trimmed['string'];
-        $prefix = $trimmed['prefix'];
-
-        $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
-        Dba::write($sql, array($name, $prefix, $year, $summary, $current_id));
+        $sql = 'UPDATE `tvshow` SET `name` = ?, `year` = ?, `content_rating` = ?, `overview` = ? WHERE `id` = ?';
+        Dba::write($sql, array($name, $year, $content_rating, $overview, $current_id));
 
         $this->name = $name;
-        $this->prefix = $prefix;
         $this->year = $year;
         $this->summary = $summary;
 

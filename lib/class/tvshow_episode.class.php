@@ -73,16 +73,24 @@ class TVShow_Episode extends Video
         }
         $tags = $data['genre'];
 
-        $tvshow = TVShow::check($data['tvshow'], $data['year']);
+        $tvshow = TVShow::check($data['tvshow'], $data['year'], $data['content_rating'], $data['overview']);
         if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db($tvshow, 'tvshow')) {
             $art = new Art($tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
+        } elseif ($options['gather_art'] && $data['picture']  && $tvshow) {
+            $art = new Art($tvshow, 'tvshow');
+            $art->insert($data['picture']['data'], $data['picture']['image_mime'] );
         }
+
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
         if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
+        } elseif ($options['gather_art'] && $data['picture']  && tvshow_season) {
+            $art = new Art($tvshow_season, 'tvshow_season');
+            $art->insert($data['picture']['data'], $data['picture']['image_mime'] );
         }
+
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {
@@ -107,9 +115,9 @@ class TVShow_Episode extends Video
      */
     public static function create($data)
     {
-        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " .
+        $sql = "INSERT INTO `tvshow_episode` (`id`, `episode_title`, `season`, `episode_number`, `summary`) " .
             "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']));
+        Dba::write($sql, array($data['id'], $data['episode_title'], $data['tvshow_season'], $data['tvshow_episode'], $data['description']));
 
         return $data['id'];
 
@@ -123,15 +131,14 @@ class TVShow_Episode extends Video
     {
         parent::update($data);
 
-        $original_name = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
+        $episode_title = isset($data['episode_title']) ? $data['episode_title'] : $this->episode_title;
         $tvshow_season = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
         $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->episode_number;
         $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $sql = "UPDATE `tvshow_episode` SET `episode_title` = ?, `season` = ?, `episode_number` = ?, `summary` = ?  WHERE `id` = ?";
+        Dba::write($sql, array($episode_title, $tvshow_season, $tvshow_episode, $summary, $this->id));
 
-        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
-        Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
-
-        $this->original_name = $original_name;
+        $this->episode_title = $episode_title;
         $this->season = $tvshow_season;
         $this->episode_number = $tvshow_episode;
         $this->summary = $summary;
@@ -151,7 +158,7 @@ class TVShow_Episode extends Video
         $season = new TVShow_Season($this->season);
         $season->format($details);
 
-        $this->f_title = ($this->original_name ?: $this->f_title);
+        $this->f_title = ($this->episode_title ?: $this->f_title);
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
         $this->f_season = $season->f_name;
         $this->f_season_link = $season->f_link;
@@ -162,6 +169,7 @@ class TVShow_Episode extends Video
         if ($this->episode_number) {
             $this->f_file .= ' - S'. sprintf('%02d', $season->season_number) . 'E'. sprintf('%02d', $this->episode_number);
         }
+
         $this->f_file .= ' - ' . $this->f_title;
         $this->f_full_title = $this->f_file;
 
