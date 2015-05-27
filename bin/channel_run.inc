@@ -181,7 +181,7 @@ while(true)
                                 fwrite($sock, "HTTP/1.1 200 OK\r\n");
                                 fwrite($sock, "Cache-Control: no-store, no-cache, must-revalidate\r\n");
                             }
-                            fwrite($sock, "Content-Type: " . Song::type_to_mime($transcode_to) . "\r\n");
+                            fwrite($sock, "Content-Type: " . Song::type_to_mime($channel->stream_type) . "\r\n");
                             fwrite($sock, "Accept-Ranges: none\r\n");
                             
                             $genre = $channel->get_genre();                            

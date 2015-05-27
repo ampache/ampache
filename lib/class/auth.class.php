@@ -327,7 +327,9 @@ class Auth
                 return $results;
             } // If bind fails
 
-            $sr = ldap_search($ldap_link, $ldap_dn, "(&(objectclass=$ldap_class)$ldap_filter)");
+            $searchstr = "(&(objectclass=$ldap_class)$ldap_filter)";
+            debug_event('ldap_auth', 'ldap_search: ' . $searchstr, 5);
+            $sr = ldap_search($ldap_link, $ldap_dn, $searchstr);
             $info = ldap_get_entries($ldap_link, $sr);
 
             if ($info["count"] == 1) {
