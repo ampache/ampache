@@ -39,6 +39,9 @@ class Channel extends database_object implements media, library_item
     public $name;
     public $description;
 
+    public $header_chunk;
+    public $chunk_size = 4096;
+
     public $tags;
     public $f_tags;
 
@@ -419,8 +422,18 @@ class Channel extends database_object implements media, library_item
                 }
 
                 if (is_resource($this->transcoder['handle'])) {
-
-                    $chunk = fread($this->transcoder['handle'], 4096);
+		    if ( ftell($this->transcoder['handle']) == 0 ) {
+		    	debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'3');
+		        $this->header_chunk = '';
+		    }
+		    $chunk = fread($this->transcoder['handle'], $this->chunk_size);
+		    if ( ftell($this->transcoder['handle']) < 2000 ){
+		        $this->header_chunk .= $chunk;
+			//debug_event('channel', 'CHUNK : ' . $this->header_chunk, '3');
+		    }
+		    //debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'3');
+		    //debug_event('channel', 'CHUNK : ' . $chunk, '3');
+		    //debug_event('channel', 'Chunk size: ' . strlen($chunk) ,'3');
                     $this->media_bytes_streamed += strlen($chunk);
 
                     // End of file, prepare to move on for next call
