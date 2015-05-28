@@ -1003,6 +1003,78 @@ class vainfo
 
         return $parsed;
     }
+    
+   /**
+    *  parses TV show name variations:
+    *    1. title[date].S#[#]E#[#].ext		(Upper/lower case)
+    *    2. title[date].#[#]X#[#].ext		(both upper/lower case letters
+    *    3. title[date].Season #[#] Episode #[#].ext
+    *    4. title[date].###.ext		(maximum of 9 seasons)
+    *  parse directory  path for name, season and episode numbers
+    *     /show name/season #/## episode name.ext
+    *  parse movie names:
+    *    title.[date].ext
+    */
+    public static function parseFileName($filename, $gather_types)
+    {
+        $file = pathinfo($filename,PATHINFO_FILENAME);
+    
+        if (in_array('tvshow', $gather_types)) {
+            if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
+                $temp = preg_split("~([1|2][0-9]{3})?(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+)|((\.|_|\s)\d+[x|X]\d+))~",$file,2);
+                preg_match("~[sS](\d+)[eE](\d+)~",$seasonEpisode[0],$tmp);
+            }
+            else {
+                if (preg_match("~[\.\s](\d)[xX](\d{2})[\.\s]~", $file, $seasonEpisode)) {
+                    $temp = preg_split("~([1|2][0-9]{3})?[\._\s]\d[xX]\d{2}[\.\s]~",$file,2);
+                    preg_match("~[\.\s](\d)[xX](\d+)[\.\s]~",$seasonEpisode[0],$tmp);
+                }
+                else {
+                    if (preg_match("~[S|s]eason[-\.\s](\d+)[\.\-\s\,]?\s?[e|E]pisode[\s-\.\s](\d+)[\.\s-]?~", $file, $seasonEpisode)) {
+                        $temp = preg_split("~[\s\.-]?([1|2][0-9]{3})?[\.\s-][S|s]eason[\s-\.\,](\d+)[\.\s-,]?\s?[e|E]pisode[\s-\.](\d+)~",$file,2);
+                        $tmp = $seasonEpisode;
+                    }
+                    else {
+                	       if (preg_match("~\.(\d)(\d\d)[\.\z]~", $file, $seasonEpisode)) {
+                	           $temp = preg_split("~([1|2][0-9]{3})?\.(\d){3}[\.\z]~",$file,3);
+                	           preg_match("~\.(\d)(\d\d)\.?~",$seasonEpisode[0],$tmp);
+                	       }
+                	       else {
+                	           if (strpos($filename, '/') !== false) {
+                	               $slash_type = '~/~';
+                	           } else {
+                	               $slash_type = "~\\\\~";
+                	           }
+                	           $matches = preg_split($slash_type,$filename, -1,PREG_SPLIT_DELIM_CAPTURE);
+                	           $rmatches = array_reverse($matches);
+                	           $episode = preg_split('~^(\d{1,2})~',$rmatches[0], 0,  PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+                	           $episode[0] = ltrim($episode[0], "0");
+                	           preg_match('~\d{1,2}\z~', $rmatches[1], $season);
+                	           $season[0] = ltrim($season[0], "0");
+                	           $title = ucwords($rmatches[2]);
+                	           return [$title, $season[0], $episode[0], null];
+                	       }
+                    }
+                }
+            }
+            preg_match("~[1|2][0-9]{3}~", $file, $tyear);
+            $year = isset($tyear[0]) ? $tyear[0] : null;
+            $seasonEpisode = array_reverse($tmp);
+            $episode = ltrim($seasonEpisode[0],"0");
+            $season = ltrim($seasonEpisode[1],"0");
+            $title = str_replace(['.','_'], ' ',trim($temp[0], " \t\n\r\0\x0B\.\_"));
+            return [ucwords($title), $season, $episode, $year];
+        }
+    
+        if (in_array('movie', $gather_types)) {
+            $temp = preg_split("~(\.(\(([12][0-9]{3})\)))?(?(1)|\.[12][0-9]{3})~",$file,2);
+            $title = str_replace(['.','_'], ' ',trim($temp[0], " \t\n\r\0\x0B\.\_"));
+            preg_match("~[1|2][0-9]{3}~", $file, $tyear);
+            $year = isset($tyear[0]) ? $tyear[0] : null;
+            return [ucwords($title), $year];
+        }
+    }
+    
 
     /**
      * _parse_filename
