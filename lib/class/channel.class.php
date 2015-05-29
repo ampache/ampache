@@ -423,16 +423,16 @@ class Channel extends database_object implements media, library_item
                 }
 
                 if (is_resource($this->transcoder['handle'])) {
-		    
+                    if ($this->transcoder['handle'] == 0)
+                        $this->header_chunk = '';
                     $chunk = fread($this->transcoder['handle'], $this->chunk_size);
                     $this->media_bytes_streamed += strlen($chunk);
 
-                    if ( (ftell($this->transcoder['handle']) < 10000 && strtolower($this->stream_type) == "ogg") || $this->header_chunk_remainder ) {
+                    if ((ftell($this->transcoder['handle']) < 10000 && strtolower($this->stream_type) == "ogg") || $this->header_chunk_remainder){
                         //debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'3');
                         $clchunk = $chunk;
-                        if ($this->transcoder['handle'] == 0)
-                            $this->header_chunk = '';
-                        else {
+
+                        if ($this->header_chunk_remainder) {
                             $this->header_chunk .= substr($clchunk, 0, $this->header_chunk_remainder);
                             if (strlen($clchunk) >= $header_chunk_remainder){
                                 $clchunk = substr($clchunk, $this->header_chunk_remainder);
@@ -441,7 +441,7 @@ class Channel extends database_object implements media, library_item
                                 $this->header_chunk_remainder = $this->header_chunk_remainder - strlen($clchunk);
                                 $clchunk = '';
                             }
-                                                         }
+                        }
                         // see bin/channel_run.inc for explanation what's happening here
                         while (strtohex(substr($clchunk, 0, 4)) == "4F676753"){
                             $hex = strtohex(substr($clchunk, 0, 27));
