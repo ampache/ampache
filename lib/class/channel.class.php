@@ -443,11 +443,11 @@ class Channel extends database_object implements media, library_item
                             }
                         }
                         // see bin/channel_run.inc for explanation what's happening here
-                        while (strtohex(substr($clchunk, 0, 4)) == "4F676753"){
-                            $hex = strtohex(substr($clchunk, 0, 27));
+                        while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753"){
+                            $hex = $this->strtohex(substr($clchunk, 0, 27));
                             $ogg_nr_of_segments = hexdec(substr($hex, 26*2, 2));
                             if ((substr($clchunk, 27 + $ogg_nr_of_segments + 1, 6) == "vorbis") || (substr($clchunk, 27 + $ogg_nr_of_segments, 4) == "Opus")){
-                                $hex .= strtohex(substr($clchunk, 27, $ogg_nr_of_segments));
+                                $hex .= $this->strtohex(substr($clchunk, 27, $ogg_nr_of_segments));
                                 $ogg_sum_segm_laces = 0;
                                 for($segm = 0; $segm < $ogg_nr_of_segments; $segm++){
                                     $ogg_sum_segm_laces += hexdec(substr($hex, 27*2 + $segm*2, 2));
