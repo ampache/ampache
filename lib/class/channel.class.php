@@ -423,7 +423,7 @@ class Channel extends database_object implements media, library_item
                 }
 
                 if (is_resource($this->transcoder['handle'])) {
-                    if ($this->transcoder['handle'] == 0)
+                    if (ftell($this->transcoder['handle']) == 0)
                         $this->header_chunk = '';
                     $chunk = fread($this->transcoder['handle'], $this->chunk_size);
                     $this->media_bytes_streamed += strlen($chunk);
