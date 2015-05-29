@@ -318,9 +318,9 @@ class XML_Data
                     "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<mbid>" . $artist->mbid . "</mbid>\n" .
-                    "\t<summary>" . $artist->summary . "</summary>\n" .
-                    "\t<yearformed>" . $artist->summary . "</yearformed>\n" .
-                    "\t<placeformed>" . $artist->summary . "</placeformed>\n" .
+                    "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
+                    "\t<yearformed>" . $artist->yearformed . "</yearformed>\n" .
+                    "\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n" .
                     "</artist>\n";
         } // end foreach artists
 
