@@ -452,9 +452,9 @@ class Channel extends database_object implements media, library_item
                                 for($segm = 0; $segm < $ogg_nr_of_segments; $segm++){
                                     $ogg_sum_segm_laces += hexdec(substr($hex, 27*2 + $segm*2, 2));
                                 }
-                                $this->header_chunk .= substr($chunk, 0, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
+                                $this->header_chunk .= substr($clchunk, 0, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
                                 if (strlen($clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces))
-                                    $this->header_chunk_remainder = 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen($chunk);
+                                    $this->header_chunk_remainder = 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen($clchunk);
                                 $clchunk = substr($clchunk, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
                             } else //no more interesting headers
                                 $clchunk = '';
