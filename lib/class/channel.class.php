@@ -41,6 +41,7 @@ class Channel extends database_object implements media, library_item
 
     public $header_chunk;
     public $chunk_size = 4096;
+    private $header_chunk_remainder = 0;
 
     public $tags;
     public $f_tags;
@@ -422,19 +423,46 @@ class Channel extends database_object implements media, library_item
                 }
 
                 if (is_resource($this->transcoder['handle'])) {
-		    if ( ftell($this->transcoder['handle']) == 0 ) {
-		    	debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'3');
-		        $this->header_chunk = '';
-		    }
-		    $chunk = fread($this->transcoder['handle'], $this->chunk_size);
-		    if ( ftell($this->transcoder['handle']) < 2000 ){
-		        $this->header_chunk .= $chunk;
-			//debug_event('channel', 'CHUNK : ' . $this->header_chunk, '3');
-		    }
-		    //debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'3');
-		    //debug_event('channel', 'CHUNK : ' . $chunk, '3');
-		    //debug_event('channel', 'Chunk size: ' . strlen($chunk) ,'3');
+		    
+                    $chunk = fread($this->transcoder['handle'], $this->chunk_size);
                     $this->media_bytes_streamed += strlen($chunk);
+
+                    if ( (ftell($this->transcoder['handle']) < 10000 && strtolower($this->stream_type) == "ogg") || $this->header_chunk_remainder ) {
+                        //debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'3');
+                        $clchunk = $chunk;
+                        if ($this->transcoder['handle'] == 0)
+                            $this->header_chunk = '';
+                        else {
+                            $this->header_chunk .= substr($clchunk, 0, $this->header_chunk_remainder);
+                            if (strlen($clchunk) >= $header_chunk_remainder){
+                                $clchunk = substr($clchunk, $this->header_chunk_remainder);
+                                $this->header_chunk_remainder = 0;
+                            } else {
+                                $this->header_chunk_remainder = $this->header_chunk_remainder - strlen($clchunk);
+                                $clchunk = '';
+                            }
+                                                         }
+                        // see bin/channel_run.inc for explanation what's happening here
+                        while (strtohex(substr($clchunk, 0, 4)) == "4F676753"){
+                            $hex = strtohex(substr($clchunk, 0, 27));
+                            $ogg_nr_of_segments = hexdec(substr($hex, 26*2, 2));
+                            if ((substr($clchunk, 27 + $ogg_nr_of_segments + 1, 6) == "vorbis") || (substr($clchunk, 27 + $ogg_nr_of_segments, 4) == "Opus")){
+                                $hex .= strtohex(substr($clchunk, 27, $ogg_nr_of_segments));
+                                $ogg_sum_segm_laces = 0;
+                                for($segm = 0; $segm < $ogg_nr_of_segments; $segm++){
+                                    $ogg_sum_segm_laces += hexdec(substr($hex, 27*2 + $segm*2, 2));
+                                }
+                                $this->header_chunk .= substr($chunk, 0, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
+                                if (strlen($clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces))
+                                    $this->header_chunk_remainder = 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen($chunk);
+                                $clchunk = substr($clchunk, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
+                            } else //no more interesting headers
+                                $clchunk = '';
+                        }
+                    }
+                    //debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'3');
+                    //debug_event('channel', 'CHUNK : ' . $chunk, '3');
+		    //debug_event('channel', 'Chunk size: ' . strlen($chunk) ,'3');
 
                     // End of file, prepare to move on for next call
                     if (feof($this->transcoder['handle'])) {
@@ -505,5 +533,12 @@ class Channel extends database_object implements media, library_item
     {
 
     }
+
+    function strtohex($x) {
+        $s='';
+        foreach(str_split($x) as $c) $s.=sprintf("%02X",ord($c));
+        return($s);
+    }
+
 
 } // end of channel class
