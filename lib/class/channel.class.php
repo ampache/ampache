@@ -416,8 +416,8 @@ class Channel extends database_object implements media, library_item
                 // Stream not yet initialized for this media, start it
                 if (!$this->transcoder) {
                     $options = array(
-                        'bitrate' => $this->bitrate
-                    );
+                            'bitrate' => $this->bitrate
+                            );
                     $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, null, $options);
                     $this->media_bytes_streamed = 0;
                 }
@@ -462,7 +462,7 @@ class Channel extends database_object implements media, library_item
                     }
                     //debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'3');
                     //debug_event('channel', 'CHUNK : ' . $chunk, '3');
-		    //debug_event('channel', 'Chunk size: ' . strlen($chunk) ,'3');
+                    //debug_event('channel', 'Chunk size: ' . strlen($chunk) ,'3');
 
                     // End of file, prepare to move on for next call
                     if (feof($this->transcoder['handle'])) {
