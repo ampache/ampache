@@ -1590,10 +1590,11 @@ class Song extends database_object implements media, library_item
         $media_name = str_replace("#", "", $media_name);
         $media_name = rawurlencode($media_name);
 
-        $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params . "&name=" . $media_name;
+        $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params;
         if ($player) {
             $url .= "&player=" . $player;
         }
+        $url .= "&name=" . $media_name;
 
         return Stream_URL::format($url);
     }
