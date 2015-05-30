@@ -44,11 +44,11 @@ if ($cargv > 1) {
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = intval($_SERVER['argv'][++$x]);
             $operations_string .= "\n\t" . T_('- Channel ' . $chanid);
-        } 
+        }
         elseif ($_SERVER['argv'][$x] == "-v") {
             $operations_string .= "\n\t" . T_('- Verbose');
             $verbose = true;
-        } 
+        }
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = intval($_SERVER['argv'][++$x]);
             $operations_string .= "\n\t" . T_('- Port ' . $port);
@@ -58,7 +58,7 @@ if ($cargv > 1) {
 
 if ($chanid <= 0) {
     usage();
-    exit; 
+    exit;
 }
 
 // Transcode is mandatory to have consistent stream codec
@@ -68,7 +68,7 @@ if ($transcode_cfg == 'never') {
     die('Cannot start channel, transcoding is mandatory to work.');
 }
 
-echo T_("Starting Channel...") . $operations_string . "\n"; 
+echo T_("Starting Channel...") . $operations_string . "\n";
 
 $channel = new Channel($chanid);
 if (!$channel->id) {
@@ -285,7 +285,7 @@ while(true)
     }
 }
 
-ob_end_flush(); 
+ob_end_flush();
 echo "\n";
 
 function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
@@ -305,7 +305,7 @@ function usage()
     echo T_("- Channel Listening -");
     echo "\n";
     echo T_("Usage: channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
-    echo "\n\t"; 
+    echo "\n\t";
     echo "\n-c {CHANNEL ID}\t";
     echo T_('Channel id to start');
     echo "\n-p {PORT}\t";
@@ -364,7 +364,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $http .= "Content-Type: " . Song::type_to_mime($channel->stream_type) . "\r\n";
                     $http .= "Accept-Ranges: none\r\n";
 
-                    $genre = $channel->get_genre();                            
+                    $genre = $channel->get_genre();
                     // Send Shoutcast metadata on demand
                     //if ($options['metadata']) {
                         $http .= "icy-notice1: " . AmpConfig::get('site_title') . "\r\n";
@@ -572,6 +572,6 @@ function strtohex($x) {
     $s='';
     foreach(str_split($x) as $c) $s.=sprintf("%02X",ord($c));
     return($s);
-} 
+}
 
 ?>

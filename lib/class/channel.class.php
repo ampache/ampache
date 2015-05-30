@@ -428,13 +428,13 @@ class Channel extends database_object implements media, library_item
                     $chunk = fread($this->transcoder['handle'], $this->chunk_size);
                     $this->media_bytes_streamed += strlen($chunk);
 
-                    if ((ftell($this->transcoder['handle']) < 10000 && strtolower($this->stream_type) == "ogg") || $this->header_chunk_remainder){
+                    if ((ftell($this->transcoder['handle']) < 10000 && strtolower($this->stream_type) == "ogg") || $this->header_chunk_remainder) {
                         //debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'5');
                         $clchunk = $chunk;
 
                         if ($this->header_chunk_remainder) {
                             $this->header_chunk .= substr($clchunk, 0, $this->header_chunk_remainder);
-                            if (strlen($clchunk) >= $this->header_chunk_remainder){
+                            if (strlen($clchunk) >= $this->header_chunk_remainder) {
                                 $clchunk = substr($clchunk, $this->header_chunk_remainder);
                                 $this->header_chunk_remainder = 0;
                             } else {
@@ -443,13 +443,13 @@ class Channel extends database_object implements media, library_item
                             }
                         }
                         // see bin/channel_run.inc for explanation what's happening here
-                        while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753"){
+                        while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753") {
                             $hex = $this->strtohex(substr($clchunk, 0, 27));
                             $ogg_nr_of_segments = hexdec(substr($hex, 26*2, 2));
-                            if ((substr($clchunk, 27 + $ogg_nr_of_segments + 1, 6) == "vorbis") || (substr($clchunk, 27 + $ogg_nr_of_segments, 4) == "Opus")){
+                            if ((substr($clchunk, 27 + $ogg_nr_of_segments + 1, 6) == "vorbis") || (substr($clchunk, 27 + $ogg_nr_of_segments, 4) == "Opus")) {
                                 $hex .= $this->strtohex(substr($clchunk, 27, $ogg_nr_of_segments));
                                 $ogg_sum_segm_laces = 0;
-                                for($segm = 0; $segm < $ogg_nr_of_segments; $segm++){
+                                for ($segm = 0; $segm < $ogg_nr_of_segments; $segm++) {
                                     $ogg_sum_segm_laces += hexdec(substr($hex, 27*2 + $segm*2, 2));
                                 }
                                 $this->header_chunk .= substr($clchunk, 0, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
@@ -534,7 +534,8 @@ class Channel extends database_object implements media, library_item
 
     }
 
-    private function strtohex($x) {
+    private function strtohex($x)
+    {
         $s='';
         foreach(str_split($x) as $c) $s.=sprintf("%02X",ord($c));
         return($s);
