@@ -497,7 +497,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
 
                     // Footer
                     $xsl .= "<div class=\"poster\">" . "\n";
-                    $xsl .= "Support Icecast development at <a target=\"_blank\" href=\"http://www.icecast.org\">www.icecast.org</a>" . "\n";
+                    $xsl .= "Support Ampache at <a target=\"_blank\" href=\"http://www.ampache.org\">www.ampache.org</a>" . "\n";
                     $xsl .= "</div>" . "\n";
                     $xsl .= "</div>" . "\n";
                     $xsl .= "</body>" . "\n";
