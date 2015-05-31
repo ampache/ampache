@@ -72,7 +72,7 @@ class WebDAV_Directory extends DAV\Collection
         if (count($matches) > 0)
             return WebDAV_Directory::getChildFromArray($matches[0]);
 
-        return null;
+        throw new DAV\Exception\NotFound('The child with name: ' . $name . ' could not be found');;
     }
 
     public static function getChildFromArray($array)

@@ -3,6 +3,48 @@ CHANGELOG
 
 3.8.0
 ----------
+- Added ogg channel streaming support (thanks Deathcow)
+- Fixed sql connection close before stream (thanks fufroma)
+- Added support for several ldap filters (thanks T-Rock)
+- Fixed 'Add to existing playlist' button on web player (thanks RyanCopley)
+- Added 'add to existing playlist' link on album page (thanks RyanCopley)
+- Added option to hide user fullname from other users
+- Added playlist track information in Apache XML API (thanks RyanCopley)
+- Fixed playlist remove song in Apache XML API (thanks RyanCopley)
+- Fixed SubSonic API ifModifiedSince information
+- Added Podcast links to albums / artists
+- Added Piwik and Google Analytics plugins
+- Added Apache 2.4 access control declaration in htaccess files
+- Fixed performance issues on user preferences
+- Added artist search by year and place
+- Fixed search by comment (thanks malkavi)
+- Added Paypal and Flattr plugins
+- Added .maintenance page
+- Fixed captcha
+- Added private messages between users
+- Fixed SubSonic API rating information on albums and songs
+- Added latest artists and shouts RSS feeds
+- Fixed tag cloud ordering
+- Added Label entities associated to artists / users
+- Added WebDAV backend
+- Fixed SubSonic API requests with musicFolderId parameter (thanks dhsc19)
+- Added footer text edition setting
+- Added uploaded artist list on user page
+- Added custom Ampache login logo and favicon support
+- Added edition support on shared objects (thanks dhsc19)
+- Fixed share feature on videos (thanks RobertoCarlo)
+- Removed album year display from album name if unset
+- Fixed Subsonic API Album/Artist song's link (thanks dhsc19 and daneren2005)
+- Added mysql database socket authentication support on web setup (thanks AsavarTzeth)
+- Fixed artist art url for mobile use (thanks dhsc19)
+- Added Shoutbox home plugin
+- Added catalog favorites home plugin
+- Fixed search by rating (thanks iamnumbersix)
+- Added UPnP localplay (thanks SeregaPru)
+- Changed preferences to return the global value if preference is missing for the searched user
+- Fixed special chars in songs names and tags (thanks SeregaPru) 
+- Fixed Subsonic API playlist edition/delation (thanks dhsc19)
+- Fixed integer default value in Apache XML API
 - Fixed image thumb on webplayer and search preview (thanks RobertoCarlo and eephyne)
 - Fixed proxy setting on all external http requests (thanks brendankearney)
 - Added QRCode view of user API key 

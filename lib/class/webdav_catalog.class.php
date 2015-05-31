@@ -56,14 +56,15 @@ class WebDAV_Catalog extends DAV\Collection
 
     public function getChild($name)
     {
-        debug_event('webdav', 'Catalog getChild', 5);
+        debug_event('webdav', 'Catalog getChild for `' . $name . '`', 5);
         $matches = Catalog::search_childrens($name, $this->catalog_id);
+        debug_event('webdav', 'Found ' . count($matches) . ' childs.', 5);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0)
             return WebDAV_Directory::getChildFromArray($matches[0]);
 
-        return null;
+        throw new DAV\Exception\NotFound('The artist with name: ' . $name . ' could not be found');
     }
 
     public function childExists($name)

@@ -964,7 +964,7 @@ abstract class Catalog extends database_object
         $search['type'] = "artist";
         $search['rule_0_input'] = $name;
         $search['rule_0_operator'] = 4;
-        $search['rule_0'] = "title";
+        $search['rule_0'] = "name";
         if ($catalog_id > 0) {
             $search['rule_1_input'] = $catalog_id;
             $search['rule_1_operator'] = 0;

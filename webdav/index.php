@@ -33,7 +33,7 @@ use Sabre\DAV;
 $rootDir = new WebDAV_Catalog();
 $server = new DAV\Server($rootDir);
 
-$baseUri = (AmpConfig::get('raw_web_path') !== "/") ? AmpConfig::get('raw_web_path') : "" . '/webdav/index.php';
+$baseUri = ((AmpConfig::get('raw_web_path') !== "/") ? AmpConfig::get('raw_web_path') : "") . '/webdav/index.php';
 $server->setBaseUri($baseUri);
 if (AmpConfig::get('use_auth')) {
     $authBackend = new WebDAV_Auth();
