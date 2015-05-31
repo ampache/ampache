@@ -677,7 +677,8 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
 
 if ($transcode && isset($transcoder)) {
     fclose($fp);
-    proc_terminate($transcoder['process']);
+
+    Stream::kill_process($transcoder);
 } else {
     fclose($fp);
 }

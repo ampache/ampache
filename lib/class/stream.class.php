@@ -255,9 +255,14 @@ class Stream
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             // Windows doesn't like to provide stderr as a pipe
             $descriptors[2] = array('pipe', 'w');
-        }
+            $cmdPrefix = "exec ";
+        } else
+            $cmdPrefix = "start /B ";
 
-        $process = proc_open($command, $descriptors, $pipes);
+
+        debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
+
+        $process = proc_open($cmdPrefix.$command, $descriptors, $pipes);
         $parray = array(
             'process' => $process,
             'handle' => $pipes[1],
@@ -269,6 +274,21 @@ class Stream
         }
 
         return array_merge($parray, $settings);
+    }
+
+    public static function kill_process($transcoder)
+    {
+        $status = proc_get_status($transcoder['process']);
+        if ($status['running'] == true) {
+            $pid = $status['pid'];
+            debug_event('stream', 'Stream process about to be killed. pid:' . $pid, 1);
+
+            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("taskkill /F /T /PID $pid") : exec("kill -9 $pid");
+
+            proc_close($transcoder['process']);
+        } else {
+            debug_event('stream', 'Process is not running, kill skipped.', 5);
+        }
     }
 
     /**
