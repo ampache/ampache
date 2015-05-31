@@ -677,7 +677,21 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
 
 if ($transcode && isset($transcoder)) {
     fclose($fp);
-    proc_terminate($transcoder['process']);
+
+    function kill($pid){
+        return stripos(php_uname('s'), 'win')>-1  ? exec("taskkill /F /T /PID $pid") : exec("kill -9 $pid");
+    }
+
+    $status = proc_get_status($transcoder['process']);
+    if($status['running'] == true)
+    {
+        $pid = $status['pid'];
+        debug_event('play', 'Stream process about to be killed. pid:'.$pid, 1);
+
+        kill($pid);
+
+        proc_close($transcoder['process']);
+    }
 } else {
     fclose($fp);
 }
