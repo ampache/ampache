@@ -863,7 +863,9 @@ class Api
         $type = $input['type'];
         $offset = $input['offset'];
         $limit = $input['limit'];
+        $username = $input['username'];
 
+        $albums = null;
         if ($type == "newest") {
             $albums = Stats::get_newest("album", $limit, $offset);
         } else if ($type == "highest") {
@@ -871,7 +873,16 @@ class Api
         } else if ($type == "frequent") {
             $albums = Stats::get_top("album", $limit, '', $offset);
         } else if ($type == "recent") {
-            $albums = Stats::get_recent("album", $limit, $offset);
+            if (!empty($username)) {
+                $user = User::get_from_username($username);
+                if ($user !== null) {
+                    $albums = $user->get_recently_played($limit, 'album');
+                } else {
+                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                }
+            } else {
+                $albums = Stats::get_recent("album", $limit, $offset);
+            }
         } else if ($type == "flagged") {
             $albums = Userflag::get_latest('album');
         } else {
@@ -881,8 +892,109 @@ class Api
             $albums = Album::get_random($limit);
         }
 
-        ob_end_clean();
-        echo XML_Data::albums($albums);
-    }
+        if ($albums !== null) {
+            ob_end_clean();
+            echo XML_Data::albums($albums);
+        }
+    } // stats
+
+    /**
+     * user
+     * This get an user public information
+     * @param array $input
+     */
+    public static function user($input)
+    {
+        $username = $input['username'];
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                ob_end_clean();
+                echo XML_Data::user($user);
+            } else {
+                debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+            }
+        } else {
+            debug_event('api', 'Username required on user function call.', 1);
+        }
+    } // user
+
+    /**
+     * followers
+     * This get an user followers
+     * @param array $input
+     */
+    public static function followers($input)
+    {
+        if (AmpConfig::get('sociable')) {
+            $username = $input['username'];
+            if (!empty($username)) {
+                $user = User::get_from_username($username);
+                if ($user !== null) {
+                    $users = $user->get_followers();
+                    ob_end_clean();
+                    echo XML_Data::users($user);
+                } else {
+                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                }
+            } else {
+                debug_event('api', 'Username required on followers function call.', 1);
+            }
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // followers
+
+    /**
+     * following
+     * This get the user list followed by an user
+     * @param array $input
+     */
+    public static function following($input)
+    {
+        if (AmpConfig::get('sociable')) {
+            $username = $input['username'];
+            if (!empty($username)) {
+                $user = User::get_from_username($username);
+                if ($user !== null) {
+                    $users = $user->get_following();
+                    ob_end_clean();
+                    echo XML_Data::users($user);
+                } else {
+                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                }
+            } else {
+                debug_event('api', 'Username required on following function call.', 1);
+            }
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // following
+
+    /**
+     * last_shouts
+     * This get the latest posted shouts
+     * @param array $input
+     */
+    public static function last_shouts($input)
+    {
+        $limit = intval($input['limit']);
+        if ($limit < 1) {
+            $limit = AmpConfig::get('popular_threshold');
+        }
+        if (AmpConfig::get('sociable')) {
+            $username = $input['username'];
+            if (!empty($username)) {
+                $shouts = Shoutbox::get_top($limit, $username);
+            } else {
+                $shouts = Shoutbox::get_top($limit);
+            }
+
+            ob_end_clean();
+            echo XML_Data::shouts($shouts);
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // last_shouts
 
 } // API class
