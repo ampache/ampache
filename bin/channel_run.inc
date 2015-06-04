@@ -280,6 +280,7 @@ while(true)
             }
         } else {
             $channel->update_listeners(0);
+            debug_event('channel', 'No more data, stream ended.', 5);
             die('No more data, stream ended.');
         }
     }
