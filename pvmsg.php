@@ -42,7 +42,7 @@ switch ($action) {
                 $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $pvmsg->message);
             }
         }
-        require_once AmpConfig::get('prefix') . '/templates/show_add_pvmsg.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_add_pvmsg.inc.php');
     break;
     case 'add_message':
         if (AmpConfig::get('demo_mode')) { break; }
@@ -60,7 +60,7 @@ switch ($action) {
 
         $pvmsg_id = PrivateMsg::create($_POST);
         if (!$pvmsg_id) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_pvmsg.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_pvmsg.inc.php');
         } else {
             $body = T_('Message Sent');
             $title = '';
@@ -124,7 +124,7 @@ switch ($action) {
             if (!$pvmsg->is_read) {
                 $pvmsg->set_is_read(true);
             }
-            require_once AmpConfig::get('prefix') . '/templates/show_pvmsg.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_pvmsg.inc.php');
         } else {
             debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
             UI::access_denied();

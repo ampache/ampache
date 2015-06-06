@@ -30,7 +30,7 @@
         <?php } ?>
     </ul>
 </div>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php') ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="smartplaylist">
     <thead>
         <tr class="th-top">
@@ -51,7 +51,7 @@
             $libitem->format();
         ?>
         <tr class="<?php echo UI::flip_class(); ?>" id="smartplaylist_row_<?php echo $libitem->id; ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_search_row.inc.php'; ?>
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_search_row.inc.php'); ?>
         </tr>
         <?php } // end foreach ($playlists as $playlist) ?>
         <?php if (!count($object_ids)) { ?>
@@ -74,4 +74,4 @@
     </tfoot>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php') ?>

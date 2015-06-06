@@ -432,7 +432,7 @@ class Catalog_local extends Catalog
         $this->added_videos_to_gather = array();
 
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_adds_catalog.inc.php');
             flush();
         }
 
@@ -465,7 +465,7 @@ class Catalog_local extends Catalog
         if ($options['gather_art']) {
             $catalog_id = $this->id;
             if (!defined('SSE_OUTPUT')) {
-                require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
+                require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
                 flush();
             }
             $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
@@ -505,7 +505,7 @@ class Catalog_local extends Catalog
         $this->count = 0;
 
         if (!defined('SSE_OUTPUT')) {
-            require_once AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
             flush();
         }
 

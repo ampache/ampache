@@ -96,7 +96,7 @@ class Shoutbox
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
      * number of objects shown
      */
-    public static function get_top($limit, $username = null)
+    public static function get_top($limit)
     {
         $shouts = self::get_sticky();
 
@@ -108,14 +108,8 @@ class Shoutbox
 
         // Only get as many as we need
         $limit = intval($limit) - count($shouts);
-        $params = array();
-        $sql = "SELECT `user_shout`.`id` AS `id` FROM `user_shout` LEFT JOIN `user` ON `user`.`id` = `user_shout`.`user` WHERE `user_shout`.`sticky`='0' ";
-        if ($username !== null) {
-            $sql .= "AND `user`.`username` = ? ";
-            $params[] = $username;
-        }
-        $sql .= "ORDER BY `user_shout`.`date` DESC LIMIT " . $limit;
-        $db_results = Dba::read($sql, $params);
+        $sql = "SELECT * FROM `user_shout` WHERE `sticky`='0' ORDER BY `date` DESC LIMIT $limit";
+        $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $shouts[] = $row['id'];

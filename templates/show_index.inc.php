@@ -57,7 +57,7 @@ if (Art::is_enabled()) {
     <?php
         $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
-        require_once AmpConfig::get('prefix') . '/templates/show_recently_played.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_recently_played.inc.php');
     ?>
 </div>
 <?php } ?>

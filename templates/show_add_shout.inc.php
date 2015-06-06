@@ -65,7 +65,7 @@ UI::show_box_top($boxtitle, 'box box_add_shout');
 <?php
 $shouts = Shoutbox::get_shouts($object_type, $object->id);
 if (count($shouts)) {
-    require_once AmpConfig::get('prefix') . '/templates/show_shoutbox.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('show_shoutbox.inc.php');
 }
 ?>
 <?php UI::show_box_bottom(); ?>

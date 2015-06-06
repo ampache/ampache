@@ -277,9 +277,9 @@ class Rating extends database_object
         $rating = new Rating($object_id, $type);
 
         if ($static) {
-            require AmpConfig::get('prefix') . '/templates/show_static_object_rating.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_static_object_rating.inc.php');
         } else {
-            require AmpConfig::get('prefix') . '/templates/show_object_rating.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
         }
 
     } // show

@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
 
     break;
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_mail_users.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_mail_users.inc.php');
     break;
 } // end switch
 

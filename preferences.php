@@ -168,7 +168,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Show the default preferences page
-        require AmpConfig::get('prefix') . '/templates/show_preferences.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_preferences.inc.php');
     break;
 } // end switch on action
 

@@ -1589,7 +1589,7 @@ abstract class Catalog extends database_object
         debug_event('clean', 'Starting on ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . '/templates/show_clean_catalog.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_clean_catalog.inc.php');
             ob_flush();
             flush();
         }
@@ -1619,7 +1619,7 @@ abstract class Catalog extends database_object
     public function verify_catalog()
     {
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
             ob_flush();
             flush();
         }

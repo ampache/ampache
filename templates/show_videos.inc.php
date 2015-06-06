@@ -21,7 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="video">
     <thead>
@@ -33,7 +33,7 @@ if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/l
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
 <?php
 if (isset($video_type) && $video_type != 'video') {
-    require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . 's.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . 's.inc.php');
 }
 ?>
             <th class="cel_release_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'),'sort_video_release_date'); ?></th>
@@ -67,7 +67,7 @@ if (isset($video_type) && $video_type != 'video') {
                 $libitem->format();
         ?>
         <tr id="video_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_video_row.inc.php'; ?>
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_video_row.inc.php'); ?>
         </tr>
         <?php } //end foreach  ?>
         <?php if (!count($object_ids)) { ?>
@@ -85,7 +85,7 @@ if (isset($video_type) && $video_type != 'video') {
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
 <?php
 if (isset($video_type) && $video_type != 'video') {
-    require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . 's.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . 's.inc.php');
 }
 ?>
             <th class="cel_release_date"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'),'sort_video_release_date'); ?></th>
@@ -109,4 +109,4 @@ if (isset($video_type) && $video_type != 'video') {
     </tfoot>
 </table>
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>

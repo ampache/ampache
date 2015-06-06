@@ -28,6 +28,8 @@ if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
 }
 $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
+
+$web_path = AmpConfig::get('web_path');
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -36,9 +38,9 @@ is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <?php UI::show_custom_style(); ?>
-        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/print.css" type="text/css" media="print" />
-        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/dark.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('print.css'); ?>" type="text/css" media="print" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('default.css'); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('dark.css'); ?>" type="text/css" media="screen" />
         <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
         <script type="text/javascript" language="javascript">
             function focus()
@@ -51,14 +53,14 @@ is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
         <div id="maincontainer">
             <div id="header"><!-- This is the header -->
                 <h1 id="headerlogo">
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/login.php">
-                        <img src="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
+                    <a href="<?php echo $web_path ?>/login.php">
+                        <img src="<?php echo $web_path ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
                     </a>
                 </h1>
             </div>
             <div id="loginbox">
                 <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
-                <form name="login" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php">
+                <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path ?>/lostpassword.php">
                     <div class="loginfield" id="emailfield">
                         <label for="email"><?php echo  T_('Email'); ?>:</label>
                         <input type="hidden" id="action" name="action" value="send" />

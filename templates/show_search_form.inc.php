@@ -47,7 +47,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
     </tr>
 </table>
 
-<?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . UI::find_template('show_rules.inc.php'); ?>
 
 <div class="formValidation">
             <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;

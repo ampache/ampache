@@ -55,7 +55,7 @@ $thcount = 8;
                 $libitem->format();
         ?>
         <tr id="artist_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php } ?>
         <?php

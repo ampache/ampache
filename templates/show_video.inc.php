@@ -110,7 +110,7 @@ foreach ($subtitles as $subtitle) {
   $videoprops[gettext_noop('Title')]   = scrub_out($video->f_title);
   $videoprops[gettext_noop('Length')]  = scrub_out($video->f_time);
 if (!strtolower(get_class($video)) != 'video') {
-    require AmpConfig::get('prefix') . '/templates/show_partial_' . strtolower(get_class($video)) . '.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_partial_' . strtolower(get_class($video)) . '.inc.php');
 }
   $videoprops[gettext_noop('Release Date')]   = scrub_out($video->f_release_date);
   $videoprops[gettext_noop('Codec')]   = scrub_out($video->f_codec);

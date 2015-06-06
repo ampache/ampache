@@ -43,7 +43,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Show the create page
-        require_once AmpConfig::get('prefix') . '/templates/show_create_democratic.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_create_democratic.inc.php');
     break;
     case 'delete':
         if (!Access::check('interface','75')) {
@@ -96,20 +96,20 @@ switch ($_REQUEST['action']) {
         // Get all of the non-user playlists
         $playlists = Democratic::get_playlists();
 
-        require_once AmpConfig::get('prefix') . '/templates/show_manage_democratic.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_manage_democratic.inc.php');
 
     break;
     case 'show_playlist':
     default:
         $democratic = Democratic::get_current_playlist();
         if (!$democratic->id) {
-            require_once AmpConfig::get('prefix') . '/templates/show_democratic.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_democratic.inc.php');
             break;
         }
 
         $democratic->set_parent();
         $democratic->format();
-        require_once AmpConfig::get('prefix') . '/templates/show_democratic.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_democratic.inc.php');
         $objects = $democratic->get_items();
         Song::build_cache($democratic->object_ids);
         Democratic::build_vote_cache($democratic->vote_ids);

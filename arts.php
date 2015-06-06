@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
+require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
 $object_type = $_GET['object_type'];
 $object_id = $_GET['object_id'];
@@ -128,14 +128,14 @@ switch ($_REQUEST['action']) {
             } // end foreach
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
-            require_once AmpConfig::get('prefix') . '/templates/show_arts.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_arts.inc.php');
         }
         // Else nothing
         else {
             show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'), $burl);
         }
 
-        require_once AmpConfig::get('prefix') . '/templates/show_get_art.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
 
     break;
     case 'select_art':

@@ -25,7 +25,7 @@ session_start();
 $web_path = AmpConfig::get('web_path');
 $thcount = 8;
 ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="artist">
     <thead>
         <tr class="th-top">
@@ -76,7 +76,7 @@ $thcount = 8;
             }
         ?>
         <tr id="artist_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php } //end foreach ($artists as $artist) ?>
         <?php if (!count($object_ids)) { ?>
@@ -114,4 +114,4 @@ $thcount = 8;
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>

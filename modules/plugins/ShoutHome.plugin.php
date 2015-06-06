@@ -83,7 +83,7 @@ class AmpacheShoutHome {
             echo "<div id='shout_objects'>\n";
             $shouts = Shoutbox::get_top($this->maxitems);
             if (count($shouts)) {
-                require_once AmpConfig::get('prefix') . '/templates/show_shoutbox.inc.php';
+                require_once AmpConfig::get('prefix') . UI::find_template('show_shoutbox.inc.php');
             }
             echo "</div>\n";
         }

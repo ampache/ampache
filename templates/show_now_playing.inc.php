@@ -45,9 +45,9 @@ foreach ($results as $item) {
 <div class="np_row">
 <?php
 if (strtolower(get_class($media)) == 'song') {
-    require AmpConfig::get('prefix') . '/templates/show_now_playing_row.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_now_playing_row.inc.php');
 } else {
-    require AmpConfig::get('prefix') . '/templates/show_now_playing_video_row.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_now_playing_video_row.inc.php');
 }
 ?>
 </div>

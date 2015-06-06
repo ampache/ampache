@@ -5,7 +5,7 @@ if ($is_share) {
 }
 
 if (!$iframed) {
-    require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php');
 }
 ?>
 <script type="text/javascript">
@@ -490,7 +490,7 @@ if ($isVideo) {
 </div>
 <?php
 if (!$iframed || $is_share) {
-    require_once AmpConfig::get('prefix') . '/templates/uberviz.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('uberviz.inc.php');
 }
 ?>
 <?php if (!$is_share) { ?>

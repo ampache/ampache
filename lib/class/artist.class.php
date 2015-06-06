@@ -537,9 +537,6 @@ class Artist extends database_object implements library_item
         $search['rule_0_input'] = $name;
         $search['rule_0_operator'] = 4;
         $search['rule_0'] = "title";
-        $search['rule_1_input'] = $this->name;
-        $search['rule_1_operator'] = 4;
-        $search['rule_1'] = "artist";
         $albums = Search::run($search);
 
         $childrens = array();

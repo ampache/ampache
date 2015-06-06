@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
+require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
         $type         = 'album';
         $object_id     = intval($_REQUEST['album_id']);
         $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
-        require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
     case 'set_track_numbers':
         debug_event('albums', 'Set track numbers called.', '5');
@@ -108,7 +108,7 @@ switch ($_REQUEST['action']) {
         }
         $walbum->load_all();
         $walbum->format();
-        require AmpConfig::get('prefix') . '/templates/show_missing_album.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_missing_album.inc.php');
     break;
     // Browse by Album
     case 'show':
@@ -117,9 +117,9 @@ switch ($_REQUEST['action']) {
         $album->format();
 
         if (!count($album->album_suite)) {
-            require AmpConfig::get('prefix') . '/templates/show_album.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');
         } else {
-            require AmpConfig::get('prefix') . '/templates/show_album_group_disks.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_album_group_disks.inc.php');
         }
 
     break;

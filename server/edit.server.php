@@ -68,16 +68,16 @@ if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
 switch ($_REQUEST['action']) {
     case 'show_edit_object':
         ob_start();
-        require AmpConfig::get('prefix') . '/templates/show_edit_' . $type . '.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_edit_' . $type . '.inc.php');
         $results = ob_get_contents();
     break;
     case 'refresh_updated':
-        require AmpConfig::get('prefix') . '/templates/show_' . $type . '.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_' . $type . '.inc.php');
         $results = ob_get_contents();
     break;
     case 'show_edit_playlist':
         ob_start();
-        require AmpConfig::get('prefix') . '/templates/show_playlists_dialog.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_playlists_dialog.inc.php');
         $results = ob_get_contents();
         ob_end_clean();
     break;

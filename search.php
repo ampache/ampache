@@ -31,15 +31,15 @@ switch ($_REQUEST['action']) {
     case 'search':
         if ($_REQUEST['rule_1'] != 'missing_artist') {
             $browse = new Browse();
-            require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
-            require_once AmpConfig::get('prefix') . '/templates/show_search_options.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
+            require_once AmpConfig::get('prefix') . UI::find_template('show_search_options.inc.php');
             $results = Search::run($_REQUEST);
             $browse->set_type($_REQUEST['type']);
             $browse->show_objects($results);
             $browse->store();
         } else {
             $wartists = Wanted::search_missing_artists($_REQUEST['rule_1_input']);
-            require_once AmpConfig::get('prefix') . '/templates/show_missing_artists.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_missing_artists.inc.php');
             echo '<a href="http://musicbrainz.org/search?query=' . rawurlencode($_REQUEST['rule_1_input']) . '&type=artist&method=indexed" target="_blank">' . T_('View on MusicBrainz') . '</a><br />';
         }
     break;
@@ -56,10 +56,10 @@ switch ($_REQUEST['action']) {
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB
         ob_clean();
-        require_once AmpConfig::get('prefix') . '/templates/show_search_descriptor.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search_descriptor.inc.php');
         exit;
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
     break;
 }
 

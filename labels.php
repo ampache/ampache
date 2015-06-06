@@ -76,7 +76,7 @@ switch ($_REQUEST['action']) {
 
         $label_id = Label::create($_POST);
         if (!$label_id) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_label.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
             $body = T_('Label Added');
             $title = '';
@@ -95,13 +95,13 @@ switch ($_REQUEST['action']) {
             $label->format();
             $object_ids = $label->get_artists();
             $object_type = 'artist';
-            require_once AmpConfig::get('prefix') . '/templates/show_label.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_label.inc.php');
             UI::show_footer();
             exit;
         }
     case 'show_add_label':
         if (Access::check('interface','50') || AmpConfig::get('upload_allow_edit')) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_label.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
             echo T_('Label cannot be found.');
         }

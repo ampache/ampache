@@ -21,7 +21,7 @@
  */
 
 ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php') ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="channel">
     <thead>
         <tr class="th-top">
@@ -49,7 +49,7 @@
             $libitem->format();
         ?>
         <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $libitem->id; ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_channel_row.inc.php'; ?>
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_channel_row.inc.php'); ?>
         </tr>
         <?php } ?>
         <?php if (!count($object_ids)) { ?>
@@ -60,4 +60,4 @@
     </tbody>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php') ?>

@@ -44,7 +44,7 @@ $web_path = AmpConfig::get('web_path');
             $client = new User($libitem->user);
             $client->format();
 
-            require AmpConfig::get('prefix') . '/templates/show_shout_row.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_shout_row.inc.php');
         ?>
         <?php } if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">

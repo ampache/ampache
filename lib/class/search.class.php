@@ -416,13 +416,6 @@ class Search extends playlist_object
             );
 
             $this->types[] = array(
-                'name'   => 'artist',
-                'label'  => T_('Artist'),
-                'type'   => 'text',
-                'widget' => array('input', 'text')
-            );
-
-            $this->types[] = array(
                 'name'   => 'year',
                 'label'  => T_('Year'),
                 'type'   => 'numeric',
@@ -989,10 +982,6 @@ class Search extends playlist_object
                     $where[] = "`image`.`width` $sql_match_operator '$input'";
                     $join['image'] = true;
                 break;
-                case 'artist':
-                    $where[] = "`artist`.`name` $sql_match_operator '$input'";
-                    $join['artist'] = true;
-                break;
                 default:
                     // Nae laird!
                 break;
@@ -1014,9 +1003,6 @@ class Search extends playlist_object
                 "AND `tag`.`name` $value GROUP BY `object_id`" .
                 ") AS realtag_$key " .
                 "ON `album`.`id`=`realtag_$key`.`object_id`";
-        }
-        if ($join['artist']) {
-            $table['artist'] = "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist`";
         }
         if ($join['song']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";

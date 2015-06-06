@@ -22,7 +22,7 @@
 ?>
 <?php
 ob_start();
-require AmpConfig::get('prefix') . '/templates/show_search_title.inc.php';
+require AmpConfig::get('prefix') . UI::find_template('show_search_title.inc.php');
 $title = ob_get_contents();
 ob_end_clean();
 UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>' , 'box box_smartplaylist');
@@ -51,7 +51,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 </div>
 
 <form id="editplaylist" name="editplaylist" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=update_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
-    <?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
+    <?php require AmpConfig::get('prefix') . UI::find_template('show_rules.inc.php'); ?>
     <div class="formValidation">
         <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
     </div>

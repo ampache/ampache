@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
     case 'validate':
         $username     = scrub_in($_GET['username']);
         $validation    = scrub_in($_GET['auth']);
-        require_once AmpConfig::get('prefix') . '/templates/show_user_activate.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_user_activate.inc.php');
     break;
     case 'add_user':
         /**
@@ -123,7 +123,7 @@ switch ($_REQUEST['action']) {
 
         // If we've hit an error anywhere up there break!
         if (Error::occurred()) {
-            require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
             break;
         }
 
@@ -148,7 +148,7 @@ switch ($_REQUEST['action']) {
 
         if (!$new_user) {
             Error::add('duplicate_user', T_("Error: Insert Failed"));
-            require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
             break;
         }
 
@@ -161,10 +161,10 @@ switch ($_REQUEST['action']) {
             Registration::send_confirmation($username, $fullname, $email, $website, $pass1, $validation);
         }
 
-        require_once AmpConfig::get('prefix') . '/templates/show_registration_confirmation.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_registration_confirmation.inc.php');
     break;
     case 'show_add_user':
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
     break;
 } // end switch on action

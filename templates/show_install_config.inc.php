@@ -172,9 +172,6 @@ require $prefix . '/templates/install_header.inc.php';
     <div class="checkbox-inline">
         <label><input type="checkbox" name="backends[]" value="daap" <?php if (isset($_REQUEST['backends']) && in_array('daap', $_REQUEST['backends'])) echo 'checked'; ?>>DAAP (iTunes)</label>
     </div>
-    <div class="checkbox-inline">
-        <label><input type="checkbox" name="backends[]" value="webdav" <?php if (isset($_REQUEST['backends']) && in_array('webdav', $_REQUEST['backends'])) echo 'checked'; ?>>WebDAV</label>
-    </div>
 </div>
 
 <br /><br />

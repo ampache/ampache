@@ -93,10 +93,10 @@ switch ($_REQUEST['action']) {
         $browse2 = new Browse();
         $browse2->set_type($browse_type);
         $browse2->store();
-        require_once AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_tagcloud.inc.php');
         UI::show_box_bottom();
         $type = $browse2->get_type();
-        require_once AmpConfig::get('prefix') . '/templates/browse_content.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('browse_content.inc.php');
     break;
     case 'artist':
         $browse->set_filter('catalog',$_SESSION['catalog']);

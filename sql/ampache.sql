@@ -650,12 +650,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (132, 'browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)', 25, 'integer', 'interface'),
 (133, 'geolocation', '0', 'Allow geolocation', 25, 'integer', 'options'),
 (134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming'),
-(135, 'upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 75, 'boolean', 'system'),
-(136, 'custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface'),
-(137, 'custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface'),
-(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface'),
-(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system'),
-(140, 'notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options');
+(135, 'upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 75, 'boolean', 'system');
 
 -- --------------------------------------------------------
 
@@ -1074,7 +1069,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '370035'),
+('db_version', '370030'),
 ('Plugin_Last.FM', '000004');
 
 -- --------------------------------------------------------
@@ -1099,7 +1094,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `validation` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   `state` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `city` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `fullname_public` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
@@ -1247,11 +1241,6 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 133, '0'),
 (-1, 134, '1'),
 (-1, 135, '1'),
-(-1, 136, ''),
-(-1, 137, ''),
-(-1, 138, ''),
-(-1, 139, '0'),
-(-1, 140, '0'),
 (-1, 96, ''),
 (-1, 97, ''),
 (-1, 98, '');
@@ -1354,76 +1343,6 @@ CREATE TABLE IF NOT EXISTS `wanted` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_wanted` (`user`,`artist`,`mbid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `label`
---
-
-DROP TABLE IF EXISTS `label`;
-CREATE TABLE IF NOT EXISTS `label` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) NOT NULL,
-  `category` varchar(40) NULL,
-  `summary` TEXT CHARACTER SET utf8 NULL,
-  `address` varchar(256) NULL,
-  `email` varchar(128) NULL,
-  `website` varchar(256) NULL,
-  `user` int(11) unsigned NULL,
-  `creation_date` int(11) unsigned NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 
-
--- --------------------------------------------------------
-
---
--- Table structure for table `label_asso`
---
-
-DROP TABLE IF EXISTS `label_asso`;
-CREATE TABLE IF NOT EXISTS `label_asso` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `label` int(11) unsigned NOT NULL,
-  `artist` int(11) unsigned NOT NULL,
-  `creation_date` int(11) unsigned NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_pvmsg`
---
-
-DROP TABLE IF EXISTS `user_pvmsg`;
-CREATE TABLE IF NOT EXISTS `user_pvmsg` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `subject` varchar(80) NOT NULL,
-  `message` TEXT CHARACTER SET utf8 NULL,
-  `from_user` int(11) unsigned NOT NULL,
-  `to_user` int(11) unsigned NOT NULL,
-  `is_read` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `creation_date` int(11) unsigned NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_follower`
---
-
-DROP TABLE IF EXISTS `user_follower`;
-CREATE TABLE IF NOT EXISTS `user_follower` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `user` int(11) unsigned NOT NULL,
-  `follow_user` int(11) unsigned NOT NULL,
-  `follow_date` int(11) unsigned  NULL,
-  `creation_date` int(11) unsigned NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

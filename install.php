@@ -29,7 +29,7 @@ set_error_handler('ampache_error_handler');
 // Redirect if installation is already complete.
 if (!install_check_status($configfile)) {
     $redirect_url = 'login.php';
-    require_once AmpConfig::get('prefix') . '/templates/error_page.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('error_page.inc.php');
     exit;
 }
 
@@ -171,13 +171,13 @@ switch ($_REQUEST['action']) {
         /* Make sure we've got a valid config file */
         if (!check_config_values($results) || !$created_config) {
             Error::add('general', T_('Error: Config files not found or unreadable'));
-            require_once AmpConfig::get('prefix') . '/templates/show_install_config.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_config.inc.php');
             break;
         }
 
         // Don't try to add administrator user on existing database
         if (install_check_status($configfile)) {
-            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
         } else {
             header ("Location: " . $web_path . '/login.php');
         }
@@ -189,7 +189,7 @@ switch ($_REQUEST['action']) {
         $password2 = scrub_in($_REQUEST['local_pass2']);
 
         if (!install_create_account($username, $password, $password2)) {
-            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
             break;
         }
 

@@ -29,7 +29,7 @@ $thcount = 6;
     </ul>
 </div>
 <?php } ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="label">
     <thead>
         <tr class="th-top">
@@ -50,7 +50,7 @@ $thcount = 6;
             $libitem->format();
         ?>
         <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_label_row.inc.php'; ?>
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_label_row.inc.php'); ?>
         </tr>
         <?php } ?>
         <?php if (!count($object_ids)) { ?>
@@ -73,4 +73,4 @@ $thcount = 6;
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>

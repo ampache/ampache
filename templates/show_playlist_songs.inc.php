@@ -22,7 +22,7 @@
 
 $web_path = AmpConfig::get('web_path');
 ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
     <table id="reorder_playlist_table" class="tabledata" cellpadding="0" cellspacing="0">
         <thead>
@@ -60,7 +60,7 @@ $web_path = AmpConfig::get('web_path');
                     $playlist_track = $object['track'];
             ?>
                     <tr class="<?php echo UI::flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
-                        <?php require AmpConfig::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?>
+                        <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_song_row.inc.php'); ?>
                     </tr>
             <?php } ?>
         </tbody>
@@ -88,4 +88,4 @@ $web_path = AmpConfig::get('web_path');
     </table>
 </form>
 <?php show_table_render($argument); ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>

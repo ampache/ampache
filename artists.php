@@ -65,30 +65,30 @@ switch ($_REQUEST['action']) {
             $object_ids = $artist->get_albums($_REQUEST['catalog']);
         }
         $object_type = 'album';
-        require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
         $object_type = 'song';
         $object_ids = $artist->get_songs();
-        require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         break;
     case 'update_from_tags':
         $type  = 'artist';
         $object_id = intval($_REQUEST['artist']);
         $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
-        require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
         if ($match == "Browse" || $match == "Show_all") { $chr = ""; } else { $chr = $match; }
         /* Enclose this in the purty box! */
-        require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
         show_alphabet_list('artists','artists.php',$match);
         show_alphabet_form($chr, T_('Show Artists starting with'),"artists.php?action=match");
-        require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
 
         if ($match === "Browse") {
             show_artists();
@@ -108,7 +108,7 @@ switch ($_REQUEST['action']) {
         $mbid = $_REQUEST['mbid'];
         $wartist = Wanted::get_missing_artist($mbid);
 
-        require AmpConfig::get('prefix') . '/templates/show_missing_artist.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_missing_artist.inc.php');
     break;
 } // end switch
 

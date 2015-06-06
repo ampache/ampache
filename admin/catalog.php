@@ -176,7 +176,7 @@ switch ($_REQUEST['action']) {
             $catalog_id = Catalog::create($_POST);
 
             if (!$catalog_id) {
-                require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
+                require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
                 break;
             }
 
@@ -185,7 +185,7 @@ switch ($_REQUEST['action']) {
 
             show_confirmation(T_('Catalog Creation started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
         } else {
-            require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
         }
     break;
     case 'clear_stats':
@@ -197,7 +197,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'show_add_catalog':
-        require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
     break;
     case 'clear_now_playing':
         if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
@@ -210,7 +210,7 @@ switch ($_REQUEST['action']) {
 
         $songs = Song::get_disabled();
         if (count($songs)) {
-            require AmpConfig::get('prefix') . '/templates/show_disabled_songs.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_disabled_songs.inc.php');
         } else {
             echo "<div class=\"error\" align=\"center\">" . T_('No Disabled songs found') . "</div>";
         }
@@ -226,7 +226,7 @@ switch ($_REQUEST['action']) {
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $catalog->format();
-        require_once AmpConfig::get('prefix') . '/templates/show_edit_catalog.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_edit_catalog.inc.php');
     break;
     case 'gather_media_art':
         $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=gather_media_art&catalogs=" . $sse_catalogs;
@@ -235,7 +235,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_catalogs':
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_manage_catalogs.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_manage_catalogs.inc.php');
     break;
 } // end switch
 

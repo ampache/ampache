@@ -96,7 +96,7 @@
 </tr>
 </table>
 
-<?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . UI::find_template('show_rules.inc.php'); ?>
 
 <div class="formValidation">
         <input type="submit" value="<?php echo T_('Enqueue'); ?>" />

@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 
 ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="user">
 <colgroup>
   <col id="col_username" />
@@ -65,7 +65,7 @@ foreach ($object_ids as $user_id) {
     $create_date    = $libitem->create_date ? date("m\/d\/Y - H:i",$libitem->create_date) : T_('Unknown');
 ?>
 <tr class="<?php echo UI::flip_class(); ?>" id="admin_user_<?php echo $libitem->id; ?>">
-    <?php require AmpConfig::get('prefix') . '/templates/show_user_row.inc.php'; ?>
+    <?php require AmpConfig::get('prefix') . UI::find_template('show_user_row.inc.php'); ?>
 </tr>
 <?php } //end foreach users ?>
 </tbody>
@@ -89,4 +89,4 @@ foreach ($object_ids as $user_id) {
 </tfoot>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php'); ?>

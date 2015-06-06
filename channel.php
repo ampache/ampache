@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
             $object = new $type($_REQUEST['id']);
             if ($object->id) {
                 $object->format();
-                require_once AmpConfig::get('prefix') . '/templates/show_add_channel.inc.php';
+                require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
             }
         }
         UI::show_footer();
@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
         $created = Channel::create($_REQUEST['name'], $_REQUEST['description'], $_REQUEST['url'], $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['interface'], $_REQUEST['port'], $_REQUEST['admin_password'], $_REQUEST['private'] ?: 0, $_REQUEST['max_listeners'], $_REQUEST['random'] ?: 0, $_REQUEST['loop'] ?: 0, $_REQUEST['stream_type'], $_REQUEST['bitrate']);
 
         if (!$created) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_channel.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
         } else {
             $title = T_('Channel Created');
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=channel');

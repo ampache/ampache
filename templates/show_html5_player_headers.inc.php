@@ -1,18 +1,18 @@
 <?php
 if ($iframed || $is_share) {
 ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jplayer.midnight.black-iframed.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black-iframed.css'); ?>" type="text/css" />
 <?php
 } else {
 ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jplayer.midnight.black.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black.css'); ?>" type="text/css" />
 <?php
 }
 
 if (!$iframed) {
-    require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php');
 ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jquery-editdialog.css'); ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
