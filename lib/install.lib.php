@@ -485,6 +485,7 @@ function install_config_backends(Array $backends)
         'plex_backend' => '0',
         'daap_backend' => '0',
         'upnp_backend' => '0',
+        'webdav_backend' => '0',
         'stream_beautiful_url' => '0'
     );
 
@@ -502,6 +503,9 @@ function install_config_backends(Array $backends)
                 break;
             case 'daap':
                 $dbconfig['daap_backend'] = '1';
+                break;
+            case 'webdav':
+                $dbconfig['webdav_backend'] = '1';
                 break;
         }
     }
