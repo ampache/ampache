@@ -972,3 +972,10 @@ encode_ss_duration = "-t %DURATION%"
 ; so that the ordering is sane.
 ; DEFAULT: auto
 ;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"
+
+
+
+; This setting allows themes to overwrite PHP template files. This can be really
+; dangerous. Do this only if you trust every theme in your themes/ directory.
+; DEFAULT: false
+;allow_php_themes = "false"
