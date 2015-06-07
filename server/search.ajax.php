@@ -124,7 +124,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        if ($target == 'anywhere' || $target == 'playlist') {
+        if ($target == 'anywhere' || $target == 'playlist_name') {
             $searchreq = array(
                 'limit' => $limit,
                 'type' => 'playlist',
@@ -144,7 +144,7 @@ switch ($_REQUEST['action']) {
                 $playlist->format(false);
                 $results[] = array(
                     'type' => T_('Playlists'),
-                    'link' => $playlist->f_link,
+                    'link' => $playlist->link,
                     'label' => $playlist->name,
                     'value' => $playlist->name,
                     'rels' => '',
