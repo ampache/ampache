@@ -27,8 +27,8 @@
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Original Name') ?></td>
-                <td><input type="text" name="original_name" value="<?php echo scrub_out($libitem->original_name); ?>" /></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Episode Title') ?></td>
+                <td><input type="text" name="episode_title" value="<?php echo scrub_out($libitem->episode_title); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>

@@ -64,19 +64,14 @@ class Movie extends Video
      * create
      * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
      */
-    public static function insert(array $data, $gtypes = array(), $options = array())
+   public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $trimmed = Catalog::trim_prefix(trim($data['original_name']));
-        $name = $trimmed['string'];
-        $prefix = $trimmed['prefix'];
-
-        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) " .
+        $sql = "INSERT INTO `movie` (`id`, `original_name`, `summary`, `year`, `content_rating`) " .
             "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
+        Dba::write($sql, array($data['id'], $data['original_name'], $data['overview'], $data['year'], $data['content_rating']));
 
         return $data['id'];
-
-    } // create
+    }
 
     /**
      * update
@@ -86,19 +81,12 @@ class Movie extends Video
     {
         parent::update($data);
 
-        if (isset($data['original_name'])) {
-            $trimmed = Catalog::trim_prefix(trim($data['original_name']));
-            $name = $trimmed['string'];
-            $prefix = $trimmed['prefix'];
-        } else {
-            $name = $this->original_name;
-            $prefix = $this->prefix;
-        }
-        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $year = isset($data['year']) ? $data['summary'] : $this->year;
+       $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $year = isset($data['year']) ? $data['year'] : $this->year;
 
-        $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
+       $certification = isset($data['certification']) ? $data['certification'] : $this->content_rating;
+        $sql = "UPDATE `movie` SET `original_name` = ?,`summary` = ?, `year` = ?, `content_rating` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['original_name'], $summary, $year, $certification, $this->id));
 
         $this->original_name = $name;
         $this->prefix = $prefix;
@@ -118,8 +106,6 @@ class Movie extends Video
     {
         parent::format($details);
 
-        $this->f_original_name = trim($this->prefix . " " . $this->f_title);
-        $this->f_title = ($this->f_original_name ?: $this->f_title);
         $this->f_full_title = $this->f_title;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
 

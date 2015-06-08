@@ -1470,7 +1470,7 @@ dl.media_details dt {
 
 dl.media_details dd {
     margin: 10px 0 10px 250px;
-    height: 24px;
+    height: auto;
 }
 
 /***********************************************

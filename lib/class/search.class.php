@@ -490,7 +490,53 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
         break;
-        case 'artist':
+        case 'movie':
+            $this->types[] = array(
+                'name'   => 'title',
+                'label'  => T_('Title'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+            $this->types[] = array(
+                'name'   => 'original_name',
+                'label'  => T_('Original Name'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+            $this->types[] = array(
+                'name'   => 'year',
+                'label'  => T_('Year'),
+                'type'   => 'numeric',
+                'widget' => array('input', 'text')
+            );
+           $this->types[] = array(
+               'name'   => 'certification',
+               'label'  => T_('Certification'),
+               'type'   => 'text',
+               'widget' => array('input', 'text')
+           );
+            break;
+        case 'tvshow':
+            $this->types[] = array(
+                'name'   => 'name',
+                'label'  => T_('Name'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+           $this->types[] = array(
+                'name'   => 'year',
+                'label'  => T_('Year'),
+                'type'   => 'numeric',
+                'widget' => array('input', 'text')
+            );
+           $this->types[] = array(
+               'name'   => 'content_rating',
+               'label'  => T_('Content Rating'),
+               'type'   => 'text',
+               'widget' => array('input', 'text')
+           );
+            break;
+            case 'artist':
             $this->types[] = array(
                 'name'   => 'name',
                 'label'  => T_('Name'),
@@ -582,6 +628,8 @@ class Search extends playlist_object
             case 'album':
             case 'artist':
             case 'video':
+            case 'movie':
+            case 'tvshow':
             case 'song':
             case 'playlist':
             case 'label':
@@ -1389,6 +1437,152 @@ class Search extends playlist_object
 
         return array(
             'base' => 'SELECT DISTINCT(`video`.`id`) FROM `video`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
+        );
+    }
+
+    /**
+     *  movie_to_sql
+     *
+     * Handles the generation of the SQL for video searches.
+     */
+    private function movie_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+
+        $where = array();
+        $table = array();
+        $join = array();
+        $group = array();
+        $having = array();
+
+        foreach ($this->rules as $rule) {
+            $type = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'title':
+                    $where[] = "`video`.`title` $sql_match_operator '$input'";
+                  break;
+                case 'original_name':
+                    $where[] = "`movie`.`original_name` $sql_match_operator '$input'";
+                break;
+                case 'year':
+                    $where[] = "`movie`.`year` $sql_match_operator '$input'";
+                break;
+                case 'certification':
+                    $where[] = "`movie`.`content_rating` $sql_match_operator '$input'";
+                 break;
+                default:
+                    // WE WILLNA BE FOOLED AGAIN!
+            } // switch on ruletype
+        } // foreach rule
+
+        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $join['movie'] = true;
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        if ($join['catalog']) {
+            $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`video`.`catalog`";
+            $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+        }
+
+        if ($join['movie']) {
+            $table['movie'] = "LEFT JOIN `movie` ON `video`.`id` = `movie`.`id`";
+        }
+
+        if ($join['video']) {
+            $table['video'] = "LEFT JOIN `movie` ON `video`.`id` = `movie`.`id`";
+        }
+
+
+        $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`video`.`id`) FROM `video`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
+        );
+    }
+
+    /**
+     *  tvshow_to_sql
+     *
+     * Handles the generation of the SQL for TV show searches.
+     */
+    private function tvshow_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+
+        $where = array();
+        $table = array();
+        $join = array();
+        $group = array();
+        $having = array();
+
+        foreach ($this->rules as $rule) {
+            $type = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'name':
+                    $where[] = "`tvshow`.`name` $sql_match_operator '$input'";
+                break;
+                case 'year':
+                    $where[] = "`tvshow`.`year` $sql_match_operator '$input'";
+                break;
+                case 'content_rating':
+                    $where[] = "`tvshow`.`content_rating` $sql_match_operator '$input'";
+                default:
+                    // WE WILLNA BE FOOLED AGAIN!
+            } // switch on ruletype
+        } // foreach rule
+
+        $join['catalog'] = AmpConfig::get('catalog_disable');
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        if ($join['catalog']) {
+            $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`video`.`catalog`";
+            $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+        }
+
+        $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`tvshow`.`id`) FROM `tvshow`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

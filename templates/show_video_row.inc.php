@@ -46,20 +46,23 @@ if (Art::is_enabled()) {
     <?php
     $art_showed = false;
     if ($libitem->get_default_art_kind() == 'preview') {
-        $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
+        $art_showed = Art::display('video', $libitem->id, htmlspecialchars($libitem->summary), 9, $libitem->link, false, 'preview');
     }
     if (!$art_showed) {
-        Art::display('video', $libitem->id, $libitem->f_title, 6, $libitem->link);
+         Art::display('video', $libitem->id, htmlspecialchars($libitem->summary), 6, $libitem->link);
     }
     ?>
 </td>
 <?php } ?>
-<td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_title"><?php echo $libitem->f_title; ?></td>
 <?php
 if ($video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . '_row.inc.php';
 }
 ?>
+<?php if ($video_type != 'tvshow_episode') { ?>
+<td class="cel_content"><?php echo $libitem->content_rating; ?></td>
+<?php } ?>
 <td class="cel_release_date"><?php echo $libitem->f_release_date; ?></td>
 <td class="cel_codec"><?php echo $libitem->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
