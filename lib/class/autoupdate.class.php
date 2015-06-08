@@ -76,7 +76,8 @@ class AutoUpdate
     public static function github_request($action)
     {
         try {
-            $url = "http://api.github.com/repos/ampache/ampache" . $action;
+            // https is mandatory
+            $url = "https://api.github.com/repos/ampache/ampache" . $action;
             $request = Requests::get($url, array(), Core::requests_options());
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
@@ -229,8 +230,8 @@ class AutoUpdate
         echo '<font color="#ff0000">' . T_('Update available') . '</font>';
         echo ' (' . self::get_latest_version() . ').<br />';
 
-        echo T_('See') . ' <a href="http://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
-        echo T_('or') . ' <a href="http://github.com/ampache/ampache/archive/' . (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
+        echo T_('See') . ' <a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
+        echo T_('or') . ' <a href="https://github.com/ampache/ampache/archive/' . (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
         if (self::is_git_repository()) {
             echo ' | <a rel="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update">.:: Update ::.</a>';
         }
@@ -245,7 +246,7 @@ class AutoUpdate
         echo T_('Updating Ampache sources with `git pull` ...') . '<br />';
         ob_flush();
         chdir(AmpConfig::get('prefix'));
-        exec('git pull http://github.com/ampache/ampache.git');
+        exec('git pull https://github.com/ampache/ampache.git');
         echo T_('Done') . '<br />';
         ob_flush();
         self::get_latest_version(true);

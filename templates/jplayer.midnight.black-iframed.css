@@ -469,7 +469,11 @@ div.jp-title {
 	font-weight: bold;
 	text-align: center;
 	color: #FFF;
-	background: #343433 url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;
+	
+	background-color: rgba(0,0,0,0) !important;
+	font-size:0.7em;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	
 	left: -80%;
 	position: absolute;
@@ -485,14 +489,14 @@ div.playing_info {
 	font-family: 'Verdana',Arial,sans-serif;
 	color: rgb(153, 153, 153);
 	width: 300px;
-        z-index: 9999;
+	z-index: 9999;
 }
 
 div.playing_artist {
 	font-size:0.5em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 div.playing_artist a {
@@ -502,9 +506,9 @@ div.playing_artist a {
 
 div.playing_title {
 	font-size:0.7em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 div.playing_title a {
