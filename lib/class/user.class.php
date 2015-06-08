@@ -623,6 +623,9 @@ class User extends database_object
                         $this->$function($value);
                     }
                 break;
+                case 'clear_stats':
+                    Stats::clear($this->id);
+                break;
                 default:
                     // Rien a faire
                 break;

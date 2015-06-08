@@ -136,9 +136,10 @@ switch ($_REQUEST['action']) {
         }
 
         if (!$GLOBALS['user']->update($_POST)) {
-            $GLOBALS['user']->upload_avatar();
             Error::add('general', T_('Error Update Failed'));
         } else {
+            $GLOBALS['user']->upload_avatar();
+
             //$_REQUEST['action'] = 'confirm';
             $title = T_('Updated');
             $text = T_('Your Account has been updated');

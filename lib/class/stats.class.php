@@ -53,11 +53,16 @@ class Stats
      * clear
      *
      * This clears all stats for _everything_.
+     * @param int $user
      */
-    public static function clear()
+    public static function clear($user = 0)
     {
-        Dba::write('TRUNCATE `object_count`');
-        Dba::write('UPDATE `song` SET `played` = 0');
+        if ($user > 0) {
+            Dba::write("DELETE FROM `object_count` WHERE `user` = ?", array($user));
+        } else {
+            Dba::write("TRUNCATE `object_count`");
+        }
+        Dba::write("UPDATE `song` SET `played` = 0");
     }
 
     /**
