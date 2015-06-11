@@ -4,12 +4,12 @@
     "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
     "authors": [
         {
-            "name": "Jim Jagielski",
-            "email": "jimjag@gmail.com"
-        },
-        {
             "name": "Marcus Bointon",
             "email": "phpmailer@synchromedia.co.uk"
+        },
+        {
+            "name": "Jim Jagielski",
+            "email": "jimjag@gmail.com"
         },
         {
             "name": "Andy Prevost",
@@ -24,10 +24,16 @@
     },
     "require-dev": {
         "phpdocumentor/phpdocumentor": "*",
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "4.3.*"
     },
     "autoload": {
-        "classmap": ["class.phpmailer.php", "class.pop3.php", "class.smtp.php"]
+        "classmap": [
+            "class.phpmailer.php",
+            "class.smtp.php",
+            "class.pop3.php",
+            "extras/EasyPeasyICS.php",
+            "extras/ntlm_sasl_client.php"
+        ]
     },
     "license": "LGPL-2.1"
 }

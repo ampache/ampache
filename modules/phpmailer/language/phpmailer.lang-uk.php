@@ -1,8 +1,9 @@
 <?php
 /**
-* PHPMailer language file: refer to English translation for definitive list
-* Ukrainian Version by Yuriy Rudyy <yrudyy@prs.net.ua>
-*/
+ * Ukrainian PHPMailer language file: refer to English translation for definitive list
+ * @package PHPMailer
+ * @author Yuriy Rudyy <yrudyy@prs.net.ua>
+ */
 
 $PHPMAILER_LANG['authenticate']         = 'Помилка SMTP: помилка авторизації.';
 $PHPMAILER_LANG['connect_host']         = 'Помилка SMTP: не вдається підєднатися до серверу SMTP.';
@@ -22,3 +23,4 @@ $PHPMAILER_LANG['signing']              = 'Помилка підпису: ';
 $PHPMAILER_LANG['smtp_connect_failed']  = 'Помилка зєднання із SMTP-сервером';
 $PHPMAILER_LANG['smtp_error']           = 'Помилка SMTP-сервера: ';
 $PHPMAILER_LANG['variable_set']         = 'Неможливо встановити або перевстановити змінну: ';
+//$PHPMAILER_LANG['extension_missing']    = 'Extension missing: ';
