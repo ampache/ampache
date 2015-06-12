@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,7 +23,7 @@
 /**
  * Userflag class
  *
- * This user flag/unflag songs, albums and artists as favorite.
+ * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
  *
  */
 class Userflag extends database_object
@@ -89,10 +89,21 @@ class Userflag extends database_object
      *
      * Remove userflag for items that no longer exist.
      */
-    public static function gc()
+    public static function gc($object_type = null, $object_id = null)
     {
-        foreach (array('song', 'album', 'artist', 'video') as $object_type) {
-            Dba::write("DELETE FROM `user_flag` USING `user_flag` LEFT JOIN `$object_type` ON `$object_type`.`id` = `user_flag`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
+
+        if ($object_type != null) {
+            if (in_array($object_type, $types)) {
+                $sql = "DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?";
+                Dba::write($sql, array($object_type, $object_id));
+            } else {
+                debug_event('userflag', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+            }
+        } else {
+            foreach ($types as $type) {
+                Dba::write("DELETE FROM `user_flag` USING `user_flag` LEFT JOIN `$type` ON `$type`.`id` = `user_flag`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
+            }
         }
     }
 
@@ -165,21 +176,36 @@ class Userflag extends database_object
             $user_id = $GLOBALS['user']->id;
         }
         $user_id = intval($user_id);
-        $type = Stats::validate_type($type);
 
-        $sql = "SELECT `object_id` as `id` FROM user_flag" .
-                " WHERE object_type = '" . $type . "' AND `user` = '" . $user_id . "'";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
+        if ($user_id <= 0) {
+            // Get latest only from user rights >= content manager
+            $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
+                    " WHERE `user`.`access` >= 50";
         }
-        $sql .= " ORDER BY `date` DESC ";
+        if (!is_null($type)) {
+            if ($user_id <= 0) {
+                $sql .= " AND";
+            } else {
+                $sql .= " WHERE";
+            }
+            $type = Stats::validate_type($type);
+            $sql .= " `user_flag`.`object_type` = '" . $type . "'";
+            if ($user_id > 0) {
+                $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
+            }
+            if (AmpConfig::get('catalog_disable')) {
+                $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+            }
+        }
+        $sql .= " ORDER BY `user_flag`.`date` DESC ";
         return $sql;
     }
     /**
      * get_latest
      * Get the latest user flagged objects
      */
-    public static function get_latest($type, $user_id=null, $count='', $offset='')
+    public static function get_latest($type=null, $user_id=null, $count='', $offset='')
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
@@ -194,12 +220,16 @@ class Userflag extends database_object
         /* Select Top objects counting by # of rows */
         $sql = self::get_latest_sql($type, $user_id);
         $sql .= "LIMIT $limit";
-        $db_results = Dba::read($sql, array($type, $user_id));
+        $db_results = Dba::read($sql);
 
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            if (is_null($type)) {
+                $results[] = $row;
+            } else {
+                $results[] = $row['id'];
+            }
         }
 
         return $results;

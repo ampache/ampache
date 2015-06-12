@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -75,12 +75,10 @@ class AmpacheHttpq extends localplay_controller
          */
         public function is_installed()
         {
-        $sql = "DESCRIBE `localplay_httpq`";
-        $db_results = Dba::read($sql);
+            $sql = "SHOW TABLES LIKE 'localplay_httpq'";
+            $db_results = Dba::read($sql);
 
-        return Dba::num_rows($db_results);
-
-
+            return (Dba::num_rows($db_results) > 0);
         } // is_installed
 
         /**
@@ -101,7 +99,6 @@ class AmpacheHttpq extends localplay_controller
 
         // Add an internal preference for the users current active instance
         Preference::insert('httpq_active','HTTPQ Active Instance','0','25','integer','internal');
-        User::rebuild_all_preferences();
 
         return true;
 
@@ -461,7 +458,8 @@ class AmpacheHttpq extends localplay_controller
             $url_data = $this->parse_url($entry);
                         switch ($url_data['primary_key']) {
                                 case 'oid':
-                                        $song = new Song($url_data['oid']);
+                                        $data['oid'] = $url_data['oid'];
+                                        $song = new Song($data['oid']);
                                         $song->format();
                                         $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                                         $data['link']   = $song->f_link;
@@ -480,7 +478,7 @@ class AmpacheHttpq extends localplay_controller
                                         $filename = Dba::escape($entry['file']);
                                         $sql = "SELECT `id`,'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " .
                                                 "UNION ALL " .
-                                                "SELECT `id`,'radio' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                                                "SELECT `id`,'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
 
                                         $db_results = Dba::read($sql);
                                         if ($row = Dba::fetch_assoc($db_results)) {
@@ -491,7 +489,7 @@ class AmpacheHttpq extends localplay_controller
                                                                 $data['name'] = $media->f_title . ' - ' . $media->f_album . ' - ' . $media->f_artist;
                                                                 $data['link'] = $media->f_link;
                                                         break;
-                                                        case 'radio':
+                                                        case 'live_stream':
                                                                 $frequency = $media->frequency ? '[' . $media->frequency . ']' : '';
                                                                 $site_url = $media->site_url ? '(' . $media->site_url . ')' : '';
                                                                 $data['name'] = "$media->name $frequency $site_url";
@@ -533,7 +531,7 @@ class AmpacheHttpq extends localplay_controller
         $url_data = $this->parse_url($array['track']);
 
         if (isset($url_data['oid'])) {
-            $song = new Song($url_data['oid']);
+            $song = new Song($data['oid']);
             $array['track_title']     = $song->title;
             $array['track_artist']     = $song->get_artist_name();
             $array['track_album']    = $song->get_album_name();

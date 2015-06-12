@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -29,23 +29,29 @@ UI::show_header();
  */
 switch ($_REQUEST['action']) {
     case 'search':
-        $browse = new Browse();
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
-        require_once AmpConfig::get('prefix') . '/templates/show_search_options.inc.php';
-        $results = Search::run($_REQUEST);
-        $browse->set_type($_REQUEST['type']);
-        $browse->show_objects($results);
-        $browse->store();
-    break;
-    case 'save_as_track':
-        $playlist_id = save_search($_REQUEST);
-        $playlist = new Playlist($playlist_id);
-        show_confirmation(T_('Search Saved'),sprintf(T_('Your Search has been saved as a track in %s'), $playlist->name), AmpConfig::get('web_path') . "/search.php");
+        if ($_REQUEST['rule_1'] != 'missing_artist') {
+            $browse = new Browse();
+            require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_search_options.inc.php';
+            $results = Search::run($_REQUEST);
+            $browse->set_type($_REQUEST['type']);
+            $browse->show_objects($results);
+            $browse->store();
+        } else {
+            $wartists = Wanted::search_missing_artists($_REQUEST['rule_1_input']);
+            require_once AmpConfig::get('prefix') . '/templates/show_missing_artists.inc.php';
+            echo '<a href="http://musicbrainz.org/search?query=' . rawurlencode($_REQUEST['rule_1_input']) . '&type=artist&method=indexed" target="_blank">' . T_('View on MusicBrainz') . '</a><br />';
+        }
     break;
     case 'save_as_smartplaylist':
+        if (!Access::check('interface', 25)) {
+            UI::access_denied();
+            exit();
+        }
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
+        show_confirmation(T_('Search Saved'),sprintf(T_('Your Search has been saved as a Smart Playlist with name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
     break;
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB
@@ -53,7 +59,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . '/templates/show_search_descriptor.inc.php';
         exit;
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
     break;
 }
 

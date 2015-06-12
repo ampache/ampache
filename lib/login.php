@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -48,10 +48,6 @@ if (empty($_REQUEST['step'])) {
         (in_array('http', AmpConfig::get('auth_methods')) &&
         ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
 
-        if ($_POST['rememberme']) {
-            Session::create_remember_cookie();
-        }
-
         /* If we are in demo mode let's force auth success */
         if (AmpConfig::get('demo_mode')) {
             $auth['success']        = true;
@@ -80,7 +76,7 @@ if (empty($_REQUEST['step'])) {
                 echo $auth['ui_required'];
                 exit();
             } else {
-                debug_event('Login', scrub_out($username) . ' attempted to login and failed', '1');
+                debug_event('Login', scrub_out($username) . ' From ' . $_SERVER['REMOTE_ADDR'] . ' attempted to login and failed', '1');
                 Error::add('general', T_('Error Username or Password incorrect, please try again'));
             }
         }
@@ -156,6 +152,13 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         $user->insert_ip_history();
     }
 
+    if (isset($username)) {
+        Session::create_user_cookie($username);
+        if ($_POST['rememberme']) {
+            Session::create_remember_cookie($username);
+        }
+    }
+
     // Update data from this auth if ours are empty
     if (empty($user->fullname) && !empty($auth['name'])) {
         $user->update_fullname($auth['name']);
@@ -167,6 +170,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         $user->update_website($auth['website']);
     }
 
+    $GLOBALS['user'] = $user;
     // If an admin, check for update
     if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
         AutoUpdate::is_update_available(true);

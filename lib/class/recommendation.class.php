@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -40,23 +40,26 @@ class Recommendation
         $api_key = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
         $url = $api_base . $method . '&api_key=' . $api_key . '&' . $query;
+
+        return self::query_lastfm($url);
+    }
+
+    public static function query_lastfm($url)
+    {
         debug_event('Recommendation', 'search url : ' . $url, 5);
 
-        $options = array();
-        if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-            $proxy = array();
-            $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-            if (AmpConfig::get('proxy_user')) {
-                $proxy[] = AmpConfig::get('proxy_user');
-                $proxy[] = AmpConfig::get('proxy_pass');
-            }
-            $options['proxy'] = $proxy;
-        }
-        $request = Requests::get($url, array(), $options);
+        $request = Requests::get($url, array(), Core::requests_options());
         $content = $request->body;
 
         return simplexml_load_string($content);
-    } // get_lastfm_results
+    }
+
+    public static function album_search($artist, $album)
+    {
+        $url = 'http://ws.audioscrobbler.com/1.0/album/' . urlencode($artist) . '/' . urlencode($album) . '/info.xml';
+
+        return self::query_lastfm($url);
+    }
 
     /**
      * gc
@@ -312,10 +315,13 @@ class Recommendation
             // Data newer than 6 months, use it
             if (($artist->last_update + 15768000) > time()) {
                 $results = array();
+                $results['id'] = $artist_id;
                 $results['summary'] = $artist->summary;
                 $results['placeformed'] = $artist->placeformed;
                 $results['yearformed'] = $artist->yearformed;
                 $results['largephoto'] = Art::url($artist->id, 'artist');
+                $results['smallphoto'] = $results['largephoto'];    // TODO: Change to thumb size?
+                $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto'] = $results['largephoto'];
                 return $results;
             }
@@ -329,10 +335,13 @@ class Recommendation
         $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed'] = (string) $xml->artist->bio->yearformed;
+        $results['smallphoto'] = $xml->artist->image[0];
+        $results['mediumphoto'] = $xml->artist->image[1];
         $results['largephoto'] = $xml->artist->image[2];
         $results['megaphoto'] = $xml->artist->image[4];
 
         if ($artist) {
+            $results['id'] = $artist->id;
             if (!empty($results['summary']) || !empty($results['megaphoto'])) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
 

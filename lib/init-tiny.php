@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,9 +22,9 @@
 
 // Minimal init for use in install
 
-// Do a check for PHP5 because nothing will work without it
-if (floatval(phpversion()) < 5) {
-    echo "ERROR: Ampache requires PHP5";
+// Do a check for PHP5.4 because nothing will work without it
+if (version_compare(phpversion(), '5.4.0', '<')) {
+    echo "ERROR: Ampache requires PHP version >= 5.4";
     exit;
 }
 
@@ -35,6 +35,14 @@ $load_time_begin = microtime(true);
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
 $configfile = $prefix . '/config/ampache.cfg.php';
+
+// We still allow scripts to run (it could be the purpose of the maintenance)
+if (!defined('CLI')) {
+    if (file_exists($prefix . '/.maintenance')) {
+        require_once($prefix . '/.maintenance');
+    }
+}
+
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/ampconfig.class.php';
 require_once $prefix . '/lib/class/core.class.php';
@@ -62,7 +70,7 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
 } else if (isset($_SERVER['SERVER_PORT'])) {
     $http_port = $_SERVER['SERVER_PORT'];
 }
-if (!isset($http_port) || !$http_port) {
+if (!isset($http_port) || empty($http_port)) {
     $http_port = 80;
 }
 
@@ -79,8 +87,10 @@ require_once $prefix . '/lib/batch.lib.php';
 require_once $prefix . '/lib/themes.php';
 require_once $prefix . '/lib/class/localplay_controller.abstract.php';
 require_once $prefix . '/lib/class/database_object.abstract.php';
-require_once $prefix . '/lib/class/playlist_object.abstract.php';
 require_once $prefix . '/lib/class/media.interface.php';
+require_once $prefix . '/lib/class/playable_item.interface.php';
+require_once $prefix . '/lib/class/library_item.interface.php';
+require_once $prefix . '/lib/class/playlist_object.abstract.php';
 require_once $prefix . '/modules/horde/Browser.php';
 
 /* Set up the flip class */

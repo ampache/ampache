@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -64,20 +64,27 @@ class Error
         // Make sure its set first
         if (!isset(Error::$errors[$name])) {
             Error::$errors[$name] = $message;
-            Error::$state = 1;
+            Error::$state = true;
             $_SESSION['errors'][$name] = $message;
         }
         // They want us to clobber it
         elseif ($clobber) {
-            Error::$state = 1;
+            Error::$state = true;
             Error::$errors[$name] = $message;
             $_SESSION['errors'][$name] = $message;
         }
         // They want us to append the error, add a BR\n and then the message
         else {
-            Error::$state = 1;
+            Error::$state = true;
             Error::$errors[$name] .= "<br />\n" . $message;
             $_SESSION['errors'][$name] .=  "<br />\n" . $message;
+        }
+
+        // If on SSE worker, output the error directly.
+        if (defined('SSE_OUTPUT')) {
+            echo "data: display_sse_error('" . addslashes($message) . "')\n\n";
+            ob_flush();
+            flush();
         }
 
     } // add

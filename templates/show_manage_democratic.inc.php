@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -40,7 +40,7 @@ UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
     ?>
     <tr class="<?php echo UI::flip_class(); ?>">
         <td><?php echo scrub_out($democratic->name); ?></td>
-        <td><?php echo $playlist->f_name_link; ?></td>
+        <td><?php echo $playlist->f_link; ?></td>
         <td><?php echo $democratic->f_cooldown; ?></td>
         <td><?php echo $democratic->f_level; ?></td>
         <td><?php echo $democratic->f_primary; ?></td>

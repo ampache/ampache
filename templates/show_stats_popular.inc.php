@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -29,10 +29,18 @@ require AmpConfig::get('prefix') . '/templates/show_objects.inc.php';
 UI::show_box_bottom();
 
 $objects = Stats::get_top('artist');
-$headers = array('f_name_link' => T_('Most Popular Artists'));
+$headers = array('f_link' => T_('Most Popular Artists'));
 UI::show_box_top('','info-box box_popular_artists');
 require AmpConfig::get('prefix') . '/templates/show_objects.inc.php';
 UI::show_box_bottom();
+
+if (AmpConfig::get('allow_video')) {
+    $objects = Stats::get_top('video');
+    $headers = array('f_link' => T_('Most Popular Videos'));
+    UI::show_box_top('','info-box box_popular_videos');
+    require AmpConfig::get('prefix') . '/templates/show_objects.inc.php';
+    UI::show_box_bottom();
+}
 
 ?>
 </div>

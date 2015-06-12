@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -69,7 +69,7 @@ function install_check_status($configfile)
     if (!file_exists($configfile)) {
         return true;
     } else {
-        Error::add('general', T_('Config file already exists, install is probably completed'));
+        //Error::add('general', T_('Config file already exists, install is probably completed'));
     }
 
     /*
@@ -265,7 +265,7 @@ function install_create_config($download = false)
     Dba::dbh();
 
     $params = AmpConfig::get_all();
-    if (empty($params['database_username']) || empty($params['database_password'])) {
+    if (empty($params['database_username']) || (empty($params['database_password']) && strpos($params['database_hostname'], '/') !== 0)) {
         Error::add('general', T_("Invalid configuration settings"));
         return false;
     }
@@ -395,17 +395,122 @@ function install_config_transcode_mode($mode)
 {
     $trconfig = array(
         'encode_target' => 'mp3',
+        'encode_video_target' => 'webm',
         'transcode_m4a' => 'required',
         'transcode_flac' => 'required',
         'transcode_mpc' => 'required',
         'transcode_ogg' => 'allowed',
-        'transcode_wav' => 'required'
+        'transcode_wav' => 'required',
+        'transcode_avi' => 'allowed',
+        'transcode_mpg' => 'allowed',
+        'transcode_mkv' => 'allowed',
     );
     if ($mode == 'ffmpeg' || $mode == 'avconv') {
-        $trconfig['transcode_cmd'] = $mode . ' -i %FILE%';
-        $trconfig['encode_args_mp3'] = '-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1';
-        $trconfig['encode_args_ogg'] = '-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1';
-        $trconfig['encode_args_wav'] = '-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1';
+        $trconfig['transcode_cmd'] = $mode;
+        $trconfig['transcode_input'] = '-i %FILE%';
+        $trconfig['waveform'] = 'true';
+        $trconfig['generate_video_preview'] = 'true';
+
         AmpConfig::set_by_array($trconfig, true);
+    }
+}
+
+function install_config_use_case($case)
+{
+    $trconfig = array(
+        'use_auth' => 'true',
+        'ratings' => 'true',
+        'userflags' => 'true',
+        'sociable' => 'true',
+        'licensing' => 'false',
+        'wanted' => 'true',
+        'channel' => 'true',
+        'live_stream' => 'true',
+        'allow_public_registration' => 'false',
+        'cookie_disclaimer' => 'false',
+        'share' => 'false'
+    );
+
+    $dbconfig = array(
+        'download' => '1',
+        'share' => '0',
+        'allow_video' => '1',
+        'home_now_playing' => '1',
+        'home_recently_played' => '1'
+    );
+
+    switch ($case) {
+        case 'minimalist':
+            $trconfig['ratings'] = 'false';
+            $trconfig['userflags'] = 'false';
+            $trconfig['sociable'] = 'false';
+            $trconfig['wanted'] = 'false';
+            $trconfig['channel'] = 'false';
+            $trconfig['live_stream'] = 'false';
+
+            $dbconfig['download'] = '0';
+            $dbconfig['allow_video'] = '0';
+
+            // Hide sidebar by default to have a better 'minimalist first look'.
+            setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
+            break;
+        case 'community':
+            $trconfig['use_auth'] = 'false';
+            $trconfig['licensing'] = 'true';
+            $trconfig['wanted'] = 'false';
+            $trconfig['live_stream'] = 'false';
+            $trconfig['allow_public_registration'] = 'true';
+            $trconfig['cookie_disclaimer'] = 'true';
+            $trconfig['share'] = 'true';
+
+            $dbconfig['download'] = '0';
+            $dbconfig['share'] = '1';
+            $dbconfig['home_now_playing'] = '0';
+            $dbconfig['home_recently_played'] = '0';
+            break;
+        default:
+            break;
+    }
+
+    AmpConfig::set_by_array($trconfig, true);
+    foreach ($dbconfig as $preference => $value) {
+        Preference::update($preference, -1, $value, true, true);
+    }
+}
+
+function install_config_backends(Array $backends)
+{
+    $dbconfig = array(
+        'subsonic_backend' => '0',
+        'plex_backend' => '0',
+        'daap_backend' => '0',
+        'upnp_backend' => '0',
+        'webdav_backend' => '0',
+        'stream_beautiful_url' => '0'
+    );
+
+    foreach ($backends as $backend) {
+        switch ($backend) {
+            case 'subsonic':
+                $dbconfig['subsonic_backend'] = '1';
+                break;
+            case 'plex':
+                $dbconfig['plex_backend'] = '1';
+                break;
+            case 'upnp':
+                $dbconfig['upnp_backend'] = '1';
+                $dbconfig['stream_beautiful_url'] = '1';
+                break;
+            case 'daap':
+                $dbconfig['daap_backend'] = '1';
+                break;
+            case 'webdav':
+                $dbconfig['webdav_backend'] = '1';
+                break;
+        }
+    }
+
+    foreach ($dbconfig as $preference => $value) {
+        Preference::update($preference, -1, $value, true, true);
     }
 }

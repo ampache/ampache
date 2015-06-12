@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -28,13 +28,30 @@ if (!defined('AJAX_INCLUDE')) { exit; }
 $results = array();
 switch ($_REQUEST['action']) {
     case 'random_albums':
-        $albums = Album::get_random(6, true);
+        $albums = Album::get_random(6);
         if (count($albums) AND is_array($albums)) {
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_random_albums.inc.php';
             $results['random_selection'] = ob_get_clean();
         } else {
             $results['random_selection'] = '<!-- None found -->';
+
+            if (Access::check('interface', '100')) {
+                $catalogs = Catalog::get_catalogs();
+                if (count($catalogs) == 0) {
+                    $results['random_selection'] = sprintf(T_('No catalog configured yet. To start streaming your media, you now need to %s add a catalog %s'), '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">', '</a>.<br /><br />');
+                }
+            }
+        }
+    break;
+    case 'random_videos':
+        $videos = Video::get_random(6);
+        if (count($videos) AND is_array($videos)) {
+            ob_start();
+            require_once AmpConfig::get('prefix') . '/templates/show_random_videos.inc.php';
+            $results['random_video_selection'] = ob_get_clean();
+        } else {
+            $results['random_video_selection'] = '<!-- None found -->';
         }
     break;
     case 'artist_info':
@@ -108,6 +125,25 @@ switch ($_REQUEST['action']) {
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_concerts.inc.php';
             $results['concerts'] = ob_get_clean();
+        }
+    break;
+    case 'labels':
+        if (AmpConfig::get('label') && isset($_REQUEST['artist'])) {
+            $labels = Label::get_labels($_REQUEST['artist']);
+            $object_ids = array();
+            if (count($labels) > 0) {
+                foreach ($labels as $id => $label) {
+                    $object_ids[] = $id;
+                }
+            }
+            $browse = new Browse();
+            $browse->set_type('label');
+            $browse->set_simple_browse(false);
+            $browse->save_objects($object_ids);
+            $browse->store();
+            ob_start();
+            require_once AmpConfig::get('prefix') . '/templates/show_labels.inc.php';
+            $results['labels'] = ob_get_clean();
         }
     break;
     case 'wanted_missing_albums':
@@ -204,28 +240,12 @@ switch ($_REQUEST['action']) {
                 exit;
         } // end switch on button
 
+        Ajax::set_include_override(true);
         ob_start();
         $_SESSION['state']['sidebar_tab'] = $button;
         require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php';
-        $results['sidebar'] = ob_get_contents();
+        $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
-    break;
-    case 'shoutbox':
-        ob_start();
-        $since = $_REQUEST['since'];
-        if ($since) {
-            $shouts = Shoutbox::get_shouts_since(intval($since / 1000));
-            echo "<script language='javascript' type='text/javascript'>";
-            foreach ($shouts as $id) {
-                $shout = new Shoutbox($id);
-                echo "noty({text: '" . addslashes($shout->get_display(true)) . "',
-                    type: 'alert', layout: 'bottomRight',
-                    template: '<div class=\"noty_message noty_ampache\"><span class=\"noty_text noty_ampache\"></span><div class=\"noty_close noty_ampache\"></div></div>',
-                });";
-            }
-            echo "</script>";
-        }
-        $results['live_shoutbox'] = ob_get_clean();
     break;
     case 'start_channel':
         if (Access::check('interface','75')) {
@@ -280,6 +300,28 @@ switch ($_REQUEST['action']) {
             echo "</script>";
         }
         $results['fslider_script'] = ob_get_clean();
+    break;
+    case 'songs':
+        $label_id = intval($_REQUEST['label']);
+
+        ob_start();
+        if ($label_id > 0) {
+            $label = new Label($label_id);
+            $object_ids = $label->get_songs();
+
+            $browse = new Browse();
+            $browse->set_type('song');
+            $browse->set_simple_browse(false);
+            $browse->save_objects($object_ids);
+            $browse->store();
+
+            UI::show_box_top(T_('Songs'), 'info-box');
+            require_once AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
+            UI::show_box_bottom();
+        }
+
+        $results['songs'] = ob_get_contents();
+        ob_end_clean();
     break;
     default:
         $results['rfc3514'] = '0x1';

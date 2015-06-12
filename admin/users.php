@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -40,14 +40,17 @@ switch ($_REQUEST['action']) {
         }
 
         /* Clean up the variables */
-        $user_id    = intval($_POST['user_id']);
-        $username     = scrub_in($_POST['username']);
-        $fullname     = scrub_in($_POST['fullname']);
-        $email         = scrub_in($_POST['email']);
-        $website         = scrub_in($_POST['website']);
-        $access     = scrub_in($_POST['access']);
-        $pass1         = $_POST['password_1'];
-        $pass2         = $_POST['password_2'];
+        $user_id        = intval($_POST['user_id']);
+        $username       = scrub_in($_POST['username']);
+        $fullname       = scrub_in($_POST['fullname']);
+        $email          = scrub_in($_POST['email']);
+        $website        = scrub_in($_POST['website']);
+        $access         = scrub_in($_POST['access']);
+        $pass1          = $_POST['password_1'];
+        $pass2          = $_POST['password_2'];
+        $state          = scrub_in($_POST['state']);
+        $city           = scrub_in($_POST['city']);
+        $fullname_public = isset($_POST['fullname_public']);
 
         /* Setup the temp user */
         $client = new User($user_id);
@@ -55,16 +58,27 @@ switch ($_REQUEST['action']) {
         /* Verify Input */
         if (empty($username)) {
             Error::add('username', T_("Error Username Required"));
+        } else {
+            if ($username != $client->username) {
+                if (!User::check_username($username)) {
+                    Error::add('username', T_("Error Username already exists"));
+                }
+            }
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
             Error::add('password', T_("Error Passwords don't match"));
         }
 
-        /* If we've got an error then break! */
+        // Check the mail for correct address formation.
+        if (!Mailer::validate_address($email)) {
+            Error::add('email', T_('Invalid email address'));
+        }
+
+        /* If we've got an error then show edit form! */
         if (Error::occurred()) {
-            $_REQUEST['action'] = 'show_edit';
+            require_once AmpConfig::get('prefix') . '/templates/show_edit_user.inc.php';
             break;
-        } // if we've had an oops!
+        }
 
         if ($access != $client->access) {
             $client->update_access($access);
@@ -81,8 +95,17 @@ switch ($_REQUEST['action']) {
         if ($fullname != $client->fullname) {
             $client->update_fullname($fullname);
         }
+        if ($fullname_public != $client->fullname_public) {
+            $client->update_fullname_public($fullname_public);
+        }
         if ($pass1 == $pass2 && strlen($pass1)) {
             $client->update_password($pass1);
+        }
+        if ($state != $client->state) {
+            $client->update_state($state);
+        }
+        if ($city != $client->city) {
+            $client->update_city($city);
         }
         $client->upload_avatar();
 
@@ -96,13 +119,15 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        $username    = scrub_in($_POST['username']);
-        $fullname    = scrub_in($_POST['fullname']);
-        $email        = scrub_in($_POST['email']);
+        $username       = scrub_in($_POST['username']);
+        $fullname       = scrub_in($_POST['fullname']);
+        $email          = scrub_in($_POST['email']);
         $website        = scrub_in($_POST['website']);
-        $access        = scrub_in($_POST['access']);
-        $pass1        = $_POST['password_1'];
-        $pass2        = $_POST['password_2'];
+        $access         = scrub_in($_POST['access']);
+        $pass1          = $_POST['password_1'];
+        $pass2          = $_POST['password_2'];
+        $state          = (string) scrub_in($_POST['state']);
+        $city           = (string) scrub_in($_POST['city']);
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
             Error::add('password', T_("Error Passwords don't match"));
@@ -117,20 +142,25 @@ switch ($_REQUEST['action']) {
             Error::add('username', T_('Error Username already exists'));
         }
 
-        if (!Error::occurred()) {
-            /* Attempt to create the user */
-            $user_id = User::create($username, $fullname, $email, $website, $pass1, $access);
-            if (!$user_id) {
-                Error::add('general', T_("Error: Insert Failed"));
-            }
+        // Check the mail for correct address formation.
+        if (!Mailer::validate_address($email)) {
+            Error::add('email', T_('Invalid email address'));
+        }
 
-            $user = new User($user_id);
-            $user->upload_avatar();
-        } // if no errors
-        else {
-            $_REQUEST['action'] = 'show_add_user';
+        /* If we've got an error then show add form! */
+        if (Error::occurred()) {
+            require_once AmpConfig::get('prefix') . '/templates/show_add_user.inc.php';
             break;
         }
+
+        /* Attempt to create the user */
+        $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
+        if (!$user_id) {
+            Error::add('general', T_("Error: Insert Failed"));
+        }
+        $user = new User($user_id);
+        $user->upload_avatar();
+
         if ($access == 5) { $access = T_('Guest');} elseif ($access == 25) { $access = T_('User');} elseif ($access == 100) { $access = T_('Admin');}
 
         /* HINT: %1 Username, %2 Access num */
@@ -139,6 +169,9 @@ switch ($_REQUEST['action']) {
     case 'enable':
         $client = new User($_REQUEST['user_id']);
         $client->enable();
+        if (!AmpConfig::get('user_no_email_confirm')) {
+            Registration::send_account_enabled($client->username, $client->fullname, $client->email);
+        }
         show_confirmation(T_('User Enabled'),$client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path'). '/admin/users.php');
     break;
     case 'disable':
@@ -239,7 +272,7 @@ switch ($_REQUEST['action']) {
         $browse = new Browse();
         $browse->reset_filters();
         $browse->set_type('user');
-        $browse->set_simple_browse(1);
+        $browse->set_simple_browse(true);
         $browse->set_sort('name','ASC');
         $user_ids = $browse->get_objects();
         $browse->show_objects($user_ids);

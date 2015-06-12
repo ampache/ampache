@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2013 Ampache.org
+ * Copyright 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -28,52 +28,17 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 <head>
+<!-- Propulsed by Ampache | ampache.org -->
 <title><?php echo AmpConfig::get('site_title'); ?></title>
+<meta property="og:title" content="<?php echo AmpConfig::get('site_title'); ?>" />
+<meta property="og:image" content="<?php echo AmpConfig::get('web_path'); ?>/themes/reborn/images/ampache.png"/>
+<meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
+<meta property="og:site_name" content="Ampache"/>
 <?php
 if (!$is_share) {
     $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
 }
-?>
-<script language="javascript" type="text/javascript">
-var jplaylist = new Array();
-var jtypes = new Array();
 
-function addMedia(media)
-{
-    var jpmedia = {};
-    jpmedia['title'] = media['title'];
-    jpmedia['artist'] = media['artist'];
-    jpmedia[media['filetype']] = media['url'];
-    jpmedia['poster'] = media['poster'];
-    jpmedia['artist_id'] = media['artist_id'];
-    jpmedia['album_id'] = media['album_id'];
-    jpmedia['song_id'] = media['song_id'];
-
-    jplaylist.add(jpmedia);
-}
-</script>
-<script language="javascript" type="text/javascript">
-function ExitPlayer()
-{
-    var ff = parent.parent.document.getElementById('frame_footer');
-    var maindiv = parent.parent.document.getElementById('maindiv');
-    if (ff.getAttribute('className') == 'frame_footer_visible') {
-        ff.setAttribute('className', 'frame_footer_hide');
-        ff.setAttribute('class', 'frame_footer_hide');
-
-        maindiv.style.height = parent.parent.innerHeight + "px";
-<?php
-if (AmpConfig::get('song_page_title')) {
-    echo "window.parent.document.title = '" . addslashes(AmpConfig::get('site_title')) . "';";
-}
-?>
-    }
-    window.parent.onbeforeunload = null;
-    ff.setAttribute('src', '');
-    return false;
-}
-</script>
-<?php
 $isRadio = false;
 $isVideo = false;
 $radio = null;

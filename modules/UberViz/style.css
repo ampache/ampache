@@ -1,16 +1,17 @@
 #uberviz {
-    visibility: hidden;
+        visibility: hidden;
+        z-index: 99999;
 }
 
 #uberviz #viz {
-	position:absolute;
+	position:fixed;
 	background-color: #000;
 }
 
 #uberviz #controls{
 	position:absolute;
 	background-color: #000;
-	top: 0px;
+	bottom: 0px;
 	right:0px;
 	width:250px;
 	height:100%;
@@ -48,12 +49,13 @@
 }
 
 #uberviz #audioDebug{
-	position:absolute;
+	position:fixed;
 	background-color: #000;
 	width: 250px;
-	top:0px;
+	bottom:0px;
 	right:0px;
-    opacity: 0.9;
+        opacity: 0.5;
+        z-index: 9999;
 }
 
 #uberviz #settings{

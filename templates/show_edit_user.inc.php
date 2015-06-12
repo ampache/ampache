@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -32,7 +32,7 @@
                 <?php echo T_('Username'); ?>:
             </td>
             <td>
-                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" />
+                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
                 <?php Error::display('username'); ?>
             </td>
         </tr>
@@ -40,6 +40,8 @@
             <td><?php echo T_('Full Name'); ?>:</td>
             <td>
                 <input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+                <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) echo "checked" ?> /> <?php echo T_('Public'); ?>
+                <?php Error::display('fullname'); ?>
             </td>
         </tr>
         <tr>
@@ -48,6 +50,7 @@
             </td>
             <td>
                 <input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
+                <?php Error::display('email'); ?>
             </td>
         </tr>
         <tr>
@@ -56,6 +59,25 @@
             </td>
             <td>
                 <input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
+                <?php Error::display('website'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('State'); ?>:
+            </td>
+            <td>
+                <input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" />
+                <?php Error::display('state'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('City'); ?>:
+            </td>
+            <td>
+                <input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" />
+                <?php Error::display('city'); ?>
             </td>
         </tr>
         <tr>
@@ -92,7 +114,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo T_('Avatar'); ?>
+                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />
@@ -111,6 +133,7 @@
             <td>
                 <span><?php echo $client->apikey; ?></span>
             </td>
+        </tr>
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>

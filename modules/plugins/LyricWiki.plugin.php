@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,9 +22,10 @@
 
 class Ampachelyricwiki {
 
-    public $name        = 'LyricWiki';
+    public $name           = 'LyricWiki';
+    public $categories     = 'lyrics';
     public $description    = 'Get lyrics from LyricWiki';
-    public $url        = '';
+    public $url            = 'http://lyrics.wikia.com/Lyrics_Wiki';
     public $version        ='000001';
     public $min_ampache    ='360022';
     public $max_ampache    ='999999';
@@ -71,7 +72,7 @@ class Ampachelyricwiki {
     public function get_lyrics($song) {
   
         $uri = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title) . '&fmt=xml&func=getSong';
-        $request = Requests::get($uri);
+        $request = Requests::get($uri, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
             if ($xml) {

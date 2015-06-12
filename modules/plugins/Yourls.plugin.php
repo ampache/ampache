@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,9 +23,10 @@
 class AmpacheYourls {
 
     public $name        = 'YOURLS';
+    public $categories  = 'shortener';
     public $description = 'Url shorteners on shared links with YOURLS';
-    public $url         = 'http://yourls.org/';
-    public $version     = '000001';
+    public $url         = 'http://yourls.org';
+    public $version     = '000002';
     public $min_ampache = '360037';
     public $max_ampache = '999999';
 
@@ -33,7 +34,7 @@ class AmpacheYourls {
     // fill them out
     private $yourls_domain;
     private $yourls_use_idn;
-    private $yourls_api;
+    private $yourls_api_key;
 
     /**
      * Constructor
@@ -55,9 +56,9 @@ class AmpacheYourls {
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('yourls_domain')) { return false; }
 
-        Preference::insert('yourls_domain','YOURLS domain name','','25','string','plugins');
-        Preference::insert('yourls_use_idn','YOURLS use IDN','0','25','boolean','plugins');
-        Preference::insert('yourls_api','YOURLS api key','','25','string','plugins');
+        Preference::insert('yourls_domain','YOURLS domain name','','75','string','plugins');
+        Preference::insert('yourls_use_idn','YOURLS use IDN','0','75','boolean','plugins');
+        Preference::insert('yourls_api_key','YOURLS api key','','75','string','plugins');
 
         return true;
 
@@ -72,7 +73,7 @@ class AmpacheYourls {
 
         Preference::delete('yourls_domain');
         Preference::delete('yourls_use_idn');
-        Preference::delete('yourls_api');
+        Preference::delete('yourls_api_key');
 
     } // uninstall
 
@@ -86,17 +87,17 @@ class AmpacheYourls {
 
     public function shortener($url) {
         
-        if (empty($this->yourls_domain) || empty($this->yourls_api)) {
+        if (empty($this->yourls_domain) || empty($this->yourls_api_key)) {
             debug_event($this->name, 'YOURLS domain or api key missing', '3');
             return false;
         }
         
         $shorturl = '';
     
-        $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api . '&action=shorturl&format=simple&url=' . urlencode($url);
+        $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
         try {
             debug_event($this->name, 'YOURLS api call: ' . $apiurl, '5');
-            $request = Requests::get($apiurl);
+            $request = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = $request->body;
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.
@@ -130,8 +131,8 @@ class AmpacheYourls {
             debug_event($this->name,'No YOURLS domain, shortener skipped','3');
             return false;
         }
-        if (strlen(trim($data['yourls_api']))) {
-            $this->yourls_api = trim($data['yourls_api']);
+        if (strlen(trim($data['yourls_api_key']))) {
+            $this->yourls_api_key = trim($data['yourls_api_key']);
         }
         else {
             debug_event($this->name,'No YOURLS api key, shortener skipped','3');

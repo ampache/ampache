@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -37,6 +37,7 @@ define('INSTALL', 1);
 
 $htaccess_play_file = AmpConfig::get('prefix') . '/play/.htaccess';
 $htaccess_rest_file = AmpConfig::get('prefix') . '/rest/.htaccess';
+$htaccess_channel_file = AmpConfig::get('prefix') . '/channel/.htaccess';
 
 // Clean up incoming variables
 $web_path = scrub_in($_REQUEST['web_path']);
@@ -65,6 +66,20 @@ if (isset($_REQUEST['transcode_template'])) {
     install_config_transcode_mode($mode);
 }
 
+if (isset($_REQUEST['usecase'])) {
+    $case = $_REQUEST['usecase'];
+    if (Dba::check_database()) {
+        install_config_use_case($case);
+    }
+}
+
+if (isset($_REQUEST['backends'])) {
+    $backends = $_REQUEST['backends'];
+    if (Dba::check_database()) {
+        install_config_backends($backends);
+    }
+}
+
 // Charset and gettext setup
 $htmllang = $_REQUEST['htmllang'];
 $charset  = $_REQUEST['charset'];
@@ -89,7 +104,7 @@ load_gettext();
 header ('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 
 // Correct potential \ or / in the dirname
-$safe_dirname = rtrim(dirname($_SERVER['PHP_SELF']),"/\\");
+$safe_dirname = get_web_path();
 
 $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 
@@ -119,28 +134,53 @@ switch ($_REQUEST['action']) {
 
         // Now that it's inserted save the lang preference
         Preference::update('lang', '-1', AmpConfig::get('lang'));
-
-        header ('Location: ' . $web_path . "/install.php?action=show_create_config&local_db=$database&local_host=$hostname&local_port=$port&htmllang=$htmllang&charset=$charset");
-    break;
-    case 'create_config':
-        $download = (!isset($_POST['write']));
-        $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
-        $download_htaccess_play = (isset($_POST['download_htaccess_play']));
-        $write_htaccess_rest = (isset($_POST['write_htaccess_rest']));
-        $write_htaccess_play = (isset($_POST['write_htaccess_play']));
-
-        if ($write_htaccess_rest || $download_htaccess_rest) {
-            $created_config = install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
-        } elseif ($write_htaccess_play || $download_htaccess_play) {
-            $created_config = install_rewrite_rules($htaccess_play_file, $_POST['web_path'], $download_htaccess_play);
-        } else {
-            $created_config = install_create_config($download);
-        }
-
-        require_once 'templates/show_install_config.inc.php';
-    break;
     case 'show_create_config':
         require_once 'templates/show_install_config.inc.php';
+    break;
+    case 'create_config':
+        $all = (isset($_POST['create_all']));
+        $skip = (isset($_POST['skip_config']));
+        if (!$skip) {
+            $write = (isset($_POST['write']));
+            $download = (isset($_POST['download']));
+            $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
+            $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
+            $download_htaccess_play = (isset($_POST['download_htaccess_play']));
+            $write_htaccess_channel = (isset($_POST['write_htaccess_channel']));
+            $write_htaccess_rest = (isset($_POST['write_htaccess_rest']));
+            $write_htaccess_play = (isset($_POST['write_htaccess_play']));
+
+            $created_config = true;
+            if ($write_htaccess_channel || $download_htaccess_channel || $all) {
+                $created_config = $created_config && install_rewrite_rules($htaccess_channel_file, $_POST['web_path'], $download_htaccess_channel);
+            }
+            if ($write_htaccess_rest || $download_htaccess_rest || $all) {
+                $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
+            }
+            if ($write_htaccess_play || $download_htaccess_play || $all) {
+                $created_config = $created_config && install_rewrite_rules($htaccess_play_file, $_POST['web_path'], $download_htaccess_play);
+            }
+            if ($write || $download || $all) {
+                $created_config = $created_config && install_create_config($download);
+            }
+        }
+    case 'show_create_account':
+        $results = parse_ini_file($configfile);
+        if (!isset($created_config)) $created_config = true;
+
+        /* Make sure we've got a valid config file */
+        if (!check_config_values($results) || !$created_config) {
+            Error::add('general', T_('Error: Config files not found or unreadable'));
+            require_once AmpConfig::get('prefix') . '/templates/show_install_config.inc.php';
+            break;
+        }
+
+        // Don't try to add administrator user on existing database
+        if (install_check_status($configfile)) {
+            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+        } else {
+            header ("Location: " . $web_path . '/login.php');
+        }
     break;
     case 'create_account':
         $results = parse_ini_file($configfile);
@@ -153,19 +193,13 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        header ("Location: " . $web_path . '/login.php');
-    break;
-    case 'show_create_account':
-        $results = parse_ini_file($configfile);
+        // Automatically log-in the newly created user
+        Session::create_cookie();
+        Session::create(array('type' => 'mysql', 'username' => $username));
+        $_SESSION['userdata']['username'] = $username;
+        Session::check();
 
-        /* Make sure we've got a valid config file */
-        if (!check_config_values($results)) {
-            Error::add('general', T_('Error: Config file not found or unreadable'));
-            require_once AmpConfig::get('prefix') . '/templates/show_install_config.inc.php';
-            break;
-        }
-
-        require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+        header ("Location: " . $web_path . '/index.php');
     break;
     case 'init':
         require_once 'templates/show_install.inc.php';

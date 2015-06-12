@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -278,22 +278,24 @@ END;
     }
 
     /**
-     * show_mainframes
-     *
-     * For now this just shows the mainframes template
-     */
-    public static function show_mainframes()
-    {
-        require_once AmpConfig::get('prefix') . '/templates/mainframes.inc.php';
-    }
-
-    /**
      * show_footer
      *
      * Shows the footer template and possibly profiling info.
      */
     public static function show_footer()
     {
+        if (!defined("TABLE_RENDERED")) {
+            show_table_render();
+        }
+
+        $plugins = Plugin::get_plugins('display_on_footer');
+        foreach ($plugins as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($GLOBALS['user'])) {
+                $plugin->_plugin->display_on_footer();
+            }
+        }
+
         require_once AmpConfig::get('prefix') . '/templates/footer.inc.php';
         if (isset($_REQUEST['profiling'])) {
             Dba::show_profile();
@@ -320,6 +322,16 @@ END;
         require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
     }
 
+    public static function show_custom_style()
+    {
+        if (AmpConfig::get('custom_login_logo')) {
+            echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
+        }
+
+        $favicon = AmpConfig::get('custom_favicon') ?: AmpConfig::get('web_path') . "/favicon.ico";
+        echo "<link rel='shortcut icon' href='" .  $favicon . "' />\n";
+    }
+
     /**
      * update_text
      *
@@ -333,10 +345,30 @@ END;
             return;
         }
 
-        echo '<script type="text/javascript">';
-        echo "updateText('$field', '$value');";
-        echo "</script>\n";
+        static $id = 1;
+
+        if (defined('SSE_OUTPUT')) {
+            echo "id: " . $id . "\n";
+            echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
+        } else {
+            if (!empty($field)) {
+                echo "<script>updateText('" . $field . "', '" . json_encode($value) ."');</script>\n";
+            } else {
+                echo "<br />" . $value . "<br /><br />\n";
+            }
+        }
+
         ob_flush();
         flush();
+        $id++;
+    }
+
+    public static function get_logo_url()
+    {
+        if (AmpConfig::get('custom_logo')) {
+            return AmpConfig::get('custom_logo');
+        } else {
+            return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache.png';
+        }
     }
 }

@@ -77,7 +77,7 @@ Reads & parses (to varying degrees):
  ¤ audio-lossy:
   * MP3/MP2/MP1
   * MPC / Musepack
-  * Ogg (Vorbis, OggFLAC, Speex)
+  * Ogg (Vorbis, OggFLAC, Speex, Opus)
   * AAC / MP4
   * AC3
   * DTS
@@ -195,6 +195,11 @@ if ($fp_remote = fopen($remotefilename, 'rb')) {
     fclose($fp_remote);
 }
 
+Note: since v1.9.9-20150212 it is possible a second and third parameter
+to $getID3->analyze(), for original filesize and original filename
+respectively. This permits you to download only a portion of a large remote
+file but get accurate playtime estimates, assuming the format only requires
+the beginning of the file for correct format analysis.
 
 See /demos/demo.write.php for how to write tags.
 
@@ -432,6 +437,13 @@ Known Bugs/Issues in other programs
 -----------------------------------
 http://www.getid3.org/phpBB3/viewtopic.php?t=25
 
+* MusicBrainz Picard (at least up to v1.3.2) writes multiple
+  ID3v2.3 genres in non-standard forward-slash separated text
+  rather than parenthesis-numeric+refinement style per the ID3v2.3
+  specs. Tags written in ID3v2.4 mode are written correctly.
+  (detected and worked around by getID3())
+* PZ TagEditor v4.53.408 has been known to insert ID3v2.3 frames
+  into an existing ID3v2.2 tag which, of course, breaks things
 * Windows Media Player (up to v11) and iTunes (up to v10+) do
     not correctly handle ID3v2.3 tags with UTF-16BE+BOM
     encoding (they assume the data is UTF-16LE+BOM and either
@@ -602,3 +614,4 @@ Reference material:
 * http://trac.musepack.net/trac/wiki/SV8Specification
 * http://wyday.com/cuesharp/specification.php
 * http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Nikon.html
+* http://www.codeproject.com/Articles/8295/MPEG-Audio-Frame-Header

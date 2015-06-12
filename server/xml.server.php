@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -72,6 +72,9 @@ if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
         Session::extend($_REQUEST['auth']);
         $GLOBALS['user'] = User::get_from_username($username);
 }
+
+// Make sure beautiful url is disabled as it is not supported by most Ampache clients
+AmpConfig::set('stream_beautiful_url', false, true);
 
 // Get the list of possible methods for the Ampache API
 $methods = get_class_methods('api');

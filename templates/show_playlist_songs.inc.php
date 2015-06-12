@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -34,14 +34,16 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_album optional"><?php echo T_('Album'); ?></th>
                 <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time optional"><?php echo T_('Time'); ?></th>
-            <?php if (AmpConfig::get('ratings')) {
-                Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
-            ?>
-                <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-            <?php } ?>
-            <?php if (AmpConfig::get('userflags')) {
-                Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
-            ?>
+                <?php if (User::is_registered()) { ?>
+                    <?php if (AmpConfig::get('ratings')) {
+                        Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
+                    ?>
+                        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+                    <?php } ?>
+                    <?php if (AmpConfig::get('userflags')) {
+                        Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
+                    ?>
+                <?php } ?>
                 <th class="cel_userflag essential"><?php echo T_('Fav.'); ?></th>
             <?php } ?>
                 <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -53,8 +55,8 @@ $web_path = AmpConfig::get('web_path');
                     if (!is_array($object)) {
                         $object = (array) $object;
                     }
-                    $song = new Song($object['object_id']);
-                    $song->format();
+                    $libitem = new Song($object['object_id']);
+                    $libitem->format();
                     $playlist_track = $object['track'];
             ?>
                     <tr class="<?php echo UI::flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
@@ -71,16 +73,19 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_album"><?php echo T_('Album'); ?></th>
                 <th class="cel_tags"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time"><?php echo T_('Time'); ?></th>
-            <?php if (AmpConfig::get('ratings')) { ?>
-                <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-            <?php } ?>
-            <?php if (AmpConfig::get('userflags')) { ?>
-                <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-            <?php } ?>
+                <?php if (User::is_registered()) { ?>
+                    <?php if (AmpConfig::get('ratings')) { ?>
+                        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+                    <?php } ?>
+                    <?php if (AmpConfig::get('userflags')) { ?>
+                        <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                    <?php } ?>
+                <?php } ?>
                 <th class="cel_action"><?php echo T_('Action'); ?></th>
                 <th class="cel_drag"></th>
             </tr>
         </tfoot>
     </table>
 </form>
+<?php show_table_render($argument); ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

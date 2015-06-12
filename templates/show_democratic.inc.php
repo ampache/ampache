@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -48,6 +48,25 @@ UI::show_box_top($string , 'info-box');
 <?php } ?>
 <?php } ?>
 </ul>
-
+</div>
+<div style="text-align: right;">
+    <script language="javascript" type="text/javascript">
+        function reloadPageChanged(obj)
+        {
+            if (obj.checked) {
+                setTimeout(function() {
+                    if (obj.checked) {
+                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!isset($_GET['reloadpage'])) echo " + '&reloadpage=1'"; ?>;
+                    }
+                }, <?php echo (AmpConfig::get('refresh_limit') * 1000); ?>);
+            }
+        }
+        <?php if (isset($_GET['reloadpage'])) { ?>
+        $(document).ready(function() {
+            reloadPageChanged(document.getElementById('chkreloadpage'));
+        });
+        <?php } ?>
+    </script>
+    <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (isset($_GET['reloadpage'])) echo "checked"; ?> /> <?php echo T_('Reload this page automatically'); ?>
 </div>
 <?php UI::show_box_bottom(); ?>

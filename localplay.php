@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -47,6 +47,7 @@ switch ($_REQUEST['action']) {
         // Setup the object
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->add_instance($_POST);
+        header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
     break;
     case 'update_instance':
         // Make sure they gots them rights

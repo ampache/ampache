@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -30,9 +30,18 @@
  */
 class Api
 {
+    /**
+     *  @var string $auth_version
+     */
     public static $auth_version = '350001';
-    public static $version = '370001';
+    /**
+     *  @var string $version
+     */
+    public static $version = '380001';
 
+    /**
+     *  @var Browse $browse
+     */
     private static $browse = null;
 
     /**
@@ -62,6 +71,9 @@ class Api
      * the filters in a slightly different and vastly simpler way to the
      * end users--so we have to do a little extra work to make them work
      * internally.
+     * @param string $filter
+     * @param int|string|boolean|null $value
+     * @return boolean
      */
     public static function set_filter($filter,$value)
     {
@@ -108,6 +120,8 @@ class Api
      *
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
+     * @param array
+     * @return boolean
      */
     public static function handshake($input)
     {
@@ -155,6 +169,7 @@ class Api
                     ($timestamp > (time() + 1800))) {
                     debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     Error::add('api', T_('Login Failed: timestamp out of range'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
                     return false;
                 }
 
@@ -166,6 +181,7 @@ class Api
                 if (!$realpwd) {
                     debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
                     Error::add('api', T_('Invalid Username/Password'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
                     return false;
                 }
 
@@ -184,6 +200,18 @@ class Api
                 $data['username'] = $client->username;
                 $data['type'] = 'api';
                 $data['value'] = $timestamp;
+                if (isset($input['client'])) {
+                    $data['agent'] = $input['client'];
+                }
+                if (isset($input['geo_latitude'])) {
+                    $data['geo_latitude'] = $input['geo_latitude'];
+                }
+                if (isset($input['geo_longitude'])) {
+                    $data['geo_longitude'] = $input['geo_longitude'];
+                }
+                if (isset($input['geo_name'])) {
+                    $data['geo_name'] = $input['geo_name'];
+                }
                 $token = Session::create($data);
 
                 debug_event('API', 'Login Success, passphrase matched', 1);
@@ -233,14 +261,16 @@ class Api
         } // end while
 
         debug_event('API','Login Failed, unable to match passphrase','1');
-        XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
+        return false;
     } // handshake
 
     /**
       * ping
      * This can be called without being authenticated, it is useful for determining if what the status
      * of the server is, and what version it is running/compatible with
+     * @param array $input
      */
     public static function ping($input)
     {
@@ -264,6 +294,7 @@ class Api
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      * //DEPRECATED
+     * @param array $input
      */
     public static function artists($input)
     {
@@ -291,6 +322,7 @@ class Api
      * artist
      * This returns a single artist based on the UID of said artist
      * //DEPRECATED
+     * @param array $input
      */
     public static function artist($input)
     {
@@ -302,6 +334,7 @@ class Api
     /**
      * artist_albums
      * This returns the albums of an artist
+     * @param array $input
      */
     public static function artist_albums($input)
     {
@@ -320,6 +353,7 @@ class Api
     /**
      * artist_songs
      * This returns the songs of the specified artist
+     * @param array $input
      */
     public static function artist_songs($input)
     {
@@ -337,6 +371,7 @@ class Api
     /**
       * albums
      * This returns albums based on the provided search filters
+     * @param array $input
      */
     public static function albums($input)
     {
@@ -361,6 +396,7 @@ class Api
     /**
      * album
      * This returns a single album based on the UID provided
+     * @param array $input
      */
     public static function album($input)
     {
@@ -372,6 +408,7 @@ class Api
     /**
      * album_songs
      * This returns the songs of a specified album
+     * @param array $input
      */
     public static function album_songs($input)
     {
@@ -390,6 +427,7 @@ class Api
     /**
      * tags
      * This returns the tags based on the specified filter
+     * @param array $input
      */
     public static function tags($input)
     {
@@ -413,6 +451,7 @@ class Api
     /**
      * tag
      * This returns a single tag based on UID
+     * @param array $input
      */
     public static function tag($input)
     {
@@ -425,38 +464,43 @@ class Api
     /**
      * tag_artists
      * This returns the artists associated with the tag in question as defined by the UID
+     * @param array $input
      */
     public static function tag_artists($input)
     {
         $artists = Tag::get_tag_objects('artist',$input['filter']);
+        if ($artists) {
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
-        ob_end_clean();
-        echo XML_Data::artists($artists);
+            ob_end_clean();
+            echo XML_Data::artists($artists);
+        }
 
     } // tag_artists
 
     /**
      * tag_albums
      * This returns the albums associated with the tag in question
+     * @param array $input
      */
     public static function tag_albums($input)
     {
         $albums = Tag::get_tag_objects('album',$input['filter']);
+        if ($albums) {
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
-        ob_end_clean();
-        echo XML_Data::albums($albums);
+            ob_end_clean();
+            echo XML_Data::albums($albums);
+        }
 
     } // tag_albums
 
     /**
      * tag_songs
      * returns the songs for this tag
+     * @param array $input
      */
     public static function tag_songs($input)
     {
@@ -473,6 +517,7 @@ class Api
     /**
      * songs
      * Returns songs based on the specified filter
+     * @param array $input
      */
     public static function songs($input)
     {
@@ -499,6 +544,7 @@ class Api
     /**
      * song
      * returns a single song
+     * @param array $input
      */
     public static function song($input)
     {
@@ -513,6 +559,7 @@ class Api
      * url_to_song
      *
      * This takes a url and returns the song object in question
+     * @param array $input
      */
     public static function url_to_song($input)
     {
@@ -525,6 +572,7 @@ class Api
     /**
       * playlists
      * This returns playlists based on the specified filter
+     * @param array $input
      */
     public static function playlists($input)
     {
@@ -548,6 +596,7 @@ class Api
     /**
      * playlist
      * This returns a single playlist
+     * @param array $input
      */
     public static function playlist($input)
     {
@@ -561,6 +610,7 @@ class Api
     /**
      * playlist_songs
      * This returns the songs for a playlist
+     * @param array $input
      */
     public static function playlist_songs($input)
     {
@@ -577,13 +627,14 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::songs($songs);
+        echo XML_Data::songs($songs,$items);
 
     } // playlist_songs
 
     /**
      * playlist_create
      * This create a new playlist and return it
+     * @param array $input
      */
     public static function playlist_create($input)
     {
@@ -600,6 +651,7 @@ class Api
     /**
      * playlist_delete
      * This delete a playlist
+     * @param array $input
      */
     public static function playlist_delete($input)
     {
@@ -616,12 +668,13 @@ class Api
     /**
      * playlist_add_song
      * This add a song to a playlist
+     * @param array $input
      */
     public static function playlist_add_song($input)
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $song = new Playlist($input['song']);
+        $song = $input['song'];
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
@@ -634,12 +687,13 @@ class Api
     /**
      * playlist_remove_song
      * This remove a song from a playlist
+     * @param array $input
      */
     public static function playlist_remove_song($input)
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $track = new Playlist($input['track']);
+        $track = scrub_in($input['track']);
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
@@ -652,6 +706,7 @@ class Api
     /**
      * search_songs
      * This searches the songs and returns... songs
+     * @param array $input
      */
     public static function search_songs($input)
     {
@@ -675,6 +730,7 @@ class Api
     /**
      * videos
      * This returns video objects!
+     * @param array $input
      */
     public static function videos($input)
     {
@@ -697,6 +753,7 @@ class Api
     /**
      * video
      * This returns a single video
+     * @param array $input
      */
     public static function video($input)
     {
@@ -710,6 +767,7 @@ class Api
     /**
      * localplay
      * This is for controling localplay
+     * @param array $input
      */
     public static function localplay($input)
     {
@@ -737,6 +795,7 @@ class Api
     /**
      * democratic
      * This is for controlling democratic play
+     * @param array $input
      */
     public static function democratic($input)
     {
@@ -781,7 +840,7 @@ class Api
                 $objects = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                XML_Data::democratic($objects);
+                echo XML_Data::democratic($objects);
             break;
             case 'play':
                 $url = $democratic->play_url();
@@ -795,12 +854,18 @@ class Api
 
     } // democratic
 
+    /**
+     * This get library stats.
+     * @param array $input
+     */
     public static function stats($input)
     {
         $type = $input['type'];
         $offset = $input['offset'];
         $limit = $input['limit'];
+        $username = $input['username'];
 
+        $albums = null;
         if ($type == "newest") {
             $albums = Stats::get_newest("album", $limit, $offset);
         } else if ($type == "highest") {
@@ -808,7 +873,16 @@ class Api
         } else if ($type == "frequent") {
             $albums = Stats::get_top("album", $limit, '', $offset);
         } else if ($type == "recent") {
-            $albums = Stats::get_recent("album", $limit, $offset);
+            if (!empty($username)) {
+                $user = User::get_from_username($username);
+                if ($user !== null) {
+                    $albums = $user->get_recently_played($limit, 'album');
+                } else {
+                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                }
+            } else {
+                $albums = Stats::get_recent("album", $limit, $offset);
+            }
         } else if ($type == "flagged") {
             $albums = Userflag::get_latest('album');
         } else {
@@ -818,8 +892,109 @@ class Api
             $albums = Album::get_random($limit);
         }
 
-        ob_end_clean();
-        echo XML_Data::albums($albums);
-    }
+        if ($albums !== null) {
+            ob_end_clean();
+            echo XML_Data::albums($albums);
+        }
+    } // stats
+
+    /**
+     * user
+     * This get an user public information
+     * @param array $input
+     */
+    public static function user($input)
+    {
+        $username = $input['username'];
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                ob_end_clean();
+                echo XML_Data::user($user);
+            } else {
+                debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+            }
+        } else {
+            debug_event('api', 'Username required on user function call.', 1);
+        }
+    } // user
+
+    /**
+     * followers
+     * This get an user followers
+     * @param array $input
+     */
+    public static function followers($input)
+    {
+        if (AmpConfig::get('sociable')) {
+            $username = $input['username'];
+            if (!empty($username)) {
+                $user = User::get_from_username($username);
+                if ($user !== null) {
+                    $users = $user->get_followers();
+                    ob_end_clean();
+                    echo XML_Data::users($user);
+                } else {
+                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                }
+            } else {
+                debug_event('api', 'Username required on followers function call.', 1);
+            }
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // followers
+
+    /**
+     * following
+     * This get the user list followed by an user
+     * @param array $input
+     */
+    public static function following($input)
+    {
+        if (AmpConfig::get('sociable')) {
+            $username = $input['username'];
+            if (!empty($username)) {
+                $user = User::get_from_username($username);
+                if ($user !== null) {
+                    $users = $user->get_following();
+                    ob_end_clean();
+                    echo XML_Data::users($user);
+                } else {
+                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                }
+            } else {
+                debug_event('api', 'Username required on following function call.', 1);
+            }
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // following
+
+    /**
+     * last_shouts
+     * This get the latest posted shouts
+     * @param array $input
+     */
+    public static function last_shouts($input)
+    {
+        $limit = intval($input['limit']);
+        if ($limit < 1) {
+            $limit = AmpConfig::get('popular_threshold');
+        }
+        if (AmpConfig::get('sociable')) {
+            $username = $input['username'];
+            if (!empty($username)) {
+                $shouts = Shoutbox::get_top($limit, $username);
+            } else {
+                $shouts = Shoutbox::get_top($limit);
+            }
+
+            ob_end_clean();
+            echo XML_Data::shouts($shouts);
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // last_shouts
 
 } // API class

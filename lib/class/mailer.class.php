@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -152,16 +152,16 @@ class Mailer
         }
         $mail->Body    = $this->message;
 
-        $sendmail       = AmpConfig::get('sendmail_path');
+        $sendmail    = AmpConfig::get('sendmail_path');
         $sendmail    = $sendmail ? $sendmail : '/usr/sbin/sendmail';
         $mailhost    = AmpConfig::get('mail_host');
         $mailhost    = $mailhost ? $mailhost : 'localhost';
         $mailport    = AmpConfig::get('mail_port');
         $mailport    = $mailport ? $mailport : 25;
         $mailauth    = AmpConfig::get('mail_auth');
-        $mailuser       = AmpConfig::get('mail_auth_user');
+        $mailuser    = AmpConfig::get('mail_auth_user');
         $mailuser    = $mailuser ? $mailuser : '';
-        $mailpass       = AmpConfig::get('mail_auth_pass');
+        $mailpass    = AmpConfig::get('mail_auth_pass');
         $mailpass    = $mailpass ? $mailpass : '';
 
         switch ($mailtype) {
@@ -169,7 +169,7 @@ class Mailer
                 $mail->IsSMTP();
                 $mail->Host = $mailhost;
                 $mail->Port = $mailport;
-                if ($mailauth == true) {
+                if ($mailauth === true) {
                     $mail->SMTPAuth = true;
                     $mail->Username = $mailuser;
                     $mail->Password = $mailpass;
@@ -189,7 +189,7 @@ class Mailer
         }
 
         $retval = $mail->send();
-        if ($retval == true) {
+        if ($retval === true) {
             return true;
         } else {
             return false;

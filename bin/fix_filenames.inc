@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -75,7 +75,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
 
 } // end of the catalogs
 
-echo T_('Finished checking filenames for valid chacters');
+echo T_('Finished checking file names for valid characters');
 echo "\n";
 
 /**************************************************
@@ -191,13 +191,13 @@ function charset_rename_file($full_file,$translated_filename) {
     $results = copy($full_file,$translated_filename);
 
     if (!$results) {
-        echo T_('Error: Copy Failed, not deleteing old file');
+        echo T_('Error: Copy Failed, not deleting old file');
         echo "\n";
         return false;
     }
 
-    $old_sum = filesize($full_file);
-    $new_sum = filesize($translated_filename);
+    $old_sum = Core::get_filesize($full_file);
+    $new_sum = Core::get_filesize($translated_filename);
 
     if ($old_sum != $new_sum OR !$new_sum) {
         printf (T_('Error: Size Inconsistency, not deleting %s'), $full_file);

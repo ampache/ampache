@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -26,8 +26,9 @@
     dir="<?php echo $dir;?>">
 
 <head>
+<!-- Propulsed by Ampache | ampache.org -->
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
-<link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
+<?php UI::show_custom_style(); ?>
 <title><?php echo( T_("Ampache error page"));?></title>
 <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">

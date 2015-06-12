@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -31,17 +31,19 @@ class Search extends playlist_object
     public $rules;
     public $logic_operator = 'AND';
     public $type = 'public';
+    public $random = false;
+    public $limit = 0;
 
     public $basetypes;
     public $types;
 
+    public $link;
     public $f_link;
-    public $f_name_link;
 
     /**
      * constructor
      */
-    public function __construct($searchtype = 'song', $id = '')
+    public function __construct($id = null, $searchtype = 'song')
     {
         $this->searchtype = $searchtype;
         if ($id) {
@@ -223,8 +225,22 @@ class Search extends playlist_object
             );
 
             $this->types[] = array(
+                'name'   => 'composer',
+                'label'  => T_('Composer'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
                 'name'   => 'comment',
                 'label'  =>  T_('Comment'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
+                'name'   => 'label',
+                'label'  =>  T_('Label'),
                 'type'   => 'text',
                 'widget' => array('input', 'text')
             );
@@ -376,6 +392,20 @@ class Search extends playlist_object
                 'type'   => 'boolean_subsearch',
                 'widget' => array('select', $playlists)
             );
+
+            $licenses = array();
+            foreach (License::get_licenses() as $license_id) {
+                $license = new License($license_id);
+                $licenses[$license_id] = $license->name;
+            }
+            if (AmpConfig::get('licensing')) {
+                $this->types[] = array(
+                    'name'   => 'license',
+                    'label'  => T_('Music License'),
+                    'type'   => 'boolean_numeric',
+                    'widget' => array('select', $licenses)
+                );
+            }
         break;
         case 'album':
             $this->types[] = array(
@@ -386,8 +416,29 @@ class Search extends playlist_object
             );
 
             $this->types[] = array(
+                'name'   => 'artist',
+                'label'  => T_('Artist'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
                 'name'   => 'year',
                 'label'  => T_('Year'),
+                'type'   => 'numeric',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
+                'name'   => 'image width',
+                'label'  => T_('Image Width'),
+                'type'   => 'numeric',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
+                'name'   => 'image height',
+                'label'  => T_('Image Height'),
                 'type'   => 'numeric',
                 'widget' => array('input', 'text')
             );
@@ -447,6 +498,18 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
             $this->types[] = array(
+                'name'   => 'yearformed',
+                'label'  => T_('Year'),
+                'type'   => 'numeric',
+                'widget' => array('input', 'text')
+            );
+            $this->types[] = array(
+                'name'   => 'placeformed',
+                'label'  => T_('Place'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+            $this->types[] = array(
                 'name'   => 'tag',
                 'label'  => T_('Tag'),
                 'type'   => 'text',
@@ -457,6 +520,28 @@ class Search extends playlist_object
             $this->types[] = array(
                 'name'   => 'name',
                 'label'  => T_('Name'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+        break;
+        case 'label':
+            $this->types[] = array(
+                'name'   => 'name',
+                'label'  => T_('Name'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+            $this->types[] = array(
+                'name'   => 'category',
+                'label'  => T_('Category'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+        break;
+        case 'user':
+            $this->types[] = array(
+                'name'   => 'username',
+                'label'  => T_('Username'),
                 'type'   => 'text',
                 'widget' => array('input', 'text')
             );
@@ -499,6 +584,8 @@ class Search extends playlist_object
             case 'video':
             case 'song':
             case 'playlist':
+            case 'label':
+            case 'user':
                 $request['type'] = $data['type'];
             break;
             default:
@@ -551,24 +638,34 @@ class Search extends playlist_object
     public static function run($data)
     {
         $limit = intval($data['limit']);
+        $offset = intval($data['offset']);
         $data = Search::clean_request($data);
 
-        $search = new Search($data['type']);
+        $search = new Search(null, $data['type']);
         $search->parse_rules($data);
 
         // Generate BASE SQL
 
         $limit_sql = "";
         if ($limit > 0) {
-            $offset = intval($data['offset']);
             $limit_sql = ' LIMIT ';
             if ($offset) $limit_sql .= $offset . ",";
             $limit_sql .= $limit;
         }
 
         $search_info = $search->to_sql();
-        $sql = $search_info['base'] . ' ' . $search_info['table_sql'] .
-            ' WHERE ' . $search_info['where_sql'] . " $limit_sql";
+        $sql = $search_info['base'] . ' ' . $search_info['table_sql'];
+        if (!empty($search_info['where_sql'])) {
+            $sql .= ' WHERE ' . $search_info['where_sql'];
+        }
+        if (!empty($search_info['group_sql'])) {
+            $sql .= ' GROUP BY ' . $search_info['group_sql'];
+            if (!empty($search_info['having_sql'])) {
+                $sql .= ' HAVING ' . $search_info['having_sql'];
+            }
+        }
+        $sql .= ' ' . $limit_sql;
+        $sql = trim($sql);
 
         $db_results = Dba::read($sql);
 
@@ -599,11 +696,12 @@ class Search extends playlist_object
      * format
      * Gussy up the data
      */
-    public function format()
+    public function format($details = true)
     {
         parent::format();
-        $this->f_link = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
-        $this->f_name_link = '<a href="' . $this->f_link . '">' . $this->f_name . '</a>';
+
+        $this->link = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
+        $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
     }
 
     /**
@@ -616,12 +714,26 @@ class Search extends playlist_object
     {
         $results = array();
 
-        $sql = $this->to_sql();
-        $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
-            $sql['where_sql'];
+        $sqltbl = $this->to_sql();
+        $sql = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
+        if (!empty($sqltbl['where_sql'])) {
+            $sql .= ' WHERE ' . $sqltbl['where_sql'];
+        }
+        if (!empty($sqltbl['group_sql'])) {
+            $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
+        }
+        if (!empty($sqltbl['having_sql'])) {
+            $sql .= ' HAVING ' . $sqltbl['having_sql'];
+        }
+
+        if ($this->random) {
+            $sql .= " ORDER BY RAND()";
+        }
+        if ($this->limit > 0) {
+            $sql .= " LIMIT " . intval($this->limit);
+        }
 
         $db_results = Dba::read($sql);
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_id' => $row['id'],
@@ -642,9 +754,17 @@ class Search extends playlist_object
     {
         $results = array();
 
-        $sql = $this->to_sql();
-        $sql = $sql['base'] . ' ' . $sql['table_sql'] .
-            ' WHERE ' . $sql['where_sql'];
+        $sqltbl = $this->to_sql();
+        $sql = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
+        if (!empty($sqltbl['where_sql'])) {
+            $sql .= ' WHERE ' . $sqltbl['where_sql'];
+        }
+        if (!empty($sqltbl['group_sql'])) {
+            $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
+        }
+        if (!empty($sqltbl['having_sql'])) {
+            $sql .= ' HAVING ' . $sqltbl['having_sql'];
+        }
 
         $sql .= ' ORDER BY RAND()';
         $sql .= $limit ? ' LIMIT ' . intval($limit) : '';
@@ -712,14 +832,14 @@ class Search extends playlist_object
         if (! $this->name) {
             $this->name = $GLOBALS['user']->username . ' - ' . date('Y-m-d H:i:s', time());
         }
-        $sql = "SELECT `id` FROM `search` WHERE `name`='$this->name'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id` FROM `search` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($this->name));
         if (Dba::num_rows($db_results)) {
             $this->name .= uniqid('', true);
         }
 
-        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator));
+        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator, $this->random, $this->limit));
         $insert_id = Dba::insert_id();
         $this->id = $insert_id;
         return $insert_id;
@@ -757,15 +877,27 @@ class Search extends playlist_object
      *
      * This function updates the saved version with the current settings.
      */
-    public function update()
+    public function update(array $data = null)
     {
+        if ($data && is_array($data)) {
+            $this->name = $data['name'];
+            $this->type = $data['pl_type'];
+            $this->random = $data['random'];
+            $this->limit = $data['limit'];
+        }
+
         if (!$this->id) {
             return false;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->id));
-        return $db_results;
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
+        Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->random, $this->limit, $this->id));
+
+        return $this->id;
+    }
+
+    public static function gc()
+    {
     }
 
     /**
@@ -808,6 +940,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
         $join['tag'] = array();
 
         foreach ($this->rules as $rule) {
@@ -830,7 +964,12 @@ class Search extends playlist_object
                     $where[] = "`album`.`year` $sql_match_operator '$input'";
                 break;
                 case 'rating':
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    if ($this->type != "public") {
+                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    } else {
+                        $group[] = "`album`.`id`";
+                        $having[] = "ROUND(AVG(`rating`.`rating`)) $sql_match_operator '$input'";
+                    }
                     $join['rating'] = true;
                 break;
                 case 'catalog':
@@ -841,6 +980,18 @@ class Search extends playlist_object
                     $key = md5($input . $sql_match_operator);
                     $where[] = "`realtag_$key`.`match` > 0";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
+                break;
+                case 'image height':
+                    $where[] = "`image`.`height` $sql_match_operator '$input'";
+                    $join['image'] = true;
+                break;
+                case 'image width':
+                    $where[] = "`image`.`width` $sql_match_operator '$input'";
+                    $join['image'] = true;
+                break;
+                case 'artist':
+                    $where[] = "`artist`.`name` $sql_match_operator '$input'";
+                    $join['artist'] = true;
                 break;
                 default:
                     // Nae laird!
@@ -864,6 +1015,9 @@ class Search extends playlist_object
                 ") AS realtag_$key " .
                 "ON `album`.`id`=`realtag_$key`.`object_id`";
         }
+        if ($join['artist']) {
+            $table['artist'] = "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist`";
+        }
         if ($join['song']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
 
@@ -874,13 +1028,21 @@ class Search extends playlist_object
         }
         if ($join['rating']) {
             $userid = intval($GLOBALS['user']->id);
-            $table['rating'] = "LEFT JOIN `rating` ON " .
-                "`rating`.`object_type`='album' " .
-                "AND `rating`.`user`='$userid' " .
-                "AND `rating`.`object_id`=`album`.`id`";
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' ";
+            if ($this->type != 'public') {
+                $table['rating'] .= "AND `rating`.`user`='$userid' ";
+            }
+            $table['rating'] .= "AND `rating`.`object_id`=`album`.`id`";
+        }
+        if ($join['image']) {
+            $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
+            $where_sql .= " AND `image`.`object_type`='album'";
+            $where_sql .= " AND `image`.`size`='original'";
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`album`.`id`) FROM `album`',
@@ -888,7 +1050,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 
@@ -903,6 +1067,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
         $join['tag'] = array();
 
         foreach ($this->rules as $rule) {
@@ -920,6 +1086,12 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'name':
                     $where[] = "`artist`.`name` $sql_match_operator '$input'";
+                break;
+                case 'yearformed':
+                    $where[] = "`artist`.`yearformed` $sql_match_operator '$input'";
+                break;
+                case 'placeformed':
+                    $where[] = "`artist`.`placeformed` $sql_match_operator '$input'";
                 break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
@@ -959,6 +1131,8 @@ class Search extends playlist_object
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`artist`.`id`) FROM `artist`',
@@ -966,7 +1140,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 
@@ -981,6 +1157,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
         $join['tag'] = array();
 
         foreach ($this->rules as $rule) {
@@ -997,7 +1175,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'anywhere':
-                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR `album`.`name` $sql_match_operator '$input' OR `song_data`.`comment` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input')";
+                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR `album`.`name` $sql_match_operator '$input' OR `song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input')";
                     $join['album'] = true;
                     $join['artist'] = true;
                     $join['song_data'] = true;
@@ -1018,6 +1196,9 @@ class Search extends playlist_object
                     $where[] = "`artist`.`name` $sql_match_operator '$input'";
                     $join['artist'] = true;
                 break;
+                case 'composer':
+                    $where[] = "`song`.`composer` $sql_match_operator '$input'";
+                break;
                 case 'time':
                     $input = $input * 60;
                     $where[] = "`song`.`time` $sql_match_operator '$input'";
@@ -1032,6 +1213,10 @@ class Search extends playlist_object
                     $where[] = "`song_data`.`comment` $sql_match_operator '$input'";
                     $join['song_data'] = true;
                 break;
+                case 'label':
+                    $where[] = "`song_data`.`label` $sql_match_operator '$input'";
+                    $join['song_data'] = true;
+                break;
                 case 'played':
                     $where[] = " `song`.`played` = '$input'";
                 break;
@@ -1040,12 +1225,17 @@ class Search extends playlist_object
                     $where[] = "`song`.`bitrate` $sql_match_operator '$input'";
                 break;
                 case 'rating':
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    if ($this->type != "public") {
+                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    } else {
+                        $group[] = "`song`.`id`";
+                        $having[] = "ROUND(AVG(`rating`.`rating`)) $sql_match_operator '$input'";
+                    }
                     $join['rating'] = true;
                 break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'song'" .
+                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                 break;
                 case 'catalog':
@@ -1061,7 +1251,7 @@ class Search extends playlist_object
                     $where[] = "`playlist_data`.`playlist` $sql_match_operator '$input'";
                 break;
                 case 'smartplaylist':
-                    $subsearch = new Search('song', $input);
+                    $subsearch = new Search($input, 'song');
                     $subsql = $subsearch->to_sql();
                     $where[] = "$sql_match_operator (" . $subsql['where_sql'] . ")";
                     // HACK: array_merge would potentially lose tags, since it
@@ -1070,6 +1260,9 @@ class Search extends playlist_object
                     $tagjoin = array_merge($subsql['join']['tag'], $join['tag']);
                     $join = array_merge($subsql['join'], $join);
                     $join['tag'] = $tagjoin;
+                break;
+                case 'license':
+                    $where[] = "`song`.`license` $sql_match_operator '$input'";
                 break;
                 case 'added':
                     $input = strtotime($input);
@@ -1111,10 +1304,11 @@ class Search extends playlist_object
         }
         if ($join['rating']) {
             $userid = $GLOBALS['user']->id;
-            $table['rating'] = "LEFT JOIN `rating` ON " .
-                "`rating`.`object_type`='song' AND " .
-                "`rating`.`user`='$userid' AND " .
-                "`rating`.`object_id`=`song`.`id`";
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
+            if ($this->type != "public") {
+                $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            }
+            $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
         }
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
@@ -1129,6 +1323,8 @@ class Search extends playlist_object
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`song`.`id`) FROM `song`',
@@ -1136,7 +1332,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 
@@ -1152,6 +1350,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
@@ -1184,6 +1384,8 @@ class Search extends playlist_object
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`video`.`id`) FROM `video`',
@@ -1191,7 +1393,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 
@@ -1206,6 +1410,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
@@ -1252,6 +1458,8 @@ class Search extends playlist_object
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`playlist`.`id`) FROM `playlist`',
@@ -1259,7 +1467,106 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
+        );
+    }
+
+    /**
+     * label_to_sql
+     *
+     * Handles the generation of the SQL for label searches.
+     */
+    private function label_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $where = array();
+        $table = array();
+
+        foreach ($this->rules as $rule) {
+            $type = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'name':
+                    $where[] = "`label`.`name` $sql_match_operator '$input'";
+                break;
+                case 'category':
+                    $where[] = "`label`.`category` $sql_match_operator '$input'";
+                break;
+                default:
+                    // Nihil
+                break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`label`.`id`) FROM `label`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => '',
+            'group_sql' => '',
+            'having_sql' => ''
+        );
+    }
+
+    /**
+     * user_to_sql
+     *
+     * Handles the generation of the SQL for user searches.
+     */
+    private function user_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $where = array();
+        $table = array();
+
+        foreach ($this->rules as $rule) {
+            $type = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'username':
+                    $where[] = "`user`.`username` $sql_match_operator '$input'";
+                break;
+                default:
+                    // Nihil
+                break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`user`.`id`) FROM `user`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => '',
+            'group_sql' => '',
+            'having_sql' => ''
         );
     }
 }

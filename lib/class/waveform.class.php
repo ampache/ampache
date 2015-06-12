@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -65,6 +65,11 @@ class Waveform
 
     } // Constructor
 
+    /**
+     * Get a song waveform.
+     * @param int $song_id
+     * @return binary|string|null
+     */
     public static function get($song_id)
     {
         $song = new Song($song_id);
@@ -107,6 +112,8 @@ class Waveform
                                 fclose($fp);
                                 fclose($tfp);
 
+                                Stream::kill_process($transcoder);
+
                                 $waveform = self::create_waveform($tmpfile);
                                 //$waveform = self::create_waveform("C:\\tmp\\test.wav");
 
@@ -143,6 +150,8 @@ class Waveform
     /**
      * Great function slightly modified as posted by Minux at
      * http://forums.clantemplates.com/showthread.php?t=133805
+     * @param string $input
+     * @return array
      */
     protected static function html2rgb($input)
     {
@@ -154,8 +163,17 @@ class Waveform
         );
       }
 
+      /**
+       * Create waveform from song file.
+       * @param string $filename
+       * @return binary|string|null
+       */
     protected static function create_waveform($filename)
     {
+        if (!file_exists($filename)) {
+            return null;
+        }
+
         $detail = 5;
         $width = 400;
         $height = 32;
@@ -194,7 +212,7 @@ class Waveform
 
         // start putting together the initial canvas
         // $data_size = (size_of_file - header_bytes_read) / skipped_bytes + 1
-        $data_size = floor((filesize($filename) - 44) / ($ratio + $byte) + 1);
+        $data_size = floor((Core::get_filesize($filename) - 44) / ($ratio + $byte) + 1);
         $data_point = 0;
 
         // create original image width based on amount of detail
@@ -293,6 +311,12 @@ class Waveform
         return $imgdata;
     }
 
+    /**
+     * Save waveform to db.
+     * @param int $song_id
+     * @param binary|string $waveform
+     * @return boolean
+     */
     protected static function save_to_db($song_id, $waveform)
     {
         $sql = "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";

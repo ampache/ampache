@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -33,7 +33,7 @@ switch ($_REQUEST['action']) {
         }
 
         $song = new Song($_REQUEST['song_id']);
-        $new_enabled = $song->enabled ? '0' : '1';
+        $new_enabled = $song->enabled ? false : true;
         $song->update_enabled($new_enabled,$song->id);
         $song->enabled = $new_enabled;
         $song->format();
@@ -42,7 +42,6 @@ switch ($_REQUEST['action']) {
         $id = 'button_flip_state_' . $song->id;
         $button = $song->enabled ? 'disable' : 'enable';
         $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button, T_(ucfirst($button)),'flip_state_' . $song->id);
-
     break;
     case 'shouts':
         ob_start();
@@ -56,6 +55,7 @@ switch ($_REQUEST['action']) {
             echo "shouts = {};\r\n";
             foreach ($shouts as $id) {
                 $shout = new Shoutbox($id);
+                $shout->format();
                 $key = intval($shout->data);
                 echo "if (shouts['" . $key. "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
                 echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";

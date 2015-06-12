@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -46,7 +46,7 @@
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('Expire Days'); ?></td>
+    <td><?php echo T_('Expiry Days'); ?></td>
     <td>
         <input type="text" name="expire" value="<?php echo scrub_out($_REQUEST['expire'] ?: AmpConfig::get('share_expire')); ?>" />
     </td>
@@ -57,7 +57,7 @@
         <input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
-<?php if (($_REQUEST['type'] == 'song' && Access::check_function('download')) || Access::check_function('batch_download')) { ?>
+<?php if ((($_REQUEST['type'] == 'song' || $_REQUEST['type'] == 'video') && Access::check_function('download')) || Access::check_function('batch_download')) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
     <td>

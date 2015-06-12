@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -38,7 +38,7 @@ $web_path = AmpConfig::get('web_path');
         foreach ($plugins as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if (! $installed_version) {
+                if (!$installed_version) {
                         $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
                 } else {

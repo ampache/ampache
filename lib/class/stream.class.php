@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,7 +22,7 @@
 
 class Stream
 {
-    public static $session;
+    private static $session;
 
     private function __construct()
     {
@@ -40,6 +40,38 @@ class Stream
     {
         self::$session=$sid;
     } // set_session
+
+    public static function get_session()
+    {
+        if (!self::$session) {
+            // Generate the session ID.  This is slightly wasteful.
+            $data = array();
+            $data['type'] = 'stream';
+            // This shouldn't be done here but at backend endpoint side
+            if (isset($_REQUEST['client'])) {
+                $data['agent'] = $_REQUEST['client'];
+            }
+
+            // Copy session geolocation
+            // Same thing, should be done elsewhere
+            $sid = session_id();
+            if ($sid) {
+                $location = Session::get_geolocation($sid);
+                if (isset($location['latitude'])) {
+                    $data['geo_latitude'] = $location['latitude'];
+                }
+                if (isset($location['longitude'])) {
+                    $data['geo_longitude'] = $location['longitude'];
+                }
+                if (isset($location['name'])) {
+                    $data['geo_name'] = $location['name'];
+                }
+            }
+
+            self::$session = Session::create($data);
+        }
+        return self::$session;
+    }
 
     /**
      *
@@ -102,37 +134,38 @@ class Stream
      * start_transcode
      *
      * This is a rather complex function that starts the transcoding or
-     * resampling of a song and returns the opened file handle.
+     * resampling of a media and returns the opened file handle.
      */
-    public static function start_transcode($song, $type = null, $bitrate=0)
+    public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
-        debug_event('stream.class.php', 'Starting transcode for {'.$song->file.'}. Type {'.$type.'}. Bitrate {'.$bitrate.'}...', 5);
+        debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Options: ' . print_r($options, true) . '}...', 5);
 
-        $transcode_settings = $song->get_transcode_settings($type);
+        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
             return false;
         }
 
-        if ($bitrate == 0) {
-            $sample_rate = self::get_allowed_bitrate($song);
+        //$media_rate = $media->video_bitrate ?: $media->bitrate;
+        if (!$options['bitrate']) {
+            $sample_rate = self::get_allowed_bitrate($media);
             debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
             // Validate the bitrate
             $sample_rate = self::validate_bitrate($sample_rate);
         } else {
-            $sample_rate = $bitrate;
+            $sample_rate = $options['bitrate'];
         }
 
-        // Never upsample a song
-        if ($song->type == $transcode_settings['format'] && ($sample_rate * 1000) > $song->bitrate) {
+        // Never upsample a media
+        if ($media->type == $transcode_settings['format'] && ($sample_rate * 1000) > $media->bitrate) {
             debug_event('stream', 'Clamping bitrate to avoid upsampling to ' . $sample_rate, 5);
-            $sample_rate = self::validate_bitrate($song->bitrate / 1000);
+            $sample_rate = self::validate_bitrate($media->bitrate / 1000);
         }
 
         debug_event('stream', 'Final transcode bitrate is ' . $sample_rate, 5);
 
-        $song_file = scrub_arg($song->file);
+        $song_file = scrub_arg($media->file);
 
         // Finalise the command line
         $command = $transcode_settings['command'];
@@ -141,29 +174,121 @@ class Stream
             '%FILE%'   => $song_file,
             '%SAMPLE%' => $sample_rate
         );
+        if (isset($options['maxbitrate'])) {
+            $string_map['%MAXBITRATE%'] = $options['maxbitrate'];
+        } else {
+            $string_map['%MAXBITRATE%'] = 8000;
+        }
+        if (isset($options['frame'])) {
+            $frame = gmdate("H:i:s", $options['frame']);
+            $string_map['%TIME%'] = $frame;
+        }
+        if (isset($options['duration'])) {
+            $duration = gmdate("H:i:s", $options['duration']);
+            $string_map['%DURATION%'] = $duration;
+        }
+        if (isset($options['resolution'])) {
+            $string_map['%RESOLUTION%'] = $options['resolution'];
+        } else {
+            $string_map['%RESOLUTION%'] = ($media->f_resolution) ?: '1280x720';
+        }
+        if (isset($options['quality'])) {
+            $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;
+        } else {
+            $string_map['%QUALITY%'] = 10;
+        }
+        if (!empty($options['subtitle'])) {
+            // This is too specific to ffmpeg/avconv
+            $string_map['%SRTFILE%'] = str_replace(':', '\:', addslashes($options['subtitle']));
+        }
 
         foreach ($string_map as $search => $replace) {
             $command = str_replace($search, $replace, $command, $ret);
             if (!$ret) {
-                debug_event('downsample', "$search not in downsample command", 5);
+                debug_event('stream', "$search not in transcode command", 5);
             }
         }
 
-        debug_event('downsample', "Downsample command: $command", 3);
+        return self::start_process($command, array('format' => $transcode_settings['format']));
+    }
+
+    public static function get_image_preview($media)
+    {
+        $image = null;
+        $sec = ($media->time >= 30) ? 30 : intval($media->time / 2);
+        $frame = gmdate("H:i:s", $sec);
+
+        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
+
+            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
+            $string_map = array(
+                '%FILE%'   => scrub_arg($media->file),
+                '%TIME%' => $frame
+            );
+            foreach ($string_map as $search => $replace) {
+                $command = str_replace($search, $replace, $command, $ret);
+                if (!$ret) {
+                    debug_event('stream', "$search not in transcode command", 5);
+                }
+            }
+            $proc = self::start_process($command);
+
+            if (is_resource($proc['handle'])) {
+                $image = '';
+                do {
+                    $image .= fread($proc['handle'], 1024);
+                } while (!feof($proc['handle']));
+                fclose($proc['handle']);
+            }
+        } else {
+            debug_event('stream', 'Missing transcode_cmd / encode_get_image parameters to generate media preview.', 3);
+        }
+
+        return $image;
+    }
+
+    private static function start_process($command, $settings = array())
+    {
+        debug_event('stream', "Transcode command: " . $command, 3);
 
         $descriptors = array(1 => array('pipe', 'w'));
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             // Windows doesn't like to provide stderr as a pipe
             $descriptors[2] = array('pipe', 'w');
-        }
+            $cmdPrefix = "exec ";
+        } else
+            $cmdPrefix = "start /B ";
 
-        $process = proc_open($command, $descriptors, $pipes);
-        return array(
+
+        debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
+
+        $process = proc_open($cmdPrefix.$command, $descriptors, $pipes);
+        $parray = array(
             'process' => $process,
             'handle' => $pipes[1],
-            'stderr' => $pipes[2],
-            'format' => $transcode_settings['format']
+            'stderr' => $pipes[2]
         );
+
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+        }
+
+        return array_merge($parray, $settings);
+    }
+
+    public static function kill_process($transcoder)
+    {
+        $status = proc_get_status($transcoder['process']);
+        if ($status['running'] == true) {
+            $pid = $status['pid'];
+            debug_event('stream', 'Stream process about to be killed. pid:' . $pid, 1);
+
+            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("taskkill /F /T /PID $pid") : exec("kill -9 $pid");
+
+            proc_close($transcoder['process']);
+        } else {
+            debug_event('stream', 'Process is not running, kill skipped.', 5);
+        }
     }
 
     /**
@@ -263,6 +388,7 @@ class Stream
             $media = new $type($row['object_id']);
             $media->format();
             $client = new User($row['user']);
+            $client->format();
             $results[] = array(
                 'media' => $media,
                 'client' => $client,
@@ -295,21 +421,6 @@ class Stream
     }
 
     /**
-     * auto_init
-     * This is called on class load it sets the session
-     */
-    public static function _auto_init()
-    {
-        // Generate the session ID.  This is slightly wasteful.
-        $data = array();
-        $data['type'] = 'stream';
-        if (isset($_REQUEST['client'])) {
-            $data['agent'] = $_REQUEST['client'];
-        }
-        self::$session = Session::create($data);
-    }
-
-    /**
      * run_playlist_method
      *
      * This takes care of the different types of 'playlist methods'. The
@@ -338,7 +449,7 @@ class Stream
 
         // Load our javascript
         echo "<script type=\"text/javascript\">";
-        echo "reloadUtil('".$_SESSION['iframe']['target']."');";
+        echo Core::get_reloadutil() . "('".$_SESSION['iframe']['target']."');";
         echo "</script>";
 
     } // run_playlist_method
@@ -347,23 +458,29 @@ class Stream
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      */
-    public static function get_base_url()
+    public static function get_base_url($local=false)
     {
         $session_string = '';
-        if (AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . self::$session . '&';
+        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+            $session_string = 'ssid=' . self::get_session() . '&';
         }
 
-        $web_path = AmpConfig::get('web_path');
+        if ($local) {
+            $web_path = AmpConfig::get('local_web_path');
+        } else {
+            $web_path = AmpConfig::get('web_path');
+        }
 
-        if (AmpConfig::get('force_http_play') OR !empty(self::$force_http)) {
+        if (AmpConfig::get('force_http_play')) {
             $web_path = str_replace("https://", "http://",$web_path);
         }
-        if (AmpConfig::get('http_port') != '80') {
+
+        $http_port = AmpConfig::get('http_port');
+        if (!empty($http_port) && $http_port != '80') {
             if (preg_match("/:(\d+)/",$web_path,$matches)) {
-                $web_path = str_replace(':' . $matches['1'],':' . AmpConfig::get('http_port'),$web_path);
+                $web_path = str_replace(':' . $matches['1'], ':' . $http_port, $web_path);
             } else {
-                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . AmpConfig::get('http_port'), $web_path);
+                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, $web_path);
             }
         }
 

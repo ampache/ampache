@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -43,7 +43,13 @@ foreach ($results as $item) {
     if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 ?>
 <div class="np_row">
-<?php require AmpConfig::get('prefix') . '/templates/show_now_playing_row.inc.php'; ?>
+<?php
+if (strtolower(get_class($media)) == 'song') {
+    require AmpConfig::get('prefix') . '/templates/show_now_playing_row.inc.php';
+} else {
+    require AmpConfig::get('prefix') . '/templates/show_now_playing_video_row.inc.php';
+}
+?>
 </div>
 <?php
 } // end foreach

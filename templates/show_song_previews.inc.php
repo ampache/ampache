@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -38,9 +38,9 @@
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $song) {
+        foreach ($object_ids as $libitem) {
         ?>
-        <tr id="song_preview_<?php echo $song->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="song_preview_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_song_preview_row.inc.php'; ?>
         </tr>
         <?php } ?>

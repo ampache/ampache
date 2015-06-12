@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -137,22 +137,22 @@ class Tmp_Playlist extends database_object
      */
     public function get_items()
     {
-        $id = Dba::escape($this->id);
-
         /* Select all objects from this playlist */
         $sql = "SELECT `object_type`, `id`, `object_id` " .
             "FROM `tmp_playlist_data` " .
-            "WHERE `tmp_playlist`='$id' ORDER BY `id` ASC";
-        $db_results = Dba::read($sql);
+            "WHERE `tmp_playlist` = ? ORDER BY `id` ASC";
+        $db_results = Dba::read($sql, array($this->id));
 
         /* Define the array */
         $items = array();
 
+        $i = 1;
         while ($results = Dba::fetch_assoc($db_results)) {
-            $key        = $results['id'];
-            $items[$key]     = array(
+            $items[]     = array(
                 'object_type' => $results['object_type'],
-                'object_id' => $results['object_id']
+                'object_id' => $results['object_id'],
+                'track_id' => $results['id'],
+                'track' => $i++,
             );
         }
 
@@ -271,7 +271,7 @@ class Tmp_Playlist extends database_object
     {
         self::prune_playlists();
         self::prune_tracks();
-        Dba::write("DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` WHERE `song`.`id` IS NULL");
+        //Dba::write("DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` WHERE `song`.`id` IS NULL");
     }
 
     /**
@@ -323,6 +323,13 @@ class Tmp_Playlist extends database_object
         return true;
 
     } // add_object
+
+    public function add_medias($medias)
+    {
+        foreach ($medias as $media) {
+            $this->add_object($media['object_id'], $media['object_type']);
+        }
+    }
 
     /**
      * vote_active

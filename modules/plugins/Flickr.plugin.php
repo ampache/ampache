@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,12 +23,15 @@
 class Ampacheflickr {
 
     public $name        = 'Flickr';
+    public $categories  = 'misc,slideshow';
     public $description = 'Artist photos from Flickr';
     public $url         = 'http://www.flickr.com';
     public $version     = '000001';
     public $min_ampache = '360045';
     public $max_ampache = '999999';
 
+    private $api_key;
+    
     /**
      * Constructor
      * This function does nothing...
@@ -46,7 +49,7 @@ class Ampacheflickr {
      */
     public function install() {
         if (Preference::exists('flickr_api_key')) { return false; }
-        Preference::insert('flickr_api_key','Flickr api key','','25','string','plugins');
+        Preference::insert('flickr_api_key','Flickr api key','','75','string','plugins');
         return true;
     } // install
 
@@ -68,14 +71,14 @@ class Ampacheflickr {
         return true;
     } // upgrade
 
-    public function get_photos($search) {
+    public function get_photos($search, $category = 'concert') {
         $photos = array();
-        $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode($search . " concert");
+        $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
         debug_event($this->name, 'Calling ' . $url, '5');
-        $request = Requests::get($url);
+        $request = Requests::get($url, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
-            if ($xml) {
+            if ($xml && $xml->photos) {
                 foreach ($xml->photos->photo as $photo) {
                     $photos[] = array(
                         'title' => $photo->title,
@@ -86,6 +89,32 @@ class Ampacheflickr {
         }
         
         return $photos;
+    }
+    
+    public function gather_arts($type, $options = array(), $limit = 5)
+    {
+        if (!$limit) {
+            $limit = 5;
+        }
+        
+        $images = $this->get_photos($options['keyword'], '');
+        $results = array();
+        foreach ($images as $image) {
+            $title = $this->name;
+            if (!empty($image['title'])) {
+                $title .= ' - ' . $image['title'];
+            }
+            $results[] = array(
+                'url' => $image['url'],
+                'mime' => 'image/jpeg',
+                'title' => $title
+            );
+            
+            if ($limit && count($results) >= $limit)
+                break;
+        }
+        
+        return $results;
     }
     
     /**

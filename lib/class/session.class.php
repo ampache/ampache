@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -37,6 +37,16 @@ class Session
     } // __construct
 
     /**
+     * open
+     *
+     * This is run on the beginning of a session, nothing to do here for now.
+     */
+    public static function open()
+    {
+        return true;
+    }
+
+    /**
      * close
      *
      * This is run on the end of a session, nothing to do here for now.
@@ -57,12 +67,7 @@ class Session
             return true;
         }
 
-        // Check to see if remember me cookie is set, if so use remember
-        // length, otherwise use the session length
-        $expire = isset($_COOKIE[AmpConfig::get('session_name') . '_remember'])
-            ? time() + AmpConfig::get('remember_length')
-            : time() + AmpConfig::get('session_length');
-
+        $expire = time() + AmpConfig::get('session_length');
         $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
@@ -86,8 +91,14 @@ class Session
 
         debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
 
+        $session_name = AmpConfig::get('session_name');
+        $cookie_path = AmpConfig::get('cookie_path');
+        $cookie_domain = null;
+        $cookie_secure = AmpConfig::get('cookie_secure');
+
         // Destroy our cookie!
-        setcookie(AmpConfig::get('session_name'), '', time() - 86400);
+        setcookie($session_name, null, -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_user', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
 
         return true;
     }
@@ -100,6 +111,9 @@ class Session
     public static function gc()
     {
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
+        Dba::write($sql, array(time()));
+
+        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
@@ -204,12 +218,25 @@ class Session
             $expire = time() + AmpConfig::get('session_length');
         }
 
+        $latitude = null;
+        if (isset($data['geo_latitude'])) {
+            $latitude = $data['geo_latitude'];
+        }
+        $longitude = null;
+        if (isset($data['geo_longitude'])) {
+            $longitude = $data['geo_longitude'];
+        }
+        $geoname = null;
+        if (isset($data['geo_name'])) {
+            $geoname = $data['geo_name'];
+        }
+
         if (!strlen($value)) { $value = ' '; }
 
         /* Insert the row */
-        $sql = 'INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`) ' .
-            'VALUES (?, ?, ?, ?, ?, ?, ?)';
-        $db_results = Dba::write($sql, array($key, $username, $ip, $type, $agent, $value, $expire));
+        $sql = 'INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`,`geo_latitude`,`geo_longitude`, `geo_name`) ' .
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $db_results = Dba::write($sql, array($key, $username, $ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
             debug_event('session', 'Session creation failed', '1');
@@ -233,11 +260,6 @@ class Session
 
         // No cookie no go!
         if (!isset($_COOKIE[$session_name])) { return false; }
-
-        // Check for a remember me
-        if (isset($_COOKIE[$session_name . '_remember'])) {
-            self::create_remember_cookie();
-        }
 
         // Set up the cookie params before we start the session.
         // This is vital
@@ -308,12 +330,10 @@ class Session
     public static function extend($sid, $type = null)
     {
         $time = time();
-        $expire = isset($_COOKIE[AmpConfig::get('session_name') . '_remember'])
-            ? $time + AmpConfig::get('remember_length')
-            : $time + AmpConfig::get('session_length');
-
         if ($type == 'stream') {
             $expire = $time + AmpConfig::get('stream_length');
+        } else {
+            $expire = $time + AmpConfig::get('session_length');
         }
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
@@ -322,6 +342,57 @@ class Session
         }
 
         return $db_results;
+    }
+
+    /**
+     * update_username
+     *
+     * This takes a SID and update associated username.
+     */
+    public static function update_username($sid, $username)
+    {
+        $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
+        return Dba::write($sql, array($username, $sid));
+    }
+
+    /**
+     * update_geolocation
+     * Update session geolocation.
+     * @param string $sid
+     * @param float $latitude
+     * @param float $longitude
+     */
+    public static function update_geolocation($sid, $latitude, $longitude, $name)
+    {
+        if ($sid) {
+            $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
+            Dba::write($sql, array($latitude, $longitude, $name, $sid));
+        } else {
+            debug_event('session', 'Missing session id to update geolocation.', 3);
+        }
+    }
+
+    /**
+     * get_geolocation
+     * Get session geolocation.
+     * @param string $sid
+     * @return array
+     */
+    public static function get_geolocation($sid)
+    {
+        $location = array();
+
+        if ($sid) {
+            $sql = "SELECT `geo_latitude`, `geo_longitude`, `geo_name` FROM `session` WHERE `id` = ?";
+            $db_results = Dba::read($sql, array($sid));
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $location['latitude'] = $row['geo_latitude'];
+                $location['longitude'] = $row['geo_longitude'];
+                $location['name'] = $row['geo_name'];
+            }
+        }
+
+        return $location;
     }
 
     /**
@@ -363,7 +434,7 @@ class Session
         // Set up the cookie prefs before we throw down, this is very important
         $cookie_life = AmpConfig::get('cookie_life');
         $cookie_path = AmpConfig::get('cookie_path');
-        $cookie_domain = false;
+        $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
@@ -376,17 +447,78 @@ class Session
     }
 
     /**
+     * create_user_cookie
+     *
+     * This function just creates the user cookie wich contains current username.
+     * It must be used for information only.
+     */
+    public static function create_user_cookie($username)
+    {
+        $cookie_life = AmpConfig::get('cookie_life');
+        $session_name = AmpConfig::get('session_name');
+        $cookie_path = AmpConfig::get('cookie_path');
+        $cookie_domain = null;
+        $cookie_secure = AmpConfig::get('cookie_secure');
+
+        setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+    }
+
+    /**
      * create_remember_cookie
      *
      * This function just creates the remember me cookie, nothing special.
      */
-    public static function create_remember_cookie()
+    public static function create_remember_cookie($username)
     {
         $remember_length = AmpConfig::get('remember_length');
         $session_name = AmpConfig::get('session_name');
 
-        AmpConfig::set('cookie_life', $remember_length, true);
-        setcookie($session_name . '_remember', "Rappelez-vous, rappelez-vous le 27 mars", time() + $remember_length, '/');
+        $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
+        self::storeTokenForUser($username, $token, $remember_length);
+        $cookie = $username . ':' . $token;
+        $mac = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
+        $cookie .= ':' . $mac;
+
+        setcookie($session_name . '_remember', $cookie, time() + $remember_length);
+    }
+
+    /**
+     * Generate a random token.
+     * @return string
+     */
+    public static function generateRandomToken()
+    {
+        return md5(uniqid(mt_rand(), true));
+    }
+
+    public static function storeTokenForUser($username, $token, $remember_length)
+    {
+        $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
+        return Dba::write($sql, array($username, $token, time() + $remember_length));
+    }
+
+    public static function auth_remember()
+    {
+        $auth = false;
+        $cname = AmpConfig::get('session_name') . '_remember';
+        if (isset($_COOKIE[$cname])) {
+            list ($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
+            if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
+                $sql = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
+                $db_results = Dba::read($sql, array($username, $token, time()));
+                if (Dba::num_rows($db_results) > 0) {
+                    Session::create_cookie();
+                    self::create(array(
+                        'type' => 'mysql',
+                        'username' => $username
+                    ));
+                    $_SESSION['userdata']['username'] = $username;
+                    $auth = true;
+                }
+            }
+        }
+
+        return $auth;
     }
 
     /**

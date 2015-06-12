@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -50,14 +50,14 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $artist = new Artist($id);
-                $artist->format();
+                $artist->format(false);
                 $results[] = array(
                     'type' => T_('Artists'),
-                    'link' => $artist->f_link,
+                    'link' => $artist->link,
                     'label' => $artist->name,
                     'value' => $artist->name,
                     'rels' => '',
-                    'image' => Art::url($artist->id, 'artist'),
+                    'image' => Art::url($artist->id, 'artist', null, 10),
                 );
             }
         }
@@ -79,18 +79,18 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $album = new Album($id);
-                $album->format();
+                $album->format(true);
                 $a_title = $album->f_title;
                 if ($album->disk) {
                     $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
                 }
                 $results[] = array(
                     'type' => T_('Albums'),
-                    'link' => $album->f_link_src,
+                    'link' => $album->link,
                     'label' => $a_title,
                     'value' => $album->f_title,
                     'rels' => $album->f_artist,
-                    'image' => Art::url($album->id, 'album'),
+                    'image' => Art::url($album->id, 'album', null, 10),
                 );
             }
         }
@@ -112,19 +112,19 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $song = new Song($id);
-                $song->format();
+                $song->format(false);
                 $results[] = array(
                     'type' => T_('Songs'),
                     'link' => $song->link,
                     'label' => $song->f_title_full,
                     'value' => $song->f_title_full,
                     'rels' => $song->f_artist_full,
-                    'image' => Art::url($song->album, 'album'),
+                    'image' => Art::url($song->album, 'album', null, 10),
                 );
             }
         }
 
-        if ($target == 'anywhere' || $target == 'playlist') {
+        if ($target == 'anywhere' || $target == 'playlist_name') {
             $searchreq = array(
                 'limit' => $limit,
                 'type' => 'playlist',
@@ -141,14 +141,94 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $playlist = new Playlist($id);
-                $playlist->format();
+                $playlist->format(false);
                 $results[] = array(
                     'type' => T_('Playlists'),
-                    'link' => $playlist->f_link,
+                    'link' => $playlist->link,
                     'label' => $playlist->name,
                     'value' => $playlist->name,
                     'rels' => '',
                     'image' => '',
+                );
+            }
+        }
+
+        if (($target == 'anywhere' || $target == 'label') && AmpConfig::get('label')) {
+            $searchreq = array(
+                'limit' => $limit,
+                'type' => 'label',
+                'rule_1_input' => $search,
+                'rule_1_operator' => '2',   // Starts with...
+                'rule_1' => 'name',
+            );
+            $sres = Search::run($searchreq);
+
+            // Litmit not reach, new search with another operator
+            if (count($sres) < $limit) {
+                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['rule_1_operator'] = '0';
+                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+            }
+            foreach ($sres as $id) {
+                $label = new Label($id);
+                $label->format(false);
+                $results[] = array(
+                    'type' => T_('Labels'),
+                    'link' => $label->link,
+                    'label' => $label->name,
+                    'value' => $label->name,
+                    'rels' => '',
+                    'image' => Art::url($label->id, 'label', null, 10),
+                );
+            }
+        }
+
+        if ($target == 'missing_artist' && AmpConfig::get('wanted')) {
+            $sres = Wanted::search_missing_artists($search);
+            $i = 0;
+            foreach ($sres as $r) {
+                $results[] = array(
+                    'type' => T_('Missing Artists'),
+                    'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $r['mbid'],
+                    'label' => $r['name'],
+                    'value' => $r['name'],
+                    'rels' => '',
+                    'image' => '',
+                );
+                $i++;
+
+                if ($i >= $limit)
+                    break;
+            }
+        }
+
+        if ($target == 'user' && AmpConfig::get('sociable')) {
+            $searchreq = array(
+                'limit' => $limit,
+                'type' => 'user',
+                'rule_1_input' => $search,
+                'rule_1_operator' => '2',   // Starts with...
+                'rule_1' => 'username',
+            );
+            $sres = Search::run($searchreq);
+
+            // Litmit not reach, new search with another operator
+            if (count($sres) < $limit) {
+                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['rule_1_operator'] = '0';
+                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+            }
+            foreach ($sres as $id) {
+                $user = new User($id);
+                $user->format();
+                $avatar = $user->get_avatar();
+                $results[] = array(
+                    'type' => T_('Users'),
+                    'link' => '',
+                    'label' => $user->username,
+                    'value' => $user->username,
+                    'rels' => '',
+                    'image' => $avatar['url'] ?: '',
                 );
             }
         }

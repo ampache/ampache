@@ -116,7 +116,7 @@ final class AppInfo
         }
 
         $str = file_get_contents($path);
-        $jsonArr = json_decode($str, TRUE);
+        $jsonArr = json_decode($str, true);
 
         if (is_null($jsonArr)) {
             throw new AppInfoLoadException("JSON parse error: \"$path\"");
@@ -131,7 +131,7 @@ final class AppInfo
      * Parses a JSON object to build an AppInfo object.  If you would like to load this from a file,
      * use the loadFromJsonFile() method.
      *
-     * @param array $jsonArr Output from json_decode($str, TRUE)
+     * @param array $jsonArr Output from json_decode($str, true)
      *
      * @return AppInfo
      *

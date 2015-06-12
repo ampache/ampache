@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,6 @@ class Preference extends database_object
     private function __construct()
     {
         // Rien a faire
-
     } // __construct
 
     /**
@@ -56,12 +55,15 @@ class Preference extends database_object
 
         $sql = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='$user_id'";
         $db_results = Dba::read($sql);
+        if (Dba::num_rows($db_results) < 1) {
+            $sql = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='-1'";
+            $db_results = Dba::read($sql);
+        }
         $data = Dba::fetch_assoc($db_results);
 
         parent::add_to_cache('get_by_user', $user_id, $data['value']);
 
         return $data['value'];
-
     } // get_by_user
 
 
@@ -69,7 +71,7 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update($preference,$user_id,$value,$applytoall='',$applytodefault='')
+    public static function update($preference,$user_id,$value,$applytoall=false,$applytodefault=false)
     {
         // First prepare
         if (!is_numeric($preference)) {
@@ -102,7 +104,7 @@ class Preference extends database_object
 
             return true;
         } else {
-            debug_event('denied', $GLOBALS['user'] ? $GLOBALS['user']->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions','3');
+            debug_event('denied', $GLOBALS['user'] ? $GLOBALS['user']->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
         }
 
         return false;
@@ -128,7 +130,6 @@ class Preference extends database_object
         Dba::write($sql);
 
         return true;
-
     } // update_level
 
     /**
@@ -146,7 +147,6 @@ class Preference extends database_object
         parent::clear_cache();
 
         return true;
-
     } // update_all
 
     /**
@@ -161,7 +161,6 @@ class Preference extends database_object
         $db_results = Dba::read($sql);
 
         return Dba::num_rows($db_results);
-
     } // exists
 
     /**
@@ -172,7 +171,9 @@ class Preference extends database_object
     public static function has_access($preference)
     {
         // Nothing for those demo thugs
-        if (AmpConfig::get('demo_mode')) { return false; }
+        if (AmpConfig::get('demo_mode')) {
+            return false;
+        }
 
         $preference = Dba::escape($preference);
 
@@ -185,7 +186,6 @@ class Preference extends database_object
         }
 
         return false;
-
     } // has_access
 
     /**
@@ -207,7 +207,6 @@ class Preference extends database_object
         parent::add_to_cache('id_from_name', $name, $row['id']);
 
         return $row['id'];
-
     } // id_from_name
 
     /**
@@ -225,7 +224,6 @@ class Preference extends database_object
         $row = Dba::fetch_assoc($db_results);
 
         return $row['name'];
-
     } // name_from_id
 
     /**
@@ -247,7 +245,6 @@ class Preference extends database_object
         } // end while
 
         return $results;
-
     } // get_catagories
 
     /**
@@ -276,7 +273,6 @@ class Preference extends database_object
         }
 
         return $results;
-
     } // get_all
 
     /**
@@ -286,22 +282,27 @@ class Preference extends database_object
      */
     public static function insert($name,$description,$default,$level,$type,$catagory)
     {
-        // Clean em up
-        $name = Dba::escape($name);
-        $description = Dba::escape($description);
-        $default = Dba::escape($default);
-        $level = Dba::escape($level);
-        $type = Dba::escape($type);
-        $catagory = Dba::escape($catagory);
-
         $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`) " .
-            "VALUES ('$name','$description','$default','$level','$type','$catagory')";
-        $db_results = Dba::write($sql);
+            "VALUES (?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($name, $description, $default, intval($level), $type, $catagory));
 
-        if (!$db_results) { return false; }
+        if (!$db_results) {
+            return false;
+        }
+        $id = Dba::insert_id();
+        $params = array($id, $default);
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,?)";
+        $db_results = Dba::write($sql, $params);
+        if (!$db_results)
+            return false;
+        if ($catagory !== "system") {
+            $sql = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
+            $db_results = Dba::write($sql, $params);
+            if (!$db_results)
+                return false;
+        }
 
         return true;
-
     } // insert
 
     /**
@@ -312,17 +313,14 @@ class Preference extends database_object
     {
         // First prepare
         if (!is_numeric($preference)) {
-            $name = Dba::escape($preference);
-            $sql = "DELETE FROM `preference` WHERE `name`='$name'";
+            $sql = "DELETE FROM `preference` WHERE `name` = ?";
         } else {
-            $id = Dba::escape($preference);
-            $sql = "DELETE FROM `preference` WHERE `id`='$id'";
+            $sql = "DELETE FROM `preference` WHERE `id` = ?";
         }
 
-        Dba::write($sql);
+        Dba::write($sql, array($preference));
 
-        self::rebuild_preferences();
-
+        self::clean_preferences();
     } // delete
 
     /**
@@ -331,28 +329,20 @@ class Preference extends database_object
      */
     public static function rename($old, $new)
     {
-        $old = Dba::escape($old);
-        $new = Dba::escape($new);
-
-        $sql = "UPDATE `preference` SET `name`='$new' WHERE `name`='$old'";
-        Dba::write($sql);
+        $sql = "UPDATE `preference` SET `name` = ? WHERE `name` = ?";
+        Dba::write($sql, array($new, $old));
     }
 
     /**
-     * rebuild_preferences
-     * This removes any garbage and then adds back in anything missing preferences wise
+     * clean_preferences
+     * This removes any garbage
      */
-    public static function rebuild_preferences()
+    public static function clean_preferences()
     {
         // First remove garbage
         $sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` " .
             "WHERE `preference`.`id` IS NULL";
         Dba::write($sql);
-
-        // Now add anything that we are missing back in, except System
-        //$sql = "SELECT * FROM `preference` WHERE `type`!='system'";
-        //FIXME: Uhh WTF shouldn't there be something here??
-
     } // rebuild_preferences
 
     /**
@@ -362,8 +352,11 @@ class Preference extends database_object
      */
     public static function fix_preferences($results)
     {
-        $arrays = array('auth_methods', 'getid3_tag_order',
-            'metadata_order', 'art_order', 'amazon_base_urls');
+        $arrays = array(
+            'auth_methods', 'getid3_tag_order', 'metadata_order',
+            'metadata_order_video', 'art_order', 'registration_display_fields',
+            'registration_mandatory_fields'
+        );
 
         foreach ($arrays as $item) {
             $results[$item] = trim($results[$item])
@@ -373,13 +366,16 @@ class Preference extends database_object
 
         foreach ($results as $key=>$data) {
             if (!is_array($data)) {
-                if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
-                if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
+                if (strcasecmp($data,"true") == "0") {
+                    $results[$key] = 1;
+                }
+                if (strcasecmp($data,"false") == "0") {
+                    $results[$key] = 0;
+                }
             }
         }
 
         return $results;
-
     } // fix_preferences
 
     /**
@@ -394,7 +390,6 @@ class Preference extends database_object
         }
 
         return false;
-
     } // load_from_session
 
     /**
@@ -405,7 +400,6 @@ class Preference extends database_object
     public static function clear_from_session()
     {
         unset($_SESSION['userdata']['preferences']);
-
     } // clear_from_session
 
     /**
@@ -419,8 +413,7 @@ class Preference extends database_object
         $boolean_array = array('session_cookiesecure','require_session',
                     'access_control','require_localnet_session',
                     'downsample_remote','track_user_ip',
-                    'xml_rpc','allow_zip_download',
-                    'file_zip_download','ratings',
+                    'xml_rpc','allow_zip_download','ratings',
                     'shoutbox','resize_images',
                     'show_album_art','allow_public_registration',
                     'captcha_public_reg','admin_notify_reg',
@@ -435,7 +428,6 @@ class Preference extends database_object
         }
 
         return false;
-
     } // is_boolean
 
     /**
@@ -455,8 +447,8 @@ class Preference extends database_object
         /* Get Global Preferences */
         $sql = "SELECT `preference`.`name`,`user_preference`.`value`,`syspref`.`value` AS `system_value` FROM `preference` " .
             "LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' " .
-            "LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user`='$user_id' AND `preference`.`catagory`!='system'";
-        $db_results = Dba::read($sql);
+            "LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory`!='system'";
+        $db_results = Dba::read($sql, array($user_id));
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -468,19 +460,20 @@ class Preference extends database_object
         /* Set the Theme mojo */
         if (strlen($results['theme_name']) > 0) {
             $results['theme_path'] = '/themes/' . $results['theme_name'];
+            // In case the theme was removed
+            if (!Core::is_readable(AmpConfig::get('prefix') . $results['theme_path'])) {
+                unset($results['theme_path']);
+            }
         }
         // Default theme if we don't get anything from their
         // preferences because we're going to want at least something otherwise
         // the page is going to be really ugly
-        else {
+        if (!isset($results['theme_path'])) {
             $results['theme_path'] = '/themes/reborn';
         }
 
         AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;
         $_SESSION['userdata']['uid'] = $user_id;
-
     } // init
-
-
 } // end Preference class

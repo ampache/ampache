@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -20,7 +20,7 @@
  *
  */
 
-class Song_Preview extends database_object implements media
+class Song_Preview extends database_object implements media, playable_item
 {
     public $id;
     public $file;
@@ -63,7 +63,7 @@ class Song_Preview extends database_object implements media
                 $this->$key = $value;
             }
             $data = pathinfo($this->file);
-            $this->type = strtolower($data['extension']);
+            $this->type = strtolower($data['extension']) ?: 'mp3';
             $this->mime = Song::type_to_mime($this->type);
         } else {
             $this->id = null;
@@ -192,12 +192,8 @@ class Song_Preview extends database_object implements media
      * and does a ton of formating on it creating f_??? variables on the current
      * object
      */
-    public function format()
+    public function format($details = true)
     {
-        // Format the filename
-        preg_match("/^.*\/(.*?)$/",$this->file, $short);
-        $this->f_file = htmlspecialchars($short[1]);
-
         // Format the artist name
         if ($this->artist) {
             $this->f_artist_full = $this->get_artist_name();
@@ -224,13 +220,57 @@ class Song_Preview extends database_object implements media
 
     } // format
 
+    public function get_fullname()
+    {
+        return $this->f_title;
+    }
+
+    public function get_parent()
+    {
+        // Wanted album is not part of the library, cannot return it.
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
+
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'song_preview') {
+            $medias[] = array(
+                'object_type' => 'song_preview',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array();
+    }
+
     /**
      * play_url
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
      */
-    public static function play_url($oid, $additional_params='')
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         $song = new Song_Preview($oid);
         $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
@@ -238,13 +278,27 @@ class Song_Preview extends database_object implements media
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
 
-        $url = Stream::get_base_url() . "type=song_preview&oid=$song->id&uid=$user_id&name=$song_name";
+        $url = Stream::get_base_url($local) . "type=song_preview&oid=" . $song->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_URL::format($url . $additional_params);
 
     } // play_url
 
-    public function get_stream_types()
+    public function stream()
+    {
+        $data = null;
+        foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($GLOBALS['user'])) {
+                if ($plugin->_plugin->stream_song_preview($this->file))
+                    break;
+            }
+        }
+
+        return $data;
+    }
+
+    public function get_stream_types($player = null)
     {
         return array('native');
     }
@@ -254,9 +308,19 @@ class Song_Preview extends database_object implements media
      *
      * FIXME: Song Preview transcoding is not implemented
      */
-    public function get_transcode_settings($target = null)
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
         return false;
+    }
+
+    public function get_stream_name()
+    {
+        return $this->title;
+    }
+
+    public function set_played($user, $agent, $location)
+    {
+        // Do nothing
     }
 
     public static function get_song_previews($album_mbid)

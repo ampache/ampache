@@ -7,7 +7,7 @@
  *
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -35,7 +35,7 @@
  * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
  * @return    void
  */
-function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation')
+function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation',$visible=true)
 {
     if (substr_count($next_url,AmpConfig::get('web_path'))) {
         $path = $next_url;
@@ -45,6 +45,13 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 
     require AmpConfig::get('prefix') . '/templates/show_confirmation.inc.php';
 } // show_confirmation
+
+function sse_worker($url)
+{
+    echo '<script type="text/javascript">';
+    echo "sse_worker('$url');";
+    echo "</script>\n";
+}
 
 /**
  * return_referer
@@ -185,7 +192,7 @@ function show_preference_box($preferences)
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
+function show_album_select($name='album', $album_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
 {
     static $album_id_cnt = 0;
 
@@ -196,11 +203,22 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
         $key = "album_select_c" . ++$album_id_cnt;
     }
 
+    $sql = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
+    $params = array();
+    if ($user) {
+        $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
+        $params[] = $user;
+    }
+    $sql .= "ORDER BY `album`.`name`";
+    $db_results = Dba::read($sql, $params);
+    $count = Dba::num_rows($db_results);
+
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
 
-    $sql = "SELECT `id`, `name`, `prefix`, `disk` FROM `album` ORDER BY `name`";
-    $db_results = Dba::read($sql);
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -223,6 +241,10 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
 
     echo "</select>\n";
 
+    if ($count === 0) {
+        echo "<script type='text/javascript'>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+    }
+
 } // show_album_select
 
 /**
@@ -230,20 +252,31 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  */
-function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0)
+function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
     if ($song_id) {
-        $key = "artist_select_" . $song_id;
+        $key = $name . "_select_" . $song_id;
     } else {
-        $key = "artist_select_c" . ++$artist_id_cnt;
+        $key = $name . "_select_c" . ++$artist_id_cnt;
     }
+
+    $sql = "SELECT `id`, `name`, `prefix` FROM `artist` ";
+    $params = array();
+    if ($user) {
+        $sql .= "WHERE `user` = ? ";
+        $params[] = $user;
+    }
+    $sql .= "ORDER BY `name`";
+    $db_results = Dba::read($sql, $params);
+    $count = Dba::num_rows($db_results);
 
     echo "<select name=\"$name\" id=\"$key\">\n";
 
-    $sql = "SELECT `id`, `name`, `prefix` FROM `artist` ORDER BY `name`";
-    $db_results = Dba::read($sql);
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -258,24 +291,117 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id
 
     if ($allow_add) {
         // Append additional option to the end with value=-1
+        echo "\t<option value=\"-1\">" . T_('Add New') . "...</option>\n";
+    }
+
+    echo "</select>\n";
+
+    if ($count === 0) {
+        echo "<script type='text/javascript'>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+    }
+
+} // show_artist_select
+
+/**
+ * show_tvshow_select
+ * This is the same as show_album_select except it's *gasp* for tvshows! How
+ * inventive!
+ */
+function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $season_id=0, $allow_none=false)
+{
+    static $tvshow_id_cnt = 0;
+    // Generate key to use for HTML element ID
+    if ($season_id) {
+        $key = $name . "_select_" . $season_id;
+    } else {
+        $key = $name . "_select_c" . ++$tvshow_id_cnt;
+    }
+
+    echo "<select name=\"$name\" id=\"$key\">\n";
+
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
+
+    $sql = "SELECT `id`, `name` FROM `tvshow` ORDER BY `name`";
+    $db_results = Dba::read($sql);
+
+    while ($r = Dba::fetch_assoc($db_results)) {
+        $selected = '';
+        if ($r['id'] == $tvshow_id) {
+            $selected = "selected=\"selected\"";
+        }
+
+        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
+
+    } // end while
+
+    if ($allow_add) {
+        // Append additional option to the end with value=-1
         echo "\t<option value=\"-1\">Add New...</option>\n";
     }
 
     echo "</select>\n";
 
-} // show_artist_select
+} // show_tvshow_select
+
+function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add=false, $video_id=0, $allow_none=false)
+{
+    if (!$season_id)
+        return false;
+    $season = new TVShow_Season($season_id);
+
+    static $season_id_cnt = 0;
+    // Generate key to use for HTML element ID
+    if ($video_id) {
+        $key = $name . "_select_" . $video_id;
+    } else {
+        $key = $name . "_select_c" . ++$season_id_cnt;
+    }
+
+    echo "<select name=\"$name\" id=\"$key\">\n";
+
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
+
+    $sql = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
+    $db_results = Dba::read($sql, array($season->tvshow));
+
+    while ($r = Dba::fetch_assoc($db_results)) {
+        $selected = '';
+        if ($r['id'] == $season_id) {
+            $selected = "selected=\"selected\"";
+        }
+
+        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['season_number']) . "</option>\n";
+
+    } // end while
+
+    if ($allow_add) {
+        // Append additional option to the end with value=-1
+        echo "\t<option value=\"-1\">Add New...</option>\n";
+    }
+
+    echo "</select>\n";
+
+}
 
 /**
  * show_catalog_select
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  */
-function show_catalog_select($name='catalog',$catalog_id=0,$style='')
+function show_catalog_select($name='catalog',$catalog_id=0,$style='', $allow_none=false)
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
     $sql = "SELECT `id`, `name` FROM `catalog` ORDER BY `name`";
     $db_results = Dba::read($sql);
+
+    if ($allow_none) {
+        echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
+    }
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -290,6 +416,42 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='')
     echo "</select>\n";
 
 } // show_catalog_select
+
+/**
+ * show_album_select
+ * This displays a select of every album that we've got in Ampache (which can be
+ * hella long). It's used by the Edit page and takes a $name and a $album_id
+ */
+function show_license_select($name='license',$license_id=0,$song_id=0)
+{
+    static $license_id_cnt = 0;
+
+    // Generate key to use for HTML element ID
+    if ($song_id) {
+        $key = "license_select_" . $song_id;
+    } else {
+        $key = "license_select_c" . ++$license_id_cnt;
+    }
+
+    // Added ID field so we can easily observe this element
+    echo "<select name=\"$name\" id=\"$key\">\n";
+
+    $sql = "SELECT `id`, `name` FROM `license` ORDER BY `name`";
+    $db_results = Dba::read($sql);
+
+    while ($r = Dba::fetch_assoc($db_results)) {
+        $selected = '';
+        if ($r['id'] == $license_id) {
+            $selected = "selected=\"selected\"";
+        }
+
+        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . $r['name'] . "</option>\n";
+
+    } // end while
+
+    echo "</select>\n";
+
+} // show_license_select
 
 /**
  * show_user_select
@@ -396,7 +558,7 @@ function xml_from_array($array, $callback = false, $type = '')
     case 'itunes':
         foreach ($array as $key=>$value) {
             if (is_array($value)) {
-                $value = xoutput_from_array($value,1,$type);
+                $value = xoutput_from_array($value, true, $type);
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
             } else {
                 if ($key == "key") {
@@ -417,7 +579,7 @@ function xml_from_array($array, $callback = false, $type = '')
     case 'xspf':
         foreach ($array as $key=>$value) {
             if (is_array($value)) {
-                $value = xoutput_from_array($value,1,$type);
+                $value = xoutput_from_array($value, true, $type);
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
             } else {
                 if ($key == "key") {
@@ -535,6 +697,13 @@ function toggle_visible($element)
 
 } // toggle_visible
 
+function display_notification($message, $timeout = 5000)
+{
+    echo "<script type='text/javascript'>";
+    echo "displayNotification('" . json_encode($message) . "', " . $timeout . ");";
+    echo "</script>\n";
+}
+
 /**
  * print_bool
  * This function takes a boolean value and then prints out a friendly text
@@ -567,3 +736,17 @@ function show_now_playing()
     require_once AmpConfig::get('prefix') . '/templates/show_now_playing.inc.php';
 
 } // show_now_playing
+
+function show_table_render($render = false, $force = false)
+{
+    // Include table render javascript only once
+    if ($force || !defined('TABLE_RENDERED')) {
+        define('TABLE_RENDERED', 1);
+    ?>
+        <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
+        <?php if (isset($render) && $render) { ?>
+            <script language="javascript" type="text/javascript">sortPlaylistRender();</script>
+        <?php
+        }
+    }
+}

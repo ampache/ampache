@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -19,13 +19,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+$logo_url = AmpConfig::get('custom_login_logo');
+if (empty($logo_url)) {
+    $logo_url = AmpConfig::get('web_path') . "/themes/reborn/images/ampache.png";
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html lang="en-US">
     <head>
+        <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Ampache -- Debug Page</title>
-        <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
+        <?php UI::show_custom_style(); ?>
         <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/install-doped.css" type="text/css" media="screen" />
@@ -34,12 +40,12 @@
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="<?php echo AmpConfig::get('web_path'); ?>/themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
-                    <?php echo T_('Ampache'); ?> - For the love of Music
+                    <img src="<?php echo $logo_url; ?>" title="Ampache" alt="Ampache">
+                    <?php echo AmpConfig::get('site_title'); ?>
                 </a>
             </div>
         </div>
-        <div class="container" role="main">
+        <div id="guts" class="container" role="main">
             <div class="jumbotron">
                 <h1><?php echo T_('Access Denied'); ?></h1>
                 <p><?php echo T_('This event has been logged.'); ?></p>

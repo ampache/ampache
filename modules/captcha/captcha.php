@@ -110,16 +110,16 @@ Mike O'Connell <wb:gm.c>
 class captcha {
 
    #-- tests submitted CAPTCHA solution against tracking data
-   function solved() {
+   public static function solved() {
       $c = new easy_captcha();
       return $c->solved();
    }
-   function check() {
+   public static function check() {
       return captcha::solved();
    }
 
    #-- returns string with "<img> and <input>" fields for display in your <form>
-   function form($text="") {
+   public static function form($text="") {
       $c = new easy_captcha();
       return $c->form("$text");
    }
@@ -394,7 +394,7 @@ class easy_captcha {
       // clean up old files
       if ((rand(0,100) <= 5) && ($dh = opendir($dir))) {
          $t_kill = time() - CAPTCHA_TIMEOUT * 1.2;
-         while($fn = readdir($dh)) if ($fn[0] != ".") {
+         while(false !== ($fn = readdir($dh))) if ($fn[0] != ".") {
             if (filemtime("$dir/$fn") < $t_kill) {
                @unlink("$dir/$fn");
             }
@@ -475,7 +475,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy {
 
    #-- return a single .ttf font filename
    function font() {
-      $fonts = array(/*"MyUnderwood.ttf"*/);
+      $fonts = array(/*"FreeMono.ttf"*/);
       $fonts += glob(CAPTCHA_FONT_DIR."/*.ttf");
       return $fonts[rand(0,count($fonts)-1)];
    }
@@ -509,7 +509,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy {
    function output() {
       ob_start();
       ob_implicit_flush(0);
-        imagejpeg($this->img, "", $this->quality);
+        imagejpeg($this->img, null, $this->quality);
         $jpeg = ob_get_contents();
       ob_end_clean();
       imagedestroy($this->img);
@@ -1034,7 +1034,7 @@ class easy_captcha_utility {
 
 
    #-- script was called directly
-   function API() {
+   public static function API() {
 
       #-- load data
       if ($id = @$_GET[CAPTCHA_PARAM_ID]) {

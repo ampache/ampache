@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -35,7 +35,9 @@ class Share extends database_object
     public $counter;
     public $secret;
     public $public_url;
+    public $description;
 
+    public $f_name;
     public $f_object_link;
     public $f_user;
     public $f_allow_stream;
@@ -73,6 +75,12 @@ class Share extends database_object
         return Dba::write($sql, $params);
     }
 
+    public static function gc()
+    {
+        $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
+        Dba::write($sql);
+    }
+
     public static function delete_shares($object_type, $object_id)
     {
         $sql = "DELETE FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
@@ -97,6 +105,7 @@ class Share extends database_object
             case 'album':
             case 'song':
             case 'playlist':
+            case 'video':
                 return $type;
             default:
                 return '';
@@ -188,22 +197,46 @@ class Share extends database_object
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75') || $this->user == $GLOBALS['user']->id) {
+                echo "<a id=\"edit_share_ " . $this->id ."\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
 
-    public function format()
+    public function format($details = true)
     {
-        $object = new $this->object_type($this->object_id);
-        $object->format();
-        $this->f_object_link = $object->f_link;
-        $user = new User($this->user);
-        $this->f_user = $user->fullname;
+        if ($details) {
+            $object = new $this->object_type($this->object_id);
+            $object->format();
+            $this->f_name = $object->get_fullname();
+            $this->f_object_link = $object->f_link;
+            $user = new User($this->user);
+            $user->format();
+            $this->f_user = $user->f_name;
+        }
         $this->f_allow_stream = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
         $this->f_creation_date = date("Y-m-d H:i:s", $this->creation_date);
         $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", $this->creation_date) : '';
+    }
+
+    public function update(array $data)
+    {
+        $this->max_counter = intval($data['max_counter']);
+        $this->expire_days = intval($data['expire']);
+        $this->allow_stream = $data['allow_stream'] == '1';
+        $this->allow_download = $data['allow_download'] == '1';
+        $this->description = isset($data['description']) ? $data['description'] : $this->description;
+
+        $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .
+            "WHERE `id` = ?";
+        $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->description, $this->id);
+        if (!$GLOBALS['user']->has_access('75')) {
+            $sql .= " AND `user` = ?";
+            $params[] = $GLOBALS['user']->id;
+        }
+
+        return Dba::write($sql, $params);
     }
 
     public function save_access()
@@ -261,12 +294,9 @@ class Share extends database_object
             case 'album':
             case 'playlist':
                 $object = new $this->object_type($this->object_id);
-                $songs = $object->get_songs();
-                foreach ($songs as $id) {
-                    $medias[] = array(
-                        'object_type' => 'song',
-                        'object_id' => $id,
-                    );
+                $songs = $object->get_medias('song');
+                foreach ($songs as $song) {
+                    $medias[] = $song;
                 }
             break;
             default:
@@ -281,7 +311,7 @@ class Share extends database_object
         return $playlist;
     }
 
-    public function is_shared_song($song_id)
+    public function is_shared_media($media_id)
     {
         $is_shared = false;
         switch ($this->object_type) {
@@ -290,16 +320,60 @@ class Share extends database_object
                 $object = new $this->object_type($this->object_id);
                 $songs = $object->get_songs();
                 foreach ($songs as $id) {
-                    $is_shared = ($song_id == $id);
+                    $is_shared = ($media_id == $id);
                     if ($is_shared) { break; }
                 }
             break;
             default:
-                $is_shared = ($this->object_type == 'song' && $this->object_id == $song_id);
+                $is_shared = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
             break;
         }
 
         return $is_shared;
+    }
+
+    public function get_user_owner()
+    {
+        return $this->user;
+    }
+
+    public static function display_ui($object_type, $object_id, $show_text = true)
+    {
+        echo "<a onclick=\"showShareDialog(event, '" . $object_type . "', " . $object_id . ");\">" . UI::get_icon('share', T_('Share'));
+        if ($show_text) {
+            echo " &nbsp;" . T_('Share');
+        }
+        echo "</a>";
+    }
+
+    public static function display_ui_links($object_type, $object_id)
+    {
+        echo "<ul>";
+        echo "<li><a onclick=\"handleShareAction('". AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . UI::get_icon('share', T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
+        if (AmpConfig::get('download')) {
+            $dllink = "";
+            if ($object_type == "song" || $object_type == "video") {
+                $dllink = AmpConfig::get('web_path') . "/play/index.php?action=download&type=" . $object_type . "&oid=" . $object_id . "&uid=-1";
+            } else {
+                if (Access::check_function('batch_download') && check_can_zip($object_type)) {
+                    $dllink = AmpConfig::get('web_path') . "/batch.php?action=" . $object_type . "&id=" . $object_id;
+                }
+            }
+            if (!empty($dllink)) {
+                if (AmpConfig::get('require_session')) {
+                    // Add session information to the link to avoid authentication
+                    $dllink .= "&ssid=" . Stream::get_session();
+                }
+                echo "<li><a rel=\"nohtml\" href=\"" . $dllink . "\">" . UI::get_icon('download', T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
+            }
+        }
+        echo "<li style='padding-top: 8px; text-align: right;'>";
+        $plugins = Plugin::get_plugins('external_share');
+        foreach ($plugins as $plugin_name) {
+            echo "<a onclick=\"handleShareAction('". AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower($plugin_name), $plugin_name) . "</a>&nbsp;";
+        }
+        echo "</li>";
+        echo "</ul>";
     }
 
 } // end of recommendation class

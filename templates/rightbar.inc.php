@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -24,28 +24,30 @@
     <li>
         <?php echo Ajax::button('?page=stream&action=basket','all', T_('Play'), 'rightbar_play'); ?>
     </li>
-    <li id="pl_add">
-        <?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
-        <ul id="pl_action_additems" class="submenu">
-            <li>
-                <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
-            </li>
-        <?php
-            $playlists = Playlist::get_users($GLOBALS['user']->id);
-            Playlist::build_cache($playlists);
-            foreach ($playlists as $playlist_id) {
-                $playlist = new Playlist($playlist_id);
-                $playlist->format();
-        ?>
-            <li>
-                <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id='. $playlist->id, $playlist->f_name, 'rb_append_playlist_'.$playlist->id); ?>
-            </li>
-        <?php } ?>
-        </ul>
-    </li>
-<?php if (Access::check_function('batch_download')) { ?>
+    <?php if (Access::check('interface', '25')) { ?>
+        <li id="pl_add">
+            <?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
+            <ul id="pl_action_additems" class="submenu">
+                <li>
+                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
+                </li>
+            <?php
+                $playlists = Playlist::get_users($GLOBALS['user']->id);
+                Playlist::build_cache($playlists);
+                foreach ($playlists as $playlist_id) {
+                    $playlist = new Playlist($playlist_id);
+                    $playlist->format();
+            ?>
+                <li>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id='. $playlist->id, $playlist->f_name, 'rb_append_playlist_'.$playlist->id); ?>
+                </li>
+            <?php } ?>
+            </ul>
+        </li>
+    <?php } ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
     <li>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     </li>
@@ -88,11 +90,13 @@
 ?>
     <script type="text/javascript">
         <?php if (count($objects) || (AmpConfig::get('play_type') == 'localplay')) { ?>
-            $("#content").removeClass("content-wild", 500);
+            $("#content").removeClass("content-right-wild", 500);
+            $("#footer").removeClass("footer-wild", 500);
             $("#rightbar").removeClass("hidden");
             $("#rightbar").show("slow");
         <?php } else { ?>
-            $("#content").addClass("content-wild", 500);
+            $("#content").addClass("content-right-wild", 500);
+            $("#footer").addClass("footer-wild", 500);
             $("#rightbar").hide("slow");
         <?php } ?>
     </script>
@@ -103,9 +107,10 @@
         $objects = array_slice($objects, 0, 100, true);
     }
 
-    $normal_array = array('radio', 'song', 'video', 'random', 'song_preview');
+    $normal_array = array('live_stream', 'song', 'video', 'random', 'song_preview');
 
-    foreach ($objects as $uid=>$object_data) {
+    foreach ($objects as $object_data) {
+        $uid = $object_data['track_id'];
         $type = array_shift($object_data);
         if (in_array($type,$normal_array)) {
             $object = new $type(array_shift($object_data));
@@ -126,7 +131,7 @@
 <?php } ?>
 </ul>
 <?php
-// We do a little magic here to force a iframe reload depending on preference
+// We do a little magic here to force a reload depending on preference
 // We do this last because we want it to load, and we want to know if there is anything
 // to even pass
 if (count($objects)) {

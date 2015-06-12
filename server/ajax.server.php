@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -74,6 +74,9 @@ switch ($page) {
     case 'player':
         require_once AmpConfig::get('prefix') . '/server/player.ajax.php';
         exit;
+    case 'user':
+        require_once AmpConfig::get('prefix') . '/server/user.ajax.php';
+        exit;
     default:
         // A taste of compatibility
     break;
@@ -82,113 +85,6 @@ switch ($page) {
 switch ($_REQUEST['action']) {
     case 'refresh_rightbar':
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
-    /* Controls the editing of objects */
-    case 'edit_object':
-        debug_event('ajax_server', "Editing object...", '5');
-
-        // Scrub the data
-        foreach ($_POST as $key => $data) {
-            $_POST[$key] = unhtmlentities(scrub_in($data));
-            debug_event('ajax_server', $key.'='.$_POST[$key], '5');
-        }
-
-        $level = '50';
-
-        if ($_POST['type'] == 'playlist_row' || $_POST['type'] == 'playlist_title') {
-            $playlist = new Playlist($_POST['id']);
-            if ($GLOBALS['user']->id == $playlist->user) {
-                $level = '25';
-            }
-        }
-        if ($_POST['type'] == 'smartplaylist_row' ||
-            $_POST['type'] == 'smartplaylist_title') {
-            $smartpl = new Search('song', $_POST['id']);
-            if ($GLOBALS['user']->id == $smartpl->user) {
-                $level = '25';
-            }
-        }
-
-        // Make sure we've got them rights
-        if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
-            $results['rfc3514'] = '0x1';
-            break;
-        }
-
-        $new_id = '';
-        switch ($_POST['type']) {
-            case 'album_row':
-                $key = 'album_' . $_POST['id'];
-                $album = new Album($_POST['id']);
-                $songs = $album->get_songs();
-                $new_id = $album->update($_POST);
-                if ($new_id != $_POST['id']) {
-                    $album = new Album($new_id);
-                }
-                $album->format();
-            break;
-            case 'artist_row':
-                $key = 'artist_' . $_POST['id'];
-                $artist = new Artist($_POST['id']);
-                $songs = $artist->get_songs();
-                $new_id = $artist->update($_POST);
-                if ($new_id != $_POST['id']) {
-                    $artist = new Artist($new_id);
-                }
-                $artist->format();
-            break;
-            case 'song_row':
-                $key = 'song_' . $_POST['id'];
-                $song = new Song($_POST['id']);
-                $song->update($_POST);
-                $song->format();
-            break;
-            case 'playlist_row':
-            case 'playlist_title':
-                $key = 'playlist_row_' . $_POST['id'];
-                if (isset($playlist)) {
-                    $playlist->update($_POST);
-                    $playlist->format();
-                    $count = $playlist->get_song_count();
-                }
-            break;
-            case 'smartplaylist_row':
-            case 'smartplaylist_title':
-                $key = 'smartplaylist_row_' . $_POST['id'];
-                if (isset($smartpl)) {
-                    $smartpl->name = $_POST['name'];
-                    $smartpl->type = $_POST['pl_type'];
-                    $smartpl->update();
-                    $smartpl->format();
-                }
-            break;
-            case 'live_stream_row':
-                $key = 'live_stream_' . $_POST['id'];
-                Radio::update($_POST);
-                $radio = new Radio($_POST['id']);
-                $radio->format();
-            break;
-            case 'channel_row':
-                $key = 'channel_row_' . $_POST['id'];
-                $channel = new Channel($_POST['id']);
-                $channel->update($_POST);
-            break;
-            case 'broadcast_row':
-                $key = 'broadcast_row_' . $_POST['id'];
-                $broadcast = new Broadcast($_POST['id']);
-                $broadcast->update($_POST);
-            break;
-            case 'tag_row':
-                $tag = new Tag($_POST['id']);
-                $tag->update($_POST['name']);
-            break;
-            default:
-                $key = 'rfc3514';
-                echo xoutput_from_array(array($key=>'0x1'));
-                exit;
-        } // end switch on type
-
-        $results['id'] = $new_id;
     break;
     case 'current_playlist':
         switch ($_REQUEST['type']) {
@@ -201,124 +97,90 @@ switch ($_REQUEST['action']) {
     break;
     // Handle the users basketcases...
     case 'basket':
-        switch ($_REQUEST['type']) {
-            case 'album':
-                foreach ($_REQUEST['id'] as $i) {
-                    $object = new $_REQUEST['type']($i);
-                    $songs = $object->get_songs();
-                    foreach ($songs as $song_id) {
-                        $GLOBALS['user']->playlist->add_object($song_id, 'song');
+        $object_type = $_REQUEST['type'];
+        $object_id = $_REQUEST['id'];
+
+        if (Core::is_playable_item($object_type)) {
+            if (!is_array($object_id)) {
+                $object_id = array($object_id);
+            }
+            foreach ($object_id as $id) {
+                $item = new $object_type($id);
+                $medias = $item->get_medias();
+                $GLOBALS['user']->playlist->add_medias($medias);
+            }
+        } else {
+            switch ($_REQUEST['type']) {
+                case 'browse_set':
+                    $browse = new Browse($_REQUEST['browse_id']);
+                    $objects = $browse->get_saved();
+                    foreach ($objects as $object_id) {
+                        $GLOBALS['user']->playlist->add_object($object_id, 'song');
                     }
-                }
-            break;
-            case 'artist':
-            case 'tag':
-                $object = new $_REQUEST['type']($_REQUEST['id']);
-                $songs = $object->get_songs();
-                foreach ($songs as $song_id) {
-                    $GLOBALS['user']->playlist->add_object($song_id,'song');
-                }
-            break;
-            case 'browse_set':
-                $browse = new Browse($_REQUEST['browse_id']);
-                $objects = $browse->get_saved();
-                foreach ($objects as $object_id) {
-                    $GLOBALS['user']->playlist->add_object($object_id,'song');
-                }
-            break;
-            case 'album_random':
-                $data = explode('_',$_REQUEST['type']);
-                $type = $data['0'];
-                foreach ($_REQUEST['id'] as $i) {
-                    $object = new $type($i);
+                break;
+                case 'album_random':
+                    $data = explode('_',$_REQUEST['type']);
+                    $type = $data['0'];
+                    foreach ($_REQUEST['id'] as $i) {
+                        $object = new $type($i);
+                        $songs = $object->get_random_songs();
+                        foreach ($songs as $song_id) {
+                            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+                        }
+                    }
+                break;
+                case 'artist_random':
+                case 'tag_random':
+                    $data = explode('_',$_REQUEST['type']);
+                    $type = $data['0'];
+                    $object = new $type($_REQUEST['id']);
                     $songs = $object->get_random_songs();
                     foreach ($songs as $song_id) {
-                        $GLOBALS['user']->playlist->add_object($song_id, 'song');
+                        $GLOBALS['user']->playlist->add_object($song_id,'song');
                     }
-                }
-            break;
-            case 'artist_random':
-            case 'tag_random':
-                $data = explode('_',$_REQUEST['type']);
-                $type = $data['0'];
-                $object = new $type($_REQUEST['id']);
-                $songs = $object->get_random_songs();
-                foreach ($songs as $song_id) {
-                    $GLOBALS['user']->playlist->add_object($song_id,'song');
-                }
-            break;
-            case 'playlist':
-                $playlist = new Playlist($_REQUEST['id']);
-                $items = $playlist->get_items();
-                foreach ($items as $item) {
-                    $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
-                }
-            break;
-            case 'playlist_random':
-                $playlist = new Playlist($_REQUEST['id']);
-                $items = $playlist->get_random_items();
-                foreach ($items as $item) {
-                    $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
-                }
-            break;
-            case 'smartplaylist':
-                $playlist = new Search('song', $_REQUEST['id']);
-                $items = $playlist->get_items();
-                foreach ($items as $item) {
-                    $GLOBALS['user']->playlist->add_object($item['object_id'],$item['object_type']);
-                }
-            break;
-            case 'clear_all':
-                $GLOBALS['user']->playlist->clear();
-            break;
-            case 'live_stream':
-                $object = new Radio($_REQUEST['id']);
-                // Confirm its a valid ID
-                if ($object->name) {
-                    $GLOBALS['user']->playlist->add_object($object->id,'radio');
-                }
-            break;
-            case 'video':
-                $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'video');
-            break;
-            case 'album_preview':
-                $songs = Song_preview::get_song_previews($_REQUEST['mbid']);
-                foreach ($songs as $song) {
-                    if (!empty($song->file)) {
-                        $GLOBALS['user']->playlist->add_object($song->id, 'song_preview');
+                break;
+                case 'playlist_random':
+                    $playlist = new Playlist($_REQUEST['id']);
+                    $items = $playlist->get_random_items();
+                    foreach ($items as $item) {
+                        $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
                     }
-                }
-            break;
-            case 'song_preview':
-                $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'song_preview');
-            break;
-            case 'song':
-            default:
-                $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'song');
-            break;
-        } // end switch
+                break;
+                case 'clear_all':
+                    $GLOBALS['user']->playlist->clear();
+                break;
+            }
+        }
 
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
     /* Setting ratings */
     case 'set_rating':
-        ob_start();
-        $rating = new Rating($_GET['object_id'], $_GET['rating_type']);
-        $rating->set_rating($_GET['rating']);
-        Rating::show($_GET['object_id'], $_GET['rating_type']);
-        $key = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
-        $results[$key] = ob_get_contents();
-        ob_end_clean();
+        if (User::is_registered()) {
+            ob_start();
+            $rating = new Rating($_GET['object_id'], $_GET['rating_type']);
+            $rating->set_rating($_GET['rating']);
+            Rating::show($_GET['object_id'], $_GET['rating_type']);
+            $key = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
+            $results[$key] = ob_get_contents();
+            ob_end_clean();
+        } else {
+            $results['rfc3514'] = '0x1';
+        }
     break;
     /* Setting userflags */
     case 'set_userflag':
-        ob_start();
-        $userflag = new Userflag($_GET['object_id'], $_GET['userflag_type']);
-        $userflag->set_flag($_GET['userflag']);
-        Userflag::show($_GET['object_id'], $_GET['userflag_type']);
-        $key = "userflag_" . $_GET['object_id'] . "_" . $_GET['userflag_type'];
-        $results[$key] = ob_get_contents();
-        ob_end_clean();
+        if (User::is_registered()) {
+            ob_start();
+            $userflag = new Userflag($_GET['object_id'], $_GET['userflag_type']);
+            $userflag->set_flag($_GET['userflag']);
+            Userflag::show($_GET['object_id'], $_GET['userflag_type']);
+            $key = "userflag_" . $_GET['object_id'] . "_" . $_GET['userflag_type'];
+            $results[$key] = ob_get_contents();
+            ob_end_clean();
+        } else {
+            $results['rfc3514'] = '0x1';
+        }
     break;
     case 'action_buttons':
         ob_start();

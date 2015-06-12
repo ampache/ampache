@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -148,7 +148,7 @@ class Democratic extends Tmp_Playlist
      * format
      * This makes the variables all purrty so that they can be displayed
      */
-    public function format()
+    public function format($details = true)
     {
         $this->f_cooldown    = $this->cooldown . ' ' . T_('minutes');
         $this->f_primary    = $this->primary ? T_('Primary') : '';
@@ -228,6 +228,12 @@ class Democratic extends Tmp_Playlist
      */
     public function get_items($limit = null)
     {
+        // Remove 'unconnected' users votes
+        if (AmpConfig::get('demo_clear_sessions')) {
+            $sql = 'DELETE FROM `user_vote` WHERE `user_vote`.`sid` NOT IN (SELECT `session`.`id` FROM `session`)';
+            Dba::write($sql);
+        }
+
         $sql = 'SELECT `tmp_playlist_data`.`object_type`, ' .
             '`tmp_playlist_data`.`object_id`, ' .
             '`tmp_playlist_data`.`id` ' .
@@ -236,7 +242,7 @@ class Democratic extends Tmp_Playlist
             "WHERE `tmp_playlist_data`.`tmp_playlist` = '" .
             Dba::escape($this->tmp_playlist) . "' " .
             'GROUP BY 1, 2 ' .
-            'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`) ';
+            'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), `tmp_playlist_data`.`id` ';
 
         if ($limit) {
             $sql .= 'LIMIT ' . intval($limit);
@@ -366,20 +372,23 @@ class Democratic extends Tmp_Playlist
      */
     public function has_vote($object_id, $type = 'song')
     {
-        $tmp_id        = Dba::escape($this->tmp_playlist);
-        $object_id     = Dba::escape($object_id);
-        $type        = Dba::escape($type);
-        $user_id    = Dba::escape($GLOBALS['user']->id);
+        $params = array($type, $object_id, $this->tmp_playlist);
 
         /* Query vote table */
         $sql = 'SELECT `tmp_playlist_data`.`object_id` ' .
             'FROM `user_vote` INNER JOIN `tmp_playlist_data` ' .
             'ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` ' .
-            "WHERE `user_vote`.`user`='$user_id' " .
-            "AND `tmp_playlist_data`.`object_type`='$type' " .
-            "AND `tmp_playlist_data`.`object_id`='$object_id' " .
-            "AND `tmp_playlist_data`.`tmp_playlist`='$tmp_id'";
-        $db_results = Dba::read($sql);
+            "WHERE `tmp_playlist_data`.`object_type` = ? " .
+            "AND `tmp_playlist_data`.`object_id` = ? " .
+            "AND `tmp_playlist_data`.`tmp_playlist` = ? ";
+        if ($GLOBALS['user']->id > 0) {
+            $sql .= "AND `user_vote`.`user` = ? ";
+            $params[] = $GLOBALS['user']->id;
+        } else {
+            $sql .= "AND `user_vote`.`sid` = ? ";
+            $params[] = session_id();
+        }
+        $db_results = Dba::read($sql, $params);
 
         /* If we find  row, they've voted!! */
         if (Dba::num_rows($db_results)) {
@@ -396,30 +405,31 @@ class Democratic extends Tmp_Playlist
      */
     private function _add_vote($object_id, $object_type = 'song')
     {
-        $object_id    = Dba::escape($object_id);
-        $tmp_playlist    = Dba::escape($this->tmp_playlist);
-        $object_type    = Dba::escape($object_type);
+        if (!$this->tmp_playlist) {
+            return false;
+        }
+
         $media = new $object_type($object_id);
-        $track = isset($media->track) ? "'" . intval($media->track) . "'" : "NULL";
+        $track = isset($media->track) ? intval($media->track) : null;
 
         /* If it's on the playlist just vote */
         $sql = "SELECT `id` FROM `tmp_playlist_data` " .
-            "WHERE `tmp_playlist_data`.`object_id`='$object_id' AND `tmp_playlist_data`.`tmp_playlist`='$tmp_playlist'";
-        $db_results = Dba::write($sql);
+            "WHERE `tmp_playlist_data`.`object_id` = ? AND `tmp_playlist_data`.`tmp_playlist` = ?";
+        $db_results = Dba::write($sql, array($object_id, $this->tmp_playlist));
 
         /* If it's not there, add it and pull ID */
         if (!$results = Dba::fetch_assoc($db_results)) {
             $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`,`object_id`,`object_type`,`track`) " .
-                "VALUES ('$tmp_playlist','$object_id','$object_type',$track)";
-            Dba::write($sql);
+                "VALUES (?, ?, ?, ?)";
+            Dba::write($sql, array($this->tmp_playlist, $object_id, $object_type, $track));
             $results['id'] = Dba::insert_id();
         }
 
         /* Vote! */
         $time = time();
-        $sql = "INSERT INTO user_vote (`user`,`object_id`,`date`) " .
-            "VALUES ('" . Dba::escape($GLOBALS['user']->id) . "','" . $results['id'] . "','$time')";
-        Dba::write($sql);
+        $sql = "INSERT INTO user_vote (`user`,`object_id`,`date`,`sid`) " .
+            "VALUES (?, ?, ?, ?)";
+        Dba::write($sql, array($GLOBALS['user']->id, $results['id'], $time, session_id()));
 
         return true;
     }
@@ -432,11 +442,16 @@ class Democratic extends Tmp_Playlist
      */
     public function remove_vote($row_id)
     {
-        $object_id    = Dba::escape($row_id);
-        $user_id    = Dba::escape($GLOBALS['user']->id);
-
-        $sql = "DELETE FROM `user_vote` WHERE `object_id`='$object_id' AND `user`='$user_id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `user_vote` WHERE `object_id` = ? ";
+        $params = array($row_id);
+        if ($GLOBALS['user']->id > 0) {
+            $sql .= "AND `user` = ?";
+            $params[] = $GLOBALS['user']->id;
+        } else {
+            $sql .= "AND `user_vote`.`sid` = ? ";
+            $params[] = session_id();
+        }
+        Dba::write($sql, $params);
 
         /* Clean up anything that has no votes */
         self::prune_tracks();
@@ -503,7 +518,7 @@ class Democratic extends Tmp_Playlist
      * update
      * This updates an existing democratic playlist item. It takes a key'd array just like the create
      */
-    public function update($data)
+    public function update(array $data)
     {
         $name = Dba::escape($data['name']);
         $base = Dba::escape($data['democratic']);
@@ -577,11 +592,13 @@ class Democratic extends Tmp_Playlist
     {
         $tmp_id = Dba::escape($this->tmp_playlist);
 
-        /* Clear all votes then prune */
-        $sql = "DELETE FROM `user_vote` USING `user_vote` " .
-            "LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` " .
-            "WHERE `tmp_playlist_data`.`tmp_playlist`='$tmp_id'";
-        Dba::write($sql);
+        if ($tmp_id) {
+            /* Clear all votes then prune */
+            $sql = "DELETE FROM `user_vote` USING `user_vote` " .
+                "LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` " .
+                "WHERE `tmp_playlist_data`.`tmp_playlist`='$tmp_id'";
+            Dba::write($sql);
+        }
 
         // Prune!
         self::prune_tracks();
@@ -619,8 +636,8 @@ class Democratic extends Tmp_Playlist
         }
 
         $sql = 'SELECT COUNT(`user`) AS `count` FROM `user_vote` ' .
-            "WHERE `object_id`='" . Dba::escape($id) . "'";
-        $db_results = Dba::read($sql);
+            "WHERE `object_id` = ?";
+        $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
         parent::add_to_cache('democratic_vote', $id, $results['count']);
@@ -635,8 +652,19 @@ class Democratic extends Tmp_Playlist
      */
     public function get_voters($object_id)
     {
-        return parent::get_from_cache('democratic_voters',$object_id);
+        if (parent::is_cached('democratic_voters', $object_id)) {
+            return parent::get_from_cache('democratic_voters', $object_id);
+        }
 
+        $sql = "SELECT `user` FROM `user_vote` WHERE `object_id` = ?";
+        $db_results = Dba::read($sql, array($object_id));
+
+        $voters = array();
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $voters[] = $results['user'];
+        }
+        parent::add_to_cache('democratic_vote', $object_id, $voters);
+        return $voters;
     } // get_voters
 
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -33,10 +33,10 @@
     <tbody>
         <?php
         foreach ($object_ids as $wanted_id) {
-            $walbum = new Wanted($wanted_id);
-            $walbum->format();
+            $libitem = new Wanted($wanted_id);
+            $libitem->format();
         ?>
-        <tr id="walbum_<?php echo $walbum->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_wanted_album_row.inc.php'; ?>
         </tr>
         <?php } ?>

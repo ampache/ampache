@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -31,7 +31,7 @@
     <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>
 <tr>
-    <td><textarea rows="5" cols="70"  maxlength="140" name="comment"><?php echo $shout->text; ?></textarea></td>
+    <td><textarea rows="5" cols="70"  maxlength="140" name="comment" autofocus><?php echo $shout->text; ?></textarea></td>
 </tr>
 <tr>
     <td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") { echo "checked"; } ?>/> <strong><?php echo T_('Stick this comment'); ?></strong></td>

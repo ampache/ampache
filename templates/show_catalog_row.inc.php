@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,24 +22,34 @@
 
 $web_path = AmpConfig::get('web_path');
 
-$icon = $catalog->enabled ? 'disable' : 'enable';
-$button_flip_state_id = 'button_flip_state_' . $catalog->id;
+$icon = $libitem->enabled ? 'disable' : 'enable';
+$button_flip_state_id = 'button_flip_state_' . $libitem->id;
 ?>
-<td class="cel_catalog"><?php echo $catalog->f_name_link; ?></td>
-<td class="cel_info"><?php echo scrub_out($catalog->f_info); ?></td>
-<td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
-<td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
-<td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
+<td class="cel_catalog"><?php echo $libitem->f_link; ?></td>
+<td class="cel_info"><?php echo scrub_out($libitem->f_info); ?></td>
+<td class="cel_lastverify"><?php echo scrub_out($libitem->f_update); ?></td>
+<td class="cel_lastadd"><?php echo scrub_out($libitem->f_add); ?></td>
+<td class="cel_lastclean"><?php echo scrub_out($libitem->f_clean); ?></td>
 <td class="cel_action cel_action_text">
-    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Add'); ?></a>
-    | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Verify'); ?></a>
-        | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Clean'); ?></a>
-    | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Update'); ?></a>
-    | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Gather Art'); ?></a>
-    | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>"><?php echo T_('Delete'); ?></a>
-<?php if (AmpConfig::get('catalog_disable')) { ?>
-    | <span id="<?php echo($button_flip_state_id); ?>">
-        <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $icon, T_(ucfirst($icon)),'flip_state_' . $catalog->id); ?>
-      </span>
+<?php if (!$libitem->isReady()) { ?>
+    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $libitem->id; ?>"><b><?php echo T_('Make it ready ...'); ?></b></a><br />
 <?php } ?>
+<form>
+    <select name="catalog_action_menu">
+<?php if ($libitem->isReady()) { ?>
+        <option value="add_to_catalog"><?php echo T_('Add'); ?></option>
+        <option value="update_catalog"><?php echo T_('Verify'); ?></option>
+        <option value="clean_catalog"><?php echo T_('Clean'); ?></option>
+        <option value="full_service"><?php echo T_('Update'); ?></option>
+        <option value="gather_media_art"><?php echo T_('Gather Art'); ?></option>
+<?php } ?>
+        <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>
+    </select>
+    <input type="button" onClick="NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $libitem->id; ?>');" value="<?php echo T_('Go'); ?>">
+    <?php if (AmpConfig::get('catalog_disable')) { ?>
+        <span id="<?php echo($button_flip_state_id); ?>">
+            <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, T_(ucfirst($icon)),'flip_state_' . $libitem->id); ?>
+        </span>
+    <?php } ?>
+</form>
 </td>

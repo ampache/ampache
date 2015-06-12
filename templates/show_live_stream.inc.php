@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -20,12 +20,14 @@
  *
  */
 ?>
+<?php if (Access::check('interface', '50')) { ?>
 <?php UI::show_box_top(T_('Manage Radio Stations'),'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?></a> <?php echo T_('Add Radio Station'); ?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Radio Station'); ?></a>
 </li>
 </ul>
 </div>
 <?php UI::show_box_bottom(); ?>
+<?php } ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -74,48 +74,32 @@ switch ($_REQUEST['action']) {
     case 'directplay':
 
         debug_event('stream.ajax.php', 'Play type {'.$_REQUEST['playtype'].'}', 5);
-        switch ($_REQUEST['playtype']) {
-            case 'album':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=album&album_id='.implode(',', $_REQUEST['album_id']);
-            break;
-            case 'artist':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=artist&artist_id='.$_REQUEST['artist_id'];
-            break;
-            case 'song':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=single_song&song_id='.$_REQUEST['song_id'];
-                if ($_REQUEST['custom_play_action']) {
-                    $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
+        $object_type = $_REQUEST['object_type'];
+        $object_id = $_REQUEST['object_id'];
+        if (is_array($object_id)) {
+            $object_id = implode(',', $object_id);
+        }
+
+        if (Core::is_playable_item($object_type)) {
+            $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
+            if ($_REQUEST['custom_play_action']) {
+                $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
+            }
+            if (!empty($_REQUEST['append'])) {
+                $_SESSION['iframe']['target'] .= '&append=true';
+            }
+            if (!empty($_REQUEST['playnext'])) {
+                $_SESSION['iframe']['target'] .= '&playnext=true';
+            }
+            if ($_REQUEST['subtitle']) {
+                $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
+            } else {
+                if (isset($_SESSION['iframe']['subtitle'])) {
+                    unset($_SESSION['iframe']['subtitle']);
                 }
-            break;
-            case 'video':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=single_video&video_id='.$_REQUEST['video_id'];
-            break;
-            case 'playlist':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=playlist&playlist_id='.$_REQUEST['playlist_id'];
-            break;
-            case 'smartplaylist':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=smartplaylist&playlist_id='.$_REQUEST['playlist_id'];
-            break;
-            case 'live_stream':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=live_stream&stream_id='.$_REQUEST['stream_id'];
-            break;
-            case 'album_preview':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=album_preview&mbid='.$_REQUEST['mbid'];
-            break;
-            case 'song_preview':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=song_preview&id='.$_REQUEST['id'];
-            break;
-            case 'channel':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=channel&id='.$_REQUEST['channel_id'];
-            break;
-            case 'broadcast':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=broadcast&id='.$_REQUEST['broadcast_id'];
-            break;
+            }
+            $results['rfc3514'] = '<script type="text/javascript">' . Core::get_reloadutil() . '(\''. AmpConfig::get('web_path') . '/util.php\');</script>';
         }
-        if (!empty($_REQUEST['append'])) {
-            $_SESSION['iframe']['target'] .= '&append=true';
-        }
-        $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''. AmpConfig::get('web_path') . '/util.php\');</script>';
     break;
     case 'basket':
         // Go ahead and see if we should clear the playlist here or not,
@@ -129,7 +113,7 @@ switch ($_REQUEST['action']) {
 
         // We need to set the basket up!
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
-        $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''. AmpConfig::get('web_path') . '/util.php\');</script>';
+        $results['rfc3514'] = '<script type="text/javascript">' . Core::get_reloadutil() . '(\''. AmpConfig::get('web_path') . '/util.php\');</script>';
     break;
     default:
         $results['rfc3514'] = '0x1';

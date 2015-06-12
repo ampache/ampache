@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -39,7 +39,10 @@ switch ($_REQUEST['action']) {
 
         // Multi-byte Character Mail
         if (function_exists('mb_language')) {
-            ini_set("mbstring.internal_encoding","UTF-8");
+            $ini_default_charset = version_compare(PHP_VERSION, '5.6', '<') ? 'mbstring.internal_encoding' : 'default_charset';
+            if (ini_get($ini_default_charset)) {
+                ini_set($ini_default_charset, "UTF-8");
+            }
             mb_language("uni");
         }
 

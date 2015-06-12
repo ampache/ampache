@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -111,7 +111,7 @@
         $browse->save_objects($object_ids);
         $browse->show_objects();
         $browse->store();
-        echo Ajax::observe('window','load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
+        echo Ajax::observe('window', 'load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
     }
 ?>
 </div>

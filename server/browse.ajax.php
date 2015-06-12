@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -37,13 +37,18 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
+debug_event('browse.ajax.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
+
 $browse = new Browse($browse_id);
 
 if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
     $browse->set_show_header($_REQUEST['show_header'] == 'true');
 }
 
-debug_event('browse.ajax.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
+$argument = null;
+if ($_REQUEST['argument']) {
+    $argument = scrub_in($_REQUEST['argument']);
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -72,8 +77,8 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $browse->show_objects(null, $argument);
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'set_sort':
         if ($_REQUEST['sort']) {
@@ -85,8 +90,8 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $browse->show_objects(null, $argument);
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'toggle_tag':
         $type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
@@ -104,14 +109,14 @@ switch ($_REQUEST['action']) {
                 $key = 'playlist_row_' . $playlist->id;
             break;
             case 'smartplaylist':
-                $playlist = new Search('song', $_REQUEST['id']);
+                $playlist = new Search($_REQUEST['id'], 'song');
                 if (!$playlist->has_access()) { exit; }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
                 if (!$GLOBALS['user']->has_access('75')) { exit; }
-                $radio = new Radio($_REQUEST['id']);
+                $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
             break;
@@ -124,17 +129,16 @@ switch ($_REQUEST['action']) {
     break;
     case 'page':
         $browse->set_start($_REQUEST['start']);
-
         ob_start();
-        $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $browse->show_objects(null, $argument);
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'show_art':
         Art::set_enabled();
 
         ob_start();
-        $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $browse->show_objects(null, $argument);
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'get_filters':
         ob_start();
@@ -183,9 +187,19 @@ switch ($_REQUEST['action']) {
                 }
             break;
         }
+
         ob_start();
-        $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $browse->show_objects(null, $argument);
+        $results[$browse->get_content_div()] = ob_get_clean();
+    break;
+    case 'get_share_links':
+        $object_type = $_REQUEST['object_type'];
+        $object_id = intval($_REQUEST['object_id']);
+
+        if (Core::is_library_item($object_type) && $object_id > 0) {
+            Share::display_ui_links($object_type, $object_id);
+            exit;
+        }
     break;
     default:
         $results['rfc3514'] = '0x1';

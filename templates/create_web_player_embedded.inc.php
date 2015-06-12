@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -27,38 +27,43 @@
 <script language="javascript" type="text/javascript">
 function PlayerFrame()
 {
-    var ff = parent.parent.document.getElementById('frame_footer');
-    var maindiv = parent.parent.document.getElementById('maindiv');
     var appendmedia = false;
-    if (ff.getAttribute('className') != 'frame_footer_visible') {
-        ff.setAttribute('className', 'frame_footer_visible');
-        ff.setAttribute('class', 'frame_footer_visible');
-
-        maindiv.style.height = (parent.parent.innerHeight - 105) + "px";
-    } else {
+    var playnext = false;
+    var $webplayer = $("#webplayer");
+    if ($webplayer.is(':visible')) {
 <?php
 if ($_REQUEST['append']) {
 ?>
         appendmedia = true;
+<?php
+} else if ($_REQUEST['playnext']) {
+?>
+        playnext = true;
 <?php
 }
 ?>
     }
 
 <?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
-    parent.parent.onbeforeunload = null;
+    document.onbeforeunload = null;
 <?php } ?>
-
     if (appendmedia) {
-        <?php echo WebPlayer::add_media_js($this, "ff.contentWindow."); ?>
+        <?php echo WebPlayer::add_media_js($this); ?>
+    } else if (playnext) {
+        <?php echo WebPlayer::play_next_js($this); ?>
     } else {
-        ff.setAttribute('src', '<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>');
-        window.location = '<?php echo return_referer() ?>';
+        $webplayer.show();
+        $.get('<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>', function (data) {
+            var $response = $(data);
+            $webplayer.empty().append($response);
+        },'html');
     }
     return false;
 }
+
+PlayerFrame();
 </script>
 </head>
-<body onLoad="javascript:PlayerFrame();">
+<body>
 </body>
 </html>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -29,7 +29,7 @@ if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
 
 if (!defined('NO_SESSION')) {
     /* If we are running a demo, quick while you still can! */
-    if (AmpConfig::get('demo_mode') || !Access::check('interface','25')) {
+    if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface','25')) {
         UI::access_denied();
         exit;
     }
@@ -76,26 +76,23 @@ switch ($_REQUEST['action']) {
             break;
         } // end switch on type
     break;
-    case 'single_song':
-        $media_ids[] = array(
-            'object_type' => 'song',
-            'object_id' => scrub_in($_REQUEST['song_id']),
-            'custom_play_action' => $_REQUEST['custom_play_action']
-        );
-    break;
-    case 'single_video':
-        $media_ids[] = array(
-            'object_type' => 'video',
-            'object_id' => scrub_in($_REQUEST['video_id'])
-        );
-    break;
-    case 'artist':
-        $artist = new Artist($_REQUEST['artist_id']);
-        $songs = $artist->get_songs();
-        foreach ($songs as $song) {
-            $media_ids[] = array(
-                'object_type' => 'song',
-                'object_id' => $song);
+    case 'play_item':
+        $object_type = $_REQUEST['object_type'];
+        $object_ids = explode(',', $_REQUEST['object_id']);
+
+        if (Core::is_playable_item($object_type)) {
+            foreach ($object_ids as $object_id) {
+                $item = new $object_type($object_id);
+                $media_ids = array_merge($media_ids, $item->get_medias());
+
+                if ($_REQUEST['custom_play_action']) {
+                    foreach ($media_ids as $media_id) {
+                        if (is_array($media_id)) {
+                            $media_id['custom_play_action'] = $_REQUEST['custom_play_action'];
+                        }
+                    }
+                }
+            }
         }
     break;
     case 'artist_random':
@@ -105,38 +102,6 @@ switch ($_REQUEST['action']) {
     case 'album_random':
         $album = new Album($_REQUEST['album_id']);
         $media_ids = $album->get_random_songs();
-    break;
-    case 'album':
-        debug_event('stream.php', 'Playing/Adding all songs of album(s) {'.$_REQUEST['album_id'].'}...', '5');
-        $albums_array = explode(',', $_REQUEST['album_id']);
-
-        foreach ($albums_array as $a) {
-            $album = new Album($a);
-            $songs = $album->get_songs();
-            foreach ($songs as $song) {
-                $media_ids[] = array(
-                    'object_type' => 'song',
-                    'object_id' => $song);
-            }
-        }
-    break;
-    case 'playlist':
-        $playlist = new Playlist($_REQUEST['playlist_id']);
-        $songs = $playlist->get_songs();
-        foreach ($songs as $song) {
-            $media_ids[] = array(
-                'object_type' => 'song',
-                'object_id' => $song);
-        }
-    break;
-    case 'smartplaylist':
-        $playlist = new Search('song', $_REQUEST['playlist_id']);
-        $items = $playlist->get_items();
-        foreach ($items as $item) {
-            $media_ids[] = array(
-                'object_type' => $item['object_type'],
-                'object_id' => $item['object_id']);
-        }
     break;
     case 'playlist_random':
         $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -159,47 +124,17 @@ switch ($_REQUEST['action']) {
         $urls = array($democratic->play_url());
     break;
     case 'download':
-        $media_ids[] = array(
-            'object_type' => 'song',
-            'object_id' => scrub_in($_REQUEST['song_id'])
-        );
-    break;
-    case 'live_stream':
-        $object = new Radio($_REQUEST['stream_id']);
-        if ($object->name) {
+        if (isset($_REQUEST['song_id'])) {
             $media_ids[] = array(
-                'object_type' => 'radio',
-                'object_id' => scrub_in($_REQUEST['stream_id'])
+                'object_type' => 'song',
+                'object_id' => scrub_in($_REQUEST['song_id'])
+            );
+        } else if (isset($_REQUEST['video_id'])) {
+            $media_ids[] = array(
+                'object_type' => 'video',
+                'object_id' => scrub_in($_REQUEST['video_id'])
             );
         }
-    break;
-    case 'album_preview':
-        $songs = Song_preview::get_song_previews($_REQUEST['mbid']);
-        foreach ($songs as $song) {
-            if (!empty($song->file)) {
-                $media_ids[] = array(
-                    'object_type' => 'song_preview',
-                    'object_id' => $song->id);
-            }
-        }
-    break;
-    case 'song_preview':
-        $media_ids[] = array(
-            'object_type' => 'song_preview',
-            'object_id' => scrub_in($_REQUEST['id'])
-        );
-    break;
-    case 'channel':
-        $media_ids[] = array(
-            'object_type' => 'channel',
-            'object_id' => scrub_in($_REQUEST['id'])
-        );
-    break;
-    case 'broadcast':
-        $media_ids[] = array(
-            'object_type' => 'broadcast',
-            'object_id' => scrub_in($_REQUEST['id'])
-        );
     break;
     default:
     break;
@@ -218,6 +153,7 @@ switch ($_REQUEST['action']) {
         }
     default:
         $stream_type = AmpConfig::get('play_type');
+
         if ($stream_type == 'stream') {
             $stream_type = AmpConfig::get('playlist_type');
         }
@@ -226,7 +162,20 @@ switch ($_REQUEST['action']) {
 
 debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
 
-if (count(media_ids)) {
+if (count($media_ids) || isset($urls)) {
+
+    if ($stream_type != 'democratic') {
+        if (!User::stream_control($media_ids)) {
+            debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, 3);
+            UI::access_denied();
+            exit;
+        }
+    }
+
+    if ($GLOBALS['user']->id > -1) {
+        Session::update_username(Stream::get_session(), $GLOBALS['user']->username);
+    }
+
     $playlist = new Stream_Playlist();
     $playlist->add($media_ids);
     if (isset($urls)) {

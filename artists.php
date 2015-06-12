@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -28,10 +28,42 @@ UI::show_header();
  * Display Switch
  */
 switch ($_REQUEST['action']) {
+    case 'delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $artist_id = scrub_in($_REQUEST['artist_id']);
+        show_confirmation(
+            T_('Artist Deletion'),
+            T_('Are you sure you want to permanently delete this artist?'),
+            AmpConfig::get('web_path')."/artists.php?action=confirm_delete&artist_id=" . $artist_id,
+            1,
+            'delete_artist'
+        );
+    break;
+    case 'confirm_delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $artist = new Artist($_REQUEST['artist_id']);
+        if (!Catalog::can_remove($artist)) {
+            debug_event('artist', 'Unauthorized to remove the artist `.' . $artist->id . '`.', 1);
+            UI::access_denied();
+            exit;
+        }
+
+        if ($artist->remove_from_disk()) {
+            show_confirmation(T_('Artist Deletion'), T_('Artist has been deleted.'), AmpConfig::get('web_path'));
+        } else {
+            show_confirmation(T_('Artist Deletion'), T_('Cannot delete this artist.'), AmpConfig::get('web_path'));
+        }
+    break;
     case 'show':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
-        $object_ids = $artist->get_albums($_REQUEST['catalog']);
+        if (AmpConfig::get('album_release_type')) {
+            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], false, true);
+        } else {
+            $object_ids = $artist->get_albums($_REQUEST['catalog']);
+        }
         $object_type = 'album';
         require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
         break;

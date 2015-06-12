@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,12 +22,13 @@
 
 class AmpacheLastfm {
 
-    public $name        ='Last.FM';
-    public $description    ='Records your played songs to your Last.FM Account';
-    public $url        ='';
-    public $version        ='000004';
-    public $min_ampache    ='360003';
-    public $max_ampache    ='999999';
+    public $name        = 'Last.FM';
+    public $categories  = 'scrobbling';
+    public $description = 'Records your played songs to your Last.FM Account';
+    public $url         = 'http://www.lastfm.com';
+    public $version     = '000004';
+    public $min_ampache = '360003';
+    public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to
     // fill them out
@@ -102,8 +103,10 @@ class AmpacheLastfm {
      * save_songplay
      * This takes care of queueing and then submitting the tracks.
      */
-    public function save_songplay($song) {
-
+    public function save_mediaplay($song) {
+        // Only support songs
+        if (strtolower(get_class($song)) != 'song') return false;
+        
         // Let's pull the last song submitted by this user
         $previous = Stats::get_last_song($this->user_id);
 

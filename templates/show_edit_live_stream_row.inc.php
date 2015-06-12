@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -21,26 +21,26 @@
  */
 ?>
 <div>
-    <form method="post" id="edit_live_stream_<?php echo $radio->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_live_stream_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($radio->name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Stream URL') ?></td>
-                <td><input type="text" name="url" value="<?php echo scrub_out($radio->url); ?>" /></td>
+                <td><input type="text" name="url" value="<?php echo scrub_out($libitem->url); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Homepage') ?></td>
-                <td><input type="text" name="site_url" value="<?php echo scrub_out($radio->site_url); ?>" /></td>
+                <td><input type="text" name="site_url" value="<?php echo scrub_out($libitem->site_url); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Codec') ?></td>
-                <td><input type="text" name="codec" value="<?php echo scrub_out($radio->codec); ?>" /></td>
+                <td><input type="text" name="codec" value="<?php echo scrub_out($libitem->codec); ?>" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $radio->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="live_stream_row" />
     </form>
 </div>

@@ -22,11 +22,13 @@ Recommended Version
 
 Currently, the recommended version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=master)
 
 Latest changes but unstable is [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
+[![Codacy Badge](https://www.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
+[![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/ee067d0e-3432-4062-a969-01b4ee037f48/mini.png)](https://insight.sensiolabs.com/projects/ee067d0e-3432-4062-a969-01b4ee037f48)
 
 Requirements
 ------------
@@ -38,7 +40,7 @@ receives the most testing:
     * nginx
     * IIS
 
-* PHP 5.3 or greater.
+* PHP 5.4 or greater.
 
 * PHP modules:
     * PDO
@@ -46,6 +48,8 @@ receives the most testing:
     * hash
     * session
     * json
+	* simplexml (This is not strictly necessary, but may result in a better experience.)
+    * curl (This is not strictly necessary, but may result in a better experience.)
 
 * MySQL 5.x
 
@@ -59,8 +63,8 @@ Upgrading
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
-its place and then copying the old config file into config/. All
-database updates will be handled by Ampache.
+its place and then copying the old config/ampache.cfg.php, /rest/.htaccess,
+and /play/.htaccess files if any. All database updates will be handled by Ampache.
 
 License
 -------
@@ -99,6 +103,15 @@ Ampache includes some external modules that carry their own licensing.
 * [MediaTable] (https://github.com/edenspiekermann/MediaTable): MIT
 * [Responsive Elements] (https://github.com/kumailht/responsive-elements): MIT
 * [Bootstrap] (http://getbootstrap.com): MIT
+* [jQuery Knob] (https://github.com/aterrien/jQuery-Knob): MIT
+* [jQuery File Upload] (https://github.com/blueimp/jQuery-File-Upload): MIT
+* [jsTree] (http://www.jstree.com): MIT
+* [php-tmdb-api] (https://github.com/wtfzdotnet/php-tmdb-api) : MIT
+* [TvDb] (https://github.com/Moinax/TvDb) : MIT
+* [jQuery DateTimePicker] (https://github.com/xdan/datetimepicker) : MIT
+* [pChart] (http://www.pchart.net) : GPL v3
+* [ZipStream-PHP] (https://github.com/maennchen/ZipStream-PHP) : [ZipStream-PHP license] (modules/zipstream/COPYING)
+* [SabreDAV] (https://github.com/fruux/sabre-dav) : New BSD
 
 
 Translations
@@ -109,19 +122,24 @@ following languages. If you are interested in updating an existing
 translation or adding a new one please see /locale/base/TRANSLATIONS
 for more instructions.
 
-* English	(en_US)
-* German	(de_DE)
-* Spanish	(es_ES)
-* Dutch		(nl_NL)
-* Norwegian	(nb_NO)
-* UK English	(en_GB)
-* Italian	(it_IT)
-* French	(fr_FR)
-* Swedish	(sv_SE)
-* Japanese	(ja_JP) 
-* Catalan	(ca_ES)
-* Russian	(ru_RU)
-* Czech (cs_CZ)
+* English       (en_US)
+* Arabic        (ar_SA)
+* Catalan       (ca_ES)
+* Catalan       (ca_ES)
+* Czech         (cs_CZ)
+* Dutch         (nl_NL)
+* French        (fr_FR)
+* German        (de_DE)
+* Greek         (el_GR)
+* Italian       (it_IT) 
+* Japanese      (ja_JP)
+* Norwegian     (nb_NO)
+* Persian       (fa_IR)
+* Polish        (pl_PL)
+* Russian       (ru_RU)
+* Spanish       (es_ES)
+* Swedish       (sv_SE)
+* UK English    (en_GB)
 
 Credits
 -------
@@ -137,6 +155,7 @@ more features, encounter bugs, etc.
 
 * [Public Repository](http://github.com/ampache)
 * IRC: chat.freenode.net #ampache
+* [Forum](https://groups.google.com/forum/#!forum/ampache)
 * [Issue Tracker](https://github.com/ampache/ampache/issues)
 * [Documentation](https://github.com/ampache/ampache/wiki)
 

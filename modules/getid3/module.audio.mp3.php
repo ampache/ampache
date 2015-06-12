@@ -437,7 +437,6 @@ class getid3_mp3 extends getid3_handler
 		// and $cc... is the audio data
 
 		$head4 = substr($headerstring, 0, 4);
-
 		static $MPEGaudioHeaderDecodeCache = array();
 		if (isset($MPEGaudioHeaderDecodeCache[$head4])) {
 			$MPEGheaderRawArray = $MPEGaudioHeaderDecodeCache[$head4];
@@ -648,9 +647,20 @@ class getid3_mp3 extends getid3_handler
 				}
 
 				//if (($thisfile_mpeg_audio['bitrate'] == 'free') && !empty($thisfile_mpeg_audio['VBR_frames']) && !empty($thisfile_mpeg_audio['VBR_bytes'])) {
-				if (!empty($thisfile_mpeg_audio['VBR_frames']) && !empty($thisfile_mpeg_audio['VBR_bytes'])) {
+				//if (!empty($thisfile_mpeg_audio['VBR_frames']) && !empty($thisfile_mpeg_audio['VBR_bytes'])) {
+				if (!empty($thisfile_mpeg_audio['VBR_frames'])) {
+					$used_filesize  = 0;
+					if (!empty($thisfile_mpeg_audio['VBR_bytes'])) {
+						$used_filesize = $thisfile_mpeg_audio['VBR_bytes'];
+					} elseif (!empty($info['filesize'])) {
+						$used_filesize  = $info['filesize'];
+						$used_filesize -= intval(@$info['id3v2']['headerlength']);
+						$used_filesize -= (isset($info['id3v1']) ? 128 : 0);
+						$used_filesize -= (isset($info['tag_offset_end']) ? $info['tag_offset_end'] - $info['tag_offset_start'] : 0);
+						$info['warning'][] = 'MP3.Xing header missing VBR_bytes, assuming MPEG audio portion of file is '.number_format($used_filesize).' bytes';
+					}
 
-					$framelengthfloat = $thisfile_mpeg_audio['VBR_bytes'] / $thisfile_mpeg_audio['VBR_frames'];
+					$framelengthfloat = $used_filesize / $thisfile_mpeg_audio['VBR_frames'];
 
 					if ($thisfile_mpeg_audio['layer'] == '1') {
 						// BitRate = (((FrameLengthInBytes / 4) - Padding) * SampleRate) / 12
@@ -948,7 +958,7 @@ class getid3_mp3 extends getid3_handler
 					}
 					$thisfile_mpeg_audio['VBR_bitrate'] = (isset($thisfile_mpeg_audio['VBR_bytes']) ? (($thisfile_mpeg_audio['VBR_bytes'] / $thisfile_mpeg_audio['VBR_frames']) * 8) * ($info['audio']['sample_rate'] / $bytes_per_frame) : 0);
 					if ($thisfile_mpeg_audio['VBR_bitrate'] > 0) {
-						$info['audio']['bitrate']         = $thisfile_mpeg_audio['VBR_bitrate'];
+						$info['audio']['bitrate']       = $thisfile_mpeg_audio['VBR_bitrate'];
 						$thisfile_mpeg_audio['bitrate'] = $thisfile_mpeg_audio['VBR_bitrate']; // to avoid confusion
 					}
 					break;

@@ -4,35 +4,41 @@
 ;###################
 
 ; This value is used to detect quickly
-; if this config file is up to date 
+; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 16
+config_version = 29
 
 ;###################
 ; Path Vars        #
 ;###################
 
-; The http host of your server.
+; The public http host of your server.
 ; If not set, retrieved automatically from client request.
 ; This setting is required for WebSocket server
 ; DEFAULT: ""
 ;http_host = "localhost"
 
-; The path to your ampache install
-; Do not put a trailing / on this path 
+; The public path to your ampache install
+; Do not put a trailing / on this path
 ; For example if your site is located at http://localhost
 ; than you do not need to enter anything for the web_path
-; if it is located at http://localhost/music you need to 
+; if it is located at http://localhost/music you need to
 ; set web_path to /music
 ; DEFAULT: ""
 ;web_path 	= ""
+
+; The local http url of your server.
+; If not set, retrieved automatically from server information.
+; DEFAULT: ""
+;local_web_path = "http://localhost/ampache"
 
 ;##############################
 ; Session and Login Variables #
 ;##############################
 
 ; Hostname of your database
+; For socket authentication, set the path to socket file (e.g. /var/run/mysqld/mysqld.sock)
 ; DEFAULT: localhost
 database_hostname = localhost
 
@@ -50,27 +56,31 @@ database_username = username
 
 ; Password for your ampache database, this can not be blank
 ; this is a 'forced' security precaution, the default value
-; will not work
+; will not work (except if using socket authentication)
 ; DEFAULT: ""
 database_password = password
 
+; Cryptographic secret
+; This MUST BE changed with your own secret key. Ampache-specific, just pick any random string you want.
+secret_key = "abcdefghijklmnoprqstuvwyz0123456"
+
 ; Length that a session will last expressed in seconds. Default is
-; one hour. 
+; one hour.
 ; DEFAULT: 3600
 session_length = 3600
 
 ; Length that the session for a single streaming instance will last
-; the default is two hours. With some clients, and long songs this can 
+; the default is two hours. With some clients, and long songs this can
 ; cause playback to stop, increase this value if you experience that
 ; DEFAULT: 7200
 stream_length = 7200
 
-; This length defines how long a 'remember me' session and cookie will 
-; last, the default is 7200, same as length. It is up to the administrator
-; of the box to increase this, for reference 86400 = 1 day 
-; 604800 = 1 week and 2419200 = 1 month
-; DEFAULT: 86400
-remember_length = 86400
+; This length defines how long a 'remember me' session and cookie will
+; last, the default is 86400, same as length. It is up to the administrator
+; of the box to increase this, for reference 86400 = 1 day,
+; 604800 = 1 week, and 2419200 = 1 month
+; DEFAULT: 604800
+remember_length = 604800
 
 ; Name of the Session/Cookie that will sent to the browser
 ; default should be fine
@@ -78,16 +88,16 @@ remember_length = 86400
 session_name = ampache
 
 ; Lifetime of the Cookie, 0 == Forever (until browser close) , otherwise in terms of seconds
-; If you want cookies to last past a browser close set this to a value in seconds. 
+; If you want cookies to last past a browser close set this to a value in seconds.
 ; DEFAULT: 0
 session_cookielife = 0
 
 ; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
-; running a secure site (HTTPS). 
+; running a secure site (HTTPS).
 ; DEFAULT: 0
 session_cookiesecure       = 0
 
-; Auth Methods 
+; Auth Methods
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
@@ -108,7 +118,7 @@ auth_methods = "mysql"
 ;auth_password_save = "false"
 
 ; Logout redirection target
-; Defaults to our own login.php, but we can override it here if, for instance, 
+; Defaults to our own login.php, but we can override it here if, for instance,
 ; we want to redirect to an SSO provider instead.
 ; logout_redirect = "http://sso.example.com/logout"
 
@@ -120,15 +130,15 @@ auth_methods = "mysql"
 ; This defines which file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here separating them
 ; with a |
-; DEFAULT: mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv
-catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv"
+; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv
+catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv"
 
 ; Video Pattern
 ; This defines which video file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here seperating them with
 ; a | but ampache may not be able to parse them
-; DEAFULT: avi|mpg|flv|m4v|webm
-catalog_video_pattern = "avi|mpg|flv|m4v|webm"
+; DEAFULT: avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts
+catalog_video_pattern = "avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts"
 
 ; Playlist Pattern
 ; This defines which playlist types Ampache will attempt to catalog
@@ -149,11 +159,11 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: false
 ;catalog_disable = "false"
 
-; Use Access List 
+; Use Access List
 ; Toggle this on if you want ampache to pay attention to the access list
-; and only allow streaming/downloading/api-rpc from known hosts api-rpc 
+; and only allow streaming/downloading/api-rpc from known hosts api-rpc
 ; will not work without this on.
-; NOTE: Default Behavior is DENY FROM ALL 
+; NOTE: Default Behavior is DENY FROM ALL
 ; DEFAULT: true
 access_control	= "true"
 
@@ -161,7 +171,7 @@ access_control	= "true"
 ; If this is set to true ampache will make sure that the URL passed when
 ; attempting to retrieve a song contains a valid Session ID This prevents
 ; others from guessing URL's. This setting is ignored if you have use_auth
-; disabled. 
+; disabled.
 ; DEFAULT: true
 require_session = "true"
 
@@ -170,7 +180,7 @@ require_session = "true"
 ; is passed even on hosts defined in the Local Network ACL. This setting
 ; has no effect if access_control is not enabled
 ; DEFAULT: true
-require_localnet_session = "true" 
+require_localnet_session = "true"
 
 ; Multiple Logins
 ; Added by Vlet 07/25/07
@@ -188,62 +198,63 @@ require_localnet_session = "true"
 
 ; Track User IPs
 ; If this is enabled Ampache will log the IP of every completed login
-; it will store user,ip,time at one row per login. The results are 
+; it will store user,ip,time at one row per login. The results are
 ; displayed in Admin --> Users
 ; DEFAULT: false
 ;track_user_ip = "false"
 
 ; User IP Cardinality
 ; This defines how many days worth of IP history Ampache will track
-; As it is one row per login on high volume sites you will want to 
-; clear it every now and then. 
+; As it is one row per login on high volume sites you will want to
+; clear it every now and then.
 ; DEFAULT: 42 days
 ;user_ip_cardinality = "42"
 
 ; Allow Zip Download
 ; This setting allows/disallows using zlib to zip up an entire
 ; playlist/album for download. Even if this is turned on you will
-; still need to enabled downloading for the specific user you 
+; still need to enabled downloading for the specific user you
 ; want to be able to use this function
 ; DEFAULT: false
 ;allow_zip_download = "false"
 
-; File Zip Download
-; This settings tells Ampache to attempt to save the zip file
-; to the filesystem instead of creating it in memory, you must
-; also set tmp_dir_path in order for this to work
-; DEFAULT: false
-;file_zip_download = "false" 
+Allow Zip Types
+; This setting allows/disallows zip download of specific object types
+; If empty, all supported object types can be zipped.
+; Otherwise, only the given object list can be zipped.
+; POSSIBLE VALUES: artist, album, playlist, search, tmp_playlist
+; DEFAULT: none
+;allow_zip_types = "album"
 
 ; File Zip Comment
 ; This is an optional configuration option that adds a comment
 ; to your zip files, this only applies if you've got allow_zip_downloads
 ; DEFAULT: Ampache - Zip Batch Download
-;file_zip_comment = "Ampache - Zip Batch Download" 
+;file_zip_comment = "Ampache - Zip Batch Download"
 
 ; Waveform
 ; This settings tells Ampache to attempt to generate a waveform
 ; for each song. It requires transcode and encode_args_wav settings.
 ; You must also set tmp_dir_path in order for this to work
 ; DEFAULT: false
-;waveform = "false" 
+;waveform = "false"
 
 ; Waveform color
 ; The waveform color.
 ; DEFAULT: #FF0000
-;waveform_color = "#FF0000" 
+;waveform_color = "#FF0000"
 
 ; Temporary Directory Path
-; If File Zip Download or Waveform is enabled this must be set to tell
+; If Waveform is enabled this must be set to tell
 ; Ampache which directory to save the temporary file to. Do not put a
 ; trailing slash or this will not work.
 ; DEFAULT: false
 ;tmp_dir_path = "false"
 
 ; This setting throttles a persons downloading to the specified
-; bytes per second. This is not a 100% guaranteed function, and 
+; bytes per second. This is not a 100% guaranteed function, and
 ; you should really use a server based rate limiter if you want
-; to do this correctly. 
+; to do this correctly.
 ; DEFAULT: off
 ; VALUES: any whole number (in bytes per second)
 ;throttle_download = 10
@@ -261,12 +272,51 @@ getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpe
 ; DEFAULT: false
 ;getid3_detect_id3v2_encoding = "false"
 
+; This determines if file metadata should be write back to files
+; as id3 metadata when updated.
+; DEFAULT: false
+;write_id3 = "false"
+
+; This determines if album art should be write back to files
+; as id3 metadata when updated.
+; DEFAULT: false
+;write_id3_art = "false"
+
+; This determines if catalog manager users can delete medias from disk.
+; DEFAULT: false
+;delete_from_disk = "false"
+
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked)
 ; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): MusicBrainz, plus any others you've installed.
+; POSSIBLE VALUES (plugins): MusicBrainz,TheAudioDb, plus any others you've installed.
 ; DEFAULT: getID3 filename
 metadata_order = "getID3,filename"
+
+; This determines the order in which metadata sources are used (and in the
+; case of plugins, checked) for video files
+; POSSIBLE VALUES (builtins): filename and getID3
+; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
+; DEFAULT: filename getID3
+metadata_order_video = "filename,getID3"
+
+; This determines if extended metadata grabbed from external services should be deferred.
+; If enabled, extended metadata is retrieved when browsing the library item.
+; If disabled, extended metadata is retrieved at catalog update.
+; Today, only Artist information (summary, place formed, ...) can be deferred.
+; DEFAULT: true
+deferred_ext_metadata = "true"
+
+; Some taggers use delimiters other than \0 for fields
+; This list specifies possible delimiters additional to \0
+; This setting takes a regex pattern.
+; DEFAULT: // / \ | , ;
+additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
+
+; This determines if a preview image should be retrieved from video files
+; It requires encode_get_image transcode settings.
+; DEFAULT: false
+;generate_video_preview = "true"
 
 ; Un comment if don't want ampache to follow symlinks
 ; DEFAULT: false
@@ -284,10 +334,10 @@ use_auth	= "true"
 ; If use_auth is set to false then this option is used
 ; to determine the permission level of the 'default' users
 ; default is administrator. This setting only takes affect
-; if use_auth if false
+; if use_auth is false
 ; POSSIBLE VALUES: user, admin, manager, guest
-; DEFAULT: admin
-default_auth_level = "admin"
+; DEFAULT: guest
+default_auth_level = "guest"
 
 ; 5 Star Ratings
 ; This allows ratings for almost any object in ampache
@@ -310,14 +360,14 @@ directplay = "true"
 ; Sociable
 ; This turns on / off all of the "social" features of ampache
 ; default is on, but if you don't care and just want music
-; turn this off to disable all social features. 
+; turn this off to disable all social features.
 ; DEFAULT: true
 sociable = "true"
 
-; Notify
-; This turns on / off all Ampache notifications
-; DEFAULT: true
-notify = "true"
+; License
+; This turns on / off all licensing features on Ampache
+; DEFAULT: false
+;licensing = "false"
 
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog
@@ -332,7 +382,7 @@ notify = "true"
 ; requirments on larger catalogs. If you have the memory this can create
 ; a 2-3x speed improvement.
 ; DEFAULT: false
-;memory_cache = false
+;memory_cache = "false"
 
 ; Memory Limit
 ; This defines the "Min" memory limit for PHP if your php.ini
@@ -347,7 +397,43 @@ notify = "true"
 ; Especially useful if you have a front and a back image in a folder
 ; comment out if ampache should search for any jpg,gif or png
 ; DEFAULT: folder.jpg
-;album_art_preferred_filename = "folder.jpg" 
+;album_art_preferred_filename = "folder.jpg"
+
+; Album Art Store on Disk
+; This defines if arts should be stored on disk instead of database.
+; DEFAULT: false
+;album_art_store_disk = "false"
+
+; Local Metadata Directory
+; This define a local metadata directory with write access where to store
+; heavy data if enabled (album arts, ...)
+; DEFAULT: none
+;local_metadata_dir = "/metadata"
+
+; Maximal upload size
+; Specify the maximal allowed upload size for images, in bytes.
+; DEFAULT: 1048576
+;max_upload_size = 1048576
+
+; Album Art Minimum Width
+; Specify the minimum width for arts (in pixel).
+; DEFAULT: none
+;album_art_min_width = 100
+
+; Album Art Maximum Width
+; Specify the maximum width for arts (in pixel).
+; DEFAULT: none
+;album_art_max_width = 1024
+
+; Album Art Minimum Height
+; Specify the minimum height for arts (in pixel).
+; DEFAULT: none
+;album_art_min_height = 100
+
+; Album Art Maximum Height
+; Specify the maximum height for arts (in pixel).
+; DEFAULT: none
+;album_art_max_height = 1024
 
 ; Resize Images * Requires PHP-GD *
 ; Set this to true if you want Ampache to resize the Album
@@ -357,24 +443,22 @@ notify = "true"
 ; DEFAULT: false
 ;resize_images = "false"
 
+; Statistical Graphs * Requires PHP-GD *
+; Set this to true if you want Ampache to generate statistical
+; graphs on usages / users.
+; DEFAULT: false
+;statistical_graphs = "false"
+
 ; Art Gather Order
 ; Simply arrange the following in the order you would like
 ; ampache to search. If you want to disable one of the search
 ; methods simply leave it out. DB should be left as the first
 ; method unless you want it to overwrite what's already in the
 ; database
-; POSSIBLE VALUES: db tags folder amazon lastfm musicbrainz google
+; POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
+; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
 ; DEFAULT: db,tags,folder,musicbrainz,lastfm,google
 art_order = "db,tags,folder,musicbrainz,lastfm,google"
-
-; Amazon Developer Key
-; These are needed in order to actually use the amazon album art
-; Your public key is your 'Access Key ID'
-; Your private key is your 'Secret Access Key'
-; DEFAULT: false
-;amazon_developer_public_key = ""
-;amazon_developer_private_key = ""
-;amazon_developer_associate_tag = ""
 
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums
@@ -390,14 +474,14 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 
 ; Last.FM API Key
 ; Set this to your Last.FM api key to actually use Last.FM for
-; recommendations.
-;lastfm_api_key = ""
+; recommendations and metadata.
+lastfm_api_key = "d5df942424c71b754e54ce1832505ae2"
 
 ; Wanted
 ; Set this to true to enable display missing albums and the
 ; possibility for users to mark it as wanted.
 ; DEFAULT: false
-;wanted = "false"
+wanted = "true"
 
 ; Wanted types
 ; Set the allowed types of wanted releases (album,compilation,single,ep,live,remix,promotion,official)
@@ -413,42 +497,33 @@ wanted_types = "album,official"
 ; EchoNest provides several music services. Currently used for missing song 30 seconds preview.
 ;echonest_api_key = ""
 
+; Labels
+; Use labels to browse artists per label membership.
+; DEFAULT: false
+;label = "false"
+
 ; Broadcasts
 ; Allow users to broadcast music.
 ; This feature requires advanced server configuration, please take a look on the wiki for more information.
 ; DEFAULT: false
 ;broadcast = "false"
 
+; Channels
+; Set this to true to enable channels and the
+; possibility for users to create channels from playlists
+; DEFAULT: true
+channel = "true"
+
+; Live Streams
+; Set this to true to enable live streams (radio) and the
+; possibility for users to add new live streams.
+; DEFAULT: true
+live_stream = "true"
+
 ; Web Socket address
 ; Declare the web socket server address
 ; DEFAULT: determined automatically
 ;websocket_address = "ws://localhost:8100"
-
-; Amazon base urls
-; An array of Amazon sites to search.
-; NOTE: This will search each of these sites in turn so don't expect it
-; to be lightning fast!
-; It is strongly recommended that only one of these is selected at any
-; one time
-; POSSIBLE VALUES: 
-;	http://webservices.amazon.com
-;	http://webservices.amazon.co.uk
-;	http://webservices.amazon.de
-;	http://webservices.amazon.co.jp
-;	http://webservices.amazon.fr
-;	http://webservices.amazon.ca
-; Default: http://webservices.amazon.com
-amazon_base_urls = "http://webservices.amazon.com"
-
-; max_amazon_results_pages
-; The maximum number of results pages to pull from EACH amazon site
-; NOTE: The art search pages through the results returned by your search
-; up to this number of pages. As with the base_urls above, this is going
-; to take more time, the more pages you ask it to process.
-; Of course a good search will return only a few matches anyway.
-; It is strongly recommended that you do _not_ change this value
-; DEFAULT: 1 page (10 items)
-max_amazon_results_pages = 1
 
 ; Debug
 ; If this is enabled Ampache will write debugging information to the log file
@@ -458,7 +533,7 @@ max_amazon_results_pages = 1
 ; Debug Level
 ; This should always be set in conjunction with the
 ; debug option, it defines how prolific you want the
-; debugging in ampache to be. values are 1-5. 
+; debugging in ampache to be. values are 1-5.
 ; 1 == Errors only
 ; 2 == Error + Failures (login attempts etc.)
 ; 3 == ??
@@ -487,7 +562,7 @@ log_filename = "%name.%Y%m%d.log"
 ; DEFAULT: UTF-8
 site_charset = UTF-8
 
-; Locale Charset 
+; Locale Charset
 ; Local charset (mainly for file operations) if different
 ; from site_charset.
 ; This is disabled by default, enable only if needed
@@ -496,11 +571,18 @@ site_charset = UTF-8
 ;lc_charset = "ISO8859-1"
 
 ; Refresh Limit
-; This defines the default refresh limit in seconds for 
+; This defines the default refresh limit in seconds for
 ; pages with dynamic content, such as now playing
 ; DEFAULT: 60
 ; Possible Values: Int > 5
 refresh_limit = "60"
+
+; Footer Statistics
+; This defines whether statistics (Queries, Cache Hits, Load Time)
+; are shown in the page footer.
+; DEFAULT: true
+; Possible values: true, false
+show_footer_statistics = "true"
 
 ;#########################################################
 ; Custom actions (optional)                              #
@@ -528,10 +610,10 @@ refresh_limit = "60"
 ;#########################################################
 
 ; LDAP filter string to use (required)
-; For OpenLDAP use "uid" 
+; For OpenLDAP use "uid"
 ; For Microsoft Active Directory (MAD) use "sAMAccountName"
 ; DEFAULT: null
-; ldap_filter = "sAMAccountName"
+;ldap_filter = "(sAMAccountName=%v)"
 
 ; LDAP objectclass (required)
 ; OpanLDAP objectclass = "*"
@@ -608,15 +690,15 @@ refresh_limit = "60"
 ; DEFAULT: false
 ;admin_enable_required = "false"
 
-; This setting will allow all registrants/ldap/http users 
-; to be auto-approved as a user. By default, they will be 
+; This setting will allow all registrants/ldap/http users
+; to be auto-approved as a user. By default, they will be
 ; added as a guest and must be promoted by the admin.
 ; POSSIBLE VALUES: guest, user, admin
 ; DEFAULT: guest
 ;auto_user = "guest"
 
 ; This will display the user agreement when registering
-; For agreement text, edit templates/user_agreement.php
+; For agreement text, edit config/registration_agreement.php
 ; User will need to accept the agreement before they can register
 ; DEFAULT: false
 ;user_agreement = "false"
@@ -624,6 +706,24 @@ refresh_limit = "60"
 ; This disable email confirmation when registering.
 ; DEFAULT: false
 ;user_no_email_confirm = "false"
+
+; This will display the cookie disclaimer (EU Cookie Law)
+; DEFAULT: false
+;cookie_disclaimer = "false"
+
+; The fields that will be shown on Registration page
+; If a user wants to register.
+; Username and email fields are forced.
+; POSSIBLE VALUES: fullname,website,state,city
+; DEFAULT: "fullname,website"
+registration_display_fields = "fullname,website"
+
+; The fields that will be mandatory
+; This controls which fields are mandatory for registration.
+; Username and email fields are forced mandatory.
+; POSSIBLE VALUES: fullname,website,state,city
+; DEFAULT: fullname
+registration_mandatory_fields = "fullname"
 
 ;########################################################
 ; These options control the dynamic downsampling based  #
@@ -646,7 +746,7 @@ refresh_limit = "60"
 
 ;######################################################
 ; These are commands used to transcode non-streaming
-; formats to the target file type for streaming. 
+; formats to the target file type for streaming.
 ; This can be useful in re-encoding file types that don't stream
 ; very well, or if your player doesn't support some file types.
 ;
@@ -662,25 +762,64 @@ refresh_limit = "60"
 ; (e.g. if you store everything in FLAC, but don't want to ever stream that.)
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
+;;; Audio
 ;transcode_m4a      = allowed
 ;transcode_flac     = required
 ;transcode_mpc      = required
 ;transcode_ogg      = required
+;transcode_oga      = required
 ;transcode_wav      = required
+;transcode_wma      = required
+;transcode_aif      = required
+;transcode_aiff     = required
+;transcode_ape     = required
+;transcode_shn     = required
 ;transcode_mp3      = allowed
+;;; Video
+;transcode_avi      = allowed
+;transcode_mkv      = allowed
+;transcode_mpg      = allowed
+;transcode_mpeg     = allowed
+;transcode_m4v      = allowed
+;transcode_mp4      = allowed
+;transcode_mov      = allowed
+;transcode_wmv      = allowed
+;transcode_ogv      = allowed
+;transcode_divx     = allowed
+;transcode_m2ts     = allowed
+;transcode_webm     = allowed
 
-; Default output format
+; Default audio output format
 ; DEFAULT: none
 ;encode_target = mp3
+
+; Default video output format
+; DEFAULT: none
+;encode_video_target = webm
 
 ; Override the default output format on a per-type basis
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
 ;encode_target_flac = ogg
 
+; Override the default TYPE transcoding behavior on a per-player basis
+; transcode_player_PLAYER_TYPE = TYPE
+; Valid PLAYER is: webplayer, api
+; DEFAULT: none
+;transcode_player_webplayer_m4a = required
+;transcode_player_webplayer_flac = required
+;transcode_player_webplayer_mpc = required
+
+; Override the default output format on a per-player basis
+; encode_player_PLAYER_target = TYPE
+; Valid PLAYER is: webplayer, api
+; DEFAULT: none
+;encode_player_webplayer_target = mp3
+;encode_player_api_target = mp3
+
 ; Allow clients to override transcode settings (output type, bitrate, codec ...)
 ; DEFAULT: true
-transcode_player_customize = true
+transcode_player_customize = "true"
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename
@@ -694,13 +833,16 @@ transcode_player_customize = true
 ; equivalent to the old default, but if you find that necessary you should be
 ; clever enough to figure out how on your own.
 ; DEFAULT: none
-;transcode_cmd = "ffmpeg -i %FILE%"
-;transcode_cmd = "avconv -i %FILE%"
-;transcode_cmd = "/usr/bin/neatokeen %FILE%"
+;transcode_cmd = "ffmpeg"
+;transcode_cmd = "avconv"
+;transcode_cmd = "/usr/bin/neatokeen"
+
+; Transcode input file argument
+transcode_input = "-i %FILE%"
 
 ; Specific transcode commands
 ; It shouldn't be necessary in most cases, but you can override the transcode
-; command for specific source formats.  It still needs to accept the 
+; command for specific source formats.  It still needs to accept the
 ; encoding arguments, so the easiest approach is to use your normal command as
 ; a clearing-house.
 ; transcode_cmd_TYPE = TRANSCODE_CMD
@@ -708,12 +850,28 @@ transcode_player_customize = true
 
 ; Encoding arguments
 ; For each output format, you should provide the necessary arguments for
-; your transcode_cmd. 
+; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-;encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
-;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
-;encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
-;encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
+encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
+encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
+encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
+encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+
+; Encoding arguments to retrieve an image from a single frame
+encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"
+
+; Encoding argument to encrust subtitle
+encode_srt = "-vf \"subtitles='%SRTFILE%'\""
+
+; Encode segment frame argument
+encode_ss_frame = "-ss %TIME%"
+
+; Encode segment duration argument
+encode_ss_duration = "-t %DURATION%"
+
 
 ;######################################################
 ; these options allow you to configure your rss-feed
@@ -721,7 +879,7 @@ transcode_player_customize = true
 ; song is the information in the feed. can be multiple items.
 ; use_rss = false (values true | false)
 ;DEFAULT: use_rss = false
-;use_rss = false
+;use_rss = "false"
 ;#####################################################
 
 ;#############################
@@ -737,7 +895,7 @@ transcode_player_customize = true
 
 ; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
 ;Default: false
-;force_ssl = true
+;force_ssl = "true"
 
 ;#############################
 ;   Mail Settings            #
@@ -749,7 +907,7 @@ transcode_player_customize = true
 ;mail_type = "php"
 
 ;Mail domain.
-;DEFAULT: example.com 
+;DEFAULT: example.com
 ;mail_domain = "example.com"
 
 ;This will be combined with mail_domain and used as the source address for
@@ -796,7 +954,7 @@ transcode_player_customize = true
 
 ;Enable SMTP authentication
 ;DEFAULT: false
-;mail_auth = true
+;mail_auth = "true"
 
 ;SMTP Username
 ;your mail auth username.

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -49,12 +49,23 @@ switch ($_REQUEST['action']) {
     case 'song':
     case 'channel':
     case 'broadcast':
+    case 'tvshow':
+    case 'tvshow_season':
+    case 'tvshow_episode':
+    case 'movie':
+    case 'clip':
+    case 'personal_video':
+    case 'label':
+    case 'pvmsg':
         $browse->set_type($_REQUEST['action']);
         $browse->set_simple_browse(true);
     break;
 } // end switch
 
 UI::show_header();
+
+// Browser is able to save page on current session. Only applied to main menus.
+$browse->set_update_session(true);
 
 switch ($_REQUEST['action']) {
     case 'file':
@@ -65,20 +76,22 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();  // Update current index depending on what is in session.
         $browse->show_objects();
     break;
     case 'tag':
         //FIXME: This whole thing is ugly, even though it works.
         $browse->set_sort('count','ASC');
         // This one's a doozy
+        $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'song';
         $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags(/*AmpConfig::get('offset_limit')*/));   // Should add a pager?
+        $browse->save_objects(Tag::get_tags($browse_type, 0, 'name'));   // Should add a pager?
         $object_ids = $browse->get_saved();
         $keys = array_keys($object_ids);
         Tag::build_cache($keys);
         UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
         $browse2 = new Browse();
-        $browse2->set_type('song');
+        $browse2->set_type($browse_type);
         $browse2->store();
         require_once AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
         UI::show_box_bottom();
@@ -91,6 +104,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'song':
@@ -99,6 +113,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('title','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'live_stream':
@@ -106,6 +121,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'catalog':
@@ -114,19 +130,23 @@ switch ($_REQUEST['action']) {
     case 'playlist':
         $browse->set_sort('type','ASC');
         $browse->set_filter('playlist_type','1');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'smartplaylist':
         $browse->set_sort('type', 'ASC');
         $browse->set_filter('playlist_type','1');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'channel':
         $browse->set_sort('id', 'ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'broadcast':
         $browse->set_sort('id', 'ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'video':
@@ -134,8 +154,54 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('title','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
+    case 'tvshow':
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();
+        $browse->show_objects();
+    break;
+    case 'tvshow_season':
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_sort('season_number','ASC');
+        $browse->update_browse_from_session();
+        $browse->show_objects();
+    break;
+    case 'tvshow_episode':
+    case 'movie':
+    case 'clip':
+    case 'personal_video':
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->update_browse_from_session();
+        $browse->show_objects();
+    break;
+    case 'label':
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();
+        $browse->show_objects();
+        break;
+    case 'pvmsg':
+        $browse->set_sort('creation_date','DESC');
+        $folder = $_REQUEST['folder'];
+        if ($folder === "sent") {
+            $browse->set_filter('user', $GLOBALS['user']->id);
+        } else {
+            $browse->set_filter('to_user', $GLOBALS['user']->id);
+        }
+        $browse->update_browse_from_session();
+        $browse->show_objects();
+        break;
     default:
 
     break;

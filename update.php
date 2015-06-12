@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -20,22 +20,34 @@
  *
  */
 
-// We need this stuff
-define('NO_SESSION', 1);
-define('OUTDATED_DATABASE_OK', 1);
+if (!isset($_REQUEST['type']) || $_REQUEST['type'] != 'sources') {
+    // We need this stuff
+    define('NO_SESSION', 1);
+    define('OUTDATED_DATABASE_OK', 1);
+}
 require_once 'lib/init.php';
 
 // Get the version and format it
 $version = Update::get_version();
 
-if ($_REQUEST['action'] == 'update') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+    if ($_REQUEST['type'] == 'sources') {
+        if (!Access::check('interface', '100')) {
+            UI::access_denied();
+            exit;
+        }
 
-    /* Run the Update Mojo Here */
-    Update::run_update();
+        set_time_limit(300);
+        AutoUpdate::update_files();
+        echo '<script language="javascript" type="text/javascript">window.location="' . AmpConfig::get('web_path') . '";</script>';
+        exit;
+    } else {
+        /* Run the Update Mojo Here */
+        Update::run_update();
 
-    /* Get the New Version */
-    $version = Update::get_version();
-
+        /* Get the New Version */
+        $version = Update::get_version();
+    }
 }
 $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 
@@ -43,9 +55,10 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
+    <!-- Propulsed by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ampache :: For the love of Music - Update</title>
+    <title><?php echo AmpConfig::get('site_title'); ?> - Update</title>
     <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
@@ -64,8 +77,8 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
             <h1><?php echo T_('Ampache Update'); ?></h1>
         </div>
         <div class="well">
-             <p><?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong>%s</strong>.'), Update::format_version($version)); ?></p>
-             <p><?php echo T_('The following updates need to be performed'); ?></p>
+             <p><?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with database version <strong>%s</strong>.'), AmpConfig::get('version'), $version); ?></p>
+             <p><?php echo T_('The following updates need to be performed:'); ?></p>
         </div>
         <?php Error::display('general'); ?>
         <div class="content">

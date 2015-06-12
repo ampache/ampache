@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -24,12 +24,12 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=broadcast&broadcast_id=' . $broadcast->id,'play', T_('Play'),'play_broadcast_' . $channel->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&object_type=broadcast&object_id=' . $libitem->id,'play', T_('Play'),'play_broadcast_' . $libitem->id); ?>
 <?php } ?>
     </div>
 </td>
-<td class="cel_name"><?php echo $broadcast->name; ?></td>
-<td class="cel_genre"><?php echo $broadcast->f_tags; ?></td>
-<td class="cel_started"><?php echo ($broadcast->started ? T_('Yes') : T_('No')); ?></td>
-<td class="cel_listeners"><?php echo $broadcast->listeners; ?></td>
-<td class="cel_action"><?php $broadcast->show_action_buttons(); ?></td>
+<td class="cel_name"><?php echo $libitem->name; ?></td>
+<td class="cel_genre"><?php echo $libitem->f_tags; ?></td>
+<td class="cel_started"><?php echo ($libitem->started ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_listeners"><?php echo $libitem->listeners; ?></td>
+<td class="cel_action"><?php $libitem->show_action_buttons(); ?></td>

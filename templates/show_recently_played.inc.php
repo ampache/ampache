@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -33,7 +33,9 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
+            <?php if (Access::check('interface', 50)) { ?>
             <th class="cel_agent"><?php echo T_('Agent'); ?></th>
+            <?php } ?>
         </tr>
     </thead>
     <tbody>
@@ -56,37 +58,38 @@ foreach ($data as $row) {
 
     if ($is_allowed || $has_allowed_agent) {
         $agent = $row['agent'];
+        if (!empty($row['geo_name'])) {
+            $agent .= ' - ' . $row['geo_name'];
+        }
     }
 
     if ($is_allowed || $has_allowed_time) {
         $interval = intval(time() - $row['date']);
 
         if ($interval < 60) {
-            $unit = ngettext('second ago', 'seconds ago', $interval);
-        } else if ($interval < 3600) {
+            $time_string = sprintf(ngettext('%d second ago', '%d seconds ago', $interval), $interval);
+        } elseif ($interval < 3600) {
             $interval = floor($interval / 60);
-            $unit = ngettext('minute ago', 'minutes ago', $interval);
-        } else if ($interval < 86400) {
+            $time_string = sprintf(ngettext('%d minute ago', '%d minutes ago', $interval), $interval);
+        } elseif ($interval < 86400) {
             $interval = floor($interval / 3600);
-            $unit = ngettext('hour ago', 'hours ago', $interval);
-        } else if ($interval < 604800) {
+            $time_string = sprintf(ngettext('%d hour ago', '%d hours ago', $interval), $interval);
+        } elseif ($interval < 604800) {
             $interval = floor($interval / 86400);
-            $unit = ngettext('day ago', 'days ago', $interval);
-        } else if ($interval < 2592000) {
+            $time_string = sprintf(ngettext('%d day ago', '%d days ago', $interval), $interval);
+        } elseif ($interval < 2592000) {
             $interval = floor($interval / 604800);
-            $unit = ngettext('week ago', 'weeks ago', $interval);
-        } else if ($interval < 31556926) {
+            $time_string = sprintf(ngettext('%d week ago', '%d weeks ago', $interval), $interval);
+        } elseif ($interval < 31556926) {
             $interval = floor($interval / 2592000);
-            $unit = ngettext('month ago', 'months ago', $interval);
-        } else if ($interval < 631138519) {
+            $time_string = sprintf(ngettext('%d month ago', '%d months ago', $interval), $interval);
+        } elseif ($interval < 631138519) {
             $interval = floor($interval / 31556926);
-            $unit = ngettext('year ago', 'years ago', $interval);
+            $time_string = sprintf(ngettext('%d year ago', '%d years ago', $interval), $interval);
         } else {
             $interval = floor($interval / 315569260);
-            $unit = ngettext('decade ago', 'decades ago', $interval);
+            $time_string = sprintf(ngettext('%d decade ago', '%d decades ago', $interval), $interval);
         }
-
-        $time_string = sprintf('%d ' . (T_ngettext($unit, $unit, $interval)), $interval);
     }
     $song->format();
 ?>
@@ -95,9 +98,12 @@ foreach ($data as $row) {
             <span class="cel_play_content">&nbsp;</span>
             <div class="cel_play_hover">
             <?php if (AmpConfig::get('directplay')) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play'),'play_song_' . $nb . '_' . $song->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id,'play', T_('Play'),'play_song_' . $nb . '_' . $song->id); ?>
                 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $nb . '_' . $song->id); ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $nb . '_' . $song->id); ?>
+                <?php } ?>
+                <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $nb . '_' . $song->id); ?>
                 <?php } ?>
         <?php } ?>
             </div>
@@ -119,11 +125,13 @@ foreach ($data as $row) {
             </a>
         </td>
         <td class="cel_lastplayed"><?php echo $time_string; ?></td>
+        <?php if (Access::check('interface', 50)) { ?>
         <td class="cel_agent">
             <?php if (!empty($agent)) {
                 echo UI::get_icon('info', $agent);
             } ?>
         </td>
+        <?php } ?>
     </tr>
 <?php
     ++$nb;
@@ -144,7 +152,9 @@ foreach ($data as $row) {
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
+            <?php if (Access::check('interface', 50)) { ?>
             <th class="cel_agent"><?php echo T_('Agent'); ?></th>
+            <?php } ?>
         </tr>
     </tfoot>
 </table>
@@ -158,7 +168,7 @@ foreach ($data as $row) {
     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
 <script language="javascript" type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function () {
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
 });
 </script>

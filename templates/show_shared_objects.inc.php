@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -32,7 +32,7 @@
             <th class="cel_max_counter optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=max_counter', T_('Max Counter'),'sort_share_max_counter'); ?></th>
             <th class="cel_allow_stream optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_stream', T_('Allow Stream'),'sort_share_allow_stream'); ?></th>
             <th class="cel_allow_download optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_download', T_('Allow Download'),'sort_share_allow_download'); ?></th>
-            <th class="cel_expire optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=expire', T_('Expire Days'),'sort_share_expire'); ?></th>
+            <th class="cel_expire optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=expire', T_('Expiry Days'),'sort_share_expire'); ?></th>
             <th class="cel_public_url essential"><?php echo T_('Public Url'); ?></th>
             <th class="cel_action  essential"><?php echo T_('Actions'); ?></th>
         </tr>
@@ -40,11 +40,11 @@
     <tbody>
     <?php
     foreach ($object_ids as $share_id) {
-        $share = new Share($share_id);
-        $share->format();
+        $libitem = new Share($share_id);
+        $libitem->format();
     ?>
-    <tr id="share_<?php echo $share->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require AmpConfig::get('prefix') . '/templates/show_shared_object_row.inc.php'; ?>
+    <tr id="share_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <?php require AmpConfig::get('prefix') . '/templates/show_share_row.inc.php'; ?>
     </tr>
     <?php } ?>
     </tbody>

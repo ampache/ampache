@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -24,31 +24,56 @@
  * playlist_object
  * Abstracting out functionality needed by both normal and smart playlists
  */
-abstract class playlist_object extends database_object
+abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
+    /**
+     * @var int $id
+     */
     public $id;
+    /**
+     * @var string $name
+     */
     public $name;
+    /**
+     * @var int $user
+     */
     public $user;
+    /**
+     * @var string $type
+     */
     public $type;
 
+    /**
+     * @var string $f_type
+     */
     public $f_type;
+    /**
+     * @var string $f_name
+     */
     public $f_name;
+    /**
+     * @var string $f_user
+     */
     public $f_user;
+
+    abstract public function get_items();
 
     /**
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
      */
-    public function format()
+    public function format($details = true)
     {
         $this->f_name =  $this->name;
         $this->f_type = ($this->type == 'private') ? UI::get_icon('lock', T_('Private')) : '';
 
-        $client = new User($this->user);
-
-        $this->f_user = $client->fullname;
+        if ($details) {
+            $client = new User($this->user);
+            $client->format();
+            $this->f_user = $client->f_name;
+        }
 
     } // format
 
@@ -59,16 +84,95 @@ abstract class playlist_object extends database_object
      */
     public function has_access()
     {
-        if (!Access::check('interface','25')) {
+        if (!Access::check('interface', 25)) {
             return false;
         }
         if ($this->user == $GLOBALS['user']->id) {
             return true;
         } else {
-            return Access::check('interface','100');
+            return Access::check('interface', 75);
         }
 
     } // has_access
 
+    public function get_medias($filter_type = null)
+    {
+        $medias = $this->get_items();
+        if ($filter_type) {
+            $nmedias = array();
+            foreach ($medias as $media) {
+                if ($media['object_type'] == $filter_type) {
+                    $nmedias[] = $media;
+                }
+            }
+            $medias = $nmedias;
+        }
+        return $medias;
+    }
+
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        $childrens = array();
+        $items = $this->get_items();
+        foreach ($items as $item) {
+            if (!in_array($item['object_type'], $childrens)) {
+                $childrens[$item['object_type']] = array();
+            }
+            $childrens[$item['object_type']][] = $item['object_id'];
+        }
+
+        return $this->get_items();
+    }
+
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
+    public function get_user_owner()
+    {
+        return $this->user;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
+    public function get_description()
+    {
+        return null;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        // no art
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array();
+    }
 
 } // end playlist_object

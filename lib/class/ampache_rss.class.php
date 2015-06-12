@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +27,9 @@
  */
 class Ampache_RSS
 {
+    /**
+     *  @var string $type
+     */
     private $type;
     public $data;
 
@@ -44,33 +47,56 @@ class Ampache_RSS
      * get_xml
      * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
      * and then uses the xmlDATA class to build the document
+     * @return string
      */
-    public function get_xml()
+    public function get_xml($params = null)
     {
-        // Function call name
-        $data_function = 'load_' . $this->type;
-        $pub_date_function = 'pubdate_' . $this->type;
+        if ($this->type === "podcast") {
+            if ($params != null && is_array($params)) {
+                $object_type = $params['object_type'];
+                $object_id = $params['object_id'];
+                if (Core::is_library_item($object_type)) {
+                    $libitem = new $object_type($object_id);
+                    if ($libitem->id) {
+                        $libitem->format();
+                        return XML_Data::podcast($libitem);
+                    }
+                }
+            }
+        } else {
+            // Function call name
+            $data_function = 'load_' . $this->type;
+            $pub_date_function = 'pubdate_' . $this->type;
 
-        $data = call_user_func(array('Ampache_RSS',$data_function));
-        $pub_date = call_user_func(array('Ampache_RSS',$pub_date_function));
+            $data = call_user_func(array('Ampache_RSS',$data_function));
+            $pub_date = null;
+            if (method_exists('Ampache_RSS', $data_function)) {
+                $pub_date = call_user_func(array('Ampache_RSS',$pub_date_function));
+            }
 
-        XML_Data::set_type('rss');
-        $xml_document = XML_Data::rss_feed($data,$this->get_title(),$this->get_description(),$pub_date);
+            XML_Data::set_type('rss');
+            $xml_document = XML_Data::rss_feed($data,$this->get_title(),$this->get_description(),$pub_date);
 
-        return $xml_document;
+            return $xml_document;
+        }
+
+        return null;
 
     } // get_xml
 
     /**
      * get_title
      * This returns the standardized title for the rss feed based on this->type
+     * @return string
      */
     public function get_title()
     {
         $titles = array('now_playing' => T_('Now Playing'),
-                'recently_played' => T_('Recently Played'),
-                'latest_album' => T_('Newest Albums'),
-                'latest_artist' => T_('Newest Artists'));
+            'recently_played' => T_('Recently Played'),
+            'latest_album' => T_('Newest Albums'),
+            'latest_artist' => T_('Newest Artists'),
+            'latest_shout' => T_('Newest Shouts')
+        );
 
         return scrub_out(AmpConfig::get('site_title')) . ' - ' . $titles[$this->type];
 
@@ -79,6 +105,7 @@ class Ampache_RSS
     /**
      * get_description
      * This returns the standardized description for the rss feed based on this->type
+     * @return string
      */
     public function get_description()
     {
@@ -90,11 +117,12 @@ class Ampache_RSS
     /**
      * validate_type
      * this returns a valid type for an rss feed, if the specified type is invalid it returns a default value
+     * @param string $type
+     * @return string
      */
     public static function validate_type($type)
     {
-        $valid_types = array('now_playing','recently_played','latest_album','latest_artist','latest_song',
-                'popular_song','popular_album','popular_artist');
+        $valid_types = array('now_playing','recently_played','latest_album','latest_artist','latest_shout','podcast');
 
         if (!in_array($type,$valid_types)) {
             return 'now_playing';
@@ -107,13 +135,28 @@ class Ampache_RSS
     /**
       * get_display
      * This dumps out some html and an icon for the type of rss that we specify
+     * @param string $type
+     * @param string $title
+     * @param array|null $params
+     * @return string
      */
-    public static function get_display($type='now_playing')
+    public static function get_display($type='now_playing', $title = '', $params = null)
     {
         // Default to now playing
         $type = self::validate_type($type);
 
-        $string = '<a href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . '">' . UI::get_icon('feed', T_('RSS Feed')) . '</a>';
+        $strparams = "";
+        if ($params != null && is_array($params)) {
+            foreach ($params as $key => $value) {
+                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
+            }
+        }
+
+        $string = '<a rel="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
+        if (!empty($title)) {
+            $string .= ' &nbsp;' . $title;
+        }
+        $string .= '</a>';
 
         return $string;
 
@@ -125,6 +168,7 @@ class Ampache_RSS
      * load_now_playing
      * This loads in the now playing information. This is just the raw data with key=>value pairs that could be turned
      * into an xml document if we so wished
+     * @return array
      */
     public static function load_now_playing()
     {
@@ -152,7 +196,7 @@ class Ampache_RSS
                     'title' => $title,
                     'link' => $song->link,
                     'description' => $description,
-                    'comments' => $client->fullname . ' - ' . $element['agent'],
+                    'comments' => $client->f_name . ' - ' . $element['agent'],
                     'pubDate' => date('r', $element['expire'])
                     );
             $results[] = $xml_array;
@@ -166,6 +210,7 @@ class Ampache_RSS
      * pubdate_now_playing
      * this is the pub date we should use for the now playing information,
      * this is a little specific as it uses the 'newest' expire we can find
+     * @return int
      */
     public static function pubdate_now_playing()
     {
@@ -181,6 +226,7 @@ class Ampache_RSS
     /**
      * load_recently_played
      * This loads in the recently played information and formats it up real nice like
+     * @return array
      */
     public static function load_recently_played()
     {
@@ -238,8 +284,103 @@ class Ampache_RSS
     } // load_recently_played
 
     /**
+     * load_latest_album
+     * This loads in the latest added albums
+     * @return array
+     */
+    public static function load_latest_album()
+    {
+        $ids = Stats::get_newest('album', 10);
+
+        $results = array();
+
+        foreach ($ids as $id) {
+            $album = new Album($id);
+            $album->format();
+
+            $xml_array = array('title' => $album->f_name,
+                    'link' => $album->link,
+                    'description' => $album->f_artist_name . ' - ' . $album->f_name,
+                    'image' => Art::url($album->id, 'album', null, 2),
+                    'comments' => '',
+                    'pubDate' => date("c", $album->get_addtime_first_song())
+            );
+            $results[] = $xml_array;
+
+        } // end foreach
+
+        return $results;
+
+    } // load_latest_album
+
+    /**
+     * load_latest_artist
+     * This loads in the latest added artists
+     * @return array
+     */
+    public static function load_latest_artist()
+    {
+        $ids = Stats::get_newest('artist', 10);
+
+        $results = array();
+
+        foreach ($ids as $id) {
+            $artist = new Artist($id);
+            $artist->format();
+
+            $xml_array = array('title' => $artist->f_name,
+                    'link' => $artist->link,
+                    'description' => $artist->summary,
+                    'image' => Art::url($artist->id, 'artist', null, 2),
+                    'comments' => '',
+                    'pubDate' => ''
+            );
+            $results[] = $xml_array;
+
+        } // end foreach
+
+        return $results;
+
+    } // load_latest_artist
+
+    /**
+     * load_latest_shout
+     * This loads in the latest added shouts
+     * @return array
+     */
+    public static function load_latest_shout()
+    {
+        $ids = Shoutbox::get_top(10);
+
+        $results = array();
+
+        foreach ($ids as $id) {
+            $shout = new Shoutbox($id);
+            $shout->format();
+            $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
+            $object->format();
+            $user = new User($shout->user);
+            $user->format();
+
+            $xml_array = array('title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
+                    'link' => $object->link,
+                    'description' => $shout->text,
+                    'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
+                    'comments' => '',
+                    'pubDate' => date("c", $shout->date)
+            );
+            $results[] = $xml_array;
+
+        } // end foreach
+
+        return $results;
+
+    } // load_latest_shout
+
+    /**
      * pubdate_recently_played
      * This just returns the 'newest' recently played entry
+     * @return int
      */
     public static function pubdate_recently_played()
     {

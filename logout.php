@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -27,4 +27,5 @@
 require_once 'lib/init.php';
 
 // To end a legitimate session, just call logout.
+setcookie(AmpConfig::get('session_name') . '_remember', null, -1);
 Auth::logout('',false);

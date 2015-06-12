@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -32,10 +32,12 @@
 define('NO_SESSION','1');
 require_once 'lib/init.php';
 
-// Check to see if they've got an interface session or a valid API session, if not GTFO
-if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
-    debug_event('image','Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
-    exit;
+if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+    // Check to see if they've got an interface session or a valid API session, if not GTFO
+    if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
+        debug_event('image','Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
+        exit;
+    }
 }
 
 // If we aren't resizing just trash thumb
@@ -46,44 +48,18 @@ if (!isset($_GET['object_type'])) {
     $_GET['object_type'] = 'album';
 }
 
-$type = Art::validate_type($_GET['object_type']);
+$type = $_GET['object_type'];
+if (!Core::is_library_item($type))
+    exit;
 
 /* Decide what size this image is */
-switch ($_GET['thumb']) {
-    case '1':
-        /* This is used by the now_playing stuff */
-        $size['height'] = '75';
-        $size['width']    = '75';
-    break;
-    case '2':
-        $size['height']    = '128';
-        $size['width']    = '128';
-    break;
-    case '3':
-        /* This is used by the flash player */
-        $size['height']    = '80';
-        $size['width']    = '80';
-    break;
-    case '4':
-        /* Web Player size */
-        $size['height'] = 200;
-        $size['width'] = 200; // 200px width, set via CSS
-    break;
-    case '5':
-        /* Web Player size */
-        $size['height'] = 32;
-        $size['width'] = 32;
-    break;
-    default:
-        $size['height'] = '275';
-        $size['width']    = '275';
-        if (!isset($_GET['thumb'])) { $return_raw = true; }
-    break;
-} // define size based on thumbnail
+$size = Art::get_thumb_size($_GET['thumb']);
+$kind = isset($_GET['kind']) ? $_GET['kind'] : 'default';
 
 $image = '';
 $mime = '';
 $filename = '';
+$etag = '';
 $typeManaged = false;
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
@@ -102,20 +78,47 @@ if (isset($_GET['type'])) {
     }
 }
 if (!$typeManaged) {
-    $media = new $type($_GET['id']);
-    $filename = $media->name;
+    $item = new $type($_GET['object_id']);
+    $filename = $item->name ?: $item->title;
 
-    $art = new Art($media->id,$type);
+    $art = new Art($item->id, $type, $kind);
     $art->get_db();
+    $etag = $art->id;
+
+    // That means the client has a cached version of the image
+    $reqheaders = getallheaders();
+    if (isset($reqheaders['If-Modified-Since']) && isset($reqheaders['If-None-Match'])) {
+        $ccontrol = $reqheaders['Cache-Control'];
+        if ($ccontrol != 'no-cache') {
+            $cetagf = explode('-', $reqheaders['If-None-Match']);
+            $cetag = $cetagf[0];
+            // Same image than the cached one? Use the cache.
+            if ($cetag == $etag) {
+                header('HTTP/1.1 304 Not Modified');
+                exit;
+            }
+        }
+    }
 
     if (!$art->raw_mime) {
-        $mime = 'image/jpeg';
-        $image = file_get_contents(AmpConfig::get('prefix') .
-            AmpConfig::get('theme_path') .
-            '/images/blankalbum.jpg');
+        $defaultimg = AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/';
+        switch ($type) {
+            case 'video':
+            case 'tvshow':
+            case 'tvshow_season':
+                $mime = 'image/png';
+                $defaultimg .= "blankmovie.png";
+                break;
+            default:
+                $mime = 'image/jpeg';
+                $defaultimg .= "blankalbum.jpg";
+            break;
+        }
+        $image = file_get_contents($defaultimg);
     } else {
         if ($_GET['thumb']) {
             $thumb_data = $art->get_thumb($size);
+            $etag .= '-' . $_GET['thumb'];
         }
 
         $mime = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;
@@ -129,7 +132,11 @@ if (!empty($image)) {
 
     // Send the headers and output the image
     $browser = new Horde_Browser();
-    header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 604800));
+    if (!empty($etag)) {
+        header('ETag: ' . $etag);
+        header('Cache-Control: private');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s \G\M\T', time()));
+    }
     $browser->downloadHeaders($filename, $mime, true);
     echo $image;
 }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -75,10 +75,10 @@ class AmpacheVlc extends localplay_controller
          */
         public function is_installed()
         {
-        $sql = "DESCRIBE `localplay_vlc`";
+        $sql = "SHOW TABLES LIKE 'localplay_vlc'";
         $db_results = Dba::query($sql);
 
-        return Dba::num_rows($db_results);
+        return (Dba::num_rows($db_results) > 0);
 
 
         } // is_installed
@@ -101,7 +101,6 @@ class AmpacheVlc extends localplay_controller
 
             // Add an internal preference for the users current active instance
             Preference::insert('vlc_active','VLC Active Instance','0','25','integer','internal');
-            User::rebuild_all_preferences();
 
             return true;
 
@@ -469,7 +468,8 @@ class AmpacheVlc extends localplay_controller
             $url_data = $this->parse_url($entry);
                         switch ($url_data['primary_key']) {
                                 case 'oid':
-                                        $song = new Song($url_data['oid']);
+                                        $data['oid'] = $url_data['oid'];
+                                        $song = new Song($data['oid']);
                                         $song->format();
                                         $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                                         $data['link']   = $song->f_link;
@@ -542,9 +542,9 @@ class AmpacheVlc extends localplay_controller
         $url_data = $this->parse_url($array['track']);
         $song = new Song($url_data['oid']);
         if ($song->title || $song->get_artist_name() || $song->get_album_name()) {
-        $array['track_title']     = $song->title;
-        $array['track_artist']     = $song->get_artist_name();
-        $array['track_album']    = $song->get_album_name();
+            $array['track_title']     = $song->title;
+            $array['track_artist']     = $song->get_artist_name();
+            $array['track_album']    = $song->get_album_name();
         }
         // if not a known format
         else {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -39,8 +39,12 @@ switch ($_REQUEST['action']) {
         $current = parse_ini_file(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
         $final = generate_config($current);
         $browser = new Horde_Browser();
-        $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
+        $browser->downloadHeaders('ampache.cfg.php', 'text/plain',false,filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
         echo $final;
+        exit;
+    case 'write_config':
+        write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
+        header('Location: '. AmpConfig::get('web_path') . '/index.php');
         exit;
     case 'reset_db_charset':
         Dba::reset_db_charset();
@@ -52,6 +56,14 @@ switch ($_REQUEST['action']) {
             $version = AutoUpdate::get_latest_version(true);
         }
         require_once AmpConfig::get('prefix') . '/templates/show_debug.inc.php';
+    break;
+    case 'clear_cache':
+        switch ($_REQUEST['type']) {
+            case 'song' : Song::clear_cache(); break;
+            case 'artist' : Artist::clear_cache(); break;
+            case 'album' : Album::clear_cache(); break;
+        }
+        show_confirmation(T_('Cache cleared'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path').'/admin/system.php?action=show_debug');
     break;
     default:
         // Rien a faire

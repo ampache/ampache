@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -31,8 +31,17 @@
  */
 class Browse extends Query
 {
+    /**
+     * @var boolean $show_header
+     */
     public $show_header;
 
+    /**
+     * Constructor.
+     *
+     * @param int|null $id
+     * @param boolean $cached
+     */
     public function __construct($id = null, $cached = true)
     {
         parent::__construct($id, $cached);
@@ -48,6 +57,8 @@ class Browse extends Query
      * set_simple_browse
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
+     *
+     * @param boolean $value
      */
     public function set_simple_browse($value)
     {
@@ -58,6 +69,9 @@ class Browse extends Query
     /**
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
+     *
+     * @param string $class
+     * @param int $uid
      */
     public function add_supplemental_object($class, $uid)
     {
@@ -71,6 +85,8 @@ class Browse extends Query
      * get_supplemental_objects
      * This returns an array of 'class','id' for additional objects that
      * need to be created before we start this whole browsing thing.
+     *
+     * @return array
      */
     public function get_supplemental_objects()
     {
@@ -85,10 +101,41 @@ class Browse extends Query
     } // get_supplemental_objects
 
     /**
+     * update_browse_from_session
+     * Restore the previous start index from something saved into the current session.
+     */
+    public function update_browse_from_session()
+    {
+        if ($this->is_simple() && $this->get_start() == 0) {
+            $name = 'browse_current_' . $this->get_type();
+            if (isset($_SESSION[$name]) && isset($_SESSION[$name]['start']) && $_SESSION[$name]['start'] > 0) {
+
+                // Checking if value is suitable
+                $start = $_SESSION[$name]['start'];
+                if ($this->get_offset() > 0) {
+
+                    $set_page = floor($start / $this->get_offset());
+                    if ($this->get_total() > $this->get_offset()) {
+                        $total_pages = ceil($this->get_total() / $this->get_offset());
+                    } else {
+                        $total_pages = 0;
+                    }
+
+                    if ($set_page >= 0 && $set_page <= $total_pages) {
+                        $this->set_start($start);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * show_objects
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
+     *
+     * @param int[] $object_ids
      */
     public function show_objects($object_ids = null, $argument = null)
     {
@@ -100,9 +147,8 @@ class Browse extends Query
 
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
-        if ((count($object_ids) > $this->get_start()) &&
-            ! $this->is_simple() &&
-            ! $this->is_static_content()) {
+        if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) &&
+            ! $this->is_simple()) {
             $object_ids = array_slice(
                 $object_ids,
                 $this->get_start(),
@@ -133,37 +179,53 @@ class Browse extends Query
             $match = ' (' . $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id($filter_value);
+            $catalog = Catalog::create_from_id(intval($filter_value));
             $match = ' (' . $catalog->name . ')';
         }
 
         $type = $this->get_type();
 
+        // Update the session value only if it's allowed on the current browser
+        if ($this->get_update_session()) {
+            $_SESSION['browse_current_' . $type]['start'] = $browse->get_start();
+        }
+
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
-        debug_event('browse', 'Called for type {'.$type.'}', '5');
+        $argument_param = ($argument ? '&argument=' . scrub_in($argument) : '');
+
+        debug_event('browse', 'Show objects called for type {'.$type.'}', '5');
+
+        $limit_threshold = $this->get_threshold();
 
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
                 $box_title = T_('Songs') . $match;
-                Song::build_cache($object_ids);
+                Song::build_cache($object_ids, $limit_threshold);
                 $box_req = AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
             break;
             case 'album':
-                $box_title = T_('Albums') . $match;
                 Album::build_cache($object_ids);
-                $allow_group_disks = $argument;
+                $box_title = T_('Albums') . $match;
+                if (is_array($argument)) {
+                    $allow_group_disks = $argument['group_disks'];
+                    if ($argument['title']) {
+                        $box_title = $argument['title'];
+                    }
+                } else {
+                    $allow_group_disks = false;
+                }
                 $box_req = AmpConfig::get('prefix') . '/templates/show_albums.inc.php';
             break;
             case 'user':
-                $box_title = T_('Manage Users') . $match;
+                $box_title = T_('Users') . $match;
                 $box_req = AmpConfig::get('prefix') . '/templates/show_users.inc.php';
             break;
             case 'artist':
                 $box_title = T_('Artists') . $match;
-                Artist::build_cache($object_ids, 'extra');
+                Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = AmpConfig::get('prefix') . '/templates/show_artists.inc.php';
             break;
             case 'live_stream':
@@ -187,7 +249,7 @@ class Browse extends Query
             break;
             case 'smartplaylist':
                 $box_title = T_('Smart Playlists') . $match;
-                $box_req = AmpConfig::get('prefix') . '/templates/show_smartplaylists.inc.php';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_searches.inc.php';
             break;
             case 'catalog':
                 $box_title = T_('Catalogs');
@@ -204,6 +266,7 @@ class Browse extends Query
             break;
             case 'video':
                 Video::build_cache($object_ids);
+                $video_type = 'video';
                 $box_title = T_('Videos');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
             break;
@@ -231,12 +294,52 @@ class Browse extends Query
                 $box_title = T_('Broadcasts');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_broadcasts.inc.php';
             break;
+            case 'license':
+                $box_title = T_('Media Licenses');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_manage_license.inc.php';
+            break;
+            case 'tvshow':
+                $box_title = T_('TV Shows');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_tvshows.inc.php';
+            break;
+            case 'tvshow_season':
+                $box_title = T_('Seasons');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_tvshow_seasons.inc.php';
+            break;
+            case 'tvshow_episode':
+                $box_title = T_('Episodes');
+                $video_type = $type;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'movie':
+                $box_title = T_('Movies');
+                $video_type = $type;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'clip':
+                $box_title = T_('Clips');
+                $video_type = $type;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'personal_video':
+                $box_title = T_('Personal Videos');
+                $video_type = $type;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'label':
+                $box_title = T_('Labels');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_labels.inc.php';
+            break;
+            case 'pvmsg':
+                $box_title = T_('Private Messages');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_pvmsgs.inc.php';
+            break;
             default:
                 // Rien a faire
             break;
         } // end switch on type
 
-        Ajax::start_container('browse_content_' . $type, 'browse_content');
+        Ajax::start_container($this->get_content_div(), 'browse_content');
         if ($this->get_show_header()) {
             if (isset($box_req) && isset($box_title)) {
                 UI::show_box_top($box_title, $class);
@@ -252,31 +355,32 @@ class Browse extends Query
                 UI::show_box_bottom();
             }
             echo '<script type="text/javascript">';
-            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id, '');
+            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
         } else {
             if (!$this->get_use_pages()) {
-                $this->show_next_link();
+                $this->show_next_link($argument);
             }
         }
         Ajax::end_container();
 
     } // show_object
 
-    public function show_next_link()
+    public function show_next_link($argument = null)
     {
-        $limit    = $this->get_offset();
-        $start    = $this->get_start();
-        $total    = $this->get_total();
+        $limit = $this->get_offset();
+        $start = $this->get_start();
+        $total = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=browse_content_' . $this->get_type() . '&show_header=false">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false' . $argument . '">' . T_('More') . '</a>';
         }
     }
 
     /**
       * set_filter_from_request
      * //FIXME
+     * @param array $request
      */
     public function set_filter_from_request($request)
     {
@@ -300,6 +404,11 @@ class Browse extends Query
         }
     } // set_filter_from_request
 
+    /**
+     *
+     * @param string $type
+     * @param string $custom_base
+     */
     public function set_type($type, $custom_base = '')
     {
         $cn = 'browse_' . $type . '_pages';
@@ -321,6 +430,11 @@ class Browse extends Query
         parent::set_type($type, $custom_base);
     }
 
+    /**
+     *
+     * @param string $option
+     * @param string $value
+     */
     public function save_cookie_params($option, $value)
     {
         if ($this->get_type()) {
@@ -328,36 +442,96 @@ class Browse extends Query
         }
     }
 
+    /**
+     *
+     * @param boolean $use_pages
+     */
     public function set_use_pages($use_pages)
     {
         $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
         $this->_state['use_pages'] = $use_pages;
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public function get_use_pages()
     {
         return $this->_state['use_pages'];
     }
 
+    /**
+     *
+     * @param boolean $use_alpha
+     */
     public function set_use_alpha($use_alpha)
     {
         $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
         $this->_state['use_alpha'] = $use_alpha;
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public function get_use_alpha()
     {
         return $this->_state['use_alpha'];
     }
 
+    /**
+     *
+     * @param boolean $show_header
+     */
     public function set_show_header($show_header)
     {
         $this->show_header = $show_header;
     }
 
+    /**
+     * Allow the current page to be save into the current session
+     * @param boolean $update_session
+     */
+    public function set_update_session($update_session)
+    {
+        $this->_state['update_session'] = $update_session;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
     public function get_show_header()
     {
         return $this->show_header;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function get_update_session()
+    {
+        return $this->_state['update_session'];
+    }
+
+    /**
+     *
+     * @param string $threshold
+     */
+    public function set_threshold($threshold)
+    {
+        $this->_state['threshold'] = $threshold;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function get_threshold()
+    {
+        return $this->_state['threshold'];
     }
 
 } // browse

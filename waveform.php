@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -34,6 +34,11 @@ if (!AmpConfig::get('waveform')) exit();
 // Prevent user from aborting script
 ignore_user_abort(true);
 set_time_limit(300);
+
+// Write/close session data to release session lock for this script.
+// This to allow other pages from the same session to be processed
+// Do NOT change any session variable after this call
+session_write_close();
 
 $id = $_REQUEST['song_id'];
 $waveform = Waveform::get($id);

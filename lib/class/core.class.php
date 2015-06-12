@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -211,6 +211,34 @@ class Core
         return true;
     }
 
+    /**
+     * get_filesize
+     * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
+     */
+    public static function get_filesize($filename)
+    {
+        $size = filesize($filename);
+        if ($size === false) {
+            $fp = fopen($filename, 'rb');
+            if (!$fp) {
+                return false;
+            }
+            $offset = PHP_INT_MAX - 1;
+            $size = (float) $offset;
+            if (!fseek($fp, $offset)) {
+                return false;
+            }
+            $chunksize = 8192;
+            while (!feof($fp)) {
+                $size += strlen(fread($fp, $chunksize));
+            }
+        } elseif ($size < 0) {
+            // Handle overflowed integer...
+            $size = sprintf("%u", $size);
+        }
+        return $size;
+    }
+
     /*
      * conv_lc_file
      *
@@ -245,5 +273,56 @@ class Core
             }
         }
         return false;
+    }
+
+    private static function is_class_typeof($classname, $typeofname)
+    {
+        if (class_exists($classname)) {
+            return in_array($typeofname, array_map('strtolower', class_implements($classname)));
+        }
+
+        return false;
+    }
+
+    public static function is_playable_item($classname)
+    {
+        return self::is_class_typeof($classname, 'playable_item');
+    }
+
+    public static function is_library_item($classname)
+    {
+        return self::is_class_typeof($classname, 'library_item');
+    }
+
+    public static function is_media($classname)
+    {
+        return self::is_class_typeof($classname, 'media');
+    }
+
+    public static function get_reloadutil()
+    {
+        return (AmpConfig::get('play_type') == "stream" || !AmpConfig::get('ajax_load')) ? "reloadUtil" : "reloadDivUtil";
+    }
+
+    public static function requests_options($options = null)
+    {
+        if ($options == null) {
+            $options = array();
+        }
+
+        if (!isset($options['proxy'])) {
+            if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
+                $proxy = array();
+                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+                if (AmpConfig::get('proxy_user')) {
+                    $proxy[] = AmpConfig::get('proxy_user');
+                    $proxy[] = AmpConfig::get('proxy_pass');
+                }
+
+                $options['proxy'] = $proxy;
+            }
+        }
+
+        return $options;
     }
 } // Core

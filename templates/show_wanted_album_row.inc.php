@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -21,14 +21,14 @@
  */
 ?>
 
-<td class="cel_album"><?php echo $walbum->f_name_link; ?></td>
-<td class="cel_artist"><?php echo $walbum->f_artist_link; ?></td>
-<td class="cel_year"><?php echo $walbum->year; ?></td>
-<td class="cel_user"><?php echo $walbum->f_user; ?></td>
+<td class="cel_album"><?php echo $libitem->f_link; ?></td>
+<td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
+<td class="cel_year"><?php echo $libitem->year; ?></td>
+<td class="cel_user"><?php echo $libitem->f_user; ?></td>
 <td class="cel_action">
-    <div id="wanted_action_<?php echo $walbum->mbid; ?>">
+    <div id="wanted_action_<?php echo $libitem->mbid; ?>">
     <?php
-        $walbum->show_action_buttons();
+        $libitem->show_action_buttons();
     ?>
     </div>
 </td>

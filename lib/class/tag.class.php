@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -26,10 +26,11 @@
  * This class hnadles all of the tag relation operations
  *
  */
-class Tag extends database_object
+class Tag extends database_object implements library_item
 {
     public $id;
     public $name;
+    public $is_hidden;
 
     /**
      * constructor
@@ -90,7 +91,9 @@ class Tag extends database_object
     {
         if (!is_array($ids) OR !count($ids)) { return false; }
 
-        $type = self::validate_type($type);
+        if (!Core::is_library_item($type))
+            return false;
+
         $idlist = '(' . implode(',',$ids) . ')';
 
         $sql = "SELECT `tag_map`.`id`,`tag_map`.`tag_id`, `tag`.`name`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag` " .
@@ -128,8 +131,8 @@ class Tag extends database_object
      */
     public static function add($type, $id, $value, $user=false)
     {
-        // Validate the tag type
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
 
         if (!is_numeric($id)) { return false; }
 
@@ -166,10 +169,8 @@ class Tag extends database_object
     {
         if (!strlen($value)) { return false; }
 
-        $value = Dba::escape($value);
-
-        $sql = "REPLACE INTO `tag` SET `name`='$value'";
-        Dba::write($sql);
+        $sql = "REPLACE INTO `tag` SET `name` = ?";
+        Dba::write($sql, array($value));
         $insert_id = Dba::insert_id();
 
         parent::add_to_cache('tag_name', $value, $insert_id);
@@ -182,17 +183,87 @@ class Tag extends database_object
      * update
      * Update the name of the tag
      */
-    public function update($name)
+    public function update(array $data)
     {
         //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', '5');
-        if (!strlen($name)) { return false; }
-
-        $name = Dba::escape($name);
+        if (!strlen($data['name'])) { return false; }
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
-        Dba::write($sql, array($name, $this->id));
+        Dba::write($sql, array($data[name], $this->id));
+
+        if ($data['edit_tags']) {
+            $tag_names = explode(',', $data['edit_tags']);
+            foreach ($tag_names as $tag) {
+                $merge_to = Tag::construct_from_name($tag);
+                if ($merge_to->id == 0) {
+                    Tag::add_tag($tag);
+                    $merge_to = Tag::construct_from_name($tag);
+                }
+                $this->merge($merge_to->id, $data['merge_persist'] == '1');
+            }
+            if ($data['keep_existing'] != '1') {
+                $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ? ";
+                Dba::write($sql, array($this->id));
+                if ($data['merge_persist'] != '1') {
+                    $this->delete();
+                } else {
+                    $sql = "UPDATE `tag` SET `is_hidden` = true WHERE `tag`.`tag` = ? ";
+                    Dba::write($sql, array($this->id));
+                }
+            }
+        }
+        return $this->id;
 
     } // add_tag
+
+    /**
+     * merge
+     * merges this tag to another one.
+     */
+    public function merge($merge_to, $is_persistent)
+    {
+        if ($this->id != $merge_to) {
+            debug_event('tag', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', '5');
+
+            $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
+                   "SELECT ?,`user`,`object_type`,`object_id` " .
+                   "FROM `tag_map` AS `tm`" .
+                   "WHERE `tm`.`tag_id` = ? AND NOT EXISTS ( " .
+                       "SELECT 1 FROM `tag_map` ".
+                       "WHERE `tag_map`.`tag_id` = ? " .
+                         "AND `tag_map`.`object_id` = `tm`.`object_id` " .
+                         "AND `tag_map`.`object_type` = `tm`.`object_type` " .
+                         "AND `tag_map`.`user` = `tm`.`user`" .
+                   ")";
+            Dba::write($sql, array($merge_to, $this->id, $merge_to));
+            if ($is_persistent) {
+                $sql = 'INSERT INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)';
+                Dba::write($sql, array($this->id, $merge_to));
+            }
+        }
+    }
+
+    /**
+     * get_merged_tags
+     * Get merged tags to this tag.
+     */
+    public function get_merged_tags()
+    {
+        $sql = "SELECT `tag`.`id`, `tag`.`name`" .
+            "FROM `tag_merge` " .
+            "INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` ".
+            "WHERE `tag_merge`.`tag_id` = ? " .
+            "ORDER BY `tag`.`name` ";
+
+        $db_results = Dba::read($sql, array($this->id));
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = array('id'=>$row['id'], 'name'=>$row['name']);
+        }
+
+        return $results;
+    }
 
     /**
      * add_tag_map
@@ -202,14 +273,23 @@ class Tag extends database_object
     {
         $uid = ($user == '') ? intval($GLOBALS['user']->id) : intval($user);
         $tag_id = intval($tag_id);
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
         $id = intval($object_id);
 
         if (!$tag_id || !$id) { return false; }
 
-        $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
-            "VALUES ('$tag_id','$uid','$type','$id')";
-        Dba::write($sql);
+        // If tag merged to another one, add reference to the merge destination
+        $parent = new Tag($tag_id);
+        $merges = $parent->get_merged_tags();
+        if ($parent->is_hidden == false) {
+            $merges[] = array('id' => $parent->id, 'name' => $parent->name);
+        }
+        foreach ($merges as $tag) {
+            $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
+                "VALUES (?, ?, ?, ?)";
+            Dba::write($sql, array($tag['id'], $uid, $type, $id));
+        }
         $insert_id = Dba::insert_id();
 
         parent::add_to_cache('tag_map_' . $type,$insert_id,array('tag_id'=>$tag_id,'user'=>$uid,'object_type'=>$type,'object_id'=>$id));
@@ -242,9 +322,18 @@ class Tag extends database_object
             "WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL";
         Dba::write($sql);
 
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `tvshow` ON `tvshow`.`id`=`tag_map`.`object_id` " .
+            "WHERE `tag_map`.`object_type`='tvshow' AND `tvshow`.`id` IS NULL";
+        Dba::write($sql);
+
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id`=`tag_map`.`object_id` " .
+            "WHERE `tag_map`.`object_type`='tvshow_season' AND `tvshow_season`.`id` IS NULL";
+        Dba::write($sql);
+
         // Now nuke the tags themselves
         $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "WHERE `tag_map`.`id` IS NULL";
+            "WHERE `tag_map`.`id` IS NULL " .
+            "AND NOT EXISTS (SELECT 1 FROM `tag_merge` where `tag_merge`.`tag_id` = `tag`.`id`)";
         Dba::write($sql);
     }
 
@@ -255,11 +344,15 @@ class Tag extends database_object
      */
     public function delete()
     {
-        $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id`='".$this->id."'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
+        Dba::write($sql, array($this->id));
 
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id`='".$this->id."'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `tag_merge` " .
+               "WHERE `tag_merge`.`tag_id` = ?";
+        Dba::write($sql, array($this->id));
+
+        $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? ";
+        Dba::write($sql, array($this->id, $this->id));
 
         // Call the garbage collector to clean everything
         Tag::gc();
@@ -277,9 +370,8 @@ class Tag extends database_object
             return parent::get_from_cache('tag_name',$value);
         }
 
-        $value = Dba::escape($value);
-        $sql = "SELECT * FROM `tag` WHERE `name`='$value'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `tag` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($value));
 
         $results = Dba::fetch_assoc($db_results);
 
@@ -296,15 +388,12 @@ class Tag extends database_object
      */
     public static function tag_map_exists($type,$object_id,$tag_id,$user)
     {
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
 
-        $object_id = Dba::escape($object_id);
-        $tag_id = Dba::escape($tag_id);
-        $user = Dba::escape($user);
-        $type = Dba::escape($type);
-
-        $sql = "SELECT * FROM `tag_map` WHERE `tag_id`='$tag_id' AND `user`='$user' AND `object_id`='$object_id' AND `object_type`='$type'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` " .
+            "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
+        $db_results = Dba::read($sql, array($tag_id, $user, $object_id, $type));
 
         $results = Dba::fetch_assoc($db_results);
 
@@ -318,8 +407,8 @@ class Tag extends database_object
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
-        //debug_event('tag.class', 'Getting tags for type {'.$type.'} object_id {'.$object_id.'}...', '5');
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return array();
 
         $object_id = intval($object_id);
 
@@ -348,16 +437,15 @@ class Tag extends database_object
      */
     public static function get_object_tags($type, $id)
     {
-        if (!self::validate_type($type)) { return array(); }
-
-        $id = Dba::escape($id);
+        if (!Core::is_library_item($type))
+            return false;
 
         $sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
-            "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$id'";
+            "WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ?";
 
         $results = array();
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($type, $id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row;
@@ -372,7 +460,8 @@ class Tag extends database_object
      */
     public static function get_tag_objects($type,$tag_id,$count='',$offset='')
     {
-        if (!self::validate_type($type)) { return array(); }
+        if (!Core::is_library_item($type))
+            return false;
 
         $limit_sql = "";
         if ($count) {
@@ -402,7 +491,7 @@ class Tag extends database_object
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
      */
-    public static function get_tags($limit = 0)
+    public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
         //debug_event('tag.class.php', 'Get tags list called...', '5');
         if (parent::is_cached('tags_list', 'no_name')) {
@@ -412,10 +501,18 @@ class Tag extends database_object
 
         $results = array();
 
-        $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` " .
+        $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "GROUP BY `tag`.`name` ORDER BY `count` DESC ";
+            "WHERE `tag`.`is_hidden` = false ";
+        if (!empty($type)) {
+            $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
+        }
+        $order = "`" . $order . "`";
+        if ($order == 'count') {
+            $order .= " DESC";
+        }
+        $sql .="GROUP BY `tag`.`name` ORDER BY " . $order;
 
         if ($limit > 0) {
             $sql .= " LIMIT $limit";
@@ -424,7 +521,7 @@ class Tag extends database_object
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['tag_id']] = array('id'=>$row['tag_id'], 'name'=>$row['name'], 'count'=>$row['count']);
+            $results[$row['tag_id']] = array('id'=>$row['tag_id'], 'name'=>$row['name'], 'is_hidden'=>$row['is_hidden'], 'count'=>$row['count']);
         }
 
         parent::add_to_cache('tags_list', 'no_name', $results);
@@ -434,11 +531,11 @@ class Tag extends database_object
 
     /**
      * get_display
-     * This returns a human formated version of the tags that we are given
+     * This returns a csv formated version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
      */
-    public static function get_display($tags)
+    public static function get_display($tags, $link=false, $filter_type='')
     {
         //debug_event('tag.class.php', 'Get display tags called...', '5');
         if (!is_array($tags)) { return ''; }
@@ -451,7 +548,14 @@ class Tag extends database_object
             foreach ($value as $vid=>$v) {
                 debug_event('tag.class.php', $vid.' = {'.$v.'}', '5');
             }*/
-            $results .= $value['name'] . ', ';
+            if ($link) {
+                $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . $value['name'] . '">';
+            }
+            $results .= $value['name'];
+            if ($link) {
+                $results .= '</a>';
+            }
+            $results .= ', ';
         }
 
         $results = rtrim($results, ', ');
@@ -464,7 +568,7 @@ class Tag extends database_object
      * update_tag_list
      * Update the tags list based on commated list (ex. tag1,tag2,tag3,..)
      */
-    public static function update_tag_list($tags_comma, $type, $object_id)
+    public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
         debug_event('tag.class', 'Updating tags for values {'.$tags_comma.'} type {'.$type.'} object_id {'.$object_id.'}', '5');
 
@@ -488,7 +592,7 @@ class Tag extends database_object
                     if ($found) {
                         debug_event('tag.class', 'Already found. Do nothing.', '5');
                         unset($editedTags[$tk]);
-                    } else {
+                    } else if ($overwrite) {
                         debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
                         $ctag->remove_map($type, $object_id);
                     }
@@ -498,12 +602,39 @@ class Tag extends database_object
 
         // Look if we need to add some new tags
         foreach ($editedTags as  $tk => $tv) {
-            debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
             if ($tv != '') {
+                debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
                 Tag::add($type, $object_id, $tv, false);
             }
         }
     } // update_tag_list
+
+    /**
+     * clean_to_existing
+     * Clean tag list to existing tag list only
+     * @param array|string $tags
+     * @return array|string
+     */
+    public static function clean_to_existing($tags)
+    {
+        if (is_array($tags)) {
+            $ar = $tags;
+        } else {
+            $ar = explode(",", $tags);
+        }
+
+        $ret = array();
+        foreach ($ar as $tag) {
+            $tag = trim($tag);
+            if (!empty($tag)) {
+                if (Tag::tag_exists($tag)) {
+                    $ret[] = $tag;
+                }
+            }
+        }
+
+        return (is_array($tags) ? $ret : implode(",", $ret));
+    }
 
     /**
      * count
@@ -534,30 +665,103 @@ class Tag extends database_object
      * remove_map
      * This will only remove tag maps for the current user
      */
-    public function remove_map($type,$object_id)
+    public function remove_map($type, $object_id)
     {
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
 
-        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
-        Dba::write($sql, array($this->id, $type, $object_id, $GLOBALS['user']->id));
+        // TODO: Review the tag edition per user.
+
+        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? "; //AND `user` = ?";
+        Dba::write($sql, array($this->id, $type, $object_id));//, $GLOBALS['user']->id));
 
         return true;
 
     } // remove_map
 
-    /**
-     * validate_type
-     * This validates the type of the object the user wants to tag, we limit this to types
-     * we currently support
-     */
-    public static function validate_type($type)
+    public function format($details = true)
     {
-        $valid_array = array('song','artist','album','video','playlist','live_stream','channel','broadcast');
 
-        if (in_array($type,$valid_array)) { return $type; }
+    }
 
-        return false;
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['tag'] = array('important' => true,
+            'label' => T_('Tag'),
+            'value' => $this->name);
 
-    } // validate_type
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
+
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if ($filter_type) {
+            $ids = Tag::get_tag_objects($filter_type, $this->id);
+            if ($ids) {
+                foreach ($ids as $id) {
+                    $medias[] = array(
+                        'object_type' => $filter_type,
+                        'object_id' => $id
+                    );
+                }
+            }
+        }
+        return $medias;
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array();
+    }
+
+    public function get_user_owner()
+    {
+        return null;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
+    public function get_description()
+    {
+        return null;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        if (Art::has_db($this->id, 'tag')) {
+            Art::display('tag', $this->id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
 
 } // end of Tag class

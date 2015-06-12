@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -127,7 +127,7 @@ function scrub_arg($arg)
  */
 function make_bool($string)
 {
-    if (strcasecmp($string,'false') == 0) {
+    if (strcasecmp($string,'false') == 0 || $string == '0') {
         return false;
     }
 
@@ -163,10 +163,7 @@ function get_languages()
 
     $results = array();
 
-    /* Prepend English */
-    $results['en_US'] = 'English (US)';
-
-    while ($file = readdir($handle)) {
+    while (false !== ($file = readdir($handle))) {
 
         $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
 
@@ -175,46 +172,46 @@ function get_languages()
 
             switch ($file) {
                 case 'af_ZA'; $name = 'Afrikaans'; break; /* Afrikaans */
+                case 'bg_BG'; $name = '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;'; break; /* Bulgarian */
                 case 'ca_ES'; $name = 'Catal&#224;'; break; /* Catalan */
                 case 'cs_CZ'; $name = '&#x010c;esky'; break; /* Czech */
                 case 'da_DK'; $name = 'Dansk'; break; /* Danish */
                 case 'de_DE'; $name = 'Deutsch'; break; /* German */
-                case 'en_US'; $name = 'English (US)'; break; /* English */
+                case 'el_GR'; $name = 'Greek'; break; /* Greek */
                 case 'en_GB'; $name = 'English (UK)'; break; /* English */
+                case 'en_US'; $name = 'English (US)'; break; /* English */
+                case 'es_AR'; $name = 'Espa&#241;ol (AR)'; break; /* Spanish */
                 case 'es_ES'; $name = 'Espa&#241;ol'; break; /* Spanish */
                 case 'es_MX'; $name = 'Espa&#241;ol (MX)'; break; /* Spanish */
-                case 'es_AR'; $name = 'Espa&#241;ol (AR)'; break; /* Spanish */
                 case 'et_EE'; $name = 'Eesti'; break; /* Estonian */
                 case 'eu_ES'; $name = 'Euskara'; break; /* Basque */
+                case 'fi_FI'; $name = 'Suomi'; break; /* Finnish */
                 case 'fr_FR'; $name = 'Fran&#231;ais'; break; /* French */
                 case 'ga_IE'; $name = 'Gaeilge'; break; /* Irish */
-                case 'el_GR'; $name = 'Greek'; break; /* Greek */
+                case 'hu_HU'; $name = 'Magyar'; break; /* Hungarian */
                 case 'is_IS'; $name = 'Icelandic'; break; /* Icelandic */
                 case 'it_IT'; $name = 'Italiano'; break; /* Italian */
-                case 'lv_LV'; $name = 'Latvie&#353;u'; break; /* Latvian */
+                case 'ja_JP'; $name = '&#x65e5;&#x672c;&#x8a9e;'; break; /* Japanese */
+                case 'ko_KR'; $name = '&#xd55c;&#xad6d;&#xb9d0;'; break; /* Korean */
                 case 'lt_LT'; $name = 'Lietuvi&#371;'; break; /* Lithuanian */
-                case 'hu_HU'; $name = 'Magyar'; break; /* Hungarian */
+                case 'lv_LV'; $name = 'Latvie&#353;u'; break; /* Latvian */
+                case 'nb_NO'; $name = 'Norsk'; break; /* Norwegian */
                 case 'nl_NL'; $name = 'Nederlands'; break; /* Dutch */
                 case 'no_NO'; $name = 'Norsk bokm&#229;l'; break; /* Norwegian */
                 case 'pl_PL'; $name = 'Polski'; break; /* Polish */
                 case 'pt_BR'; $name = 'Portugu&#234;s Brasileiro'; break; /* Portuguese */
                 case 'pt_PT'; $name = 'Portugu&#234;s'; break; /* Portuguese */
                 case 'ro_RO'; $name = 'Rom&#226;n&#259;'; break; /* Romanian */
+                case 'ru_RU'; $name = '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'; break; /* Russian */
                 case 'sk_SK'; $name = 'Sloven&#269;ina'; break; /* Slovak */
                 case 'sl_SI'; $name = 'Sloven&#353;&#269;ina'; break; /* Slovenian */
                 case 'sr_CS'; $name = 'Srpski'; break; /* Serbian */
-                case 'fi_FI'; $name = 'Suomi'; break; /* Finnish */
                 case 'sv_SE'; $name = 'Svenska'; break; /* Swedish */
+                case 'tr_TR'; $name = 'T&#252;rk&#231;e'; break; /* Turkish */
                 case 'uk_UA'; $name = 'Українська'; break; /* Ukrainian */
                 case 'vi_VN'; $name = 'Ti&#7871;ng Vi&#7879;t'; break; /* Vietnamese */
-                case 'tr_TR'; $name = 'T&#252;rk&#231;e'; break; /* Turkish */
-                case 'bg_BG'; $name = '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;'; break; /* Bulgarian */
-                case 'ru_RU'; $name = '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'; break; /* Russian */
                 case 'zh_CN'; $name = '&#31616;&#20307;&#20013;&#25991;'; break; /* Chinese */
                 case 'zn_TW'; $name = '&#32321;&#39636;&#20013;&#25991;'; break; /* Chinese */
-                case 'ko_KR'; $name = '&#xd55c;&#xad6d;&#xb9d0;'; break; /* Korean */
-                case 'ja_JP'; $name = '&#x65e5;&#x672c;&#x8a9e;'; break; /* Japanese */
-                case 'nb_NO'; $name = 'Norsk'; break; /* Norwegian */
                 /* These languages are right to left. */
                 case 'ar_SA'; $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'; break; /* Arabic */
                 case 'he_IL'; $name = '&#1506;&#1489;&#1512;&#1497;&#1514;'; break; /* Hebrew */
@@ -227,6 +224,12 @@ function get_languages()
         }
 
     } // end while
+
+    // Sort the list of languages by country code
+    ksort($results);
+
+    // Prepend English (US)
+    $results = array( "en_US" => "English (US)" ) + $results;
 
     return $results;
 
@@ -307,6 +310,21 @@ function generate_config($current)
 }
 
 /**
+ * write_config
+ *
+ * Write new configuration into the current configuration file by keeping old values.
+ */
+function write_config($current_file_path)
+{
+    $new_data = generate_config(parse_ini_file($current_file_path));
+
+    // Start writing into the current config file
+    $handle = fopen($current_file_path, 'w+');
+    fwrite($handle, $new_data, strlen($new_data));
+    fclose($handle);
+}
+
+/**
  * escape_ini
  *
  * Escape a value used for inserting into an ini file.
@@ -315,4 +333,47 @@ function generate_config($current)
 function escape_ini($str)
 {
     return str_replace('"', '\"', $str);
+}
+
+// Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
+if (!function_exists('apache_request_headers')) {
+    function apache_request_headers()
+    {
+        $headers = array();
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+                $headers[$name] = $value;
+            } else if ($name == "CONTENT_TYPE") {
+               $headers["Content-Type"] = $value;
+           } else if ($name == "CONTENT_LENGTH") {
+               $headers["Content-Length"] = $value;
+           }
+        }
+        return $headers;
+    }
+
+    function getallheaders()
+    {
+        return apache_request_headers();
+    }
+}
+
+function get_current_path()
+{
+    if (strlen($_SERVER['PHP_SELF'])) {
+        $root = $_SERVER['PHP_SELF'];
+    } else {
+        $root = $_SERVER['REQUEST_URI'];
+    }
+
+    return $root;
+}
+
+function get_web_path()
+{
+    $root = get_current_path();
+    //$root = rtrim(dirname($root),"/\\");
+    $root = preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
+    return $root;
 }
