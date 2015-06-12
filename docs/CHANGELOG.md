@@ -3,6 +3,11 @@ CHANGELOG
 
 3.8.0
 ----------
+- Added Portuguese (Brasil) language (thanks Ione Souza Junior)
+- Updated PHPMailer version to 5.2.10
+- Fixed user stats clear
+- Added user, followers and last shouts XML API functions
+- Fixed transcoded process end on some systems (thanks nan4k7)
 - Added ogg channel streaming support (thanks Deathcow)
 - Fixed sql connection close before stream (thanks fufroma)
 - Added support for several ldap filters (thanks T-Rock)
