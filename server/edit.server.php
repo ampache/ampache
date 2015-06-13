@@ -58,6 +58,9 @@ $level = '50';
 if ($libitem->get_user_owner() == $GLOBALS['user']->id) {
     $level = '25';
 }
+if ($_REQUEST['action'] == 'show_edit_playlist') {
+    $level = '25';
+}
 
 // Make sure they got them rights
 if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
