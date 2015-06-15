@@ -305,7 +305,7 @@ class Auth
             return $results;
         }
 
-        if (strpos($ldap_filter, "%v") >= 0) {
+        if (strpos($ldap_filter, "%v") !== false) {
             $ldap_filter = str_replace("%v", $username, $ldap_filter);
         } else {
             // This to support previous configuration where only the fieldname was set
