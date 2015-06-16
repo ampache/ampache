@@ -784,7 +784,7 @@ class XML_Data
         if ($owner) {
             $user_owner = new User($owner);
             $user_owner->format();
-            $xowner = $xitem->addChild("xmlns:itunes:owner");
+            $xowner = $xchannel->addChild("xmlns:itunes:owner");
             $xowner->addChild("xmlns:itunes:name", $user_owner->f_name);
         }
 
