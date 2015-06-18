@@ -602,6 +602,8 @@ class Song extends database_object implements media, library_item
             case 'spx':
             case 'ogg':
                 return 'application/ogg';
+            case 'opus':
+                return 'audio/ogg; codecs=opus';
             case 'wma':
             case 'asf':
                 return 'audio/x-ms-wma';
