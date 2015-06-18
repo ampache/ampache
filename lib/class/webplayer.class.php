@@ -114,7 +114,7 @@ class WebPlayer
             }
 
             if ($urlinfo['type'] == 'song') {
-                if ($types['real'] == "ogg") $types['player'] = "oga";
+                if ($types['real'] == "ogg" || $types['real'] == "opus") $types['player'] = "oga";
                 else if ($types['real'] == "mp4") $types['player'] = "m4a";
             } else if ($urlinfo['type'] == 'video') {
                 if ($types['real'] == "ogg") $types['player'] = "ogv";
@@ -123,7 +123,7 @@ class WebPlayer
             }
         } else if ($item->type == 'live_stream') {
             $types['real'] = $item->codec;
-            if ($types['real'] == "ogg") $types['player'] = "oga";
+            if ($types['real'] == "ogg" || $types['real'] == "opus") $types['player'] = "oga";
         } else {
             $ext = pathinfo($item->url, PATHINFO_EXTENSION);
             if (!empty($ext)) $types['real'] = $ext;
