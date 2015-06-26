@@ -1373,7 +1373,7 @@ CREATE TABLE IF NOT EXISTS `label` (
   `user` int(11) unsigned NULL,
   `creation_date` int(11) unsigned NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
