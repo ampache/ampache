@@ -432,7 +432,7 @@ class Art extends database_object
         return true;
     }
 
-    private static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
+    public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {

@@ -28,12 +28,18 @@ require_once $prefix . '/lib/init.php';
 // Turn off output buffering we don't need it for a command line script
 ob_end_clean(); 
 
-$sql = "SELECT `image`,`id` FROM `image`";
+$inDisk = AmpConfig::get('album_art_store_disk');
+
+$sql = "SELECT `image`,`id`,object_id,object_type,size FROM `image`";
 $db_results = Dba::read($sql);
 $results = array();
 
 while ($row = Dba::fetch_assoc($db_results)) {
-    $source = $row['image'];
+    if ($inDisk)
+	    $source = Art::get_from_source(array('file' => Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default').'art-'.$row['size'].'.jpg'), $row['object_type']);
+    else
+        $source = $row['image'];
+
     $id = $row['id'];
         $dimensions = Core::image_dimensions($source);
         if ($dimensions) {
