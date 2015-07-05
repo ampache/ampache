@@ -283,7 +283,7 @@ class Stream
             $pid = $status['pid'];
             debug_event('stream', 'Stream process about to be killed. pid:' . $pid, 1);
 
-            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("taskkill /F /T /PID $pid") : exec("kill -9 $pid");
+            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("kill -9 $pid") : exec("taskkill /F /T /PID $pid");
 
             proc_close($transcoder['process']);
         } else {
