@@ -62,7 +62,7 @@ $('#browse_<?php echo $browse->id; ?>_scroll').jscroll({
 
 // Next
 $next_offset = $start + $limit;
-if ($next_offset > $total) { $next_offset = $start; }
+if ($next_offset >= $total) { $next_offset = $start; }
 
 // Prev
 $prev_offset = $start - $limit;

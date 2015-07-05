@@ -443,6 +443,8 @@ class XML_Data
             if (!$song->id) {
                 continue;
             }
+            
+            $song->format();
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating = new Rating($song_id, 'song');
@@ -455,26 +457,46 @@ class XML_Data
                     "]]></artist>\n" .
                 "\t<album id=\"" . $song->album .
                     '"><![CDATA[' . $song->get_album_name().
-                    "]]></album>\n" .
-                $tag_string .
+                    "]]></album>\n";
+            if ($song->albumartist) {
+                $string .= "\t<albumartist id=\"" . $song->albumartist .
+                    "\"><![CDATA[" . $song->get_album_artist_name(). "]]></albumartist>\n";
+            }
+            $string .= $tag_string .
                 "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
                 "\t<track>" . $song->track . "</track>\n" .
                 $playlist_track_string  .
                 "\t<time>" . $song->time . "</time>\n" .
                 "\t<year>" . $song->year . "</year>\n" .
-                "\t<bitrate>" . $song->bitrate . "</bitrate>\n".
-                "\t<mode>" . $song->mode . "</mode>\n".
+                "\t<bitrate>" . $song->bitrate . "</bitrate>\n" .
+                "\t<rate>" . $song->rate . "</rate>\n" .
+                "\t<mode>" . $song->mode . "</mode>\n" .
                 "\t<mime>" . $song->mime . "</mime>\n" .
                 "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api') . "]]></url>\n" .
-                "\t<size>" . $song->size . "</size>\n".
-                "\t<mbid>" . $song->mbid . "</mbid>\n".
-                "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n".
-                "\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n".
+                "\t<size>" . $song->size . "</size>\n" .
+                "\t<mbid>" . $song->mbid . "</mbid>\n" .
+                "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n" .
+                "\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n" .
+                "\t<albumartist_mbid>" . $song->albumartist_mbid . "</albumartist_mbid>\n" .
                 "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                 "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
                 "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
                 "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
-                "</song>\n";
+                "\t<composer>" . $song->composer . "</composer>\n" .
+                "\t<channels>" . $song->channels . "</channels>\n" .
+                "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
+            
+            $string .= "\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n"
+                    . "\t<language>" . $song->language . "</language>\n"
+                    . "\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n"
+                    . "\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n"
+                    . "\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n"
+                    . "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n";
+            foreach ($song->tags as $tag) {
+                $string .= "\t<genre><![CDATA[" . $tag . "]]></genre>\n";
+            }
+            
+            $string .= "</song>\n";
         } // end foreach
 
         return self::_header() . $string . self::_footer();
