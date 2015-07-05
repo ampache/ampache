@@ -814,7 +814,7 @@ class Song extends database_object implements media, library_item
 
         $array = array();
         $string_array = array('title','comment','lyrics');
-        $skip_array = array('id','tag_id','mime','artist_mbid','album_mbid','albumartist_mbid','albumartist','mbid','mb_albumid_group','waveform');
+        $skip_array = array('id','tag_id','mime','artist_mbid','album_mbid','albumartist_mbid','albumartist','mbid','mb_albumid_group','waveform','object_cnt');
 
         // Pull out all the currently set vars
         $fields = get_object_vars($song);
@@ -832,7 +832,9 @@ class Song extends database_object implements media, library_item
             else {
                 if ($song->$key != $new_song->$key) {
                     $array['change'] = true;
-                    $array['element'][$key] = 'OLD:' . $song->$key . ' --> ' . $new_song->$key;
+                    $songData = is_array($song->$key) ? implode(" ", $song->$key) : $song->$key;
+                    $newSongData = is_array($new_song->$key) ? implode(" ", $new_song->$key) : $new_song->$key;
+                    $array['element'][$key] = 'OLD:' . $songData . ' --> ' . $newSongData;
                 }
             } // end else
 

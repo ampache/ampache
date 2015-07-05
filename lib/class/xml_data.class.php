@@ -443,7 +443,7 @@ class XML_Data
             if (!$song->id) {
                 continue;
             }
-            
+
             $song->format();
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
@@ -485,7 +485,7 @@ class XML_Data
                 "\t<composer>" . $song->composer . "</composer>\n" .
                 "\t<channels>" . $song->channels . "</channels>\n" .
                 "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
-            
+
             $string .= "\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n"
                     . "\t<language>" . $song->language . "</language>\n"
                     . "\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n"
@@ -495,7 +495,7 @@ class XML_Data
             foreach ($song->tags as $tag) {
                 $string .= "\t<genre><![CDATA[" . $tag . "]]></genre>\n";
             }
-            
+
             $string .= "</song>\n";
         } // end foreach
 
