@@ -826,7 +826,9 @@ class Song extends database_object implements media, library_item
             if (in_array($key,$string_array)) {
                 if (trim(stripslashes($song->$key)) != trim(stripslashes($new_song->$key))) {
                     $array['change'] = true;
-                    $array['element'][$key] = 'OLD: ' . $song->$key . ' --> ' . $new_song->$key;
+                    $songData = is_array($song->$key) ? implode(" ", $song->$key) : $song->$key;
+                    $newSongData = is_array($new_song->$key) ? implode(" ", $new_song->$key) : $new_song->$key;
+                    $array['element'][$key] = 'OLD:' . $songData . ' --> ' . $newSongData;
                 }
             } // in array of stringies
             else {
