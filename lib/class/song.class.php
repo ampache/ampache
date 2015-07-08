@@ -822,18 +822,19 @@ class Song extends database_object implements media, library_item
         // Foreach them
         foreach ($fields as $key=>$value) {
             if (in_array($key,$skip_array)) { continue; }
+
+            $songData = is_array($song->$key) ? implode(" ", $song->$key) : $song->$key;
+            $newSongData = is_array($new_song->$key) ? implode(" ", $new_song->$key) : $new_song->$key;
             // If it's a stringie thing
-            if (in_array($key,$string_array)) {
-                if (trim(stripslashes($song->$key)) != trim(stripslashes($new_song->$key))) {
+            if (in_array($key, $string_array)) {
+                if (trim(stripslashes($songData)) != trim(stripslashes($newSongData))) {
                     $array['change'] = true;
-                    $array['element'][$key] = 'OLD: ' . $song->$key . ' --> ' . $new_song->$key;
+                    $array['element'][$key] = 'OLD: ' . $songData . ' --> ' . $newSongData;
                 }
             } // in array of stringies
             else {
                 if ($song->$key != $new_song->$key) {
                     $array['change'] = true;
-                    $songData = is_array($song->$key) ? implode(" ", $song->$key) : $song->$key;
-                    $newSongData = is_array($new_song->$key) ? implode(" ", $new_song->$key) : $new_song->$key;
                     $array['element'][$key] = 'OLD:' . $songData . ' --> ' . $newSongData;
                 }
             } // end else
