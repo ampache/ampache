@@ -45,7 +45,6 @@ class Movie extends Video
         }
 
         return true;
-
     } // Constructor
 
     /**
@@ -75,7 +74,6 @@ class Movie extends Video
         Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
 
         return $data['id'];
-
     } // create
 
     /**
@@ -106,7 +104,6 @@ class Movie extends Video
         $this->year = $year;
 
         return $this->id;
-
     } // update
 
     /**
@@ -124,7 +121,6 @@ class Movie extends Video
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
 
         return true;
-
     } //format
 
     /**
@@ -160,5 +156,5 @@ class Movie extends Video
 
         return $deleted;
     }
-
 } // Movie class
+

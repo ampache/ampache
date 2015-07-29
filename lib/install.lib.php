@@ -26,31 +26,31 @@
  */
 function split_sql($sql)
 {
-        $sql = trim($sql);
-        $sql = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
-        $buffer = array();
-        $ret = array();
-        $in_string = false;
-        for ($i=0; $i<strlen($sql)-1; $i++) {
-                if ($sql[$i] == ";" && !$in_string) {
-                        $ret[] = substr($sql, 0, $i);
-                        $sql = substr($sql, $i + 1);
-                        $i = 0;
-                }
-                if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
-                        $in_string = false;
-                } elseif (!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
-                        $in_string = $sql[$i];
-                }
-                if (isset($buffer[1])) {
-                        $buffer[0] = $buffer[1];
-                }
-                $buffer[1] = $sql[$i];
+    $sql = trim($sql);
+    $sql = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
+    $buffer = array();
+    $ret = array();
+    $in_string = false;
+    for ($i=0; $i<strlen($sql)-1; $i++) {
+        if ($sql[$i] == ";" && !$in_string) {
+            $ret[] = substr($sql, 0, $i);
+            $sql = substr($sql, $i + 1);
+            $i = 0;
         }
-        if (!empty($sql)) {
-                $ret[] = $sql;
+        if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
+            $in_string = false;
+        } elseif (!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+            $in_string = $sql[$i];
         }
-        return($ret);
+        if (isset($buffer[1])) {
+            $buffer[0] = $buffer[1];
+        }
+        $buffer[1] = $sql[$i];
+    }
+    if (!empty($sql)) {
+        $ret[] = $sql;
+    }
+    return($ret);
 } // split_sql
 
 /**
@@ -98,7 +98,6 @@ function install_check_status($configfile)
         Error::add('general', T_('Existing Database detected, unable to continue installation'));
         return false;
     }
-
 } // install_check_status
 
 function install_check_server_apache()
@@ -340,7 +339,6 @@ function install_create_account($username, $password, $password2)
     User::fix_preferences('-1');
 
     return true;
-
 } // install_create_account
 
 function command_exists($command)

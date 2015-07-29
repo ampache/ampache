@@ -67,7 +67,7 @@ switch ($_REQUEST['action']) {
 
         /* If we're using the captcha stuff */
         if (AmpConfig::get('captcha_public_reg')) {
-                $captcha         = captcha::solved();
+            $captcha         = captcha::solved();
             if (!isset ($captcha)) {
                 Error::add('captcha', T_('Error Captcha Required'));
             }
@@ -75,8 +75,8 @@ switch ($_REQUEST['action']) {
                 if ($captcha) {
                     $msg="SUCCESS";
                 } else {
-                        Error::add('captcha', T_('Error Captcha Failed'));
-                    }
+                    Error::add('captcha', T_('Error Captcha Failed'));
+                }
             } // end if we've got captcha
         } // end if it's enabled
 
@@ -168,3 +168,4 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
     break;
 } // end switch on action
+

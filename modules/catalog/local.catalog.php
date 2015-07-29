@@ -43,7 +43,6 @@ class Catalog_local extends Catalog
     public function get_description()
     {
         return $this->description;
-
     } // get_description
 
     /**
@@ -53,7 +52,6 @@ class Catalog_local extends Catalog
     public function get_version()
     {
         return $this->version;
-
     } // get_version
 
     /**
@@ -63,7 +61,6 @@ class Catalog_local extends Catalog
     public function get_type()
     {
         return $this->type;
-
     } // get_type
 
     /**
@@ -73,7 +70,6 @@ class Catalog_local extends Catalog
     public function get_create_help()
     {
         return "";
-
     } // get_create_help
 
     /**
@@ -86,8 +82,6 @@ class Catalog_local extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-
-
     } // is_installed
 
     /**
@@ -103,7 +97,6 @@ class Catalog_local extends Catalog
         $db_results = Dba::query($sql);
 
         return true;
-
     } // install
 
     public function catalog_fields()
@@ -111,7 +104,6 @@ class Catalog_local extends Catalog
         $fields['path']      = array('description' => T_('Path'),'type'=>'textbox');
 
         return $fields;
-
     }
 
     public $path;
@@ -162,7 +154,6 @@ class Catalog_local extends Catalog
             // Keep going until the path stops changing
             $old_path = $component_path;
             $component_path = realpath($component_path . '/../');
-
         } while (strcmp($component_path,$old_path) != 0);
 
         return false;
@@ -260,7 +251,9 @@ class Catalog_local extends Catalog
         while ( false !== ( $file = readdir($handle) ) ) {
 
             /* Skip to next if we've got . or .. */
-            if (substr($file,0,1) == '.') { continue; }
+            if (substr($file,0,1) == '.') {
+                continue;
+            }
 
             debug_event('read', "Starting work on $file inside $path", 5);
             debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
@@ -268,7 +261,6 @@ class Catalog_local extends Catalog
             /* Create the new path */
             $full_file = $path.$slash_type.$file;
             $this->add_file($full_file, $options);
-
         } // end while reading directory
 
         debug_event('closedir', "Finished reading $path , closing handle", 5);
@@ -280,7 +272,6 @@ class Catalog_local extends Catalog
 
         /* Close the dir handle */
         @closedir($handle);
-
     } // add_files
 
     public function add_file($full_file, $options)
@@ -390,11 +381,13 @@ class Catalog_local extends Catalog
                     } else {
                         debug_event('read', $full_file . " ignored, bad media type for this music catalog.", 5);
                     }
-                } else if (count($this->get_gather_types('video')) > 0) {
-                    if ($is_video_file) {
-                        $this->insert_local_video($full_file, $options);
-                    } else {
-                        debug_event('read', $full_file . " ignored, bad media type for this video catalog.", 5);
+                } else {
+                    if (count($this->get_gather_types('video')) > 0) {
+                        if ($is_video_file) {
+                            $this->insert_local_video($full_file, $options);
+                        } else {
+                            debug_event('read', $full_file . " ignored, bad media type for this video catalog.", 5);
+                        }
                     }
                 }
 
@@ -404,9 +397,7 @@ class Catalog_local extends Catalog
                     UI::update_text('add_count_' . $this->id, $this->count);
                     UI::update_text('add_dir_' . $this->id, scrub_out($file));
                 } // update our current state
-
             } // if it's not an m3u
-
         } //if it matches the pattern
         else {
             debug_event('read', "$full_file ignored, non-audio file or 0 bytes", 5);
@@ -487,7 +478,6 @@ class Catalog_local extends Catalog
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
-
     } // add_to_catalog
 
     /**
@@ -530,7 +520,6 @@ class Catalog_local extends Catalog
         $this->update_last_update();
 
         return array('total' => $number, 'updated' => $total_updated);
-
     } // verify_catalog_proc
 
     /**
@@ -554,7 +543,8 @@ class Catalog_local extends Catalog
             }
             $media_type::build_cache($media_ids);
             $db_results = Dba::read($sql);
-        } while ($row = Dba::fetch_assoc($db_results)) {
+        }
+        while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (UI::check_ticker()) {
                 $file = str_replace(array('(',')','\''), '', $row['file']);
@@ -579,7 +569,6 @@ class Catalog_local extends Catalog
 
         UI::update_text('verify_count_' . $this->id, $count);
         return $changed;
-
     } // _verify_chunk
 
     /**
@@ -589,30 +578,30 @@ class Catalog_local extends Catalog
      */
      public function clean_catalog_proc()
      {
-        if (!Core::is_readable($this->path)) {
-            // First sanity check; no point in proceeding with an unreadable
+         if (!Core::is_readable($this->path)) {
+             // First sanity check; no point in proceeding with an unreadable
             // catalog root.
             debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
-            Error::add('general', T_('Catalog Root unreadable, stopping clean'));
-            Error::display('general');
-            return 0;
-        }
+             Error::add('general', T_('Catalog Root unreadable, stopping clean'));
+             Error::display('general');
+             return 0;
+         }
 
-        $dead_total = 0;
-        $stats = self::get_stats($this->id);
-        $this->count = 0;
-        foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
+         $dead_total = 0;
+         $stats = self::get_stats($this->id);
+         $this->count = 0;
+         foreach (array('video', 'song') as $media_type) {
+             $total = $stats[$media_type . 's']; // UGLY
             if ($total == 0) {
                 continue;
             }
-            $chunks = floor($total / 10000);
-            $dead = array();
-            foreach (range(0, $chunks) as $chunk) {
-                $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
-            }
+             $chunks = floor($total / 10000);
+             $dead = array();
+             foreach (range(0, $chunks) as $chunk) {
+                 $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+             }
 
-            $dead_count = count($dead);
+             $dead_count = count($dead);
             // The AlmightyOatmeal sanity check
             // Never remove everything; it might be a dead mount
             if ($dead_count >= $total) {
@@ -620,15 +609,15 @@ class Catalog_local extends Catalog
                 Error::add('general', T_('All files would be removed. Doing nothing'));
                 continue;
             }
-            if ($dead_count) {
-                $dead_total += $dead_count;
-                $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
+             if ($dead_count) {
+                 $dead_total += $dead_count;
+                 $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
                     '(' . implode(',',$dead) . ')';
-                $db_results = Dba::write($sql);
-            }
-        }
-        return $dead_total;
-    }
+                 $db_results = Dba::write($sql);
+             }
+         }
+         return $dead_total;
+     }
 
     /**
      * _clean_chunk
@@ -661,14 +650,14 @@ class Catalog_local extends Catalog
 
                 // Store it in an array we'll delete it later...
                 $dead[] = $results['id'];
-
             } //if error
-            else if (!Core::is_readable(Core::conv_lc_file($results['file']))) {
-                debug_event('clean', $results['file'] . ' is not readable, but does exist', 1);
+            else {
+                if (!Core::is_readable(Core::conv_lc_file($results['file']))) {
+                    debug_event('clean', $results['file'] . ' is not readable, but does exist', 1);
+                }
             }
         }
         return $dead;
-
     } //_clean_chunk
 
     /**
@@ -771,7 +760,6 @@ class Catalog_local extends Catalog
         }
 
         return false;
-
     } //check_local_mp3
 
     public function get_rel_path($file_path)
@@ -798,5 +786,5 @@ class Catalog_local extends Catalog
         // Do nothing, it's just file...
         return $media;
     }
-
 } // end of local catalog class
+

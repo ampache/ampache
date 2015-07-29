@@ -26,7 +26,10 @@ require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
 
 $object_type = $_GET['object_type'];
 $object_id = $_GET['object_id'];
-if (!Core::is_library_item($object_type)) { UI::access_denied(); exit; }
+if (!Core::is_library_item($object_type)) {
+    UI::access_denied();
+    exit;
+}
 $burl = '';
 if (isset($_GET['burl'])) {
     $burl = base64_decode($_GET['burl']);
@@ -34,7 +37,10 @@ if (isset($_GET['burl'])) {
 $item = new $object_type($object_id);
 
 // If not a content manager user then kick em out
-if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != $GLOBALS['user']->id)) { UI::access_denied(); exit; }
+if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != $GLOBALS['user']->id)) {
+    UI::access_denied();
+    exit;
+}
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
@@ -87,9 +93,7 @@ switch ($_REQUEST['action']) {
                 $art->insert($image_data,$upload['0']['mime']);
                 show_confirmation(T_('Art Inserted'), '', $burl);
                 break;
-
             } // if image data
-
         } // if it's an upload
 
         $keywords = $item->get_keywords();

@@ -23,7 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $democratic = Democratic::get_current_playlist();
 $democratic->set_parent();

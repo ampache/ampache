@@ -198,7 +198,6 @@ class Video extends database_object implements media, library_item
         $this->type = strtolower($data['extension']);
 
         return true;
-
     } // Constructor
 
     /**
@@ -228,7 +227,9 @@ class Video extends database_object implements media, library_item
      */
     public static function build_cache($ids=array())
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) OR !count($ids)) {
+            return false;
+        }
 
         $idlist = '(' . implode(',',$ids) . ')';
 
@@ -238,7 +239,6 @@ class Video extends database_object implements media, library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('video',$row['id'],$row);
         }
-
     } // build_cache
 
     /**
@@ -285,7 +285,6 @@ class Video extends database_object implements media, library_item
         if ($this->release_date) {
             $this->f_release_date = date('Y-m-d', $this->release_date);
         }
-
     } // format
 
     /**
@@ -474,8 +473,9 @@ class Video extends database_object implements media, library_item
     {
         $dtypes = self::get_derived_types();
         foreach ($dtypes as $dtype) {
-            if (strtolower($type) == strtolower($dtype))
+            if (strtolower($type) == strtolower($dtype)) {
                 return $type;
+            }
         }
 
         return 'Video';
@@ -631,7 +631,6 @@ class Video extends database_object implements media, library_item
         $this->release_date = $release_date;
 
         return $this->id;
-
     } // update
 
     /**
@@ -715,7 +714,6 @@ class Video extends database_object implements media, library_item
         Video::update_played(true, $this->id);
 
         return true;
-
     } // set_played
 
     /**
@@ -1001,7 +999,6 @@ class Video extends database_object implements media, library_item
     public static function update_played($new_played, $song_id)
     {
         self::_update_item('played', ($new_played ? 1 : 0),$song_id,'25');
-
     } // update_played
 
     /**
@@ -1019,16 +1016,19 @@ class Video extends database_object implements media, library_item
     private static function _update_item($field, $value, $song_id, $level)
     {
         /* Check them Rights! */
-        if (!Access::check('interface',$level)) { return false; }
+        if (!Access::check('interface',$level)) {
+            return false;
+        }
 
         /* Can't update to blank */
-        if (!strlen(trim($value))) { return false; }
+        if (!strlen(trim($value))) {
+            return false;
+        }
 
         $sql = "UPDATE `video` SET `$field` = ? WHERE `id` = ?";
         Dba::write($sql, array($value, $song_id));
 
         return true;
-
     } // _update_item
-
 } // end Video class
+

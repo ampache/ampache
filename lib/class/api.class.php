@@ -51,7 +51,6 @@ class Api
     private function __construct()
     {
         // Rien a faire
-
     } // constructor
 
     /**
@@ -77,7 +76,9 @@ class Api
      */
     public static function set_filter($filter,$value)
     {
-        if (!strlen($value)) { return false; }
+        if (!strlen($value)) {
+            return false;
+        }
 
         switch ($filter) {
             case 'add':
@@ -112,7 +113,6 @@ class Api
         } // end filter
 
         return true;
-
     } // set_filter
 
     /**
@@ -257,7 +257,6 @@ class Api
                     'catalogs'=>$catalog['catalog']));
                 return true;
             } // match
-
         } // end while
 
         debug_event('API','Login Failed, unable to match passphrase','1');
@@ -286,7 +285,6 @@ class Api
 
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);
-
     } // ping
 
     /**
@@ -315,7 +313,6 @@ class Api
         // echo out the resulting xml document
         ob_end_clean();
         echo XML_Data::artists($artists);
-
     } // artists
 
     /**
@@ -328,7 +325,6 @@ class Api
     {
         $uid = scrub_in($input['filter']);
         echo XML_Data::artists(array($uid));
-
     } // artist
 
     /**
@@ -347,7 +343,6 @@ class Api
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
         echo XML_Data::albums($albums);
-
     } // artist_albums
 
     /**
@@ -365,7 +360,6 @@ class Api
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
         echo XML_Data::songs($songs);
-
     } // artist_songs
 
     /**
@@ -390,7 +384,6 @@ class Api
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
         echo XML_Data::albums($albums);
-
     } // albums
 
     /**
@@ -402,7 +395,6 @@ class Api
     {
         $uid = scrub_in($input['filter']);
         echo XML_Data::albums(array($uid));
-
     } // album
 
     /**
@@ -421,7 +413,6 @@ class Api
 
         ob_end_clean();
         echo XML_Data::songs($songs);
-
     } // album_songs
 
     /**
@@ -445,7 +436,6 @@ class Api
 
         ob_end_clean();
         echo XML_Data::tags($tags);
-
     } // tags
 
     /**
@@ -458,7 +448,6 @@ class Api
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         echo XML_Data::tags(array($uid));
-
     } // tag
 
     /**
@@ -476,7 +465,6 @@ class Api
             ob_end_clean();
             echo XML_Data::artists($artists);
         }
-
     } // tag_artists
 
     /**
@@ -494,7 +482,6 @@ class Api
             ob_end_clean();
             echo XML_Data::albums($albums);
         }
-
     } // tag_albums
 
     /**
@@ -511,7 +498,6 @@ class Api
 
         ob_end_clean();
         echo XML_Data::songs($songs);
-
     } // tag_songs
 
     /**
@@ -538,7 +524,6 @@ class Api
 
         ob_end_clean();
         echo XML_Data::songs($songs);
-
     } // songs
 
     /**
@@ -552,7 +537,6 @@ class Api
 
         ob_end_clean();
         echo XML_Data::songs(array($uid));
-
     } // song
 
     /**
@@ -590,7 +574,6 @@ class Api
 
         ob_end_clean();
         echo XML_Data::playlists($playlist_ids);
-
     } // playlists
 
     /**
@@ -604,7 +587,6 @@ class Api
 
         ob_end_clean();
         echo XML_Data::playlists(array($uid));
-
     } // playlist
 
     /**
@@ -628,7 +610,6 @@ class Api
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
         echo XML_Data::songs($songs,$items);
-
     } // playlist_songs
 
     /**
@@ -681,7 +662,6 @@ class Api
             $playlist->add_songs(array($song));
             echo XML_Data::single_string('success');
         }
-
     } // playlist_add_song
 
     /**
@@ -700,7 +680,6 @@ class Api
             $playlist->delete_track_number($track);
             echo XML_Data::single_string('success');
         }
-
     } // playlist_remove_song
 
     /**
@@ -724,7 +703,6 @@ class Api
         $results = Search::run($array);
 
         echo XML_Data::songs($results);
-
     } // search_songs
 
     /**
@@ -747,7 +725,6 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         echo XML_Data::videos($video_ids);
-
     } // videos
 
     /**
@@ -760,8 +737,6 @@ class Api
         $video_id = scrub_in($input['filter']);
 
         echo XML_Data::videos(array($video_id));
-
-
     } // video
 
     /**
@@ -789,7 +764,6 @@ class Api
                 echo XML_Data::error('405', T_('Invalid Request'));
             break;
         } // end switch on command
-
     } // localplay
 
     /**
@@ -851,7 +825,6 @@ class Api
                 echo XML_Data::error('405', T_('Invalid Request'));
             break;
         } // switch on method
-
     } // democratic
 
     /**
@@ -868,28 +841,36 @@ class Api
         $albums = null;
         if ($type == "newest") {
             $albums = Stats::get_newest("album", $limit, $offset);
-        } else if ($type == "highest") {
-            $albums = Rating::get_highest("album", $limit, $offset);
-        } else if ($type == "frequent") {
-            $albums = Stats::get_top("album", $limit, '', $offset);
-        } else if ($type == "recent") {
-            if (!empty($username)) {
-                $user = User::get_from_username($username);
-                if ($user !== null) {
-                    $albums = $user->get_recently_played($limit, 'album');
-                } else {
-                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
-                }
-            } else {
-                $albums = Stats::get_recent("album", $limit, $offset);
-            }
-        } else if ($type == "flagged") {
-            $albums = Userflag::get_latest('album');
         } else {
-            if (!$limit) {
-                $limit = AmpConfig::get('popular_threshold');
+            if ($type == "highest") {
+                $albums = Rating::get_highest("album", $limit, $offset);
+            } else {
+                if ($type == "frequent") {
+                    $albums = Stats::get_top("album", $limit, '', $offset);
+                } else {
+                    if ($type == "recent") {
+                        if (!empty($username)) {
+                            $user = User::get_from_username($username);
+                            if ($user !== null) {
+                                $albums = $user->get_recently_played($limit, 'album');
+                            } else {
+                                debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                            }
+                        } else {
+                            $albums = Stats::get_recent("album", $limit, $offset);
+                        }
+                    } else {
+                        if ($type == "flagged") {
+                            $albums = Userflag::get_latest('album');
+                        } else {
+                            if (!$limit) {
+                                $limit = AmpConfig::get('popular_threshold');
+                            }
+                            $albums = Album::get_random($limit);
+                        }
+                    }
+                }
             }
-            $albums = Album::get_random($limit);
         }
 
         if ($albums !== null) {
@@ -996,5 +977,5 @@ class Api
             debug_event('api', 'Sociable feature is not enabled.', 3);
         }
     } // last_shouts
-
 } // API class
+

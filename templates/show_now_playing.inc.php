@@ -28,9 +28,10 @@
  */
 
 if (count($results)) {
-$link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : '';
-?>
-<?php UI::show_box_top(T_('Now Playing') . $link); ?>
+    $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : '';
+    ?>
+<?php UI::show_box_top(T_('Now Playing') . $link);
+    ?>
 <?php
 foreach ($results as $item) {
     $media = $item['media'];
@@ -39,9 +40,13 @@ foreach ($results as $item) {
     $agent = $item['agent'];
 
     /* If we've gotten a non-song object just skip this row */
-    if (!is_object($media)) { continue; }
-    if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
-?>
+    if (!is_object($media)) {
+        continue;
+    }
+    if (!$np_user->fullname) {
+        $np_user->fullname = "Ampache User";
+    }
+    ?>
 <div class="np_row">
 <?php
 if (strtolower(get_class($media)) == 'song') {
@@ -49,10 +54,13 @@ if (strtolower(get_class($media)) == 'song') {
 } else {
     require AmpConfig::get('prefix') . '/templates/show_now_playing_video_row.inc.php';
 }
-?>
+    ?>
 </div>
 <?php
+
 } // end foreach
 ?>
-<?php UI::show_box_bottom(); ?>
-<?php } // end if count results ?>
+<?php UI::show_box_bottom();
+    ?>
+<?php 
+} // end if count results ?>

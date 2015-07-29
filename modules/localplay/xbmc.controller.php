@@ -50,7 +50,6 @@ class AmpacheXbmc extends localplay_controller
     {
         /* Do a Require Once On the needed Libraries */
         require_once AmpConfig::get('prefix') . '/modules/xbmc-php-rpc/HTTPClient.php';
-
     } // Constructor
 
     /**
@@ -60,7 +59,6 @@ class AmpacheXbmc extends localplay_controller
     public function get_description()
     {
         return $this->description;
-
     } // get_description
 
     /**
@@ -70,7 +68,6 @@ class AmpacheXbmc extends localplay_controller
     public function get_version()
     {
         return $this->version;
-
     } // get_version
 
     /**
@@ -83,8 +80,6 @@ class AmpacheXbmc extends localplay_controller
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-
-
     } // is_installed
 
     /**
@@ -107,7 +102,6 @@ class AmpacheXbmc extends localplay_controller
         Preference::insert('xbmc_active','XBMC Active Instance','0','25','integer','internal');
 
         return true;
-
     } // install
 
     /**
@@ -123,7 +117,6 @@ class AmpacheXbmc extends localplay_controller
         Preference::delete('xbmc_active');
 
         return true;
-
     } // uninstall
 
     /**
@@ -137,7 +130,6 @@ class AmpacheXbmc extends localplay_controller
         $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['user'], $data['pass'], $GLOBALS['user']->id));
 
         return $db_results;
-
     } // add_instance
 
     /**
@@ -150,7 +142,6 @@ class AmpacheXbmc extends localplay_controller
         $db_results = Dba::query($sql, array($uid));
 
         return true;
-
     } // delete_instance
 
     /**
@@ -170,7 +161,6 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $results;
-
     } // get_instances
 
     /**
@@ -183,7 +173,6 @@ class AmpacheXbmc extends localplay_controller
         $db_results = Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid));
 
         return true;
-
     } // update_instance
 
     /**
@@ -200,7 +189,6 @@ class AmpacheXbmc extends localplay_controller
         $fields['pass']         = array('description' => T_('Password'),'type'=>'textbox');
 
         return $fields;
-
     } // instance_fields
 
     /**
@@ -217,7 +205,6 @@ class AmpacheXbmc extends localplay_controller
         $row = Dba::fetch_assoc($db_results);
 
         return $row;
-
     } // get_instance
 
     /**
@@ -237,7 +224,6 @@ class AmpacheXbmc extends localplay_controller
         AmpConfig::set('xbmc_active', intval($uid), true);
 
         return true;
-
     } // set_active_instance
 
     /**
@@ -287,7 +273,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'delete_track failed: ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // delete_track
 
     /**
@@ -309,7 +294,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'clear_playlist failed: ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // clear_playlist
 
     /**
@@ -342,7 +326,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'play failed: ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // play
 
     /**
@@ -365,7 +348,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'pause failed, is the player started? ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // pause
 
     /**
@@ -388,7 +370,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'stop failed, is the player started? ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // stop
 
     /**
@@ -411,7 +392,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'skip failed, is the player started?: ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // skip
 
     /**
@@ -432,7 +412,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'volume_up failed: ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // volume_up
 
     /**
@@ -453,7 +432,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'volume_down failed: ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // volume_down
 
     /**
@@ -476,7 +454,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'next failed, is the player started? ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // next
 
     /**
@@ -499,7 +476,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'prev failed, is the player started? ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // prev
 
     /**
@@ -521,7 +497,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'volume failed: ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // volume
 
     /**
@@ -544,7 +519,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'repeat failed, is the player started? ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // repeat
 
     /**
@@ -567,7 +541,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'random failed, is the player started? ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // random
 
     /**
@@ -616,7 +589,6 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $results;
-
     } // get
 
     /**
@@ -669,7 +641,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'status failed: ' . $ex->getMessage(), 1);
         }
         return $array;
-
     } // status
 
     /**
@@ -690,7 +661,6 @@ class AmpacheXbmc extends localplay_controller
             debug_event('xbmc', 'xbmc connection failed: ' . $ex->getMessage(), 1);
             return false;
         }
-
     } // connect
-
 } //end of AmpacheXbmc
+

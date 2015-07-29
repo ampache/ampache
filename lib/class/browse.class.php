@@ -63,7 +63,6 @@ class Browse extends Query
     public function set_simple_browse($value)
     {
         $this->set_is_simple($value);
-
     } // set_simple_browse
 
     /**
@@ -78,7 +77,6 @@ class Browse extends Query
         $_SESSION['browse']['supplemental'][$this->id][$class] = intval($uid);
 
         return true;
-
     } // add_supplemental_object
 
     /**
@@ -97,7 +95,6 @@ class Browse extends Query
         }
 
         return $objects;
-
     } // get_supplemental_objects
 
     /**
@@ -113,7 +110,6 @@ class Browse extends Query
                 // Checking if value is suitable
                 $start = $_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {
-
                     $set_page = floor($start / $this->get_offset());
                     if ($this->get_total() > $this->get_offset()) {
                         $total_pages = ceil($this->get_total() / $this->get_offset());
@@ -155,8 +151,10 @@ class Browse extends Query
                 $this->get_offset(),
                 true
             );
-        } else if (!count($object_ids)) {
-            $this->set_total(0);
+        } else {
+            if (!count($object_ids)) {
+                $this->set_total(0);
+            }
         }
 
         // Load any additional object we need for this
@@ -363,7 +361,6 @@ class Browse extends Query
             }
         }
         Ajax::end_container();
-
     } // show_object
 
     public function show_next_link($argument = null)
@@ -533,5 +530,5 @@ class Browse extends Query
     {
         return $this->_state['threshold'];
     }
-
 } // browse
+

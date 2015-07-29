@@ -34,20 +34,33 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($songs as $song) { ?>
-                <tr class="<?php echo UI::flip_class(); ?>">
-                    <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
-                    <td class="cel_song"><?php echo $song->title; ?></td>
-                    <td class="cel_album"><?php echo $song->get_album_name($song->album); ?></td>
-                    <td class="cel_artist"><?php echo $song->get_artist_name($song->album); ?></td>
-                    <td class="cel_filename"><?php echo $song->file; ?></td>
-                    <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y",$song->addition_time); ?></td>
+            <?php foreach ($songs as $song) {
+    ?>
+                <tr class="<?php echo UI::flip_class();
+    ?>">
+                    <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id;
+    ?>" /></td>
+                    <td class="cel_song"><?php echo $song->title;
+    ?></td>
+                    <td class="cel_album"><?php echo $song->get_album_name($song->album);
+    ?></td>
+                    <td class="cel_artist"><?php echo $song->get_artist_name($song->album);
+    ?></td>
+                    <td class="cel_filename"><?php echo $song->file;
+    ?></td>
+                    <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y",$song->addition_time);
+    ?></td>
                 </tr>
-            <?php } if (!count($songs)) { ?>
-                <tr class="<?php echo UI::flip_class(); ?>">
-                    <td colspan="6"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+            <?php 
+} if (!count($songs)) {
+    ?>
+                <tr class="<?php echo UI::flip_class();
+    ?>">
+                    <td colspan="6"><span class="error"><?php echo T_('No Records Found');
+    ?></span></td>
                 </tr>
-            <?php } ?>
+            <?php 
+} ?>
         </tbody>
         <tfoot>
             <tr class="th-bottom">

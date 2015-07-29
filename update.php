@@ -84,11 +84,15 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
         <div class="content">
             <?php Update::display_update(); ?>
         </div>
-        <?php if (Update::need_update()) { ?>
-            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
-                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!'); ?></button>
+        <?php if (Update::need_update()) {
+    ?>
+            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path');
+    ?>/update.php?action=update">
+                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!');
+    ?></button>
             </form>
-        <?php } ?>
+        <?php 
+} ?>
     </div>
 </body>
 </html>

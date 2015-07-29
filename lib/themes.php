@@ -32,8 +32,8 @@ function get_themes()
     $handle = opendir(AmpConfig::get('prefix') . '/themes');
 
     if (!is_resource($handle)) {
-         debug_event('theme', 'Failed to open /themes directory', 2);
-         return array();
+        debug_event('theme', 'Failed to open /themes directory', 2);
+        return array();
     }
 
     $results = array();
@@ -56,7 +56,6 @@ function get_themes()
     ksort($results);
 
     return $results;
-
 } // get_themes
 
 /*!
@@ -66,13 +65,14 @@ function get_themes()
 */
 function get_theme($name)
 {
-    if (strlen($name) < 1) { return false; }
+    if (strlen($name) < 1) {
+        return false;
+    }
 
     $config_file = AmpConfig::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
     $results = parse_ini_file($config_file);
     $results['path'] = $name;
     return $results;
-
 } // get_theme
 
 /*!
@@ -85,7 +85,6 @@ function get_theme_author($theme_name)
     $results = read_config($theme_path);
 
     return $results['author'];
-
 } // get_theme_author
 
 /*!
@@ -101,5 +100,5 @@ function theme_exists($theme_name)
     }
 
     return true;
-
 } // theme_exists
+

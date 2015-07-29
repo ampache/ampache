@@ -139,7 +139,9 @@ class Artist extends database_object implements library_item
     public function __construct($id=null,$catalog_init=0)
     {
         /* If they failed to pass in an id, just run for it */
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         $this->catalog_id = $catalog_init;
         /* Get the information from the db */
@@ -150,7 +152,6 @@ class Artist extends database_object implements library_item
         } // foreach info
 
         return true;
-
     } //constructor
 
     /**
@@ -171,7 +172,6 @@ class Artist extends database_object implements library_item
         $artist->_fake = true;
 
         return $artist;
-
     } // construct_from_array
 
     /**
@@ -196,15 +196,17 @@ class Artist extends database_object implements library_item
      */
     public static function build_cache($ids, $extra=false, $limit_threshold = '')
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) OR !count($ids)) {
+            return false;
+        }
 
         $idlist = '(' . implode(',', $ids) . ')';
 
         $sql = "SELECT * FROM `artist` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
-          while ($row = Dba::fetch_assoc($db_results)) {
-              parent::add_to_cache('artist',$row['id'],$row);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            parent::add_to_cache('artist',$row['id'],$row);
         }
 
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
@@ -220,11 +222,9 @@ class Artist extends database_object implements library_item
                 }
                 parent::add_to_cache('artist_extra',$row['artist'],$row);
             }
-
         } // end if extra
 
         return true;
-
     } // build_cache
 
     /**
@@ -243,7 +243,6 @@ class Artist extends database_object implements library_item
         $object = new Artist($row['id']);
 
         return $object;
-
     } // get_from_name
 
     /**
@@ -321,7 +320,6 @@ class Artist extends database_object implements library_item
         }
 
         return $results;
-
     } // get_albums
 
     /**
@@ -348,7 +346,6 @@ class Artist extends database_object implements library_item
         }
 
         return $results;
-
     } // get_songs
 
     /**
@@ -376,7 +373,6 @@ class Artist extends database_object implements library_item
         }
 
         return $results;
-
     } // get_random_songs
 
     /**
@@ -418,7 +414,6 @@ class Artist extends database_object implements library_item
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
-
     } // _get_extra_info
 
     /**
@@ -437,7 +432,9 @@ class Artist extends database_object implements library_item
         $this->f_full_name = trim(trim($this->prefix) . ' ' . trim($this->name));
 
         // If this is a memory-only object, we're done here
-        if (!$this->id) { return true; }
+        if (!$this->id) {
+            return true;
+        }
 
         if ($this->catalog_id) {
             $this->link = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
@@ -471,7 +468,6 @@ class Artist extends database_object implements library_item
         }
 
         return true;
-
     } // format
 
     /**
@@ -627,12 +623,14 @@ class Artist extends database_object implements library_item
             $user = $GLOBALS['user']->id;
         }
 
-        if (!$user)
+        if (!$user) {
             return false;
+        }
 
         if (AmpConfig::get('upload_allow_edit')) {
-            if ($this->user !== null && $user == $this->user)
+            if ($this->user !== null && $user == $this->user) {
                 return true;
+            }
         }
 
         return Access::check('interface', 50, $user);
@@ -653,7 +651,9 @@ class Artist extends database_object implements library_item
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
 
-        if ($mbid == '') $mbid = null;
+        if ($mbid == '') {
+            $mbid = null;
+        }
 
         if (!$name) {
             $name = T_('Unknown (Orphaned)');
@@ -725,7 +725,6 @@ class Artist extends database_object implements library_item
 
         self::$_mapcache[$name][$mbid] = $id;
         return $id;
-
     }
 
     /**
@@ -773,9 +772,11 @@ class Artist extends database_object implements library_item
                 Rating::gc();
                 Userflag::gc();
             } // if updated
-        } else if ($this->mbid != $mbid) {
-            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
-            Dba::write($sql, array($mbid, $current_id));
+        } else {
+            if ($this->mbid != $mbid) {
+                $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+                Dba::write($sql, array($mbid, $current_id));
+            }
         }
 
         // Update artist name (if we don't want to use the MusicBrainz name)
@@ -810,7 +811,6 @@ class Artist extends database_object implements library_item
         }
 
         return $current_id;
-
     } // update
 
     /**
@@ -894,5 +894,5 @@ class Artist extends database_object implements library_item
 
         return $deleted;
     }
-
 } // end of artist class
+

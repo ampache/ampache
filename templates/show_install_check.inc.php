@@ -21,7 +21,9 @@
  */
 require $prefix . '/templates/install_header.inc.php';
 ?>
-<?php if (!defined('INSTALL')) { exit; } ?>
+<?php if (!defined('INSTALL')) {
+    exit;
+} ?>
         <div class="page-header requirements">
             <h1><?php echo T_('Requirements'); ?></h1>
         </div>

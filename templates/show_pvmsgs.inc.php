@@ -40,7 +40,9 @@ $thcount = 5;
         <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=' + getSelectionArray());"><?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?></a></li>
     </ul>
 </div>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+} ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="label">
     <thead>
         <tr class="th-top">
@@ -58,16 +60,25 @@ $thcount = 5;
         foreach ($object_ids as $pvmg_id) {
             $libitem = new PrivateMsg($pvmg_id);
             $libitem->format();
-        ?>
-        <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?> <?php echo (!$libitem->is_read) ? "unread" : "" ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_pvmsg_row.inc.php'; ?>
+            ?>
+        <tr id="label_<?php echo $libitem->id;
+            ?>" class="<?php echo UI::flip_class();
+            ?> <?php echo (!$libitem->is_read) ? "unread" : "" ?>">
+            <?php require AmpConfig::get('prefix') . '/templates/show_pvmsg_row.inc.php';
+            ?>
         </tr>
-        <?php } ?>
-        <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No message found'); ?></span></td>
+        <?php 
+        } ?>
+        <?php if (!count($object_ids)) {
+    ?>
+        <tr class="<?php echo UI::flip_class();
+    ?>">
+            <td colspan="<?php echo $thcount;
+    ?>"><span class="nodata"><?php echo T_('No message found');
+    ?></span></td>
         </tr>
-        <?php } ?>
+        <?php 
+} ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -82,4 +93,6 @@ $thcount = 5;
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+} ?>

@@ -27,7 +27,9 @@ if (!Access::check('interface','100')) {
     UI::access_denied();
     exit;
 }
-if (AmpConfig::get('demo_mode')) { exit; }
+if (AmpConfig::get('demo_mode')) {
+    exit;
+}
 
 ob_end_clean();
 set_time_limit(0);
@@ -121,7 +123,9 @@ switch ($worker) {
                 if ($_REQUEST['update_path'] != '/' AND strlen($_REQUEST['update_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($_REQUEST['update_path'])) {
                         $songs = Song::get_from_path($_REQUEST['update_path']);
-                        foreach ($songs as $song_id) { Catalog::update_single_item('song',$song_id); }
+                        foreach ($songs as $song_id) {
+                            Catalog::update_single_item('song',$song_id);
+                        }
                     }
                 } // end if update
 

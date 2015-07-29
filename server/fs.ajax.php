@@ -39,9 +39,13 @@ class fs
     protected function real($path)
     {
         $temp = realpath($path);
-        if (!$temp) { throw new Exception('Path does not exist: ' . $path); }
+        if (!$temp) {
+            throw new Exception('Path does not exist: ' . $path);
+        }
         if ($this->base && strlen($this->base)) {
-            if (strpos($temp, $this->base) !== 0) { throw new Exception('Path is not inside base ('.$this->base.'): ' . $temp); }
+            if (strpos($temp, $this->base) !== 0) {
+                throw new Exception('Path is not inside base ('.$this->base.'): ' . $temp);
+            }
         }
         return $temp;
     }
@@ -64,19 +68,27 @@ class fs
     public function __construct($base)
     {
         $this->base = $this->real($base);
-        if (!$this->base) { throw new Exception('Base directory does not exist'); }
+        if (!$this->base) {
+            throw new Exception('Base directory does not exist');
+        }
     }
 
     public function lst($id, $with_root = false)
     {
         $dir = $this->path($id);
         $lst = @scandir($dir);
-        if (!$lst) { throw new Exception('Could not list path: ' . $dir); }
+        if (!$lst) {
+            throw new Exception('Could not list path: ' . $dir);
+        }
         $res = array();
         foreach ($lst as $item) {
-            if ($item == '.' || $item == '..' || $item === null) { continue; }
+            if ($item == '.' || $item == '..' || $item === null) {
+                continue;
+            }
             $tmp = preg_match('([^ a-zа-я-_0-9.]+)ui', $item);
-            if ($tmp === false || $tmp === 1) { continue; }
+            if ($tmp === false || $tmp === 1) {
+                continue;
+            }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 $res[] = array('text' => $item, 'children' => true,  'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
             } else {
@@ -164,7 +176,9 @@ class fs
         array_pop($new);
         array_push($new, $name);
         $new = implode(DIRECTORY_SEPARATOR, $new);
-        if (is_file($new) || is_dir($new)) { throw new Exception('Path already exists: ' . $new); }
+        if (is_file($new) || is_dir($new)) {
+            throw new Exception('Path already exists: ' . $new);
+        }
         rename($dir, $new);
         return array('id' => $this->id($new));
     }
@@ -202,7 +216,9 @@ class fs
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
         $new = $par . DIRECTORY_SEPARATOR . $new;
-        if (is_file($new) || is_dir($new)) { throw new Exception('Path already exists: ' . $new); }
+        if (is_file($new) || is_dir($new)) {
+            throw new Exception('Path already exists: ' . $new);
+        }
 
         if (is_dir($dir)) {
             mkdir($new);
@@ -218,7 +234,6 @@ class fs
 }
 
 if (isset($_GET['operation'])) {
-
     $fs = new fs($rootdir);
     try {
         $rslt = null;

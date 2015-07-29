@@ -42,11 +42,15 @@
     foreach ($object_ids as $share_id) {
         $libitem = new Share($share_id);
         $libitem->format();
-    ?>
-    <tr id="share_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require AmpConfig::get('prefix') . '/templates/show_share_row.inc.php'; ?>
+        ?>
+    <tr id="share_<?php echo $libitem->id;
+        ?>" class="<?php echo UI::flip_class();
+        ?>">
+        <?php require AmpConfig::get('prefix') . '/templates/show_share_row.inc.php';
+        ?>
     </tr>
-    <?php } ?>
+    <?php 
+    } ?>
     </tbody>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>

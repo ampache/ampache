@@ -59,9 +59,13 @@ if ($album != T_('Unknown (Orphaned)')) {
 <br /><br />
 <div class="lyrics">
     <div id="lyrics_text"><?php echo ($lyrics['text']) ? $lyrics['text'] : T_("No lyrics found."); ?></div>
-<?php if ($lyrics['url']) { ?>
-    <div id="lyrics_url"><a href="<?php echo $lyrics['url']; ?>" target="_blank"><?php echo T_('Show more'); ?></a></div>
-<?php } ?>
+<?php if ($lyrics['url']) {
+    ?>
+    <div id="lyrics_url"><a href="<?php echo $lyrics['url'];
+    ?>" target="_blank"><?php echo T_('Show more');
+    ?></a></div>
+<?php 
+} ?>
 </div>
 
 <?php UI::show_box_bottom(); ?>

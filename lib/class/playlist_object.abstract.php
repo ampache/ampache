@@ -74,7 +74,6 @@ abstract class playlist_object extends database_object implements library_item
             $client->format();
             $this->f_user = $client->f_name;
         }
-
     } // format
 
     /**
@@ -92,7 +91,6 @@ abstract class playlist_object extends database_object implements library_item
         } else {
             return Access::check('interface', 75);
         }
-
     } // has_access
 
     public function get_medias($filter_type = null)
@@ -174,5 +172,5 @@ abstract class playlist_object extends database_object implements library_item
     {
         return array();
     }
-
 } // end playlist_object
+

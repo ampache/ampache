@@ -48,7 +48,9 @@ class Tmp_Playlist extends database_object
      */
     public function __construct($playlist_id='')
     {
-        if (!$playlist_id) { return false; }
+        if (!$playlist_id) {
+            return false;
+        }
 
         $this->id     = intval($playlist_id);
         $info         = $this->_get_info();
@@ -58,7 +60,6 @@ class Tmp_Playlist extends database_object
         }
 
         return true;
-
     } // __construct
 
     /**
@@ -74,7 +75,6 @@ class Tmp_Playlist extends database_object
         $results = Dba::fetch_assoc($db_results);
 
         return $results;
-
     } // _get_info
 
     /**
@@ -102,7 +102,6 @@ class Tmp_Playlist extends database_object
         $playlist = new Tmp_Playlist($results['0']);
 
         return $playlist;
-
     } // get_from_session
 
     /**
@@ -128,7 +127,6 @@ class Tmp_Playlist extends database_object
         $data = Dba::fetch_assoc($db_results);
 
         return $data['id'];
-
     } // get_from_userid
 
     /**
@@ -157,7 +155,6 @@ class Tmp_Playlist extends database_object
         }
 
         return $items;
-
     } // get_items
 
     /**
@@ -175,7 +172,6 @@ class Tmp_Playlist extends database_object
         $results = Dba::fetch_assoc($db_results);
 
         return $results['object_id'];
-
     } // get_next_object
 
     /**
@@ -194,7 +190,6 @@ class Tmp_Playlist extends database_object
         $results = Dba::fetch_row($db_results);
 
         return $results['0'];
-
     } // count_items
 
     /**
@@ -207,7 +202,6 @@ class Tmp_Playlist extends database_object
         Dba::write($sql, array($this->id));
 
         return true;
-
     } // clear
 
     /**
@@ -229,7 +223,6 @@ class Tmp_Playlist extends database_object
         self::session_clean($data['session_id'], $id);
 
         return $id;
-
     } // create
 
     /**
@@ -243,7 +236,6 @@ class Tmp_Playlist extends database_object
         Dba::write($sql, array($playlist_id, $this->id));
 
         return true;
-
     } // update_playlist
 
     /**
@@ -260,7 +252,6 @@ class Tmp_Playlist extends database_object
         self::prune_tracks();
 
         return true;
-
     } // session_clean
 
     /**
@@ -289,7 +280,6 @@ class Tmp_Playlist extends database_object
         Dba::write($sql);
 
         return true;
-
     } // prune_playlists
 
     /**
@@ -305,7 +295,6 @@ class Tmp_Playlist extends database_object
             "`tmp_playlist_data`.`tmp_playlist`=`tmp_playlist`.`id` " .
             "WHERE `tmp_playlist`.`id` IS NULL";
         Dba::write($sql);
-
     } // prune_tracks
 
     /**
@@ -321,7 +310,6 @@ class Tmp_Playlist extends database_object
         Dba::write($sql, array($object_id, $this->id, $object_type));
 
         return true;
-
     } // add_object
 
     public function add_medias($medias)
@@ -339,10 +327,11 @@ class Tmp_Playlist extends database_object
     public function vote_active()
     {
         /* Going to do a little more here later */
-        if ($this->type == 'vote') { return true; }
+        if ($this->type == 'vote') {
+            return true;
+        }
 
         return false;
-
     } // vote_active
 
     /**
@@ -356,7 +345,6 @@ class Tmp_Playlist extends database_object
         Dba::write($sql, array($id));
 
         return true;
-
     } // delete_track
-
 } // class Tmp_Playlist
+

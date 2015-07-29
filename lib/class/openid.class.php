@@ -93,5 +93,5 @@ class Openid
 
         return $policies;
     }
-
 } // end of Openid class
+

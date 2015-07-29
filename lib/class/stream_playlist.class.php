@@ -275,7 +275,9 @@ class Stream_Playlist
      */
     public function add_urls($urls = array())
     {
-        if (!is_array($urls)) { return false; }
+        if (!is_array($urls)) {
+            return false;
+        }
 
         foreach ($urls as $url) {
             $this->_add_url(new Stream_URL(array(
@@ -296,7 +298,6 @@ class Stream_Playlist
         foreach ($this->urls as $url) {
             echo $url->url . "\n";
         }
-
     } // simple_m3u
 
     /**
@@ -314,7 +315,6 @@ class Stream_Playlist
             echo $url->url . "\n";
             $i++;
         }
-
     } // create_m3u
 
     /**
@@ -360,7 +360,6 @@ class Stream_Playlist
         }
 
         echo "</ASX>\n";
-
     } // create_asx
 
     /**
@@ -397,14 +396,12 @@ class Stream_Playlist
             }
 
             $result .= XML_Data::keyed_array($xml, true);
-
         } // end foreach
 
         XML_Data::set_type('xspf');
         echo XML_Data::header();
         echo $result;
         echo XML_Data::footer();
-
     } // create_xspf
 
     public function create_hls()
@@ -461,7 +458,6 @@ class Stream_Playlist
         } else {
             require AmpConfig::get('prefix') . '/templates/create_web_player.inc.php';
         }
-
     }  // create_web_player
 
     /**
@@ -492,7 +488,6 @@ class Stream_Playlist
             }
             $localplay->play();
         }
-
     } // create_localplay
 
     /**

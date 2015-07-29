@@ -27,37 +27,52 @@ foreach (Plugin::get_plugins('display_home') as $plugin_name) {
     }
 }
 ?>
-<?php if (AmpConfig::get('home_now_playing')) { ?>
+<?php if (AmpConfig::get('home_now_playing')) {
+    ?>
 <div id="now_playing">
-    <?php show_now_playing(); ?>
+    <?php show_now_playing();
+    ?>
 </div> <!-- Close Now Playing Div -->
-<?php } ?>
+<?php 
+} ?>
 <!-- Randomly selected albums of the moment -->
 <?php
 if (Art::is_enabled()) {
     if (AmpConfig::get('home_moment_albums')) {
         echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums'));
-?>
+        ?>
 <div id="random_selection" class="random_selection">
-    <?php UI::show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
+    <?php UI::show_box_top(T_('Albums of the Moment'));
+        echo T_('Loading...');
+        UI::show_box_bottom();
+        ?>
 </div>
 <?php
+
     }
     if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
         echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos'));
-?>
+        ?>
 <div id="random_video_selection" class="random_selection">
-    <?php UI::show_box_top(T_('Videos of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
+    <?php UI::show_box_top(T_('Videos of the Moment'));
+        echo T_('Loading...');
+        UI::show_box_bottom();
+        ?>
 </div>
-    <?php } ?>
-<?php } ?>
-<?php if (AmpConfig::get('home_recently_played')) { ?>
+    <?php 
+    }
+    ?>
+<?php 
+} ?>
+<?php if (AmpConfig::get('home_recently_played')) {
+    ?>
 <!-- Recently Played -->
 <div id="recently_played">
     <?php
         $data = Song::get_recently_played();
-        Song::build_cache(array_keys($data));
-        require_once AmpConfig::get('prefix') . '/templates/show_recently_played.inc.php';
+    Song::build_cache(array_keys($data));
+    require_once AmpConfig::get('prefix') . '/templates/show_recently_played.inc.php';
     ?>
 </div>
-<?php } ?>
+<?php 
+} ?>

@@ -47,25 +47,43 @@
         <tr>
             <td valign="top"><?php echo T_('ACL Type'); ?>:</td>
             <td colspan="3">
-        <?php if ($action == 'show_add_rpc') { ?>
+        <?php if ($action == 'show_add_rpc') {
+    ?>
                 <input type="hidden" name="type" value="rpc" />
                 <select name="addtype">
-                    <option value="rpc"><?php echo T_('API/RPC'); ?></option>
-                    <option selected="selected" value="stream"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('Stream Access')); ?></option>
-                    <option value="all"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('All')); ?></option>
-        <?php } else if ($action == 'show_add_local') { ?>
+                    <option value="rpc"><?php echo T_('API/RPC');
+    ?></option>
+                    <option selected="selected" value="stream"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('Stream Access'));
+    ?></option>
+                    <option value="all"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('All'));
+    ?></option>
+        <?php 
+} else {
+    if ($action == 'show_add_local') {
+        ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
-                    <option value="network"><?php echo T_('Local Network Definition'); ?></option>
-                    <option value="stream"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('Stream Access')); ?></option>
-                    <option selected="selected" value="all"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('All')); ?></option>
-        <?php } else { ?>
+                    <option value="network"><?php echo T_('Local Network Definition');
+        ?></option>
+                    <option value="stream"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('Stream Access'));
+        ?></option>
+                    <option selected="selected" value="all"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('All'));
+        ?></option>
+        <?php 
+    } else {
+        ?>
                 <select name="type">
-                    <option selected="selected" value="stream"><?php echo T_('Stream Access'); ?></option>
-                    <option value="interface"><?php echo T_('Web Interface'); ?></option>
-                    <option value="network"><?php echo T_('Local Network Definition'); ?></option>
-                    <option value="rpc"><?php echo T_('API/RPC'); ?></option>
-        <?php } ?>
+                    <option selected="selected" value="stream"><?php echo T_('Stream Access');
+        ?></option>
+                    <option value="interface"><?php echo T_('Web Interface');
+        ?></option>
+                    <option value="network"><?php echo T_('Local Network Definition');
+        ?></option>
+                    <option value="rpc"><?php echo T_('API/RPC');
+        ?></option>
+        <?php 
+    }
+} ?>
                 </select>
             </td>
         </tr>
@@ -83,9 +101,9 @@
                     <?php Error::display('start'); ?>
                     <input type="text" name="start" value="<?php
                 if ($action == 'show_add_current') {
-                        echo scrub_out($_SERVER['REMOTE_ADDR']);
-                    } else {
-                        echo scrub_out($_REQUEST['start']);
+                    echo scrub_out($_SERVER['REMOTE_ADDR']);
+                } else {
+                    echo scrub_out($_REQUEST['start']);
                 } ?>" />
             </td>
             <td>
@@ -96,7 +114,7 @@
                         echo scrub_out($_SERVER['REMOTE_ADDR']);
                     } else {
                         echo scrub_out($_REQUEST['end']);
-                } ?>" />
+                    } ?>" />
             </td>
         </tr>
     </table>

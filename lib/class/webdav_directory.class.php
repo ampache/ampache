@@ -69,10 +69,12 @@ class WebDAV_Directory extends DAV\Collection
         $matches = $this->libitem->search_childrens($name);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
-        if (count($matches) > 0)
+        if (count($matches) > 0) {
             return WebDAV_Directory::getChildFromArray($matches[0]);
+        }
 
-        throw new DAV\Exception\NotFound('The child with name: ' . $name . ' could not be found');;
+        throw new DAV\Exception\NotFound('The child with name: ' . $name . ' could not be found');
+        ;
     }
 
     public static function getChildFromArray($array)

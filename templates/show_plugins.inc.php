@@ -38,31 +38,42 @@ $web_path = AmpConfig::get('web_path');
         foreach ($plugins as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if (!$installed_version) {
-                        $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
+            if (!$installed_version) {
+                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
-                } else {
-                        $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
+            } else {
+                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Deactivate') . "</a>";
                 if ($installed_version < $plugin->_plugin->version) {
                     $action .= '&nbsp;&nbsp;<a href="' . $web_path .
                     '/admin/modules.php?action=upgrade_plugin&amp;plugin=' .
                     scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }
-                }
-        ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
-            <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
-            <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
-            <td class="cel_iversion"><?php echo scrub_out($installed_version); ?></td>
-            <td class="cel_action"><?php echo $action; ?></td>
+            }
+            ?>
+        <tr class="<?php echo UI::flip_class();
+            ?>">
+            <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name);
+            ?></td>
+            <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description);
+            ?></td>
+            <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version);
+            ?></td>
+            <td class="cel_iversion"><?php echo scrub_out($installed_version);
+            ?></td>
+            <td class="cel_action"><?php echo $action;
+            ?></td>
         </tr>
-        <?php } if (!count($plugins)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="5"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+        <?php 
+        } if (!count($plugins)) {
+            ?>
+        <tr class="<?php echo UI::flip_class();
+            ?>">
+            <td colspan="5"><span class="error"><?php echo T_('No Records Found');
+            ?></span></td>
         </tr>
-        <?php } ?>
+        <?php 
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

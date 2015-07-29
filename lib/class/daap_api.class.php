@@ -173,7 +173,6 @@ class Daap_Api
         if (!isset($_GET['session-id'])) {
             debug_event('daap', 'Missing session id.', '');
         } else {
-
             $sql = "SELECT * FROM `daap_session` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($_GET['session-id']));
 

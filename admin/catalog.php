@@ -55,7 +55,9 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'add_to_catalog':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=add_to_catalog&catalogs=" . $sse_catalogs;
         sse_worker($sse_url);
@@ -67,21 +69,28 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_catalog':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_catalog&catalogs=" . $sse_catalogs;
         sse_worker($sse_url);
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'full_service':
-        if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
+        if (AmpConfig::get('demo_mode')) {
+            UI::access_denied();
+            break;
+        }
 
         $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=full_service&catalogs=" . $sse_catalogs;
         sse_worker($sse_url);
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'delete_catalog':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         if (!Core::form_verify('delete_catalog')) {
             UI::access_denied();
@@ -92,7 +101,9 @@ switch ($_REQUEST['action']) {
         /* Delete the sucker, we don't need to check perms as thats done above */
         foreach ($catalogs as $catalog_id) {
             $deleted = Catalog::delete($catalog_id);
-            if (!$deleted) break;
+            if (!$deleted) {
+                break;
+            }
         }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         if ($deleted) {
@@ -106,7 +117,9 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
     break;
     case 'enable_disabled':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $songs = $_REQUEST['song'];
 
@@ -134,7 +147,9 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_catalog_settings':
         /* No Demo Here! */
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         /* Update the catalog */
         Catalog::update_settings($_POST);
@@ -145,7 +160,9 @@ switch ($_REQUEST['action']) {
         show_confirmation($title,$body,$url);
     break;
     case 'update_from':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_from&add_path=" . scrub_in($_POST['add_path']) . "&update_path=" . $_POST['update_path'];
         sse_worker($sse_url);
@@ -153,7 +170,9 @@ switch ($_REQUEST['action']) {
     break;
     case 'add_catalog':
         /* Wah Demo! */
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         ob_end_flush();
 
@@ -172,7 +191,6 @@ switch ($_REQUEST['action']) {
 
         // If an error hasn't occured
         if (!Error::occurred()) {
-
             $catalog_id = Catalog::create($_POST);
 
             if (!$catalog_id) {
@@ -189,7 +207,10 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'clear_stats':
-        if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
+        if (AmpConfig::get('demo_mode')) {
+            UI::access_denied();
+            break;
+        }
         Stats::clear();
         $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = T_('Catalog statistics cleared');
@@ -200,13 +221,18 @@ switch ($_REQUEST['action']) {
         require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
     break;
     case 'clear_now_playing':
-        if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
+        if (AmpConfig::get('demo_mode')) {
+            UI::access_denied();
+            break;
+        }
         Stream::clear_now_playing();
         show_confirmation(T_('Now Playing Cleared'), T_('All now playing data has been cleared'),AmpConfig::get('web_path') . '/admin/catalog.php');
     break;
     case 'show_disabled':
         /* Stop the demo hippies */
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $songs = Song::get_disabled();
         if (count($songs)) {
@@ -217,7 +243,10 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_delete_catalog':
         /* Stop the demo hippies */
-        if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
+        if (AmpConfig::get('demo_mode')) {
+            UI::access_denied();
+            break;
+        }
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);

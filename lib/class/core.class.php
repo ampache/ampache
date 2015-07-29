@@ -36,7 +36,6 @@ class Core
     private function __construct()
     {
         return false;
-
     } // construction
 
     /**
@@ -110,7 +109,6 @@ class Core
         } // end switch on type
 
         return $string;
-
     } // form_register
 
     /**
@@ -160,7 +158,6 @@ class Core
         // OMG HAX0RZ
         debug_event('Core', "$type form $sid failed consistency check, rejecting request", 2);
         return false;
-
     } // form_verify
 
     /**
@@ -171,19 +168,24 @@ class Core
     */
     public static function image_dimensions($image_data)
     {
-        if (!function_exists('ImageCreateFromString')) { return false; }
+        if (!function_exists('ImageCreateFromString')) {
+            return false;
+        }
 
         $image = ImageCreateFromString($image_data);
 
-        if (!$image) { return false; }
+        if (!$image) {
+            return false;
+        }
 
         $width = imagesx($image);
         $height = imagesy($image);
 
-        if (!$width || !$height) { return false; }
+        if (!$width || !$height) {
+            return false;
+        }
 
         return array('width'=>$width,'height'=>$height);
-
     } // image_dimensions
 
     /*
@@ -326,3 +328,4 @@ class Core
         return $options;
     }
 } // Core
+

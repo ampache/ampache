@@ -132,7 +132,9 @@ foreach ($query as $param) {
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
-    if (in_array($method,$internal_functions)) { continue; }
+    if (in_array($method,$internal_functions)) {
+        continue;
+    }
 
     // If the method is the same as the action being called
     // Then let's call this function!
@@ -141,7 +143,6 @@ foreach ($methods as $method) {
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit();
     }
-
 } // end foreach methods in API
 
 // If we manage to get here, we still need to hand out an XML document

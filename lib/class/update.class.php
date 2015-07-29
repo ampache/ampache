@@ -79,7 +79,6 @@ class Update
         }
 
         return $version;
-
     } // get_version
 
     /**
@@ -523,13 +522,16 @@ class Update
         }
         $update_needed = false;
 
-        if (!defined('CLI')) { echo "<ul>\n"; }
+        if (!defined('CLI')) {
+            echo "<ul>\n";
+        }
 
         foreach (self::$versions as $update) {
-
             if ($update['version'] > $current_version) {
                 $update_needed = true;
-                if (!defined('CLI')) { echo '<li><b>'; }
+                if (!defined('CLI')) {
+                    echo '<li><b>';
+                }
                 echo 'Version: ', self::format_version($update['version']);
                 if (defined('CLI')) {
                     echo "\n", str_replace('<br />', "\n", $update['description']), "\n";
@@ -537,13 +539,16 @@ class Update
                     echo '</b><br />', $update['description'], "<br /></li>\n";
                 }
             } // if newer
-
         } // foreach versions
 
-        if (!defined('CLI')) { echo "</ul>\n"; }
+        if (!defined('CLI')) {
+            echo "</ul>\n";
+        }
 
         if (!$update_needed) {
-            if (!defined('CLI')) { echo '<p align="center">'; }
+            if (!defined('CLI')) {
+                echo '<p align="center">';
+            }
             echo T_('No updates needed.');
             if (!defined('CLI')) {
                 echo ' [<a href="', AmpConfig::get('web_path'), '">', T_('Return to main page'), '</a>]</p>';
@@ -602,9 +607,7 @@ class Update
                         return false;
                     }
                 }
-
             }
-
         } // end foreach version
 
         // Once we've run all of the updates let's re-sync the character set as
@@ -2860,9 +2863,9 @@ class Update
     {
         $retval = true;
 
-       $sql = "ALTER TABLE `video` ADD `release_date` date NULL AFTER `enabled`, " .
+        $sql = "ALTER TABLE `video` ADD `release_date` date NULL AFTER `enabled`, " .
              "ADD `played` tinyint(1) unsigned DEFAULT '1' NOT NULL AFTER `enabled`";
-       $retval = Dba::write($sql) ? $retval : false;
+        $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "CREATE TABLE `tvshow` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .

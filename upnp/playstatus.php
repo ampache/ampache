@@ -40,10 +40,11 @@ echo "STATE = " . $state . "\n";
 // Do not start anything if playback was stopped from beginning
 if ($played) {
     echo "UPnP play next" . "\n";
-    if ($player->Next(false))
+    if ($player->Next(false)) {
         echo "Next song started" . "\n";
-    else
+    } else {
         echo "Next song FAILED!" . "\n";
+    }
 }
 
 ?>

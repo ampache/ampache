@@ -29,7 +29,10 @@ $class = $class ? $class : 'box';
       <div class="box-left-top"></div>
       <div class="box-right-top"></div>
     </div>
-    <?php if ($title) { ?>
-       <h3 class="box-title"><?php echo $title; ?></h3>
-      <?php } ?>
+    <?php if ($title) {
+    ?>
+       <h3 class="box-title"><?php echo $title;
+    ?></h3>
+      <?php 
+} ?>
     <div class="box-content clearfix">

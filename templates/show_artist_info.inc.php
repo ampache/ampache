@@ -23,14 +23,22 @@
 
 <div class="item_info">
     <?php if ($biography['id']) {
-        Art::display('artist', $biography['id'], $artist->f_name, 2);
-    } else { ?>
+    Art::display('artist', $biography['id'], $artist->f_name, 2);
+} else {
+    ?>
         <div class="item_art">
-            <?php if ($biography && is_array($biography)) { ?>
-                <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
-            <?php } ?>
+            <?php if ($biography && is_array($biography)) {
+    ?>
+                <a href="<?php echo $biography['megaphoto'];
+    ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto'];
+    ?>" alt="<?php echo $artist->f_name;
+    ?>" width="128"></a>
+            <?php 
+}
+    ?>
         </div>
-    <?php } ?>
+    <?php 
+} ?>
     <div class="item_properties">
         <?php
         if ($biography && is_array($biography)) {
@@ -49,9 +57,12 @@
     </div>
 </div>
 <div id="item_summary">
-    <?php if ($biography && is_array($biography)) { ?>
-        <?php echo $biography['summary']; ?>
-    <?php }?>
+    <?php if ($biography && is_array($biography)) {
+    ?>
+        <?php echo $biography['summary'];
+    ?>
+    <?php 
+}?>
 </div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){

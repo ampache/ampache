@@ -46,7 +46,6 @@ class Shoutbox
         $this->_get_info($shout_id);
 
         return true;
-
     } // Constructor
 
     /**
@@ -65,7 +64,6 @@ class Shoutbox
         }
 
         return true;
-
     } // _get_info
 
     /**
@@ -122,7 +120,6 @@ class Shoutbox
         }
 
         return $shouts;
-
     } // get_top
 
     public static function get_shouts_since($time)
@@ -136,7 +133,6 @@ class Shoutbox
         }
 
         return $shouts;
-
     }
 
     /**
@@ -155,7 +151,6 @@ class Shoutbox
         }
 
         return $results;
-
     } // get_sticky
 
     /**
@@ -164,13 +159,13 @@ class Shoutbox
      */
     public static function get_object($type,$object_id)
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
 
         $object = new $type($object_id);
 
         return $object;
-
     } // get_object
 
     /**
@@ -186,7 +181,6 @@ class Shoutbox
         }
 
         return $image_string;
-
     } // get_image
 
     /**
@@ -195,8 +189,9 @@ class Shoutbox
      */
     public static function create(array $data)
     {
-        if (!Core::is_library_item($data['object_type']))
+        if (!Core::is_library_item($data['object_type'])) {
             return false;
+        }
 
         $sticky     = isset($data['sticky']) ? 1 : 0;
         $user       = intval($data['user'] ?: $GLOBALS['user']->id);
@@ -237,7 +232,6 @@ class Shoutbox
         }
 
         return $insert_id;
-
     } // create
 
     /**
@@ -250,7 +244,6 @@ class Shoutbox
         Dba::write($sql, array($data['comment'], make_bool($data['sticky']), $this->id));
 
         return $this->id;
-
     } // create
 
     /**
@@ -264,7 +257,6 @@ class Shoutbox
         $this->f_date = date("m\/d\/Y - H:i", $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
         return true;
-
     } //format
 
     /**
@@ -278,7 +270,6 @@ class Shoutbox
         $shout_id = Dba::escape($shout_id);
         $sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
         Dba::write($sql);
-
     } // delete
 
     public function get_display($details = true, $jsbuttons = false)
@@ -343,5 +334,5 @@ class Shoutbox
 
         return $results;
     }
-
 } // Shoutbox class
+

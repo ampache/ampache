@@ -23,7 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 switch ($_REQUEST['action']) {
     case 'flip_state':
@@ -62,7 +64,7 @@ switch ($_REQUEST['action']) {
                 echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->data / $media->time) * 400) - 1) . "px;\' />');\r\n";
             }
             echo "</script>\r\n";
-            }
+        }
         $results['shouts_data'] = ob_get_clean();
     break;
     default:

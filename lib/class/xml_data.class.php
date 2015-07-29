@@ -845,3 +845,4 @@ class XML_Data
         return $dom->saveXML($dom->documentElement);
     }
 } // XML_Data
+

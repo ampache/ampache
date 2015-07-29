@@ -51,7 +51,6 @@ class Playlist extends playlist_object
         foreach ($info as $key=>$value) {
             $this->$key = $value;
         }
-
     } // Playlist
 
     /**
@@ -73,7 +72,9 @@ class Playlist extends playlist_object
      */
     public static function build_cache($ids)
     {
-        if (!count($ids)) { return false; }
+        if (!count($ids)) {
+            return false;
+        }
 
         $idlist = '(' . implode(',',$ids) . ')';
 
@@ -83,7 +84,6 @@ class Playlist extends playlist_object
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('playlist',$row['id'],$row);
         }
-
     } // build_cache
 
     /**
@@ -122,7 +122,6 @@ class Playlist extends playlist_object
         parent::format($details);
         $this->link = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
-
     } // format
 
     /**
@@ -138,7 +137,6 @@ class Playlist extends playlist_object
         $row = Dba::fetch_assoc($db_results);
 
         return $row;
-
     } // get_track
 
     /**
@@ -164,7 +162,6 @@ class Playlist extends playlist_object
         } // end while
 
         return $results;
-
     } // get_items
 
     /**
@@ -182,7 +179,6 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-
             $results[] = array(
                 'object_type' => $row['object_type'],
                 'object_id' => $row['object_id']
@@ -190,7 +186,6 @@ class Playlist extends playlist_object
         } // end while
 
         return $results;
-
     } // get_random_items
 
     /**
@@ -210,7 +205,6 @@ class Playlist extends playlist_object
         } // end while
 
         return $results;
-
     } // get_songs
 
     /**
@@ -226,7 +220,6 @@ class Playlist extends playlist_object
         $results = Dba::fetch_row($db_results);
 
         return $results['0'];
-
     } // get_song_count
 
     /**
@@ -244,7 +237,6 @@ class Playlist extends playlist_object
         $results = Dba::fetch_row($db_results);
 
         return $results['0'];
-
     } // get_total_duration
 
     /**
@@ -264,7 +256,6 @@ class Playlist extends playlist_object
         }
 
         return $results;
-
     } // get_users
 
     /**
@@ -292,7 +283,6 @@ class Playlist extends playlist_object
         if ($this->_update_item('type',$new_type,50)) {
             $this->type = $new_type;
         }
-
     } // update_type
 
     /**
@@ -304,7 +294,6 @@ class Playlist extends playlist_object
         if ($this->_update_item('name',$new_name,50)) {
             $this->name = $new_name;
         }
-
     } // update_name
 
     /**
@@ -321,7 +310,6 @@ class Playlist extends playlist_object
         $db_results = Dba::write($sql, array($value, $this->id));
 
         return $db_results;
-
     } // update_item
 
     /**
@@ -332,7 +320,6 @@ class Playlist extends playlist_object
     {
         $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
         Dba::write($sql, array($index, $track_id));
-
     } // update_track_number
 
     /**
@@ -362,7 +349,6 @@ class Playlist extends playlist_object
             );
         }
         $this->add_medias($medias, $ordered);
-
     } // add_songs
 
     public function add_medias($medias, $ordered=false)
@@ -395,7 +381,6 @@ class Playlist extends playlist_object
                     " VALUES (?, ?, ?, ?)";
                 Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
             } // if valid id
-
         } // end foreach medias
     }
 
@@ -417,7 +402,6 @@ class Playlist extends playlist_object
 
         $insert_id = Dba::insert_id();
         return $insert_id;
-
     } // create
 
     /**
@@ -427,7 +411,6 @@ class Playlist extends playlist_object
     public function set_items()
     {
         $this->items = $this->get_items();
-
     } // set_items
 
     /**
@@ -440,7 +423,6 @@ class Playlist extends playlist_object
         Dba::write($sql, array($this->id, $id));
 
         return true;
-
     } // delete_track
 
     /**
@@ -453,7 +435,6 @@ class Playlist extends playlist_object
         Dba::write($sql, array($this->id, $track));
 
         return true;
-
     } // delete_track_number
 
     /**
@@ -472,7 +453,6 @@ class Playlist extends playlist_object
         Dba::write($sql, array($this->id));
 
         return true;
-
     } // delete
 
     /**
@@ -511,7 +491,6 @@ class Playlist extends playlist_object
         } // foreach re-ordered results
 
     return true;
-
     } // sort_tracks
-
 } // class Playlist
+

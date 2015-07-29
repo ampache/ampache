@@ -40,7 +40,9 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'),$url);
     break;
     case 'show_delete_record':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
         $access = new Access($_GET['access_id']);
         show_confirmation(T_('Deletion Request'), T_('Are you sure you want to permanently delete') . ' ' . $access->name,
                 'admin/access.php?action=delete_record&amp;access_id=' . $access->id,1,'delete_access');

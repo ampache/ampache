@@ -514,5 +514,4 @@ class AmpacheUPnP extends localplay_controller
         debug_event('upnp', 'Connected.', '5');
         return true;
     }
-
 }

@@ -49,7 +49,9 @@ class TVShow extends database_object implements library_item
     public function __construct($id='')
     {
         /* If they failed to pass in an id, just run for it */
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -59,7 +61,6 @@ class TVShow extends database_object implements library_item
         } // foreach info
 
         return true;
-
     } //constructor
 
     /**
@@ -87,7 +88,6 @@ class TVShow extends database_object implements library_item
 
         $object = new TVShow($row['id']);
         return $object;
-
     } // get_from_name
 
     /**
@@ -105,7 +105,6 @@ class TVShow extends database_object implements library_item
         }
 
         return $results;
-
     } // get_seasons
 
     /**
@@ -133,7 +132,6 @@ class TVShow extends database_object implements library_item
         }
 
         return $results;
-
     } // get_episodes
 
     /**
@@ -168,7 +166,6 @@ class TVShow extends database_object implements library_item
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
-
     } // _get_extra_info
 
     /**
@@ -327,7 +324,6 @@ class TVShow extends database_object implements library_item
 
         self::$_mapcache[$name]['null'] = $id;
         return $id;
-
     }
 
     /**
@@ -386,7 +382,6 @@ class TVShow extends database_object implements library_item
         }
 
         return $current_id;
-
     } // update
 
     /**
@@ -436,5 +431,5 @@ class TVShow extends database_object implements library_item
 
         return $deleted;
     }
-
 } // end of tvshow class
+

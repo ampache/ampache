@@ -29,7 +29,9 @@ UI::show_header();
  */
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $tvshow_season_id = scrub_in($_REQUEST['tvshow_season_id']);
         show_confirmation(
@@ -41,7 +43,9 @@ switch ($_REQUEST['action']) {
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $tvshow_season = new TVShow_Season($_REQUEST['tvshow_season_id']);
         if (!Catalog::can_remove($tvshow_season)) {

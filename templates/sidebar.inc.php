@@ -43,42 +43,49 @@ if (User::is_registered()) {
     <?php
     foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
-
             $active = ('sidebar_'.$item['id'] == $class_name) ? ' active' : '';
             $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'";
-    ?>
-        <li <?php echo $li_params; ?>>
+            ?>
+        <li <?php echo $li_params;
+            ?>>
     <?php
             echo Ajax::button("?page=index&action=sidebar&button=".$item['id'], $item['icon'], $item['title'], 'sidebar_'.$item['id']);
             if ($item['id']==$_SESSION['state']['sidebar_tab']) {
-    ?>
+                ?>
             <div id="sidebar-page" class="sidebar-page-float">
-                <?php require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'; ?>
+                <?php require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
+                ?>
             </div>
     <?php
+
             }
-    ?>
+            ?>
         </li>
     <?php
+
         }
     }
     ?>
         <li id="sb_tab_logout" class="sb1">
-            <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" rel="nohtml" >
-            <?php echo UI::get_icon('logout', T_('Logout')); ?>
+            <a target="_top" href="<?php echo $web_path;
+    ?>/logout.php" id="sidebar_logout" rel="nohtml" >
+            <?php echo UI::get_icon('logout', T_('Logout'));
+    ?>
             </a>
         </li>
 <?php
+
 } else {
-?>
+    ?>
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
             <?php
                 require_once AmpConfig::get('prefix') . '/templates/sidebar_home.inc.php';
-            ?>
+    ?>
             </div>
         </li>
 <?Php
+
 }
 ?>
 </ul>

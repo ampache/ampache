@@ -93,7 +93,9 @@ class PrivateMsg extends database_object
      */
     public function __construct($id=null)
     {
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         $info = $this->get_info($id, 'user_pvmsg');
         foreach ($info as $key=>$value) {

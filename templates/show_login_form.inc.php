@@ -77,20 +77,24 @@ define('TABLE_RENDERED', 1);
                         <input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
                         <input type="hidden" name="action" value="login" />
 
-                        <?php if (AmpConfig::get('allow_public_registration')) { ?>
-                            <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
-                        <?php } // end if allow_public_registration ?>
+                        <?php if (AmpConfig::get('allow_public_registration')) {
+    ?>
+                            <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path');
+    ?>/register.php"><?php echo T_('Register');
+    ?></a>
+                        <?php 
+} // end if allow_public_registration ?>
                     </div>
                 </form>
         <?php
         if (@is_readable(AmpConfig::get('prefix') . '/config/motd.php')) {
-        ?>
+            ?>
             </div>
             <div id="motd">
         <?php
                 UI::show_box_top(T_('Message of the Day'));
-                require_once AmpConfig::get('prefix') . '/config/motd.php';
-                UI::show_box_bottom();
+            require_once AmpConfig::get('prefix') . '/config/motd.php';
+            UI::show_box_bottom();
         }
         UI::show_footer();
         ?>

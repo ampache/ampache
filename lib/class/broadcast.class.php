@@ -78,7 +78,9 @@ class Broadcast extends database_object implements library_item
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -404,7 +406,6 @@ class Broadcast extends database_object implements library_item
 
     public static function gc()
     {
-
     }
 
     /*
@@ -421,5 +422,5 @@ class Broadcast extends database_object implements library_item
     {
         return $oid;
     }
-
 } // end of broadcast class
+

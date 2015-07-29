@@ -39,7 +39,6 @@ class Catalog_soundcloud extends Catalog
     public function get_description()
     {
         return $this->description;
-
     } // get_description
 
     /**
@@ -49,7 +48,6 @@ class Catalog_soundcloud extends Catalog
     public function get_version()
     {
         return $this->version;
-
     } // get_version
 
     /**
@@ -59,7 +57,6 @@ class Catalog_soundcloud extends Catalog
     public function get_type()
     {
         return $this->type;
-
     } // get_type
 
     /**
@@ -73,7 +70,6 @@ class Catalog_soundcloud extends Catalog
             "<li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li>" .
             "<li>Copy your Client ID and Secret here, and Save the app</li></ul>";
         return $help;
-
     } // get_create_help
 
     /**
@@ -86,8 +82,6 @@ class Catalog_soundcloud extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-
-
     } // is_installed
 
     /**
@@ -105,7 +99,6 @@ class Catalog_soundcloud extends Catalog
         $db_results = Dba::query($sql);
 
         return true;
-
     } // install
 
     public function catalog_fields()
@@ -114,7 +107,6 @@ class Catalog_soundcloud extends Catalog
         $fields['secret']      = array('description' => T_('Secret'),'type'=>'textbox');
 
         return $fields;
-
     }
 
     public function isReady()
@@ -229,7 +221,7 @@ class Catalog_soundcloud extends Catalog
      */
     public function add_to_catalog($options = null)
     {
-    // Prevent the script from timing out
+        // Prevent the script from timing out
         set_time_limit(0);
 
         if ($options != null) {
@@ -321,7 +313,6 @@ class Catalog_soundcloud extends Catalog
         }
 
         return true;
-
     }
 
     public function verify_catalog_proc()
@@ -453,5 +444,5 @@ class Catalog_soundcloud extends Catalog
 
         return null;
     }
-
 } // end of catalog class
+

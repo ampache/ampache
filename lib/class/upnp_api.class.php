@@ -140,7 +140,7 @@ class Upnp_Api
                     case 'SearchCriteria':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
-                          $retArr['searchcriteria'] = $reader->value;
+                            $retArr['searchcriteria'] = $reader->value;
                         } # end if
                         break;
                     case 'SortCriteria':
@@ -600,8 +600,9 @@ class Upnp_Api
             break;
         }
 
-        if ($maxCount == 0)
+        if ($maxCount == 0) {
             $maxCount = count($mediaItems);
+        }
         return array($maxCount, $mediaItems);
     }
 
@@ -840,8 +841,9 @@ class Upnp_Api
             break;
         }
 
-        if ($maxCount == 0)
+        if ($maxCount == 0) {
             $maxCount = count($mediaItems);
+        }
         return array($maxCount, $mediaItems);
     }
 
@@ -858,8 +860,9 @@ class Upnp_Api
         $title = preg_replace('~[^\\pL\d\.\s\(\)\.\,\'\"]+~u', '-', $title);
         ///debug_event('upnp_class', 'replace >>> ' . $title, 5);
 
-        if ($title == "")
+        if ($title == "") {
             $title = '(no title)';
+        }
 
         return $title;
     }

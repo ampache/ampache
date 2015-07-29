@@ -24,12 +24,16 @@
 <div id="shoutbox">
 <?php
   foreach ($shouts as $shout_id) {
-    $shout = new Shoutbox($shout_id);
-    $shout->format();
-?>
-<div id="shout<?php echo $shout->id; ?>" class="shout <?php echo UI::flip_class(); ?>">
-    <?php echo $shout->get_display(true, true); ?>
+      $shout = new Shoutbox($shout_id);
+      $shout->format();
+      ?>
+<div id="shout<?php echo $shout->id;
+      ?>" class="shout <?php echo UI::flip_class();
+      ?>">
+    <?php echo $shout->get_display(true, true);
+      ?>
 </div>
-<?php } ?>
+<?php 
+  } ?>
 </div>
 <?php UI::show_box_bottom(); ?>

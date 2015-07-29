@@ -187,10 +187,10 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         strpos($_POST['referrer'], 'update.php')    === false &&
         strpos($_POST['referrer'], 'activate.php')    === false &&
         strpos($_POST['referrer'], 'admin')        === false ) {
-
-            header('Location: ' . $_POST['referrer']);
-            exit();
+        header('Location: ' . $_POST['referrer']);
+        exit();
     } // if we've got a referrer
     header('Location: ' . AmpConfig::get('web_path') . '/index.php');
     exit();
 } // auth success
+

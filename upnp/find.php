@@ -5,7 +5,6 @@ ini_set('display_errors', 1);
 
 class UPnPFind
 {
-
     /**
      * Find devices by UPnP multicast message and stores them to cache
      *
@@ -91,9 +90,9 @@ class UPnPFind
             $buf = null;
             @socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);
 
-            if (!is_null($buf))
+            if (!is_null($buf)) {
                 $response[] = self::discoveryReponse2Array($buf);
-
+            }
         } while (!is_null($buf));
         //socket_close($socket);
 
@@ -127,7 +126,6 @@ class UPnPFind
 
         return (Object)$result;
     }
-
 }
 
 

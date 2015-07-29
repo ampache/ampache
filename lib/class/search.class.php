@@ -162,7 +162,7 @@ class Search extends playlist_object
             'sql'     => '<=>'
         );
 
-         $this->basetypes['boolean_numeric'][] = array(
+        $this->basetypes['boolean_numeric'][] = array(
             'name'    => 'ne',
             'description' => T_('is not'),
             'sql'     => '<>'
@@ -382,7 +382,7 @@ class Search extends playlist_object
 
             $playlists = array();
             foreach (Search::get_searches() as $playlistid) {
-            // Slightly different from the above so we don't instigate
+                // Slightly different from the above so we don't instigate
             // a vicious loop.
                 $playlists[$playlistid] = Search::get_name_byid($playlistid);
             }
@@ -547,7 +547,6 @@ class Search extends playlist_object
             );
         break;
         } // end switch on searchtype
-
     } // end constructor
 
     /**
@@ -607,7 +606,7 @@ class Search extends playlist_object
         $db_results = Dba::read($sql);
         $r = Dba::fetch_assoc($db_results);
         return $r['name'];
-     }
+    }
 
     /**
      * get_searches
@@ -649,7 +648,9 @@ class Search extends playlist_object
         $limit_sql = "";
         if ($limit > 0) {
             $limit_sql = ' LIMIT ';
-            if ($offset) $limit_sql .= $offset . ",";
+            if ($offset) {
+                $limit_sql .= $offset . ",";
+            }
             $limit_sql .= $limit;
         }
 

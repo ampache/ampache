@@ -53,7 +53,6 @@ function log_event($username, $event_name, $event_description, $log_name)
     if (!$log_write) {
         echo "Warning: Unable to write to log ($log_filename) Please check your log_path variable in ampache.cfg.php";
     }
-
 } // log_event
 
 /*
@@ -151,5 +150,5 @@ function debug_event($type, $message, $level, $file = '', $username = '')
     foreach (explode("\n", $message) as $line) {
         log_event($username, $type, $line, $file);
     }
-
 } // debug_event
+

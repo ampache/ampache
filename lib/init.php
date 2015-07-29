@@ -206,7 +206,8 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user']->access = intval($auth['access']);
         }
         if (!$GLOBALS['user']->id AND !AmpConfig::get('demo_mode')) {
-            Auth::logout(session_id()); exit;
+            Auth::logout(session_id());
+            exit;
         }
         $GLOBALS['user']->update_last_seen();
     }
@@ -221,7 +222,6 @@ else {
     } else {
         $GLOBALS['user'] = new User();
     }
-
 } // If NO_SESSION passed
 
 $GLOBALS['user']->format(false);

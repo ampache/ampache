@@ -166,52 +166,64 @@
 </tr>
 <?php
 if (!defined('INSTALL')) {
-?>
+    ?>
 <tr>
-    <td valign="top"><?php echo T_('Configuration file readability'); ?></td>
+    <td valign="top"><?php echo T_('Configuration file readability');
+    ?></td>
     <td valign="top">
-    <?php echo debug_result(is_readable($configfile)); ?>
+    <?php echo debug_result(is_readable($configfile));
+    ?>
     </td>
     <td width="350px">
-    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.'); ?>
+    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.');
+    ?>
     </td>
 </tr>
 <tr>
     <td valign="top">
-        <?php echo T_('Configuration file validity'); ?>
+        <?php echo T_('Configuration file validity');
+    ?>
     </td>
     <td valign="top">
     <?php
         $results = @parse_ini_file($configfile);
-        AmpConfig::set_by_array($results);
-        echo debug_result(check_config_values($results));
+    AmpConfig::set_by_array($results);
+    echo debug_result(check_config_values($results));
     ?>
     </td>
     <td>
-    <?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file."); ?>
+    <?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file.");
+    ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_("Database connection"); ?></td>
+    <td valign="top"><?php echo T_("Database connection");
+    ?></td>
     <td valign="top">
-    <?php echo debug_result(check_php_pdo() && Dba::check_database()); ?>
+    <?php echo debug_result(check_php_pdo() && Dba::check_database());
+    ?>
     </td>
     <td>
-    <?php echo T_('This attempts to connect to your database using the values read from your configuration file.'); ?>
+    <?php echo T_('This attempts to connect to your database using the values read from your configuration file.');
+    ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('Database tables'); ?></td>
+    <td valign="top"><?php echo T_('Database tables');
+    ?></td>
     <td valign="top">
-    <?php echo debug_result(check_php_pdo() && Dba::check_database_inserted()); ?>
+    <?php echo debug_result(check_php_pdo() && Dba::check_database_inserted());
+    ?>
     </td>
     <td>
-    <?php echo T_('This checks a few key tables to make sure that you have successfully inserted the Ampache database and that the user has access to the database'); ?>
+    <?php echo T_('This checks a few key tables to make sure that you have successfully inserted the Ampache database and that the user has access to the database');
+    ?>
     </td>
 </tr>
 <tr>
 
-    <td valign="top"><?php echo T_('Web path'); ?></td>
+    <td valign="top"><?php echo T_('Web path');
+    ?></td>
     <td valign="top">
     <?php
         if (check_config_values($results)) {
@@ -223,9 +235,11 @@ if (!defined('INSTALL')) {
     ?>
     </td>
     <td>
-    <?php echo T_('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.'); ?>
+    <?php echo T_('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.');
+    ?>
     </td>
 </tr>
 <?php
+
 }
 ?>

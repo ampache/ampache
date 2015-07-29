@@ -147,7 +147,9 @@ class User extends database_object
      */
     public function __construct($user_id=0)
     {
-        if (!$user_id) { return false; }
+        if (!$user_id) {
+            return false;
+        }
 
         $this->id = intval($user_id);
 
@@ -155,13 +157,16 @@ class User extends database_object
 
         foreach ($info as $key=>$value) {
             // Let's not save the password in this object :S
-            if ($key == 'password') { continue; }
+            if ($key == 'password') {
+                continue;
+            }
             $this->$key = $value;
         }
 
         // Make sure the Full name is always filled
-        if (strlen($this->fullname) < 1) { $this->fullname = $this->username; }
-
+        if (strlen($this->fullname) < 1) {
+            $this->fullname = $this->username;
+        }
     } // Constructor
 
     /**
@@ -217,7 +222,6 @@ class User extends database_object
         parent::add_to_cache('user',$id,$data);
 
         return $data;
-
     } // _get_info
 
     /**
@@ -231,7 +235,6 @@ class User extends database_object
         $session_id = session_id();
 
         $this->playlist = Tmp_Playlist::get_from_session($session_id);
-
     } // load_playlist
 
     /**
@@ -265,7 +268,6 @@ class User extends database_object
         $user = new User($results['id']);
 
         return $user;
-
     } // get_from_username
 
     /**
@@ -288,7 +290,6 @@ class User extends database_object
         }
 
         return $user;
-
     } // get_from_apikey
 
     /**
@@ -306,7 +307,6 @@ class User extends database_object
         }
 
         return $user;
-
     } // get_from_email
 
     /**
@@ -323,7 +323,6 @@ class User extends database_object
             $users[] = $results['id'];
         }
         return $users;
-
     } // get_from_website
 
     /**
@@ -347,7 +346,6 @@ class User extends database_object
         parent::add_to_cache('user_catalog',$this->id,$catalogs);
 
         return $catalogs;
-
     } // get_catalogs
 
     /**
@@ -367,8 +365,10 @@ class User extends database_object
         $user_limit = "";
         if (!$system) {
             $user_limit = "AND preference.catagory != 'system'";
-        } else if ($type != '0') {
-            $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
+        } else {
+            if ($type != '0') {
+                $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
+            }
         }
 
 
@@ -384,13 +384,14 @@ class User extends database_object
         while ($r = Dba::fetch_assoc($db_results)) {
             $type = $r['catagory'];
             $admin = false;
-            if ($type == 'system') { $admin = true; }
+            if ($type == 'system') {
+                $admin = true;
+            }
             $type_array[$type][$r['name']] = array('name'=>$r['name'],'level'=>$r['level'],'description'=>$r['description'],'value'=>$r['value']);
             $results[$type] = array ('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
         } // end while
 
         return $results;
-
     } // get_preferences
 
     /**
@@ -453,11 +454,9 @@ class User extends database_object
                 $data->f_name = $data->f_link;
                 $items[] = $data;
             }
-
         } // end foreach
 
         return $items;
-
     } // get_favorites
 
     /**
@@ -490,7 +489,6 @@ class User extends database_object
                 $key = $user_info['user'];
                 $users[$key]++;
             }
-
         } // end while
 
         /* now we've got your ratings, and all users and the # of ratings that match your ratings
@@ -510,20 +508,20 @@ class User extends database_object
 
             while ($r = Dba::fetch_assoc($db_results)) {
                 $key = $r['object_id'];
-                if (isset($ratings[$key])) { continue; }
+                if (isset($ratings[$key])) {
+                    continue;
+                }
 
                 /* Let's only get 5 total for now */
-                if (count($recommendations) > 5) { return $recommendations; }
+                if (count($recommendations) > 5) {
+                    return $recommendations;
+                }
 
                 $recommendations[$key] = $r['user_rating'];
-
             } // end while
-
-
         } // end foreach users
 
         return $recommendations;
-
     } // get_recommendations
 
     /**
@@ -545,7 +543,6 @@ class User extends database_object
         }
 
         return false;
-
     } // is_logged_in
 
     /**
@@ -555,12 +552,15 @@ class User extends database_object
      */
     public function has_access($needed_level)
     {
-        if (AmpConfig::get('demo_mode')) { return true; }
+        if (AmpConfig::get('demo_mode')) {
+            return true;
+        }
 
-        if ($this->access >= $needed_level) { return true; }
+        if ($this->access >= $needed_level) {
+            return true;
+        }
 
         return false;
-
     } // has_access
 
     /**
@@ -570,9 +570,13 @@ class User extends database_object
      */
     public static function is_registered()
     {
-        if (!$GLOBALS['user']->id) return false;
+        if (!$GLOBALS['user']->id) {
+            return false;
+        }
 
-        if (!AmpConfig::get('use_auth') && $GLOBALS['user']->access <= 5) return false;
+        if (!AmpConfig::get('use_auth') && $GLOBALS['user']->access <= 5) {
+            return false;
+        }
 
         return true;
     }
@@ -644,7 +648,6 @@ class User extends database_object
         $sql = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
         Dba::write($sql, array($new_username, $this->id));
-
     } // update_username
 
     /**
@@ -660,7 +663,6 @@ class User extends database_object
         $this->validation = $new_validation;
 
         return $db_results;
-
     } // update_validation
 
     /**
@@ -671,7 +673,6 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_fullname, $this->id));
-
     } // update_fullname
 
     /**
@@ -682,7 +683,6 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_fullname_public ? '1' : '0', $this->id));
-
     } // update_fullname_public
 
     /**
@@ -693,7 +693,6 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_email, $this->id));
-
     } // update_email
 
     /**
@@ -705,7 +704,6 @@ class User extends database_object
         $new_website = rtrim($new_website, "/");
         $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_website, $this->id));
-
     } // update_website
 
     /**
@@ -736,7 +734,6 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_apikey, $this->id));
-
     } // update_website
 
     /**
@@ -772,7 +769,9 @@ class User extends database_object
         $sql = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `id` != '" . $this->id . "' AND `access`='100'";
         $db_results = Dba::read($sql);
 
-        if (!Dba::num_rows($db_results)) { return false; }
+        if (!Dba::num_rows($db_results)) {
+            return false;
+        }
 
         $sql = "UPDATE `user` SET `disabled`='1' WHERE id='" . $this->id . "'";
         Dba::write($sql);
@@ -782,7 +781,6 @@ class User extends database_object
         Dba::write($sql);
 
         return true;
-
     } // disable
 
     /**
@@ -795,7 +793,6 @@ class User extends database_object
         Dba::write($sql);
 
         return true;
-
     } // enable
 
     /**
@@ -808,13 +805,14 @@ class User extends database_object
         if ($new_access < '100') {
             $sql = "SELECT `id` FROM user WHERE `access`='100' AND `id` != '$this->id'";
             $db_results = Dba::read($sql);
-            if (!Dba::num_rows($db_results)) { return false; }
+            if (!Dba::num_rows($db_results)) {
+                return false;
+            }
         }
 
         $new_access = Dba::escape($new_access);
         $sql = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
         Dba::write($sql);
-
     } // update_access
 
     /*!
@@ -825,7 +823,6 @@ class User extends database_object
     {
         $sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
         Dba::write($sql);
-
     } // update_last_seen
 
     /**
@@ -840,7 +837,9 @@ class User extends database_object
         $user = $this->id;
 
         // We shouldn't test on file only
-        if (!strlen($media->file)) { return false; }
+        if (!strlen($media->file)) {
+            return false;
+        }
 
         if (!$noscrobble) {
             $this->set_preferences();
@@ -863,7 +862,6 @@ class User extends database_object
         $media->set_played($user, $agent, $location);
 
         return true;
-
     } // update_stats
 
     public static function save_mediaplay($user, $media)
@@ -911,7 +909,6 @@ class User extends database_object
         }
 
         return true;
-
     } // insert_ip_history
 
     /**
@@ -957,7 +954,9 @@ class User extends database_object
         $sql .= ")";
         $db_results = Dba::write($sql, $params);
 
-        if (!$db_results) { return false; }
+        if (!$db_results) {
+            return false;
+        }
 
         // Get the insert_id
         $insert_id = Dba::insert_id();
@@ -966,7 +965,6 @@ class User extends database_object
         self::fix_preferences($insert_id);
 
         return $insert_id;
-
     } // create
 
     /**
@@ -982,8 +980,9 @@ class User extends database_object
         $db_results = Dba::write($sql, array($new_password, $this->id));
 
         // Clear this (temp fix)
-        if ($db_results) { unset($_SESSION['userdata']['password']); }
-
+        if ($db_results) {
+            unset($_SESSION['userdata']['password']);
+        }
     } // update_password
 
     /**
@@ -995,10 +994,18 @@ class User extends database_object
     public function format($details = true)
     {
         /* If they have a last seen date */
-        if (!$this->last_seen) { $this->f_last_seen = T_('Never'); } else { $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen); }
+        if (!$this->last_seen) {
+            $this->f_last_seen = T_('Never');
+        } else {
+            $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen);
+        }
 
         /* If they have a create date */
-        if (!$this->create_date) { $this->f_create_date = T_('Unknown'); } else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
+        if (!$this->create_date) {
+            $this->f_create_date = T_('Unknown');
+        } else {
+            $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date);
+        }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
 
@@ -1037,7 +1044,6 @@ class User extends database_object
         if (!empty($avatar['url_medium'])) {
             $this->f_avatar_medium = '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
         }
-
     } // format_user
 
     /**
@@ -1058,7 +1064,6 @@ class User extends database_object
             default:
                 return '0';
         }
-
     } // access_name_to_level
 
     /**
@@ -1115,7 +1120,6 @@ class User extends database_object
         $db_results = Dba::read($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
-
             $key = $r['id'];
 
             /* Check if this preference is set */
@@ -1128,7 +1132,6 @@ class User extends database_object
                 Dba::write($sql);
             }
         } // while preferences
-
     } // fix_preferences
 
     /**
@@ -1212,7 +1215,6 @@ class User extends database_object
         Dba::write($sql, array($this->username));
 
         return true;
-
     } // delete
 
     /**
@@ -1224,7 +1226,6 @@ class User extends database_object
     public function is_online( $delay = 1200 )
     {
         return time() - $this->last_seen <= $delay;
-
     } // is_online
 
     /**
@@ -1239,7 +1240,6 @@ class User extends database_object
         $row = Dba::fetch_assoc($db_results);
 
         return $row['validation'];
-
     } // get_validation
 
     /**
@@ -1249,7 +1249,9 @@ class User extends database_object
      */
     public function get_recently_played($limit,$type='')
     {
-        if (!$type) { $type = 'song'; }
+        if (!$type) {
+            $type = 'song';
+        }
 
         $sql = "SELECT * FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
             "ORDER BY `date` DESC LIMIT " . $limit;
@@ -1261,7 +1263,6 @@ class User extends database_object
         }
 
         return $results;
-
     } // get_recently_played
 
     /**
@@ -1275,11 +1276,15 @@ class User extends database_object
         $count        = $count ? intval($count) : intval(AmpConfig::get('user_ip_cardinality'));
 
         // Make sure it's something
-        if ($count < 1) { $count = '1'; }
+        if ($count < 1) {
+            $count = '1';
+        }
         $limit_sql = "LIMIT " . intval($count);
 
         $group_sql = "";
-        if ($distinct) { $group_sql = "GROUP BY `ip`"; }
+        if ($distinct) {
+            $group_sql = "GROUP BY `ip`";
+        }
 
         /* Select ip history */
         $sql = "SELECT `ip`,`date` FROM `ip_history`" .
@@ -1294,7 +1299,6 @@ class User extends database_object
         }
 
         return $results;
-
     } // get_ip_history
 
     /**
@@ -1364,7 +1368,6 @@ class User extends database_object
 
         $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
         Dba::write($sql, array($username));
-
     } // activate_user
 
     /**
@@ -1399,7 +1402,6 @@ class User extends database_object
         //FIXME: combined with the song title to make sure that the REFERER
         //FIXME: is in the access list with full rights
         return true;
-
     } // is_xmlrpc
 
     /**
@@ -1467,8 +1469,9 @@ class User extends database_object
      */
     public function toggle_follow($user_id)
     {
-        if (!$user_id || $user_id === $this->id)
+        if (!$user_id || $user_id === $this->id) {
             return false;
+        }
 
         $params = array($this->id, $user_id);
         if ($this->is_following($user_id)) {
@@ -1493,8 +1496,9 @@ class User extends database_object
             $user_id = $GLOBALS['user']->id;
         }
 
-        if ($user_id === $this->id)
+        if ($user_id === $this->id) {
             return "";
+        }
 
         $followed = $this->is_followed_by($user_id);
 
@@ -1521,7 +1525,6 @@ class User extends database_object
         }
 
         return true;
-
     } // check_username
 
     /**
@@ -1547,7 +1550,6 @@ class User extends database_object
         }
 
         return true;
-
     } // rebuild_all_preferences
 
     /**
@@ -1574,5 +1576,5 @@ class User extends database_object
 
         return true;
     }
-
 } //end user class
+

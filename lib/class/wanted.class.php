@@ -93,7 +93,9 @@ class Wanted extends database_object
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -372,7 +374,6 @@ class Wanted extends database_object
         }
 
         return false;
-
     }
 
     /**
@@ -467,8 +468,9 @@ class Wanted extends database_object
                                 $plugin = new Plugin($plugin_name);
                                 if ($plugin->load($GLOBALS['user'])) {
                                     $song['file'] = $plugin->_plugin->get_song_preview($track['id'], $artist_name, $track['title']);
-                                    if ($song['file'] != null)
+                                    if ($song['file'] != null) {
                                         break;
+                                    }
                                 }
                             }
 
@@ -507,7 +509,6 @@ class Wanted extends database_object
         $user = new User($this->user);
         $user->format();
         $this->f_user = $user->f_name;
-
     }
 
     /**
@@ -541,5 +542,5 @@ class Wanted extends database_object
 
         return $results;
     }
-
 } // end of recommendation class
+

@@ -93,7 +93,9 @@ class Access
      */
     public function __construct($access_id = null)
     {
-        if (!$access_id) { return false; }
+        if (!$access_id) {
+            return false;
+        }
 
         /* Assign id for use in get_info() */
         $this->id = intval($access_id);
@@ -232,7 +234,6 @@ class Access
         Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
 
         return true;
-
     }
 
     /**
@@ -476,7 +477,9 @@ class Access
      */
     public function get_user_name()
     {
-        if ($this->user == '-1') { return T_('All'); }
+        if ($this->user == '-1') {
+            return T_('All');
+        }
 
         $user = new User($this->user);
         return $user->fullname . " (" . $user->username . ")";

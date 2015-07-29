@@ -27,7 +27,9 @@ UI::show_header();
 // Switch on Action
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $song_id = scrub_in($_REQUEST['song_id']);
         show_confirmation(
@@ -39,7 +41,9 @@ switch ($_REQUEST['action']) {
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $song = new Song($_REQUEST['song_id']);
         if (!Catalog::can_remove($song)) {

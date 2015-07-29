@@ -493,10 +493,12 @@ class Graph
                         $blink = $libitem->f_link;
                     }
                 }
-            } else if ($user_id) {
-                $u = new User($user_id);
-                $u->format();
-                $blink = $u->f_link;
+            } else {
+                if ($user_id) {
+                    $u = new User($user_id);
+                    $u->format();
+                    $blink = $u->f_link;
+                }
             }
 
             require_once AmpConfig::get('prefix') . '/templates/show_graphs.inc.php';

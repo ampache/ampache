@@ -64,14 +64,18 @@ class WebPlayer
         $urlinfo = Stream_URL::parse($item->url);
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
-        } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
-            $media = new Song_Preview($urlinfo['id']);
-        } else if (isset($urlinfo['demo_id'])) {
-            $democratic = new Democratic($urlinfo['demo_id']);
-            if ($democratic->id) {
-                $song_id = $democratic->get_next_object();
-                if ($song_id) {
-                    $media = new Song($song_id);
+        } else {
+            if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+                $media = new Song_Preview($urlinfo['id']);
+            } else {
+                if (isset($urlinfo['demo_id'])) {
+                    $democratic = new Democratic($urlinfo['demo_id']);
+                    if ($democratic->id) {
+                        $song_id = $democratic->get_next_object();
+                        if ($song_id) {
+                            $media = new Song($song_id);
+                        }
+                    }
                 }
             }
         }
@@ -114,22 +118,45 @@ class WebPlayer
             }
 
             if ($urlinfo['type'] == 'song') {
-                if ($types['real'] == "ogg" || $types['real'] == "opus") $types['player'] = "oga";
-                else if ($types['real'] == "mp4") $types['player'] = "m4a";
-            } else if ($urlinfo['type'] == 'video') {
-                if ($types['real'] == "ogg") $types['player'] = "ogv";
-                else if ($types['real'] == "webm") $types['player'] = "webmv";
-                else if ($types['real'] == "mp4") $types['player'] = "m4v";
+                if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                    $types['player'] = "oga";
+                } else {
+                    if ($types['real'] == "mp4") {
+                        $types['player'] = "m4a";
+                    }
+                }
+            } else {
+                if ($urlinfo['type'] == 'video') {
+                    if ($types['real'] == "ogg") {
+                        $types['player'] = "ogv";
+                    } else {
+                        if ($types['real'] == "webm") {
+                            $types['player'] = "webmv";
+                        } else {
+                            if ($types['real'] == "mp4") {
+                                $types['player'] = "m4v";
+                            }
+                        }
+                    }
+                }
             }
-        } else if ($item->type == 'live_stream') {
-            $types['real'] = $item->codec;
-            if ($types['real'] == "ogg" || $types['real'] == "opus") $types['player'] = "oga";
         } else {
-            $ext = pathinfo($item->url, PATHINFO_EXTENSION);
-            if (!empty($ext)) $types['real'] = $ext;
+            if ($item->type == 'live_stream') {
+                $types['real'] = $item->codec;
+                if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                    $types['player'] = "oga";
+                }
+            } else {
+                $ext = pathinfo($item->url, PATHINFO_EXTENSION);
+                if (!empty($ext)) {
+                    $types['real'] = $ext;
+                }
+            }
         }
 
-        if (empty($types['player'])) $types['player'] = $types['real'];
+        if (empty($types['player'])) {
+            $types['player'] = $types['real'];
+        }
 
         debug_event("webplayer.class.php", "Types {".json_encode($types)."}", 5);
         return $types;
@@ -209,10 +236,11 @@ class WebPlayer
     {
         $js = array();
         foreach (array('title', 'author') as $member) {
-            if ($member == "author")
+            if ($member == "author") {
                 $kmember = "artist";
-            else
+            } else {
                 $kmember = $member;
+            }
 
             $js[$kmember] = $item->$member;
         }
@@ -226,14 +254,18 @@ class WebPlayer
 
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
-        } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
-            $media = new Song_Preview($urlinfo['id']);
-        } else if (isset($urlinfo['demo_id'])) {
-            $democratic = new Democratic($urlinfo['demo_id']);
-            if ($democratic->id) {
-                $song_id = $democratic->get_next_object();
-                if ($song_id) {
-                    $media = new Song($song_id);
+        } else {
+            if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+                $media = new Song_Preview($urlinfo['id']);
+            } else {
+                if (isset($urlinfo['demo_id'])) {
+                    $democratic = new Democratic($urlinfo['demo_id']);
+                    if ($democratic->id) {
+                        $song_id = $democratic->get_next_object();
+                        if ($song_id) {
+                            $media = new Song($song_id);
+                        }
+                    }
                 }
             }
         }

@@ -27,7 +27,9 @@ require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
 /* Switch on Action */
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $album_id = scrub_in($_REQUEST['album_id']);
         show_confirmation(
@@ -39,7 +41,9 @@ switch ($_REQUEST['action']) {
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $album = new Album($_REQUEST['album_id']);
         if (!Catalog::can_remove($album)) {

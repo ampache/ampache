@@ -29,7 +29,9 @@ UI::show_header();
  */
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $tvshow_id = scrub_in($_REQUEST['tvshow_id']);
         show_confirmation(
@@ -41,7 +43,9 @@ switch ($_REQUEST['action']) {
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $tvshow = new TVShow($_REQUEST['tvshow_id']);
         if (!Catalog::can_remove($tvshow)) {
@@ -66,7 +70,11 @@ switch ($_REQUEST['action']) {
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
-        if ($match == "Browse") { $chr = ""; } else { $chr = $match; }
+        if ($match == "Browse") {
+            $chr = "";
+        } else {
+            $chr = $match;
+        }
         /* Enclose this in the purty box! */
         require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
         show_alphabet_list('tvshows','tvshows.php',$match);

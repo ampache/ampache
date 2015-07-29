@@ -39,7 +39,6 @@ class Catalog_remote extends Catalog
     public function get_description()
     {
         return $this->description;
-
     } // get_description
 
     /**
@@ -49,7 +48,6 @@ class Catalog_remote extends Catalog
     public function get_version()
     {
         return $this->version;
-
     } // get_version
 
     /**
@@ -59,7 +57,6 @@ class Catalog_remote extends Catalog
     public function get_type()
     {
         return $this->type;
-
     } // get_type
 
     /**
@@ -69,7 +66,6 @@ class Catalog_remote extends Catalog
     public function get_create_help()
     {
         return "";
-
     } // get_create_help
 
     /**
@@ -82,8 +78,6 @@ class Catalog_remote extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-
-
     } // is_installed
 
     /**
@@ -101,7 +95,6 @@ class Catalog_remote extends Catalog
         $db_results = Dba::query($sql);
 
         return true;
-
     } // install
 
     public function catalog_fields()
@@ -111,7 +104,6 @@ class Catalog_remote extends Catalog
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
         return $fields;
-
     }
 
     public $uri;
@@ -284,7 +276,6 @@ class Catalog_remote extends Catalog
         $this->update_last_update();
 
         return true;
-
     }
 
     public function verify_catalog_proc()
@@ -386,5 +377,5 @@ class Catalog_remote extends Catalog
 
         return null;
     }
-
 } // end of catalog class
+

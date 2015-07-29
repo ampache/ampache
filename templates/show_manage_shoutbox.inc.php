@@ -45,12 +45,17 @@ $web_path = AmpConfig::get('web_path');
             $client->format();
 
             require AmpConfig::get('prefix') . '/templates/show_shout_row.inc.php';
-        ?>
-        <?php } if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6" class="error"><?php echo T_('No Records Found'); ?></td>
+            ?>
+        <?php 
+        } if (!count($object_ids)) {
+            ?>
+        <tr class="<?php echo UI::flip_class();
+            ?>">
+            <td colspan="6" class="error"><?php echo T_('No Records Found');
+            ?></td>
         </tr>
-        <?php } ?>
+        <?php 
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

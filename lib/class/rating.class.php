@@ -43,7 +43,6 @@ class Rating extends database_object
         $this->type = $type;
 
         return true;
-
     } // Constructor
 
     /**
@@ -76,7 +75,9 @@ class Rating extends database_object
      */
     public static function build_cache($type, $ids)
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) OR !count($ids)) {
+            return false;
+        }
 
         $ratings = array();
         $user_ratings = array();
@@ -119,7 +120,6 @@ class Rating extends database_object
         }
 
         return true;
-
     } // build_cache
 
     /**
@@ -129,29 +129,28 @@ class Rating extends database_object
      */
      public function get_user_rating($user_id = null)
      {
-        if (is_null($user_id)) {
-            $user_id = $GLOBALS['user']->id;
-        }
+         if (is_null($user_id)) {
+             $user_id = $GLOBALS['user']->id;
+         }
 
-        $key = 'rating_' . $this->type . '_user' . $user_id;
-        if (parent::is_cached($key, $this->id)) {
-            return parent::get_from_cache($key, $this->id);
-        }
+         $key = 'rating_' . $this->type . '_user' . $user_id;
+         if (parent::is_cached($key, $this->id)) {
+             return parent::get_from_cache($key, $this->id);
+         }
 
-        $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? ".
+         $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? ".
             "AND `object_id` = ? AND `object_type` = ?";
-        $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
+         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
-        $rating = 0;
+         $rating = 0;
 
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $rating = $results['rating'];
-        }
+         if ($results = Dba::fetch_assoc($db_results)) {
+             $rating = $results['rating'];
+         }
 
-        parent::add_to_cache($key, $this->id, $rating);
-        return $rating;
-
-    } // get_user_rating
+         parent::add_to_cache($key, $this->id, $rating);
+         return $rating;
+     } // get_user_rating
 
     /**
      * get_average_rating
@@ -172,7 +171,6 @@ class Rating extends database_object
 
         parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results['rating']);
         return $results['rating'];
-
     } // get_average_rating
 
     /**
@@ -219,7 +217,6 @@ class Rating extends database_object
         }
 
         return $results;
-
     }
 
     /**
@@ -261,7 +258,6 @@ class Rating extends database_object
         }
 
         return true;
-
     } // set_rating
 
     /**
@@ -272,7 +268,9 @@ class Rating extends database_object
     public static function show($object_id, $type, $static=false)
     {
         // If ratings aren't enabled don't do anything
-        if (!AmpConfig::get('ratings')) { return false; }
+        if (!AmpConfig::get('ratings')) {
+            return false;
+        }
 
         $rating = new Rating($object_id, $type);
 
@@ -281,7 +279,6 @@ class Rating extends database_object
         } else {
             require AmpConfig::get('prefix') . '/templates/show_object_rating.inc.php';
         }
-
     } // show
-
 } //end rating class
+

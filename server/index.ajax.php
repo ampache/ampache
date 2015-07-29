@@ -23,7 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -234,7 +236,11 @@ switch ($_REQUEST['action']) {
                 $button = $_REQUEST['button'];
             break;
             case 'admin':
-                if (Access::check('interface','100')) { $button = $_REQUEST['button']; } else { exit; }
+                if (Access::check('interface','100')) {
+                    $button = $_REQUEST['button'];
+                } else {
+                    exit;
+                }
             break;
             default:
                 exit;

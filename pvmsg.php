@@ -45,7 +45,9 @@ switch ($action) {
         require_once AmpConfig::get('prefix') . '/templates/show_add_pvmsg.inc.php';
     break;
     case 'add_message':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         // Remove unauthorized defined values from here
         if (isset($_POST['from_user'])) {
@@ -68,7 +70,9 @@ switch ($action) {
         }
     break;
     case 'set_is_read':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $msgs = split(",", $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
@@ -86,7 +90,9 @@ switch ($action) {
         show_confirmation(T_('Messages State Changed'), T_('Messages state have been changed.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
     break;
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $msgs = scrub_out($_REQUEST['msgs']);
         show_confirmation(
@@ -98,7 +104,9 @@ switch ($action) {
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $msgs = split(",", $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {

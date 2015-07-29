@@ -44,12 +44,17 @@ $web_path = AmpConfig::get('web_path');
             $libitem->format();
 
             require AmpConfig::get('prefix') . '/templates/show_license_row.inc.php';
-        ?>
-        <?php } if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6" class="error"><?php echo T_('No Licenses Found'); ?></td>
+            ?>
+        <?php 
+        } if (!count($object_ids)) {
+            ?>
+        <tr class="<?php echo UI::flip_class();
+            ?>">
+            <td colspan="6" class="error"><?php echo T_('No Licenses Found');
+            ?></td>
         </tr>
-        <?php } ?>
+        <?php 
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

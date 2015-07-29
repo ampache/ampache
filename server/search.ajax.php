@@ -23,7 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 switch ($_REQUEST['action']) {
     case 'search':
@@ -197,8 +199,9 @@ switch ($_REQUEST['action']) {
                 );
                 $i++;
 
-                if ($i >= $limit)
+                if ($i >= $limit) {
                     break;
+                }
             }
         }
 

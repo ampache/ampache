@@ -39,11 +39,14 @@ UI::show_box_top($boxtitle, 'box box_add_shout');
 <tr>
     <td><textarea rows="5" cols="35" maxlength="140" name="comment"></textarea></td>
 </tr>
-<?php if (Access::check('interface','50')) { ?>
+<?php if (Access::check('interface','50')) {
+    ?>
 <tr>
-    <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
+    <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment');
+    ?></strong></td>
 </tr>
-<?php } ?>
+<?php 
+} ?>
 <tr>
     <td>
         <?php echo Core::form_register('add_shout'); ?>

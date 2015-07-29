@@ -123,24 +123,30 @@
             </thead>
             <tbody>
             <?php foreach ($configuration as $key=>$value) {
-                if ($key == 'database_password' || $key == 'mysql_password') { $value = '*********'; }
-                if (is_array($value)) {
-                    $string = '';
-                    foreach ($value as $setting) {
-                        $string .= $setting . '<br />';
-                    }
-                    $value = $string;
-                }
-                if (Preference::is_boolean($key)) {
-                    $value = print_bool($value);
-                }
-            ?>
-            <tr class="<?php echo UI::flip_class(); ?>">
-                <td valign="top"><strong><?php echo $key; ?></strong></td>
-                <td><?php echo $value; ?></td>
+    if ($key == 'database_password' || $key == 'mysql_password') {
+        $value = '*********';
+    }
+    if (is_array($value)) {
+        $string = '';
+        foreach ($value as $setting) {
+            $string .= $setting . '<br />';
+        }
+        $value = $string;
+    }
+    if (Preference::is_boolean($key)) {
+        $value = print_bool($value);
+    }
+    ?>
+            <tr class="<?php echo UI::flip_class();
+    ?>">
+                <td valign="top"><strong><?php echo $key;
+    ?></strong></td>
+                <td><?php echo $value;
+    ?></td>
             </tr>
             </tbody>
-            <?php } ?>
+            <?php 
+} ?>
         </table>
     <?php UI::show_box_bottom(); ?>
 

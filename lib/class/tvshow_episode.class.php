@@ -48,7 +48,6 @@ class TVShow_Episode extends Video
         }
 
         return true;
-
     }
 
     /**
@@ -112,7 +111,6 @@ class TVShow_Episode extends Video
         Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']));
 
         return $data['id'];
-
     }
 
     /**
@@ -137,7 +135,6 @@ class TVShow_Episode extends Video
         $this->summary = $summary;
 
         return $this->id;
-
     }
 
     /**
@@ -208,8 +205,9 @@ class TVShow_Episode extends Video
 
     public function get_description()
     {
-        if (!empty($this->summary))
+        if (!empty($this->summary)) {
             return $this->summary;
+        }
 
         $season = new TVShow_Season($this->season);
         return $season->get_description();
@@ -223,14 +221,16 @@ class TVShow_Episode extends Video
         if (Art::has_db($this->id, 'video')) {
             $id = $this->id;
             $type = 'video';
-        } else if (Art::has_db($this->season, 'tvshow_season')) {
-            $id = $this->season;
-            $type = 'tvshow_season';
         } else {
-            $season = new TVShow_Season($this->season);
-            if (Art::has_db($season->tvshow, 'tvshow')) {
-                $id = $season->tvshow;
-                $type = 'tvshow';
+            if (Art::has_db($this->season, 'tvshow_season')) {
+                $id = $this->season;
+                $type = 'tvshow_season';
+            } else {
+                $season = new TVShow_Season($this->season);
+                if (Art::has_db($season->tvshow, 'tvshow')) {
+                    $id = $season->tvshow;
+                    $type = 'tvshow';
+                }
             }
         }
 

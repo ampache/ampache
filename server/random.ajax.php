@@ -23,14 +23,19 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
     case 'song':
         $songs = Random::get_default();
 
-        if (!count($songs)) { $results['rfc3514'] = '0x1'; break; }
+        if (!count($songs)) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         foreach ($songs as $song_id) {
             $GLOBALS['user']->playlist->add_object($song_id, 'song');
@@ -40,7 +45,10 @@ switch ($_REQUEST['action']) {
     case 'album':
         $album_id = Album::get_random();
 
-        if (!$album_id) { $results['rfc3514'] = '0x1'; break; }
+        if (!$album_id) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         $album = new Album($album_id[0]);
         $songs = $album->get_songs();
@@ -52,7 +60,10 @@ switch ($_REQUEST['action']) {
     case 'artist':
         $artist_id = Random::artist();
 
-        if (!$artist_id) { $results['rfc3514'] = '0x1'; break; }
+        if (!$artist_id) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         $artist = new Artist($artist_id);
         $songs = $artist->get_songs();
@@ -64,7 +75,10 @@ switch ($_REQUEST['action']) {
     case 'playlist':
         $playlist_id = Random::playlist();
 
-        if (!$playlist_id) { $results['rfc3514'] = '0x1'; break; }
+        if (!$playlist_id) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         $playlist = new Playlist($playlist_id);
         $items = $playlist->get_items();

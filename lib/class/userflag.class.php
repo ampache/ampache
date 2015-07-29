@@ -43,7 +43,6 @@ class Userflag extends database_object
         $this->type = $type;
 
         return true;
-
     } // Constructor
 
     /**
@@ -53,7 +52,9 @@ class Userflag extends database_object
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) OR !count($ids)) {
+            return false;
+        }
 
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
@@ -81,7 +82,6 @@ class Userflag extends database_object
         }
 
         return true;
-
     } // build_cache
 
     /**
@@ -129,7 +129,6 @@ class Userflag extends database_object
 
         parent::add_to_cache($key, $this->id, $flagged);
         return $flagged;
-
     }
 
     /**
@@ -163,7 +162,6 @@ class Userflag extends database_object
         parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, $flagged);
 
         return true;
-
     } // set_flag
 
     /**
@@ -233,7 +231,6 @@ class Userflag extends database_object
         }
 
         return $results;
-
     } // get_latest
 
     /**
@@ -244,11 +241,12 @@ class Userflag extends database_object
     public static function show($object_id, $type)
     {
         // If user flags aren't enabled don't do anything
-        if (!AmpConfig::get('userflags')) { return false; }
+        if (!AmpConfig::get('userflags')) {
+            return false;
+        }
 
         $userflag = new Userflag($object_id, $type);
         require AmpConfig::get('prefix') . '/templates/show_object_userflag.inc.php';
-
     } // show
-
 } //end rating class
+

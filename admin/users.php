@@ -32,7 +32,9 @@ UI::show_header();
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'update_user':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         if (!Core::form_verify('edit_user','post')) {
             UI::access_denied();
@@ -112,7 +114,9 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('updated'), AmpConfig::get('web_path'). '/admin/users.php');
     break;
     case 'add_user':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         if (!Core::form_verify('add_user','post')) {
             UI::access_denied();
@@ -161,7 +165,13 @@ switch ($_REQUEST['action']) {
         $user = new User($user_id);
         $user->upload_avatar();
 
-        if ($access == 5) { $access = T_('Guest');} elseif ($access == 25) { $access = T_('User');} elseif ($access == 100) { $access = T_('Admin');}
+        if ($access == 5) {
+            $access = T_('Guest');
+        } elseif ($access == 25) {
+            $access = T_('User');
+        } elseif ($access == 100) {
+            $access = T_('Admin');
+        }
 
         /* HINT: %1 Username, %2 Access num */
         show_confirmation(T_('New User Added'),sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), AmpConfig::get('web_path').'/admin/users.php');
@@ -183,12 +193,16 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'show_edit':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
         $client    = new User($_REQUEST['user_id']);
         require_once AmpConfig::get('prefix') . '/templates/show_edit_user.inc.php';
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
         if (!Core::form_verify('delete_user')) {
             UI::access_denied();
             exit;
@@ -201,7 +215,9 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
         $client = new User($_REQUEST['user_id']);
         show_confirmation(T_('Deletion Request'),
             sprintf(T_('Are you sure you want to permanently delete %s?'), $client->fullname),
@@ -214,7 +230,9 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('User Avatar Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_avatar');
     break;
     case 'delete_avatar':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         if (!Core::form_verify('delete_avatar','post')) {
             UI::access_denied();
@@ -234,7 +252,9 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('Generate new API Key'), T_('Confirm API Key Generation'), $next_url, 1, 'generate_apikey');
     break;
     case 'generate_apikey':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         if (!Core::form_verify('generate_apikey','post')) {
             UI::access_denied();
@@ -260,7 +280,9 @@ switch ($_REQUEST['action']) {
         require AmpConfig::get('prefix') . '/templates/show_ip_history.inc.php';
     break;
     case 'show_add_user':
-            if (AmpConfig::get('demo_mode')) { break; }
+            if (AmpConfig::get('demo_mode')) {
+                break;
+            }
         require_once AmpConfig::get('prefix') . '/templates/show_add_user.inc.php';
     break;
     case 'show_preferences':

@@ -26,7 +26,9 @@ UI::show_header();
 
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $video_id = scrub_in($_REQUEST['video_id']);
         show_confirmation(
@@ -38,7 +40,9 @@ switch ($_REQUEST['action']) {
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $video = Video::create_from_id($_REQUEST['video_id']);
         if (!Catalog::can_remove($video)) {

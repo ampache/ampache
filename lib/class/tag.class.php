@@ -38,14 +38,15 @@ class Tag extends database_object implements library_item
      */
     public function __construct($id)
     {
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         $info = $this->get_info($id);
 
         foreach ($info as $key=>$value) {
             $this->$key = $value;
         } // end foreach
-
     } // constructor
 
     /**
@@ -59,7 +60,6 @@ class Tag extends database_object implements library_item
         $tag = new Tag($tag_id);
 
         return $tag;
-
     } // construct_from_name
 
     /**
@@ -69,7 +69,9 @@ class Tag extends database_object implements library_item
      */
     public static function build_cache($ids)
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) OR !count($ids)) {
+            return false;
+        }
 
         $idlist = '(' . implode(',', $ids) . ')';
 
@@ -89,10 +91,13 @@ class Tag extends database_object implements library_item
      */
     public static function build_map_cache($type, $ids)
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
-
-        if (!Core::is_library_item($type))
+        if (!is_array($ids) OR !count($ids)) {
             return false;
+        }
+
+        if (!Core::is_library_item($type)) {
+            return false;
+        }
 
         $idlist = '(' . implode(',',$ids) . ')';
 
@@ -121,7 +126,6 @@ class Tag extends database_object implements library_item
         }
 
         return true;
-
     } // build_map_cache
 
     /**
@@ -131,14 +135,19 @@ class Tag extends database_object implements library_item
      */
     public static function add($type, $id, $value, $user=false)
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
 
-        if (!is_numeric($id)) { return false; }
+        if (!is_numeric($id)) {
+            return false;
+        }
 
         $cleaned_value = $value;
 
-        if (!strlen($cleaned_value)) { return false; }
+        if (!strlen($cleaned_value)) {
+            return false;
+        }
 
         $uid = ($user === false) ? intval($user) : intval($GLOBALS['user']->id);
 
@@ -158,7 +167,6 @@ class Tag extends database_object implements library_item
         }
 
         return $map_id;
-
     } // add
 
     /**
@@ -167,7 +175,9 @@ class Tag extends database_object implements library_item
      */
     public static function add_tag($value)
     {
-        if (!strlen($value)) { return false; }
+        if (!strlen($value)) {
+            return false;
+        }
 
         $sql = "REPLACE INTO `tag` SET `name` = ?";
         Dba::write($sql, array($value));
@@ -176,7 +186,6 @@ class Tag extends database_object implements library_item
         parent::add_to_cache('tag_name', $value, $insert_id);
 
         return $insert_id;
-
     } // add_tag
 
     /**
@@ -186,7 +195,9 @@ class Tag extends database_object implements library_item
     public function update(array $data)
     {
         //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', '5');
-        if (!strlen($data['name'])) { return false; }
+        if (!strlen($data['name'])) {
+            return false;
+        }
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data[name], $this->id));
@@ -213,7 +224,6 @@ class Tag extends database_object implements library_item
             }
         }
         return $this->id;
-
     } // add_tag
 
     /**
@@ -273,11 +283,14 @@ class Tag extends database_object implements library_item
     {
         $uid = ($user == '') ? intval($GLOBALS['user']->id) : intval($user);
         $tag_id = intval($tag_id);
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
         $id = intval($object_id);
 
-        if (!$tag_id || !$id) { return false; }
+        if (!$tag_id || !$id) {
+            return false;
+        }
 
         // If tag merged to another one, add reference to the merge destination
         $parent = new Tag($tag_id);
@@ -295,7 +308,6 @@ class Tag extends database_object implements library_item
         parent::add_to_cache('tag_map_' . $type,$insert_id,array('tag_id'=>$tag_id,'user'=>$uid,'object_type'=>$type,'object_id'=>$id));
 
         return $insert_id;
-
     } // add_tag_map
 
     /**
@@ -378,7 +390,6 @@ class Tag extends database_object implements library_item
         parent::add_to_cache('tag_name',$results['name'],$results['id']);
 
         return $results['id'];
-
     } // tag_exists
 
     /**
@@ -388,8 +399,9 @@ class Tag extends database_object implements library_item
      */
     public static function tag_map_exists($type,$object_id,$tag_id,$user)
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
 
         $sql = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` " .
             "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
@@ -398,7 +410,6 @@ class Tag extends database_object implements library_item
         $results = Dba::fetch_assoc($db_results);
 
         return $results['id'];
-
     } // tag_map_exists
 
     /**
@@ -407,8 +418,9 @@ class Tag extends database_object implements library_item
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return array();
+        }
 
         $object_id = intval($object_id);
 
@@ -427,7 +439,6 @@ class Tag extends database_object implements library_item
         }
 
         return $results;
-
     } // get_top_tags
 
     /**
@@ -437,8 +448,9 @@ class Tag extends database_object implements library_item
      */
     public static function get_object_tags($type, $id)
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
 
         $sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
@@ -460,13 +472,16 @@ class Tag extends database_object implements library_item
      */
     public static function get_tag_objects($type,$tag_id,$count='',$offset='')
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
 
         $limit_sql = "";
         if ($count) {
             $limit_sql = "LIMIT ";
-            if ($offset) $limit_sql .= intval($offset) . ',';
+            if ($offset) {
+                $limit_sql .= intval($offset) . ',';
+            }
             $limit_sql .= intval($count);
         }
 
@@ -526,7 +541,6 @@ class Tag extends database_object implements library_item
 
         parent::add_to_cache('tags_list', 'no_name', $results);
         return $results;
-
     } // get_tags
 
     /**
@@ -538,7 +552,9 @@ class Tag extends database_object implements library_item
     public static function get_display($tags, $link=false, $filter_type='')
     {
         //debug_event('tag.class.php', 'Get display tags called...', '5');
-        if (!is_array($tags)) { return ''; }
+        if (!is_array($tags)) {
+            return '';
+        }
 
         $results = '';
 
@@ -561,7 +577,6 @@ class Tag extends database_object implements library_item
         $results = rtrim($results, ', ');
 
         return $results;
-
     } // get_display
 
     /**
@@ -592,9 +607,11 @@ class Tag extends database_object implements library_item
                     if ($found) {
                         debug_event('tag.class', 'Already found. Do nothing.', '5');
                         unset($editedTags[$tk]);
-                    } else if ($overwrite) {
-                        debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
-                        $ctag->remove_map($type, $object_id);
+                    } else {
+                        if ($overwrite) {
+                            debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
+                            $ctag->remove_map($type, $object_id);
+                        }
                     }
                 }
             }
@@ -658,7 +675,6 @@ class Tag extends database_object implements library_item
         }
 
         return $results;
-
     } // count
 
     /**
@@ -667,8 +683,9 @@ class Tag extends database_object implements library_item
      */
     public function remove_map($type, $object_id)
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
 
         // TODO: Review the tag edition per user.
 
@@ -676,12 +693,10 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($this->id, $type, $object_id));//, $GLOBALS['user']->id));
 
         return true;
-
     } // remove_map
 
     public function format($details = true)
     {
-
     }
 
     public function get_keywords()
@@ -763,5 +778,5 @@ class Tag extends database_object implements library_item
             Art::display('tag', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
-
 } // end of Tag class
+

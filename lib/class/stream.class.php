@@ -219,7 +219,6 @@ class Stream
         $frame = gmdate("H:i:s", $sec);
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
-
             $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
                 '%FILE%'   => scrub_arg($media->file),
@@ -256,8 +255,9 @@ class Stream
             // Windows doesn't like to provide stderr as a pipe
             $descriptors[2] = array('pipe', 'w');
             $cmdPrefix = "exec ";
-        } else
+        } else {
             $cmdPrefix = "start /B ";
+        }
 
 
         debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
@@ -398,7 +398,6 @@ class Stream
         } // end while
 
         return $results;
-
     } // get_now_playing
 
     /**
@@ -431,7 +430,9 @@ class Stream
     public static function run_playlist_method()
     {
         // If this wasn't ajax included run away
-        if (!defined('AJAX_INCLUDE')) { return false; }
+        if (!defined('AJAX_INCLUDE')) {
+            return false;
+        }
 
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
@@ -451,7 +452,6 @@ class Stream
         echo "<script type=\"text/javascript\">";
         echo Core::get_reloadutil() . "('".$_SESSION['iframe']['target']."');";
         echo "</script>";
-
     } // run_playlist_method
 
     /**
@@ -487,7 +487,6 @@ class Stream
         $url = $web_path . "/play/index.php?$session_string";
 
         return $url;
-
     } // get_base_url
-
 } //end of stream class
+

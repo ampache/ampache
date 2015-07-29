@@ -50,7 +50,9 @@ class Share extends database_object
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -115,9 +117,13 @@ class Share extends database_object
     public static function create_share($object_type, $object_id, $allow_stream=true, $allow_download=true, $expire=0, $secret='', $max_counter=0, $description='')
     {
         $object_type = self::format_type($object_type);
-        if (empty($object_type)) return '';
+        if (empty($object_type)) {
+            return '';
+        }
 
-        if (!$allow_stream && !$allow_download) return '';
+        if (!$allow_stream && !$allow_download) {
+            return '';
+        }
 
         $sql = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array($GLOBALS['user']->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
@@ -321,7 +327,9 @@ class Share extends database_object
                 $songs = $object->get_songs();
                 foreach ($songs as $id) {
                     $is_shared = ($media_id == $id);
-                    if ($is_shared) { break; }
+                    if ($is_shared) {
+                        break;
+                    }
                 }
             break;
             default:
@@ -375,5 +383,5 @@ class Share extends database_object
         echo "</li>";
         echo "</ul>";
     }
-
 } // end of recommendation class
+

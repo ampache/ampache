@@ -35,7 +35,6 @@ class Registration
     public function __construct()
     {
         // Rien a faire
-
     } // constructor
 
     /**
@@ -89,7 +88,6 @@ Website: %s
         }
 
         return true;
-
     } // send_confirmation
 
     /**
@@ -121,18 +119,21 @@ Website: %s
     {
         $filename = AmpConfig::get('prefix') . '/config/registration_agreement.php';
 
-        if (!file_exists($filename)) { return false; }
+        if (!file_exists($filename)) {
+            return false;
+        }
 
         /* Check for existance */
         $fp = fopen($filename,'r');
 
-        if (!$fp) { return false; }
+        if (!$fp) {
+            return false;
+        }
 
         $data = fread($fp,filesize($filename));
 
         /* Scrub and show */
         echo $data;
-
     } // show_agreement
-
 } // end registration class
+

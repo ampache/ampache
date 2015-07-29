@@ -35,7 +35,6 @@ class memory_object
                 $this->_data[$key] = $value;
             }
         }
-
     }
 
     public function __set($name, $value)

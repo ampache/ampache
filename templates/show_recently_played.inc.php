@@ -33,9 +33,12 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-            <?php if (Access::check('interface', 50)) { ?>
-            <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-            <?php } ?>
+            <?php if (Access::check('interface', 50)) {
+    ?>
+            <th class="cel_agent"><?php echo T_('Agent');
+    ?></th>
+            <?php 
+} ?>
         </tr>
     </thead>
     <tbody>
@@ -92,56 +95,85 @@ foreach ($data as $row) {
         }
     }
     $song->format();
-?>
-    <tr class="<?php echo UI::flip_class(); ?>">
+    ?>
+    <tr class="<?php echo UI::flip_class();
+    ?>">
         <td class="cel_play">
             <span class="cel_play_content">&nbsp;</span>
             <div class="cel_play_hover">
-            <?php if (AmpConfig::get('directplay')) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id,'play', T_('Play'),'play_song_' . $nb . '_' . $song->id); ?>
-                <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $nb . '_' . $song->id); ?>
-                <?php } ?>
-                <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $nb . '_' . $song->id); ?>
-                <?php } ?>
-        <?php } ?>
+            <?php if (AmpConfig::get('directplay')) {
+    ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id,'play', T_('Play'),'play_song_' . $nb . '_' . $song->id);
+    ?>
+                <?php if (Stream_Playlist::check_autoplay_append()) {
+    ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $nb . '_' . $song->id);
+    ?>
+                <?php 
+}
+    ?>
+                <?php if (Stream_Playlist::check_autoplay_next()) {
+    ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $nb . '_' . $song->id);
+    ?>
+                <?php 
+}
+    ?>
+        <?php 
+}
+    ?>
             </div>
         </td>
-        <td class="cel_song"><?php echo $song->f_link; ?></td>
+        <td class="cel_song"><?php echo $song->f_link;
+    ?></td>
         <td class="cel_add">
             <span class="cel_item_add">
-                <?php echo Ajax::button('?action=basket&type=song&id='.$song->id, 'add', T_('Add to temporary playlist'), 'add_' . $nb . '_'.$song->id); ?>
+                <?php echo Ajax::button('?action=basket&type=song&id='.$song->id, 'add', T_('Add to temporary playlist'), 'add_' . $nb . '_'.$song->id);
+    ?>
                 <a id="<?php echo 'add_playlist_' . $nb . '_'.$song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
-                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
+    ?>
                 </a>
             </span>
         </td>
-        <td class="cel_album"><?php echo $song->f_album_link; ?></td>
-        <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
+        <td class="cel_album"><?php echo $song->f_album_link;
+    ?></td>
+        <td class="cel_artist"><?php echo $song->f_artist_link;
+    ?></td>
         <td class="cel_username">
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
-            <?php echo scrub_out($row_user->fullname); ?>
+            <a href="<?php echo AmpConfig::get('web_path');
+    ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id);
+    ?>">
+            <?php echo scrub_out($row_user->fullname);
+    ?>
             </a>
         </td>
-        <td class="cel_lastplayed"><?php echo $time_string; ?></td>
-        <?php if (Access::check('interface', 50)) { ?>
+        <td class="cel_lastplayed"><?php echo $time_string;
+    ?></td>
+        <?php if (Access::check('interface', 50)) {
+    ?>
         <td class="cel_agent">
             <?php if (!empty($agent)) {
-                echo UI::get_icon('info', $agent);
-            } ?>
+    echo UI::get_icon('info', $agent);
+}
+    ?>
         </td>
-        <?php } ?>
+        <?php 
+}
+    ?>
     </tr>
 <?php
     ++$nb;
 }
 ?>
-<?php if (!count($data)) { ?>
+<?php if (!count($data)) {
+    ?>
     <tr>
-        <td colspan="8"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
+        <td colspan="8"><span class="nodata"><?php echo T_('No recently item found');
+    ?></span></td>
     </tr>
-<?php } ?>
+<?php 
+} ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -152,9 +184,12 @@ foreach ($data as $row) {
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-            <?php if (Access::check('interface', 50)) { ?>
-            <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-            <?php } ?>
+            <?php if (Access::check('interface', 50)) {
+    ?>
+            <th class="cel_agent"><?php echo T_('Agent');
+    ?></th>
+            <?php 
+} ?>
         </tr>
     </tfoot>
 </table>

@@ -29,7 +29,7 @@ if (!AmpConfig::get('plex_backend')) {
 }
 
 if (function_exists('apache_setenv')) {
-   @apache_setenv('no-gzip', 1);
+    @apache_setenv('no-gzip', 1);
 }
 @ini_set('zlib.output_compression', 0);
 
@@ -67,7 +67,9 @@ if (count($params) > 0) {
         for ($i = count($params); $i > 0; $i--) {
             $act = strtolower(implode('_', array_slice($params, 0, $i)));
             foreach ($methods as $method) {
-                if (in_array($method, $internal_functions)) { continue; }
+                if (in_array($method, $internal_functions)) {
+                    continue;
+                }
 
                 // If the method is the same as the action being called
                 // Then let's call this function!
@@ -82,7 +84,6 @@ if (count($params) > 0) {
                     // We only allow a single function to be called, and we assume it's cleaned up!
                     exit();
                 }
-
             } // end foreach methods in API
         }
     }

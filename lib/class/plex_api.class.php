@@ -177,8 +177,8 @@ class Plex_Api
             if (!$sid) {
                 $sid = $myplex_token;
                 if ($sid) {
-                   session_id($sid);
-                   Session::create_cookie();
+                    session_id($sid);
+                    Session::create_cookie();
                 }
             }
             if (!empty($sid) && Session::exists('api', $sid)) {
@@ -319,7 +319,8 @@ class Plex_Api
         );
         $action = 'users/sign_in.xml';
 
-        $res = self::myPlexRequest($action, $options, $headers);;
+        $res = self::myPlexRequest($action, $options, $headers);
+        ;
         return $res['xml']['authenticationToken'];
     }
 
@@ -558,7 +559,6 @@ class Plex_Api
     {
         if (count($params) == 2) {
             if ($params[0] == ':' && $params[1] == 'transcode') {
-
                 $width = $_REQUEST['width'];
                 $height = $_REQUEST['height'];
                 $url = $_REQUEST['url'];
@@ -698,15 +698,18 @@ class Plex_Api
 
                     $videoResolution = $_GET['videoResolution'];
                     $maxVideoBitrate = $_GET['maxVideoBitrate'];
-                    if (!$maxVideoBitrate)
+                    if (!$maxVideoBitrate) {
                         $maxVideoBitrate = 8175;
+                    }
 
                     echo "#EXTM3U\n";
                     echo "#EXT-X-STREAM-INF:PROGRAM-ID=1";
-                    if ($maxVideoBitrate)
+                    if ($maxVideoBitrate) {
                         echo ",BANDWIDTH=" . ($maxVideoBitrate * 1000);
-                    if ($videoResolution)
+                    }
+                    if ($videoResolution) {
                         echo ",RESOLUTION=" . $videoResolution;
+                    }
                     echo "\n";
                     echo "hls.m3u8?" . substr($_SERVER['QUERY_STRING'], strpos($_SERVER['QUERY_STRING'], '&') + 1);
                 } elseif ($protocol == "http") {
@@ -949,7 +952,6 @@ class Plex_Api
                     }
                     Plex_XML_Data::addPlaylist($r, $litem);
                 }
-
             } else {
                 $subact = $params[1];
                 if ($subact == "children") {
@@ -957,18 +959,24 @@ class Plex_Api
                         $litem = new Artist($id);
                         $litem->format();
                         Plex_XML_Data::setArtistRoot($r, $litem);
-                    } else if (Plex_XML_Data::isAlbum($key)) {
-                        $litem = new Album($id);
-                        $litem->format();
-                        Plex_XML_Data::setAlbumRoot($r, $litem);
-                    } else if (Plex_XML_Data::isTVShow($key)) {
-                        $litem = new TVShow($id);
-                        $litem->format();
-                        Plex_XML_Data::setTVShowRoot($r, $litem);
-                    } else if (Plex_XML_Data::isTVShowSeason($key)) {
-                        $litem = new TVShow_Season($id);
-                        $litem->format();
-                        Plex_XML_Data::setTVShowSeasonRoot($r, $litem);
+                    } else {
+                        if (Plex_XML_Data::isAlbum($key)) {
+                            $litem = new Album($id);
+                            $litem->format();
+                            Plex_XML_Data::setAlbumRoot($r, $litem);
+                        } else {
+                            if (Plex_XML_Data::isTVShow($key)) {
+                                $litem = new TVShow($id);
+                                $litem->format();
+                                Plex_XML_Data::setTVShowRoot($r, $litem);
+                            } else {
+                                if (Plex_XML_Data::isTVShowSeason($key)) {
+                                    $litem = new TVShow_Season($id);
+                                    $litem->format();
+                                    Plex_XML_Data::setTVShowSeasonRoot($r, $litem);
+                                }
+                            }
+                        }
                     }
                 } elseif ($subact == "thumbs" || $subact == "posters" || $subact == "arts" || $subact == 'backgrounds') {
                     $kind = Plex_XML_Data::getPhotoKind($subact);
@@ -1000,16 +1008,26 @@ class Plex_Api
                         $art = null;
                         if (Plex_XML_Data::isArtist($key)) {
                             $art = new Art($id, "artist", $kind);
-                        } else if (Plex_XML_Data::isAlbum($key)) {
-                            $art = new Art($id, "album", $kind);
-                        } else if (Plex_XML_Data::isTrack($key)) {
-                            $art = new Art($id, "song", $kind);
-                        } else if (Plex_XML_Data::isTVShow($key)) {
-                            $art = new Art($id, "tvshow", $kind);
-                        } else if (Plex_XML_Data::isTVShowSeason($key)) {
-                            $art = new Art($id, "tvshow_season", $kind);
-                        } else if (Plex_XML_Data::isVideo($key)) {
-                            $art = new Art($id, "video", $kind);
+                        } else {
+                            if (Plex_XML_Data::isAlbum($key)) {
+                                $art = new Art($id, "album", $kind);
+                            } else {
+                                if (Plex_XML_Data::isTrack($key)) {
+                                    $art = new Art($id, "song", $kind);
+                                } else {
+                                    if (Plex_XML_Data::isTVShow($key)) {
+                                        $art = new Art($id, "tvshow", $kind);
+                                    } else {
+                                        if (Plex_XML_Data::isTVShowSeason($key)) {
+                                            $art = new Art($id, "tvshow_season", $kind);
+                                        } else {
+                                            if (Plex_XML_Data::isVideo($key)) {
+                                                $art = new Art($id, "video", $kind);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         if ($art != null) {
@@ -1071,9 +1089,9 @@ class Plex_Api
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_TIMEOUT => 0
         ));
-    if (curl_exec($ch) === false) {
+        if (curl_exec($ch) === false) {
             debug_event('plex-api', 'Curl error: ' . curl_error($ch),1);
-    }
+        }
         curl_close($ch);
     }
 
@@ -1245,7 +1263,9 @@ class Plex_Api
             $userid = $params[0];
         }
         // Not supported yet
-        if ($userid > 1) { self::createError(404); }
+        if ($userid > 1) {
+            self::createError(404);
+        }
 
         $r = Plex_XML_Data::createAccountContainer();
         Plex_XML_Data::setAccounts($r, $userid);
@@ -1373,7 +1393,9 @@ class Plex_Api
             if ($res['status'] == '201') {
                 Plex_XML_Data::setMyPlexSubscription($res['xml']);
                 self::apiOutput($res['xml']->asXML());
-            } else { self::createError($res['status']); }
+            } else {
+                self::createError($res['status']);
+            }
         }
     }
 

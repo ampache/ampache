@@ -35,12 +35,17 @@
     </ul>
   </li>
 <!--
-<?php if (AmpConfig::get('allow_democratic_playback')) { ?>
-  <li><h4><?php echo T_('Democratic'); ?></h4>
+<?php if (AmpConfig::get('allow_democratic_playback')) {
+    ?>
+  <li><h4><?php echo T_('Democratic');
+    ?></h4>
     <ul class="sb3" id="sb_home_democratic">
-      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=manage_playlists"><?php echo T_('Manage Playlist'); ?></a></li>
+      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path;
+    ?>/democratic.php?action=manage_playlists"><?php echo T_('Manage Playlist');
+    ?></a></li>
     </ul>
   </li>
-<?php } ?>
+<?php 
+} ?>
 -->
 </ul>

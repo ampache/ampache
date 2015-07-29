@@ -29,7 +29,9 @@ UI::show_header();
  */
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $artist_id = scrub_in($_REQUEST['artist_id']);
         show_confirmation(
@@ -41,7 +43,9 @@ switch ($_REQUEST['action']) {
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $artist = new Artist($_REQUEST['artist_id']);
         if (!Catalog::can_remove($artist)) {
@@ -83,7 +87,11 @@ switch ($_REQUEST['action']) {
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
-        if ($match == "Browse" || $match == "Show_all") { $chr = ""; } else { $chr = $match; }
+        if ($match == "Browse" || $match == "Show_all") {
+            $chr = "";
+        } else {
+            $chr = $match;
+        }
         /* Enclose this in the purty box! */
         require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
         show_alphabet_list('artists','artists.php',$match);

@@ -46,7 +46,9 @@ class TVShow_Season extends database_object implements library_item
     public function __construct($id='')
     {
         /* If they failed to pass in an id, just run for it */
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -56,7 +58,6 @@ class TVShow_Season extends database_object implements library_item
         } // foreach info
 
         return true;
-
     } //constructor
 
     /**
@@ -95,7 +96,6 @@ class TVShow_Season extends database_object implements library_item
         }
 
         return $results;
-
     } // get_episodes
 
     /**
@@ -122,7 +122,6 @@ class TVShow_Season extends database_object implements library_item
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
-
     } // _get_extra_info
 
     /**
@@ -236,9 +235,11 @@ class TVShow_Season extends database_object implements library_item
         if (Art::has_db($this->id, 'tvshow_season')) {
             $id = $this->id;
             $type = 'tvshow_season';
-        } else if (Art::has_db($this->tvshow, 'tvshow')) {
-            $id = $this->tvshow;
-            $type = 'tvshow';
+        } else {
+            if (Art::has_db($this->tvshow, 'tvshow')) {
+                $id = $this->tvshow;
+                $type = 'tvshow';
+            }
         }
 
         if ($id !== null && $type !== null) {
@@ -298,7 +299,6 @@ class TVShow_Season extends database_object implements library_item
 
         self::$_mapcache[$name]['null'] = $id;
         return $id;
-
     }
 
     /**
@@ -345,5 +345,5 @@ class TVShow_Season extends database_object implements library_item
         $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";
         return Dba::write($sql, array($tvshow_id, $season_id));
     }
-
 } // end of tvshow_season class
+

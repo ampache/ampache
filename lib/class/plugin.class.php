@@ -41,7 +41,6 @@ class Plugin
         }
 
         return true;
-
     } // Constructor
 
 
@@ -64,7 +63,6 @@ class Plugin
         }
 
         return true;
-
     } // _get_info
 
     /**
@@ -75,8 +73,9 @@ class Plugin
     {
         // make static cache for optimization when multiple call
         static $plugins_list = array();
-        if (isset($plugins_list[$type]))
+        if (isset($plugins_list[$type])) {
             return $plugins_list[$type];
+        }
 
         $plugins_list[$type] = array();
 
@@ -90,8 +89,12 @@ class Plugin
         // Recurse the directory
         while (false !== ($file = readdir($handle))) {
             // Ignore non-plugin files
-            if (substr($file,-10,10) != 'plugin.php') { continue; }
-            if (is_dir($file)) { continue; }
+            if (substr($file,-10,10) != 'plugin.php') {
+                continue;
+            }
+            if (is_dir($file)) {
+                continue;
+            }
             $plugin_name = basename($file,'.plugin.php');
             if ($type != '') {
                 $plugin = new Plugin($plugin_name);
@@ -116,7 +119,6 @@ class Plugin
         ksort($plugins_list[$type]);
 
         return $plugins_list[$type];
-
     } // get_plugins
 
     /**
@@ -166,7 +168,6 @@ class Plugin
 
         // We've passed all of the tests
         return true;
-
     } // is_valid
 
     /**
@@ -178,7 +179,6 @@ class Plugin
     {
         /* All we do is check the version */
         return self::get_plugin_version($plugin_name);
-
     } // is_installed
 
     /**
@@ -206,7 +206,6 @@ class Plugin
         $this->_plugin->uninstall();
 
         $this->remove_plugin_version();
-
     } // uninstall
 
     /**
@@ -249,7 +248,6 @@ class Plugin
         }
 
         return false;
-
     } // get_plugin_version
 
     /**
@@ -264,7 +262,6 @@ class Plugin
         $results = Dba::fetch_assoc($db_results);
 
         return $results['value'];
-
     } // get_ampache_db_version
 
     /**
@@ -280,7 +277,6 @@ class Plugin
         Dba::write($sql);
 
         return true;
-
     } // set_plugin_version
 
     /**
@@ -295,7 +291,6 @@ class Plugin
         Dba::write($sql);
 
         return true;
-
     } // remove_plugin_version
-
 } //end plugin class
+

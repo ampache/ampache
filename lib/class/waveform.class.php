@@ -62,7 +62,6 @@ class Waveform
     {
         // Static
         return false;
-
     } // Constructor
 
     /**
@@ -161,7 +160,7 @@ class Waveform
             hexdec(substr($input, 2, 2)),
             hexdec(substr($input, 4, 2))
         );
-      }
+    }
 
       /**
        * Create waveform from song file.
@@ -222,32 +221,35 @@ class Waveform
 
         // fill background of image
         if ($background == "") {
-          // transparent background specified
+            // transparent background specified
           imagesavealpha($img, true);
-          $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
-          imagefill($img, 0, 0, $transparentColor);
+            $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
+            imagefill($img, 0, 0, $transparentColor);
         } else {
-          list($br, $bg, $bb) = self::html2rgb($background);
-          imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $br, $bg, $bb));
-        } while (!feof($handle) && $data_point < $data_size) {
+            list($br, $bg, $bb) = self::html2rgb($background);
+            imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $br, $bg, $bb));
+        }
+        while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail == 0) {
-              $bytes = array();
+                $bytes = array();
 
               // get number of bytes depending on bitrate
-              for ($i = 0; $i < $byte; $i++)
-                $bytes[$i] = fgetc($handle);
+              for ($i = 0; $i < $byte; $i++) {
+                  $bytes[$i] = fgetc($handle);
+              }
 
-              switch ($byte) {
+                switch ($byte) {
                 // get value for 8-bit wav
                 case 1:
                   $data = self::findValues($bytes[0], $bytes[1]);
                 break;
                 // get value for 16-bit wav
                 case 2:
-                  if(ord($bytes[1]) & 128)
-                    $temp = 0;
-                  else
-                    $temp = 128;
+                  if (ord($bytes[1]) & 128) {
+                      $temp = 0;
+                  } else {
+                      $temp = 128;
+                  }
                   $temp = chr((ord($bytes[1]) & 127) + $temp);
                   $data = floor(self::findValues($bytes[0], $temp) / 256);
                 break;
@@ -265,8 +267,8 @@ class Waveform
               $v = (int) ($data / 255 * $height);
 
               // don't print flat values on the canvas if not necessary
-              if (!($v / $height == 0.5 && !$draw_flat))
-                // draw the line on the image using the $v value and centering it vertically on the canvas
+              if (!($v / $height == 0.5 && !$draw_flat)) {
+                  // draw the line on the image using the $v value and centering it vertically on the canvas
                 imageline(
                   $img,
                   // x1
@@ -279,9 +281,9 @@ class Waveform
                   $height - ($height - $v),
                   imagecolorallocate($img, $r, $g, $b)
                 );
-
+              }
             } else {
-              // skip this one due to lack of detail
+                // skip this one due to lack of detail
               fseek($handle, $ratio + $byte, SEEK_CUR);
             }
         }
@@ -322,5 +324,5 @@ class Waveform
         $sql = "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
         return Dba::write($sql, array($waveform, $song_id));
     }
-
 } // Waveform class
+

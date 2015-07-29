@@ -35,11 +35,15 @@
         foreach ($object_ids as $wanted_id) {
             $libitem = new Wanted($wanted_id);
             $libitem->format();
-        ?>
-        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_wanted_album_row.inc.php'; ?>
+            ?>
+        <tr id="walbum_<?php echo $libitem->mbid;
+            ?>" class="<?php echo UI::flip_class();
+            ?>">
+            <?php require AmpConfig::get('prefix') . '/templates/show_wanted_album_row.inc.php';
+            ?>
         </tr>
-        <?php } ?>
+        <?php 
+        } ?>
     </tbody>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>

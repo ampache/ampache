@@ -27,22 +27,33 @@
 ?>
 <table class="tabledata" cellspacing="0">
     <tr>
-    <?php foreach ($headers as $header) { ?>
-        <th class="th-top"><?php echo $header; ?></th>
-    <?php } ?>
+    <?php foreach ($headers as $header) {
+    ?>
+        <th class="th-top"><?php echo $header;
+    ?></th>
+    <?php 
+} ?>
     </tr>
     <?php foreach ($objects as $object) {
-        $object->format();
+    $object->format();
     ?>
-    <tr id="object_row_<?php echo $object->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require AmpConfig::get('prefix') . '/templates/show_object_row.inc.php'; ?>
+    <tr id="object_row_<?php echo $object->id;
+    ?>" class="<?php echo UI::flip_class();
+    ?>">
+        <?php require AmpConfig::get('prefix') . '/templates/show_object_row.inc.php';
+    ?>
     </tr>
-    <?php } ?>
-    <?php if (!count($objects)) { ?>
+    <?php 
+} ?>
+    <?php if (!count($objects)) {
+    ?>
     <tr>
-        <td colspan="<?php echo count($headers); ?>">
-            <span class="error"><?php echo T_('Not Enough Data'); ?></span>
+        <td colspan="<?php echo count($headers);
+    ?>">
+            <span class="error"><?php echo T_('Not Enough Data');
+    ?></span>
         </td>
     </tr>
-    <?php } ?>
+    <?php 
+} ?>
 </table>

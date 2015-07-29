@@ -81,12 +81,12 @@ class Art extends database_object
      */
     public function __construct($uid, $type = 'album', $kind = 'default')
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
         $this->type = $type;
         $this->uid = intval($uid);
         $this->kind = $kind;
-
     } // constructor
 
     /**
@@ -99,7 +99,9 @@ class Art extends database_object
      */
     public static function build_cache($object_ids)
     {
-        if (!is_array($object_ids) || !count($object_ids)) { return false; }
+        if (!is_array($object_ids) || !count($object_ids)) {
+            return false;
+        }
         $uidlist = '(' . implode(',', $object_ids) . ')';
         $sql = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $uidlist";
         $db_results = Dba::read($sql);
@@ -110,7 +112,6 @@ class Art extends database_object
         }
 
         return true;
-
     } // build_cache
 
     /**
@@ -173,10 +174,11 @@ class Art extends database_object
         $data = explode("/", $mime);
         $extension = $data['1'];
 
-        if ($extension == 'jpeg') { $extension = 'jpg'; }
+        if ($extension == 'jpeg') {
+            $extension = 'jpg';
+        }
 
         return $extension;
-
     } // extension
 
     /**
@@ -202,8 +204,8 @@ class Art extends database_object
         // Check to make sure PHP:GD exists.  If so, we can sanity check
         // the image.
         if (function_exists('ImageCreateFromString')) {
-             $image = ImageCreateFromString($source);
-             if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
+            $image = ImageCreateFromString($source);
+            if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('Art', 'Image failed PHP-GD test',1);
                 $test = false;
             }
@@ -234,7 +236,6 @@ class Art extends database_object
         } else {
             return $this->thumb;
         }
-
     } // get
 
 
@@ -258,18 +259,22 @@ class Art extends database_object
                     $this->raw = $results['image'];
                 }
                 $this->raw_mime = $results['mime'];
-            } else if (AmpConfig::get('resize_images') && $results['size'] == '275x275') {
-                if (AmpConfig::get('album_art_store_disk')) {
-                    $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind);
-                } else {
-                    $this->thumb = $results['image'];
+            } else {
+                if (AmpConfig::get('resize_images') && $results['size'] == '275x275') {
+                    if (AmpConfig::get('album_art_store_disk')) {
+                        $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind);
+                    } else {
+                        $this->thumb = $results['image'];
+                    }
+                    $this->raw_mime = $results['mime'];
                 }
-                $this->raw_mime = $results['mime'];
             }
             $this->id = $results['id'];
         }
         // If we get nothing return false
-        if (!$this->raw) { return false; }
+        if (!$this->raw) {
+            return false;
+        }
 
         // If there is no thumb and we want thumbs
         if (!$this->thumb && AmpConfig::get('resize_images')) {
@@ -286,7 +291,6 @@ class Art extends database_object
         } // if no thumb, but art and we want to resize
 
         return true;
-
     } // get_db
 
     /**
@@ -345,7 +349,9 @@ class Art extends database_object
     public function insert($source, $mime = '')
     {
         // Disabled in demo mode cause people suck and upload porn
-        if (AmpConfig::get('demo_mode')) { return false; }
+        if (AmpConfig::get('demo_mode')) {
+            return false;
+        }
 
         // Check to make sure we like this image
         if (!self::test_image($source)) {
@@ -404,7 +410,6 @@ class Art extends database_object
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
 
         return true;
-
     } // insert
 
     public static function check_dimensions($dimensions)
@@ -521,9 +526,13 @@ class Art extends database_object
 
         if (Core::is_readable($path)) {
             foreach (scandir($path) as $file) {
-                if ('.' === $file || '..' === $file) continue;
-                elseif (is_dir($path . '/' . $file)) self::delete_rec_dir($path . '/' . $file);
-                else unlink($path . '/' . $file);
+                if ('.' === $file || '..' === $file) {
+                    continue;
+                } elseif (is_dir($path . '/' . $file)) {
+                    self::delete_rec_dir($path . '/' . $file);
+                } else {
+                    unlink($path . '/' . $file);
+                }
             }
             rmdir($path);
         }
@@ -599,7 +608,6 @@ class Art extends database_object
         }
 
         return $results;
-
     } // get_thumb
 
     /**
@@ -702,7 +710,6 @@ class Art extends database_object
         }
 
         return array('thumb' => $data, 'thumb_mime' => $mime_type);
-
     } // generate_thumb
 
     /**
@@ -772,7 +779,6 @@ class Art extends database_object
         } // if data song
 
         return null;
-
     } // get_from_source
 
     /**
@@ -786,8 +792,9 @@ class Art extends database_object
      */
     public static function url($uid,$type,$sid=null,$thumb=null)
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return null;
+        }
 
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
@@ -816,8 +823,10 @@ class Art extends database_object
                 parent::add_to_cache('art', $key . $row['size'], $row);
                 if ($row['size'] == 'original') {
                     $mime = $row['mime'];
-                } else if ($row['size'] == '275x275' && AmpConfig::get('resize_images')) {
-                    $thumb_mime = $row['mime'];
+                } else {
+                    if ($row['size'] == '275x275' && AmpConfig::get('resize_images')) {
+                        $thumb_mime = $row['mime'];
+                    }
                 }
             }
         }
@@ -846,7 +855,6 @@ class Art extends database_object
         }
 
         return $url;
-
     } // url
 
     /**
@@ -973,8 +981,9 @@ class Art extends database_object
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }
-            } else if (in_array($method_name, $methods)) {
-                debug_event('Art', "Method used: $method_name", 3);
+            } else {
+                if (in_array($method_name, $methods)) {
+                    debug_event('Art', "Method used: $method_name", 3);
                 // Some of these take options!
                 switch ($method_name) {
                     case 'gather_lastfm':
@@ -987,8 +996,9 @@ class Art extends database_object
                         $data = $this->{$method_name}($limit);
                     break;
                 }
-            } else {
-                debug_event("Art", $method_name . " not defined", 1);
+                } else {
+                    debug_event("Art", $method_name . " not defined", 1);
+                }
             }
 
             // Add the results we got to the current set
@@ -997,11 +1007,9 @@ class Art extends database_object
             if ($limit && count($results) >= $limit) {
                 return array_slice($results, 0, $limit);
             }
-
         } // end foreach
 
         return $results;
-
     } // gather
 
     ///////////////////////////////////////////////////////////////////////
@@ -1173,7 +1181,6 @@ class Art extends database_object
         } // end foreach
 
         return $images;
-
     } // gather_musicbrainz
 
     /**
@@ -1216,9 +1223,11 @@ class Art extends database_object
                 $song = new Song($song_id);
                 $dirs[] = Core::conv_lc_file( dirname($song->file) );
             }
-        } else if ($this->type == 'video') {
-            $media = new Video($this->uid);
-            $dirs[] = Core::conv_lc_file( dirname($media->file) );
+        } else {
+            if ($this->type == 'video') {
+                $media = new Video($this->uid);
+                $dirs[] = Core::conv_lc_file( dirname($media->file) );
+            }
         }
 
         foreach ($dirs as $dir) {
@@ -1284,10 +1293,8 @@ class Art extends database_object
                     'mime' => 'image/' . $extension,
                     'title' => 'Folder'
                 );
-
             } // end while reading dir
             closedir($handle);
-
         } // end foreach dirs
 
         if (is_array($preferred)) {
@@ -1302,7 +1309,6 @@ class Art extends database_object
         }
 
         return array_values($results);
-
     } // gather_folder
 
     /**
@@ -1376,7 +1382,9 @@ class Art extends database_object
         $mtype = strtolower(get_class($media));
         $data = array();
         $getID3 = new getID3();
-        try { $id3 = $getID3->analyze($media->file); } catch (Exception $error) {
+        try {
+            $id3 = $getID3->analyze($media->file);
+        } catch (Exception $error) {
             debug_event('getid3', $error->getMessage(), 1);
         }
 
@@ -1411,7 +1419,6 @@ class Art extends database_object
         }
 
         return $data;
-
     }
 
     /**
@@ -1452,8 +1459,9 @@ class Art extends database_object
                     $mime = 'image/' . $results['extension'];
 
                     $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
-                    if ($limit > 0 && count($images) >= $limit)
+                    if ($limit > 0 && count($images) >= $limit) {
                         break;
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -1461,7 +1469,6 @@ class Art extends database_object
         }
 
         return $images;
-
     } // gather_google
 
     /**
@@ -1487,10 +1494,14 @@ class Art extends database_object
         try {
             $xmldata = Recommendation::album_search($data['artist'], $data['album']);
 
-            if (!count($xmldata)) { return array(); }
+            if (!count($xmldata)) {
+                return array();
+            }
 
             $coverart = (array) $xmldata->coverart;
-            if (!$coverart) { return array(); }
+            if (!$coverart) {
+                return array();
+            }
 
             ksort($coverart);
             foreach ($coverart as $url) {
@@ -1513,7 +1524,6 @@ class Art extends database_object
         }
 
         return $images;
-
     } // gather_lastfm
 
     /**
@@ -1677,8 +1687,9 @@ class Art extends database_object
      */
     public static function display($object_type, $object_id, $name, $thumb, $link = null, $show_default = true, $kind = 'default')
     {
-        if (!Core::is_library_item($object_type))
+        if (!Core::is_library_item($object_type)) {
             return false;
+        }
 
         if (!$show_default) {
             // Don't show any image if not available
@@ -1733,5 +1744,5 @@ class Art extends database_object
 
         return true;
     }
-
 } // Art
+

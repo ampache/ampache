@@ -1922,8 +1922,9 @@ abstract class Catalog extends database_object
 
         $catalog = self::create_from_id($catalog_id);
 
-        if (!$catalog->id)
+        if (!$catalog->id) {
             return false;
+        }
 
         $sql = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
         $db_results = Dba::write($sql, array($catalog_id));
@@ -2057,14 +2058,17 @@ abstract class Catalog extends database_object
             $user = $GLOBALS['user']->id;
         }
 
-        if (!$user)
+        if (!$user) {
             return false;
+        }
 
-        if (!AmpConfig::get('delete_from_disk'))
+        if (!AmpConfig::get('delete_from_disk')) {
             return false;
+        }
 
         return (Access::check('interface','75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
     }
 }
 
 // end of catalog class
+

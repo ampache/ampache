@@ -35,9 +35,12 @@
                 $fields = Song::get_fields();
                 foreach ($fields as $key=>$value) {
                     $name = ucfirst(str_replace('_',' ',$key));
-            ?>
-                <option value="<?php echo scrub_out($key); ?>"><?php echo scrub_out($name); ?></option>
-            <?php } ?>
+                    ?>
+                <option value="<?php echo scrub_out($key);
+                    ?>"><?php echo scrub_out($name);
+                    ?></option>
+            <?php 
+                } ?>
             </select>
         </td>
         <td>

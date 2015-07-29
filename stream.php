@@ -129,11 +129,13 @@ switch ($_REQUEST['action']) {
                 'object_type' => 'song',
                 'object_id' => scrub_in($_REQUEST['song_id'])
             );
-        } else if (isset($_REQUEST['video_id'])) {
-            $media_ids[] = array(
+        } else {
+            if (isset($_REQUEST['video_id'])) {
+                $media_ids[] = array(
                 'object_type' => 'video',
                 'object_id' => scrub_in($_REQUEST['video_id'])
             );
+            }
         }
     break;
     default:
@@ -163,7 +165,6 @@ switch ($_REQUEST['action']) {
 debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
 
 if (count($media_ids) || isset($urls)) {
-
     if ($stream_type != 'democratic') {
         if (!User::stream_control($media_ids)) {
             debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, 3);

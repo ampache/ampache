@@ -46,7 +46,6 @@ class Stats
     public function __construct()
     {
         return true;
-
     } // Constructor
 
     /**
@@ -103,12 +102,15 @@ class Stats
             $latitude = null;
             $longitude = null;
             $geoname = null;
-            if (isset($location['latitude']))
+            if (isset($location['latitude'])) {
                 $latitude = $location['latitude'];
-            if (isset($location['longitude']))
+            }
+            if (isset($location['longitude'])) {
                 $longitude = $location['longitude'];
-            if (isset($location['name']))
+            }
+            if (isset($location['name'])) {
                 $geoname = $location['name'];
+            }
 
             $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`count_type`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -142,7 +144,6 @@ class Stats
         }
 
         return count($results) > 0;
-
     } // is_already_inserted
 
     /**
@@ -205,7 +206,6 @@ class Stats
         $results = Dba::fetch_assoc($db_results);
 
         return $results;
-
     } // get_last_song
 
     /**
@@ -236,7 +236,6 @@ class Stats
         }
 
         return $results;
-
     } // get_object_history
 
     /**
@@ -291,7 +290,6 @@ class Stats
             $results[] = $row['id'];
         }
         return $results;
-
     } // get_top
 
     /**
@@ -345,7 +343,6 @@ class Stats
         }
 
         return $results;
-
     } // get_recent
 
     /**
@@ -379,7 +376,6 @@ class Stats
         }
 
         return $results;
-
     } // get_user
 
     /**
@@ -404,7 +400,6 @@ class Stats
             default:
                 return 'song';
         } // end switch
-
     } // validate_type
 
     /**
@@ -424,7 +419,7 @@ class Stats
         $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
         $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
         if (AmpConfig::get('catalog_disable')) {
-                $sql .= "WHERE `catalog`.`enabled` = '1' ";
+            $sql .= "WHERE `catalog`.`enabled` = '1' ";
         }
         if ($catalog > 0) {
             $sql .= "AND `catalog` = '" . scrub_in($catalog) ."' ";
@@ -441,7 +436,9 @@ class Stats
      */
     public static function get_newest($type, $count='', $offset='', $catalog=0)
     {
-        if (!$count) { $count = AmpConfig::get('popular_threshold'); }
+        if (!$count) {
+            $count = AmpConfig::get('popular_threshold');
+        }
         if (!$offset) {
             $limit = $count;
         } else {
@@ -459,7 +456,6 @@ class Stats
         } // end while results
 
         return $items;
-
     } // get_newest
-
 } // Stats class
+

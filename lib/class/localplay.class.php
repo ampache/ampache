@@ -43,7 +43,6 @@ class Localplay
         $this->type = $type;
 
         $this->_get_info();
-
     } // Localplay
 
     /**
@@ -56,7 +55,6 @@ class Localplay
     private function _get_info()
     {
         $this->_load_player();
-
     } // _get_info
 
     /**
@@ -71,7 +69,6 @@ class Localplay
         } else {
             return false;
         }
-
     } // player_loaded
 
     /**
@@ -81,13 +78,13 @@ class Localplay
      */
     public function format()
     {
-        if (!is_object($this->_player)) { return false; }
+        if (!is_object($this->_player)) {
+            return false;
+        }
 
         $this->f_name         = ucfirst($this->type);
         $this->f_description     = $this->_player->get_description();
         $this->f_version    = $this->_player->get_version();
-
-
     } // format
 
     /**
@@ -98,7 +95,9 @@ class Localplay
      */
     private function _load_player()
     {
-        if (!$this->type) { return false; }
+        if (!$this->type) {
+            return false;
+        }
 
         $filename = AmpConfig::get('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
         $include = require_once $filename;
@@ -117,7 +116,6 @@ class Localplay
                 return false;
             }
         }
-
     } // _load_player
 
     /**
@@ -131,7 +129,6 @@ class Localplay
         $name = scrub_out($name);
         $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $id,$name,'localplay_skip_' . $id);
         return $name;
-
     } // format_name
 
     /**
@@ -151,8 +148,9 @@ class Localplay
         $results = array();
 
         while (false !== ($file = readdir($handle))) {
-
-            if (substr($file,-14,14) != 'controller.php') { continue; }
+            if (substr($file,-14,14) != 'controller.php') {
+                continue;
+            }
 
             /* Make sure it isn't a dir */
             if (!is_dir($file)) {
@@ -163,7 +161,6 @@ class Localplay
         } // end while
 
         return $results;
-
     } // get_controllers
 
     /**
@@ -176,10 +173,11 @@ class Localplay
         // Load the controller and then check for its preferences
         $localplay = new Localplay($controller);
         // If we can't even load it no sense in going on
-        if (!isset($localplay->_player)) { return false; }
+        if (!isset($localplay->_player)) {
+            return false;
+        }
 
         return $localplay->_player->is_installed();
-
     } // is_enabled
 
     /**
@@ -193,7 +191,6 @@ class Localplay
         $installed = $this->_player->install();
 
         return $installed;
-
     } // install
 
     /**
@@ -212,7 +209,6 @@ class Localplay
         }
 
         return true;
-
     } // uninstall
 
     /**
@@ -228,7 +224,6 @@ class Localplay
         }
 
         return true;
-
     } // connect
 
     /**
@@ -244,7 +239,6 @@ class Localplay
         }
 
         return true;
-
     } // play
 
     /**
@@ -260,7 +254,6 @@ class Localplay
         }
 
         return true;
-
     } // stop
 
     /**
@@ -270,7 +263,6 @@ class Localplay
     {
         debug_event('localplay', 'Deprecated add method called: ' . json_encode($object), 5);
         return false;
-
     } // add
 
     /**
@@ -285,7 +277,6 @@ class Localplay
         }
 
         return true;
-
     } // add_url
 
     /**
@@ -302,7 +293,6 @@ class Localplay
         }
 
         return $data;
-
     } // repeat
 
     /**
@@ -319,7 +309,6 @@ class Localplay
         }
 
         return $data;
-
     } // random
 
     /**
@@ -337,7 +326,6 @@ class Localplay
         }
 
         return $data;
-
     } // status
 
     /**
@@ -356,7 +344,6 @@ class Localplay
         }
 
         return $data;
-
     } // get
 
     /**
@@ -371,7 +358,9 @@ class Localplay
         $value = int($value);
 
         /* Make sure that it's between 0 and 100 */
-        if ($value > 100 OR $value < 0) { return false; }
+        if ($value > 100 OR $value < 0) {
+            return false;
+        }
 
         if (!$this->_player->volume($value)) {
             debug_event('localplay','Error: Unable to set volume, check ' . $this->type . ' controller','1');
@@ -379,7 +368,6 @@ class Localplay
         }
 
         return true;
-
     } // volume_set
 
     /**
@@ -395,7 +383,6 @@ class Localplay
         }
 
         return true;
-
     } // volume_up
 
     /**
@@ -411,7 +398,6 @@ class Localplay
         }
 
         return true;
-
     } // volume_down
 
     /**
@@ -427,7 +413,6 @@ class Localplay
         }
 
         return true;
-
     } // volume_mute
 
     /**
@@ -442,7 +427,6 @@ class Localplay
         }
 
         return true;
-
     } // skip
 
     /**
@@ -458,7 +442,6 @@ class Localplay
         }
 
         return true;
-
     } // next
 
     /**
@@ -474,7 +457,6 @@ class Localplay
         }
 
         return true;
-
     } // prev
 
     /**
@@ -490,7 +472,6 @@ class Localplay
         }
 
         return true;
-
     } // pause
 
     /**
@@ -502,7 +483,6 @@ class Localplay
         $instances = $this->_player->get_instances();
 
         return $instances;
-
     } // get_instances
 
     /**
@@ -514,7 +494,6 @@ class Localplay
         $data = $this->_player->get_instance();
 
         return $data['id'];
-
     } // current_instance
 
     /**
@@ -526,7 +505,6 @@ class Localplay
         $data = $this->_player->get_instance($uid);
 
         return $data;
-
     } // get_instance
 
     /**
@@ -538,7 +516,6 @@ class Localplay
         $data = $this->_player->update_instance($uid,$data);
 
         return $data;
-
     } // update_instance
 
     /**
@@ -548,7 +525,6 @@ class Localplay
     public function add_instance($data)
     {
         $this->_player->add_instance($data);
-
     } // add_instance
 
     /**
@@ -558,7 +534,6 @@ class Localplay
     public function delete_instance($instance_uid)
     {
         $this->_player->delete_instance($instance_uid);
-
     } // delete_instance
 
     /**
@@ -568,7 +543,6 @@ class Localplay
     public function set_active_instance($instance)
     {
         $this->_player->set_active_instance($instance);
-
     } // set_active_instance
 
     /**
@@ -585,7 +559,6 @@ class Localplay
 
 
         return true;
-
     } // delete
 
     /**
@@ -601,7 +574,6 @@ class Localplay
         }
 
         return true;
-
     } // delete_all
 
     /**
@@ -614,7 +586,6 @@ class Localplay
         $fields = $this->_player->instance_fields();
 
         return $fields;
-
     } // get_instance_fields
 
     /**
@@ -634,7 +605,6 @@ class Localplay
             default:
                 return T_('Unknown');
         } // switch on state
-
     } // get_user_state
 
     /**
@@ -657,8 +627,6 @@ class Localplay
         $track_name = "[" . $status['track'] . "] - " . $track_name;
 
         return $track_name;
-
     } // get_user_playing
-
-
 } // end localplay class
+

@@ -34,9 +34,15 @@
     <td><?php echo  T_('Category'); ?></td>
         <td>
             <select name="category">
-                <option value="personal" <?php if (empty($_REQUEST['category']) || $_REQUEST['category'] === "personal") echo "selected"; ?>><?php echo T_('Personal'); ?></option>
-                <option value="association" <?php if ($_REQUEST['category'] === "association") echo "selected"; ?>><?php echo T_('Association'); ?></option>
-                <option value="company" <?php if ($_REQUEST['category'] === "company") echo "selected"; ?>><?php echo T_('Company'); ?></option>
+                <option value="personal" <?php if (empty($_REQUEST['category']) || $_REQUEST['category'] === "personal") {
+    echo "selected";
+} ?>><?php echo T_('Personal'); ?></option>
+                <option value="association" <?php if ($_REQUEST['category'] === "association") {
+    echo "selected";
+} ?>><?php echo T_('Association'); ?></option>
+                <option value="company" <?php if ($_REQUEST['category'] === "company") {
+    echo "selected";
+} ?>><?php echo T_('Company'); ?></option>
             </select>
         </td>
 </tr>

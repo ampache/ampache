@@ -83,7 +83,9 @@ class Session
      */
     public static function destroy($key)
     {
-        if (!strlen($key)) { return false; }
+        if (!strlen($key)) {
+            return false;
+        }
 
         // Remove anything and EVERYTHING
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
@@ -231,7 +233,9 @@ class Session
             $geoname = $data['geo_name'];
         }
 
-        if (!strlen($value)) { $value = ' '; }
+        if (!strlen($value)) {
+            $value = ' ';
+        }
 
         /* Insert the row */
         $sql = 'INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`,`geo_latitude`,`geo_longitude`, `geo_name`) ' .
@@ -259,7 +263,9 @@ class Session
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!isset($_COOKIE[$session_name])) { return false; }
+        if (!isset($_COOKIE[$session_name])) {
+            return false;
+        }
 
         // Set up the cookie params before we start the session.
         // This is vital
@@ -541,5 +547,4 @@ class Session
 
         return true;
     }
-
 }

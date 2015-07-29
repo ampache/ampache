@@ -41,7 +41,9 @@ if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
 }
 
 // If we aren't resizing just trash thumb
-if (!AmpConfig::get('resize_images')) { $_GET['thumb'] = null; }
+if (!AmpConfig::get('resize_images')) {
+    $_GET['thumb'] = null;
+}
 
 // FIXME: Legacy stuff - should be removed after a version or so
 if (!isset($_GET['object_type'])) {
@@ -49,8 +51,9 @@ if (!isset($_GET['object_type'])) {
 }
 
 $type = $_GET['object_type'];
-if (!Core::is_library_item($type))
+if (!Core::is_library_item($type)) {
     exit;
+}
 
 /* Decide what size this image is */
 $size = Art::get_thumb_size($_GET['thumb']);

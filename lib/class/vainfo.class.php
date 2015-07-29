@@ -152,22 +152,26 @@ class vainfo
      */
     private static function _detect_encoding($tags, $mb_order)
     {
-        if (!function_exists('mb_detect_encoding'))
+        if (!function_exists('mb_detect_encoding')) {
             return 'ISO-8859-1';
+        }
 
         $encodings = array();
         if (is_array($tags)) {
             foreach ($tags as $tag) {
-                if (is_array($tag))
+                if (is_array($tag)) {
                     $tag = implode(" ", $tag);
+                }
                 $enc = mb_detect_encoding($tag, $mb_order, true);
-                if ($enc != false)
+                if ($enc != false) {
                     $encodings[$enc]++;
+                }
             }
         } else {
             $enc = mb_detect_encoding($tags, $mb_order, true);
-            if ($enc != false)
+            if ($enc != false) {
                 $encodings[$enc]++;
+            }
         }
 
         //!!debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
@@ -1248,3 +1252,4 @@ class vainfo
         return $data;
     }
 } // end class vainfo
+

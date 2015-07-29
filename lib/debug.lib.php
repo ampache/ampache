@@ -114,12 +114,11 @@ function check_config_values($conf)
     }
     if (isset($conf['debug'])) {
         if (!isset($conf['log_path'])) {
-        return false;
+            return false;
         }
     }
 
     return true;
-
 } // check_config_values
 
 /**
@@ -138,7 +137,6 @@ function check_php_memory()
     }
 
     return true;
-
 } // check_php_memory
 
 /**
@@ -150,7 +148,6 @@ function check_php_timelimit()
 {
     $current = intval(ini_get('max_execution_time'));
     return ($current >= 60 || $current == 0);
-
 } // check_php_timelimit
 
 /**

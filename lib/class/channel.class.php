@@ -59,7 +59,9 @@ class Channel extends database_object implements media, library_item
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -423,8 +425,9 @@ class Channel extends database_object implements media, library_item
                 }
 
                 if (is_resource($this->transcoder['handle'])) {
-                    if (ftell($this->transcoder['handle']) == 0)
+                    if (ftell($this->transcoder['handle']) == 0) {
                         $this->header_chunk = '';
+                    }
                     $chunk = fread($this->transcoder['handle'], $this->chunk_size);
                     $this->media_bytes_streamed += strlen($chunk);
 
@@ -453,11 +456,13 @@ class Channel extends database_object implements media, library_item
                                     $ogg_sum_segm_laces += hexdec(substr($hex, 27*2 + $segm*2, 2));
                                 }
                                 $this->header_chunk .= substr($clchunk, 0, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
-                                if (strlen($clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces))
+                                if (strlen($clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces)) {
                                     $this->header_chunk_remainder = (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen($clchunk));
+                                }
                                 $clchunk = substr($clchunk, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
-                            } else //no more interesting headers
+                            } else { //no more interesting headers
                                 $clchunk = '';
+                            }
                         }
                     }
                     //debug_event('channel', 'File handle pointer: ' . ftell($this->transcoder['handle']) ,'5');
@@ -531,15 +536,15 @@ class Channel extends database_object implements media, library_item
 
     public static function gc()
     {
-
     }
 
     private function strtohex($x)
     {
         $s='';
-        foreach(str_split($x) as $c) $s.=sprintf("%02X",ord($c));
+        foreach (str_split($x) as $c) {
+            $s.=sprintf("%02X",ord($c));
+        }
         return($s);
     }
-
-
 } // end of channel class
+

@@ -75,7 +75,6 @@ function return_referer()
     }
 
     return $file;
-
 } // return_referer
 
 /**
@@ -174,7 +173,6 @@ function get_location()
     } // switch on raw page location
 
     return $location;
-
 } // get_location
 
 /**
@@ -184,7 +182,6 @@ function get_location()
 function show_preference_box($preferences)
 {
     require AmpConfig::get('prefix') . '/templates/show_preference_box.inc.php';
-
 } // show_preference_box
 
 /**
@@ -231,7 +228,6 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
         }
 
         echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
-
     } // end while
 
     if ($allow_add) {
@@ -244,7 +240,6 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
     if ($count === 0) {
         echo "<script type='text/javascript'>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
     }
-
 } // show_album_select
 
 /**
@@ -286,7 +281,6 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
         }
 
         echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($artist_name) . "</option>\n";
-
     } // end while
 
     if ($allow_add) {
@@ -299,7 +293,6 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
     if ($count === 0) {
         echo "<script type='text/javascript'>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
     }
-
 } // show_artist_select
 
 /**
@@ -333,7 +326,6 @@ function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $sea
         }
 
         echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
-
     } // end while
 
     if ($allow_add) {
@@ -342,13 +334,13 @@ function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $sea
     }
 
     echo "</select>\n";
-
 } // show_tvshow_select
 
 function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add=false, $video_id=0, $allow_none=false)
 {
-    if (!$season_id)
+    if (!$season_id) {
         return false;
+    }
     $season = new TVShow_Season($season_id);
 
     static $season_id_cnt = 0;
@@ -375,7 +367,6 @@ function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add
         }
 
         echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['season_number']) . "</option>\n";
-
     } // end while
 
     if ($allow_add) {
@@ -384,7 +375,6 @@ function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add
     }
 
     echo "</select>\n";
-
 }
 
 /**
@@ -410,11 +400,9 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='', $allow_non
         }
 
         echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
-
     } // end while
 
     echo "</select>\n";
-
 } // show_catalog_select
 
 /**
@@ -446,11 +434,9 @@ function show_license_select($name='license',$license_id=0,$song_id=0)
         }
 
         echo "\t<option value=\"" . $r['id'] . "\" $selected>" . $r['name'] . "</option>\n";
-
     } // end while
 
     echo "</select>\n";
-
 } // show_license_select
 
 /**
@@ -478,7 +464,6 @@ function show_user_select($name,$selected='',$style='')
     } // end while users
 
     echo "</select>\n";
-
 } // show_user_select
 
 /**
@@ -508,7 +493,6 @@ function show_playlist_select($name,$selected='',$style='')
     } // end while users
 
     echo "</select>\n";
-
 } // show_playlist_select
 
 function xoutput_headers()
@@ -551,7 +535,9 @@ function xml_from_array($array, $callback = false, $type = '')
     $string = '';
 
     // If we weren't passed an array then return
-    if (!is_array($array)) { return $string; }
+    if (!is_array($array)) {
+        return $string;
+    }
 
     // The type is used for the different XML docs we pass
     switch ($type) {
@@ -562,17 +548,16 @@ function xml_from_array($array, $callback = false, $type = '')
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
             } else {
                 if ($key == "key") {
-                $string .= "\t\t<$key>$value</$key>\n";
+                    $string .= "\t\t<$key>$value</$key>\n";
                 } elseif (is_int($value)) {
-                $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
+                    $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
                 } elseif ($key == "Date Added") {
-                $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
+                    $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
                 } elseif (is_string($value)) {
-                /* We need to escape the value */
+                    /* We need to escape the value */
                 $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
                 }
             }
-
         } // end foreach
 
         return $string;
@@ -583,15 +568,14 @@ function xml_from_array($array, $callback = false, $type = '')
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
             } else {
                 if ($key == "key") {
-                $string .= "\t\t<$key>$value</$key>\n";
+                    $string .= "\t\t<$key>$value</$key>\n";
                 } elseif (is_numeric($value)) {
-                $string .= "\t\t\t<$key>$value</$key>\n";
+                    $string .= "\t\t\t<$key>$value</$key>\n";
                 } elseif (is_string($value)) {
-                /* We need to escape the value */
+                    /* We need to escape the value */
                 $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
                 }
             }
-
         } // end foreach
 
         return $string;
@@ -694,7 +678,6 @@ function toggle_visible($element)
     echo '<script type="text/javascript">';
     echo "toggleVisible('$element');";
     echo "</script>\n";
-
 } // toggle_visible
 
 function display_notification($message, $timeout = 5000)
@@ -718,7 +701,6 @@ function print_bool($value)
     }
 
     return $string;
-
 } // print_bool
 
 /**
@@ -734,7 +716,6 @@ function show_now_playing()
     $web_path = AmpConfig::get('web_path');
     $results = Stream::get_now_playing();
     require_once AmpConfig::get('prefix') . '/templates/show_now_playing.inc.php';
-
 } // show_now_playing
 
 function show_table_render($render = false, $force = false)
@@ -742,11 +723,14 @@ function show_table_render($render = false, $force = false)
     // Include table render javascript only once
     if ($force || !defined('TABLE_RENDERED')) {
         define('TABLE_RENDERED', 1);
+        ?>
+        <script src="<?php echo AmpConfig::get('web_path');
+        ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
+        <?php if (isset($render) && $render) {
     ?>
-        <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-        <?php if (isset($render) && $render) { ?>
             <script language="javascript" type="text/javascript">sortPlaylistRender();</script>
         <?php
-        }
+
+}
     }
 }

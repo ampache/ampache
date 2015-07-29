@@ -85,7 +85,9 @@ class Label extends database_object implements library_item
      */
     public function __construct($id=null)
     {
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         $info = $this->get_info($id);
         foreach ($info as $key=>$value) {
@@ -201,12 +203,14 @@ class Label extends database_object implements library_item
             $user = $GLOBALS['user']->id;
         }
 
-        if (!$user)
+        if (!$user) {
             return false;
+        }
 
         if (AmpConfig::get('upload_allow_edit')) {
-            if ($this->user !== null && $user == $this->user)
+            if ($this->user !== null && $user == $this->user) {
                 return true;
+            }
         }
 
         return Access::check('interface', 50, $user);
@@ -336,7 +340,6 @@ class Label extends database_object implements library_item
         }
 
         return $results;
-
     } // get_songs
 
     public function remove()
@@ -383,7 +386,9 @@ class Label extends database_object implements library_item
      */
     public static function get_display($labels, $link=false)
     {
-        if (!is_array($labels)) { return ''; }
+        if (!is_array($labels)) {
+            return '';
+        }
 
         $results = '';
 
@@ -402,7 +407,6 @@ class Label extends database_object implements library_item
         $results = rtrim($results, ', ');
 
         return $results;
-
     } // get_display
 
     /**
@@ -433,9 +437,11 @@ class Label extends database_object implements library_item
                     if ($found) {
                         debug_event('label.class', 'Already found. Do nothing.', '5');
                         unset($editedLabels[$lk]);
-                    } else if ($overwrite) {
-                        debug_event('label.class', 'Not found in the new list. Delete it.', '5');
-                        $clabel->remove_artist_assoc($artist_id);
+                    } else {
+                        if ($overwrite) {
+                            debug_event('label.class', 'Not found in the new list. Delete it.', '5');
+                            $clabel->remove_artist_assoc($artist_id);
+                        }
                     }
                 }
             }

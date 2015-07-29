@@ -44,7 +44,6 @@ class Mailer
     public function __construct()
     {
         // Eh bien.
-
     } // Constructor
 
     /**
@@ -117,7 +116,6 @@ class Mailer
         }
 
         return $results;
-
     } // get_users
 
     /**
@@ -209,5 +207,5 @@ class Mailer
 
         return $this->send($mail);
     }
-
 } // Mailer class
+

@@ -31,26 +31,34 @@ if (!$rate) {
 }
 ?>
 
-<div class="star-rating dynamic-star-rating<?php if ($othering) { echo ' global-star-rating'; } ?>">
+<div class="star-rating dynamic-star-rating<?php if ($othering) {
+    echo ' global-star-rating';
+} ?>">
   <ul>
     <?php
     // decide width of rating (5 stars -> 20% per star)
     $width = $rate * 20;
-    if ($width < 0) $width = 0;
+    if ($width < 0) {
+        $width = 0;
+    }
 
     //set the current rating background
     echo '<li class="current-rating" style="width:' . $width . '%" >';
     echo T_('Current rating: ');
     if ($rate <= 0) {
         echo T_('not rated yet') . "</li>\n";
-    } else printf(T_('%s of 5'), $rate); echo "</li>\n";
+    } else {
+        printf(T_('%s of 5'), $rate);
+    } echo "</li>\n";
 
     for ($i = 1; $i < 6; $i++) {
-    ?>
+        ?>
       <li>
-          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i); ?>
+          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i);
+        ?>
       </li>
     <?php
+
     }
     ?>
   </ul>

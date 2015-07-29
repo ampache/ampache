@@ -29,7 +29,9 @@ if (!Core::is_session_started()) {
     session_start();
 }
 
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 if (isset($_REQUEST['browse_id'])) {
     $browse_id = $_REQUEST['browse_id'];
@@ -102,7 +104,9 @@ switch ($_REQUEST['action']) {
             case 'playlist':
                 // Check the perms we need to on this
                 $playlist = new Playlist($_REQUEST['id']);
-                if (!$playlist->has_access()) { exit; }
+                if (!$playlist->has_access()) {
+                    exit;
+                }
 
                 // Delete it!
                 $playlist->delete();
@@ -110,12 +114,16 @@ switch ($_REQUEST['action']) {
             break;
             case 'smartplaylist':
                 $playlist = new Search($_REQUEST['id'], 'song');
-                if (!$playlist->has_access()) { exit; }
+                if (!$playlist->has_access()) {
+                    exit;
+                }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
-                if (!$GLOBALS['user']->has_access('75')) { exit; }
+                if (!$GLOBALS['user']->has_access('75')) {
+                    exit;
+                }
                 $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;

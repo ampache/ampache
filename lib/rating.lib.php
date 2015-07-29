@@ -29,7 +29,6 @@ function show_rating($object_id,$type)
     $rating = new Rating($object_id,$type);
 
     require AmpConfig::get('prefix') . '/templates/show_object_rating.inc.php';
-
 } // show_rating
 
 /**
@@ -55,5 +54,5 @@ function get_rating_name($score)
         default:
             return T_("Off the Charts!");
     } // end switch
-
 } // get_rating_name
+

@@ -438,5 +438,5 @@ class Broadcast_Server implements MessageComponentInterface
 
         return $websocket_address . '/broadcast';
     }
-
 } // end of broadcast_server class
+

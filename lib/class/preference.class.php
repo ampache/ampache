@@ -293,13 +293,15 @@ class Preference extends database_object
         $params = array($id, $default);
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,?)";
         $db_results = Dba::write($sql, $params);
-        if (!$db_results)
+        if (!$db_results) {
             return false;
+        }
         if ($catagory !== "system") {
             $sql = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
             $db_results = Dba::write($sql, $params);
-            if (!$db_results)
+            if (!$db_results) {
                 return false;
+            }
         }
 
         return true;
@@ -477,3 +479,4 @@ class Preference extends database_object
         $_SESSION['userdata']['uid'] = $user_id;
     } // init
 } // end Preference class
+

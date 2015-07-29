@@ -40,7 +40,6 @@ class Ampache_RSS
     public function __construct($type)
     {
         $this->type = self::validate_type($type);
-
     } // constructor
 
     /**
@@ -81,7 +80,6 @@ class Ampache_RSS
         }
 
         return null;
-
     } // get_xml
 
     /**
@@ -99,7 +97,6 @@ class Ampache_RSS
         );
 
         return scrub_out(AmpConfig::get('site_title')) . ' - ' . $titles[$this->type];
-
     } // get_title
 
     /**
@@ -111,7 +108,6 @@ class Ampache_RSS
     {
         //FIXME: For now don't do any kind of translating
         return 'Ampache RSS Feeds';
-
     } // get_description
 
     /**
@@ -129,7 +125,6 @@ class Ampache_RSS
         }
 
         return $type;
-
     } // validate_type
 
     /**
@@ -159,7 +154,6 @@ class Ampache_RSS
         $string .= '</a>';
 
         return $string;
-
     } // get_display
 
     // type specific functions below, these are called semi-dynamically based on the current type //
@@ -203,7 +197,6 @@ class Ampache_RSS
         } // end foreach
 
         return $results;
-
     } // load_now_playing
 
     /**
@@ -220,7 +213,6 @@ class Ampache_RSS
         $element = array_shift($data);
 
         return $element['expire'];
-
     } // pubdate_now_playing
 
     /**
@@ -276,11 +268,9 @@ class Ampache_RSS
                         'comments'=>$client->username,
                         'pubDate'=>date("r",$item['date']));
             $results[] = $xml_array;
-
         } // end foreach
 
         return $results;
-
     } // load_recently_played
 
     /**
@@ -306,11 +296,9 @@ class Ampache_RSS
                     'pubDate' => date("c", $album->get_addtime_first_song())
             );
             $results[] = $xml_array;
-
         } // end foreach
 
         return $results;
-
     } // load_latest_album
 
     /**
@@ -336,11 +324,9 @@ class Ampache_RSS
                     'pubDate' => ''
             );
             $results[] = $xml_array;
-
         } // end foreach
 
         return $results;
-
     } // load_latest_artist
 
     /**
@@ -370,11 +356,9 @@ class Ampache_RSS
                     'pubDate' => date("c", $shout->date)
             );
             $results[] = $xml_array;
-
         } // end foreach
 
         return $results;
-
     } // load_latest_shout
 
     /**
@@ -389,7 +373,6 @@ class Ampache_RSS
         $element = array_shift($data);
 
         return $element['date'];
-
     } // pubdate_recently_played
-
 } // end Ampache_RSS class
+

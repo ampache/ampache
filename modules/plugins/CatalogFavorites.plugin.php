@@ -25,7 +25,7 @@ class AmpacheCatalogFavorites {
     public $categories     = 'home';
     public $description    = 'Catalog favorites on homepage';
     public $url            = '';
-    public $version        = '000001';
+    public $version        = '000002';
     public $min_ampache    = '370021';
     public $max_ampache    = '999999';
 
@@ -51,6 +51,7 @@ class AmpacheCatalogFavorites {
         if (Preference::exists('catalogfav_max_items')) { return false; }
 
         Preference::insert('catalogfav_max_items','Catalog favorites max items','5','25','integer','plugins');
+        Preference::insert('catalogfav_columns','Catalog favorites columns','1','25','integer','plugins');
 
         return true;
     }
@@ -71,6 +72,10 @@ class AmpacheCatalogFavorites {
      * This is a recommended plugin function
      */
     public function upgrade() {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version < 2) {
+            Preference::insert('catalogfav_columns','Catalog favorites columns','1','25','integer','plugins');
+        }
         return true;
     }
 

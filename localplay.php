@@ -33,7 +33,10 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface','2
 switch ($_REQUEST['action']) {
     case 'show_add_instance':
         // This requires 50 or better
-        if (!Access::check('localplay','75')) { UI::access_denied(); break; }
+        if (!Access::check('localplay','75')) {
+            UI::access_denied();
+            break;
+        }
 
         // Get the current localplay fields
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
@@ -42,7 +45,10 @@ switch ($_REQUEST['action']) {
     break;
     case 'add_instance':
         // This requires 50 or better!
-        if (!Access::check('localplay','75')) { UI::access_denied(); break; }
+        if (!Access::check('localplay','75')) {
+            UI::access_denied();
+            break;
+        }
 
         // Setup the object
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
@@ -51,14 +57,20 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_instance':
         // Make sure they gots them rights
-        if (!Access::check('localplay','75')) { UI::access_denied(); break; }
+        if (!Access::check('localplay','75')) {
+            UI::access_denied();
+            break;
+        }
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->update_instance($_REQUEST['instance'],$_POST);
         header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
     break;
     case 'edit_instance':
         // Check to make sure they've got the access
-        if (!Access::check('localplay','75')) { UI::access_denied(); break; }
+        if (!Access::check('localplay','75')) {
+            UI::access_denied();
+            break;
+        }
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $instance = $localplay->get_instance($_REQUEST['instance']);
         $fields = $localplay->get_instance_fields();
@@ -66,7 +78,10 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_instances':
         // First build the localplay object and then get the instances
-        if (!Access::check('localplay','5')) { UI::access_denied(); break; }
+        if (!Access::check('localplay','5')) {
+            UI::access_denied();
+            break;
+        }
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $instances = $localplay->get_instances();
         $fields = $localplay->get_instance_fields();
@@ -74,7 +89,10 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_playlist':
     default:
-        if (!Access::check('localplay','5')) { UI::access_denied(); break; }
+        if (!Access::check('localplay','5')) {
+            UI::access_denied();
+            break;
+        }
         // Init and then connect to our localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();

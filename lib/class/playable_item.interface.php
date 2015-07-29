@@ -77,5 +77,5 @@ interface playable_item
      * @return int[]
      */
     public function get_catalogs();
-
 } // end interface
+

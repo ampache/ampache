@@ -40,7 +40,9 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Random') ?></td>
-                <td><input type="checkbox" name="random" value="1" <?php if ($libitem->random) echo "checked"; ?> /></td>
+                <td><input type="checkbox" name="random" value="1" <?php if ($libitem->random) {
+    echo "checked";
+} ?> /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)') ?></td>

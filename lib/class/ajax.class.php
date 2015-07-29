@@ -40,7 +40,6 @@ class Ajax
     public function __construct()
     {
         // Rien a faire
-
     } // constructor
 
     /**
@@ -78,7 +77,6 @@ class Ajax
         $observe .= "</script>";
 
         return $observe;
-
     } // observe
 
     /**
@@ -120,7 +118,6 @@ class Ajax
         }
 
         return $ajax_string;
-
     } // action
 
     /**
@@ -156,7 +153,6 @@ class Ajax
         $string .= self::observe($source, 'click', $ajax_string, $confirm);
 
         return $string;
-
     } // button
 
     /**
@@ -193,7 +189,6 @@ class Ajax
         }
 
         return $string;
-
     } // text
 
     /**
@@ -206,7 +201,6 @@ class Ajax
         echo "<script type=\"text/javascript\"><!--\n";
         echo "$action";
         echo "\n--></script>";
-
     } // run
 
     /**
@@ -218,7 +212,6 @@ class Ajax
     public static function set_include_override($value)
     {
         self::$include_override = make_bool($value);
-
     } // set_include_override
 
     /**
@@ -230,14 +223,15 @@ class Ajax
      */
     public static function start_container($name, $class = '')
     {
-        if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
+        if (defined('AJAX_INCLUDE') && !self::$include_override) {
+            return true;
+        }
 
         echo '<div id="' . scrub_out($name) . '"';
         if (!empty($class)) {
             echo ' class="' . scrub_out($class) . '"';
         }
         echo '>';
-
     } // start_container
 
     /**
@@ -246,12 +240,13 @@ class Ajax
      */
     public static function end_container()
     {
-        if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
+        if (defined('AJAX_INCLUDE') && !self::$include_override) {
+            return true;
+        }
 
         echo "</div>";
 
         self::$include_override = false;
-
     } // end_container
-
 } // end Ajax class
+

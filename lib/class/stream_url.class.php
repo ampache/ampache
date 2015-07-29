@@ -41,8 +41,9 @@ class Stream_URL extends memory_object
                 $url = substr($url, 0, $posargs + 6) . 'index.php?';
                 $args = explode('/', $argsstr);
                 for ($i = 0; $i < count($args); $i += 2) {
-                    if ($i > 0)
+                    if ($i > 0) {
                         $url .= '&';
+                    }
                     $url .= $args[$i] . '=' . $args[$i + 1];
                 }
             }
