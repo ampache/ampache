@@ -1,13 +1,14 @@
-# LANGUAGE Translation of Ampache.
-# Copyright (C) 2007 Ampache.org
-# This file is distributed under the same license as the Ampache package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2015-05-21 16:39+0200\n"
+"Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
+"POT-Creation-Date: 2015-07-29 04:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +45,7 @@ msgid "Your new Access Control List(s) have been created"
 msgstr ""
 
 #: ../../admin/access.php:86 ../../lib/class/catalog.class.php:1389
-#: ../../lib/class/search.class.php:345 ../../preferences.php:143
+#: ../../lib/class/search.class.php:345 ../../preferences.php:144
 msgid "Updated"
 msgstr ""
 
@@ -291,7 +292,7 @@ msgid "Error: Insert Failed"
 msgstr ""
 
 #: ../../admin/users.php:164 ../../lib/class/democratic.class.php:158
-#: ../../lib/class/shoutbox.class.php:319
+#: ../../lib/class/shoutbox.class.php:325
 #: ../../templates/show_add_user.inc.php:85
 #: ../../templates/show_edit_user.inc.php:107
 #: ../../templates/show_preference_admin.inc.php:43
@@ -615,51 +616,51 @@ msgid ""
 "v|-a|-g] is used."
 msgstr ""
 
-#: ../../bin/channel_run.inc:44
+#: ../../bin/channel_run.inc:46
 msgid "- Channel "
 msgstr ""
 
-#: ../../bin/channel_run.inc:47 ../../bin/websocket_run.inc:42
+#: ../../bin/channel_run.inc:49 ../../bin/websocket_run.inc:42
 msgid "- Verbose"
 msgstr ""
 
-#: ../../bin/channel_run.inc:52 ../../bin/websocket_run.inc:47
+#: ../../bin/channel_run.inc:54 ../../bin/websocket_run.inc:47
 msgid "- Port "
 msgstr ""
 
-#: ../../bin/channel_run.inc:69
+#: ../../bin/channel_run.inc:71
 msgid "Starting Channel..."
 msgstr ""
 
-#: ../../bin/channel_run.inc:73
+#: ../../bin/channel_run.inc:75
 msgid "Unknown channel."
 msgstr ""
 
-#: ../../bin/channel_run.inc:88
+#: ../../bin/channel_run.inc:90
 msgid "Found available port "
 msgstr ""
 
-#: ../../bin/channel_run.inc:105
+#: ../../bin/channel_run.inc:107
 msgid "Listening on "
 msgstr ""
 
-#: ../../bin/channel_run.inc:473
+#: ../../bin/channel_run.inc:306
 msgid "- Channel Listening -"
 msgstr ""
 
-#: ../../bin/channel_run.inc:475
+#: ../../bin/channel_run.inc:308
 msgid "Usage: channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]"
 msgstr ""
 
-#: ../../bin/channel_run.inc:478
+#: ../../bin/channel_run.inc:311
 msgid "Channel id to start"
 msgstr ""
 
-#: ../../bin/channel_run.inc:480
+#: ../../bin/channel_run.inc:313
 msgid "Listening port, default get an available port automatically"
 msgstr ""
 
-#: ../../bin/channel_run.inc:482 ../../bin/websocket_run.inc:74
+#: ../../bin/channel_run.inc:315 ../../bin/websocket_run.inc:74
 msgid "Verbose"
 msgstr ""
 
@@ -1096,7 +1097,7 @@ msgstr ""
 msgid "Stream Access"
 msgstr ""
 
-#: ../../lib/class/album.class.php:394 ../../lib/class/artist.class.php:656
+#: ../../lib/class/album.class.php:394 ../../lib/class/artist.class.php:659
 #: ../../templates/show_album_group_disks.inc.php:50
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
@@ -1142,7 +1143,7 @@ msgstr ""
 
 #: ../../lib/class/album.class.php:669 ../../lib/class/artist.class.php:488
 #: ../../lib/class/clip.class.php:125 ../../lib/class/search.class.php:222
-#: ../../lib/class/song.class.php:1360
+#: ../../lib/class/search.class.php:420 ../../lib/class/song.class.php:1365
 #: ../../templates/browse_filters.inc.php:66
 #: ../../templates/show_add_upload.inc.php:176
 #: ../../templates/show_albums.inc.php:36
@@ -1312,7 +1313,7 @@ msgstr ""
 msgid "Error: Unable to open"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1714 ../../lib/class/shoutbox.class.php:300
+#: ../../lib/class/art.class.php:1714 ../../lib/class/shoutbox.class.php:306
 #: ../../modules/plugins/CatalogFavorites.plugin.php:99
 #: ../../templates/rightbar.inc.php:25
 #: ../../templates/show_album_group_disks.inc.php:61
@@ -1359,31 +1360,31 @@ msgstr ""
 msgid "Artist MusicBrainzID"
 msgstr ""
 
-#: ../../lib/class/autoupdate.class.php:229
+#: ../../lib/class/autoupdate.class.php:230
 msgid "Update available"
 msgstr ""
 
-#: ../../lib/class/autoupdate.class.php:232
+#: ../../lib/class/autoupdate.class.php:233
 msgid "See"
 msgstr ""
 
-#: ../../lib/class/autoupdate.class.php:232
+#: ../../lib/class/autoupdate.class.php:233
 msgid "changes"
 msgstr ""
 
-#: ../../lib/class/autoupdate.class.php:233
+#: ../../lib/class/autoupdate.class.php:234
 msgid "or"
 msgstr ""
 
-#: ../../lib/class/autoupdate.class.php:233
+#: ../../lib/class/autoupdate.class.php:234
 msgid "download"
 msgstr ""
 
-#: ../../lib/class/autoupdate.class.php:245
+#: ../../lib/class/autoupdate.class.php:246
 msgid "Updating Ampache sources with `git pull` ..."
 msgstr ""
 
-#: ../../lib/class/autoupdate.class.php:249
+#: ../../lib/class/autoupdate.class.php:250
 msgid "Done"
 msgstr ""
 
@@ -1392,7 +1393,7 @@ msgid "Broadcast edit"
 msgstr ""
 
 #: ../../lib/class/broadcast.class.php:356
-#: ../../lib/class/channel.class.php:180 ../../lib/class/share.class.php:200
+#: ../../lib/class/channel.class.php:184 ../../lib/class/share.class.php:200
 #: ../../templates/show_access_list.inc.php:70
 #: ../../templates/show_album_group_disks.inc.php:143
 #: ../../templates/show_album.inc.php:170
@@ -1422,7 +1423,7 @@ msgid "Edit"
 msgstr ""
 
 #: ../../lib/class/broadcast.class.php:357
-#: ../../lib/class/channel.class.php:181 ../../lib/class/share.class.php:201
+#: ../../lib/class/channel.class.php:185 ../../lib/class/share.class.php:201
 #: ../../templates/rightbar.inc.php:122
 #: ../../templates/show_access_list.inc.php:71
 #: ../../templates/show_account.inc.php:87
@@ -1631,7 +1632,7 @@ msgid "More"
 msgstr ""
 
 #: ../../lib/class/catalog.class.php:506 ../../lib/class/catalog.class.php:509
-#: ../../lib/class/catalog.class.php:512 ../../lib/class/user.class.php:995
+#: ../../lib/class/catalog.class.php:512 ../../lib/class/user.class.php:998
 #: ../../lib/preferences.php:314 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:64
 msgid "Never"
@@ -1677,23 +1678,23 @@ msgstr ""
 msgid "No valid songs found in playlist file."
 msgstr ""
 
-#: ../../lib/class/channel.class.php:178
+#: ../../lib/class/channel.class.php:182
 msgid "Start Channel"
 msgstr ""
 
-#: ../../lib/class/channel.class.php:179
+#: ../../lib/class/channel.class.php:183
 msgid "Stop Channel"
 msgstr ""
 
-#: ../../lib/class/channel.class.php:180
+#: ../../lib/class/channel.class.php:184
 msgid "Channel edit"
 msgstr ""
 
-#: ../../lib/class/channel.class.php:331
+#: ../../lib/class/channel.class.php:335
 msgid "Running"
 msgstr ""
 
-#: ../../lib/class/channel.class.php:333
+#: ../../lib/class/channel.class.php:337
 #: ../../lib/class/localplay.class.php:631
 msgid "Stopped"
 msgstr ""
@@ -1756,7 +1757,7 @@ msgstr ""
 
 #: ../../lib/class/localplay.class.php:635
 #: ../../lib/class/tvshow_episode.class.php:72
-#: ../../lib/class/user.class.php:998 ../../lib/class/video.class.php:735
+#: ../../lib/class/user.class.php:1001 ../../lib/class/video.class.php:735
 #: ../../lib/general.lib.php:219
 #: ../../modules/localplay/mpd.controller.php:503
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:65
@@ -1922,7 +1923,7 @@ msgid "Any searchable text"
 msgstr ""
 
 #: ../../lib/class/search.class.php:208 ../../lib/class/search.class.php:413
-#: ../../lib/class/song.class.php:1363 ../../lib/class/video.class.php:299
+#: ../../lib/class/song.class.php:1368 ../../lib/class/video.class.php:299
 #: ../../templates/show_democratic_playlist.inc.php:57
 #: ../../templates/show_democratic_playlist.inc.php:104
 #: ../../templates/show_disabled_songs.inc.php:29
@@ -1951,13 +1952,13 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: ../../lib/class/search.class.php:251 ../../lib/class/search.class.php:473
-#: ../../lib/class/search.class.php:507 ../../lib/class/tag.class.php:691
+#: ../../lib/class/search.class.php:251 ../../lib/class/search.class.php:480
+#: ../../lib/class/search.class.php:514 ../../lib/class/tag.class.php:691
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
 msgstr ""
 
-#: ../../lib/class/search.class.php:258 ../../lib/class/search.class.php:481
+#: ../../lib/class/search.class.php:258 ../../lib/class/search.class.php:488
 #: ../../templates/show_disabled_songs.inc.php:32
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:34
@@ -1968,8 +1969,8 @@ msgstr ""
 msgid "Filename"
 msgstr ""
 
-#: ../../lib/class/search.class.php:265 ../../lib/class/search.class.php:420
-#: ../../lib/class/search.class.php:495 ../../templates/show_albums.inc.php:38
+#: ../../lib/class/search.class.php:265 ../../lib/class/search.class.php:427
+#: ../../lib/class/search.class.php:502 ../../templates/show_albums.inc.php:38
 #: ../../templates/show_albums.inc.php:96
 #: ../../templates/show_edit_album_row.inc.php:61
 #: ../../templates/show_edit_song_row.inc.php:73
@@ -1988,7 +1989,7 @@ msgstr ""
 msgid "Length (in minutes)"
 msgstr ""
 
-#: ../../lib/class/search.class.php:280 ../../lib/class/search.class.php:442
+#: ../../lib/class/search.class.php:280 ../../lib/class/search.class.php:449
 #: ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:103
 #: ../../templates/show_artists.inc.php:47
@@ -2040,7 +2041,7 @@ msgstr ""
 msgid "Played"
 msgstr ""
 
-#: ../../lib/class/search.class.php:358 ../../lib/class/search.class.php:465
+#: ../../lib/class/search.class.php:358 ../../lib/class/search.class.php:472
 #: ../../templates/browse_filters.inc.php:72
 #: ../../templates/show_add_live_stream.inc.php:54
 #: ../../templates/show_export.inc.php:32
@@ -2073,16 +2074,16 @@ msgstr ""
 msgid "Music License"
 msgstr ""
 
-#: ../../lib/class/search.class.php:427
+#: ../../lib/class/search.class.php:434
 msgid "Image Width"
 msgstr ""
 
-#: ../../lib/class/search.class.php:434
+#: ../../lib/class/search.class.php:441
 msgid "Image Height"
 msgstr ""
 
-#: ../../lib/class/search.class.php:489 ../../lib/class/search.class.php:515
-#: ../../lib/class/search.class.php:523
+#: ../../lib/class/search.class.php:496 ../../lib/class/search.class.php:522
+#: ../../lib/class/search.class.php:530
 #: ../../templates/cookie_disclaimer.inc.php:16
 #: ../../templates/show_access_list.inc.php:46
 #: ../../templates/show_add_access.inc.php:27
@@ -2122,13 +2123,13 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: ../../lib/class/search.class.php:501
+#: ../../lib/class/search.class.php:508
 #: ../../templates/show_concerts.inc.php:28
 #: ../../templates/show_concerts.inc.php:53
 msgid "Place"
 msgstr ""
 
-#: ../../lib/class/search.class.php:529
+#: ../../lib/class/search.class.php:536
 #: ../../templates/show_add_label.inc.php:34
 #: ../../templates/show_edit_label_row.inc.php:31
 #: ../../templates/show_labels.inc.php:40
@@ -2136,7 +2137,7 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: ../../lib/class/search.class.php:537
+#: ../../lib/class/search.class.php:544
 #: ../../modules/catalog/remote.catalog.php:110
 #: ../../modules/catalog/subsonic.catalog.php:110
 #: ../../modules/localplay/xbmc.controller.php:199
@@ -2170,11 +2171,11 @@ msgstr ""
 msgid "Temporary direct link"
 msgstr ""
 
-#: ../../lib/class/shoutbox.class.php:219
+#: ../../lib/class/shoutbox.class.php:225
 msgid "New shout on your content"
 msgstr ""
 
-#: ../../lib/class/shoutbox.class.php:220
+#: ../../lib/class/shoutbox.class.php:226
 #, php-format
 msgid ""
 "You just received a new shout from %s on your content `%s`.\n"
@@ -2188,7 +2189,7 @@ msgid ""
 "    "
 msgstr ""
 
-#: ../../lib/class/shoutbox.class.php:301
+#: ../../lib/class/shoutbox.class.php:307
 #: ../../templates/show_add_label.inc.php:74
 #: ../../templates/show_add_live_stream.inc.php:62
 #: ../../templates/show_catalog_row.inc.php:40
@@ -2198,7 +2199,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: ../../lib/class/shoutbox.class.php:304
+#: ../../lib/class/shoutbox.class.php:310
 #: ../../templates/show_album_group_disks.inc.php:125
 #: ../../templates/show_album.inc.php:132
 #: ../../templates/show_album.inc.php:133
@@ -2216,16 +2217,16 @@ msgstr ""
 msgid "Post Shout"
 msgstr ""
 
-#: ../../lib/class/shoutbox.class.php:308
+#: ../../lib/class/shoutbox.class.php:314
 msgid "by"
 msgstr ""
 
-#: ../../lib/class/song.class.php:1336
+#: ../../lib/class/song.class.php:1341
 #: ../../templates/show_html5_player.inc.php:146
 msgid "Show Lyrics"
 msgstr ""
 
-#: ../../lib/class/song.class.php:1357
+#: ../../lib/class/song.class.php:1362
 msgid "Track MusicBrainzID"
 msgstr ""
 
@@ -2293,20 +2294,20 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: ../../lib/class/user.class.php:1023 ../../templates/show_objects.inc.php:44
+#: ../../lib/class/user.class.php:1026 ../../templates/show_objects.inc.php:44
 #: ../../templates/show_tagcloud.inc.php:83
 msgid "Not Enough Data"
 msgstr ""
 
-#: ../../lib/class/user.class.php:1305
+#: ../../lib/class/user.class.php:1308
 msgid "User avatar"
 msgstr ""
 
-#: ../../lib/class/user.class.php:1499
+#: ../../lib/class/user.class.php:1502
 msgid "Unfollow"
 msgstr ""
 
-#: ../../lib/class/user.class.php:1499
+#: ../../lib/class/user.class.php:1502
 msgid "Follow"
 msgstr ""
 
@@ -3920,15 +3921,15 @@ msgstr ""
 msgid "Please fill in your city"
 msgstr ""
 
-#: ../../preferences.php:140
+#: ../../preferences.php:139
 msgid "Error Update Failed"
 msgstr ""
 
-#: ../../preferences.php:144
+#: ../../preferences.php:145
 msgid "Your Account has been updated"
 msgstr ""
 
-#: ../../preferences.php:148
+#: ../../preferences.php:149
 msgid "User updated successfully"
 msgstr ""
 
@@ -4168,30 +4169,34 @@ msgid "Ampache session."
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:37
-msgid "Automatically authenticate users."
+msgid "Ampache session username (if authenticated, information only)."
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:42
-msgid "Keep latest web player volume."
+msgid "Automatically authenticate users."
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:47
-msgid "Show/Hide column [column_index] when browsing [object_type] objects."
+msgid "Keep latest web player volume."
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:52
-msgid "Use alphabet when browsing [object_type] objects."
+msgid "Show/Hide column [column_index] when browsing [object_type] objects."
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:57
-msgid "Use pages when browsing [object_type] objects."
+msgid "Use alphabet when browsing [object_type] objects."
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:62
-msgid "Collapse/Expand Sidebar [menu_section]."
+msgid "Use pages when browsing [object_type] objects."
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:67
+msgid "Collapse/Expand Sidebar [menu_section]."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:72
 msgid "Collapse/Expand Sidebar."
 msgstr ""
 
@@ -5020,12 +5025,12 @@ msgstr ""
 #: ../../templates/show_album_group_disks.inc.php:132
 #: ../../templates/show_album.inc.php:179
 #: ../../templates/show_album.inc.php:180
-#: ../../templates/show_artist.inc.php:141
 #: ../../templates/show_artist.inc.php:142
-#: ../../templates/show_install_config.inc.php:191
-#: ../../templates/show_install_config.inc.php:206
-#: ../../templates/show_install_config.inc.php:221
-#: ../../templates/show_install_config.inc.php:237
+#: ../../templates/show_artist.inc.php:143
+#: ../../templates/show_install_config.inc.php:194
+#: ../../templates/show_install_config.inc.php:209
+#: ../../templates/show_install_config.inc.php:224
+#: ../../templates/show_install_config.inc.php:240
 #: ../../templates/show_playlist_song_row.inc.php:60
 #: ../../templates/show_share.inc.php:33 ../../templates/show_share.inc.php:34
 #: ../../templates/show_song.inc.php:83
@@ -6310,75 +6315,75 @@ msgid ""
 "additional configuration."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:181
+#: ../../templates/show_install_config.inc.php:184
 msgid "File Insight"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:188
+#: ../../templates/show_install_config.inc.php:191
 msgid "channel/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:193
-#: ../../templates/show_install_config.inc.php:208
-#: ../../templates/show_install_config.inc.php:223
-#: ../../templates/show_install_config.inc.php:239
+#: ../../templates/show_install_config.inc.php:196
+#: ../../templates/show_install_config.inc.php:211
+#: ../../templates/show_install_config.inc.php:226
+#: ../../templates/show_install_config.inc.php:242
 msgid "Write"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:196
+#: ../../templates/show_install_config.inc.php:199
 msgid "channel/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:198
+#: ../../templates/show_install_config.inc.php:201
 msgid "channel/.htaccess configured?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:203
+#: ../../templates/show_install_config.inc.php:206
 msgid "rest/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:211
+#: ../../templates/show_install_config.inc.php:214
 msgid "rest/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:213
+#: ../../templates/show_install_config.inc.php:216
 msgid "rest/.htaccess configured?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:218
+#: ../../templates/show_install_config.inc.php:221
 msgid "play/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:226
+#: ../../templates/show_install_config.inc.php:229
 msgid "play/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:228
+#: ../../templates/show_install_config.inc.php:231
 msgid "play/.htaccess configured?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:234
+#: ../../templates/show_install_config.inc.php:237
 msgid "config/ampache.cfg.php action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:242
+#: ../../templates/show_install_config.inc.php:245
 msgid "config/ampache.cfg.php exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:244
+#: ../../templates/show_install_config.inc.php:247
 msgid "config/ampache.cfg.php configured?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:251
+#: ../../templates/show_install_config.inc.php:254
 msgid "Recheck Config"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:259
+#: ../../templates/show_install_config.inc.php:262
 #: ../../templates/show_install.inc.php:130
 msgid "Skip"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:262
+#: ../../templates/show_install_config.inc.php:265
 msgid "Create config"
 msgstr ""
 
@@ -7856,6 +7861,7 @@ msgstr ""
 #: ../../video.php:53
 msgid "Cannot delete this video."
 msgstr ""
+
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr ""
@@ -7937,14 +7943,14 @@ msgid "Playlist Method"
 msgstr ""
 
 #: Database preference table id 55
-# Is already in ../../templates/show_install_config.inc.php:108
-# but to avoid confusion it's added and commented
+# is already in the source code
+# but to avoid confusion, it's added and commented
 # msgid "Transcoding"
 # msgstr ""
 
 #: Database preference table id 69
-# is already in #: ../../lib/class/song.class.php:1297 and ../../templates/show_html5_player.inc.php:137
-# but to avoid confusion it's added and commented
+# is already in the source code
+# but to avoid confusion, it's added and commented
 # msgid "Show Lyrics"
 # msgstr ""
 
@@ -8025,7 +8031,7 @@ msgid "Personal information visibility - Recently played - Allow to show streami
 msgstr ""
 
 #: Database preference table id 94
-msgid "Fix header/sidebars position on compatible themes"
+msgid "Fix header position on compatible themes"
 msgstr ""
 
 #: Database preference table id 95
@@ -8124,11 +8130,11 @@ msgstr ""
 msgid "Use DAAP backend"
 msgstr ""
 
-#: Database preference table id 129
+#: Database preference table id 119
 msgid "DAAP backend password"
 msgstr ""
 
-#: Database preference table id 121
+#: Database preference table id 120
 msgid "Use UPnP backend"
 msgstr ""
 
