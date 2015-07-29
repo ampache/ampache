@@ -493,7 +493,7 @@ class XML_Data
                     . "\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n"
                     . "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n";
             foreach ($song->tags as $tag) {
-                $string .= "\t<genre><![CDATA[" . $tag . "]]></genre>\n";
+                $string .= "\t<genre><![CDATA[" . $tag['name'] . "]]></genre>\n";
             }
 
             $string .= "</song>\n";
