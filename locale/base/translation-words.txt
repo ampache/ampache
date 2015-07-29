@@ -1,3 +1,4 @@
+
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr ""
@@ -79,14 +80,14 @@ msgid "Playlist Method"
 msgstr ""
 
 #: Database preference table id 55
-# Is already in ../../templates/show_install_config.inc.php:108
-# but to avoid confusion it's added and commented
+# is already in the source code
+# but to avoid confusion, it's added and commented
 # msgid "Transcoding"
 # msgstr ""
 
 #: Database preference table id 69
-# is already in #: ../../lib/class/song.class.php:1297 and ../../templates/show_html5_player.inc.php:137
-# but to avoid confusion it's added and commented
+# is already in the source code
+# but to avoid confusion, it's added and commented
 # msgid "Show Lyrics"
 # msgstr ""
 
@@ -167,7 +168,7 @@ msgid "Personal information visibility - Recently played - Allow to show streami
 msgstr ""
 
 #: Database preference table id 94
-msgid "Fix header/sidebars position on compatible themes"
+msgid "Fix header position on compatible themes"
 msgstr ""
 
 #: Database preference table id 95
@@ -266,11 +267,11 @@ msgstr ""
 msgid "Use DAAP backend"
 msgstr ""
 
-#: Database preference table id 129
+#: Database preference table id 119
 msgid "DAAP backend password"
 msgstr ""
 
-#: Database preference table id 121
+#: Database preference table id 120
 msgid "Use UPnP backend"
 msgstr ""
 
