@@ -142,6 +142,7 @@ class Stream_Playlist
                         $url['info_url'] = $object->f_link;
                         $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                         $url['album'] = $object->f_album_full;
+                        $url['track_num'] = $object->f_track;
                     break;
                     case 'video':
                         $url['title'] = 'Video - ' . $object->title;
@@ -393,6 +394,9 @@ class Stream_Playlist
             }
             if ($url->album) {
                 $xml['track']['album'] = $url->album;
+            }
+            if ($url->track_num) {
+                $xml['track']['trackNum'] = $url->track_num;
             }
 
             $result .= XML_Data::keyed_array($xml, true);

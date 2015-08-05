@@ -908,6 +908,7 @@ CREATE TABLE IF NOT EXISTS `stream_playlist` (
   `type` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `time` smallint(5) DEFAULT NULL,
   `codec` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `track_num` smallint(5) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
