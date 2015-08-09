@@ -902,9 +902,8 @@ class vainfo
                     }
                 }
                 // Rating made by an unknow user, adding it to super user (id=-1)
-                else
-                {
-                	$parsed['rating'][-1] = $popm['rating'] / 255 * 5;
+                else {
+                    $parsed['rating'][-1] = $popm['rating'] / 255 * 5;
                 }
             }
         }

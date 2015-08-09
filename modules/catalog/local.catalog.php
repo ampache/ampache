@@ -696,8 +696,7 @@ class Catalog_local extends Catalog
         // If song rating tag exists and is well formed (array user=>rating), add it
         if ($id && array_key_exists('rating', $results) && is_array($results['rating'])) {
             // For each user's ratings, call the function
-            foreach ($results['rating'] as $user => $rating)
-            {
+            foreach ($results['rating'] as $user => $rating) {
                 debug_event('Rating', "Setting rating for Song $id to $rating for user $user", 5);
                 $o_rating = new Rating($id, 'song');
                 $o_rating->set_rating($rating, $user);
