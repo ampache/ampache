@@ -3514,7 +3514,7 @@ class Update
     /**
      * update_370036
      *
-     * Add option on user fullname to show/hide it publicly
+     * Add field for track number when generating streaming playlists
      */
     public static function update_370036()
     {
