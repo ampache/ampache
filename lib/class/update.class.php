@@ -504,6 +504,9 @@ class Update
 
         $update_string = " - Add option on user fullname to show/hide it publicly.<br />";
         $version[] = array('version' => '370035','description' => $update_string);
+        
+        $update_string = " - Add track number field to stream_playlist table.<br />";
+        $version[] = array('version' => '370036','description' => $update_string);
 
         return $version;
     }
@@ -3503,6 +3506,21 @@ class Update
         $retval = true;
 
         $sql = "ALTER TABLE `user` ADD COLUMN `fullname_public` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+    
+    /**
+     * update_370036
+     *
+     * Add option on user fullname to show/hide it publicly
+     */
+    public static function update_370036()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `stream_playlist` ADD COLUMN `track_num` SMALLINT( 5 ) DEFAULT '0'";
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
