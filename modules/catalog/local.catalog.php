@@ -693,6 +693,15 @@ class Catalog_local extends Catalog
         }
 
         $id = Song::insert($results);
+        // If song rating tag exists and is well formed (array user=>rating), add it
+        if ($id && array_key_exists('rating', $results) && is_array($results['rating'])) {
+            // For each user's ratings, call the function
+            foreach ($results['rating'] as $user => $rating) {
+                debug_event('Rating', "Setting rating for Song $id to $rating for user $user", 5);
+                $o_rating = new Rating($id, 'song');
+                $o_rating->set_rating($rating, $user);
+            }
+        }
         // Extended metadata loading is not deferred, retrieve it now
         if ($id && !AmpConfig::get('deferred_ext_metadata')) {
             $song = new Song($id);
