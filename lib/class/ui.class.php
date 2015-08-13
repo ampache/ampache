@@ -220,7 +220,7 @@ END;
             $hover_url = self::_find_icon($hover_name);
         }
         if ($bUseSprite) {
-            $tag = '<span class="sprite sprite-icon_'.$name.'"';
+            $tag = '<span class="sprite sprite-icon_'.$name.'" ';
         } else {
             $tag = '<img src="' . $icon_url . '" ';
         }
