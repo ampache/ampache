@@ -423,7 +423,6 @@ class vainfo
         }
 
 	// Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
-	$size = -1;
         if (isset($results['general']['size'])) {
                 $size = $results['general']['size'];
         } else {
