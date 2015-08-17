@@ -422,11 +422,11 @@ class vainfo
             unset($info['totaldisks']);
         }
 
-	// Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
+    // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
         if (isset($results['general']['size'])) {
-                $size = $results['general']['size'];
+            $size = $results['general']['size'];
         } else {
-                $size = Core::get_filesize($filename);
+            $size = Core::get_filesize($filename);
         }
 
         $info['size'] = $info['size'] ?: $size;
