@@ -365,6 +365,16 @@ function create_preference_input($name,$value)
             echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
             echo "</select>\n";
         break;
+        case 'lastfm_grant_link':
+        case 'librefm_grant_link':
+            // construct links for granting access Ampache application to Last.fm and Libre.fm
+            $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
+            $plugin = new Plugin($plugin_name);
+            $url = $plugin->_plugin->url;
+            $api_key = rawurlencode(AmpConfig::get('lastfm_api_key'));
+            $callback = rawurlencode(AmpConfig::get('web_path').'/preferences.php?tab=plugins&action=grant&plugin='.$plugin_name);
+            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', T_("Click for grant Ampache to ").$plugin_name).'</a>';
+        break;
         default:
             if (preg_match('/_pass$/', $name)) {
                 echo '<input type="password" name="' . $name . '" value="******" />';

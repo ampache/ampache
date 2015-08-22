@@ -477,6 +477,11 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ; recommendations and metadata.
 lastfm_api_key = "d5df942424c71b754e54ce1832505ae2"
 
+; Last.FM API secret
+; Set this to your Last.FM api secret to actually use Last.FM for
+; scrobbling.
+lastfm_api_secret = ""
+
 ; Wanted
 ; Set this to true to enable display missing albums and the
 ; possibility for users to mark it as wanted.

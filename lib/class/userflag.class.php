@@ -161,6 +161,25 @@ class Userflag extends database_object
 
         parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, $flagged);
 
+        // Forward flag to last.fm and Libre.fm (song only)
+        if ($this->type == 'song') {
+            $user = new User($user_id);
+            $song = new Song($this->id);
+            if ($song) {
+                $song->format();
+                foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
+                    try {
+                        $plugin = new Plugin($plugin_name);
+                        if ($plugin->load($user)) {
+                            $plugin->_plugin->set_flag($song, $flagged);
+                        }
+                    } catch (Exception $e) {
+                        debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
+                    }
+                }
+            }
+        }
+
         return true;
     } // set_flag
 
