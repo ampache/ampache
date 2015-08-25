@@ -349,7 +349,7 @@ class vainfo
             $info['bitrate'] = $info['bitrate'] ?: intval($tags['bitrate']);
             $info['rate'] = $info['rate'] ?: intval($tags['rate']);
             $info['mode'] = $info['mode'] ?: $tags['mode'];
-            $info['size'] = $info['size'] ?: $tags['size'];
+            // size will be added later, because of conflicts between real file size and getID3 reported filesize
             $info['mime'] = $info['mime'] ?: $tags['mime'];
             $info['encoding'] = $info['encoding'] ?: $tags['encoding'];
             $info['rating'] = $info['rating'] ?: $tags['rating'];
@@ -421,6 +421,15 @@ class vainfo
             unset($info['disk']);
             unset($info['totaldisks']);
         }
+
+    // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
+        if (isset($results['general']['size'])) {
+            $size = $results['general']['size'];
+        } else {
+            $size = Core::get_filesize($filename);
+        }
+
+        $info['size'] = $info['size'] ?: $size;
 
         return $info;
     }
