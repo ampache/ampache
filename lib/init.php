@@ -35,7 +35,7 @@ Session::_auto_init();
 
 // Set up for redirection on important error cases
 $path = get_web_path();
-$path = $http_type . $_SERVER['HTTP_HOST'] . ':' . $http_port . $path;
+$path = $http_type . $_SERVER['HTTP_HOST'] . $path;
 
 // Check to make sure the config file exists. If it doesn't then go ahead and
 // send them over to the install script.
@@ -80,7 +80,7 @@ if ($ow_config) {
 
 $results['raw_web_path'] = $results['web_path'];
 if (empty($results['http_host'])) {
-    $results['http_host'] = $_SERVER['HTTP_HOST'];
+    $results['http_host'] = $_SERVER['SERVER_NAME'];
 }
 if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
