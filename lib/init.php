@@ -35,7 +35,7 @@ Session::_auto_init();
 
 // Set up for redirection on important error cases
 $path = get_web_path();
-$path = $http_type . $_SERVER['HTTP_HOST'] . $path;
+$path = $http_type . $_SERVER['HTTP_HOST'] . ':' . $http_port . $path;
 
 // Check to make sure the config file exists. If it doesn't then go ahead and
 // send them over to the install script.
@@ -66,7 +66,7 @@ if (!empty($link)) {
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
 $results['version']        = '3.8.1-develop';
-$results['int_config_version'] = '29';
+$results['int_config_version'] = '30';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -85,8 +85,10 @@ if (empty($results['http_host'])) {
 if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
 }
-$results['web_path'] = $http_type . $results['http_host'] . $results['web_path'];
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
+$results['web_path'] = $http_type . $results['http_host'] .
+        (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
+        $results['web_path'];
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
 $results['max_upload_size'] = $results['max_upload_size'] ?: 1048576;

@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 29
+config_version = 30
 
 ;###################
 ; Path Vars        #
@@ -18,6 +18,11 @@ config_version = 29
 ; This setting is required for WebSocket server
 ; DEFAULT: ""
 ;http_host = "localhost"
+
+; The public http port of your server.
+; If not set, retrieved automatically from client request.
+; DEFAULT: 
+;http_port = 80
 
 ; The public path to your ampache install
 ; Do not put a trailing / on this path

@@ -507,6 +507,9 @@ class Update
         
         $update_string = " - Add track number field to stream_playlist table.<br />";
         $version[] = array('version' => '370036','description' => $update_string);
+        
+        $update_string = " - Delete http_port preference (use ampache.cfg.php configuration instead).<br />";
+        $version[] = array('version' => '370037','description' => $update_string);
 
         return $version;
     }
@@ -3521,6 +3524,21 @@ class Update
         $retval = true;
 
         $sql = "ALTER TABLE `stream_playlist` ADD COLUMN `track_num` SMALLINT( 5 ) DEFAULT '0'";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+    
+    /**
+     * update_370037
+     *
+     * Delete http_port preference (use ampache.cfg.php configuration instead)
+     */
+    public static function update_370037()
+    {
+        $retval = true;
+
+        $sql = "DELETE FROM `preference` WHERE `name` = 'http_port'";
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
