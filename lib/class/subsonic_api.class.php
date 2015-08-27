@@ -584,11 +584,11 @@ class Subsonic_Api
             }
         }
 
+        $r = Subsonic_XML_Data::createSuccessResponse();
         if (count($albums)) {
-            $r = Subsonic_XML_Data::createSuccessResponse();
             Subsonic_XML_Data::addAlbumList($r, $albums, $elementName);
         } else {
-            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            $r->addChild(htmlspecialchars($elementName));
         }
 
         self::apiOutput($input, $r);
