@@ -279,6 +279,15 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
     replaygainEnabled = false;
 <?php echo WebPlayer::add_media_js($playlist); ?>
 
+    $("#jquery_jplayer_1").resizable({
+        alsoResize: "#jquery_jplayer_1 video",
+        handles: "nw, ne, se, sw, n, e, w, s"
+    });
+
+    $("#jquery_jplayer_1 video").resizable();
+
+    $("#jquery_jplayer_1").draggable();
+
 });
 </script>
 <?php
