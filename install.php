@@ -195,12 +195,6 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        // Automatically log-in the newly created user
-        Session::create_cookie();
-        Session::create(array('type' => 'mysql', 'username' => $username));
-        $_SESSION['userdata']['username'] = $username;
-        Session::check();
-
         header ("Location: " . $web_path . '/index.php');
     break;
     case 'init':
