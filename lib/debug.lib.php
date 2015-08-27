@@ -81,6 +81,14 @@ function check_php_pdo_mysql()
     return class_exists('PDO') ? in_array('mysql', PDO::getAvailableDrivers()) : false;
 }
 
+function check_mbstring_func_overload()
+{
+    if ( ini_get('mbstring.func_overload') > 0) {
+        return false;
+    }
+    return true;
+}
+
 /**
  * check_config_values
  * checks to make sure that they have at least set the needed variables

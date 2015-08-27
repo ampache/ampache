@@ -164,6 +164,15 @@
     <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires 64-bit operating system.'); ?>
     </td>
 </tr>
+<tr>
+    <td valign="top"><?php echo T_('PHP mbstring.func_overload'); ?></td>
+    <td valign="top">
+    <?php echo debug_result(check_mbstring_func_overload()); ?>
+    </td>
+    <td>
+    <?php printf(T_('This tests whether PHP %s is set as it may break the ID3 tag support. This is not stricly necessary, but enabling Ampache ID3 tag write support (disabled by default) along with mbstring.func_overload may result in irreversible corruption of your music files.'), '<a href="http://php.net/manual/en/mbstring.overload.php">mbstring.func_overload</a>'); ?>
+    </td>
+</tr>
 <?php
 if (!defined('INSTALL')) {
     ?>
