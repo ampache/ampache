@@ -129,6 +129,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
+        $libitem->format();
         $new_id = $libitem->update($_POST);
         $libitem = new $object_type($new_id);
         $libitem->format();
