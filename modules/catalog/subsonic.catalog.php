@@ -201,6 +201,8 @@ class Catalog_subsonic extends Catalog
      */
     public function update_remote_catalog()
     {
+        debug_event('subsonic_catalog', 'Updating remote catalog...', 5);
+        
         $subsonic = $this->createClient();
 
         $songsadded = 0;
@@ -208,7 +210,9 @@ class Catalog_subsonic extends Catalog
         $artists = $subsonic->getIndexes();
         if ($artists['success']) {
             foreach ($artists['data']['indexes']['index'] as $index) {
+                $subsonic = $this->createClient();
                 foreach ($index['artist'] as $artist) {
+                    $subsonic = $this->createClient();
                     // Get albums for artist
                     $albums = $subsonic->getMusicDirectory(array('id' => $artist['id']));
 
@@ -246,11 +250,13 @@ class Catalog_subsonic extends Catalog
                                         }
                                     }
                                 } else {
+                                    debug_event('subsonic_catalog', 'Song error:' . $songs['error'], 3);
                                     Error::add('general', T_('Song Error.') . ": " . $songs['error']);
                                 }
                             }
                         }
                     } else {
+                        debug_event('subsonic_catalog', 'Album error:' . $albums['error'], 3);
                         Error::add('general', T_('Album Error.') . ": " . $albums['error']);
                     }
                 }
@@ -261,9 +267,12 @@ class Catalog_subsonic extends Catalog
             // Update the last update value
             $this->update_last_update();
         } else {
+            debug_event('subsonic_catalog', 'Artist error:' . $artists['error'], 3);
             Error::add('general', T_('Artist Error.') . ": " . $artists['error']);
         }
 
+        debug_event('subsonic_catalog', 'Catalog updated.', 5);
+        
         return true;
     }
 
