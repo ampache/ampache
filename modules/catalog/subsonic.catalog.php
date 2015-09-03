@@ -210,9 +210,7 @@ class Catalog_subsonic extends Catalog
         $artists = $subsonic->getIndexes();
         if ($artists['success']) {
             foreach ($artists['data']['indexes']['index'] as $index) {
-                $subsonic = $this->createClient();
                 foreach ($index['artist'] as $artist) {
-                    $subsonic = $this->createClient();
                     // Get albums for artist
                     $albums = $subsonic->getMusicDirectory(array('id' => $artist['id']));
 
