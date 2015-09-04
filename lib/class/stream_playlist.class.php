@@ -110,7 +110,7 @@ class Stream_Playlist
     {
         $urls = array();
         foreach ($media as $medium) {
-            $surl = self::media_to_url($media, $additional_params);
+            $surl = self::media_to_url($medium, $additional_params);
             if ($surl != null) {
                 $urls[] = $surl;
             }
@@ -129,8 +129,8 @@ class Stream_Playlist
         $object = new $type($object_id);
         $object->format();
         
-        if ($medium['custom_play_action']) {
-            $additional_params .= "&custom_play_action=" . $medium['custom_play_action'];
+        if ($media['custom_play_action']) {
+            $additional_params .= "&custom_play_action=" . $media['custom_play_action'];
         }
 
         if ($_SESSION['iframe']['subtitle']) {

@@ -89,9 +89,9 @@ echo "Playlist export completed.\n";
 
 /* FUNCTIONS */
 function usage() {
-    $desc1 = T_("This will dump a collection of m3u playlists based on type");
+    $desc1 = T_("This will dump a collection of playlists files based on type");
     $desc2 = T_("Types:");
-    $desc3 = T_("Dumps all of your Playlists as m3u's");
+    $desc3 = T_("Dumps all of your Playlists");
     $desc4 = T_("Dumps all Albums as individual playlists");
     $desc5 = T_("Dumps all Artists as individual playlists");
     $desc6 = T_("Extensions: m3u (default), xspf, pls");
