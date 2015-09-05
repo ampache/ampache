@@ -1692,6 +1692,18 @@ abstract class Catalog extends database_object
     } // trim_prefix
 
     /**
+     * trim_featuring
+     * Splits artists featuring from the string
+     * @param string $string
+     * @return array
+     */
+    public static function trim_featuring($string)
+    {
+        $trimmed = array_map('trim', explode(' feat. ', $string));
+        return $trimmed;
+    } // trim_featuring
+
+    /**
      * check_title
      * this checks to make sure something is
      * set on the title, if it isn't it looks at the
