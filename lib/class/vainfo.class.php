@@ -837,6 +837,10 @@ class vainfo
                 case 'track_number':
                     $parsed['track'] = $data[0];
                 break;
+                case 'comment':
+                    // First array key can be xFF\xFE in case of UTF-8, better to get it this way
+                    $parsed['comment'] = reset($data);
+                break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
                 break;
