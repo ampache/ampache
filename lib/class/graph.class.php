@@ -501,7 +501,7 @@ class Graph
                 }
             }
 
-            require_once AmpConfig::get('prefix') . '/templates/show_graphs.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_graphs.inc.php');
         }
     }
 }

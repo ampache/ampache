@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="live_stream">
     <thead>
@@ -44,7 +44,7 @@ $web_path = AmpConfig::get('web_path');
         <tr id="live_stream_<?php echo $libitem->id;
             ?>" class="<?php echo UI::flip_class();
             ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php';
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php');
             ?>
         </tr>
         <?php 
@@ -70,5 +70,5 @@ $web_path = AmpConfig::get('web_path');
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::Get('prefix') . '/templates/list_header.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>

@@ -570,6 +570,11 @@ show_footer_statistics = "true"
 ;DEFAULT: use_rss = false
 ;use_rss = "false"
 
+; This setting allows themes to overwrite PHP template files. This can be really
+; dangerous. Do this only if you trust every theme in your themes/ directory.
+; DEFAULT: false
+;allow_php_themes = "false"
+
 
 ;#########################################################
 ; Debugging                                              #

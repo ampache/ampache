@@ -43,7 +43,7 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
         $path = AmpConfig::get('web_path') . "/$next_url";
     }
 
-    require AmpConfig::get('prefix') . '/templates/show_confirmation.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_confirmation.inc.php');
 } // show_confirmation
 
 function sse_worker($url)
@@ -181,7 +181,7 @@ function get_location()
  */
 function show_preference_box($preferences)
 {
-    require AmpConfig::get('prefix') . '/templates/show_preference_box.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_preference_box.inc.php');
 } // show_preference_box
 
 /**
@@ -715,7 +715,7 @@ function show_now_playing()
 
     $web_path = AmpConfig::get('web_path');
     $results = Stream::get_now_playing();
-    require_once AmpConfig::get('prefix') . '/templates/show_now_playing.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php');
 } // show_now_playing
 
 function show_table_render($render = false, $force = false)

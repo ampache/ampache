@@ -131,7 +131,7 @@ switch ($_REQUEST['action']) {
             /*$playlist->format();
             $object_ids = $playlist->get_items();
             ob_start();
-            require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
             $results['content'] = ob_get_contents();
             ob_end_clean();*/
             debug_event('playlist', 'Items added successfully!', '5');

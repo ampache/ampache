@@ -32,7 +32,7 @@ $results = array();
 switch ($_REQUEST['action']) {
     case 'show_broadcasts':
         ob_start();
-        require AmpConfig::get('prefix') . '/templates/show_broadcasts_dialog.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_broadcasts_dialog.inc.php');
         $results = ob_get_contents();
         ob_end_clean();
         echo $results;

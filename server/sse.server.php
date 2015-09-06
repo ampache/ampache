@@ -152,7 +152,7 @@ switch ($worker) {
                 foreach ($catalogs as $catalog_id) {
                     $catalog = Catalog::create_from_id($catalog_id);
                     if ($catalog !== null) {
-                        require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
+                        require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
                         flush();
                         $catalog->gather_art();
                     }

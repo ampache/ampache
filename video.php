@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
     default:
         $video = Video::create_from_id($_REQUEST['video_id']);
         $video->format();
-        require_once AmpConfig::get('prefix') . '/templates/show_video.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_video.inc.php');
     break;
 }
 

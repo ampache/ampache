@@ -25,7 +25,7 @@ $embed = $_REQUEST['embed'];
 $is_share = true;
 $playlist = $share->create_fake_playlist();
 
-require AmpConfig::get('prefix') . '/templates/show_web_player.inc.php';
+require AmpConfig::get('prefix') . UI::find_template('show_web_player.inc.php');
 
 if (empty($embed)) {
     echo "<a href='" . $share->public_url . "'>" .T_('Shared by') . ' ' . $share->f_user . "</a><br />";

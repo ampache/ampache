@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
@@ -162,5 +162,5 @@ $democratic = Democratic::get_current_playlist();
 
 <?php show_table_render(); ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>

@@ -24,7 +24,7 @@ $web_path = AmpConfig::get('web_path');
 $thcount = 6;
 ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="tvshow_season">
     <thead>
@@ -79,7 +79,7 @@ $thcount = 6;
         <tr id="tvshow_season_<?php echo $libitem->id;
             ?>" class="<?php echo UI::flip_class();
             ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_tvshow_season_row.inc.php';
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_tvshow_season_row.inc.php');
             ?>
         </tr>
         <?php 
@@ -131,5 +131,5 @@ $thcount = 6;
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>

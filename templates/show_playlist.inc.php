@@ -28,7 +28,7 @@
 ?>
 <?php
 ob_start();
-require AmpConfig::get('prefix') . '/templates/show_playlist_title.inc.php';
+require AmpConfig::get('prefix') . UI::find_template('show_playlist_title.inc.php');
 $title = ob_get_contents();
 ob_end_clean();
 UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box');

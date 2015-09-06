@@ -35,9 +35,9 @@ $_SESSION['login'] = true;
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
-        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/print.css" type="text/css" media="print" />
-        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/dark.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('print.css'); ?>" type="text/css" media="print" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('default.css'); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('dark.css'); ?>" type="text/css" media="screen" />
         <?php UI::show_custom_style(); ?>
     </head>
     <body id="registerPage">
@@ -47,7 +47,7 @@ $_SESSION['login'] = true;
 
         <div id="maincontainer">
             <div id="header">
-                <a href="<?php echo AmpConfig::get('web_path'); ?>"><h1 id="headerlogo"></h1></a>
+                <a href="<?php echo $web_path ?>"><h1 id="headerlogo"></h1></a>
                 <span><?php echo T_('Registration'); ?>...</span>
             </div>
             <?php

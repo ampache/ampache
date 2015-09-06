@@ -51,7 +51,7 @@ switch ($_REQUEST['actionp']) {
 
     default:
         UI::show_header();
-        require AmpConfig::get('prefix') . '/templates/show_add_upload.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_add_upload.inc.php');
         break;
 } // switch on the action
 

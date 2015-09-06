@@ -36,7 +36,7 @@
         <tr id="concert_<?php echo $libitem->id;
             ?>" class="<?php echo UI::flip_class();
             ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_concert_row.inc.php';
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_concert_row.inc.php');
             ?>
         </tr>
         <?php 
@@ -70,7 +70,7 @@
         <tr id="concert_<?php echo $libitem->id;
             ?>" class="<?php echo UI::flip_class();
             ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_concert_row.inc.php';
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_concert_row.inc.php');
             ?>
         </tr>
         <?php 

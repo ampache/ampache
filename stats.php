@@ -33,33 +33,33 @@ switch ($_REQUEST['action']) {
     // Show a Users "Profile" page
     case 'show_user':
         $client = new User($_REQUEST['user_id']);
-        require_once AmpConfig::get('prefix') . '/templates/show_user.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_user.inc.php');
     break;
     // Show stats
     case 'newest':
-        require_once AmpConfig::get('prefix') . '/templates/show_newest.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_newest.inc.php');
     break;
     case 'popular':
-        require_once AmpConfig::get('prefix') . '/templates/show_popular.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_popular.inc.php');
     break;
     case 'highest':
-        require_once AmpConfig::get('prefix') . '/templates/show_highest.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_highest.inc.php');
     break;
     case 'userflag':
-        require_once AmpConfig::get('prefix') . '/templates/show_userflag.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_userflag.inc.php');
     break;
     case 'recent':
         $user_id = $_REQUEST['user_id'];
-        require_once AmpConfig::get('prefix') . '/templates/show_recent.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_recent.inc.php');
     break;
     case 'wanted':
-        require_once AmpConfig::get('prefix') . '/templates/show_wanted.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_wanted.inc.php');
     break;
     case 'share':
-        require_once AmpConfig::get('prefix') . '/templates/show_shares.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_shares.inc.php');
     break;
     case 'upload':
-        require_once AmpConfig::get('prefix') . '/templates/show_uploads.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_uploads.inc.php');
     break;
     case 'graph':
         Graph::display_from_request();
@@ -67,7 +67,7 @@ switch ($_REQUEST['action']) {
     case 'show':
     default:
         if (Access::check('interface','50')) {
-            require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_stats.inc.php');
         }
     break;
 } // end switch on action
