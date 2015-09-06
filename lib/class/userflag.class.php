@@ -246,7 +246,7 @@ class Userflag extends database_object
         }
 
         $userflag = new Userflag($object_id, $type);
-        require AmpConfig::get('prefix') . '/templates/show_object_userflag.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_object_userflag.inc.php');
     } // show
 } //end rating class
 

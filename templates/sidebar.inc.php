@@ -53,7 +53,7 @@ if (User::is_registered()) {
             if ($item['id']==$_SESSION['state']['sidebar_tab']) {
                 ?>
             <div id="sidebar-page" class="sidebar-page-float">
-                <?php require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
+                <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php');
                 ?>
             </div>
     <?php
@@ -80,7 +80,7 @@ if (User::is_registered()) {
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
             <?php
-                require_once AmpConfig::get('prefix') . '/templates/sidebar_home.inc.php';
+                require_once AmpConfig::get('prefix') . UI::find_template('sidebar_home.inc.php');
     ?>
             </div>
         </li>

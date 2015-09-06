@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
         }
     case 'advanced':
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_random.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_random.inc.php');
     break;
 } // end switch
 

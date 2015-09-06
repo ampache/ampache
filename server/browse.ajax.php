@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'get_filters':
         ob_start();
-        require_once AmpConfig::get('prefix') . '/templates/browse_filters.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('browse_filters.inc.php');
         $results['browse_filters'] = ob_get_clean();
     break;
     case 'options':

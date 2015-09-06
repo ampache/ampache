@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
         // Get the current localplay fields
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $fields = $localplay->get_instance_fields();
-        require_once AmpConfig::get('prefix') . '/templates/show_localplay_add_instance.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_add_instance.inc.php');
     break;
     case 'add_instance':
         // This requires 50 or better!
@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $instance = $localplay->get_instance($_REQUEST['instance']);
         $fields = $localplay->get_instance_fields();
-        require_once AmpConfig::get('prefix') . '/templates/show_localplay_edit_instance.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_edit_instance.inc.php');
     break;
     case 'show_instances':
         // First build the localplay object and then get the instances
@@ -85,7 +85,7 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $instances = $localplay->get_instances();
         $fields = $localplay->get_instance_fields();
-        require_once AmpConfig::get('prefix') . '/templates/show_localplay_instances.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_instances.inc.php');
     break;
     case 'show_playlist':
     default:
@@ -99,7 +99,7 @@ switch ($_REQUEST['action']) {
 
         // Pull the current playlist and require the template
         $objects = $localplay->get();
-        require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
     break;
 } // end switch action
 

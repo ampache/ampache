@@ -63,14 +63,14 @@ switch ($_REQUEST['action']) {
         $song->format();
         $song->fill_ext_info();
         $lyrics = $song->get_lyrics();
-        require_once AmpConfig::get('prefix') . '/templates/show_lyrics.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_lyrics.inc.php');
     break;
     case 'show_song':
     default:
         $song = new Song($_REQUEST['song_id']);
         $song->format();
         $song->fill_ext_info();
-        require_once AmpConfig::get('prefix') . '/templates/show_song.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
     break;
 } // end data collection
 

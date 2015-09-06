@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
         $object->format();
         $client = new User($shout->user);
         $client->format();
-        require_once AmpConfig::get('prefix') . '/templates/show_edit_shout.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_edit_shout.inc.php');
         break;
     case 'delete':
         Shoutbox::delete($_REQUEST['shout_id']);

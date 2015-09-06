@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
     case 'show_create':
-        require_once AmpConfig::get('prefix') . '/templates/show_edit_license.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_edit_license.inc.php');
         break;
     case 'delete':
         License::delete($_REQUEST['license_id']);

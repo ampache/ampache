@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
         if ($_REQUEST['autoupdate'] == 'force') {
             $version = AutoUpdate::get_latest_version(true);
         }
-        require_once AmpConfig::get('prefix') . '/templates/show_debug.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_debug.inc.php');
     break;
     case 'clear_cache':
         switch ($_REQUEST['type']) {

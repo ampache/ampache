@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        require_once AmpConfig::get('prefix') . '/templates/show_add_live_stream.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
 
     break;
     case 'create':
@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
         $results = Live_Stream::create($_POST);
 
         if (!$results) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_live_stream.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
         } else {
             $body = T_('Radio Station Added');
             $title = '';

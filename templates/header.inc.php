@@ -62,10 +62,10 @@ $_SESSION['login'] = false;
 } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
-        <?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
+        <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-editdialog.css'); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-file-upload.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-file-upload.css'); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jstree/themes/default/style.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/tag-it/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
@@ -115,7 +115,7 @@ $_SESSION['login'] = false;
             <script src="<?php echo $web_path;
             ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
         <?php
-            require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php');
             ?>
         <script type="text/javascript">
             function NavigateTo(url)
@@ -334,10 +334,10 @@ $_SESSION['login'] = false;
                 </h1>
                 <div id="headerbox">
                     <?php UI::show_box_top('','box box_headerbox'); ?>
-                    <?php require_once AmpConfig::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
+                    <?php require_once AmpConfig::get('prefix') . UI::find_template('show_search_bar.inc.php'); ?>
                     <?php if (User::is_registered()) {
     ?>
-                        <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php';
+                        <?php require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php');
     ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path;
@@ -436,10 +436,10 @@ $_SESSION['login'] = false;
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" ><span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span></div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
-                    <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
+                    <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php'); ?>
                 </div>
                 <div id="sidebar-content-light" class="<?php echo $isCollapsed ? 'sidebar-content-light-collapsed' : ''; ?>" >
-                    <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.light.inc.php'; ?>
+                    <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.light.inc.php'); ?>
                 </div>
             </div>
             <!-- Handle collapsed visibility -->
@@ -477,7 +477,7 @@ $_SESSION['login'] = false;
             </script>
 
             <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo $count_temp_playlist ? '' : 'hidden' ?>">
-                <?php require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php'; ?>
+                <?php require_once AmpConfig::get('prefix') . UI::find_template('rightbar.inc.php'); ?>
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
