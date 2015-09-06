@@ -142,7 +142,7 @@ class Stream
 
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
-        if ($transcode_settings == false) {
+        if ($transcode_settings === false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
             return false;
         }
