@@ -242,8 +242,8 @@ catalog_video_pattern = "avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts
 ; This defines which playlist types Ampache will attempt to catalog
 ; You can specify any file extension you want in here seperating them with
 ; a | but ampache may not be able to parse them
-; DEFAULT: m3u|pls|asx|xspf
-catalog_playlist_pattern = "m3u|pls|asx|xspf"
+; DEFAULT: m3u|m3u8|pls|asx|xspf
+catalog_playlist_pattern = "m3u|m3u8|pls|asx|xspf"
 
 ; Prefix Pattern
 ; This defines which prefix Ampache will ignore when importing tags from

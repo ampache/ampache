@@ -1498,7 +1498,12 @@ class Art extends database_object
                 return array();
             }
 
-            $coverart = (array) $xmldata->coverart;
+            $xalbum = $xmldata->album;
+            if (!$xalbum) {
+                return array();
+            }
+            
+            $coverart = (array) $xalbum->image;
             if (!$coverart) {
                 return array();
             }
@@ -1506,7 +1511,7 @@ class Art extends database_object
             ksort($coverart);
             foreach ($coverart as $url) {
                 // We need to check the URL for the /noimage/ stuff
-                if (strpos($url, '/noimage/') !== false) {
+                if (is_array($url) || strpos($url, '/noimage/') !== false) {
                     debug_event('LastFM', 'Detected as noimage, skipped ' . $url, 3);
                     continue;
                 }

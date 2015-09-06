@@ -1729,7 +1729,7 @@ abstract class Catalog extends database_object
     public static function import_playlist($playlist)
     {
         $data = file_get_contents($playlist);
-        if (substr($playlist, -3, 3) == 'm3u') {
+        if (substr($playlist, -3, 3) == 'm3u' || substr($playlist, -4, 4) == 'm3u8') {
             $files = self::parse_m3u($data);
         } elseif (substr($playlist, -3, 3) == 'pls') {
             $files = self::parse_pls($data);

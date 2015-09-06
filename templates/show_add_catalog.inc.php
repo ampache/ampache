@@ -61,7 +61,7 @@ $default_sort = "%a/%A";
             <td><input type="checkbox" name="gather_art" value="1" checked /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Build Playlists from playlist Files (m3u, asx, pls, xspf)'); ?>:</td>
+            <td valign="top"><?php echo T_('Build Playlists from playlist Files'); ?> (m3u, m3u8, asx, pls, xspf):</td>
             <td><input type="checkbox" name="parse_playlist" value="1" /></td>
         </tr>
         <tr>

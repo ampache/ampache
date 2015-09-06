@@ -426,7 +426,7 @@ class vainfo
         if (isset($results['general']['size'])) {
             $size = $results['general']['size'];
         } else {
-            $size = Core::get_filesize($filename);
+            $size = Core::get_filesize(Core::conv_lc_file($filename));
         }
 
         $info['size'] = $info['size'] ?: $size;

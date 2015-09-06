@@ -56,7 +56,8 @@ class Recommendation
 
     public static function album_search($artist, $album)
     {
-        $url = 'http://ws.audioscrobbler.com/1.0/album/' . urlencode($artist) . '/' . urlencode($album) . '/info.xml';
+        $api_key = AmpConfig::get('lastfm_api_key');
+        $url = 'http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist='. urlencode($artist) .'&album=' . urlencode($album) . '&api_key=' . $api_key;
 
         return self::query_lastfm($url);
     }
