@@ -34,7 +34,6 @@ $_SESSION['login'] = false;
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
-        <?php UI::show_custom_style(); ?>
         <link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
         <?php if (AmpConfig::get('use_rss')) {
     ?>

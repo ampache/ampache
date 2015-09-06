@@ -29,10 +29,7 @@ $web_path = AmpConfig::get('web_path');
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
-        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('print.css'); ?>" type="text/css" media="print" />
-        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('default.css'); ?>" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('dark.css'); ?>" type="text/css" media="screen" />
-        <?php UI::show_custom_style(); ?>
+        <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
     </head>
     <body id="registerPage">
         <div id="maincontainer">

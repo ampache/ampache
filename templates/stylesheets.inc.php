@@ -22,10 +22,18 @@
 
 $web_path = AmpConfig::get('web_path');
 $theme_path = AmpConfig::get('theme_path') . '/templates';
-?>
-<link rel="stylesheet" href="<?php echo $web_path . UI::find_template('base.css'); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path . UI::find_template('default.css'); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path . UI::find_template('dark.css');; ?>" type="text/css" media="screen" />
+$theme_color = AmpConfig::get('theme_color');
+$theme_css_base = AmpConfig::get('theme_css_base');
+foreach ($theme_css_base as $css_base) {
+    ?>
+    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $css_base[0];
+    ?>" type="text/css" media="<?php echo $css_base[1];
+    ?>" />
+<?php 
+} ?>
+<link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css'; ?>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css'; ?>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print" />
 <?php
 if (file_exists(AmpConfig::get('prefix') . $theme_path . '/icons.sprite.css')) {
     ?>
@@ -46,5 +54,5 @@ if (is_rtl(AmpConfig::get('lang'))
 }
 ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/prettyPhoto/css/prettyPhoto.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-ui.custom.css'); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path . UI::find_template('print.css'); ?>" type="text/css" media="print" />
+<link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-ui.custom.css'; ?>" type="text/css" media="screen" />
+<?php UI::show_custom_style(); ?>

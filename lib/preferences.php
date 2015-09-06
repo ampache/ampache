@@ -309,6 +309,21 @@ function create_preference_input($name,$value)
             } // foreach themes
             echo "</select>\n";
         break;
+        case 'theme_color':
+            // This include a two-step configuration (first change theme and save, then change theme color and save)
+            $theme_cfg = get_theme(AmpConfig::get('theme_name'));
+            if ($theme_cfg !== null) {
+                echo "<select name=\"$name\">\n";
+                foreach ($theme_cfg['colors'] as $color) {
+                    $is_selected = "";
+                    if ($value == strtolower($color)) {
+                        $is_selected = "selected=\"selected\"";
+                    }
+                    echo "\t<option value=\"" . strtolower($color) . "\" $is_selected>" . $color . "</option>\n";
+                } // foreach themes
+                echo "</select>\n";
+            }
+        break;
         case 'playlist_method':
             ${$value} = ' selected="selected"';
             echo "<select name=\"$name\">\n";

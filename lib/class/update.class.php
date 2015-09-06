@@ -510,6 +510,9 @@ class Update
         
         $update_string = " - Delete http_port preference (use ampache.cfg.php configuration instead).<br />";
         $version[] = array('version' => '370037','description' => $update_string);
+        
+        $update_string = " - Add theme color option.<br />";
+        $version[] = array('version' => '370038','description' => $update_string);
 
         return $version;
     }
@@ -3540,6 +3543,25 @@ class Update
 
         $sql = "DELETE FROM `preference` WHERE `name` = 'http_port'";
         $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+    
+    /**
+     * update_370038
+     *
+     * Add theme color option
+     */
+    public static function update_370038()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('theme_color','dark','Theme color',0,'special','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
     }
