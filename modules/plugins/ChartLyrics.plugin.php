@@ -73,7 +73,7 @@ class Ampachechartlyrics {
   
         $base = 'http://api.chartlyrics.com/apiv1.asmx/';
         $uri = $base . 'SearchLyricDirect?artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title);
-        $request = Requests::get($uri);
+        $request = Requests::get($uri, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
             if ($xml) {

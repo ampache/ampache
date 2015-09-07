@@ -1,0 +1,162 @@
+<?php
+
+namespace Sabre\CalDAV\Notifications;
+
+use Sabre\DAV;
+use Sabre\DAV\PropFind;
+use Sabre\DAV\INode as BaseINode;
+use Sabre\DAV\ServerPlugin;
+use Sabre\DAV\Server;
+use Sabre\DAVACL;
+use Sabre\HTTP\RequestInterface;
+use Sabre\HTTP\ResponseInterface;
+
+
+/**
+ * Notifications plugin
+ *
+ * This plugin implements several features required by the caldav-notification
+ * draft specification.
+ *
+ * Before version 2.1.0 this functionality was part of Sabre\CalDAV\Plugin but
+ * this has since been split up.
+ *
+ * @copyright Copyright (C) 2007-2015 fruux GmbH (https://fruux.com/).
+ * @author Evert Pot (http://evertpot.com/)
+ * @license http://code.google.com/p/sabredav/wiki/License Modified BSD License
+ */
+class Plugin extends ServerPlugin {
+
+    /**
+     * This is the namespace for the proprietary calendarserver extensions
+     */
+    const NS_CALENDARSERVER = 'http://calendarserver.org/ns/';
+
+    /**
+     * @var Server
+     */
+    protected $server;
+
+    /**
+     * Returns a plugin name.
+     *
+     * Using this name other plugins will be able to access other plugins
+     * using \Sabre\DAV\Server::getPlugin
+     *
+     * @return string
+     */
+    function getPluginName() {
+
+        return 'notifications';
+
+    }
+
+    /**
+     * This initializes the plugin.
+     *
+     * This function is called by Sabre\DAV\Server, after
+     * addPlugin is called.
+     *
+     * This method should set up the required event subscriptions.
+     *
+     * @param Server $server
+     * @return void
+     */
+    function initialize(Server $server) {
+
+        $this->server = $server;
+        $server->on('method:GET', [$this,'httpGet'], 90);
+        $server->on('propFind',   [$this,'propFind']);
+
+        $server->xmlNamespaces[self::NS_CALENDARSERVER] = 'cs';
+        $server->resourceTypeMapping['\\Sabre\\CalDAV\\Notifications\\ICollection'] = '{' . self::NS_CALENDARSERVER . '}notification';
+
+        array_push($server->protectedProperties,
+            '{' . self::NS_CALENDARSERVER . '}notification-URL',
+            '{' . self::NS_CALENDARSERVER . '}notificationtype'
+        );
+
+    }
+
+    /**
+     * PropFind
+     *
+     * @param PropFind $propFind
+     * @param BaseINode $node
+     * @return void
+     */
+    function propFind(PropFind $propFind, BaseINode $node) {
+
+        $caldavPlugin = $this->server->getPlugin('caldav');
+
+        if ($node instanceof DAVACL\IPrincipal) {
+
+            $principalUrl = $node->getPrincipalUrl();
+
+            // notification-URL property
+            $propFind->handle('{' . self::NS_CALENDARSERVER . '}notification-URL', function() use ($principalUrl, $caldavPlugin) {
+
+                $notificationPath = $caldavPlugin->getCalendarHomeForPrincipal($principalUrl) . '/notifications/';
+                return new DAV\Property\Href($notificationPath);
+
+            });
+
+        } // instanceof IPrincipal
+
+        if ($node instanceof INode) {
+
+            $propFind->handle(
+                '{' . self::NS_CALENDARSERVER . '}notificationtype',
+                [$node, 'getNotificationType']
+            );
+
+        } // instanceof Notifications_INode
+
+    }
+
+    /**
+     * This event is triggered before the usual GET request handler.
+     *
+     * We use this to intercept GET calls to notification nodes, and return the
+     * proper response.
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return void
+     */
+    function httpGet(RequestInterface $request, ResponseInterface $response) {
+
+        $path = $request->getPath();
+
+        try {
+            $node = $this->server->tree->getNodeForPath($path);
+        } catch (DAV\Exception\NotFound $e) {
+            return;
+        }
+
+        if (!$node instanceof INode)
+            return;
+
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+
+        $dom->formatOutput = true;
+
+        $root = $dom->createElement('cs:notification');
+        foreach($this->server->xmlNamespaces as $namespace => $prefix) {
+            $root->setAttribute('xmlns:' . $prefix, $namespace);
+        }
+
+        $dom->appendChild($root);
+        $node->getNotificationType()->serializeBody($this->server, $root);
+
+        $response->setHeader('Content-Type','application/xml');
+        $response->setHeader('ETag',$node->getETag());
+        $response->setStatus(200);
+        $response->setBody($dom->saveXML());
+
+        // Return false to break the event chain.
+        return false;
+
+    }
+
+}

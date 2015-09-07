@@ -94,7 +94,8 @@ class Catalog_beets extends Beets\Catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
      */
-    public static function create_type($catalog_id, $data) { // TODO: This Method should be required / provided by parent
+    public static function create_type($catalog_id, $data)
+    { // TODO: This Method should be required / provided by parent
         $beetsdb = $data['beetsdb'];
 
         if (preg_match('/^[\s]+$/', $beetsdb)) {
@@ -143,4 +144,10 @@ class Catalog_beets extends Beets\Catalog
         return $this->beetsdb;
     }
 
+    public function format()
+    {
+        parent::format();
+        $this->f_info = $this->beetsdb;
+        $this->f_full_info = $this->f_info;
+    }
 }

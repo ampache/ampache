@@ -197,10 +197,29 @@ class Broadcast_Server implements MessageComponentInterface
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
             $clients = $this->getListeners($broadcast);
-            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play);
+            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play ? 'true' : 'false');
 
             if ($this->verbose) {
                 echo "[" . time() ."][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n";
+            }
+        } else {
+            debug_event('broadcast', 'Action unauthorized.', '3');
+        }
+    }
+
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     */
+    protected function notifyEnded(ConnectionInterface $from)
+    {
+        if ($this->isBroadcaster($from)) {
+            $broadcast = $this->broadcasters[$from->resourceId];
+            $clients = $this->getListeners($broadcast);
+            $this->broadcastMessage($clients, self::BROADCAST_ENDED);
+
+            if ($this->verbose) {
+                echo "[" . time() ."][info]Broadcast " . $broadcast->id . " ended." . "\r\n";
             }
         } else {
             debug_event('broadcast', 'Action unauthorized.', '3');
@@ -414,10 +433,10 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $websocket_address = AmpConfig::get('websocket_address');
         if (empty($websocket_address)) {
-            $websocket_address = 'ws://' . $_SERVER['HTTP_HOST'] . ':8100';
+            $websocket_address = 'ws://' . $_SERVER['SERVER_NAME'] . ':8100';
         }
 
         return $websocket_address . '/broadcast';
     }
-
 } // end of broadcast_server class
+

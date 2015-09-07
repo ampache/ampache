@@ -36,7 +36,6 @@ class Core
     private function __construct()
     {
         return false;
-
     } // construction
 
     /**
@@ -147,7 +146,6 @@ class Core
         } // end switch on type
 
         return $string;
-
     } // form_register
 
     /**
@@ -197,7 +195,6 @@ class Core
         // OMG HAX0RZ
         debug_event('Core', "$type form $sid failed consistency check, rejecting request", 2);
         return false;
-
     } // form_verify
 
     /**
@@ -208,19 +205,24 @@ class Core
     */
     public static function image_dimensions($image_data)
     {
-        if (!function_exists('ImageCreateFromString')) { return false; }
+        if (!function_exists('ImageCreateFromString')) {
+            return false;
+        }
 
         $image = ImageCreateFromString($image_data);
 
-        if (!$image) { return false; }
+        if (!$image) {
+            return false;
+        }
 
         $width = imagesx($image);
         $height = imagesy($image);
 
-        if (!$width || !$height) { return false; }
+        if (!$width || !$height) {
+            return false;
+        }
 
         return array('width'=>$width,'height'=>$height);
-
     } // image_dimensions
 
     /*
@@ -340,4 +342,27 @@ class Core
     {
         return (AmpConfig::get('play_type') == "stream" || !AmpConfig::get('ajax_load')) ? "reloadUtil" : "reloadDivUtil";
     }
+
+    public static function requests_options($options = null)
+    {
+        if ($options == null) {
+            $options = array();
+        }
+
+        if (!isset($options['proxy'])) {
+            if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
+                $proxy = array();
+                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+                if (AmpConfig::get('proxy_user')) {
+                    $proxy[] = AmpConfig::get('proxy_user');
+                    $proxy[] = AmpConfig::get('proxy_pass');
+                }
+
+                $options['proxy'] = $proxy;
+            }
+        }
+
+        return $options;
+    }
 } // Core
+

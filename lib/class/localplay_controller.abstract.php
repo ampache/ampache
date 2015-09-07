@@ -68,7 +68,6 @@ abstract class localplay_controller
         $url = call_user_func(array($class,'play_url'),$object->id);
 
         return $url;
-
     } // get_url
 
     /**
@@ -102,12 +101,10 @@ abstract class localplay_controller
                     $data['primary_key'] = $pkey;
                     return $data;
                 }
-
             } // end foreach
         }
 
         return $data;
-
     } // parse_url
-
 } // end localplay_controller interface
+

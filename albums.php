@@ -22,10 +22,42 @@
 
 require_once 'lib/init.php';
 
-require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
+require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
+    case 'delete':
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
+
+        $album_id = scrub_in($_REQUEST['album_id']);
+        show_confirmation(
+            T_('Album Deletion'),
+            T_('Are you sure you want to permanently delete this album?'),
+            AmpConfig::get('web_path')."/albums.php?action=confirm_delete&album_id=" . $album_id,
+            1,
+            'delete_album'
+        );
+    break;
+    case 'confirm_delete':
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
+
+        $album = new Album($_REQUEST['album_id']);
+        if (!Catalog::can_remove($album)) {
+            debug_event('album', 'Unauthorized to remove the album `.' . $album->id . '`.', 1);
+            UI::access_denied();
+            exit;
+        }
+
+        if ($album->remove_from_disk()) {
+            show_confirmation(T_('Album Deletion'), T_('Album has been deleted.'), AmpConfig::get('web_path'));
+        } else {
+            show_confirmation(T_('Album Deletion'), T_('Cannot delete this album.'), AmpConfig::get('web_path'));
+        }
+    break;
     case 'update_from_tags':
         // Make sure they are a 'power' user at least
         if (!Access::check('interface','75')) {
@@ -36,7 +68,7 @@ switch ($_REQUEST['action']) {
         $type         = 'album';
         $object_id     = intval($_REQUEST['album_id']);
         $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
-        require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
     case 'set_track_numbers':
         debug_event('albums', 'Set track numbers called.', '5');
@@ -54,7 +86,7 @@ switch ($_REQUEST['action']) {
 
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
-            $track = 1;
+            $track = $_GET['offset'] ? (intval($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     Song::update_track($track, $song_id);
@@ -80,7 +112,7 @@ switch ($_REQUEST['action']) {
         }
         $walbum->load_all();
         $walbum->format();
-        require AmpConfig::get('prefix') . '/templates/show_missing_album.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_missing_album.inc.php');
     break;
     // Browse by Album
     case 'show':
@@ -89,9 +121,9 @@ switch ($_REQUEST['action']) {
         $album->format();
 
         if (!count($album->album_suite)) {
-            require AmpConfig::get('prefix') . '/templates/show_album.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');
         } else {
-            require AmpConfig::get('prefix') . '/templates/show_album_group_disks.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_album_group_disks.inc.php');
         }
 
     break;

@@ -47,8 +47,9 @@ class scrobbler
         $this->submit_port = $port;
         $this->submit_url = $url;
         $this->queued_tracks = array();
-        if ($scrobble_host) { $this->scrobble_host = $scrobble_host; }
-
+        if ($scrobble_host) {
+            $this->scrobble_host = $scrobble_host;
+        }
     } // scrobbler
 
     /**
@@ -57,7 +58,6 @@ class scrobbler
     public function get_error_msg()
     {
         return $this->error_msg;
-
     } // get_error_msg
 
     /**
@@ -66,7 +66,6 @@ class scrobbler
     public function get_queue_count()
     {
         return count($this->queued_tracks);
-
     } // get_queue_count
 
     /**
@@ -141,7 +140,6 @@ class scrobbler
         // Remove any extra junk around the challenge
         $data['challenge'] = trim($response[1]);
         return $data;
-
     } // handshake
 
     /**
@@ -167,7 +165,6 @@ class scrobbler
 
         $this->queued_tracks[$timestamp] = $newtrack;
         return true;
-
     } // queue_track
 
     /**
@@ -264,7 +261,6 @@ class scrobbler
         }
 
         return true;
-
     } // submit_tracks
-
 } // end audioscrobbler class
+

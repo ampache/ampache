@@ -89,9 +89,8 @@ class Query
 
             $db_results = Dba::read($sql, array($id, $sid));
             if ($results = Dba::fetch_assoc($db_results)) {
-
                 $this->id = $id;
-                $this->_state = self::_unserialize($results['data']);
+                $this->_state = (array) self::_unserialize($results['data']);
 
                 return true;
             }
@@ -210,6 +209,27 @@ class Query
                 'season_lt',
                 'season_lg',
                 'season_eq'
+            ),
+            'user' => array(
+                'starts_with'
+            ),
+            'label' => array(
+                'alpha_match',
+                'regex_match',
+                'regex_not_match',
+                'starts_with'
+            ),
+            'pvmsg' => array(
+                'alpha_match',
+                'regex_match',
+                'regex_not_match',
+                'starts_with',
+                'user',
+                'to_user'
+            ),
+            'follower' => array(
+                'user',
+                'to_user',
             )
         );
 
@@ -236,10 +256,13 @@ class Query
             ),
             'artist' => array(
                 'name',
-                'album'
+                'album',
+                'placeformed',
+                'yearformed'
             ),
             'tag' => array(
-                'tag'
+                'tag',
+                'name'
             ),
             'album' => array(
                 'name',
@@ -319,7 +342,7 @@ class Query
                 'year'
             ),
             'tvshow_season' => array(
-                'season_number',
+                'season',
                 'tvshow'
             ),
             'tvshow_episode' => array(
@@ -327,6 +350,7 @@ class Query
                 'resolution',
                 'length',
                 'codec',
+                'episode',
                 'season',
                 'tvshow'
             ),
@@ -352,6 +376,22 @@ class Query
                 'length',
                 'codec',
                 'release_date'
+            ),
+            'label' => array(
+                'name',
+                'category',
+                'user'
+            ),
+            'pvmsg' => array(
+                'subject',
+                'to_user',
+                'creation_date',
+                'is_read'
+            ),
+            'follower' => array(
+                'user',
+                'follow_user',
+                'follow_date'
             )
         );
 
@@ -435,6 +475,8 @@ class Query
             case 'season_lt':
             case 'season_lg':
             case 'season_eq':
+            case 'user':
+            case 'to_user':
                 $this->_state['filter'][$key] = intval($value);
             break;
             case 'exact_match':
@@ -442,14 +484,24 @@ class Query
             case 'regex_match':
             case 'regex_not_match':
             case 'starts_with':
-                if ($this->is_static_content()) { return false; }
+                if ($this->is_static_content()) {
+                    return false;
+                }
                 $this->_state['filter'][$key] = $value;
-                if ($key == 'regex_match') unset($this->_state['filter']['regex_not_match']);
-                if ($key == 'regex_not_match') unset($this->_state['filter']['regex_match']);
+                if ($key == 'regex_match') {
+                    unset($this->_state['filter']['regex_not_match']);
+                }
+                if ($key == 'regex_not_match') {
+                    unset($this->_state['filter']['regex_match']);
+                }
             break;
             case 'playlist_type':
                 // Must be a content manager to turn this off
-                if (Access::check('interface','100')) { unset($this->_state['filter'][$key]); } else { $this->_state['filter'][$key] = '1'; }
+                if (Access::check('interface','100')) {
+                    unset($this->_state['filter'][$key]);
+                } else {
+                    $this->_state['filter'][$key] = '1';
+                }
             break;
             default:
                 // Rien a faire
@@ -461,7 +513,6 @@ class Query
         $this->set_start(0);
 
         return true;
-
     } // set_filter
 
     /**
@@ -481,7 +532,6 @@ class Query
         $this->set_is_simple(false);
         $this->set_start(0);
         $this->set_offset(AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25');
-
     } // reset
 
     /**
@@ -491,7 +541,6 @@ class Query
     public function reset_base()
     {
         $this->_state['base'] = NULL;
-
     } // reset_base
 
     /**
@@ -501,7 +550,6 @@ class Query
     public function reset_select()
     {
         $this->_state['select'] = array();
-
     } // reset_select
 
     /**
@@ -511,7 +559,6 @@ class Query
     public function reset_having()
     {
         unset($this->_state['having']);
-
     } // reset_having
 
     /**
@@ -521,7 +568,6 @@ class Query
     public function reset_join()
     {
         unset($this->_state['join']);
-
     } // reset_join
 
     /**
@@ -531,7 +577,6 @@ class Query
     public function reset_filters()
     {
         $this->_state['filter'] = array();
-
     } // reset_filters
 
     /**
@@ -541,7 +586,6 @@ class Query
     public function reset_total()
     {
         unset($this->_state['total']);
-
     } // reset_total
 
     /**
@@ -556,7 +600,6 @@ class Query
         return isset($this->_state['filter'][$key])
             ? $this->_state['filter'][$key]
             : false;
-
     } // get_filter
 
     /**
@@ -567,7 +610,6 @@ class Query
     public function get_start()
     {
         return $this->_state['start'];
-
     } // get_start
 
     /**
@@ -616,7 +658,6 @@ class Query
         $this->_state['total'] = $num_rows;
 
         return $num_rows;
-
     } // get_total
 
     /**
@@ -671,6 +712,9 @@ class Query
             case 'movie':
             case 'personal_video':
             case 'clip':
+            case 'label':
+            case 'pvmsg':
+            case 'follower':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -689,7 +733,6 @@ class Query
     public function get_type()
     {
         return $this->_state['type'];
-
     } // get_type
 
     /**
@@ -722,7 +765,6 @@ class Query
         }
 
         $this->resort_objects();
-
     } // set_sort
 
     /**
@@ -733,7 +775,6 @@ class Query
     public function set_offset($offset)
     {
         $this->_state['offset'] = abs($offset);
-
     } // set_offset
 
     /**
@@ -756,7 +797,6 @@ class Query
     public function set_select($field)
     {
         $this->_state['select'][] = $field;
-
     } // set_select
 
     /**
@@ -771,7 +811,6 @@ class Query
     public function set_join($type, $table, $source, $dest, $priority)
     {
         $this->_state['join'][$priority][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest;
-
     } // set_join
 
     /**
@@ -783,7 +822,6 @@ class Query
     public function set_having($condition)
     {
         $this->_state['having'] = $condition;
-
     } // set_having
 
     /**
@@ -809,7 +847,6 @@ class Query
     {
         $value = make_bool($value);
         $this->_state['simple'] = $value;
-
     } // set_is_simple
 
     /**
@@ -824,7 +861,6 @@ class Query
         $value = make_bool($value);
 
         $this->_state['static'] = $value;
-
     } // set_static_content
 
     /**
@@ -844,7 +880,6 @@ class Query
     public function is_simple()
     {
         return $this->_state['simple'];
-
     } // is_simple
 
     /**
@@ -867,14 +902,13 @@ class Query
 
             $row = Dba::fetch_assoc($db_results);
 
-            $this->_cache = self::_unserialize($row['object_data']);
+            $this->_cache = (array) self::_unserialize($row['object_data']);
             return $this->_cache;
         } else {
             $objects = $this->get_objects();
         }
 
         return $objects;
-
     } // get_saved
 
     /**
@@ -909,7 +943,6 @@ class Query
         $this->save_objects($filtered);
 
         return $filtered;
-
     } // get_objects
 
     /**
@@ -921,7 +954,9 @@ class Query
     private function set_base_sql($force = false, $custom_base = '')
     {
         // Only allow it to be set once
-        if (strlen($this->_state['base']) && !$force) { return true; }
+        if (strlen($this->_state['base']) && !$force) {
+            return true;
+        }
 
         // Custom sql base
         if ($force && !empty($custom_base)) {
@@ -1014,6 +1049,18 @@ class Query
                     $this->set_select("`personal_video`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `personal_video` ";
                 break;
+                case 'label':
+                    $this->set_select("`label`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `label` ";
+                break;
+                case 'pvmsg':
+                    $this->set_select("`user_pvmsg`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `user_pvmsg` ";
+                break;
+                case 'follower':
+                    $this->set_select("`user_follower`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `user_follower` ";
+                break;
                 case 'playlist_song':
                 case 'song':
                 default:
@@ -1036,7 +1083,6 @@ class Query
     {
         $select_string = implode(", ", $this->_state['select']);
         return $select_string;
-
     } // get_select
 
     /**
@@ -1049,7 +1095,6 @@ class Query
     {
         $sql = str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
         return $sql;
-
     } // get_base_sql
 
     /**
@@ -1067,7 +1112,6 @@ class Query
 
         foreach ($this->_state['filter']
             as $key => $value) {
-
             $sql .= $this->sql_filter($key, $value);
         }
 
@@ -1091,7 +1135,6 @@ class Query
         $sql = rtrim($sql,'AND ') . ' ';
 
         return $sql;
-
     } // get_filter_sql
 
     /**
@@ -1116,7 +1159,6 @@ class Query
         $sql = rtrim($sql,',');
 
         return $sql;
-
     } // get_sort_sql
 
     /**
@@ -1126,12 +1168,13 @@ class Query
      */
     private function get_limit_sql()
     {
-        if (!$this->is_simple() || $this->get_start() < 0) { return ''; }
+        if (!$this->is_simple() || $this->get_start() < 0) {
+            return '';
+        }
 
         $sql = ' LIMIT ' . intval($this->get_start()) . ',' . intval($this->get_offset());
 
         return $sql;
-
     } // get_limit_sql
 
     /**
@@ -1154,7 +1197,6 @@ class Query
         } // end foreach of this level of joins
 
         return $sql;
-
     } // get_join_sql
 
     /**
@@ -1167,7 +1209,6 @@ class Query
         $sql = isset($this->_state['having']) ? $this->_state['having'] : '';
 
         return $sql;
-
     } // get_having_sql
 
     /**
@@ -1188,20 +1229,19 @@ class Query
         $order_sql = "";
         if (!isset($this->_state['custom']) || !$this->_state['custom']) {
             $filter_sql = $this->get_filter_sql();
+            $order_sql = $this->get_sort_sql();
             $join_sql = $this->get_join_sql();
             $having_sql = $this->get_having_sql();
-            $order_sql = $this->get_sort_sql();
         }
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         if ( $this->get_type() == 'artist' && !$this->_state['custom'] ) {
-             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
+            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
         }
         $final_sql .= $order_sql . $limit_sql;
 
         return $final_sql;
-
     } // get_sql
 
     /**
@@ -1235,7 +1275,6 @@ class Query
         } // end foreach
 
         return $results;
-
     } // post_process
 
     /**
@@ -1270,10 +1309,14 @@ class Query
                     $filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `song`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `song`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `song`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `song`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1334,10 +1377,14 @@ class Query
                     $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
@@ -1407,10 +1454,14 @@ class Query
                     $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
@@ -1451,10 +1502,14 @@ class Query
                     $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1474,10 +1529,14 @@ class Query
                     $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1497,10 +1556,14 @@ class Query
                     $filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `search`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `search`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1517,10 +1580,14 @@ class Query
                     $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'exact_match':
                     $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1548,10 +1615,14 @@ class Query
                     $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1567,10 +1638,14 @@ class Query
                     $filter_sql = " `license`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `license`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `license`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'exact_match':
                     $filter_sql = " `license`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1586,10 +1661,14 @@ class Query
                     $filter_sql = " `tvshow`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `tvshow`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `tvshow`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `tvshow`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `tvshow`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'exact_match':
                     $filter_sql = " `tvshow`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1624,10 +1703,81 @@ class Query
                 break;
             } // end filter
         break;
+        case 'user':
+            switch ($filter) {
+                case 'starts_with':
+                    $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%' ) AND ";
+                break;
+            } // end filter
+        break;
+        case 'label':
+            switch ($filter) {
+                case 'alpha_match':
+                    $filter_sql = " `label`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    if (!empty($value)) {
+                        $filter_sql = " `label`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
+                break;
+                case 'regex_not_match':
+                    if (!empty($value)) {
+                        $filter_sql = " `label`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
+                break;
+                case 'starts_with':
+                    $filter_sql = " `label`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
+        case 'pvmsg':
+            switch ($filter) {
+                case 'alpha_match':
+                    $filter_sql = " `user_pvmsg`.`subject` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    if (!empty($value)) {
+                        $filter_sql = " `user_pvmsg`.`subject` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
+                break;
+                case 'regex_not_match':
+                    if (!empty($value)) {
+                        $filter_sql = " `user_pvmsg`.`subject` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
+                break;
+                case 'starts_with':
+                    $filter_sql = " `user_pvmsg`.`subject` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'user':
+                    $filter_sql = " `user_pvmsg`.`from_user` = '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'to_user':
+                    $filter_sql = " `user_pvmsg`.`to_user` = '" . Dba::escape($value) . "' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
+        case 'follower':
+            switch ($filter) {
+                case 'user':
+                    $filter_sql = " `user_follower`.`user` = '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'to_user':
+                    $filter_sql = " `user_follower`.`follow_user` = '" . Dba::escape($value) . "' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
         } // end switch on type
 
         return $filter_sql;
-
     } // sql_filter
 
     /**
@@ -1644,7 +1794,6 @@ class Query
     private function logic_filter($object_id)
     {
         return true;
-
     } // logic_filter
 
     /**
@@ -1653,13 +1802,15 @@ class Query
      * to sort the results as best we can, there is also
      * a logic based sort that will come later as that's
      * a lot more complicated
-     * @param string $filed
+     * @param string $field
      * @param string $order
      * @return string
      */
     private function sql_sort($field, $order)
     {
-        if ($order != 'DESC') { $order == 'ASC'; }
+        if ($order != 'DESC') {
+            $order == 'ASC';
+        }
 
         // Depending on the type of browsing we are doing we can apply
         // different filters that apply to different fields
@@ -1723,6 +1874,12 @@ class Query
                     case 'name':
                         $sql = "`artist`.`name`";
                     break;
+                case 'placeformed':
+                        $sql = "`artist`.`placeformed`";
+                    break;
+                case 'yearformed':
+                        $sql = "`artist`.`yearformed`";
+                    break;
                 } // end switch
             break;
             case 'playlist':
@@ -1761,10 +1918,13 @@ class Query
                     break;
                 } // end switch
             break;
-            case 'genre':
+            case 'tag':
                 switch ($field) {
+                    case 'tag':
+                        $sql = "`tag`.`id`";
+                    break;
                     case 'name':
-                        $sql = "`genre`.`name`";
+                        $sql = "`tag`.`name`";
                     break;
                 } // end switch
             break;
@@ -1785,7 +1945,7 @@ class Query
                 } // end switch
             break;
             case 'video':
-                $sql = $this->sql_sort_video('video', $field);
+                $sql = $this->sql_sort_video($field, 'video');
             break;
             case 'wanted':
                 switch ($field) {
@@ -1894,7 +2054,7 @@ class Query
             break;
             case 'tvshow_season':
                 switch ($field) {
-                    case 'season_number':
+                    case 'season':
                         $sql = "`tvshow_season`.`season_number`";
                     break;
                     case 'tvshow':
@@ -1905,6 +2065,9 @@ class Query
             break;
             case 'tvshow_episode':
                 switch ($field) {
+                    case 'episode':
+                        $sql = "`tvshow_episode`.`episode_number`";
+                    break;
                     case 'season':
                         $sql = "`tvshow_season`.`season_number`";
                         $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
@@ -1915,12 +2078,12 @@ class Query
                         $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                     break;
                     default:
-                        $sql = $this->sql_sort_video('tvshow_episode', $field);
+                        $sql = $this->sql_sort_video($field, 'tvshow_episode');
                     break;
                 }
             break;
             case 'movie':
-                $sql = $this->sql_sort_video('movie', $field);
+                $sql = $this->sql_sort_video($field, 'movie');
             break;
             case 'clip':
                 switch ($field) {
@@ -1928,7 +2091,7 @@ class Query
                         $sql = "`clip`.`artist`";
                     break;
                     default:
-                        $sql = $this->sql_sort_video('clip', $field);
+                        $sql = $this->sql_sort_video($field, 'clip');
                     break;
                 }
             break;
@@ -1938,7 +2101,49 @@ class Query
                         $sql = "`personal_video`.`location`";
                     break;
                     default:
-                        $sql = $this->sql_sort_video('personal_video', $field);
+                        $sql = $this->sql_sort_video($field, 'personal_video');
+                    break;
+                }
+            break;
+            case 'label':
+                switch ($field) {
+                    case 'name':
+                        $sql = "`label`.`name`";
+                    break;
+                    case 'category':
+                        $sql = "`label`.`category`";
+                    break;
+                    case 'user':
+                        $sql = "`label`.`user`";
+                    break;
+                }
+            break;
+            case 'pvmsg':
+                switch ($field) {
+                    case 'subject':
+                        $sql = "`user_pvmsg`.`subject`";
+                    break;
+                    case 'to_user':
+                        $sql = "`user_pvmsg`.`to_user`";
+                    break;
+                    case 'creation_date':
+                        $sql = "`user_pvmsg`.`creation_date`";
+                    break;
+                    case 'is_read':
+                        $sql = "`user_pvmsg`.`is_read`";
+                    break;
+                }
+            break;
+            case 'follower':
+                switch ($field) {
+                    case 'user':
+                        $sql = "`user_follower`.`user`";
+                    break;
+                    case 'follow_user':
+                        $sql = "`user_follower`.`follow_user`";
+                    break;
+                    case 'follow_date':
+                        $sql = "`user_follower`.`follow_date`";
                     break;
                 }
             break;
@@ -1947,10 +2152,11 @@ class Query
             break;
         } // end switch
 
-        if (isset($sql) && !empty($sql)) { return "$sql $order,"; }
+        if (isset($sql) && !empty($sql)) {
+            return "$sql $order,";
+        }
 
         return "";
-
     } // sql_sort
 
     /**
@@ -1959,7 +2165,7 @@ class Query
      * @param string $table
      * @return string
      */
-    private function sql_sort_video($field, $table)
+    private function sql_sort_video($field, $table = 'video')
     {
         $sql = "";
         switch ($field) {
@@ -1967,13 +2173,13 @@ class Query
                 $sql = "`video`.`title`";
             break;
             case 'resolution':
-                $sql = "`video`.`resolution`";
+                $sql = "`video`.`resolution_x`";
             break;
             case 'length':
-                $sql = "`video`.`length`";
+                $sql = "`video`.`time`";
             break;
             case 'codec':
-                $sql = "`video`.`codec`";
+                $sql = "`video`.`video_codec`";
             break;
             case 'release_date':
                 $sql = "`video`.`release_date`";
@@ -2047,7 +2253,6 @@ class Query
         $this->save_objects($results);
 
         return true;
-
     } // resort_objects
 
     /**
@@ -2093,7 +2298,6 @@ class Query
         }
 
         return true;
-
     } // save_objects
 
     /**
@@ -2104,7 +2308,6 @@ class Query
     public function get_state()
     {
         return $this->_state;
-
     } // get_state
 
     /**
@@ -2128,5 +2331,5 @@ class Query
     {
         $this->_state['ak'] = $ak;
     }
-
 } // query
+

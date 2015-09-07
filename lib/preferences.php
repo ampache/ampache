@@ -32,7 +32,9 @@ function update_preferences($pref_id=0)
     $sql = "SELECT `id`,`name`,`type` FROM `preference`";
 
     /* If it isn't the System Account's preferences */
-    if ($pref_id != '-1') { $sql .= " WHERE `catagory` != 'system'"; }
+    if ($pref_id != '-1') {
+        $sql .= " WHERE `catagory` != 'system'";
+    }
 
     $db_results = Dba::read($sql);
 
@@ -61,8 +63,12 @@ function update_preferences($pref_id=0)
         }
 
         if (preg_match('/_pass$/', $name)) {
-            if ($value == '******') { unset($_REQUEST[$name]); } else if (preg_match('/md5_pass$/', $name)) {
-                $value = md5($value);
+            if ($value == '******') {
+                unset($_REQUEST[$name]);
+            } else {
+                if (preg_match('/md5_pass$/', $name)) {
+                    $value = md5($value);
+                }
             }
         }
 
@@ -71,15 +77,13 @@ function update_preferences($pref_id=0)
             Preference::update($id,$pref_id,$value,$_REQUEST[$apply_to_all]);
         }
 
-        if (Access::check('interface','100') AND $_REQUEST[$new_level]) {
+        if (Access::check('interface','100') && $_REQUEST[$new_level]) {
             Preference::update_level($id,$_REQUEST[$new_level]);
         }
-
     } // end foreach preferences
 
     // Now that we've done that we need to invalidate the cached preverences
     Preference::clear_from_session();
-
 } // update_preferences
 
 /**
@@ -110,7 +114,6 @@ function update_preference($user_id,$name,$pref_id,$value)
     }
 
     return false;
-
 } // update_preference
 
 /**
@@ -193,10 +196,14 @@ function create_preference_input($name,$value)
         case 'allow_video':
         case 'geolocation':
         case 'webplayer_aurora':
+        case 'upload_allow_remove':
+        case 'webdav_backend':
+        case 'notify_email':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {
-                $is_true = "selected=\"selected\""; } else {
+                $is_true = "selected=\"selected\"";
+            } else {
                 $is_false = "selected=\"selected\"";
             }
             echo "<select name=\"$name\">\n";
@@ -261,9 +268,13 @@ function create_preference_input($name,$value)
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
             foreach ($controllers as $controller) {
-                if (!Localplay::is_enabled($controller)) { continue; }
+                if (!Localplay::is_enabled($controller)) {
+                    continue;
+                }
                 $is_selected = '';
-                if ($value == $controller) { $is_selected = 'selected="selected"'; }
+                if ($value == $controller) {
+                    $is_selected = 'selected="selected"';
+                }
                 echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
             } // end foreach
             echo "</select>\n";
@@ -291,10 +302,27 @@ function create_preference_input($name,$value)
             echo "<select name=\"$name\">\n";
             foreach ($themes as $theme) {
                 $is_selected = "";
-                if ($value == $theme['path']) { $is_selected = "selected=\"selected\""; }
+                if ($value == $theme['path']) {
+                    $is_selected = "selected=\"selected\"";
+                }
                 echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
             } // foreach themes
             echo "</select>\n";
+        break;
+        case 'theme_color':
+            // This include a two-step configuration (first change theme and save, then change theme color and save)
+            $theme_cfg = get_theme(AmpConfig::get('theme_name'));
+            if ($theme_cfg !== null) {
+                echo "<select name=\"$name\">\n";
+                foreach ($theme_cfg['colors'] as $color) {
+                    $is_selected = "";
+                    if ($value == strtolower($color)) {
+                        $is_selected = "selected=\"selected\"";
+                    }
+                    echo "\t<option value=\"" . strtolower($color) . "\" $is_selected>" . $color . "</option>\n";
+                } // foreach themes
+                echo "</select>\n";
+            }
         break;
         case 'playlist_method':
             ${$value} = ' selected="selected"';
@@ -361,5 +389,5 @@ function create_preference_input($name,$value)
         break;
 
     }
-
 } // create_preference_input
+

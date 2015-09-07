@@ -25,6 +25,9 @@
 <?php
 UI::show_box_top(T_('Upload'));
 $ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
+
+$artist = intval($_REQUEST['artist']);
+$album = intval($_REQUEST['album']);
 ?>
 <div id="container" role="main">
     <div id="tree"></div>
@@ -150,7 +153,7 @@ $(function () {
                 });
             } else {
                 $('#data .treecontent').hide();
-                $('#data .default').html('Target Folder').show();
+                $('#data .default').html('<?php echo T_('Target folder'); ?>').show();
             }
         });
 });
@@ -159,20 +162,68 @@ $(function () {
 <form id="uploadfile" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/upload.php">
 <input type="hidden" name="actionp" value="upload" />
 <input type="hidden" id="folder" name="folder" value="" />
+<?php
+// Display a max file size client side if we know it
+if ($upload_max > 0) {
+    ?>
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max;
+    ?>" />
+<?php
+
+}
+?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-<?php if (AmpConfig::get('licensing')) { ?>
+<?php if (!AmpConfig::get('upload_user_artist')) {
+    ?>
 <tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
     <td>
-        <?php show_license_select('license', '', '0'); ?>
-        <div id="album_select_license_<?php echo $song->license ?>">
-            <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")'); ?>
+        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $GLOBALS['user']->id);
+    ?>
+        <div id="artist_select_album_1">
+            <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)');
+    ?>
         </div>
     </td>
 </tr>
-<?php } ?>
+<?php 
+} ?>
 <tr>
-    <td><?php echo T_('Files'); ?></td>
+    <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
+    <td>
+        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $GLOBALS['user']->id); ?>
+        <div id="album_select_upload_1">
+            <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
+        </div>
+    </td>
+</tr>
+<?php if (AmpConfig::get('licensing')) {
+    ?>
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
+    <td>
+        <?php show_license_select('license', '', '0');
+    ?>
+        <div id="album_select_license_<?php echo $song->license ?>">
+            <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")');
+    ?>
+        </div>
+    </td>
+</tr>
+<?php 
+} ?>
+<tr>
+    <td>
+        <?php echo T_('Files'); ?>
+        <?php
+        if ($upload_max > 0) {
+            echo " (< " . UI::format_bytes($upload_max) . ")";
+        }
+        ?>
+        <br /><br />
+        <?php echo T_('Allowed file type'); ?>:<br />
+        <?php echo str_replace("|", ", ", AmpConfig::get('catalog_file_pattern')); ?>
+    </td>
     <td>
         <div id="dropfile">
             <?php echo T_('Drop File Here'); ?>

@@ -44,7 +44,6 @@ class Clip extends Video
         }
 
         return true;
-
     } // Constructor
 
     /**
@@ -70,7 +69,6 @@ class Clip extends Video
         Dba::write($sql, array($data['id'], $data['artist'], $data['song']));
 
         return $data['id'];
-
     } // create
 
     /**
@@ -83,7 +81,6 @@ class Clip extends Video
         Dba::write($sql, array($data['artist'], $data['song'], $this->id));
 
         return $this->id;
-
     } // update
 
     /**
@@ -99,7 +96,7 @@ class Clip extends Video
             if ($this->artist) {
                 $artist = new Artist($this->artist);
                 $artist->format();
-                $this->f_artist = $artist->f_link;
+                $this->f_artist = $artist->link;
             }
 
             if ($this->song) {
@@ -110,7 +107,6 @@ class Clip extends Video
         }
 
         return true;
-
     } //format
 
     /**
@@ -137,5 +133,5 @@ class Clip extends Video
 
         return null;
     }
-
 } // Clip class
+

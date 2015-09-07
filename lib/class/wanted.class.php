@@ -66,9 +66,14 @@ class Wanted extends database_object
     public $user;
 
     /**
-     * @var string $f_name_link
+     * @var string $link
      */
-    public $f_name_link;
+    public $link;
+
+    /**
+     * @var string $f_link
+     */
+    public $f_link;
     /**
      * @var string $f_artist_link
      */
@@ -88,7 +93,9 @@ class Wanted extends database_object
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -133,7 +140,6 @@ class Wanted extends database_object
                 } else {
                     if (trim($album->mbid)) {
                         $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
-                        debug_event('aaaa', print_r($malbum, true), 5);
                         if ($malbum['release-group']) {
                             if (!in_array($malbum['release-group']['id'], $owngroups)) {
                                 $owngroups[] = $malbum['release-group']['id'];
@@ -180,15 +186,15 @@ class Wanted extends database_object
                                 }
                             }
                             $wanted->accepted = false;
-                            $wanted->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group['id'];
+                            $wanted->link = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group['id'];
                             if ($artist) {
-                                $wanted->f_name_link .= "&artist=" . $wanted->artist;
+                                $wanted->link .= "&artist=" . $wanted->artist;
                             } else {
-                                $wanted->f_name_link .= "&artist_mbid=" . $mbid;
+                                $wanted->link .= "&artist_mbid=" . $mbid;
                             }
-                            $wanted->f_name_link .= "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
-                            $wanted->f_artist_link = $artist ? $artist->f_name_link : $wartist['link'];
-                            $wanted->f_user = $GLOBALS['user']->fullname;
+                            $wanted->f_link = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
+                            $wanted->f_artist_link = $artist ? $artist->f_link : $wartist['link'];
+                            $wanted->f_user = $GLOBALS['user']->f_name;
                         }
                         $results[] = $wanted;
                     }
@@ -368,7 +374,6 @@ class Wanted extends database_object
         }
 
         return false;
-
     }
 
     /**
@@ -390,6 +395,8 @@ class Wanted extends database_object
             $wantedid = Dba::insert_id();
             $wanted = new Wanted($wantedid);
             $wanted->accept();
+
+            database_object::remove_from_cache('wanted', $wantedid);
         }
     }
 
@@ -461,8 +468,9 @@ class Wanted extends database_object
                                 $plugin = new Plugin($plugin_name);
                                 if ($plugin->load($GLOBALS['user'])) {
                                     $song['file'] = $plugin->_plugin->get_song_preview($track['id'], $artist_name, $track['title']);
-                                    if ($song['file'] != null)
+                                    if ($song['file'] != null) {
                                         break;
+                                    }
                                 }
                             }
 
@@ -491,15 +499,16 @@ class Wanted extends database_object
         if ($this->artist) {
             $artist = new Artist($this->artist);
             $artist->format();
-            $this->f_artist_link = $artist->f_name_link;
+            $this->f_artist_link = $artist->f_link;
         } else {
             $wartist = Wanted::get_missing_artist($this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
         }
-        $this->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name . "\">" . $this->name . "</a>";
+        $this->link = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name;
+        $this->f_link = "<a href=\"" . $this->link . "\">" . $this->name . "</a>";
         $user = new User($this->user);
-        $this->f_user = $user->fullname;
-
+        $user->format();
+        $this->f_user = $user->f_name;
     }
 
     /**
@@ -533,5 +542,5 @@ class Wanted extends database_object
 
         return $results;
     }
-
 } // end of recommendation class
+

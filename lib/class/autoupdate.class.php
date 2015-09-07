@@ -76,8 +76,9 @@ class AutoUpdate
     public static function github_request($action)
     {
         try {
+            // https is mandatory
             $url = "https://api.github.com/repos/ampache/ampache" . $action;
-            $request = Requests::get($url);
+            $request = Requests::get($url, array(), Core::requests_options());
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
@@ -99,7 +100,6 @@ class AutoUpdate
     {
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
-            User::rebuild_all_preferences();
             Preference::update('autoupdate_lastcheck', $GLOBALS['user']->id, '1');
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }

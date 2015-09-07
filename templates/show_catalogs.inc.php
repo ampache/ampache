@@ -20,7 +20,9 @@
  *
  */
 ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="catalog">
     <thead>
         <tr class="th-top">
@@ -37,16 +39,23 @@
             foreach ($object_ids as $catalog_id) {
                 $libitem = Catalog::create_from_id($catalog_id);
                 $libitem->format();
-        ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="catalog_<?php echo $libitem->id; ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>
+                ?>
+        <tr class="<?php echo UI::flip_class();
+                ?>" id="catalog_<?php echo $libitem->id;
+                ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_catalog_row.inc.php');
+                ?>
         </tr>
-        <?php } ?>
+        <?php 
+            } ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6">
-            <?php if (!count($object_ids)) { ?>
-                <span class="nodata"><?php echo T_('No catalog found'); ?></span>
-            <?php } ?>
+            <?php if (!count($object_ids)) {
+    ?>
+                <span class="nodata"><?php echo T_('No catalog found');
+    ?></span>
+            <?php 
+} ?>
             </td>
         </tr>
     </tbody>
@@ -62,4 +71,6 @@
     </tfoot>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>

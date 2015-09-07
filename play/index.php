@@ -40,10 +40,15 @@ $sid            = scrub_in($_REQUEST['ssid']);
 $type           = scrub_in($_REQUEST['type']);
 
 $transcode_to = null;
+$player = null;
 $bitrate = 0;
 $maxbitrate = 0;
 $resolution = '';
 $quality = 0;
+
+if (isset($_REQUEST['player'])) {
+    $player = $_REQUEST['player'];
+}
 
 if (AmpConfig::get('transcode_player_customize')) {
     $transcode_to = scrub_in($_REQUEST['transcode_to']);
@@ -153,16 +158,18 @@ if (!$share_id) {
         }
 
         // If require session is set then we need to make sure we're legit
-        if (AmpConfig::get('require_session')) {
+        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
                 debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
-            } else if (!Session::exists('stream', $sid)) {
-                // No valid session id given, try with cookie session from web interface
+            } else {
+                if (!Session::exists('stream', $sid)) {
+                    // No valid session id given, try with cookie session from web interface
                 $sid = $_COOKIE[AmpConfig::get('session_name')];
-                if (!Session::exists('interface', $sid)) {
-                    debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
-                    header('HTTP/1.1 403 Session Expired');
-                    exit;
+                    if (!Session::exists('interface', $sid)) {
+                        debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
+                        header('HTTP/1.1 403 Session Expired');
+                        exit;
+                    }
                 }
             }
 
@@ -183,7 +190,7 @@ if (!$share_id) {
         exit;
     }
 
-    if ($type != 'song' || !$share->is_shared_song($oid)) {
+    if (!$share->is_shared_media($oid)) {
         header('HTTP/1.1 403 Access Unauthorized');
         exit;
     }
@@ -245,9 +252,10 @@ if ($demo_id) {
         while (in_array($oid,$oids)) {
             $song_cool_check++;
             $oid = $democratic->get_next_object($song_cool_check);
-            if ($song_cool_check >= '5') { break; }
+            if ($song_cool_check >= '5') {
+                break;
+            }
         } // while we've got the 'new' song in old the array
-
     } // end if we've got a cooldown
 } // if democratic ID passed
 
@@ -275,16 +283,18 @@ if ($type == 'song') {
     /* Base Checks passed create the song object */
     $media = new Song($oid);
     $media->format();
-} else if ($type == 'song_preview') {
-    $media = new Song_Preview($oid);
-    $media->format();
 } else {
-    $type = 'video';
-    $media = new Video($oid);
-    if (isset($_REQUEST['subtitle'])) {
-        $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
+    if ($type == 'song_preview') {
+        $media = new Song_Preview($oid);
+        $media->format();
+    } else {
+        $type = 'video';
+        $media = new Video($oid);
+        if (isset($_REQUEST['subtitle'])) {
+            $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
+        }
+        $media->format();
     }
-    $media->format();
 }
 
 if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
@@ -301,7 +311,9 @@ if ($media->catalog) {
     if (!make_bool($media->enabled)) {
         debug_event('Play', "Error: $media->file is currently disabled, song skipped", '5');
         // Check to see if this is a democratic playlist, if so remove it completely
-        if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
+        if ($demo_id && isset($democratic)) {
+            $democratic->delete_from_oid($oid, $type);
+        }
         header('HTTP/1.1 404 File Disabled');
         exit;
     }
@@ -342,7 +354,9 @@ if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
     }
     // FIXME: why are these separate?
     // Remove the media votes if this is a democratic song
-    if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
+    if ($demo_id && isset($democratic)) {
+        $democratic->delete_from_oid($oid, $type);
+    }
 
     debug_event('play', "Media $media->file ($media->title) does not have a valid filename specified", 2);
     header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
@@ -364,7 +378,6 @@ $browser = new Horde_Browser();
  * and then present them with the download file
  */
 if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
-
     debug_event('play', 'Downloading file...', 5);
     // STUPID IE
     $media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
@@ -402,7 +415,6 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
 
     fclose($fp);
     exit();
-
 } // if they are trying to download and they can
 
 // Prevent the script from timing out
@@ -436,33 +448,45 @@ debug_event('play', 'Transcode to {'.$transcode_to.'}', 5);
 // If custom play action, do not try to transcode
 if (!$cpaction) {
     $transcode_cfg = AmpConfig::get('transcode');
-    $valid_types = $media->get_stream_types();
+    $valid_types = $media->get_stream_types($player);
     if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
         if ($transcode_to) {
             $transcode = true;
             debug_event('play', 'Transcoding due to explicit request for ' . $transcode_to, 5);
-        } else if ($transcode_cfg == 'always') {
-            $transcode = true;
-            debug_event('play', 'Transcoding due to always', 5);
-        } else if ($force_downsample) {
-            $transcode = true;
-            debug_event('play', 'Transcoding due to downsample_remote', 5);
-        } else if (($bitrate > 0 && ($bitrate * 100) < $media->bitrate) || ($maxbitrate > 0 && ($maxbitrate * 100) < $media->bitrate)) {
-            $transcode = true;
-            debug_event('play', 'Transcoding because explicit bitrate request', 5);
-        } else if (!in_array('native', $valid_types)) {
-            $transcode = true;
-            debug_event('play', 'Transcoding because native streaming is unavailable', 5);
-        } else if (!empty($subtitle)) {
-            $transcode = true;
-            debug_event('play', 'Transcoding because subtitle requested', 5);
         } else {
-            debug_event('play', 'Decided not to transcode', 5);
+            if ($transcode_cfg == 'always') {
+                $transcode = true;
+                debug_event('play', 'Transcoding due to always', 5);
+            } else {
+                if ($force_downsample) {
+                    $transcode = true;
+                    debug_event('play', 'Transcoding due to downsample_remote', 5);
+                } else {
+                    if (($bitrate > 0 && ($bitrate * 100) < $media->bitrate) || ($maxbitrate > 0 && ($maxbitrate * 100) < $media->bitrate)) {
+                        $transcode = true;
+                        debug_event('play', 'Transcoding because explicit bitrate request', 5);
+                    } else {
+                        if (!in_array('native', $valid_types)) {
+                            $transcode = true;
+                            debug_event('play', 'Transcoding because native streaming is unavailable', 5);
+                        } else {
+                            if (!empty($subtitle)) {
+                                $transcode = true;
+                                debug_event('play', 'Transcoding because subtitle requested', 5);
+                            } else {
+                                debug_event('play', 'Decided not to transcode', 5);
+                            }
+                        }
+                    }
+                }
+            }
         }
-    } else if ($transcode_cfg != 'never') {
-        debug_event('play', 'Transcoding is not enabled for this media type. Valid types: {'.json_encode($valid_types).'}', 5);
     } else {
-        debug_event('play', 'Transcode disabled in user settings.', 5);
+        if ($transcode_cfg != 'never') {
+            debug_event('play', 'Transcoding is not enabled for this media type. Valid types: {'.json_encode($valid_types).'}', 5);
+        } else {
+            debug_event('play', 'Transcode disabled in user settings.', 5);
+        }
     }
 }
 
@@ -500,15 +524,17 @@ if ($transcode) {
         }
     }
 
-    $transcoder = Stream::start_transcode($media, $transcode_to, null, $troptions);
+    $transcoder = Stream::start_transcode($media, $transcode_to, $player, $troptions);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
-} else if ($cpaction) {
-    $transcoder = $media->run_custom_play_action($cpaction, $transcode_to);
-    $fp = $transcoder['handle'];
-    $transcode = true;
 } else {
-    $fp = fopen(Core::conv_lc_file($media->file), 'rb');
+    if ($cpaction) {
+        $transcoder = $media->run_custom_play_action($cpaction, $transcode_to);
+        $fp = $transcoder['handle'];
+        $transcode = true;
+    } else {
+        $fp = fopen(Core::conv_lc_file($media->file), 'rb');
+    }
 }
 
 if ($transcode) {
@@ -559,7 +585,7 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
     } else {
         if ($transcode) {
             debug_event('play', 'We should transcode only for a calculated frame range, but not yet supported here.', 2);
-                $stream_size = null;
+            $stream_size = null;
         } else {
             debug_event('play', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
             fseek($fp, $start);
@@ -601,9 +627,30 @@ if ($transcode || $demo_id) {
     header('Accept-Ranges: bytes');
 }
 
-$mime = ($transcode && isset($transcoder))
-    ? $media->type_to_mime($transcoder['format'])
-    : $media->mime;
+$mime = $media->mime;
+if ($transcode && isset($transcoder)) {
+    $mime = $media->type_to_mime($transcoder['format']);
+    // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2015...)
+    // We don't want to wait indefinitly for a potential error so we just ignore it.
+    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+        // This to avoid hang, see http://php.net/manual/es/function.proc-open.php#89338
+        $transcode_error = fread($transcoder['stderr'], 4096);
+        if (!empty($transcode_error)) {
+            debug_event('play', 'Transcode stderr: ' . $transcode_error, 1);
+        }
+        fclose($transcoder['stderr']);
+    }
+};
+
+// If this is a democratic playlist remove the entry.
+// We do this regardless of play amount.
+if ($demo_id && isset($democratic)) {
+    $democratic->delete_from_oid($oid, $type);
+}
+
+// Close sql connection
+// Warning: do not call functions requiring sql after this point
+Dba::disconnect();
 
 $browser->downloadHeaders($media_name, $mime, false, $stream_size);
 
@@ -611,20 +658,32 @@ $bytes_streamed = 0;
 
 // Actually do the streaming
 $buf_all = '';
-ob_end_clean();
-do {
-    $read_size = $transcode
-        ? 2048
-        : min(2048, $stream_size - $bytes_streamed);
-    $buf = fread($fp, $read_size);
-    if ($send_all_in_once) {
-        $buf_all .= $buf;
-    } else {
-        print($buf);
-        ob_flush();
-    }
-    $bytes_streamed += strlen($buf);
-} while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+$r_arr = array($fp);
+$w_arr = $e_arr = null;
+$status = stream_select($r_arr, $w_arr, $e_arr, 2);
+if ($status === false) {
+    debug_event('play', 'stream_select failed.', 1);
+} elseif ($status > 0) {
+    do {
+        $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
+        if ($buf = fread($fp, $read_size)) {
+            if ($send_all_in_once) {
+                $buf_all .= $buf;
+            } else {
+                if (!empty($buf)) {
+                    print($buf);
+                    if (ob_get_length()) {
+                        ob_flush();
+                        flush();
+                        ob_end_flush();
+                    }
+                    ob_start();
+                }
+            }
+            $bytes_streamed += strlen($buf);
+        }
+    } while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+}
 
 if ($send_all_in_once && connection_status() == 0) {
     header("Content-Length: " . strlen($buf_all));
@@ -639,17 +698,10 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
     $bytes_streamed = $stream_size;
 }
 
-// If this is a democratic playlist remove the entry.
-// We do this regardless of play amount.
-if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
-
 if ($transcode && isset($transcoder)) {
-    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-        fread($transcoder['stderr'], 8192);
-        fclose($transcoder['stderr']);
-    }
     fclose($fp);
-    proc_terminate($transcoder['process']);
+
+    Stream::kill_process($transcoder);
 } else {
     fclose($fp);
 }

@@ -337,7 +337,6 @@ class AmpacheApi
         xml_set_object($this->XML_parser,$this);
         xml_set_element_handler($this->XML_parser,'XML_start_element','XML_end_element');
         xml_set_character_data_handler($this->XML_parser,'XML_cdata');
-
     } // XML_create_parser
 
     /**
@@ -348,21 +347,23 @@ class AmpacheApi
     {
         $cdata = trim($cdata);
 
-        if (!$this->XML_currentTag || !$cdata) { return false; }
+        if (!$this->XML_currentTag || !$cdata) {
+            return false;
+        }
 
         if ($this->XML_subTag) {
             $this->XML_results[$this->XML_position][$this->XML_currentTag][$this->XML_subTag] = $cdata;
         } else {
             $this->XML_results[$this->XML_position][$this->XML_currentTag] = $cdata;
         }
-
-
     } // XML_cdata
 
     public function XML_start_element($parser,$tag,$attributes)
     {
         // Skip it!
-        if (in_array($tag,$this->XML_skiptags)) { return false; }
+        if (in_array($tag,$this->XML_skiptags)) {
+            return false;
+        }
 
         if (!in_array($tag,$this->XML_parenttags) OR $this->XML_currentTag) {
             $this->XML_subTag = $tag;
@@ -377,7 +378,6 @@ class AmpacheApi
                 $this->XML_results[$this->XML_position][$this->XML_currentTag][$this->XML_subTag]['self'] = $attributes;
             }
         }
-
     } // start_element
 
     public function XML_end_element($parser,$tag)
@@ -388,7 +388,5 @@ class AmpacheApi
             $this->XML_currentTag = false;
             $this->XML_position++;
         }
-
-
     } // end_element
 }

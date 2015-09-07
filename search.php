@@ -31,24 +31,23 @@ switch ($_REQUEST['action']) {
     case 'search':
         if ($_REQUEST['rule_1'] != 'missing_artist') {
             $browse = new Browse();
-            require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
-            require_once AmpConfig::get('prefix') . '/templates/show_search_options.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
+            require_once AmpConfig::get('prefix') . UI::find_template('show_search_options.inc.php');
             $results = Search::run($_REQUEST);
             $browse->set_type($_REQUEST['type']);
             $browse->show_objects($results);
             $browse->store();
         } else {
             $wartists = Wanted::search_missing_artists($_REQUEST['rule_1_input']);
-            require_once AmpConfig::get('prefix') . '/templates/show_missing_artists.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_missing_artists.inc.php');
             echo '<a href="http://musicbrainz.org/search?query=' . rawurlencode($_REQUEST['rule_1_input']) . '&type=artist&method=indexed" target="_blank">' . T_('View on MusicBrainz') . '</a><br />';
         }
     break;
-    case 'save_as_track':
-        $playlist_id = save_search($_REQUEST);
-        $playlist = new Playlist($playlist_id);
-        show_confirmation(T_('Search Saved'),sprintf(T_('Your Search has been saved as a track in %s'), $playlist->name), AmpConfig::get('web_path') . "/search.php");
-    break;
     case 'save_as_smartplaylist':
+        if (!Access::check('interface', 25)) {
+            UI::access_denied();
+            exit();
+        }
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
@@ -57,10 +56,10 @@ switch ($_REQUEST['action']) {
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB
         ob_clean();
-        require_once AmpConfig::get('prefix') . '/templates/show_search_descriptor.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search_descriptor.inc.php');
         exit;
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
     break;
 }
 

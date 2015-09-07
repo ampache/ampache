@@ -164,54 +164,75 @@
     <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires 64-bit operating system.'); ?>
     </td>
 </tr>
+<tr>
+    <td valign="top"><?php echo T_('PHP mbstring.func_overload'); ?></td>
+    <td valign="top">
+    <?php echo debug_result(check_mbstring_func_overload()); ?>
+    </td>
+    <td>
+    <?php printf(T_('This tests whether PHP %s is set as it may break the ID3 tag support. This is not stricly necessary, but enabling Ampache ID3 tag write support (disabled by default) along with mbstring.func_overload may result in irreversible corruption of your music files.'), '<a href="http://php.net/manual/en/mbstring.overload.php">mbstring.func_overload</a>'); ?>
+    </td>
+</tr>
 <?php
 if (!defined('INSTALL')) {
-?>
+    ?>
 <tr>
-    <td valign="top"><?php echo T_('Configuration file readability'); ?></td>
+    <td valign="top"><?php echo T_('Configuration file readability');
+    ?></td>
     <td valign="top">
-    <?php echo debug_result(is_readable($configfile)); ?>
+    <?php echo debug_result(is_readable($configfile));
+    ?>
     </td>
     <td width="350px">
-    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.'); ?>
+    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.');
+    ?>
     </td>
 </tr>
 <tr>
     <td valign="top">
-        <?php echo T_('Configuration file validity'); ?>
+        <?php echo T_('Configuration file validity');
+    ?>
     </td>
     <td valign="top">
     <?php
         $results = @parse_ini_file($configfile);
-        AmpConfig::set_by_array($results);
-        echo debug_result(check_config_values($results));
+    AmpConfig::set_by_array($results);
+    echo debug_result(check_config_values($results));
     ?>
     </td>
     <td>
-    <?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file."); ?>
+    <?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file.");
+    ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_("Database connection"); ?></td>
+    <td valign="top"><?php echo T_("Database connection");
+    ?></td>
     <td valign="top">
-    <?php echo debug_result(check_php_pdo() && Dba::check_database()); ?>
+    <?php echo debug_result(check_php_pdo() && Dba::check_database());
+    ?>
     </td>
     <td>
-    <?php echo T_('This attempts to connect to your database using the values read from your configuration file.'); ?>
+    <?php echo T_('This attempts to connect to your database using the values read from your configuration file.');
+    ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('Database tables'); ?></td>
+    <td valign="top"><?php echo T_('Database tables');
+    ?></td>
     <td valign="top">
-    <?php echo debug_result(check_php_pdo() && Dba::check_database_inserted()); ?>
+    <?php echo debug_result(check_php_pdo() && Dba::check_database_inserted());
+    ?>
     </td>
     <td>
-    <?php echo T_('This checks a few key tables to make sure that you have successfully inserted the Ampache database and that the user has access to the database'); ?>
+    <?php echo T_('This checks a few key tables to make sure that you have successfully inserted the Ampache database and that the user has access to the database');
+    ?>
     </td>
 </tr>
 <tr>
 
-    <td valign="top"><?php echo T_('Web path'); ?></td>
+    <td valign="top"><?php echo T_('Web path');
+    ?></td>
     <td valign="top">
     <?php
         if (check_config_values($results)) {
@@ -223,9 +244,11 @@ if (!defined('INSTALL')) {
     ?>
     </td>
     <td>
-    <?php echo T_('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.'); ?>
+    <?php echo T_('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.');
+    ?>
     </td>
 </tr>
 <?php
+
 }
 ?>

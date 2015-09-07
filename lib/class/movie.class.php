@@ -45,7 +45,6 @@ class Movie extends Video
         }
 
         return true;
-
     } // Constructor
 
     /**
@@ -75,7 +74,6 @@ class Movie extends Video
         Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
 
         return $data['id'];
-
     } // create
 
     /**
@@ -94,8 +92,8 @@ class Movie extends Video
             $name = $this->original_name;
             $prefix = $this->prefix;
         }
-        $summary = $data['summary'] ?: $this->summary;
-        $year = $data['year'] ?: $this->year;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $year = isset($data['year']) ? $data['summary'] : $this->year;
 
         $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
@@ -106,7 +104,6 @@ class Movie extends Video
         $this->year = $year;
 
         return $this->id;
-
     } // update
 
     /**
@@ -124,7 +121,6 @@ class Movie extends Video
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
 
         return true;
-
     } //format
 
     /**
@@ -147,4 +143,18 @@ class Movie extends Video
         return 'default';
     }
 
+    /**
+     * Remove the video from disk.
+     */
+    public function remove_from_disk()
+    {
+        $deleted = parent::remove_from_disk();
+        if ($deleted) {
+            $sql = "DELETE FROM `movie` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+        }
+
+        return $deleted;
+    }
 } // Movie class
+

@@ -2,6 +2,7 @@ config/ampache.cfg.php
 config/ampache-doped.cfg.php
 rest/.htaccess
 play/.htaccess
+channel/.htaccess
 *.phpproj
 *.sln
 *.v11.suo
@@ -9,3 +10,7 @@ play/.htaccess
 logs
 /nbproject/private/
 .pc
+/tmp
+log/
+*~
+*#

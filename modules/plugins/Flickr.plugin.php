@@ -75,7 +75,7 @@ class Ampacheflickr {
         $photos = array();
         $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
         debug_event($this->name, 'Calling ' . $url, '5');
-        $request = Requests::get($url);
+        $request = Requests::get($url, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
             if ($xml && $xml->photos) {

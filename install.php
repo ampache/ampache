@@ -29,7 +29,7 @@ set_error_handler('ampache_error_handler');
 // Redirect if installation is already complete.
 if (!install_check_status($configfile)) {
     $redirect_url = 'login.php';
-    require_once AmpConfig::get('prefix') . '/templates/error_page.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('error_page.inc.php');
     exit;
 }
 
@@ -37,6 +37,7 @@ define('INSTALL', 1);
 
 $htaccess_play_file = AmpConfig::get('prefix') . '/play/.htaccess';
 $htaccess_rest_file = AmpConfig::get('prefix') . '/rest/.htaccess';
+$htaccess_channel_file = AmpConfig::get('prefix') . '/channel/.htaccess';
 
 // Clean up incoming variables
 $web_path = scrub_in($_REQUEST['web_path']);
@@ -63,6 +64,20 @@ if (!$skip_admin) {
 if (isset($_REQUEST['transcode_template'])) {
     $mode = $_REQUEST['transcode_template'];
     install_config_transcode_mode($mode);
+}
+
+if (isset($_REQUEST['usecase'])) {
+    $case = $_REQUEST['usecase'];
+    if (Dba::check_database()) {
+        install_config_use_case($case);
+    }
+}
+
+if (isset($_REQUEST['backends'])) {
+    $backends = $_REQUEST['backends'];
+    if (Dba::check_database()) {
+        install_config_backends($backends);
+    }
 }
 
 // Charset and gettext setup
@@ -128,12 +143,17 @@ switch ($_REQUEST['action']) {
         if (!$skip) {
             $write = (isset($_POST['write']));
             $download = (isset($_POST['download']));
+            $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
             $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
             $download_htaccess_play = (isset($_POST['download_htaccess_play']));
+            $write_htaccess_channel = (isset($_POST['write_htaccess_channel']));
             $write_htaccess_rest = (isset($_POST['write_htaccess_rest']));
             $write_htaccess_play = (isset($_POST['write_htaccess_play']));
 
             $created_config = true;
+            if ($write_htaccess_channel || $download_htaccess_channel || $all) {
+                $created_config = $created_config && install_rewrite_rules($htaccess_channel_file, $_POST['web_path'], $download_htaccess_channel);
+            }
             if ($write_htaccess_rest || $download_htaccess_rest || $all) {
                 $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
             }
@@ -146,18 +166,20 @@ switch ($_REQUEST['action']) {
         }
     case 'show_create_account':
         $results = parse_ini_file($configfile);
-        if (!isset($created_config)) $created_config = true;
+        if (!isset($created_config)) {
+            $created_config = true;
+        }
 
         /* Make sure we've got a valid config file */
         if (!check_config_values($results) || !$created_config) {
             Error::add('general', T_('Error: Config files not found or unreadable'));
-            require_once AmpConfig::get('prefix') . '/templates/show_install_config.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_config.inc.php');
             break;
         }
 
         // Don't try to add administrator user on existing database
         if (install_check_status($configfile)) {
-            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
         } else {
             header ("Location: " . $web_path . '/login.php');
         }
@@ -169,11 +191,11 @@ switch ($_REQUEST['action']) {
         $password2 = scrub_in($_REQUEST['local_pass2']);
 
         if (!install_create_account($username, $password, $password2)) {
-            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
             break;
         }
 
-        header ("Location: " . $web_path . '/login.php');
+        header ("Location: " . $web_path . '/index.php');
     break;
     case 'init':
         require_once 'templates/show_install.inc.php';
@@ -186,3 +208,4 @@ switch ($_REQUEST['action']) {
         require_once 'templates/show_install_lang.inc.php';
     break;
 } // end action switch
+

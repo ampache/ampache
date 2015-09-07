@@ -29,7 +29,19 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
-                <td><input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" /></td>
+                <td>
+                    <?php if (Access::check('interface', 50)) {
+    ?>
+                    <input type="text" name="mbid" value="<?php echo $libitem->mbid;
+    ?>" />
+                    <?php 
+} else {
+    ?>
+                    <?php echo $libitem->mbid;
+    ?>
+                    <?php 
+} ?>
+                </td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
@@ -47,6 +59,15 @@
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
+            <?php if (AmpConfig::get('label')) {
+    ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Labels') ?></td>
+                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->labels);
+    ?>" /></td>
+            </tr>
+            <?php 
+} ?>
             <tr>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub albums and sub songs') ?></td>

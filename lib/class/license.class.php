@@ -56,7 +56,6 @@ class License
         $this->_get_info($id);
 
         return true;
-
     } // Constructor
 
     /**
@@ -77,7 +76,6 @@ class License
         }
 
         return true;
-
     } // _get_info
 
     /**
@@ -94,7 +92,6 @@ class License
         $insert_id = Dba::insert_id();
 
         return $insert_id;
-
     } // create
 
     /**
@@ -109,7 +106,6 @@ class License
         Dba::write($sql, array($data['name'], $data['description'], $data['external_link'], $this->id));
 
         return $this->id;
-
     } // create
 
     /**
@@ -130,7 +126,6 @@ class License
     {
         $sql = "DELETE FROM `license` WHERE `id` = ?";
         Dba::write($sql, array($license_id));
-
     } // delete
 
     /**
@@ -150,5 +145,5 @@ class License
 
         return $results;
     } // get_licenses
-
 } // License class
+

@@ -69,7 +69,7 @@ class AmpacheOmdb {
         if (!empty($year)) {
             $url .= '&y=' . rawurlencode($year);
         }
-        $request = Requests::get($url);
+        $request = Requests::get($url, array(), Core::requests_options());
         return json_decode($request->body);
     }
     

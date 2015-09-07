@@ -35,6 +35,7 @@ class Share extends database_object
     public $counter;
     public $secret;
     public $public_url;
+    public $description;
 
     public $f_name;
     public $f_object_link;
@@ -49,7 +50,9 @@ class Share extends database_object
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -114,9 +117,13 @@ class Share extends database_object
     public static function create_share($object_type, $object_id, $allow_stream=true, $allow_download=true, $expire=0, $secret='', $max_counter=0, $description='')
     {
         $object_type = self::format_type($object_type);
-        if (empty($object_type)) return '';
+        if (empty($object_type)) {
+            return '';
+        }
 
-        if (!$allow_stream && !$allow_download) return '';
+        if (!$allow_stream && !$allow_download) {
+            return '';
+        }
 
         $sql = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array($GLOBALS['user']->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
@@ -196,6 +203,7 @@ class Share extends database_object
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75') || $this->user == $GLOBALS['user']->id) {
+                echo "<a id=\"edit_share_ " . $this->id ."\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
@@ -209,12 +217,32 @@ class Share extends database_object
             $this->f_name = $object->get_fullname();
             $this->f_object_link = $object->f_link;
             $user = new User($this->user);
-            $this->f_user = $user->fullname;
+            $user->format();
+            $this->f_user = $user->f_name;
         }
         $this->f_allow_stream = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
         $this->f_creation_date = date("Y-m-d H:i:s", $this->creation_date);
         $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", $this->creation_date) : '';
+    }
+
+    public function update(array $data)
+    {
+        $this->max_counter = intval($data['max_counter']);
+        $this->expire_days = intval($data['expire']);
+        $this->allow_stream = $data['allow_stream'] == '1';
+        $this->allow_download = $data['allow_download'] == '1';
+        $this->description = isset($data['description']) ? $data['description'] : $this->description;
+
+        $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .
+            "WHERE `id` = ?";
+        $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->description, $this->id);
+        if (!$GLOBALS['user']->has_access('75')) {
+            $sql .= " AND `user` = ?";
+            $params[] = $GLOBALS['user']->id;
+        }
+
+        return Dba::write($sql, $params);
     }
 
     public function save_access()
@@ -274,10 +302,7 @@ class Share extends database_object
                 $object = new $this->object_type($this->object_id);
                 $songs = $object->get_medias('song');
                 foreach ($songs as $song) {
-                    $medias[] = array(
-                        'object_type' => $song['object_type'],
-                        'object_id' => $song['object_id'],
-                    );
+                    $medias[] = $song;
                 }
             break;
             default:
@@ -292,7 +317,7 @@ class Share extends database_object
         return $playlist;
     }
 
-    public function is_shared_song($song_id)
+    public function is_shared_media($media_id)
     {
         $is_shared = false;
         switch ($this->object_type) {
@@ -301,16 +326,23 @@ class Share extends database_object
                 $object = new $this->object_type($this->object_id);
                 $songs = $object->get_songs();
                 foreach ($songs as $id) {
-                    $is_shared = ($song_id == $id);
-                    if ($is_shared) { break; }
+                    $is_shared = ($media_id == $id);
+                    if ($is_shared) {
+                        break;
+                    }
                 }
             break;
             default:
-                $is_shared = ($this->object_type == 'song' && $this->object_id == $song_id);
+                $is_shared = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
             break;
         }
 
         return $is_shared;
+    }
+
+    public function get_user_owner()
+    {
+        return $this->user;
     }
 
     public static function display_ui($object_type, $object_id, $show_text = true)
@@ -351,5 +383,5 @@ class Share extends database_object
         echo "</li>";
         echo "</ul>";
     }
-
 } // end of recommendation class
+

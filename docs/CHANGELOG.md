@@ -3,6 +3,109 @@ CHANGELOG
 
 3.8.0
 ----------
+- Added Portuguese (Brasil) language (thanks Ione Souza Junior)
+- Updated PHPMailer version to 5.2.10
+- Fixed user stats clear
+- Added user, followers and last shouts XML API functions
+- Fixed transcoded process end on some systems (thanks nan4k7)
+- Added ogg channel streaming support (thanks Deathcow)
+- Fixed sql connection close before stream (thanks fufroma)
+- Added support for several ldap filters (thanks T-Rock)
+- Fixed 'Add to existing playlist' button on web player (thanks RyanCopley)
+- Added 'add to existing playlist' link on album page (thanks RyanCopley)
+- Added option to hide user fullname from other users
+- Added playlist track information in Apache XML API (thanks RyanCopley)
+- Fixed playlist remove song in Apache XML API (thanks RyanCopley)
+- Fixed SubSonic API ifModifiedSince information
+- Added Podcast links to albums / artists
+- Added Piwik and Google Analytics plugins
+- Added Apache 2.4 access control declaration in htaccess files
+- Fixed performance issues on user preferences
+- Added artist search by year and place
+- Fixed search by comment (thanks malkavi)
+- Added Paypal and Flattr plugins
+- Added .maintenance page
+- Fixed captcha
+- Added private messages between users
+- Fixed SubSonic API rating information on albums and songs
+- Added latest artists and shouts RSS feeds
+- Fixed tag cloud ordering
+- Added Label entities associated to artists / users
+- Added WebDAV backend
+- Fixed SubSonic API requests with musicFolderId parameter (thanks dhsc19)
+- Added footer text edition setting
+- Added uploaded artist list on user page
+- Added custom Ampache login logo and favicon support
+- Added edition support on shared objects (thanks dhsc19)
+- Fixed share feature on videos (thanks RobertoCarlo)
+- Removed album year display from album name if unset
+- Fixed Subsonic API Album/Artist song's link (thanks dhsc19 and daneren2005)
+- Added mysql database socket authentication support on web setup (thanks AsavarTzeth)
+- Fixed artist art url for mobile use (thanks dhsc19)
+- Added Shoutbox home plugin
+- Added catalog favorites home plugin
+- Fixed search by rating (thanks iamnumbersix)
+- Added UPnP localplay (thanks SeregaPru)
+- Changed preferences to return the global value if preference is missing for the searched user
+- Fixed special chars in songs names and tags (thanks SeregaPru) 
+- Fixed Subsonic API playlist edition/delation (thanks dhsc19)
+- Fixed integer default value in Apache XML API
+- Fixed image thumb on webplayer and search preview (thanks RobertoCarlo and eephyne)
+- Fixed proxy setting on all external http requests (thanks brendankearney)
+- Added QRCode view of user API key 
+- Fixed http status code on Subsonic API streams when using curl (thanks nicklan)
+- Added Server-Sent Events on catalog actions
+- Added option to enable/disable channel and live stream features
+- Removed official PHP 5.3 support
+- Added option to show/hide footer statistics (thanks brownl)
+- Added delete from disk option on user uploaded files
+- Added installation type and players helper at installation process
+- Added tv_episode tag on quicktime files (thanks wagnered)
+- Added new option to disable deferred extended metadata, e.g. artist details
+- Added Subsonic API getAvatar function
+- Fixed unsynced lyrics tags
+- Fixed ldap_filter setting deactivation on ampache.cfg.php update (thanks Rouzax)
+- Added Subsonic API similar artists & songs functions
+- Added Subsonic API getLyrics function
+- Fixed disk number and album artist metadata on quicktime files (thanks JoeDat)
+- Fixed Ampache API playlist_add_song function
+- Added ability to store images on disk
+- Added new setting to define album art min and max width/height
+- Fixed Subsonic API getAlbum returned artist id on songs
+- Fixed Subsonic API cover art when PHP-GD unavailable
+- Fixed localplay playlist refresh on volume changes (thanks essagl)
+- Fixed web player equalizer option if visualizer is not enabled (thanks brownl)
+- Fixed asx file mime type (thanks thinca)
+- Added song genre parsing options (thanks Razrael and lotan)
+- Added sort on languages list (thanks brownl)
+- Added placeholder text to search box (thanks brownl)
+- Added web player Play Next feature (thanks tan-ce)
+- Fixed Plex backend administration page uri (thanks a9k)
+- Fixed expired shared objects clean (thanks eephyne)
+- Added missing artist search results (thanks bliptec)
+- Fixed song genre id parsing (thanks lotan)
+- Added Scrobble method to Subsonic API
+- Added an option to add tags to child without overwriting
+- Added image dimension info to image tables (thanks tsquare66)
+- Replaced ArchiveLib by StreamZip-PHP to avoid temporary zip file
+- Added Year field in song details and edition
+- Added Subsonic API create/delete user, jukebox control and search auto suggestion
+- Added few optional install tests
+- Improved Share features with modal dialog choices
+- Added new action on playlists to remove duplicates
+- Fixed playlist addition to another playlist (thanks kszulc)
+- Fixed Various Artist link on album page (thanks Jucgshu)
+- Added session_destroy call when a session should be destroyed
+- Added HTML5 ReplayGain track feature
+- Added display and mandatory user registration fields settings
+- Added .htaccess IfModule mod_access.c directives
+- Fixed SmartPlayer results per user (thanks nakinigit)
+- Fixed XSS vulnerability CVE-2014-8620 (thanks g0blin)
+- Fixed playlist import setting on catalog update to be disabled by default (thanks DaPike)
+- Added ability to browse my tags other library items than songs
+- Added Stream Control plugins
+- Added transcode settings per player type
+- Added ability to write directly the new configuration file when it version changed
 - Added `quick play url` to have permanent authenticated stream link without session
 - Fixed unresponsive website on batch download (thanks Rouzax)
 - Added batch download item granularity

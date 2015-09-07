@@ -6,7 +6,10 @@ namespace Dropbox;
  */
 class ArrayEntryStore implements ValueStore
 {
+    /** @var array */
     private $array;
+
+    /** @var mixed */
     private $key;
 
     /**
@@ -15,7 +18,7 @@ class ArrayEntryStore implements ValueStore
      * @param array $array
      *    The array that we'll be accessing.
      *
-     * @param object $key
+     * @param mixed $key
      *    The key for the array element we'll be accessing.
      */
     function __construct(&$array, $key)

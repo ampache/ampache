@@ -34,6 +34,10 @@ class Upload
 
     public static function process()
     {
+        header('Content-Type: application/json');
+        ob_start();
+        define('CLI', true);
+
         $catalog_id = AmpConfig::get('upload_catalog');
         if ($catalog_id > 0) {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -45,8 +49,7 @@ class Upload
 
                     if (!in_array(strtolower($extension), $allowed)) {
                         debug_event('upload', 'File extension `' . $extension . '` not allowed.', '2');
-                        echo '{"status":"error"}';
-                        return false;
+                        return self::rerror();
                     }
 
                     $rootdir = self::get_root($catalog);
@@ -62,19 +65,17 @@ class Upload
                     $targetdir = realpath($targetdir);
                     if (strpos($targetdir, $rootdir) === FALSE) {
                         debug_event('upload', 'Something wrong with final upload path.', '1');
-                        echo '{"status":"error"}';
-                        return false;
+                        return self::rerror();
                     }
 
-                    $targetfile = $targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name'];
+                    $targetfile = $targetdir . DIRECTORY_SEPARATOR . time() . '_' . $_FILES['upl']['name'];
                     if (Core::is_readable($targetfile)) {
-                        debug_event('upload', 'File `' . $_FILES['upl']['name'] . '` already exists in target directory.', '1');
-                        echo '{"status":"error"}';
-                        return false;
+                        debug_event('upload', 'File `' . $targetfile . '` already exists.', '1');
+                        return self::rerror();
                     }
 
                     if (move_uploaded_file($_FILES['upl']['tmp_name'], $targetfile)) {
-                        debug_event('upload', 'File `' . $_FILES['upl']['name'] . '` uploaded.', '5');
+                        debug_event('upload', 'File uploaded to `' . $targetfile . '`.', '5');
 
                         if (AmpConfig::get('upload_script')) {
                             chdir($targetdir);
@@ -86,8 +87,79 @@ class Upload
                         if (isset($_POST['license'])) {
                             $options['license'] = $_POST['license'];
                         }
-                        $catalog->add_files($targetdir, $options);
+                        $artist_id = intval($_REQUEST['artist']);
+                        $album_id = intval($_REQUEST['album']);
 
+                        // Override artist information with artist's user
+                        if (AmpConfig::get('upload_user_artist')) {
+                            $artists = $GLOBALS['user']->get_artists();
+                            $artist = null;
+                            // No associated artist yet, we create a default one for the user sender
+                            if (count($artists) == 0) {
+                                $artists[] = Artist::check($GLOBALS['user']->f_name);
+                                $artist = new Artist($artists[0]);
+                                $artist->update_artist_user($GLOBALS['user']->id);
+                            } else {
+                                $artist = new Artist($artists[0]);
+                            }
+                            $artist_id = $artist->id;
+                        } else {
+                            // Try to create a new artist
+                            if (isset($_REQUEST['artist_name'])) {
+                                $artist_id = Artist::check($_REQUEST['artist_name'], null, true);
+                                if ($artist_id && !Access::check('interface', 50)) {
+                                    debug_event('upload', 'An artist with the same name already exists, uploaded song skipped.', 3);
+                                    return self::rerror($targetfile);
+                                } else {
+                                    $artist_id = Artist::check($_REQUEST['artist_name']);
+                                    $artist = new Artist($artist_id);
+                                    if (!$artist->get_user_owner()) {
+                                        $artist->update_artist_user($GLOBALS['user']->id);
+                                    }
+                                }
+                            }
+                            if (!Access::check('interface', 50)) {
+                                // If the user doesn't have privileges, check it is assigned to an artist he owns
+                                if (!$artist_id) {
+                                    debug_event('upload', 'Artist information required, uploaded song skipped.', 3);
+                                    return self::rerror($targetfile);
+                                }
+                                $artist = new Artist($artist_id);
+                                if ($artist->get_user_owner() != $GLOBALS['user']->id) {
+                                    debug_event('upload', 'Artist owner doesn\'t match the current user.', 3);
+                                    return self::rerror($targetfile);
+                                }
+                            }
+                        }
+                        // Try to create a new album
+                        if (isset($_REQUEST['album_name'])) {
+                            $album_id = Album::check($_REQUEST['album_name'], 0, 0, null, null, $artist_id);
+                        }
+
+                        if (!Access::check('interface', 50)) {
+                            // If the user doesn't have privileges, check it is assigned to an album he owns
+                            if (!$album_id) {
+                                debug_event('upload', 'Album information required, uploaded song skipped.', 3);
+                                return self::rerror($targetfile);
+                            }
+                            $album = new Album($album_id);
+                            if ($album->get_user_owner() != $GLOBALS['user']->id) {
+                                debug_event('upload', 'Album owner doesn\'t match the current user.', 3);
+                                return self::rerror($targetfile);
+                            }
+                        }
+
+                        if ($artist_id) {
+                            $options['artist_id'] = $artist_id;
+                        }
+                        if ($album_id) {
+                            $options['album_id'] = $album_id;
+                        }
+
+                        $catalog->add_file($targetfile, $options);
+
+                        ob_get_contents();
+                        ob_end_clean();
                         echo '{"status":"success"}';
                         return true;
                     } else {
@@ -101,6 +173,17 @@ class Upload
             debug_event('upload', 'No catalog target upload configured.', '1');
         }
 
+        return self::rerror();
+    }
+
+    public static function rerror($file = null)
+    {
+        if ($file) {
+            @unlink($file);
+        }
+        @header($_SERVER['SERVER_PROTOCOL'] . ' 500 File Upload Error', true, 500);
+        ob_get_contents();
+        ob_end_clean();
         echo '{"status":"error"}';
         return false;
     }
@@ -134,5 +217,5 @@ class Upload
 
         return $rootdir;
     }
-
 } // Upload class
+

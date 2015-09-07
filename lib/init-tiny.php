@@ -22,9 +22,9 @@
 
 // Minimal init for use in install
 
-// Do a check for PHP5 because nothing will work without it
-if (floatval(phpversion()) < 5) {
-    echo "ERROR: Ampache requires PHP5";
+// Do a check for PHP5.4 because nothing will work without it
+if (version_compare(phpversion(), '5.4.0', '<')) {
+    echo "ERROR: Ampache requires PHP version >= 5.4";
     exit;
 }
 
@@ -35,6 +35,14 @@ $load_time_begin = microtime(true);
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
 $configfile = $prefix . '/config/ampache.cfg.php';
+
+// We still allow scripts to run (it could be the purpose of the maintenance)
+if (!defined('CLI')) {
+    if (file_exists($prefix . '/.maintenance')) {
+        require_once($prefix . '/.maintenance');
+    }
+}
+
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/ampconfig.class.php';
 require_once $prefix . '/lib/class/core.class.php';
@@ -59,8 +67,10 @@ if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PRO
 
 if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
     $http_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
-} else if (isset($_SERVER['SERVER_PORT'])) {
-    $http_port = $_SERVER['SERVER_PORT'];
+} else {
+    if (isset($_SERVER['SERVER_PORT'])) {
+        $http_port = $_SERVER['SERVER_PORT'];
+    }
 }
 if (!isset($http_port) || empty($http_port)) {
     $http_port = 80;

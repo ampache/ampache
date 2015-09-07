@@ -26,7 +26,7 @@ $name = 'catalog_' . $_REQUEST['export_catalog'];
 ${$name} = ' selected="selected"';
 
 UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
-<form name="duplicates" action="<?php echo AmpConfig::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data" >
+<form name="export" action="<?php echo AmpConfig::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data" >
 <table class="tableform" cellspacing="0" cellpadding="3">
 <tr>
     <td valign="top"><strong><?php echo T_('Catalog'); ?>:</strong></td>
@@ -39,9 +39,13 @@ UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
             $catalog = Catalog::create_from_id($catalog_id);
             $current_name = 'catalog_' . $catalog->id;
 
-?>
-            <option value="<?php echo $catalog->id; ?>"<?php echo ${$current_name}; ?>><?php echo scrub_out($catalog->name); ?></option>
+            ?>
+            <option value="<?php echo $catalog->id;
+            ?>"<?php echo ${$current_name};
+            ?>><?php echo scrub_out($catalog->name);
+            ?></option>
 <?php
+
         }
 ?>
         </select>

@@ -22,12 +22,16 @@
 
 require_once 'lib/init.php';
 
+if (!AmpConfig::get('broadcast')) {
+    UI::access_denied();
+    exit;
+}
+
 UI::show_header();
 
 /* Switch on the action passed in */
 switch ($_REQUEST['action']) {
     case 'show_delete':
-        UI::show_header();
         $id = $_REQUEST['id'];
 
         $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($id);
@@ -40,7 +44,6 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        UI::show_header();
         $id = $_REQUEST['id'];
         $broadcast = new Broadcast($id);
         if ($broadcast->delete()) {

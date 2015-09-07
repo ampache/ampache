@@ -29,10 +29,15 @@ $confirmation = Core::form_register($form_name);
         <input type="submit" value="<?php echo T_('Continue'); ?>" />
         <?php echo $confirmation; ?>
     </form>
-<?php if ($cancel) { ?>
-    <form method="post" action="<?php echo AmpConfig::get('web_path') . '/' . return_referer(); ?>" style="display:inline;">
-        <input type="submit" value="<?php echo T_('Cancel'); ?>" />
-        <?php echo $confirmation; ?>
+<?php if ($cancel) {
+    ?>
+    <form method="post" action="<?php echo AmpConfig::get('web_path') . '/' . return_referer();
+    ?>" style="display:inline;">
+        <input type="submit" value="<?php echo T_('Cancel');
+    ?>" />
+        <?php echo $confirmation;
+    ?>
     </form>
-<?php } ?>
+<?php 
+} ?>
 <?php UI::show_box_bottom(); ?>

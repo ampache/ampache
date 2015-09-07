@@ -81,6 +81,14 @@ function check_php_pdo_mysql()
     return class_exists('PDO') ? in_array('mysql', PDO::getAvailableDrivers()) : false;
 }
 
+function check_mbstring_func_overload()
+{
+    if ( ini_get('mbstring.func_overload') > 0) {
+        return false;
+    }
+    return true;
+}
+
 /**
  * check_config_values
  * checks to make sure that they have at least set the needed variables
@@ -96,9 +104,10 @@ function check_config_values($conf)
     if (!$conf['database_username']) {
         return false;
     }
-    if (!$conf['database_password']) {
+    /* Don't check for password to support mysql socket auth
+     * if (!$conf['database_password']) {
         return false;
-    }
+    }*/
     if (!$conf['session_length']) {
         return false;
     }
@@ -113,12 +122,11 @@ function check_config_values($conf)
     }
     if (isset($conf['debug'])) {
         if (!isset($conf['log_path'])) {
-        return false;
+            return false;
         }
     }
 
     return true;
-
 } // check_config_values
 
 /**
@@ -137,7 +145,6 @@ function check_php_memory()
     }
 
     return true;
-
 } // check_php_memory
 
 /**
@@ -149,7 +156,6 @@ function check_php_timelimit()
 {
     $current = intval(ini_get('max_execution_time'));
     return ($current >= 60 || $current == 0);
-
 } // check_php_timelimit
 
 /**
@@ -261,6 +267,12 @@ function check_config_writable()
     // file eixsts && is writable, or dir is writable
     return ((file_exists(AmpConfig::get('prefix') . '/config/ampache.cfg.php') && is_writable(AmpConfig::get('prefix') . '/config/ampache.cfg.php'))
         || (!file_exists(AmpConfig::get('prefix') . '/config/ampache.cfg.php') && is_writeable(AmpConfig::get('prefix') . '/config/')));
+}
+
+function check_htaccess_channel_writable()
+{
+    return ((file_exists(AmpConfig::get('prefix') . '/channel/.htaccess') && is_writable(AmpConfig::get('prefix') . '/channel/.htaccess'))
+        || (!file_exists(AmpConfig::get('prefix') . '/channel/.htaccess') && is_writeable(AmpConfig::get('prefix') . '/channel/')));
 }
 
 function check_htaccess_rest_writable()

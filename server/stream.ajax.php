@@ -24,7 +24,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 debug_event('stream.ajax.php', 'Called for action {'.$_REQUEST['action'].'}', 5);
 
@@ -107,7 +109,7 @@ switch ($_REQUEST['action']) {
         if ( ($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
             define('NO_SONGS','1');
             ob_start();
-            require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('rightbar.inc.php');
             $results['rightbar'] = ob_get_clean();
         }
 

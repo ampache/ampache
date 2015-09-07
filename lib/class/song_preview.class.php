@@ -54,7 +54,9 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public function __construct($id = null)
     {
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         $this->id = intval($id);
 
@@ -71,7 +73,6 @@ class Song_Preview extends database_object implements media, playable_item
         }
 
         return true;
-
     } // constructor
 
     /**
@@ -113,12 +114,16 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public static function build_cache($song_ids)
     {
-        if (!is_array($song_ids) || !count($song_ids)) { return false; }
+        if (!is_array($song_ids) || !count($song_ids)) {
+            return false;
+        }
 
         $idlist = '(' . implode(',', $song_ids) . ')';
 
         // Callers might have passed array(false) because they are dumb
-        if ($idlist == '()') { return false; }
+        if ($idlist == '()') {
+            return false;
+        }
 
         // Song data cache
         $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' .
@@ -137,7 +142,6 @@ class Song_Preview extends database_object implements media, playable_item
         Artist::build_cache($artists);
 
         return true;
-
     } // build_cache
 
     /**
@@ -177,13 +181,15 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public function get_artist_name($artist_id=0)
     {
-        if (!$artist_id) { $artist_id = $this->artist; }
+        if (!$artist_id) {
+            $artist_id = $this->artist;
+        }
         $artist = new Artist($artist_id);
-        if ($artist->prefix)
-          return $artist->prefix . " " . $artist->name;
-        else
-          return $artist->name;
-
+        if ($artist->prefix) {
+            return $artist->prefix . " " . $artist->name;
+        } else {
+            return $artist->name;
+        }
     } // get_album_name
 
     /**
@@ -217,7 +223,6 @@ class Song_Preview extends database_object implements media, playable_item
         $this->f_track = $this->track;
 
         return true;
-
     } // format
 
     public function get_fullname()
@@ -232,6 +237,11 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     public function get_childrens()
+    {
+        return array();
+    }
+
+    public function search_childrens($name)
     {
         return array();
     }
@@ -265,7 +275,7 @@ class Song_Preview extends database_object implements media, playable_item
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
      */
-    public static function play_url($oid, $additional_params='', $local=false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         $song = new Song_Preview($oid);
         $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
@@ -276,7 +286,6 @@ class Song_Preview extends database_object implements media, playable_item
         $url = Stream::get_base_url($local) . "type=song_preview&oid=" . $song->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_URL::format($url . $additional_params);
-
     } // play_url
 
     public function stream()
@@ -285,15 +294,16 @@ class Song_Preview extends database_object implements media, playable_item
         foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->load($GLOBALS['user'])) {
-                if ($plugin->_plugin->stream_song_preview($this->file))
+                if ($plugin->_plugin->stream_song_preview($this->file)) {
                     break;
+                }
             }
         }
 
         return $data;
     }
 
-    public function get_stream_types()
+    public function get_stream_types($player = null)
     {
         return array('native');
     }
@@ -340,5 +350,5 @@ class Song_Preview extends database_object implements media, playable_item
             'WHERE `session`.`id` IS NULL';
         return Dba::write($sql);
     }
-
 } // end of song_preview class
+

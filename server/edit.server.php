@@ -46,7 +46,7 @@ if (empty($type)) {
     $object_type = implode('_', explode('_', $type, -1));
 }
 
-if (!Core::is_library_item($object_type)) {
+if (!Core::is_library_item($object_type) && $object_type != 'share') {
     debug_event('edit.server.php', 'Type `' . $type . '` is not based on an item library.', '3');
     exit();
 }
@@ -56,6 +56,9 @@ $libitem->format();
 
 $level = '50';
 if ($libitem->get_user_owner() == $GLOBALS['user']->id) {
+    $level = '25';
+}
+if ($_REQUEST['action'] == 'show_edit_playlist') {
     $level = '25';
 }
 
@@ -68,16 +71,16 @@ if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
 switch ($_REQUEST['action']) {
     case 'show_edit_object':
         ob_start();
-        require AmpConfig::get('prefix') . '/templates/show_edit_' . $type . '.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_edit_' . $type . '.inc.php');
         $results = ob_get_contents();
     break;
     case 'refresh_updated':
-        require AmpConfig::get('prefix') . '/templates/show_' . $type . '.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_' . $type . '.inc.php');
         $results = ob_get_contents();
     break;
     case 'show_edit_playlist':
         ob_start();
-        require AmpConfig::get('prefix') . '/templates/show_playlists_dialog.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_playlists_dialog.inc.php');
         $results = ob_get_contents();
         ob_end_clean();
     break;
@@ -91,16 +94,46 @@ switch ($_REQUEST['action']) {
         };
         $entities($_POST);
 
-        // this break generic layer, we should move it somewhere else
-        if ($type == 'song_row') {
-            $song = new Song($_POST['id']);
-            if ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface','75')) {
-                if (isset($_POST['artist'])) unset($_POST['artist']);
-                if (isset($_POST['album'])) unset($_POST['album']);
-                $levelok = true;
+        $libitem = new $object_type($_POST['id']);
+        if ($libitem->get_user_owner() == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+            // TODO: improve this uniqueless check
+            if (isset($_POST['user'])) {
+                unset($_POST['user']);
+            }
+            if (isset($_POST['artist'])) {
+                unset($_POST['artist']);
+            }
+            if (isset($_POST['artist_name'])) {
+                unset($_POST['artist_name']);
+            }
+            if (isset($_POST['album'])) {
+                unset($_POST['album']);
+            }
+            if (isset($_POST['album_name'])) {
+                unset($_POST['album_name']);
+            }
+            if (isset($_POST['album_artist'])) {
+                unset($_POST['album_artist']);
+            }
+            if (isset($_POST['album_artist_name'])) {
+                unset($_POST['album_artist_name']);
+            }
+            if (isset($_POST['edit_tags'])) {
+                $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);
+            }
+            if (isset($_POST['edit_labels'])) {
+                $_POST['edit_labels'] = Label::clean_to_existing($_POST['edit_labels']);
+            }
+            // Check mbid and *_mbid match as it is used as identifier
+            if (isset($_POST['mbid'])) {
+                $_POST['mbid'] = $libitem->mbid;
+            }
+            if (isset($_POST['mbid_group'])) {
+                $_POST['mbid_group'] = $libitem->mbid_group;
             }
         }
 
+        $libitem->format();
         $new_id = $libitem->update($_POST);
         $libitem = new $object_type($new_id);
         $libitem->format();

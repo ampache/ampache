@@ -1,0 +1,27 @@
+{
+    "name": "sabre/event",
+    "description" : "sabre/event is a library for lightweight event-based programming",
+    "keywords" : [ "Events", "EventEmitter", "Promise", "Hooks", "Plugin", "Signal" ],
+    "homepage" : "http://sabre.io/event/",
+    "license" : "BSD-3-Clause",
+    "require" : {
+        "php"          : ">=5.4.1"
+    },
+    "authors" : [
+        {
+            "name" : "Evert Pot",
+            "email" : "me@evertpot.com",
+            "homepage" : "http://evertpot.com/",
+            "role" : "Developer"
+        }
+    ],
+    "support" : {
+        "forum" : "https://groups.google.com/group/sabredav-discuss",
+        "source" : "https://github.com/fruux/sabre-event"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "Sabre\\Event\\" : "lib/"
+        }
+    }
+}

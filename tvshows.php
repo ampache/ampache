@@ -28,22 +28,58 @@ UI::show_header();
  * Display Switch
  */
 switch ($_REQUEST['action']) {
+    case 'delete':
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
+
+        $tvshow_id = scrub_in($_REQUEST['tvshow_id']);
+        show_confirmation(
+            T_('TVShow Deletion'),
+            T_('Are you sure you want to permanently delete this tvshow?'),
+            AmpConfig::get('web_path')."/tvshows.php?action=confirm_delete&tvshow_id=" . $tvshow_id,
+            1,
+            'delete_tvshow'
+        );
+    break;
+    case 'confirm_delete':
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
+
+        $tvshow = new TVShow($_REQUEST['tvshow_id']);
+        if (!Catalog::can_remove($tvshow)) {
+            debug_event('tvshow', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
+            UI::access_denied();
+            exit;
+        }
+
+        if ($tvshow->remove_from_disk()) {
+            show_confirmation(T_('TVShow Deletion'), T_('TVShow has been deleted.'), AmpConfig::get('web_path'));
+        } else {
+            show_confirmation(T_('TVShow Deletion'), T_('Cannot delete this tvshow.'), AmpConfig::get('web_path'));
+        }
+    break;
     case 'show':
         $tvshow = new TVShow($_REQUEST['tvshow']);
         $tvshow->format();
         $object_ids = $tvshow->get_seasons();
         $object_type = 'tvshow_season';
-        require_once AmpConfig::get('prefix') . '/templates/show_tvshow.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_tvshow.inc.php');
         break;
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
-        if ($match == "Browse") { $chr = ""; } else { $chr = $match; }
+        if ($match == "Browse") {
+            $chr = "";
+        } else {
+            $chr = $match;
+        }
         /* Enclose this in the purty box! */
-        require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
         show_alphabet_list('tvshows','tvshows.php',$match);
         show_alphabet_form($chr, T_('Show TV Shows starting with'),"tvshows.php?action=match");
-        require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
 
         if ($match === "Browse") {
             show_tvshows();

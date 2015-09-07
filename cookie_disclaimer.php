@@ -24,6 +24,6 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-require_once AmpConfig::get('prefix') . '/templates/cookie_disclaimer.inc.php';
+require_once AmpConfig::get('prefix') . UI::find_template('cookie_disclaimer.inc.php');
 
 UI::show_footer();

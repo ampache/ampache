@@ -49,10 +49,10 @@ if (!AmpConfig::get('access_control')) {
  * login via this interface so we do have an exception for action=login
  */
 if (!Session::exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
-        debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
-        ob_end_clean();
-        echo XML_Data::error('401', T_('Session Expired'));
-        exit();
+    debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
+    ob_end_clean();
+    echo XML_Data::error('401', T_('Session Expired'));
+    exit();
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
@@ -62,15 +62,15 @@ $username =
     : Session::username($_REQUEST['auth']);
 
 if (!Access::check_network('init-api', $username, 5)) {
-        debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
-        ob_end_clean();
-        echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
-        exit();
+    debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    ob_end_clean();
+    echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
+    exit();
 }
 
 if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
-        Session::extend($_REQUEST['auth']);
-        $GLOBALS['user'] = User::get_from_username($username);
+    Session::extend($_REQUEST['auth']);
+    $GLOBALS['user'] = User::get_from_username($username);
 }
 
 // Make sure beautiful url is disabled as it is not supported by most Ampache clients
@@ -84,7 +84,9 @@ $internal_functions = array('set_filter');
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
-    if (in_array($method,$internal_functions)) { continue; }
+    if (in_array($method,$internal_functions)) {
+        continue;
+    }
 
     // If the method is the same as the action being called
     // Then let's call this function!
@@ -93,7 +95,6 @@ foreach ($methods as $method) {
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;
     }
-
 } // end foreach methods in API
 
 // If we manage to get here, we still need to hand out an XML document

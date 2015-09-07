@@ -55,9 +55,10 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
+    <!-- Propulsed by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ampache :: For the love of Music - Update</title>
+    <title><?php echo AmpConfig::get('site_title'); ?> - Update</title>
     <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
@@ -83,11 +84,15 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
         <div class="content">
             <?php Update::display_update(); ?>
         </div>
-        <?php if (Update::need_update()) { ?>
-            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
-                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!'); ?></button>
+        <?php if (Update::need_update()) {
+    ?>
+            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path');
+    ?>/update.php?action=update">
+                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!');
+    ?></button>
             </form>
-        <?php } ?>
+        <?php 
+} ?>
     </div>
 </body>
 </html>

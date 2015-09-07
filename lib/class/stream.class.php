@@ -142,7 +142,7 @@ class Stream
 
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
-        if ($transcode_settings == false) {
+        if ($transcode_settings === false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
             return false;
         }
@@ -218,9 +218,8 @@ class Stream
         $sec = ($media->time >= 30) ? 30 : intval($media->time / 2);
         $frame = gmdate("H:i:s", $sec);
 
-        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('encode_get_image')) {
-
-            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('encode_get_image');
+        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
+            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
                 '%FILE%'   => scrub_arg($media->file),
                 '%TIME%' => $frame
@@ -255,16 +254,41 @@ class Stream
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             // Windows doesn't like to provide stderr as a pipe
             $descriptors[2] = array('pipe', 'w');
+            $cmdPrefix = "exec ";
+        } else {
+            $cmdPrefix = "start /B ";
         }
 
-        $process = proc_open($command, $descriptors, $pipes);
+
+        debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
+
+        $process = proc_open($cmdPrefix.$command, $descriptors, $pipes);
         $parray = array(
             'process' => $process,
             'handle' => $pipes[1],
             'stderr' => $pipes[2]
         );
 
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+        }
+
         return array_merge($parray, $settings);
+    }
+
+    public static function kill_process($transcoder)
+    {
+        $status = proc_get_status($transcoder['process']);
+        if ($status['running'] == true) {
+            $pid = $status['pid'];
+            debug_event('stream', 'Stream process about to be killed. pid:' . $pid, 1);
+
+            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("kill -9 $pid") : exec("taskkill /F /T /PID $pid");
+
+            proc_close($transcoder['process']);
+        } else {
+            debug_event('stream', 'Process is not running, kill skipped.', 5);
+        }
     }
 
     /**
@@ -364,6 +388,7 @@ class Stream
             $media = new $type($row['object_id']);
             $media->format();
             $client = new User($row['user']);
+            $client->format();
             $results[] = array(
                 'media' => $media,
                 'client' => $client,
@@ -373,7 +398,6 @@ class Stream
         } // end while
 
         return $results;
-
     } // get_now_playing
 
     /**
@@ -406,7 +430,9 @@ class Stream
     public static function run_playlist_method()
     {
         // If this wasn't ajax included run away
-        if (!defined('AJAX_INCLUDE')) { return false; }
+        if (!defined('AJAX_INCLUDE')) {
+            return false;
+        }
 
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
@@ -426,7 +452,6 @@ class Stream
         echo "<script type=\"text/javascript\">";
         echo Core::get_reloadutil() . "('".$_SESSION['iframe']['target']."');";
         echo "</script>";
-
     } // run_playlist_method
 
     /**
@@ -436,7 +461,7 @@ class Stream
     public static function get_base_url($local=false)
     {
         $session_string = '';
-        if (AmpConfig::get('require_session')) {
+        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $session_string = 'ssid=' . self::get_session() . '&';
         }
 
@@ -462,7 +487,6 @@ class Stream
         $url = $web_path . "/play/index.php?$session_string";
 
         return $url;
-
     } // get_base_url
-
 } //end of stream class
+

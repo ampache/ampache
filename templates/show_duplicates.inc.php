@@ -45,20 +45,32 @@
                     $button_flip_state_id = 'button_flip_state_' . $song_id;
                     $current_class = ($key == '0') ? 'row-highlight' : UI::flip_class();
                     $button = $song->enabled ? 'disable' : 'enable';
-                ?>
-        <tr id="<?php echo $row_key; ?>" class="<?php echo $current_class; ?>">
-            <td class="cel_disable" id="<?php echo($button_flip_state_id); ?>">
-                <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id,$button, T_(ucfirst($button)),'flip_state_' . $song_id); ?>
+                    ?>
+        <tr id="<?php echo $row_key;
+                    ?>" class="<?php echo $current_class;
+                    ?>">
+            <td class="cel_disable" id="<?php echo($button_flip_state_id);
+                    ?>">
+                <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id,$button, T_(ucfirst($button)),'flip_state_' . $song_id);
+                    ?>
             </td>
-            <td class="cel_song"><?php echo $song->f_link; ?></td>
-            <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
-            <td class="cel_album"><?php echo $song->f_album_link; ?></td>
-            <td class="cel_length"><?php echo $song->f_time; ?></td>
-            <td class="cel_bitrate"><?php echo $song->f_bitrate; ?></td>
-            <td class="cel_size"><?php echo $song->f_size; ?></td>
-            <td class="cel_filename"><?php echo scrub_out($song->file); ?></td>
+            <td class="cel_song"><?php echo $song->f_link;
+                    ?></td>
+            <td class="cel_artist"><?php echo $song->f_artist_link;
+                    ?></td>
+            <td class="cel_album"><?php echo $song->f_album_link;
+                    ?></td>
+            <td class="cel_length"><?php echo $song->f_time;
+                    ?></td>
+            <td class="cel_bitrate"><?php echo $song->f_bitrate;
+                    ?></td>
+            <td class="cel_size"><?php echo $song->f_size;
+                    ?></td>
+            <td class="cel_filename"><?php echo scrub_out($song->file);
+                    ?></td>
         </tr>
         <?php
+
                 }
             }
         ?>

@@ -29,7 +29,9 @@
 
 require_once 'lib/init.php';
 
-if (!AmpConfig::get('waveform')) exit();
+if (!AmpConfig::get('waveform')) {
+    exit();
+}
 
 // Prevent user from aborting script
 ignore_user_abort(true);

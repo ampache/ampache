@@ -38,7 +38,6 @@ function set_memory_limit($new_limit)
     if ($current_limit < $new_limit) {
         ini_set (memory_limit, $new_limit);
     }
-
 } // set_memory_limit
 
 /**
@@ -56,7 +55,7 @@ function generate_password($length)
     for ($i = 0; $i < $length; $i++) {
         if ($alt == 1) {
             $password .= $consonants[(rand(0,strlen($consonants)-1))];
-        $alt = 0;
+            $alt = 0;
         } else {
             $password .= $vowels[(rand(0,strlen($vowels)-1))];
             $alt = 1;
@@ -64,7 +63,6 @@ function generate_password($length)
     }
 
     return $password;
-
 } // generate_password
 
 /**
@@ -93,7 +91,6 @@ function scrub_in($input)
 function scrub_out($string)
 {
     return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset'));
-
 } // scrub_out
 
 /**
@@ -103,7 +100,6 @@ function scrub_out($string)
 function unhtmlentities($string)
 {
     return html_entity_decode($string, ENT_QUOTES, AmpConfig::get('site_charset'));
-
 } //unhtmlentities
 
 /**
@@ -132,7 +128,6 @@ function make_bool($string)
     }
 
     return (bool) $string;
-
 } // make_bool
 
 /**
@@ -142,7 +137,6 @@ function make_bool($string)
 function invert_bool($value)
 {
     return make_bool($value) ? false : true;
-
 } // invert_bool
 
 /**
@@ -164,12 +158,10 @@ function get_languages()
     $results = array();
 
     while (false !== ($file = readdir($handle))) {
-
         $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
 
         /* Check to see if it's a directory */
         if (is_dir($full_file) AND substr($file,0,1) != '.' AND $file != 'base') {
-
             switch ($file) {
                 case 'af_ZA'; $name = 'Afrikaans'; break; /* Afrikaans */
                 case 'bg_BG'; $name = '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;'; break; /* Bulgarian */
@@ -222,7 +214,6 @@ function get_languages()
 
             $results[$file] = $name;
         }
-
     } // end while
 
     // Sort the list of languages by country code
@@ -232,7 +223,6 @@ function get_languages()
     $results = array( "en_US" => "English (US)" ) + $results;
 
     return $results;
-
 } // get_languages
 
 /**
@@ -266,7 +256,6 @@ function translate_pattern_code($code)
     }
 
     return false;
-
 } // translate_pattern_code
 
 /**
@@ -290,7 +279,6 @@ function generate_config($current)
         if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
-
             $key    = $matches[1];
             $value  = $matches[2];
 
@@ -320,7 +308,7 @@ function write_config($current_file_path)
 
     // Start writing into the current config file
     $handle = fopen($current_file_path, 'w+');
-    $writtenlen = fwrite($handle, $new_data, strlen($new_data));
+    fwrite($handle, $new_data, strlen($new_data));
     fclose($handle);
 }
 
@@ -344,11 +332,15 @@ if (!function_exists('apache_request_headers')) {
             if (substr($name, 0, 5) == 'HTTP_') {
                 $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
                 $headers[$name] = $value;
-            } else if ($name == "CONTENT_TYPE") {
-               $headers["Content-Type"] = $value;
-           } else if ($name == "CONTENT_LENGTH") {
-               $headers["Content-Length"] = $value;
-           }
+            } else {
+                if ($name == "CONTENT_TYPE") {
+                    $headers["Content-Type"] = $value;
+                } else {
+                    if ($name == "CONTENT_LENGTH") {
+                        $headers["Content-Length"] = $value;
+                    }
+                }
+            }
         }
         return $headers;
     }

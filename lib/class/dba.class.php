@@ -21,7 +21,9 @@
  */
 
 /* Make sure they aren't directly accessing it */
-if (!defined('INIT_LOADED') || INIT_LOADED != '1') { exit; }
+if (!defined('INIT_LOADED') || INIT_LOADED != '1') {
+    exit;
+}
 
 /**
  * Dba Class
@@ -48,7 +50,6 @@ class Dba
     private function __construct()
     {
         // Rien a faire
-
     } // construct
 
     /**
@@ -93,12 +94,14 @@ class Dba
             self::$_error = json_encode($dbh->errorInfo());
             debug_event('Dba', 'Error: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
-        } else if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
-            self::$_error = json_encode($stmt->errorInfo());
-            debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
-            self::finish($stmt);
-            self::disconnect();
-            return false;
+        } else {
+            if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
+                self::$_error = json_encode($stmt->errorInfo());
+                debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
+                self::finish($stmt);
+                self::disconnect();
+                return false;
+            }
         }
 
         return $stmt;
@@ -173,7 +176,7 @@ class Dba
             return array();
         }
 
-        $result = $resource->fetch(PDO::FETCH_NUM);;
+        $result = $resource->fetch(PDO::FETCH_NUM);
 
         if (!$result) {
             if ($finish) {

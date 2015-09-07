@@ -85,5 +85,5 @@ class Artist_Event
 
         return false;
     }
-
 } // end of recommendation class
+

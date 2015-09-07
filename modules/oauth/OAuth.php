@@ -3,7 +3,7 @@
 
 
 // Avoid http://php.net/manual/fr/class.oauthexception.php conflict
-if (!class_exists("OAuthException")) {
+if (!class_exists("OAuthException", false)) {
     /* Generic exception class
      */
     class OAuthException extends Exception {

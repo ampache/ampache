@@ -95,7 +95,8 @@ class Catalog_beetsremote extends Beets\Catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
      */
-    public static function create_type($catalog_id, $data) { // TODO: This Method should be required / provided by parent
+    public static function create_type($catalog_id, $data)
+    { // TODO: This Method should be required / provided by parent
         $uri = $data['uri'];
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
@@ -137,5 +138,4 @@ class Catalog_beetsremote extends Beets\Catalog
 
         return (boolean) $this->getIdFromPath($song['file']);
     }
-
 }

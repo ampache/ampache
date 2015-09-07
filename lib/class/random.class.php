@@ -47,7 +47,6 @@ class Random
         $results = Dba::fetch_assoc($db_results);
 
         return $results['id'];
-
     } // artist
 
     /**
@@ -65,7 +64,6 @@ class Random
         $results = Dba::fetch_assoc($db_results);
 
         return $results['id'];
-
     } // playlist
 
     /**
@@ -74,7 +72,6 @@ class Random
      */
     public static function get_single_song($type)
     {
-        $song_id = 0;
         $method_name = 'get_' . $type;
 
         if (!method_exists('Random', $method_name)) {
@@ -84,7 +81,6 @@ class Random
         $song_id = array_pop($song_ids);
 
         return $song_id;
-
     } // get_single_song
 
     /**
@@ -113,7 +109,6 @@ class Random
         }
 
         return $results;
-
     } // get_default
 
     /**
@@ -147,7 +142,6 @@ class Random
         }
 
         return $results;
-
     } // get_album
 
     /**
@@ -180,7 +174,6 @@ class Random
         }
 
         return $results;
-
     } // get_artist
 
     /**
@@ -197,7 +190,11 @@ class Random
 
         /* If they've passed -1 as limit then get everything */
         $limit_sql = "";
-        if ($data['random'] == "-1") { unset($data['random']); } else { $limit_sql = "LIMIT " . Dba::escape($limit); }
+        if ($data['random'] == "-1") {
+            unset($data['random']);
+        } else {
+            $limit_sql = "LIMIT " . Dba::escape($limit);
+        }
 
         $search_data = Search::clean_request($data);
 
@@ -305,7 +302,8 @@ class Random
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
-                    break; }
+                    break;
+                }
             } // if size_limit
 
             // If length really does matter
@@ -314,7 +312,8 @@ class Random
                 $new_time = floor($row['time'] / 60);
 
                 if ($fuzzy_time > 100) {
-                    break;;
+                    break;
+                    ;
                 }
 
                 // If the new one would go over skip!
@@ -335,7 +334,6 @@ class Random
             if (!$data['size_limit'] && !$data['length']) {
                 $results[] = $row['id'];
             }
-
         } // end while results
 
         switch ($type) {
@@ -359,5 +357,5 @@ class Random
                 return false;
         }
     } // advanced
-
 } //end of random class
+

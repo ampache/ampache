@@ -95,6 +95,7 @@ class vainfo
             } catch (Exception $error) {
                 debug_event('getID3', "Broken file detected: $file: " . $error->getMessage(), 1);
                 $this->_broken = true;
+
                 return false;
             }
 
@@ -131,7 +132,7 @@ class vainfo
                 }
 
                 $this->encoding_id3v2 = self::_detect_encoding($tags, $mb_order);
-                $this->_getID3->encoding_id3v2 = $this->encoding_id3v2;
+                $this->_getID3->encoding = $this->encoding_id3v2;
             }
 
             $this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
@@ -151,33 +152,44 @@ class vainfo
      */
     private static function _detect_encoding($tags, $mb_order)
     {
-        if (function_exists('mb_detect_encoding')) {
-            $encodings = array();
-            if (is_array($tags)) {
-                foreach ($tags as $tag) {
-                    $encodings[mb_detect_encoding($tag, $mb_order, true)]++;
+        if (!function_exists('mb_detect_encoding')) {
+            return 'ISO-8859-1';
+        }
+
+        $encodings = array();
+        if (is_array($tags)) {
+            foreach ($tags as $tag) {
+                if (is_array($tag)) {
+                    $tag = implode(" ", $tag);
+                }
+                $enc = mb_detect_encoding($tag, $mb_order, true);
+                if ($enc != false) {
+                    $encodings[$enc]++;
                 }
             }
-
-            debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
-            $high = 0;
-            $encoding = '';
-            foreach ($encodings as $key => $value) {
-                if ($value > $high) {
-                    $encoding = $key;
-                    $high = $value;
-                }
-            }
-
-            if ($encoding != 'ASCII' && $encoding != '0') {
-                return (string) $encoding;
-            } else {
-                return 'ISO-8859-1';
+        } else {
+            $enc = mb_detect_encoding($tags, $mb_order, true);
+            if ($enc != false) {
+                $encodings[$enc]++;
             }
         }
-        return 'ISO-8859-1';
-    }
 
+        //!!debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
+        $high = 0;
+        $encoding = 'ISO-8859-1';
+        foreach ($encodings as $key => $value) {
+            if ($value > $high) {
+                $encoding = $key;
+                $high = $value;
+            }
+        }
+
+        if ($encoding != 'ASCII') {
+            return (string) $encoding;
+        } else {
+            return 'ISO-8859-1';
+        }
+    }
 
     /**
      * get_info
@@ -190,6 +202,7 @@ class vainfo
         // time, just return their rotting carcass of a media file.
         if ($this->_broken) {
             $this->tags = $this->set_broken();
+
             return true;
         }
 
@@ -336,7 +349,7 @@ class vainfo
             $info['bitrate'] = $info['bitrate'] ?: intval($tags['bitrate']);
             $info['rate'] = $info['rate'] ?: intval($tags['rate']);
             $info['mode'] = $info['mode'] ?: $tags['mode'];
-            $info['size'] = $info['size'] ?: $tags['size'];
+            // size will be added later, because of conflicts between real file size and getID3 reported filesize
             $info['mime'] = $info['mime'] ?: $tags['mime'];
             $info['encoding'] = $info['encoding'] ?: $tags['encoding'];
             $info['rating'] = $info['rating'] ?: $tags['rating'];
@@ -372,13 +385,10 @@ class vainfo
             $info['release_type'] = $info['release_type'] ?: trim($tags['release_type']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
+            $info['comment'] = $info['comment'] ?: trim($tags['comment']);
 
             $info['lyrics']    = $info['lyrics']
-                    ?: str_replace(
-                        array("\r\n","\r","\n"),
-                        '<br />',
-                        strip_tags($tags['lyrics']));
-
+                    ?: strip_tags(nl2br($tags['lyrics']), "<br>");
             $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: floatval($tags['replaygain_track_gain']);
             $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: floatval($tags['replaygain_track_peak']);
             $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
@@ -418,6 +428,15 @@ class vainfo
             unset($info['disk']);
             unset($info['totaldisks']);
         }
+
+    // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
+        if (isset($results['general']['size'])) {
+            $size = $results['general']['size'];
+        } else {
+            $size = Core::get_filesize(Core::conv_lc_file($filename));
+        }
+
+        $info['size'] = $info['size'] ?: $size;
 
         return $info;
     }
@@ -662,6 +681,7 @@ class vainfo
             default:
                 /* Log the fact that we couldn't figure it out */
                 debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
+
                 return $type;
         }
     }
@@ -717,11 +737,12 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            if ($tag == 'unsynchedlyrics' || $tag == 'unsynchronised lyric') {
+            if ($tag == 'unsyncedlyrics' || $tag == 'unsynced lyrics' || $tag == 'unsynchronised lyric') {
                 $tag = 'lyrics';
             }
             $parsed[$tag] = $data[0];
         }
+
         return $parsed;
     }
 
@@ -769,6 +790,8 @@ class vainfo
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = $data[0];
                     break;
+                case 'unsyncedlyrics':
+                case 'unsynced lyrics':
                 case 'lyrics':
                     $parsed['lyrics'] = $data[0];
                     break;
@@ -820,6 +843,10 @@ class vainfo
                 break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
+                break;
+                case 'comment':
+                    // First array key can be xFF\xFE in case of UTF-8, better to get it this way
+                    $parsed['comment'] = reset($data);
                 break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
@@ -894,6 +921,10 @@ class vainfo
                         $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
                     }
                 }
+                // Rating made by an unknow user, adding it to super user (id=-1)
+                else {
+                    $parsed['rating'][-1] = $popm['rating'] / 255 * 5;
+                }
             }
         }
 
@@ -931,7 +962,7 @@ class vainfo
         foreach ($tags as $tag => $data) {
             switch ($tag) {
                 case 'creation_date':
-                    $parsed['release_date'] = strtotime($data[0]);
+                    $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
                         $data[0] = date('Y', $parsed['release_date']);
                     }
@@ -958,6 +989,21 @@ class vainfo
                 case 'track_number':
                     $parsed['track'] = $data[0];
                 break;
+                case 'disc_number':
+                    $parsed['disk'] = $data[0];
+                break;
+                case 'album_artist':
+                    $parsed['albumartist'] = $data[0];
+                break;
+                case 'tv_episode':
+                    $parsed['tvshow_episode'] = $data[0];
+                    break;
+                case 'tv_season':
+                    $parsed['tvshow_season'] = $data[0];
+                    break;
+                case 'tv_show_name':
+                    $parsed['tvshow'] = $data[0];
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
@@ -1162,6 +1208,7 @@ class vainfo
             $name = preg_replace('/^ /', '', $name);
             $name = preg_replace('/^-/', '', $name);
         }
+
         return $name;
     }
 
@@ -1175,6 +1222,7 @@ class vainfo
             $name = preg_replace('/ $/', '', $name);
             $name = preg_replace('/-$/', '', $name);
         }
+
         return $name;
     }
 
@@ -1183,7 +1231,7 @@ class vainfo
      *
      * This fills all tag types with Unknown (Broken)
      *
-     * @return    array    Return broken title, album, artist
+     * @return array Return broken title, album, artist
      */
     public function set_broken()
     {
@@ -1208,7 +1256,7 @@ class vainfo
 
     /**
      *
-     * @param array $data
+     * @param  array     $data
      * @return array
      * @throws Exception
      */
@@ -1224,6 +1272,8 @@ class vainfo
             }
             $data = $genres;
         }
+
         return $data;
     }
 } // end class vainfo
+

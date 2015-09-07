@@ -22,7 +22,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
         <friendlyName>Ampache</friendlyName>
         <manufacturer>ampache.org</manufacturer>
         <manufacturerURL>http://ampache.org</manufacturerURL>
-        <modelDescription>Ampache - For the love of music</modelDescription>
+        <modelDescription><?php echo AmpConfig::get('site_title'); ?></modelDescription>
         <modelName>Ampache</modelName>
         <modelNumber><?php echo AmpConfig::get('version'); ?></modelNumber>
         <modelURL>http://ampache.org</modelURL>

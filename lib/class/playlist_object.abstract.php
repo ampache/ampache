@@ -71,9 +71,9 @@ abstract class playlist_object extends database_object implements library_item
 
         if ($details) {
             $client = new User($this->user);
-            $this->f_user = $client->fullname;
+            $client->format();
+            $this->f_user = $client->f_name;
         }
-
     } // format
 
     /**
@@ -83,15 +83,14 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function has_access()
     {
-        if (!Access::check('interface','25')) {
+        if (!Access::check('interface', 25)) {
             return false;
         }
         if ($this->user == $GLOBALS['user']->id) {
             return true;
         } else {
-            return Access::check('interface','100');
+            return Access::check('interface', 75);
         }
-
     } // has_access
 
     public function get_medias($filter_type = null)
@@ -138,6 +137,11 @@ abstract class playlist_object extends database_object implements library_item
         return $this->get_items();
     }
 
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
     public function get_user_owner()
     {
         return $this->user;
@@ -146,6 +150,16 @@ abstract class playlist_object extends database_object implements library_item
     public function get_default_art_kind()
     {
         return 'default';
+    }
+
+    public function get_description()
+    {
+        return null;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        // no art
     }
 
     /**
@@ -158,5 +172,5 @@ abstract class playlist_object extends database_object implements library_item
     {
         return array();
     }
-
 } // end playlist_object
+

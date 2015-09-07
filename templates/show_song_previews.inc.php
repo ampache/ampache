@@ -23,13 +23,17 @@
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <thead>
         <tr class="th-top">
-            <?php if (AmpConfig::get('echonest_api_key')) { ?>
+            <?php if (AmpConfig::get('echonest_api_key')) {
+    ?>
                 <th class="cel_play"></th>
-            <?php } ?>
+            <?php 
+} ?>
             <th class="cel_song"><?php echo T_('Song Title'); ?></th>
-            <?php if (AmpConfig::get('echonest_api_key')) { ?>
+            <?php if (AmpConfig::get('echonest_api_key')) {
+    ?>
                 <th class="cel_add"></th>
-            <?php } ?>
+            <?php 
+} ?>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_track"><?php echo T_('Track'); ?></th>
@@ -39,11 +43,15 @@
     <tbody>
         <?php
         foreach ($object_ids as $libitem) {
-        ?>
-        <tr id="song_preview_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_song_preview_row.inc.php'; ?>
+            ?>
+        <tr id="song_preview_<?php echo $libitem->id;
+            ?>" class="<?php echo UI::flip_class();
+            ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_song_preview_row.inc.php');
+            ?>
         </tr>
-        <?php } ?>
+        <?php 
+        } ?>
     </tbody>
 </table>
 <?php UI::show_box_bottom(); ?>

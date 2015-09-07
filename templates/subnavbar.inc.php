@@ -35,6 +35,11 @@
         }
         $li_id = "id=\"" . $item['cssclass'] . "\"";
         ?>
-        <li <?php echo $li_class; echo $li_id; ?>><a href="<?php echo AmpConfig::get('web_path') . "/" .  $item['url']; ?>"><?php echo $item['title']; ?></a></li>
-    <?php unset($li_id); } // END foreach ($items as $item) ?>
+        <li <?php echo $li_class;
+        echo $li_id;
+        ?>><a href="<?php echo AmpConfig::get('web_path') . "/" .  $item['url'];
+        ?>"><?php echo $item['title'];
+        ?></a></li>
+    <?php unset($li_id);
+    } // END foreach ($items as $item) ?>
 </ul>

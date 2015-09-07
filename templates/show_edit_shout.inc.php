@@ -34,7 +34,9 @@
     <td><textarea rows="5" cols="70"  maxlength="140" name="comment" autofocus><?php echo $shout->text; ?></textarea></td>
 </tr>
 <tr>
-    <td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") { echo "checked"; } ?>/> <strong><?php echo T_('Stick this comment'); ?></strong></td>
+    <td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") {
+    echo "checked";
+} ?>/> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
 <tr>
     <td>

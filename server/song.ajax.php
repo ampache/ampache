@@ -23,7 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 switch ($_REQUEST['action']) {
     case 'flip_state':
@@ -42,7 +44,6 @@ switch ($_REQUEST['action']) {
         $id = 'button_flip_state_' . $song->id;
         $button = $song->enabled ? 'disable' : 'enable';
         $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button, T_(ucfirst($button)),'flip_state_' . $song->id);
-
     break;
     case 'shouts':
         ob_start();
@@ -56,13 +57,14 @@ switch ($_REQUEST['action']) {
             echo "shouts = {};\r\n";
             foreach ($shouts as $id) {
                 $shout = new Shoutbox($id);
+                $shout->format();
                 $key = intval($shout->data);
                 echo "if (shouts['" . $key. "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
                 echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
                 echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->data / $media->time) * 400) - 1) . "px;\' />');\r\n";
             }
             echo "</script>\r\n";
-            }
+        }
         $results['shouts_data'] = ob_get_clean();
     break;
     default:

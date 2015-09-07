@@ -48,7 +48,6 @@ class TVShow_Episode extends Video
         }
 
         return true;
-
     }
 
     /**
@@ -112,7 +111,6 @@ class TVShow_Episode extends Video
         Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']));
 
         return $data['id'];
-
     }
 
     /**
@@ -123,10 +121,10 @@ class TVShow_Episode extends Video
     {
         parent::update($data);
 
-        $original_name = $data['original_name'] ?: $this->original_name;
-        $tvshow_season = $data['tvshow_season'] ?: $this->season;
-        $tvshow_episode = $data['tvshow_episode'] ?: $this->episode_number;
-        $summary = $data['summary'] ?: $this->summary;
+        $original_name = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
+        $tvshow_season = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
+        $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->episode_number;
+        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
         Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
@@ -137,7 +135,6 @@ class TVShow_Episode extends Video
         $this->summary = $summary;
 
         return $this->id;
-
     }
 
     /**
@@ -204,5 +201,55 @@ class TVShow_Episode extends Video
         return array('object_type' => 'tvshow_season',
             'object_id' => $this->season
         );
+    }
+
+    public function get_description()
+    {
+        if (!empty($this->summary)) {
+            return $this->summary;
+        }
+
+        $season = new TVShow_Season($this->season);
+        return $season->get_description();
+    }
+
+    public function display_art($thumb = 2)
+    {
+        $id = null;
+        $type = null;
+
+        if (Art::has_db($this->id, 'video')) {
+            $id = $this->id;
+            $type = 'video';
+        } else {
+            if (Art::has_db($this->season, 'tvshow_season')) {
+                $id = $this->season;
+                $type = 'tvshow_season';
+            } else {
+                $season = new TVShow_Season($this->season);
+                if (Art::has_db($season->tvshow, 'tvshow')) {
+                    $id = $season->tvshow;
+                    $type = 'tvshow';
+                }
+            }
+        }
+
+        if ($id !== null && $type !== null) {
+            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
+
+    /**
+     * Remove the video from disk.
+     */
+    public function remove_from_disk()
+    {
+        $deleted = parent::remove_from_disk();
+        if ($deleted) {
+            $sql = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+        }
+
+        return $deleted;
     }
 }

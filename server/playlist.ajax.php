@@ -23,7 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -60,7 +62,7 @@ switch ($_REQUEST['action']) {
             }
 
             $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
-            $playlist_id = Playlist::create($name,'public');
+            $playlist_id = Playlist::create($name, 'private');
             if (!$playlist_id) {
                 break;
             }
@@ -129,7 +131,7 @@ switch ($_REQUEST['action']) {
             /*$playlist->format();
             $object_ids = $playlist->get_items();
             ob_start();
-            require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
             $results['content'] = ob_get_contents();
             ob_end_clean();*/
             debug_event('playlist', 'Items added successfully!', '5');

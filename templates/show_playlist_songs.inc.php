@@ -22,7 +22,9 @@
 
 $web_path = AmpConfig::get('web_path');
 ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
     <table id="reorder_playlist_table" class="tabledata" cellpadding="0" cellspacing="0">
         <thead>
@@ -34,35 +36,47 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_album optional"><?php echo T_('Album'); ?></th>
                 <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time optional"><?php echo T_('Time'); ?></th>
-                <?php if (User::is_registered()) { ?>
+                <?php if (User::is_registered()) {
+    ?>
                     <?php if (AmpConfig::get('ratings')) {
-                        Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
-                    ?>
-                        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                    <?php } ?>
+    Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
+    ?>
+                        <th class="cel_rating"><?php echo T_('Rating');
+    ?></th>
+                    <?php 
+}
+    ?>
                     <?php if (AmpConfig::get('userflags')) {
-                        Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
-                    ?>
-                <?php } ?>
-                <th class="cel_userflag essential"><?php echo T_('Fav.'); ?></th>
-            <?php } ?>
+    Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
+    ?>
+                <?php 
+}
+    ?>
+                <th class="cel_userflag essential"><?php echo T_('Fav.');
+    ?></th>
+            <?php 
+} ?>
                 <th class="cel_action essential"><?php echo T_('Action'); ?></th>
                 <th class="cel_drag essential"></th>
             </tr>
         </thead>
         <tbody id="sortableplaylist_<?php echo $playlist->id; ?>">
             <?php foreach ($object_ids as $object) {
-                    if (!is_array($object)) {
-                        $object = (array) $object;
-                    }
-                    $libitem = new Song($object['object_id']);
-                    $libitem->format();
-                    $playlist_track = $object['track'];
-            ?>
-                    <tr class="<?php echo UI::flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
-                        <?php require AmpConfig::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?>
+    if (!is_array($object)) {
+        $object = (array) $object;
+    }
+    $libitem = new Song($object['object_id']);
+    $libitem->format();
+    $playlist_track = $object['track'];
+    ?>
+                    <tr class="<?php echo UI::flip_class();
+    ?>" id="track_<?php echo $object['track_id'];
+    ?>">
+                        <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_song_row.inc.php');
+    ?>
                     </tr>
-            <?php } ?>
+            <?php 
+} ?>
         </tbody>
         <tfoot>
             <tr class="th-bottom">
@@ -73,14 +87,24 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_album"><?php echo T_('Album'); ?></th>
                 <th class="cel_tags"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time"><?php echo T_('Time'); ?></th>
-                <?php if (User::is_registered()) { ?>
-                    <?php if (AmpConfig::get('ratings')) { ?>
-                        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                    <?php } ?>
-                    <?php if (AmpConfig::get('userflags')) { ?>
-                        <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-                    <?php } ?>
-                <?php } ?>
+                <?php if (User::is_registered()) {
+    ?>
+                    <?php if (AmpConfig::get('ratings')) {
+    ?>
+                        <th class="cel_rating"><?php echo T_('Rating');
+    ?></th>
+                    <?php 
+}
+    ?>
+                    <?php if (AmpConfig::get('userflags')) {
+    ?>
+                        <th class="cel_userflag"><?php echo T_('Fav.');
+    ?></th>
+                    <?php 
+}
+    ?>
+                <?php 
+} ?>
                 <th class="cel_action"><?php echo T_('Action'); ?></th>
                 <th class="cel_drag"></th>
             </tr>
@@ -88,4 +112,6 @@ $web_path = AmpConfig::get('web_path');
     </table>
 </form>
 <?php show_table_render($argument); ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>

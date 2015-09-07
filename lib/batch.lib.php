@@ -77,15 +77,15 @@ function get_media_files($media_ids)
 function send_zip($name, $media_files)
 {
     /* Require needed library */
-    require_once AmpConfig::get('prefix') . '/modules/zipstream/zipstream.php';
-    $arc = new ZipStream($name . ".zip" );
+    require_once AmpConfig::get('prefix') . '/modules/ZipStream/ZipStream.php';
+    $arc = new ZipStream\ZipStream($name . ".zip" );
     $options = array(
         'comment'       => AmpConfig::get('file_zip_comment'),
     );
 
     foreach ($media_files as $dir => $files) {
         foreach ($files as $file) {
-            $arc->add_file_from_path($dir . "/" . basename($file), $file, $options);
+            $arc->addFileFromPath($dir . "/" . basename($file), $file, $options);
         }
     }
 

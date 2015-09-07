@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface','25') OR !AmpConfig::get('use_auth')) {
+        if (!Access::check('interface','25') && $GLOBALS['user']->id > 0) {
             UI::access_denied();
             exit;
         }
@@ -136,9 +136,10 @@ switch ($_REQUEST['action']) {
         }
 
         if (!$GLOBALS['user']->update($_POST)) {
-            $GLOBALS['user']->upload_avatar();
             Error::add('general', T_('Error Update Failed'));
         } else {
+            $GLOBALS['user']->upload_avatar();
+
             //$_REQUEST['action'] = 'confirm';
             $title = T_('Updated');
             $text = T_('Your Account has been updated');
@@ -168,7 +169,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Show the default preferences page
-        require AmpConfig::get('prefix') . '/templates/show_preferences.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_preferences.inc.php');
     break;
 } // end switch on action
 

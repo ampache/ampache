@@ -41,7 +41,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'create_playlist':
         /* Check rights */
-        if (!Access::check('interface','25')) {
+        if (!Access::check('interface', 25)) {
             UI::access_denied();
             break;
         }
@@ -61,10 +61,10 @@ switch ($_REQUEST['action']) {
         $playlist = new Playlist($_REQUEST['playlist_id']);
         $playlist->format();
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
     break;
     case 'show_import_playlist':
-        require_once AmpConfig::get('prefix') . '/templates/show_import_playlist.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_import_playlist.inc.php');
     break;
     case 'import_playlist':
         /* first we rename the file to it's original name before importing.
@@ -106,7 +106,7 @@ switch ($_REQUEST['action']) {
 
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
-            $track = 1;
+            $track = $_GET['offset'] ? (intval($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     $playlist->update_track_number($song_id, $track);
@@ -164,7 +164,7 @@ switch ($_REQUEST['action']) {
             $playlist->delete_track($track_id);
         }
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
     break;
     case 'sort_tracks':
         $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -176,10 +176,10 @@ switch ($_REQUEST['action']) {
         /* Sort the tracks */
         $playlist->sort_tracks();
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
     break;
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
     break;
 } // switch on the action
 

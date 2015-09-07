@@ -20,7 +20,9 @@
  *
  */
 ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="playlist">
     <thead>
         <tr class="th-top">
@@ -30,14 +32,24 @@
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_songs optional"><?php echo T_('# Songs'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-                <?php } ?>
-            <?php } ?>
+            <?php if (User::is_registered()) {
+    ?>
+                <?php if (AmpConfig::get('ratings')) {
+    ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating');
+    ?></th>
+                <?php 
+}
+    ?>
+                <?php if (AmpConfig::get('userflags')) {
+    ?>
+                    <th class="cel_userflag optional"><?php echo T_('Fav.');
+    ?></th>
+                <?php 
+}
+    ?>
+            <?php 
+} ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -46,16 +58,24 @@
         foreach ($object_ids as $playlist_id) {
             $libitem = new Playlist($playlist_id);
             $libitem->format();
-        ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $libitem->id; ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_playlist_row.inc.php'; ?>
+            ?>
+        <tr class="<?php echo UI::flip_class();
+            ?>" id="playlist_row_<?php echo $libitem->id;
+            ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php');
+            ?>
         </tr>
-        <?php } // end foreach ($playlists as $playlist) ?>
-        <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="7"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
+        <?php 
+        } // end foreach ($playlists as $playlist) ?>
+        <?php if (!count($object_ids)) {
+    ?>
+        <tr class="<?php echo UI::flip_class();
+    ?>">
+            <td colspan="7"><span class="nodata"><?php echo T_('No playlist found');
+    ?></span></td>
         </tr>
-        <?php } ?>
+        <?php 
+} ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -65,17 +85,29 @@
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_songs optional"><?php echo T_('# Songs'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner_bottom'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                <?php } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-                <?php } ?>
-            <?php } ?>
+            <?php if (User::is_registered()) {
+    ?>
+                <?php if (AmpConfig::get('ratings')) {
+    ?>
+                    <th class="cel_rating"><?php echo T_('Rating');
+    ?></th>
+                <?php 
+}
+    ?>
+                <?php if (AmpConfig::get('userflags')) {
+    ?>
+                    <th class="cel_userflag"><?php echo T_('Fav.');
+    ?></th>
+                <?php 
+}
+    ?>
+            <?php 
+} ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </tfoot>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>

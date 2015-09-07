@@ -65,8 +65,8 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']        = '3.8.0-develop';
-$results['int_config_version'] = '23';
+$results['version']        = '3.8.1-develop';
+$results['int_config_version'] = '30';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -80,16 +80,18 @@ if ($ow_config) {
 
 $results['raw_web_path'] = $results['web_path'];
 if (empty($results['http_host'])) {
-    $results['http_host'] = $_SERVER['HTTP_HOST'];
+    $results['http_host'] = $_SERVER['SERVER_NAME'];
 }
 if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
 }
-$results['web_path'] = $http_type . $results['http_host'] . $results['web_path'];
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
+$results['web_path'] = $http_type . $results['http_host'] .
+        (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
+        $results['web_path'];
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
-$results['max_upload_size'] = $results['max_upload_size'] ?: 102400;
+$results['max_upload_size'] = $results['max_upload_size'] ?: 1048576;
 $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
 
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
@@ -119,6 +121,8 @@ require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
 require_once $prefix . '/modules/EchoNest/Autoloader.php';
 EchoNest_Autoloader::register();
+
+require_once $prefix . '/modules/SabreDAV/autoload.php';
 
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
@@ -204,7 +208,8 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user']->access = intval($auth['access']);
         }
         if (!$GLOBALS['user']->id AND !AmpConfig::get('demo_mode')) {
-            Auth::logout(session_id()); exit;
+            Auth::logout(session_id());
+            exit;
         }
         $GLOBALS['user']->update_last_seen();
     }
@@ -219,8 +224,9 @@ else {
     } else {
         $GLOBALS['user'] = new User();
     }
-
 } // If NO_SESSION passed
+
+$GLOBALS['user']->format(false);
 
 // Load the Preferences from the database
 Preference::init();

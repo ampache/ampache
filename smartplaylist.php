@@ -80,7 +80,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Search($_REQUEST['playlist_id'], 'song');
         $playlist->format();
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
     break;
     case 'update_playlist':
         $playlist = new Search($_REQUEST['playlist_id'], 'song');
@@ -93,11 +93,11 @@ switch ($_REQUEST['action']) {
             break;
         }
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
     break;
     default:
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
     break;
 } // switch on the action
 

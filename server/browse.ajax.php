@@ -29,7 +29,9 @@ if (!Core::is_session_started()) {
     session_start();
 }
 
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 if (isset($_REQUEST['browse_id'])) {
     $browse_id = $_REQUEST['browse_id'];
@@ -43,6 +45,11 @@ $browse = new Browse($browse_id);
 
 if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
     $browse->set_show_header($_REQUEST['show_header'] == 'true');
+}
+
+$argument = null;
+if ($_REQUEST['argument']) {
+    $argument = scrub_in($_REQUEST['argument']);
 }
 
 $results = array();
@@ -72,7 +79,7 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'set_sort':
@@ -85,7 +92,7 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'toggle_tag':
@@ -97,7 +104,9 @@ switch ($_REQUEST['action']) {
             case 'playlist':
                 // Check the perms we need to on this
                 $playlist = new Playlist($_REQUEST['id']);
-                if (!$playlist->has_access()) { exit; }
+                if (!$playlist->has_access()) {
+                    exit;
+                }
 
                 // Delete it!
                 $playlist->delete();
@@ -105,12 +114,16 @@ switch ($_REQUEST['action']) {
             break;
             case 'smartplaylist':
                 $playlist = new Search($_REQUEST['id'], 'song');
-                if (!$playlist->has_access()) { exit; }
+                if (!$playlist->has_access()) {
+                    exit;
+                }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
-                if (!$GLOBALS['user']->has_access('75')) { exit; }
+                if (!$GLOBALS['user']->has_access('75')) {
+                    exit;
+                }
                 $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
@@ -125,19 +138,19 @@ switch ($_REQUEST['action']) {
     case 'page':
         $browse->set_start($_REQUEST['start']);
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'show_art':
         Art::set_enabled();
 
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'get_filters':
         ob_start();
-        require_once AmpConfig::get('prefix') . '/templates/browse_filters.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('browse_filters.inc.php');
         $results['browse_filters'] = ob_get_clean();
     break;
     case 'options':
@@ -184,7 +197,7 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'get_share_links':

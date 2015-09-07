@@ -21,11 +21,14 @@
  */
 ?>
 
-<?php if ($artists) { ?>
+<?php if ($artists) {
+    ?>
 <div class="np_group similars">
     <div class="np_cell cel_similar">
-        <label><?php echo T_('Similar Artists'); ?></label>
-        <?php foreach ($artists as $a) { ?>
+        <label><?php echo T_('Similar Artists');
+    ?></label>
+        <?php foreach ($artists as $a) {
+    ?>
             <div class="np_cell cel_similar_artist">
             <?php
                 if (is_null($a['id'])) {
@@ -37,28 +40,37 @@
                 } else {
                     $artist = new Artist($a['id']);
                     $artist->format();
-                    echo $artist->f_name_link;
+                    echo $artist->f_link;
                 }
-            ?>
+    ?>
             </div>
-        <?php } ?>
+        <?php 
+}
+    ?>
     </div>
 </div>
-<?php } ?>
+<?php 
+} ?>
 
-<?php if ($songs) { ?>
+<?php if ($songs) {
+    ?>
 <div class="np_group similars">
     <div class="np_cell cel_similar">
-        <label><?php echo T_('Similar Songs'); ?></label>
-        <?php foreach ($songs as $s) { ?>
+        <label><?php echo T_('Similar Songs');
+    ?></label>
+        <?php foreach ($songs as $s) {
+    ?>
             <div class="np_cell cel_similar_song">
             <?php
                 $song = new Song($s['id']);
-                $song->format();
-                echo $song->f_link;
-            ?>
+    $song->format();
+    echo $song->f_link;
+    ?>
             </div>
-        <?php } ?>
+        <?php 
+}
+    ?>
     </div>
 </div>
-<?php } ?>
+<?php 
+} ?>

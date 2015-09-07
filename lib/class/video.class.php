@@ -198,7 +198,6 @@ class Video extends database_object implements media, library_item
         $this->type = strtolower($data['extension']);
 
         return true;
-
     } // Constructor
 
     /**
@@ -228,7 +227,9 @@ class Video extends database_object implements media, library_item
      */
     public static function build_cache($ids=array())
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) OR !count($ids)) {
+            return false;
+        }
 
         $idlist = '(' . implode(',',$ids) . ')';
 
@@ -238,7 +239,6 @@ class Video extends database_object implements media, library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('video',$row['id'],$row);
         }
-
     } // build_cache
 
     /**
@@ -285,7 +285,6 @@ class Video extends database_object implements media, library_item
         if ($this->release_date) {
             $this->f_release_date = date('Y-m-d', $this->release_date);
         }
-
     } // format
 
     /**
@@ -325,6 +324,16 @@ class Video extends database_object implements media, library_item
      * @return array
      */
     public function get_childrens()
+    {
+        return array();
+    }
+
+    /**
+     * Search for item childrens.
+     * @param string $name
+     * @return array
+     */
+    public function search_childrens($name)
     {
         return array();
     }
@@ -375,6 +384,18 @@ class Video extends database_object implements media, library_item
         return 'preview';
     }
 
+    public function get_description()
+    {
+        return '';
+    }
+
+    public function display_art($thumb = 2)
+    {
+        if (Art::has_db($this->id, 'video')) {
+            Art::display('video', $this->id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
+
     /**
      * gc
      *
@@ -394,9 +415,9 @@ class Video extends database_object implements media, library_item
      * Get stream types.
      * @return array
      */
-    public function get_stream_types()
+    public function get_stream_types($player = null)
     {
-        return Song::get_stream_types_for_type($this->type);
+        return Song::get_stream_types_for_type($this->type, $player);
     }
 
     /**
@@ -405,12 +426,13 @@ class Video extends database_object implements media, library_item
      * like a hack, might need to adjust it in the future
      * @param int $oid
      * @param string $additional_params
+     * @param string $player
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params='', $local=false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
-        return Song::generic_play_url('video', $oid, $additional_params, $local);
+        return Song::generic_play_url('video', $oid, $additional_params, $player, $local);
     }
 
     /**
@@ -451,8 +473,9 @@ class Video extends database_object implements media, library_item
     {
         $dtypes = self::get_derived_types();
         foreach ($dtypes as $dtype) {
-            if (strtolower($type) == strtolower($dtype))
+            if (strtolower($type) == strtolower($dtype)) {
                 return $type;
+            }
         }
 
         return 'Video';
@@ -595,20 +618,19 @@ class Video extends database_object implements media, library_item
         } else {
             $release_date = $this->release_date;
         }
-        $title = $data['title'] ?: $this->title;
+        $title = isset($data['title']) ? $data['title'] : $this->title;
 
         $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
         Dba::write($sql, array($title, $release_date, $this->id));
 
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'video', $this->id);
+            Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
         }
 
         $this->title = $title;
         $this->release_date = $release_date;
 
         return $this->id;
-
     } // update
 
     /**
@@ -692,7 +714,6 @@ class Video extends database_object implements media, library_item
         Video::update_played(true, $this->id);
 
         return true;
-
     } // set_played
 
     /**
@@ -944,6 +965,32 @@ class Video extends database_object implements media, library_item
     }
 
     /**
+     * Remove the video from disk.
+     */
+    public function remove_from_disk()
+    {
+        if (file_exists($this->file)) {
+            $deleted = unlink($this->file);
+        } else {
+            $deleted = true;
+        }
+        if ($deleted === true) {
+            $sql = "DELETE FROM `video` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+            if ($deleted) {
+                Art::gc('video', $this->id);
+                Userflag::gc('video', $this->id);
+                Rating::gc('video', $this->id);
+                Shoutbox::gc('video', $this->id);
+            }
+        } else {
+            debug_event('video', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+        }
+
+        return $deleted;
+    }
+
+    /**
      * update_played
      * sets the played flag
      * @param boolean $new_played
@@ -952,7 +999,6 @@ class Video extends database_object implements media, library_item
     public static function update_played($new_played, $song_id)
     {
         self::_update_item('played', ($new_played ? 1 : 0),$song_id,'25');
-
     } // update_played
 
     /**
@@ -970,16 +1016,19 @@ class Video extends database_object implements media, library_item
     private static function _update_item($field, $value, $song_id, $level)
     {
         /* Check them Rights! */
-        if (!Access::check('interface',$level)) { return false; }
+        if (!Access::check('interface',$level)) {
+            return false;
+        }
 
         /* Can't update to blank */
-        if (!strlen(trim($value))) { return false; }
+        if (!strlen(trim($value))) {
+            return false;
+        }
 
         $sql = "UPDATE `video` SET `$field` = ? WHERE `id` = ?";
         Dba::write($sql, array($value, $song_id));
 
         return true;
-
     } // _update_item
-
 } // end Video class
+

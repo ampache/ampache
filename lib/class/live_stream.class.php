@@ -76,7 +76,9 @@ class Live_Stream extends database_object implements media, library_item
      */
     public function __construct($id = null)
     {
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         $info = $this->get_info($id, 'live_stream');
 
@@ -84,7 +86,6 @@ class Live_Stream extends database_object implements media, library_item
         foreach ($info as $key=>$value) {
             $this->$key = $value;
         }
-
     } // constructor
 
     /**
@@ -95,12 +96,11 @@ class Live_Stream extends database_object implements media, library_item
     public function format($details = true)
     {
         // Default link used on the rightbar
-        $this->f_link        = "<a href=\"$this->url\">$this->name</a>";
-        $this->f_name_link    = "<a target=\"_blank\" href=\"$this->site_url\">$this->name</a>";
-        $this->f_url_link    = "<a target=\"_blank\" href=\"$this->url\">$this->url</a>";
+        $this->f_link        = "<a href=\"" . $this->url . "\">" . $this->name . "</a>";
+        $this->f_name_link    = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->name . "</a>";
+        $this->f_url_link    = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
 
         return true;
-
     } // format
 
     public function get_keywords()
@@ -119,6 +119,11 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     public function get_childrens()
+    {
+        return array();
+    }
+
+    public function search_childrens($name)
     {
         return array();
     }
@@ -156,6 +161,18 @@ class Live_Stream extends database_object implements media, library_item
         return 'default';
     }
 
+    public function get_description()
+    {
+        return null;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        if (Art::has_db($this->id, 'live_stream')) {
+            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->link);
+        }
+    }
+
     /**
      * update
      * This is a static function that takes a key'd array for input
@@ -184,7 +201,6 @@ class Live_Stream extends database_object implements media, library_item
         Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $data['codec'], $this->id));
 
         return $this->id;
-
     } // update
 
     /**
@@ -213,7 +229,9 @@ class Live_Stream extends database_object implements media, library_item
             Error::add('catalog', T_('Invalid Catalog'));
         }
 
-        if (Error::occurred()) { return false; }
+        if (Error::occurred()) {
+            return false;
+        }
 
         // If we've made it this far everything must be ok... I hope
         $sql = "INSERT INTO `live_stream` (`name`,`site_url`,`url`,`catalog`,`codec`) " .
@@ -221,7 +239,6 @@ class Live_Stream extends database_object implements media, library_item
         $db_results = Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
 
         return $db_results;
-
     } // create
 
     /**
@@ -234,14 +251,13 @@ class Live_Stream extends database_object implements media, library_item
         Dba::write($sql, array($this->id));
 
         return true;
-
     } // delete
 
     /**
      * get_stream_types
      * This is needed by the media interface
      */
-    public function get_stream_types()
+    public function get_stream_types($player = null)
     {
         return array('foreign');
     } // native_stream
@@ -250,12 +266,11 @@ class Live_Stream extends database_object implements media, library_item
      * play_url
      * This is needed by the media interface
      */
-    public static function play_url($oid, $additional_params='', $local=false, $sid='', $force_http='')
+    public static function play_url($oid, $additional_params='', $player=null, $local=false, $sid='', $force_http='')
     {
         $radio = new Live_Stream($oid);
 
         return $radio->url . $additional_params;
-
     } // play_url
 
     public function get_stream_name()
@@ -299,12 +314,11 @@ class Live_Stream extends database_object implements media, library_item
 
     public static function gc()
     {
-
     }
 
     public function set_played($user, $agent, $location)
     {
         // Do nothing
     }
-
 } //end of radio class
+

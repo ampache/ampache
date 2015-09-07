@@ -34,6 +34,7 @@ if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode'))
 /* Don't even include it if we aren't going to use it */
 if (AmpConfig::get('captcha_public_reg')) {
     define ("CAPTCHA_INVERSE", 1);
+    define ("CAPTCHA_BASE_URL", AmpConfig::get('web_path') . '/modules/captcha/captcha.php');
     require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
 }
 
@@ -43,7 +44,7 @@ switch ($_REQUEST['action']) {
     case 'validate':
         $username     = scrub_in($_GET['username']);
         $validation    = scrub_in($_GET['auth']);
-        require_once AmpConfig::get('prefix') . '/templates/show_user_activate.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_user_activate.inc.php');
     break;
     case 'add_user':
         /**
@@ -61,12 +62,12 @@ switch ($_REQUEST['action']) {
         $website        = scrub_in($_POST['website']);
         $pass1          = $_POST['password_1'];
         $pass2          = $_POST['password_2'];
-        $state          = scrub_in($_POST['state']);
-        $city           = scrub_in($_POST['city']);
+        $state          = (string) scrub_in($_POST['state']);
+        $city           = (string) scrub_in($_POST['city']);
 
         /* If we're using the captcha stuff */
         if (AmpConfig::get('captcha_public_reg')) {
-                $captcha         = captcha::solved();
+            $captcha         = captcha::solved();
             if (!isset ($captcha)) {
                 Error::add('captcha', T_('Error Captcha Required'));
             }
@@ -74,8 +75,8 @@ switch ($_REQUEST['action']) {
                 if ($captcha) {
                     $msg="SUCCESS";
                 } else {
-                        Error::add('captcha', T_('Error Captcha Failed'));
-                    }
+                    Error::add('captcha', T_('Error Captcha Failed'));
+                }
             } // end if we've got captcha
         } // end if it's enabled
 
@@ -122,7 +123,7 @@ switch ($_REQUEST['action']) {
 
         // If we've hit an error anywhere up there break!
         if (Error::occurred()) {
-            require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
             break;
         }
 
@@ -143,11 +144,11 @@ switch ($_REQUEST['action']) {
 
 
         $new_user = User::create($username, $fullname, $email, $website, $pass1,
-            $access, AmpConfig::get('admin_enable_required'), $state, $city);
+            $access, $state, $city, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
             Error::add('duplicate_user', T_("Error: Insert Failed"));
-            require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
             break;
         }
 
@@ -160,10 +161,11 @@ switch ($_REQUEST['action']) {
             Registration::send_confirmation($username, $fullname, $email, $website, $pass1, $validation);
         }
 
-        require_once AmpConfig::get('prefix') . '/templates/show_registration_confirmation.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_registration_confirmation.inc.php');
     break;
     case 'show_add_user':
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
     break;
 } // end switch on action
+

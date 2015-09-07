@@ -29,23 +29,35 @@ if ($videos) {
     foreach ($videos as $video_id) {
         $video = Video::create_from_id($video_id);
         $video->format();
-    ?>
+        ?>
     <div class="random_video">
         <div class="art_album">
             <?php if (Art::is_enabled()) {
-                $release_art = $video->get_release_item_art();
-                Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), 6, $video->link);
-            } else { ?>
-                <?php echo $video->get_fullname(); ?>
-            <?php } ?>
+    $release_art = $video->get_release_item_art();
+    Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), 6, $video->link);
+} else {
+    ?>
+                <?php echo $video->get_fullname();
+    ?>
+            <?php 
+}
+        ?>
         </div>
         <div class="play_video">
-        <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id,'play', T_('Play'),'play_album_' . $video->id); ?>
-            <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id); ?>
-            <?php } ?>
-        <?php } ?>
+        <?php if (AmpConfig::get('directplay')) {
+    ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id,'play', T_('Play'),'play_album_' . $video->id);
+    ?>
+            <?php if (Stream_Playlist::check_autoplay_append()) {
+    ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id);
+    ?>
+            <?php 
+}
+    ?>
+        <?php 
+}
+        ?>
         </div>
         <?php
         if (AmpConfig::get('ratings') && Access::check('interface', '25')) {
@@ -55,7 +67,10 @@ if ($videos) {
         }
         ?>
     </div>
-    <?php } ?>
-<?php } ?>
+    <?php 
+    }
+    ?>
+<?php 
+} ?>
 
 <?php UI::show_box_bottom(); ?>

@@ -51,33 +51,6 @@ class WebPlayer
     }
 
     /**
-     * Get browser information.
-     * @param string $agent
-     * @return array
-     */
-    public static function browser_info($agent=null)
-    {
-        // Declare known browsers to look for
-        $known = array('msie', 'trident', 'firefox', 'safari', 'webkit', 'opera', 'netscape', 'konqueror', 'gecko');
-
-        // Clean up agent and build regex that matches phrases for known browsers
-        // (e.g. "Firefox/2.0" or "MSIE 6.0" (This only matches the major and minor
-        // version numbers.  E.g. "2.0.0.6" is parsed as simply "2.0"
-        $agent = strtolower($agent ? $agent : $_SERVER['HTTP_USER_AGENT']);
-        $pattern = '#(?<browser>' . join('|', $known) . ')[/ ]+(?<version>[0-9]+(?:\.[0-9]+)?)#';
-
-        // Find all phrases (or return empty array if none found)
-        if (!preg_match_all($pattern, $agent, $matches)) return array();
-
-        // Since some UAs have more than one phrase (e.g Firefox has a Gecko phrase,
-        // Opera 7,8 have a MSIE phrase), use the last one found (the right-most one
-        // in the UA).  That's usually the most correct.
-        $i = count($matches['browser'])-1;
-        return array($matches['browser'][$i] => $matches['version'][$i]);
-
-    }
-
-    /**
      * Get types information for an item.
      * @param \playable_item $item
      * @param string $force_type
@@ -87,24 +60,22 @@ class WebPlayer
     {
         $types = array('real' => 'mp3', 'player' => '');
 
-        $browsers = array_keys(self::browser_info());
-        $browser = '';
-        if (count($browsers) > 0 ) {
-            $browser = $browsers[0];
-        }
-
         $media = null;
         $urlinfo = Stream_URL::parse($item->url);
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
-        } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
-            $media = new Song_Preview($urlinfo['id']);
-        } else if (isset($urlinfo['demo_id'])) {
-            $democratic = new Democratic($urlinfo['demo_id']);
-            if ($democratic->id) {
-                $song_id = $democratic->get_next_object();
-                if ($song_id) {
-                    $media = new Song($song_id);
+        } else {
+            if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+                $media = new Song_Preview($urlinfo['id']);
+            } else {
+                if (isset($urlinfo['demo_id'])) {
+                    $democratic = new Democratic($urlinfo['demo_id']);
+                    if ($democratic->id) {
+                        $song_id = $democratic->get_next_object();
+                        if ($song_id) {
+                            $media = new Song($song_id);
+                        }
+                    }
                 }
             }
         }
@@ -147,22 +118,45 @@ class WebPlayer
             }
 
             if ($urlinfo['type'] == 'song') {
-                if ($types['real'] == "ogg") $types['player'] = "oga";
-                else if ($types['real'] == "mp4") $types['player'] = "m4a";
-            } else if ($urlinfo['type'] == 'video') {
-                if ($types['real'] == "ogg") $types['player'] = "ogv";
-                else if ($types['real'] == "webm") $types['player'] = "webmv";
-                else if ($types['real'] == "mp4") $types['player'] = "m4v";
+                if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                    $types['player'] = "oga";
+                } else {
+                    if ($types['real'] == "mp4") {
+                        $types['player'] = "m4a";
+                    }
+                }
+            } else {
+                if ($urlinfo['type'] == 'video') {
+                    if ($types['real'] == "ogg") {
+                        $types['player'] = "ogv";
+                    } else {
+                        if ($types['real'] == "webm") {
+                            $types['player'] = "webmv";
+                        } else {
+                            if ($types['real'] == "mp4") {
+                                $types['player'] = "m4v";
+                            }
+                        }
+                    }
+                }
             }
-        } else if ($item->type == 'live_stream') {
-            $types['real'] = $item->codec;
-            if ($types['real'] == "ogg") $types['player'] = "oga";
         } else {
-            $ext = pathinfo($item->url, PATHINFO_EXTENSION);
-            if (!empty($ext)) $types['real'] = $ext;
+            if ($item->type == 'live_stream') {
+                $types['real'] = $item->codec;
+                if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                    $types['player'] = "oga";
+                }
+            } else {
+                $ext = pathinfo($item->url, PATHINFO_EXTENSION);
+                if (!empty($ext)) {
+                    $types['real'] = $ext;
+                }
+            }
         }
 
-        if (empty($types['player'])) $types['player'] = $types['real'];
+        if (empty($types['player'])) {
+            $types['player'] = $types['real'];
+        }
 
         debug_event("webplayer.class.php", "Types {".json_encode($types)."}", 5);
         return $types;
@@ -242,10 +236,11 @@ class WebPlayer
     {
         $js = array();
         foreach (array('title', 'author') as $member) {
-            if ($member == "author")
+            if ($member == "author") {
                 $kmember = "artist";
-            else
+            } else {
                 $kmember = $member;
+            }
 
             $js[$kmember] = $item->$member;
         }
@@ -259,14 +254,18 @@ class WebPlayer
 
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
-        } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
-            $media = new Song_Preview($urlinfo['id']);
-        } else if (isset($urlinfo['demo_id'])) {
-            $democratic = new Democratic($urlinfo['demo_id']);
-            if ($democratic->id) {
-                $song_id = $democratic->get_next_object();
-                if ($song_id) {
-                    $media = new Song($song_id);
+        } else {
+            if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+                $media = new Song_Preview($urlinfo['id']);
+            } else {
+                if (isset($urlinfo['demo_id'])) {
+                    $democratic = new Democratic($urlinfo['demo_id']);
+                    if ($democratic->id) {
+                        $song_id = $democratic->get_next_object();
+                        if ($song_id) {
+                            $media = new Song($song_id);
+                        }
+                    }
                 }
             }
         }
@@ -292,7 +291,7 @@ class WebPlayer
         $js['filetype'] = $types['player'];
         $js['url'] = $url;
         if ($urlinfo['type'] == 'song') {
-            $js['poster'] = $item->image_url . (!AmpConfig::get('ajax_load') ? '&thumb=4' : '');
+            $js['poster'] = $item->image_url;
         }
 
         debug_event("webplayer.class.php", "Return get_media_js_param {".json_encode($js)."}", 5);

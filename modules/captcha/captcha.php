@@ -110,16 +110,16 @@ Mike O'Connell <wb:gm.c>
 class captcha {
 
    #-- tests submitted CAPTCHA solution against tracking data
-   function solved() {
+   public static function solved() {
       $c = new easy_captcha();
       return $c->solved();
    }
-   function check() {
+   public static function check() {
       return captcha::solved();
    }
 
    #-- returns string with "<img> and <input>" fields for display in your <form>
-   function form($text="") {
+   public static function form($text="") {
       $c = new easy_captcha();
       return $c->form("$text");
    }
@@ -509,7 +509,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy {
    function output() {
       ob_start();
       ob_implicit_flush(0);
-        imagejpeg($this->img, "", $this->quality);
+        imagejpeg($this->img, null, $this->quality);
         $jpeg = ob_get_contents();
       ob_end_clean();
       imagedestroy($this->img);
@@ -1034,7 +1034,7 @@ class easy_captcha_utility {
 
 
    #-- script was called directly
-   function API() {
+   public static function API() {
 
       #-- load data
       if ($id = @$_GET[CAPTCHA_PARAM_ID]) {

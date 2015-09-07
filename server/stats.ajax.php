@@ -23,7 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -41,8 +43,9 @@ switch ($_REQUEST['action']) {
                             $plugin = new Plugin($plugin_name);
                             if ($plugin->load($GLOBALS['user'])) {
                                 $name = $plugin->_plugin->get_location_name($latitude, $longitude);
-                                if (!empty($name))
+                                if (!empty($name)) {
                                     break;
+                                }
                             }
                         }
                     }

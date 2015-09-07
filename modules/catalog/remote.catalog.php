@@ -39,7 +39,6 @@ class Catalog_remote extends Catalog
     public function get_description()
     {
         return $this->description;
-
     } // get_description
 
     /**
@@ -49,7 +48,6 @@ class Catalog_remote extends Catalog
     public function get_version()
     {
         return $this->version;
-
     } // get_version
 
     /**
@@ -59,7 +57,6 @@ class Catalog_remote extends Catalog
     public function get_type()
     {
         return $this->type;
-
     } // get_type
 
     /**
@@ -69,7 +66,6 @@ class Catalog_remote extends Catalog
     public function get_create_help()
     {
         return "";
-
     } // get_create_help
 
     /**
@@ -82,8 +78,6 @@ class Catalog_remote extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-
-
     } // is_installed
 
     /**
@@ -101,7 +95,6 @@ class Catalog_remote extends Catalog
         $db_results = Dba::query($sql);
 
         return true;
-
     } // install
 
     public function catalog_fields()
@@ -111,7 +104,6 @@ class Catalog_remote extends Catalog
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
         return $fields;
-
     }
 
     public $uri;
@@ -181,9 +173,13 @@ class Catalog_remote extends Catalog
      */
     public function add_to_catalog($options = null)
     {
-        UI::show_box_top(T_('Running Remote Update') . '. . .');
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top(T_('Running Remote Update') . '. . .');
+        }
         $this->update_remote_catalog();
-        UI::show_box_bottom();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         return true;
     } // add_to_catalog
@@ -239,8 +235,7 @@ class Catalog_remote extends Catalog
         $remote_catalog_info = $remote_handle->info();
 
         // Tell 'em what we've found, Johnny!
-        printf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']);
-        flush();
+        UI::update_text('', sprintf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step = 500;
@@ -275,14 +270,12 @@ class Catalog_remote extends Catalog
             }
         } // end while
 
-        echo "<p>" . T_('Completed updating remote catalog(s).') . "</p><hr />\n";
-        flush();
+        UI::update_text('', T_('Completed updating remote catalog(s).'));
 
         // Update the last update value
         $this->update_last_update();
 
         return true;
-
     }
 
     public function verify_catalog_proc()
@@ -384,5 +377,5 @@ class Catalog_remote extends Catalog
 
         return null;
     }
-
 } // end of catalog class
+

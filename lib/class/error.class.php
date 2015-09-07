@@ -39,7 +39,6 @@ class Error
     private function __construct()
     {
         // Rien a faire
-
     } // __construct
 
     /**
@@ -51,7 +50,6 @@ class Error
         foreach (self::$errors as $key=>$error) {
             $_SESSION['errors'][$key] = $error;
         }
-
     } // __destruct
 
     /**
@@ -80,6 +78,12 @@ class Error
             $_SESSION['errors'][$name] .=  "<br />\n" . $message;
         }
 
+        // If on SSE worker, output the error directly.
+        if (defined('SSE_OUTPUT')) {
+            echo "data: display_sse_error('" . addslashes($message) . "')\n\n";
+            ob_flush();
+            flush();
+        }
     } // add
 
     /**
@@ -88,10 +92,11 @@ class Error
      */
     public static function occurred()
     {
-        if (self::$state == '1') { return true; }
+        if (self::$state == '1') {
+            return true;
+        }
 
         return false;
-
     } // occurred
 
     /**
@@ -100,10 +105,11 @@ class Error
      */
     public static function get($name)
     {
-        if (!isset(Error::$errors[$name])) { return ''; }
+        if (!isset(Error::$errors[$name])) {
+            return '';
+        }
 
         return Error::$errors[$name];
-
     } // get
 
     /**
@@ -114,10 +120,11 @@ class Error
     public static function display($name)
     {
         // Be smart about this, if no error don't print
-        if (!isset(Error::$errors[$name])) { return ''; }
+        if (!isset(Error::$errors[$name])) {
+            return '';
+        }
 
         echo '<p class="alert alert-danger">' . T_(Error::$errors[$name]) . '</p>';
-
     } // display
 
     /**
@@ -126,13 +133,14 @@ class Error
      */
     public static function auto_init()
     {
-        if (!is_array($_SESSION['errors'])) { return false; }
+        if (!is_array($_SESSION['errors'])) {
+            return false;
+        }
 
         // Re-insert them
         foreach ($_SESSION['errors'] as $key=>$error) {
             self::add($key,$error);
         }
-
     } // auto_init
-
 } // Error
+

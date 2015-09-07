@@ -47,7 +47,6 @@ class AmpacheMpd extends localplay_controller
     {
         /* Do a Require Once On the needed Libraries */
         require_once AmpConfig::get('prefix') . '/modules/mpd/mpd.class.php';
-
     } // AmpacheMpd
 
     /**
@@ -57,7 +56,6 @@ class AmpacheMpd extends localplay_controller
     public function get_description()
     {
         return $this->description;
-
     } // get_description
 
     /**
@@ -67,7 +65,6 @@ class AmpacheMpd extends localplay_controller
     public function get_version()
     {
         return $this->version;
-
     } // get_version
 
     /**
@@ -80,7 +77,6 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::read($sql);
 
         return (Dba::num_rows($db_results) > 0);
-
     } // is_installed
 
     /**
@@ -89,23 +85,21 @@ class AmpacheMpd extends localplay_controller
      */
     public function install()
     {
-                /* We need to create the MPD table */
-                $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                        "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                        "`owner` INT( 11 ) NOT NULL , " .
-                        "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                        "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
-                        "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                        "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-                        ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-                $db_results = Dba::write($sql);
+        /* We need to create the MPD table */
+        $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+                "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`owner` INT( 11 ) NOT NULL , " .
+                "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
+                "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
+                ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+        $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
         Preference::insert('mpd_active','MPD Active Instance','0','25','integer','internal');
-        User::rebuild_all_preferences();
 
-                return true;
-
+        return true;
     } // install
 
     /**
@@ -114,13 +108,12 @@ class AmpacheMpd extends localplay_controller
      */
     public function uninstall()
     {
-                $sql = "DROP TABLE `localplay_mpd`";
-                $db_results = Dba::write($sql);
+        $sql = "DROP TABLE `localplay_mpd`";
+        $db_results = Dba::write($sql);
 
         Preference::delete('mpd_active');
 
-                return true;
-
+        return true;
     } // uninstall
 
     /**
@@ -150,7 +143,6 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::write($sql);
 
         return $db_results;
-
     } // add_instance
 
     /**
@@ -166,7 +158,6 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::write($sql);
 
         return true;
-
     } // delete_instance
 
     /**
@@ -186,7 +177,6 @@ class AmpacheMpd extends localplay_controller
         }
 
         return $results;
-
     } // get_instances
 
     /**
@@ -205,7 +195,6 @@ class AmpacheMpd extends localplay_controller
         $row = Dba::fetch_assoc($db_results);
 
         return $row;
-
     } // get_instance
 
     /**
@@ -224,7 +213,6 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::write($sql);
 
         return true;
-
     } // update_instance
 
     /**
@@ -240,7 +228,6 @@ class AmpacheMpd extends localplay_controller
         $fields['password']    = array('description' => T_('Password'),'type'=>'textbox');
 
         return $fields;
-
     } // instance_fields
 
     /**
@@ -260,7 +247,6 @@ class AmpacheMpd extends localplay_controller
         AmpConfig::set('mpd_active', intval($uid), true);
 
         return true;
-
     } // set_active_instance
 
     /**
@@ -341,13 +327,14 @@ class AmpacheMpd extends localplay_controller
      */
     public function skip($song)
     {
-        if (!$this->_mpd->SkipTo($song)) { return false; }
+        if (!$this->_mpd->SkipTo($song)) {
+            return false;
+        }
         sleep(2);
         $this->stop();
         sleep(2);
         $this->play();
         return true;
-
     } // skip
 
     /**
@@ -400,8 +387,8 @@ class AmpacheMpd extends localplay_controller
         */
     public function volume($volume)
     {
-               return $this->_mpd->SetVolume($volume);
-       } // volume
+        return $this->_mpd->SetVolume($volume);
+    } // volume
 
        /**
         * repeat
@@ -411,7 +398,7 @@ class AmpacheMpd extends localplay_controller
     public function repeat($state)
     {
         return $this->_mpd->SetRepeat($state);
-       } // repeat
+    } // repeat
 
        /**
         * random
@@ -420,7 +407,7 @@ class AmpacheMpd extends localplay_controller
         */
        public function random($onoff)
        {
-               return $this->_mpd->SetRandom($onoff);
+           return $this->_mpd->SetRandom($onoff);
        } // random
 
        /**
@@ -429,8 +416,8 @@ class AmpacheMpd extends localplay_controller
         */
        public function move($source, $destination)
        {
-        return $this->_mpd->PLMoveTrack($source, $destination);
-    } // move
+           return $this->_mpd->PLMoveTrack($source, $destination);
+       } // move
 
     /**
      * get_songs
@@ -512,11 +499,9 @@ class AmpacheMpd extends localplay_controller
             $data['track']    = $entry['Pos']+1;
 
             $results[] = $data;
-
         } // foreach playlist items
 
         return $results;
-
     } // get
 
     /**
@@ -546,16 +531,19 @@ class AmpacheMpd extends localplay_controller
             $array['track_title'] = $song->title;
             $array['track_artist'] = $song->get_artist_name();
             $array['track_album'] = $song->get_album_name();
-        } else if (!empty($playlist_item['Title'])) {
-            $array['track_title'] = $playlist_item['Title'];
-        } else if (!empty($playlist_item['Name'])) {
-            $array['track_title'] = $playlist_item['Name'];
         } else {
-            $array['track_title'] = $playlist_item['file'];
+            if (!empty($playlist_item['Title'])) {
+                $array['track_title'] = $playlist_item['Title'];
+            } else {
+                if (!empty($playlist_item['Name'])) {
+                    $array['track_title'] = $playlist_item['Name'];
+                } else {
+                    $array['track_title'] = $playlist_item['file'];
+                }
+            }
         }
 
         return $array;
-
     } // get_status
 
     /**
@@ -570,10 +558,11 @@ class AmpacheMpd extends localplay_controller
         $options = self::get_instance();
         $this->_mpd = new mpd($options['host'], $options['port'], $options['password'], 'debug_event');
 
-        if ($this->_mpd->connected) { return true; }
+        if ($this->_mpd->connected) {
+            return true;
+        }
 
         return false;
-
     } // connect
-
 } //end of AmpacheMpd
+

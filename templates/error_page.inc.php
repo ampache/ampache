@@ -26,8 +26,9 @@
     dir="<?php echo $dir;?>">
 
 <head>
+<!-- Propulsed by Ampache | ampache.org -->
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
-<link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
+<?php UI::show_custom_style(); ?>
 <title><?php echo( T_("Ampache error page"));?></title>
 <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">

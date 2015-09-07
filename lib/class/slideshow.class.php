@@ -58,5 +58,5 @@ class Slideshow
 
         return $images;
     }
-
 } // end of Slideshow class
+

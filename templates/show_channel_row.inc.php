@@ -23,16 +23,19 @@
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
-    <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&object_type=channel&object_id=' . $libitem->id,'play', T_('Play'),'play_channel_' . $libitem->id); ?>
-<?php } ?>
+    <?php if (AmpConfig::get('directplay')) {
+    ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&object_type=channel&object_id=' . $libitem->id,'play', T_('Play'),'play_channel_' . $libitem->id);
+    ?>
+<?php 
+} ?>
     </div>
 </td>
 <td class="cel_id"><?php echo $libitem->id; ?></td>
 <td class="cel_name"><?php echo $libitem->name; ?></td>
 <td class="cel_interface"><?php echo $libitem->interface; ?></td>
 <td class="cel_port"><?php echo $libitem->port; ?></td>
-<td class="cel_data"><?php echo $libitem->get_target_object()->f_name_link; ?></td>
+<td class="cel_data"><?php echo $libitem->get_target_object()->f_link; ?></td>
 <!--<td class="cel_random"><?php echo ($libitem->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_loop"><?php echo ($libitem->loop ? T_('Yes') : T_('No')); ?></td>-->
 <td class="cel_streamtype"><?php echo $libitem->stream_type; ?></td>
@@ -41,7 +44,9 @@
 <td class="cel_listeners"><?php echo $libitem->listeners; ?></td>
 <td class="cel_streamurl">
     <?php echo $libitem->get_stream_url(); ?><br />
-    <?php if ($libitem->is_private) { echo UI::get_icon('lock', T_('Authentication Required')); } ?>
+    <?php if ($libitem->is_private) {
+    echo UI::get_icon('lock', T_('Authentication Required'));
+} ?>
     <?php echo $libitem->get_stream_proxy_url(); ?>
 </td>
 <td class="cel_state"><div id="channel_state_<?php echo $libitem->id; ?>"><?php echo $libitem->get_channel_state(); ?></div></td>

@@ -23,7 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -33,6 +35,10 @@ switch ($_REQUEST['action']) {
     case 'get_tag_map':
         $tags = Tag::get_display(Tag::get_tags());
         $results['tags'] = $tags;
+    break;
+    case 'get_labels':
+        $labels = Label::get_display(Label::get_all_labels());
+        $results['labels'] = $labels;
     break;
     case 'add_tag':
         debug_event('tag.ajax', 'Adding new tag...', '5');

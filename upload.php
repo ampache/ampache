@@ -22,8 +22,19 @@
 
 require_once 'lib/init.php';
 
-if (!AmpConfig::get('allow_upload')) {
+if (!AmpConfig::get('allow_upload') || !Access::check('interface', '25')) {
     UI::access_denied();
+    exit;
+}
+
+$upload_max = return_bytes(ini_get('upload_max_filesize'));
+$post_max = return_bytes(ini_get('post_max_size'));
+if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
+    $upload_max = $post_max;
+}
+// Check to handle POST requests exceeding max post size.
+if ($_SERVER['CONTENT_LENGTH'] > 0 && $post_max > 0 && $_SERVER['CONTENT_LENGTH'] > $post_max) {
+    Upload::rerror();
     exit;
 }
 
@@ -40,7 +51,7 @@ switch ($_REQUEST['actionp']) {
 
     default:
         UI::show_header();
-        require AmpConfig::get('prefix') . '/templates/show_add_upload.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_add_upload.inc.php');
         break;
 } // switch on the action
 

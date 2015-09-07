@@ -100,7 +100,9 @@ class Auth
             }
 
             $results = self::$function_name($username, $password);
-            if ($results['success'] || ($allow_ui && !empty($results['ui_required']))) { break; }
+            if ($results['success'] || ($allow_ui && !empty($results['ui_required']))) {
+                break;
+            }
         }
 
         return $results;
@@ -305,6 +307,13 @@ class Auth
             return $results;
         }
 
+        if (strpos($ldap_filter, "%v") !== false) {
+            $ldap_filter = str_replace("%v", $username, $ldap_filter);
+        } else {
+            // This to support previous configuration where only the fieldname was set
+            $ldap_filter = "($ldap_filter=$username)";
+        }
+
         $ldap_name_field    = AmpConfig::get('ldap_name_field');
         $ldap_email_field    = AmpConfig::get('ldap_email_field');
 
@@ -320,7 +329,9 @@ class Auth
                 return $results;
             } // If bind fails
 
-            $sr = ldap_search($ldap_link, $ldap_dn, "(&(objectclass=$ldap_class)($ldap_filter=$username))");
+            $searchstr = "(&(objectclass=$ldap_class)$ldap_filter)";
+            debug_event('ldap_auth', 'ldap_search: ' . $searchstr, 5);
+            $sr = ldap_search($ldap_link, $ldap_dn, $searchstr);
             $info = ldap_get_entries($ldap_link, $sr);
 
             if ($info["count"] == 1) {
@@ -368,11 +379,8 @@ class Auth
                     $results['email']    = $info[0][$ldap_email_field][0];
 
                     return $results;
-
                 } // if we get something good back
-
             } // if something was sent back
-
         } // if failed connect
 
         /* Default to bad news */
@@ -380,7 +388,6 @@ class Auth
         $results['error']   = 'LDAP login attempt failed';
 
         return $results;
-
     } // ldap_auth
 
     /**
@@ -472,11 +479,11 @@ class Auth
                             $results['ui_required'] = $form_html;
                         }
                     }
-                 } else {
+                } else {
                     debug_event('auth', $website . ' is not a valid OpenID.', '3');
                     $results['success'] = false;
                     $results['error']   = 'Not a valid OpenID.';
-                 }
+                }
             } else {
                 debug_event('auth', 'Cannot initialize OpenID resources.', '3');
                 $results['success'] = false;
@@ -507,35 +514,37 @@ class Auth
             if ($response->status == Auth_OpenID_CANCEL) {
                 $results['success'] = false;
                 $results['error']   = 'OpenID verification cancelled.';
-            } else if ($response->status == Auth_OpenID_FAILURE) {
-                $results['success'] = false;
-                $results['error']   = 'OpenID authentication failed: ' . $response->message;
-            } else if ($response->status == Auth_OpenID_SUCCESS) {
-                // Extract the identity URL and Simple Registration data (if it was returned).
+            } else {
+                if ($response->status == Auth_OpenID_FAILURE) {
+                    $results['success'] = false;
+                    $results['error']   = 'OpenID authentication failed: ' . $response->message;
+                } else {
+                    if ($response->status == Auth_OpenID_SUCCESS) {
+                        // Extract the identity URL and Simple Registration data (if it was returned).
                 $sreg_resp = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
-                $sreg = $sreg_resp->contents();
+                        $sreg = $sreg_resp->contents();
 
-                $results['website'] = $response->getDisplayIdentifier();
-                if (@$sreg['email']) {
-                    $results['email'] = $sreg['email'];
-                }
+                        $results['website'] = $response->getDisplayIdentifier();
+                        if (@$sreg['email']) {
+                            $results['email'] = $sreg['email'];
+                        }
 
-                if (@$sreg['nickname']) {
-                    $results['username'] = $sreg['nickname'];
-                }
+                        if (@$sreg['nickname']) {
+                            $results['username'] = $sreg['nickname'];
+                        }
 
-                if (@$sreg['fullname']) {
-                    $results['name'] = $sreg['fullname'];
-                }
+                        if (@$sreg['fullname']) {
+                            $results['name'] = $sreg['fullname'];
+                        }
 
-                $users = User::get_from_website($results['website']);
-                if (count($users) > 0) {
-                    if (count($users) == 1) {
-                        $user = new User($users[0]);
-                        $results['success'] = true;
-                        $results['username'] = $user->username;
-                    } else {
-                        // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
+                        $users = User::get_from_website($results['website']);
+                        if (count($users) > 0) {
+                            if (count($users) == 1) {
+                                $user = new User($users[0]);
+                                $results['success'] = true;
+                                $results['username'] = $user->username;
+                            } else {
+                                // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
                         // Should we make website field unique?
                         foreach ($users as $id) {
                             $user = new User($id);
@@ -544,16 +553,18 @@ class Auth
                                 $results['username'] = $user->username;
                             }
                         }
-                    }
-                } else {
-                    // Don't return success if an user already exists for this username but don't have this openid identity as website
+                            }
+                        } else {
+                            // Don't return success if an user already exists for this username but don't have this openid identity as website
                     $user = User::get_from_username($results['username']);
-                    if ($user->id) {
-                        $results['success'] = false;
-                        $results['error'] = 'No user associated to this OpenID and username already taken.';
-                    } else {
-                        $results['success'] = true;
-                        $results['error'] = 'No user associated to this OpenID.';
+                            if ($user->id) {
+                                $results['success'] = false;
+                                $results['error'] = 'No user associated to this OpenID and username already taken.';
+                            } else {
+                                $results['success'] = true;
+                                $results['error'] = 'No user associated to this OpenID.';
+                            }
+                        }
                     }
                 }
             }

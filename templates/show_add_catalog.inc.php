@@ -61,19 +61,29 @@ $default_sort = "%a/%A";
             <td><input type="checkbox" name="gather_art" value="1" checked /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Build Playlists from playlist Files (m3u, asx, pls, xspf)'); ?>:</td>
+            <td valign="top"><?php echo T_('Build Playlists from playlist Files'); ?> (m3u, m3u8, asx, pls, xspf):</td>
             <td><input type="checkbox" name="parse_playlist" value="1" /></td>
         </tr>
         <tr>
             <td valign="top"><?php echo T_('Gather media types'); ?>:</td>
             <td>
-                <input type="radio" name="gather_media" value="music" checked /> <?php echo T_('Music'); ?>
-                <?php if (AmpConfig::get('allow_video')) { ?>
-                    <input type="radio" name="gather_media" value="clip" /> <?php echo T_('Music Clip'); ?>
-                    <input type="radio" name="gather_media" value="tvshow" /> <?php echo T_('TV Show'); ?>
-                    <input type="radio" name="gather_media" value="movie" /> <?php echo T_('Movie'); ?>
-                    <input type="radio" name="gather_media" value="personal_video" /> <?php echo T_('Personal Video'); ?>
-                <?php } ?>
+
+                <select name="gather_media">
+                    <option value="music"><?php echo T_('Music'); ?></option>
+            <?php if (AmpConfig::get('allow_video')) {
+    ?>
+                    <option value="clip"><?php echo T_('Music Clip');
+    ?></option>
+                    <option value="tvshow"><?php echo T_('TV Show');
+    ?></option>
+                    <option value="movie"><?php echo T_('Movie');
+    ?></option>
+                    <option value="personal_video"><?php echo T_('Personal Video');
+    ?></option>
+            <?php
+
+} ?>
+                </select>
             </td>
         </tr>
     </table>

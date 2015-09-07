@@ -22,7 +22,9 @@
 
 $web_path = AmpConfig::get('web_path');
 ?>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="live_stream">
     <thead>
         <tr class="th-top">
@@ -38,16 +40,23 @@ $web_path = AmpConfig::get('web_path');
         foreach ($object_ids as $radio_id) {
             $libitem = new Live_Stream($radio_id);
             $libitem->format();
-        ?>
-        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
+            ?>
+        <tr id="live_stream_<?php echo $libitem->id;
+            ?>" class="<?php echo UI::flip_class();
+            ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php');
+            ?>
         </tr>
-        <?php } //end foreach ($artists as $artist) ?>
-        <?php if (!count($object_ids)) { ?>
+        <?php 
+        } //end foreach ($artists as $artist) ?>
+        <?php if (!count($object_ids)) {
+    ?>
         <tr>
-            <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
+            <td colspan="6"><span class="nodata"><?php echo T_('No live stream found');
+    ?></span></td>
         </tr>
-        <?php } ?>
+        <?php 
+} ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -60,4 +69,6 @@ $web_path = AmpConfig::get('web_path');
     </tfoot>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) require AmpConfig::Get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>

@@ -37,6 +37,16 @@ class Session
     } // __construct
 
     /**
+     * open
+     *
+     * This is run on the beginning of a session, nothing to do here for now.
+     */
+    public static function open()
+    {
+        return true;
+    }
+
+    /**
      * close
      *
      * This is run on the end of a session, nothing to do here for now.
@@ -73,7 +83,9 @@ class Session
      */
     public static function destroy($key)
     {
-        if (!strlen($key)) { return false; }
+        if (!strlen($key)) {
+            return false;
+        }
 
         // Remove anything and EVERYTHING
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
@@ -81,9 +93,14 @@ class Session
 
         debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
 
+        $session_name = AmpConfig::get('session_name');
+        $cookie_path = AmpConfig::get('cookie_path');
+        $cookie_domain = null;
+        $cookie_secure = AmpConfig::get('cookie_secure');
+
         // Destroy our cookie!
-        setcookie(AmpConfig::get('session_name'), null, -1);
-        session_destroy();
+        setcookie($session_name, null, -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_user', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
 
         return true;
     }
@@ -216,7 +233,9 @@ class Session
             $geoname = $data['geo_name'];
         }
 
-        if (!strlen($value)) { $value = ' '; }
+        if (!strlen($value)) {
+            $value = ' ';
+        }
 
         /* Insert the row */
         $sql = 'INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`,`geo_latitude`,`geo_longitude`, `geo_name`) ' .
@@ -244,7 +263,9 @@ class Session
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!isset($_COOKIE[$session_name])) { return false; }
+        if (!isset($_COOKIE[$session_name])) {
+            return false;
+        }
 
         // Set up the cookie params before we start the session.
         // This is vital
@@ -432,6 +453,23 @@ class Session
     }
 
     /**
+     * create_user_cookie
+     *
+     * This function just creates the user cookie wich contains current username.
+     * It must be used for information only.
+     */
+    public static function create_user_cookie($username)
+    {
+        $cookie_life = AmpConfig::get('cookie_life');
+        $session_name = AmpConfig::get('session_name');
+        $cookie_path = AmpConfig::get('cookie_path');
+        $cookie_domain = null;
+        $cookie_secure = AmpConfig::get('cookie_secure');
+
+        setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+    }
+
+    /**
      * create_remember_cookie
      *
      * This function just creates the remember me cookie, nothing special.
@@ -509,5 +547,4 @@ class Session
 
         return true;
     }
-
 }

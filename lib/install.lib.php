@@ -26,31 +26,31 @@
  */
 function split_sql($sql)
 {
-        $sql = trim($sql);
-        $sql = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
-        $buffer = array();
-        $ret = array();
-        $in_string = false;
-        for ($i=0; $i<strlen($sql)-1; $i++) {
-                if ($sql[$i] == ";" && !$in_string) {
-                        $ret[] = substr($sql, 0, $i);
-                        $sql = substr($sql, $i + 1);
-                        $i = 0;
-                }
-                if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
-                        $in_string = false;
-                } elseif (!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
-                        $in_string = $sql[$i];
-                }
-                if (isset($buffer[1])) {
-                        $buffer[0] = $buffer[1];
-                }
-                $buffer[1] = $sql[$i];
+    $sql = trim($sql);
+    $sql = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
+    $buffer = array();
+    $ret = array();
+    $in_string = false;
+    for ($i=0; $i<strlen($sql)-1; $i++) {
+        if ($sql[$i] == ";" && !$in_string) {
+            $ret[] = substr($sql, 0, $i);
+            $sql = substr($sql, $i + 1);
+            $i = 0;
         }
-        if (!empty($sql)) {
-                $ret[] = $sql;
+        if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
+            $in_string = false;
+        } elseif (!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+            $in_string = $sql[$i];
         }
-        return($ret);
+        if (isset($buffer[1])) {
+            $buffer[0] = $buffer[1];
+        }
+        $buffer[1] = $sql[$i];
+    }
+    if (!empty($sql)) {
+        $ret[] = $sql;
+    }
+    return($ret);
 } // split_sql
 
 /**
@@ -98,7 +98,6 @@ function install_check_status($configfile)
         Error::add('general', T_('Existing Database detected, unable to continue installation'));
         return false;
     }
-
 } // install_check_status
 
 function install_check_server_apache()
@@ -265,7 +264,7 @@ function install_create_config($download = false)
     Dba::dbh();
 
     $params = AmpConfig::get_all();
-    if (empty($params['database_username']) || empty($params['database_password'])) {
+    if (empty($params['database_username']) || (empty($params['database_password']) && strpos($params['database_hostname'], '/') !== 0)) {
         Error::add('general', T_("Invalid configuration settings"));
         return false;
     }
@@ -340,7 +339,6 @@ function install_create_account($username, $password, $password2)
     User::fix_preferences('-1');
 
     return true;
-
 } // install_create_account
 
 function command_exists($command)
@@ -406,10 +404,111 @@ function install_config_transcode_mode($mode)
         'transcode_mkv' => 'allowed',
     );
     if ($mode == 'ffmpeg' || $mode == 'avconv') {
-        $trconfig['transcode_cmd'] = $mode . ' -i %FILE%';
+        $trconfig['transcode_cmd'] = $mode;
+        $trconfig['transcode_input'] = '-i %FILE%';
         $trconfig['waveform'] = 'true';
         $trconfig['generate_video_preview'] = 'true';
 
         AmpConfig::set_by_array($trconfig, true);
+    }
+}
+
+function install_config_use_case($case)
+{
+    $trconfig = array(
+        'use_auth' => 'true',
+        'ratings' => 'true',
+        'userflags' => 'true',
+        'sociable' => 'true',
+        'licensing' => 'false',
+        'wanted' => 'true',
+        'channel' => 'true',
+        'live_stream' => 'true',
+        'allow_public_registration' => 'false',
+        'cookie_disclaimer' => 'false',
+        'share' => 'false'
+    );
+
+    $dbconfig = array(
+        'download' => '1',
+        'share' => '0',
+        'allow_video' => '1',
+        'home_now_playing' => '1',
+        'home_recently_played' => '1'
+    );
+
+    switch ($case) {
+        case 'minimalist':
+            $trconfig['ratings'] = 'false';
+            $trconfig['userflags'] = 'false';
+            $trconfig['sociable'] = 'false';
+            $trconfig['wanted'] = 'false';
+            $trconfig['channel'] = 'false';
+            $trconfig['live_stream'] = 'false';
+
+            $dbconfig['download'] = '0';
+            $dbconfig['allow_video'] = '0';
+
+            // Hide sidebar by default to have a better 'minimalist first look'.
+            setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
+            break;
+        case 'community':
+            $trconfig['use_auth'] = 'false';
+            $trconfig['licensing'] = 'true';
+            $trconfig['wanted'] = 'false';
+            $trconfig['live_stream'] = 'false';
+            $trconfig['allow_public_registration'] = 'true';
+            $trconfig['cookie_disclaimer'] = 'true';
+            $trconfig['share'] = 'true';
+
+            $dbconfig['download'] = '0';
+            $dbconfig['share'] = '1';
+            $dbconfig['home_now_playing'] = '0';
+            $dbconfig['home_recently_played'] = '0';
+            break;
+        default:
+            break;
+    }
+
+    AmpConfig::set_by_array($trconfig, true);
+    foreach ($dbconfig as $preference => $value) {
+        Preference::update($preference, -1, $value, true, true);
+    }
+}
+
+function install_config_backends(Array $backends)
+{
+    $dbconfig = array(
+        'subsonic_backend' => '0',
+        'plex_backend' => '0',
+        'daap_backend' => '0',
+        'upnp_backend' => '0',
+        'webdav_backend' => '0',
+        'stream_beautiful_url' => '0'
+    );
+
+    foreach ($backends as $backend) {
+        switch ($backend) {
+            case 'subsonic':
+                $dbconfig['subsonic_backend'] = '1';
+                break;
+            case 'plex':
+                $dbconfig['plex_backend'] = '1';
+                break;
+            case 'upnp':
+                $dbconfig['upnp_backend'] = '1';
+                $dbconfig['stream_beautiful_url'] = '1';
+                break;
+            case 'daap':
+                $dbconfig['daap_backend'] = '1';
+                break;
+            case 'webdav':
+                $dbconfig['webdav_backend'] = '1';
+                break;
+        }
+    }
+
+    foreach ($dbconfig as $preference => $value) {
+        Preference::update($preference, -1, $value, true, true);
     }
 }

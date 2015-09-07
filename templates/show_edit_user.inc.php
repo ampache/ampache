@@ -40,6 +40,9 @@
             <td><?php echo T_('Full Name'); ?>:</td>
             <td>
                 <input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+                <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
+    echo "checked";
+} ?> /> <?php echo T_('Public'); ?>
                 <?php Error::display('fullname'); ?>
             </td>
         </tr>
@@ -113,7 +116,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo T_('Avatar'); ?>
+                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />

@@ -109,7 +109,7 @@ class getID3
 	protected $startup_error   = '';
 	protected $startup_warning = '';
 
-	const VERSION           = '1.9.9-20141121';
+	const VERSION           = '1.9.9-20150318';
 	const FREAD_BUFFER_SIZE = 32768;
 
 	const ATTACHMENTS_NONE   = false;
@@ -243,7 +243,7 @@ class getID3
 	}
 
 
-	public function openfile($filename) {
+	public function openfile($filename, $filesize=null) {
 		try {
 			if (!empty($this->startup_error)) {
 				throw new getid3_exception($this->startup_error);
@@ -287,7 +287,7 @@ class getID3
 				throw new getid3_exception('Could not open "'.$filename.'" ('.implode('; ', $errormessagelist).')');
 			}
 
-			$this->info['filesize'] = filesize($filename);
+			$this->info['filesize'] = (!is_null($filesize) ? $filesize : filesize($filename));
 			// set redundant parameters - might be needed in some include file
 			// filenames / filepaths in getID3 are always expressed with forward slashes (unix-style) for both Windows and other to try and minimize confusion
 			$filename = str_replace('\\', '/', $filename);
@@ -342,9 +342,9 @@ class getID3
 	}
 
 	// public: analyze file
-	public function analyze($filename) {
+	public function analyze($filename, $filesize=null, $original_filename='') {
 		try {
-			if (!$this->openfile($filename)) {
+			if (!$this->openfile($filename, $filesize)) {
 				return $this->info;
 			}
 
@@ -389,7 +389,7 @@ class getID3
 			$formattest = fread($this->fp, 32774);
 
 			// determine format
-			$determined_format = $this->GetFileFormat($formattest, $filename);
+			$determined_format = $this->GetFileFormat($formattest, ($original_filename ? $original_filename : $filename));
 
 			// unable to determine file format
 			if (!$determined_format) {

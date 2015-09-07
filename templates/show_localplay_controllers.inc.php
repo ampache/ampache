@@ -36,7 +36,9 @@ $web_path = AmpConfig::get('web_path');
         <?php
         foreach ($controllers as $controller) {
             $localplay = new Localplay($controller);
-            if (!$localplay->player_loaded()) { continue; }
+            if (!$localplay->player_loaded()) {
+                continue;
+            }
             $localplay->format();
             if (Localplay::is_enabled($controller)) {
                 $action     = 'confirm_uninstall_localplay';
@@ -45,18 +47,31 @@ $web_path = AmpConfig::get('web_path');
                 $action = 'install_localplay';
                 $action_txt    = T_('Activate');
             }
-        ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td class="cel_name"><?php echo scrub_out($localplay->f_name); ?></td>
-            <td class="cel_description"><?php echo scrub_out($localplay->f_description); ?></td>
-            <td class="cel_version"><?php echo scrub_out($localplay->f_version); ?></td>
-            <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type=<?php echo urlencode($controller); ?>"><?php echo $action_txt; ?></a></td>
+            ?>
+        <tr class="<?php echo UI::flip_class();
+            ?>">
+            <td class="cel_name"><?php echo scrub_out($localplay->f_name);
+            ?></td>
+            <td class="cel_description"><?php echo scrub_out($localplay->f_description);
+            ?></td>
+            <td class="cel_version"><?php echo scrub_out($localplay->f_version);
+            ?></td>
+            <td class="cel_action"><a href="<?php echo $web_path;
+            ?>/admin/modules.php?action=<?php echo $action;
+            ?>&amp;type=<?php echo urlencode($controller);
+            ?>"><?php echo $action_txt;
+            ?></a></td>
         </tr>
-        <?php } if (!count($controllers)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="4"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+        <?php 
+        } if (!count($controllers)) {
+            ?>
+        <tr class="<?php echo UI::flip_class();
+            ?>">
+            <td colspan="4"><span class="error"><?php echo T_('No Records Found');
+            ?></span></td>
         </tr>
-        <?php } ?>
+        <?php 
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

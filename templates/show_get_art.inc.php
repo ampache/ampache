@@ -26,16 +26,21 @@
         <?php
         foreach ($keywords as $key => $word) {
             if ($key != 'keyword' && $word['label']) {
-        ?>
+                ?>
                 <tr>
                     <td>
-                        <?php echo $word['label']; ?>&nbsp;
+                        <?php echo $word['label'];
+                ?>&nbsp;
                     </td>
                     <td>
-                        <input type="text" id="option_<?php echo $key; ?>" name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" />
+                        <input type="text" id="option_<?php echo $key;
+                ?>" name="option_<?php echo $key;
+                ?>" value="<?php echo scrub_out(unhtmlentities($word['value']));
+                ?>" />
                     </td>
                 </tr>
         <?php
+
             }
         }
         ?>
@@ -49,7 +54,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo T_('Local Image'); ?>
+                <?php echo T_('Local Image'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="file" name="file" value="" />

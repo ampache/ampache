@@ -9,10 +9,17 @@ if (!function_exists('json_decode')) {
     throw new \Exception("The Dropbox SDK requires the JSON PHP extension, but it looks like you don't have it (couldn't find function \"json_decode\").  Library: \"" . __FILE__ . "\".");
 }
 
+// If mbstring.func_overload is set, it changes the behavior of the standard string functions in
+// ways that makes this library break.
+$mbstring_func_overload = ini_get("mbstring.func_overload");
+if ($mbstring_func_overload & 2 == 2) {
+    throw new \Exception("The Dropbox SDK doesn't work when mbstring.func_overload is set to overload the standard string functions (value = ".var_export($mbstring_func_overload, true).").  Library: \"" . __FILE__ . "\".");
+}
+
 if (strlen((string) PHP_INT_MAX) < 19) {
     // Looks like we're running on a 32-bit build of PHP.  This could cause problems because some of the numbers
     // we use (file sizes, quota, etc) can be larger than 32-bit ints can handle.
-    //throw new \Exception("The Dropbox SDK uses 64-bit integers, but it looks like we're running on a version of PHP that doesn't support 64-bit integers (PHP_INT_MAX=" . ((string) PHP_INT_MAX) . ").  Library: \"" . __FILE__ . "\"");
+    throw new \Exception("The Dropbox SDK uses 64-bit integers, but it looks like we're running on a version of PHP that doesn't support 64-bit integers (PHP_INT_MAX=" . ((string) PHP_INT_MAX) . ").  Library: \"" . __FILE__ . "\"");
 }
 
 /**
@@ -27,7 +34,7 @@ final class RequestUtil
      * @param array $params
      * @return string
      */
-    static function buildUrl($userLocale, $host, $path, $params = null)
+    static function buildUrlForGetOrPut($userLocale, $host, $path, $params = null)
     {
         $url = self::buildUri($host, $path);
         $url .= "?locale=" . rawurlencode($userLocale);
@@ -69,9 +76,9 @@ final class RequestUtil
      * @param string $url
      * @return Curl
      */
-    static function mkCurlWithoutAuth($clientIdentifier, $url, $maxsize=0)
+    static function mkCurl($clientIdentifier, $url)
     {
-        $curl = new Curl($url, $maxsize);
+        $curl = new Curl($url);
 
         $curl->set(CURLOPT_CONNECTTIMEOUT, 10);
 
@@ -89,14 +96,25 @@ final class RequestUtil
     /**
      * @param string $clientIdentifier
      * @param string $url
+     * @param string $authHeaderValue
+     * @return Curl
+     */
+    static function mkCurlWithAuth($clientIdentifier, $url, $authHeaderValue)
+    {
+        $curl = self::mkCurl($clientIdentifier, $url);
+        $curl->addHeader("Authorization: $authHeaderValue");
+        return $curl;
+    }
+
+    /**
+     * @param string $clientIdentifier
+     * @param string $url
      * @param string $accessToken
      * @return Curl
      */
-    static function mkCurl($clientIdentifier, $url, $accessToken, $maxsize=0)
+    static function mkCurlWithOAuth($clientIdentifier, $url, $accessToken)
     {
-        $curl = self::mkCurlWithoutAuth($clientIdentifier, $url, $maxsize);
-        $curl->addHeader("Authorization: Bearer $accessToken");
-        return $curl;
+        return self::mkCurlWithAuth($clientIdentifier, $url, "Bearer $accessToken");
     }
 
     static function buildPostBody($params)
@@ -123,6 +141,7 @@ final class RequestUtil
     }
 
     /**
+     * @param string $clientIdentifier
      * @param string $accessToken
      * @param string $userLocale
      * @param string $host
@@ -142,7 +161,7 @@ final class RequestUtil
         if ($params === null) $params = array();
         $params['locale'] = $userLocale;
 
-        $curl = self::mkCurl($clientIdentifier, $url, $accessToken);
+        $curl = self::mkCurlWithOAuth($clientIdentifier, $url, $accessToken);
         $curl->set(CURLOPT_POST, true);
         $curl->set(CURLOPT_POSTFIELDS, self::buildPostBody($params));
 
@@ -151,6 +170,36 @@ final class RequestUtil
     }
 
     /**
+     * @param string $clientIdentifier
+     * @param string $authHeaderValue
+     * @param string $userLocale
+     * @param string $host
+     * @param string $path
+     * @param array|null $params
+     *
+     * @return HttpResponse
+     *
+     * @throws Exception
+     */
+    static function doPostWithSpecificAuth($clientIdentifier, $authHeaderValue, $userLocale, $host, $path, $params = null)
+    {
+        Checker::argStringNonEmpty("authHeaderValue", $authHeaderValue);
+
+        $url = self::buildUri($host, $path);
+
+        if ($params === null) $params = array();
+        $params['locale'] = $userLocale;
+
+        $curl = self::mkCurlWithAuth($clientIdentifier, $url, $authHeaderValue);
+        $curl->set(CURLOPT_POST, true);
+        $curl->set(CURLOPT_POSTFIELDS, self::buildPostBody($params));
+
+        $curl->set(CURLOPT_RETURNTRANSFER, true);
+        return $curl->exec();
+    }
+
+    /**
+     * @param string $clientIdentifier
      * @param string $accessToken
      * @param string $userLocale
      * @param string $host
@@ -165,9 +214,9 @@ final class RequestUtil
     {
         Checker::argStringNonEmpty("accessToken", $accessToken);
 
-        $url = self::buildUrl($userLocale, $host, $path, $params);
+        $url = self::buildUrlForGetOrPut($userLocale, $host, $path, $params);
 
-        $curl = self::mkCurl($clientIdentifier, $url, $accessToken);
+        $curl = self::mkCurlWithOAuth($clientIdentifier, $url, $accessToken);
         $curl->set(CURLOPT_HTTPGET, true);
         $curl->set(CURLOPT_RETURNTRANSFER, true);
 
@@ -181,7 +230,7 @@ final class RequestUtil
      */
     static function parseResponseJson($responseBody)
     {
-        $obj = json_decode($responseBody, TRUE, 10);
+        $obj = json_decode($responseBody, true, 10);
         if ($obj === null) {
             throw new Exception_BadResponse("Got bad JSON from server: $responseBody");
         }
@@ -203,7 +252,7 @@ final class RequestUtil
         if ($sc === 500 || $sc === 502) return new Exception_ServerError($message);
         if ($sc === 503) return new Exception_RetryLater($message);
 
-        return new Exception_BadResponse("Unexpected $message");
+        return new Exception_BadResponseCode("Unexpected $message", $sc);
     }
 
     /**

@@ -75,9 +75,13 @@ abstract class Catalog extends database_object
      */
     public $f_name;
     /**
-     * @var string $f_name_link
+     * @var string $link
      */
-    public $f_name_link;
+    public $link;
+    /**
+     * @var string $f_link
+     */
+    public $f_link;
     /**
      * @var string $f_update
      */
@@ -156,6 +160,31 @@ abstract class Catalog extends database_object
      * @return media|null
      */
     abstract public function prepare_media($media);
+
+    /**
+     * Check if the catalog is ready to perform actions (configuration completed, ...)
+     * @return boolean
+     */
+    public function isReady()
+    {
+        return true;
+    }
+
+    /**
+     * Show a message to make the catalog ready.
+     */
+    public function show_ready_process()
+    {
+        // Do nothing.
+    }
+
+    /**
+     * Perform the last step process to make the catalog ready.
+     */
+    public function perform_ready()
+    {
+        // Do nothing.
+    }
 
     /**
      * uninstall
@@ -317,9 +346,7 @@ abstract class Catalog extends database_object
     public static function is_audio_file($file)
     {
         $pattern = "/\.(" . AmpConfig::get('catalog_file_pattern') . ")$/i";
-        $match = preg_match($pattern, $file);
-
-        return $match;
+        return (preg_match($pattern, $file) === 1);
     }
 
     /**
@@ -330,7 +357,7 @@ abstract class Catalog extends database_object
     public static function is_video_file($file)
     {
         $video_pattern = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
-        return preg_match($video_pattern, $file);
+        return (preg_match($video_pattern, $file) === 1);
     }
 
     /**
@@ -471,9 +498,8 @@ abstract class Catalog extends database_object
     public function format()
     {
         $this->f_name = $this->name;
-        $this->f_name_link = '<a href="' . AmpConfig::get('web_path') .
-            '/admin/catalog.php?action=show_customize_catalog&catalog_id=' .
-            $this->id . '" title="' . scrub_out($this->name) . '">' .
+        $this->link = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
+        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' .
             scrub_out($this->f_name) . '</a>';
         $this->f_update = $this->last_update
             ? date('d/m/Y h:i', $this->last_update)
@@ -898,7 +924,7 @@ abstract class Catalog extends database_object
      * @param array|null $catalogs
      * @return \Artist[]
     */
-    public static function get_artists($catalogs = null)
+    public static function get_artists($catalogs = null, $size = 0, $offset = 0)
     {
         $sql_where = "";
         if (is_array($catalogs) && count($catalogs)) {
@@ -906,7 +932,21 @@ abstract class Catalog extends database_object
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
         }
 
-        $sql = "SELECT `artist`.id, `artist`.`name`, `artist`.`summary` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.artist ORDER BY `artist`.`name`";
+        $sql_limit = "";
+        if ($offset > 0 && $size > 0) {
+            $sql_limit = "LIMIT " . $offset . ", " . $size;
+        } elseif ($size > 0) {
+            $sql_limit = "LIMIT " . $size;
+        } elseif ($offset > 0) {
+            // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html
+            $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
+        }
+
+        $sql = "SELECT `artist`.id, `artist`.`name`, `artist`.`summary` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " .
+                $sql_where .
+                "GROUP BY `song`.artist ORDER BY `artist`.`name` " .
+                $sql_limit;
 
         $results = array();
         $db_results = Dba::read($sql);
@@ -916,6 +956,30 @@ abstract class Catalog extends database_object
         }
 
         return $results;
+    }
+
+    public static function search_childrens($name, $catalog_id = 0)
+    {
+        $search = array();
+        $search['type'] = "artist";
+        $search['rule_0_input'] = $name;
+        $search['rule_0_operator'] = 4;
+        $search['rule_0'] = "name";
+        if ($catalog_id > 0) {
+            $search['rule_1_input'] = $catalog_id;
+            $search['rule_1_operator'] = 0;
+            $search['rule_1'] = "catalog";
+        }
+        $artists = Search::run($search);
+
+        $childrens = array();
+        foreach ($artists as $artist) {
+            $childrens[] = array(
+                'object_type' => 'artist',
+                'object_id' => $artist
+            );
+        }
+        return $childrens;
     }
 
     /**
@@ -1050,12 +1114,10 @@ abstract class Catalog extends database_object
                 $art->insert($image, $results[0]['mime']);
                 // If they've enabled resizing of images generate a thumbnail
                 if (AmpConfig::get('resize_images')) {
-                    $thumb = $art->generate_thumb($image, array(
-                            'width' => 275,
-                            'height' => 275),
-                        $results[0]['mime']);
+                    $size = array('width' => 275, 'height' => 275);
+                    $thumb = $art->generate_thumb($image,$size ,$results[0]['mime']);
                     if (is_array($thumb)) {
-                        $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], '275x275');
+                        $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
                     }
                 }
             } else {
@@ -1417,8 +1479,10 @@ abstract class Catalog extends database_object
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
         $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
         $tags            = Tag::get_object_tags('song', $song->id);
-        foreach ($tags as $tag) {
-            $song->tags[] = $tag['name'];
+        if ($tags) {
+            foreach ($tags as $tag) {
+                $song->tags[] = $tag['name'];
+            }
         }
         $new_song->tags        = $results['genre'];
         $artist                = $results['artist'];
@@ -1479,8 +1543,23 @@ abstract class Catalog extends database_object
             debug_event('update', "$song->file : no differences found", 5);
         }
 
+        // If song rating tag exists and is well formed (array user=>rating), update it
+        if ($song->id && array_key_exists('rating', $results) && is_array($results['rating'])) {
+            // For each user's ratings, call the function
+            foreach ($results['rating'] as $user => $rating) {
+                debug_event('Rating', "Updating rating for Song ".$song->id." to $rating for user $user", 5);
+                $o_rating = new Rating($song->id, 'song');
+                $o_rating->set_rating($rating, $user);
+            }
+        }
         return $info;
     } // update_song_from_tags
+
+    public function update_video_from_tags($results, Video $video)
+    {
+        // TODO: implement this
+        return null;
+    }
 
     /**
      *
@@ -1500,7 +1579,7 @@ abstract class Catalog extends database_object
         }
 
         if ($media_type == "music") {
-            $types = array_diff($types, array('personal_video', 'movie', 'tvshow'));
+            $types = array_diff($types, array('personal_video', 'movie', 'tvshow', 'clip'));
         }
 
         return $types;
@@ -1518,9 +1597,11 @@ abstract class Catalog extends database_object
 
         debug_event('clean', 'Starting on ' . $this->name, 5);
 
-        require AmpConfig::get('prefix') . '/templates/show_clean_catalog.inc.php';
-        ob_flush();
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            require AmpConfig::get('prefix') . UI::find_template('show_clean_catalog.inc.php');
+            ob_flush();
+            flush();
+        }
 
         $dead_total = $this->clean_catalog_proc();
 
@@ -1529,14 +1610,13 @@ abstract class Catalog extends database_object
         // Remove any orphaned artists/albums/etc.
         self::gc();
 
-        UI::show_box_top();
-        echo "<strong>";
-        printf(ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
-        echo "</strong><br />\n\n";
-        echo "<br />\n";
-        UI::show_box_bottom();
-        ob_flush();
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top();
+        }
+        UI::update_text('', sprintf(ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total));
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         $this->update_last_clean();
     } // clean_catalog
@@ -1547,20 +1627,21 @@ abstract class Catalog extends database_object
      */
     public function verify_catalog()
     {
-        require AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
-        ob_flush();
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            require AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
+            ob_flush();
+            flush();
+        }
 
         $verified = $this->verify_catalog_proc();
 
-        UI::show_box_top();
-        echo '<strong>';
-        printf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']);
-        echo "</strong><br />\n";
-        echo "<br />\n";
-        UI::show_box_bottom();
-        ob_flush();
-        flush();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top();
+        }
+        UI::update_text('', sprintf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']));
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         return true;
     } // verify_catalog
@@ -1615,6 +1696,18 @@ abstract class Catalog extends database_object
     } // trim_prefix
 
     /**
+     * trim_featuring
+     * Splits artists featuring from the string
+     * @param string $string
+     * @return array
+     */
+    public static function trim_featuring($string)
+    {
+        $trimmed = array_map('trim', explode(' feat. ', $string));
+        return $trimmed;
+    } // trim_featuring
+
+    /**
      * check_title
      * this checks to make sure something is
      * set on the title, if it isn't it looks at the
@@ -1640,7 +1733,7 @@ abstract class Catalog extends database_object
     public static function import_playlist($playlist)
     {
         $data = file_get_contents($playlist);
-        if (substr($playlist, -3, 3) == 'm3u') {
+        if (substr($playlist, -3, 3) == 'm3u' || substr($playlist, -4, 4) == 'm3u8') {
             $files = self::parse_m3u($data);
         } elseif (substr($playlist, -3, 3) == 'pls') {
             $files = self::parse_pls($data);
@@ -1854,6 +1947,10 @@ abstract class Catalog extends database_object
 
         $catalog = self::create_from_id($catalog_id);
 
+        if (!$catalog->id) {
+            return false;
+        }
+
         $sql = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
         $db_results = Dba::write($sql, array($catalog_id));
 
@@ -1867,6 +1964,7 @@ abstract class Catalog extends database_object
 
         // Run the cleaners...
         self::gc();
+        return true;
     } // delete
 
     /**
@@ -1978,6 +2076,24 @@ abstract class Catalog extends database_object
         }
         return $tags;
     }
+
+    public static function can_remove($libitem, $user = null)
+    {
+        if (!$user) {
+            $user = $GLOBALS['user']->id;
+        }
+
+        if (!$user) {
+            return false;
+        }
+
+        if (!AmpConfig::get('delete_from_disk')) {
+            return false;
+        }
+
+        return (Access::check('interface','75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
+    }
 }
 
 // end of catalog class
+

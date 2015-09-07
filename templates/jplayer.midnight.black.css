@@ -443,7 +443,11 @@ div.jp-title {
 	font-weight: bold;
 	text-align: center;
 	color: #FFF;
-	background: #343433 url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x
+	
+	background-color: rgba(0,0,0,0) !important;
+	font-size:0.7em;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 div.playing_info {

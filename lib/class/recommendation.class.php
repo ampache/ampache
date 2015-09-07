@@ -48,17 +48,7 @@ class Recommendation
     {
         debug_event('Recommendation', 'search url : ' . $url, 5);
 
-        $options = array();
-        if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-            $proxy = array();
-            $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-            if (AmpConfig::get('proxy_user')) {
-                $proxy[] = AmpConfig::get('proxy_user');
-                $proxy[] = AmpConfig::get('proxy_pass');
-            }
-            $options['proxy'] = $proxy;
-        }
-        $request = Requests::get($url, array(), $options);
+        $request = Requests::get($url, array(), Core::requests_options());
         $content = $request->body;
 
         return simplexml_load_string($content);
@@ -66,7 +56,8 @@ class Recommendation
 
     public static function album_search($artist, $album)
     {
-        $url = 'http://ws.audioscrobbler.com/1.0/album/' . urlencode($artist) . '/' . urlencode($album) . '/info.xml';
+        $api_key = AmpConfig::get('lastfm_api_key');
+        $url = 'http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist='. urlencode($artist) .'&album=' . urlencode($album) . '&api_key=' . $api_key;
 
         return self::query_lastfm($url);
     }
@@ -330,6 +321,8 @@ class Recommendation
                 $results['placeformed'] = $artist->placeformed;
                 $results['yearformed'] = $artist->yearformed;
                 $results['largephoto'] = Art::url($artist->id, 'artist');
+                $results['smallphoto'] = $results['largephoto'];    // TODO: Change to thumb size?
+                $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto'] = $results['largephoto'];
                 return $results;
             }
@@ -343,6 +336,8 @@ class Recommendation
         $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed'] = (string) $xml->artist->bio->yearformed;
+        $results['smallphoto'] = $xml->artist->image[0];
+        $results['mediumphoto'] = $xml->artist->image[1];
         $results['largephoto'] = $xml->artist->image[2];
         $results['megaphoto'] = $xml->artist->image[4];
 
@@ -364,5 +359,5 @@ class Recommendation
 
         return $results;
     } // get_artist_info
-
 } // end of recommendation class
+

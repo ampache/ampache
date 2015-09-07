@@ -46,7 +46,9 @@ class TVShow_Season extends database_object implements library_item
     public function __construct($id='')
     {
         /* If they failed to pass in an id, just run for it */
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -56,7 +58,6 @@ class TVShow_Season extends database_object implements library_item
         } // foreach info
 
         return true;
-
     } //constructor
 
     /**
@@ -95,7 +96,6 @@ class TVShow_Season extends database_object implements library_item
         }
 
         return $results;
-
     } // get_episodes
 
     /**
@@ -122,7 +122,6 @@ class TVShow_Season extends database_object implements library_item
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
-
     } // _get_extra_info
 
     /**
@@ -180,6 +179,11 @@ class TVShow_Season extends database_object implements library_item
         return array('tvshow_episode' => $this->get_episodes());
     }
 
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -214,6 +218,33 @@ class TVShow_Season extends database_object implements library_item
     public function get_default_art_kind()
     {
         return 'default';
+    }
+
+    public function get_description()
+    {
+        // No season description for now, always return tvshow description
+        $tvshow = new TVShow($this->tvshow);
+        return $tvshow->get_description();
+    }
+
+    public function display_art($thumb = 2)
+    {
+        $id = null;
+        $type = null;
+
+        if (Art::has_db($this->id, 'tvshow_season')) {
+            $id = $this->id;
+            $type = 'tvshow_season';
+        } else {
+            if (Art::has_db($this->tvshow, 'tvshow')) {
+                $id = $this->tvshow;
+                $type = 'tvshow';
+            }
+        }
+
+        if ($id !== null && $type !== null) {
+            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        }
     }
 
     /**
@@ -268,7 +299,6 @@ class TVShow_Season extends database_object implements library_item
 
         self::$_mapcache[$name]['null'] = $id;
         return $id;
-
     }
 
     /**
@@ -283,10 +313,37 @@ class TVShow_Season extends database_object implements library_item
         return $this->id;
     } // update
 
+    public function remove_from_disk()
+    {
+        $deleted = true;
+        $video_ids = $this->get_episodes();
+        foreach ($video_ids as $id) {
+            $video = Video::create_from_id($id);
+            $deleted = $video->remove_from_disk();
+            if (!$deleted) {
+                debug_event('tvshow_season', 'Error when deleting the video `' . $id .'`.', 1);
+                break;
+            }
+        }
+
+        if ($deleted) {
+            $sql = "DELETE FROM `tvshow_season` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+            if ($deleted) {
+                Art::gc('tvshow_season', $this->id);
+                Userflag::gc('tvshow_season', $this->id);
+                Rating::gc('tvshow_season', $this->id);
+                Shoutbox::gc('tvshow_season', $this->id);
+            }
+        }
+
+        return $deleted;
+    }
+
     public static function update_tvshow($tvshow_id, $season_id)
     {
         $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";
         return Dba::write($sql, array($tvshow_id, $season_id));
     }
-
 } // end of tvshow_season class
+

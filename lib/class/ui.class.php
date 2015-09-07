@@ -35,6 +35,26 @@ class UI
     }
 
     /**
+     * find_template
+     *
+     * Return the path to the template file wanted. The file can be overwriten
+     * by the theme if it's not a php file, or if it is and if option
+     * allow_php_themes is set to true.
+     */
+    public static function find_template($template)
+    {
+        $path = AmpConfig::get('theme_path') . '/templates/' . $template;
+        $realpath = AmpConfig::get('prefix') . $path;
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (($extension != 'php' || AmpConfig::get('allow_php_themes'))
+           && file_exists($realpath) && is_file($realpath)) {
+            return $path;
+        } else {
+            return '/templates/' . $template;
+        }
+    }
+
+    /**
      * access_denied
      *
      * Throw an error when they try to do something naughty.
@@ -44,7 +64,7 @@ class UI
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 $error");
-        require_once AmpConfig::get('prefix') . '/templates/show_denied.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_denied.inc.php');
         exit;
     }
 
@@ -57,7 +77,7 @@ class UI
     public static function ajax_include($template)
     {
         ob_start();
-        require AmpConfig::get('prefix') . '/templates/' . $template;
+        require AmpConfig::get('prefix') . UI::find_template('') . $template;
         $output = ob_get_contents();
         ob_end_clean();
 
@@ -220,7 +240,7 @@ END;
             $hover_url = self::_find_icon($hover_name);
         }
         if ($bUseSprite) {
-            $tag = '<span class="sprite sprite-icon_'.$name.'"';
+            $tag = '<span class="sprite sprite-icon_'.$name.'" ';
         } else {
             $tag = '<img src="' . $icon_url . '" ';
         }
@@ -274,7 +294,7 @@ END;
      */
     public static function show_header()
     {
-        require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
     }
 
     /**
@@ -287,7 +307,16 @@ END;
         if (!defined("TABLE_RENDERED")) {
             show_table_render();
         }
-        require_once AmpConfig::get('prefix') . '/templates/footer.inc.php';
+
+        $plugins = Plugin::get_plugins('display_on_footer');
+        foreach ($plugins as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($GLOBALS['user'])) {
+                $plugin->_plugin->display_on_footer();
+            }
+        }
+
+        require_once AmpConfig::get('prefix') . UI::find_template('footer.inc.php');
         if (isset($_REQUEST['profiling'])) {
             Dba::show_profile();
         }
@@ -300,7 +329,7 @@ END;
      */
     public static function show_box_top($title = '', $class = '')
     {
-        require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
     }
 
     /**
@@ -310,7 +339,17 @@ END;
      */
     public static function show_box_bottom()
     {
-        require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
+    }
+
+    public static function show_custom_style()
+    {
+        if (AmpConfig::get('custom_login_logo')) {
+            echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
+        }
+
+        $favicon = AmpConfig::get('custom_favicon') ?: AmpConfig::get('web_path') . "/favicon.ico";
+        echo "<link rel='shortcut icon' href='" .  $favicon . "' />\n";
     }
 
     /**
@@ -326,11 +365,22 @@ END;
             return;
         }
 
-        echo '<script type="text/javascript">';
-        echo "updateText('$field', '$value');";
-        echo "</script>\n";
+        static $id = 1;
+
+        if (defined('SSE_OUTPUT')) {
+            echo "id: " . $id . "\n";
+            echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
+        } else {
+            if (!empty($field)) {
+                echo "<script>updateText('" . $field . "', '" . json_encode($value) ."');</script>\n";
+            } else {
+                echo "<br />" . $value . "<br /><br />\n";
+            }
+        }
+
         ob_flush();
         flush();
+        $id++;
     }
 
     public static function get_logo_url()

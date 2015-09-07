@@ -38,7 +38,7 @@ require $prefix . '/templates/install_header.inc.php';
         <li><?php echo T_('Step 1 - Create the Ampache database'); ?></li>
         <li><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></li>
     </ul>
-    <p><strong><?php echo T_('Step 3 - Set up the initial account'); ?></strong></li>
+    <p><strong><?php echo T_('Step 3 - Set up the initial account'); ?></strong></p>
     <dl>
         <dd><?php echo T_('This step creates your initial Ampache admin account. Once your admin account has been created you will be redirected to the login page.'); ?></dd>
     </dl>

@@ -78,7 +78,9 @@ class Broadcast extends database_object implements library_item
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -165,7 +167,7 @@ class Broadcast extends database_object implements library_item
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id);
+            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
         $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " .
@@ -223,6 +225,16 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
+     * Search for item childrens.
+     * @param string $name
+     * @return array
+     */
+    public function search_childrens($name)
+    {
+        return array();
+    }
+
+    /**
      * Get all childrens and sub-childrens medias.
      * @param string $filter_type
      * @return array
@@ -267,6 +279,18 @@ class Broadcast extends database_object implements library_item
     public function get_default_art_kind()
     {
         return 'default';
+    }
+
+    public function get_description()
+    {
+        return null;
+    }
+
+    public function display_art($thumb = 2)
+    {
+        if (Art::has_db($this->id, 'broadcast')) {
+            Art::display('broadcast', $this->id, $this->get_fullname(), $thumb, $this->link);
+        }
     }
 
     /**
@@ -382,7 +406,6 @@ class Broadcast extends database_object implements library_item
 
     public static function gc()
     {
-
     }
 
     /*
@@ -390,13 +413,14 @@ class Broadcast extends database_object implements library_item
      *
      * @param int $oid
      * @param string $additional_params
+     * @param string $player
      * @param boolean $local
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function play_url($oid, $additional_params='', $local=false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         return $oid;
     }
-
 } // end of broadcast class
+

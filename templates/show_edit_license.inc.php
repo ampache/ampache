@@ -22,21 +22,30 @@
 ?>
 <?php UI::show_box_top(T_('Configure License')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=edit">
-<?php if (isset($license)) { ?>
-<input type="hidden" name="license_id" value="<?php echo $license->id; ?>" />
-<?php } ?>
+<?php if (isset($license)) {
+    ?>
+<input type="hidden" name="license_id" value="<?php echo $license->id;
+    ?>" />
+<?php 
+} ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-    <td><input type="text" name="name" value="<?php if (isset($license)) echo $license->name; ?>" autofocus /></td>
+    <td><input type="text" name="name" value="<?php if (isset($license)) {
+    echo $license->name;
+} ?>" autofocus /></td>
 </tr>
 <tr>
     <td><?php echo T_('Description:'); ?></td>
-    <td><textarea rows="5" cols="70"  maxlength="140" name="description"><?php if (isset($license)) echo $license->description; ?></textarea></td>
+    <td><textarea rows="5" cols="70"  maxlength="140" name="description"><?php if (isset($license)) {
+    echo $license->description;
+} ?></textarea></td>
 </tr>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('External Link') ?></td>
-    <td><input type="text" name="external_link" value="<?php if (isset($license)) echo $license->external_link; ?>" /></td>
+    <td><input type="text" name="external_link" value="<?php if (isset($license)) {
+    echo $license->external_link;
+} ?>" /></td>
 </tr>
 <tr>
     <td>

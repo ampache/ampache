@@ -93,7 +93,9 @@ class Access
      */
     public function __construct($access_id = null)
     {
-        if (!$access_id) { return false; }
+        if (!$access_id) {
+            return false;
+        }
 
         /* Assign id for use in get_info() */
         $this->id = intval($access_id);
@@ -232,7 +234,6 @@ class Access
         Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
 
         return true;
-
     }
 
     /**
@@ -374,9 +375,10 @@ class Access
      * always used.
      * @param string $type
      * @param int $level
+     * @param int|null $user
      * @return boolean
      */
-    public static function check($type, $level)
+    public static function check($type, $level, $user_id=null)
     {
         if (AmpConfig::get('demo_mode')) {
             return true;
@@ -385,6 +387,10 @@ class Access
             return true;
         }
 
+        $user = $GLOBALS['user'];
+        if ($user_id) {
+            $user = new User($user_id);
+        }
         $level = intval($level);
 
         // Switch on the type
@@ -392,10 +398,10 @@ class Access
             case 'localplay':
                 // Check their localplay_level
                 return (AmpConfig::get('localplay_level') >= $level
-                    || $GLOBALS['user']->access >= 100);
+                    || $user->access >= 100);
             case 'interface':
                 // Check their standard user level
-                return ($GLOBALS['user']->access >= $level);
+                return ($user->access >= $level);
             default:
                 return false;
         }
@@ -471,7 +477,9 @@ class Access
      */
     public function get_user_name()
     {
-        if ($this->user == '-1') { return T_('All'); }
+        if ($this->user == '-1') {
+            return T_('All');
+        }
 
         $user = new User($this->user);
         return $user->fullname . " (" . $user->username . ")";

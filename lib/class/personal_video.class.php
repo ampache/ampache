@@ -43,7 +43,6 @@ class Personal_Video extends Video
         }
 
         return true;
-
     } // Constructor
 
     /**
@@ -69,7 +68,6 @@ class Personal_Video extends Video
         Dba::write($sql, array($data['id'], $data['location'], $data['summary']));
 
         return $data['id'];
-
     } // create
 
     /**
@@ -84,7 +82,6 @@ class Personal_Video extends Video
         Dba::write($sql, array($data['location'], $data['summary'], $this->id));
 
         return $this->id;
-
     } // update
 
     /**
@@ -99,7 +96,20 @@ class Personal_Video extends Video
         $this->f_location = $this->location;
 
         return true;
-
     } //format
 
+    /**
+     * Remove the video from disk.
+     */
+    public function remove_from_disk()
+    {
+        $deleted = parent::remove_from_disk();
+        if ($deleted) {
+            $sql = "DELETE FROM `personal_video` WHERE `id` = ?";
+            $deleted = Dba::write($sql, array($this->id));
+        }
+
+        return $deleted;
+    }
 } // Personal_Video class
+

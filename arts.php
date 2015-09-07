@@ -22,16 +22,24 @@
 
 require_once 'lib/init.php';
 
-require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
-
-// If not a content manager user then kick em out
-if (!Access::check('interface','50')) { UI::access_denied(); exit; }
+require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
 $object_type = $_GET['object_type'];
 $object_id = $_GET['object_id'];
+if (!Core::is_library_item($object_type)) {
+    UI::access_denied();
+    exit;
+}
 $burl = '';
 if (isset($_GET['burl'])) {
     $burl = base64_decode($_GET['burl']);
+}
+$item = new $object_type($object_id);
+
+// If not a content manager user then kick em out
+if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != $GLOBALS['user']->id)) {
+    UI::access_denied();
+    exit;
 }
 
 /* Switch on Action */
@@ -69,7 +77,6 @@ switch ($_REQUEST['action']) {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $item = new $object_type($object_id);
         $item->format();
         $art = new Art($object_id, $object_type);
         $images = array();
@@ -86,9 +93,7 @@ switch ($_REQUEST['action']) {
                 $art->insert($image_data,$upload['0']['mime']);
                 show_confirmation(T_('Art Inserted'), '', $burl);
                 break;
-
             } // if image data
-
         } // if it's an upload
 
         $keywords = $item->get_keywords();
@@ -127,14 +132,14 @@ switch ($_REQUEST['action']) {
             } // end foreach
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
-            require_once AmpConfig::get('prefix') . '/templates/show_arts.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_arts.inc.php');
         }
         // Else nothing
         else {
             show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'), $burl);
         }
 
-        require_once AmpConfig::get('prefix') . '/templates/show_get_art.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
 
     break;
     case 'select_art':

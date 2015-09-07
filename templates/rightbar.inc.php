@@ -24,34 +24,46 @@
     <li>
         <?php echo Ajax::button('?page=stream&action=basket','all', T_('Play'), 'rightbar_play'); ?>
     </li>
-    <?php if (Access::check('interface', '25')) { ?>
+    <?php if (Access::check('interface', '25')) {
+    ?>
         <li id="pl_add">
-            <?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to Playlist'));
+    ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist');
+    ?>
                 </li>
             <?php
                 $playlists = Playlist::get_users($GLOBALS['user']->id);
-                Playlist::build_cache($playlists);
-                foreach ($playlists as $playlist_id) {
-                    $playlist = new Playlist($playlist_id);
-                    $playlist->format();
-            ?>
+    Playlist::build_cache($playlists);
+    foreach ($playlists as $playlist_id) {
+        $playlist = new Playlist($playlist_id);
+        $playlist->format();
+        ?>
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id='. $playlist->id, $playlist->f_name, 'rb_append_playlist_'.$playlist->id); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id='. $playlist->id, $playlist->f_name, 'rb_append_playlist_'.$playlist->id);
+        ?>
                 </li>
-            <?php } ?>
+            <?php 
+    }
+    ?>
             </ul>
         </li>
-    <?php } ?>
-<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
+    <?php 
+} ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) {
+    ?>
     <li>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
+    ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id;
+    ?>">
+            <?php echo UI::get_icon('batch_download', T_('Batch Download'));
+    ?>
         </a>
     </li>
-<?php } ?>
+<?php 
+} ?>
     <li>
     <?php echo Ajax::button('?action=basket&type=clear_all','delete', T_('Clear Playlist'),'rb_clear_playlist'); ?>
     </li>
@@ -75,7 +87,7 @@
 </ul>
 <?php
     if (AmpConfig::get('play_type') == 'localplay') {
-        require_once AmpConfig::get('prefix') . '/templates/show_localplay_control.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_control.inc.php');
     }
 ?>
 <ul id="rb_current_playlist">
@@ -89,16 +101,20 @@
     }
 ?>
     <script type="text/javascript">
-        <?php if (count($objects) || (AmpConfig::get('play_type') == 'localplay')) { ?>
+        <?php if (count($objects) || (AmpConfig::get('play_type') == 'localplay')) {
+    ?>
             $("#content").removeClass("content-right-wild", 500);
             $("#footer").removeClass("footer-wild", 500);
             $("#rightbar").removeClass("hidden");
             $("#rightbar").show("slow");
-        <?php } else { ?>
+        <?php 
+} else {
+    ?>
             $("#content").addClass("content-right-wild", 500);
             $("#footer").addClass("footer-wild", 500);
             $("#rightbar").hide("slow");
-        <?php } ?>
+        <?php 
+} ?>
     </script>
 <?php
     // Limit the number of objects we show here
@@ -116,19 +132,30 @@
             $object = new $type(array_shift($object_data));
             $object->format();
         }
-?>
-    <li class="<?php echo UI::flip_class(); ?>" >
-      <?php echo $object->f_link; ?>
-        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
+        ?>
+    <li class="<?php echo UI::flip_class();
+        ?>" >
+      <?php echo $object->f_link;
+        ?>
+        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem');
+        ?>
     </li>
-<?php } if (!count($objects)) { ?>
-    <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
-<?php } ?>
-<?php if (isset($truncated)) { ?>
-    <li class="<?php echo UI::flip_class(); ?>">
-        <?php echo $truncated . ' ' . T_('More'); ?>...
+<?php 
+    } if (!count($objects)) {
+        ?>
+    <li><span class="nodata"><?php echo T_('No items');
+        ?></span></li>
+<?php 
+    } ?>
+<?php if (isset($truncated)) {
+    ?>
+    <li class="<?php echo UI::flip_class();
+    ?>">
+        <?php echo $truncated . ' ' . T_('More');
+    ?>...
     </li>
-<?php } ?>
+<?php 
+} ?>
 </ul>
 <?php
 // We do a little magic here to force a reload depending on preference

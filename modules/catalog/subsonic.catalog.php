@@ -39,7 +39,6 @@ class Catalog_subsonic extends Catalog
     public function get_description()
     {
         return $this->description;
-
     } // get_description
 
     /**
@@ -49,7 +48,6 @@ class Catalog_subsonic extends Catalog
     public function get_version()
     {
         return $this->version;
-
     } // get_version
 
     /**
@@ -59,7 +57,6 @@ class Catalog_subsonic extends Catalog
     public function get_type()
     {
         return $this->type;
-
     } // get_type
 
     /**
@@ -69,7 +66,6 @@ class Catalog_subsonic extends Catalog
     public function get_create_help()
     {
         return "";
-
     } // get_create_help
 
     /**
@@ -82,8 +78,6 @@ class Catalog_subsonic extends Catalog
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
-
-
     } // is_installed
 
     /**
@@ -101,7 +95,6 @@ class Catalog_subsonic extends Catalog
         $db_results = Dba::query($sql);
 
         return true;
-
     } // install
 
     public function catalog_fields()
@@ -111,7 +104,6 @@ class Catalog_subsonic extends Catalog
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
         return $fields;
-
     }
 
     public $uri;
@@ -185,9 +177,13 @@ class Catalog_subsonic extends Catalog
         // Prevent the script from timing out
         set_time_limit(0);
 
-        UI::show_box_top(T_('Running Subsonic Remote Update') . '. . .');
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_top(T_('Running Subsonic Remote Update') . '. . .');
+        }
         $this->update_remote_catalog();
-        UI::show_box_bottom();
+        if (!defined('SSE_OUTPUT')) {
+            UI::show_box_bottom();
+        }
 
         return true;
     } // add_to_catalog
@@ -205,6 +201,8 @@ class Catalog_subsonic extends Catalog
      */
     public function update_remote_catalog()
     {
+        debug_event('subsonic_catalog', 'Updating remote catalog...', 5);
+        
         $subsonic = $this->createClient();
 
         $songsadded = 0;
@@ -243,8 +241,6 @@ class Catalog_subsonic extends Catalog
                                                 if (!Song::insert($data)) {
                                                     debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
                                                     Error::add('general', T_('Unable to Insert Song - %s'), $song['path']);
-                                                    Error::display('general');
-                                                    flush();
                                                 } else {
                                                     $songsadded++;
                                                 }
@@ -252,30 +248,30 @@ class Catalog_subsonic extends Catalog
                                         }
                                     }
                                 } else {
-                                    echo "<p>" . T_('Song Error.') . ": " . $songs['error'] . "</p><hr />\n";
-                                    flush();
+                                    debug_event('subsonic_catalog', 'Song error:' . $songs['error'], 3);
+                                    Error::add('general', T_('Song Error.') . ": " . $songs['error']);
                                 }
                             }
                         }
                     } else {
-                        echo "<p>" . T_('Album Error.') . ": " . $albums['error'] . "</p><hr />\n";
-                        flush();
+                        debug_event('subsonic_catalog', 'Album error:' . $albums['error'], 3);
+                        Error::add('general', T_('Album Error.') . ": " . $albums['error']);
                     }
                 }
             }
 
-            echo "<p>" . T_('Completed updating Subsonic catalog(s).') . " " . $songsadded . " " . T_('Songs added.') . "</p><hr />\n";
-            flush();
+            UI::update_text('', T_('Completed updating Subsonic catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
 
             // Update the last update value
             $this->update_last_update();
         } else {
-            echo "<p>" . T_('Artist Error.') . ": " . $artists['error'] . "</p><hr />\n";
-            flush();
+            debug_event('subsonic_catalog', 'Artist error:' . $artists['error'], 3);
+            Error::add('general', T_('Artist Error.') . ": " . $artists['error']);
         }
 
+        debug_event('subsonic_catalog', 'Catalog updated.', 5);
+        
         return true;
-
     }
 
     public function verify_catalog_proc()
@@ -380,5 +376,5 @@ class Catalog_subsonic extends Catalog
 
         return null;
     }
-
 } // end of catalog class
+

@@ -28,6 +28,7 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 <head>
+<!-- Propulsed by Ampache | ampache.org -->
 <title><?php echo AmpConfig::get('site_title'); ?></title>
 <meta property="og:title" content="<?php echo AmpConfig::get('site_title'); ?>" />
 <meta property="og:image" content="<?php echo AmpConfig::get('web_path'); ?>/themes/reborn/images/ampache.png"/>
@@ -51,5 +52,5 @@ if (isset($playlist)) {
         $isVideo = WebPlayer::is_playlist_video($playlist);
     }
 }
-require_once AmpConfig::get('prefix') . '/templates/show_html5_player.inc.php';
+require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player.inc.php');
 ?>

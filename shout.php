@@ -38,8 +38,22 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
+        // Remove unauthorized defined values from here
+        if (isset($_POST['user'])) {
+            unset($_POST['user']);
+        }
+        if (isset($_POST['date'])) {
+            unset($_POST['date']);
+        }
+
+        if (!Core::is_library_item($_POST['object_type'])) {
+            UI::access_denied();
+            exit;
+        }
+
         $shout_id = Shoutbox::create($_POST);
-        header("Location:" . AmpConfig::get('web_path'));
+        header("Location:" . AmpConfig::get('web_path') . '/shout.php?action=show_add_shout&type=' . $_POST['object_type'] . '&id=' . intval($_POST['object_id']));
+        exit;
     break;
     case 'show_add_shout':
         // Get our object first
@@ -57,7 +71,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Now go ahead and display the page where we let them add a comment etc
-        require_once AmpConfig::get('prefix') . '/templates/show_add_shout.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_add_shout.inc.php');
     break;
     default:
         header("Location:" . AmpConfig::get('web_path'));
