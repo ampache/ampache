@@ -35,14 +35,19 @@ trait Metadata
      * @var Repository\Metadata
      */
     protected $metadataRepository;
-    
+
     /**
      *
      * @var Repository\MetadataField
      */
     protected $metadataFieldRepository;
-    
-    
+
+    /**
+     * Determines if the functionality is enabled or not.
+     * @var boolean
+     */
+    protected $enableCustomMetadata;
+
     /**
      * Initialize the repository variables. Needs to be called first if the trait should do something.
      */
@@ -51,8 +56,8 @@ trait Metadata
         $this->metadataRepository = new \lib\Metadata\Repository\Metadata();
         $this->metadataFieldRepository = new \lib\Metadata\Repository\MetadataField();
     }
-    
-    
+
+
     /**
      *
      * @return Model\Metadata
@@ -61,7 +66,7 @@ trait Metadata
     {
         return $this->metadataRepository->findByObjectIdAndType($this->id, get_class($this));
     }
-    
+
     /**
      *
      * @param Model\Metadata $metadata
@@ -70,7 +75,7 @@ trait Metadata
     {
         $this->metadataRepository->remove($metadata);
     }
-    
+
     public function addMetadata(\lib\Metadata\Model\MetadataField $field, $data)
     {
         $metadata = new \lib\Metadata\Model\Metadata();
@@ -80,7 +85,7 @@ trait Metadata
         $metadata->setData($data);
         $this->metadataRepository->add($metadata);
     }
-    
+
     public function updateOrInsertMetadata(\lib\Metadata\Model\MetadataField $field, $data)
     {
         /* @var $metadata Model\Metadata */
@@ -93,7 +98,7 @@ trait Metadata
             $this->addMetadata($field, $data);
         }
     }
-    
+
     /**
      *
      * @param type $name
@@ -126,5 +131,14 @@ trait Metadata
             $field = $this->createField($propertie, $public);
         }
         return $field;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public static function isCustomMetadataEnabled()
+    {
+        return (boolean) \AmpConfig::get('enable_custom_metadata');
     }
 }

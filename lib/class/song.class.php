@@ -24,7 +24,7 @@ class Song extends database_object implements media, library_item
 {
 
     use \lib\Metadata\Metadata;
-    
+
     /* Variables from DB */
 
     /**
@@ -294,10 +294,10 @@ class Song extends database_object implements media, library_item
     const aliases = array(
         'mb_trackid','mbid','mb_albumid','mb_albumid_group','mb_artistid','mb_albumartistid','genre','publisher'
     );
-    
-    
-    
-    
+
+
+
+
     /**
      * Constructor
      *
@@ -323,8 +323,10 @@ class Song extends database_object implements media, library_item
             $this->id = null;
             return false;
         }
-        
-        $this->initializeMetadata();
+
+        if (self::isCustomMetadataEnabled()) {
+            $this->initializeMetadata();
+        }
 
         return true;
     } // constructor
@@ -924,7 +926,9 @@ class Song extends database_object implements media, library_item
                     $this->tags = Tag::get_top_tags('song', $this->id);
                 break;
                 case 'metadata':
-                    $this->updateMetadata($value);
+                    if (self::isCustomMetadataEnabled()) {
+                        $this->updateMetadata($value);
+                    }
                 default:
                 break;
             } // end whitelist
@@ -946,8 +950,10 @@ class Song extends database_object implements media, library_item
             if ($catalog->get_type() == 'local') {
                 debug_event('song', 'Writing id3 metadata to file ' . $this->file, 5);
                 $meta = $this->get_metadata();
-                foreach($this->getMetadata() as $metadata) {
-                    $meta[$metadata->getField()->getName()] = $metadata->getData();
+                if (self::isCustomMetadataEnabled()) {
+                    foreach ($this->getMetadata() as $metadata) {
+                        $meta[$metadata->getField()->getName()] = $metadata->getData();
+                    }
                 }
                 $id3 = new vainfo($this->file);
                 $id3->write_id3($meta);

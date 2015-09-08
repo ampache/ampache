@@ -51,7 +51,7 @@
                     </div>
                 </td>
             </tr>
-            <?php 
+            <?php
 } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
@@ -64,12 +64,12 @@
     ?>
                     <input type="text" name="mbid" value="<?php echo $libitem->mbid;
     ?>" />
-                    <?php 
+                    <?php
 } else {
     ?>
                     <?php echo $libitem->mbid;
     ?>
-                    <?php 
+                    <?php
 } ?>
                 </td>
             </tr>
@@ -104,30 +104,32 @@
                     </div>
                 </td>
             </tr>
-            <?php 
+            <?php
 } ?>
 
         </table>
-        <button class="metadataAccordionButton"><?php echo T_('More Metadata') ?></button>
-        <div class="metadataAccordion">
-            <table class="tabledata" cellspacing="0" cellpadding="0">
-                <?php
-                foreach($libitem->getMetadata() as $metadata) {
-                    /* @var $metadata \lib\Metadata\Model\Metadata */
-                    $field = $metadata->getField();
-                    if($field->isPublic()) {
-                        echo '<tr>'
-                        . '<td class="edit_dialog_content_header">' . $field->getName() . '</td>'
+        <?php if (Song::isCustomMetadataEnabled()): ?>
+            <button class="metadataAccordionButton"><?php echo T_('More Metadata') ?></button>
+                    <div class="metadataAccordion">
+                    <table class="tabledata" cellspacing="0" cellpadding="0">
+                        <?php
+                        foreach ($libitem->getMetadata() as $metadata) {
+                            /* @var $metadata \lib\Metadata\Model\Metadata */
+                            $field = $metadata->getField();
+                            if ($field->isPublic()) {
+                                echo '<tr>'
+                                . '<td class="edit_dialog_content_header">' . $field->getName() . '</td>'
                                 . '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>';
-                    }
-                }
-                ?>
-            </table>
-        </div>
+                            }
+                        }
+                        ?>
+                    </table>
+                </div>
+            <?php endif; ?>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="song_row" />
     </form>
-    
+
     <script>
         $('.metadataAccordionButton').button().click(function() {
             $('.metadataAccordion').toggle();
