@@ -22,7 +22,6 @@
 
 class Song extends database_object implements media, library_item
 {
-
     use \lib\Metadata\Metadata;
 
     /* Variables from DB */
@@ -411,7 +410,8 @@ class Song extends database_object implements media, library_item
             $composer, $channels));
 
         if (!$db_results) {
-            var_dump(Dba::error());exit;
+            var_dump(Dba::error());
+            exit;
             debug_event('song', 'Unable to insert ' . $file, 2);
             return false;
         }
@@ -1953,7 +1953,8 @@ class Song extends database_object implements media, library_item
         return $meta;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -1963,9 +1964,9 @@ class Song extends database_object implements media, library_item
      */
     public function updateMetadata($value)
     {
-        foreach($value as $metadataId => $value) {
+        foreach ($value as $metadataId => $value) {
             $metadata = $this->metadataRepository->findById($metadataId);
-            if(!$metadata || $value != $metadata->getData()) {
+            if (!$metadata || $value != $metadata->getData()) {
                 $metadata->setData($value);
                 $this->metadataRepository->update($metadata);
             }
@@ -1998,4 +1999,3 @@ class Song extends database_object implements media, library_item
         return $deleted;
     }
 } // end of song class
-

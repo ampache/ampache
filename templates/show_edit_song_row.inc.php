@@ -52,6 +52,7 @@
                 </td>
             </tr>
             <?php
+
 } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
@@ -65,11 +66,13 @@
                     <input type="text" name="mbid" value="<?php echo $libitem->mbid;
     ?>" />
                     <?php
+
 } else {
     ?>
                     <?php echo $libitem->mbid;
     ?>
                     <?php
+
 } ?>
                 </td>
             </tr>
@@ -105,6 +108,7 @@
                 </td>
             </tr>
             <?php
+
 } ?>
 
         </table>
