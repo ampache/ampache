@@ -212,13 +212,13 @@ class Subsonic_XML_Data
         self::addArtists($xindexes, $artists);
     }
 
-    public static function addArtistsRoot($xml, $artists)
+    public static function addArtistsRoot($xml, $artists, $albumsSet = false)
     {
         $xartists = $xml->addChild('artists');
-        self::addArtists($xartists, $artists, true);
+        self::addArtists($xartists, $artists, true, $albumsSet);
     }
 
-    public static function addArtists($xml, $artists, $extra=false)
+    public static function addArtists($xml, $artists, $extra=false, $albumsSet = false)
     {
         $xlastcat = null;
         $xsharpcat = null;
@@ -250,25 +250,29 @@ class Subsonic_XML_Data
             }
 
             if ($xlastcat != null) {
-                self::addArtist($xlastcat, $artist, $extra);
+                self::addArtist($xlastcat, $artist, $extra, false, $albumsSet);
             }
         }
     }
 
-    public static function addArtist($xml, $artist, $extra=false, $albums=false)
+    public static function addArtist($xml, $artist, $extra=false, $albums=false, $albumsSet = false)
     {
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', self::getArtistId($artist->id));
         $xartist->addAttribute('name', $artist->name);
 
         $allalbums = array();
-        if ($extra || $albums) {
+        if (($extra && !$albumsSet) || $albums) {
             $allalbums = $artist->get_albums(null, true);
         }
 
         if ($extra) {
             //$xartist->addAttribute('coverArt');
-            $xartist->addAttribute('albumCount', count($allalbums));
+            if ($albumsSet) {
+                $xartist->addAttribute('albumCount', $artist->albums);
+            } else {
+                $xartist->addAttribute('albumCount', count($allalbums));
+            }
         }
         if ($albums) {
             foreach ($allalbums as $id) {

@@ -429,7 +429,7 @@ class Subsonic_Api
 
         $r = Subsonic_XML_Data::createSuccessResponse();
         $artists = Catalog::get_artists(Catalog::get_catalogs());
-        Subsonic_XML_Data::addArtistsRoot($r, $artists);
+        Subsonic_XML_Data::addArtistsRoot($r, $artists, true);
         self::apiOutput($input, $r);
     }
 
