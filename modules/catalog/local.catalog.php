@@ -249,7 +249,6 @@ class Catalog_local extends Catalog
 
         /* Recurse through this dir and create the files array */
         while ( false !== ( $file = readdir($handle) ) ) {
-
             /* Skip to next if we've got . or .. */
             if (substr($file,0,1) == '.') {
                 continue;
@@ -322,7 +321,6 @@ class Catalog_local extends Catalog
 
         /* see if this is a valid audio file or playlist file */
         if ($is_audio_file || $is_video_file || $is_playlist) {
-
             /* Now that we're sure its a file get filesize  */
             $file_size = Core::get_filesize($full_file);
 
@@ -578,31 +576,31 @@ class Catalog_local extends Catalog
      * Removes local songs that no longer exist.
      */
     public function clean_catalog_proc()
-     {
-         if (!Core::is_readable($this->path)) {
-             // First sanity check; no point in proceeding with an unreadable
+    {
+        if (!Core::is_readable($this->path)) {
+            // First sanity check; no point in proceeding with an unreadable
             // catalog root.
             debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
-             Error::add('general', T_('Catalog Root unreadable, stopping clean'));
-             Error::display('general');
-             return 0;
-         }
+            Error::add('general', T_('Catalog Root unreadable, stopping clean'));
+            Error::display('general');
+            return 0;
+        }
 
-         $dead_total = 0;
-         $stats = self::get_stats($this->id);
-         $this->count = 0;
-         foreach (array('video', 'song') as $media_type) {
-             $total = $stats[$media_type . 's']; // UGLY
+        $dead_total = 0;
+        $stats = self::get_stats($this->id);
+        $this->count = 0;
+        foreach (array('video', 'song') as $media_type) {
+            $total = $stats[$media_type . 's']; // UGLY
             if ($total == 0) {
                 continue;
             }
-             $chunks = floor($total / 10000);
-             $dead = array();
-             foreach (range(0, $chunks) as $chunk) {
-                 $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
-             }
+            $chunks = floor($total / 10000);
+            $dead = array();
+            foreach (range(0, $chunks) as $chunk) {
+                $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+            }
 
-             $dead_count = count($dead);
+            $dead_count = count($dead);
             // The AlmightyOatmeal sanity check
             // Never remove everything; it might be a dead mount
             if ($dead_count >= $total) {
@@ -610,9 +608,9 @@ class Catalog_local extends Catalog
                 Error::add('general', T_('All files would be removed. Doing nothing'));
                 continue;
             }
-             if ($dead_count) {
-                 $dead_total += $dead_count;
-                 $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
+            if ($dead_count) {
+                $dead_total += $dead_count;
+                $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
                     '(' . implode(',',$dead) . ')';
                 $db_results = Dba::write($sql);
             }
@@ -820,7 +818,7 @@ class Catalog_local extends Catalog
             defined(get_class($libraryItem) . '::' . 'aliases') ? $libraryItem::aliases : array(),
             array_keys(get_object_vars($libraryItem))
         );
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             unset($tags[$key]);
         }
 
@@ -836,7 +834,7 @@ class Catalog_local extends Catalog
     {
         $tags = $this->getCleanMetadata($libraryItem, $metadata);
 
-        foreach($tags as $tag => $value) {
+        foreach ($tags as $tag => $value) {
             $field = $libraryItem->getField($tag);
             $libraryItem->addMetadata($field, $value);
         }
@@ -870,6 +868,4 @@ class Catalog_local extends Catalog
             }
         }
     }
-
 } // end of local catalog class
-

@@ -160,7 +160,6 @@ trait Metadata
     public function getDisabledMetadataFields()
     {
         if (!$this->disabledMetadataFields) {
-
             $fields = array();
             $ids = explode(',', \AmpConfig::get('DisabledCustomMetadataFields'));
             foreach ($ids as $id) {

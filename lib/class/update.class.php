@@ -603,7 +603,6 @@ class Update
         }
 
         foreach (self::$versions as $version) {
-
             // If it's newer than our current version let's see if a function
             // exists and run the bugger.
             if ($version['version'] > $current_version) {
