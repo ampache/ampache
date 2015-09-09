@@ -49,6 +49,12 @@ trait Metadata
     protected $enableCustomMetadata;
 
     /**
+     * Cache variable for disabled metadata field names
+     * @var array
+     */
+    protected $disabledMetadataFields = array();
+
+    /**
      * Initialize the repository variables. Needs to be called first if the trait should do something.
      */
     protected function initializeMetadata()
@@ -76,6 +82,11 @@ trait Metadata
         $this->metadataRepository->remove($metadata);
     }
 
+    /**
+     *
+     * @param \lib\Metadata\Model\MetadataField $field
+     * @param type $data
+     */
     public function addMetadata(\lib\Metadata\Model\MetadataField $field, $data)
     {
         $metadata = new \lib\Metadata\Model\Metadata();
@@ -140,5 +151,28 @@ trait Metadata
     public static function isCustomMetadataEnabled()
     {
         return (boolean) \AmpConfig::get('enable_custom_metadata');
+    }
+
+    /**
+     * Get all disabled Metadata field names
+     * @return array
+     */
+    public function getDisabledMetadataFields()
+    {
+        if (!$this->disabledMetadataFields) {
+
+            $fields = array();
+            $ids = explode(',', \AmpConfig::get('DisabledCustomMetadataFields'));
+            foreach ($ids as $id) {
+                $field = $this->metadataFieldRepository->findById($id);
+                if ($field) {
+                    $fields[] = $field->getName();
+                }
+            }
+            $this->disabledMetadataFields = array_merge(
+                    $fields, explode(',', \AmpConfig::get('DisabledCustomMetadataFieldsInput'))
+            );
+        }
+        return $this->disabledMetadataFields;
     }
 }

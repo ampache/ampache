@@ -380,6 +380,16 @@ function create_preference_input($name,$value)
             echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
             echo "</select>\n";
         break;
+        case 'DisabledCustomMetadataFields':
+            $ids = explode(',', $value);
+            $options = array();
+            $fieldRepository = new \lib\Metadata\Repository\MetadataField();
+            foreach ($fieldRepository->findAll() as $field) {
+                $selected = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
+                $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
+            }
+            echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
+            break;
         default:
             if (preg_match('/_pass$/', $name)) {
                 echo '<input type="password" name="' . $name . '" value="******" />';

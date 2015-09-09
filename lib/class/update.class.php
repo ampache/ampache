@@ -3597,6 +3597,20 @@ class Update
            ) ENGINE=InnoDB';
         $retval &= Dba::write($sql);
 
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                "VALUES ('DisabledCustomMetadataFields','-1','Disable custom metadata fields (ctrl / shift click to select multiple)',100,'integer','system')";
+        $retval &= Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval &= Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                "VALUES ('DisabledCustomMetadataFieldsInput','-1','Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.',100,'integer','system')";
+        $retval &= Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval &= Dba::write($sql, array($id));
+
         return (bool) $retval;
     }
 }

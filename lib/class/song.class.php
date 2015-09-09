@@ -311,6 +311,10 @@ class Song extends database_object implements media, library_item
 
         $this->id = intval($id);
 
+        if (self::isCustomMetadataEnabled()) {
+            $this->initializeMetadata();
+        }
+
         if ($info = $this->_get_info($limit_threshold)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
@@ -321,10 +325,6 @@ class Song extends database_object implements media, library_item
         } else {
             $this->id = null;
             return false;
-        }
-
-        if (self::isCustomMetadataEnabled()) {
-            $this->initializeMetadata();
         }
 
         return true;

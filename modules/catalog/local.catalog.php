@@ -710,6 +710,12 @@ class Catalog_local extends Catalog
         if ($id && !AmpConfig::get('deferred_ext_metadata')) {
             $song = new Song($id);
             Recommendation::get_artist_info($song->artist);
+        }
+        if (Song::isCustomMetadataEnabled()) {
+            if (!$song) {
+                $song = new Song($id);
+            }
+            $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
             $this->addMetadata($song, $results);
         }
         $this->added_songs_to_gather[] = $id;
@@ -856,10 +862,12 @@ class Catalog_local extends Catalog
         $results = vainfo::clean_tag_info($vainfo->tags,$key,$media->file);
 
         $tags = $this->getCleanMetadata($media, $results);
-
-        foreach($tags as $tag => $value) {
-            $field = $media->getField($tag);
-            $media->updateOrInsertMetadata($field, $value);
+        if (method_exists($media, 'updateOrInsertMetadata') && $media::isCustomMetadataEnabled()) {
+            $tags = array_diff_key($results, array_flip($media->getDisabledMetadataFields()));
+            foreach ($tags as $tag => $value) {
+                $field = $media->getField($tag);
+                $media->updateOrInsertMetadata($field, $value);
+            }
         }
     }
 

@@ -87,6 +87,10 @@ class Preference extends database_object
             $user_check = " AND `user`='$user_id'";
         }
 
+        if (is_array($value)) {
+            $value = implode(',', $value);
+        }
+
         if ($applytodefault AND Access::check('interface', '100')) {
             $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$id'";
             Dba::write($sql);
@@ -475,11 +479,11 @@ class Preference extends database_object
             $results['theme_name'] = 'reborn';
         }
         $results['theme_path'] = '/themes/' . $results['theme_name'];
-        
+
         // Load theme settings
         $themecfg = get_theme($results['theme_name']);
         $results['theme_css_base'] = $themecfg['base'];
-        
+
         if (strlen($results['theme_color']) > 0) {
             // In case the color was removed
             if (!Core::is_readable(AmpConfig::get('prefix') . '/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {
