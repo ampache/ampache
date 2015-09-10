@@ -969,7 +969,7 @@ class Search extends playlist_object
                         $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     } else {
                         $group[] = "`album`.`id`";
-                        $having[] = "ROUND(AVG(`rating`.`rating`)) $sql_match_operator '$input'";
+                        $having[] = "ROUND(AVG(ifnull(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     }
                     $join['rating'] = true;
                 break;
@@ -1230,7 +1230,7 @@ class Search extends playlist_object
                         $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     } else {
                         $group[] = "`song`.`id`";
-                        $having[] = "ROUND(AVG(`rating`.`rating`)) $sql_match_operator '$input'";
+                        $having[] = "ROUND(AVG(ifnull(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     }
                     $join['rating'] = true;
                 break;
