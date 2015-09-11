@@ -3560,7 +3560,7 @@ class Update
             "VALUES ('theme_color','dark','Theme color',0,'special','interface')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'dark')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
