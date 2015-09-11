@@ -37,8 +37,6 @@ function get_themes()
     }
 
     $results = array();
-    $theme_cfg = '/theme.cfg.php';
-
     while (($f = readdir($handle)) !== false) {
         debug_event('theme', "Checking $f", 5);
         $cfg = get_theme($f);
@@ -77,7 +75,8 @@ function get_theme($name)
         $results = parse_ini_file($config_file);
         $results['path'] = $name;
         $results['base'] = explode(',', $results['base']);
-        for ($i = 0; $i < count($results['base']); $i++) {
+        $nbbases = count($results['base']);
+        for ($i = 0; $i < $nbbases; $i++) {
             $results['base'][$i] = explode('|', $results['base'][$i]);
         }
         $results['colors'] = explode(',', $results['colors']);

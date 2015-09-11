@@ -2090,6 +2090,114 @@ abstract class Catalog extends database_object
 
         return (Access::check('interface','75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
     }
+    
+    public static function process_action($action, $catalogs, $options = null)
+    {
+        if (!$options || !is_array($options)) {
+            $options = array();
+        }
+        
+        switch ($action) {
+            case 'add_to_all_catalogs':
+                $catalogs = Catalog::get_catalogs();
+            case 'add_to_catalog':
+                if ($catalogs) {
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->add_to_catalog($options);
+                        }
+                    }
+                    
+                    if (!defined('SSE_OUTPUT')) {
+                        Error::display('catalog_add');
+                    }
+                }
+                break;
+            case 'update_all_catalogs':
+                $catalogs = Catalog::get_catalogs();
+            case 'update_catalog':
+                if ($catalogs) {
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->verify_catalog();
+                        }
+                    }
+                }
+                break;
+            case 'full_service':
+                if (!$catalogs) {
+                    $catalogs = Catalog::get_catalogs();
+                }
+
+                /* This runs the clean/verify/add in that order */
+                foreach ($catalogs as $catalog_id) {
+                    $catalog = Catalog::create_from_id($catalog_id);
+                    if ($catalog !== null) {
+                        $catalog->clean_catalog();
+                        $catalog->verify_catalog();
+                        $catalog->add_to_catalog();
+                    }
+                }
+                Dba::optimize_tables();
+                break;
+            case 'clean_all_catalogs':
+                $catalogs = Catalog::get_catalogs();
+            case 'clean_catalog':
+                if ($catalogs) {
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->clean_catalog();
+                        }
+                    } // end foreach catalogs
+                    Dba::optimize_tables();
+                }
+                break;
+            case 'update_from':
+                $catalog_id = 0;
+                // First see if we need to do an add
+                if ($options['add_path'] != '/' && strlen($options['add_path'])) {
+                    if ($catalog_id = Catalog_local::get_from_path($options['add_path'])) {
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->add_to_catalog(array('subdirectory'=>$options['add_path']));
+                        }
+                    }
+                } // end if add
+
+                // Now check for an update
+                if ($options['update_path'] != '/' && strlen($options['update_path'])) {
+                    if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
+                        $songs = Song::get_from_path($options['update_path']);
+                        foreach ($songs as $song_id) {
+                            Catalog::update_single_item('song',$song_id);
+                        }
+                    }
+                } // end if update
+
+                if ($catalog_id <= 0) {
+                    Error::add('general', T_("This subdirectory is not part of an existing catalog. Update cannot be processed."));
+                }
+                break;
+            case 'gather_media_art':
+                if (!$catalogs) {
+                    $catalogs = Catalog::get_catalogs();
+                }
+
+                // Iterate throught the catalogs and gather as needed
+                foreach ($catalogs as $catalog_id) {
+                    $catalog = Catalog::create_from_id($catalog_id);
+                    if ($catalog !== null) {
+                        require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
+                        flush();
+                        $catalog->gather_art();
+                    }
+                }
+                break;
+        }
+    }
 }
 
 // end of catalog class
