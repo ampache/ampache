@@ -110,25 +110,9 @@ class AmpacheTmdb {
             $title = $media_info['original_name'] ?: $media_info['title'];
             
             $results = array();
-            $release_info = Vainfo::parseFileName($media_info['file'], $gather_types);
-            if (empty($release_info[0])) {
-                debug_event('tmdb', 'Could not parse title, skipped.', '5');
-                return null;
-            }
-            if (in_array('tvshow', $gather_types)) {
-                $results['tvshow'] = trim($release_info[0]);
-                $results['tvshow_season'] = $release_info[1];
-                $results['tvshow_episode'] = $release_info[2];
-                $results['year'] = $release_info[3];
-            }
-            else {
-                $results['title'] = $release_info[0];
-                $results['year'] = $release_info[1];
-            }
-            
-            if (in_array('movie', $gather_types)) {
-                if (!empty($results['title'])) {
-                    $apires = $client->getSearchApi()->searchMovies($results['title']);
+             if (in_array('movie', $gather_types)) {
+                if (!empty($media_info['title'])) {
+                    $apires = $client->getSearchApi()->searchMovies($media_info['title']);
                     if (count($apires['results']) > 0) {
                         $results['tmdb_id'] = $apires['results'][0]['id'];
                         $release = $client->getMoviesApi()->getMovie($results['tmdb_id']);
@@ -150,8 +134,8 @@ class AmpacheTmdb {
             }
             
             if (in_array('tvshow', $gather_types)) {
-                if (!empty($results['tvshow'])) {
-                    $apires = $client->getSearchApi()->searchTv($results['tvshow']);
+                if (!empty($media_info['tvshow'])) {
+                    $apires = $client->getSearchApi()->searchTv($media_info['tvshow']);
                     if (count($apires['results']) > 0) {
                         // Get first match
                         $results['tmdb_tvshow_id'] = $apires['results'][0]['id'];
@@ -168,24 +152,24 @@ class AmpacheTmdb {
                         }
                         $results['genre'] = self::get_genres($release);
                         
-                        if ($results['tvshow_season']) {
-                            $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'], $results['tvshow_season']);
+                        if ($media_info['tvshow_season']) {
+                            $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'], $media_info['tvshow_season']);
                             if ($release['id']) {
                                 if ($release['poster_path']) {
                                     $results['tvshow_season_art'] = $imageHelper->getUrl($release['poster_path']);
                                 }
                                 if ($media_info['tvshow_episode']) {
-                                    $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'], $results['tvshow_season'], $results['tvshow_episode']);
+                                    $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
                                     if ($release['id']) {
                                         $results['tmdb_id'] = $release['id'];
                                         $results['tvshow_season'] = $release['season_number'];
                                         $results['tvshow_episode'] = $release['episode_number'];
                                         $results['original_name'] = $release['name'];
                                         if (!empty($release['air_date'])) {
-                                            $results['release_date'] = strtotime($release['release_date']);
+                                            $results['release_date'] = strtotime($release['air_date']);
                                             $results['year'] = date("Y", $results['release_date']);
                                         }
-                                        $results['description'] = $release['overview'];
+                                        $results['summary'] = $release['overview'];
                                         if ($release['still_path']) {
                                             $results['art'] = $imageHelper->getUrl($release['still_path']);
                                         }
@@ -202,8 +186,7 @@ class AmpacheTmdb {
         
         return $results;
     } // get_metadata
-    
-    public function gather_arts($type, $options = array(), $limit = 5)
+      public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('Tmdb', 'gather_arts for type `' . $type . '`', 5);
         return Art::gather_metadata_plugin($this, $type, $options);
@@ -221,34 +204,6 @@ class AmpacheTmdb {
         }
         return $genres;
     }
-    private function getResultByTitle($results, $title, $gather_type, $year)
-    {
-        $titles = array();
-    
-        foreach ($results as $index)
-        {
-            if (in_array('movie', $gather_type)) {
-                if ((strtoupper($title) == strtoupper($index['title'])) && (strtoupper($index['original_title']) == strtoupper($title))) {
-                    $titles[] = $index;
-                }
-            }
-            else {
-                if ((strtoupper($title) == strtoupper($index['name'])) && (strtoupper($index['original_name']) == strtoupper($title))) {
-                    $titles[] = $index;
-                }
-            }
-        }
-        if ((count($titles) > 1) && ($year != null)) {
-            foreach ($titles as $index)
-            {
-                $y = in_array('movie', $gather_type) ? date("Y",strtotime($index['release_date'])) : date("Y",strtotime($index['first_air_date']));
-                if ($year == $y) {
-                    return $index;
-                }
-            }
-        }
-        return count($titles) > 0 ? $titles[0] : $results[0];
-    }
-    
+
 } // end AmpacheTmdb
 ?>
