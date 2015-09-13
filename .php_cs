@@ -3,6 +3,8 @@
 use Symfony\CS\FixerInterface;
 
 $finder = Symfony\CS\Finder\DefaultFinder::create()
+    ->exclude('lib/components')
+    ->exclude('lib/vendor')
     ->exclude('modules')
     ->exclude('nbproject')
     ->in(__DIR__)

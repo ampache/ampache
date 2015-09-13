@@ -22,15 +22,6 @@
 
 class Graph
 {
-    public function __construct()
-    {
-        require_once AmpConfig::get('prefix') . '/modules/pChart/pData.class.php';
-        require_once AmpConfig::get('prefix') . '/modules/pChart/pDraw.class.php';
-        require_once AmpConfig::get('prefix') . '/modules/pChart/pImage.class.php';
-
-        return true;
-    }
-
     protected function get_sql_date_format($field, $zoom)
     {
         switch ($zoom) {
@@ -336,12 +327,13 @@ class Graph
         /* Add a border to the picture */
         $myPicture->drawRectangle(0,0,$width-1,$height-1,array("R"=>0,"G"=>0,"B"=>0));
 
+        $font_path = AmpConfig::get('prefix')."/lib/vendor/szymach/c-pchart/src/Resources";
         /* Write the chart title */
-        $myPicture->setFontProperties(array("FontName"=>AmpConfig::get('prefix')."/modules/pChart/fonts/Forgotte.ttf","FontSize"=>11));
+        $myPicture->setFontProperties(array("FontName"=>$font_path."/Forgotte.ttf","FontSize"=>11));
         $myPicture->drawText(150,35,$title,array("FontSize"=>20,"Align"=>TEXT_ALIGN_BOTTOMMIDDLE));
 
         /* Set the default font */
-        $myPicture->setFontProperties(array("FontName"=>AmpConfig::get('prefix')."/modules/pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
+        $myPicture->setFontProperties(array("FontName"=>$font_path."/pf_arma_five.ttf","FontSize"=>6));
 
         /* Define the chart area */
         $myPicture->setGraphArea(60,40,$width-20,$height-50);

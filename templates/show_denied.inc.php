@@ -34,8 +34,8 @@ $web_path = AmpConfig::get('web_path');
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Ampache -- Debug Page</title>
         <?php UI::show_custom_style(); ?>
-        <link href="<?php echo $web_path; ?>/modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="<?php echo $web_path; ?>/modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('install-doped.css'); ?>" type="text/css" media="screen" />
     </head>
     <body>

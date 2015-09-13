@@ -53,6 +53,6 @@ if (is_rtl(AmpConfig::get('lang'))
 
 }
 ?>
-<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/prettyPhoto/css/prettyPhoto.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/prettyphoto/css/prettyPhoto.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-ui.custom.css'; ?>" type="text/css" media="screen" />
 <?php UI::show_custom_style(); ?>

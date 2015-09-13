@@ -77,7 +77,10 @@ function get_media_files($media_ids)
 function send_zip($name, $media_files)
 {
     /* Require needed library */
-    require_once AmpConfig::get('prefix') . '/modules/ZipStream/ZipStream.php';
+    if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/maennchen/zipstream-php/src/ZipStream.php')) {
+        throw new Exception('Missing ZipStream dependency.');
+    }
+    
     $arc = new ZipStream\ZipStream($name . ".zip" );
     $options = array(
         'comment'       => AmpConfig::get('file_zip_comment'),

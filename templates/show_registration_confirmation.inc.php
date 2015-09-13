@@ -39,7 +39,7 @@ $_SESSION['login'] = true;
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
                 <span><?php echo T_('Registration Complete'); ?>.</span>
             </div>
-            <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
             <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
             <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
             <div>

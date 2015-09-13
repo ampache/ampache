@@ -83,7 +83,6 @@ Ampache includes some external modules that carry their own licensing.
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
 * [jQuery](http://jquery.org): MIT
 * [Requests](http://requests.ryanmccue.info): ISC Licensed
-* [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 * [xbmc-php-rpc](https://github.com/karlrixon/xbmc-php-rpc): GPL v3
 * [Dropbox SDK](https://github.com/dropbox/dropbox-sdk-php): MIT
 * [jPlayer](http://jplayer.org): MIT

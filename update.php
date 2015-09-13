@@ -39,6 +39,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
 
         set_time_limit(300);
         AutoUpdate::update_files();
+        AutoUpdate::update_dependencies();
         echo '<script language="javascript" type="text/javascript">window.location="' . AmpConfig::get('web_path') . '";</script>';
         exit;
     } else {
@@ -59,8 +60,8 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?php echo AmpConfig::get('site_title'); ?> - Update</title>
-    <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
 </head>
 <body>

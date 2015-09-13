@@ -258,6 +258,11 @@ function return_bytes($val)
     return $val;
 }
 
+function check_dependencies_folder()
+{
+    return file_exists(AmpConfig::get('prefix') . '/lib/vendor');
+}
+
 /**
  * check_config_writable
  * This checks whether we can write the config file

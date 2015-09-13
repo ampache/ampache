@@ -65,26 +65,26 @@ $_SESSION['login'] = false;
         <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-editdialog.css'); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-file-upload.css'); ?>" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jstree/themes/default/style.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/tag-it/jquery.tagit.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/dist/themes/default/style.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
-        <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/tag-it/tag-it.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-qrcode/jquery.qrcode.min.js" language="javascript" type="text/javascript"></script>
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
+        <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/src/jquery.qrcode.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-datetimepicker/jquery.datetimepicker.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-knob/jquery.knob.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>

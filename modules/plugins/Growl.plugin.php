@@ -42,7 +42,9 @@ class Ampachegrowl {
      */
     public function __construct() {
 
-        require_once AmpConfig::get('prefix') . '/modules/growl/growl.gntp.php';
+        if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/jamiebicknell/Growl-GNTP/growl.gntp.php')) {
+            throw new Exception('Missing Growl-GNTP dependency.');
+        }
         
         return true;
 

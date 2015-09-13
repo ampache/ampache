@@ -38,7 +38,7 @@ $album = intval($_REQUEST['album']);
         <div class="treecontent default" style="text-align:center;"><?php echo T_('Target folder'); ?></div>
     </div>
 </div>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jstree/jstree.min.js"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jstree/dist/jstree.min.js"></script>
 <script>
 $(window).resize(function () {
     var h = Math.max($(window).height() - 0, 420);

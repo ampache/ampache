@@ -7,10 +7,13 @@ channel/.htaccess
 *.sln
 *.v11.suo
 *.suo
-logs
+logs/
 /nbproject/private/
 .pc
-/tmp
+tmp/
 log/
 *~
 *#
+*.log
+/lib/vendor/
+/lib/components/

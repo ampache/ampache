@@ -251,4 +251,17 @@ class AutoUpdate
         ob_flush();
         self::get_latest_version(true);
     }
+    
+    /**
+     * Update project dependencies.
+     */
+    public static function update_dependencies()
+    {
+        echo T_('Updating dependencies with `composer install` ...') . '<br />';
+        ob_flush();
+        chdir(AmpConfig::get('prefix'));
+        exec('composer install');
+        echo T_('Done') . '<br />';
+        ob_flush();
+    }
 }

@@ -51,14 +51,19 @@ class Plugin
      */
     public function _get_info($name)
     {
-        /* Require the file we want */
-        require_once AmpConfig::get('prefix') . '/modules/plugins/' . $name . '.plugin.php';
+        try {
+            /* Require the file we want */
+            if (!@include_once(AmpConfig::get('prefix') . '/modules/plugins/' . $name . '.plugin.php')) {
+                return false;
+            }
 
-        $plugin_name = "Ampache$name";
+            $plugin_name = "Ampache$name";
+            $this->_plugin = new $plugin_name();
 
-        $this->_plugin = new $plugin_name();
-
-        if (!$this->is_valid()) {
+            if (!$this->is_valid()) {
+                return false;
+            }
+        } catch (Exception $ex) {
             return false;
         }
 

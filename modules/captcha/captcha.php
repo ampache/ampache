@@ -1,5 +1,13 @@
 <?php
 /*
+   #####################################################################
+   #                               Warning                             #
+   #                               #######                             #
+   # This external file is Ampache-adapted and probably unsynced with  #
+   # origin because abandonned by its original authors.                #
+   #                                                                   #
+   #####################################################################
+
    api: php
    title: Easy_CAPTCHA
    description: highly configurable, user-friendly and accessible CAPTCHA

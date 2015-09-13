@@ -20,8 +20,6 @@
  *
  */
 
- require_once AmpConfig::get('prefix') . '/modules/Dropbox/autoload.php';
-
 /**
  * Dropbox Catalog Class
  *

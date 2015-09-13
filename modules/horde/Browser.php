@@ -1,5 +1,13 @@
 <?php
 /**
+   #####################################################################
+   #                               Warning                             #
+   #                               #######                             #
+   # This external file is Ampache-adapted and probably unsynced with  #
+   # origin because abandonned by its original authors.                #
+   #                                                                   #
+   #####################################################################
+   
  * This provides capability information for the current web client.
  *
  * Browser identification is performed by examining the HTTP_USER_AGENT
