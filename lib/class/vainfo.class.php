@@ -1018,7 +1018,7 @@ class vainfo
      */
     private function _parse_filename($filepath)
     {
-        $origin = $filename;
+        $origin = $filepath;
         $results = array();
         $season = array();
         $episode = array();
