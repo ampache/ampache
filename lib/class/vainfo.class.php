@@ -1018,13 +1018,17 @@ class vainfo
      */
     private function _parse_filename($filepath)
     {
+        $origin = $filename;
         $results = array();
         $season = array();
         $episode = array();
+        $tvyear = array();
         if (strpos($filepath, '/') !== false) {
             $slash_type = '~/~';
+            $slash_type_preg = trim($slash_type,"~");
         } else {
-            $slash_type = "~\\\\~";
+            $slash_type = "~\\~";
+            $slash_type_preg = trim($slash_type,"~") . trim($slash_type,"~");
         }
         $file = pathinfo($filepath,PATHINFO_FILENAME);
         if (in_array('tvshow', $this->gather_types)) {
