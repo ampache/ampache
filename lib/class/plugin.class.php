@@ -54,6 +54,7 @@ class Plugin
         try {
             /* Require the file we want */
             if (!@include_once(AmpConfig::get('prefix') . '/modules/plugins/' . $name . '.plugin.php')) {
+                debug_event('plugin', 'Cannot include plugin `' . $name . '`.', 1);
                 return false;
             }
 
@@ -64,6 +65,7 @@ class Plugin
                 return false;
             }
         } catch (Exception $ex) {
+            debug_event('plugin', 'Error when initializing plugin `' . $name . '`: ' . $ex->getMessage(), 1);
             return false;
         }
 

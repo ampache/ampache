@@ -1143,16 +1143,16 @@
         },
         {
             "name": "james-heinrich/getid3",
-            "version": "v1.9.9",
+            "version": "v1.9.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "c34fb84e295477cc1865b2ea4dad2d13452058d1"
+                "reference": "835a0db62993cb1d85925f9a8aefe13e4ebe2b67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/c34fb84e295477cc1865b2ea4dad2d13452058d1",
-                "reference": "c34fb84e295477cc1865b2ea4dad2d13452058d1",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/835a0db62993cb1d85925f9a8aefe13e4ebe2b67",
+                "reference": "835a0db62993cb1d85925f9a8aefe13e4ebe2b67",
                 "shasum": ""
             },
             "require": {
@@ -1175,7 +1175,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2014-12-18 16:39:41"
+            "time": "2015-09-14 05:42:21"
         },
         {
             "name": "jamiebicknell/Growl-GNTP",
@@ -1480,16 +1480,16 @@
         },
         {
             "name": "needim/noty",
-            "version": "v2.3.6",
+            "version": "v2.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/needim/noty.git",
-                "reference": "e3b341ed49e349336f061c40d3ee103924371adb"
+                "reference": "25f66d6741914b4c0ed2cb6c8d5fe5036420dfea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/needim/noty/zipball/e3b341ed49e349336f061c40d3ee103924371adb",
-                "reference": "e3b341ed49e349336f061c40d3ee103924371adb",
+                "url": "https://api.github.com/repos/needim/noty/zipball/25f66d6741914b4c0ed2cb6c8d5fe5036420dfea",
+                "reference": "25f66d6741914b4c0ed2cb6c8d5fe5036420dfea",
                 "shasum": ""
             },
             "suggest": {
@@ -1514,7 +1514,7 @@
                 "notification",
                 "noty"
             ],
-            "time": "2015-08-13 10:59:24"
+            "time": "2015-09-14 13:45:35"
         },
         {
             "name": "openid/php-openid",
@@ -1635,16 +1635,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v5.2.12",
+            "version": "v5.2.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "5dd754112d07ab7480824c2916689ce06f83a842"
+                "reference": "45df3a88f7f46071e10d0b600f228d19f95911b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/5dd754112d07ab7480824c2916689ce06f83a842",
-                "reference": "5dd754112d07ab7480824c2916689ce06f83a842",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/45df3a88f7f46071e10d0b600f228d19f95911b3",
+                "reference": "45df3a88f7f46071e10d0b600f228d19f95911b3",
                 "shasum": ""
             },
             "require": {
@@ -1652,7 +1652,7 @@
             },
             "require-dev": {
                 "phpdocumentor/phpdocumentor": "*",
-                "phpunit/phpunit": "4.3.*"
+                "phpunit/phpunit": "4.7.*"
             },
             "suggest": {
                 "league/oauth2-client": "Needed for Gmail's XOAUTH2 authentication system"
@@ -1662,7 +1662,7 @@
                 "classmap": [
                     "class.phpmailer.php",
                     "class.phpmaileroauth.php",
-                    "class.oauth.php",
+                    "class.phpmaileroauthgoogle.php",
                     "class.smtp.php",
                     "class.pop3.php",
                     "extras/EasyPeasyICS.php",
@@ -1691,7 +1691,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2015-09-02 10:40:37"
+            "time": "2015-09-14 09:18:12"
         },
         {
             "name": "pklauzinski/jscroll",
