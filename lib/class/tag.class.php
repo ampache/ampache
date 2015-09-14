@@ -284,6 +284,7 @@ class Tag extends database_object implements library_item
         $uid = ($user == '') ? intval($GLOBALS['user']->id) : intval($user);
         $tag_id = intval($tag_id);
         if (!Core::is_library_item($type)) {
+            debug_event('tag.class', $type . " is not a library item.", 3);
             return false;
         }
         $id = intval($object_id);
@@ -295,7 +296,7 @@ class Tag extends database_object implements library_item
         // If tag merged to another one, add reference to the merge destination
         $parent = new Tag($tag_id);
         $merges = $parent->get_merged_tags();
-        if ($parent->is_hidden === false) {
+        if (!$parent->is_hidden) {
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
         }
         foreach ($merges as $tag) {
