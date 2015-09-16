@@ -21,7 +21,7 @@
  */
 
 use MusicBrainz\MusicBrainz;
-use MusicBrainz\Clients\RequestsMbClient;
+use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
 class AmpacheMusicBrainz {
 
@@ -80,7 +80,7 @@ class AmpacheMusicBrainz {
             return null;
         }
 
-        $mb = new MusicBrainz(new RequestsMbClient());
+        $mb = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array(
             'artists',
             'releases'

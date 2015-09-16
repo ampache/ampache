@@ -21,7 +21,7 @@
  */
 
 use MusicBrainz\MusicBrainz;
-use MusicBrainz\Clients\RequestsMbClient;
+use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\Filters\ArtistFilter;
 
 class Wanted extends database_object
@@ -117,7 +117,7 @@ class Wanted extends database_object
      */
     public static function get_missing_albums($artist, $mbid='')
     {
-        $mb = new MusicBrainz(new RequestsMbClient());
+        $mb = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array(
             'release-groups'
         );
@@ -217,7 +217,7 @@ class Wanted extends database_object
         if (parent::is_cached('missing_artist', $mbid) ) {
             $wartist = parent::get_from_cache('missing_artist', $mbid);
         } else {
-            $mb = new MusicBrainz(new RequestsMbClient());
+            $mb = new MusicBrainz(new RequestsHttpAdapter());
             $wartist['mbid'] = $mbid;
             $wartist['name'] = T_('Unknown Artist');
 
@@ -242,7 +242,7 @@ class Wanted extends database_object
             'artist' => $name
         );
         $filter = new ArtistFilter($args);
-        $mb = new MusicBrainz(new RequestsMbClient());
+        $mb = new MusicBrainz(new RequestsHttpAdapter());
         $res = $mb->search($filter);
         $wartists = array();
         foreach ($res as $r) {
@@ -308,7 +308,7 @@ class Wanted extends database_object
     public static function delete_wanted_release($mbid)
     {
         if (self::get_accepted_wanted_count() > 0) {
-            $mb = new MusicBrainz(new RequestsMbClient());
+            $mb = new MusicBrainz(new RequestsHttpAdapter());
             $malbum = $mb->lookup('release', $mbid, array('release-groups'));
             if ($malbum['release-group']) {
                 self::delete_wanted($malbum['release-group']);
@@ -425,7 +425,7 @@ class Wanted extends database_object
      */
     public function load_all($track_details = true)
     {
-        $mb = new MusicBrainz(new RequestsMbClient());
+        $mb = new MusicBrainz(new RequestsHttpAdapter());
         $this->songs = array();
 
         try {
