@@ -310,8 +310,8 @@ class Wanted extends database_object
         if (self::get_accepted_wanted_count() > 0) {
             $mb = new MusicBrainz(new RequestsHttpAdapter());
             $malbum = $mb->lookup('release', $mbid, array('release-groups'));
-            if ($malbum['release-group']) {
-                self::delete_wanted($malbum['release-group']);
+            if ($malbum->{'release-group'}) {
+                self::delete_wanted($malbum->{'release-group'});
             }
         }
     }
