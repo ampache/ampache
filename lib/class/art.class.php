@@ -1065,7 +1065,7 @@ class Art extends database_object
             return $images;
         }
 
-        $asin = $release['asin'];
+        $asin = $release->asin;
 
         if ($asin) {
             debug_event('mbz-gatherart', "Found ASIN: " . $asin, '5');

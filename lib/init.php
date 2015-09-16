@@ -110,17 +110,10 @@ $results['cookie_secure']    = $results['session_cookiesecure'];
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
-//require_once $prefix . '/lib/vendor/james-heinrich/getid3/getid3/getid3.php';
 //require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.phpmailer.php';
 //require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.smtp.php';
-//require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/MusicBrainz.php';
-//require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/Exception.php';
-//require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/Clients/MbClient.php';
-//require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/Clients/RequestsMbClient.php';
-//require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/Artist.php';
-//require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/Filters/AbstractFilter.php';
-//require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/Filters/FilterInterface.php';
-//require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/Filters/ArtistFilter.php';
+// Temporary fix, waiting for https://github.com/mikealmond/MusicBrainz/issues/16
+require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/MusicBrainz/HttpAdapters/RequestsAdapter.php';
 
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
