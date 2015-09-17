@@ -5,9 +5,11 @@
 .navbar-brand {
     padding-top: 0px;
 }
+
 .navbar-brand img {
     height: 48px;
     width: 48px;
+	display: inline;
 }
 
 .panel-heading a:after {

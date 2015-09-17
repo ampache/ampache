@@ -1372,16 +1372,16 @@
         },
         {
             "name": "mikealmond/musicbrainz",
-            "version": "v0.2.1",
+            "version": "v0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikealmond/MusicBrainz.git",
-                "reference": "8d482e3e7c46e81f7ddebc43018d7cc3555cfc96"
+                "reference": "c5a6fe502bf8d2be4e269543a3536b759f7a50d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikealmond/MusicBrainz/zipball/8d482e3e7c46e81f7ddebc43018d7cc3555cfc96",
-                "reference": "8d482e3e7c46e81f7ddebc43018d7cc3555cfc96",
+                "url": "https://api.github.com/repos/mikealmond/MusicBrainz/zipball/c5a6fe502bf8d2be4e269543a3536b759f7a50d4",
+                "reference": "c5a6fe502bf8d2be4e269543a3536b759f7a50d4",
                 "shasum": ""
             },
             "require": {
@@ -1426,7 +1426,7 @@
                 "musicbrainz",
                 "php"
             ],
-            "time": "2014-02-19 19:45:27"
+            "time": "2015-09-17 16:46:51"
         },
         {
             "name": "moinax/tvdb",
@@ -1567,16 +1567,16 @@
         },
         {
             "name": "php-tmdb/api",
-            "version": "v2.0.11",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-tmdb/api.git",
-                "reference": "55dc12fec4c18679099761ca23a062a89a4a05ac"
+                "reference": "6b4ae433ad1ed8d3f114300d1db9138312beebfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-tmdb/api/zipball/55dc12fec4c18679099761ca23a062a89a4a05ac",
-                "reference": "55dc12fec4c18679099761ca23a062a89a4a05ac",
+                "url": "https://api.github.com/repos/php-tmdb/api/zipball/6b4ae433ad1ed8d3f114300d1db9138312beebfb",
+                "reference": "6b4ae433ad1ed8d3f114300d1db9138312beebfb",
                 "shasum": ""
             },
             "require": {
@@ -1631,7 +1631,7 @@
                 "tvdb",
                 "wrapper"
             ],
-            "time": "2015-09-12 21:55:18"
+            "time": "2015-09-17 18:06:22"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -2381,16 +2381,16 @@
         },
         {
             "name": "sabre/dav",
-            "version": "3.0.4",
+            "version": "3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruux/sabre-dav.git",
-                "reference": "bb066f3e5ce573a2da552cadee4ef5fb58ec2b05"
+                "reference": "69c1b5c9c19e52e2da15dc8920fce9ea9df9abcc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruux/sabre-dav/zipball/bb066f3e5ce573a2da552cadee4ef5fb58ec2b05",
-                "reference": "bb066f3e5ce573a2da552cadee4ef5fb58ec2b05",
+                "url": "https://api.github.com/repos/fruux/sabre-dav/zipball/69c1b5c9c19e52e2da15dc8920fce9ea9df9abcc",
+                "reference": "69c1b5c9c19e52e2da15dc8920fce9ea9df9abcc",
                 "shasum": ""
             },
             "require": {
@@ -2458,7 +2458,7 @@
                 "framework",
                 "iCalendar"
             ],
-            "time": "2015-09-04 22:36:51"
+            "time": "2015-09-15 19:24:48"
         },
         {
             "name": "sabre/event",

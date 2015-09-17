@@ -39,7 +39,7 @@
     <?php if (!check_dependencies_folder()) {
     ?>
         <br />
-        <b><?php echo T_('Please download and install Composer from http://getcomposer.org then run `composer install` on Ampache directory.');
+        <b><?php echo T_('Please download and install Composer from http://getcomposer.org then run `composer install --prefer-source --no-interaction` on Ampache directory.');
     ?></b>
     <?php 
 } ?>

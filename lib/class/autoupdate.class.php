@@ -243,10 +243,11 @@ class AutoUpdate
      */
     public static function update_files()
     {
-        echo T_('Updating Ampache sources with `git pull` ...') . '<br />';
+        $cmd = 'git pull https://github.com/ampache/ampache.git';
+        echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         ob_flush();
         chdir(AmpConfig::get('prefix'));
-        exec('git pull https://github.com/ampache/ampache.git');
+        exec($cmd);
         echo T_('Done') . '<br />';
         ob_flush();
         self::get_latest_version(true);
@@ -257,10 +258,11 @@ class AutoUpdate
      */
     public static function update_dependencies()
     {
-        echo T_('Updating dependencies with `composer install` ...') . '<br />';
+        $cmd = 'composer install --prefer-source --no-interaction';
+        echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
         ob_flush();
         chdir(AmpConfig::get('prefix'));
-        exec('composer install');
+        exec($cmd);
         echo T_('Done') . '<br />';
         ob_flush();
     }

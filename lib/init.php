@@ -112,8 +112,6 @@ require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
 //require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.phpmailer.php';
 //require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.smtp.php';
-// Temporary fix, waiting for https://github.com/mikealmond/MusicBrainz/issues/16
-require_once $prefix . '/lib/vendor/mikealmond/musicbrainz/src/MusicBrainz/HttpAdapters/RequestsAdapter.php';
 
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
