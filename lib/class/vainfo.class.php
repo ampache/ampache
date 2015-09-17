@@ -1075,8 +1075,8 @@ class vainfo
             $results['year'] = $tvyear[0];
             $results['tvshow_season'] = $season[0];
             $results['tvshow_episode'] = $episode[0];
-            $results['tvshow'] = trim($this->removeCommonAbbreviations($temp[0]));
-            $results['original_name'] = trim($this->removeCommonAbbreviations($temp[1]));
+            $results['tvshow'] = str_replace(['.','_'], ' ', trim($this->removeCommonAbbreviations($temp[0])));
+            $results['original_name'] = str_replace(['.','_','-'], ' ', trim($this->removeCommonAbbreviations($temp[1])));
          }
     
         if (in_array('movie', $this->gather_types)) {
@@ -1149,11 +1149,15 @@ class vainfo
             'topaz', 'tvt', 'notv', 'fpn', 'fov', 'orenji', '0tv', 'omicron',
             'dsr', 'ws', 'sys', 'crimson', 'wat', 'hiqt', 'internal', 'brrip',
             'BrRip', 'boheme', 'vost', 'vostfr', 'fastsub', 'addiction', 'x264',
-            'LOL','720p','1080p','YIFY'
+            'LOL','720p','1080p','YIFY', 'evolve','[1|2][0-9]{3}','fihtv','first',
+            'BOKUTOX','bluray'
         );
-        $string = str_replace($commonabbr,'',$name);
-        $string = preg_replace("~\(*[19|20]\d{3}\)*~", '',$string) ; //Remove any year in title.
-        
+        //scan for brackets, braces, etc and ignore case.
+	   for ($i=0; $i< count($commonabbr);$i++)
+	   {
+		  $commonabbr[$i] = "~\[*|\(*|\<*|\{*(?i)" .$commonabbr[$i] . "\]*|\)*|\>*|\}*~";
+	   }
+        $string = preg_replace($commonabbr,'',$name);        
         return $string;
     }
 
