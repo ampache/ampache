@@ -28,20 +28,20 @@ fi
 
 [[ $OLANG ]] || OLANG=$(echo $LANG | sed 's/\..*//;')
 potfile='messages.pot'
-twtxt='translation-words.txt'
+tdstxt='translatable-database-strings.txt'
 ampconf='../../config/ampache.cfg.php'
 
 usage() {
     echo ""
-    echo -e "\033[32m usage: $0 [-h|--help][-g|--get][-gu|--getutw][-i|--init][-m|--merge][-f|--format][-a|--all][-au|--allutw]\033[0m"
+    echo -e "\033[32m usage: $0 [-h|--help][-g|--get][-gu|--getutds][-i|--init][-m|--merge][-f|--format][-a|--all][-au|--allutds]\033[0m"
     echo ""
     echo -e "[-g|--get]\t Creates the messages.pot file from translation strings within the source code."
-    echo -e "[-gu|--getutw]\t Generates the Pot file from translation strings within the source code\n\t\t and creates or updates the 'translation-words.txt' from the database-preference-table strings.\n\t\t Ampache needs to be fully setup for this to work."
+    echo -e "[-gu|--getutds]\t Generates the Pot file from translation strings within the source code\n\t\t and creates or updates the 'translatable-database-strings.txt' from the database-preference-table strings.\n\t\t Ampache needs to be fully setup for this to work."
     echo -e "[-i|--init]\t Creates a new language catalog and its directory structure."
     echo -e "[-m|--merge]\t Merges the messages.pot into the language catalogs and shows obsolet translations."
     echo -e "[-f|--format]\t Compiles the .mo file for its related .po file."
-    echo -e "[-a|--all]\t Does all except --init and --utw."
-    echo -e "[-au|--allutw]\t Does all except --init"
+    echo -e "[-a|--all]\t Does all except --init and --utds."
+    echo -e "[-au|--allutds]\t Does all except --init"
     echo -e "[-h|--help]\t Shows this help screen."
     echo ""
     echo -e "\033[32m If you encounter any bugs, please report them on Transifex (https://www.transifex.com/projects/p/ampache/)\033[0m"
@@ -60,15 +60,15 @@ generate_pot() {
                 -o $potfile \
                 $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
     if [[ $? -eq 0 ]]; then
-        echo -e "\033[32m Pot file creation succeeded. Adding 'translation-words.txt\033[0m"
-        cat $twtxt >> $potfile
+        echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
+        cat $tdstxt >> $potfile
         echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"
     else
         echo -e "\033[31m Error\033[0m: Pot file creation has failed!"
     fi
 }
 
-generate_pot_utw() {
+generate_pot_utds() {
     echo ""
     echo "Generating/updating pot-file"
     echo ""
@@ -80,12 +80,12 @@ generate_pot_utw() {
                 -o $potfile \
                 $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
     if [[ $? -eq 0 ]]; then
-    
+
         ampconf='../../config/ampache.cfg.php'
-        
+
         echo -e "\033[32m Pot creation/update successful\033[0m\n"
         echo -e "Reading database login information from Amapche config file\n"
-        
+
         dbhost=$(grep -oP "(?<=database_hostname = \")[^\"\n]+" $ampconf)
         if [ ! $dbhost ]; then
             echo -e "\n\033[31m Error\033[0m: No or false database host setting detected!"
@@ -97,7 +97,7 @@ generate_pot_utw() {
                 fi
         fi
         echo "Temporary saved '$dbhost' as your database host"
-        
+
         dbport=$(grep -oP "(?<=database_port = \")[^\"\n]+" $ampconf)
         if [ ! $dbport ]; then
             echo ""
@@ -108,7 +108,7 @@ generate_pot_utw() {
                 fi
         fi
         echo "Temporary saved '$dbport' as your database port"
-        
+
         dbname=$(grep -oP "(?<=database_name = \")[^\"\n]+" $ampconf)
         if [ ! $dbname ]; then
             echo ""
@@ -121,7 +121,7 @@ generate_pot_utw() {
                 fi
         fi
         echo "Temporary saved '$dbname' as your database name"
-        
+
         dbuser=$(grep -oP "(?<=database_username = \")[^\"\n]+" $ampconf)
         if [ ! $dbuser ]; then
             echo -e "\n\033[31m Error\033[0m: You need to set a valid database user in you Ampache config file"
@@ -146,37 +146,45 @@ generate_pot_utw() {
         else
             echo "Temporary saved '$dbpass' as your database password"
         fi
-        
-        
-        echo ""
-        echo "Deleting old translation-words.txt"
-        echo ""
-        rm $twtxt
 
-        echo -e "Creating new 'translation-words.txt' from database\n"
+        echo ""
+        echo "Deleting old translatable-database-strings.txt"
+        echo ""
+        rm $tdstxt
+
+        echo -e "Creating new 'translatable-database-strings.txt' from database\n"
+
+        echo -e " #######################################################################\n\n"\
+                "# This file lists all description strings from your Ampache-database -> preference-table.\n"\
+                "# Please do not delete or modify the content by yourself. It will be automatically (re)generated\n"\
+                "# if you run './gather-messages.sh [-gu|--getutds].\n"\
+                "# Last Update: $(date "+%d.%m.%Y %H:%M:%S %Z")"\
+                "\n\n"\
+                "#######################################################################" >> $tdstxt
+
         mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" | 
         while read dbprefid; do
             dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT description FROM preference where id=$dbprefid")
             dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile)
             if [ ! "$dbprefdescchk" ]; then
-                echo -e "\n#: Database preference table id $dbprefid" >> $twtxt
-                echo -e "msgid \"$dbprefdesc\"" >> $twtxt
-                echo -e "msgstr \"\"" >> $twtxt
+                echo -e "\n#: Database preference table id $dbprefid" >> $tdstxt
+                echo -e "msgid \"$dbprefdesc\"" >> $tdstxt
+                echo -e "msgstr \"\"" >> $tdstxt
             else
-                echo -e "\n#: Database preference table id $dbprefid" >> $twtxt
-                echo -e "# is already in the source code\n# but to avoid confusion, it's added and commented" >> $twtxt
-                echo -e "# msgid \"$dbprefdesc\"" >> $twtxt
-                echo -e "# msgstr \"\"" >> $twtxt
+                echo -e "\n#: Database preference table id $dbprefid" >> $tdstxt
+                echo -e "# is already in the source code\n# but to avoid confusion, it's added and commented" >> $tdstxt
+                echo -e "# msgid \"$dbprefdesc\"" >> $tdstxt
+                echo -e "# msgstr \"\"" >> $tdstxt
             fi
         done
-        echo -e "\033[32m Pot file creation succeeded. Adding 'translation-words.txt\033[0m"
-        cat $twtxt >> $potfile
+        echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
+        cat $tdstxt >> $potfile
         echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"
     else
         echo -e "\033[31m Error\033[0m: Pot file creation has failed!"
     fi
 }
-        
+
 do_msgmerge() {
     source=$potfile
     target="../$1/LC_MESSAGES/messages.po"
@@ -199,38 +207,38 @@ fi
 case $1 in
     '-a'|'--all')
         generate_pot
-	for i in $(ls ../ | grep -v base); do
-	    do_msgmerge $i
-	    do_msgfmt $i
-	done
+        for i in $(ls ../ | grep -v base); do
+            do_msgmerge $i
+            do_msgfmt $i
+        done
     ;;
-    '-au'|'--allutw')
-        generate_pot_utw
-	for i in $(ls ../ | grep -v base); do
-	    do_msgmerge $i
-	    do_msgfmt $i
-	done
+    '-au'|'--allutds')
+        generate_pot_utds
+        for i in $(ls ../ | grep -v base); do
+            do_msgmerge $i
+            do_msgfmt $i
+        done
     ;;
     '-af'|'--allformat')
-	for i in $(ls ../ | grep -v base); do
-	    do_msgfmt $i
-	done
+        for i in $(ls ../ | grep -v base); do
+            do_msgfmt $i
+        done
     ;;
     '-am'|'--allmerge')
-	for i in $(ls ../ | grep -v base); do
-	    do_msgmerge $i
-	done
+        for i in $(ls ../ | grep -v base); do
+            do_msgmerge $i
+        done
     ;;
     '-g'|'--get')
         generate_pot
     ;;
-    '-gu'|'--getutw')
-        generate_pot_utw
+    '-gu'|'--getutds')
+        generate_pot_utds
     ;;
     '-i'|'--init'|'init')
         outdir="../$OLANG/LC_MESSAGES"
         [[ -d $outdir ]] || mkdir -p $outdir
-	msginit -l $LANG -i $potfile -o $outdir/messages.po
+        msginit -l $LANG -i $potfile -o $outdir/messages.po
     ;;
     '-f'|'--format'|'format')
         do_msgfmt $OLANG
