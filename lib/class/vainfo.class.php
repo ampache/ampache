@@ -1075,9 +1075,9 @@ class vainfo
             $results['year'] = $tvyear[0];
             $results['tvshow_season'] = $season[0];
             $results['tvshow_episode'] = $episode[0];
-            $results['tvshow'] = str_replace(['.','_'], ' ', trim($this->removeCommonAbbreviations($temp[0])));
-            $results['original_name'] = str_replace(['.','_','-'], ' ', trim($this->removeCommonAbbreviations($temp[1])));
-         }
+            $results['tvshow'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',$temp[0]),"\s\t\n\r\0\x0B\.\_\-"));
+            $results['original_name'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',$temp[1]),"\s\t\n\r\0\x0B\.\_\-"));
+        }
     
         if (in_array('movie', $this->gather_types)) {
             $string = $this->removeCommonAbbreviations($file);
