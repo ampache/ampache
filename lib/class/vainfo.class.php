@@ -1075,13 +1075,13 @@ class vainfo
             $results['year'] = $tvyear[0];
             $results['tvshow_season'] = $season[0];
             $results['tvshow_episode'] = $episode[0];
-            $results['tvshow'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',$temp[0]),"\s\t\n\r\0\x0B\.\_\-"));
-            $results['original_name'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',$temp[1]),"\s\t\n\r\0\x0B\.\_\-"));
+            $results['tvshow'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',ucwords($temp[0])),"\s\t\n\r\0\x0B\.\_\-"));
+            $results['original_name'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',ucwords($temp[1])),"\s\t\n\r\0\x0B\.\_\-"));
         }
     
         if (in_array('movie', $this->gather_types)) {
             $string = $this->removeCommonAbbreviations($file);
-            $results['title'] = str_replace(['.','_'], ' ',trim($string, " \t\n\r\0\x0B\.\_\-"));
+            $results['title'] = ucwords(str_replace(['.','_'], ' ',trim($string, " \t\n\r\0\x0B\.\_\-")));
             $results['original_name'] = $results['title'];
             
             $matches = preg_split($slash_type,$filepath, -1,PREG_SPLIT_DELIM_CAPTURE);
