@@ -53,7 +53,7 @@ class Plugin
     {
         try {
             /* Require the file we want */
-            if (!@include_once(AmpConfig::get('prefix') . '/modules/plugins/' . $name . '.plugin.php')) {
+            if (!@include_once(AmpConfig::get('prefix') . '/modules/plugins/' . $name . '/' . $name . '.plugin.php')) {
                 debug_event('plugin', 'Cannot include plugin `' . $name . '`.', 1);
                 return false;
             }
@@ -87,7 +87,8 @@ class Plugin
         $plugins_list[$type] = array();
 
         // Open up the plugin dir
-        $handle = opendir(AmpConfig::get('prefix') . '/modules/plugins');
+        $basedir = AmpConfig::get('prefix') . '/modules/plugins';
+        $handle = opendir($basedir);
 
         if (!is_resource($handle)) {
             debug_event('Plugins','Unable to read plugins directory','1');
@@ -95,31 +96,35 @@ class Plugin
 
         // Recurse the directory
         while (false !== ($file = readdir($handle))) {
-            // Ignore non-plugin files
-            if (substr($file,-10,10) != 'plugin.php') {
+            // Take care of directories only
+            if (!is_dir($basedir . '/' . $file)) {
+                debug_event('Plugins', $file . ' is not a directory.', 3);
                 continue;
             }
-            if (is_dir($file)) {
+            
+            // Make sure the plugin base file exists inside the plugin directory
+            if (! file_exists($basedir . '/' . $file . '/' . $file . '.plugin.php')) {
+                debug_event('Plugins', 'Missing class for ' . $file, 3);
                 continue;
             }
-            $plugin_name = basename($file,'.plugin.php');
+            
             if ($type != '') {
-                $plugin = new Plugin($plugin_name);
+                $plugin = new Plugin($file);
                 if (! Plugin::is_installed($plugin->_plugin->name)) {
                     debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (! $plugin->is_valid()) {
-                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' is not valid, skipping', 6);
+                    debug_event('Plugins', 'Plugin ' . $file . ' is not valid, skipping', 6);
                     continue;
                 }
                 if (! method_exists($plugin->_plugin, $type)) {
-                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' does not support ' . $type . ', skipping', 6);
+                    debug_event('Plugins', 'Plugin ' . $file . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }
             // It's a plugin record it
-            $plugins_list[$type][$plugin_name] = $plugin_name;
+            $plugins_list[$type][$file] = $file;
         } // end while
 
         // Little stupid but hey

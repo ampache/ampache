@@ -221,7 +221,7 @@ abstract class Catalog extends database_object
     /**
      * create_catalog_type
      * This function attempts to create a catalog type
-     * all Catalog modules should be located in /modules/catalog/<name>.class.php
+     * all Catalog modules should be located in /modules/catalog/<name>/<name>.class.php
      * @param string $type
      * @param int $id
      * @return Catalog|null
@@ -232,7 +232,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
+        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '/' . $type . '.catalog.php';
         $include = require_once $filename;
 
         if (!$include) {
@@ -313,7 +313,8 @@ abstract class Catalog extends database_object
     public static function get_catalog_types()
     {
         /* First open the dir */
-        $handle = opendir(AmpConfig::get('prefix') . '/modules/catalog');
+        $basedir = AmpConfig::get('prefix') . '/modules/catalog';
+        $handle = opendir($basedir);
 
         if (!is_resource($handle)) {
             debug_event('catalog', 'Error: Unable to read catalog types directory', '1');
@@ -323,16 +324,19 @@ abstract class Catalog extends database_object
         $results = array();
 
         while (false !== ($file = readdir($handle))) {
-            if (substr($file, -11, 11) != 'catalog.php') {
+            /* Make sure it is a dir */
+            if (! is_dir($basedir . '/' . $file)) {
+                debug_event('catalog', $file . ' is not a directory.', 3);
                 continue;
             }
-
-            /* Make sure it isn't a dir */
-            if (!is_dir($file)) {
-                /* Get the basename and then everything before catalog */
-                $filename = basename($file, '.catalog.php');
-                $results[] = $filename;
+            
+            // Make sure the plugin base file exists inside the plugin directory
+            if (! file_exists($basedir . '/' . $file . '/' . $file . '.catalog.php')) {
+                debug_event('catalog', 'Missing class for ' . $file, 3);
+                continue;
             }
+            
+            $results[] = $file;
         } // end while
 
         return $results;
@@ -613,7 +617,7 @@ abstract class Catalog extends database_object
         }
 
         $insert_id = 0;
-        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
+        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '/' . $type . '.catalog.php';
         $include = require_once $filename;
 
         if ($include) {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a44f06d93118a38a89dd38d6bd18b71e",
+    "hash": "390523abc8c42729295d02806e12f51b",
     "packages": [
         {
             "name": "aehlke/tag-it",
@@ -3143,6 +3143,53 @@
             "time": "2015-08-24 11:32:18"
         },
         {
+            "name": "wikimedia/composer-merge-plugin",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/composer-merge-plugin.git",
+                "reference": "c455fb5ca09da6b970355b19185e27415bc15756"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/c455fb5ca09da6b970355b19185e27415bc15756",
+                "reference": "c455fb5ca09da6b970355b19185e27415bc15756",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "composer/composer": "1.0.*@dev",
+                "jakub-onderka/php-parallel-lint": "~0.8",
+                "phpspec/prophecy-phpunit": "~1.0",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~2.1.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Wikimedia\\Composer\\MergePlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wikimedia\\Composer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Davis",
+                    "email": "bd808@wikimedia.org"
+                }
+            ],
+            "description": "Composer plugin to merge multiple composer.json files",
+            "time": "2015-07-03 03:24:58"
+        },
+        {
             "name": "xdan/datetimepicker",
             "version": "2.4.5",
             "source": {
@@ -3171,14 +3218,36 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "bshaffer/php-echonest-api": 20,
-        "krixon/xbmc-php-rpc": 20,
         "jeromeetienne/jquery-qrcode": 20,
-        "kumailht/responsive-elements": 20
+        "kumailht/responsive-elements": 20,
+        "dropbox/dropbox-sdk": 0,
+        "mptre/php-soundcloud": 0,
+        "krixon/xbmc-php-rpc": 20,
+        "jamiebicknell/growl-gntp": 0,
+        "php-tmdb/api": 0,
+        "moinax/tvdb": 0
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "ext-curl": "1.0",
+        "ext-gd": "1.0",
+        "ext-gmp": "1.0",
+        "ext-dom": "1.0",
+        "ext-pcre": "1.0",
+        "ext-spl": "1.0",
+        "ext-simplexml": "1.0",
+        "ext-ctype": "1.0",
+        "ext-date": "1.0",
+        "ext-iconv": "1.0",
+        "ext-libxml": "1.0",
+        "ext-mbstring": "1.0",
+        "ext-xmlwriter": "1.0",
+        "ext-xmlreader": "1.0",
+        "lib-libxml": "2.6.20"
+    }
 }

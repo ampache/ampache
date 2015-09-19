@@ -8,13 +8,32 @@
 	"config":
 	{
         "vendor-dir": "lib/vendor",
-		"component-dir": "lib/components"
+		"component-dir": "lib/components",
+		
+		"platform": {
+			"ext-curl": "1.0",
+			"ext-gd": "1.0",
+			"ext-gmp": "1.0",
+			"ext-dom": "1.0",
+			"ext-pcre": "1.0",
+			"ext-spl": "1.0",
+			"ext-simplexml": "1.0",
+			"ext-ctype": "1.0",
+			"ext-date": "1.0",
+			"ext-iconv": "1.0",
+			"ext-libxml": "1.0",
+			"ext-mbstring": "1.0",
+			"ext-xmlwriter": "1.0",
+			"ext-xmlreader": "1.0",
+			"lib-libxml": "2.6.20"
+		}
     },
     "require": {
 		"php": ">=5.3.0",
+		"wikimedia/composer-merge-plugin": "1.*",
+		
         "james-heinrich/getid3": "1.9.*",
 		"mikealmond/musicbrainz": "0.2.*",
-		"guzzlehttp/guzzle": "5.*",
 		"phpmailer/phpmailer": "5.2.*",
 		"rmccue/requests": "1.6.*",
 		"react/react": "0.4.*",
@@ -27,16 +46,10 @@
 		"happyworm/jplayer": "2.*",
 		"needim/noty": "2.3.*",
 		"openid/php-openid": "2.*",
-		"dropbox/dropbox-sdk": "1.*",
 		"sabre/dav": "3.*",
 		"maennchen/zipstream-php": "0.*",
-		"php-tmdb/api": "2.*",
-		"moinax/tvdb": "1.*",
 		
-		"jamiebicknell/Growl-GNTP": "1.*",
 		"bshaffer/php-echonest-api": "dev-master",
-		"krixon/xbmc-php-rpc": "dev-master",
-		"mptre/php-soundcloud": "2.*",
 		
 		"components/jquery": "2.0.*",
 		"components/jqueryui": "1.*",
@@ -58,48 +71,12 @@
 		{
 			"type": "package",
 			"package": {
-				"name": "jamiebicknell/Growl-GNTP",
-				"version": "1.0.0",
-				"source": {
-					"url": "https://github.com/jamiebicknell/Growl-GNTP.git",
-					"type": "git",
-					"reference": "1.0.0"
-				}
-			}
-		},
-		{
-			"type": "package",
-			"package": {
 				"name": "bshaffer/php-echonest-api",
 				"version": "dev-master",
 				"source": {
 					"url": "https://github.com/bshaffer/php-echonest-api.git",
 					"type": "git",
 					"reference": "master"
-				}
-			}
-		},
-		{
-			"type": "package",
-			"package": {
-				"name": "krixon/xbmc-php-rpc",
-				"version": "dev-master",
-				"source": {
-					"url": "https://github.com/krixon/xbmc-php-rpc.git",
-					"type": "git",
-					"reference": "master"
-				}
-			}
-		},
-		{
-			"type": "package",
-			"package": {
-				"name": "mptre/php-soundcloud",
-				"version": "2.3.2",
-				"source": {
-					"url": "https://github.com/mptre/php-soundcloud.git",
-					"type": "git",
-					"reference": "v2.3.2"
 				}
 			}
 		},
@@ -327,5 +304,19 @@
 				}
 			}
 		}
-	]
+	],
+	
+	"extra": {
+        "merge-plugin": {
+            "include": [
+                "composer.local.json",
+				"modules/catalog/*/composer.json",
+				"modules/localplay/*/composer.json",
+                "modules/plugins/*/composer.json"
+            ],
+            "recurse": false,
+            "replace": false,
+            "merge-extra": false
+        }
+    }
 }
