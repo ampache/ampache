@@ -1033,34 +1033,34 @@ class vainfo
         $file = pathinfo($filepath,PATHINFO_FILENAME);
         if (in_array('tvshow', $this->gather_types)) {
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
-                $temp = preg_split("~([1|2][0-9]{3})?(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+)|((\.|_|\s)\d+[x|X]\d+))~",$file,2);
+                $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+)|((\.|_|\s)\d+[x|X]\d+))~",$file,2);
                 preg_match("~(?<=\()[1|2][0-9]{3}|[1|2][0-9]{3}~", $temp[1],$tvyear);
                 preg_match("~(?<=[Ss])\d+~", $file, $season);
                 preg_match("~(?<=[Ee])\d+~", $file, $episode);
                 
             } else {
                 if (preg_match("~[\_\.\s]\d+[xX]\d+[\_\.\s]~", $file, $seasonEpisode)) {
-                    $temp = preg_split("~([\_\.\s][1|2][0-9]{3})*[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]~",$file);
+                    $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]~",$file);
                     preg_match("~(?<=\()[1|2][0-9]{3}|[1|2][0-9]{3}~", $file,$tvyear);
                     preg_match("~\d+(?=[Xx])~", $file, $season);
                     preg_match("~(?<=[Xx])\d+~", $file, $episode);
                 } else {
-                    if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_](\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
-                        $temp = preg_split("~([\_\.\s][1|2][0-9]{3})?[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])?~",$file,2);
+                    if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
+                        $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",$file,3);
                         preg_match("~(?<=\()[1|2][0-9]{3}|[1|2][0-9]{3}~", $file,$tvyear);
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
                         preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
                     }   
                     else {
                         if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
-                            $temp = preg_split("~[\.\s\-\_]([1|2][0-9]{3})?[\.\s\-\_]\d{3}[\.\s\-\_]~",$file,3);
+                            $temp = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
                             preg_match("~(?<=\()[1|2][0-9]{3}|[1|2][0-9]{3}~", $file,$tvyear);
                             $season[0] = $seasonEpisode[1];
                             $episode[0] = $seasonEpisode[2];
                         } else {
                            preg_match("~^(\d\d)[\_\-\.\s](.*)~", $file, $temp);
                            if (count($temp)) {
-                               $folders = preg_split($slash_type,$filepath, -1,PREG_SPLIT_NO_EMPTY);
+                               $folders = preg_split("~/~",$filepath, -1,PREG_SPLIT_NO_EMPTY);
 	                           $folders = array_reverse($folders);
                                $temp = array_reverse($temp);
 	                           preg_match("~^(\d\d)~", $file, $episode);
@@ -1072,11 +1072,11 @@ class vainfo
                     }
                 }
             }
-            $results['year'] = $tvyear[0];
+            $results['year'] = !empty($tvyear) ? $tvyear[0] : null;
             $results['tvshow_season'] = $season[0];
             $results['tvshow_episode'] = $episode[0];
-            $results['tvshow'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',ucwords($temp[0])),"\s\t\n\r\0\x0B\.\_\-"));
-            $results['original_name'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',ucwords($temp[1])),"\s\t\n\r\0\x0B\.\_\-"));
+            $results['tvshow'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',$temp[0]),"\s\t\n\r\0\x0B\.\_\-"));
+            $results['original_name'] = trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',$temp[1]),"\s\t\n\r\0\x0B\.\_\-"));
         }
     
         if (in_array('movie', $this->gather_types)) {
@@ -1143,19 +1143,14 @@ class vainfo
    
     private function removeCommonAbbreviations($name)
     {
-        $commonabbr = array(
-            'divx', 'xvid', 'dvdrip', 'hdtv', 'HDTV', 'lol', 'axxo', 'repack', 'xor',
-            'pdtv', 'real', 'vtv', 'caph', '2hd', 'proper', 'fqm', 'uncut',
-            'topaz', 'tvt', 'notv', 'fpn', 'fov', 'orenji', '0tv', 'omicron',
-            'dsr', 'ws', 'sys', 'crimson', 'wat', 'hiqt', 'internal', 'brrip',
-            'BrRip', 'boheme', 'vost', 'vostfr', 'fastsub', 'addiction', 'x264',
-            'LOL','720p','1080p','YIFY', 'evolve','[1|2][0-9]{3}','fihtv','first',
-            'BOKUTOX','bluray'
-        );
-        //scan for brackets, braces, etc and ignore case.
+        $abbr = explode(",",AmpConfig::get('common_abbr'));
+        $commonabbr = preg_replace("~\n~", '',$abbr);
+        $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
+
+       //scan for brackets, braces, etc and ignore case.
 	   for ($i=0; $i< count($commonabbr);$i++)
 	   {
-		  $commonabbr[$i] = "~\[*|\(*|\<*|\{*(?i)" .$commonabbr[$i] . "\]*|\)*|\>*|\}*~";
+		  $commonabbr[$i] = "~\[*|\(*|\<*|\{*(?i)" . trim($commonabbr[$i]) . "\]*|\)*|\>*|\}*~";
 	   }
         $string = preg_replace($commonabbr,'',$name);        
         return $string;

@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 30
+config_version = 31
 
 ;###################
 ; Path Vars        #
@@ -977,3 +977,14 @@ encode_ss_duration = "-t %DURATION%"
 ; so that the ordering is sane.
 ; DEFAULT: auto
 ;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"
+
+;#############################
+;   Abbreviation Filter      #
+;#############################
+; For file name parsing. Any unecessary abbreviations in file names can be removed during parsing
+; by adding them to the list below so that they will be removed during the parsing process.
+common_abbr = "divx,xvid,vdrip,hdtv,lol,axxo,repack,xor,pdtv,
+real,vtv,caph,2hd,proper,fqm,uncut,topaz,tvt,notv,fpn,fov,orenji,0tv,
+omicron,dsr,ws,sys,crimson,wat,hiqt,internal,brrip,boheme,vost,vostfr,
+fastsub,addiction,x264,LOL,720p,1080p,YIFY,evolve,fihtv,first,bokutox,bluray,
+tvboom,info"
