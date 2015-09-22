@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 30
+config_version = 31
 
 
 ;#########################################################
@@ -500,6 +500,11 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ; Set this to your Last.FM api key to actually use Last.FM for
 ; recommendations and metadata.
 lastfm_api_key = "d5df942424c71b754e54ce1832505ae2"
+
+; Last.FM API secret
+; Set this to your Last.FM api secret to actually use Last.FM for
+; scrobbling.
+lastfm_api_secret = ""
 
 ; Wanted
 ; Set this to true to enable display missing albums and the

@@ -25,20 +25,20 @@ class AmpacheLastfm
     public $name        = 'Last.FM';
     public $categories  = 'scrobbling';
     public $description = 'Records your played songs to your Last.FM Account';
-    public $url         = 'http://www.lastfm.com';
-    public $version     = '000004';
+    public $url;
+    public $version     = '000005';
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to
     // fill them out
-    private $username;
-    private $password;
-    private $hostname;
-    private $port;
-    private $path;
     private $challenge;
     private $user_id;
+    private $api_key;
+    private $secret;
+    private $scheme     = 'https';
+    private $host       = 'www.last.fm';
+    private $api_host   = 'ws.audioscrobbler.com';
 
     /**
      * Constructor
@@ -46,6 +46,7 @@ class AmpacheLastfm
      */
     public function __construct()
     {
+        $this->url = $this->scheme.'://'.$this->host;
         return true;
     } // constructor
 
@@ -62,12 +63,8 @@ class AmpacheLastfm
             return false;
         }
 
-        Preference::insert('lastfm_user','Last.FM Username','','25','string','plugins');
-        Preference::insert('lastfm_md5_pass','Last.FM Password','','25','string','plugins');
-        Preference::insert('lastfm_port','Last.FM Submit Port','','25','string','internal');
-        Preference::insert('lastfm_host','Last.FM Submit Host','','25','string','internal');
-        Preference::insert('lastfm_url','Last.FM Submit URL','','25','string','internal');
         Preference::insert('lastfm_challenge','Last.FM Submit Challenge','','25','string','internal');
+        Preference::insert('lastfm_grant_link','Last.FM Grant URL','','25','string','plugins');
 
         return true;
     } // install
@@ -79,12 +76,8 @@ class AmpacheLastfm
      */
     public function uninstall()
     {
-        Preference::delete('lastfm_md5_pass');
-        Preference::delete('lastfm_user');
-        Preference::delete('lastfm_url');
-        Preference::delete('lastfm_host');
-        Preference::delete('lastfm_port');
         Preference::delete('lastfm_challenge');
+        Preference::delete('lastfm_grant_link');
     } // uninstall
 
     /**
@@ -96,6 +89,14 @@ class AmpacheLastfm
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version < 4) {
             Preference::rename('lastfm_pass', 'lastfm_md5_pass');
+        }
+        if ($from_version < 5) {
+            Preference::delete('lastfm_md5_pass');
+            Preference::delete('lastfm_user');
+            Preference::delete('lastfm_url');
+            Preference::delete('lastfm_host');
+            Preference::delete('lastfm_port');
+            Preference::insert('lastfm_grant_link','Last.FM Grant URL','','25','string','plugins');
         }
         return true;
     } // upgrade
@@ -110,7 +111,12 @@ class AmpacheLastfm
         if (strtolower(get_class($song)) != 'song') {
             return false;
         }
-        
+        // Make sure there's actually a session before we keep going
+        if (!$this->challenge) {
+            debug_event($this->name,'Session key missing','5');
+            return false;
+        }
+
         // Let's pull the last song submitted by this user
         $previous = Stats::get_last_song($this->user_id);
 
@@ -127,33 +133,17 @@ class AmpacheLastfm
             return false;
         }
 
-        // Make sure there's actually a username and password before we keep going
-        if (!$this->username || !$this->password) {
-            debug_event($this->name,'Username or password missing','3');
-            return false;
-        }
+        // Create our scrobbler and then queue it
+        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
-        // Create our scrobbler with everything this time and then queue it
-        $scrobbler = new scrobbler($this->username,$this->password,$this->hostname,$this->port,$this->path,$this->challenge);
-
-        // Check to see if the scrobbling works
+        // Check to see if the scrobbling works by queueing song
         if (!$scrobbler->queue_track($song->f_artist_full,$song->f_album_full,$song->title,time(),$song->time,$song->track)) {
-            // Depending on the error we might need to do soemthing here
             return false;
         }
 
         // Go ahead and submit it now
         if (!$scrobbler->submit_tracks()) {
             debug_event($this->name,'Error Submit Failed: ' . $scrobbler->error_msg,'3');
-            if ($scrobbler->reset_handshake) {
-                debug_event($this->name,'Re-running Handshake due to error','3');
-                $this->set_handshake($this->user_id);
-                // Try try again
-                if ($scrobbler->submit_tracks()) {
-                    debug_event($this->name,'Submission Successful','5');
-                    return true;
-                }
-            }
             return false;
         }
 
@@ -163,72 +153,66 @@ class AmpacheLastfm
     } // submit
 
     /**
-     * set_handshake
-     * This runs a handshake and properly updates the preferences as needed.
-     * It returns the data as an array so we don't have to requery the db.
-     * This requires a userid so it knows whose crap to update.
+     * set_flag
+     * This takes care of spreading your love on Last.fm
      */
-    public function set_handshake($user_id)
+    public function set_flag($song, $flagged)
     {
-        $scrobbler = new scrobbler($this->username,$this->password);
-        $data = $scrobbler->handshake();
-
-        if (!$data) {
-            debug_event($this->name,'Handshake Failed: ' . $scrobbler->error_msg,'3');
+        // Make sure there's actually a session before we keep going
+        if (!$this->challenge) {
+            debug_event($this->name,'Session key missing','5');
             return false;
         }
+        // Create our scrobbler and then queue it
+        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
+        if (!$scrobbler->love($flagged, 'song', $song->f_artist_full, $song->title, $song->f_album_full)) {
+            debug_event($this->name,'Error Love Failed: ' . $scrobbler->error_msg,'3');
+            return false;
+        }
+        debug_event($this->name,'Sent Love Successfully','5');
+        return true;
+    } // set_flag
 
-        $this->hostname = $data['submit_host'];
-        $this->port = $data['submit_port'];
-        $this->path = $data['submit_url'];
-        $this->challenge = $data['challenge'];
+    /**
+     * get_session
+     * This call the getSession method and properly updates the preferences as needed.
+     * This requires a userid so it knows whose crap to update.
+     */
+    public function get_session($user_id, $token)
+    {
+        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host,'', $this->secret);
+        $session_key = $scrobbler->get_session_key($token);
+        if (!$session_key) {
+            debug_event($this->name,'getSession Failed: ' . $scrobbler->error_msg,'3');
+            return false;
+        }
+        $this->challenge = $session_key;
 
         // Update the preferences
-        Preference::update('lastfm_port',$user_id,$data['submit_port']);
-        Preference::update('lastfm_host',$user_id,$data['submit_host']);
-        Preference::update('lastfm_url',$user_id,$data['submit_url']);
-        Preference::update('lastfm_challenge',$user_id,$data['challenge']);
+        Preference::update('lastfm_challenge',$user_id,$session_key);
+        debug_event($this->name,'getSession Successful','3');
 
         return true;
-    } // set_handshake
+    } // get_session
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
     {
+        $this->api_key=AmpConfig::get('lastfm_api_key');
+        $this->secret=AmpConfig::get('lastfm_api_secret');
         $user->set_preferences();
         $data = $user->prefs;
-
-        if (strlen(trim($data['lastfm_user']))) {
-            $this->username = trim($data['lastfm_user']);
-        } else {
-            debug_event($this->name,'No Username, not scrobbling','3');
-            return false;
-        }
-        if (strlen(trim($data['lastfm_md5_pass']))) {
-            $this->password = trim($data['lastfm_md5_pass']);
-        } else {
-            debug_event($this->name,'No Password, not scrobbling','3');
-            return false;
-        }
-
         $this->user_id = $user->id;
-
-        // If we don't have the other stuff try to get it before giving up
-        if (!$data['lastfm_host'] || !$data['lastfm_port'] || !$data['lastfm_url'] || !$data['lastfm_challenge']) {
-            debug_event($this->name, 'Running Handshake, missing information', '1');
-            if (!$this->set_handshake($this->user_id)) {
-                debug_event($this->name, 'Handshake failed, you lose', '3');
-                return false;
-            }
+        // check if user have a session key
+        if (strlen(trim($data['lastfm_challenge']))) {
+            $this->challenge= trim($data['lastfm_challenge']);
         } else {
-            $this->hostname = $data['lastfm_host'];
-            $this->port = $data['lastfm_port'];
-            $this->path = $data['lastfm_url'];
-            $this->challenge = $data['lastfm_challenge'];
+            debug_event($this->name,'No session key, not scrobbling (need to grant Ampache to last.fm)','5');
+            return false;
         }
 
         return true;

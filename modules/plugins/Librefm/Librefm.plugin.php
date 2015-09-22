@@ -25,20 +25,20 @@ class Ampachelibrefm
     public $name        = 'Libre.FM';
     public $categories  = 'scrobbling';
     public $description = 'Records your played songs to your Libre.FM Account';
-    public $url         = 'https://libre.fm';
-    public $version     = '000002';
+    public $url;
+    public $version     = '000003';
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to
     // fill them out
-    private $username;
-    private $password;
-    private $hostname;
-    private $port;
-    private $path;
     private $challenge;
     private $user_id;
+    private $api_key;
+    private $secret;
+    private $scheme     = 'https';
+    private $host       = 'libre.fm';
+    private $api_host   = 'libre.fm';
 
     /**
      * Constructor
@@ -46,6 +46,7 @@ class Ampachelibrefm
      */
     public function __construct()
     {
+        $this->url = $this->scheme.'://'.$this->host;
         return true;
     } // constructor
 
@@ -62,12 +63,8 @@ class Ampachelibrefm
             return false;
         }
 
-        Preference::insert('librefm_user','Libre.FM Username','','25','string','plugins');
-        Preference::insert('librefm_md5_pass','Libre.FM Password','','25','string','plugins');
-        Preference::insert('librefm_port','Libre.FM Submit Port','','25','string','internal');
-        Preference::insert('librefm_host','Libre.FM Submit Host','','25','string','internal');
-        Preference::insert('librefm_url','Libre.FM Submit URL','','25','string','internal');
         Preference::insert('librefm_challenge','Libre.FM Submit Challenge','','25','string','internal');
+        Preference::insert('librefm_grant_link','Libre.FM Grant URL','','25','string','plugins');
 
         return true;
     } // install
@@ -79,12 +76,8 @@ class Ampachelibrefm
      */
     public function uninstall()
     {
-        Preference::delete('librefm_md5_pass');
-        Preference::delete('librefm_user');
-        Preference::delete('librefm_url');
-        Preference::delete('librefm_host');
-        Preference::delete('librefm_port');
         Preference::delete('librefm_challenge');
+        Preference::delete('librefm_grant_link');
     } // uninstall
 
     /**
@@ -97,6 +90,14 @@ class Ampachelibrefm
         if ($from_version < 2) {
             Preference::rename('librefm_pass', 'librefm_md5_pass');
         }
+        if ($from_version < 3) {
+            Preference::delete('librefm_md5_pass');
+            Preference::delete('librefm_user');
+            Preference::delete('librefm_url');
+            Preference::delete('librefm_host');
+            Preference::delete('librefm_port');
+            Preference::insert('librefm_grant_link','Libre.FM Grant URL','','25','string','plugins');
+        }
         return true;
     } // upgrade
 
@@ -106,12 +107,17 @@ class Ampachelibrefm
      */
     public function save_mediaplay($song)
     {
-        
         // Only support songs
         if (strtolower(get_class($song)) != 'song') {
             return false;
         }
         
+        // Make sure there's actually a session before we keep going
+        if (!$this->challenge) {
+            debug_event($this->name,'Session key missing','5');
+            return false;
+        }
+
         // Before we start let's pull the last song submitted by this user
         $previous = Stats::get_last_song($this->user_id);
 
@@ -128,32 +134,17 @@ class Ampachelibrefm
             return false;
         }
 
-        // Make sure there's actually a username and password before we keep going
-        if (!$this->username || !$this->password) {
-            debug_event($this->name,'Username or password missing','3');
-            return false;
-        }
+        // Create our scrobbler and then queue it
+        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
-        // Create our scrobbler with everything this time and then queue it
-        $scrobbler = new scrobbler($this->username,$this->password,$this->hostname,$this->port,$this->path,$this->challenge,'turtle.libre.fm');
-
-        // Check to see if the scrobbling works
+        // Check to see if the scrobbling works by queueing song
         if (!$scrobbler->queue_track($song->f_artist_full,$song->f_album_full,$song->title,time(),$song->time,$song->track)) {
-            // Depending on the error we might need to do soemthing here
             return false;
         }
 
         // Go ahead and submit it now
         if (!$scrobbler->submit_tracks()) {
             debug_event($this->name,'Error Submit Failed: ' . $scrobbler->error_msg,'3');
-            if ($scrobbler->reset_handshake) {
-                debug_event($this->name, 'Re-running Handshake due to error', '1');
-                $this->set_handshake($this->user_id);
-                // Try try again
-                if ($scrobbler->submit_tracks()) {
-                    return true;
-                }
-            }
             return false;
         }
 
@@ -163,72 +154,66 @@ class Ampachelibrefm
     } // submit
 
     /**
-     * set_handshake
-     * This runs a handshake and properly updates the preferences as needed.
-     * It returns the data as an array so we don't have to requery the db.
-     * This requires a userid so it knows whose crap to update.
+     * set_flag
+     * This takes care of spreading your love on Libre.fm
      */
-    public function set_handshake($user_id)
+    public function set_flag($song, $flagged)
     {
-        $scrobbler = new scrobbler($this->username,$this->password,'','','','','turtle.libre.fm');
-        $data = $scrobbler->handshake();
-
-        if (!$data) {
-            debug_event($this->name,'Handshake Failed: ' . $scrobbler->error_msg,'3');
+        // Make sure there's actually a session before we keep going
+        if (!$this->challenge) {
+            debug_event($this->name,'Session key missing','5');
             return false;
         }
+        // Create our scrobbler and then queue it
+        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
+        if (!$scrobbler->love($flagged, 'song', $song->f_artist_full, $song->title, $song->f_album_full)) {
+            debug_event($this->name,'Error Love Failed: ' . $scrobbler->error_msg,'3');
+            return false;
+        }
+        debug_event($this->name,'Sent Love Successfully','5');
+        return true;
+    } // set_flag
 
-        $this->hostname = $data['submit_host'];
-        $this->port = $data['submit_port'];
-        $this->path = $data['submit_url'];
-        $this->challenge = $data['challenge'];
+    /**
+     * get_session
+     * This call the getSession method and properly updates the preferences as needed.
+     * This requires a userid so it knows whose crap to update.
+     */
+    public function get_session($user_id, $token)
+    {
+        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host,'', $this->secret);
+        $session_key = $scrobbler->get_session_key($token);
+        if (!$session_key) {
+            debug_event($this->name,'getSession Failed: ' . $scrobbler->error_msg,'3');
+            return false;
+        }
+        $this->challenge = $session_key;
 
         // Update the preferences
-        Preference::update('librefm_port',$user_id,$data['submit_port']);
-        Preference::update('librefm_host',$user_id,$data['submit_host']);
-        Preference::update('librefm_url',$user_id,$data['submit_url']);
-        Preference::update('librefm_challenge',$user_id,$data['challenge']);
+        Preference::update('librefm_challenge',$user_id,$session_key);
+        debug_event($this->name,'getSession Successful','3');
 
         return true;
-    } // set_handshake
+    } // get_session
 
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
     {
+        $this->api_key=AmpConfig::get('lastfm_api_key');
+        $this->secret='';
         $user->set_preferences();
         $data = $user->prefs;
-
-        if (strlen(trim($data['librefm_user']))) {
-            $this->username = trim($data['librefm_user']);
-        } else {
-            debug_event($this->name,'No Username, not scrobbling','3');
-            return false;
-        }
-        if (strlen(trim($data['librefm_md5_pass']))) {
-            $this->password = trim($data['librefm_md5_pass']);
-        } else {
-            debug_event($this->name,'No Password, not scrobbling','3');
-            return false;
-        }
-
         $this->user_id = $user->id;
-
-        // If we don't have the other stuff try to get it before giving up
-        if (!$data['librefm_host'] || !$data['librefm_port'] || !$data['librefm_url'] || !$data['librefm_challenge']) {
-            debug_event($this->name,'Running Handshake, missing information','3');
-            if (!$this->set_handshake($this->user_id)) {
-                debug_event($this->name,'Handshake failed, you lose','3');
-                return false;
-            }
+        // check if user have a session key
+        if (strlen(trim($data['librefm_challenge']))) {
+            $this->challenge= trim($data['librefm_challenge']);
         } else {
-            $this->hostname = $data['librefm_host'];
-            $this->port = $data['librefm_port'];
-            $this->path = $data['librefm_url'];
-            $this->challenge = $data['librefm_challenge'];
+            debug_event($this->name,'No session key, not scrobbling (need to grant Ampache to libre.fm)','5');
+            return false;
         }
 
         return true;
