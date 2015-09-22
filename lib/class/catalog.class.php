@@ -324,6 +324,9 @@ abstract class Catalog extends database_object
         $results = array();
 
         while (false !== ($file = readdir($handle))) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
             /* Make sure it is a dir */
             if (! is_dir($basedir . '/' . $file)) {
                 debug_event('catalog', $file . ' is not a directory.', 3);

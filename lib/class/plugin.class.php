@@ -96,6 +96,9 @@ class Plugin
 
         // Recurse the directory
         while (false !== ($file = readdir($handle))) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
             // Take care of directories only
             if (!is_dir($basedir . '/' . $file)) {
                 debug_event('Plugins', $file . ' is not a directory.', 3);
