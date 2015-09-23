@@ -771,9 +771,9 @@ class Subsonic_Api
         $sartist['rule_1_operator'] = $operator;
         $sartist['rule_1'] = "name";
         $sartist['type'] = "artist";
-	if ($artistCount > 0) {
-	        $artists = Search::run($sartist);
-	}
+        if ($artistCount > 0) {
+            $artists = Search::run($sartist);
+        }
 
         $salbum = array();
         $salbum['limit'] = $albumCount;
@@ -784,9 +784,9 @@ class Subsonic_Api
         $salbum['rule_1_operator'] = $operator;
         $salbum['rule_1'] = "title";
         $salbum['type'] = "album";
-	if ($albumCount > 0) {
-	        $albums = Search::run($salbum);
-	}
+        if ($albumCount > 0) {
+            $albums = Search::run($salbum);
+        }
 
         $ssong = array();
         $ssong['limit'] = $songCount;
@@ -797,9 +797,9 @@ class Subsonic_Api
         $ssong['rule_1_operator'] = $operator;
         $ssong['rule_1'] = "anywhere";
         $ssong['type'] = "song";
-	if ($songCount > 0) {
-	        $songs = Search::run($ssong);
-	}
+        if ($songCount > 0) {
+            $songs = Search::run($ssong);
+        }
 
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addSearchResult($r, $artists, $albums, $songs, $elementName);
