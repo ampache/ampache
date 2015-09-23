@@ -706,6 +706,23 @@ class Api
     } // search_songs
 
     /**
+     * advanced_search
+     * Perform an advanced search given passed rules
+     * @param array $input
+     */
+    public static function advanced_search($input)
+    {
+        ob_end_clean();
+
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
+
+        $results = Search::run($input);
+
+        echo XML_Data::songs($results);
+    } // advanced_search
+
+    /**
      * videos
      * This returns video objects!
      * @param array $input
