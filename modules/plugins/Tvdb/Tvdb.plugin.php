@@ -26,7 +26,7 @@ class AmpacheTvdb
     public $categories     = 'metadata';
     public $description    = 'Tvdb metadata integration';
     public $url            = 'http://thetvdb.com';
-    public $version        = '000001';
+    public $version        = '000002';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
     
@@ -108,15 +108,16 @@ class AmpacheTvdb
             $client = new Moinax\TvDb\Client($tvdburl, $this->api_key);
             $title = $media_info['original_name'] ?: $media_info['title'];
             
-            $results = array();
-            if (!empty($media_info['tvshow'])) {
+            if ($media_info['tvshow']) {
                 $releases = $client->getSeries($media_info['tvshow']);
-                if (count($releases) > 0) {
+                if (count($releases) == 0) {
+                    throw new Exception("TV Show not found");
+                }
                     // Get first match
-                    $release = $releases[0];
+                    $release = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                     $results['tvdb_tvshow_id'] = $release->id;
                     $results['tvshow_imdb_id'] = $release->imdbId ;
-                    $results['summary'] = $release->overview;
+                    $results['summary'] = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
                     $results['tvshow'] = $release->name;
                     if ($release->FirstAired) {
                         $results['tvshow_year'] = $release->firstAired->format('Y');
@@ -124,10 +125,12 @@ class AmpacheTvdb
                     if ($release->banner) {
                         $results['tvshow_banner_art'] = $tvdburl . '/banners/' . $release->banner;
                     }
-                    if (count($results->genres) > 0) {
-                        $results['genre'] = $results->genres;
-                    }
+                    $baseSeries = $client->getSerie($results['tvdb_tvshow_id']);
                     
+                    if (count($baseSeries->genres) > 0) {
+                        $results['genre'] = $baseSeries->genres;
+                    }
+                                        
                     $banners = $client->getBanners($results['tvdb_tvshow_id']);
                     foreach ($banners as $banner) {
                         if ($banner->language == "en") {
@@ -164,7 +167,6 @@ class AmpacheTvdb
                             }
                         }
                     }
-                }
             }
         } catch (Exception $e) {
             debug_event('tvdb', 'Error getting metadata: ' . $e->getMessage(), '1');
@@ -178,5 +180,29 @@ class AmpacheTvdb
         debug_event('Tvdb', 'gather_arts for type `' . $type . '`', 5);
         return Art::gather_metadata_plugin($this, $type, $options);
     }
+    
+    private function getReleaseByTitle($results, $title, $year)
+    {
+        $titles = array();
+        foreach ($results as $index)
+        {
+            $pos = strpos($index->name, $title);
+            if ($pos !== false) {
+                $titles[] = $index;
+            }
+        }
+    
+        if ((count($titles) > 1) && ($year != null)) {
+            foreach ($titles as $index)
+            {
+                $y = $index->firstAired->format('Y');
+                if ($year == $y) {
+                    return $index;
+                }
+            }
+        }
+        return count($titles) > 0 ? $titles[0] : $results[0];
+    }
+
 } // end AmpacheTvdb
 ?>
