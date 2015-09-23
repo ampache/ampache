@@ -706,6 +706,39 @@ class Api
     } // search_songs
 
     /**
+     * advanced_search
+     * Perform an advanced search given passed rules
+     * @param array $input
+     */
+    public static function advanced_search($input)
+    {
+        ob_end_clean();
+
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
+
+        $results = Search::run($input);
+
+        $type = 'song';
+        if (isset($input['type'])) {
+            $type = $input['type'];
+        }
+        
+        switch ($type)
+        {
+            case 'artist':
+                echo XML_Data::artists($results);
+                break;
+            case 'album':
+                echo XML_Data::albums($results);
+                break;
+            default:
+                echo XML_Data::songs($results);
+                break;
+        }
+    } // advanced_search
+
+    /**
      * videos
      * This returns video objects!
      * @param array $input
