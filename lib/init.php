@@ -112,6 +112,8 @@ require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 //require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.phpmailer.php';
 //require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.smtp.php';
 
+require_once $prefix . '/lib/vendor/bshaffer/php-echonest-api/lib/EchoNest/Autoloader.php';
+
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
 
