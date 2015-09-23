@@ -719,7 +719,23 @@ class Api
 
         $results = Search::run($input);
 
-        echo XML_Data::songs($results);
+        $type = 'song';
+        if (isset($input['type'])) {
+            $type = $input['type'];
+        }
+        
+        switch ($type)
+        {
+            case 'artist':
+                echo XML_Data::artists($results);
+                break;
+            case 'album':
+                echo XML_Data::albums($results);
+                break;
+            default:
+                echo XML_Data::songs($results);
+                break;
+        }
     } // advanced_search
 
     /**
