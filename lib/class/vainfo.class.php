@@ -1154,7 +1154,7 @@ class vainfo
        //scan for brackets, braces, etc and ignore case.
 	   for ($i=0; $i< count($commonabbr);$i++)
 	   {
-		  $commonabbr[$i] = "~\[*|\(*|\<*|\{*(?i)" . trim($commonabbr[$i]) . "\]*|\)*|\>*|\}*~";
+		  $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
 	   }
         $string = preg_replace($commonabbr,'',$name);        
         return $string;
