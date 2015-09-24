@@ -724,8 +724,7 @@ class Api
             $type = $input['type'];
         }
         
-        switch ($type)
-        {
+        switch ($type) {
             case 'artist':
                 echo XML_Data::artists($results);
                 break;
