@@ -1091,8 +1091,8 @@ class Subsonic_Api
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "song");
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
-        // if this is the case, we take the album art
-                 $song = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($id)));
+                // if this is the case, we take the album art
+                $song = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($id)));
                 $art = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
         }
