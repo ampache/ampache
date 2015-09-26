@@ -717,6 +717,11 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, $params);
         $data = Dba::fetch_row($db_results);
         $playlists = $data[0];
+        
+        $sql = 'SELECT COUNT(`id`) FROM `live_stream`';
+        $db_results = Dba::read($sql, $params);
+        $data = Dba::fetch_row($db_results);
+        $live_streams = $data[0];
 
         $results = array();
         $results['songs'] = $songs;
@@ -725,6 +730,7 @@ abstract class Catalog extends database_object
         $results['artists'] = $artists;
         $results['playlists'] = $playlists;
         $results['smartplaylists'] = $smartplaylists;
+        $results['live_streams'] = $live_streams;
         $results['size'] = $size;
         $results['time'] = $time;
 

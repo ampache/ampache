@@ -434,6 +434,30 @@ class Upnp_Api
                     break;
                 }
             break;
+            
+            case 'live_streams':
+                switch (count($pathreq)) {
+                    case 1:
+                        $counts = Catalog::count_medias();
+                        $meta = array(
+                            'id'            => $root . '/live_streams',
+                            'parentID'      => $root,
+                            'restricted'    => '1',
+                            'childCount'    => $counts['live_streams'],
+                            'dc:title'      => T_('Radio Stations'),
+                            'upnp:class'    => 'object.container',
+                        );
+                    break;
+
+                    case 2:
+                        $radio = new Live_Stream($pathreq[1]);
+                        if ($radio->id) {
+                            $radio->format();
+                            $meta = self::_itemLiveStream($radio, $root . '/live_streams');
+                        }
+                    break;
+                }
+            break;
 
             default:
                 $meta = array(
@@ -598,6 +622,20 @@ class Upnp_Api
                     break;
                 }
             break;
+            
+            case 'live_streams':
+                switch (count($pathreq)) {
+                    case 1: // Get radios list
+                        $radios = Live_Stream::get_all_radios();
+                        list($maxCount, $radios) = self::_slice($radios, $start, $count);
+                        foreach ($radios as $radio_id) {
+                            $radio = new Live_Stream($radio_id);
+                            $radio->format();
+                            $mediaItems[] = self::_itemLiveStream($radio, $parent);
+                        }
+                    break;
+                }
+            break;
 
             default:
                 $mediaItems[] = self::_musicMetadata('artists');
@@ -605,6 +643,7 @@ class Upnp_Api
                 $mediaItems[] = self::_musicMetadata('songs');
                 $mediaItems[] = self::_musicMetadata('playlists');
                 $mediaItems[] = self::_musicMetadata('smartplaylists');
+                $mediaItems[] = self::_musicMetadata('live_streams');
             break;
         }
 
@@ -956,6 +995,27 @@ class Upnp_Api
             'sampleFrequency'           => $song->rate,
             //'nrAudioChannels'           => '1',
             'description'               => self::_replaceSpecialSymbols($song->comment),
+        );
+    }
+    
+    public static function _itemLiveStream($radio, $parent)
+    {
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $art_url = Art::url($radio->id, 'live_stream', $api_session);
+
+        $fileTypesByExt = self::_getFileTypes();
+        $arrFileType = $fileTypesByExt[$radio->codec];
+
+        return array(
+            'id'                        => 'amp://music/live_streams/' . $radio->id,
+            'parentID'                  => $parent,
+            'restricted'                => '1',
+            'dc:title'                  => self::_replaceSpecialSymbols($radio->name),
+            'upnp:class'                => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
+            'upnp:albumArtURI'          => $art_url,
+
+            'res'                       => $radio->url,
+            'protocolInfo'              => $arrFileType['mime']
         );
     }
 
