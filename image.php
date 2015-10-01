@@ -113,8 +113,8 @@ if (!$typeManaged) {
                 $defaultimg .= "blankmovie.png";
                 break;
             default:
-                $mime = 'image/jpeg';
-                $defaultimg .= "blankalbum.jpg";
+                $mime = 'image/png';
+                $defaultimg .= "blankalbum.png";
             break;
         }
         $image = file_get_contents($defaultimg);
