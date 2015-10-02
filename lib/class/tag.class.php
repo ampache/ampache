@@ -365,7 +365,7 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($this->id));
 
         $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? ";
-        Dba::write($sql, array($this->id, $this->id));
+        Dba::write($sql, array($this->id));
 
         // Call the garbage collector to clean everything
         Tag::gc();
