@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 31
+config_version = 32
 
 
 ;#########################################################
@@ -886,7 +886,7 @@ transcode_player_customize = "true"
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename
-; %SAMPLE% => target sample rate
+; %BITRATE% => target bit rate
 ; You can do fancy things like VBR, but consider whether the consequences are
 ; acceptable in your environment.
 
@@ -915,11 +915,11 @@ transcode_input = "-i %FILE%"
 ; For each output format, you should provide the necessary arguments for
 ; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
-encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
-encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
-encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
-encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+encode_args_mp3 = "-vn -b:a %BITRATE%K -c:a libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a %BITRATE%K -c:a libvorbis -f ogg pipe:1"
+encode_args_m4a = "-vn -b:a %BITRATE%K -c:a libfdk_aac -f adts pipe:1"
+encode_args_wav = "-vn -b:a %BITRATE%K -c:a pcm_s16le -f wav pipe:1"
+encode_args_flv = "-b:a %BITRATE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
 encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 

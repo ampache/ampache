@@ -55,7 +55,7 @@ function update_preferences($pref_id=0)
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
-            case 'sample_rate':
+            case 'transcode_bitrate':
                 $value = Stream::validate_bitrate($value);
             break;
             default:
