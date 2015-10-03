@@ -514,6 +514,9 @@ class Update
         $update_string = " - Add theme color option.<br />";
         $version[] = array('version' => '370038','description' => $update_string);
 
+        $update_string = " - Renamed false named sample_rate option name in preference table.<br />";
+        $version[] = array('version' => '370039','description' => $update_string);
+
         return $version;
     }
 
@@ -3516,7 +3519,7 @@ class Update
 
         return $retval;
     }
-    
+
     /**
      * update_370036
      *
@@ -3531,7 +3534,7 @@ class Update
 
         return $retval;
     }
-    
+
     /**
      * update_370037
      *
@@ -3546,7 +3549,7 @@ class Update
 
         return $retval;
     }
-    
+
     /**
      * update_370038
      *
@@ -3562,6 +3565,21 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'dark')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370039
+     *
+     * Renamed false named sample_rate option name in preference table
+     */
+    public static function update_370039()
+    {
+        $retval = true;
+
+        $sql = "UPDATE `preference` SET `name` = 'transcode_bitrate' WHERE `preference`.`name` = 'sample_rate'";
+        $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
     }
