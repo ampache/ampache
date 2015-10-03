@@ -172,6 +172,7 @@ class Stream
 
         $string_map = array(
             '%FILE%'   => $song_file,
+            '%SAMPLE%' => $bit_rate,   // Deprecated
             '%BITRATE%' => $bit_rate
         );
         if (isset($options['maxbitrate'])) {

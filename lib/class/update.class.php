@@ -3578,7 +3578,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "UPDATE `preference` SET `name` = 'transcode_bitrate' WHERE `preference`.`id` = 19";
+        $sql = "UPDATE `preference` SET `name` = 'transcode_bitrate' WHERE `preference`.`name` = 'sample_rate'";
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
