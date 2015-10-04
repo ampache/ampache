@@ -1656,6 +1656,7 @@ class Song extends database_object implements media, library_item
             }
         }
         $sql .= "ORDER BY `date` DESC ";
+        $sql .= "LIMIT " . intval(AmpConfig::get('popular_threshold')) . " ";
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -1665,9 +1666,6 @@ class Song extends database_object implements media, library_item
                 $row['geo_name'] = Stats::get_cached_place_name($row['latitude'], $row['longitude']);
             }
             $results[] = $row;
-            if (count($results) >= AmpConfig::get('popular_threshold')) {
-                break;
-            }
         }
 
         return $results;
