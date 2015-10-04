@@ -823,7 +823,7 @@ class Song extends database_object implements media, library_item
         unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
 
         $array = array();
-        $string_array = array('title','comment','lyrics');
+        $string_array = array('title','comment','lyrics','composer','tags');
         $skip_array = array('id','tag_id','mime','artist_mbid','album_mbid','albumartist_mbid','albumartist','mbid','mb_albumid_group','waveform','object_cnt');
 
         // Pull out all the currently set vars
@@ -831,15 +831,33 @@ class Song extends database_object implements media, library_item
 
         // Foreach them
         foreach ($fields as $key=>$value) {
-            if (in_array($key,$skip_array)) {
+            $key = trim($key);
+            if (empty($key) || in_array($key,$skip_array)) {
                 continue;
             }
 
-            $songData = is_array($song->$key) ? implode(" ", $song->$key) : $song->$key;
-            $newSongData = is_array($new_song->$key) ? implode(" ", $new_song->$key) : $new_song->$key;
+            // Represent the value as a string for simpler comparaison.
+            // For array, ensure to sort similarly old/new values
+            if (is_array($song->$key)) {
+                $arr = $song->$key;
+                sort($arr);
+                $songData = implode(" ", $arr);
+            } else {
+                $songData = $song->$key;
+            }
+            if (is_array($new_song->$key)) {
+                $arr = $new_song->$key;
+                sort($arr);
+                $newSongData = implode(" ", $arr);
+            } else {
+                $newSongData = $new_song->$key;
+            }
+            
             // If it's a stringie thing
             if (in_array($key, $string_array)) {
-                if (trim(stripslashes($songData)) != trim(stripslashes($newSongData))) {
+                $songData = self::clean_string_field_value($songData);
+                $newSongData = self::clean_string_field_value($newSongData);
+                if ($songData != $newSongData) {
                     $array['change'] = true;
                     $array['element'][$key] = 'OLD: ' . $songData . ' --> ' . $newSongData;
                 }
@@ -859,6 +877,17 @@ class Song extends database_object implements media, library_item
         return $array;
     } // compare_song_information
 
+    private static function clean_string_field_value($value)
+    {
+        $value = trim(stripslashes(preg_replace('/\s+/', ' ', $value)));
+        
+        // Strings containing  only UTF-8 BOM = empty string
+        if (strlen($value) == 2 && (ord($value[0]) == 0xFF || ord($value[0]) == 0xFE)) {
+            $value = "";
+        }
+        
+        return $value;
+    }
 
     /**
      * update
