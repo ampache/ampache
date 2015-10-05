@@ -40,7 +40,7 @@ class VlcPlayer
      * with port 8080
      * i would change this to another value then standard 8080, it gets used by more things
      */
-    public function VlcPlayer($h = "localhost", $pw = "", $p = 8080)
+    public function __construct($h = "localhost", $pw = "", $p = 8080)
     {
         $this->host = $h;
         $this->port = $p;

@@ -67,7 +67,7 @@ class UPnPPlayer
      * UPnPPlayer
      * This is the constructor,
      */
-    public function UPnPPlayer($name = "noname", $description_url = "http://localhost")
+    public function __construct($name = "noname", $description_url = "http://localhost")
     {
         require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/upnpdevice.php';
         require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/upnpplaylist.php';

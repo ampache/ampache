@@ -156,7 +156,7 @@ class easy_captcha {
 
 
    #-- init data
-   function easy_captcha($id=NULL, $ignore_expiration=0) {
+   function __construct($id=NULL, $ignore_expiration=0) {
 
       #-- load
       if (($this->id = $id) or ($this->id = preg_replace("/[^-,.\w]+/", "", @$_REQUEST[CAPTCHA_PARAM_ID]))) {
@@ -464,7 +464,7 @@ class easy_captcha_fuzzy extends easy_captcha {
 class easy_captcha_graphic extends easy_captcha_fuzzy {
 
    #-- config
-   function easy_captcha_graphic($x=NULL, $y=NULL) {
+   function __construct($x=NULL, $y=NULL) {
       if (!$y) {
          $x = strtok(CAPTCHA_IMAGE_SIZE, "x,|/*;:");
          $y = strtok(",.");
@@ -719,7 +719,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic {
 class easy_captcha_dxy_wave {
 
    #-- init params
-   function easy_captcha_dxy_wave($max_x, $max_y) {
+   function __construct($max_x, $max_y) {
       $this->dist_x = $this->real_rand(2.5, 3.5);     // max +-x/y delta distance
       $this->dist_y = $this->real_rand(2.5, 3.5);
       $this->slow_x = $this->real_rand(7.5, 20.0);    // =wave-width in pixel/3
@@ -886,7 +886,7 @@ class easy_captcha_text_math_formula extends easy_captcha {
    var $solution = "2";
 
    #-- set up
-   function easy_captcha_text_math_formula() {
+   function __construct() {
       $this->question = sprintf(CAPTCHA_WHATIS_TEXT, $this->create_formula());
       $this->solution = $this->calculate_formula($this->question);
       // we could do easier with iterated formula+result generation here, of course
@@ -954,7 +954,7 @@ class easy_captcha_text_disable extends easy_captcha {
 #   (should be identical in each instantiation, cookie is time-bombed)
 class easy_captcha_persistent_grant extends easy_captcha {
 
-   function easy_captcha_persistent_grant() {
+   function __construct() {
    }
    
 

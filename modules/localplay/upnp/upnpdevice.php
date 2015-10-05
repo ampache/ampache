@@ -10,7 +10,7 @@ class UPnPDevice
     );
 
 
-    public function UPnPDevice($descriptionUrl)
+    public function __construct($descriptionUrl)
     {
         if (! $this->restoreDescriptionUrl($descriptionUrl)) {
             $this->parseDescriptionUrl($descriptionUrl);

@@ -31,7 +31,7 @@ class UPnPPlaylist
     /*
      * Playlist is its own for each UPnP device
      */
-    public function UPnPPlaylist($deviceGUID)
+    public function __construct($deviceGUID)
     {
         $this->_deviceGUID = $deviceGUID;
         $this->PlayListRead();

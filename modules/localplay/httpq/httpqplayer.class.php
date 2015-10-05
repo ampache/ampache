@@ -37,7 +37,7 @@ class HttpQPlayer
      * This is the constructor, it defaults to localhost
      * with port 4800
      */
-    public function HttpQPlayer($h = "localhost", $pw = "", $p = 4800)
+    public function __construct($h = "localhost", $pw = "", $p = 4800)
     {
         $this->host = $h;
         $this->port = $p;
