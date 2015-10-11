@@ -1555,7 +1555,7 @@ abstract class Catalog extends database_object
         return $info;
     } // update_song_from_tags
 
-    public function update_video_from_tags($results, Video $video)
+    public static function update_video_from_tags($results, Video $video)
     {
         // TODO: implement this
         return null;
