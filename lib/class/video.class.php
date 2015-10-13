@@ -542,7 +542,7 @@ class Video extends database_object implements media, library_item
         $release_date   = intval($data['release_date']);
         // No release date, then release date = production year
         if (!$release_date && $data['year']) {
-            $release_date = strtotime($data['year'] . '01-01');
+            $release_date = strtotime(strval($data['year']) . '-01-01');
         }
         $tags           = $data['genre'];
         $channels       = intval($data['channels']);

@@ -26,7 +26,7 @@ class AmpacheTmdb
     public $categories     = 'metadata';
     public $description    = 'Tmdb metadata integration';
     public $url            = 'https://www.themoviedb.org';
-    public $version        = '000001';
+    public $version        = '000002';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
     
@@ -113,9 +113,9 @@ class AmpacheTmdb
             $title = $media_info['original_name'] ?: $media_info['title'];
             
             $results = array();
-            if (in_array('movie', $gather_types)) {
-                if (!empty($title)) {
-                    $apires = $client->getSearchApi()->searchMovies($title);
+             if (in_array('movie', $gather_types)) {
+                if (!empty($media_info['title'])) {
+                    $apires = $client->getSearchApi()->searchMovies($media_info['title']);
                     if (count($apires['results']) > 0) {
                         $results['tmdb_id'] = $apires['results'][0]['id'];
                         $release = $client->getMoviesApi()->getMovie($results['tmdb_id']);
@@ -169,10 +169,10 @@ class AmpacheTmdb
                                         $results['tvshow_episode'] = $release['episode_number'];
                                         $results['original_name'] = $release['name'];
                                         if (!empty($release['air_date'])) {
-                                            $results['release_date'] = strtotime($release['release_date']);
+                                            $results['release_date'] = strtotime($release['air_date']);
                                             $results['year'] = date("Y", $results['release_date']);
                                         }
-                                        $results['description'] = $release['overview'];
+                                        $results['summary'] = $release['overview'];
                                         if ($release['still_path']) {
                                             $results['art'] = $imageHelper->getUrl($release['still_path']);
                                         }
