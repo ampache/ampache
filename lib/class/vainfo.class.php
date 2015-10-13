@@ -348,10 +348,7 @@ class vainfo
             $info['file'] = $info['file'] ?: $tags['file'];
             $info['bitrate'] = $info['bitrate'] ?: intval($tags['bitrate']);
             $info['rate'] = $info['rate'] ?: intval($tags['rate']);
-            $info['mode'] = $info['mode'] ?: $tags['modExpand/Collapse
-
-                
-            e'];
+            $info['mode'] = $info['mode'] ?: $tags['mode'];
             // size will be added later, because of conflicts between real file size and getID3 reported filesize
             $info['mime'] = $info['mime'] ?: $tags['mime'];
             $info['encoding'] = $info['encoding'] ?: $tags['encoding'];
@@ -1063,37 +1060,51 @@ class vainfo
                             $temp = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
                             $season[0] = $seasonEpisode[1];
                             $episode[0] = $seasonEpisode[2];
-                        } else {
-                            // Prepare to get tv show name and season from folder path
-                            $folders = preg_split("$slash_type",$filepath, -1,PREG_SPLIT_NO_EMPTY);
- 	                        $folders = array_reverse($folders);
- 	                        //match pattern like 10.episode name.mp4
- 	                        if (preg_match("~^(\d\d)[\_\-\.\s]?(.*)~", $file, $temp)) {
-                               $temp = array_reverse($temp);
-	                           preg_match("~^(\d+)~", $file, $episode);
-                               preg_match("~\d+\z~", $folders[1], $season);
-	                           array_unshift($temp, $folders[2]);
-                            } else {
-                                //Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
-                                preg_match("~(\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode);
-                                $season[0] = $seasonEpisode[1];
-                                $episode[0] = $seasonEpisode[2];
-                                $temp[] = $folders[2]; 
-                            }
-                         }
+                        }
                     }
                 }
             }
             $results['tvshow_season'] = $season[0];
             $results['tvshow_episode'] = $episode[0];
-            $results['tvshow'] = $results['title'] = ucwords(trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',$temp[0]),"\s\t\n\r\0\x0B\.\_\-")));
-            $results['original_name'] = ucwords(trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ',$temp[1]),"\s\t\n\r\0\x0B\.\_\-")));
+            $results['tvshow'] = $this->formatVideoName($temp[0]);
+            $results['original_name'] = $this->formatVideoName($temp[1]);
+
+            // Try to identify the show information from parent folder
+            if (!$results['tvshow']) {
+                $folders = preg_split($slash_type, $filepath, -1, PREG_SPLIT_NO_EMPTY);
+                if ($results['tvshow_season'] && $results['tvshow_episode']) {
+                    // We have season and episode, we assume parent folder is the tvshow name
+                    $filetitle = end($folders);
+                    $results['tvshow'] = $this->formatVideoName($filetitle);
+                } else {
+                    // Or we assume each parent folder contains one missing information
+                    if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filepath, $matches)) {
+                        if ($matches != null) {
+                            $results['tvshow'] = $this->formatVideoName($matches[1]);
+                            $results['tvshow_season'] = $matches[2];
+                            if (isset($matches[5])) {
+                                $results['tvshow_episode'] = $matches[5];
+                            } else {
+                                //match pattern like 10.episode name.mp4
+                                if (preg_match("~^(\d\d)[\_\-\.\s]?(.*)~", $file, $matches)) {
+                                    $results['tvshow_episode'] = $matches[1];
+                                    $results['original_name'] = $this->formatVideoName($matches[2]);
+                                } else {
+                                    //Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
+                                    preg_match("~(\d)(\d\d)[\_\-\.\s]*~", $file, $matches);
+                                    $results['tvshow_episode'] = $matches[2];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $results['title'] = $results['tvshow'];
         }
     
         if (in_array('movie', $this->gather_types)) {
-            $string = $this->removeCommonAbbreviations($file);
-            $results['title'] = ucwords(str_replace(['.','_'], ' ',trim($string, " \t\n\r\0\x0B\.\_\-")));
-            $results['original_name'] = $results['title'];
+            $results['original_name'] = $results['title'] = $this->formatVideoName($file);
         }
         
         if (in_array('music', $this->gather_types) || in_array('clip', $this->gather_types)) {
@@ -1154,6 +1165,11 @@ class vainfo
 	   }
         $string = preg_replace($commonabbr,'',$name);        
         return $string;
+    }
+    
+    private function formatVideoName($name)
+    {
+        return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ', $name), "\s\t\n\r\0\x0B\.\_\-")));
     }
 
 
