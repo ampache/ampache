@@ -39,7 +39,7 @@ if ($albums) {
             <?php if (Art::is_enabled()) {
     ?>
                     <img src="<?php echo $web_path;
-    ?>/image.php?thumb=3&object_id=<?php echo $album_id;
+    ?>/image.php?thumb=1&object_id=<?php echo $album_id;
     ?>&object_type=album" alt="<?php echo $name;
     ?>" title="<?php echo $name;
     ?>" />
