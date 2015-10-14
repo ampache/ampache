@@ -37,7 +37,7 @@ $video_type = strtolower(get_class($libitem));
             </tr>
 <?php
 if ($video_type != 'video') {
-    require AmpConfig::get('prefix') . '/templates/show_partial_edit_' . $video_type . '_row.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_partial_edit_' . $video_type . '_row.inc.php');
 }
 ?>
             <tr>

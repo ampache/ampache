@@ -60,7 +60,7 @@ class AmazonSearch
     /**
      * Class Constructor
      */
-    function AmazonSearch($public_key, $private_key, $associate_tag, $base_url_param = '')
+    function __construct($public_key, $private_key, $associate_tag, $base_url_param = '')
     {
 
         /* If we have a base url then use it */

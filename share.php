@@ -49,7 +49,7 @@ switch ($action) {
             $object = new $type($oid);
             if ($object->id) {
                 $object->format();
-                require_once AmpConfig::get('prefix') . '/templates/show_add_share.inc.php';
+                require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
             }
         }
         UI::show_footer();
@@ -69,7 +69,7 @@ switch ($action) {
         $id = Share::create_share($_REQUEST['type'], $_REQUEST['id'], $_REQUEST['allow_stream'], $_REQUEST['allow_download'], $_REQUEST['expire'], $_REQUEST['secret'], $_REQUEST['max_counter']);
 
         if (!$id) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_share.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
         } else {
             $share = new Share($id);
             $body = T_('Share created.') . '<br />' .
@@ -191,7 +191,7 @@ if ($action == 'download') {
         require AmpConfig::get('prefix') . '/batch.php';
     }
 } elseif ($action == 'stream') {
-    require AmpConfig::get('prefix') . '/templates/show_share.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_share.inc.php');
 } else {
     debug_event('UI::access_denied', 'Access Denied: unknown action.', '3');
     UI::access_denied();

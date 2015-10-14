@@ -21,7 +21,7 @@
  */
 
 require_once '../lib/init.php';
-require_once AmpConfig::get('prefix') . '/modules/catalog/local.catalog.php';
+require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.php';
 
 if (!Access::check('interface','100')) {
     UI::access_denied();
@@ -45,13 +45,12 @@ if (is_array($catalogs) && count($catalogs) == 1 && $_REQUEST['action'] !== 'del
         }
     }
 }
-$sse_catalogs = urlencode(serialize($catalogs));
+
 
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
     case 'add_to_all_catalogs':
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=add_to_all_catalogs";
-        sse_worker($sse_url);
+        catalog_worker('add_to_all_catalogs');
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'add_to_catalog':
@@ -59,13 +58,11 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=add_to_catalog&catalogs=" . $sse_catalogs;
-        sse_worker($sse_url);
+        catalog_worker('add_to_catalog', $catalogs);
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_all_catalogs':
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_all_catalogs";
-        sse_worker($sse_url);
+        catalog_worker('update_all_catalogs');
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_catalog':
@@ -73,8 +70,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_catalog&catalogs=" . $sse_catalogs;
-        sse_worker($sse_url);
+        catalog_worker('update_catalog', $catalogs);
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'full_service':
@@ -83,8 +79,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=full_service&catalogs=" . $sse_catalogs;
-        sse_worker($sse_url);
+        catalog_worker('full_service', $catalogs);
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'delete_catalog':
@@ -136,13 +131,11 @@ switch ($_REQUEST['action']) {
         show_confirmation($title,$body,$url);
     break;
     case 'clean_all_catalogs':
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=clean_all_catalogs";
-        sse_worker($sse_url);
+        catalog_worker('clean_all_catalogs');
         show_confirmation(T_('Catalog Clean started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'clean_catalog':
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=clean_catalog&catalogs=" . $sse_catalogs;
-        sse_worker($sse_url);
+        catalog_worker('clean_catalog', $catalogs);
         show_confirmation(T_('Catalog Clean started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_catalog_settings':
@@ -164,8 +157,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=update_from&add_path=" . scrub_in($_POST['add_path']) . "&update_path=" . $_POST['update_path'];
-        sse_worker($sse_url);
+        catalog_worker('update_from', null, $_POST);
         show_confirmation(T_('Subdirectory update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'add_catalog':
@@ -194,16 +186,15 @@ switch ($_REQUEST['action']) {
             $catalog_id = Catalog::create($_POST);
 
             if (!$catalog_id) {
-                require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
+                require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
                 break;
             }
 
-            $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=add_catalog&catalog_id=" . $catalog_id . "&options=" . urlencode(serialize($_POST));
-            sse_worker($sse_url);
-
+            $catalogs[] = $catalog_id;
+            catalog_worker('add_to_catalog', $catalogs, $_POST);
             show_confirmation(T_('Catalog Creation started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
         } else {
-            require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
         }
     break;
     case 'clear_stats':
@@ -218,7 +209,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'show_add_catalog':
-        require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
     break;
     case 'clear_now_playing':
         if (AmpConfig::get('demo_mode')) {
@@ -236,7 +227,7 @@ switch ($_REQUEST['action']) {
 
         $songs = Song::get_disabled();
         if (count($songs)) {
-            require AmpConfig::get('prefix') . '/templates/show_disabled_songs.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_disabled_songs.inc.php');
         } else {
             echo "<div class=\"error\" align=\"center\">" . T_('No Disabled songs found') . "</div>";
         }
@@ -255,16 +246,15 @@ switch ($_REQUEST['action']) {
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $catalog->format();
-        require_once AmpConfig::get('prefix') . '/templates/show_edit_catalog.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_edit_catalog.inc.php');
     break;
     case 'gather_media_art':
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=gather_media_art&catalogs=" . $sse_catalogs;
-        sse_worker($sse_url);
+        catalog_worker('gather_media_art', $catalogs);
         show_confirmation(T_('Media Art Search started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'show_catalogs':
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_manage_catalogs.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_manage_catalogs.inc.php');
     break;
 } // end switch
 

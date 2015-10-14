@@ -41,10 +41,10 @@ switch ($action) {
             Error::add('general', T_('Password has not been sent'));
         }
 
-        require AmpConfig::get('prefix') . '/templates/show_login_form.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');
         break;
     default:
-        require AmpConfig::get('prefix') . '/templates/show_lostpassword_form.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_lostpassword_form.inc.php');
 }
 
 function send_newpassword($email,$current_ip)

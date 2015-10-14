@@ -83,7 +83,7 @@ switch ($_REQUEST['action']) {
         //FIXME: This whole thing is ugly, even though it works.
         $browse->set_sort('count','ASC');
         // This one's a doozy
-        $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'song';
+        $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'artist';
         $browse->set_simple_browse(false);
         $browse->save_objects(Tag::get_tags($browse_type, 0, 'name'));   // Should add a pager?
         $object_ids = $browse->get_saved();
@@ -93,10 +93,10 @@ switch ($_REQUEST['action']) {
         $browse2 = new Browse();
         $browse2->set_type($browse_type);
         $browse2->store();
-        require_once AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_tagcloud.inc.php');
         UI::show_box_bottom();
         $type = $browse2->get_type();
-        require_once AmpConfig::get('prefix') . '/templates/browse_content.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('browse_content.inc.php');
     break;
     case 'artist':
         $browse->set_filter('catalog',$_SESSION['catalog']);

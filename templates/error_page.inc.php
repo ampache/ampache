@@ -30,8 +30,8 @@
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
 <?php UI::show_custom_style(); ?>
 <title><?php echo( T_("Ampache error page"));?></title>
-<link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
 </head>
 <body>

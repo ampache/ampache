@@ -55,7 +55,7 @@ function update_preferences($pref_id=0)
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
-            case 'sample_rate':
+            case 'transcode_bitrate':
                 $value = Stream::validate_bitrate($value);
             break;
             default:
@@ -309,6 +309,21 @@ function create_preference_input($name,$value)
             } // foreach themes
             echo "</select>\n";
         break;
+        case 'theme_color':
+            // This include a two-step configuration (first change theme and save, then change theme color and save)
+            $theme_cfg = get_theme(AmpConfig::get('theme_name'));
+            if ($theme_cfg !== null) {
+                echo "<select name=\"$name\">\n";
+                foreach ($theme_cfg['colors'] as $color) {
+                    $is_selected = "";
+                    if ($value == strtolower($color)) {
+                        $is_selected = "selected=\"selected\"";
+                    }
+                    echo "\t<option value=\"" . strtolower($color) . "\" $is_selected>" . $color . "</option>\n";
+                } // foreach themes
+                echo "</select>\n";
+            }
+        break;
         case 'playlist_method':
             ${$value} = ' selected="selected"';
             echo "<select name=\"$name\">\n";
@@ -364,6 +379,16 @@ function create_preference_input($name,$value)
             echo "\t<option value=\"name_asc\" $is_sort_name_asc>" . T_('Name ascending') . "</option>\n";
             echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
             echo "</select>\n";
+        break;
+        case 'lastfm_grant_link':
+        case 'librefm_grant_link':
+            // construct links for granting access Ampache application to Last.fm and Libre.fm
+            $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
+            $plugin = new Plugin($plugin_name);
+            $url = $plugin->_plugin->url;
+            $api_key = rawurlencode(AmpConfig::get('lastfm_api_key'));
+            $callback = rawurlencode(AmpConfig::get('web_path').'/preferences.php?tab=plugins&action=grant&plugin='.$plugin_name);
+            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', T_("Click for grant Ampache to ").$plugin_name).'</a>';
         break;
         default:
             if (preg_match('/_pass$/', $name)) {

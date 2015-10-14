@@ -461,17 +461,35 @@ class Preference extends database_object
 
         /* Set the Theme mojo */
         if (strlen($results['theme_name']) > 0) {
-            $results['theme_path'] = '/themes/' . $results['theme_name'];
             // In case the theme was removed
-            if (!Core::is_readable(AmpConfig::get('prefix') . $results['theme_path'])) {
-                unset($results['theme_path']);
+            if (!Core::is_readable(AmpConfig::get('prefix') . '/themes/' . $results['theme_name'])) {
+                unset($results['theme_name']);
             }
+        } else {
+            unset($results['theme_name']);
         }
         // Default theme if we don't get anything from their
         // preferences because we're going to want at least something otherwise
         // the page is going to be really ugly
-        if (!isset($results['theme_path'])) {
-            $results['theme_path'] = '/themes/reborn';
+        if (!isset($results['theme_name'])) {
+            $results['theme_name'] = 'reborn';
+        }
+        $results['theme_path'] = '/themes/' . $results['theme_name'];
+        
+        // Load theme settings
+        $themecfg = get_theme($results['theme_name']);
+        $results['theme_css_base'] = $themecfg['base'];
+        
+        if (strlen($results['theme_color']) > 0) {
+            // In case the color was removed
+            if (!Core::is_readable(AmpConfig::get('prefix') . '/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {
+                unset($results['theme_color']);
+            }
+        } else {
+            unset($results['theme_color']);
+        }
+        if (!isset($results['theme_color'])) {
+            $results['theme_color'] = strtolower($themecfg['colors'][0]);
         }
 
         AmpConfig::set_by_array($results, true);

@@ -96,14 +96,24 @@ class Playlist extends playlist_object
             $user_id = $GLOBALS['user']->id;
         }
 
-        $sql = 'SELECT `id` FROM `playlist`' .
-               ' WHERE `user` = ?';
+        $sql = 'SELECT `id` FROM `playlist`';
+        $params = array();
+        if ($user_id > -1) {
+            $sql .= ' WHERE `user` = ?';
+            $params[] = $user_id;
+        }
+               
         if ($incl_public) {
-            $sql .= " OR `type` = 'public'";
+            if (count($params) > 0) {
+                $sql .= ' OR ';
+            } else {
+                $sql .= ' WHERE ';
+            }
+            $sql .= "`type` = 'public'";
         }
         $sql .= ' ORDER BY `name`';
 
-        $db_results = Dba::read($sql, array($user_id));
+        $db_results = Dba::read($sql, $params);
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];

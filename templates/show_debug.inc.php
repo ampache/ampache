@@ -136,17 +136,23 @@
     if (Preference::is_boolean($key)) {
         $value = print_bool($value);
     }
-    ?>
+    
+    // Be sure to print only scalar values
+    if ($value === null || is_scalar($value)) {
+        ?>
             <tr class="<?php echo UI::flip_class();
-    ?>">
+        ?>">
                 <td valign="top"><strong><?php echo $key;
-    ?></strong></td>
+        ?></strong></td>
                 <td><?php echo $value;
-    ?></td>
+        ?></td>
             </tr>
+<?php
+
+    }
+}
+?>
             </tbody>
-            <?php 
-} ?>
         </table>
     <?php UI::show_box_bottom(); ?>
 

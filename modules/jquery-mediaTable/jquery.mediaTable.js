@@ -1,4 +1,12 @@
 /**
+   #####################################################################
+   #                               Warning                             #
+   #                               #######                             #
+   # This external file is Ampache-adapted and probably unsynced with  #
+   # origin because abandonned by its original authors.                #
+   #                                                                   #
+   #####################################################################
+   
 Copyright (c) 2012 Marco Pegoraro, http://movableapp.com/
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -25,8 +33,6 @@ WHERE TO FIND MEDIA TABLE:
 https://github.com/thepeg/MediaTable
 http://consulenza-web.com/jquery/MediaTable/
 http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
-
-**Modified version for Ampache.**
 
 **/
 

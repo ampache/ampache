@@ -39,7 +39,7 @@ set_time_limit(300);
 
 // Write/close session data to release session lock for this script.
 // This to allow other pages from the same session to be processed
-// Do NOT change any session variable after this call
+// Warning: Do not change any session variable after this call
 session_write_close();
 
 $id = $_REQUEST['song_id'];

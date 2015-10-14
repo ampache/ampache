@@ -39,4 +39,4 @@ if (AmpConfig::get('use_auth') && !isset($_GET['force_display'])) {
 }
 require_once 'lib/login.php';
 
-require AmpConfig::get('prefix') . '/templates/show_login_form.inc.php';
+require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');

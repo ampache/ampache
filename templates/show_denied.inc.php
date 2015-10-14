@@ -24,6 +24,8 @@ $logo_url = AmpConfig::get('custom_login_logo');
 if (empty($logo_url)) {
     $logo_url = AmpConfig::get('web_path') . "/themes/reborn/images/ampache.png";
 }
+
+$web_path = AmpConfig::get('web_path');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html lang="en-US">
@@ -32,9 +34,9 @@ if (empty($logo_url)) {
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Ampache -- Debug Page</title>
         <?php UI::show_custom_style(); ?>
-        <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/install-doped.css" type="text/css" media="screen" />
+        <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('install-doped.css'); ?>" type="text/css" media="screen" />
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

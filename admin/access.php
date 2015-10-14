@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
             show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'),$url);
         } else {
             $action = 'show_add_' . $_POST['type'];
-            require_once AmpConfig::get('prefix') . '/templates/show_add_access.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
         }
     break;
     case 'update_record':
@@ -88,7 +88,7 @@ switch ($_REQUEST['action']) {
             show_confirmation(T_('Updated'), T_('Access List Entry updated'), AmpConfig::get('web_path').'/admin/access.php');
         } else {
             $access->format();
-            require_once AmpConfig::get('prefix') . '/templates/show_edit_access.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
         }
     break;
     case 'show_add_current':
@@ -96,17 +96,17 @@ switch ($_REQUEST['action']) {
     case 'show_add_local':
     case 'show_add_advanced':
         $action = $_REQUEST['action'];
-        require_once AmpConfig::get('prefix') . '/templates/show_add_access.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
     break;
     case 'show_edit_record':
         $access = new Access($_REQUEST['access_id']);
         $access->format();
-        require_once AmpConfig::get('prefix') . '/templates/show_edit_access.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
     break;
     default:
         $list = array();
         $list = Access::get_access_lists();
-        require_once AmpConfig::get('prefix') .'/templates/show_access_list.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_access_list.inc.php');
     break;
 } // end switch on action
 UI::show_footer();

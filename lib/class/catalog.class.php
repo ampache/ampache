@@ -221,7 +221,7 @@ abstract class Catalog extends database_object
     /**
      * create_catalog_type
      * This function attempts to create a catalog type
-     * all Catalog modules should be located in /modules/catalog/<name>.class.php
+     * all Catalog modules should be located in /modules/catalog/<name>/<name>.class.php
      * @param string $type
      * @param int $id
      * @return Catalog|null
@@ -232,7 +232,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
+        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '/' . $type . '.catalog.php';
         $include = require_once $filename;
 
         if (!$include) {
@@ -313,7 +313,8 @@ abstract class Catalog extends database_object
     public static function get_catalog_types()
     {
         /* First open the dir */
-        $handle = opendir(AmpConfig::get('prefix') . '/modules/catalog');
+        $basedir = AmpConfig::get('prefix') . '/modules/catalog';
+        $handle = opendir($basedir);
 
         if (!is_resource($handle)) {
             debug_event('catalog', 'Error: Unable to read catalog types directory', '1');
@@ -323,16 +324,22 @@ abstract class Catalog extends database_object
         $results = array();
 
         while (false !== ($file = readdir($handle))) {
-            if (substr($file, -11, 11) != 'catalog.php') {
+            if ($file === '.' || $file === '..') {
                 continue;
             }
-
-            /* Make sure it isn't a dir */
-            if (!is_dir($file)) {
-                /* Get the basename and then everything before catalog */
-                $filename = basename($file, '.catalog.php');
-                $results[] = $filename;
+            /* Make sure it is a dir */
+            if (! is_dir($basedir . '/' . $file)) {
+                debug_event('catalog', $file . ' is not a directory.', 3);
+                continue;
             }
+            
+            // Make sure the plugin base file exists inside the plugin directory
+            if (! file_exists($basedir . '/' . $file . '/' . $file . '.catalog.php')) {
+                debug_event('catalog', 'Missing class for ' . $file, 3);
+                continue;
+            }
+            
+            $results[] = $file;
         } // end while
 
         return $results;
@@ -613,7 +620,7 @@ abstract class Catalog extends database_object
         }
 
         $insert_id = 0;
-        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
+        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '/' . $type . '.catalog.php';
         $include = require_once $filename;
 
         if ($include) {
@@ -710,6 +717,11 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, $params);
         $data = Dba::fetch_row($db_results);
         $playlists = $data[0];
+        
+        $sql = 'SELECT COUNT(`id`) FROM `live_stream`';
+        $db_results = Dba::read($sql, $params);
+        $data = Dba::fetch_row($db_results);
+        $live_streams = $data[0];
 
         $results = array();
         $results['songs'] = $songs;
@@ -718,6 +730,7 @@ abstract class Catalog extends database_object
         $results['artists'] = $artists;
         $results['playlists'] = $playlists;
         $results['smartplaylists'] = $smartplaylists;
+        $results['live_streams'] = $live_streams;
         $results['size'] = $size;
         $results['time'] = $time;
 
@@ -943,7 +956,8 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
-        $sql = "SELECT `artist`.id, `artist`.`name`, `artist`.`summary` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " .
+        $sql = "SELECT `artist`.id, `artist`.`name`, `artist`.`summary`, (SELECT COUNT(DISTINCT album) from `song` as `inner_song` WHERE `inner_song`.`artist` = `song`.`artist`) AS `albums`" .
+                "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " .
                 $sql_where .
                 "GROUP BY `song`.artist ORDER BY `artist`.`name` " .
                 $sql_limit;
@@ -1598,7 +1612,7 @@ abstract class Catalog extends database_object
         debug_event('clean', 'Starting on ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . '/templates/show_clean_catalog.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_clean_catalog.inc.php');
             ob_flush();
             flush();
         }
@@ -1628,7 +1642,7 @@ abstract class Catalog extends database_object
     public function verify_catalog()
     {
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
             ob_flush();
             flush();
         }
@@ -1692,6 +1706,18 @@ abstract class Catalog extends database_object
     } // trim_prefix
 
     /**
+     * trim_featuring
+     * Splits artists featuring from the string
+     * @param string $string
+     * @return array
+     */
+    public static function trim_featuring($string)
+    {
+        $trimmed = array_map('trim', explode(' feat. ', $string));
+        return $trimmed;
+    } // trim_featuring
+
+    /**
      * check_title
      * this checks to make sure something is
      * set on the title, if it isn't it looks at the
@@ -1717,7 +1743,7 @@ abstract class Catalog extends database_object
     public static function import_playlist($playlist)
     {
         $data = file_get_contents($playlist);
-        if (substr($playlist, -3, 3) == 'm3u') {
+        if (substr($playlist, -3, 3) == 'm3u' || substr($playlist, -4, 4) == 'm3u8') {
             $files = self::parse_m3u($data);
         } elseif (substr($playlist, -3, 3) == 'pls') {
             $files = self::parse_pls($data);
@@ -2076,6 +2102,114 @@ abstract class Catalog extends database_object
         }
 
         return (Access::check('interface','75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
+    }
+    
+    public static function process_action($action, $catalogs, $options = null)
+    {
+        if (!$options || !is_array($options)) {
+            $options = array();
+        }
+        
+        switch ($action) {
+            case 'add_to_all_catalogs':
+                $catalogs = Catalog::get_catalogs();
+            case 'add_to_catalog':
+                if ($catalogs) {
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->add_to_catalog($options);
+                        }
+                    }
+                    
+                    if (!defined('SSE_OUTPUT')) {
+                        Error::display('catalog_add');
+                    }
+                }
+                break;
+            case 'update_all_catalogs':
+                $catalogs = Catalog::get_catalogs();
+            case 'update_catalog':
+                if ($catalogs) {
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->verify_catalog();
+                        }
+                    }
+                }
+                break;
+            case 'full_service':
+                if (!$catalogs) {
+                    $catalogs = Catalog::get_catalogs();
+                }
+
+                /* This runs the clean/verify/add in that order */
+                foreach ($catalogs as $catalog_id) {
+                    $catalog = Catalog::create_from_id($catalog_id);
+                    if ($catalog !== null) {
+                        $catalog->clean_catalog();
+                        $catalog->verify_catalog();
+                        $catalog->add_to_catalog();
+                    }
+                }
+                Dba::optimize_tables();
+                break;
+            case 'clean_all_catalogs':
+                $catalogs = Catalog::get_catalogs();
+            case 'clean_catalog':
+                if ($catalogs) {
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->clean_catalog();
+                        }
+                    } // end foreach catalogs
+                    Dba::optimize_tables();
+                }
+                break;
+            case 'update_from':
+                $catalog_id = 0;
+                // First see if we need to do an add
+                if ($options['add_path'] != '/' && strlen($options['add_path'])) {
+                    if ($catalog_id = Catalog_local::get_from_path($options['add_path'])) {
+                        $catalog = Catalog::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->add_to_catalog(array('subdirectory'=>$options['add_path']));
+                        }
+                    }
+                } // end if add
+
+                // Now check for an update
+                if ($options['update_path'] != '/' && strlen($options['update_path'])) {
+                    if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
+                        $songs = Song::get_from_path($options['update_path']);
+                        foreach ($songs as $song_id) {
+                            Catalog::update_single_item('song',$song_id);
+                        }
+                    }
+                } // end if update
+
+                if ($catalog_id <= 0) {
+                    Error::add('general', T_("This subdirectory is not part of an existing catalog. Update cannot be processed."));
+                }
+                break;
+            case 'gather_media_art':
+                if (!$catalogs) {
+                    $catalogs = Catalog::get_catalogs();
+                }
+
+                // Iterate throught the catalogs and gather as needed
+                foreach ($catalogs as $catalog_id) {
+                    $catalog = Catalog::create_from_id($catalog_id);
+                    if ($catalog !== null) {
+                        require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
+                        flush();
+                        $catalog->gather_art();
+                    }
+                }
+                break;
+        }
     }
 }
 

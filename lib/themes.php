@@ -37,18 +37,11 @@ function get_themes()
     }
 
     $results = array();
-    $theme_cfg = '/theme.cfg.php';
-
     while (($f = readdir($handle)) !== false) {
         debug_event('theme', "Checking $f", 5);
-        $file = AmpConfig::get('prefix') . '/themes/' . $f;
-        if (file_exists($file . $theme_cfg)) {
-            debug_event('theme', "Loading $theme_cfg from $f", 5);
-            $r = parse_ini_file($file . $theme_cfg);
-            $r['path'] = $f;
-            $results[$r['name']] = $r;
-        } else {
-            debug_event('theme', "$theme_cfg not found in $f", 5);
+        $cfg = get_theme($f);
+        if ($cfg !== null) {
+            $results[$cfg['name']] = $cfg;
         }
     } // end while directory
 
@@ -65,13 +58,34 @@ function get_themes()
 */
 function get_theme($name)
 {
+    static $_mapcache = array();
+            
     if (strlen($name) < 1) {
         return false;
     }
+    
+    $name = strtolower($name);
+    
+    if (isset($_mapcache[$name])) {
+        return $_mapcache[$name];
+    }
 
     $config_file = AmpConfig::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
-    $results = parse_ini_file($config_file);
-    $results['path'] = $name;
+    if (file_exists($config_file)) {
+        $results = parse_ini_file($config_file);
+        $results['path'] = $name;
+        $results['base'] = explode(',', $results['base']);
+        $nbbases = count($results['base']);
+        for ($i = 0; $i < $nbbases; $i++) {
+            $results['base'][$i] = explode('|', $results['base'][$i]);
+        }
+        $results['colors'] = explode(',', $results['colors']);
+    } else {
+        debug_event('theme', $config_file . ' not found.', 3);
+        $results = null;
+    }
+    $_mapcache[$name] = $results;
+    
     return $results;
 } // get_theme
 

@@ -72,7 +72,7 @@
     ?>
         <div id="webplayer"></div>
         <?php
-            require_once AmpConfig::get('prefix') . '/templates/uberviz.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('uberviz.inc.php');
 }
         ?>
     </body>

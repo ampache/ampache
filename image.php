@@ -68,7 +68,7 @@ if (isset($_GET['type'])) {
     switch ($_GET['type']) {
         case 'popup':
             $typeManaged = true;
-            require_once AmpConfig::get('prefix') . '/templates/show_big_art.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_big_art.inc.php');
         break;
         case 'session':
             // If we need to pull the data out of the session
@@ -113,8 +113,8 @@ if (!$typeManaged) {
                 $defaultimg .= "blankmovie.png";
                 break;
             default:
-                $mime = 'image/jpeg';
-                $defaultimg .= "blankalbum.jpg";
+                $mime = 'image/png';
+                $defaultimg .= "blankalbum.png";
             break;
         }
         $image = file_get_contents($defaultimg);

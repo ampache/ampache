@@ -140,9 +140,9 @@ class XML_Data
      * @see    _header()
      * @return    string    return xml
      */
-    public static function header()
+    public static function header($title = null)
     {
-        return self::_header();
+        return self::_header($title);
     } // header
 
     /**
@@ -714,13 +714,13 @@ class XML_Data
      *
      * @return    string    Header xml tag.
      */
-    private static function _header()
+    private static function _header($title = null)
     {
         switch (self::$type) {
             case 'xspf':
                 $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
-                        "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n " .
-                        "<title>Ampache XSPF Playlist</title>\n" .
+                        "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n" .
+                        "<title>" . ($title ?: "Ampache XSPF Playlist") . "</title>\n" .
                         "<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n" .
                         "<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n" .
                         "<info>". AmpConfig::get('web_path') ."</info>\n" .

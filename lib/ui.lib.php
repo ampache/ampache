@@ -43,8 +43,21 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
         $path = AmpConfig::get('web_path') . "/$next_url";
     }
 
-    require AmpConfig::get('prefix') . '/templates/show_confirmation.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_confirmation.inc.php');
 } // show_confirmation
+
+function catalog_worker($action, $catalogs = null, $options = null)
+{
+    if (AmpConfig::get('ajax_load')) {
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(serialize($catalogs));
+        if ($options) {
+            $sse_url .= "&options=" . urlencode(serialize($_POST));
+        }
+        sse_worker($sse_url);
+    } else {
+        Catalog::process_action($action, $catalogs, $options);
+    }
+}
 
 function sse_worker($url)
 {
@@ -181,7 +194,7 @@ function get_location()
  */
 function show_preference_box($preferences)
 {
-    require AmpConfig::get('prefix') . '/templates/show_preference_box.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template('show_preference_box.inc.php');
 } // show_preference_box
 
 /**
@@ -715,7 +728,7 @@ function show_now_playing()
 
     $web_path = AmpConfig::get('web_path');
     $results = Stream::get_now_playing();
-    require_once AmpConfig::get('prefix') . '/templates/show_now_playing.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php');
 } // show_now_playing
 
 function show_table_render($render = false, $force = false)

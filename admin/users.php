@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
 
         /* If we've got an error then show edit form! */
         if (Error::occurred()) {
-            require_once AmpConfig::get('prefix') . '/templates/show_edit_user.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_edit_user.inc.php');
             break;
         }
 
@@ -153,7 +153,7 @@ switch ($_REQUEST['action']) {
 
         /* If we've got an error then show add form! */
         if (Error::occurred()) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_user.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_user.inc.php');
             break;
         }
 
@@ -197,7 +197,7 @@ switch ($_REQUEST['action']) {
             break;
         }
         $client    = new User($_REQUEST['user_id']);
-        require_once AmpConfig::get('prefix') . '/templates/show_edit_user.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_edit_user.inc.php');
     break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
@@ -277,18 +277,18 @@ switch ($_REQUEST['action']) {
         } else {
             $history    = $working_user->get_ip_history();
         }
-        require AmpConfig::get('prefix') . '/templates/show_ip_history.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_ip_history.inc.php');
     break;
     case 'show_add_user':
             if (AmpConfig::get('demo_mode')) {
                 break;
             }
-        require_once AmpConfig::get('prefix') . '/templates/show_add_user.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_add_user.inc.php');
     break;
     case 'show_preferences':
         $client = new User($_REQUEST['user_id']);
         $preferences = Preference::get_all($client->id);
-        require_once AmpConfig::get('prefix') . '/templates/show_user_preferences.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_user_preferences.inc.php');
     break;
     default:
         $browse = new Browse();

@@ -82,11 +82,11 @@ class Stream
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate');
         // FIXME: This should be configurable for each output type
-        $user_sample_rate = AmpConfig::get('sample_rate');
+        $user_bit_rate = AmpConfig::get('transcode_bitrate');
 
         // If the user's crazy, that's no skin off our back
-        if ($user_sample_rate < $min_bitrate) {
-            $min_bitrate = $user_sample_rate;
+        if ($user_bit_rate < $min_bitrate) {
+            $min_bitrate = $user_bit_rate;
         }
 
         // Are there site-wide constraints? (Dynamic downsampling.)
@@ -109,25 +109,25 @@ class Stream
             // We count as one for the algorithm
             // FIXME: Should this reflect the actual bit rates?
             $active_streams++;
-            $sample_rate = floor($max_bitrate / $active_streams);
+            $bit_rate = floor($max_bitrate / $active_streams);
 
             // Exit if this would be insane
-            if ($sample_rate < ($min_bitrate ?: 8)) {
+            if ($bit_rate < ($min_bitrate ?: 8)) {
                 debug_event('stream', 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
                 exit();
             }
 
             // Never go over the user's sample rate
-            if ($sample_rate > $user_sample_rate) {
-                $sample_rate = $user_sample_rate;
+            if ($bit_rate > $user_bit_rate) {
+                $bit_rate = $user_bit_rate;
             }
         } // end if we've got bitrates
         else {
-            $sample_rate = $user_sample_rate;
+            $bit_rate = $user_bit_rate;
         }
 
-        return $sample_rate;
+        return $bit_rate;
     }
 
     /**
@@ -142,28 +142,28 @@ class Stream
 
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
-        if ($transcode_settings == false) {
+        if ($transcode_settings === false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
             return false;
         }
 
         //$media_rate = $media->video_bitrate ?: $media->bitrate;
         if (!$options['bitrate']) {
-            $sample_rate = self::get_allowed_bitrate($media);
-            debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
+            $bit_rate = self::get_allowed_bitrate($media);
+            debug_event('stream', 'Configured bitrate is ' . $bit_rate, 5);
             // Validate the bitrate
-            $sample_rate = self::validate_bitrate($sample_rate);
+            $bit_rate = self::validate_bitrate($bit_rate);
         } else {
-            $sample_rate = $options['bitrate'];
+            $bit_rate = $options['bitrate'];
         }
 
         // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($sample_rate * 1000) > $media->bitrate) {
-            debug_event('stream', 'Clamping bitrate to avoid upsampling to ' . $sample_rate, 5);
-            $sample_rate = self::validate_bitrate($media->bitrate / 1000);
+        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate) {
+            debug_event('stream', 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
+            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
         }
 
-        debug_event('stream', 'Final transcode bitrate is ' . $sample_rate, 5);
+        debug_event('stream', 'Final transcode bitrate is ' . $bit_rate, 5);
 
         $song_file = scrub_arg($media->file);
 
@@ -172,7 +172,8 @@ class Stream
 
         $string_map = array(
             '%FILE%'   => $song_file,
-            '%SAMPLE%' => $sample_rate
+            '%SAMPLE%' => $bit_rate,   // Deprecated
+            '%BITRATE%' => $bit_rate
         );
         if (isset($options['maxbitrate'])) {
             $string_map['%MAXBITRATE%'] = $options['maxbitrate'];
@@ -298,9 +299,9 @@ class Stream
     public static function validate_bitrate($bitrate)
     {
         /* Round to standard bitrates */
-        $sample_rate = 16*(floor($bitrate/16));
+        $bit_rate = 16*(floor($bitrate/16));
 
-        return $sample_rate;
+        return $bit_rate;
     }
 
     /**

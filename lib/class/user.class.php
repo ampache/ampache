@@ -1015,14 +1015,12 @@ class User extends database_object
 
         if ($details) {
             /* Calculate their total Bandwidth Usage */
-            $sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
+            $sql = "SELECT sum(`song`.`size`) as size FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
                 "WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
             $db_results = Dba::read($sql);
 
-            $total = 0;
-            while ($r = Dba::fetch_assoc($db_results)) {
-                $total = $total + $r['size'];
-            }
+            $result = Dba::fetch_assoc($db_results);
+            $total = $result['size'];
 
             $this->f_useage = UI::format_bytes($total);
 

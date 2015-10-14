@@ -21,5 +21,5 @@
  */
 ?>
 <?php UI::show_box_top(T_('Wanted List')); ?>
-<?php require_once AmpConfig::get('prefix') . '/templates/show_stats_wanted.inc.php'; ?>
+<?php require_once AmpConfig::get('prefix') . UI::find_template('show_stats_wanted.inc.php'); ?>
 <?php UI::show_box_bottom(); ?>
