@@ -115,58 +115,58 @@ class AmpacheTvdb
                 }
                     // Get first match
                     $release = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
-                    $results['tvdb_tvshow_id'] = $release->id;
-                    $results['tvshow_imdb_id'] = $release->imdbId ;
-                    $results['summary'] = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
+                $results['tvdb_tvshow_id'] = $release->id;
+                $results['tvshow_imdb_id'] = $release->imdbId ;
+                $results['summary'] = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
                     $results['tvshow'] = $release->name;
-                    if ($release->FirstAired) {
-                        $results['tvshow_year'] = $release->firstAired->format('Y');
-                    }
-                    if ($release->banner) {
-                        $results['tvshow_banner_art'] = $tvdburl . '/banners/' . $release->banner;
-                    }
-                    $baseSeries = $client->getSerie($results['tvdb_tvshow_id']);
+                if ($release->FirstAired) {
+                    $results['tvshow_year'] = $release->firstAired->format('Y');
+                }
+                if ($release->banner) {
+                    $results['tvshow_banner_art'] = $tvdburl . '/banners/' . $release->banner;
+                }
+                $baseSeries = $client->getSerie($results['tvdb_tvshow_id']);
                     
-                    if (count($baseSeries->genres) > 0) {
-                        $results['genre'] = $baseSeries->genres;
-                    }
+                if (count($baseSeries->genres) > 0) {
+                    $results['genre'] = $baseSeries->genres;
+                }
                                         
-                    $banners = $client->getBanners($results['tvdb_tvshow_id']);
-                    foreach ($banners as $banner) {
-                        if ($banner->language == "en") {
-                            if (!$results['tvshow_art']) {
-                                if ($banner->type == "poster") {
-                                    $results['tvshow_art'] = $tvdburl . '/banners/' . $banner->path;
-                                }
+                $banners = $client->getBanners($results['tvdb_tvshow_id']);
+                foreach ($banners as $banner) {
+                    if ($banner->language == "en") {
+                        if (!$results['tvshow_art']) {
+                            if ($banner->type == "poster") {
+                                $results['tvshow_art'] = $tvdburl . '/banners/' . $banner->path;
                             }
+                        }
                             
-                            if ($media_info['tvshow_season'] && !$results['tvshow_season_art']) {
-                                if ($banner->type == "season" && $banner->season == $media_info['tvshow_season']) {
-                                    $results['tvshow_season_art'] = $tvdburl . '/banners/' . $banner->path;
-                                }
+                        if ($media_info['tvshow_season'] && !$results['tvshow_season_art']) {
+                            if ($banner->type == "season" && $banner->season == $media_info['tvshow_season']) {
+                                $results['tvshow_season_art'] = $tvdburl . '/banners/' . $banner->path;
                             }
                         }
                     }
+                }
                     
-                    if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
-                        $release = $client->getEpisode($results['tvdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
-                        if ($release->id) {
-                            $results['tvdb_id'] = $release->id;
-                            $results['tvshow_season'] = $release->season;
-                            $results['tvshow_episode'] = $release->number;
-                            $results['original_name'] = $release->name;
-                            $results['imdb_id'] = $release->imdbId ;
-                            if ($release->firstAired) {
-                                $results['release_date'] = $release->firstAired->getTimestamp();
-                                $results['year'] = $release->firstAired->format('Y');
-                                ;
-                            }
-                            $results['description'] = $release->overview;
-                            if ($release->thumbnail) {
-                                $results['art'] = $tvdburl . '/banners/' . $release->thumbnail;
-                            }
+                if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
+                    $release = $client->getEpisode($results['tvdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
+                    if ($release->id) {
+                        $results['tvdb_id'] = $release->id;
+                        $results['tvshow_season'] = $release->season;
+                        $results['tvshow_episode'] = $release->number;
+                        $results['original_name'] = $release->name;
+                        $results['imdb_id'] = $release->imdbId ;
+                        if ($release->firstAired) {
+                            $results['release_date'] = $release->firstAired->getTimestamp();
+                            $results['year'] = $release->firstAired->format('Y');
+                            ;
+                        }
+                        $results['description'] = $release->overview;
+                        if ($release->thumbnail) {
+                            $results['art'] = $tvdburl . '/banners/' . $release->thumbnail;
                         }
                     }
+                }
             }
         } catch (Exception $e) {
             debug_event('tvdb', 'Error getting metadata: ' . $e->getMessage(), '1');
@@ -184,8 +184,7 @@ class AmpacheTvdb
     private function getReleaseByTitle($results, $title, $year)
     {
         $titles = array();
-        foreach ($results as $index)
-        {
+        foreach ($results as $index) {
             $pos = strpos($index->name, $title);
             if ($pos !== false) {
                 $titles[] = $index;
@@ -193,8 +192,7 @@ class AmpacheTvdb
         }
     
         if ((count($titles) > 1) && ($year != null)) {
-            foreach ($titles as $index)
-            {
+            foreach ($titles as $index) {
                 $y = $index->firstAired->format('Y');
                 if ($year == $y) {
                     return $index;
@@ -203,6 +201,5 @@ class AmpacheTvdb
         }
         return count($titles) > 0 ? $titles[0] : $results[0];
     }
-
 } // end AmpacheTvdb
 ?>

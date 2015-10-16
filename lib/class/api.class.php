@@ -1009,5 +1009,31 @@ class Api
             debug_event('api', 'Sociable feature is not enabled.', 3);
         }
     } // last_shouts
+
+    /**
+     * rate
+     * This rate a library item
+     * @param array $input
+     */
+    public static function rate($input)
+    {
+        ob_end_clean();
+        $type = $input['type'];
+        $id = $input['id'];
+        $rating = $input['rating'];
+        
+        if (!Core::is_library_item($type) || !$id) {
+            echo XML_Data::error('401', T_('Wrong library item type.'));
+        } else {
+            $item = new $type($id);
+            if (!$item->id) {
+                echo XML_Data::error('404', T_('Library item not found.'));
+            } else {
+                $rating = new Rating($id, $type);
+                $rating->set_rating($rating);
+                echo XML_Data::single_string('success');
+            }
+        }
+    } // rate
 } // API class
 

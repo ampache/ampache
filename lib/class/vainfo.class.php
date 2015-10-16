@@ -447,7 +447,6 @@ class vainfo
                     $arr[] = trim($genre);
                 }
             }
-
         } else {
             $arr = $info[$field];
         }
@@ -1037,9 +1036,9 @@ class vainfo
             $slash_type_preg = trim($slash_type,"~") . trim($slash_type,"~");
         }
         $file = pathinfo($filepath,PATHINFO_FILENAME);
-	    preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath,$tvyear);
+        preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath,$tvyear);
         $results['year'] = !empty($tvyear) ? intval($tvyear[0]) : null;
-	    if (in_array('tvshow', $this->gather_types)) {
+        if (in_array('tvshow', $this->gather_types)) {
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
                 $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~",$file,2);
                 preg_match("~(?<=[Ss])\d+~", $file, $season);
@@ -1054,8 +1053,7 @@ class vainfo
                         $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",$file,3);
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
                         preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
-                    }   
-                    else {
+                    } else {
                         if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
                             $temp = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
                             $season[0] = $seasonEpisode[1];
@@ -1159,11 +1157,10 @@ class vainfo
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
 
        //scan for brackets, braces, etc and ignore case.
-	   for ($i=0; $i< count($commonabbr);$i++)
-	   {
-		  $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
-	   }
-        $string = preg_replace($commonabbr,'',$name);        
+       for ($i=0; $i< count($commonabbr);$i++) {
+           $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
+       }
+        $string = preg_replace($commonabbr,'',$name);
         return $string;
     }
     
