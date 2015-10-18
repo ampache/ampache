@@ -1029,8 +1029,8 @@ class Api
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
             } else {
-                $rating = new Rating($id, $type);
-                $rating->set_rating($rating);
+                $r = new Rating($id, $type);
+                $r->set_rating($rating);
                 echo XML_Data::single_string('success');
             }
         }
