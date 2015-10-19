@@ -149,7 +149,7 @@ class AmpacheTvdb
                 }
                     
                 if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
-                    $release = $client->getEpisode($results['tvdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
+                    $release = $client->getEpisode($results['tvdb_tvshow_id'], ltrim($media_info['tvshow_season'], "0"), ltrim($media_info['tvshow_episode'], "0"));
                     if ($release->id) {
                         $results['tvdb_id'] = $release->id;
                         $results['tvshow_season'] = $release->season;
