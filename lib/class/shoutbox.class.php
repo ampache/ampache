@@ -164,6 +164,16 @@ class Shoutbox
         }
 
         $object = new $type($object_id);
+        
+        if ($object->id > 0) {
+            if (strtolower($type) === 'song') {
+                if (!$object->enabled) {
+                    $object = null;
+                }
+            }
+        } else {
+            $object = null;
+        }
 
         return $object;
     } // get_object

@@ -19,7 +19,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-?>
+
+// Don't show disabled songs to normal users
+if ($libitem->enabled || Access::check('interface','50')) {
+    ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php echo '<b>'.$playlist_track.'</b>'; ?></span>
     <div class="cel_play_hover">
@@ -112,4 +115,5 @@
     ?>
 </td>
 <?php 
+}
 } ?>

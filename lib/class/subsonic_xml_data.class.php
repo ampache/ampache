@@ -343,6 +343,11 @@ class Subsonic_XML_Data
 
     public static function createSong($xml, $song, $elementName='song')
     {
+        // Don't create entries for disabled songs
+        if (!$song->enabled) {
+            return null;
+        }
+        
         $xsong = $xml->addChild(htmlspecialchars($elementName));
         $xsong->addAttribute('id', self::getSongId($song->id));
         $xsong->addAttribute('parent', self::getAlbumId($song->album));
@@ -583,9 +588,11 @@ class Subsonic_XML_Data
         $xplaynow = $xml->addChild('nowPlaying');
         foreach ($data as $d) {
             $track = self::createSong($xplaynow, $d['media'], "entry");
-            $track->addAttribute('username', $d['client']->username);
-            $track->addAttribute('minutesAgo', intval(time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
-            $track->addAttribute('playerId', $d['agent']);
+            if ($track !== null) {
+                $track->addAttribute('username', $d['client']->username);
+                $track->addAttribute('minutesAgo', intval(time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
+                $track->addAttribute('playerId', $d['agent']);
+            }
         }
     }
 
