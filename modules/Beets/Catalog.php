@@ -174,7 +174,7 @@ abstract class Catalog extends \Catalog
     {
         $tags = array_diff($metadata, get_object_vars($libraryItem));
         $keys = array_merge(
-            defined(get_class($libraryItem) . '::' . 'aliases') ? $libraryItem::aliases : array(),
+            isset($libraryItem::$aliases) ? $libraryItem::$aliases : array(),
             array_keys(get_object_vars($libraryItem))
         );
         foreach ($keys as $key) {
