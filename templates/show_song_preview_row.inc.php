@@ -20,22 +20,15 @@
  *
  */
 ?>
-<?php if (AmpConfig::get('echonest_api_key')) {
-    ?>
+<?php if (AmpConfig::get('echonest_api_key')) { ?>
 <td class="cel_play">
-    <?php if (AmpConfig::get('directplay') && $libitem->file) {
-    ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&object_type=song_preview&object_id=' . $libitem->id,'play_preview', T_('Play'),'play_song_' . $libitem->id);
-    ?>
-        <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song_preview&object_id=' . $libitem->id . '&append=true','play_add_preview', T_('Play last'),'addplay_song_' . $libitem->id);
-    ?>
-        <?php 
-}
-    ?>
-<?php 
-}
+    <?php
+        if (AmpConfig::get('directplay') && $libitem->file) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=song_preview&object_id=' . $libitem->id,'play_preview', T_('Play'),'play_song_' . $libitem->id);
+            if (Stream_Playlist::check_autoplay_append()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=song_preview&object_id=' . $libitem->id . '&append=true','play_add_preview', T_('Play last'),'addplay_song_' . $libitem->id);
+            }
+        }
     ?>
 </td>
 <?php 
@@ -45,22 +38,17 @@
     ?>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php if ($libitem->file) {
-    ?>
-            <?php echo Ajax::button('?action=basket&type=song_preview&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id);
-    ?>
-            <?php if (Access::check('interface', '25')) {
-    ?>
-                <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'song_preview', '<?php echo $libitem->id ?>')">
-                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
-    ?>
-                </a>
+        <?php
+            if ($libitem->file) {
+                echo Ajax::button('?action=basket&type=song_preview&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id);
+                if (Access::check('interface', '25')) { ?>
+                    <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'song_preview', '<?php echo $libitem->id ?>')">
+                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                    </a>
             <?php 
-}
-    ?>
-        <?php 
-}
-    ?>
+                }
+            }
+        ?>
     </span>
 </td>
 <?php 

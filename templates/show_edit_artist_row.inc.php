@@ -30,17 +30,12 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
                 <td>
-                    <?php if (Access::check('interface', 50)) {
-    ?>
-                    <input type="text" name="mbid" value="<?php echo $libitem->mbid;
-    ?>" />
-                    <?php 
-} else {
-    ?>
-                    <?php echo $libitem->mbid;
-    ?>
-                    <?php 
-} ?>
+                    <?php if (Access::check('interface', 50)) { ?>
+                    <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
+                    <?php }
+                    else {
+                        echo $libitem->mbid;
+                    } ?>
                 </td>
             </tr>
             <tr>

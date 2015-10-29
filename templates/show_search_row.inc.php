@@ -23,19 +23,14 @@
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
-    <?php if (AmpConfig::get('directplay')) {
+    <?php
+        if (AmpConfig::get('directplay')) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id,'play', T_('Play'),'play_playlist_' . $libitem->id);
+            if (Stream_Playlist::check_autoplay_append()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_playlist_' . $libitem->id);
+            }
+        }
     ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id,'play', T_('Play'),'play_playlist_' . $libitem->id);
-    ?>
-        <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_playlist_' . $libitem->id);
-    ?>
-        <?php 
-}
-    ?>
-<?php 
-} ?>
     </div>
 </td>
 <td class="cel_playlist"><?php echo $libitem->f_link; ?></td>
@@ -52,24 +47,19 @@
 <td class="cel_limit"><?php echo (($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
-        <?php if (Access::check_function('batch_download') && check_can_zip('search')) {
-    ?>
-                <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-    ?>/batch.php?action=search&amp;id=<?php echo $libitem->id;
-    ?>">
-                        <?php echo UI::get_icon('batch_download', T_('Batch Download'));
-    ?>
+        <?php
+            if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
+                <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
+                    <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
                 </a>
         <?php 
-} ?>
-    <?php if ($libitem->has_access()) {
-    ?>
-        <a id="<?php echo 'edit_playlist_'.$libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_'.$libitem->id ?>', '<?php echo T_('Smart Playlist edit') ?>', 'smartplaylist_row_')">
-            <?php echo UI::get_icon('edit', T_('Edit'));
-    ?>
-        </a>
-        <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id,'delete', T_('Delete'),'delete_playlist_' . $libitem->id);
-    ?>
-    <?php 
-} ?>
+            }
+            if ($libitem->has_access()) { ?>
+                <a id="<?php echo 'edit_playlist_'.$libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_'.$libitem->id ?>', '<?php echo T_('Smart Playlist edit') ?>', 'smartplaylist_row_')">
+                    <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                </a>
+                <?php
+                echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id,'delete', T_('Delete'),'delete_playlist_' . $libitem->id);
+            }
+        ?>
 </td>
