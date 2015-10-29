@@ -39,14 +39,21 @@ class Upnp_Api
     # object.item.textItem
     # object.container
 
-    const UUIDSTR = '2d8a2e2b-7869-4836-a9ec-76447d620734';
-
     /**
      * constructor
      * This really isn't anything to do here, so it's private
      */
     private function __construct()
     {
+    }
+    
+    public static function get_uuidStr()
+    {
+        // Create uuid based on host
+        $key = 'ampache_' . AmpConfig::get('http_host');
+        $hash = hash('md5', $key);
+        $uuidstr = substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
+        return $uuidstr;
     }
 
     private static function udpSend($buf, $delay=15, $host="239.255.255.250", $port=1900)
@@ -63,32 +70,33 @@ class Upnp_Api
         $strHeader  = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
         $strHeader .= 'LOCATION: http://' . AmpConfig::get('http_host') . ':'. AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
-        $strHeader .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/3.8' . "\r\n";
+        $strHeader .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
         $strHeader .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         $strHeader .= 'NTS: ssdp:alive' . "\r\n";
-
+        $uuidStr = self::get_uuidStr();
+        
         $rootDevice = $prefix . ': upnp:rootdevice' . "\r\n";
-        $rootDevice .= 'USN: uuid:' . self::UUIDSTR . '::upnp:rootdevice' . "\r\n". "\r\n";
+        $rootDevice .= 'USN: uuid:' . $uuidStr . '::upnp:rootdevice' . "\r\n". "\r\n";
         $buf = $strHeader . $rootDevice;
         self::udpSend($buf, $delay, $host, $port);
 
-        $uuid = $prefix . ': uuid:' . self::UUIDSTR . "\r\n";
-        $uuid .= 'USN: uuid:' . self::UUIDSTR . "\r\n". "\r\n";
+        $uuid = $prefix . ': uuid:' . $uuidStr . "\r\n";
+        $uuid .= 'USN: uuid:' . $uuidStr . "\r\n". "\r\n";
         $buf = $strHeader . $uuid;
         self::udpSend($buf, $delay, $host, $port);
 
         $deviceType = $prefix . ': urn:schemas-upnp-org:device:MediaServer:1' . "\r\n";
-        $deviceType .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:device:MediaServer:1' . "\r\n". "\r\n";
+        $deviceType .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:device:MediaServer:1' . "\r\n". "\r\n";
         $buf = $strHeader . $deviceType;
         self::udpSend($buf, $delay, $host, $port);
 
         $serviceCM = $prefix . ': urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n";
-        $serviceCM .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n". "\r\n";
+        $serviceCM .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n". "\r\n";
         $buf = $strHeader . $serviceCM;
         self::udpSend($buf, $delay, $host, $port);
 
         $serviceCD = $prefix . ': urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n";
-        $serviceCD .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n". "\r\n";
+        $serviceCD .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n". "\r\n";
         $buf = $strHeader . $serviceCD;
         self::udpSend($buf, $delay, $host, $port);
     }
@@ -426,6 +434,30 @@ class Upnp_Api
                     break;
                 }
             break;
+            
+            case 'live_streams':
+                switch (count($pathreq)) {
+                    case 1:
+                        $counts = Catalog::count_medias();
+                        $meta = array(
+                            'id'            => $root . '/live_streams',
+                            'parentID'      => $root,
+                            'restricted'    => '1',
+                            'childCount'    => $counts['live_streams'],
+                            'dc:title'      => T_('Radio Stations'),
+                            'upnp:class'    => 'object.container',
+                        );
+                    break;
+
+                    case 2:
+                        $radio = new Live_Stream($pathreq[1]);
+                        if ($radio->id) {
+                            $radio->format();
+                            $meta = self::_itemLiveStream($radio, $root . '/live_streams');
+                        }
+                    break;
+                }
+            break;
 
             default:
                 $meta = array(
@@ -590,6 +622,20 @@ class Upnp_Api
                     break;
                 }
             break;
+            
+            case 'live_streams':
+                switch (count($pathreq)) {
+                    case 1: // Get radios list
+                        $radios = Live_Stream::get_all_radios();
+                        list($maxCount, $radios) = self::_slice($radios, $start, $count);
+                        foreach ($radios as $radio_id) {
+                            $radio = new Live_Stream($radio_id);
+                            $radio->format();
+                            $mediaItems[] = self::_itemLiveStream($radio, $parent);
+                        }
+                    break;
+                }
+            break;
 
             default:
                 $mediaItems[] = self::_musicMetadata('artists');
@@ -597,6 +643,7 @@ class Upnp_Api
                 $mediaItems[] = self::_musicMetadata('songs');
                 $mediaItems[] = self::_musicMetadata('playlists');
                 $mediaItems[] = self::_musicMetadata('smartplaylists');
+                $mediaItems[] = self::_musicMetadata('live_streams');
             break;
         }
 
@@ -948,6 +995,27 @@ class Upnp_Api
             'sampleFrequency'           => $song->rate,
             //'nrAudioChannels'           => '1',
             'description'               => self::_replaceSpecialSymbols($song->comment),
+        );
+    }
+    
+    public static function _itemLiveStream($radio, $parent)
+    {
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $art_url = Art::url($radio->id, 'live_stream', $api_session);
+
+        $fileTypesByExt = self::_getFileTypes();
+        $arrFileType = $fileTypesByExt[$radio->codec];
+
+        return array(
+            'id'                        => 'amp://music/live_streams/' . $radio->id,
+            'parentID'                  => $parent,
+            'restricted'                => '1',
+            'dc:title'                  => self::_replaceSpecialSymbols($radio->name),
+            'upnp:class'                => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
+            'upnp:albumArtURI'          => $art_url,
+
+            'res'                       => $radio->url,
+            'protocolInfo'              => $arrFileType['mime']
         );
     }
 

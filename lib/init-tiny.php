@@ -51,11 +51,12 @@ require_once $prefix . '/modules/php-gettext/gettext.inc';
 // Define some base level config options
 AmpConfig::set('prefix', $prefix);
 
-// Register the autoloader
+// Register autoloaders
 spl_autoload_register(array('Core', 'autoload'), true, true);
-
-require_once $prefix . '/modules/requests/Requests.php';
-Requests::register_autoloader();
+$composer_autoload = $prefix . '/lib/vendor/autoload.php';
+if (file_exists($composer_autoload)) {
+    require_once $prefix . '/lib/vendor/autoload.php';
+}
 
 // Check to see if this is http or https
 if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' )

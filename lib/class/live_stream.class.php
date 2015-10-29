@@ -192,6 +192,13 @@ class Live_Stream extends database_object implements media, library_item
         if (!in_array($elements['0'],$allowed_array)) {
             Error::add('general', T_('Invalid URL must be mms:// , https:// or http://'));
         }
+        
+        if (!empty($data['site_url'])) {
+            $elements = explode(":", $data['site_url']);
+            if (!in_array($elements['0'], $allowed_array)) {
+                Error::add('site_url', T_('Invalid URL must be http:// or https://'));
+            }
+        }
 
         if (Error::occurred()) {
             return false;
@@ -219,8 +226,15 @@ class Live_Stream extends database_object implements media, library_item
 
         $elements = explode(":", $data['url']);
 
-        if (!in_array($elements['0'],$allowed_array)) {
+        if (!in_array($elements['0'], $allowed_array)) {
             Error::add('url', T_('Invalid URL must be http:// or https://'));
+        }
+        
+        if (!empty($data['site_url'])) {
+            $elements = explode(":", $data['site_url']);
+            if (!in_array($elements['0'], $allowed_array)) {
+                Error::add('site_url', T_('Invalid URL must be http:// or https://'));
+            }
         }
 
         // Make sure it's a real catalog

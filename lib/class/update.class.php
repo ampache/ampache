@@ -514,10 +514,13 @@ class Update
         $update_string = " - Add theme color option.<br />";
         $version[] = array('version' => '370038','description' => $update_string);
 
-        $update_string = "- Add basic metadata tables<br />";
-        $version[] = array('version' => '370039', 'description' => $update_string);
+        $update_string = " - Renamed false named sample_rate option name in preference table.<br />";
+        $version[] = array('version' => '370039','description' => $update_string);
 
-        return $version;
+        $update_string = "- Add basic metadata tables<br />";
+$version[] = array('version' => '370040', 'description' => $update_string);
+
+return $version;
     }
 
     /**
@@ -3562,16 +3565,33 @@ class Update
             "VALUES ('theme_color','dark','Theme color',0,'special','interface')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'dark')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
     }
 
+    /**
+     * update_370039
+     *
+     * Renamed false named sample_rate option name in preference table
+     */
     public static function update_370039()
     {
         $retval = true;
 
+        $sql = "UPDATE `preference` SET `name` = 'transcode_bitrate' WHERE `preference`.`name` = 'sample_rate'";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * Adds Metadata tables and preferences
+     * @return bool
+     */
+    public static function update_370040()
+    {
         $sql = 'CREATE TABLE IF NOT EXISTS `metadata_field` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `name` varchar(255) NOT NULL,

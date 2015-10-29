@@ -706,6 +706,38 @@ class Api
     } // search_songs
 
     /**
+     * advanced_search
+     * Perform an advanced search given passed rules
+     * @param array $input
+     */
+    public static function advanced_search($input)
+    {
+        ob_end_clean();
+
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
+
+        $results = Search::run($input);
+
+        $type = 'song';
+        if (isset($input['type'])) {
+            $type = $input['type'];
+        }
+        
+        switch ($type) {
+            case 'artist':
+                echo XML_Data::artists($results);
+                break;
+            case 'album':
+                echo XML_Data::albums($results);
+                break;
+            default:
+                echo XML_Data::songs($results);
+                break;
+        }
+    } // advanced_search
+
+    /**
      * videos
      * This returns video objects!
      * @param array $input
@@ -977,5 +1009,31 @@ class Api
             debug_event('api', 'Sociable feature is not enabled.', 3);
         }
     } // last_shouts
+
+    /**
+     * rate
+     * This rate a library item
+     * @param array $input
+     */
+    public static function rate($input)
+    {
+        ob_end_clean();
+        $type = $input['type'];
+        $id = $input['id'];
+        $rating = $input['rating'];
+        
+        if (!Core::is_library_item($type) || !$id) {
+            echo XML_Data::error('401', T_('Wrong library item type.'));
+        } else {
+            $item = new $type($id);
+            if (!$item->id) {
+                echo XML_Data::error('404', T_('Library item not found.'));
+            } else {
+                $r = new Rating($id, $type);
+                $r->set_rating($rating);
+                echo XML_Data::single_string('success');
+            }
+        }
+    } // rate
 } // API class
 

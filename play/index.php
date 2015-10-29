@@ -651,6 +651,9 @@ if ($demo_id && isset($democratic)) {
 // Close sql connection
 // Warning: do not call functions requiring sql after this point
 Dba::disconnect();
+// Free the session write lock
+// Warning: Do not change any session variable after this call
+session_write_close();
 
 $browser->downloadHeaders($media_name, $mime, false, $stream_size);
 

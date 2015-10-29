@@ -21,13 +21,13 @@ if (!$iframed) {
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path');
     ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
 <script src="<?php echo AmpConfig::get('web_path');
-    ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+    ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path');
-    ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
+    ?>/lib/components/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path');
-    ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
+    ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path');
-    ?>/modules/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
+    ?>/lib/components/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path');
     ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path');
@@ -54,8 +54,8 @@ function update_action()
     ?>/modules/aurora.js/aurora.js" language="javascript" type="text/javascript"></script>
 <?php 
 } ?>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/add-on/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/add-on/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.playlist.ext.js" language="javascript" type="text/javascript"></script>
 
 <script language="javascript" type="text/javascript">

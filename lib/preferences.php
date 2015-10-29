@@ -55,7 +55,7 @@ function update_preferences($pref_id=0)
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
-            case 'sample_rate':
+            case 'transcode_bitrate':
                 $value = Stream::validate_bitrate($value);
             break;
             default:
@@ -390,6 +390,16 @@ function create_preference_input($name,$value)
             }
             echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
             break;
+        case 'lastfm_grant_link':
+        case 'librefm_grant_link':
+            // construct links for granting access Ampache application to Last.fm and Libre.fm
+            $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
+            $plugin = new Plugin($plugin_name);
+            $url = $plugin->_plugin->url;
+            $api_key = rawurlencode(AmpConfig::get('lastfm_api_key'));
+            $callback = rawurlencode(AmpConfig::get('web_path').'/preferences.php?tab=plugins&action=grant&plugin='.$plugin_name);
+            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', T_("Click for grant Ampache to ").$plugin_name).'</a>';
+        break;
         default:
             if (preg_match('/_pass$/', $name)) {
                 echo '<input type="password" name="' . $name . '" value="******" />';

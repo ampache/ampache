@@ -19,11 +19,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-?>
+
+// Don't show disabled songs to normal users
+if ($libitem->enabled || Access::check('interface','50')) {
+    ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php if (isset($argument) && $argument) {
     echo '<b>'.$libitem->f_track.'</b>';
-} ?></span>
+}
+    ?></span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) {
     ?>
@@ -44,13 +48,16 @@
 }
     ?>
     <?php 
-} ?>
+}
+    ?>
     </div>
 </td>
-<td class="cel_song"><?php echo $libitem->f_link; ?></td>
+<td class="cel_song"><?php echo $libitem->f_link;
+    ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=song&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id); ?>
+        <?php echo Ajax::button('?action=basket&type=song&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id);
+    ?>
         <?php if (Access::check('interface', '25')) {
     ?>
             <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
@@ -58,26 +65,33 @@
     ?>
             </a>
         <?php 
-} ?>
+}
+    ?>
 
         <?php if (AmpConfig::get('directplay')) {
     ?>
             <?php echo $libitem->show_custom_play_actions();
     ?>
         <?php 
-} ?>
+}
+    ?>
     </span>
 </td>
-<td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
-<td class="cel_album"><?php echo $libitem->f_album_link; ?></td>
-<td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
-<td class="cel_time"><?php echo $libitem->f_time; ?></td>
+<td class="cel_artist"><?php echo $libitem->f_artist_link;
+    ?></td>
+<td class="cel_album"><?php echo $libitem->f_album_link;
+    ?></td>
+<td class="cel_tags"><?php echo $libitem->f_tags;
+    ?></td>
+<td class="cel_time"><?php echo $libitem->f_time;
+    ?></td>
 <?php if (AmpConfig::get('show_played_times')) {
     ?>
 <td class="cel_counter"><?php echo $libitem->object_cnt;
     ?></td>
 <?php 
-} ?>
+}
+    ?>
 <?php if (User::is_registered()) {
     ?>
     <?php if (AmpConfig::get('ratings')) {
@@ -97,9 +111,12 @@
 }
     ?>
 <?php 
-} ?>
+}
+    ?>
 <td class="cel_action">
-    <a href="<?php echo $libitem->link; ?>"><?php echo UI::get_icon('preferences', T_('Song Information')); ?></a>
+    <a href="<?php echo $libitem->link;
+    ?>"><?php echo UI::get_icon('preferences', T_('Song Information'));
+    ?></a>
     <?php if (Access::check('interface','25')) {
     ?>
         <?php if (AmpConfig::get('sociable')) {
@@ -119,7 +136,8 @@
 }
     ?>
     <?php 
-} ?>
+}
+    ?>
     <?php if (Access::check_function('download')) {
     ?>
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
@@ -127,7 +145,8 @@
     ?>"><?php echo UI::get_icon('download', T_('Download'));
     ?></a>
     <?php 
-} ?>
+}
+    ?>
     <?php if (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
     ?>
         <a id="<?php echo 'edit_song_'.$libitem->id ?>" onclick="showEditDialog('song_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_song_'.$libitem->id ?>', '<?php echo T_('Song edit') ?>', 'song_')">
@@ -135,7 +154,8 @@
     ?>
         </a>
     <?php 
-} ?>
+}
+    ?>
     <?php if (Access::check('interface','75') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
     ?>
         <?php $icon = $libitem->enabled ? 'disable' : 'enable';
@@ -148,7 +168,8 @@
     ?>
         </span>
     <?php 
-} ?>
+}
+    ?>
     <?php if (Catalog::can_remove($libitem)) {
     ?>
         <a id="<?php echo 'delete_song_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path');
@@ -158,7 +179,8 @@
     ?>
         </a>
     <?php 
-} ?>
+}
+    ?>
 </td>
 <?php if (Access::check('interface', '50') && isset($argument) && $argument) {
     ?>
@@ -167,4 +189,5 @@
     ?>
 </td>
 <?php 
+}
 } ?>

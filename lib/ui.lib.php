@@ -46,6 +46,19 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
     require AmpConfig::get('prefix') . UI::find_template('show_confirmation.inc.php');
 } // show_confirmation
 
+function catalog_worker($action, $catalogs = null, $options = null)
+{
+    if (AmpConfig::get('ajax_load')) {
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(serialize($catalogs));
+        if ($options) {
+            $sse_url .= "&options=" . urlencode(serialize($_POST));
+        }
+        sse_worker($sse_url);
+    } else {
+        Catalog::process_action($action, $catalogs, $options);
+    }
+}
+
 function sse_worker($url)
 {
     echo '<script type="text/javascript">';

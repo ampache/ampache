@@ -30,6 +30,22 @@
     </td>
 </tr>
 <tr>
+    <td valign="top"><?php echo T_('Dependencies'); ?></td>
+    <td valign="top">
+    <?php echo debug_result(check_dependencies_folder()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether Ampache dependencies are installed.'); ?>
+    <?php if (!check_dependencies_folder()) {
+    ?>
+        <br />
+        <b><?php echo T_('Please download and install Composer from http://getcomposer.org and install it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer install --prefer-source --no-interaction` on Ampache directory.');
+    ?></b>
+    <?php 
+} ?>
+    </td>
+</tr>
+<tr>
     <td valign="top"><?php echo T_('PHP hash extension'); ?></td>
     <td valign="top">
     <?php echo debug_result(check_php_hash()); ?>

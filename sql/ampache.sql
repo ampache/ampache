@@ -572,7 +572,6 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (22, 'site_title', 'Ampache :: For the love of Music', 'Website Title', 100, 'string', 'system'),
 (23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system'),
 (24, 'force_http_play', '0', 'Forces Http play regardless of port', 100, 'boolean', 'system'),
-(25, 'http_port', '80', 'Non-Standard Http Port', 100, 'integer', 'system'),
 (41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options'),
 (29, 'play_type', 'web_player', 'Type of Playback', 25, 'special', 'streaming'),
 (31, 'lang', 'fr_FR', 'Language', 100, 'special', 'interface'),
@@ -655,7 +654,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (137, 'custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface'),
 (138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface'),
 (139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system'),
-(140, 'notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options');
+(140, 'notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options'),
+(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface');
 
 -- --------------------------------------------------------
 
@@ -908,6 +908,7 @@ CREATE TABLE IF NOT EXISTS `stream_playlist` (
   `type` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `time` smallint(5) DEFAULT NULL,
   `codec` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `track_num` smallint(5) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
@@ -1074,7 +1075,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '370035'),
+('db_version', '370038'),
 ('Plugin_Last.FM', '000004');
 
 -- --------------------------------------------------------
@@ -1252,6 +1253,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 138, ''),
 (-1, 139, '0'),
 (-1, 140, '0'),
+(-1, 141, 'dark'),
 (-1, 96, ''),
 (-1, 97, ''),
 (-1, 98, '');

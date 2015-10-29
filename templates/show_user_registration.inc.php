@@ -38,7 +38,7 @@ $_SESSION['login'] = true;
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
     </head>
     <body id="registerPage">
-        <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 

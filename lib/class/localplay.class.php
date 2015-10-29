@@ -99,7 +99,7 @@ class Localplay
             return false;
         }
 
-        $filename = AmpConfig::get('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
+        $filename = AmpConfig::get('prefix') . '/modules/localplay/' . $this->type . '/' . $this->type . '.controller.php';
         $include = require_once $filename;
 
         if (!$include) {
@@ -138,7 +138,8 @@ class Localplay
     public static function get_controllers()
     {
         /* First open the dir */
-        $handle = opendir(AmpConfig::get('prefix') . '/modules/localplay');
+        $basedir = AmpConfig::get('prefix') . '/modules/localplay';
+        $handle = opendir($basedir);
 
         if (!is_resource($handle)) {
             debug_event('Localplay','Error: Unable to read localplay controller directory','1');
@@ -148,16 +149,22 @@ class Localplay
         $results = array();
 
         while (false !== ($file = readdir($handle))) {
-            if (substr($file,-14,14) != 'controller.php') {
+            if ($file === '.' || $file === '..') {
                 continue;
             }
-
-            /* Make sure it isn't a dir */
-            if (!is_dir($file)) {
-                /* Get the basename and then everything before controller */
-                $filename = basename($file,'.controller.php');
-                $results[] = $filename;
+            /* Make sure it is a dir */
+            if (! is_dir($basedir . '/' . $file)) {
+                debug_event('Localplay', $file . ' is not a directory.', 3);
+                continue;
             }
+            
+            // Make sure the plugin base file exists inside the plugin directory
+            if (! file_exists($basedir . '/' . $file . '/' . $file . '.controller.php')) {
+                debug_event('Localplay', 'Missing class for ' . $file, 3);
+                continue;
+            }
+            
+            $results[] = $file;
         } // end while
 
         return $results;

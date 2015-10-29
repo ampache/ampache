@@ -21,9 +21,9 @@
  */
 
 $tag_types = array(
-    'song' => T_('Song'),
-    'album' => T_('Album'),
     'artist' => T_('Artist'),
+    'album' => T_('Album'),
+    'song' => T_('Song'),
     'video' => T_('Video'),
 );
 ?>

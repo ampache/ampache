@@ -1,6 +1,17 @@
 <?php
 // vim: foldmethod=marker
 
+/**
+   #####################################################################
+   #                               Warning                             #
+   #                               #######                             #
+   # This external file is Ampache-adapted and probably unsynced with  #
+   # origin because abandonned by its original authors.                #
+   #                                                                   #
+   #####################################################################
+   
+   Code origin from http://oauth.googlecode.com/svn/code/php/OAuth.php
+ */
 
 // Avoid http://php.net/manual/fr/class.oauthexception.php conflict
 if (!class_exists("OAuthException", false)) {

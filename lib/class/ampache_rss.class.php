@@ -232,42 +232,44 @@ class Ampache_RSS
         foreach ($data as $item) {
             $client = new User($item['user']);
             $song = new Song($item['object_id']);
-            $song->format();
-            $amount = intval(time() - $item['date']+2);
-            $final = '0';
-            $time_place = '0';
-            while ($amount >= 1) {
-                $final = $amount;
-                $time_place++;
-                if ($time_place <= 2) {
-                    $amount = floor($amount/60);
-                }
-                if ($time_place == '3') {
-                    $amount = floor($amount/24);
-                }
-                if ($time_place == '4') {
-                    $amount = floor($amount/7);
-                }
-                if ($time_place == '5') {
-                    $amount = floor($amount/4);
-                }
-                if ($time_place == '6') {
-                    $amount = floor ($amount/12);
-                }
-                if ($time_place > '6') {
-                    $final = $amount . '+';
-                    break;
-                }
-            } // end while
+            if ($song->enabled) {
+                $song->format();
+                $amount = intval(time() - $item['date']+2);
+                $final = '0';
+                $time_place = '0';
+                while ($amount >= 1) {
+                    $final = $amount;
+                    $time_place++;
+                    if ($time_place <= 2) {
+                        $amount = floor($amount/60);
+                    }
+                    if ($time_place == '3') {
+                        $amount = floor($amount/24);
+                    }
+                    if ($time_place == '4') {
+                        $amount = floor($amount/7);
+                    }
+                    if ($time_place == '5') {
+                        $amount = floor($amount/4);
+                    }
+                    if ($time_place == '6') {
+                        $amount = floor ($amount/12);
+                    }
+                    if ($time_place > '6') {
+                        $final = $amount . '+';
+                        break;
+                    }
+                } // end while
 
-            $time_string = $final . ' ' . $time_unit[$time_place];
+                $time_string = $final . ' ' . $time_unit[$time_place];
 
-            $xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-                        'link'=>str_replace('&amp;', '&', $song->link),
-                        'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
-                        'comments'=>$client->username,
-                        'pubDate'=>date("r",$item['date']));
-            $results[] = $xml_array;
+                $xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
+                            'link'=>str_replace('&amp;', '&', $song->link),
+                            'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
+                            'comments'=>$client->username,
+                            'pubDate'=>date("r",$item['date']));
+                $results[] = $xml_array;
+            }
         } // end foreach
 
         return $results;
@@ -344,18 +346,20 @@ class Ampache_RSS
             $shout = new Shoutbox($id);
             $shout->format();
             $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
-            $object->format();
-            $user = new User($shout->user);
-            $user->format();
+            if ($object !== null) {
+                $object->format();
+                $user = new User($shout->user);
+                $user->format();
 
-            $xml_array = array('title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
-                    'link' => $object->link,
-                    'description' => $shout->text,
-                    'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
-                    'comments' => '',
-                    'pubDate' => date("c", $shout->date)
-            );
-            $results[] = $xml_array;
+                $xml_array = array('title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
+                        'link' => $object->link,
+                        'description' => $shout->text,
+                        'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
+                        'comments' => '',
+                        'pubDate' => date("c", $shout->date)
+                );
+                $results[] = $xml_array;
+            }
         } // end foreach
 
         return $results;

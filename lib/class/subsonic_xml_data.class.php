@@ -212,13 +212,13 @@ class Subsonic_XML_Data
         self::addArtists($xindexes, $artists);
     }
 
-    public static function addArtistsRoot($xml, $artists)
+    public static function addArtistsRoot($xml, $artists, $albumsSet = false)
     {
         $xartists = $xml->addChild('artists');
-        self::addArtists($xartists, $artists, true);
+        self::addArtists($xartists, $artists, true, $albumsSet);
     }
 
-    public static function addArtists($xml, $artists, $extra=false)
+    public static function addArtists($xml, $artists, $extra=false, $albumsSet = false)
     {
         $xlastcat = null;
         $xsharpcat = null;
@@ -250,25 +250,29 @@ class Subsonic_XML_Data
             }
 
             if ($xlastcat != null) {
-                self::addArtist($xlastcat, $artist, $extra);
+                self::addArtist($xlastcat, $artist, $extra, false, $albumsSet);
             }
         }
     }
 
-    public static function addArtist($xml, $artist, $extra=false, $albums=false)
+    public static function addArtist($xml, $artist, $extra=false, $albums=false, $albumsSet = false)
     {
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', self::getArtistId($artist->id));
         $xartist->addAttribute('name', $artist->name);
 
         $allalbums = array();
-        if ($extra || $albums) {
+        if (($extra && !$albumsSet) || $albums) {
             $allalbums = $artist->get_albums(null, true);
         }
 
         if ($extra) {
             //$xartist->addAttribute('coverArt');
-            $xartist->addAttribute('albumCount', count($allalbums));
+            if ($albumsSet) {
+                $xartist->addAttribute('albumCount', $artist->albums);
+            } else {
+                $xartist->addAttribute('albumCount', count($allalbums));
+            }
         }
         if ($albums) {
             foreach ($allalbums as $id) {
@@ -339,6 +343,11 @@ class Subsonic_XML_Data
 
     public static function createSong($xml, $song, $elementName='song')
     {
+        // Don't create entries for disabled songs
+        if (!$song->enabled) {
+            return null;
+        }
+        
         $xsong = $xml->addChild(htmlspecialchars($elementName));
         $xsong->addAttribute('id', self::getSongId($song->id));
         $xsong->addAttribute('parent', self::getAlbumId($song->album));
@@ -579,9 +588,11 @@ class Subsonic_XML_Data
         $xplaynow = $xml->addChild('nowPlaying');
         foreach ($data as $d) {
             $track = self::createSong($xplaynow, $d['media'], "entry");
-            $track->addAttribute('username', $d['client']->username);
-            $track->addAttribute('minutesAgo', intval(time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
-            $track->addAttribute('playerId', $d['agent']);
+            if ($track !== null) {
+                $track->addAttribute('username', $d['client']->username);
+                $track->addAttribute('minutesAgo', intval(time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
+                $track->addAttribute('playerId', $d['agent']);
+            }
         }
     }
 

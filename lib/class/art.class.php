@@ -21,7 +21,7 @@
  */
 
 use MusicBrainz\MusicBrainz;
-use MusicBrainz\Clients\RequestsMbClient;
+use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
 /**
  * Art Class
@@ -1055,7 +1055,7 @@ class Art extends database_object
             return $images;
         }
 
-        $mb = new MusicBrainz(new RequestsMbClient());
+        $mb = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array(
             'url-rels'
         );
@@ -1065,7 +1065,7 @@ class Art extends database_object
             return $images;
         }
 
-        $asin = $release['asin'];
+        $asin = $release->asin;
 
         if ($asin) {
             debug_event('mbz-gatherart', "Found ASIN: " . $asin, '5');
