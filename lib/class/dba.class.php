@@ -188,7 +188,7 @@ class Dba
         return $result;
     }
 
-     public static function fetch_object($resource, $class = 'stdClass', $finish = true)
+    public static function fetch_object($resource, $class = 'stdClass', $finish = true)
     {
         if (!$resource) {
             return array();

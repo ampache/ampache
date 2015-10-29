@@ -54,12 +54,11 @@ class Core
             $possiblePaths = self::getNamespacedPaths($class);
         }
 
-        foreach($possiblePaths as $path) {
-            if(is_file($path) && Core::is_readable($path)) {
+        foreach ($possiblePaths as $path) {
+            if (is_file($path) && Core::is_readable($path)) {
                 require_once($path);
                 self::executeAutoCall($class);
-            }
-            else {
+            } else {
                 debug_event('autoload', "'$class' not found!", 1);
             }
         }
@@ -69,7 +68,8 @@ class Core
      * Execute _auto_init if availlable
      * @param string $class
      */
-    private static function executeAutoCall($class) {
+    private static function executeAutoCall($class)
+    {
         $autocall = array($class, '_auto_init');
         if (is_callable($autocall)) {
             call_user_func($autocall);
@@ -83,7 +83,8 @@ class Core
      * @param array $add
      * @return array
      */
-    private static function insertInArray(array $array, $position, array $add) {
+    private static function insertInArray(array $array, $position, array $add)
+    {
         return array_slice($array, 0, $position, true) +
                 $add +
                 array_slice($array, $position, null, true);
@@ -94,7 +95,8 @@ class Core
      * @param string $class
      * @return string
      */
-    private static function getNamespacedPaths($class) {
+    private static function getNamespacedPaths($class)
+    {
         $possiblePaths = array();
         $namespaceParts = explode('\\', $class);
         $possiblePaths[] = AmpConfig::get('prefix') . '/modules/' . implode('/', $namespaceParts) . '.php';
@@ -111,7 +113,8 @@ class Core
      * @param string $class
      * @return string
      */
-    private static function getNonNamespacedPaths($class) {
+    private static function getNonNamespacedPaths($class)
+    {
         $possiblePaths = array();
         $possiblePaths[] = AmpConfig::get('prefix') . '/lib/class/' .
                 strtolower($class) . '.class.php';

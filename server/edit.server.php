@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
     case 'edit_object':
         // Scrub the data, walk recursive through array
         $entities = function(&$data) use (&$entities) {
-            foreach($data as $key => $value) {
+            foreach ($data as $key => $value) {
                 $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
             }
             return $data;

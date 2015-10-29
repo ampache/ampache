@@ -518,9 +518,9 @@ class Update
         $version[] = array('version' => '370039','description' => $update_string);
 
         $update_string = "- Add basic metadata tables<br />";
-$version[] = array('version' => '370040', 'description' => $update_string);
+        $version[] = array('version' => '370040', 'description' => $update_string);
 
-return $version;
+        return $version;
     }
 
     /**

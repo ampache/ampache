@@ -290,7 +290,7 @@ class Song extends database_object implements media, library_item
     /**
      * Aliases used in insert function
      */
-    const aliases = array(
+    public static $aliases = array(
         'mb_trackid','mbid','mb_albumid','mb_albumid_group','mb_artistid','mb_albumartistid','genre','publisher'
     );
 
@@ -870,7 +870,7 @@ class Song extends database_object implements media, library_item
             } else {
                 $newSongData = $new_song->$key;
             }
-            
+
             // If it's a stringie thing
             if (in_array($key, $string_array)) {
                 $songData = self::clean_string_field_value($songData);
@@ -898,12 +898,12 @@ class Song extends database_object implements media, library_item
     private static function clean_string_field_value($value)
     {
         $value = trim(stripslashes(preg_replace('/\s+/', ' ', $value)));
-        
+
         // Strings containing  only UTF-8 BOM = empty string
         if (strlen($value) == 2 && (ord($value[0]) == 0xFF || ord($value[0]) == 0xFE)) {
             $value = "";
         }
-        
+
         return $value;
     }
 
@@ -2026,3 +2026,4 @@ class Song extends database_object implements media, library_item
         return $deleted;
     }
 } // end of song class
+

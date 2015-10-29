@@ -32,7 +32,7 @@ abstract class DatabaseObject
 {
     protected $id;
     //private $originalData;
-    
+
     /**
      *
      * @var array Stores relation between SQL field name and class name so we

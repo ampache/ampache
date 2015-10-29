@@ -869,3 +869,4 @@ class Catalog_local extends Catalog
         }
     }
 } // end of local catalog class
+
