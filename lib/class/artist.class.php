@@ -774,6 +774,7 @@ class Artist extends database_object implements library_item
                 Stats::gc();
                 Rating::gc();
                 Userflag::gc();
+                Useractivity::gc();
             } // if updated
         } else {
             if ($this->mbid != $mbid) {
@@ -892,6 +893,7 @@ class Artist extends database_object implements library_item
                 Userflag::gc('artist', $this->id);
                 Rating::gc('artist', $this->id);
                 Shoutbox::gc('artist', $this->id);
+                Useractivity::gc('artist', $this->id);
             }
         }
 

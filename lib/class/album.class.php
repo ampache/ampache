@@ -916,6 +916,7 @@ class Album extends database_object implements library_item
             Stats::gc();
             Rating::gc();
             Userflag::gc();
+            Useractivity::gc();
         } // if updated
 
         $override_childs = false;
@@ -982,6 +983,7 @@ class Album extends database_object implements library_item
                 Userflag::gc('album', $this->id);
                 Rating::gc('album', $this->id);
                 Shoutbox::gc('album', $this->id);
+                Useractivity::gc('album', $this->id);
             }
         }
 

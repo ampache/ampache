@@ -1300,6 +1300,15 @@ class User extends database_object
     } // get_ip_history
 
     /**
+     * Get item fullname.
+     * @return string
+     */
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    /**
      * get_avatar
      * Get the user avatar
      */
@@ -1477,6 +1486,8 @@ class User extends database_object
         } else {
             $sql = "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)";
             $params[] = time();
+            
+            Useractivity::post_activity($this->id, 'follow', 'user', $user_id);
         }
 
         return Dba::write($sql, $params);
@@ -1485,7 +1496,7 @@ class User extends database_object
     /**
      * get_display_follow
      * Get html code to display the follow/unfollow link
-     * @param $display_user_id int|null
+     * @param int|null $display_user_id
      * @return string
      */
     public function get_display_follow($user_id = null)

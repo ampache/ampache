@@ -426,6 +426,7 @@ class TVShow extends database_object implements library_item
                 Userflag::gc('tvshow', $this->id);
                 Rating::gc('tvshow', $this->id);
                 Shoutbox::gc('tvshow', $this->id);
+                Useractivity::gc('tvshow', $this->id);
             }
         }
 

@@ -985,6 +985,30 @@ class Api
     } // following
 
     /**
+     * toggle_follow
+     * This follow/unfollow an user
+     * @param array $input
+     */
+    public static function toggle_follow($input)
+    {
+        if (AmpConfig::get('sociable')) {
+            $username = $input['username'];
+            if (!empty($username)) {
+                $user = User::get_from_username($username);
+                if ($user !== null) {
+                    $GLOBALS['user']->toggle_follow($user->id);
+                    ob_end_clean();
+                    echo XML_Data::single_string('success');
+                }
+            } else {
+                debug_event('api', 'Username to toggle required on follow function call.', 1);
+            }
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // toggle_follow
+
+    /**
      * last_shouts
      * This get the latest posted shouts
      * @param array $input
@@ -1035,5 +1059,55 @@ class Api
             }
         }
     } // rate
+
+    /**
+     * timeline
+     * This get an user timeline
+     * @param array $input
+     */
+    public static function timeline($input)
+    {
+        if (AmpConfig::get('sociable')) {
+            $username = $input['username'];
+            $limit = intval($input['limit']);
+            $since = intval($input['since']);
+            
+            if (!empty($username)) {
+                $user = User::get_from_username($username);
+                if ($user !== null) {
+                    if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
+                        $activities = Useractivity::get_activities($user->id, $limit, $since);
+                        ob_end_clean();
+                        echo XML_Data::timeline($activities);
+                    }
+                }
+            } else {
+                debug_event('api', 'Username required on timeline function call.', 1);
+            }
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // timeline
+
+    /**
+     * timeline
+     * This get current user friends timeline
+     * @param array $input
+     */
+    public static function friends_timeline($input)
+    {
+        if (AmpConfig::get('sociable')) {
+            $limit = intval($input['limit']);
+            $since = intval($input['since']);
+            
+            if ($GLOBALS['user']->id > 0) {
+                $activities = Useractivity::get_friends_activities($GLOBALS['user']->id, $limit, $since);
+                ob_end_clean();
+                echo XML_Data::timeline($activities);
+            }
+        } else {
+            debug_event('api', 'Sociable feature is not enabled.', 3);
+        }
+    } // friends_timeline
 } // API class
 

@@ -676,6 +676,38 @@ class XML_Data
     } // shouts
 
     /**
+     * timeline
+     *
+     * This handles creating an xml document for an activity list
+     *
+     * @param    int[]    $activities    Activity identifier list
+     * @return    string    return xml
+     */
+    public static function timeline($activities)
+    {
+        $string = "<timeline>\n";
+        foreach ($activities as $aid) {
+            $activity = new Useractivity($aid);
+            $shout->format();
+            $user = new User($activity->user);
+            $string .= "\t<activity id=\"" . $aid . "\">\n" .
+                    "\t\t<date>" . $activity->activity_date . "</date>\n" .
+                    "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" .
+                    "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .
+                    "\t\t<action><![CDATA[" . $shout->text . "]]></action>\n";
+            if ($user->id) {
+                $string .= "\t\t<username><![CDATA[" . $user->username ."]]></username>";
+            }
+            $string .= "\t</activity>n";
+        }
+        $string .= "</timeline>\n";
+
+        $final = self::_header() . $string . self::_footer();
+
+        return $final;
+    } // timeline
+
+    /**
      * rss_feed
      *
      * (description here...)

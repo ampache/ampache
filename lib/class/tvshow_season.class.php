@@ -334,6 +334,7 @@ class TVShow_Season extends database_object implements library_item
                 Userflag::gc('tvshow_season', $this->id);
                 Rating::gc('tvshow_season', $this->id);
                 Shoutbox::gc('tvshow_season', $this->id);
+                Useractivity::gc('tvshow_season', $this->id);
             }
         }
 

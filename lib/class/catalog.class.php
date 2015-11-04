@@ -1677,6 +1677,7 @@ abstract class Catalog extends database_object
         Stats::gc();
         Rating::gc();
         Userflag::gc();
+        Useractivity::gc();
         Playlist::gc();
         Tmp_Playlist::gc();
         Shoutbox::gc();

@@ -150,6 +150,8 @@ if ($client->f_avatar) {
     ?></a></li>
             <li><a href="#followers"><?php echo T_('Followers');
     ?></a></li>
+            <li><a href="#timeline"><?php echo T_('Timeline');
+    ?></a></li>
             <?php 
 } ?>
         </ul>
@@ -236,6 +238,18 @@ if ($client->f_avatar) {
     $browse->store();
     ?>
         </div>
+            <div id="timeline" class="tab_content">
+                <?php
+                if (Preference::get_by_user($client->id, 'allow_personal_info_recent')) {
+                    $activities = Useractivity::get_activities($client->id);
+                    Useractivity::build_cache($activities);
+                    foreach ($activities as $aid) {
+                        $activity = new Useractivity($aid);
+                        $activity->show();
+                    }
+                }
+    ?>
+            </div>
         <?php 
 } ?>
     </div>

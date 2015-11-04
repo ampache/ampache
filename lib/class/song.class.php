@@ -399,6 +399,10 @@ class Song extends database_object implements media, library_item
         }
 
         $song_id = Dba::insert_id();
+        
+        if ($user_upload) {
+            Useractivity::post_activity($this->id, 'upload', 'song', $song_id);
+        }
 
         if (is_array($tags)) {
             // Allow scripts to populate new tags when injecting user uploads
@@ -1971,6 +1975,7 @@ class Song extends database_object implements media, library_item
                 Userflag::gc('song', $this->id);
                 Rating::gc('song', $this->id);
                 Shoutbox::gc('song', $this->id);
+                Useractivity::gc('song', $this->id);
             }
         } else {
             debug_event('song', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);

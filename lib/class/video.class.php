@@ -982,6 +982,7 @@ class Video extends database_object implements media, library_item
                 Userflag::gc('video', $this->id);
                 Rating::gc('video', $this->id);
                 Shoutbox::gc('video', $this->id);
+                Useractivity::gc('video', $this->id);
             }
         } else {
             debug_event('video', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);

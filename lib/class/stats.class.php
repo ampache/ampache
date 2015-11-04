@@ -115,6 +115,10 @@ class Stats
             $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`count_type`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $db_results = Dba::write($sql, array($type, $oid, $count_type, time(), $user, $agent, $latitude, $longitude, $geoname));
+            
+            if (Core::is_media($type)) {
+                Useractivity::post_activity($user, 'play', $type, $oid);
+            }
 
             if (!$db_results) {
                 debug_event('statistics', 'Unabled to insert statistics:' . $sql, '3');

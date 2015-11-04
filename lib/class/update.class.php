@@ -516,6 +516,9 @@ class Update
 
         $update_string = " - Renamed false named sample_rate option name in preference table.<br />";
         $version[] = array('version' => '370039','description' => $update_string);
+        
+        $update_string = " - Add user_activity table.<br />";
+        $version[] = array('version' => '370040','description' => $update_string);
 
         return $version;
     }
@@ -2053,7 +2056,7 @@ class Update
 
         // Insert new recently played preference
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_personal_info_recent','1','Personal information visibility - Recently played',25,'boolean','interface')";
+            "VALUES ('allow_personal_info_recent','1','Personal information visibility - Recently played / actions',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -3579,6 +3582,27 @@ class Update
         $retval = true;
 
         $sql = "UPDATE `preference` SET `name` = 'transcode_bitrate' WHERE `preference`.`name` = 'sample_rate'";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+    
+    /**
+     * update_370040
+     *
+     * Add user_activity table
+     */
+    public static function update_370040()
+    {
+        $retval = true;
+
+        $sql = "CREATE TABLE `user_activity` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+            "`user` INT( 11 ) NOT NULL , " .
+            "`action` varchar(20) NOT NULL , " .
+            "`object_id` INT( 11 ) UNSIGNED NOT NULL , " .
+            "`object_type` VARCHAR( 32 ) NOT NULL, " .
+            "`activity_date` INT( 11 ) UNSIGNED NOT NULL" .
+            ") ENGINE = MYISAM";
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;

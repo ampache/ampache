@@ -156,6 +156,8 @@ class Userflag extends database_object
             "(`object_id`, `object_type`, `user`, `date`) " .
             "VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $user_id, time());
+            
+            Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
         }
         Dba::write($sql, $params);
 
