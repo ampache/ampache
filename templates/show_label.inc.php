@@ -52,7 +52,7 @@ if ($label->website) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-        <?php if (Access::check('interface','25')) {
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>

@@ -35,7 +35,7 @@ if (Art::is_enabled()) {
 <td class="cel_category"><?php echo $libitem->category; ?></td>
 <td class="cel_artists"><?php echo $libitem->artists; ?></td>
 <td class="cel_action">
-<?php if (Access::check('interface','25')) {
+<?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
     ?>
     <?php if (AmpConfig::get('sociable')) {
     ?>

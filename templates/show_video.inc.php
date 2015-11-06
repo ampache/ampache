@@ -112,7 +112,7 @@ $subtitles = $video->get_subtitles();
     ?>
         <?php 
 } ?>
-        <?php if (Access::check('interface','25')) {
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -122,6 +122,11 @@ $subtitles = $video->get_subtitles();
     ?></a>
             <?php 
 }
+    ?>
+        <?php 
+}
+    ?>
+    <?php if (Access::check('interface','25')) {
     ?>
             <?php if (AmpConfig::get('share')) {
     ?>

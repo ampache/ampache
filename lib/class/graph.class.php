@@ -462,12 +462,22 @@ class Graph
 
     public static function display_from_request()
     {
-        if (!Access::check('interface','50')) {
+        $object_type = $_REQUEST['object_type'];
+        $object_id = $_REQUEST['object_id'];
+        
+        $libitem = null;
+        $owner_id = 0;
+        if ($object_id) {
+            if (Core::is_library_item($object_type)) {
+                $libitem = new $object_type($object_id);
+                $owner_id = $libitem->get_user_owner();
+            }
+        }
+        
+        if (($owner_id <= 0 || $owner_id != $GLOBALS['user']->id) && !Access::check('interface','50')) {
             UI::access_denied();
         } else {
             $user_id = $_REQUEST['user_id'];
-            $object_type = $_REQUEST['object_type'];
-            $object_id = $_REQUEST['object_id'];
             $end_date = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
             $f_end_date = date("Y-m-d H:i", $end_date);
             $start_date = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);
@@ -485,13 +495,10 @@ class Graph
             }
 
             $blink = '';
-            if ($object_id) {
-                if (Core::is_library_item($object_type)) {
-                    $libitem = new $object_type($object_id);
-                    $libitem->format();
-                    if (isset($libitem->f_link)) {
-                        $blink = $libitem->f_link;
-                    }
+            if ($libitem !== null) {
+                $libitem->format();
+                if (isset($libitem->f_link)) {
+                    $blink = $libitem->f_link;
                 }
             } else {
                 if ($user_id) {

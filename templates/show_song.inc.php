@@ -109,7 +109,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <?php 
 } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add to temporary playlist'),'add_song_' . $song->id); ?>
-        <?php if (Access::check('interface','25')) {
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -121,6 +121,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
                 </a>
             <?php 
 }
+    ?>
+        <?php 
+}
+    ?>
+        <?php if (Access::check('interface','25')) {
     ?>
             <?php if (AmpConfig::get('share')) {
     ?>
@@ -142,7 +147,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?></a>
         <?php 
 } ?>
-        <?php if (Access::check('interface','50')) {
+        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface','50')) {
     ?>
             <?php if (AmpConfig::get('statistical_graphs')) {
     ?>
@@ -155,7 +160,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>
         <?php 
 } ?>
-        <?php if (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
+        <?php if (Access::check('interface','50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
     ?>
             <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit'));

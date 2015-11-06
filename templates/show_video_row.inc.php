@@ -105,7 +105,7 @@ if ($video_type != 'video') {
 } ?>
 <td class="cel_action">
 <a href="<?php echo $libitem->link; ?>"><?php echo UI::get_icon('preferences', T_('Video Information')); ?></a>
-<?php if (Access::check('interface','25')) {
+<?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
     ?>
     <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -115,6 +115,11 @@ if ($video_type != 'video') {
     ?></a>
     <?php 
 }
+    ?>
+    <?php 
+}
+    ?>
+    <?php if (Access::check('interface','25')) {
     ?>
     <?php if (AmpConfig::get('share')) {
     ?>

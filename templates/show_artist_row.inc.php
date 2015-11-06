@@ -104,7 +104,7 @@ if (Art::is_enabled()) {
 <?php 
 } ?>
 <td class="cel_action">
-<?php if (Access::check('interface','25')) {
+<?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
     ?>
     <?php if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
     ?>
