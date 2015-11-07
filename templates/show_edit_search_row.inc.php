@@ -30,7 +30,7 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Type') ?></td>
                 <td>
-                    <?php $name = 'select_' . $libitem->type; ?>
+                    <?php $name    = 'select_' . $libitem->type; ?>
                     <?php ${$name} = ' selected="selected"'; ?>
                     <select name="pl_type">
                         <option value="public"<?php echo $select_public; ?>><?php echo T_('Public'); ?></option>

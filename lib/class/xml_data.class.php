@@ -31,9 +31,9 @@
 class XML_Data
 {
     // This is added so that we don't pop any webservers
-    private static $limit = 5000;
+    private static $limit  = 5000;
     private static $offset = 0;
-    private static $type = '';
+    private static $type   = '';
 
     /**
      * constructor
@@ -55,7 +55,7 @@ class XML_Data
      */
     public static function set_offset($offset)
     {
-        $offset = intval($offset);
+        $offset       = intval($offset);
         self::$offset = $offset;
     } // set_offset
 
@@ -73,7 +73,7 @@ class XML_Data
             return false;
         }
 
-        $limit = intval($limit);
+        $limit       = intval($limit);
         self::$limit = $limit;
     } // set_limit
 
@@ -229,7 +229,7 @@ class XML_Data
             // See if the key has attributes
             if (is_array($value) AND isset($value['<attributes>'])) {
                 $attribute = ' ' . $value['<attributes>'];
-                $key = $value['value'];
+                $key       = $value['value'];
             }
 
             // If it's an array, run again
@@ -265,7 +265,7 @@ class XML_Data
         $string = '';
 
         foreach ($tags as $tag_id) {
-            $tag = new Tag($tag_id);
+            $tag    = new Tag($tag_id);
             $counts = $tag->count();
             $string .= "<tag id=\"$tag_id\">\n" .
                     "\t<name><![CDATA[$tag->name]]></name>\n" .
@@ -306,7 +306,7 @@ class XML_Data
             $artist = new Artist($artist_id);
             $artist->format();
 
-            $rating = new Rating($artist_id,'artist');
+            $rating     = new Rating($artist_id,'artist');
             $tag_string = self::tags_string($artist->tags);
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
@@ -446,9 +446,9 @@ class XML_Data
 
             $song->format();
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
-            $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
-            $rating = new Rating($song_id, 'song');
-            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id));
+            $rating                = new Rating($song_id, 'song');
+            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
                 "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
@@ -456,11 +456,11 @@ class XML_Data
                     '"><![CDATA[' . $song->get_artist_name() .
                     "]]></artist>\n" .
                 "\t<album id=\"" . $song->album .
-                    '"><![CDATA[' . $song->get_album_name().
+                    '"><![CDATA[' . $song->get_album_name() .
                     "]]></album>\n";
             if ($song->albumartist) {
                 $string .= "\t<albumartist id=\"" . $song->albumartist .
-                    "\"><![CDATA[" . $song->get_album_artist_name(). "]]></albumartist>\n";
+                    "\"><![CDATA[" . $song->get_album_artist_name() . "]]></albumartist>\n";
             }
             $string .= $tag_string .
                 "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
@@ -560,8 +560,8 @@ class XML_Data
             $song->format();
 
             //FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag = new Tag($song->tags['0']);
-            $song->genre = $tag->id;
+            $tag           = new Tag($song->tags['0']);
+            $song->genre   = $tag->id;
             $song->f_genre = $tag->name;
 
             $tag_string = self::tags_string($song->tags);
@@ -664,7 +664,7 @@ class XML_Data
                     "\t\t<date>" . $shout->date . "</date>\n" .
                     "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
             if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username ."]]></username>";
+                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
             $string .= "\t</shout>n";
         }
@@ -696,7 +696,7 @@ class XML_Data
                     "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .
                     "\t\t<action><![CDATA[" . $shout->text . "]]></action>\n";
             if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username ."]]></username>";
+                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
             $string .= "\t</activity>n";
         }
@@ -755,7 +755,7 @@ class XML_Data
                         "<title>" . ($title ?: "Ampache XSPF Playlist") . "</title>\n" .
                         "<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n" .
                         "<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n" .
-                        "<info>". AmpConfig::get('web_path') ."</info>\n" .
+                        "<info>" . AmpConfig::get('web_path') . "</info>\n" .
                         "<trackList>\n";
             break;
             case 'itunes':

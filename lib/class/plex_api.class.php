@@ -41,11 +41,11 @@ class Plex_Api
 
     protected static function is_local()
     {
-        $local = false;
+        $local      = false;
         $local_auth = AmpConfig::get('plex_local_auth');
         if (!$local_auth) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-            $lip = ip2long($ip);
+            $ip    = $_SERVER['REMOTE_ADDR'];
+            $lip   = ip2long($ip);
             $rangs = array(
                 array('127.0.0.1', '127.0.0.1'),
                 array('10.0.0.1', '10.255.255.254'),
@@ -71,7 +71,7 @@ class Plex_Api
     {
         $isLocal = self::is_local();
 
-        $headers = apache_request_headers();
+        $headers      = apache_request_headers();
         $myplex_token = $headers['X-Plex-Token'];
         if (empty($myplex_token)) {
             $myplex_token = $_REQUEST['X-Plex-Token'];
@@ -96,12 +96,12 @@ class Plex_Api
             $createSession = false;
             Session::gc();
             $username = "";
-            $email = trim(Session::read((string) $myplex_token));
+            $email    = trim(Session::read((string) $myplex_token));
 
             if (empty($email)) {
                 $createSession = true;
-                $xml = self::get_server_authtokens();
-                $validToken = false;
+                $xml           = self::get_server_authtokens();
+                $validToken    = false;
                 foreach ($xml->access_token as $tk) {
                     if ((string) $tk['token'] == $myplex_token) {
                         $username = (string) $tk['username'];
@@ -155,7 +155,7 @@ class Plex_Api
                     }
                 }
             } else {
-                $email = $username;
+                $email    = $username;
                 $username = null;
 
                 $GLOBALS['user'] = new User();
@@ -186,7 +186,7 @@ class Plex_Api
                 $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
             } else {
                 $GLOBALS['user'] = new User();
-                $data = array(
+                $data            = array(
                     'type' => 'api',
                     'sid' => $sid,
                 );
@@ -244,8 +244,8 @@ class Plex_Api
         $ach = $reqheaders['Access-Control-Request-Headers'];
         if ($ach) {
             //$filter = explode(',', $ach);
-            $filter = null;
-            $headers = self::getPlexHeaders(true, $filter);
+            $filter     = null;
+            $headers    = self::getPlexHeaders(true, $filter);
             $headerkeys = array();
             foreach ($headers as $key => $value) {
                 $headerkeys[] = $key;
@@ -300,7 +300,7 @@ class Plex_Api
                 break;
         }
         header("Content-type: text/html", true);
-        header("HTTP/1.0 ". $code . " " . $error, true, $code);
+        header("HTTP/1.0 " . $code . " " . $error, true, $code);
 
         $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
         self::apiOutput($html);
@@ -353,8 +353,8 @@ class Plex_Api
 
     public static function publishDeviceConnection($authtoken)
     {
-        $headers = array ();
-        $action = 'devices/' . Plex_XML_Data::getMachineIdentifier() . '?Connection[][uri]=' . Plex_XML_Data::getServerUri() . '&X-Plex-Token=' . $authtoken;
+        $headers  = array ();
+        $action   = 'devices/' . Plex_XML_Data::getMachineIdentifier() . '?Connection[][uri]=' . Plex_XML_Data::getServerUri() . '&X-Plex-Token=' . $authtoken;
         $curlopts = array(
             CURLOPT_CUSTOMREQUEST => "PUT"
         );
@@ -367,7 +367,7 @@ class Plex_Api
         $headers = array (
             'Content-Type: text/xml'
         );
-        $action = 'servers/' . Plex_XML_Data::getMachineIdentifier() . '.xml?auth_token=' . $authtoken;
+        $action   = 'servers/' . Plex_XML_Data::getMachineIdentifier() . '.xml?auth_token=' . $authtoken;
         $curlopts = array(
             CURLOPT_CUSTOMREQUEST => "DELETE"
         );
@@ -438,7 +438,7 @@ class Plex_Api
     public static function replay_header($ch, $header)
     {
         $rheader = trim($header);
-        $rhpart = explode(':', $rheader);
+        $rhpart  = explode(':', $rheader);
         if (!empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
                 header($rheader);
@@ -463,7 +463,7 @@ class Plex_Api
 
     protected static function myPlexRequest($action, $curlopts = array(), $headers = array(), $proxy = false)
     {
-        $server = Plex_XML_Data::getServerUri();
+        $server     = Plex_XML_Data::getServerUri();
         $allheaders = array();
         if (!$proxy) {
             $allheadersarr = self::getPlexHeaders();
@@ -496,12 +496,12 @@ class Plex_Api
 
         $ch = curl_init($url);
         curl_setopt_array($ch, $options);
-        $r = curl_exec($ch);
-        $res = array();
+        $r             = curl_exec($ch);
+        $res           = array();
         $res['status'] = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         $res['headers'] = self::$request_headers;
-        $res['raw'] = $r;
+        $res['raw']     = $r;
         try {
             $res['xml'] = simplexml_load_string($r);
         } catch (Exception $e) {
@@ -559,9 +559,9 @@ class Plex_Api
     {
         if (count($params) == 2) {
             if ($params[0] == ':' && $params[1] == 'transcode') {
-                $width = $_REQUEST['width'];
+                $width  = $_REQUEST['width'];
                 $height = $_REQUEST['height'];
-                $url = $_REQUEST['url'];
+                $url    = $_REQUEST['url'];
 
                 // Replace 32400 request port with the real listening port
                 // *** To `Plex Inc`: ***
@@ -573,7 +573,7 @@ class Plex_Api
                 $options = Core::requests_options();
                 if (strpos($url, $localrs) !== false) {
                     $options = array(); // In case proxy is set, no proxy for local addresses
-                    $url = "http://127.0.0.1:" . Plex_XML_Data::getServerPort() . "/" . substr($url, strlen($localrs));
+                    $url     = "http://127.0.0.1:" . Plex_XML_Data::getServerPort() . "/" . substr($url, strlen($localrs));
                 }
 
                 if ($width && $height && $url) {
@@ -582,9 +582,9 @@ class Plex_Api
                         ob_clean();
                         $mime = $request->headers['content-type'];
                         self::setHeader($mime);
-                        $art = new Art(0);
+                        $art      = new Art(0);
                         $art->raw = $request->body;
-                        $thumb = $art->generate_thumb($art->raw, array('width' => $width, 'height' => $height), $mime);
+                        $thumb    = $art->generate_thumb($art->raw, array('width' => $width, 'height' => $height), $mime);
                         echo $thumb['thumb'];
                         exit();
                     }
@@ -599,14 +599,14 @@ class Plex_Api
             if ($params[0] == ':' && $params[1] == 'transcode') {
                 if (count($params) == 3) {
                     $format = $_REQUEST['format'] ?: pathinfo($params[2], PATHINFO_EXTENSION);
-                    $url = $_REQUEST['url'];
-                    $br = $_REQUEST['audioBitrate'];
+                    $url    = $_REQUEST['url'];
+                    $br     = $_REQUEST['audioBitrate'];
                     if (preg_match("/\/parts\/([0-9]+)\//", $url, $matches)) {
                         $song_id = Plex_XML_Data::getAmpacheId($matches[1]);
                     }
                 } elseif (count($params) == 4 && $params[2] == 'universal') {
                     $format = pathinfo($params[3], PATHINFO_EXTENSION);
-                    $path = $_REQUEST['path'];
+                    $path   = $_REQUEST['path'];
                     // Should be the maximal allowed bitrate, not necessary the bitrate used but Ampache doesn't support this kind of option yet
                     $br = $_REQUEST['maxAudioBitrate'];
                     if (preg_match("/\/metadata\/([0-9]+)/", $path, $matches)) {
@@ -645,19 +645,19 @@ class Plex_Api
         $n = count($params);
         if ($n == 2) {
             $transcode_to = $params[0];
-            $action = $params[1];
-            $id = '';
+            $action       = $params[1];
+            $id           = '';
 
-            $path = $_GET['path'];
+            $path     = $_GET['path'];
             $protocol = $_GET['protocol'];
-            $offset = $_GET['offset'];
+            $offset   = $_GET['offset'];
 
             // Transcode arguments.
-            $videoQuality = $_GET['videoQuality'];
+            $videoQuality    = $_GET['videoQuality'];
             $videoResolution = $_GET['videoResolution'];
             $maxVideoBitrate = $_GET['maxVideoBitrate'];
-            $subtitleSize = $_GET['subtitleSize'];
-            $audioBoost = $_GET['audioBoost'];
+            $subtitleSize    = $_GET['subtitleSize'];
+            $audioBoost      = $_GET['audioBoost'];
 
             $additional_params = '&vsettings=';
             if ($videoResolution) {
@@ -684,7 +684,7 @@ class Plex_Api
             //$directStream = $_GET['directStream'];
 
             $uriroot = '/library/metadata/';
-            $upos = strrpos($path, $uriroot);
+            $upos    = strrpos($path, $uriroot);
             if ($upos !== false) {
                 $id = substr($path, $upos + strlen($uriroot));
             }
@@ -774,7 +774,7 @@ class Plex_Api
         if ($n == 0) {
             Plex_XML_Data::setSections($r, Catalog::get_catalogs());
         } else {
-            $key = $params[0];
+            $key     = $params[0];
             $catalog = Catalog::create_from_id($key);
             if (!$catalog) {
                 self::createError(404);
@@ -782,7 +782,7 @@ class Plex_Api
             if ($n == 1) {
                 Plex_XML_Data::setSectionContent($r, $catalog);
             } elseif ($n == 2) {
-                $view = $params[1];
+                $view   = $params[1];
                 $gtypes = $catalog->get_gather_types();
                 if ($gtypes[0] == 'music') {
                     $type = 'artist';
@@ -852,12 +852,12 @@ class Plex_Api
 
     public static function library_metadata($params)
     {
-        $r = Plex_XML_Data::createLibContainer();
-        $n = count($params);
+        $r     = Plex_XML_Data::createLibContainer();
+        $n     = count($params);
         $litem = null;
 
         $createMode = ($_SERVER['REQUEST_METHOD'] == 'POST');
-        $editMode = ($_SERVER['REQUEST_METHOD'] == 'PUT');
+        $editMode   = ($_SERVER['REQUEST_METHOD'] == 'PUT');
 
         if ($n > 0) {
             $key = $params[0];
@@ -870,7 +870,7 @@ class Plex_Api
             if ($n == 1) {
                 // Should we check that files still exists here?
                 $checkFiles = $_REQUEST['checkFiles'];
-                $extra = $_REQUEST['includeExtra'];
+                $extra      = $_REQUEST['includeExtra'];
 
                 if (Plex_XML_Data::isArtist($key)) {
                     $litem = new Artist($id);
@@ -1038,10 +1038,10 @@ class Plex_Api
                                 self::setHeader($art->raw_mime);
                                 echo $art->raw;
                             } else {
-                                $dim = array();
-                                $dim['width'] = $size;
+                                $dim           = array();
+                                $dim['width']  = $size;
                                 $dim['height'] = $size;
-                                $thumb = $art->get_thumb($dim);
+                                $thumb         = $art->get_thumb($dim);
                                 self::setHeader($art->thumb_mime);
                                 echo $thumb['thumb'];
                             }
@@ -1070,7 +1070,7 @@ class Plex_Api
         set_time_limit(0);
         ob_end_clean();
 
-        $headers = apache_request_headers();
+        $headers    = apache_request_headers();
         $reqheaders = array();
         if (isset($headers['Range'])) {
             $reqheaders[] = "Range: " . $headers['Range'];
@@ -1125,7 +1125,7 @@ class Plex_Api
             } elseif ($n == 1) {
                 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
                     if (isset($_GET['subtitleStreamID'])) {
-                        $lang_code = dechex(hex2bin(substr($_GET['subtitleStreamID'], 0, 2)));
+                        $lang_code                      = dechex(hex2bin(substr($_GET['subtitleStreamID'], 0, 2)));
                         $_SESSION['iframe']['subtitle'] = $lang_code;
                     }
                 }
@@ -1135,9 +1135,9 @@ class Plex_Api
 
     public static function library_recentlyadded($params)
     {
-        $data = array();
+        $data          = array();
         $data['album'] = Stats::get_newest('album', 25);
-        $r = Plex_XML_Data::createLibContainer();
+        $r             = Plex_XML_Data::createLibContainer();
         Plex_XML_Data::setCustomView($r, $data);
         Plex_XML_Data::setContainerSize($r);
         self::apiOutputXml($r->asXML());
@@ -1145,9 +1145,9 @@ class Plex_Api
 
     public static function library_ondeck($params)
     {
-        $data = array();
+        $data          = array();
         $data['album'] = Stats::get_recent('album', 25);
-        $r = Plex_XML_Data::createLibContainer();
+        $r             = Plex_XML_Data::createLibContainer();
         Plex_XML_Data::setCustomView($r, $data);
         Plex_XML_Data::setContainerSize($r);
         self::apiOutputXml($r->asXML());
@@ -1179,11 +1179,11 @@ class Plex_Api
 
     public static function system_agents($params)
     {
-        $r = Plex_XML_Data::createSysContainer();
+        $r               = Plex_XML_Data::createSysContainer();
         $addcontributors = false;
-        $mediaType = $_REQUEST['mediaType'];
+        $mediaType       = $_REQUEST['mediaType'];
         if (count($params) >= 3 && $params[1] == 'config') {
-            $mediaType = $params[2];
+            $mediaType       = $params[2];
             $addcontributors = true;
         }
 
@@ -1220,7 +1220,7 @@ class Plex_Api
 
     public static function system_agents_contributors($params)
     {
-        $mediaType = $_REQUEST['mediaType'];
+        $mediaType    = $_REQUEST['mediaType'];
         $primaryAgent = $_REQUEST['primaryAgent'];
 
         $r = Plex_XML_Data::createSysContainer();
@@ -1240,7 +1240,7 @@ class Plex_Api
     {
         if (count($params) > 0) {
             $type = $params[0];
-            $r = Plex_XML_Data::createSysContainer();
+            $r    = Plex_XML_Data::createSysContainer();
             Plex_XML_Data::setScanners($r, $type);
             Plex_XML_Data::setContainerSize($r);
             self::apiOutputXml($r->asXML());
@@ -1336,10 +1336,10 @@ class Plex_Api
     public static function timeline($params)
     {
         $ratingKey = $_REQUEST['ratingKey'];
-        $key = $_REQUEST['key'];
-        $state = $_REQUEST['state'];
-        $time = $_REQUEST['time'];
-        $duration = $_REQUEST['duration'];
+        $key       = $_REQUEST['key'];
+        $state     = $_REQUEST['state'];
+        $time      = $_REQUEST['time'];
+        $duration  = $_REQUEST['duration'];
 
         // Not supported right now (maybe in a future for broadcast?)
         header('Content-Type: text/html');
@@ -1347,9 +1347,9 @@ class Plex_Api
 
     public static function rate($params)
     {
-        $id = $_REQUEST['key'];
+        $id         = $_REQUEST['key'];
         $identifier = $_REQUEST['identifier'];
-        $rating = $_REQUEST['rating'];
+        $rating     = $_REQUEST['rating'];
 
         if ($identifier == 'com.plexapp.plugins.library') {
             $robj = new Rating(Plex_XML_Data::getAmpacheId($id), Plex_XML_Data::getLibraryItemType($id));
@@ -1364,7 +1364,7 @@ class Plex_Api
         }
 
         $action = 'users/account?auth_token=' . $authtoken;
-        $res = self::myPlexRequest($action);
+        $res    = self::myPlexRequest($action);
         return $res['xml'];
     }
 
@@ -1383,8 +1383,8 @@ class Plex_Api
     {
         if ($params[0] == 'sign_in.xml') {
             $curlopts = array();
-            $headers = array();
-            $res = self::myPlexRequest('users/sign_in.xml', $curlopts, $headers, true);
+            $headers  = array();
+            $res      = self::myPlexRequest('users/sign_in.xml', $curlopts, $headers, true);
 
             foreach ($res['headers'] as $header) {
                 header($header);
@@ -1413,8 +1413,8 @@ class Plex_Api
         $n = count($params);
 
         $createMode = ($_SERVER['REQUEST_METHOD'] == 'POST');
-        $editMode = ($_SERVER['REQUEST_METHOD'] == 'PUT');
-        $delMode = ($_SERVER['REQUEST_METHOD'] == 'DELETE');
+        $editMode   = ($_SERVER['REQUEST_METHOD'] == 'PUT');
+        $delMode    = ($_SERVER['REQUEST_METHOD'] == 'DELETE');
         if ($createMode || $editMode || $delMode) {
             self::check_access(50);
         }
@@ -1429,12 +1429,12 @@ class Plex_Api
                 //$summary = $_GET['summary'];
                 $uri = $_GET['uri'];
 
-                $plid = Playlist::create($title, 'public');
+                $plid     = Playlist::create($title, 'public');
                 $playlist = new Playlist($plid);
-                $key = Plex_XML_Data::getKeyFromFullUri($uri);
-                $id = Plex_XML_Data::getKeyFromMetadataUri($key);
+                $key      = Plex_XML_Data::getKeyFromFullUri($uri);
+                $id       = Plex_XML_Data::getKeyFromMetadataUri($key);
                 if ($id) {
-                    $item = Plex_XML_Data::createLibraryItem($id);
+                    $item   = Plex_XML_Data::createLibraryItem($id);
                     $medias = $item->get_medias();
                     $playlist->add_medias($medias);
                 }
@@ -1472,9 +1472,9 @@ class Plex_Api
                             // Add a new item to playlist
                             $uri = $_GET['uri'];
                             $key = Plex_XML_Data::getKeyFromFullUri($uri);
-                            $id = Plex_XML_Data::getKeyFromMetadataUri($key);
+                            $id  = Plex_XML_Data::getKeyFromMetadataUri($key);
                             if ($id) {
-                                $item = Plex_XML_Data::createLibraryItem($id);
+                                $item   = Plex_XML_Data::createLibraryItem($id);
                                 $medias = $item->get_medias();
                                 $playlist->add_medias($medias);
                                 Plex_XML_Data::addPlaylist($r, $playlist);
@@ -1507,11 +1507,11 @@ class Plex_Api
             $playlistID = $params[0];
             Plex_XML_Data::setTmpPlayQueue($r, $playlistID);
         } else {
-            $type = $_GET['type'];
+            $type       = $_GET['type'];
             $playlistID = $_GET['playlistID'];
-            $uri = $_GET['uri'];
-            $key = $_GET['key'];
-            $shuffle = $_GET['shuffle'];
+            $uri        = $_GET['uri'];
+            $key        = $_GET['key'];
+            $shuffle    = $_GET['shuffle'];
 
             Plex_XML_Data::setPlayQueue($r, $type, $playlistID, $uri, $key, $shuffle);
         }

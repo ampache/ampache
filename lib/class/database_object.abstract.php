@@ -53,7 +53,7 @@ abstract class database_object
             return self::get_from_cache($table_name,$id);
         }
 
-        $sql = "SELECT * FROM `$table_name` WHERE `id`='$id'";
+        $sql        = "SELECT * FROM `$table_name` WHERE `id`='$id'";
         $db_results = Dba::read($sql);
 
         if (!$db_results) {
@@ -114,7 +114,7 @@ abstract class database_object
             return false;
         }
 
-        $value = is_null($data) ? false : $data;
+        $value                           = is_null($data) ? false : $data;
         self::$object_cache[$index][$id] = $value;
     } // add_to_cache
 

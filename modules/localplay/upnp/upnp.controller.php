@@ -73,7 +73,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'localplay_upnp'";
+        $sql        = "SHOW TABLES LIKE 'localplay_upnp'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -85,7 +85,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function install()
     {
-        $sql = "CREATE TABLE `localplay_upnp` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+        $sql = "CREATE TABLE `localplay_upnp` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`owner` INT( 11 ) NOT NULL, " .
             "`url` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL  " .
@@ -104,7 +104,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function uninstall()
     {
-        $sql = "DROP TABLE `localplay_upnp`";
+        $sql        = "DROP TABLE `localplay_upnp`";
         $db_results = Dba::query($sql);
 
         // Remove the pref we added for this
@@ -132,7 +132,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function delete_instance($uid)
     {
-        $sql = "DELETE FROM `localplay_upnp` WHERE `id` = ?";
+        $sql        = "DELETE FROM `localplay_upnp` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($uid));
 
         return true;
@@ -145,7 +145,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get_instances()
     {
-        $sql = "SELECT * FROM `localplay_upnp` ORDER BY `name`";
+        $sql        = "SELECT * FROM `localplay_upnp` ORDER BY `name`";
         $db_results = Dba::query($sql);
 
         $results = array();
@@ -163,7 +163,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function update_instance($uid, $data)
     {
-        $sql = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ?  WHERE `id` = ?";
+        $sql        = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ?  WHERE `id` = ?";
         $db_results = Dba::query($sql, array($data['url'], $data['name'], $uid));
 
         return true;
@@ -190,9 +190,9 @@ class AmpacheUPnP extends localplay_controller
     {
         $instance = $instance ? $instance : AmpConfig::get('upnp_active');
 
-        $sql = "SELECT * FROM `localplay_upnp` WHERE `id` = ?";
+        $sql        = "SELECT * FROM `localplay_upnp` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($instance));
-        $row = Dba::fetch_assoc($db_results);
+        $row        = Dba::fetch_assoc($db_results);
 
         return $row;
     }
@@ -438,11 +438,11 @@ class AmpacheUPnP extends localplay_controller
         $playlist = $this->_upnp->GetPlaylistItems();
 
         $results = array();
-        $idx = 1;
+        $idx     = 1;
         foreach ($playlist as $key => $item) {
-            $data = array();
-            $data['link'] = $item['link'];
-            $data['id'] = $idx;
+            $data          = array();
+            $data['link']  = $item['link'];
+            $data['id']    = $idx;
             $data['track'] = $idx;
 
             $url_data = Stream_URL::parse($item['link']);
@@ -481,11 +481,11 @@ class AmpacheUPnP extends localplay_controller
 
         $status = array();
 
-        $status['state'] = $this->_upnp->GetState();
-        $status['volume'] = $this->_upnp->GetVolume();
-        $status['repeat'] = false;
-        $status['random'] = false;
-        $status['track'] = $item['link'];
+        $status['state']       = $this->_upnp->GetState();
+        $status['volume']      = $this->_upnp->GetVolume();
+        $status['repeat']      = false;
+        $status['random']      = false;
+        $status['track']       = $item['link'];
         $status['track_title'] = $item['name'];
 
         $url_data = Stream_URL::parse($item['link']);
@@ -493,7 +493,7 @@ class AmpacheUPnP extends localplay_controller
             $song = new Song($url_data['id']);
             if ($song != null) {
                 $status['track_artist'] = $song->get_artist_name();
-                $status['track_album'] = $song->get_album_name();
+                $status['track_album']  = $song->get_album_name();
             }
         }
 

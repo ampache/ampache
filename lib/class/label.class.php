@@ -119,7 +119,7 @@ class Label extends database_object implements library_item
 
     public function get_childrens()
     {
-        $medias = array();
+        $medias  = array();
         $artists = $this->get_artists();
         foreach ($artists as $artist_id) {
             $medias[] = array(
@@ -147,7 +147,7 @@ class Label extends database_object implements library_item
 
     public function get_keywords()
     {
-        $keywords = array();
+        $keywords          = array();
         $keywords['label'] = array('important' => true,
             'label' => T_('Label'),
             'value' => $this->f_name);
@@ -181,11 +181,11 @@ class Label extends database_object implements library_item
 
     public function search_childrens($name)
     {
-        $search['type'] = "artist";
-        $search['rule_0_input'] = $name;
+        $search['type']            = "artist";
+        $search['rule_0_input']    = $name;
         $search['rule_0_operator'] = 4;
-        $search['rule_0'] = "title";
-        $artists = Search::run($search);
+        $search['rule_0']          = "title";
+        $artists                   = Search::run($search);
 
         $childrens = array();
         foreach ($artists as $artist) {
@@ -222,22 +222,22 @@ class Label extends database_object implements library_item
             return false;
         }
 
-        $name = isset($data['name']) ? $data['name'] : $this->name;
+        $name     = isset($data['name']) ? $data['name'] : $this->name;
         $category = isset($data['category']) ? $data['category'] : $this->category;
-        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $address = isset($data['address']) ? $data['address'] : $this->address;
-        $email = isset($data['email']) ? $data['email'] : $this->email;
-        $website = isset($data['website']) ? $data['website'] : $this->website;
+        $summary  = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $address  = isset($data['address']) ? $data['address'] : $this->address;
+        $email    = isset($data['email']) ? $data['email'] : $this->email;
+        $website  = isset($data['website']) ? $data['website'] : $this->website;
 
         $sql = "UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $this->id));
 
-        $this->name = $name;
+        $this->name     = $name;
         $this->category = $category;
-        $this->summary = $summary;
-        $this->address = $address;
-        $this->email = $email;
-        $this->website = $website;
+        $this->summary  = $summary;
+        $this->address  = $address;
+        $this->email    = $email;
+        $this->website  = $website;
 
         return $this->id;
     }
@@ -248,13 +248,13 @@ class Label extends database_object implements library_item
             return false;
         }
 
-        $name = $data['name'];
-        $category = $data['category'];
-        $summary = $data['summary'];
-        $address = $data['address'];
-        $email = $data['email'];
-        $website = $data['website'];
-        $user = $data['user'] ?: $GLOBALS['user']->id;
+        $name          = $data['name'];
+        $category      = $data['category'];
+        $summary       = $data['summary'];
+        $address       = $data['address'];
+        $email         = $data['email'];
+        $website       = $data['website'];
+        $user          = $data['user'] ?: $GLOBALS['user']->id;
         $creation_date = $data['creation_date'] ?: time();
 
         $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) " .
@@ -267,11 +267,11 @@ class Label extends database_object implements library_item
 
     public static function lookup(array $data, $id = 0)
     {
-        $ret = -1;
+        $ret  = -1;
         $name = trim($data['name']);
         if (!empty($name)) {
-            $ret = 0;
-            $sql = "SELECT `id` FROM `label` WHERE `name` = ?";
+            $ret    = 0;
+            $sql    = "SELECT `id` FROM `label` WHERE `name` = ?";
             $params = array($name);
             if ($id > 0) {
                 $sql .= " AND `id` != ?";
@@ -293,9 +293,9 @@ class Label extends database_object implements library_item
 
     public function get_artists()
     {
-        $sql = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
+        $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
         $db_results = Dba::read($sql, array($this->id));
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['artist'];
         }
@@ -344,7 +344,7 @@ class Label extends database_object implements library_item
 
     public function remove()
     {
-        $sql = "DELETE FROM `label` WHERE `id` = ?";
+        $sql     = "DELETE FROM `label` WHERE `id` = ?";
         $deleted = Dba::write($sql, array($this->id));
         if ($deleted) {
             Art::gc('label', $this->id);
@@ -359,9 +359,9 @@ class Label extends database_object implements library_item
 
     public static function get_all_labels()
     {
-        $sql = "SELECT `id`, `name` FROM `label`";
+        $sql        = "SELECT `id`, `name` FROM `label`";
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
@@ -374,7 +374,7 @@ class Label extends database_object implements library_item
                "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` " .
                "WHERE `label_asso`.`artist` = ?";
         $db_results = Dba::read($sql, array($artist_id));
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
@@ -416,16 +416,16 @@ class Label extends database_object implements library_item
      */
     public static function update_label_list($labels_comma, $artist_id, $overwrite)
     {
-        debug_event('label.class', 'Updating labels for values {'.$labels_comma.'} artist {'.$artist_id.'}', '5');
+        debug_event('label.class', 'Updating labels for values {' . $labels_comma . '} artist {' . $artist_id . '}', '5');
 
-        $clabels = Label::get_labels($artist_id);
+        $clabels      = Label::get_labels($artist_id);
         $editedLabels = explode(",", $labels_comma);
 
         if (is_array($clabels)) {
             foreach ($clabels as $clid => $clv) {
                 if ($clid) {
                     $clabel = new Label($clid);
-                    debug_event('label.class', 'Processing label {'.$clabel->name.'}...', '5');
+                    debug_event('label.class', 'Processing label {' . $clabel->name . '}...', '5');
                     $found = false;
 
                     foreach ($editedLabels as  $lk => $lv) {
@@ -451,7 +451,7 @@ class Label extends database_object implements library_item
         // Look if we need to add some new labels
         foreach ($editedLabels as  $lk => $lv) {
             if ($lv != '') {
-                debug_event('label.class', 'Adding new label {'.$lv.'}', '5');
+                debug_event('label.class', 'Adding new label {' . $lv . '}', '5');
                 $label_id = Label::lookup(array('name' => $lv));
                 if ($label_id === 0) {
                     debug_event('label.class', 'Creating a label directly from artist editing is not allowed.', '5');

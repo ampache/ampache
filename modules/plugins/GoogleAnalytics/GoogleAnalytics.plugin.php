@@ -93,7 +93,7 @@ class AmpacheGoogleAnalytics
         echo "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n";
         echo "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n";
         echo "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n";
-        echo "ga('create', '" . scrub_out($this->tracking_id) ."', 'auto');\n";
+        echo "ga('create', '" . scrub_out($this->tracking_id) . "', 'auto');\n";
         echo "ga('send', 'pageview');\n";
         echo "</script>\n";
     }

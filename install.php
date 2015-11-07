@@ -35,17 +35,17 @@ if (!install_check_status($configfile)) {
 
 define('INSTALL', 1);
 
-$htaccess_play_file = AmpConfig::get('prefix') . '/play/.htaccess';
-$htaccess_rest_file = AmpConfig::get('prefix') . '/rest/.htaccess';
+$htaccess_play_file    = AmpConfig::get('prefix') . '/play/.htaccess';
+$htaccess_rest_file    = AmpConfig::get('prefix') . '/rest/.htaccess';
 $htaccess_channel_file = AmpConfig::get('prefix') . '/channel/.htaccess';
 
 // Clean up incoming variables
-$web_path = scrub_in($_REQUEST['web_path']);
-$username = scrub_in($_REQUEST['local_username']);
-$password = $_REQUEST['local_pass'];
-$hostname = scrub_in($_REQUEST['local_host']);
-$database = scrub_in($_REQUEST['local_db']);
-$port = scrub_in($_REQUEST['local_port']);
+$web_path   = scrub_in($_REQUEST['web_path']);
+$username   = scrub_in($_REQUEST['local_username']);
+$password   = $_REQUEST['local_pass'];
+$hostname   = scrub_in($_REQUEST['local_host']);
+$database   = scrub_in($_REQUEST['local_db']);
+$port       = scrub_in($_REQUEST['local_port']);
 $skip_admin = isset($_REQUEST['skip_admin']);
 
 AmpConfig::set_by_array(array(
@@ -91,9 +91,9 @@ if (!$htmllang) {
         $lang = 'en_US';
     }
     if (strpos($lang, '.')) {
-        $langtmp = explode('.', $lang);
+        $langtmp  = explode('.', $lang);
         $htmllang = $langtmp[0];
-        $charset = $langtmp[1];
+        $charset  = $langtmp[1];
     } else {
         $htmllang = $lang;
     }
@@ -138,17 +138,17 @@ switch ($_REQUEST['action']) {
         require_once 'templates/show_install_config.inc.php';
     break;
     case 'create_config':
-        $all = (isset($_POST['create_all']));
+        $all  = (isset($_POST['create_all']));
         $skip = (isset($_POST['skip_config']));
         if (!$skip) {
-            $write = (isset($_POST['write']));
-            $download = (isset($_POST['download']));
+            $write                     = (isset($_POST['write']));
+            $download                  = (isset($_POST['download']));
             $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
-            $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
-            $download_htaccess_play = (isset($_POST['download_htaccess_play']));
-            $write_htaccess_channel = (isset($_POST['write_htaccess_channel']));
-            $write_htaccess_rest = (isset($_POST['write_htaccess_rest']));
-            $write_htaccess_play = (isset($_POST['write_htaccess_play']));
+            $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
+            $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
+            $write_htaccess_channel    = (isset($_POST['write_htaccess_channel']));
+            $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
+            $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
 
             $created_config = true;
             if ($write_htaccess_channel || $download_htaccess_channel || $all) {

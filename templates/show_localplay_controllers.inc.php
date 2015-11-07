@@ -41,10 +41,10 @@ $web_path = AmpConfig::get('web_path');
             }
             $localplay->format();
             if (Localplay::is_enabled($controller)) {
-                $action     = 'confirm_uninstall_localplay';
+                $action        = 'confirm_uninstall_localplay';
                 $action_txt    = T_('Disable');
             } else {
-                $action = 'install_localplay';
+                $action        = 'install_localplay';
                 $action_txt    = T_('Activate');
             }
             ?>

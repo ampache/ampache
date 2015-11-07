@@ -66,8 +66,8 @@ class Movie extends Video
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
         $trimmed = Catalog::trim_prefix(trim($data['original_name']));
-        $name = $trimmed['string'];
-        $prefix = $trimmed['prefix'];
+        $name    = $trimmed['string'];
+        $prefix  = $trimmed['prefix'];
 
         $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) " .
             "VALUES (?, ?, ?, ?, ?)";
@@ -86,22 +86,22 @@ class Movie extends Video
 
         if (isset($data['original_name'])) {
             $trimmed = Catalog::trim_prefix(trim($data['original_name']));
-            $name = $trimmed['string'];
-            $prefix = $trimmed['prefix'];
+            $name    = $trimmed['string'];
+            $prefix  = $trimmed['prefix'];
         } else {
-            $name = $this->original_name;
+            $name   = $this->original_name;
             $prefix = $this->prefix;
         }
         $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $year = isset($data['year']) ? $data['year'] : $this->year;
+        $year    = isset($data['year']) ? $data['year'] : $this->year;
 
         $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
 
         $this->original_name = $name;
-        $this->prefix = $prefix;
-        $this->summary = $summary;
-        $this->year = $year;
+        $this->prefix        = $prefix;
+        $this->summary       = $summary;
+        $this->year          = $year;
 
         return $this->id;
     } // update
@@ -116,9 +116,9 @@ class Movie extends Video
         parent::format($details);
 
         $this->f_original_name = trim($this->prefix . " " . $this->f_title);
-        $this->f_title = ($this->f_original_name ?: $this->f_title);
-        $this->f_full_title = $this->f_title;
-        $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+        $this->f_title         = ($this->f_original_name ?: $this->f_title);
+        $this->f_full_title    = $this->f_title;
+        $this->f_link          = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
 
         return true;
     } //format
@@ -129,7 +129,7 @@ class Movie extends Video
      */
     public function get_keywords()
     {
-        $keywords = parent::get_keywords();
+        $keywords         = parent::get_keywords();
         $keywords['type'] = array('important' => false,
             'label' => null,
             'value' => 'movie'
@@ -150,7 +150,7 @@ class Movie extends Video
     {
         $deleted = parent::remove_from_disk();
         if ($deleted) {
-            $sql = "DELETE FROM `movie` WHERE `id` = ?";
+            $sql     = "DELETE FROM `movie` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
         }
 

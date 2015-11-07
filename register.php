@@ -42,7 +42,7 @@ if (AmpConfig::get('captcha_public_reg')) {
 /* Start switch based on action passed */
 switch ($_REQUEST['action']) {
     case 'validate':
-        $username     = scrub_in($_GET['username']);
+        $username      = scrub_in($_GET['username']);
         $validation    = scrub_in($_GET['auth']);
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_activate.inc.php');
     break;
@@ -153,7 +153,7 @@ switch ($_REQUEST['action']) {
         }
 
         if (!AmpConfig::get('user_no_email_confirm')) {
-            $client = new User($new_user);
+            $client     = new User($new_user);
             $validation = md5(uniqid(rand(), true));
             $client->update_validation($validation);
 

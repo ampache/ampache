@@ -59,21 +59,21 @@ function init_db()
 }
 
 init_db();
-$myplex_username = Plex_XML_Data::getMyPlexUsername();
-$myplex_authtoken = Plex_XML_Data::getMyPlexAuthToken();
-$myplex_published = Plex_XML_Data::getMyPlexPublished();
-$plex_servername = Plex_XML_Data::getServerName();
+$myplex_username     = Plex_XML_Data::getMyPlexUsername();
+$myplex_authtoken    = Plex_XML_Data::getMyPlexAuthToken();
+$myplex_published    = Plex_XML_Data::getMyPlexPublished();
+$plex_servername     = Plex_XML_Data::getServerName();
 $plex_public_address = Plex_XML_Data::getServerPublicAddress();
-$plex_public_port = Plex_XML_Data::getServerPublicPort();
-$plex_local_port = Plex_XML_Data::getServerPort();
-$plex_local_auth = AmpConfig::get('plex_local_auth');
-$plex_match_email = AmpConfig::get('plex_match_email');
+$plex_public_port    = Plex_XML_Data::getServerPublicPort();
+$plex_local_port     = Plex_XML_Data::getServerPort();
+$plex_local_auth     = AmpConfig::get('plex_local_auth');
+$plex_match_email    = AmpConfig::get('plex_match_email');
 
 $plexact = $_REQUEST['plexact'];
 switch ($plexact) {
     case 'auth_myplex':
-        $myplex_username = $_POST['myplex_username'];
-        $myplex_password = $_POST['myplex_password'];
+        $myplex_username  = $_POST['myplex_username'];
+        $myplex_password  = $_POST['myplex_password'];
         $plex_public_port = $_POST['plex_public_port'];
 
 
@@ -112,7 +112,7 @@ switch ($plexact) {
     case 'unauth_myplex':
         Plex_Api::unregisterMyPlex($myplex_authtoken);
 
-        $myplex_username = '';
+        $myplex_username  = '';
         $myplex_authtoken = '';
         $myplex_published = false;
         Preference::update('myplex_username', -1, $myplex_username, true, true);
@@ -121,8 +121,8 @@ switch ($plexact) {
     break;
 
     case 'save':
-        $plex_servername = $_POST['plex_servername'];
-        $plex_local_auth = $_POST['plex_local_auth'] ?: '0';
+        $plex_servername  = $_POST['plex_servername'];
+        $plex_local_auth  = $_POST['plex_local_auth'] ?: '0';
         $plex_match_email = $_POST['plex_match_email'] ?: '0';
 
         Preference::update('plex_servername', -1, $plex_servername, true, true);

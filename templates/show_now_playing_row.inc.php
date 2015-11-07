@@ -24,12 +24,12 @@
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
         <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id; ?>">
-        <?php echo scrub_out($np_user->fullname); ?>
-<?php
-        if ($np_user->f_avatar_medium) {
-            echo '<div>' . $np_user->f_avatar_medium . '</div>';
-        }
-?>
+        <?php
+            echo scrub_out($np_user->fullname);
+            if ($np_user->f_avatar_medium) {
+                echo '<div>' . $np_user->f_avatar_medium . '</div>';
+            }
+        ?>
         </a>
     </div>
 </div>
@@ -47,16 +47,18 @@
         <label><?php echo T_('Artist'); ?></label>
         <?php echo $media->f_artist_link; ?>
     </div>
-    <?php if (!empty($media->f_tags)) {
+    <?php
+        if (!empty($media->f_tags)) {
+            ?>
+            <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
+                <label><?php echo T_('Tags');
+            ?></label>
+                <?php echo $media->f_tags;
+            ?>
+            </div>
+        <?php 
+        }
     ?>
-        <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
-            <label><?php echo T_('Tags');
-    ?></label>
-            <?php echo $media->f_tags;
-    ?>
-        </div>
-    <?php 
-} ?>
 </div>
 
 <?php if (Art::is_enabled()) {
@@ -93,44 +95,46 @@
 </div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){
-    <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id='.$media->id.'&media_artist='.$media->artist, 'similar_now_playing');
+    <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id=' . $media->id . '&media_artist=' . $media->artist, 'similar_now_playing');
     ?>
 });
 </script>
 <?php 
 } ?>
 
-<?php if (Access::check('interface', '25')) {
-    ?>
-    <div class="np_group" id="np_group_4">
-    <?php if (AmpConfig::get('ratings')) {
-    ?>
-        <div class="np_cell cel_rating">
-            <label><?php echo T_('Rating');
-    ?></label>
-            <div id="rating_<?php echo $media->id;
-    ?>_song">
-                <?php Rating::show($media->id,'song');
-    ?>
+<?php
+    if (Access::check('interface', '25')) {
+        ?>
+        <div class="np_group" id="np_group_4">
+    <?php
+        if (AmpConfig::get('ratings')) {
+            ?>
+            <div class="np_cell cel_rating">
+                <label><?php echo T_('Rating');
+            ?></label>
+                <div id="rating_<?php echo $media->id;
+            ?>_song">
+                    <?php Rating::show($media->id,'song');
+            ?>
+                </div>
             </div>
+        <?php 
+        }
+        if (AmpConfig::get('userflags')) {
+            ?>
+            <div class="np_cell cel_userflag">
+                <label><?php echo T_('Fav.');
+            ?></label>
+                <div id="userflag_<?php echo $media->id;
+            ?>_song">
+                    <?php Userflag::show($media->id,'song');
+            ?>
+                </div>
+            </div>
+        <?php 
+        }
+        ?>
         </div>
     <?php 
-}
-    ?>
-    <?php if (AmpConfig::get('userflags')) {
-    ?>
-        <div class="np_cell cel_userflag">
-            <label><?php echo T_('Fav.');
-    ?></label>
-            <div id="userflag_<?php echo $media->id;
-    ?>_song">
-                <?php Userflag::show($media->id,'song');
-    ?>
-            </div>
-        </div>
-    <?php 
-}
-    ?>
-    </div>
-<?php 
-} ?>
+    }
+?>

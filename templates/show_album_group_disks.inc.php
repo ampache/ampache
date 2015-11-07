@@ -28,9 +28,9 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
-$show_playlist_add = Access::check('interface', '25');
-$show_direct_play = $show_direct_play_cfg;
-$directplay_limit = AmpConfig::get('direct_play_limit');
+$show_playlist_add    = Access::check('interface', '25');
+$show_direct_play     = $show_direct_play_cfg;
+$directplay_limit     = AmpConfig::get('direct_play_limit');
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($album->song_count <= $directplay_limit);
@@ -119,8 +119,8 @@ if ($directplay_limit > 0) {
     foreach ($album_suite as $album_id) {
         $c_album = new Album($album_id);
         $c_album->format();
-        $c_title = scrub_out($c_album->name) . "&nbsp;<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
-        $show_direct_play = $show_direct_play_cfg;
+        $c_title           = scrub_out($c_album->name) . "&nbsp;<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
+        $show_direct_play  = $show_direct_play_cfg;
         $show_playlist_add = Access::check('interface', '25');
         if ($directplay_limit > 0) {
             $show_playlist_add = ($c_album->song_count <= $directplay_limit);
@@ -191,7 +191,7 @@ if ($directplay_limit > 0) {
                 <?php echo UI::get_icon('file_refresh', T_('Update from tags'));
     ?>
             </a>
-            <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_'.$c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
+            <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit'));
     ?>
             </a>

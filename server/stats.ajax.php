@@ -32,9 +32,9 @@ switch ($_REQUEST['action']) {
     case 'geolocation':
         if (AmpConfig::get('geolocation')) {
             if ($GLOBALS['user']->id) {
-                $latitude = floatval($_REQUEST['latitude']);
+                $latitude  = floatval($_REQUEST['latitude']);
                 $longitude = floatval($_REQUEST['longitude']);
-                $name = $_REQUEST['name'];
+                $name      = $_REQUEST['name'];
                 if (empty($name)) {
                     // First try to get from local cache (avoid external api requests)
                     $name = Stats::get_cached_place_name($latitude, $longitude);

@@ -41,13 +41,13 @@ if (!$is_share) {
 
 $isRadio = false;
 $isVideo = false;
-$radio = null;
+$radio   = null;
 if (isset($playlist)) {
     if (WebPlayer::is_playlist_radio($playlist)) {
         // Special stuff for web radio (to better handle Icecast/Shoutcast metadata ...)
         // No special stuff for now
         $isRadio = true;
-        $radio = $playlist->urls[0];
+        $radio   = $playlist->urls[0];
     } else {
         $isVideo = WebPlayer::is_playlist_video($playlist);
     }

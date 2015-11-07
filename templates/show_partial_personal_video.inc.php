@@ -21,4 +21,4 @@
  */
 
 $videoprops[gettext_noop('Location')]   = $video->f_location;
-$videoprops[gettext_noop('Summary')]   = scrub_out($video->summary);
+$videoprops[gettext_noop('Summary')]    = scrub_out($video->summary);

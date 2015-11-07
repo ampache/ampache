@@ -20,14 +20,14 @@
  *
  */
 
-$sql = Catalog::get_uploads_sql('song', $GLOBALS['user']->id);
+$sql    = Catalog::get_uploads_sql('song', $GLOBALS['user']->id);
 $browse = new Browse();
 $browse->set_type('song', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql = Catalog::get_uploads_sql('album', $GLOBALS['user']->id);
+$sql    = Catalog::get_uploads_sql('album', $GLOBALS['user']->id);
 $browse = new Browse();
 $browse->set_type('album', $sql);
 $browse->set_simple_browse(true);
@@ -35,7 +35,7 @@ $browse->show_objects();
 $browse->store();
 
 if (!AmpConfig::get('upload_user_artist')) {
-    $sql = Catalog::get_uploads_sql('artist', $GLOBALS['user']->id);
+    $sql    = Catalog::get_uploads_sql('artist', $GLOBALS['user']->id);
     $browse = new Browse();
     $browse->set_type('artist', $sql);
     $browse->set_simple_browse(true);

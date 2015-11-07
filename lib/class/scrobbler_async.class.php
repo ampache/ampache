@@ -24,7 +24,7 @@ class scrobbler_async extends Thread
 {
     public function __construct($user, $song_info)
     {
-        $this->user = $user;
+        $this->user      = $user;
         $this->song_info = $song_info;
     }
 

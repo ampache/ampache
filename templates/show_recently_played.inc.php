@@ -46,16 +46,16 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 $nb = 0;
 foreach ($data as $row) {
     $row_user = new User($row['user']);
-    $song = new Song($row['object_id']);
+    $song     = new Song($row['object_id']);
 
-    $agent = '';
+    $agent       = '';
     $time_string = '-';
 
     $has_allowed_agent = true;
-    $has_allowed_time = true;
-    $is_allowed = Access::check('interface', '100') || $GLOBALS['user']->id == $row_user->id;
+    $has_allowed_time  = true;
+    $is_allowed        = Access::check('interface', '100') || $GLOBALS['user']->id == $row_user->id;
     if (!$is_allowed) {
-        $has_allowed_time = Preference::get_by_user($row_user->id, 'allow_personal_info_time');
+        $has_allowed_time  = Preference::get_by_user($row_user->id, 'allow_personal_info_time');
         $has_allowed_agent = Preference::get_by_user($row_user->id, 'allow_personal_info_agent');
     }
 
@@ -72,25 +72,25 @@ foreach ($data as $row) {
         if ($interval < 60) {
             $time_string = sprintf(ngettext('%d second ago', '%d seconds ago', $interval), $interval);
         } elseif ($interval < 3600) {
-            $interval = floor($interval / 60);
+            $interval    = floor($interval / 60);
             $time_string = sprintf(ngettext('%d minute ago', '%d minutes ago', $interval), $interval);
         } elseif ($interval < 86400) {
-            $interval = floor($interval / 3600);
+            $interval    = floor($interval / 3600);
             $time_string = sprintf(ngettext('%d hour ago', '%d hours ago', $interval), $interval);
         } elseif ($interval < 604800) {
-            $interval = floor($interval / 86400);
+            $interval    = floor($interval / 86400);
             $time_string = sprintf(ngettext('%d day ago', '%d days ago', $interval), $interval);
         } elseif ($interval < 2592000) {
-            $interval = floor($interval / 604800);
+            $interval    = floor($interval / 604800);
             $time_string = sprintf(ngettext('%d week ago', '%d weeks ago', $interval), $interval);
         } elseif ($interval < 31556926) {
-            $interval = floor($interval / 2592000);
+            $interval    = floor($interval / 2592000);
             $time_string = sprintf(ngettext('%d month ago', '%d months ago', $interval), $interval);
         } elseif ($interval < 631138519) {
-            $interval = floor($interval / 31556926);
+            $interval    = floor($interval / 31556926);
             $time_string = sprintf(ngettext('%d year ago', '%d years ago', $interval), $interval);
         } else {
-            $interval = floor($interval / 315569260);
+            $interval    = floor($interval / 315569260);
             $time_string = sprintf(ngettext('%d decade ago', '%d decades ago', $interval), $interval);
         }
     }
@@ -128,9 +128,9 @@ foreach ($data as $row) {
     ?></td>
         <td class="cel_add">
             <span class="cel_item_add">
-                <?php echo Ajax::button('?action=basket&type=song&id='.$song->id, 'add', T_('Add to temporary playlist'), 'add_' . $nb . '_'.$song->id);
+                <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to temporary playlist'), 'add_' . $nb . '_' . $song->id);
     ?>
-                <a id="<?php echo 'add_playlist_' . $nb . '_'.$song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
+                <a id="<?php echo 'add_playlist_' . $nb . '_' . $song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
                     <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
     ?>
                 </a>

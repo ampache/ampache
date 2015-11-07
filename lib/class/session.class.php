@@ -68,7 +68,7 @@ class Session
         }
 
         $expire = time() + AmpConfig::get('session_length');
-        $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
+        $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
         debug_event('session', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
@@ -93,8 +93,8 @@ class Session
 
         debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
 
-        $session_name = AmpConfig::get('session_name');
-        $cookie_path = AmpConfig::get('cookie_path');
+        $session_name  = AmpConfig::get('session_name');
+        $cookie_path   = AmpConfig::get('cookie_path');
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
@@ -144,7 +144,7 @@ class Session
      */
     private static function _read($key, $column)
     {
-        $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
+        $sql        = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -206,8 +206,8 @@ class Session
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $ip = $_SERVER['REMOTE_ADDR'] ? inet_pton($_SERVER['REMOTE_ADDR']) : '0';
-        $type = $data['type'];
+        $ip    = $_SERVER['REMOTE_ADDR'] ? inet_pton($_SERVER['REMOTE_ADDR']) : '0';
+        $type  = $data['type'];
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
@@ -310,7 +310,7 @@ class Session
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
                 if (AmpConfig::get('use_auth')) {
                     // Build a list of enabled authentication types
-                    $types = AmpConfig::get('auth_methods');
+                    $types         = AmpConfig::get('auth_methods');
                     $enabled_types = implode("','", $types);
                     $sql .= " AND `type` IN('$enabled_types')";
                 }
@@ -389,12 +389,12 @@ class Session
         $location = array();
 
         if ($sid) {
-            $sql = "SELECT `geo_latitude`, `geo_longitude`, `geo_name` FROM `session` WHERE `id` = ?";
+            $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name` FROM `session` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($sid));
             if ($row = Dba::fetch_assoc($db_results)) {
-                $location['latitude'] = $row['geo_latitude'];
+                $location['latitude']  = $row['geo_latitude'];
                 $location['longitude'] = $row['geo_longitude'];
-                $location['name'] = $row['geo_name'];
+                $location['name']      = $row['geo_name'];
             }
         }
 
@@ -438,8 +438,8 @@ class Session
     public static function create_cookie()
     {
         // Set up the cookie prefs before we throw down, this is very important
-        $cookie_life = AmpConfig::get('cookie_life');
-        $cookie_path = AmpConfig::get('cookie_path');
+        $cookie_life   = AmpConfig::get('cookie_life');
+        $cookie_path   = AmpConfig::get('cookie_path');
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
@@ -460,9 +460,9 @@ class Session
      */
     public static function create_user_cookie($username)
     {
-        $cookie_life = AmpConfig::get('cookie_life');
-        $session_name = AmpConfig::get('session_name');
-        $cookie_path = AmpConfig::get('cookie_path');
+        $cookie_life   = AmpConfig::get('cookie_life');
+        $session_name  = AmpConfig::get('session_name');
+        $cookie_path   = AmpConfig::get('cookie_path');
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
@@ -477,12 +477,12 @@ class Session
     public static function create_remember_cookie($username)
     {
         $remember_length = AmpConfig::get('remember_length');
-        $session_name = AmpConfig::get('session_name');
+        $session_name    = AmpConfig::get('session_name');
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
         self::storeTokenForUser($username, $token, $remember_length);
         $cookie = $username . ':' . $token;
-        $mac = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
+        $mac    = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
         $cookie .= ':' . $mac;
 
         setcookie($session_name . '_remember', $cookie, time() + $remember_length);
@@ -505,12 +505,12 @@ class Session
 
     public static function auth_remember()
     {
-        $auth = false;
+        $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';
         if (isset($_COOKIE[$cname])) {
             list ($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
-                $sql = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
+                $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));
                 if (Dba::num_rows($db_results) > 0) {
                     Session::create_cookie();
@@ -519,7 +519,7 @@ class Session
                         'username' => $username
                     ));
                     $_SESSION['userdata']['username'] = $username;
-                    $auth = true;
+                    $auth                             = true;
                 }
             }
         }

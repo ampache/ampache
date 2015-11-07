@@ -24,7 +24,7 @@
     <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse Music'); ?>"><?php echo T_('Browse Music'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo isset($_COOKIE['sb_home_browse_music']) ? $_COOKIE['sb_home_browse_music'] : 'expanded'; ?>" id="browse_music" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
         <?php
         if (isset($_REQUEST['action'])) {
-            $text = scrub_in($_REQUEST['action']) . '_ac';
+            $text    = scrub_in($_REQUEST['action']) . '_ac';
             ${$text} = ' selected="selected"';
         }
         ?>
@@ -134,8 +134,8 @@
             <?php
                 // Little bit of work to be done here
                 $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-    $current_instance = $localplay->current_instance();
-    $class = $current_instance ? '' : ' class="active_instance"';
+    $current_instance      = $localplay->current_instance();
+    $class                 = $current_instance ? '' : ' class="active_instance"';
     ?>
             <li id="sb_home_playlist_show"><a href="<?php echo $web_path;
     ?>/localplay.php?action=show_playlist"><?php echo T_('Localplay');

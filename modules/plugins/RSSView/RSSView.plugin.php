@@ -91,7 +91,7 @@ class AmpacheRSSView
     public function display_home()
     {
         $xmlstr = file_get_contents($this->feed_url);
-        $xml = simplexml_load_string($xmlstr);
+        $xml    = simplexml_load_string($xmlstr);
         if ($xml->channel) {
             UI::show_box_top($xml->channel->title);
             $i = 0;
@@ -106,7 +106,7 @@ class AmpacheRSSView
                 if (isset($item->image)) {
                     echo '<div style="float: left; margin-right: 20px;"><img src="' . $item->image . '" style="width: auto; max-height: 48px;" /></div>';
                 }
-                echo '<div>'. $item->description .'</div>';
+                echo '<div>' . $item->description . '</div>';
                 echo '</div>';
                 echo '</td></tr>';
                 

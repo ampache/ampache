@@ -54,7 +54,7 @@ class UPnPPlaylist
 
     public function Clear()
     {
-        $this->_songs = array();
+        $this->_songs   = array();
         $this->_current = 0;
         $this->PlayListSave();
     }
@@ -117,16 +117,16 @@ class UPnPPlaylist
 
     private function PlayListRead()
     {
-        $sid = 'upnp_pls_' . $this->_deviceGUID;
+        $sid      = 'upnp_pls_' . $this->_deviceGUID;
         $pls_data = unserialize(Session::read($sid));
 
-        $this->_songs = $pls_data['upnp_playlist'];
+        $this->_songs   = $pls_data['upnp_playlist'];
         $this->_current = $pls_data['upnp_current'];
     }
 
     private function PlayListSave()
     {
-        $sid = 'upnp_pls_' . $this->_deviceGUID;
+        $sid      = 'upnp_pls_' . $this->_deviceGUID;
         $pls_data = serialize(array(
             'upnp_playlist' => $this->_songs,
             'upnp_current' => $this->_current

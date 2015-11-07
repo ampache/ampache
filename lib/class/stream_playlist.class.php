@@ -56,7 +56,7 @@ class Stream_Playlist
 
             $this->user = intval($GLOBALS['user']->id);
 
-            $sql = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
+            $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
             $db_results = Dba::read($sql, array($this->id));
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -69,23 +69,23 @@ class Stream_Playlist
 
     private function _add_url($url)
     {
-        debug_event("stream_playlist.class.php", "Adding url {".json_encode($url)."}...", 5);
+        debug_event("stream_playlist.class.php", "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
-        $sql = 'INSERT INTO `stream_playlist` ';
+        $sql          = 'INSERT INTO `stream_playlist` ';
 
-        $fields = array();
-        $fields[] = '`sid`';
-        $values = array();
-        $values[] = $this->id;
-        $holders = array();
+        $fields    = array();
+        $fields[]  = '`sid`';
+        $values    = array();
+        $values[]  = $this->id;
+        $holders   = array();
         $holders[] = '?';
 
         foreach ($url->properties as $field) {
             if ($url->$field) {
-                $fields[] = '`' . $field . '`';
+                $fields[]  = '`' . $field . '`';
                 $holders[] = '?';
-                $values[] = $url->$field;
+                $values[]  = $url->$field;
             }
         }
         $sql .= '(' . implode(', ', $fields) . ') ';
@@ -124,9 +124,9 @@ class Stream_Playlist
      */
     public static function media_to_url($media, $additional_params='', $urltype='web')
     {
-        $type = $media['object_type'];
+        $type      = $media['object_type'];
         $object_id = $media['object_id'];
-        $object = new $type($object_id);
+        $object    = new $type($object_id);
         $object->format();
         
         if ($media['custom_play_action']) {
@@ -146,9 +146,9 @@ class Stream_Playlist
     public static function media_object_to_url($object, $additional_params='', $urltype='web')
     {
         $surl = null;
-        $url = array();
+        $url  = array();
         
-        $type = strtolower(get_class($object));
+        $type        = strtolower(get_class($object));
         $url['type'] = $type;
         
         // Don't add disabled media objects to the stream playlist
@@ -175,19 +175,19 @@ class Stream_Playlist
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
-            $url['time'] = $object->time;
+            $url['time']   = $object->time;
             switch ($type) {
                 case 'song':
-                    $url['title'] = $object->title;
-                    $url['author'] = $object->f_artist_full;
-                    $url['info_url'] = $object->f_link;
+                    $url['title']     = $object->title;
+                    $url['author']    = $object->f_artist_full;
+                    $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    $url['album'] = $object->f_album_full;
+                    $url['album']     = $object->f_album_full;
                     $url['track_num'] = $object->f_track;
                 break;
                 case 'video':
-                    $url['title'] = 'Video - ' . $object->title;
-                    $url['author'] = $object->f_artist_full;
+                    $url['title']      = 'Video - ' . $object->title;
+                    $url['author']     = $object->f_artist_full;
                     $url['resolution'] = $object->f_resolution;
                 break;
                 case 'live_stream':
@@ -198,7 +198,7 @@ class Stream_Playlist
                     $url['codec'] = $object->codec;
                 break;
                 case 'song_preview':
-                    $url['title'] = $object->title;
+                    $url['title']  = $object->title;
                     $url['author'] = $object->f_artist_full;
                 break;
                 case 'channel':
@@ -209,7 +209,7 @@ class Stream_Playlist
                 break;
                 default:
                     $url['title'] = 'URL-Add';
-                    $url['time'] = -1;
+                    $url['time']  = -1;
                 break;
             }
 
@@ -240,7 +240,7 @@ class Stream_Playlist
             return false;
         }
 
-        debug_event('stream_playlist', 'Generating a {'.$type.'} object...', 5);
+        debug_event('stream_playlist', 'Generating a {' . $type . '} object...', 5);
 
         $ext = $type;
         switch ($type) {
@@ -249,7 +249,7 @@ class Stream_Playlist
             case 'localplay':
             case 'web_player':
                 // These are valid, but witchy
-                $ct = "";
+                $ct       = "";
                 $redirect = false;
                 unset($ext);
             break;
@@ -264,20 +264,20 @@ class Stream_Playlist
             break;
             case 'simple_m3u':
                 $ext = 'm3u';
-                $ct = 'audio/x-mpegurl';
+                $ct  = 'audio/x-mpegurl';
             break;
             case 'xspf':
                 $ct = 'application/xspf+xml';
             break;
             case 'hls':
                 $ext = 'm3u8';
-                $ct = 'application/vnd.apple.mpegurl';
+                $ct  = 'application/vnd.apple.mpegurl';
             break;
             case 'm3u':
             default:
                 // Assume M3U if the pooch is screwed
                 $ext = $type = 'm3u';
-                $ct = 'audio/x-mpegurl';
+                $ct  = 'audio/x-mpegurl';
             break;
         }
 
@@ -374,7 +374,7 @@ class Stream_Playlist
         $i = 0;
         foreach ($this->urls as $url) {
             $i++;
-            $ret .= 'File' . $i . '='. $url->url . "\n";
+            $ret .= 'File' . $i . '=' . $url->url . "\n";
             $ret .= 'Title' . $i . '=' . $url->author . ' - ' .
                 $url->title . "\n";
             $ret .= 'Length' . $i . '=' . $url->time . "\n";
@@ -475,7 +475,7 @@ class Stream_Playlist
     public function get_hls_string()
     {
         $ssize = 10;
-        $ret = "#EXTM3U\n";
+        $ret   = "#EXTM3U\n";
         $ret .= "#EXT-X-TARGETDURATION:" . $ssize . "\n";
         $ret .= "#EXT-X-VERSION:1\n";
         $ret .= "#EXT-X-ALLOW-CACHE:NO\n";
@@ -486,12 +486,12 @@ class Stream_Playlist
             $soffset = 0;
             $segment = 0;
             while ($soffset < $url->time) {
-                $type = $url->type;
-                $size = (($soffset + $ssize) <= $url->time) ? $ssize : ($url->time - $soffset);
+                $type              = $url->type;
+                $size              = (($soffset + $ssize) <= $url->time) ? $ssize : ($url->time - $soffset);
                 $additional_params = '&transcode_to=ts&segment=' . $segment;
                 $ret .= "#EXTINF:" . $size . ",\n";
                 $purl = Stream_URL::parse($url->url);
-                $id = $purl['id'];
+                $id   = $purl['id'];
 
                 unset($purl['id']);
                 unset($purl['ssid']);
@@ -577,7 +577,7 @@ class Stream_Playlist
         $items = array();
 
         foreach ($this->urls as $url) {
-            $data = Stream_URL::parse($url->url);
+            $data    = Stream_URL::parse($url->url);
             $items[] = array($data['type'], $data['id']);
         }
 

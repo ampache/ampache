@@ -66,7 +66,7 @@ class License
      */
     private function _get_info($id)
     {
-        $sql = "SELECT * FROM `license` WHERE `id` = ?";
+        $sql        = "SELECT * FROM `license` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($id));
 
         $data = Dba::fetch_assoc($db_results);
@@ -135,7 +135,7 @@ class License
      */
     public static function get_licenses()
     {
-        $sql = 'SELECT `id` from `license` ORDER BY `name`';
+        $sql        = 'SELECT `id` from `license` ORDER BY `name`';
         $db_results = Dba::read($sql);
 
         $results = array();

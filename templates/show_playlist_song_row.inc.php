@@ -24,109 +24,73 @@
 if ($libitem->enabled || Access::check('interface','50')) {
     ?>
 <td class="cel_play">
-    <span class="cel_play_content"><?php echo '<b>'.$playlist_track.'</b>';
-    ?></span>
+    <span class="cel_play_content"><?php echo '<b>' . $playlist_track . '</b>' ?></span>
     <div class="cel_play_hover">
-    <?php if (AmpConfig::get('directplay')) {
-    ?>
-         <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id, 'play', T_('Play'),'play_playlist_song_' . $libitem->id);
-    ?>
-        <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $libitem->id);
-    ?>
-        <?php 
-}
-    ?>
-<?php 
-}
+    <?php
+    if (AmpConfig::get('directplay')) {
+        echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id, 'play', T_('Play'),'play_playlist_song_' . $libitem->id);
+        if (Stream_Playlist::check_autoplay_append()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $libitem->id);
+        }
+    }
     ?>
     </div>
 </td>
-<td class="cel_song"><?php echo $libitem->f_link;
-    ?></td>
+<td class="cel_song"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=song&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'playlist_add_' . $libitem->id);
-    ?>
-        <?php if (Access::check('interface', '25')) {
-    ?>
-            <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
-    ?>
+    if (Access::check('interface', '25')) {
+        ?>
+            <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
+                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')) ?>
             </a>
         <?php 
-}
+    }
     ?>
     </span>
 </td>
-<td class="cel_artist"><?php echo $libitem->f_artist_link;
-    ?></td>
-<td class="cel_album"><?php echo $libitem->f_album_link;
-    ?></td>
-<td class="cel_tags"><?php echo $libitem->f_tags;
-    ?></td>
-<td class="cel_time"><?php echo $libitem->f_time;
-    ?></td>
+<td class="cel_artist"><?php echo $libitem->f_artist_link ?></td>
+<td class="cel_album"><?php echo $libitem->f_album_link ?></td>
+<td class="cel_tags"><?php echo $libitem->f_tags ?></td>
+<td class="cel_time"><?php echo $libitem->f_time ?></td>
 <?php if (User::is_registered()) {
-    ?>
-    <?php if (AmpConfig::get('ratings')) {
-    ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id;
-    ?>_song"><?php Rating::show($libitem->id,'song');
-    ?></td>
+    if (AmpConfig::get('ratings')) {
+        ?>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id ?>_song"><?php Rating::show($libitem->id,'song') ?></td>
     <?php 
-}
-    ?>
-    <?php if (AmpConfig::get('userflags')) {
-    ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id;
-    ?>_song"><?php Userflag::show($libitem->id,'song');
-    ?></td>
+    }
+    if (AmpConfig::get('userflags')) {
+        ?>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_song"><?php Userflag::show($libitem->id,'song') ?></td>
     <?php 
-}
-    ?>
-<?php 
+    }
 }
     ?>
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) {
     ?>
-    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-    ?>/stream.php?action=download&amp;song_id=<?php echo $libitem->id;
-    ?>">
-        <?php echo UI::get_icon('download', T_('Download'));
-    ?>
+    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&amp;song_id=<?php echo $libitem->id ?>">
+        <?php echo UI::get_icon('download', T_('Download')) ?>
     </a>
     <?php 
 }
-    ?>
-    <?php if (Access::check('interface', '25')) {
-    ?>
-        <?php if (AmpConfig::get('share')) {
-    ?>
-            <?php Share::display_ui('song', $libitem->id, false);
-    ?>
-        <?php 
-}
-    ?>
-    <?php 
-}
-    ?>
-    <?php if (get_class($playlist) == "Playlist" && $playlist->has_access()) {
-    ?>
-        <?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']);
-    ?>
-    <?php 
-}
+    if (Access::check('interface', '25')) {
+        if (AmpConfig::get('share')) {
+            Share::display_ui('song', $libitem->id, false);
+        }
+    }
+    if (get_class($playlist) == "Playlist" && $playlist->has_access()) {
+        echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']);
+    }
     ?>
 </td>
 <?php if (Access::check('interface', '50') && get_class($playlist) == "Playlist") {
     ?>
 <td class="cel_drag">
-    <?php echo UI::get_icon('drag', T_('Reorder'));
-    ?>
-</td>
-<?php 
+    <?php echo UI::get_icon('drag', T_('Reorder')) ?>
+        </td>
+    <?php 
 }
-} ?>
+}
+?>

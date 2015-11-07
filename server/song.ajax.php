@@ -34,24 +34,24 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        $song = new Song($_REQUEST['song_id']);
+        $song        = new Song($_REQUEST['song_id']);
         $new_enabled = $song->enabled ? false : true;
         $song->update_enabled($new_enabled,$song->id);
         $song->enabled = $new_enabled;
         $song->format();
 
         //Return the new Ajax::button
-        $id = 'button_flip_state_' . $song->id;
-        $button = $song->enabled ? 'disable' : 'enable';
+        $id           = 'button_flip_state_' . $song->id;
+        $button       = $song->enabled ? 'disable' : 'enable';
         $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button, T_(ucfirst($button)),'flip_state_' . $song->id);
     break;
     case 'shouts':
         ob_start();
         $type = $_REQUEST['object_type'];
-        $id = $_REQUEST['object_id'];
+        $id   = $_REQUEST['object_id'];
 
         if ($type == "song") {
-            $media = new Song($id);
+            $media  = new Song($id);
             $shouts = Shoutbox::get_shouts($type, $id);
             echo "<script type='text/javascript'>\r\n";
             echo "shouts = {};\r\n";
@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
                 $shout = new Shoutbox($id);
                 $shout->format();
                 $key = intval($shout->data);
-                echo "if (shouts['" . $key. "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
+                echo "if (shouts['" . $key . "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
                 echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
                 echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->data / $media->time) * 400) - 1) . "px;\' />');\r\n";
             }

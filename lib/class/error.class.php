@@ -29,7 +29,7 @@
  */
 class Error
 {
-    private static $state = false; // set to one when an error occurs
+    private static $state  = false; // set to one when an error occurs
     private static $errors = array(); // Errors array key'd array with errors that have occured
 
     /**
@@ -61,14 +61,14 @@ class Error
     {
         // Make sure its set first
         if (!isset(Error::$errors[$name])) {
-            Error::$errors[$name] = $message;
-            Error::$state = true;
+            Error::$errors[$name]      = $message;
+            Error::$state              = true;
             $_SESSION['errors'][$name] = $message;
         }
         // They want us to clobber it
         elseif ($clobber) {
-            Error::$state = true;
-            Error::$errors[$name] = $message;
+            Error::$state              = true;
+            Error::$errors[$name]      = $message;
             $_SESSION['errors'][$name] = $message;
         }
         // They want us to append the error, add a BR\n and then the message

@@ -60,7 +60,7 @@ class WebPlayer
     {
         $types = array('real' => 'mp3', 'player' => '');
 
-        $media = null;
+        $media   = null;
         $urlinfo = Stream_URL::parse($item->url);
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
@@ -83,7 +83,7 @@ class WebPlayer
         if ($media != null) {
             $ftype = $media->type;
 
-            $transcode = false;
+            $transcode     = false;
             $transcode_cfg = AmpConfig::get('transcode');
             // Check transcode is required
             $valid_types = Song::get_stream_types_for_type($ftype, 'webplayer');
@@ -91,12 +91,12 @@ class WebPlayer
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode forced from client side
                     if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
-                        debug_event("webplayer.class.php", "Forcing type to {".$force_type."}", 5);
+                        debug_event("webplayer.class.php", "Forcing type to {" . $force_type . "}", 5);
                         // Transcode only if excepted type available
                         $transcode_settings = $media->get_transcode_settings($force_type, 'webplayer');
                         if ($transcode_settings) {
                             $types['real'] = $transcode_settings['format'];
-                            $transcode = true;
+                            $transcode     = true;
                         }
                     }
 
@@ -106,7 +106,7 @@ class WebPlayer
                             $transcode_settings = $media->get_transcode_settings(null, 'webplayer');
                             if ($transcode_settings) {
                                 $types['real'] = $transcode_settings['format'];
-                                $transcode = true;
+                                $transcode     = true;
                             }
                         }
                     }
@@ -158,7 +158,7 @@ class WebPlayer
             $types['player'] = $types['real'];
         }
 
-        debug_event("webplayer.class.php", "Types {".json_encode($types)."}", 5);
+        debug_event("webplayer.class.php", "Types {" . json_encode($types) . "}", 5);
         return $types;
     }
 
@@ -248,9 +248,9 @@ class WebPlayer
 
         $types = self::get_types($item, $force_type);
 
-        $media = null;
+        $media   = null;
         $urlinfo = Stream_URL::parse($url);
-        $url = $urlinfo['base_url'];
+        $url     = $urlinfo['base_url'];
 
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
@@ -273,8 +273,8 @@ class WebPlayer
         if ($media != null) {
             $media->format();
             if ($urlinfo['type'] == 'song') {
-                $js['artist_id'] = $media->artist;
-                $js['album_id'] = $media->album;
+                $js['artist_id']             = $media->artist;
+                $js['album_id']              = $media->album;
                 $js['replaygain_track_gain'] = $media->replaygain_track_gain;
                 $js['replaygain_track_peak'] = $media->replaygain_track_peak;
                 $js['replaygain_album_gain'] = $media->replaygain_album_gain;
@@ -289,12 +289,12 @@ class WebPlayer
         }
 
         $js['filetype'] = $types['player'];
-        $js['url'] = $url;
+        $js['url']      = $url;
         if ($urlinfo['type'] == 'song') {
             $js['poster'] = $item->image_url;
         }
 
-        debug_event("webplayer.class.php", "Return get_media_js_param {".json_encode($js)."}", 5);
+        debug_event("webplayer.class.php", "Return get_media_js_param {" . json_encode($js) . "}", 5);
 
         return json_encode($js);
     }

@@ -31,7 +31,7 @@ require_once '../lib/init.php';
 
 $results = '';
 
-debug_event('edit.server.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
+debug_event('edit.server.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
 
 // Post first
 $type = $_POST['type'];
@@ -130,7 +130,7 @@ switch ($_REQUEST['action']) {
         }
 
         $libitem->format();
-        $new_id = $libitem->update($_POST);
+        $new_id  = $libitem->update($_POST);
         $libitem = new $object_type($new_id);
         $libitem->format();
 

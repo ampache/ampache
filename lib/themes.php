@@ -72,10 +72,10 @@ function get_theme($name)
 
     $config_file = AmpConfig::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
     if (file_exists($config_file)) {
-        $results = parse_ini_file($config_file);
+        $results         = parse_ini_file($config_file);
         $results['path'] = $name;
         $results['base'] = explode(',', $results['base']);
-        $nbbases = count($results['base']);
+        $nbbases         = count($results['base']);
         for ($i = 0; $i < $nbbases; $i++) {
             $results['base'][$i] = explode('|', $results['base'][$i]);
         }
@@ -96,7 +96,7 @@ function get_theme($name)
 function get_theme_author($theme_name)
 {
     $theme_path = AmpConfig::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
-    $results = read_config($theme_path);
+    $results    = read_config($theme_path);
 
     return $results['author'];
 } // get_theme_author

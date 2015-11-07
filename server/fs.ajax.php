@@ -44,7 +44,7 @@ class fs
         }
         if ($this->base && strlen($this->base)) {
             if (strpos($temp, $this->base) !== 0) {
-                throw new Exception('Path is not inside base ('.$this->base.'): ' . $temp);
+                throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
             }
         }
         return $temp;
@@ -143,7 +143,7 @@ class fs
                     $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64,'.base64_encode(file_get_contents($dir));
                     break;*/
                 default:
-                    $dat['content'] = 'File not recognized: '.$this->id($dir);
+                    $dat['content'] = 'File not recognized: ' . $this->id($dir);
                     break;
             }
             return $dat;

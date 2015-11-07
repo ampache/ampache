@@ -36,10 +36,10 @@ function get_media_files($media_ids)
         if (is_array($element)) {
             if (isset($element['object_type'])) {
                 $type = $element['object_type'];
-                $id = $element['object_id'];
+                $id   = $element['object_id'];
             } else {
                 $type = array_shift($element);
-                $id = array_shift($element);
+                $id   = array_shift($element);
             }
             $media = new $type($id);
         } else {
@@ -49,7 +49,7 @@ function get_media_files($media_ids)
             $media->format();
             $total_size += sprintf("%.2f",($media->size/1048576));
             $dirname = '';
-            $parent = $media->get_parent();
+            $parent  = $media->get_parent();
             if ($parent != null) {
                 $pobj = new $parent['object_type']($parent['object_id']);
                 $pobj->format();
@@ -81,7 +81,7 @@ function send_zip($name, $media_files)
         throw new Exception('Missing ZipStream dependency.');
     }
     
-    $arc = new ZipStream\ZipStream($name . ".zip" );
+    $arc     = new ZipStream\ZipStream($name . ".zip" );
     $options = array(
         'comment'       => AmpConfig::get('file_zip_comment'),
     );
@@ -106,7 +106,7 @@ function check_can_zip($object_type)
 {
     $allowed = true;
     if (AmpConfig::get('allow_zip_types')) {
-        $allowed = false;
+        $allowed       = false;
         $allowed_types = explode(',', AmpConfig::get('allow_zip_types'));
         foreach ($allowed_types as $atype) {
             if (trim($atype) == $object_type) {

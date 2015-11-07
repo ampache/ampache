@@ -20,10 +20,10 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-$show_direct_play = AmpConfig::get('directplay');
+$web_path          = AmpConfig::get('web_path');
+$show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', '25');
-$directplay_limit = AmpConfig::get('direct_play_limit');
+$directplay_limit  = AmpConfig::get('direct_play_limit');
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($artist->songs <= $directplay_limit);
@@ -37,7 +37,7 @@ UI::show_box_top($artist->f_name, 'info-box');
 ?>
 <?php
 if (AmpConfig::get('lastfm_api_key')) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist=' . $artist->id, 'artist_info'));
     ?>
     <div class="item_right_info">
         <div class="external_links">
@@ -258,11 +258,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 }
     ?>
                 <li>
-                    <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
+                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
                         <?php echo UI::get_icon('edit', T_('Edit'));
     ?>
                     </a>
-                    <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
+                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
                         <?php echo T_('Edit Artist');
     ?>
                     </a>
@@ -272,7 +272,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (Catalog::can_remove($artist)) {
     ?>
         <li>
-            <a id="<?php echo 'delete_artist_'.$artist->id ?>" href="<?php echo AmpConfig::get('web_path');
+            <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo AmpConfig::get('web_path');
     ?>/artists.php?action=delete&artist_id=<?php echo $artist->id;
     ?>">
                 <?php echo UI::get_icon('delete', T_('Delete'));
@@ -325,7 +325,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     }
 
     foreach ($multi_object_ids as $key => $object_ids) {
-        $title = (!empty($key)) ? ucwords($key) : '';
+        $title  = (!empty($key)) ? ucwords($key) : '';
         $browse = new Browse();
         $browse->set_type($object_type);
         if (!empty($key)) {
@@ -338,7 +338,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </div>
 <?php
 if (AmpConfig::get('wanted')) {
-    echo Ajax::observe('missing_albums_link','click', Ajax::action('?page=index&action=wanted_missing_albums&artist='.$artist->id, 'missing_albums'));
+    echo Ajax::observe('missing_albums_link','click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums'));
     ?>
         <div id="missing_albums" class="tab_content">
         <?php UI::show_box_top(T_('Missing Albums'), 'info-box');
@@ -350,7 +350,7 @@ if (AmpConfig::get('wanted')) {
 } ?>
 <?php
 if (AmpConfig::get('show_similar')) {
-    echo Ajax::observe('similar_artist_link','click', Ajax::action('?page=index&action=similar_artist&artist='.$artist->id, 'similar_artist'));
+    echo Ajax::observe('similar_artist_link','click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist'));
     ?>
         <div id="similar_artist" class="tab_content">
         <?php UI::show_box_top(T_('Similar Artists'), 'info-box');
@@ -362,7 +362,7 @@ if (AmpConfig::get('show_similar')) {
 } ?>
 <?php
 if (AmpConfig::get('show_concerts')) {
-    echo Ajax::observe('concerts_link','click', Ajax::action('?page=index&action=concerts&artist='.$artist->id, 'concerts'));
+    echo Ajax::observe('concerts_link','click', Ajax::action('?page=index&action=concerts&artist=' . $artist->id, 'concerts'));
     ?>
         <div id="concerts" class="tab_content">
         <?php UI::show_box_top(T_('Events'), 'info-box');
@@ -374,7 +374,7 @@ if (AmpConfig::get('show_concerts')) {
 } ?>
 <?php
 if (AmpConfig::get('label')) {
-    echo Ajax::observe('labels_link','click', Ajax::action('?page=index&action=labels&artist='.$artist->id, 'labels'));
+    echo Ajax::observe('labels_link','click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels'));
     ?>
         <div id="labels" class="tab_content">
         <?php UI::show_box_top(T_('Labels'), 'info-box');

@@ -24,7 +24,7 @@ class Slideshow
 {
     public static function get_current_slideshow()
     {
-        $songs = Song::get_recently_played($GLOBALS['user']->id);
+        $songs  = Song::get_recently_played($GLOBALS['user']->id);
         $images = array();
         if (count($songs) > 0) {
             $last_song = new Song($songs[0]['object_id']);

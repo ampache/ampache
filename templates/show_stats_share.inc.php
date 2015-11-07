@@ -21,7 +21,7 @@
  */
 
 $object_ids = Share::get_share_list();
-$browse = new Browse();
+$browse     = new Browse();
 $browse->set_type('share');
 $browse->set_static_content(true);
 $browse->save_objects($object_ids);

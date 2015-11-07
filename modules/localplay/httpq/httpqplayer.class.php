@@ -39,8 +39,8 @@ class HttpQPlayer
      */
     public function __construct($h = "localhost", $pw = "", $p = 4800)
     {
-        $this->host = $h;
-        $this->port = $p;
+        $this->host     = $h;
+        $this->port     = $p;
         $this->password = $pw;
     } // HttpQPlayer
 
@@ -53,7 +53,7 @@ class HttpQPlayer
       public function add($name, $url)
       {
           $args['name'] = urlencode($name);
-          $args['url'] = urlencode($url);
+          $args['url']  = urlencode($url);
         
           $results = $this->sendCommand('playurl', $args);
         
@@ -71,7 +71,7 @@ class HttpQPlayer
      */
     public function version()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('getversion',$args);
         
         // a return of 0 is a bad value
@@ -89,7 +89,7 @@ class HttpQPlayer
      */
     public function clear()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand("delete", $args);
 
         if ($results == '0') {
@@ -105,7 +105,7 @@ class HttpQPlayer
      */
     public function next()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand("next", $args);
 
         if ($results == '0') {
@@ -121,7 +121,7 @@ class HttpQPlayer
      */
     public function prev()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand("prev", $args);
 
         if ($results == '0') {
@@ -137,7 +137,7 @@ class HttpQPlayer
      */
     public function skip($pos)
     {
-        $args = array('index'=>$pos);
+        $args    = array('index'=>$pos);
         $results = $this->sendCommand('setplaylistpos',$args);
 
         if ($results == '0') {
@@ -157,7 +157,7 @@ class HttpQPlayer
      */
     public function play()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand("play", $args);
 
         if ($results == '0') {
@@ -173,7 +173,7 @@ class HttpQPlayer
      */
     public function pause()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand("pause", $args);
 
         if ($results == '0') {
@@ -189,7 +189,7 @@ class HttpQPlayer
      */
     public function stop()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('stop', $args);
 
         if ($results == '0') {
@@ -205,7 +205,7 @@ class HttpQPlayer
      */
     public function repeat($value)
     {
-        $args = array('enable'=>$value);
+        $args    = array('enable'=>$value);
         $results = $this->sendCommand('repeat',$args);
         
         if ($results == '0') {
@@ -221,7 +221,7 @@ class HttpQPlayer
      */
     public function random($value)
     {
-        $args = array('enable'=>$value);
+        $args    = array('enable'=>$value);
         $results = $this->sendCommand('shuffle',$args);
 
         if ($results == '0') {
@@ -237,7 +237,7 @@ class HttpQPlayer
      */
     public function delete_pos($track)
     {
-        $args = array('index'=>$track);
+        $args    = array('index'=>$track);
         $results = $this->sendCommand('deletepos',$args);
         
         if ($results == '0') {
@@ -253,7 +253,7 @@ class HttpQPlayer
      */
     public function state()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('isplaying',$args);
 
         if ($results == '1') {
@@ -275,7 +275,7 @@ class HttpQPlayer
      */
     public function get_volume()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('getvolume',$args);
 
         if ($results == '0') {
@@ -294,7 +294,7 @@ class HttpQPlayer
      */
     public function volume_up()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('volumeup',$args);
         
         if ($results == '0') {
@@ -310,7 +310,7 @@ class HttpQPlayer
      */
     public function volume_down()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('volumedown',$args);
         
         if ($results == '0') {
@@ -329,8 +329,8 @@ class HttpQPlayer
     {
 
         // Convert it to base 255
-        $value = $value*2.55;
-        $args = array('level'=>$value);
+        $value   = $value*2.55;
+        $args    = array('level'=>$value);
         $results = $this->sendCommand('setvolume',$args);
 
         if ($results == '0') {
@@ -346,7 +346,7 @@ class HttpQPlayer
      */
     public function clear_playlist()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendcommand('flushplaylist',$args);
         
         if ($results == '0') {
@@ -362,7 +362,7 @@ class HttpQPlayer
      */
     public function get_repeat()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('repeat_status',$args);
 
         return $results;
@@ -374,7 +374,7 @@ class HttpQPlayer
      */
     public function get_random()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('shuffle_status',$args);
         
         return $results;

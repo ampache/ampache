@@ -62,17 +62,17 @@ class Ajax
             $source_txt = "'#$source'";
         }
 
-        $observe = "<script type=\"text/javascript\">";
+        $observe   = "<script type=\"text/javascript\">";
         $methodact = (($method == 'click') ? "update_action();" : "");
         if (AmpConfig::get('ajax_load') && $method == 'load') {
             $source_txt = "$( document ).ready(";
         } else {
-            $source_txt = "$(".$source_txt.").on('".$method."', ";
+            $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";
         }
         if (!empty($confirm)) {
-            $observe .= $source_txt . "function(){ ".$methodact." if (confirm(\"".$confirm."\")) { ".$action." }});";
+            $observe .= $source_txt . "function(){ " . $methodact . " if (confirm(\"" . $confirm . "\")) { " . $action . " }});";
         } else {
-            $observe .= $source_txt . "function(){ ".$methodact." ".$action.";});";
+            $observe .= $source_txt . "function(){ " . $methodact . " " . $action . ";});";
         }
         $observe .= "</script>";
 
@@ -140,7 +140,7 @@ class Ajax
 
         // If they passed a span class
         if ($class) {
-            $class = ' class="'.$class.'"';
+            $class = ' class="' . $class . '"';
         }
 
         $string = UI::get_icon($icon, $alt);
@@ -148,7 +148,7 @@ class Ajax
         // Generate an <a> so that it's more compliant with older
         // browsers (ie :hover actions) and also to unify linkbuttons
         // (w/o ajax) display
-        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>".$string."</a>\n";
+        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>" . $string . "</a>\n";
 
         $string .= self::observe($source, 'click', $ajax_string, $confirm);
 

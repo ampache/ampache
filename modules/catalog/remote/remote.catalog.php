@@ -74,7 +74,7 @@ class Catalog_remote extends Catalog
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'catalog_remote'";
+        $sql        = "SHOW TABLES LIKE 'catalog_remote'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -86,7 +86,7 @@ class Catalog_remote extends Catalog
      */
     public function install()
     {
-        $sql = "CREATE TABLE `catalog_remote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+        $sql = "CREATE TABLE `catalog_remote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`uri` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`username` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
@@ -99,7 +99,7 @@ class Catalog_remote extends Catalog
 
     public function catalog_fields()
     {
-        $fields['uri']      = array('description' => T_('Uri'),'type'=>'textbox');
+        $fields['uri']           = array('description' => T_('Uri'),'type'=>'textbox');
         $fields['username']      = array('description' => T_('Username'),'type'=>'textbox');
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
@@ -119,7 +119,7 @@ class Catalog_remote extends Catalog
     {
         if ($catalog_id) {
             $this->id = intval($catalog_id);
-            $info = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key=>$value) {
                 $this->$key = $value;
@@ -138,7 +138,7 @@ class Catalog_remote extends Catalog
      */
     public static function create_type($catalog_id, $data)
     {
-        $uri = $data['uri'];
+        $uri      = $data['uri'];
         $username = $data['username'];
         $password = $data['password'];
 
@@ -154,7 +154,7 @@ class Catalog_remote extends Catalog
         $password = hash('sha256', $password);
 
         // Make sure this uri isn't already in use by an existing catalog
-        $sql = 'SELECT `id` FROM `catalog_remote` WHERE `uri` = ?';
+        $sql        = 'SELECT `id` FROM `catalog_remote` WHERE `uri` = ?';
         $db_results = Dba::read($sql, array($uri));
 
         if (Dba::num_rows($db_results)) {
@@ -240,9 +240,9 @@ class Catalog_remote extends Catalog
         UI::update_text('', sprintf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']));
 
         // Hardcoded for now
-        $step = 500;
+        $step    = 500;
         $current = 0;
-        $total = $remote_catalog_info['songs'];
+        $total   = $remote_catalog_info['songs'];
 
         while ($total > $current) {
             $start = $current;
@@ -261,7 +261,7 @@ class Catalog_remote extends Catalog
                     debug_event('remote_catalog', 'Skipping existing song ' . $data['song']['url'], 5);
                 } else {
                     $data['song']['catalog'] = $this->id;
-                    $data['song']['file'] = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
+                    $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
                     if (!Song::insert($data['song'])) {
                         debug_event('remote_catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
                         Error::add('general', T_('Unable to Insert Song - %s'), $data['song']['title']);
@@ -300,7 +300,7 @@ class Catalog_remote extends Catalog
 
         $dead = 0;
 
-        $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
+        $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('remote-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
@@ -332,7 +332,7 @@ class Catalog_remote extends Catalog
     {
         $url = preg_replace('/ssid=.*&/', '', $song['url']);
 
-        $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
+        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, array($url));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -344,7 +344,7 @@ class Catalog_remote extends Catalog
 
     public function get_rel_path($file_path)
     {
-        $info = $this->_get_info();
+        $info         = $this->_get_info();
         $catalog_path = rtrim($info->uri, "/");
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
@@ -357,7 +357,7 @@ class Catalog_remote extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = $this->uri;
+        $this->f_info      = $this->uri;
         $this->f_full_info = $this->uri;
     }
 
@@ -372,7 +372,7 @@ class Catalog_remote extends Catalog
         }
 
         $handshake = $remote_handle->info();
-        $url = $media->file . '&ssid=' . $handshake['auth'];
+        $url       = $media->file . '&ssid=' . $handshake['auth'];
 
         header('Location: ' . $url);
         debug_event('play', 'Started remote stream - ' . $url, 5);

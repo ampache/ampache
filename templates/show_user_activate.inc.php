@@ -50,7 +50,7 @@ $web_path = AmpConfig::get('web_path');
 <p>
     <?php
     /* HINT: Start A tag, End A tag */
-     printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . AmpConfig::get('web_path'). '/login.php">', '</a>');
+     printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . AmpConfig::get('web_path') . '/login.php">', '</a>');
         ?>
 </p>
 <?php 

@@ -112,7 +112,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             <td>
                 <span>
                     <?php if ($client->apikey) {
-    $urlinfo = parse_url(AmpConfig::get('web_path'));
+    $urlinfo       = parse_url(AmpConfig::get('web_path'));
     $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
     if ($urlinfo['port'] && $urlinfo['port'] != 80) {
         $apikey_qrcode .= ":" . $urlinfo['port'];

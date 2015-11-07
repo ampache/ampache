@@ -54,7 +54,7 @@ class Shoutbox
      */
     private function _get_info($shout_id)
     {
-        $sql = "SELECT * FROM `user_shout` WHERE `id` = ?";
+        $sql        = "SELECT * FROM `user_shout` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($shout_id));
 
         $data = Dba::fetch_assoc($db_results);
@@ -105,9 +105,9 @@ class Shoutbox
         }
 
         // Only get as many as we need
-        $limit = intval($limit) - count($shouts);
+        $limit  = intval($limit) - count($shouts);
         $params = array();
-        $sql = "SELECT `user_shout`.`id` AS `id` FROM `user_shout` LEFT JOIN `user` ON `user`.`id` = `user_shout`.`user` WHERE `user_shout`.`sticky`='0' ";
+        $sql    = "SELECT `user_shout`.`id` AS `id` FROM `user_shout` LEFT JOIN `user` ON `user`.`id` = `user_shout`.`user` WHERE `user_shout`.`sticky`='0' ";
         if ($username !== null) {
             $sql .= "AND `user`.`username` = ? ";
             $params[] = $username;
@@ -124,7 +124,7 @@ class Shoutbox
 
     public static function get_shouts_since($time)
     {
-        $sql = "SELECT * FROM `user_shout` WHERE `date` > ? ORDER BY `date` DESC";
+        $sql        = "SELECT * FROM `user_shout` WHERE `date` > ? ORDER BY `date` DESC";
         $db_results = Dba::read($sql, array($time));
 
         $shouts = array();
@@ -141,7 +141,7 @@ class Shoutbox
      */
     public static function get_sticky()
     {
-        $sql = "SELECT * FROM `user_shout` WHERE `sticky`='1' ORDER BY `date` DESC";
+        $sql        = "SELECT * FROM `user_shout` WHERE `sticky`='1' ORDER BY `date` DESC";
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -218,7 +218,7 @@ class Shoutbox
 
         // Never send email in case of user impersonation
         if (!isset($data['user']) && $insert_id) {
-            $libitem = new $data['object_type']($data['object_id']);
+            $libitem       = new $data['object_type']($data['object_id']);
             $item_owner_id = $libitem->get_user_owner();
             if ($item_owner_id) {
                 if (Preference::get_by_user($item_owner_id, 'notify_email')) {
@@ -227,10 +227,10 @@ class Shoutbox
                         $libitem->format();
                         $mailer = new Mailer();
                         $mailer->set_default_sender();
-                        $mailer->recipient = $item_owner->email;
+                        $mailer->recipient      = $item_owner->email;
                         $mailer->recipient_name = $item_owner->fullname;
-                        $mailer->subject = T_('New shout on your content');
-                        $mailer->message = sprintf(T_("You just received a new shout from %s on your content `%s`.\n\n
+                        $mailer->subject        = T_('New shout on your content');
+                        $mailer->message        = sprintf(T_("You just received a new shout from %s on your content `%s`.\n\n
     ----------------------
     %s
     ----------------------
@@ -280,7 +280,7 @@ class Shoutbox
     {
         // Delete the shoutbox post
         $shout_id = Dba::escape($shout_id);
-        $sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
+        $sql      = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
         Dba::write($sql);
     } // delete
 
@@ -288,7 +288,7 @@ class Shoutbox
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
         $object->format();
-        $img = $this->get_image();
+        $img  = $this->get_image();
         $html = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
         if ($details && $img) {
@@ -297,7 +297,7 @@ class Shoutbox
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>".date("Y/m/d H:i:s", $this->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . date("Y/m/d H:i:s", $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";
@@ -306,8 +306,8 @@ class Shoutbox
         if ($details) {
             $html .= "<div class='shoutbox-actions'>";
             if ($jsbuttons) {
-                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type .'&' . $this->object_type . '_id=' . $this->object_id,'play', T_('Play'),'play_' . $this->object_type . '_' . $this->object_id);
-                $html .= Ajax::button('?action=basket&type=' . $this->object_type .'&id=' . $this->object_id,'add', T_('Add'),'add_' . $this->object_type . '_' . $this->object_id);
+                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type . '&' . $this->object_type . '_id=' . $this->object_id,'play', T_('Play'),'play_' . $this->object_type . '_' . $this->object_id);
+                $html .= Ajax::button('?action=basket&type=' . $this->object_type . '&id=' . $this->object_id,'add', T_('Add'),'add_' . $this->object_type . '_' . $this->object_id);
             }
             if (Access::check('interface','25')) {
                 $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
@@ -336,9 +336,9 @@ class Shoutbox
 
     public static function get_shouts($object_type, $object_id)
     {
-        $sql = "SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC";
+        $sql        = "SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC";
         $db_results = Dba::read($sql, array($object_type, $object_id));
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];

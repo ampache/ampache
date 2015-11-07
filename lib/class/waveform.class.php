@@ -71,7 +71,7 @@ class Waveform
      */
     public static function get($song_id)
     {
-        $song = new Song($song_id);
+        $song     = new Song($song_id);
         $waveform = null;
 
         if ($song->id) {
@@ -80,9 +80,9 @@ class Waveform
             if (!$waveform) {
                 $catalog = Catalog::create_from_id($song->catalog);
                 if ($catalog->get_type() == 'local') {
-                    $transcode_to = 'wav';
+                    $transcode_to  = 'wav';
                     $transcode_cfg = AmpConfig::get('transcode');
-                    $valid_types = $song->get_stream_types();
+                    $valid_types   = $song->get_stream_types();
 
                     if ($song->type != $transcode_to) {
                         $basedir = AmpConfig::get('tmp_dir_path');
@@ -97,7 +97,7 @@ class Waveform
                                 }
 
                                 $transcoder = Stream::start_transcode($song, $transcode_to);
-                                $fp = $transcoder['handle'];
+                                $fp         = $transcoder['handle'];
                                 if (!is_resource($fp)) {
                                     debug_event('waveform', "Failed to open " . $song->file . " for waveform.", 3);
                                     return null;
@@ -173,19 +173,19 @@ class Waveform
             return null;
         }
 
-        $detail = 5;
-        $width = 400;
-        $height = 32;
+        $detail     = 5;
+        $width      = 400;
+        $height     = 32;
         $foreground = AmpConfig::get('waveform_color') ?: '#FF0000';
         $background = '';
-        $draw_flat = true;
+        $draw_flat  = true;
 
         // generate foreground color
         list($r, $g, $b) = self::html2rgb($foreground);
 
         $handle = fopen($filename, "r");
         // wav file header retrieval
-        $heading = array();
+        $heading   = array();
         $heading[] = fread($handle, 4);
         $heading[] = bin2hex(fread($handle, 4));
         $heading[] = fread($handle, 4);
@@ -211,7 +211,7 @@ class Waveform
 
         // start putting together the initial canvas
         // $data_size = (size_of_file - header_bytes_read) / skipped_bytes + 1
-        $data_size = floor((Core::get_filesize($filename) - 44) / ($ratio + $byte) + 1);
+        $data_size  = floor((Core::get_filesize($filename) - 44) / ($ratio + $byte) + 1);
         $data_point = 0;
 
         // create original image width based on amount of detail

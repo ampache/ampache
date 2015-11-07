@@ -26,16 +26,16 @@
  */
 function split_sql($sql)
 {
-    $sql = trim($sql);
-    $sql = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
-    $buffer = array();
-    $ret = array();
+    $sql       = trim($sql);
+    $sql       = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
+    $buffer    = array();
+    $ret       = array();
     $in_string = false;
     for ($i=0; $i<strlen($sql)-1; $i++) {
         if ($sql[$i] == ";" && !$in_string) {
             $ret[] = substr($sql, 0, $i);
-            $sql = substr($sql, $i + 1);
-            $i = 0;
+            $sql   = substr($sql, $i + 1);
+            $i     = 0;
         }
         if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
             $in_string = false;
@@ -84,7 +84,7 @@ function install_check_status($configfile)
         return false;
     }
 
-    $sql = 'SELECT * FROM `user`';
+    $sql        = 'SELECT * FROM `user`';
     $db_results = Dba::read($sql);
 
     if (!$db_results) {
@@ -110,10 +110,10 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
     if (!is_readable($file)) {
         $file .= '.dist';
     }
-    $valid = true;
-    $htaccess = file_get_contents($file);
+    $valid     = true;
+    $htaccess  = file_get_contents($file);
     $new_lines = array();
-    $lines = explode("\n", $htaccess);
+    $lines     = explode("\n", $htaccess);
     foreach ($lines as $line) {
         $parts = explode(' ', $line);
         for ($i = 0; $i < count($parts); $i++) {
@@ -124,7 +124,7 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
                     $reprule = $web_path . $reprule;
                     if ($fix) {
                         $parts[$i + 2] = $reprule;
-                        $line = implode(' ', $parts);
+                        $line          = implode(' ', $parts);
                     } else {
                         $valid = false;
                     }
@@ -207,7 +207,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     // Check to see if we should create a user here
     if (strlen($db_user) && strlen($db_pass)) {
         $db_host = AmpConfig::get('database_hostname');
-        $sql = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
+        $sql     = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
             "'" . Dba::escape($db_user) . "'";
         if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
             $sql .= "@'localhost'";
@@ -221,9 +221,9 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
 
     if ($create_tables) {
         $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
-        $query = fread(fopen($sql_file, 'r'), filesize($sql_file));
-        $pieces  = split_sql($query);
-        $errors = array();
+        $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
+        $pieces   = split_sql($query);
+        $errors   = array();
         for ($i=0; $i<count($pieces); $i++) {
             $pieces[$i] = trim($pieces[$i]);
             if (!empty($pieces[$i]) && $pieces[$i] != '#') {
@@ -348,7 +348,7 @@ function command_exists($command)
     }
 
     $whereIsCommand = (PHP_OS == 'WINNT') ? 'where' : 'which';
-    $process = proc_open(
+    $process        = proc_open(
         "$whereIsCommand $command",
         array(
             0 => array("pipe", "r"), //STDIN
@@ -404,9 +404,9 @@ function install_config_transcode_mode($mode)
         'transcode_mkv' => 'allowed',
     );
     if ($mode == 'ffmpeg' || $mode == 'avconv') {
-        $trconfig['transcode_cmd'] = $mode;
-        $trconfig['transcode_input'] = '-i %FILE%';
-        $trconfig['waveform'] = 'true';
+        $trconfig['transcode_cmd']          = $mode;
+        $trconfig['transcode_input']        = '-i %FILE%';
+        $trconfig['waveform']               = 'true';
         $trconfig['generate_video_preview'] = 'true';
 
         AmpConfig::set_by_array($trconfig, true);
@@ -439,31 +439,31 @@ function install_config_use_case($case)
 
     switch ($case) {
         case 'minimalist':
-            $trconfig['ratings'] = 'false';
-            $trconfig['userflags'] = 'false';
-            $trconfig['sociable'] = 'false';
-            $trconfig['wanted'] = 'false';
-            $trconfig['channel'] = 'false';
+            $trconfig['ratings']     = 'false';
+            $trconfig['userflags']   = 'false';
+            $trconfig['sociable']    = 'false';
+            $trconfig['wanted']      = 'false';
+            $trconfig['channel']     = 'false';
             $trconfig['live_stream'] = 'false';
 
-            $dbconfig['download'] = '0';
+            $dbconfig['download']    = '0';
             $dbconfig['allow_video'] = '0';
 
             // Hide sidebar by default to have a better 'minimalist first look'.
             setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
             break;
         case 'community':
-            $trconfig['use_auth'] = 'false';
-            $trconfig['licensing'] = 'true';
-            $trconfig['wanted'] = 'false';
-            $trconfig['live_stream'] = 'false';
+            $trconfig['use_auth']                  = 'false';
+            $trconfig['licensing']                 = 'true';
+            $trconfig['wanted']                    = 'false';
+            $trconfig['live_stream']               = 'false';
             $trconfig['allow_public_registration'] = 'true';
-            $trconfig['cookie_disclaimer'] = 'true';
-            $trconfig['share'] = 'true';
+            $trconfig['cookie_disclaimer']         = 'true';
+            $trconfig['share']                     = 'true';
 
-            $dbconfig['download'] = '0';
-            $dbconfig['share'] = '1';
-            $dbconfig['home_now_playing'] = '0';
+            $dbconfig['download']             = '0';
+            $dbconfig['share']                = '1';
+            $dbconfig['home_now_playing']     = '0';
             $dbconfig['home_recently_played'] = '0';
             break;
         default:
@@ -496,7 +496,7 @@ function install_config_backends(Array $backends)
                 $dbconfig['plex_backend'] = '1';
                 break;
             case 'upnp':
-                $dbconfig['upnp_backend'] = '1';
+                $dbconfig['upnp_backend']         = '1';
                 $dbconfig['stream_beautiful_url'] = '1';
                 break;
             case 'daap':

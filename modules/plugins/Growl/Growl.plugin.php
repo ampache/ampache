@@ -106,7 +106,7 @@ class Ampachegrowl
         
         // Before we start let's pull the last song submitted by this user
         $previous = Stats::get_last_song($this->user_id);
-        $user = new User($this->user_id);
+        $user     = new User($this->user_id);
 
         $diff = time() - $previous['date'];
 
@@ -159,13 +159,13 @@ class Ampachegrowl
             return false;
         }
         $this->password = trim($data['growl_pass']);
-        $this->message = trim($data['growl_message']);
+        $this->message  = trim($data['growl_message']);
         
         $registered_address = trim($data['growl_registered_address']);
-        $confhash = md5($this->address . ':' . $this->password);
+        $confhash           = md5($this->address . ':' . $this->password);
         if ($registered_address != $confhash) {
             $growl = $this->get_growl();
-            $icon = AmpConfig::get('theme_path') . '/images/ampache.png';
+            $icon  = AmpConfig::get('theme_path') . '/images/ampache.png';
             $growl->registerApplication($icon);
             
             debug_event($this->name, 'Growl registered.', '5');

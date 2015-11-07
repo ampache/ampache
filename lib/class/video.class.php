@@ -194,7 +194,7 @@ class Video extends database_object implements media, library_item
             $this->$key = $value;
         }
 
-        $data = pathinfo($this->file);
+        $data       = pathinfo($this->file);
         $this->type = strtolower($data['extension']);
 
         return true;
@@ -209,7 +209,7 @@ class Video extends database_object implements media, library_item
     {
         $dtypes = self::get_derived_types();
         foreach ($dtypes as $dtype) {
-            $sql = "SELECT `id` FROM `" . strtolower($dtype) . "` WHERE `id` = ?";
+            $sql        = "SELECT `id` FROM `" . strtolower($dtype) . "` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($video_id));
             if ($results = Dba::fetch_assoc($db_results)) {
                 if ($results['id']) {
@@ -233,7 +233,7 @@ class Video extends database_object implements media, library_item
 
         $idlist = '(' . implode(',',$ids) . ')';
 
-        $sql = "SELECT * FROM `video` WHERE `video`.`id` IN $idlist";
+        $sql        = "SELECT * FROM `video` WHERE `video`.`id` IN $idlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -247,11 +247,11 @@ class Video extends database_object implements media, library_item
      */
     public function format($details = true)
     {
-        $this->f_title = scrub_out($this->title);
+        $this->f_title      = scrub_out($this->title);
         $this->f_full_title = $this->f_title;
-        $this->link = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
-        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_title) . "\"> " . scrub_out($this->f_title) . "</a>";
-        $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
+        $this->link         = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
+        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_title) . "\"> " . scrub_out($this->f_title) . "</a>";
+        $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
         }
@@ -260,28 +260,28 @@ class Video extends database_object implements media, library_item
         }
 
         // Format the Bitrate
-        $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
+        $this->f_bitrate       = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
         $this->f_video_bitrate = (string) intval($this->video_bitrate/1000);
         if ($this->frame_rate) {
             $this->f_frame_rate = $this->frame_rate . ' fps';
         }
 
         // Format the Time
-        $min = floor($this->time/60);
-        $sec = sprintf("%02d", ($this->time%60));
-        $this->f_time = $min . ":" . $sec;
-        $hour = sprintf("%02d", floor($min/60));
-        $min_h = sprintf("%02d", ($min%60));
+        $min            = floor($this->time/60);
+        $sec            = sprintf("%02d", ($this->time%60));
+        $this->f_time   = $min . ":" . $sec;
+        $hour           = sprintf("%02d", floor($min/60));
+        $min_h          = sprintf("%02d", ($min%60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
 
         if ($details) {
             // Get the top tags
-            $this->tags = Tag::get_top_tags('video', $this->id);
+            $this->tags   = Tag::get_top_tags('video', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'video');
         }
 
         $this->f_length = floor($this->time/60) . ' ' .  T_('minutes');
-        $this->f_file = $this->f_title . '.' . $this->type;
+        $this->f_file   = $this->f_title . '.' . $this->type;
         if ($this->release_date) {
             $this->f_release_date = date('Y-m-d', $this->release_date);
         }
@@ -293,7 +293,7 @@ class Video extends database_object implements media, library_item
      */
     public function get_keywords()
     {
-        $keywords = array();
+        $keywords          = array();
         $keywords['title'] = array('important' => true,
             'label' => T_('Title'),
             'value' => $this->f_title);
@@ -614,7 +614,7 @@ class Video extends database_object implements media, library_item
     {
         if (isset($data['release_date'])) {
             $f_release_date = $data['release_date'];
-            $release_date = strtotime($f_release_date);
+            $release_date   = strtotime($f_release_date);
         } else {
             $release_date = $this->release_date;
         }
@@ -627,7 +627,7 @@ class Video extends database_object implements media, library_item
             Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
         }
 
-        $this->title = $title;
+        $this->title        = $title;
         $this->release_date = $release_date;
 
         return $this->id;
@@ -653,7 +653,7 @@ class Video extends database_object implements media, library_item
     public static function generate_preview($video_id, $overwrite = false)
     {
         if ($overwrite || !Art::has_db($video_id, 'video', 'preview')) {
-            $artp = new Art($video_id, 'video', 'preview');
+            $artp  = new Art($video_id, 'video', 'preview');
             $video = new Video($video_id);
             $image = Stream::get_image_preview($video);
             $artp->insert($image, 'image/png');
@@ -675,7 +675,7 @@ class Video extends database_object implements media, library_item
             $count = 1;
         }
 
-        $sql = "SELECT DISTINCT(`video`.`id`) FROM `video` ";
+        $sql   = "SELECT DISTINCT(`video`.`id`) FROM `video` ";
         $where = "WHERE `video`.`enabled` = '1' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
@@ -724,11 +724,11 @@ class Video extends database_object implements media, library_item
     public function get_subtitles()
     {
         $subtitles = array();
-        $pinfo = pathinfo($this->file);
-        $filter = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
+        $pinfo     = pathinfo($this->file);
+        $filter    = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
 
         foreach (glob($filter) as $srt) {
-            $psrt = explode('.', $srt);
+            $psrt      = explode('.', $srt);
             $lang_code = '__';
             $lang_name = T_("Unknown");
             if (count($psrt) >= 2) {
@@ -953,7 +953,7 @@ class Video extends database_object implements media, library_item
     {
         $subtitle = '';
         if ($lang_code == '__' || $this->get_language_name($lang_code)) {
-            $pinfo = pathinfo($this->file);
+            $pinfo    = pathinfo($this->file);
             $subtitle = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'];
             if ($lang_code != '__') {
                 $subtitle .= '.' . $lang_code;
@@ -975,7 +975,7 @@ class Video extends database_object implements media, library_item
             $deleted = true;
         }
         if ($deleted === true) {
-            $sql = "DELETE FROM `video` WHERE `id` = ?";
+            $sql     = "DELETE FROM `video` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
                 Art::gc('video', $this->id);

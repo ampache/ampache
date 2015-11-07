@@ -107,17 +107,17 @@ class PrivateMsg extends database_object
 
     public function format($details = true)
     {
-        $this->f_subject = scrub_out($this->subject);
-        $this->f_message = scrub_out($this->message);
+        $this->f_subject       = scrub_out($this->subject);
+        $this->f_message       = scrub_out($this->message);
         $this->f_creation_date = date("Y/m/d H:i:s", $this->creation_date);
-        $from_user = new User($this->from_user);
+        $from_user             = new User($this->from_user);
         $from_user->format();
         $this->f_from_user_link = $from_user->f_link;
-        $to_user = new User($this->to_user);
+        $to_user                = new User($this->to_user);
         $to_user->format();
         $this->f_to_user_link = $to_user->f_link;
-        $this->link = AmpConfig::get('web_path') . '/pvmsg.php?pvmsg_id=' . $this->id;
-        $this->f_link = "<a href=\"" . $this->link . "\">" . $this->f_subject . "</a>";
+        $this->link           = AmpConfig::get('web_path') . '/pvmsg.php?pvmsg_id=' . $this->id;
+        $this->f_link         = "<a href=\"" . $this->link . "\">" . $this->f_subject . "</a>";
     }
 
     public function set_is_read($read)
@@ -147,10 +147,10 @@ class PrivateMsg extends database_object
         }
 
         if (!Error::occurred()) {
-            $from_user = $data['from_user'] ?: $GLOBALS['user']->id;
+            $from_user     = $data['from_user'] ?: $GLOBALS['user']->id;
             $creation_date = $data['creation_date'] ?: time();
-            $is_read = $data['is_read'] ?: 0;
-            $sql = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " .
+            $is_read       = $data['is_read'] ?: 0;
+            $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " .
                 "VALUES (?, ?, ?, ?, ?, ?)";
             if (Dba::write($sql, array($subject, $message, $from_user, $to_user->id, $creation_date, $is_read))) {
                 $insert_id = Dba::insert_id();
@@ -161,10 +161,10 @@ class PrivateMsg extends database_object
                         if (!empty($to_user->email)) {
                             $mailer = new Mailer();
                             $mailer->set_default_sender();
-                            $mailer->recipient = $to_user->email;
+                            $mailer->recipient      = $to_user->email;
                             $mailer->recipient_name = $to_user->fullname;
-                            $mailer->subject = "[" . T_('Private Message') . "] " . $subject;
-                            $mailer->message = sprintf(T_("You just received a new private message from %s.\n\n
+                            $mailer->subject        = "[" . T_('Private Message') . "] " . $subject;
+                            $mailer->message        = sprintf(T_("You just received a new private message from %s.\n\n
         ----------------------
         %s
         ----------------------
@@ -193,7 +193,7 @@ class PrivateMsg extends database_object
      */
     public static function get_private_msgs($to_user, $unread_only = false, $from_user = 0)
     {
-        $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = ?";
+        $sql    = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = ?";
         $params = array($to_user);
         if ($unread_only) {
             $sql .= " AND `is_read` = '0'";
@@ -204,7 +204,7 @@ class PrivateMsg extends database_object
         }
 
         $db_results = Dba::read($sql, $params);
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }

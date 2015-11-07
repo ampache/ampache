@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
         $playlist_name = scrub_in($_REQUEST['playlist_name']);
         $playlist_type = scrub_in($_REQUEST['type']);
 
-        $playlist_id = Playlist::create($playlist_name, $playlist_type);
+        $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;
         show_confirmation(T_('Playlist Created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type), 'playlist.php');
     break;
@@ -69,22 +69,22 @@ switch ($_REQUEST['action']) {
     case 'import_playlist':
         /* first we rename the file to it's original name before importing.
         Otherwise the playlist name will have the $_FILES['filename']['tmp_name'] which doesn't look right... */
-        $dir = dirname($_FILES['filename']['tmp_name']) . "/";
+        $dir      = dirname($_FILES['filename']['tmp_name']) . "/";
         $filename = $dir . basename($_FILES['filename']['name']);
         move_uploaded_file($_FILES['filename']['tmp_name'], $filename );
 
         $result = Catalog::import_playlist($filename);
 
         if ($result['success']) {
-            $url = 'show_playlist&amp;playlist_id=' . $result['id'];
+            $url   = 'show_playlist&amp;playlist_id=' . $result['id'];
             $title = T_('Playlist Imported');
             $body  = basename($_FILES['filename']['name']);
             $body .= '<br />' .
                 sprintf(ngettext('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
         } else {
-            $url = 'show_import_playlist';
+            $url   = 'show_import_playlist';
             $title = T_('Playlist Not Imported');
-            $body = T_($result['error']);
+            $body  = T_($result['error']);
         }
         show_confirmation($title, $body, AmpConfig::get('web_path') . '/playlist.php?action=' . $url);
     break;
@@ -101,7 +101,7 @@ switch ($_REQUEST['action']) {
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities(scrub_in($data));
-            debug_event('playlist', $key.'='.$_GET[$key], '5');
+            debug_event('playlist', $key . '=' . $_GET[$key], '5');
         }
 
         if (isset($_GET['order'])) {
@@ -131,7 +131,7 @@ switch ($_REQUEST['action']) {
         }
 
         prune_empty_playlists();
-        $url = AmpConfig::get('web_path') . '/playlist.php';
+        $url   = AmpConfig::get('web_path') . '/playlist.php';
         $title = T_('Empty Playlists Deleted');
         $body  = '';
         show_confirmation($title,$body,$url);
@@ -147,8 +147,8 @@ switch ($_REQUEST['action']) {
         }
 
         $tracks_to_rm = array();
-        $map = array();
-        $items = $playlist->get_items();
+        $map          = array();
+        $items        = $playlist->get_items();
         foreach ($items as $item) {
             if (!array_key_exists($item['object_type'], $map)) {
                 $map[$item['object_type']] = array();

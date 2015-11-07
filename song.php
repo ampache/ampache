@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
         show_confirmation(
             T_('Song Deletion'),
             T_('Are you sure you want to permanently delete this song?'),
-            AmpConfig::get('web_path')."/song.php?action=confirm_delete&song_id=" . $song_id,
+            AmpConfig::get('web_path') . "/song.php?action=confirm_delete&song_id=" . $song_id,
             1,
             'delete_song'
         );

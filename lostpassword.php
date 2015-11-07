@@ -31,9 +31,9 @@ switch ($action) {
         $result = false;
         if (isset($_POST['email']) && $_POST['email']) {
             /* Get the email address and the current ip*/
-            $email = scrub_in($_POST['email']);
+            $email      = scrub_in($_POST['email']);
             $current_ip =(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :$_SERVER['REMOTE_ADDR'];
-            $result = send_newpassword($email, $current_ip);
+            $result     = send_newpassword($email, $current_ip);
         }
         if ($result) {
             Error::add('general', T_('Password has been sent'));
@@ -57,9 +57,9 @@ function send_newpassword($email,$current_ip)
 
         $mailer = new Mailer();
         $mailer->set_default_sender();
-        $mailer->subject = T_("Lost Password");
+        $mailer->subject        = T_("Lost Password");
         $mailer->recipient_name = $client->fullname;
-        $mailer->recipient = $client->email;
+        $mailer->recipient      = $client->email;
 
         $message  = sprintf(T_("A user from %s has requested a password reset for '%s'."), $current_ip, $client->username);
         $message .= "\n";

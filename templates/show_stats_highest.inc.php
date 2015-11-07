@@ -20,21 +20,21 @@
  *
  */
 
-$sql = Rating::get_highest_sql('song');
+$sql    = Rating::get_highest_sql('song');
 $browse = new Browse();
 $browse->set_type('song', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql = Rating::get_highest_sql('album');
+$sql    = Rating::get_highest_sql('album');
 $browse = new Browse();
 $browse->set_type('album', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql = Rating::get_highest_sql('artist');
+$sql    = Rating::get_highest_sql('artist');
 $browse = new Browse();
 $browse->set_type('artist', $sql);
 $browse->set_simple_browse(true);
@@ -42,7 +42,7 @@ $browse->show_objects();
 $browse->store();
 
 if (AmpConfig::get('allow_video')) {
-    $sql = Rating::get_highest_sql('video');
+    $sql    = Rating::get_highest_sql('video');
     $browse = new Browse();
     $browse->set_type('video', $sql);
     $browse->set_simple_browse(true);

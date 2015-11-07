@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
             License::create($_POST);
             $text = T_('License Created');
         }
-        show_confirmation($text,'',AmpConfig::get('web_path').'/admin/license.php');
+        show_confirmation($text,'',AmpConfig::get('web_path') . '/admin/license.php');
     break;
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
         break;
     case 'delete':
         License::delete($_REQUEST['license_id']);
-        show_confirmation(T_('License Deleted'),'',AmpConfig::get('web_path').'/admin/license.php');
+        show_confirmation(T_('License Deleted'),'',AmpConfig::get('web_path') . '/admin/license.php');
     break;
     default:
         $browse = new Browse();

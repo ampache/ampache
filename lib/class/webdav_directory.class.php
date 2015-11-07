@@ -43,7 +43,7 @@ class WebDAV_Directory extends DAV\Collection
     {
         debug_event('webdav', 'Directory getChildren', 5);
         $children = array();
-        $childs = $this->libitem->get_childrens();
+        $childs   = $this->libitem->get_childrens();
         foreach ($childs as $key => $child) {
             if (is_string($key)) {
                 foreach ($child as $schild) {
@@ -61,9 +61,9 @@ class WebDAV_Directory extends DAV\Collection
         // Clean song name
         if (strtolower(get_class($this->libitem)) === "album") {
             $splitname = explode('-', $name, 3);
-            $name = trim($splitname[count($splitname) - 1]);
-            $nameinfo = pathinfo($name);
-            $name = $nameinfo['filename'];
+            $name      = trim($splitname[count($splitname) - 1]);
+            $nameinfo  = pathinfo($name);
+            $name      = $nameinfo['filename'];
         }
         debug_event('webdav', 'Directory getChild: ' . $name, 5);
         $matches = $this->libitem->search_childrens($name);

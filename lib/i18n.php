@@ -28,9 +28,9 @@
  */
 function load_gettext()
 {
-    $lang = AmpConfig::get('lang');
+    $lang    = AmpConfig::get('lang');
     $charset = AmpConfig::get('site_charset') ?: 'UTF-8';
-    $locale = $lang . '.' . $charset;
+    $locale  = $lang . '.' . $charset;
     //debug_event('i18n', 'Setting locale to ' . $locale, 5);
     T_setlocale(LC_MESSAGES, $locale);
     /* Bind the Text Domain */

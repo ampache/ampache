@@ -68,7 +68,7 @@ class Auth
 
             xoutput_headers();
 
-            $results = array();
+            $results            = array();
             $results['rfc3514'] = '<script type="text/javascript">reloadRedirect("' . $target . '")</script>';
             echo xoutput_from_array($results);
         } else {
@@ -139,7 +139,7 @@ class Auth
     private static function mysql_auth($username, $password)
     {
         if (strlen($password) && strlen($username)) {
-            $sql = 'SELECT `password` FROM `user` WHERE `username` = ?';
+            $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
 
             if ($row = Dba::fetch_assoc($db_results)) {
@@ -148,7 +148,7 @@ class Auth
                 // variations of the password. Increases collision chances, but
                 // doesn't break things.
                 // FIXME: Break things in the future.
-                $hashed_password = array();
+                $hashed_password   = array();
                 $hashed_password[] = hash('sha256', $password);
                 $hashed_password[] = hash('sha256',
                     Dba::escape(stripslashes(htmlspecialchars(strip_tags($password)))));
@@ -190,19 +190,19 @@ class Auth
         $results = array();
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
-            $results['error']    = 'The PAM PHP module is not installed';
+            $results['error']      = 'The PAM PHP module is not installed';
             return $results;
         }
 
         $password = scrub_in($password);
 
         if (pam_auth($username, $password)) {
-            $results['success']    = true;
-            $results['type']    = 'pam';
+            $results['success']     = true;
+            $results['type']        = 'pam';
             $results['username']    = $username;
         } else {
             $results['success']    = false;
-            $results['error']    = 'PAM login attempt failed';
+            $results['error']      = 'PAM login attempt failed';
         }
 
         return $results;
@@ -236,7 +236,7 @@ class Auth
             ), $pipes);
 
         if (is_resource($proc)) {
-            fwrite($pipes[0], $username."\n".$password."\n");
+            fwrite($pipes[0], $username . "\n" . $password . "\n");
             fclose($pipes[0]);
             fclose($pipes[1]);
             if ($stderr = fread($pipes[2], 8192)) {
@@ -303,7 +303,7 @@ class Auth
         if (!($ldap_dn && $ldap_url && $ldap_filter && $ldap_class)) {
             debug_event('ldap_auth', 'Required config value missing', 1);
             $results['success'] = false;
-            $results['error'] = 'Incomplete LDAP config';
+            $results['error']   = 'Incomplete LDAP config';
             return $results;
         }
 
@@ -314,7 +314,7 @@ class Auth
             $ldap_filter = "($ldap_filter=$username)";
         }
 
-        $ldap_name_field    = AmpConfig::get('ldap_name_field');
+        $ldap_name_field     = AmpConfig::get('ldap_name_field');
         $ldap_email_field    = AmpConfig::get('ldap_email_field');
 
         if ($ldap_link = ldap_connect($ldap_url) ) {
@@ -325,13 +325,13 @@ class Auth
             // bind using our auth if we need to for initial search
             if (!ldap_bind($ldap_link, $ldap_username, $ldap_password)) {
                 $results['success'] = false;
-                $results['error'] = 'Could not bind to LDAP server.';
+                $results['error']   = 'Could not bind to LDAP server.';
                 return $results;
             } // If bind fails
 
             $searchstr = "(&(objectclass=$ldap_class)$ldap_filter)";
             debug_event('ldap_auth', 'ldap_search: ' . $searchstr, 5);
-            $sr = ldap_search($ldap_link, $ldap_dn, $searchstr);
+            $sr   = ldap_search($ldap_link, $ldap_dn, $searchstr);
             $info = ldap_get_entries($ldap_link, $sr);
 
             if ($info["count"] == 1) {
@@ -350,7 +350,7 @@ class Auth
                         if (!$group_result) {
                             debug_event('ldap_auth', "Failure reading $require_group", 1);
                             $results['success'] = false;
-                            $results['error'] = 'The LDAP group could not be read';
+                            $results['error']   = 'The LDAP group could not be read';
                             return $results;
                         }
 
@@ -359,7 +359,7 @@ class Auth
                         if ($group_info['count'] < 1) {
                             debug_event('ldap_auth', "No members found in $require_group", 1);
                             $results['success'] = false;
-                            $results['error'] = 'Empty LDAP group';
+                            $results['error']   = 'Empty LDAP group';
                             return $results;
                         }
 
@@ -367,7 +367,7 @@ class Auth
                         if (!$group_match) {
                             debug_event('ldap_auth', "$user_dn is not a member of $require_group",1);
                             $results['success'] = false;
-                            $results['error'] = 'LDAP login attempt failed';
+                            $results['error']   = 'LDAP login attempt failed';
                             return $results;
                         }
                     }
@@ -404,11 +404,11 @@ class Auth
         $results = array();
         if (($_SERVER['REMOTE_USER'] == $username) ||
             ($_SERVER['HTTP_REMOTE_USER'] == $username)) {
-            $results['success']    = true;
-            $results['type']    = 'http';
+            $results['success']     = true;
+            $results['type']        = 'http';
             $results['username']    = $username;
-            $results['name']    = $username;
-            $results['email']    = '';
+            $results['name']        = $username;
+            $results['email']       = '';
         } else {
             $results['success'] = false;
             $results['error']   = 'HTTP auth login attempt failed';
@@ -466,7 +466,7 @@ class Auth
                         }
                     } else {
                         // Generate form markup and render it.
-                        $form_id = 'openid_message';
+                        $form_id   = 'openid_message';
                         $form_html = $auth_request->htmlMarkup(AmpConfig::get('web_path'), Openid::get_return_url(), false, array('id' => $form_id));
 
                         if (Auth_OpenID::isFailure($form_html)) {
@@ -475,7 +475,7 @@ class Auth
                         } else {
                             debug_event('auth', 'OpenID 2: javascript redirection code to OpenID form.', '5');
                             // First step is a success, UI interaction required.
-                            $results['success'] = false;
+                            $results['success']     = false;
                             $results['ui_required'] = $form_html;
                         }
                     }
@@ -505,9 +505,9 @@ class Auth
      */
     private static function openid_auth_2()
     {
-        $results = array();
+        $results            = array();
         $results['type']    = 'openid';
-        $consumer = Openid::get_consumer();
+        $consumer           = Openid::get_consumer();
         if ($consumer) {
             $response = $consumer->complete(Openid::get_return_url());
 
@@ -521,7 +521,7 @@ class Auth
                 } else {
                     if ($response->status == Auth_OpenID_SUCCESS) {
                         // Extract the identity URL and Simple Registration data (if it was returned).
-                $sreg_resp = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
+                $sreg_resp    = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
                         $sreg = $sreg_resp->contents();
 
                         $results['website'] = $response->getDisplayIdentifier();
@@ -540,8 +540,8 @@ class Auth
                         $users = User::get_from_website($results['website']);
                         if (count($users) > 0) {
                             if (count($users) == 1) {
-                                $user = new User($users[0]);
-                                $results['success'] = true;
+                                $user                = new User($users[0]);
+                                $results['success']  = true;
                                 $results['username'] = $user->username;
                             } else {
                                 // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
@@ -549,7 +549,7 @@ class Auth
                         foreach ($users as $id) {
                             $user = new User($id);
                             if ($user->username == $results['username']) {
-                                $results['success'] = true;
+                                $results['success']  = true;
                                 $results['username'] = $user->username;
                             }
                         }
@@ -559,10 +559,10 @@ class Auth
                     $user = User::get_from_username($results['username']);
                             if ($user->id) {
                                 $results['success'] = false;
-                                $results['error'] = 'No user associated to this OpenID and username already taken.';
+                                $results['error']   = 'No user associated to this OpenID and username already taken.';
                             } else {
                                 $results['success'] = true;
-                                $results['error'] = 'No user associated to this OpenID.';
+                                $results['error']   = 'No user associated to this OpenID.';
                             }
                         }
                     }

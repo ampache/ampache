@@ -43,7 +43,7 @@ class WebDAV_Catalog extends DAV\Collection
         $children = array();
         $catalogs = null;
         if ($this->catalog_id > 0) {
-            $catalogs = array();
+            $catalogs   = array();
             $catalogs[] = $this->catalog_id;
         }
         $artists = Catalog::get_artists($catalogs);

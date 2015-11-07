@@ -26,9 +26,8 @@
  */
 
 ?>
-<?php foreach ($headers as $key=>$header) {
-    ?>
-    <td><?php echo $object->$key;
-    ?></td>
-<?php 
-} ?>
+<?php
+    foreach ($headers as $key=>$header) {
+        echo '<td>' . $object->$key . '</td>';
+    }
+?>

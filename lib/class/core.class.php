@@ -65,7 +65,7 @@ class Core
         } else {
             // Class with namespace are not used by Ampache but probably by modules
             $split = explode('\\', $class);
-            $path = AmpConfig::get('prefix') . '/modules';
+            $path  = AmpConfig::get('prefix') . '/modules';
             for ($i = 0; $i < count($split); ++$i) {
                 $path .= '/' . $split[$i];
                 if ($i != count($split)-1) {
@@ -90,7 +90,7 @@ class Core
     public static function form_register($name, $type = 'post')
     {
         // Make ourselves a nice little sid
-        $sid =  md5(uniqid(rand(), true));
+        $sid    =  md5(uniqid(rand(), true));
         $window = AmpConfig::get('session_length');
         $expire = time() + $window;
 
@@ -178,7 +178,7 @@ class Core
             return false;
         }
 
-        $width = imagesx($image);
+        $width  = imagesx($image);
         $height = imagesy($image);
 
         if (!$width || !$height) {
@@ -226,7 +226,7 @@ class Core
                 return false;
             }
             $offset = PHP_INT_MAX - 1;
-            $size = (float) $offset;
+            $size   = (float) $offset;
             if (!fseek($fp, $offset)) {
                 return false;
             }
@@ -248,9 +248,9 @@ class Core
      */
     public static function conv_lc_file($filename)
     {
-        $lc_filename = $filename;
+        $lc_filename  = $filename;
         $site_charset = AmpConfig::get('site_charset');
-        $lc_charset = AmpConfig::get('lc_charset');
+        $lc_charset   = AmpConfig::get('lc_charset');
         if ($lc_charset && $lc_charset != $site_charset) {
             if (function_exists('iconv')) {
                 $lc_filename = iconv($site_charset, $lc_charset, $filename);
@@ -314,7 +314,7 @@ class Core
 
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
-                $proxy = array();
+                $proxy   = array();
                 $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
                 if (AmpConfig::get('proxy_user')) {
                     $proxy[] = AmpConfig::get('proxy_user');

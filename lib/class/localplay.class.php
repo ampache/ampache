@@ -82,9 +82,9 @@ class Localplay
             return false;
         }
 
-        $this->f_name         = ucfirst($this->type);
+        $this->f_name            = ucfirst($this->type);
         $this->f_description     = $this->_player->get_description();
-        $this->f_version    = $this->_player->get_version();
+        $this->f_version         = $this->_player->get_version();
     } // format
 
     /**
@@ -100,7 +100,7 @@ class Localplay
         }
 
         $filename = AmpConfig::get('prefix') . '/modules/localplay/' . $this->type . '/' . $this->type . '.controller.php';
-        $include = require_once $filename;
+        $include  = require_once $filename;
 
         if (!$include) {
             /* Throw Error Here */
@@ -108,7 +108,7 @@ class Localplay
             return false;
         } // include
         else {
-            $class_name = "Ampache" . $this->type;
+            $class_name    = "Ampache" . $this->type;
             $this->_player = new $class_name();
             if (!($this->_player instanceof localplay_controller)) {
                 debug_event('Localplay',$this->type . ' not an instance of controller abstract, unable to load','1');
@@ -139,7 +139,7 @@ class Localplay
     {
         /* First open the dir */
         $basedir = AmpConfig::get('prefix') . '/modules/localplay';
-        $handle = opendir($basedir);
+        $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
             debug_event('Localplay','Error: Unable to read localplay controller directory','1');

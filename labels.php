@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
         show_confirmation(
             T_('Label Deletion'),
             T_('Are you sure you want to permanently delete this label?'),
-            AmpConfig::get('web_path')."/labels.php?action=confirm_delete&label_id=" . $label_id,
+            AmpConfig::get('web_path') . "/labels.php?action=confirm_delete&label_id=" . $label_id,
             1,
             'delete_label'
         );
@@ -82,7 +82,7 @@ switch ($_REQUEST['action']) {
         if (!$label_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
-            $body = T_('Label Added');
+            $body  = T_('Label Added');
             $title = '';
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=label');
         }
@@ -97,7 +97,7 @@ switch ($_REQUEST['action']) {
         if ($label_id > 0) {
             $label = new Label($label_id);
             $label->format();
-            $object_ids = $label->get_artists();
+            $object_ids  = $label->get_artists();
             $object_type = 'artist';
             require_once AmpConfig::get('prefix') . UI::find_template('show_label.inc.php');
             UI::show_footer();

@@ -34,7 +34,7 @@ if (count($results)) {
     ?>
 <?php
 foreach ($results as $item) {
-    $media = $item['media'];
+    $media   = $item['media'];
     $np_user = $item['client'];
     $np_user->format();
     $agent = $item['agent'];

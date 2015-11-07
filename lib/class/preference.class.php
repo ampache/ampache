@@ -45,18 +45,18 @@ class Preference extends database_object
     public static function get_by_user($user_id, $pref_name)
     {
         //debug_event('preference.class.php', 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', '5');
-        $user_id = Dba::escape($user_id);
+        $user_id   = Dba::escape($user_id);
         $pref_name = Dba::escape($pref_name);
-        $id = self::id_from_name($pref_name);
+        $id        = self::id_from_name($pref_name);
 
         if (parent::is_cached('get_by_user', $user_id)) {
             return parent::get_from_cache('get_by_user', $user_id);
         }
 
-        $sql = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='$user_id'";
+        $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='$user_id'";
         $db_results = Dba::read($sql);
         if (Dba::num_rows($db_results) < 1) {
-            $sql = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='-1'";
+            $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='-1'";
             $db_results = Dba::read($sql);
         }
         $data = Dba::fetch_assoc($db_results);
@@ -75,11 +75,11 @@ class Preference extends database_object
     {
         // First prepare
         if (!is_numeric($preference)) {
-            $id = self::id_from_name($preference);
+            $id   = self::id_from_name($preference);
             $name = $preference;
         } else {
             $name = self::name_from_id($preference);
-            $id = $preference;
+            $id   = $preference;
         }
         if ($applytoall AND Access::check('interface','100')) {
             $user_check = "";
@@ -96,7 +96,7 @@ class Preference extends database_object
 
         if (self::has_access($name)) {
             $user_id = Dba::escape($user_id);
-            $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$id'$user_check";
+            $sql     = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$id'$user_check";
             Dba::write($sql);
             Preference::clear_from_session();
 
@@ -124,7 +124,7 @@ class Preference extends database_object
         }
 
         $preference_id = Dba::escape($preference_id);
-        $level = Dba::escape($level);
+        $level         = Dba::escape($level);
 
         $sql = "UPDATE `preference` SET `level`='$level' WHERE `id`='$preference_id'";
         Dba::write($sql);
@@ -139,7 +139,7 @@ class Preference extends database_object
     public static function update_all($preference_id,$value)
     {
         $preference_id = Dba::escape($preference_id);
-        $value = Dba::escape($value);
+        $value         = Dba::escape($value);
 
         $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
         Dba::write($sql);
@@ -156,8 +156,8 @@ class Preference extends database_object
     public static function exists($preference)
     {
         // We assume it's the name
-        $name = Dba::escape($preference);
-        $sql = "SELECT * FROM `preference` WHERE `name`='$name'";
+        $name       = Dba::escape($preference);
+        $sql        = "SELECT * FROM `preference` WHERE `name`='$name'";
         $db_results = Dba::read($sql);
 
         return Dba::num_rows($db_results);
@@ -177,9 +177,9 @@ class Preference extends database_object
 
         $preference = Dba::escape($preference);
 
-        $sql = "SELECT `level` FROM `preference` WHERE `name`='$preference'";
+        $sql        = "SELECT `level` FROM `preference` WHERE `name`='$preference'";
         $db_results = Dba::read($sql);
-        $data = Dba::fetch_assoc($db_results);
+        $data       = Dba::fetch_assoc($db_results);
 
         if (Access::check('interface',$data['level'])) {
             return true;
@@ -200,9 +200,9 @@ class Preference extends database_object
             return parent::get_from_cache('id_from_name', $name);
         }
 
-        $sql = "SELECT `id` FROM `preference` WHERE `name`='$name'";
+        $sql        = "SELECT `id` FROM `preference` WHERE `name`='$name'";
         $db_results = Dba::read($sql);
-        $row = Dba::fetch_assoc($db_results);
+        $row        = Dba::fetch_assoc($db_results);
 
         parent::add_to_cache('id_from_name', $name, $row['id']);
 
@@ -218,7 +218,7 @@ class Preference extends database_object
     {
         $id = Dba::escape($id);
 
-        $sql = "SELECT `name` FROM `preference` WHERE `id`='$id'";
+        $sql        = "SELECT `name` FROM `preference` WHERE `id`='$id'";
         $db_results = Dba::read($sql);
 
         $row = Dba::fetch_assoc($db_results);
@@ -233,7 +233,7 @@ class Preference extends database_object
      */
     public static function get_catagories()
     {
-        $sql = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`";
+        $sql        = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`";
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -266,7 +266,7 @@ class Preference extends database_object
             " ORDER BY `preference`.`description`";
 
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array('name'=>$row['name'],'level'=>$row['level'],'description'=>$row['description'],'value'=>$row['value']);
@@ -289,15 +289,15 @@ class Preference extends database_object
         if (!$db_results) {
             return false;
         }
-        $id = Dba::insert_id();
-        $params = array($id, $default);
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,?)";
+        $id         = Dba::insert_id();
+        $params     = array($id, $default);
+        $sql        = "INSERT INTO `user_preference` VALUES (-1,?,?)";
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
             return false;
         }
         if ($catagory !== "system") {
-            $sql = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
+            $sql        = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {
                 return false;
@@ -454,8 +454,8 @@ class Preference extends database_object
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $value = $row['system_value'] ? $row['system_value'] : $row['value'];
-            $name = $row['name'];
+            $value          = $row['system_value'] ? $row['system_value'] : $row['value'];
+            $name           = $row['name'];
             $results[$name] = $value;
         } // end while sys prefs
 
@@ -477,7 +477,7 @@ class Preference extends database_object
         $results['theme_path'] = '/themes/' . $results['theme_name'];
         
         // Load theme settings
-        $themecfg = get_theme($results['theme_name']);
+        $themecfg                  = get_theme($results['theme_name']);
         $results['theme_css_base'] = $themecfg['base'];
         
         if (strlen($results['theme_color']) > 0) {
@@ -494,7 +494,7 @@ class Preference extends database_object
 
         AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;
-        $_SESSION['userdata']['uid'] = $user_id;
+        $_SESSION['userdata']['uid']         = $user_id;
     } // init
 } // end Preference class
 

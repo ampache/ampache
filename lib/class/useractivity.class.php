@@ -70,7 +70,7 @@ class Useractivity extends database_object
 
         $idlist = '(' . implode(',', $ids) . ')';
 
-        $sql = "SELECT * FROM `user_activity` WHERE `id` IN $idlist";
+        $sql        = "SELECT * FROM `user_activity` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -132,14 +132,14 @@ class Useractivity extends database_object
         }
         
         $params = array($user_id);
-        $sql = "SELECT `id` FROM `user_activity` WHERE `user` = ?";
+        $sql    = "SELECT `id` FROM `user_activity` WHERE `user` = ?";
         if ($since > 0) {
             $sql .= " AND `activity_date` <= ?";
             $params[] = $since;
         }
         $sql .= " ORDER BY `activity_date` DESC LIMIT " . $limit;
         $db_results = Dba::read($sql, $params);
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -160,7 +160,7 @@ class Useractivity extends database_object
         }
         
         $params = array($user_id);
-        $sql = "SELECT `user_activity`.`id` FROM `user_activity`" .
+        $sql    = "SELECT `user_activity`.`id` FROM `user_activity`" .
                 " INNER JOIN `user_follower` ON `user_follower`.`follow_user` = `user_activity`.`user`"
                 . " WHERE `user_follower`.`user` = ?";
         if ($since > 0) {
@@ -169,7 +169,7 @@ class Useractivity extends database_object
         }
         $sql .= " ORDER BY `user_activity`.`activity_date` DESC LIMIT " . $limit;
         $db_results = Dba::read($sql, $params);
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }

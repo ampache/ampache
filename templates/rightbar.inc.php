@@ -42,7 +42,7 @@
         $playlist->format();
         ?>
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id='. $playlist->id, $playlist->f_name, 'rb_append_playlist_'.$playlist->id);
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->f_name, 'rb_append_playlist_' . $playlist->id);
         ?>
                 </li>
             <?php 
@@ -120,13 +120,13 @@
     // Limit the number of objects we show here
     if (count($objects) > 100) {
         $truncated = (count($objects) - 100);
-        $objects = array_slice($objects, 0, 100, true);
+        $objects   = array_slice($objects, 0, 100, true);
     }
 
     $normal_array = array('live_stream', 'song', 'video', 'random', 'song_preview');
 
     foreach ($objects as $object_data) {
-        $uid = $object_data['track_id'];
+        $uid  = $object_data['track_id'];
         $type = array_shift($object_data);
         if (in_array($type,$normal_array)) {
             $object = new $type(array_shift($object_data));

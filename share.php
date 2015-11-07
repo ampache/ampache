@@ -72,11 +72,11 @@ switch ($action) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
         } else {
             $share = new Share($id);
-            $body = T_('Share created.') . '<br />' .
+            $body  = T_('Share created.') . '<br />' .
                 T_('You can now start sharing the following url:') . '<br />' .
                 '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
                 '<div id="share_qrcode" style="text-align: center"></div>' .
-                '<script language="javascript" type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url .'", width: 128, height: 128});</script>' .
+                '<script language="javascript" type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
                 '<br /><br />' .
                 T_('You can also embed this share as a web player into your website, with the following html code:') . '<br />' .
                 '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';
@@ -133,13 +133,13 @@ switch ($action) {
         }
         $plugin->load($GLOBALS['user']);
 
-        $type = $_REQUEST['type'];
-        $id = $_REQUEST['id'];
+        $type           = $_REQUEST['type'];
+        $id             = $_REQUEST['id'];
         $allow_download = (($type == 'song' && Access::check_function('download')) || Access::check_function('batch_download'));
-        $secret = Share::generate_secret();
+        $secret         = Share::generate_secret();
 
         $share_id = Share::create_share($type, $id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
-        $share = new Share($share_id);
+        $share    = new Share($share_id);
         $share->format(true);
 
         header("Location: " . $plugin->_plugin->external_share($share->public_url, $share->f_name));
@@ -159,7 +159,7 @@ if (AmpConfig::get('access_control')) {
     }
 } // access_control is enabled
 
-$id = $_REQUEST['id'];
+$id     = $_REQUEST['id'];
 $secret = $_REQUEST['secret'];
 
 $share = new Share($id);
@@ -181,13 +181,13 @@ $share->format();
 $share->save_access();
 if ($action == 'download') {
     if ($share->object_type == 'song' || $share->object_type == 'video') {
-        $_REQUEST['action'] = 'download';
-        $_REQUEST['type'] = $share->object_type;
+        $_REQUEST['action']                    = 'download';
+        $_REQUEST['type']                      = $share->object_type;
         $_REQUEST[$share->object_type . '_id'] = $share->object_id;
         require AmpConfig::get('prefix') . '/stream.php';
     } else {
         $_REQUEST['action'] = $share->object_type;
-        $_REQUEST['id'] = $share->object_id;
+        $_REQUEST['id']     = $share->object_id;
         require AmpConfig::get('prefix') . '/batch.php';
     }
 } elseif ($action == 'stream') {

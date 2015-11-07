@@ -21,7 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$thcount = 8;
+$thcount  = 8;
 ?>
 <?php if ($browse->get_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
@@ -82,14 +82,14 @@ $thcount = 8;
         }
 
         $show_direct_play_cfg = AmpConfig::get('directplay');
-        $directplay_limit = AmpConfig::get('direct_play_limit');
+        $directplay_limit     = AmpConfig::get('direct_play_limit');
 
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
-            $libitem = new Album($album_id);
+            $libitem                    = new Album($album_id);
             $libitem->allow_group_disks = $allow_group_disks;
             $libitem->format(true, $limit_threshold);
-            $show_direct_play = $show_direct_play_cfg;
+            $show_direct_play  = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', '25');
             if ($directplay_limit > 0) {
                 $show_playlist_add = ($libitem->song_count <= $directplay_limit);

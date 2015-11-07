@@ -36,10 +36,10 @@ switch ($_REQUEST['action']) {
         if ($shout->id) {
             $shout->update($_POST);
         }
-        show_confirmation(T_('Shoutbox Post Updated'),'',AmpConfig::get('web_path').'/admin/shout.php');
+        show_confirmation(T_('Shoutbox Post Updated'),'',AmpConfig::get('web_path') . '/admin/shout.php');
     break;
     case 'show_edit':
-        $shout = new Shoutbox($_REQUEST['shout_id']);
+        $shout  = new Shoutbox($_REQUEST['shout_id']);
         $object = Shoutbox::get_object($shout->object_type,$shout->object_id);
         $object->format();
         $client = new User($shout->user);
@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
         break;
     case 'delete':
         Shoutbox::delete($_REQUEST['shout_id']);
-        show_confirmation(T_('Shoutbox Post Deleted'),'',AmpConfig::get('web_path').'/admin/shout.php');
+        show_confirmation(T_('Shoutbox Post Deleted'),'',AmpConfig::get('web_path') . '/admin/shout.php');
     break;
     default:
         $browse = new Browse();

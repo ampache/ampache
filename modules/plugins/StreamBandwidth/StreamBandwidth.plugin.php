@@ -98,9 +98,9 @@ class AmpacheStreamBandwidth
             $next_total += $media->size;
         }
         
-        $graph = new Graph();
-        $end_date = time();
-        $start_date = $end_date - ($this->bandwidth_days * 86400);
+        $graph         = new Graph();
+        $end_date      = time();
+        $start_date    = $end_date - ($this->bandwidth_days * 86400);
         $current_total = $graph->get_total_bandwidth($this->user_id, $start_date, $end_date);
         $next_total += $current_total;
         $max = $this->bandwidth_max * 1024 * 1024;

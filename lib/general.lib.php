@@ -33,7 +33,7 @@ function set_memory_limit($new_limit)
     }
 
     $current_limit = UI::unformat_bytes($current_limit);
-    $new_limit = UI::unformat_bytes($new_limit);
+    $new_limit     = UI::unformat_bytes($new_limit);
 
     if ($current_limit < $new_limit) {
         ini_set (memory_limit, $new_limit);
@@ -46,9 +46,9 @@ function set_memory_limit($new_limit)
  */
 function generate_password($length)
 {
-    $vowels = 'aAeEuUyY12345';
+    $vowels     = 'aAeEuUyY12345';
     $consonants = 'bBdDgGhHjJmMnNpPqQrRsStTvVwWxXzZ6789';
-    $password = '';
+    $password   = '';
 
     $alt = time() % 2;
 
@@ -208,7 +208,7 @@ function get_languages()
                 case 'ar_SA'; $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'; break; /* Arabic */
                 case 'he_IL'; $name = '&#1506;&#1489;&#1512;&#1497;&#1514;'; break; /* Hebrew */
                 case 'fa_IR'; $name = '&#1601;&#1575;&#1585;&#1587;&#1610;'; break; /* Farsi */
-                default: $name = T_('Unknown'); break;
+                default: $name      = T_('Unknown'); break;
             } // end switch
 
 
@@ -268,8 +268,8 @@ function generate_config($current)
 {
     // Start building the new config file
     $distfile = AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist';
-    $handle = fopen($distfile,'r');
-    $dist = fread($handle,filesize($distfile));
+    $handle   = fopen($distfile,'r');
+    $dist     = fread($handle,filesize($distfile));
     fclose($handle);
 
     $data = explode("\n",$dist);
@@ -330,7 +330,7 @@ if (!function_exists('apache_request_headers')) {
         $headers = array();
         foreach ($_SERVER as $name => $value) {
             if (substr($name, 0, 5) == 'HTTP_') {
-                $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+                $name           = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
                 $headers[$name] = $value;
             } else {
                 if ($name == "CONTENT_TYPE") {

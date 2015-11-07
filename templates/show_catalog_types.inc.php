@@ -41,10 +41,10 @@ $web_path = AmpConfig::get('web_path');
             }
             $catalog->format();
             if ($catalog->is_installed()) {
-                $action     = 'confirm_uninstall_catalog_type';
+                $action        = 'confirm_uninstall_catalog_type';
                 $action_txt    = T_('Disable');
             } else {
-                $action = 'install_catalog_type';
+                $action        = 'install_catalog_type';
                 $action_txt    = T_('Activate');
             }
             ?>

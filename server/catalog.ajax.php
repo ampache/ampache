@@ -34,15 +34,15 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
+        $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
         $new_enabled = $catalog->enabled ? false : true;
         $catalog->update_enabled($new_enabled, $catalog->id);
         $catalog->enabled = $new_enabled;
         $catalog->format();
 
         //Return the new Ajax::button
-        $id = 'button_flip_state_' . $catalog->id;
-        $button = $catalog->enabled ? 'disable' : 'enable';
+        $id           = 'button_flip_state_' . $catalog->id;
+        $button       = $catalog->enabled ? 'disable' : 'enable';
         $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, T_(ucfirst($button)), 'flip_state_' . $catalog->id);
 
     break;

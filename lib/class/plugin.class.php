@@ -58,7 +58,7 @@ class Plugin
                 return false;
             }
 
-            $plugin_name = "Ampache$name";
+            $plugin_name   = "Ampache$name";
             $this->_plugin = new $plugin_name();
 
             if (!$this->is_valid()) {
@@ -88,7 +88,7 @@ class Plugin
 
         // Open up the plugin dir
         $basedir = AmpConfig::get('prefix') . '/modules/plugins';
-        $handle = opendir($basedir);
+        $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
             debug_event('Plugins','Unable to read plugins directory','1');
@@ -255,7 +255,7 @@ class Plugin
     {
         $name = Dba::escape('Plugin_' . $plugin_name);
 
-        $sql = "SELECT * FROM `update_info` WHERE `key`='$name'";
+        $sql        = "SELECT * FROM `update_info` WHERE `key`='$name'";
         $db_results = Dba::read($sql);
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -271,7 +271,7 @@ class Plugin
      */
     public function get_ampache_db_version()
     {
-        $sql = "SELECT * FROM `update_info` WHERE `key`='db_version'";
+        $sql        = "SELECT * FROM `update_info` WHERE `key`='db_version'";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_assoc($db_results);
@@ -286,7 +286,7 @@ class Plugin
     public function set_plugin_version($version)
     {
         $name         = Dba::escape('Plugin_' . $this->_plugin->name);
-        $version    = Dba::escape($version);
+        $version      = Dba::escape($version);
 
         $sql = "REPLACE INTO `update_info` SET `key`='$name', `value`='$version'";
         Dba::write($sql);

@@ -99,9 +99,9 @@ class Stats
         if (!self::is_already_inserted($type, $oid, $user)) {
             $type = self::validate_type($type);
 
-            $latitude = null;
+            $latitude  = null;
             $longitude = null;
-            $geoname = null;
+            $geoname   = null;
             if (isset($location['latitude'])) {
                 $latitude = $location['latitude'];
             }
@@ -141,7 +141,7 @@ class Stats
         $sql .= "ORDER BY `object_count`.`date` DESC";
 
         $db_results = Dba::read($sql, array($user, $type, $oid, $count_type, $delay));
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -175,8 +175,8 @@ class Stats
 
     public static function get_cached_place_name($latitude, $longitude)
     {
-        $name = null;
-        $sql = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
+        $name       = null;
+        $sql        = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($latitude, $longitude));
         if ($results = Dba::fetch_assoc($db_results)) {
             $name = $results['geo_name'];
@@ -257,7 +257,7 @@ class Stats
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
-            " WHERE `object_type` = '" . $type ."' AND `date` >= '" . $date . "' ";
+            " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
@@ -310,7 +310,7 @@ class Stats
         }
 
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM object_count" .
-            " WHERE `object_type` = '" . $type ."'" . $user_sql;
+            " WHERE `object_type` = '" . $type . "'" . $user_sql;
         if (AmpConfig::get('catalog_disable')) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
@@ -330,7 +330,7 @@ class Stats
         }
 
         $count = intval($count);
-        $type = self::validate_type($type);
+        $type  = self::validate_type($type);
         if (!$offset) {
             $limit = $count;
         } else {
@@ -357,7 +357,7 @@ class Stats
     public static function get_user($count,$type,$user,$full='')
     {
         $count = intval($count);
-        $type = self::validate_type($type);
+        $type  = self::validate_type($type);
 
         /* If full then don't limit on date */
         if ($full) {
@@ -417,7 +417,7 @@ class Stats
         $base_type = 'song';
         if ($type == 'video') {
             $base_type = $type;
-            $type = $type . '`.`id';
+            $type      = $type . '`.`id';
         }
 
         $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
@@ -426,7 +426,7 @@ class Stats
             $sql .= "WHERE `catalog`.`enabled` = '1' ";
         }
         if ($catalog > 0) {
-            $sql .= "AND `catalog` = '" . scrub_in($catalog) ."' ";
+            $sql .= "AND `catalog` = '" . scrub_in($catalog) . "' ";
         }
         $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
 

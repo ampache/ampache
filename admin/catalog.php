@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
         } else {
             $body = T_('No Disabled Songs selected');
         }
-        $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
+        $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = count($songs) . ngettext(' Disabled Song Processed', ' Disabled Songs Processed', count($songs));
         show_confirmation($title,$body,$url);
     break;
@@ -147,9 +147,9 @@ switch ($_REQUEST['action']) {
         /* Update the catalog */
         Catalog::update_settings($_POST);
 
-        $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
+        $url       = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title     = T_('Catalog Updated');
-        $body    = '';
+        $body      = '';
         show_confirmation($title,$body,$url);
     break;
     case 'update_from':
@@ -203,9 +203,9 @@ switch ($_REQUEST['action']) {
             break;
         }
         Stats::clear();
-        $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
+        $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = T_('Catalog statistics cleared');
-        $body    = '';
+        $body     = '';
         show_confirmation($title, $body, $url);
     break;
     case 'show_add_catalog':

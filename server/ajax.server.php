@@ -32,7 +32,7 @@ xoutput_headers();
 
 $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
 
-debug_event('ajax.server.php', 'Called for page: {'.$page.'}', '5');
+debug_event('ajax.server.php', 'Called for page: {' . $page . '}', '5');
 
 switch ($page) {
     case 'stats':
@@ -98,21 +98,21 @@ switch ($_REQUEST['action']) {
     // Handle the users basketcases...
     case 'basket':
         $object_type = $_REQUEST['type'];
-        $object_id = $_REQUEST['id'];
+        $object_id   = $_REQUEST['id'];
 
         if (Core::is_playable_item($object_type)) {
             if (!is_array($object_id)) {
                 $object_id = array($object_id);
             }
             foreach ($object_id as $id) {
-                $item = new $object_type($id);
+                $item   = new $object_type($id);
                 $medias = $item->get_medias();
                 $GLOBALS['user']->playlist->add_medias($medias);
             }
         } else {
             switch ($_REQUEST['type']) {
                 case 'browse_set':
-                    $browse = new Browse($_REQUEST['browse_id']);
+                    $browse  = new Browse($_REQUEST['browse_id']);
                     $objects = $browse->get_saved();
                     foreach ($objects as $object_id) {
                         $GLOBALS['user']->playlist->add_object($object_id, 'song');
@@ -123,7 +123,7 @@ switch ($_REQUEST['action']) {
                     $type = $data['0'];
                     foreach ($_REQUEST['id'] as $i) {
                         $object = new $type($i);
-                        $songs = $object->get_random_songs();
+                        $songs  = $object->get_random_songs();
                         foreach ($songs as $song_id) {
                             $GLOBALS['user']->playlist->add_object($song_id, 'song');
                         }
@@ -131,17 +131,17 @@ switch ($_REQUEST['action']) {
                 break;
                 case 'artist_random':
                 case 'tag_random':
-                    $data = explode('_',$_REQUEST['type']);
-                    $type = $data['0'];
+                    $data   = explode('_',$_REQUEST['type']);
+                    $type   = $data['0'];
                     $object = new $type($_REQUEST['id']);
-                    $songs = $object->get_random_songs();
+                    $songs  = $object->get_random_songs();
                     foreach ($songs as $song_id) {
                         $GLOBALS['user']->playlist->add_object($song_id,'song');
                     }
                 break;
                 case 'playlist_random':
                     $playlist = new Playlist($_REQUEST['id']);
-                    $items = $playlist->get_random_items();
+                    $items    = $playlist->get_random_items();
                     foreach ($items as $item) {
                         $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
                     }
@@ -161,7 +161,7 @@ switch ($_REQUEST['action']) {
             $rating = new Rating($_GET['object_id'], $_GET['rating_type']);
             $rating->set_rating($_GET['rating']);
             Rating::show($_GET['object_id'], $_GET['rating_type']);
-            $key = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
+            $key           = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
             $results[$key] = ob_get_contents();
             ob_end_clean();
         } else {
@@ -175,7 +175,7 @@ switch ($_REQUEST['action']) {
             $userflag = new Userflag($_GET['object_id'], $_GET['userflag_type']);
             $userflag->set_flag($_GET['userflag']);
             Userflag::show($_GET['object_id'], $_GET['userflag_type']);
-            $key = "userflag_" . $_GET['object_id'] . "_" . $_GET['userflag_type'];
+            $key           = "userflag_" . $_GET['object_id'] . "_" . $_GET['userflag_type'];
             $results[$key] = ob_get_contents();
             ob_end_clean();
         } else {

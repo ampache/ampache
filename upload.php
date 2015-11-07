@@ -28,7 +28,7 @@ if (!AmpConfig::get('allow_upload') || !Access::check('interface', '25')) {
 }
 
 $upload_max = return_bytes(ini_get('upload_max_filesize'));
-$post_max = return_bytes(ini_get('post_max_size'));
+$post_max   = return_bytes(ini_get('post_max_size'));
 if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
     $upload_max = $post_max;
 }

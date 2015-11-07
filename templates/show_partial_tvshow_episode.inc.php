@@ -21,6 +21,6 @@
  */
 
 $videoprops[gettext_noop('TV Show')]   = $video->f_tvshow_link;
-$videoprops[gettext_noop('Season')]   = $video->f_season_link;
+$videoprops[gettext_noop('Season')]    = $video->f_season_link;
 $videoprops[gettext_noop('Episode')]   = $video->episode_number;
 $videoprops[gettext_noop('Summary')]   = $video->summary;

@@ -66,7 +66,7 @@ switch ($_REQUEST['action']) {
         }
 
         $artist = new Artist($artist_id);
-        $songs = $artist->get_songs();
+        $songs  = $artist->get_songs();
         foreach ($songs as $song_id) {
             $GLOBALS['user']->playlist->add_object($song_id, 'song');
         }
@@ -81,7 +81,7 @@ switch ($_REQUEST['action']) {
         }
 
         $playlist = new Playlist($playlist_id);
-        $items = $playlist->get_items();
+        $items    = $playlist->get_items();
         foreach ($items as $item) {
             $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
         }

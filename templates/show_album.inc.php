@@ -32,9 +32,9 @@ if ($album->disk) {
 }
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
-$show_direct_play = AmpConfig::get('directplay');
+$show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', '25');
-$directplay_limit = AmpConfig::get('direct_play_limit');
+$directplay_limit  = AmpConfig::get('direct_play_limit');
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($album->song_count <= $directplay_limit);
@@ -145,11 +145,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     ?>
         </li>
         <li>
-            <a id="<?php echo 'add_playlist_'.$album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
+            <a id="<?php echo 'add_playlist_' . $album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
                 <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
     ?>
             </a>
-            <a id="<?php echo 'add_playlist_'.$album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
+            <a id="<?php echo 'add_playlist_' . $album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
                 <?php echo T_('Add to existing playlist') ?>
             </a>
         </li>
@@ -251,11 +251,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 }
     ?>
             <li>
-                <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
+                <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                     <?php echo UI::get_icon('edit', T_('Edit'));
     ?>
                 </a>
-                <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
+                <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                     <?php echo T_('Edit Album');
     ?>
                 </a>
@@ -279,7 +279,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (Catalog::can_remove($album)) {
     ?>
         <li>
-            <a id="<?php echo 'delete_album_'.$album->id ?>" href="<?php echo AmpConfig::get('web_path');
+            <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo AmpConfig::get('web_path');
     ?>/albums.php?action=delete&album_id=<?php echo $album->id;
     ?>">
                 <?php echo UI::get_icon('delete', T_('Delete'));

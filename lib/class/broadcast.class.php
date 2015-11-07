@@ -127,7 +127,7 @@ class Broadcast extends database_object implements library_item
         $sql = "UPDATE `broadcast` SET `song` = ? " .
             "WHERE `id` = ?";
         Dba::write($sql, array($song_id, $this->id));
-        $this->song = $song_id;
+        $this->song          = $song_id;
         $this->song_position = 0;
     }
 
@@ -150,7 +150,7 @@ class Broadcast extends database_object implements library_item
     public static function create($name, $description='')
     {
         if (!empty($name)) {
-            $sql = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
+            $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
             $params = array($GLOBALS['user']->id, $name, $description);
             Dba::write($sql, $params);
             return Dba::insert_id();
@@ -183,7 +183,7 @@ class Broadcast extends database_object implements library_item
         $this->f_name = $this->name;
         $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
         if ($details) {
-            $this->tags = Tag::get_top_tags('broadcast', $this->id);
+            $this->tags   = Tag::get_top_tags('broadcast', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
         }
     }
@@ -310,9 +310,9 @@ class Broadcast extends database_object implements library_item
      */
     public static function get_broadcast_list()
     {
-        $sql = self::get_broadcast_list_sql();
+        $sql        = self::get_broadcast_list_sql();
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -338,7 +338,7 @@ class Broadcast extends database_object implements library_item
      */
     public static function get_broadcast($key)
     {
-        $sql = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
+        $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
         $db_results = Dba::read($sql, array($key));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -356,7 +356,7 @@ class Broadcast extends database_object implements library_item
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75')) {
                 echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
+                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
@@ -394,7 +394,7 @@ class Broadcast extends database_object implements library_item
      */
     public static function get_broadcasts($user_id)
     {
-        $sql = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
+        $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($user_id));
 
         $broadcasts = array();

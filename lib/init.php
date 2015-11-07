@@ -25,7 +25,7 @@
 ob_start();
 
 $ampache_path = dirname(__FILE__);
-$prefix = realpath($ampache_path . "/../");
+$prefix       = realpath($ampache_path . "/../");
 require_once $prefix . '/lib/init-tiny.php';
 
 // Explicitly load and enable the custom session handler.
@@ -65,7 +65,7 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']        = '3.8.1-develop';
+$results['version']            = '3.8.1-develop';
 $results['int_config_version'] = '31';
 
 if (!empty($results['force_ssl'])) {
@@ -86,7 +86,7 @@ if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
 }
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
-$results['web_path'] = $http_type . $results['http_host'] .
+$results['web_path']  = $http_type . $results['http_host'] .
         (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
         $results['web_path'];
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
@@ -101,10 +101,10 @@ if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) 
 }
 
 /* Variables needed for Auth class */
-$results['cookie_path']     = $results['raw_web_path'];
-$results['cookie_domain']    = $results['http_port'];
+$results['cookie_path']        = $results['raw_web_path'];
+$results['cookie_domain']      = $results['http_port'];
 $results['cookie_life']        = $results['session_cookielife'];
-$results['cookie_secure']    = $results['session_cookiesecure'];
+$results['cookie_secure']      = $results['session_cookiesecure'];
 
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
@@ -172,30 +172,30 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     /* Load preferences and theme */
     $GLOBALS['user']->update_last_seen();
 } elseif (!AmpConfig::get('use_auth')) {
-    $auth['success'] = 1;
-    $auth['username'] = '-1';
-    $auth['fullname'] = "Ampache User";
-    $auth['id'] = -1;
+    $auth['success']      = 1;
+    $auth['username']     = '-1';
+    $auth['fullname']     = "Ampache User";
+    $auth['id']           = -1;
     $auth['offset_limit'] = 50;
-    $auth['access'] = AmpConfig::get('default_auth_level') ? User::access_name_to_level(AmpConfig::get('default_auth_level')) : '100';
+    $auth['access']       = AmpConfig::get('default_auth_level') ? User::access_name_to_level(AmpConfig::get('default_auth_level')) : '100';
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         Session::create_cookie();
         Session::create($auth);
         Session::check();
-        $GLOBALS['user'] = new User($auth['username']);
+        $GLOBALS['user']           = new User($auth['username']);
         $GLOBALS['user']->username = $auth['username'];
         $GLOBALS['user']->fullname = $auth['fullname'];
-        $GLOBALS['user']->access = intval($auth['access']);
+        $GLOBALS['user']->access   = intval($auth['access']);
     } else {
         Session::check();
         if ($_SESSION['userdata']['username']) {
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
         } else {
-            $GLOBALS['user'] = new User($auth['username']);
-            $GLOBALS['user']->id = -1;
+            $GLOBALS['user']           = new User($auth['username']);
+            $GLOBALS['user']->id       = -1;
             $GLOBALS['user']->username = $auth['username'];
             $GLOBALS['user']->fullname = $auth['fullname'];
-            $GLOBALS['user']->access = intval($auth['access']);
+            $GLOBALS['user']->access   = intval($auth['access']);
         }
         if (!$GLOBALS['user']->id AND !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());

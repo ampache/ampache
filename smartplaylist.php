@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
 
         foreach ($_REQUEST as $key => $value) {
             $prefix = substr($key, 0, 4);
-            $value = trim($value);
+            $value  = trim($value);
 
             if ($prefix == 'rule' && strlen($value)) {
                 $rules[$key] = Dba::escape($value);
@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Search(null, 'song');
         $playlist->parse_rules($data);
         $playlist->logic_operator = $operator;
-        $playlist->name = $playlist_name;
+        $playlist->name           = $playlist_name;
         $playlist->save();
 
     break;

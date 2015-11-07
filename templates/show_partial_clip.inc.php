@@ -21,4 +21,4 @@
  */
 
 $videoprops[gettext_noop('Artist')]   = $video->f_artist;
-$videoprops[gettext_noop('Song')]   = $video->f_song;
+$videoprops[gettext_noop('Song')]     = $video->f_song;

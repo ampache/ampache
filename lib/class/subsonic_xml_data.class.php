@@ -32,21 +32,21 @@ class Subsonic_XML_Data
 {
     const API_VERSION = "1.11.0";
 
-    const SSERROR_GENERIC = 0;
-    const SSERROR_MISSINGPARAM = 10;
+    const SSERROR_GENERIC           = 0;
+    const SSERROR_MISSINGPARAM      = 10;
     const SSERROR_APIVERSION_CLIENT = 20;
     const SSERROR_APIVERSION_SERVER = 30;
-    const SSERROR_BADAUTH = 40;
-    const SSERROR_UNAUTHORIZED = 50;
-    const SSERROR_TRIAL = 60;
-    const SSERROR_DATA_NOTFOUND = 70;
+    const SSERROR_BADAUTH           = 40;
+    const SSERROR_UNAUTHORIZED      = 50;
+    const SSERROR_TRIAL             = 60;
+    const SSERROR_DATA_NOTFOUND     = 70;
 
     // Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
-    const AMPACHEID_ARTIST = 100000000;
-    const AMPACHEID_ALBUM = 200000000;
-    const AMPACHEID_SONG = 300000000;
+    const AMPACHEID_ARTIST  = 100000000;
+    const AMPACHEID_ALBUM   = 200000000;
+    const AMPACHEID_SONG    = 300000000;
     const AMPACHEID_SMARTPL = 400000000;
-    const AMPACHEID_VIDEO = 500000000;
+    const AMPACHEID_VIDEO   = 500000000;
 
     /**
      * constructor
@@ -220,8 +220,8 @@ class Subsonic_XML_Data
 
     public static function addArtists($xml, $artists, $extra=false, $albumsSet = false)
     {
-        $xlastcat = null;
-        $xsharpcat = null;
+        $xlastcat    = null;
+        $xsharpcat   = null;
         $xlastletter = '';
         foreach ($artists as $artist) {
             if (strlen($artist->name) > 0) {
@@ -313,11 +313,11 @@ class Subsonic_XML_Data
         }
         if (count($album->tags) > 0) {
             $tag_values = array_values($album->tags);
-            $tag = array_shift($tag_values);
+            $tag        = array_shift($tag_values);
             $xalbum->addAttribute('genre', $tag['name']);
         }
 
-        $rating = new Rating($album->id, "album");
+        $rating      = new Rating($album->id, "album");
         $user_rating = $rating->get_user_rating();
         if ($user_rating > 0) {
             $xalbum->addAttribute('userRating', ceil($user_rating));
@@ -365,7 +365,7 @@ class Subsonic_XML_Data
         $xsong->addAttribute('coverArt', self::getAlbumId($album->id));
         $xsong->addAttribute('duration', $song->time);
         $xsong->addAttribute('bitRate', intval($song->bitrate / 1000));
-        $rating = new Rating($song->id, "song");
+        $rating      = new Rating($song->id, "song");
         $user_rating = $rating->get_user_rating();
         if ($user_rating > 0) {
             $xsong->addAttribute('userRating', ceil($user_rating));
@@ -396,7 +396,7 @@ class Subsonic_XML_Data
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $valid_types = Song::get_stream_types_for_type($song->type, 'api');
+        $valid_types   = Song::get_stream_types_for_type($song->type, 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $song->get_transcode_settings(null, 'api');
             if ($transcode_settings) {
@@ -448,7 +448,7 @@ class Subsonic_XML_Data
 
         $disc_ids = $album->get_group_disks_ids();
         foreach ($disc_ids as $id) {
-            $disc = new Album($id);
+            $disc     = new Album($id);
             $allsongs = $disc->get_songs();
             foreach ($allsongs as $id) {
                 $song = new Song($id);
@@ -502,7 +502,7 @@ class Subsonic_XML_Data
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $valid_types = Song::get_stream_types_for_type($video->type, 'api');
+        $valid_types   = Song::get_stream_types_for_type($video->type, 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $video->get_transcode_settings(null, 'api');
             if ($transcode_settings) {
@@ -640,7 +640,7 @@ class Subsonic_XML_Data
         $xuser->addAttribute('email', $user->email);
         $xuser->addAttribute('scrobblingEnabled', 'true');
         $isManager = ($user->access >= 75);
-        $isAdmin = ($user->access >= 100);
+        $isAdmin   = ($user->access >= 100);
         $xuser->addAttribute('adminRole', $isAdmin ? 'true' : 'false');
         $xuser->addAttribute('settingsRole', 'true');
         $xuser->addAttribute('downloadRole', Preference::get_by_user($user->id, 'download') ? 'true' : 'false');
@@ -702,7 +702,7 @@ class Subsonic_XML_Data
             self::addSong($xshare, $song, "entry");
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
-            $songs = $playlist->get_songs();
+            $songs    = $playlist->get_songs();
             foreach ($songs as $id) {
                 $song = new Song($id);
                 self::addSong($xshare, $song, "entry");
@@ -731,7 +731,7 @@ class Subsonic_XML_Data
 
     public static function addJukeboxPlaylist($xml, Localplay $localplay)
     {
-        $xjbox = self::createJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
+        $xjbox  = self::createJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
         $tracks = $localplay->get();
         foreach ($tracks as $track) {
             if ($track['oid']) {
@@ -743,7 +743,7 @@ class Subsonic_XML_Data
 
     public static function createJukeboxStatus($xml, Localplay $localplay, $elementName = 'jukeboxStatus')
     {
-        $xjbox = $xml->addChild($elementName);
+        $xjbox  = $xml->addChild($elementName);
         $status = $localplay->status();
         $xjbox->addAttribute('currentIndex', 0);    // Not supported
         $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
@@ -761,8 +761,8 @@ class Subsonic_XML_Data
         $lyrics = $song->get_lyrics();
 
         if ($lyrics && $lyrics['text']) {
-            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text = str_replace("\r", '', $text);
+            $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text    = str_replace("\r", '', $text);
             $xlyrics = $xml->addChild("lyrics", $text);
             if ($artist) {
                 $xlyrics->addAttribute("artist", $artist);

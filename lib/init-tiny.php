@@ -33,8 +33,8 @@ error_reporting(E_ERROR); // Only show fatal errors in production
 $load_time_begin = microtime(true);
 
 $ampache_path = dirname(__FILE__);
-$prefix = realpath($ampache_path . "/../");
-$configfile = $prefix . '/config/ampache.cfg.php';
+$prefix       = realpath($ampache_path . "/../");
+$configfile   = $prefix . '/config/ampache.cfg.php';
 
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if (!defined('CLI')) {

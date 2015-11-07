@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
         show_confirmation(
             T_('TVShow Season Deletion'),
             T_('Are you sure you want to permanently delete this tvshow season?'),
-            AmpConfig::get('web_path')."/tvshow_seasons.php?action=confirm_delete&tvshow_season_id=" . $tvshow_season_id,
+            AmpConfig::get('web_path') . "/tvshow_seasons.php?action=confirm_delete&tvshow_season_id=" . $tvshow_season_id,
             1,
             'delete_tvshow_season'
         );
@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
     case 'show':
         $season = new TVShow_Season($_REQUEST['season']);
         $season->format();
-        $object_ids = $season->get_episodes();
+        $object_ids  = $season->get_episodes();
         $object_type = 'tvshow_episode';
         require_once AmpConfig::get('prefix') . UI::find_template('show_tvshow_season.inc.php');
         break;

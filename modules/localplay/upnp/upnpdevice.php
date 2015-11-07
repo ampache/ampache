@@ -44,16 +44,16 @@ class UPnPDevice
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string($response);
-        $services = $responseXML->device->serviceList->service;
+        $services    = $responseXML->device->serviceList->service;
         foreach ($services as $service) {
-            $serviceType = $service->serviceType;
-            $serviceTypeNames = explode(":", $serviceType);
-            $serviceTypeName = $serviceTypeNames[3];
+            $serviceType                                      = $service->serviceType;
+            $serviceTypeNames                                 = explode(":", $serviceType);
+            $serviceTypeName                                  = $serviceTypeNames[3];
             $this->_settings['controlURLs'][$serviceTypeName] = (string)$service->controlURL;
-            $this->_settings['eventURLs'][$serviceTypeName] = (string)$service->eventSubURL;
+            $this->_settings['eventURLs'][$serviceTypeName]   = (string)$service->eventSubURL;
         }
 
-        $urldata = parse_url($descriptionUrl);
+        $urldata                 = parse_url($descriptionUrl);
         $this->_settings['host'] = $urldata['scheme'] . '://' . $urldata['host'] . ':' . $urldata['port'];
 
         $this->_settings['descriptionURL'] = $descriptionUrl;
@@ -77,7 +77,7 @@ class UPnPDevice
         $body .='<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>';
         $body .='  <u:' . $method . ' xmlns:u="urn:schemas-upnp-org:service:' . $type . ':1">';
         foreach ( $arguments as $arg=>$value ) {
-            $body .=' <'.$arg.'>'.$value.'</'.$arg.'>';
+            $body .=' <' . $arg . '>' . $value . '</' . $arg . '>';
         }
         $body .='  </u:' . $method . '>';
         $body .='</s:Body></s:Envelope>';
@@ -110,7 +110,7 @@ class UPnPDevice
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = array();
-        $tmp = explode("\r\n\r\n", $response);
+        $tmp     = explode("\r\n\r\n", $response);
 
         foreach ($tmp as $key => $value) {
             if (substr($value, 0, 8) == 'HTTP/1.1') {
@@ -160,7 +160,7 @@ class UPnPDevice
     // helper function for calls that require only an instance id
     public function instanceOnly($command, $type = 'AVTransport', $id = 0)
     {
-        $args = array( 'InstanceID' => $id );
+        $args     = array( 'InstanceID' => $id );
         $response = $this->sendRequestToDevice($command, $args, $type);
 
         ///$response = \Format::forge($response,'xml:ns')->to_array();

@@ -31,7 +31,7 @@ switch ($_REQUEST['action']) {
     case 'search':
         $search = $_REQUEST['search'];
         $target = $_REQUEST['target'];
-        $limit = $_REQUEST['limit'] ?: 5;
+        $limit  = $_REQUEST['limit'] ?: 5;
 
         $results = array();
 
@@ -46,9 +46,9 @@ switch ($_REQUEST['action']) {
             $sres = Search::run($searchreq);
             // Litmit not reach, new search with another operator
             if (count($sres) < $limit) {
-                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
-                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+                $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
             foreach ($sres as $id) {
                 $artist = new Artist($id);
@@ -75,9 +75,9 @@ switch ($_REQUEST['action']) {
             $sres = Search::run($searchreq);
             // Litmit not reach, new search with another operator
             if (count($sres) < $limit) {
-                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
-                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+                $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
             foreach ($sres as $id) {
                 $album = new Album($id);
@@ -108,9 +108,9 @@ switch ($_REQUEST['action']) {
             $sres = Search::run($searchreq);
             // Litmit not reach, new search with another operator
             if (count($sres) < $limit) {
-                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
-                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+                $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
             foreach ($sres as $id) {
                 $song = new Song($id);
@@ -137,9 +137,9 @@ switch ($_REQUEST['action']) {
             $sres = Search::run($searchreq);
             // Litmit not reach, new search with another operator
             if (count($sres) < $limit) {
-                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
-                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+                $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
             foreach ($sres as $id) {
                 $playlist = new Playlist($id);
@@ -167,9 +167,9 @@ switch ($_REQUEST['action']) {
 
             // Litmit not reach, new search with another operator
             if (count($sres) < $limit) {
-                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
-                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+                $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
             foreach ($sres as $id) {
                 $label = new Label($id);
@@ -187,7 +187,7 @@ switch ($_REQUEST['action']) {
 
         if ($target == 'missing_artist' && AmpConfig::get('wanted')) {
             $sres = Wanted::search_missing_artists($search);
-            $i = 0;
+            $i    = 0;
             foreach ($sres as $r) {
                 $results[] = array(
                     'type' => T_('Missing Artists'),
@@ -217,14 +217,14 @@ switch ($_REQUEST['action']) {
 
             // Litmit not reach, new search with another operator
             if (count($sres) < $limit) {
-                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
-                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+                $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
             foreach ($sres as $id) {
                 $user = new User($id);
                 $user->format();
-                $avatar = $user->get_avatar();
+                $avatar    = $user->get_avatar();
                 $results[] = array(
                     'type' => T_('Users'),
                     'link' => '',

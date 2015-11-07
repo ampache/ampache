@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('show_similar') && isset($_REQUEST['artist'])) {
             $artist = new Artist($_REQUEST['artist']);
             $artist->format();
-            $object_ids = array();
+            $object_ids      = array();
             $missing_objects = array();
             if ($similars = Recommendation::get_artists_like($artist->id, 10, !AmpConfig::get('wanted'))) {
                 foreach ($similars as $similar) {
@@ -94,7 +94,7 @@ switch ($_REQUEST['action']) {
         $media_id = $_REQUEST['media_id'];
         if (AmpConfig::get('show_similar') && isset($media_id) && isset($_REQUEST['media_artist'])) {
             $artists = Recommendation::get_artists_like($_REQUEST['media_artist'], 3, false);
-            $songs = Recommendation::get_songs_like($media_id, 3);
+            $songs   = Recommendation::get_songs_like($media_id, 3);
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_now_playing_similar.inc.php');
             $results['similar_items_' . $media_id] = ob_get_clean();
@@ -105,10 +105,10 @@ switch ($_REQUEST['action']) {
             $artist = new Artist($_REQUEST['artist']);
             $artist->format();
             if ($artist->id) {
-                $up_concerts = Artist_Event::get_upcoming_events($artist);
-                $past_concerts = Artist_Event::get_past_events($artist);
+                $up_concerts     = Artist_Event::get_upcoming_events($artist);
+                $past_concerts   = Artist_Event::get_past_events($artist);
                 $coming_concerts = array();
-                $concerts = array();
+                $concerts        = array();
                 if ($up_concerts) {
                     foreach ($up_concerts->children() as $item) {
                         if ($item->getName() == 'event') {
@@ -131,7 +131,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'labels':
         if (AmpConfig::get('label') && isset($_REQUEST['artist'])) {
-            $labels = Label::get_labels($_REQUEST['artist']);
+            $labels     = Label::get_labels($_REQUEST['artist']);
             $object_ids = array();
             if (count($labels) > 0) {
                 foreach ($labels as $id => $label) {
@@ -172,10 +172,10 @@ switch ($_REQUEST['action']) {
             $mbid = $_REQUEST['mbid'];
             if (empty($_REQUEST['artist'])) {
                 $artist_mbid = $_REQUEST['artist_mbid'];
-                $artist = null;
+                $artist      = null;
             } else {
-                $artist = $_REQUEST['artist'];
-                $aobj = new Artist($artist);
+                $artist      = $_REQUEST['artist'];
+                $aobj        = new Artist($artist);
                 $artist_mbid = $aobj->mbid;
             }
             $name = $_REQUEST['name'];
@@ -200,7 +200,7 @@ switch ($_REQUEST['action']) {
             Wanted::delete_wanted($mbid);
             ob_start();
             $walbum->accepted = false;
-            $walbum->id = 0;
+            $walbum->id       = 0;
             $walbum->show_action_buttons();
             $results['wanted_action_' . $mbid] = ob_get_clean();
         }
@@ -312,7 +312,7 @@ switch ($_REQUEST['action']) {
 
         ob_start();
         if ($label_id > 0) {
-            $label = new Label($label_id);
+            $label      = new Label($label_id);
             $object_ids = $label->get_songs();
 
             $browse = new Browse();

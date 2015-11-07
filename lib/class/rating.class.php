@@ -39,7 +39,7 @@ class Rating extends database_object
      */
     public function __construct($id, $type)
     {
-        $this->id = intval($id);
+        $this->id   = intval($id);
         $this->type = $type;
 
         return true;
@@ -79,11 +79,11 @@ class Rating extends database_object
             return false;
         }
 
-        $ratings = array();
+        $ratings      = array();
         $user_ratings = array();
 
         $idlist = '(' . implode(',', $ids) . ')';
-        $sql = "SELECT `rating`, `object_id` FROM `rating` " .
+        $sql    = "SELECT `rating`, `object_id` FROM `rating` " .
             "WHERE `user` = ? AND `object_id` IN $idlist " .
             "AND `object_type` = ?";
         $db_results = Dba::read($sql, array($GLOBALS['user']->id, $type));
@@ -138,7 +138,7 @@ class Rating extends database_object
              return parent::get_from_cache($key, $this->id);
          }
 
-         $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? ".
+         $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
          $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
@@ -180,7 +180,7 @@ class Rating extends database_object
     public static function get_highest_sql($type)
     {
         $type = Stats::validate_type($type);
-        $sql = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating` FROM rating" .
+        $sql  = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating` FROM rating" .
             " WHERE object_type = '" . $type . "'";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');

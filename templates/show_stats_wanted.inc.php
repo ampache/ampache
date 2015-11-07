@@ -21,7 +21,7 @@
  */
 
 $object_ids = Wanted::get_wanted_list();
-$browse = new Browse();
+$browse     = new Browse();
 $browse->set_type('wanted');
 $browse->set_static_content(true);
 $browse->save_objects($object_ids);

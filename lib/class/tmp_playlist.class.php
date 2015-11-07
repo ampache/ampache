@@ -69,7 +69,7 @@ class Tmp_Playlist extends database_object
      */
     private function _get_info()
     {
-        $sql = "SELECT * FROM `tmp_playlist` WHERE `id`='" . Dba::escape($this->id) . "'";
+        $sql        = "SELECT * FROM `tmp_playlist` WHERE `id`='" . Dba::escape($this->id) . "'";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_assoc($db_results);
@@ -86,7 +86,7 @@ class Tmp_Playlist extends database_object
     {
         $session_id = Dba::escape($session_id);
 
-        $sql = "SELECT `id` FROM `tmp_playlist` WHERE `session`='$session_id'";
+        $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session`='$session_id'";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_row($db_results);
@@ -114,7 +114,7 @@ class Tmp_Playlist extends database_object
         // This is a little stupid, but because we don't have the
         // user_id in the session or in the tmp_playlist table we have
         // to do it this way.
-        $client = new User($user_id);
+        $client   = new User($user_id);
         $username = Dba::escape($client->username);
 
         $sql = "SELECT `tmp_playlist`.`id` FROM `tmp_playlist` " .

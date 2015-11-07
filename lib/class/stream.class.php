@@ -45,7 +45,7 @@ class Stream
     {
         if (!self::$session) {
             // Generate the session ID.  This is slightly wasteful.
-            $data = array();
+            $data         = array();
             $data['type'] = 'stream';
             // This shouldn't be done here but at backend endpoint side
             if (isset($_REQUEST['client'])) {
@@ -101,7 +101,7 @@ class Stream
                 "AND `user_preference`.`value` = 'downsample')";
 
             $db_results = Dba::read($sql);
-            $results = Dba::fetch_row($db_results);
+            $results    = Dba::fetch_row($db_results);
 
             $active_streams = intval($results[0]) ?: 0;
             debug_event('stream', 'Active transcoding streams: ' . $active_streams, 5);
@@ -138,7 +138,7 @@ class Stream
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
-        debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Options: ' . print_r($options, true) . '}...', 5);
+        debug_event('stream.class.php', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, true) . '}...', 5);
 
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
@@ -181,11 +181,11 @@ class Stream
             $string_map['%MAXBITRATE%'] = 8000;
         }
         if (isset($options['frame'])) {
-            $frame = gmdate("H:i:s", $options['frame']);
+            $frame                = gmdate("H:i:s", $options['frame']);
             $string_map['%TIME%'] = $frame;
         }
         if (isset($options['duration'])) {
-            $duration = gmdate("H:i:s", $options['duration']);
+            $duration                 = gmdate("H:i:s", $options['duration']);
             $string_map['%DURATION%'] = $duration;
         }
         if (isset($options['resolution'])) {
@@ -216,11 +216,11 @@ class Stream
     public static function get_image_preview($media)
     {
         $image = null;
-        $sec = ($media->time >= 30) ? 30 : intval($media->time / 2);
+        $sec   = ($media->time >= 30) ? 30 : intval($media->time / 2);
         $frame = gmdate("H:i:s", $sec);
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
-            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
+            $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
                 '%FILE%'   => scrub_arg($media->file),
                 '%TIME%' => $frame
@@ -255,7 +255,7 @@ class Stream
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             // Windows doesn't like to provide stderr as a pipe
             $descriptors[2] = array('pipe', 'w');
-            $cmdPrefix = "exec ";
+            $cmdPrefix      = "exec ";
         } else {
             $cmdPrefix = "start /B ";
         }
@@ -263,8 +263,8 @@ class Stream
 
         debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
 
-        $process = proc_open($cmdPrefix.$command, $descriptors, $pipes);
-        $parray = array(
+        $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
+        $parray  = array(
             'process' => $process,
             'handle' => $pipes[1],
             'stderr' => $pipes[2]
@@ -385,7 +385,7 @@ class Stream
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $type = $row['object_type'];
+            $type  = $row['object_type'];
             $media = new $type($row['object_id']);
             $media->format();
             $client = new User($row['user']);
@@ -451,7 +451,7 @@ class Stream
 
         // Load our javascript
         echo "<script type=\"text/javascript\">";
-        echo Core::get_reloadutil() . "('".$_SESSION['iframe']['target']."');";
+        echo Core::get_reloadutil() . "('" . $_SESSION['iframe']['target'] . "');";
         echo "</script>";
     } // run_playlist_method
 

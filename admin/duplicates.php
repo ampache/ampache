@@ -33,7 +33,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'find_duplicates':
         $search_type = $_REQUEST['search_type'];
-        $duplicates = Song::find_duplicates($search_type);
+        $duplicates  = Song::find_duplicates($search_type);
         require_once AmpConfig::get('prefix') . UI::find_template('show_duplicate.inc.php');
         require_once AmpConfig::get('prefix') . UI::find_template('show_duplicates.inc.php');
     break;

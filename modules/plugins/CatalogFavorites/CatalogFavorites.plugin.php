@@ -94,7 +94,7 @@ class AmpacheCatalogFavorites
     {
         if (AmpConfig::get('userflags')) {
             $userflags = Userflag::get_latest(null, -1, $this->maxitems);
-            $i = 0;
+            $i         = 0;
             echo '<div class="home_plugin"><table class="tabledata">';
             foreach ($userflags as $userflag) {
                 $item = new $userflag['type']($userflag['id']);
@@ -117,7 +117,7 @@ class AmpacheCatalogFavorites
                     echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'],'add', T_('Add to temporary playlist'),'play_full_' . $userflag['id']);
                     echo '</span>';
                     echo '</div>';
-                    echo '<div style="float: right; opacity: 0.5;">' . T_('recommended by') . ' '. $user->f_link . '</div>';
+                    echo '<div style="float: right; opacity: 0.5;">' . T_('recommended by') . ' ' . $user->f_link . '</div>';
 
                     echo '</div><br />';
 
@@ -126,7 +126,7 @@ class AmpacheCatalogFavorites
                     $item->display_art(2);
                     echo '</div>';
 
-                    echo '<div style="white-space: normal;">'. $item->get_description() .'</div>';
+                    echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';
                     echo '</div>';
 
                     echo '</td></tr>';

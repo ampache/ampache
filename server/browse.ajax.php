@@ -39,7 +39,7 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
-debug_event('browse.ajax.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
+debug_event('browse.ajax.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
 
 $browse = new Browse($browse_id);
 
@@ -155,7 +155,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'options':
         $option = $_REQUEST['option'];
-        $value = $_REQUEST['value'];
+        $value  = $_REQUEST['value'];
 
         switch ($option) {
             case 'use_pages':
@@ -202,7 +202,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'get_share_links':
         $object_type = $_REQUEST['object_type'];
-        $object_id = intval($_REQUEST['object_id']);
+        $object_id   = intval($_REQUEST['object_id']);
 
         if (Core::is_library_item($object_type) && $object_id > 0) {
             Share::display_ui_links($object_type, $object_id);

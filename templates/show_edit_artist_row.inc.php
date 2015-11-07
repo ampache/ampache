@@ -36,10 +36,7 @@
     ?>" />
                     <?php 
 } else {
-    ?>
-                    <?php echo $libitem->mbid;
-    ?>
-                    <?php 
+    echo $libitem->mbid;
 } ?>
                 </td>
             </tr>

@@ -41,10 +41,10 @@
                 foreach ($songs as $key => $song_id) {
                     $song = new Song($song_id);
                     $song->format();
-                    $row_key = 'duplicate_' . $song_id;
+                    $row_key              = 'duplicate_' . $song_id;
                     $button_flip_state_id = 'button_flip_state_' . $song_id;
-                    $current_class = ($key == '0') ? 'row-highlight' : UI::flip_class();
-                    $button = $song->enabled ? 'disable' : 'enable';
+                    $current_class        = ($key == '0') ? 'row-highlight' : UI::flip_class();
+                    $button               = $song->enabled ? 'disable' : 'enable';
                     ?>
         <tr id="<?php echo $row_key;
                     ?>" class="<?php echo $current_class;

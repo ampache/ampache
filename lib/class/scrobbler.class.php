@@ -36,12 +36,12 @@ class scrobbler
      */
     public function __construct($api_key, $scheme='https',$host='',$challenge='', $secret='')
     {
-        $this->error_msg = '';
-        $this->challenge = $challenge;
-        $this->host = $host;
-        $this->scheme = $scheme;
-        $this->api_key = $api_key;
-        $this->secret=$secret;
+        $this->error_msg     = '';
+        $this->challenge     = $challenge;
+        $this->host          = $host;
+        $this->scheme        = $scheme;
+        $this->api_key       = $api_key;
+        $this->secret        =$secret;
         $this->queued_tracks = array();
     } // scrobbler
 
@@ -55,7 +55,7 @@ class scrobbler
         ksort($vars);
         $sig = '';
         foreach ($vars as $name => $value) {
-            $sig .= $name.$value;
+            $sig .= $name . $value;
         }
         $sig .= $this->secret;
         $sig = md5($sig);
@@ -71,26 +71,26 @@ class scrobbler
     {
         // Encode parameters per RFC1738
         $params=http_build_query($vars);
-        $opts = array(
+        $opts  = array(
                 'http'=>array(
                         'method'=>$method,
                         'header'=> array(
-                                'Host: '.$this->host,
-                                'User-Agent: Ampache/'.AmpConfig::get('version')
+                                'Host: ' . $this->host,
+                                'User-Agent: Ampache/' . AmpConfig::get('version')
                         ),
                 )
         );
         // POST request need parameters in body and additional headers
         if ($method == 'POST') {
-            $opts['http']['content'] = $params;
+            $opts['http']['content']  = $params;
             $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
-            $opts['http']['header'][] = 'Content-length: '.strlen($params);
-            $params='';
+            $opts['http']['header'][] = 'Content-length: ' . strlen($params);
+            $params                   ='';
         }
         $context = stream_context_create($opts);
         if ($params!='') {
             // If there are paramters for GET request, adding the "?" caracter before
-            $params='?'.$params;
+            $params='?' . $params;
         }
         //debug_event('SCROBBLER', "$this->scheme://$this->host$url$params", 5);
         //debug_event('SCROBBLER', serialize($opts), 5);
@@ -137,11 +137,11 @@ class scrobbler
             'token'  => $token
             );
             //sign the call
-            $sig = $this->get_api_sig($vars);
+            $sig             = $this->get_api_sig($vars);
             $vars['api_sig'] = $sig;
             //call the getSession API
             $response=$this->call_url('/2.0/', 'GET', $vars);
-            $xml = simplexml_load_string($response);
+            $xml     = simplexml_load_string($response);
             if ($xml) {
                 $status = (string) $xml['status'];
                 if ($status == 'ok') {
@@ -177,13 +177,13 @@ class scrobbler
             return false;
         }
 
-        $newtrack = array();
+        $newtrack           = array();
         $newtrack['artist'] = $artist;
-        $newtrack['album'] = $album;
-        $newtrack['title'] = $title;
-        $newtrack['track'] = $track;
+        $newtrack['album']  = $album;
+        $newtrack['title']  = $title;
+        $newtrack['track']  = $track;
         $newtrack['length'] = $length;
-        $newtrack['time'] = $timestamp;
+        $newtrack['time']   = $timestamp;
 
         $this->queued_tracks[$timestamp] = $newtrack;
         return true;
@@ -206,7 +206,7 @@ class scrobbler
         ksort($this->queued_tracks);
 
         // Build the query string (encoded per RFC1738 by the call method)
-        $i = 0;
+        $i   = 0;
         $vars= array();
         foreach ($this->queued_tracks as $track) {
             //construct array of parameters for each song
@@ -219,17 +219,17 @@ class scrobbler
             $i++;
         }
         // Add the method, API and session keys
-        $vars['method'] = 'track.scrobble';
+        $vars['method']  = 'track.scrobble';
         $vars['api_key'] = $this->api_key;
-        $vars['sk'] = $this->challenge;
+        $vars['sk']      = $this->challenge;
 
         // Sign the call
-        $sig = $this->get_api_sig($vars);
+        $sig             = $this->get_api_sig($vars);
         $vars['api_sig'] = $sig;
 
         // Call the method and parse response
         $response=$this->call_url('/2.0/', 'POST', $vars);
-        $xml = simplexml_load_string($response);
+        $xml     = simplexml_load_string($response);
         if ($xml) {
             $status = (string) $xml['status'];
             if ($status == 'ok') {
@@ -251,20 +251,20 @@ class scrobbler
      */
     public function love($is_loved, $type, $artist = '', $title = '', $album = '')
     {
-        $vars['track'] = $title;
+        $vars['track']  = $title;
         $vars['artist'] = $artist;
         // Add the method, API and session keys
-        $vars['method'] = $is_loved ? 'track.love' : 'track.unlove';
+        $vars['method']  = $is_loved ? 'track.love' : 'track.unlove';
         $vars['api_key'] = $this->api_key;
-        $vars['sk'] = $this->challenge;
+        $vars['sk']      = $this->challenge;
 
         // Sign the call
-        $sig = $this->get_api_sig($vars);
+        $sig             = $this->get_api_sig($vars);
         $vars['api_sig'] = $sig;
 
         // Call the method and parse response
         $response=$this->call_url('/2.0/', 'POST', $vars);
-        $xml = simplexml_load_string($response);
+        $xml     = simplexml_load_string($response);
         if ($xml) {
             $status = (string) $xml['status'];
             if ($status == 'ok') {

@@ -39,7 +39,7 @@ class Userflag extends database_object
      */
     public function __construct($id, $type)
     {
-        $this->id = intval($id);
+        $this->id   = intval($id);
         $this->type = $type;
 
         return true;
@@ -63,7 +63,7 @@ class Userflag extends database_object
         $userflags = array();
 
         $idlist = '(' . implode(',', $ids) . ')';
-        $sql = "SELECT `object_id` FROM `user_flag` " .
+        $sql    = "SELECT `object_id` FROM `user_flag` " .
             "WHERE `user` = ? AND `object_id` IN $idlist " .
             "AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $type));
@@ -118,7 +118,7 @@ class Userflag extends database_object
             return parent::get_from_cache($key, $this->id);
         }
 
-        $sql = "SELECT `id` FROM `user_flag` WHERE `user` = ? ".
+        $sql = "SELECT `id` FROM `user_flag` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 

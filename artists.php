@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
         show_confirmation(
             T_('Artist Deletion'),
             T_('Are you sure you want to permanently delete this artist?'),
-            AmpConfig::get('web_path')."/artists.php?action=confirm_delete&artist_id=" . $artist_id,
+            AmpConfig::get('web_path') . "/artists.php?action=confirm_delete&artist_id=" . $artist_id,
             1,
             'delete_artist'
         );
@@ -75,12 +75,12 @@ switch ($_REQUEST['action']) {
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
         $object_type = 'song';
-        $object_ids = $artist->get_songs();
+        $object_ids  = $artist->get_songs();
         require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         break;
     case 'update_from_tags':
-        $type  = 'artist';
-        $object_id = intval($_REQUEST['artist']);
+        $type       = 'artist';
+        $object_id  = intval($_REQUEST['artist']);
         $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
         require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_missing':
         set_time_limit(600);
-        $mbid = $_REQUEST['mbid'];
+        $mbid    = $_REQUEST['mbid'];
         $wartist = Wanted::get_missing_artist($mbid);
 
         require AmpConfig::get('prefix') . UI::find_template('show_missing_artist.inc.php');

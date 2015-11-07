@@ -131,9 +131,9 @@ class AmpacheAmazon
      */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
-        $images     = array();
+        $images         = array();
         $final_results  = array();
-        $possible_keys = array(
+        $possible_keys  = array(
             'LargeImage',
             'MediumImage',
             'SmallImage'
@@ -162,7 +162,7 @@ class AmpacheAmazon
         // while we have pages to search
         do {
             $raw_results = $amazon->search(array('artist'=>'', 'album'=>'', 'keywords'=>$options['keyword']), $mediaType);
-            $total = count($raw_results) + count($search_results);
+            $total       = count($raw_results) + count($search_results);
 
             // If we've gotten more then we wanted
             if ($limit && $total > $limit) {
@@ -174,7 +174,7 @@ class AmpacheAmazon
                 break;
             } // if limit defined
 
-            $search_results = array_merge($search_results,$raw_results);
+            $search_results  = array_merge($search_results,$raw_results);
             $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
             debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
             $amazon->_currentPage++;
@@ -213,7 +213,7 @@ class AmpacheAmazon
                     continue;
                 }
 
-                $data = array();
+                $data           = array();
                 $data['url']    = $result[$key];
                 $data['mime']   = $mime;
                 $data['title']  = $this->name;

@@ -76,7 +76,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        $id = $_REQUEST['id'];
+        $id      = $_REQUEST['id'];
         $channel = new Channel($id);
         if ($channel->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=channel';

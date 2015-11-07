@@ -29,7 +29,7 @@
 class Daap_Api
 {
     const AMPACHEID_SMARTPL = 400000000;
-    const BASE_LIBRARY = 0;
+    const BASE_LIBRARY      = 0;
 
     public static $metas = array(
         'dmap.itemid',
@@ -83,8 +83,8 @@ class Daap_Api
         ob_end_clean();
         
         if (function_exists('curl_version')) {
-            $headers = apache_request_headers();
-            $reqheaders = array();
+            $headers      = apache_request_headers();
+            $reqheaders   = array();
             $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
             if (isset($headers['Range'])) {
                 $reqheaders[] = "Range: " . $headers['Range'];
@@ -129,7 +129,7 @@ class Daap_Api
     public static function output_header($ch, $header)
     {
         $rheader = trim($header);
-        $rhpart = explode(':', $rheader);
+        $rhpart  = explode(':', $rheader);
         if (! empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
                 header($rheader);
@@ -215,7 +215,7 @@ class Daap_Api
         if (! isset($_GET['session-id'])) {
             debug_event('daap', 'Missing session id.', '');
         } else {
-            $sql = "SELECT * FROM `daap_session` WHERE `id` = ?";
+            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
             $db_results = Dba::read($sql, array(
                 $_GET['session-id']
             ));
@@ -229,13 +229,13 @@ class Daap_Api
     private static function check_auth($code = '')
     {
         $authenticated = false;
-        $pass = AmpConfig::get('daap_pass');
+        $pass          = AmpConfig::get('daap_pass');
         // DAAP password specified, need to authenticate the client
         if (! empty($pass)) {
             $headers = apache_request_headers();
-            $auth = $headers['Authorization'];
+            $auth    = $headers['Authorization'];
             if (strpos(strtolower($auth), 'basic') === 0) {
-                $decauth = base64_decode(substr($auth, 6));
+                $decauth  = base64_decode(substr($auth, 6));
                 $userpass = split(':', $decauth);
                 if (count($userpass) == 2) {
                     if ($userpass[1] == $pass) {
@@ -289,14 +289,14 @@ class Daap_Api
     {
         // $type = $_GET['type'];
         $meta = explode(',', strtolower($_GET['meta']));
-        $o = self::tlv('dmap.status', 200);
+        $o    = self::tlv('dmap.status', 200);
         $o .= self::tlv('dmap.updatetype', 0);
 
-        $songs = array();
+        $songs    = array();
         $catalogs = Catalog::get_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            $songs = array_merge($songs, $catalog->get_songs());
+            $songs   = array_merge($songs, $catalog->get_songs());
         }
 
         $o .= self::tlv('dmap.specifiedtotalcount', count($songs));
@@ -347,7 +347,7 @@ class Daap_Api
                 $o .= self::tlv('dmap.updatetype', 0);
                 
                 $playlists = Playlist::get_playlists();
-                $searches = Search::get_searches();
+                $searches  = Search::get_searches();
                 $o .= self::tlv('dmap.specifiedtotalcount', count($playlists) + count($searches) + 1);
                 $o .= self::tlv('dmap.returnedcount', count($playlists) + count($searches) + 1);
                 
@@ -371,12 +371,12 @@ class Daap_Api
             if ($input[1] == 'items') {
                 $finfo = explode('.', $input[2]);
                 if (count($finfo) == 2) {
-                    $id = intval($finfo[0]);
+                    $id   = intval($finfo[0]);
                     $type = $finfo[1];
                     
-                    $params = '';
+                    $params  = '';
                     $headers = apache_request_headers();
-                    $client = $headers['User-Agent'];
+                    $client  = $headers['User-Agent'];
                     if (! empty($client)) {
                         $params .= '&client=' . $client;
                     }
@@ -406,9 +406,9 @@ class Daap_Api
 
                     if ($playlist->id) {
                         $meta = explode(',', strtolower($_GET['meta']));
-                        $o = self::tlv('dmap.status', 200);
+                        $o    = self::tlv('dmap.status', 200);
                         $o .= self::tlv('dmap.updatetype', 0);
-                        $items = $playlist->get_items();
+                        $items    = $playlist->get_items();
                         $song_ids = array();
                         foreach ($items as $item) {
                             if ($item['object_type'] == 'song') {
@@ -500,7 +500,7 @@ class Daap_Api
                         $o .= self::tlv($m, $song->track);
                         break;
                     case 'daap.songuserrating':
-                        $rating = new Rating($song->id, "song");
+                        $rating       = new Rating($song->id, "song");
                         $rating_value = $rating->get_average_rating();
                         $o .= self::tlv($m, $rating_value);
                         break;
@@ -533,7 +533,7 @@ class Daap_Api
             $isSmart = true;
         }
         $id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
-        $p = self::tlv('dmap.itemid', $id);
+        $p  = self::tlv('dmap.itemid', $id);
         $p .= self::tlv('dmap.persistentid', $id);
         $p .= self::tlv('dmap.itemname', $playlist->f_name);
         $p .= self::tlv('dmap.itemcount', count($playlist->get_items()));
@@ -586,9 +586,9 @@ class Daap_Api
         // Really?! PHP...
         // Need to split value into two 32-bit integer because php pack function doesn't support 64-bit integer...
         $highMap = 0xffffffff00000000;
-        $lowMap = 0x00000000ffffffff;
-        $higher = ($value & $highMap) >> 32;
-        $lower = $value & $lowMap;
+        $lowMap  = 0x00000000ffffffff;
+        $higher  = ($value & $highMap) >> 32;
+        $lower   = $value & $lowMap;
         return $tag . "\x00\x00\x00\x08" . pack("NN", $higher, $lower);
     }
 
