@@ -131,5 +131,6 @@ if (Art::is_enabled()) {
             </a>
     <?php 
         }
+    }
     ?>
 </td>
