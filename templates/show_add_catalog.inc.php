@@ -21,7 +21,7 @@
  */
 
 $default_rename = "%T - %t";
-$default_sort = "%a/%A";
+$default_sort   = "%a/%A";
 ?>
 <?php UI::show_box_top(T_('Add a Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>

@@ -37,18 +37,18 @@ switch ($_REQUEST['action']) {
     case 'generate_config':
         ob_end_clean();
         $current = parse_ini_file(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
-        $final = generate_config($current);
+        $final   = generate_config($current);
         $browser = new Horde_Browser();
         $browser->downloadHeaders('ampache.cfg.php', 'text/plain',false,filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
         echo $final;
         exit;
     case 'write_config':
         write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
-        header('Location: '. AmpConfig::get('web_path') . '/index.php');
+        header('Location: ' . AmpConfig::get('web_path') . '/index.php');
         exit;
     case 'reset_db_charset':
         Dba::reset_db_charset();
-        show_confirmation(T_('Database Charset Updated'), T_('Your Database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path').'/admin/system.php?action=show_debug');
+        show_confirmation(T_('Database Charset Updated'), T_('Your Database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;
     case 'show_debug':
         $configuration = AmpConfig::get_all();
@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
             case 'artist' : Artist::clear_cache(); break;
             case 'album' : Album::clear_cache(); break;
         }
-        show_confirmation(T_('Cache cleared'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path').'/admin/system.php?action=show_debug');
+        show_confirmation(T_('Cache cleared'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;
     default:
         // Rien a faire

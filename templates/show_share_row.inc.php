@@ -34,8 +34,6 @@
 <td class="cel_public_url"><?php echo $libitem->public_url; ?></td>
 <td class="cel_action">
     <div id="share_action_<?php echo $libitem->id; ?>">
-    <?php
-        $libitem->show_action_buttons();
-    ?>
+    <?php $libitem->show_action_buttons(); ?>
     </div>
 </td>

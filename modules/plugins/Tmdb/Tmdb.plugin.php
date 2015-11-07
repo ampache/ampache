@@ -104,11 +104,11 @@ class AmpacheTmdb
         }
         
         try {
-            $token = new \Tmdb\ApiToken($this->api_key);
-            $client = new \Tmdb\Client($token);
+            $token            = new \Tmdb\ApiToken($this->api_key);
+            $client           = new \Tmdb\Client($token);
             $configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
-            $config = $configRepository->load();
-            $imageHelper = new \Tmdb\Helper\ImageHelper($config);
+            $config           = $configRepository->load();
+            $imageHelper      = new \Tmdb\Helper\ImageHelper($config);
             
             $title = $media_info['original_name'] ?: $media_info['title'];
             
@@ -117,13 +117,13 @@ class AmpacheTmdb
                 if (!empty($media_info['title'])) {
                     $apires = $client->getSearchApi()->searchMovies($media_info['title']);
                     if (count($apires['results']) > 0) {
-                        $results['tmdb_id'] = $apires['results'][0]['id'];
-                        $release = $client->getMoviesApi()->getMovie($results['tmdb_id']);
-                        $results['imdb_id'] = $release['imdb_id'];
+                        $results['tmdb_id']       = $apires['results'][0]['id'];
+                        $release                  = $client->getMoviesApi()->getMovie($results['tmdb_id']);
+                        $results['imdb_id']       = $release['imdb_id'];
                         $results['original_name'] = $release['original_title'];
                         if (!empty($release['release_date'])) {
                             $results['release_date'] = strtotime($release['release_date']);
-                            $results['year'] = date("Y", $results['release_date']);  // Production year shouldn't be the release date
+                            $results['year']         = date("Y", $results['release_date']);  // Production year shouldn't be the release date
                         }
                         if ($release['poster_path']) {
                             $results['art'] = $imageHelper->getUrl($release['poster_path']);
@@ -142,8 +142,8 @@ class AmpacheTmdb
                     if (count($apires['results']) > 0) {
                         // Get first match
                         $results['tmdb_tvshow_id'] = $apires['results'][0]['id'];
-                        $release = $client->getTvApi()->getTvshow($results['tmdb_tvshow_id']);
-                        $results['tvshow'] = $release['original_name'];
+                        $release                   = $client->getTvApi()->getTvshow($results['tmdb_tvshow_id']);
+                        $results['tvshow']         = $release['original_name'];
                         if (!empty($release['first_air_date'])) {
                             $results['tvshow_year'] = date("Y", strtotime($release['first_air_date']));
                         }
@@ -164,13 +164,13 @@ class AmpacheTmdb
                                 if ($media_info['tvshow_episode']) {
                                     $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
                                     if ($release['id']) {
-                                        $results['tmdb_id'] = $release['id'];
-                                        $results['tvshow_season'] = $release['season_number'];
+                                        $results['tmdb_id']        = $release['id'];
+                                        $results['tvshow_season']  = $release['season_number'];
                                         $results['tvshow_episode'] = $release['episode_number'];
-                                        $results['original_name'] = $release['name'];
+                                        $results['original_name']  = $release['name'];
                                         if (!empty($release['air_date'])) {
                                             $results['release_date'] = strtotime($release['air_date']);
-                                            $results['year'] = date("Y", $results['release_date']);
+                                            $results['year']         = date("Y", $results['release_date']);
                                         }
                                         $results['summary'] = $release['overview'];
                                         if ($release['still_path']) {

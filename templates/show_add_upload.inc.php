@@ -27,7 +27,7 @@ UI::show_box_top(T_('Upload'));
 $ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
 
 $artist = intval($_REQUEST['artist']);
-$album = intval($_REQUEST['album']);
+$album  = intval($_REQUEST['album']);
 ?>
 <div id="container" role="main">
     <div id="tree"></div>

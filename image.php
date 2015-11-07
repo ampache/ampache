@@ -59,10 +59,10 @@ if (!Core::is_library_item($type)) {
 $size = Art::get_thumb_size($_GET['thumb']);
 $kind = isset($_GET['kind']) ? $_GET['kind'] : 'default';
 
-$image = '';
-$mime = '';
-$filename = '';
-$etag = '';
+$image       = '';
+$mime        = '';
+$filename    = '';
+$etag        = '';
 $typeManaged = false;
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
@@ -73,15 +73,15 @@ if (isset($_GET['type'])) {
         case 'session':
             // If we need to pull the data out of the session
             Session::check();
-            $filename = scrub_in($_REQUEST['image_index']);
-            $image = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
-            $mime = $_SESSION['form']['images'][$filename]['mime'];
+            $filename    = scrub_in($_REQUEST['image_index']);
+            $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
+            $mime        = $_SESSION['form']['images'][$filename]['mime'];
             $typeManaged = true;
         break;
     }
 }
 if (!$typeManaged) {
-    $item = new $type($_GET['object_id']);
+    $item     = new $type($_GET['object_id']);
     $filename = $item->name ?: $item->title;
 
     $art = new Art($item->id, $type, $kind);
@@ -94,7 +94,7 @@ if (!$typeManaged) {
         $ccontrol = $reqheaders['Cache-Control'];
         if ($ccontrol != 'no-cache') {
             $cetagf = explode('-', $reqheaders['If-None-Match']);
-            $cetag = $cetagf[0];
+            $cetag  = $cetagf[0];
             // Same image than the cached one? Use the cache.
             if ($cetag == $etag) {
                 header('HTTP/1.1 304 Not Modified');
@@ -124,21 +124,21 @@ if (!$typeManaged) {
             $etag .= '-' . $_GET['thumb'];
         }
 
-        $mime = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;
+        $mime  = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;
         $image = isset($thumb_data['thumb']) ? $thumb_data['thumb'] : $art->raw;
     }
 }
 
 if (!empty($image)) {
     $extension = Art::extension($mime);
-    $filename = scrub_out($filename . '.' . $extension);
+    $filename  = scrub_out($filename . '.' . $extension);
 
     // Send the headers and output the image
     $browser = new Horde_Browser();
     if (!empty($etag)) {
         header('ETag: ' . $etag);
         header('Cache-Control: private');
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s \G\M\T', time()));
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
     }
     $browser->downloadHeaders($filename, $mime, true);
     echo $image;

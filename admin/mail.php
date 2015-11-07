@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
         if ($_REQUEST['from'] == 'system') {
             $mailer->set_default_sender();
         } else {
-            $mailer->sender = $GLOBALS['user']->email;
+            $mailer->sender      = $GLOBALS['user']->email;
             $mailer->sender_name = $GLOBALS['user']->fullname;
         }
 
@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
             $body   = T_('Your E-mail was successfully sent.');
         } else {
             $title     = T_('E-mail Not Sent');
-            $body     = T_('Your E-mail was not sent.');
+            $body      = T_('Your E-mail was not sent.');
         }
         $url = AmpConfig::get('web_path') . '/admin/mail.php';
         show_confirmation($title,$body,$url);

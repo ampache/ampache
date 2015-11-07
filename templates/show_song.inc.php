@@ -20,7 +20,7 @@
  *
  */
 
-$icon = $song->enabled ? 'disable' : 'enable';
+$icon                 = $song->enabled ? 'disable' : 'enable';
 $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
 <?php UI::show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
@@ -162,7 +162,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 } ?>
         <?php if (Access::check('interface','50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
     ?>
-            <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Edit') ?>', '')">
+            <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_' . $song->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit'));
     ?>
             </a>
@@ -194,19 +194,19 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   if (!empty($song->f_albumartist_link)) {
       $songprops[gettext_noop('Album Artist')]   = $song->f_albumartist_link;
   }
-  $songprops[gettext_noop('Album')]   = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year). ")" : "");
+  $songprops[gettext_noop('Album')]      = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year) . ")" : "");
   $songprops[gettext_noop('Composer')]   = scrub_out($song->composer);
-  $songprops[gettext_noop('Genre')]   = $song->f_tags;
-  $songprops[gettext_noop('Year')]   = $song->year;
-  $songprops[gettext_noop('Links')] = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
+  $songprops[gettext_noop('Genre')]      = $song->f_tags;
+  $songprops[gettext_noop('Year')]       = $song->year;
+  $songprops[gettext_noop('Links')]      = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
   $songprops[gettext_noop('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
-  $songprops[gettext_noop('Length')]  = scrub_out($song->f_time);
-  $songprops[gettext_noop('Comment')] = scrub_out($song->comment);
-  $songprops[gettext_noop('Label')]   = AmpConfig::get('label') ? "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($song->label) . "\">" . scrub_out($song->label) . "</a>" : scrub_out($song->label);
-  $songprops[gettext_noop('Song Language')]= scrub_out($song->language);
+  $songprops[gettext_noop('Length')]           = scrub_out($song->f_time);
+  $songprops[gettext_noop('Comment')]          = scrub_out($song->comment);
+  $songprops[gettext_noop('Label')]            = AmpConfig::get('label') ? "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($song->label) . "\">" . scrub_out($song->label) . "</a>" : scrub_out($song->label);
+  $songprops[gettext_noop('Song Language')]    = scrub_out($song->language);
   $songprops[gettext_noop('Catalog Number')]   = scrub_out($song->catalog_number);
-  $songprops[gettext_noop('Bitrate')]   = scrub_out($song->f_bitrate);
-  $songprops[gettext_noop('Channels')]   = scrub_out($song->channels);
+  $songprops[gettext_noop('Bitrate')]          = scrub_out($song->f_bitrate);
+  $songprops[gettext_noop('Channels')]         = scrub_out($song->channels);
   if ($song->replaygain_track_gain != 0) {
       $songprops[gettext_noop('ReplayGain Track Gain')]   = scrub_out($song->replaygain_track_gain);
   }
@@ -247,7 +247,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   foreach ($songprops as $key => $value) {
       if (trim($value)) {
           $rowparity = UI::flip_class();
-          echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
+          echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
       }
   }
 ?>

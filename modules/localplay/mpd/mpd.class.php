@@ -155,7 +155,7 @@ class mpd
     private $password;
 
     private $_mpd_sock = null;
-    public $connected = false;
+    public $connected  = false;
 
     // MPD Status variables
     public $mpd_version = "(unknown)";
@@ -171,7 +171,7 @@ class mpd
     private $_command_queue; // The list of commands for bulk command sending
 
     private $_debug_callback = null; // Optional callback to be run on debug
-    public $debugging = false;
+    public $debugging        = false;
 
     /* Constructor
      * Builds the MPD object, connects to the server, and refreshes all
@@ -179,8 +179,8 @@ class mpd
      */
     public function __construct($server, $port, $password = null, $debug_callback = null)
     {
-        $this->host = $server;
-        $this->port = $port;
+        $this->host     = $server;
+        $this->port     = $port;
         $this->password = $password;
 
         if (is_callable($debug_callback)) {
@@ -195,7 +195,7 @@ class mpd
             return false;
         }
 
-        $version = sscanf($response, self::RESPONSE_OK . " MPD %s\n");
+        $version           = sscanf($response, self::RESPONSE_OK . " MPD %s\n");
         $this->mpd_version = $version[0];
 
         if ($password) {
@@ -390,7 +390,7 @@ class mpd
      */
     public function RefreshInfo()
     {
-        $stats = $this->SendCommand(self::COMMAND_STATISTICS, null, false);
+        $stats  = $this->SendCommand(self::COMMAND_STATISTICS, null, false);
         $status = $this->SendCommand(self::COMMAND_STATUS, null, false);
 
 
@@ -398,14 +398,14 @@ class mpd
             return false;
         }
 
-        $stats = self::_parseResponse($stats);
+        $stats  = self::_parseResponse($stats);
         $status = self::_parseResponse($status);
 
-        $this->stats = $stats;
+        $this->stats  = $stats;
         $this->status = $status;
 
         // Get the Playlist
-        $playlist = $this->SendCommand(self::COMMAND_PLINFO, null, false);
+        $playlist       = $this->SendCommand(self::COMMAND_PLINFO, null, false);
         $this->playlist = self::_parseFileListResponse($playlist);
 
         return true;
@@ -425,7 +425,7 @@ class mpd
         }
 
         $this->RefreshInfo();
-        $value = $this->status['volume'] + $value;
+        $value    = $this->status['volume'] + $value;
         $response = $this->SetVolume($value);
 
         $this->_debug('AdjustVolume', "return $response", 5);
@@ -458,7 +458,7 @@ class mpd
                 return false;
             } else {
                 $command = self::COMMAND_VOLUME;
-                $value = $value - $this->status['volume'];
+                $value   = $value - $this->status['volume'];
             }
         }
 
@@ -478,7 +478,7 @@ class mpd
     {
         $this->_debug('GetDir', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_LSDIR, $dir, false);
-        $dirlist = self::_parseFileListResponse($response);
+        $dirlist  = self::_parseFileListResponse($response);
         $this->_debug('GetDir', 'return: ' . json_encode($dirlist), 5);
         return $dirlist;
     }
@@ -614,7 +614,7 @@ class mpd
     public function SetRepeat($value)
     {
         $this->_debug('SetRepeat', 'start', 5);
-        $value = $value ? 1 : 0;
+        $value    = $value ? 1 : 0;
         $response = $this->SendCommand(self::COMMAND_REPEAT, $value);
         $this->_debug('SetRepeat', "return: $response", 5);
         return $response;
@@ -628,7 +628,7 @@ class mpd
     public function SetRandom($value)
     {
         $this->_debug('SetRandom', 'start', 5);
-        $value = $value ? 1 : 0;
+        $value    = $value ? 1 : 0;
         $response = $this->SendCommand(self::COMMAND_RANDOM, $value);
         $this->_debug('SetRandom', "return: $response", 5);
         return $response;
@@ -893,7 +893,7 @@ class mpd
         }
 
         $results = array();
-        $parsed = self::_parseResponse($response);
+        $parsed  = self::_parseResponse($response);
 
         foreach ($parsed as $key => $value) {
             if ($key == 'Album') {
@@ -962,7 +962,7 @@ class mpd
 
         $results = array();
         $counter = -1;
-        $lines = explode("\n", $response);
+        $lines   = explode("\n", $response);
         foreach ($lines as $line) {
             if (preg_match('/(\w+): (.+)/', $line, $matches)) {
                 if ($matches[1] == 'file') {
@@ -985,7 +985,7 @@ class mpd
         }
 
         $results = array();
-        $lines = explode("\n", $response);
+        $lines   = explode("\n", $response);
         foreach ($lines as $line) {
             if (preg_match('/(\w+): (.+)/', $line, $matches)) {
                 $results[$matches[1]] = $matches[2];

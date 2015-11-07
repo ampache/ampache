@@ -41,7 +41,7 @@ UI::show_box_top(T_('Preference Administration'));
     ?></td>
     <td class="cel_level">
         <?php $level_name = "is_" . $preference['level'];
-    ${$level_name} = 'selected="selected"';
+    ${$level_name}        = 'selected="selected"';
     ?>
         <select name="prefs[<?php echo scrub_out($preference['name']);
     ?>]">

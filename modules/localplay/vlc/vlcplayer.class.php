@@ -42,8 +42,8 @@ class VlcPlayer
      */
     public function __construct($h = "localhost", $pw = "", $p = 8080)
     {
-        $this->host = $h;
-        $this->port = $p;
+        $this->host     = $h;
+        $this->port     = $p;
         $this->password = $pw;
     } // VlcPlayer
 
@@ -59,7 +59,7 @@ class VlcPlayer
         $aurl .= "&";
         $aurl .= urlencode($name);
                    
-        $args = array('command'=>'in_enqueue','&input'=>$aurl);
+        $args    = array('command'=>'in_enqueue','&input'=>$aurl);
         $results = $this->sendCommand('status.xml?', $args);
         if (is_null($results)) {
             return null;
@@ -74,7 +74,7 @@ class VlcPlayer
      */
     public function version()
     {
-        $args = array();
+        $args    = array();
         $results = $this->sendCommand('status.xml',$args);
         if (is_null($results)) {
             return null;
@@ -90,7 +90,7 @@ class VlcPlayer
      */
     public function clear()
     {
-        $args = array('command'=>'pl_empty');
+        $args    = array('command'=>'pl_empty');
         $results = $this->sendCommand('status.xml?', $args);
         if (is_null($results)) {
             return null;
@@ -105,7 +105,7 @@ class VlcPlayer
      */
     public function next()
     {
-        $args = array('command'=>'pl_next');
+        $args    = array('command'=>'pl_next');
         $results = $this->sendCommand('status.xml?', $args);
         if (is_null($results)) {
             return null;
@@ -120,7 +120,7 @@ class VlcPlayer
      */
     public function prev()
     {
-        $args = array('command'=>'pl_previous');
+        $args    = array('command'=>'pl_previous');
         $results = $this->sendCommand("status.xml?", $args);
         if (is_null($results)) {
             return null;
@@ -135,7 +135,7 @@ class VlcPlayer
      */
     public function skip($pos)
     {
-        $args = array('command'=>'pl_play','&id'=>$pos);
+        $args    = array('command'=>'pl_play','&id'=>$pos);
         $results = $this->sendCommand('status.xml?',$args);
         if (is_null($results)) {
             return null;
@@ -152,7 +152,7 @@ class VlcPlayer
      */
     public function play()
     {
-        $args = array('command'=>'pl_play');
+        $args    = array('command'=>'pl_play');
         $results = $this->sendCommand("status.xml?", $args);
         if (is_null($results)) {
             return null;
@@ -167,7 +167,7 @@ class VlcPlayer
      */
     public function pause()
     {
-        $args = array('command'=>'pl_pause');
+        $args    = array('command'=>'pl_pause');
         $results = $this->sendCommand("status.xml?", $args);
         if (is_null($results)) {
             return null;
@@ -182,7 +182,7 @@ class VlcPlayer
      */
     public function stop()
     {
-        $args = array('command'=>'pl_stop');
+        $args    = array('command'=>'pl_stop');
         $results = $this->sendCommand('status.xml?', $args);
         if (is_null($results)) {
             return null;
@@ -197,7 +197,7 @@ class VlcPlayer
      */
     public function repeat($value)
     {
-        $args = array('command'=>'pl_repeat');
+        $args    = array('command'=>'pl_repeat');
         $results = $this->sendCommand('status.xml?',$args);
         if (is_null($results)) {
             return null;
@@ -212,7 +212,7 @@ class VlcPlayer
      */
     public function random($value)
     {
-        $args = array('command'=>'pl_random');
+        $args    = array('command'=>'pl_random');
         $results = $this->sendCommand('status.xml?',$args);
         if (is_null($results)) {
             return null;
@@ -227,7 +227,7 @@ class VlcPlayer
      */
     public function delete_pos($track)
     {
-        $args = array('command'=>'pl_delete','&id'=>$track);
+        $args    = array('command'=>'pl_delete','&id'=>$track);
         $results = $this->sendCommand('status.xml?',$args);
         if (is_null($results)) {
             return null;
@@ -244,7 +244,7 @@ class VlcPlayer
     {
         $args = array();
         
-        $results = $this->sendCommand('status.xml',$args);
+        $results     = $this->sendCommand('status.xml',$args);
         $currentstat = $results['root']['state']['value'];
 
         if ($currentstat == 'playing') {
@@ -282,7 +282,7 @@ class VlcPlayer
      */
     public function volume_up()
     {
-        $args = array('command'=>'volume','&val'=>'%2B20');
+        $args    = array('command'=>'volume','&val'=>'%2B20');
         $results = $this->sendCommand('status.xml?',$args);
         if (is_null($results)) {
             return null;
@@ -297,7 +297,7 @@ class VlcPlayer
      */
     public function volume_down()
     {
-        $args = array('command'=>'volume','&val'=>'-20');
+        $args    = array('command'=>'volume','&val'=>'-20');
         $results = $this->sendCommand('status.xml?',$args);
         if (is_null($results)) {
             return null;
@@ -314,8 +314,8 @@ class VlcPlayer
     {
 
         // Convert it to base 400
-        $value = $value*4;
-        $args = array('command'=>'volume','&val'=>$value);
+        $value   = $value*4;
+        $args    = array('command'=>'volume','&val'=>$value);
         $results = $this->sendCommand('status.xml?',$args);
         if (is_null($results)) {
             return null;
@@ -330,7 +330,7 @@ class VlcPlayer
      */
     public function clear_playlist()
     {
-        $args = array('command'=>'pl_empty');
+        $args    = array('command'=>'pl_empty');
         $results = $this->sendcommand('status.xml?',$args);
         if (is_null($results)) {
             return null;
@@ -391,7 +391,7 @@ class VlcPlayer
         $msg .= "\r\n";
                        
         fputs($fp, $msg);
-        $data = '';
+        $data   = '';
         $header = "";
         // here the header is split from the xml to avoid problems
         do {
@@ -439,10 +439,10 @@ class VlcPlayer
        }//Hmm...
 
     //Initializations
-    $bigxml_array = array();
-       $parents = array();
+    $bigxml_array   = array();
+       $parents     = array();
        $opened_tags = array();
-       $arr = array();
+       $arr         = array();
 
        $current = &$bigxml_array; //Refference
 
@@ -455,7 +455,7 @@ class VlcPlayer
            // tag(string), type(string), level(int), attributes(array).
            extract($data);//We could use the array by itself, but this cooler.
 
-           $result = array();
+           $result       = array();
         $attributes_data = array();
         
         if (isset($value)) {
@@ -484,64 +484,64 @@ class VlcPlayer
             if (!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
                 $current[$tag] = $result;
                 if ($attributes_data) {
-                    $current[$tag. '_attr'] = $attributes_data;
+                    $current[$tag . '_attr'] = $attributes_data;
                 }
-                $repeated_tag_index[$tag.'_'.$level] = 1;
+                $repeated_tag_index[$tag . '_' . $level] = 1;
 
                 $current = &$current[$tag];
             } else { //There was another element with the same tag name
 
                 if (isset($current[$tag][0])) {
                     //If there is a 0th element it is already an array
-                    $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-                    $repeated_tag_index[$tag.'_'.$level]++;
+                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
+                    $repeated_tag_index[$tag . '_' . $level]++;
                 } else {
                     //This section will make the value an array if multiple tags with the same name appear together
-                    $current[$tag] = array($current[$tag],$result);//This will combine the existing item and the new item together to make an array
-                    $repeated_tag_index[$tag.'_'.$level] = 2;
+                    $current[$tag]                       = array($current[$tag],$result);//This will combine the existing item and the new item together to make an array
+                    $repeated_tag_index[$tag . '_' . $level] = 2;
                     
-                    if (isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
-                        $current[$tag]['0_attr'] = $current[$tag.'_attr'];
-                        unset($current[$tag.'_attr']);
+                    if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well
+                        $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                        unset($current[$tag . '_attr']);
                     }
                 }
-                $last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
-                $current = &$current[$tag][$last_item_index];
+                $last_item_index = $repeated_tag_index[$tag . '_' . $level]-1;
+                $current         = &$current[$tag][$last_item_index];
             }
         } elseif ($type == "complete") { //Tags that ends in 1 line '<tag />'
             //See if the key is already taken.
             if (!isset($current[$tag])) { //New Key
-                $current[$tag] = $result;
-                $repeated_tag_index[$tag.'_'.$level] = 1;
+                $current[$tag]                       = $result;
+                $repeated_tag_index[$tag . '_' . $level] = 1;
                 if ($priority == 'tag' and $attributes_data) {
-                    $current[$tag. '_attr'] = $attributes_data;
+                    $current[$tag . '_attr'] = $attributes_data;
                 }
             } else { //If taken, put all things inside a list(array)
                 if (isset($current[$tag][0]) and is_array($current[$tag])) {
                     //If it is already an array...
 
                     // ...push the new element into that array.
-                    $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
+                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
                     
                     if ($priority == 'tag' and $get_attributes and $attributes_data) {
-                        $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
+                        $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                     }
-                    $repeated_tag_index[$tag.'_'.$level]++;
+                    $repeated_tag_index[$tag . '_' . $level]++;
                 } else { //If it is not an array...
-                    $current[$tag] = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
-                    $repeated_tag_index[$tag.'_'.$level] = 1;
+                    $current[$tag]                       = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
+                    $repeated_tag_index[$tag . '_' . $level] = 1;
                     if ($priority == 'tag' and $get_attributes) {
-                        if (isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
+                        if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well
 
-                            $current[$tag]['0_attr'] = $current[$tag.'_attr'];
-                            unset($current[$tag.'_attr']);
+                            $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                            unset($current[$tag . '_attr']);
                         }
                         
                         if ($attributes_data) {
-                            $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
+                            $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                         }
                     }
-                    $repeated_tag_index[$tag.'_'.$level]++; //0 and 1 index is already taken
+                    $repeated_tag_index[$tag . '_' . $level]++; //0 and 1 index is already taken
                 }
             }
         } elseif ($type == 'close') { //End of tag '</tag>'

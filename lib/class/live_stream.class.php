@@ -96,9 +96,9 @@ class Live_Stream extends database_object implements media, library_item
     public function format($details = true)
     {
         // Default link used on the rightbar
-        $this->f_link        = "<a href=\"" . $this->url . "\">" . $this->name . "</a>";
+        $this->f_link         = "<a href=\"" . $this->url . "\">" . $this->name . "</a>";
         $this->f_name_link    = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->name . "</a>";
-        $this->f_url_link    = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
+        $this->f_url_link     = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
 
         return true;
     } // format
@@ -317,7 +317,7 @@ class Live_Stream extends database_object implements media, library_item
             $params[] = $catalog;
         }
         $db_results = Dba::read($sql, $params);
-        $radios = array();
+        $radios     = array();
 
         while ($results = Dba::fetch_assoc($db_results)) {
             $radios[] = $results['id'];

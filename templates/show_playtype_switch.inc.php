@@ -22,7 +22,7 @@
 ?>
 <div id="play_type_switch">
 <?php
-$name = "is_" . AmpConfig::get('play_type');
+$name    = "is_" . AmpConfig::get('play_type');
 ${$name} = 'selected="selected" ';
 
 if (Preference::has_access('play_type')) {

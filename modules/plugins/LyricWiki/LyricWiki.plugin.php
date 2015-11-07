@@ -73,7 +73,7 @@ class Ampachelyricwiki
      */
     public function get_lyrics($song)
     {
-        $uri = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title) . '&fmt=xml&func=getSong';
+        $uri     = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title) . '&fmt=xml&func=getSong';
         $request = Requests::get($uri, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);

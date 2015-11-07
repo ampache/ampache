@@ -36,13 +36,13 @@ if (function_exists('apache_setenv')) {
 $action = $_GET['action'];
 
 $headers = apache_request_headers();
-$client = $headers['User-Agent'];
+$client  = $headers['User-Agent'];
 /*$deviceName = $headers['X-Plex-Device-Name'];
 $clientPlatform = $headers['X-Plex-Client-Platform'];
 $version = $headers['X-Plex-Version'];
 $language = $headers['X-Plex-Language'];
 $clientFeatures = $headers['X-Plex-Client-Capabilities'];*/
-debug_event('plex', 'Request headers: '. print_r($headers, true), '5');
+debug_event('plex', 'Request headers: ' . print_r($headers, true), '5');
 
 // Get the list of possible methods for the Plex API
 $methods = get_class_methods('plex_api');
@@ -50,7 +50,7 @@ $methods = get_class_methods('plex_api');
 $internal_functions = array('setHeader', 'root', 'apiOutput', 'createError', 'validateMyPlex', 'getPublicIp', 'registerMyPlex', 'publishDeviceConnection', 'unregisterMyPlex');
 
 $show_index = true;
-$params = array_filter(explode('/', $action), 'strlen');
+$params     = array_filter(explode('/', $action), 'strlen');
 if (count($params) > 0) {
     // Hack to listen locally on port != 32400
     if (count($params) >= 2 && $params[0] == '.hack' && $params[1] == 'main:32400') {

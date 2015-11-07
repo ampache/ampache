@@ -37,9 +37,9 @@ class Recommendation
      */
     public static function get_lastfm_results($method, $query)
     {
-        $api_key = AmpConfig::get('lastfm_api_key');
+        $api_key  = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
-        $url = $api_base . $method . '&api_key=' . $api_key . '&' . $query;
+        $url      = $api_base . $method . '&api_key=' . $api_key . '&' . $query;
 
         return self::query_lastfm($url);
     }
@@ -57,7 +57,7 @@ class Recommendation
     public static function album_search($artist, $album)
     {
         $api_key = AmpConfig::get('lastfm_api_key');
-        $url = 'http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist='. urlencode($artist) .'&album=' . urlencode($album) . '&api_key=' . $api_key;
+        $url     = 'http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=' . urlencode($artist) . '&album=' . urlencode($album) . '&api_key=' . $api_key;
 
         return self::query_lastfm($url);
     }
@@ -76,14 +76,14 @@ class Recommendation
     {
         self::gc();
 
-        $sql = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
+        $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($type, $id));
 
         if ($cache = Dba::fetch_assoc($db_results)) {
             if ($get_items) {
                 $cache['items'] = array();
-                $sql = "SELECT `recommendation_id`, `name`, `rel`, `mbid` FROM `recommendation_item` WHERE `recommendation` = ?";
-                $db_results = Dba::read($sql, array($cache['id']));
+                $sql            = "SELECT `recommendation_id`, `name`, `rel`, `mbid` FROM `recommendation_item` WHERE `recommendation` = ?";
+                $db_results     = Dba::read($sql, array($cache['id']));
                 while ($results = Dba::fetch_assoc($db_results)) {
                     $cache['items'][] = array(
                         'id' => $results['recommendation_id'],
@@ -136,14 +136,14 @@ class Recommendation
         $cache = self::get_recommendation_cache('song', $song_id, true);
         if (!$cache['id']) {
             $similars = array();
-            $xml = self::get_lastfm_results('track.getsimilar', $query);
+            $xml      = self::get_lastfm_results('track.getsimilar', $query);
 
             if ($xml->similartracks) {
                 foreach ($xml->similartracks->children() as $child) {
-                    $name = $child->name;
+                    $name     = $child->name;
                     $local_id = null;
 
-                    $artist_name = $child->artist->name;
+                    $artist_name   = $child->artist->name;
                     $s_artist_name = Catalog::trim_prefix($artist_name);
 
                     $sql = "SELECT `song`.`id` FROM `song` " .
@@ -220,13 +220,13 @@ class Recommendation
         $cache = self::get_recommendation_cache('artist', $artist_id, true);
         if (!$cache['id']) {
             $similars = array();
-            $query = 'artist=' . rawurlencode($artist->name);
+            $query    = 'artist=' . rawurlencode($artist->name);
 
             $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
             foreach ($xml->similarartists->children() as $child) {
-                $name = $child->name;
-                $mbid = (string) $child->mbid;
+                $name     = $child->name;
+                $mbid     = (string) $child->mbid;
                 $local_id = null;
 
                 // First we check by MBID
@@ -246,7 +246,7 @@ class Recommendation
                 if (is_null($local_id)) {
                     $searchname = Catalog::trim_prefix($name);
                     $searchname = Dba::escape($searchname['string']);
-                    $sql = "SELECT `artist`.`id` FROM `artist` WHERE `name` = ?";
+                    $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `name` = ?";
                     if (AmpConfig::get('catalog_disable')) {
                         $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
                     }
@@ -315,15 +315,15 @@ class Recommendation
 
             // Data newer than 6 months, use it
             if (($artist->last_update + 15768000) > time()) {
-                $results = array();
-                $results['id'] = $artist_id;
-                $results['summary'] = $artist->summary;
+                $results                = array();
+                $results['id']          = $artist_id;
+                $results['summary']     = $artist->summary;
                 $results['placeformed'] = $artist->placeformed;
-                $results['yearformed'] = $artist->yearformed;
-                $results['largephoto'] = Art::url($artist->id, 'artist');
-                $results['smallphoto'] = $results['largephoto'];    // TODO: Change to thumb size?
+                $results['yearformed']  = $artist->yearformed;
+                $results['largephoto']  = Art::url($artist->id, 'artist');
+                $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
                 $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
-                $results['megaphoto'] = $results['largephoto'];
+                $results['megaphoto']   = $results['largephoto'];
                 return $results;
             }
         }
@@ -332,14 +332,14 @@ class Recommendation
 
         $xml = self::get_lastfm_results('artist.getinfo', $query);
 
-        $results = array();
-        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
+        $results                = array();
+        $results['summary']     = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
-        $results['yearformed'] = (string) $xml->artist->bio->yearformed;
-        $results['smallphoto'] = $xml->artist->image[0];
+        $results['yearformed']  = (string) $xml->artist->bio->yearformed;
+        $results['smallphoto']  = $xml->artist->image[0];
         $results['mediumphoto'] = $xml->artist->image[1];
-        $results['largephoto'] = $xml->artist->image[2];
-        $results['megaphoto'] = $xml->artist->image[4];
+        $results['largephoto']  = $xml->artist->image[2];
+        $results['megaphoto']   = $xml->artist->image[4];
 
         if ($artist) {
             $results['id'] = $artist->id;
@@ -347,13 +347,13 @@ class Recommendation
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
 
                 $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
-                $rurl = pathinfo($results['megaphoto']);
-                $mime = 'image/' . $rurl['extension'];
-                $art = new Art($artist->id, 'artist');
+                $rurl  = pathinfo($results['megaphoto']);
+                $mime  = 'image/' . $rurl['extension'];
+                $art   = new Art($artist->id, 'artist');
                 $art->reset();
                 $art->insert($image, $mime);
                 $results['largephoto'] = Art::url($artist->id, 'artist');
-                $results['megaphoto'] = $results['largephoto'];
+                $results['megaphoto']  = $results['largephoto'];
             }
         }
 

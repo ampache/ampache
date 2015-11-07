@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
         $browse->set_simple_browse(false);
         $browse->save_objects(Tag::get_tags($browse_type, 0, 'name'));   // Should add a pager?
         $object_ids = $browse->get_saved();
-        $keys = array_keys($object_ids);
+        $keys       = array_keys($object_ids);
         Tag::build_cache($keys);
         UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
         $browse2 = new Browse();

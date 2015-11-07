@@ -24,7 +24,7 @@ define('AJAX_INCLUDE','1');
 
 require_once '../lib/init.php';
 
-debug_event('refresh_reordered.server.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
+debug_event('refresh_reordered.server.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
 
 /* Switch on the action passed in */
 switch ($_REQUEST['action']) {
@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Playlist($_REQUEST['id']);
         $playlist->format();
         $object_ids = $playlist->get_items();
-        $browse = new Browse();
+        $browse     = new Browse();
         $browse->set_type('playlist_song');
         $browse->add_supplemental_object('playlist', $playlist->id);
         $browse->set_static_content(true);

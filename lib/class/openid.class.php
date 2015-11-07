@@ -21,8 +21,8 @@
  */
 
 $openid_path = AmpConfig::get('prefix') . "/modules";
-$path = ini_get('include_path');
-$path = $openid_path . PATH_SEPARATOR . $path;
+$path        = ini_get('include_path');
+$path        = $openid_path . PATH_SEPARATOR . $path;
 ini_set('include_path', $path);
 
 require_once "Auth/OpenID/Consumer.php";
@@ -34,7 +34,7 @@ class Openid
 {
     public static function get_store()
     {
-        $store = null;
+        $store      = null;
         $store_path = AmpConfig::get('tmp_dir_path');
         if (empty($store_path)) {
             if (function_exists('sys_get_temp_dir')) {
@@ -68,7 +68,7 @@ class Openid
     public static function get_consumer()
     {
         $consumer = null;
-        $store = self::get_store();
+        $store    = self::get_store();
         if ($store) {
             $consumer = new Auth_OpenID_Consumer($store);
         }
@@ -83,7 +83,7 @@ class Openid
     public static function get_policies()
     {
         $openid_required_pape = AmpConfig::get('openid_required_pape');
-        $policies = array();
+        $policies             = array();
         if (!empty($openid_required_pape)) {
             $papes = explode(',', $openid_required_pape);
             foreach ($papes as $pape) {

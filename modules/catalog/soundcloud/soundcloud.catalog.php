@@ -78,7 +78,7 @@ class Catalog_soundcloud extends Catalog
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'catalog_soundcloud'";
+        $sql        = "SHOW TABLES LIKE 'catalog_soundcloud'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -90,7 +90,7 @@ class Catalog_soundcloud extends Catalog
      */
     public function install()
     {
-        $sql = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+        $sql = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`userid` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`secret` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`authtoken` VARCHAR( 255 ) COLLATE utf8_unicode_ci NULL , " .
@@ -138,7 +138,7 @@ class Catalog_soundcloud extends Catalog
     {
         if ($catalog_id) {
             $this->id = intval($catalog_id);
-            $info = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key=>$value) {
                 $this->$key = $value;
@@ -173,7 +173,7 @@ class Catalog_soundcloud extends Catalog
         }
 
         // Make sure this email isn't already in use by an existing catalog
-        $sql = 'SELECT `id` FROM `catalog_soundcloud` WHERE `userid` = ?';
+        $sql        = 'SELECT `id` FROM `catalog_soundcloud` WHERE `userid` = ?';
         $db_results = Dba::read($sql, array($userid));
 
         if (Dba::num_rows($db_results)) {
@@ -189,13 +189,13 @@ class Catalog_soundcloud extends Catalog
 
     protected function showAuthToken()
     {
-        $api = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
+        $api     = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
         $authurl = $api->getAuthorizeUrl(array('scope' => 'non-expiring'));
         echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
         echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
         if ($_REQUEST['action']) {
             echo "<input type='hidden' name='action' value='" . scrub_in($_REQUEST['action']) . "' />";
-            echo "<input type='hidden' name='catalogs[]' value='". $this->id ."' />";
+            echo "<input type='hidden' name='catalogs[]' value='" . $this->id . "' />";
         }
         echo "<input type='hidden' name='perform_ready' value='true' />";
         echo "<input type='text' name='authcode' />";
@@ -206,8 +206,8 @@ class Catalog_soundcloud extends Catalog
 
     protected function completeAuthToken()
     {
-        $api = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
-        $token = $api->accessToken($this->authcode);
+        $api             = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
+        $token           = $api->accessToken($this->authcode);
         $this->authtoken = $token['access_token'];
 
         debug_event('soundcloud_catalog', 'SoundCloud authentication token generated for userid ' . $this->userid . '.', 1);
@@ -274,17 +274,17 @@ class Catalog_soundcloud extends Catalog
                 if ($songs) {
                     foreach ($songs as $song) {
                         if ($song->streamable == true && $song->kind == 'track') {
-                            $data = Array();
-                            $data['artist'] = $song->user->username;
-                            $data['album'] = $data['artist'];
-                            $data['title'] = $song->title;
-                            $data['year'] = $song->release_year;
-                            $data['mode'] = 'vbr';
-                            $data['genre'] = explode(' ', $song->genre);
+                            $data            = Array();
+                            $data['artist']  = $song->user->username;
+                            $data['album']   = $data['artist'];
+                            $data['title']   = $song->title;
+                            $data['year']    = $song->release_year;
+                            $data['mode']    = 'vbr';
+                            $data['genre']   = explode(' ', $song->genre);
                             $data['comment'] = $song->description;
-                            $data['file'] = $song->stream_url . '.mp3'; // Always stream as mp3, if evolve => $song->original_format;
-                            $data['size'] = $song->original_content_size;
-                            $data['time'] = intval($song->duration / 1000);
+                            $data['file']    = $song->stream_url . '.mp3'; // Always stream as mp3, if evolve => $song->original_format;
+                            $data['size']    = $song->original_content_size;
+                            $data['time']    = intval($song->duration / 1000);
                             if ($this->check_remote_song($data)) {
                                 debug_event('soundcloud_catalog', 'Skipping existing song ' . $data['file'], 5);
                             } else {
@@ -334,14 +334,14 @@ class Catalog_soundcloud extends Catalog
         try {
             $api = $this->createClient();
             if ($api != null) {
-                $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
+                $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
                 $db_results = Dba::read($sql, array($this->id));
                 while ($row = Dba::fetch_assoc($db_results)) {
                     debug_event('soundcloud-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
                     $remove = false;
                     try {
                         $track = $this->url_to_track($row['file']);
-                        $song = json_decode($api->get('tracks/' . $track));
+                        $song  = json_decode($api->get('tracks/' . $track));
                         if ($song->user_favorite != true) {
                             $remove = true;
                         }
@@ -399,7 +399,7 @@ class Catalog_soundcloud extends Catalog
     {
         $url = $song['file'];
 
-        $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
+        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, array($url));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -417,7 +417,7 @@ class Catalog_soundcloud extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = $this->userid;
+        $this->f_info      = $this->userid;
         $this->f_full_info = $this->userid;
     }
 

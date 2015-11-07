@@ -123,7 +123,7 @@ class UPnPPlayer
 
     public function GetState()
     {
-        $response = $this->Device()->instanceOnly('GetTransportInfo');
+        $response    = $this->Device()->instanceOnly('GetTransportInfo');
         $responseXML = simplexml_load_string($response);
         list($state) = $responseXML->xpath('//CurrentTransportState');
 
@@ -182,13 +182,13 @@ class UPnPPlayer
         }
 
         $songUrl = $song['link'];
-        $songId = preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
+        $songId  = preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
 
         $song = new song($songId);
         $song->format();
         $songItem = Upnp_Api::_itemSong($song, '');
-        $domDIDL = Upnp_Api::createDIDL($songItem);
-        $xmlDIDL = $domDIDL->saveXML();
+        $domDIDL  = Upnp_Api::createDIDL($songItem);
+        $xmlDIDL  = $domDIDL->saveXML();
 
         return array(
             'InstanceID' => 0,
@@ -218,9 +218,9 @@ class UPnPPlayer
         $this->SetIntState(1);
 
         $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current");
-        $response = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
+        $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
-        $args = array( 'InstanceID' => 0, 'Speed' => 1);
+        $args     = array( 'InstanceID' => 0, 'Speed' => 1);
         $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
 
         //!! UPNP subscription work not for all renderers, and works strange
@@ -265,7 +265,7 @@ class UPnPPlayer
         if ($state == 'PLAYING') {
             $response = $this->Device()->instanceOnly('Pause');
         } else {
-            $args = array( 'InstanceID' => 0, 'Speed' => 1);
+            $args     = array( 'InstanceID' => 0, 'Speed' => 1);
             $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
         }
 
@@ -329,8 +329,8 @@ class UPnPPlayer
     public function SetVolume($value)
     {
         $desiredVolume = Max(0, Min(100, $value));
-        $instanceId = 0;
-        $channel = 'Master';
+        $instanceId    = 0;
+        $channel       = 'Master';
 
         $response = $this->Device()->sendRequestToDevice( 'SetVolume', array(
             'InstanceID' => $instanceId,
@@ -347,14 +347,14 @@ class UPnPPlayer
     public function GetVolume()
     {
         $instanceId = 0;
-        $channel = 'Master';
+        $channel    = 'Master';
 
         $response = $this->Device()->sendRequestToDevice( 'GetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel
         ));
 
-        $responseXML = simplexml_load_string($response);
+        $responseXML  = simplexml_load_string($response);
         list($volume) = ($responseXML->xpath('//CurrentVolume'));
         debug_event('upnpPlayer', 'GetVolume:' . $volume, 5);
 
@@ -366,7 +366,7 @@ class UPnPPlayer
     {
         $this->_intState = $state;
 
-        $sid = 'upnp_ply_' . $this->_description_url;
+        $sid  = 'upnp_ply_' . $this->_description_url;
         $data = serialize($this->_intState);
         if (! Session::exists('api', $sid)) {
             Session::create(array('type' => 'api', 'sid' => $sid, 'value' => $data ));
@@ -378,7 +378,7 @@ class UPnPPlayer
 
     private function ReadIndState()
     {
-        $sid = 'upnp_ply_' . $this->_description_url;
+        $sid  = 'upnp_ply_' . $this->_description_url;
         $data = Session::read($sid);
 
         $this->_intState = unserialize($data);

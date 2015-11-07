@@ -46,7 +46,7 @@ class Ampachelibrefm
      */
     public function __construct()
     {
-        $this->url = $this->scheme.'://'.$this->host;
+        $this->url = $this->scheme . '://' . $this->host;
         return true;
     } // constructor
 
@@ -181,7 +181,7 @@ class Ampachelibrefm
      */
     public function get_session($user_id, $token)
     {
-        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host,'', $this->secret);
+        $scrobbler   = new scrobbler($this->api_key, $this->scheme, $this->api_host,'', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
         if (!$session_key) {
             debug_event($this->name,'getSession Failed: ' . $scrobbler->error_msg,'3');
@@ -204,9 +204,9 @@ class Ampachelibrefm
     public function load($user)
     {
         $this->api_key=AmpConfig::get('lastfm_api_key');
-        $this->secret='';
+        $this->secret ='';
         $user->set_preferences();
-        $data = $user->prefs;
+        $data          = $user->prefs;
         $this->user_id = $user->id;
         // check if user have a session key
         if (strlen(trim($data['librefm_challenge']))) {

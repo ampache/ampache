@@ -64,7 +64,7 @@ class Song_Preview extends database_object implements media, playable_item
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
-            $data = pathinfo($this->file);
+            $data       = pathinfo($this->file);
             $this->type = strtolower($data['extension']) ?: 'mp3';
             $this->mime = Song::type_to_mime($this->type);
         } else {
@@ -162,7 +162,7 @@ class Song_Preview extends database_object implements media, playable_item
         $results = Dba::fetch_assoc($db_results);
         if (!empty($results['id'])) {
             if (empty($results['artist_mbid'])) {
-                $sql = 'SELECT `mbid` FROM `artist` WHERE `id` = ?';
+                $sql        = 'SELECT `mbid` FROM `artist` WHERE `id` = ?';
                 $db_results = Dba::read($sql, array($results['artist']));
                 if ($artist_res = Dba::fetch_assoc($db_results)) {
                     $results['artist_mbid'] = $artist_res['mbid'];
@@ -205,7 +205,7 @@ class Song_Preview extends database_object implements media, playable_item
             $this->f_artist_full = $this->get_artist_name();
             $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
         } else {
-            $wartist = Wanted::get_missing_artist($this->artist_mbid);
+            $wartist             = Wanted::get_missing_artist($this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
             $this->f_artist_full = $wartist['name'];
         }
@@ -213,10 +213,10 @@ class Song_Preview extends database_object implements media, playable_item
 
         // Format the title
         $this->f_title_full = $this->title;
-        $this->f_title = $this->title;
+        $this->f_title      = $this->title;
 
-        $this->link = "#";
-        $this->f_link = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
+        $this->link         = "#";
+        $this->f_link       = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $this->album_mbid . "&amp;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
 
         // Format the track (there isn't really anything to do here)
@@ -277,7 +277,7 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
-        $song = new Song_Preview($oid);
+        $song        = new Song_Preview($oid);
         $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
         $type        = $song->type;
 

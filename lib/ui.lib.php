@@ -112,7 +112,7 @@ function get_location()
     }
 
     /* Sanatize the $_SERVER['PHP_SELF'] variable */
-    $source = str_replace(AmpConfig::get('raw_web_path'), "", $source);
+    $source           = str_replace(AmpConfig::get('raw_web_path'), "", $source);
     $location['page'] = preg_replace("/^\/(.+\.php)\/?.*/","$1",$source);
 
     switch ($location['page']) {
@@ -138,43 +138,43 @@ function get_location()
             $location['title']     = T_('Preferences');
             break;
         case 'admin/index.php':
-            $location['title']     = T_('Admin-Catalog');
+            $location['title']      = T_('Admin-Catalog');
             $location['section']    = 'admin';
             break;
         case 'admin/catalog.php':
-            $location['title']     = T_('Admin-Catalog');
+            $location['title']      = T_('Admin-Catalog');
             $location['section']    = 'admin';
             break;
         case 'admin/users.php':
-            $location['title']    = T_('Admin-User Management');
+            $location['title']      = T_('Admin-User Management');
             $location['section']    = 'admin';
             break;
         case 'admin/mail.php':
-            $location['title']    = T_('Admin-Mail Users');
+            $location['title']      = T_('Admin-Mail Users');
             $location['section']    = 'admin';
             break;
         case 'admin/access.php':
-            $location['title']    = T_('Admin-Manage Access Lists');
+            $location['title']      = T_('Admin-Manage Access Lists');
             $location['section']    = 'admin';
             break;
         case 'admin/preferences.php':
-            $location['title']    = T_('Admin-Site Preferences');
+            $location['title']      = T_('Admin-Site Preferences');
             $location['section']    = 'admin';
             break;
         case 'admin/modules.php':
-            $location['title']    = T_('Admin-Manage Modules');
+            $location['title']      = T_('Admin-Manage Modules');
             $location['section']    = 'admin';
             break;
         case 'browse.php':
-            $location['title']    = T_('Browse Music');
+            $location['title']      = T_('Browse Music');
             $location['section']    = 'browse';
             break;
         case 'albums.php':
-            $location['title']    = T_('Albums');
+            $location['title']      = T_('Albums');
             $location['section']    = 'browse';
             break;
         case 'artists.php':
-            $location['title']    = T_('Artists');
+            $location['title']      = T_('Artists');
             $location['section']    = 'browse';
             break;
         case 'stats.php':
@@ -213,7 +213,7 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
         $key = "album_select_c" . ++$album_id_cnt;
     }
 
-    $sql = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
+    $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
     $params = array();
     if ($user) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
@@ -221,7 +221,7 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
     }
     $sql .= "ORDER BY `album`.`name`";
     $db_results = Dba::read($sql, $params);
-    $count = Dba::num_rows($db_results);
+    $count      = Dba::num_rows($db_results);
 
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
@@ -231,7 +231,7 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
     }
 
     while ($r = Dba::fetch_assoc($db_results)) {
-        $selected = '';
+        $selected   = '';
         $album_name = trim($r['prefix'] . " " . $r['name']);
         if ($r['disk'] >= 1) {
             $album_name .= ' [Disk ' . $r['disk'] . ']';
@@ -270,7 +270,7 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
         $key = $name . "_select_c" . ++$artist_id_cnt;
     }
 
-    $sql = "SELECT `id`, `name`, `prefix` FROM `artist` ";
+    $sql    = "SELECT `id`, `name`, `prefix` FROM `artist` ";
     $params = array();
     if ($user) {
         $sql .= "WHERE `user` = ? ";
@@ -278,7 +278,7 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
     }
     $sql .= "ORDER BY `name`";
     $db_results = Dba::read($sql, $params);
-    $count = Dba::num_rows($db_results);
+    $count      = Dba::num_rows($db_results);
 
     echo "<select name=\"$name\" id=\"$key\">\n";
 
@@ -287,7 +287,7 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
     }
 
     while ($r = Dba::fetch_assoc($db_results)) {
-        $selected = '';
+        $selected    = '';
         $artist_name = trim($r['prefix'] . " " . $r['name']);
         if ($r['id'] == $artist_id) {
             $selected = "selected=\"selected\"";
@@ -329,7 +329,7 @@ function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $sea
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    $sql = "SELECT `id`, `name` FROM `tvshow` ORDER BY `name`";
+    $sql        = "SELECT `id`, `name` FROM `tvshow` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
     while ($r = Dba::fetch_assoc($db_results)) {
@@ -370,7 +370,7 @@ function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    $sql = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
+    $sql        = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
     $db_results = Dba::read($sql, array($season->tvshow));
 
     while ($r = Dba::fetch_assoc($db_results)) {
@@ -399,7 +399,7 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='', $allow_non
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
-    $sql = "SELECT `id`, `name` FROM `catalog` ORDER BY `name`";
+    $sql        = "SELECT `id`, `name` FROM `catalog` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
     if ($allow_none) {
@@ -437,7 +437,7 @@ function show_license_select($name='license',$license_id=0,$song_id=0)
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
 
-    $sql = "SELECT `id`, `name` FROM `license` ORDER BY `name`";
+    $sql        = "SELECT `id`, `name` FROM `license` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
     while ($r = Dba::fetch_assoc($db_results)) {
@@ -462,7 +462,7 @@ function show_user_select($name,$selected='',$style='')
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('All') . "</option>\n";
 
-    $sql = "SELECT `id`,`username`,`fullname` FROM `user` ORDER BY `fullname`";
+    $sql        = "SELECT `id`,`username`,`fullname` FROM `user` ORDER BY `fullname`";
     $db_results = Dba::read($sql);
 
     while ($row = Dba::fetch_assoc($db_results)) {
@@ -488,16 +488,16 @@ function show_playlist_select($name,$selected='',$style='')
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('None') . "</option>\n";
 
-    $sql = "SELECT `id`,`name` FROM `playlist` ORDER BY `name`";
-    $db_results = Dba::read($sql);
-    $nb_items = Dba::num_rows($db_results);
-    $index = 1;
+    $sql              = "SELECT `id`,`name` FROM `playlist` ORDER BY `name`";
+    $db_results       = Dba::read($sql);
+    $nb_items         = Dba::num_rows($db_results);
+    $index            = 1;
     $already_selected = false;
 
     while ($row = Dba::fetch_assoc($db_results)) {
         $select_txt = '';
         if (!$already_selected && ($row['id'] == $selected || $index == $nb_items)) {
-            $select_txt = 'selected="selected"';
+            $select_txt       = 'selected="selected"';
             $already_selected = true;
         }
 
@@ -647,11 +647,11 @@ function xml_get_header($type)
     case 'xspf':
         $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
             "<!-- XML Generated by Ampache v." .  AmpConfig::get('version') . " -->";
-            "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n ".
+            "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n " .
             "<title>Ampache XSPF Playlist</title>\n" .
             "<creator>" . AmpConfig::get('site_title') . "</creator>\n" .
             "<annotation>" . AmpConfig::get('site_title') . "</annotation>\n" .
-            "<info>". AmpConfig::get('web_path') ."</info>\n" .
+            "<info>" . AmpConfig::get('web_path') . "</info>\n" .
             "<trackList>\n\n\n\n";
         return $header;
     default:
@@ -727,7 +727,7 @@ function show_now_playing()
     Stream::gc_now_playing();
 
     $web_path = AmpConfig::get('web_path');
-    $results = Stream::get_now_playing();
+    $results  = Stream::get_now_playing();
     require_once AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php');
 } // show_now_playing
 

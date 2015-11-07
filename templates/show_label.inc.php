@@ -86,11 +86,11 @@ if ($label->website) {
         <?php if ($label->can_edit()) {
     ?>
         <li>
-            <a id="<?php echo 'edit_label_'.$label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_'.$label->id ?>', '<?php echo T_('Label edit') ?>', '')">
+            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit'));
     ?>
             </a>
-            <a id="<?php echo 'edit_label_'.$label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_'.$label->id ?>', '<?php echo T_('Label edit') ?>', '')">
+            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label edit') ?>', '')">
                 <?php echo T_('Edit Label');
     ?>
             </a>
@@ -100,7 +100,7 @@ if ($label->website) {
         <?php if (Catalog::can_remove($label)) {
     ?>
         <li>
-            <a id="<?php echo 'delete_label_'.$label->id ?>" href="<?php echo AmpConfig::get('web_path');
+            <a id="<?php echo 'delete_label_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path');
     ?>/labels.php?action=delete&label_id=<?php echo $label->id;
     ?>">
                 <?php echo UI::get_icon('delete', T_('Delete'));
@@ -128,7 +128,7 @@ if ($label->website) {
 ?>
         </div>
 <?php
-    echo Ajax::observe('songs_link','click', Ajax::action('?page=index&action=songs&label='.$label->id, 'songs'));
+    echo Ajax::observe('songs_link','click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs'));
 ?>
         <div id="songs" class="tab_content">
         <?php UI::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>

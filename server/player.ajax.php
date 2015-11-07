@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'unbroadcast':
         $broadcast_id = $_GET['broadcast_id'];
-        $broadcast = new Broadcast($broadcast_id);
+        $broadcast    = new Broadcast($broadcast_id);
         if ($broadcast->id) {
             $broadcast->update_state(false);
             $results['broadcast'] = Broadcast::get_broadcast_link() . '' .

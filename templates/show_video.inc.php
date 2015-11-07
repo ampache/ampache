@@ -159,7 +159,7 @@ $subtitles = $video->get_subtitles();
             <?php 
 }
     ?>
-            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_'.$video->id ?>', '<?php echo T_('Edit') ?>', '')">
+            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit'));
     ?>
             </a>
@@ -167,7 +167,7 @@ $subtitles = $video->get_subtitles();
 } ?>
         <?php if (Catalog::can_remove($video)) {
     ?>
-            <a id="<?php echo 'delete_video_'.$video->id ?>" href="<?php echo AmpConfig::get('web_path');
+            <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo AmpConfig::get('web_path');
     ?>/video.php?action=delete&video_id=<?php echo $video->id;
     ?>">
                 <?php echo UI::get_icon('delete', T_('Delete'));
@@ -182,14 +182,14 @@ $subtitles = $video->get_subtitles();
 if (!strtolower(get_class($video)) != 'video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_' . strtolower(get_class($video)) . '.inc.php');
 }
-  $videoprops[gettext_noop('Release Date')]   = scrub_out($video->f_release_date);
-  $videoprops[gettext_noop('Codec')]   = scrub_out($video->f_codec);
-  $videoprops[gettext_noop('Resolution')]   = scrub_out($video->f_resolution);
-  $videoprops[gettext_noop('Display')]   = scrub_out($video->f_display);
+  $videoprops[gettext_noop('Release Date')]    = scrub_out($video->f_release_date);
+  $videoprops[gettext_noop('Codec')]           = scrub_out($video->f_codec);
+  $videoprops[gettext_noop('Resolution')]      = scrub_out($video->f_resolution);
+  $videoprops[gettext_noop('Display')]         = scrub_out($video->f_display);
   $videoprops[gettext_noop('Audio Bitrate')]   = scrub_out($video->f_bitrate);
   $videoprops[gettext_noop('Video Bitrate')]   = scrub_out($video->f_video_bitrate);
-  $videoprops[gettext_noop('Frame Rate')]   = scrub_out($video->f_frame_rate);
-  $videoprops[gettext_noop('Channels')]   = scrub_out($video->channels);
+  $videoprops[gettext_noop('Frame Rate')]      = scrub_out($video->f_frame_rate);
+  $videoprops[gettext_noop('Channels')]        = scrub_out($video->channels);
   if (Access::check('interface','75')) {
       $videoprops[gettext_noop('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
   }
@@ -204,7 +204,7 @@ if (!strtolower(get_class($video)) != 'video') {
     foreach ($videoprops as $key => $value) {
         if (trim($value)) {
             $rowparity = UI::flip_class();
-            echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
+            echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
         }
     }
 ?>

@@ -126,7 +126,7 @@ abstract class playlist_object extends database_object implements library_item
     public function get_childrens()
     {
         $childrens = array();
-        $items = $this->get_items();
+        $items     = $this->get_items();
         foreach ($items as $item) {
             if (!in_array($item['object_type'], $childrens)) {
                 $childrens[$item['object_type']] = array();

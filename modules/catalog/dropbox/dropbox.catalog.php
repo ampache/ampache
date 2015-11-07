@@ -84,7 +84,7 @@ class Catalog_dropbox extends Catalog
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'catalog_dropbox'";
+        $sql        = "SHOW TABLES LIKE 'catalog_dropbox'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -96,7 +96,7 @@ class Catalog_dropbox extends Catalog
      */
     public function install()
     {
-        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`apikey` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`secret` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
@@ -111,9 +111,9 @@ class Catalog_dropbox extends Catalog
 
     public function catalog_fields()
     {
-        $fields['apikey']      = array('description' => T_('API Key'), 'type'=>'textbox');
-        $fields['secret']      = array('description' => T_('Secret'), 'type'=>'password');
-        $fields['path']      = array('description' => T_('Path'), 'type'=>'textbox', 'value' => '/');
+        $fields['apikey']        = array('description' => T_('API Key'), 'type'=>'textbox');
+        $fields['secret']        = array('description' => T_('Secret'), 'type'=>'password');
+        $fields['path']          = array('description' => T_('Path'), 'type'=>'textbox', 'value' => '/');
         $fields['getchunk']      = array('description' => T_('Get chunked files on analyze'), 'type'=>'checkbox', 'value' => true);
 
         return $fields;
@@ -150,7 +150,7 @@ class Catalog_dropbox extends Catalog
     {
         if ($catalog_id) {
             $this->id = intval($catalog_id);
-            $info = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key=>$value) {
                 $this->$key = $value;
@@ -167,9 +167,9 @@ class Catalog_dropbox extends Catalog
      */
     public static function create_type($catalog_id, $data)
     {
-        $apikey = $data['apikey'];
-        $secret = $data['secret'];
-        $path = $data['path'];
+        $apikey   = $data['apikey'];
+        $secret   = $data['secret'];
+        $path     = $data['path'];
         $getchunk = $data['getchunk'];
 
         if (!strlen($apikey) OR !strlen($secret)) {
@@ -184,7 +184,7 @@ class Catalog_dropbox extends Catalog
         }
 
         // Make sure this app isn't already in use by an existing catalog
-        $sql = 'SELECT `id` FROM `catalog_dropbox` WHERE `apikey` = ?';
+        $sql        = 'SELECT `id` FROM `catalog_dropbox` WHERE `apikey` = ?';
         $db_results = Dba::read($sql, array($apikey));
 
         if (Dba::num_rows($db_results)) {
@@ -214,7 +214,7 @@ class Catalog_dropbox extends Catalog
         echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
         if ($_REQUEST['action']) {
             echo "<input type='hidden' name='action' value='" . scrub_in($_REQUEST['action']) . "' />";
-            echo "<input type='hidden' name='catalogs[]' value='". $this->id ."' />";
+            echo "<input type='hidden' name='catalogs[]' value='" . $this->id . "' />";
         }
         echo "<input type='hidden' name='perform_ready' value='true' />";
         echo "<input type='text' name='authcode' />&nbsp;";
@@ -225,7 +225,7 @@ class Catalog_dropbox extends Catalog
 
     protected function completeAuthToken()
     {
-        $webAuth = $this->getWebAuth();
+        $webAuth                    = $this->getWebAuth();
         list($accessToken, $userId) = $webAuth->finish($this->authcode);
         debug_event('dropbox_catalog', 'Dropbox authentication token generated for user ' . $userId . '.', 1);
         $this->authtoken = $accessToken;
@@ -334,7 +334,7 @@ class Catalog_dropbox extends Catalog
 
     public function add_file($client, $data)
     {
-        $file = $data['path'];
+        $file     = $data['path'];
         $filesize = $data['bytes'];
         if ($filesize > 0) {
             $is_audio_file = Catalog::is_audio_file($file);
@@ -363,26 +363,26 @@ class Catalog_dropbox extends Catalog
         if ($this->check_remote_song($this->get_virtual_path($file))) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $file, 5);
         } else {
-            $origin = $file;
+            $origin  = $file;
             $islocal = false;
             $fpchunk = 0;
             // Get temporary chunked file from Dropbox to (hope) read metadata
             if ($this->getchunk) {
-                $fpchunk = tmpfile();
+                $fpchunk  = tmpfile();
                 $metadata = $client->getFile($file, $fpchunk, null, 40960);
                 if ($metadata == null) {
                     debug_event('dropbox_catalog', 'Cannot get Dropbox file: ' . $file, 5);
                 }
                 $streammeta = stream_get_meta_data($fpchunk);
-                $file = $streammeta['uri'];
-                $islocal = true;
+                $file       = $streammeta['uri'];
+                $islocal    = true;
             }
 
             $vainfo = new vainfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
             $vainfo->forceSize($filesize);
             $vainfo->get_info();
 
-            $key = vainfo::get_tag_type($vainfo->tags);
+            $key     = vainfo::get_tag_type($vainfo->tags);
             $results = vainfo::clean_tag_info($vainfo->tags, $key, $file);
 
             // Remove temp file
@@ -391,7 +391,7 @@ class Catalog_dropbox extends Catalog
             }
 
             // Set the remote path
-            $results['file'] = $origin;
+            $results['file']    = $origin;
             $results['catalog'] = $this->id;
 
             if (!empty($results['artist']) && !empty($results['album'])) {
@@ -423,11 +423,11 @@ class Catalog_dropbox extends Catalog
 
         $client = $this->createClient();
         if ($client != null) {
-            $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
+            $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 debug_event('dropbox-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
-                $file = $this->get_rel_path($row['file']);
+                $file     = $this->get_rel_path($row['file']);
                 $metadata = $client->getMetadata($file);
                 if ($metadata) {
                     debug_event('dropbox-clean', 'keeping song', 5, 'ampache-catalog');
@@ -452,7 +452,7 @@ class Catalog_dropbox extends Catalog
      */
     public function check_remote_song($file)
     {
-        $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
+        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, array($file));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -484,7 +484,7 @@ class Catalog_dropbox extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = $this->apikey;
+        $this->f_info      = $this->apikey;
         $this->f_full_info = $this->apikey;
     }
 
@@ -495,12 +495,12 @@ class Catalog_dropbox extends Catalog
             set_time_limit(0);
 
             // Generate browser class for sending headers
-            $browser = new Horde_Browser();
+            $browser    = new Horde_Browser();
             $media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
             $browser->downloadHeaders($media_name, $media->mime, false, $media->size);
             $file = $this->get_rel_path($media->file);
 
-            $output = fopen('php://output', 'w');
+            $output   = fopen('php://output', 'w');
             $metadata = $client->getFile($file, $output);
             if ($metadata == null) {
                 debug_event('play', 'File not found on Dropbox: ' . $file, 5);

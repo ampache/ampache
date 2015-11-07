@@ -79,7 +79,7 @@ class Mailer
             $fromname = 'Ampache';
         }
 
-        $this->sender = $user . '@' . $domain;
+        $this->sender      = $user . '@' . $domain;
         $this->sender_name = $fromname;
     } // set_default_sender
 
@@ -99,7 +99,7 @@ class Mailer
             break ;
             case 'inactive':
                 $inactive = time() - (30 * 86400);
-                $sql = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
+                $sql      = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
             break;
             case 'all':
             default:
@@ -138,12 +138,12 @@ class Mailer
             $mail = $phpmailer;
         }
 
-        $mail->CharSet    = AmpConfig::get('site_charset');
+        $mail->CharSet     = AmpConfig::get('site_charset');
         $mail->Encoding    = 'base64';
-        $mail->From    = $this->sender;
-        $mail->Sender    = $this->sender;
+        $mail->From        = $this->sender;
+        $mail->Sender      = $this->sender;
         $mail->FromName    = $this->sender_name;
-        $mail->Subject    = $this->subject;
+        $mail->Subject     = $this->subject;
 
         if (function_exists('mb_eregi_replace')) {
             $this->message = mb_eregi_replace("\r\n", "\n", $this->message);

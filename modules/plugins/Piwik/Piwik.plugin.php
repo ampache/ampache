@@ -96,7 +96,7 @@ class AmpachePiwik
         echo "<script type='text/javascript'>\n";
         echo "var _paq = _paq || [];\n";
         //echo "_paq.push(['trackPageView']);\n";   // Doesn't work when using Ajax page loading
-        echo "_paq.push(['trackLink', '" . $currentUrl ."', 'link']);\n";
+        echo "_paq.push(['trackLink', '" . $currentUrl . "', 'link']);\n";
         echo "_paq.push(['enableLinkTracking']);\n";
         echo "(function() {\n";
         echo "var u='" . scrub_out($this->piwik_url) . "';\n";

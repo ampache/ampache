@@ -75,7 +75,7 @@ class Tag extends database_object implements library_item
 
         $idlist = '(' . implode(',', $ids) . ')';
 
-        $sql = "SELECT * FROM `tag` WHERE `id` IN $idlist";
+        $sql        = "SELECT * FROM `tag` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -107,18 +107,18 @@ class Tag extends database_object implements library_item
 
         $db_results = Dba::read($sql);
 
-        $tags = array();
+        $tags    = array();
         $tag_map = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[$row['object_id']][$row['tag_id']] = array('user'=>$row['user'], 'id'=>$row['tag_id'], 'name'=>$row['name']);
-            $tag_map[$row['object_id']] = array('id'=>$row['id'],'tag_id'=>$row['tag_id'],'user'=>$row['user'],'object_type'=>$type,'object_id'=>$row['object_id']);
+            $tag_map[$row['object_id']]              = array('id'=>$row['id'],'tag_id'=>$row['tag_id'],'user'=>$row['user'],'object_type'=>$type,'object_id'=>$row['object_id']);
         }
 
         // Run through our original ids as we also want to cache NULL
         // results
         foreach ($ids as $id) {
             if (!isset($tags[$id])) {
-                $tags[$id] = null;
+                $tags[$id]    = null;
                 $tag_map[$id] = null;
             }
             parent::add_to_cache('tag_top_' . $type, $id, $tags[$id]);
@@ -239,7 +239,7 @@ class Tag extends database_object implements library_item
                    "SELECT ?,`user`,`object_type`,`object_id` " .
                    "FROM `tag_map` AS `tm`" .
                    "WHERE `tm`.`tag_id` = ? AND NOT EXISTS ( " .
-                       "SELECT 1 FROM `tag_map` ".
+                       "SELECT 1 FROM `tag_map` " .
                        "WHERE `tag_map`.`tag_id` = ? " .
                          "AND `tag_map`.`object_id` = `tm`.`object_id` " .
                          "AND `tag_map`.`object_type` = `tm`.`object_type` " .
@@ -261,7 +261,7 @@ class Tag extends database_object implements library_item
     {
         $sql = "SELECT `tag`.`id`, `tag`.`name`" .
             "FROM `tag_merge` " .
-            "INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` ".
+            "INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` " .
             "WHERE `tag_merge`.`tag_id` = ? " .
             "ORDER BY `tag`.`name` ";
 
@@ -281,7 +281,7 @@ class Tag extends database_object implements library_item
      */
     public static function add_tag_map($type,$object_id,$tag_id,$user='')
     {
-        $uid = ($user == '') ? intval($GLOBALS['user']->id) : intval($user);
+        $uid    = ($user == '') ? intval($GLOBALS['user']->id) : intval($user);
         $tag_id = intval($tag_id);
         if (!Core::is_library_item($type)) {
             debug_event('tag.class', $type . " is not a library item.", 3);
@@ -383,7 +383,7 @@ class Tag extends database_object implements library_item
             return parent::get_from_cache('tag_name',$value);
         }
 
-        $sql = "SELECT * FROM `tag` WHERE `name` = ?";
+        $sql        = "SELECT * FROM `tag` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($value));
 
         $results = Dba::fetch_assoc($db_results);
@@ -426,9 +426,9 @@ class Tag extends database_object implements library_item
         $object_id = intval($object_id);
 
         $limit = intval($limit);
-        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
+        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
-            "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' ".
+            "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " .
             "GROUP BY `tag`.`name` LIMIT $limit";
 
         $db_results = Dba::read($sql);
@@ -457,7 +457,7 @@ class Tag extends database_object implements library_item
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
             "WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ?";
 
-        $results = array();
+        $results    = array();
         $db_results = Dba::read($sql, array($type, $id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -586,16 +586,16 @@ class Tag extends database_object implements library_item
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
-        debug_event('tag.class', 'Updating tags for values {'.$tags_comma.'} type {'.$type.'} object_id {'.$object_id.'}', '5');
+        debug_event('tag.class', 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', '5');
 
-        $ctags = Tag::get_top_tags($type, $object_id);
+        $ctags      = Tag::get_top_tags($type, $object_id);
         $editedTags = explode(",", $tags_comma);
 
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
                 if ($ctv['id'] != '') {
                     $ctag = new Tag($ctv['id']);
-                    debug_event('tag.class', 'Processing tag {'.$ctag->name.'}...', '5');
+                    debug_event('tag.class', 'Processing tag {' . $ctag->name . '}...', '5');
                     $found = false;
 
                     foreach ($editedTags as  $tk => $tv) {
@@ -621,7 +621,7 @@ class Tag extends database_object implements library_item
         // Look if we need to add some new tags
         foreach ($editedTags as  $tk => $tv) {
             if ($tv != '') {
-                debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
+                debug_event('tag.class', 'Adding new tag {' . $tv . '}', '5');
                 Tag::add($type, $object_id, $tv, false);
             }
         }
@@ -668,7 +668,7 @@ class Tag extends database_object implements library_item
 
         $results = array();
 
-        $sql = "SELECT COUNT(`id`) AS `count`,`object_type` FROM `tag_map` WHERE `tag_id`='" . Dba::escape($this->id) . "'" .  $filter_sql . " GROUP BY `object_type`";
+        $sql        = "SELECT COUNT(`id`) AS `count`,`object_type` FROM `tag_map` WHERE `tag_id`='" . Dba::escape($this->id) . "'" .  $filter_sql . " GROUP BY `object_type`";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -702,7 +702,7 @@ class Tag extends database_object implements library_item
 
     public function get_keywords()
     {
-        $keywords = array();
+        $keywords        = array();
         $keywords['tag'] = array('important' => true,
             'label' => T_('Tag'),
             'value' => $this->name);

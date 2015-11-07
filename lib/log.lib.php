@@ -45,7 +45,7 @@ function log_event($username, $event_name, $event_description, $log_name)
     $log_filename = str_replace("%d", @date('d'), $log_filename);
 
     $log_filename    = AmpConfig::get('log_path') . "/" . $log_filename;
-    $log_line    = "$log_time [$username] ($event_name) -> $event_description \n";
+    $log_line        = "$log_time [$username] ($event_name) -> $event_description \n";
 
     // Do the deed
     $log_write = error_log($log_line, 3, $log_filename);
@@ -73,7 +73,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
         case E_NOTICE:
         case E_CORE_WARNING:
             $error_name = 'Warning';
-            $level = 6;
+            $level      = 6;
         break;
         case E_ERROR:
             $error_name = 'Fatal run-time Error';
@@ -92,7 +92,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
         break;
         default:
             $error_name = "Error";
-            $level = 2;
+            $level      = 2;
         break;
     } // end switch
 
@@ -112,7 +112,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
     foreach ($ignores as $ignore) {
         if (strpos($errstr, $ignore) !== false) {
             $error_name = 'Ignored ' . $error_name;
-            $level = 7;
+            $level      = 7;
         }
     }
 
@@ -123,7 +123,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
 
     if (strpos($errstr, 'date.timezone') !== false) {
         $error_name = 'Warning';
-        $errstr = 'You have not set a valid timezone (date.timezone) in your php.ini file. This may cause display issues with dates. This warning is non-critical and not caused by Ampache.';
+        $errstr     = 'You have not set a valid timezone (date.timezone) in your php.ini file. This may cause display issues with dates. This warning is non-critical and not caused by Ampache.';
     }
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";

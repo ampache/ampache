@@ -30,7 +30,7 @@
 class AmpacheXbmc extends localplay_controller
 {
     /* Variables */
-    private $version    = '000001';
+    private $version        = '000001';
     private $description    = 'Controls a XBMC instance';
 
 
@@ -78,7 +78,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'localplay_xbmc'";
+        $sql        = "SHOW TABLES LIKE 'localplay_xbmc'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -90,7 +90,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function install()
     {
-        $sql = "CREATE TABLE `localplay_xbmc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+        $sql = "CREATE TABLE `localplay_xbmc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`owner` INT( 11 ) NOT NULL, " .
             "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
@@ -112,7 +112,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function uninstall()
     {
-        $sql = "DROP TABLE `localplay_xbmc`";
+        $sql        = "DROP TABLE `localplay_xbmc`";
         $db_results = Dba::query($sql);
 
         // Remove the pref we added for this
@@ -140,7 +140,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function delete_instance($uid)
     {
-        $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
+        $sql        = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($uid));
 
         return true;
@@ -153,7 +153,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get_instances()
     {
-        $sql = "SELECT * FROM `localplay_xbmc` ORDER BY `name`";
+        $sql        = "SELECT * FROM `localplay_xbmc` ORDER BY `name`";
         $db_results = Dba::query($sql);
 
         $results = array();
@@ -171,7 +171,7 @@ class AmpacheXbmc extends localplay_controller
      */
     public function update_instance($uid,$data)
     {
-        $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
+        $sql        = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
         $db_results = Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid));
 
         return true;
@@ -201,7 +201,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $instance = $instance ? $instance : AmpConfig::get('xbmc_active');
 
-        $sql = "SELECT * FROM `localplay_xbmc` WHERE `id` = ?";
+        $sql        = "SELECT * FROM `localplay_xbmc` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($instance));
 
         $row = Dba::fetch_assoc($db_results);
@@ -568,15 +568,15 @@ class AmpacheXbmc extends localplay_controller
             for ($i = $playlist['limits']['start']; $i < $playlist['limits']['end']; ++$i) {
                 $item = $playlist['items'][$i];
 
-                $data = array();
-                $data['link'] = $item['file'];
-                $data['id'] = $i;
+                $data          = array();
+                $data['link']  = $item['file'];
+                $data['id']    = $i;
                 $data['track'] = $i + 1;
 
                 $url_data = $this->parse_url($data['link']);
                 if ($url_data != null) {
                     $data['oid'] = $url_data['oid'];
-                    $song = new Song($data['oid']);
+                    $song        = new Song($data['oid']);
                     if ($song != null) {
                         $data['name'] = $song->get_artist_name() . ' - ' . $song->title;
                     }
@@ -629,11 +629,11 @@ class AmpacheXbmc extends localplay_controller
                 $array['track']     =   $currentplay['file'];
 
                 $url_data = $this->parse_url($array['track']);
-                $song = new Song($url_data['oid']);
+                $song     = new Song($url_data['oid']);
                 if ($song->title || $song->get_artist_name() || $song->get_album_name()) {
-                    $array['track_title']     = $song->title;
+                    $array['track_title']      = $song->title;
                     $array['track_artist']     = $song->get_artist_name();
-                    $array['track_album']    = $song->get_album_name();
+                    $array['track_album']      = $song->get_album_name();
                 }
             } catch (XBMC_RPC_Exception $ex) {
                 debug_event('xbmc', 'get current item failed, player probably stopped. ' . $ex->getMessage(), 1);

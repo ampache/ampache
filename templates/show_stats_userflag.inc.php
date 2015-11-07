@@ -20,21 +20,21 @@
  *
  */
 
-$sql = Userflag::get_latest_sql('song');
+$sql    = Userflag::get_latest_sql('song');
 $browse = new Browse();
 $browse->set_type('song', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql = Userflag::get_latest_sql('album');
+$sql    = Userflag::get_latest_sql('album');
 $browse = new Browse();
 $browse->set_type('album', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql = Userflag::get_latest_sql('artist');
+$sql    = Userflag::get_latest_sql('artist');
 $browse = new Browse();
 $browse->set_type('artist', $sql);
 $browse->set_simple_browse(true);
@@ -42,7 +42,7 @@ $browse->show_objects();
 $browse->store();
 
 if (AmpConfig::get('allow_video')) {
-    $sql = Userflag::get_latest_sql('video');
+    $sql    = Userflag::get_latest_sql('video');
     $browse = new Browse();
     $browse->set_type('video', $sql);
     $browse->set_simple_browse(true);
@@ -50,7 +50,7 @@ if (AmpConfig::get('allow_video')) {
     $browse->store();
 }
 
-$sql = Userflag::get_latest_sql('playlist');
+$sql    = Userflag::get_latest_sql('playlist');
 $browse = new Browse();
 $browse->set_type('playlist', $sql);
 $browse->set_simple_browse(true);

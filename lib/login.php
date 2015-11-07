@@ -50,9 +50,9 @@ if (empty($_REQUEST['step'])) {
 
         /* If we are in demo mode let's force auth success */
         if (AmpConfig::get('demo_mode')) {
-            $auth['success']        = true;
-            $auth['info']['username']    = 'Admin - DEMO';
-            $auth['info']['fullname']    = 'Administrative User';
+            $auth['success']                 = true;
+            $auth['info']['username']        = 'Admin - DEMO';
+            $auth['info']['fullname']        = 'Administrative User';
             $auth['info']['offset_limit']    = 25;
         } else {
             if ($_POST['username']) {
@@ -83,7 +83,7 @@ if (empty($_REQUEST['step'])) {
     }
 } elseif ($_REQUEST['step'] == '2') {
     $auth_mod = $_REQUEST['auth_mod'];
-    $auth = Auth::login_step2($auth_mod);
+    $auth     = Auth::login_step2($auth_mod);
     if ($auth['success']) {
         $username = $auth['username'];
     } else {
@@ -116,8 +116,8 @@ if (!empty($username) && isset($auth)) {
         $access    = AmpConfig::get('auto_user')
             ? User::access_name_to_level(AmpConfig::get('auto_user'))
             : '5';
-        $name    = $auth['name'];
-        $email    = $auth['email'];
+        $name       = $auth['name'];
+        $email      = $auth['email'];
         $website    = $auth['website'];
 
         /* Attempt to create the user */

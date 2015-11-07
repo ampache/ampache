@@ -95,7 +95,7 @@ class TVShow_Episode extends Video
 
         $sdata = $data;
         // Replace relation name with db ids
-        $sdata['tvshow'] = $tvshow;
+        $sdata['tvshow']        = $tvshow;
         $sdata['tvshow_season'] = $tvshow_season;
         return self::create($sdata);
     }
@@ -121,18 +121,18 @@ class TVShow_Episode extends Video
     {
         parent::update($data);
 
-        $original_name = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
-        $tvshow_season = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
+        $original_name  = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
+        $tvshow_season  = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
         $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->episode_number;
-        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $summary        = isset($data['summary']) ? $data['summary'] : $this->summary;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
         Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
 
-        $this->original_name = $original_name;
-        $this->season = $tvshow_season;
+        $this->original_name  = $original_name;
+        $this->season         = $tvshow_season;
         $this->episode_number = $tvshow_episode;
-        $this->summary = $summary;
+        $this->summary        = $summary;
 
         return $this->id;
     }
@@ -148,16 +148,16 @@ class TVShow_Episode extends Video
         $season = new TVShow_Season($this->season);
         $season->format($details);
 
-        $this->f_title = ($this->original_name ?: $this->f_title);
-        $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
-        $this->f_season = $season->f_name;
+        $this->f_title       = ($this->original_name ?: $this->f_title);
+        $this->f_link        = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+        $this->f_season      = $season->f_name;
         $this->f_season_link = $season->f_link;
-        $this->f_tvshow = $season->f_tvshow;
+        $this->f_tvshow      = $season->f_tvshow;
         $this->f_tvshow_link = $season->f_tvshow_link;
 
         $this->f_file = $this->f_tvshow;
         if ($this->episode_number) {
-            $this->f_file .= ' - S'. sprintf('%02d', $season->season_number) . 'E'. sprintf('%02d', $this->episode_number);
+            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
         }
         $this->f_file .= ' - ' . $this->f_title;
         $this->f_full_title = $this->f_file;
@@ -171,7 +171,7 @@ class TVShow_Episode extends Video
      */
     public function get_keywords()
     {
-        $keywords = parent::get_keywords();
+        $keywords           = parent::get_keywords();
         $keywords['tvshow'] = array('important' => true,
             'label' => T_('TV Show'),
             'value' => $this->f_tvshow);
@@ -215,20 +215,20 @@ class TVShow_Episode extends Video
 
     public function display_art($thumb = 2)
     {
-        $id = null;
+        $id   = null;
         $type = null;
 
         if (Art::has_db($this->id, 'video')) {
-            $id = $this->id;
+            $id   = $this->id;
             $type = 'video';
         } else {
             if (Art::has_db($this->season, 'tvshow_season')) {
-                $id = $this->season;
+                $id   = $this->season;
                 $type = 'tvshow_season';
             } else {
                 $season = new TVShow_Season($this->season);
                 if (Art::has_db($season->tvshow, 'tvshow')) {
-                    $id = $season->tvshow;
+                    $id   = $season->tvshow;
                     $type = 'tvshow';
                 }
             }
@@ -246,7 +246,7 @@ class TVShow_Episode extends Video
     {
         $deleted = parent::remove_from_disk();
         if ($deleted) {
-            $sql = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
+            $sql     = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
         }
 

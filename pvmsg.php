@@ -36,7 +36,7 @@ switch ($action) {
         if (isset($_REQUEST['reply_to'])) {
             $pvmsg = new PrivateMsg($_REQUEST['reply_to']);
             if ($pvmsg->id && ($pvmsg->from_user === $GLOBALS['user']->id || $pvmsg->to_user === $GLOBALS['user']->id)) {
-                $to_user = new User($pvmsg->from_user);
+                $to_user             = new User($pvmsg->from_user);
                 $_REQUEST['to_user'] = $to_user->username;
                 $_REQUEST['subject'] = "RE: " . $pvmsg->subject;
                 $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $pvmsg->message);
@@ -64,7 +64,7 @@ switch ($action) {
         if (!$pvmsg_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_pvmsg.inc.php');
         } else {
-            $body = T_('Message Sent');
+            $body  = T_('Message Sent');
             $title = '';
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=pvmsg');
         }
@@ -98,7 +98,7 @@ switch ($action) {
         show_confirmation(
             T_('Message Deletion'),
             T_('Are you sure you want to permanently delete the selected messages?'),
-            AmpConfig::get('web_path')."/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
+            AmpConfig::get('web_path') . "/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
             1,
             'delete_message'
         );
@@ -111,7 +111,7 @@ switch ($action) {
         $msgs = split(",", $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
             $msg_id = intval($msg_id);
-            $pvmsg = new PrivateMsg($msg_id);
+            $pvmsg  = new PrivateMsg($msg_id);
             if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
                 $pvmsg->delete();
             } else {
@@ -126,7 +126,7 @@ switch ($action) {
     case 'show':
     default:
         $msg_id = intval($_REQUEST['pvmsg_id']);
-        $pvmsg = new PrivateMsg($msg_id);
+        $pvmsg  = new PrivateMsg($msg_id);
         if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
             $pvmsg->format();
             if (!$pvmsg->is_read) {

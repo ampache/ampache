@@ -105,8 +105,8 @@ class AmpacheTvdb
         
         try {
             $tvdburl = 'http://thetvdb.com';
-            $client = new Moinax\TvDb\Client($tvdburl, $this->api_key);
-            $title = $media_info['original_name'] ?: $media_info['title'];
+            $client  = new Moinax\TvDb\Client($tvdburl, $this->api_key);
+            $title   = $media_info['original_name'] ?: $media_info['title'];
             
             if ($media_info['tvshow']) {
                 $releases = $client->getSeries($media_info['tvshow']);
@@ -114,11 +114,11 @@ class AmpacheTvdb
                     throw new Exception("TV Show not found");
                 }
                     // Get first match
-                    $release = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
+                    $release               = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId ;
-                $results['summary'] = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
-                    $results['tvshow'] = $release->name;
+                $results['summary']        = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
+                    $results['tvshow']     = $release->name;
                 if ($release->FirstAired) {
                     $results['tvshow_year'] = $release->firstAired->format('Y');
                 }
@@ -151,14 +151,14 @@ class AmpacheTvdb
                 if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
                     $release = $client->getEpisode($results['tvdb_tvshow_id'], ltrim($media_info['tvshow_season'], "0"), ltrim($media_info['tvshow_episode'], "0"));
                     if ($release->id) {
-                        $results['tvdb_id'] = $release->id;
-                        $results['tvshow_season'] = $release->season;
+                        $results['tvdb_id']        = $release->id;
+                        $results['tvshow_season']  = $release->season;
                         $results['tvshow_episode'] = $release->number;
-                        $results['original_name'] = $release->name;
-                        $results['imdb_id'] = $release->imdbId ;
+                        $results['original_name']  = $release->name;
+                        $results['imdb_id']        = $release->imdbId ;
                         if ($release->firstAired) {
                             $results['release_date'] = $release->firstAired->getTimestamp();
-                            $results['year'] = $release->firstAired->format('Y');
+                            $results['year']         = $release->firstAired->format('Y');
                             ;
                         }
                         $results['description'] = $release->overview;

@@ -74,7 +74,7 @@ class Catalog_subsonic extends Catalog
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'catalog_subsonic'";
+        $sql        = "SHOW TABLES LIKE 'catalog_subsonic'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -86,7 +86,7 @@ class Catalog_subsonic extends Catalog
      */
     public function install()
     {
-        $sql = "CREATE TABLE `catalog_subsonic` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+        $sql = "CREATE TABLE `catalog_subsonic` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`uri` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`username` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
@@ -99,7 +99,7 @@ class Catalog_subsonic extends Catalog
 
     public function catalog_fields()
     {
-        $fields['uri']      = array('description' => T_('URI'),'type'=>'textbox');
+        $fields['uri']           = array('description' => T_('URI'),'type'=>'textbox');
         $fields['username']      = array('description' => T_('Username'),'type'=>'textbox');
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
@@ -119,7 +119,7 @@ class Catalog_subsonic extends Catalog
     {
         if ($catalog_id) {
             $this->id = intval($catalog_id);
-            $info = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key=>$value) {
                 $this->$key = $value;
@@ -138,7 +138,7 @@ class Catalog_subsonic extends Catalog
      */
     public static function create_type($catalog_id, $data)
     {
-        $uri = $data['uri'];
+        $uri      = $data['uri'];
         $username = $data['username'];
         $password = $data['password'];
 
@@ -153,7 +153,7 @@ class Catalog_subsonic extends Catalog
         }
 
         // Make sure this uri isn't already in use by an existing catalog
-        $sql = 'SELECT `id` FROM `catalog_subsonic` WHERE `uri` = ?';
+        $sql        = 'SELECT `id` FROM `catalog_subsonic` WHERE `uri` = ?';
         $db_results = Dba::read($sql, array($uri));
 
         if (Dba::num_rows($db_results)) {
@@ -221,18 +221,18 @@ class Catalog_subsonic extends Catalog
                                 if ($songs['success']) {
                                     foreach ($songs['data']['directory']['child'] as $song) {
                                         if (is_array($song)) {
-                                            $data = Array();
-                                            $data['artist'] = html_entity_decode($song['artist']);
-                                            $data['album'] = html_entity_decode($song['album']);
-                                            $data['title'] = html_entity_decode($song['title']);
+                                            $data            = Array();
+                                            $data['artist']  = html_entity_decode($song['artist']);
+                                            $data['album']   = html_entity_decode($song['album']);
+                                            $data['title']   = html_entity_decode($song['title']);
                                             $data['bitrate'] = $song['bitRate'] * 1000;
-                                            $data['size'] = $song['size'];
-                                            $data['time'] = $song['duration'];
-                                            $data['track'] = $song['track'];
-                                            $data['disk'] = $song['discNumber'];
-                                            $data['mode'] = 'vbr';
-                                            $data['genre'] = explode(' ', html_entity_decode($song['genre']));
-                                            $data['file'] = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
+                                            $data['size']    = $song['size'];
+                                            $data['time']    = $song['duration'];
+                                            $data['track']   = $song['track'];
+                                            $data['disk']    = $song['discNumber'];
+                                            $data['mode']    = 'vbr';
+                                            $data['genre']   = explode(' ', html_entity_decode($song['genre']));
+                                            $data['file']    = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
                                             if ($this->check_remote_song($data)) {
                                                 debug_event('subsonic_catalog', 'Skipping existing song ' . $data['path'], 5);
                                             } else {
@@ -290,14 +290,14 @@ class Catalog_subsonic extends Catalog
 
         $dead = 0;
 
-        $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
+        $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('subsonic-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
             $remove = false;
             try {
                 $songid = $this->url_to_songid($row['file']);
-                $song = $subsonic->getSong(array('id' => $songid));
+                $song   = $subsonic->getSong(array('id' => $songid));
                 if (!$song['success']) {
                     $remove = true;
                 }
@@ -327,7 +327,7 @@ class Catalog_subsonic extends Catalog
     {
         $url = $song['file'];
 
-        $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
+        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, array($url));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -339,7 +339,7 @@ class Catalog_subsonic extends Catalog
 
     public function get_rel_path($file_path)
     {
-        $info = $this->_get_info();
+        $info         = $this->_get_info();
         $catalog_path = rtrim($info->uri, "/");
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
@@ -362,14 +362,14 @@ class Catalog_subsonic extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = $this->uri;
+        $this->f_info      = $this->uri;
         $this->f_full_info = $this->uri;
     }
 
     public function prepare_media($media)
     {
         $subsonic = $this->createClient();
-        $url = $subsonic->parameterize($media->file . '&');
+        $url      = $subsonic->parameterize($media->file . '&');
 
         header('Location: ' . $url);
         debug_event('play', 'Started remote stream - ' . $url, 5);

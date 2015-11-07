@@ -65,7 +65,7 @@ Your account is currently inactive. You cannot use it until you've visited the f
 Thank you for registering
 "), $username, AmpConfig::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
 
-        $mailer->recipient = $email;
+        $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
 
         if (!AmpConfig::get('admin_enable_required')) {
@@ -105,7 +105,7 @@ Website: %s
         $mailer->message = sprintf(T_("Your account %s has been enabled\n\n
             Please logon using %s"), $username, AmpConfig::get('web_path') . "/login.php");
 
-        $mailer->recipient = $email;
+        $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
 
         $mailer->send();

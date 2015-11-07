@@ -23,7 +23,7 @@
 
 <ul>
     <li>
-        <a href="javascript:void(0);" id="rb_append_dplaylist_new" onclick="handlePlaylistAction('<?php echo AmpConfig::get('ajax_url').'?page=playlist&action=append_item&item_type='.$object_type.'&item_id='.$object_id; ?>', 'rb_append_dplaylist_new');">
+        <a href="javascript:void(0);" id="rb_append_dplaylist_new" onclick="handlePlaylistAction('<?php echo AmpConfig::get('ajax_url') . '?page=playlist&action=append_item&item_type=' . $object_type . '&item_id=' . $object_id; ?>', 'rb_append_dplaylist_new');">
             <?php echo T_('Add to New Playlist'); ?>
         </a>
     </li>
@@ -36,7 +36,7 @@
         ?>
     <li>
         <a href="javascript:void(0);" id="rb_append_dplaylist_<?php echo $playlist->id;
-        ?>" onclick="handlePlaylistAction('<?php echo AmpConfig::get('ajax_url').'?page=playlist&action=append_item&playlist_id='.$playlist->id.'&item_type='.$object_type.'&item_id='.$object_id;
+        ?>" onclick="handlePlaylistAction('<?php echo AmpConfig::get('ajax_url') . '?page=playlist&action=append_item&playlist_id=' . $playlist->id . '&item_type=' . $object_type . '&item_id=' . $object_id;
         ?>', 'rb_append_dplaylist_<?php echo $playlist->id;
         ?>');">
             <?php echo $playlist->f_name;

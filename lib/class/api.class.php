@@ -125,14 +125,14 @@ class Api
      */
     public static function handshake($input)
     {
-        $timestamp = preg_replace('/[^0-9]/', '', $input['timestamp']);
+        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp']);
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = $_POST['auth'];
         }
         $username = trim($input['user']);
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $version = $input['version'];
+        $ip       = $_SERVER['REMOTE_ADDR'];
+        $version  = $input['version'];
 
         // Log the attempt
         debug_event('API', "Handshake Attempt, IP:$ip User:$username Version:$version", 5);
@@ -152,7 +152,7 @@ class Api
                 $user_id = $client->id;
             }
         } else {
-            $client = User::get_from_username($username);
+            $client  = User::get_from_username($username);
             $user_id = $client->id;
         }
 
@@ -196,10 +196,10 @@ class Api
 
             if ($client) {
                 // Create the session
-                $data = array();
+                $data             = array();
                 $data['username'] = $client->username;
-                $data['type'] = 'api';
-                $data['value'] = $timestamp;
+                $data['type']     = 'api';
+                $data['value']    = $timestamp;
                 if (isset($input['client'])) {
                     $data['agent'] = $input['client'];
                 }
@@ -218,30 +218,30 @@ class Api
 
                 // We need to also get the 'last update' of the
                 // catalog information in an RFC 2822 Format
-                $sql = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
+                $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
                 $db_results = Dba::read($sql);
-                $row = Dba::fetch_assoc($db_results);
+                $row        = Dba::fetch_assoc($db_results);
 
                 // Now we need to quickly get the song totals
                 $sql = 'SELECT COUNT(`id`) AS `song`, ' .
-                    'COUNT(DISTINCT(`album`)) AS `album`, '.
+                    'COUNT(DISTINCT(`album`)) AS `album`, ' .
                     'COUNT(DISTINCT(`artist`)) AS `artist` ' .
                     'FROM `song`';
                 $db_results = Dba::read($sql);
-                $counts = Dba::fetch_assoc($db_results);
+                $counts     = Dba::fetch_assoc($db_results);
 
                 // Next the video counts
-                $sql = "SELECT COUNT(`id`) AS `video` FROM `video`";
+                $sql        = "SELECT COUNT(`id`) AS `video` FROM `video`";
                 $db_results = Dba::read($sql);
-                $vcounts = Dba::fetch_assoc($db_results);
+                $vcounts    = Dba::fetch_assoc($db_results);
 
-                $sql = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`";
+                $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`";
                 $db_results = Dba::read($sql);
-                $playlist = Dba::fetch_assoc($db_results);
+                $playlist   = Dba::fetch_assoc($db_results);
 
-                $sql = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'";
+                $sql        = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'";
                 $db_results = Dba::read($sql);
-                $catalog = Dba::fetch_assoc($db_results);
+                $catalog    = Dba::fetch_assoc($db_results);
 
                 echo XML_Data::keyed_array(array('auth'=>$token,
                     'api'=>self::$version,
@@ -353,7 +353,7 @@ class Api
     public static function artist_songs($input)
     {
         $artist = new Artist($input['filter']);
-        $songs = $artist->get_songs();
+        $songs  = $artist->get_songs();
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
@@ -597,7 +597,7 @@ class Api
     public static function playlist_songs($input)
     {
         $playlist = new Playlist($input['filter']);
-        $items = $playlist->get_items();
+        $items    = $playlist->get_items();
 
         $songs = array();
         foreach ($items as $object) {
@@ -655,7 +655,7 @@ class Api
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $song = $input['song'];
+        $song     = $input['song'];
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
@@ -673,7 +673,7 @@ class Api
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $track = scrub_in($input['track']);
+        $track    = scrub_in($input['track']);
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
@@ -689,10 +689,10 @@ class Api
      */
     public static function search_songs($input)
     {
-        $array = array();
-        $array['type'] = 'song';
-        $array['rule_1'] = 'anywhere';
-        $array['rule_1_input'] = $input['filter'];
+        $array                    = array();
+        $array['type']            = 'song';
+        $array['rule_1']          = 'anywhere';
+        $array['rule_1_input']    = $input['filter'];
         $array['rule_1_operator'] = 0;
 
         ob_end_clean();
@@ -788,7 +788,7 @@ class Api
             case 'play':
             case 'stop':
                 $result_status = $localplay->$input['command']();
-                $xml_array = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
+                $xml_array     = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
                 echo XML_Data::keyed_array($xml_array);
             break;
             default:
@@ -811,7 +811,7 @@ class Api
 
         switch ($input['method']) {
             case 'vote':
-                $type = 'song';
+                $type  = 'song';
                 $media = new $type($input['oid']);
                 if (!$media->id) {
                     echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
@@ -829,7 +829,7 @@ class Api
                 echo XML_Data::keyed_array($xml_array);
             break;
             case 'devote':
-                $type = 'song';
+                $type  = 'song';
                 $media = new $type($input['oid']);
                 if (!$media->id) {
                     echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
@@ -849,7 +849,7 @@ class Api
                 echo XML_Data::democratic($objects);
             break;
             case 'play':
-                $url = $democratic->play_url();
+                $url       = $democratic->play_url();
                 $xml_array = array('url'=>$url);
                 echo XML_Data::keyed_array($xml_array);
             break;
@@ -865,9 +865,9 @@ class Api
      */
     public static function stats($input)
     {
-        $type = $input['type'];
-        $offset = $input['offset'];
-        $limit = $input['limit'];
+        $type     = $input['type'];
+        $offset   = $input['offset'];
+        $limit    = $input['limit'];
         $username = $input['username'];
 
         $albums = null;
@@ -1042,8 +1042,8 @@ class Api
     public static function rate($input)
     {
         ob_end_clean();
-        $type = $input['type'];
-        $id = $input['id'];
+        $type   = $input['type'];
+        $id     = $input['id'];
         $rating = $input['rating'];
         
         if (!Core::is_library_item($type) || !$id) {
@@ -1069,8 +1069,8 @@ class Api
     {
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
-            $limit = intval($input['limit']);
-            $since = intval($input['since']);
+            $limit    = intval($input['limit']);
+            $since    = intval($input['since']);
             
             if (!empty($username)) {
                 $user = User::get_from_username($username);

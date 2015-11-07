@@ -33,8 +33,8 @@ require $prefix . '/templates/install_header.inc.php';
         <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
             <div class="form-group">
         <?php
-            $languages = get_languages();
-            $var_name = $value . "_lang";
+            $languages   = get_languages();
+            $var_name    = $value . "_lang";
             ${$var_name} = "selected=\"selected\"";
 
             echo "<select class=\"form-control\" name=\"htmllang\">\n";

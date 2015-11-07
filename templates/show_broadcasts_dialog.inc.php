@@ -30,7 +30,7 @@
         ?>
     <li>
         <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id;
-        ?>" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url').'?page=player&action=broadcast&broadcast_id='.$broadcast->id;
+        ?>" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url') . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id;
         ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id;
         ?>');">
             <?php echo $broadcast->f_name;
@@ -40,6 +40,6 @@
 <?php 
     } ?>
 </ul><br />
-<a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url'). '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">
+<a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url') . '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">
     <?php echo T_('New broadcast'); ?>
 </a>

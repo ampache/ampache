@@ -93,7 +93,7 @@ class AmpacheHeadphones
     {
         set_time_limit(0);
         
-        $artist = new Artist($wanted->artist);
+        $artist     = new Artist($wanted->artist);
         $headartist = json_decode($this->headphones_call('getArtist', array(
             'id' => $artist->mbid
         )));

@@ -34,7 +34,7 @@ switch ($_REQUEST['action']) {
         show_confirmation(
             T_('Video Deletion'),
             T_('Are you sure you want to permanently delete this video?'),
-            AmpConfig::get('web_path')."/video.php?action=confirm_delete&video_id=" . $video_id,
+            AmpConfig::get('web_path') . "/video.php?action=confirm_delete&video_id=" . $video_id,
             1,
             'delete_video'
         );

@@ -89,7 +89,7 @@ class Query
 
             $db_results = Dba::read($sql, array($id, $sid));
             if ($results = Dba::fetch_assoc($db_results)) {
-                $this->id = $id;
+                $this->id     = $id;
                 $this->_state = (array) self::_unserialize($results['data']);
 
                 return true;
@@ -653,7 +653,7 @@ class Query
         }
 
         $db_results = Dba::read($this->get_sql(false));
-        $num_rows = Dba::num_rows($db_results);
+        $num_rows   = Dba::num_rows($db_results);
 
         $this->_state['total'] = $num_rows;
 
@@ -751,16 +751,16 @@ class Query
         $this->reset_join();
 
         if ($order) {
-            $order = ($order == 'DESC') ? 'DESC' : 'ASC';
-            $this->_state['sort'] = array();
+            $order                       = ($order == 'DESC') ? 'DESC' : 'ASC';
+            $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = $order;
         } elseif ($this->_state['sort'][$sort] == 'DESC') {
             // Reset it till I can figure out how to interface the hotness
-            $this->_state['sort'] = array();
+            $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = 'ASC';
         } else {
             // Reset it till I can figure out how to interface the hotness
-            $this->_state['sort'] = array();
+            $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = 'DESC';
         }
 
@@ -833,7 +833,7 @@ class Query
      */
     public function set_start($start)
     {
-        $start = intval($start);
+        $start                 = intval($start);
         $this->_state['start'] = $start;
     } // set_start
 
@@ -845,7 +845,7 @@ class Query
      */
     public function set_is_simple($value)
     {
-        $value = make_bool($value);
+        $value                  = make_bool($value);
         $this->_state['simple'] = $value;
     } // set_is_simple
 
@@ -922,7 +922,7 @@ class Query
     {
         // First we need to get the SQL statement we are going to run
         // This has to run against any possible filters (dependent on type)
-        $sql = $this->get_sql(true);
+        $sql        = $this->get_sql(true);
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -930,7 +930,7 @@ class Query
             $results[] = $data;
         }
 
-        $results = $this->post_process($results);
+        $results  = $this->post_process($results);
         $filtered = array();
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
@@ -961,7 +961,7 @@ class Query
         // Custom sql base
         if ($force && !empty($custom_base)) {
             $this->_state['custom'] = true;
-            $sql = $custom_base;
+            $sql                    = $custom_base;
         } else {
             switch ($this->get_type()) {
                 case 'album':
@@ -1224,13 +1224,13 @@ class Query
         $sql = $this->get_base_sql();
 
         $filter_sql = "";
-        $join_sql = "";
+        $join_sql   = "";
         $having_sql = "";
-        $order_sql = "";
+        $order_sql  = "";
         if (!isset($this->_state['custom']) || !$this->_state['custom']) {
             $filter_sql = $this->get_filter_sql();
-            $order_sql = $this->get_sort_sql();
-            $join_sql = $this->get_join_sql();
+            $order_sql  = $this->get_sort_sql();
+            $join_sql   = $this->get_join_sql();
             $having_sql = $this->get_having_sql();
         }
         $limit_sql = $limit ? $this->get_limit_sql() : '';
@@ -1260,7 +1260,7 @@ class Query
         }
 
         $tag_count = sizeof($tags);
-        $count = array();
+        $count     = array();
 
         foreach ($data as $row) {
             $count[$row['id']]++;
@@ -1328,10 +1328,10 @@ class Query
                     $filter_sql = " `song`.`played`='0' AND ";
                 break;
                 case 'album':
-                    $filter_sql = " `song`.`album` = '". Dba::escape($value) . "' AND ";
+                    $filter_sql = " `song`.`album` = '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'artist':
-                    $filter_sql = " `song`.`artist` = '". Dba::escape($value) . "' AND ";
+                    $filter_sql = " `song`.`artist` = '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'add_gt':
                     $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
@@ -1394,7 +1394,7 @@ class Query
                     }
                 break;
                 case 'artist':
-                    $filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
+                    $filter_sql = " `artist`.`id` = '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'add_lt':
                     $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
@@ -1542,7 +1542,7 @@ class Query
                     $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'playlist_type':
-                    $user_id = intval($GLOBALS['user']->id);
+                    $user_id    = intval($GLOBALS['user']->id);
                     $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
                 break;
                 default;
@@ -1569,7 +1569,7 @@ class Query
                     $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'playlist_type':
-                    $user_id = intval($GLOBALS['user']->id);
+                    $user_id    = intval($GLOBALS['user']->id);
                     $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
                 break;
             } // end switch on $filter
@@ -2218,7 +2218,7 @@ class Query
             if (!count($objects) or !is_array($objects)) {
                 return false;
             }
-            $type = $this->get_type();
+            $type      = $this->get_type();
             $where_sql = "WHERE `$type`.`id` IN (";
 
             foreach ($objects as $object_id) {

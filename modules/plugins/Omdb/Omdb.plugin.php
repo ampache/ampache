@@ -80,7 +80,7 @@ class AmpacheOmdb
     protected function parse_runtime($runtime)
     {
         $time = 0;
-        $r = explode(' ', $runtime, 2);
+        $r    = explode(' ', $runtime, 2);
         if (count($r) == 2) {
             if ($r[1] == 'min') {
                 $time = intval($r[0]) * 60;
@@ -111,7 +111,7 @@ class AmpacheOmdb
             $q = $this->query_omdb($title);
             if ($q->Response == 'True') {
                 $match = false;
-                $yse = explode('-', $q->Year);
+                $yse   = explode('-', $q->Year);
                 if (in_array('movie', $gather_types) && $q->Type == 'movie') {
                     if ($yse[0] != "N/A") {
                         $results['year'] = $yse[0];
@@ -120,7 +120,7 @@ class AmpacheOmdb
                         $results['release_date'] = $q->Released;
                     }
                     $results['original_name'] = $q->Title;
-                    $results['imdb_id'] = $q->imdbID;
+                    $results['imdb_id']       = $q->imdbID;
                     if ($q->Plot != "N/A") {
                         $results['description'] = $q->Plot;
                     }

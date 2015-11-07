@@ -33,7 +33,7 @@ $action = strtolower($_REQUEST['ssaction']);
 if (empty($action)) {
     $action = strtolower($_REQUEST['action']);
 }
-$f = $_REQUEST['f'];
+$f        = $_REQUEST['f'];
 $callback = $_REQUEST['callback'];
 /* Set the correct default headers */
 if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
@@ -57,7 +57,7 @@ $password = $_SERVER['PHP_AUTH_PW'];
 if (empty($password)) {
     $password = $_REQUEST['p'];
 }
-$version = $_REQUEST['v'];
+$version   = $_REQUEST['v'];
 $clientapp = $_REQUEST['c'];
 
 if (empty($_SERVER['HTTP_USER_AGENT'])) {
@@ -114,12 +114,12 @@ $query  = explode('&', $query_string);
 $params = array();
 foreach ($query as $param) {
     list($name, $value) = explode('=', $param);
-    $decname = urldecode($name);
-    $decvalue = urldecode($value);
+    $decname            = urldecode($name);
+    $decvalue           = urldecode($value);
     if (array_key_exists($decname, $params)) {
         if (!is_array($params[$decname])) {
-            $oldvalue = $params[$decname];
-            $params[$decname] = array();
+            $oldvalue           = $params[$decname];
+            $params[$decname]   = array();
             $params[$decname][] = $oldvalue;
         }
         $params[$decname][] = $decvalue;

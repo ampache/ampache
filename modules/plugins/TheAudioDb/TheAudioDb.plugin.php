@@ -108,12 +108,12 @@ class AmpacheTheaudiodb
             if ($media_info['mb_trackid'] && in_array('song', $gather_types)) {
                 $track = $this->get_track($media_info['mb_trackid']);
                 if ($track) {
-                    $track = $track->track[0];
-                    $results['mb_artistid'] = $track->strMusicBrainzArtistID;
+                    $track                       = $track->track[0];
+                    $results['mb_artistid']      = $track->strMusicBrainzArtistID;
                     $results['mb_albumid_group'] = $track->strMusicBrainzAlbumID;
-                    $results['album'] = $track->strAlbum;
-                    $results['artist'] = $track->strArtist;
-                    $results['title'] = $track->strTrack;
+                    $results['album']            = $track->strAlbum;
+                    $results['artist']           = $track->strArtist;
+                    $results['title']            = $track->strTrack;
                 }
             } elseif (in_array('album', $gather_types)) {
                 $release = null;
@@ -130,7 +130,7 @@ class AmpacheTheaudiodb
                 }
                 
                 if ($release) {
-                    $results['art'] = $release->strAlbumThumb;
+                    $results['art']   = $release->strAlbumThumb;
                     $results['title'] = $release->strAlbum;
                 }
             } elseif (in_array('artist', $gather_types)) {
@@ -148,9 +148,9 @@ class AmpacheTheaudiodb
                 }
                 
                 if ($release) {
-                    $results['art'] = $release->strArtistThumb;
-                    $results['title'] = $release->strArtist;
-                    $results['summary'] = $release->strBiographyEN;
+                    $results['art']        = $release->strArtistThumb;
+                    $results['title']      = $release->strArtist;
+                    $results['summary']    = $release->strBiographyEN;
                     $results['yearformed'] = $release->intFormedYear;
                 }
             }

@@ -70,7 +70,7 @@ if (Access::check('interface','100') && $_REQUEST['action'] == 'admin') {
     ?>" value="1" /></td>
                 <td class="cel_level">
                     <?php $name = 'on_' . $pref['level'];
-    ${$name} = 'selected="selected"';
+    ${$name}                    = 'selected="selected"';
     ?>
                     <select name="level_<?php echo $pref['name'];
     ?>">

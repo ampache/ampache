@@ -78,7 +78,7 @@ class Random
             $method_name = 'get_default';
         }
         $song_ids = self::$method_name(1);
-        $song_id = array_pop($song_ids);
+        $song_id  = array_pop($song_ids);
 
         return $song_id;
     } // get_single_song
@@ -121,7 +121,7 @@ class Random
         $results = array();
 
         // Get the last album played by us
-        $data = $GLOBALS['user']->get_recently_played('1', 'album');
+        $data      = $GLOBALS['user']->get_recently_played('1', 'album');
         $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`album`='" . $data[0] . "' ";
@@ -153,7 +153,7 @@ class Random
     {
         $results = array();
 
-        $data = $GLOBALS['user']->get_recently_played('1','artist');
+        $data      = $GLOBALS['user']->get_recently_played('1','artist');
         $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
@@ -273,7 +273,7 @@ class Random
 
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
 
         $size_total = 0;
         $fuzzy_size = 0;
@@ -298,7 +298,7 @@ class Random
                 }
 
                 $size_total = $size_total + $new_size;
-                $results[] = $row['id'];
+                $results[]  = $row['id'];
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
@@ -323,7 +323,7 @@ class Random
                 }
 
                 $time_total = $time_total + $new_time;
-                $results[] = $row['id'];
+                $results[]  = $row['id'];
 
                 // If there are less then 2 min of free space return
                 if (($data['length'] - $time_total) < 2) {
@@ -350,7 +350,7 @@ class Random
                 $songs = array();
                 foreach ($results as $result) {
                     $artist = new Artist($result);
-                    $songs = array_merge($songs, $artist->get_songs());
+                    $songs  = array_merge($songs, $artist->get_songs());
                 }
                 return $songs;
             default:

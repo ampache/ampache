@@ -24,9 +24,9 @@ if (INIT_LOADED != '1') {
     exit;
 }
 
-$web_path = AmpConfig::get('web_path');
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$location = get_location();
+$web_path          = AmpConfig::get('web_path');
+$htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
+$location          = get_location();
 $_SESSION['login'] = false;
 ?>
 

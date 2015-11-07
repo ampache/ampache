@@ -29,8 +29,8 @@
  */
 class Catalog_beets extends Beets\Catalog
 {
-    protected $version = '000001';
-    protected $type = 'beets';
+    protected $version     = '000001';
+    protected $type        = 'beets';
     protected $description = 'Beets Catalog';
 
     protected $listCommand = 'ls';
@@ -59,7 +59,7 @@ class Catalog_beets extends Beets\Catalog
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'catalog_beets'";
+        $sql        = "SHOW TABLES LIKE 'catalog_beets'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -104,7 +104,7 @@ class Catalog_beets extends Beets\Catalog
         }
 
         // Make sure this uri isn't already in use by an existing catalog
-        $selectSql = 'SELECT `id` FROM `catalog_beets` WHERE `beetsdb` = ?';
+        $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `beetsdb` = ?';
         $db_results = Dba::read($selectSql, array($beetsdb));
 
         if (Dba::num_rows($db_results)) {
@@ -147,7 +147,7 @@ class Catalog_beets extends Beets\Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = $this->beetsdb;
+        $this->f_info      = $this->beetsdb;
         $this->f_full_info = $this->f_info;
     }
 }

@@ -46,19 +46,19 @@ class AmpacheApi
     private $XML_subTag;
     private $XML_parser;
     private $XML_results;
-    private $XML_position = 0;
-    protected $XML_grabtags = array();
-    protected $XML_skiptags = array('root');
+    private $XML_position     = 0;
+    protected $XML_grabtags   = array();
+    protected $XML_skiptags   = array('root');
     protected $XML_parenttags = array('artist','album','song','tag','video','playlist','result',
                         'auth','version','update','add','clean','songs',
                         'artists','albums','tags','videos','api','playlists','catalogs');
 
     // Library static version information
     protected static $LIB_version = '350001';
-    private static $API_version = '';
+    private static $API_version   = '';
 
     private $_debug_callback = null;
-    private $_debug_output = false;
+    private $_debug_output   = false;
 
     /**
      * Constructor
@@ -115,8 +115,8 @@ class AmpacheApi
         $this->_debug('CONNECT', "Using $this->username / $this->password");
 
         // Set up the handshake
-        $results = array();
-        $timestamp = time();
+        $results    = array();
+        $timestamp  = time();
         $passphrase = hash('sha256', $timestamp . $this->password);
 
         $options = array(
@@ -141,7 +141,7 @@ class AmpacheApi
         // Define when we pulled this, it is not wine, it does
         // not get better with age
         $this->handshake_time = time();
-        $this->handshake = $results;
+        $this->handshake      = $results;
     }
 
     /**
@@ -178,7 +178,7 @@ class AmpacheApi
         if (isset($config['server'])) {
             // Replace any http:// in the URL with ''
             $config['server'] = str_replace($protocol, '', $config['server']);
-            $this->server = htmlentities($config['server'], ENT_QUOTES, 'UTF-8');
+            $this->server     = htmlentities($config['server'], ENT_QUOTES, 'UTF-8');
         }
 
         $this->api_url = $protocol . $this->server . '/server/xml.server.php';
@@ -269,7 +269,7 @@ class AmpacheApi
 
         $this->_debug('COMMAND URL', $url);
 
-        $data = file_get_contents($url);
+        $data               = file_get_contents($url);
         $this->raw_response = $data;
         $this->parse_response($data);
         return $this->get_response();
@@ -298,7 +298,7 @@ class AmpacheApi
     public function parse_response($response)
     {
         // Reset the results
-        $this->XML_results = array();
+        $this->XML_results  = array();
         $this->XML_position = 0;
 
         $this->XML_create_parser();

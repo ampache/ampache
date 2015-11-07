@@ -21,7 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$button = Ajax::button('?page=index&action=random_videos','random', T_('Refresh'),'random_video_refresh');
+$button   = Ajax::button('?page=index&action=random_videos','random', T_('Refresh'),'random_video_refresh');
 ?>
 <?php UI::show_box_top(T_('Videos of the Moment') . ' ' . $button, 'box box_random_videos'); ?>
 <?php

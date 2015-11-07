@@ -54,8 +54,8 @@ switch ($_REQUEST['action']) {
         Democratic::delete($_REQUEST['democratic_id']);
 
         $title = '';
-        $text = T_('The Requested Playlist has been deleted.');
-        $url = AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists';
+        $text  = T_('The Requested Playlist has been deleted.');
+        $url   = AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists';
         show_confirmation($title,$text,$url);
     break;
     case 'create':

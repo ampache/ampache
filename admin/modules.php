@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title ,$body, $url);
     break;
     case 'install_catalog_type':
-        $type = (string) scrub_in($_REQUEST['type']);
+        $type    = (string) scrub_in($_REQUEST['type']);
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
             Error::add('general', T_('Install Failed, Catalog Error'));
@@ -72,17 +72,17 @@ switch ($_REQUEST['action']) {
         show_confirmation($title ,$body, $url);
     break;
     case 'confirm_uninstall_localplay':
-        $type = (string) scrub_in($_REQUEST['type']);
-        $url = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
+        $type  = (string) scrub_in($_REQUEST['type']);
+        $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
         $title = T_('Are you sure you want to remove this plugin?');
-        $body = '';
+        $body  = '';
         show_confirmation($title,$body,$url,1);
     break;
     case 'confirm_uninstall_catalog_type':
-        $type = (string) scrub_in($_REQUEST['type']);
-        $url = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
+        $type  = (string) scrub_in($_REQUEST['type']);
+        $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
         $title = T_('Are you sure you want to remove this plugin?');
-        $body = '';
+        $body  = '';
         show_confirmation($title,$body,$url,1);
     break;
     case 'uninstall_localplay':
@@ -125,8 +125,8 @@ switch ($_REQUEST['action']) {
         if (!$plugin->install()) {
             debug_event('plugins','Error: Plugin Install Failed, ' . $_REQUEST['plugin'],'1');
             $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-            $title = T_('Unable to Install Plugin');
-            $body = '';
+            $title  = T_('Unable to Install Plugin');
+            $body   = '';
             show_confirmation($title,$body,$url);
             break;
         }
@@ -135,16 +135,16 @@ switch ($_REQUEST['action']) {
         User::rebuild_all_preferences();
 
         /* Show Confirmation */
-        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
+        $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
         $title    = T_('Plugin Activated');
-        $body    = '';
+        $body     = '';
         show_confirmation($title,$body,$url);
     break;
     case 'confirm_uninstall_plugin':
-        $plugin = scrub_in($_REQUEST['plugin']);
-        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
+        $plugin   = scrub_in($_REQUEST['plugin']);
+        $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
         $title    = T_('Are you sure you want to remove this plugin?');
-        $body    = '';
+        $body     = '';
         show_confirmation($title,$body,$url,1);
     break;
     case 'uninstall_plugin':

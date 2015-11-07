@@ -29,8 +29,8 @@
  */
 class Catalog_beetsremote extends Beets\Catalog
 {
-    protected $version = '000001';
-    protected $type = 'beetsremote';
+    protected $version     = '000001';
+    protected $type        = 'beetsremote';
     protected $description = 'Beets Remote Catalog';
 
     protected $listCommand = 'item/query';
@@ -60,7 +60,7 @@ class Catalog_beetsremote extends Beets\Catalog
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'catalog_beetsremote'";
+        $sql        = "SHOW TABLES LIKE 'catalog_beetsremote'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -105,7 +105,7 @@ class Catalog_beetsremote extends Beets\Catalog
         }
 
         // Make sure this uri isn't already in use by an existing catalog
-        $selectSql = 'SELECT `id` FROM `catalog_beets` WHERE `uri` = ?';
+        $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `uri` = ?';
         $db_results = Dba::read($selectSql, array($uri));
 
         if (Dba::num_rows($db_results)) {

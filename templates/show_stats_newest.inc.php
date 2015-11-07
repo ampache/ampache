@@ -20,14 +20,14 @@
  *
  */
 
-$sql = Stats::get_newest_sql('album');
+$sql    = Stats::get_newest_sql('album');
 $browse = new Browse();
 $browse->set_type('album', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql = Stats::get_newest_sql('artist');
+$sql    = Stats::get_newest_sql('artist');
 $browse = new Browse();
 $browse->set_type('artist', $sql);
 $browse->set_simple_browse(true);
@@ -35,7 +35,7 @@ $browse->show_objects();
 $browse->store();
 
 if (AmpConfig::get('allow_video')) {
-    $sql = Stats::get_newest_sql('video');
+    $sql    = Stats::get_newest_sql('video');
     $browse = new Browse();
     $browse->set_type('video', $sql);
     $browse->set_simple_browse(true);

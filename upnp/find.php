@@ -109,7 +109,7 @@ class UPnPFind
     private static function discoveryReponse2Array($res)
     {
         $result = array();
-        $lines = explode("\n", trim($res));
+        $lines  = explode("\n", trim($res));
 
         if (trim($lines[0]) == 'HTTP/1.1 200 OK') {
             array_shift($lines);
@@ -118,7 +118,7 @@ class UPnPFind
         foreach ($lines as $line) {
             $tmp = explode(':', trim($line));
 
-            $key = strtoupper(array_shift($tmp));
+            $key   = strtoupper(array_shift($tmp));
             $value = (count($tmp) > 0 ? trim(join(':', $tmp)) : null);
 
             $result[$key] = $value;

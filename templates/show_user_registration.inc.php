@@ -23,7 +23,7 @@
 $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
 
-$display_fields = (array) AmpConfig::get('registration_display_fields');
+$display_fields   = (array) AmpConfig::get('registration_display_fields');
 $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
 
 $_SESSION['login'] = true;
@@ -48,14 +48,14 @@ $_SESSION['login'] = true;
                 <span><?php echo T_('Registration'); ?>...</span>
             </div>
             <?php
-            $action = scrub_in($_REQUEST['action']);
-            $fullname = scrub_in($_REQUEST['fullname']);
+            $action          = scrub_in($_REQUEST['action']);
+            $fullname        = scrub_in($_REQUEST['fullname']);
             $fullname_public = ($_REQUEST['fullname_public'] === "1");
-            $username = scrub_in($_REQUEST['username']);
-            $email = scrub_in($_REQUEST['email']);
-            $website = scrub_in($_REQUEST['website']);
-            $state = scrub_in($_REQUEST['state']);
-            $city = scrub_in($_REQUEST['city']);
+            $username        = scrub_in($_REQUEST['username']);
+            $email           = scrub_in($_REQUEST['email']);
+            $website         = scrub_in($_REQUEST['website']);
+            $state           = scrub_in($_REQUEST['state']);
+            $city            = scrub_in($_REQUEST['city']);
             ?>
             <div id="registerbox">
                 <form name="update_user" method="post" action="<?php echo $web_path; ?>/register.php" enctype="multipart/form-data">

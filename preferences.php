@@ -22,9 +22,9 @@
 
 require_once 'lib/init.php';
 
-$title = "";
-$text = "";
-$next_url = "";
+$title             = "";
+$text              = "";
+$next_url          = "";
 $notification_text = "";
 
 // Switch on the action
@@ -43,12 +43,12 @@ switch ($_REQUEST['action']) {
         $system = false;
         /* Reset the Theme */
         if ($_POST['method'] == 'admin') {
-            $user_id = '-1';
-            $system = true;
-            $fullname = T_('Server');
+            $user_id            = '-1';
+            $system             = true;
+            $fullname           = T_('Server');
             $_REQUEST['action'] = 'admin';
         } else {
-            $user_id = $GLOBALS['user']->id;
+            $user_id  = $GLOBALS['user']->id;
             $fullname = $GLOBALS['user']->fullname;
         }
 
@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             exit;
         }
-        $fullname= T_('Server');
+        $fullname    = T_('Server');
         $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], true);
     break;
     case 'user':
@@ -98,8 +98,8 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             exit;
         }
-        $client = new User($_REQUEST['user_id']);
-        $fullname = $client->fullname;
+        $client      = new User($_REQUEST['user_id']);
+        $fullname    = $client->fullname;
         $preferences = $client->get_preferences($_REQUEST['tab']);
     break;
     case 'update_user':
@@ -141,8 +141,8 @@ switch ($_REQUEST['action']) {
             $GLOBALS['user']->upload_avatar();
 
             //$_REQUEST['action'] = 'confirm';
-            $title = T_('Updated');
-            $text = T_('Your Account has been updated');
+            $title    = T_('Updated');
+            $text     = T_('Your Account has been updated');
             $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=account';
         }
 
@@ -159,21 +159,21 @@ switch ($_REQUEST['action']) {
             if ($plugin = new Plugin($_REQUEST['plugin'])) {
                 $plugin->load($GLOBALS['user']);
                 if ($plugin->_plugin->get_session($GLOBALS['user']->id, $_REQUEST['token'])) {
-                    $title = T_('Updated');
-                    $text = T_('Your Account has been updated').' : '.$_REQUEST['plugin'];
+                    $title    = T_('Updated');
+                    $text     = T_('Your Account has been updated') . ' : ' . $_REQUEST['plugin'];
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 } else {
-                    $title = T_('Error');
-                    $text = T_('Your Account has not been updated').' : '.$_REQUEST['plugin'];
+                    $title    = T_('Error');
+                    $text     = T_('Your Account has not been updated') . ' : ' . $_REQUEST['plugin'];
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 }
             }
         }
-        $fullname = $GLOBALS['user']->fullname;
+        $fullname    = $GLOBALS['user']->fullname;
         $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab']);
     break;
     default:
-        $fullname = $GLOBALS['user']->fullname;
+        $fullname    = $GLOBALS['user']->fullname;
         $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab']);
     break;
 } // End Switch Action

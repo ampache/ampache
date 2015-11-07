@@ -38,7 +38,7 @@ $_SESSION['catalog'] = 0;
  */
 if (AmpConfig::get('refresh_limit') > 5 && AmpConfig::get('home_now_playing')) {
     $refresh_limit = AmpConfig::get('refresh_limit');
-    $ajax_url = '?page=index&action=reloadnp';
+    $ajax_url      = '?page=index&action=reloadnp';
     require_once AmpConfig::get('prefix') . UI::find_template('javascript_refresh.inc.php');
 }
 

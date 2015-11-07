@@ -38,8 +38,8 @@ class Stream_URL extends memory_object
             $posargs = strpos($url, '/play/');
             if ($posargs !== false) {
                 $argsstr = substr($url, $posargs + 6);
-                $url = substr($url, 0, $posargs + 6) . 'index.php?';
-                $args = explode('/', $argsstr);
+                $url     = substr($url, 0, $posargs + 6) . 'index.php?';
+                $args    = explode('/', $argsstr);
                 for ($i = 0; $i < count($args); $i += 2) {
                     if ($i > 0) {
                         $url .= '&';
@@ -49,9 +49,9 @@ class Stream_URL extends memory_object
             }
         }
 
-        $query = parse_url($url, PHP_URL_QUERY);
+        $query    = parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
-        $results = array();
+        $results  = array();
 
         $results['base_url'] = $url;
 

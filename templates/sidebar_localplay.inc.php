@@ -24,15 +24,15 @@
 <ul class="sb2" id="sb_localplay">
 <?php
 $server_allow = AmpConfig::get('allow_localplay_playback');
-$controller = AmpConfig::get('localplay_controller');
+$controller   = AmpConfig::get('localplay_controller');
 $access_check = Access::check('localplay','5');
 if ($server_allow && $controller && $access_check) {
     ?>
 <?php
     // Little bit of work to be done here
-    $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+    $localplay        = new Localplay(AmpConfig::get('localplay_controller'));
     $current_instance = $localplay->current_instance();
-    $class = $current_instance ? '' : ' class="active_instance"';
+    $class            = $current_instance ? '' : ' class="active_instance"';
     ?>
 <?php if (Access::check('localplay','25')) {
     ?>
@@ -78,7 +78,7 @@ if ($server_allow && $controller && $access_check) {
         // Requires a little work.. :(
         $instances = $localplay->get_instances();
     foreach ($instances as $uid=>$name) {
-        $name = scrub_out($name);
+        $name  = scrub_out($name);
         $class = '';
         if ($uid == $current_instance) {
             $class = ' class="active_instance"';

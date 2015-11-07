@@ -47,11 +47,11 @@ function update_preferences($pref_id=0)
     /* Foreach through possible keys and assign them */
     foreach ($results as $data) {
         /* Get the Value from POST/GET var called $data */
-        $name         = $data['name'];
+        $name            = $data['name'];
         $apply_to_all    = 'check_' . $data['name'];
-        $new_level    = 'level_' . $data['name'];
-        $id        = $data['id'];
-        $value         = scrub_in($_REQUEST[$name]);
+        $new_level       = 'level_' . $data['name'];
+        $id              = $data['id'];
+        $value           = scrub_in($_REQUEST[$name]);
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
@@ -199,7 +199,7 @@ function create_preference_input($name,$value)
         case 'upload_allow_remove':
         case 'webdav_backend':
         case 'notify_email':
-            $is_true = '';
+            $is_true  = '';
             $is_false = '';
             if ($value == '1') {
                 $is_true = "selected=\"selected\"";
@@ -215,10 +215,10 @@ function create_preference_input($name,$value)
             show_catalog_select('upload_catalog', $value, '', true);
         break;
         case 'play_type':
-            $is_localplay = '';
+            $is_localplay  = '';
             $is_democratic = '';
             $is_web_player = '';
-            $is_stream = '';
+            $is_stream     = '';
             if ($value == 'localplay') {
                 $is_localplay = 'selected="selected"';
             } elseif ($value == 'democratic') {
@@ -243,7 +243,7 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'playlist_type':
-            $var_name = $value . "_type";
+            $var_name    = $value . "_type";
             ${$var_name} = "selected=\"selected\"";
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"m3u\" $m3u_type>" . T_('M3U') . "</option>\n";
@@ -280,8 +280,8 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'localplay_level':
-            $is_user = '';
-            $is_admin = '';
+            $is_user    = '';
+            $is_admin   = '';
             $is_manager = '';
             if ($value == '25') {
                 $is_user = 'selected="selected"';
@@ -342,7 +342,7 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'show_lyrics':
-            $is_true = '';
+            $is_true  = '';
             $is_false = '';
             if ($value == '1') {
                 $is_true = "selected=\"selected\"";
@@ -355,11 +355,11 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'album_sort':
-            $is_sort_year_asc = '';
+            $is_sort_year_asc  = '';
             $is_sort_year_desc = '';
-            $is_sort_name_asc = '';
+            $is_sort_name_asc  = '';
             $is_sort_name_desc = '';
-            $is_sort_default = '';
+            $is_sort_default   = '';
             if ($value == 'year_asc') {
                 $is_sort_year_asc = 'selected="selected"';
             } elseif ($value == 'year_desc') {
@@ -384,17 +384,17 @@ function create_preference_input($name,$value)
         case 'librefm_grant_link':
             // construct links for granting access Ampache application to Last.fm and Libre.fm
             $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
-            $plugin = new Plugin($plugin_name);
-            $url = $plugin->_plugin->url;
-            $api_key = rawurlencode(AmpConfig::get('lastfm_api_key'));
-            $callback = rawurlencode(AmpConfig::get('web_path').'/preferences.php?tab=plugins&action=grant&plugin='.$plugin_name);
-            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', T_("Click for grant Ampache to ").$plugin_name).'</a>';
+            $plugin      = new Plugin($plugin_name);
+            $url         = $plugin->_plugin->url;
+            $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
+            $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', T_("Click for grant Ampache to ") . $plugin_name) . '</a>';
         break;
         default:
             if (preg_match('/_pass$/', $name)) {
                 echo '<input type="password" name="' . $name . '" value="******" />';
             } else {
-                echo '<input type="text" name="' . $name . '" value="' . $value .'" />';
+                echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
             }
         break;
 

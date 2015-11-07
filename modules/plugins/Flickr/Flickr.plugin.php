@@ -78,7 +78,7 @@ class Ampacheflickr
     public function get_photos($search, $category = 'concert')
     {
         $photos = array();
-        $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
+        $url    = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
         debug_event($this->name, 'Calling ' . $url, '5');
         $request = Requests::get($url, array(), Core::requests_options());
         if ($request->status_code == 200) {
@@ -102,7 +102,7 @@ class Ampacheflickr
             $limit = 5;
         }
         
-        $images = $this->get_photos($options['keyword'], '');
+        $images  = $this->get_photos($options['keyword'], '');
         $results = array();
         foreach ($images as $image) {
             $title = $this->name;

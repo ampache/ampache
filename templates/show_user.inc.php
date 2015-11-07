@@ -20,7 +20,7 @@
  *
  */
 
-$last_seen = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) : T_('Never');
+$last_seen   = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) : T_('Never');
 $create_date = $client->create_date ? date("m\/d\/y - H:i",$client->create_date) : T_('Unknown');
 $client->format();
 ?>
@@ -60,7 +60,7 @@ if ($client->f_avatar) {
         <?php echo $client->f_name; ?>
         <?php if (Access::check('interface','25') && AmpConfig::get('sociable')) {
     ?>
-            <a id="<?php echo 'reply_pvmsg_'.$client->id ?>" href="<?php echo AmpConfig::get('web_path');
+            <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo AmpConfig::get('web_path');
     ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username;
     ?>">
                 <?php echo UI::get_icon('mail', T_('Send private message'));
@@ -160,7 +160,7 @@ if ($client->f_avatar) {
         <div id="recentlyplayed" class="tab_content" style="display: block;">
         <?php
         $tmp_playlist = new Tmp_Playlist(Tmp_Playlist::get_from_userid($client->id));
-        $object_ids = $tmp_playlist->get_items();
+        $object_ids   = $tmp_playlist->get_items();
         if (count($object_ids) > 0) {
             UI::show_box_top(T_('Active Playlist'));
             ?>
@@ -169,7 +169,7 @@ if ($client->f_avatar) {
                 <td valign="top">
                     <?php
                         foreach ($object_ids as $object_data) {
-                            $type = array_shift($object_data);
+                            $type   = array_shift($object_data);
                             $object = new $type(array_shift($object_data));
                             $object->format();
                             echo $object->f_link;
@@ -197,7 +197,7 @@ if ($client->f_avatar) {
         <div id="artists" class="tab_content">
         <?php
             $sql = Catalog::get_uploads_sql('artist', $client->id);
-    $browse = new Browse();
+    $browse      = new Browse();
     $browse->set_type('artist', $sql);
     $browse->set_simple_browse(true);
     $browse->show_objects();
@@ -209,7 +209,7 @@ if ($client->f_avatar) {
         <div id="playlists" class="tab_content">
         <?php
             $playlist_ids = Playlist::get_playlists(false, $client->id);
-            $browse = new Browse();
+            $browse       = new Browse();
             $browse->set_type('playlist');
             $browse->set_simple_browse(false);
             $browse->show_objects($playlist_ids);
@@ -221,7 +221,7 @@ if ($client->f_avatar) {
         <div id="following" class="tab_content">
         <?php
             $following_ids = $client->get_following();
-    $browse = new Browse();
+    $browse                = new Browse();
     $browse->set_type('user');
     $browse->set_simple_browse(false);
     $browse->show_objects($following_ids);
@@ -231,7 +231,7 @@ if ($client->f_avatar) {
         <div id="followers" class="tab_content">
         <?php
             $follower_ids = $client->get_followers();
-    $browse = new Browse();
+    $browse               = new Browse();
     $browse->set_type('user');
     $browse->set_simple_browse(false);
     $browse->show_objects($follower_ids);

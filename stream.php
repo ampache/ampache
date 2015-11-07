@@ -36,9 +36,9 @@ if (!defined('NO_SESSION')) {
 }
 
 $media_ids = array();
-$web_path = AmpConfig::get('web_path');
+$web_path  = AmpConfig::get('web_path');
 
-debug_event("stream.php", "Asked for {".$_REQUEST['action']."}.", 5);
+debug_event("stream.php", "Asked for {" . $_REQUEST['action'] . "}.", 5);
 
 /**
  * action switch
@@ -56,16 +56,16 @@ switch ($_REQUEST['action']) {
     /* This is run if we need to gather info based on a tmp playlist */
     case 'tmp_playlist':
         $tmp_playlist = new Tmp_Playlist($_REQUEST['tmpplaylist_id']);
-        $media_ids = $tmp_playlist->get_items();
+        $media_ids    = $tmp_playlist->get_items();
     break;
     case 'play_favorite':
-        $data = $GLOBALS['user']->get_favorites($_REQUEST['type']);
+        $data      = $GLOBALS['user']->get_favorites($_REQUEST['type']);
         $media_ids = array();
         switch ($_REQUEST['type']) {
             case 'artist':
             case 'album':
                 foreach ($data as $value) {
-                    $songs = $value->get_songs();
+                    $songs     = $value->get_songs();
                     $media_ids = array_merge($media_ids,$songs);
                 }
             break;
@@ -78,11 +78,11 @@ switch ($_REQUEST['action']) {
     break;
     case 'play_item':
         $object_type = $_REQUEST['object_type'];
-        $object_ids = explode(',', $_REQUEST['object_id']);
+        $object_ids  = explode(',', $_REQUEST['object_id']);
 
         if (Core::is_playable_item($object_type)) {
             foreach ($object_ids as $object_id) {
-                $item = new $object_type($object_id);
+                $item      = new $object_type($object_id);
                 $media_ids = array_merge($media_ids, $item->get_medias());
 
                 if ($_REQUEST['custom_play_action']) {
@@ -96,15 +96,15 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'artist_random':
-        $artist = new Artist($_REQUEST['artist_id']);
+        $artist    = new Artist($_REQUEST['artist_id']);
         $media_ids = $artist->get_random_songs();
     break;
     case 'album_random':
-        $album = new Album($_REQUEST['album_id']);
+        $album     = new Album($_REQUEST['album_id']);
         $media_ids = $album->get_random_songs();
     break;
     case 'playlist_random':
-        $playlist = new Playlist($_REQUEST['playlist_id']);
+        $playlist  = new Playlist($_REQUEST['playlist_id']);
         $media_ids = $playlist->get_random_items();
     break;
     case 'random':
@@ -116,12 +116,12 @@ switch ($_REQUEST['action']) {
             $matchlist['catalog'] = $_REQUEST['catalog'];
         }
         /* Setup the options array */
-        $options = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit'=>$_REQUEST['size_limit']);
+        $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit'=>$_REQUEST['size_limit']);
         $media_ids = get_random_songs($options, $matchlist);
     break;
     case 'democratic':
         $democratic = new Democratic($_REQUEST['democratic_id']);
-        $urls = array($democratic->play_url());
+        $urls       = array($democratic->play_url());
     break;
     case 'download':
         if (isset($_REQUEST['song_id'])) {
@@ -162,7 +162,7 @@ switch ($_REQUEST['action']) {
     break;
 }
 
-debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
+debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: ' . json_encode($media_ids), 5);
 
 if (count($media_ids) || isset($urls)) {
     if ($stream_type != 'democratic') {

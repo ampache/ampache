@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
 
         // Get the current localplay fields
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        $fields = $localplay->get_instance_fields();
+        $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_add_instance.inc.php');
     break;
     case 'add_instance':
@@ -72,8 +72,8 @@ switch ($_REQUEST['action']) {
             break;
         }
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        $instance = $localplay->get_instance($_REQUEST['instance']);
-        $fields = $localplay->get_instance_fields();
+        $instance  = $localplay->get_instance($_REQUEST['instance']);
+        $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_edit_instance.inc.php');
     break;
     case 'show_instances':
@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
         }
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $instances = $localplay->get_instances();
-        $fields = $localplay->get_instance_fields();
+        $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_instances.inc.php');
     break;
     case 'show_playlist':

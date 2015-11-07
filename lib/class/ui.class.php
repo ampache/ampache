@@ -43,8 +43,8 @@ class UI
      */
     public static function find_template($template)
     {
-        $path = AmpConfig::get('theme_path') . '/templates/' . $template;
-        $realpath = AmpConfig::get('prefix') . $path;
+        $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
+        $realpath  = AmpConfig::get('prefix') . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension != 'php' || AmpConfig::get('allow_php_themes'))
            && file_exists($realpath) && is_file($realpath)) {
@@ -178,11 +178,11 @@ END;
         }
 
         switch ($pass) {
-            case 1: $unit = 'kB'; break;
-            case 2: $unit = 'MB'; break;
-            case 3: $unit = 'GB'; break;
-            case 4: $unit = 'TB'; break;
-            case 5: $unit = 'PB'; break;
+            case 1: $unit  = 'kB'; break;
+            case 2: $unit  = 'MB'; break;
+            case 3: $unit  = 'GB'; break;
+            case 4: $unit  = 'TB'; break;
+            case 5: $unit  = 'PB'; break;
             default: $unit = 'B'; break;
         }
 
@@ -198,7 +198,7 @@ END;
     {
         if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', $value, $matches)) {
             $value = $matches[1];
-            $unit = strtolower(substr($matches[2], 0, 1));
+            $unit  = strtolower(substr($matches[2], 0, 1));
         } else {
             return $value;
         }
@@ -230,7 +230,7 @@ END;
 
         if (is_array($name)) {
             $hover_name = $name[1];
-            $name = $name[0];
+            $name       = $name[0];
         }
 
         $title = $title ?: T_(ucfirst($name));
@@ -240,7 +240,7 @@ END;
             $hover_url = self::_find_icon($hover_name);
         }
         if ($bUseSprite) {
-            $tag = '<span class="sprite sprite-icon_'.$name.'" ';
+            $tag = '<span class="sprite sprite-icon_' . $name . '" ';
         } else {
             $tag = '<img src="' . $icon_url . '" ';
         }
@@ -277,11 +277,11 @@ END;
         }
 
         $filename = 'icon_' . $name . '.png';
-        $path = AmpConfig::get('theme_path') . '/images/icons/';
+        $path     = AmpConfig::get('theme_path') . '/images/icons/';
         if (!file_exists(AmpConfig::get('prefix') . $path . $filename)) {
             $path = '/images/';
         }
-        $url = AmpConfig::get('web_path') . $path . $filename;
+        $url                      = AmpConfig::get('web_path') . $path . $filename;
         self::$_icon_cache[$name] = $url;
 
         return $url;
@@ -372,7 +372,7 @@ END;
             echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
         } else {
             if (!empty($field)) {
-                echo "<script>updateText('" . $field . "', '" . json_encode($value) ."');</script>\n";
+                echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
             } else {
                 echo "<br />" . $value . "<br /><br />\n";
             }

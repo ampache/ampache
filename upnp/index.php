@@ -48,7 +48,7 @@ body {
 <br />
 <?php
 if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
-    echo 'SSDP sent at '.date('H:i:s').'.';
+    echo 'SSDP sent at ' . date('H:i:s') . '.';
 }
 ?>
 </body>

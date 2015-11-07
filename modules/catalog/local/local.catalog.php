@@ -78,7 +78,7 @@ class Catalog_local extends Catalog
      */
     public function is_installed()
     {
-        $sql = "SHOW TABLES LIKE 'catalog_local'";
+        $sql        = "SHOW TABLES LIKE 'catalog_local'";
         $db_results = Dba::query($sql);
 
         return (Dba::num_rows($db_results) > 0);
@@ -90,7 +90,7 @@ class Catalog_local extends Catalog
      */
     public function install()
     {
-        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
@@ -117,7 +117,7 @@ class Catalog_local extends Catalog
     {
         if ($catalog_id) {
             $this->id = intval($catalog_id);
-            $info = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key=>$value) {
                 $this->$key = $value;
@@ -135,10 +135,10 @@ class Catalog_local extends Catalog
     public static function get_from_path($path)
     {
         // First pull a list of all of the paths for the different catalogs
-        $sql = "SELECT `catalog_id`,`path` FROM `catalog_local`";
+        $sql        = "SELECT `catalog_id`,`path` FROM `catalog_local`";
         $db_results = Dba::read($sql);
 
-        $catalog_paths = array();
+        $catalog_paths  = array();
         $component_path = $path;
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -152,7 +152,7 @@ class Catalog_local extends Catalog
             }
 
             // Keep going until the path stops changing
-            $old_path = $component_path;
+            $old_path       = $component_path;
             $component_path = realpath($component_path . '/../');
         } while (strcmp($component_path,$old_path) != 0);
 
@@ -190,7 +190,7 @@ class Catalog_local extends Catalog
         }
 
         // Make sure this path isn't already in use by an existing catalog
-        $sql = 'SELECT `id` FROM `catalog_local` WHERE `path` = ?';
+        $sql        = 'SELECT `id` FROM `catalog_local` WHERE `path` = ?';
         $db_results = Dba::read($sql, array($path));
 
         if (Dba::num_rows($db_results)) {
@@ -259,7 +259,7 @@ class Catalog_local extends Catalog
             debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
 
             /* Create the new path */
-            $full_file = $path.$slash_type.$file;
+            $full_file = $path . $slash_type . $file;
             $this->add_file($full_file, $options);
         } // end while reading directory
 
@@ -342,9 +342,9 @@ class Catalog_local extends Catalog
 
             // Check to make sure the filename is of the expected charset
             if (function_exists('iconv')) {
-                $convok = false;
+                $convok       = false;
                 $site_charset = AmpConfig::get('site_charset');
-                $lc_charset = $site_charset;
+                $lc_charset   = $site_charset;
                 if (AmpConfig::get('lc_charset')) {
                     $lc_charset = AmpConfig::get('lc_charset');
                 }
@@ -418,8 +418,8 @@ class Catalog_local extends Catalog
             );
         }
 
-        $this->count = 0;
-        $this->added_songs_to_gather = array();
+        $this->count                  = 0;
+        $this->added_songs_to_gather  = array();
         $this->added_videos_to_gather = array();
 
         if (!defined('SSE_OUTPUT')) {
@@ -466,7 +466,7 @@ class Catalog_local extends Catalog
         $this->update_last_add();
 
         $time_diff = ($current_time - $start_time) ?: 0;
-        $rate = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
+        $rate      = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
         if ($rate <= 0) {
             $rate = T_('N/A');
         }
@@ -489,10 +489,10 @@ class Catalog_local extends Catalog
         debug_event('verify', 'Starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $stats = self::get_stats($this->id);
-        $number = $stats['videos'] + $stats['songs'];
+        $stats         = self::get_stats($this->id);
+        $number        = $stats['videos'] + $stats['songs'];
         $total_updated = 0;
-        $this->count = 0;
+        $this->count   = 0;
 
         if (!defined('SSE_OUTPUT')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
@@ -530,7 +530,7 @@ class Catalog_local extends Catalog
     private function _verify_chunk($media_type, $chunk, $chunk_size)
     {
         debug_event('verify', "Starting chunk $chunk", 5);
-        $count = $chunk * $chunk_size;
+        $count   = $chunk * $chunk_size;
         $changed = 0;
 
         $sql = "SELECT `id`, `file` FROM `$media_type` " .
@@ -587,8 +587,8 @@ class Catalog_local extends Catalog
              return 0;
          }
 
-         $dead_total = 0;
-         $stats = self::get_stats($this->id);
+         $dead_total  = 0;
+         $stats       = self::get_stats($this->id);
          $this->count = 0;
          foreach (array('video', 'song') as $media_type) {
              $total = $stats[$media_type . 's']; // UGLY
@@ -596,7 +596,7 @@ class Catalog_local extends Catalog
                 continue;
             }
              $chunks = floor($total / 10000);
-             $dead = array();
+             $dead   = array();
              foreach (range(0, $chunks) as $chunk) {
                  $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
              }
@@ -627,7 +627,7 @@ class Catalog_local extends Catalog
     private function _clean_chunk($media_type, $chunk, $chunk_size)
     {
         debug_event('clean', "Starting chunk $chunk", 5);
-        $dead = array();
+        $dead  = array();
         $count = $chunk * $chunk_size;
 
         $sql = "SELECT `id`, `file` FROM `$media_type` " .
@@ -672,7 +672,7 @@ class Catalog_local extends Catalog
 
         $key = vainfo::get_tag_type($vainfo->tags);
 
-        $results = vainfo::clean_tag_info($vainfo->tags, $key, $file);
+        $results            = vainfo::clean_tag_info($vainfo->tags, $key, $file);
         $results['catalog'] = $this->id;
 
         if (isset($options['user_upload'])) {
@@ -684,7 +684,7 @@ class Catalog_local extends Catalog
         }
 
         if (isset($options['artist_id'])) {
-            $results['artist_id'] = $options['artist_id'];
+            $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
         }
 
@@ -723,12 +723,12 @@ class Catalog_local extends Catalog
     public function insert_local_video($file, $options = array())
     {
         /* Create the vainfo object and get info */
-        $gtypes = $this->get_gather_types('video');
+        $gtypes     = $this->get_gather_types('video');
         $vainfo     = new vainfo($file, $gtypes,'','','',$this->sort_pattern,$this->rename_pattern);
         $vainfo->get_info();
 
-        $tag_name = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
-        $results = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file);
+        $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
+        $results            = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file);
         $results['catalog'] = $this->id;
 
         $id = Video::insert($results, $gtypes, $options);
@@ -760,7 +760,7 @@ class Catalog_local extends Catalog
             return true;
         }
 
-        $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
+        $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($full_file));
 
         //If it's found then return true
@@ -773,7 +773,7 @@ class Catalog_local extends Catalog
 
     public function get_rel_path($file_path)
     {
-        $info = $this->_get_info();
+        $info         = $this->_get_info();
         $catalog_path = rtrim($info->path, "/");
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
@@ -786,7 +786,7 @@ class Catalog_local extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = $this->path;
+        $this->f_info      = $this->path;
         $this->f_full_info = $this->path;
     }
 

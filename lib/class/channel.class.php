@@ -40,7 +40,7 @@ class Channel extends database_object implements media, library_item
     public $description;
 
     public $header_chunk;
-    public $chunk_size = 4096;
+    public $chunk_size              = 4096;
     private $header_chunk_remainder = 0;
 
     public $tags;
@@ -80,15 +80,15 @@ class Channel extends database_object implements media, library_item
         Dba::write($sql, array($start_date, $address, $port, $pid, $this->id));
 
         $this->start_date = $start_date;
-        $this->interface = $address;
-        $this->port = $port;
-        $this->pid = $pid;
+        $this->interface  = $address;
+        $this->port       = $port;
+        $this->pid        = $pid;
     }
 
     public function update_listeners($listeners, $addition=false)
     {
-        $sql = "UPDATE `channel` SET `listeners` = ? ";
-        $params = array($listeners);
+        $sql             = "UPDATE `channel` SET `listeners` = ? ";
+        $params          = array($listeners);
         $this->listeners = $listeners;
         if ($listeners > $this->peak_listeners) {
             $this->peak_listeners = $listeners;
@@ -105,7 +105,7 @@ class Channel extends database_object implements media, library_item
 
     public function get_genre()
     {
-        $tags = Tag::get_object_tags('channel', $this->id);
+        $tags  = Tag::get_object_tags('channel', $this->id);
         $genre = "";
         if ($tags) {
             foreach ($tags as $tag) {
@@ -125,8 +125,8 @@ class Channel extends database_object implements media, library_item
 
     public static function get_next_port()
     {
-        $port = 8200;
-        $sql = "SELECT MAX(`port`) AS `max_port` FROM `channel`";
+        $port       = 8200;
+        $sql        = "SELECT MAX(`port`) AS `max_port` FROM `channel`";
         $db_results = Dba::read($sql);
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -141,7 +141,7 @@ class Channel extends database_object implements media, library_item
     public static function create($name, $description, $url, $object_type, $object_id, $interface, $port, $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate)
     {
         if (!empty($name)) {
-            $sql = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql    = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $params = array($name, $description, $url, $object_type, $object_id, $interface, $port, (!empty($interface) && !empty($port)), $admin_password, !empty($private), $max_listeners, $random, $loop, $stream_type, $bitrate);
             return Dba::write($sql, $params);
         }
@@ -184,7 +184,7 @@ class Channel extends database_object implements media, library_item
                 echo Ajax::button('?page=index&action=start_channel&id=' . $this->id,'run', T_('Start Channel'),'channel_start_' . $this->id);
                 echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id,'stop', T_('Stop Channel'),'channel_stop_' . $this->id);
                 echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel edit') . "', 'channel_row_', 'refresh_channel')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
+                echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
@@ -192,7 +192,7 @@ class Channel extends database_object implements media, library_item
     public function format($details = true)
     {
         if ($details) {
-            $this->tags = Tag::get_top_tags('channel', $this->id);
+            $this->tags   = Tag::get_top_tags('channel', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'channel');
         }
     }
@@ -286,9 +286,9 @@ class Channel extends database_object implements media, library_item
 
     public static function get_channel_list()
     {
-        $sql = self::get_channel_list_sql();
+        $sql        = self::get_channel_list_sql();
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -345,7 +345,7 @@ class Channel extends database_object implements media, library_item
     protected function init_channel_songs()
     {
         $this->song_pos = 0;
-        $this->songs = array();
+        $this->songs    = array();
         $this->playlist = $this->get_target_object();
         if ($this->playlist) {
             if (!$this->random) {
@@ -367,7 +367,7 @@ class Channel extends database_object implements media, library_item
             // Move to next song
             while ($this->media == null && ($this->random || $this->song_pos < count($this->songs))) {
                 if ($this->random) {
-                    $randsongs = $this->playlist->get_random_items(1);
+                    $randsongs   = $this->playlist->get_random_items(1);
                     $this->media = new Song($randsongs[0]['object_id']);
                 } else {
                     $this->media = new Song($this->songs[$this->song_pos]);
@@ -420,7 +420,7 @@ class Channel extends database_object implements media, library_item
                     $options = array(
                             'bitrate' => $this->bitrate
                             );
-                    $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, null, $options);
+                    $this->transcoder           = Stream::start_transcode($this->media, $this->stream_type, null, $options);
                     $this->media_bytes_streamed = 0;
                 }
 
@@ -438,16 +438,16 @@ class Channel extends database_object implements media, library_item
                         if ($this->header_chunk_remainder) {
                             $this->header_chunk .= substr($clchunk, 0, $this->header_chunk_remainder);
                             if (strlen($clchunk) >= $this->header_chunk_remainder) {
-                                $clchunk = substr($clchunk, $this->header_chunk_remainder);
+                                $clchunk                      = substr($clchunk, $this->header_chunk_remainder);
                                 $this->header_chunk_remainder = 0;
                             } else {
                                 $this->header_chunk_remainder = $this->header_chunk_remainder - strlen($clchunk);
-                                $clchunk = '';
+                                $clchunk                      = '';
                             }
                         }
                         // see bin/channel_run.inc for explanation what's happening here
                         while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753") {
-                            $hex = $this->strtohex(substr($clchunk, 0, 27));
+                            $hex                = $this->strtohex(substr($clchunk, 0, 27));
                             $ogg_nr_of_segments = hexdec(substr($hex, 26*2, 2));
                             if ((substr($clchunk, 27 + $ogg_nr_of_segments + 1, 6) == "vorbis") || (substr($clchunk, 27 + $ogg_nr_of_segments, 4) == "Opus")) {
                                 $hex .= $this->strtohex(substr($clchunk, 27, $ogg_nr_of_segments));
@@ -479,11 +479,11 @@ class Channel extends database_object implements media, library_item
                         fclose($this->transcoder['handle']);
                         Stream::kill_process($this->transcoder);
 
-                        $this->media = null;
+                        $this->media      = null;
                         $this->transcoder = null;
                     }
                 } else {
-                    $this->media = null;
+                    $this->media      = null;
                     $this->transcoder = null;
                 }
 

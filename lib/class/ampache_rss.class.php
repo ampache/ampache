@@ -53,7 +53,7 @@ class Ampache_RSS
         if ($this->type === "podcast") {
             if ($params != null && is_array($params)) {
                 $object_type = $params['object_type'];
-                $object_id = $params['object_id'];
+                $object_id   = $params['object_id'];
                 if (Core::is_library_item($object_type)) {
                     $libitem = new $object_type($object_id);
                     if ($libitem->id) {
@@ -64,10 +64,10 @@ class Ampache_RSS
             }
         } else {
             // Function call name
-            $data_function = 'load_' . $this->type;
+            $data_function     = 'load_' . $this->type;
             $pub_date_function = 'pubdate_' . $this->type;
 
-            $data = call_user_func(array('Ampache_RSS',$data_function));
+            $data     = call_user_func(array('Ampache_RSS',$data_function));
             $pub_date = null;
             if (method_exists('Ampache_RSS', $data_function)) {
                 $pub_date = call_user_func(array('Ampache_RSS',$pub_date_function));
@@ -168,22 +168,22 @@ class Ampache_RSS
     {
         $data = Stream::get_now_playing();
 
-        $results = array();
-        $format = AmpConfig::get('rss_format') ?: '%t - %a - %A';
+        $results    = array();
+        $format     = AmpConfig::get('rss_format') ?: '%t - %a - %A';
         $string_map = array(
             '%t' => 'title',
             '%a' => 'artist',
             '%A' => 'album'
         );
         foreach ($data as $element) {
-            $song = $element['media'];
-            $client = $element['user'];
-            $title = $format;
+            $song        = $element['media'];
+            $client      = $element['user'];
+            $title       = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
-                $trep = 'f_' . $replace;
-                $drep = 'f_' . $replace . '_full';
-                $title = str_replace($search, $song->$trep, $title);
+                $trep        = 'f_' . $replace;
+                $drep        = 'f_' . $replace . '_full';
+                $title       = str_replace($search, $song->$trep, $title);
                 $description = str_replace($search, $song->$drep, $description);
             }
             $xml_array = array(
@@ -225,17 +225,17 @@ class Ampache_RSS
         //FIXME: The time stuff should be centralized, it's currently in two places, lame
 
         $time_unit = array('', T_('seconds ago'), T_('minutes ago'), T_('hours ago'), T_('days ago'), T_('weeks ago'), T_('months ago'), T_('years ago'));
-        $data = Song::get_recently_played();
+        $data      = Song::get_recently_played();
 
         $results = array();
 
         foreach ($data as $item) {
             $client = new User($item['user']);
-            $song = new Song($item['object_id']);
+            $song   = new Song($item['object_id']);
             if ($song->enabled) {
                 $song->format();
-                $amount = intval(time() - $item['date']+2);
-                $final = '0';
+                $amount     = intval(time() - $item['date']+2);
+                $final      = '0';
                 $time_place = '0';
                 while ($amount >= 1) {
                     $final = $amount;

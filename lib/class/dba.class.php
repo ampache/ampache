@@ -246,7 +246,7 @@ class Dba
         $username = AmpConfig::get('database_username');
         $hostname = AmpConfig::get('database_hostname');
         $password = AmpConfig::get('database_password');
-        $port = AmpConfig::get('database_port');
+        $port     = AmpConfig::get('database_port');
 
         // Build the data source name
         if (strpos($hostname, '/') === 0) {
@@ -321,7 +321,7 @@ class Dba
      */
     public static function check_database_inserted()
     {
-        $sql = "DESCRIBE session";
+        $sql        = "DESCRIBE session";
         $db_results = Dba::read($sql);
 
         if (!$db_results) {
@@ -431,39 +431,39 @@ class Dba
         switch (strtoupper($charset)) {
             case 'CP1250':
             case 'WINDOWS-1250':
-                $target_charset = 'cp1250';
+                $target_charset   = 'cp1250';
                 $target_collation = 'cp1250_general_ci';
                 break;
             case 'ISO-8859':
             case 'ISO-8859-2':
-                $target_charset = 'latin2';
+                $target_charset   = 'latin2';
                 $target_collation = 'latin2_general_ci';
                 break;
             case 'ISO-8859-1':
             case 'CP1252':
             case 'WINDOWS-1252':
-                $target_charset = 'latin1';
+                $target_charset   = 'latin1';
                 $target_collation = 'latin1_general_ci';
                 break;
             case 'EUC-KR':
-                $target_charset = 'euckr';
+                $target_charset   = 'euckr';
                 $target_collation = 'euckr_korean_ci';
                 break;
             case 'CP932':
-                $target_charset = 'sjis';
+                $target_charset   = 'sjis';
                 $target_collation = 'sjis_japanese_ci';
                 break;
             case 'KOI8-U':
-                $target_charset = 'koi8u';
+                $target_charset   = 'koi8u';
                 $target_collation = 'koi8u_general_ci';
                 break;
             case 'KOI8-R':
-                $target_charset = 'koi8r';
+                $target_charset   = 'koi8r';
                 $target_collation = 'koi8r_general_ci';
                 break;
             case 'UTF-8':
             default:
-                $target_charset = 'utf8';
+                $target_charset   = 'utf8';
                 $target_collation = 'utf8_unicode_ci';
                 break;
         }
@@ -485,19 +485,19 @@ class Dba
     public static function reset_db_charset()
     {
         $translated_charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
-        $target_charset = $translated_charset['charset'];
-        $target_collation = $translated_charset['collation'];
+        $target_charset     = $translated_charset['charset'];
+        $target_collation   = $translated_charset['collation'];
 
         // Alter the charset for the entire database
         $sql = "ALTER DATABASE `" . AmpConfig::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
         Dba::write($sql);
 
-        $sql = "SHOW TABLES";
+        $sql        = "SHOW TABLES";
         $db_results = Dba::read($sql);
 
         // Go through the tables!
         while ($row = Dba::fetch_row($db_results)) {
-            $sql = "DESCRIBE `" . $row['0'] . "`";
+            $sql              = "DESCRIBE `" . $row['0'] . "`";
             $describe_results = Dba::read($sql);
 
             // Change the tables default charset and colliation
@@ -510,7 +510,7 @@ class Dba
                 (strpos($table['Type'], 'varchar') !== false) ||
                 (strpos($table['Type'], 'enum') !== false) ||
                 (strpos($table['Table'],'text') !== false)) {
-                    $sql = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset;
+                    $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset;
                     $charset_results = Dba::write($sql);
                     if (!$charset_results) {
                         debug_event('CHARSET','Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset,'3');
@@ -531,7 +531,7 @@ class Dba
      */
     public static function optimize_tables()
     {
-        $sql = "SHOW TABLES";
+        $sql        = "SHOW TABLES";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_row($db_results)) {

@@ -53,9 +53,9 @@ if ($channel->is_private) {
 
         $auth = Auth::login($htusername, $htpassword);
         if ($auth['success']) {
-            $username = $auth['username'];
+            $username        = $auth['username'];
             $GLOBALS['user'] = new User($username);
-            $is_auth = true;
+            $is_auth         = true;
             Preference::init();
 
             if (AmpConfig::get('access_control')) {
@@ -79,9 +79,9 @@ if ($channel->is_private) {
 
 $url = 'http://' . $channel->interface . ':' . $channel->port . '/' . $_REQUEST['target'];
 // Redirect request to the real channel server
-$headers = getallheaders();
+$headers         = getallheaders();
 $headers['Host'] = $channel->interface;
-$reqheaders = array();
+$reqheaders      = array();
 foreach ($headers as $key => $value) {
     $reqheaders[] = $key . ': ' . $value;
 }

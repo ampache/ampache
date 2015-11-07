@@ -42,7 +42,7 @@ set_time_limit(300);
 // Warning: Do not change any session variable after this call
 session_write_close();
 
-$id = $_REQUEST['song_id'];
+$id       = $_REQUEST['song_id'];
 $waveform = Waveform::get($id);
 if ($waveform) {
     header('Content-type: image/png');

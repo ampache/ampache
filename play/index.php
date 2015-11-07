@@ -40,11 +40,11 @@ $sid            = scrub_in($_REQUEST['ssid']);
 $type           = scrub_in($_REQUEST['type']);
 
 $transcode_to = null;
-$player = null;
-$bitrate = 0;
-$maxbitrate = 0;
-$resolution = '';
-$quality = 0;
+$player       = null;
+$bitrate      = 0;
+$maxbitrate   = 0;
+$resolution   = '';
+$quality      = 0;
 
 if (isset($_REQUEST['player'])) {
     $player = $_REQUEST['player'];
@@ -52,7 +52,7 @@ if (isset($_REQUEST['player'])) {
 
 if (AmpConfig::get('transcode_player_customize')) {
     $transcode_to = scrub_in($_REQUEST['transcode_to']);
-    $bitrate = intval($_REQUEST['bitrate']);
+    $bitrate      = intval($_REQUEST['bitrate']);
 
     // Trick to avoid LimitInternalRecursion reconfiguration
     $vsettings = $_REQUEST['vsettings'];
@@ -73,19 +73,19 @@ if (AmpConfig::get('transcode_player_customize')) {
         }
     }
 }
-$share_id       = intval($_REQUEST['share_id']);
-$subtitle       = '';
+$share_id         = intval($_REQUEST['share_id']);
+$subtitle         = '';
 $send_all_in_once = false;
 
 if (!$type) {
     $type = 'song';
 }
 
-debug_event('play', 'Asked for type {'.$type."}", 5);
+debug_event('play', 'Asked for type {' . $type . "}", 5);
 
 if ($type == 'playlist') {
     $playlist_type = scrub_in($_REQUEST['playlist_type']);
-    $oid = $sid;
+    $oid           = $sid;
 }
 
 /* This is specifically for tmp playlist requests */
@@ -116,7 +116,7 @@ if (!empty($apikey)) {
     $user = User::get_from_apikey($apikey);
     if ($user != null) {
         $GLOBALS['user'] = $user;
-        $uid = $GLOBALS['user']->id;
+        $uid             = $GLOBALS['user']->id;
         Preference::init();
         $user_authenticated = true;
     }
@@ -124,7 +124,7 @@ if (!empty($apikey)) {
     $auth = Auth::login($u, $p);
     if ($auth['success']) {
         $GLOBALS['user'] = User::get_from_username($auth['username']);
-        $uid = $GLOBALS['user']->id;
+        $uid             = $GLOBALS['user']->id;
         Preference::init();
         $user_authenticated = true;
     }
@@ -140,7 +140,7 @@ if (empty($uid)) {
     if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         Session::check();
         $user = User::get_from_username($_SESSION['userdata']['username']);
-        $uid = $user->id;
+        $uid  = $user->id;
     }
 }
 
@@ -183,7 +183,7 @@ if (!$share_id) {
     $GLOBALS['user']->update_last_seen();
 } else {
     $secret = $_REQUEST['share_secret'];
-    $share = new Share($share_id);
+    $share  = new Share($share_id);
 
     if (!$share->is_valid($secret, 'stream')) {
         header('HTTP/1.1 403 Access Unauthorized');
@@ -201,7 +201,7 @@ if (!$share_id) {
 
 /* If we are in demo mode.. die here */
 if (AmpConfig::get('demo_mode') || (!Access::check('interface','25') )) {
-    debug_event('UI::access_denied', "Streaming Access Denied:" .AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
+    debug_event('UI::access_denied', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
     UI::access_denied();
     exit;
 }
@@ -247,8 +247,8 @@ if ($demo_id) {
     } else {
         // Pull history
         $song_cool_check = 0;
-        $oid = $democratic->get_next_object($song_cool_check);
-        $oids = $democratic->get_cool_songs();
+        $oid             = $democratic->get_next_object($song_cool_check);
+        $oids            = $democratic->get_cool_songs();
         while (in_array($oid,$oids)) {
             $song_cool_check++;
             $oid = $democratic->get_next_object($song_cool_check);
@@ -288,7 +288,7 @@ if ($type == 'song') {
         $media = new Song_Preview($oid);
         $media->format();
     } else {
-        $type = 'video';
+        $type  = 'video';
         $media = new Video($oid);
         if (isset($_REQUEST['subtitle'])) {
             $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
@@ -383,7 +383,7 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
     $media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
 
     $browser->downloadHeaders($media_name,$media->mime,false,$media->size);
-    $fp = fopen(Core::conv_lc_file($media->file), 'rb');
+    $fp            = fopen(Core::conv_lc_file($media->file), 'rb');
     $bytesStreamed = 0;
 
     if (!is_resource($fp)) {
@@ -395,8 +395,8 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
         if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
             debug_event('play', 'Registering download stats for {' . $media->get_stream_name() . '}...', '5');
             $sessionkey = $sid ?: Stream::get_session();
-            $agent = Session::agent($sessionkey);
-            $location = Session::get_geolocation($sessionkey);
+            $agent      = Session::agent($sessionkey);
+            $location   = Session::get_geolocation($sessionkey);
             Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
         }
     }
@@ -433,8 +433,8 @@ if (AmpConfig::get('downsample_remote')) {
     }
 }
 
-debug_event('play', 'Playing file ('.$media->file.'}...', 5);
-debug_event('play', 'Media type {'.$media->type.'}', 5);
+debug_event('play', 'Playing file (' . $media->file . '}...', 5);
+debug_event('play', 'Media type {' . $media->type . '}', 5);
 
 $cpaction = $_REQUEST['custom_play_action'];
 // Determine whether to transcode
@@ -442,13 +442,13 @@ $transcode = false;
 // transcode_to should only have an effect if the media is the wrong format
 $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
 
-debug_event('play', 'Custom play action {'.$cpaction.'}', 5);
-debug_event('play', 'Transcode to {'.$transcode_to.'}', 5);
+debug_event('play', 'Custom play action {' . $cpaction . '}', 5);
+debug_event('play', 'Transcode to {' . $transcode_to . '}', 5);
 
 // If custom play action, do not try to transcode
 if (!$cpaction) {
     $transcode_cfg = AmpConfig::get('transcode');
-    $valid_types = $media->get_stream_types($player);
+    $valid_types   = $media->get_stream_types($player);
     if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
         if ($transcode_to) {
             $transcode = true;
@@ -483,7 +483,7 @@ if (!$cpaction) {
         }
     } else {
         if ($transcode_cfg != 'never') {
-            debug_event('play', 'Transcoding is not enabled for this media type. Valid types: {'.json_encode($valid_types).'}', 5);
+            debug_event('play', 'Transcoding is not enabled for this media type. Valid types: {' . json_encode($valid_types) . '}', 5);
         } else {
             debug_event('play', 'Transcode disabled in user settings.', 5);
         }
@@ -516,22 +516,22 @@ if ($transcode) {
     } else {
         if (isset($_REQUEST['segment'])) {
             // 10 seconds segment. Should it be an option?
-            $ssize = 10;
+            $ssize            = 10;
             $send_all_in_once = true; // Should we use temporary folder instead?
             debug_event('play', 'Sending all data in once.', 5);
-            $troptions['frame'] = intval($_REQUEST['segment']) * $ssize;
+            $troptions['frame']    = intval($_REQUEST['segment']) * $ssize;
             $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
         }
     }
 
     $transcoder = Stream::start_transcode($media, $transcode_to, $player, $troptions);
-    $fp = $transcoder['handle'];
+    $fp         = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else {
     if ($cpaction) {
         $transcoder = $media->run_custom_play_action($cpaction, $transcode_to);
-        $fp = $transcoder['handle'];
-        $transcode = true;
+        $fp         = $transcoder['handle'];
+        $transcode  = true;
     } else {
         $fp = fopen(Core::conv_lc_file($media->file), 'rb');
     }
@@ -567,8 +567,8 @@ Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($medi
 
 // Handle Content-Range
 
-$start = 0;
-$end = 0;
+$start        = 0;
+$end          = 0;
 $range_values = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
 
 if ($range_values > 0 && ($start > 0 || $end > 0)) {
@@ -611,10 +611,10 @@ if (!isset($_REQUEST['segment'])) {
     } else {
         if (!$share_id) {
             if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-                debug_event('play', 'Registering stream stats for {'.$media->get_stream_name() .'}...', 5);
+                debug_event('play', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 5);
                 $sessionkey = $sid ?: Stream::get_session();
-                $agent = Session::agent($sessionkey);
-                $location = Session::get_geolocation($sessionkey);
+                $agent      = Session::agent($sessionkey);
+                $location   = Session::get_geolocation($sessionkey);
                 $GLOBALS['user']->update_stats($type, $media->id, $agent, $location, isset($_REQUEST['noscrobble']));
             }
         }
@@ -661,9 +661,9 @@ $bytes_streamed = 0;
 
 // Actually do the streaming
 $buf_all = '';
-$r_arr = array($fp);
-$w_arr = $e_arr = null;
-$status = stream_select($r_arr, $w_arr, $e_arr, 2);
+$r_arr   = array($fp);
+$w_arr   = $e_arr   = null;
+$status  = stream_select($r_arr, $w_arr, $e_arr, 2);
 if ($status === false) {
     debug_event('play', 'stream_select failed.', 1);
 } elseif ($status > 0) {

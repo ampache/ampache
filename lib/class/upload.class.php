@@ -52,9 +52,9 @@ class Upload
                         return self::rerror();
                     }
 
-                    $rootdir = self::get_root($catalog);
+                    $rootdir   = self::get_root($catalog);
                     $targetdir = $rootdir;
-                    $folder = $_POST['folder'];
+                    $folder    = $_POST['folder'];
                     if ($folder == '..') {
                         $folder = '';
                     }
@@ -82,22 +82,22 @@ class Upload
                             exec(AmpConfig::get('upload_script'));
                         }
 
-                        $options = array();
+                        $options                = array();
                         $options['user_upload'] = $GLOBALS['user']->id;
                         if (isset($_POST['license'])) {
                             $options['license'] = $_POST['license'];
                         }
                         $artist_id = intval($_REQUEST['artist']);
-                        $album_id = intval($_REQUEST['album']);
+                        $album_id  = intval($_REQUEST['album']);
 
                         // Override artist information with artist's user
                         if (AmpConfig::get('upload_user_artist')) {
                             $artists = $GLOBALS['user']->get_artists();
-                            $artist = null;
+                            $artist  = null;
                             // No associated artist yet, we create a default one for the user sender
                             if (count($artists) == 0) {
                                 $artists[] = Artist::check($GLOBALS['user']->f_name);
-                                $artist = new Artist($artists[0]);
+                                $artist    = new Artist($artists[0]);
                                 $artist->update_artist_user($GLOBALS['user']->id);
                             } else {
                                 $artist = new Artist($artists[0]);
@@ -112,7 +112,7 @@ class Upload
                                     return self::rerror($targetfile);
                                 } else {
                                     $artist_id = Artist::check($_REQUEST['artist_name']);
-                                    $artist = new Artist($artist_id);
+                                    $artist    = new Artist($artist_id);
                                     if (!$artist->get_user_owner()) {
                                         $artist->update_artist_user($GLOBALS['user']->id);
                                     }

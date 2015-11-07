@@ -45,7 +45,7 @@ class AutoUpdate
     protected static function is_develop()
     {
         $version = AmpConfig::get('version');
-        $vspart = explode('-', $version);
+        $vspart  = explode('-', $version);
 
         return ($vspart[count($vspart) - 1] == 'develop');
     }
@@ -77,7 +77,7 @@ class AutoUpdate
     {
         try {
             // https is mandatory
-            $url = "https://api.github.com/repos/ampache/ampache" . $action;
+            $url     = "https://api.github.com/repos/ampache/ampache" . $action;
             $request = Requests::get($url, array(), Core::requests_options());
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
@@ -195,8 +195,8 @@ class AutoUpdate
         debug_event('autoupdate', 'Checking latest version online...', '5');
 
         $available = false;
-        $current = self::get_current_version();
-        $latest = self::get_latest_version();
+        $current   = self::get_current_version();
+        $latest    = self::get_latest_version();
 
         if ($current != $latest && !empty($current)) {
             if (self::is_develop()) {

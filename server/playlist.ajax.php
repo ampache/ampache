@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
     case 'append_item':
         // Only song item are supported with playlists
 
-        debug_event('playlist', 'Appending items to playlist {'.$_REQUEST['playlist_id'].'}...', '5');
+        debug_event('playlist', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', '5');
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface','25')) {
@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
                 break;
             }
 
-            $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
+            $name        = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
             $playlist_id = Playlist::create($name, 'private');
             if (!$playlist_id) {
                 break;
@@ -75,22 +75,22 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $songs = array();
+        $songs   = array();
         $item_id = $_REQUEST['item_id'];
 
         switch ($_REQUEST['item_type']) {
             case 'smartplaylist':
                 $smartplaylist = new Search($item_id, 'song');
-                $items = $playlist->get_items();
+                $items         = $playlist->get_items();
                 foreach ($items as $item) {
                     $songs[] = $item['object_id'];
                 }
             break;
             case 'album':
-                debug_event('playlist', 'Adding all songs of album(s) {'.$item_id.'}...', '5');
+                debug_event('playlist', 'Adding all songs of album(s) {' . $item_id . '}...', '5');
                 $albums_array = explode(',', $item_id);
                 foreach ($albums_array as $a) {
-                    $album = new Album($a);
+                    $album  = new Album($a);
                     $asongs = $album->get_songs();
                     foreach ($asongs as $song_id) {
                         $songs[] = $song_id;
@@ -98,17 +98,17 @@ switch ($_REQUEST['action']) {
                 }
             break;
             case 'artist':
-                debug_event('playlist', 'Adding all songs of artist {'.$item_id.'}...', '5');
-                $artist = new Artist($item_id);
+                debug_event('playlist', 'Adding all songs of artist {' . $item_id . '}...', '5');
+                $artist  = new Artist($item_id);
                 $songs[] = $artist->get_songs();
             break;
             case 'song_preview':
             case 'song':
-                debug_event('playlist', 'Adding song {'.$item_id.'}...', '5');
+                debug_event('playlist', 'Adding song {' . $item_id . '}...', '5');
                 $songs = explode(',', $item_id);
             break;
             case 'playlist':
-                $pl = new Playlist($item_id);
+                $pl    = new Playlist($item_id);
                 $songs = $pl->get_songs();
             break;
             default:

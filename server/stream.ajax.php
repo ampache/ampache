@@ -28,7 +28,7 @@ if (!defined('AJAX_INCLUDE')) {
     exit;
 }
 
-debug_event('stream.ajax.php', 'Called for action {'.$_REQUEST['action'].'}', 5);
+debug_event('stream.ajax.php', 'Called for action {' . $_REQUEST['action'] . '}', 5);
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
                 // Rien a faire
             break;
             default:
-                $new = 'stream';
+                $new                = 'stream';
                 $results['rfc3514'] = '0x1';
             break 2;
         } // end switch
@@ -75,9 +75,9 @@ switch ($_REQUEST['action']) {
     break;
     case 'directplay':
 
-        debug_event('stream.ajax.php', 'Play type {'.$_REQUEST['playtype'].'}', 5);
+        debug_event('stream.ajax.php', 'Play type {' . $_REQUEST['playtype'] . '}', 5);
         $object_type = $_REQUEST['object_type'];
-        $object_id = $_REQUEST['object_id'];
+        $object_id   = $_REQUEST['object_id'];
         if (is_array($object_id)) {
             $object_id = implode(',', $object_id);
         }
@@ -100,7 +100,7 @@ switch ($_REQUEST['action']) {
                     unset($_SESSION['iframe']['subtitle']);
                 }
             }
-            $results['rfc3514'] = '<script type="text/javascript">' . Core::get_reloadutil() . '(\''. AmpConfig::get('web_path') . '/util.php\');</script>';
+            $results['rfc3514'] = '<script type="text/javascript">' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
         }
     break;
     case 'basket':
@@ -115,7 +115,7 @@ switch ($_REQUEST['action']) {
 
         // We need to set the basket up!
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
-        $results['rfc3514'] = '<script type="text/javascript">' . Core::get_reloadutil() . '(\''. AmpConfig::get('web_path') . '/util.php\');</script>';
+        $results['rfc3514']           = '<script type="text/javascript">' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
     break;
     default:
         $results['rfc3514'] = '0x1';

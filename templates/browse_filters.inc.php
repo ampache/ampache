@@ -80,7 +80,7 @@ if (!Core::is_session_started()) {
     <?php if (in_array('object_type',$allowed_filters)) {
     ?>
         <?php $string = 'otype_' . $browse->get_filter('object_type');
-    ${$string} = 'selected="selected"';
+    ${$string}        = 'selected="selected"';
     ?>
         <input id="typeSongRadio" type="radio" name="object_type" value="1" <?php echo $otype_song;
     ?>/>
@@ -111,7 +111,7 @@ if (!Core::is_session_started()) {
     ?></option>
                 <?php
                     $sql = 'SELECT `id`,`name` FROM `catalog`';
-    $db_results = Dba::read($sql);
+    $db_results          = Dba::read($sql);
     while ( $data = Dba::fetch_assoc($db_results) ) {
         $results[] = $data;
     }

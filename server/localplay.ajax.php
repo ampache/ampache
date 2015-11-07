@@ -129,7 +129,7 @@ switch ($_REQUEST['action']) {
         // Wait in case we just deleted what we were playing
         sleep(3);
         $objects = $localplay->get();
-        $status = $localplay->status();
+        $status  = $localplay->status();
 
         ob_start();
         $browse = new Browse();
@@ -153,7 +153,7 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->delete_instance($_REQUEST['instance']);
 
-        $key = 'localplay_instance_' . $_REQUEST['instance'];
+        $key           = 'localplay_instance_' . $_REQUEST['instance'];
         $results[$key] = '';
     break;
     case 'repeat':

@@ -33,7 +33,7 @@ switch ($_REQUEST['action']) {
     default:
         // Show Catalogs
         $catalog_ids = Catalog::get_catalogs();
-        $browse = new Browse();
+        $browse      = new Browse();
         $browse->set_type('catalog');
         $browse->set_static_content(true);
         $browse->save_objects($catalog_ids);

@@ -78,7 +78,7 @@ class Playlist extends playlist_object
 
         $idlist = '(' . implode(',',$ids) . ')';
 
-        $sql = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
+        $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -96,7 +96,7 @@ class Playlist extends playlist_object
             $user_id = $GLOBALS['user']->id;
         }
 
-        $sql = 'SELECT `id` FROM `playlist`';
+        $sql    = 'SELECT `id` FROM `playlist`';
         $params = array();
         if ($user_id > -1) {
             $sql .= ' WHERE `user` = ?';
@@ -114,7 +114,7 @@ class Playlist extends playlist_object
         $sql .= ' ORDER BY `name`';
 
         $db_results = Dba::read($sql, $params);
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -130,7 +130,7 @@ class Playlist extends playlist_object
     public function format($details = true)
     {
         parent::format($details);
-        $this->link = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
+        $this->link   = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
     } // format
 
@@ -141,7 +141,7 @@ class Playlist extends playlist_object
      */
     public function get_track($track_id)
     {
-        $sql = "SELECT * FROM `playlist_data` WHERE `id` = ? AND `playlist` = ?";
+        $sql        = "SELECT * FROM `playlist_data` WHERE `id` = ? AND `playlist` = ?";
         $db_results = Dba::read($sql, array($track_id, $this->id));
 
         $row = Dba::fetch_assoc($db_results);
@@ -159,7 +159,7 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $sql = "SELECT `id`,`object_id`,`object_type`,`track` FROM `playlist_data` WHERE `playlist`= ? ORDER BY `track`";
+        $sql        = "SELECT `id`,`object_id`,`object_type`,`track` FROM `playlist_data` WHERE `playlist`= ? ORDER BY `track`";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -207,7 +207,7 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $sql = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
+        $sql        = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_assoc($db_results)) {
@@ -224,7 +224,7 @@ class Playlist extends playlist_object
      */
     public function get_song_count()
     {
-        $sql = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist` = ?";
+        $sql        = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist` = ?";
         $db_results = Dba::read($sql, array($this->id));
 
         $results = Dba::fetch_row($db_results);
@@ -238,10 +238,10 @@ class Playlist extends playlist_object
     */
     public function get_total_duration()
     {
-        $songs = self::get_songs();
+        $songs  = self::get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
 
-        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
+        $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_row($db_results);
@@ -258,7 +258,7 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $sql = "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`";
+        $sql        = "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`";
         $db_results = Dba::read($sql, array($user_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -316,7 +316,7 @@ class Playlist extends playlist_object
             return false;
         }
 
-        $sql = "UPDATE `playlist` SET `$field` = ? WHERE `id` = ?";
+        $sql        = "UPDATE `playlist` SET `$field` = ? WHERE `id` = ?";
         $db_results = Dba::write($sql, array($value, $this->id));
 
         return $db_results;
@@ -367,11 +367,11 @@ class Playlist extends playlist_object
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        $sql = "SELECT `track` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` DESC LIMIT 1";
+        $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($this->id));
-        $data = Dba::fetch_assoc($db_results);
+        $data       = Dba::fetch_assoc($db_results);
         $base_track = $data['track'];
-        debug_event('add_medias', 'Track number: '.$base_track, '5');
+        debug_event('add_medias', 'Track number: ' . $base_track, '5');
 
         $i = 0;
         foreach ($medias as $data) {
@@ -484,14 +484,14 @@ class Playlist extends playlist_object
                      B.`track` ASC";
         $db_results = Dba::query($sql, array($this->id));
 
-        $i = 1;
+        $i       = 1;
         $results = array();
 
         while ($r = Dba::fetch_assoc($db_results)) {
-            $new_data = array();
+            $new_data               = array();
             $new_data['id']         = $r['id'];
             $new_data['track']      = $i;
-            $results[] = $new_data;
+            $results[]              = $new_data;
             $i++;
         } // end while results
 

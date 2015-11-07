@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        $id = $_REQUEST['id'];
+        $id        = $_REQUEST['id'];
         $broadcast = new Broadcast($id);
         if ($broadcast->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=broadcast';

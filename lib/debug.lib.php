@@ -179,7 +179,7 @@ function check_override_memory()
     /* Check memory */
     $current_memory = ini_get('memory_limit');
     $current_memory = substr($current_memory,0,strlen($current_memory)-1);
-    $new_limit = ($current_memory+16) . "M";
+    $new_limit      = ($current_memory+16) . "M";
 
     /* Bump it by 16 megs (for getid3)*/
     if (!ini_set('memory_limit',$new_limit)) {
@@ -219,8 +219,8 @@ function check_override_exec_time()
 function check_upload_size()
 {
     $upload_max = return_bytes(ini_get('upload_max_filesize'));
-    $post_max = return_bytes(ini_get('post_max_size'));
-    $mini = 20971520; // 20M
+    $post_max   = return_bytes(ini_get('post_max_size'));
+    $mini       = 20971520; // 20M
 
     return (($upload_max >= $mini || $upload_max <= 0) && ($post_max >= $mini || $post_max <= 0));
 }
@@ -242,7 +242,7 @@ function check_php_simplexml()
 
 function return_bytes($val)
 {
-    $val = trim($val);
+    $val  = trim($val);
     $last = strtolower($val[strlen($val)-1]);
     switch ($last) {
         // The 'G' modifier is available since PHP 5.1.0

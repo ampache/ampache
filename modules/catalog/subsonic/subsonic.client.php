@@ -125,7 +125,7 @@ class SubsonicClient
         }
         if (empty($protocol)) {
             if (!preg_match("/^http\:\/\//", $server)) {
-                $server = "http://". $server;
+                $server = "http://" . $server;
             }
             $protocol = "http://";
         }
@@ -133,7 +133,7 @@ class SubsonicClient
         if (count($matches)) {
             // If theres a port on the url, remove it and save it for later use.
             $server = str_replace($matches[0], "", $server);
-            $_port = str_replace(":", "", $matches[0]);
+            $_port  = str_replace(":", "", $matches[0]);
         }
         if ($port == null && isset($_port)) {
             // If port parameter not set but there was one on the url, use the one from the url.
@@ -143,7 +143,7 @@ class SubsonicClient
                 $port = ($protocol == "https") ? '443' : '80';
             }
         }
-        $this->_serverUrl = $server;
+        $this->_serverUrl  = $server;
         $this->_serverPort = $port;
     }
 
@@ -154,7 +154,7 @@ class SubsonicClient
 
     protected function error($error, $data=null)
     {
-        error_log($error ."\n". print_r($data, true));
+        error_log($error . "\n" . print_r($data, true));
         return (object) array("success"=>false, "error"=>$error, "data"=>$data);
     }
 
@@ -163,7 +163,7 @@ class SubsonicClient
         $arr = json_decode($response, true);
         if ($arr['subsonic-response']) {
             $response = (array)$arr['subsonic-response'];
-            $data = $response;
+            $data     = $response;
             return array("success"=>($response['status'] == "ok"), "data"=>$data);
         } else {
             return $this->error("Invalid response from server!", $object);

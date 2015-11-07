@@ -89,13 +89,13 @@ class Ampache7digital
      */
     public function get_song_preview($track_mbid, $artist_name, $title)
     {
-        $file = null;
+        $file     = null;
         $echonest = new EchoNest_Client(new EchoNest_HttpClient_Requests());
         $echonest->authenticate(AmpConfig::get('echonest_api_key'));
         $enSong = null;
         try {
             $enProfile = $echonest->getTrackApi()->profile('musicbrainz:track:' . $track_mbid);
-            $enSong = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
+            $enSong    = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
         } catch (Exception $e) {
             debug_event('echonest', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $e->getMessage(), '1');
         }
@@ -127,7 +127,7 @@ class Ampache7digital
     {
         if (strpos($file, "7digital") !== false) {
             $consumer = new OAuthConsumer($this->api_key, $this->secret, null);
-            $request = OAuthRequest::from_consumer_and_token($consumer, null, 'GET', $file);
+            $request  = OAuthRequest::from_consumer_and_token($consumer, null, 'GET', $file);
             $request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, null);
             $url = $request->to_url();
             

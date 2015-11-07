@@ -31,7 +31,7 @@ $democratic = Democratic::get_current_playlist();
 $democratic->set_parent();
 
 $show_browse = false;
-$results = array();
+$results     = array();
 switch ($_REQUEST['action']) {
     case 'delete_vote':
         $democratic->remove_vote($_REQUEST['row_id']);
@@ -62,7 +62,7 @@ switch ($_REQUEST['action']) {
         }
 
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
-        $results['rfc3514'] = '<script type="text/javascript">' . Core::get_reloadutil() . '("'.$_SESSION['iframe']['target'].'")</script>';
+        $results['rfc3514']           = '<script type="text/javascript">' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
     break;
     case 'clear_playlist':
         if (!Access::check('interface','100')) {
@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
 if ($show_browse) {
     ob_start();
     $object_ids = $democratic->get_items();
-    $browse = new Browse();
+    $browse     = new Browse();
     $browse->set_type('democratic');
     $browse->set_static_content(false);
     $browse->show_objects($object_ids);

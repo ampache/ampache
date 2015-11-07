@@ -88,8 +88,8 @@ if ($limit > 0 && $total > $limit) {
     ?>
     <div class="list-header-alpha">
     <?php
-    $alphastr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    $alphalist = str_split($alphastr);
+    $alphastr    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $alphalist   = str_split($alphastr);
     $alphalist[] = '#';
     foreach ($alphalist as $key => $value) {
         $filter = '^';

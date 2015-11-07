@@ -27,10 +27,10 @@
 <td class="cel_to_user"><?php echo $libitem->f_to_user_link; ?></td>
 <td class="cel_creation_date"><?php echo $libitem->f_creation_date; ?></td>
 <td class="cel_action">
-<a id="<?php echo 'reply_pvmsg_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->id; ?>">
+<a id="<?php echo 'reply_pvmsg_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->id; ?>">
     <?php echo UI::get_icon('mail', T_('Reply')); ?>
 </a>
-<a id="<?php echo 'delete_pvmsg_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=<?php echo $libitem->id; ?>">
+<a id="<?php echo 'delete_pvmsg_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=<?php echo $libitem->id; ?>">
     <?php echo UI::get_icon('delete', T_('Delete')); ?>
 </a>
 </td>

@@ -370,7 +370,7 @@ if ($embed) {
 
 if (!$isVideo) {
     $containerClass = "jp-audio";
-    $playerClass = "jp-jplayer-audio";
+    $playerClass    = "jp-jplayer-audio";
     ?>
 <div class="playing_info">
     <div class="playing_artist"></div>
@@ -385,7 +385,7 @@ if (!$isVideo) {
 } else {
     $areaClass .= " jp-area-video";
     $containerClass = "jp-video jp-video-float jp-video-360p";
-    $playerClass = "jp-jplayer-video";
+    $playerClass    = "jp-jplayer-video";
 } ?>
 <div id="shouts_data"></div>
 <div class="jp-area<?php echo $areaClass; ?>">
@@ -492,7 +492,7 @@ if ($isVideo) {
             }
 
             $broadcast = new Broadcast($broadcast_id);
-            $key  = Broadcast::generate_key();
+            $key       = Broadcast::generate_key();
             $broadcast->update_state(true, $key);
             echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script type="text/javascript">startBroadcast(\'' . $key . '\');</script>';
         } else {
