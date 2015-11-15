@@ -126,7 +126,7 @@ class Catalog_remote extends Catalog
             }
         }
         
-        require_once AmpConfig::get('prefix') . '/modules/catalog/remote/ampacheapi-php/AmpacheApi.lib.php';
+        require_once AmpConfig::get('prefix') . '/modules/catalog/remote/ampacheapi-php.git/AmpacheApi.lib.php';
     }
 
     /**
