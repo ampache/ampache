@@ -35,7 +35,9 @@ Session::_auto_init();
 
 // Set up for redirection on important error cases
 $path = get_web_path();
-$path = $http_type . $_SERVER['HTTP_HOST'] . $path;
+if (isset($_SERVER['HTTP_HOST'])) {
+	$path = $http_type . $_SERVER['HTTP_HOST'] . $path;
+}
 
 // Check to make sure the config file exists. If it doesn't then go ahead and
 // send them over to the install script.
@@ -66,7 +68,7 @@ if (!empty($link)) {
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
 $results['version']            = '3.8.1-develop';
-$results['int_config_version'] = '31';
+$results['int_config_version'] = '32';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';

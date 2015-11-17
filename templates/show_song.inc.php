@@ -42,7 +42,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>
             </div>
         </dd>
-    <?php 
+    <?php
+
 }
     ?>
 
@@ -60,10 +61,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>
             </div>
         </dd>
-    <?php 
+    <?php
+
 }
     ?>
-<?php 
+<?php
+
 } ?>
 <?php if (AmpConfig::get('waveform')) {
     ?>
@@ -81,7 +84,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>" />
         </div>
     </dd>
-<?php 
+<?php
+
 } ?>
 <?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
@@ -94,19 +98,22 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $song->id);
     ?>
-            <?php 
+            <?php
+
 }
     ?>
             <?php if (Stream_Playlist::check_autoplay_next()) {
     ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true','play_next', T_('Play next'),'nextplay_song_' . $song->id);
     ?>
-            <?php 
+            <?php
+
 }
     ?>
             <?php echo $song->show_custom_play_actions();
     ?>
-        <?php 
+        <?php
+
 } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add to temporary playlist'),'add_song_' . $song->id); ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
@@ -119,7 +126,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
                 <?php echo UI::get_icon('comment', T_('Post Shout'));
     ?>
                 </a>
-            <?php 
+            <?php
+
 }
     ?>
         <?php 
@@ -131,10 +139,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>
                 <?php Share::display_ui('song', $song->id, false);
     ?>
-            <?php 
+            <?php
+
 }
     ?>
-        <?php 
+        <?php
+
 } ?>
         <?php if (Access::check_function('download')) {
     ?>
@@ -145,7 +155,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>/stream.php?action=download&amp;song_id=<?php echo $song->id;
     ?>"><?php echo UI::get_icon('download', T_('Download'));
     ?></a>
-        <?php 
+        <?php
+
 } ?>
         <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface','50')) {
     ?>
@@ -155,10 +166,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>/stats.php?action=graph&object_type=song&object_id=<?php echo $song->id;
     ?>"><?php echo UI::get_icon('statistics', T_('Graphs'));
     ?></a>
-            <?php 
+            <?php
+
 }
     ?>
-        <?php 
+        <?php
+
 } ?>
         <?php if (Access::check('interface','50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
     ?>
@@ -166,7 +179,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
                 <?php echo UI::get_icon('edit', T_('Edit'));
     ?>
             </a>
-        <?php 
+        <?php
+
 } ?>
         <?php if (Access::check('interface','75') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
     ?>
@@ -175,7 +189,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id);
     ?>
             </span>
-        <?php 
+        <?php
+
 } ?>
         <?php if (Catalog::can_remove($song)) {
     ?>
@@ -185,7 +200,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
                 <?php echo UI::get_icon('delete', T_('Delete'));
     ?>
             </a>
-        <?php 
+        <?php
+
 } ?>
     </dd>
 <?php
@@ -244,12 +260,23 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   }
 
 
-  foreach ($songprops as $key => $value) {
-      if (trim($value)) {
-          $rowparity = UI::flip_class();
-          echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
-      }
-  }
+    foreach ($songprops as $key => $value) {
+        if (trim($value)) {
+            $rowparity = UI::flip_class();
+            echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
+        }
+    }
+
+    if (Song::isCustomMetadataEnabled()) {
+        $dismetas = $song->getDisabledMetadataFields();
+        foreach ($song->getMetadata() as $metadata) {
+            if (!in_array($metadata->getField()->getName(), $dismetas)) {
+                $rowparity = UI::flip_class();
+                echo '<dt class="' . $rowparity . '">' . $metadata->getField()->getFormattedName() . '</dt>';
+                echo '<dd class="' . $rowparity . '">' . $metadata->getData() . '</dd>';
+            }
+        }
+    }
 ?>
 </dl>
 <?php UI::show_box_bottom(); ?>

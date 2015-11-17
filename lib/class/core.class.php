@@ -47,39 +47,79 @@ class Core
      */
     public static function autoload($class)
     {
+        $possiblePaths = array();
         if (strpos($class, '\\') === false) {
-            $file = AmpConfig::get('prefix') . '/lib/class/' .
-                strtolower($class) . '.class.php';
+            $possiblePaths = self::getNonNamespacedPaths($class);
+        } else {
+            $possiblePaths = self::getNamespacedPaths($class);
+        }
 
-            if (Core::is_readable($file)) {
-                require_once $file;
-
-                // Call _auto_init if it exists
-                $autocall = array($class, '_auto_init');
-                if (is_callable($autocall)) {
-                    call_user_func($autocall);
-                }
+        foreach ($possiblePaths as $path) {
+            if (is_file($path) && Core::is_readable($path)) {
+                require_once($path);
+                self::executeAutoCall($class);
             } else {
                 debug_event('autoload', "'$class' not found!", 1);
             }
-        } else {
-            // Class with namespace are not used by Ampache but probably by modules
-            $split = explode('\\', $class);
-            $path  = AmpConfig::get('prefix') . '/modules';
-            for ($i = 0; $i < count($split); ++$i) {
-                $path .= '/' . $split[$i];
-                if ($i != count($split)-1) {
-                    if (!is_dir($path)) {
-                        break;
-                    }
-                } else {
-                    $path .= '.php';
-                    if (Core::is_readable($path)) {
-                        require_once $path;
-                    }
-                }
-            }
         }
+    }
+
+    /**
+     * Execute _auto_init if availlable
+     * @param string $class
+     */
+    private static function executeAutoCall($class)
+    {
+        $autocall = array($class, '_auto_init');
+        if (is_callable($autocall)) {
+            call_user_func($autocall);
+        }
+    }
+
+    /**
+     * Place a new key on a specific position in array
+     * @param array $array
+     * @param integer $position
+     * @param array $add
+     * @return array
+     */
+    private static function insertInArray(array $array, $position, array $add)
+    {
+        return array_slice($array, 0, $position, true) +
+                $add +
+                array_slice($array, $position, null, true);
+    }
+
+    /**
+     * Get possible filepaths of namespaced classes
+     * @param string $class
+     * @return string
+     */
+    private static function getNamespacedPaths($class)
+    {
+        $possiblePaths   = array();
+        $namespaceParts  = explode('\\', $class);
+        $possiblePaths[] = AmpConfig::get('prefix') . '/modules/' . implode('/', $namespaceParts) . '.php';
+
+        $classedPath = array('path' => AmpConfig::get('prefix')) +
+                self::insertInArray($namespaceParts, 1, array('add' => 'class'));
+        $possiblePaths[] = implode('/', $classedPath) . '.php';
+
+        return $possiblePaths;
+    }
+
+    /**
+     * Get possible filepaths of non namespaced classes
+     * @param string $class
+     * @return string
+     */
+    private static function getNonNamespacedPaths($class)
+    {
+        $possiblePaths   = array();
+        $possiblePaths[] = AmpConfig::get('prefix') . '/lib/class/' .
+                strtolower($class) . '.class.php';
+
+        return $possiblePaths;
     }
 
     /**

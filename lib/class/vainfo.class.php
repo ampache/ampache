@@ -415,8 +415,15 @@ class vainfo
             $info['tvshow_art']        = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
             $info['art']               = $info['art'] ?: trim($tags['art']);
+            
+            // Add rest of the tags without typecast to the array
+            foreach ($tags as $tag => $value) {
+                if (!isset($info[$tag])) {
+                    $info[$tag] = trim($value);
+                }
+            }
         }
-
+        
         // Some things set the disk number even though there aren't multiple
         if ($info['totaldisks'] == 1 && $info['disk'] == 1) {
             unset($info['disk']);
@@ -1015,7 +1022,7 @@ class vainfo
      *    3. title.[date].Season #[#] Episode #[#].ext
      *    4. title.[date].###.ext		(maximum of 9 seasons)
      *  parse directory  path for name, season and episode numbers
-     *   /TV shows/show name [(year)]/[season ]##/##.Episode.Title.ext 
+     *   /TV shows/show name [(year)]/[season ]##/##.Episode.Title.ext
      *  parse movie names:
      *    title.[date].ext
      *    /movie title [(date)]/title.ext

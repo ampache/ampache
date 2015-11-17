@@ -22,6 +22,8 @@
 
 class Song extends database_object implements media, library_item
 {
+    use \lib\Metadata\Metadata;
+
     /* Variables from DB */
 
     /**
@@ -286,6 +288,16 @@ class Song extends database_object implements media, library_item
     public $_fake = false; // If this is a 'construct_from_array' object
 
     /**
+     * Aliases used in insert function
+     */
+    public static $aliases = array(
+        'mb_trackid','mbid','mb_albumid','mb_albumid_group','mb_artistid','mb_albumartistid','genre','publisher'
+    );
+
+
+
+
+    /**
      * Constructor
      *
      * Song class, for modifing a song.
@@ -298,6 +310,10 @@ class Song extends database_object implements media, library_item
         }
 
         $this->id = intval($id);
+
+        if (self::isCustomMetadataEnabled()) {
+            $this->initializeMetadata();
+        }
 
         if ($info = $this->_get_info($limit_threshold)) {
             foreach ($info as $key => $value) {
@@ -394,6 +410,8 @@ class Song extends database_object implements media, library_item
             $composer, $channels));
 
         if (!$db_results) {
+            var_dump(Dba::error());
+            exit;
             debug_event('song', 'Unable to insert ' . $file, 2);
             return false;
         }
@@ -856,7 +874,7 @@ class Song extends database_object implements media, library_item
             } else {
                 $newSongData = $new_song->$key;
             }
-            
+
             // If it's a stringie thing
             if (in_array($key, $string_array)) {
                 $songData    = self::clean_string_field_value($songData);
@@ -884,12 +902,12 @@ class Song extends database_object implements media, library_item
     private static function clean_string_field_value($value)
     {
         $value = trim(stripslashes(preg_replace('/\s+/', ' ', $value)));
-        
+
         // Strings containing  only UTF-8 BOM = empty string
         if (strlen($value) == 2 && (ord($value[0]) == 0xFF || ord($value[0]) == 0xFE)) {
             $value = "";
         }
-        
+
         return $value;
     }
 
@@ -940,6 +958,10 @@ class Song extends database_object implements media, library_item
                     Tag::update_tag_list($value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
                 break;
+                case 'metadata':
+                    if (self::isCustomMetadataEnabled()) {
+                        $this->updateMetadata($value);
+                    }
                 default:
                 break;
             } // end whitelist
@@ -961,7 +983,12 @@ class Song extends database_object implements media, library_item
             if ($catalog->get_type() == 'local') {
                 debug_event('song', 'Writing id3 metadata to file ' . $this->file, 5);
                 $meta = $this->get_metadata();
-                $id3  = new vainfo($this->file);
+                if (self::isCustomMetadataEnabled()) {
+                    foreach ($this->getMetadata() as $metadata) {
+                        $meta[$metadata->getField()->getName()] = $metadata->getData();
+                    }
+                }
+                $id3 = new vainfo($this->file);
                 $id3->write_id3($meta);
             }
         }
@@ -1955,6 +1982,26 @@ class Song extends database_object implements media, library_item
         $meta['genre'] = implode(',', $meta['genre']);
 
         return $meta;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Update Metadata from array
+     * @param array $value
+     */
+    public function updateMetadata($value)
+    {
+        foreach ($value as $metadataId => $value) {
+            $metadata = $this->metadataRepository->findById($metadataId);
+            if (!$metadata || $value != $metadata->getData()) {
+                $metadata->setData($value);
+                $this->metadataRepository->update($metadata);
+            }
+        }
     }
 
     /**

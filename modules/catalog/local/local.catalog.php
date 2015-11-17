@@ -249,7 +249,6 @@ class Catalog_local extends Catalog
 
         /* Recurse through this dir and create the files array */
         while ( false !== ( $file = readdir($handle) ) ) {
-
             /* Skip to next if we've got . or .. */
             if (substr($file,0,1) == '.') {
                 continue;
@@ -322,7 +321,6 @@ class Catalog_local extends Catalog
 
         /* see if this is a valid audio file or playlist file */
         if ($is_audio_file || $is_video_file || $is_playlist) {
-
             /* Now that we're sure its a file get filesize  */
             $file_size = Core::get_filesize($full_file);
 
@@ -559,6 +557,7 @@ class Catalog_local extends Catalog
             }
 
             $media = new $media_type($row['id']);
+            $this->updateMetadata($media, $this->sort_pattern,$this->rename_pattern);
 
             $info = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
             if ($info['change']) {
@@ -576,32 +575,32 @@ class Catalog_local extends Catalog
      *
      * Removes local songs that no longer exist.
      */
-     public function clean_catalog_proc()
-     {
-         if (!Core::is_readable($this->path)) {
-             // First sanity check; no point in proceeding with an unreadable
+    public function clean_catalog_proc()
+    {
+        if (!Core::is_readable($this->path)) {
+            // First sanity check; no point in proceeding with an unreadable
             // catalog root.
             debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
-             Error::add('general', T_('Catalog Root unreadable, stopping clean'));
-             Error::display('general');
-             return 0;
-         }
+            Error::add('general', T_('Catalog Root unreadable, stopping clean'));
+            Error::display('general');
+            return 0;
+        }
 
-         $dead_total  = 0;
-         $stats       = self::get_stats($this->id);
-         $this->count = 0;
-         foreach (array('video', 'song') as $media_type) {
-             $total = $stats[$media_type . 's']; // UGLY
+        $dead_total  = 0;
+        $stats       = self::get_stats($this->id);
+        $this->count = 0;
+        foreach (array('video', 'song') as $media_type) {
+            $total = $stats[$media_type . 's']; // UGLY
             if ($total == 0) {
                 continue;
             }
-             $chunks = floor($total / 10000);
-             $dead   = array();
-             foreach (range(0, $chunks) as $chunk) {
-                 $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
-             }
+            $chunks = floor($total / 10000);
+            $dead   = array();
+            foreach (range(0, $chunks) as $chunk) {
+                $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+            }
 
-             $dead_count = count($dead);
+            $dead_count = count($dead);
             // The AlmightyOatmeal sanity check
             // Never remove everything; it might be a dead mount
             if ($dead_count >= $total) {
@@ -609,15 +608,18 @@ class Catalog_local extends Catalog
                 Error::add('general', T_('All files would be removed. Doing nothing'));
                 continue;
             }
-             if ($dead_count) {
-                 $dead_total += $dead_count;
-                 $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
+            if ($dead_count) {
+                $dead_total += $dead_count;
+                $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
                     '(' . implode(',',$dead) . ')';
-                 $db_results = Dba::write($sql);
-             }
-         }
-         return $dead_total;
-     }
+                $db_results = Dba::write($sql);
+            }
+        }
+
+        \lib\Metadata\Repository\Metadata::gc();
+        \lib\Metadata\Repository\MetadataField::gc();
+        return $dead_total;
+    }
 
     /**
      * _clean_chunk
@@ -707,6 +709,13 @@ class Catalog_local extends Catalog
             $song = new Song($id);
             Recommendation::get_artist_info($song->artist);
         }
+        if (Song::isCustomMetadataEnabled()) {
+            if (!$song) {
+                $song = new Song($id);
+            }
+            $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
+            $this->addMetadata($song, $results);
+        }
         $this->added_songs_to_gather[] = $id;
 
         $this->_filecache[strtolower($file)] = $id;
@@ -794,6 +803,70 @@ class Catalog_local extends Catalog
     {
         // Do nothing, it's just file...
         return $media;
+    }
+
+    /**
+     * Get rid of all tags found in the libraryItem
+     * @param library_item $libraryItem
+     * @param array $metadata
+     * @return array
+     */
+    protected function getCleanMetadata(library_item $libraryItem, $metadata)
+    {
+        $tags = array_diff($metadata, get_object_vars($libraryItem));
+        $keys = array_merge(
+            isset($libraryItem::$aliases) ? $libraryItem::$aliases : array(),
+            array_keys(get_object_vars($libraryItem))
+        );
+        foreach ($keys as $key) {
+            unset($tags[$key]);
+        }
+
+        return $tags;
+    }
+
+    /**
+     *
+     * @param library_item $libraryItem
+     * @param type $metadata
+     */
+    public function addMetadata(library_item $libraryItem, $metadata)
+    {
+        $tags = $this->getCleanMetadata($libraryItem, $metadata);
+
+        foreach ($tags as $tag => $value) {
+            $field = $libraryItem->getField($tag);
+            $libraryItem->addMetadata($field, $value);
+        }
+    }
+
+    // TODO: Get rid of duplicated code...
+    public function updateMetadata($media, $sort_pattern='', $rename_pattern='')
+    {
+        // Check for patterns
+        if (!$sort_pattern OR !$rename_pattern) {
+            $catalog        = Catalog::create_from_id($media->catalog);
+            $sort_pattern   = $catalog->sort_pattern;
+            $rename_pattern = $catalog->rename_pattern;
+        }
+
+        debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
+
+        $vainfo = new vainfo($media->file,array('music'),'','','',$sort_pattern,$rename_pattern);
+        $vainfo->get_info();
+
+        $key = vainfo::get_tag_type($vainfo->tags);
+
+        $results = vainfo::clean_tag_info($vainfo->tags,$key,$media->file);
+
+        $tags = $this->getCleanMetadata($media, $results);
+        if (method_exists($media, 'updateOrInsertMetadata') && $media::isCustomMetadataEnabled()) {
+            $tags = array_diff_key($results, array_flip($media->getDisabledMetadataFields()));
+            foreach ($tags as $tag => $value) {
+                $field = $media->getField($tag);
+                $media->updateOrInsertMetadata($field, $value);
+            }
+        }
     }
 } // end of local catalog class
 

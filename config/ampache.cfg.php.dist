@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 31
+config_version = 32
 
 ;#########################################################
 ; Path Vars                                              #
@@ -21,7 +21,7 @@ config_version = 31
 
 ; The public http port of your server.
 ; If not set, retrieved automatically from client request.
-; DEFAULT: 
+; DEFAULT:
 ;http_port = 80
 
 ; The public path to your ampache install
@@ -217,6 +217,12 @@ deferred_ext_metadata = "true"
 ; This setting takes a regex pattern.
 ; DEFAULT: // / \ | , ;
 additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
+
+; Enable importing custom metadata from files.
+; This will need a bit of time during the import. So you may want to disable this
+; if you have troubles with huge databases.
+; DEFAULT: false
+;enable_custom_metadata = "false"
 
 
 ;#########################################################

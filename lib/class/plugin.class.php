@@ -255,8 +255,8 @@ class Plugin
     {
         $name = Dba::escape('Plugin_' . $plugin_name);
 
-        $sql        = "SELECT * FROM `update_info` WHERE `key`='$name'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
+        $db_results = Dba::read($sql, array($name));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return $results['value'];

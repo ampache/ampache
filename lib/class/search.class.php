@@ -193,6 +193,7 @@ class Search extends playlist_object
             'description' => T_('after'),
             'sql'     => '>'
         );
+        $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
 
         switch ($searchtype) {
         case 'song':
@@ -369,7 +370,7 @@ class Search extends playlist_object
             $this->types[] = array(
                 'name'   => 'playlist',
                 'label'  => T_('Playlist'),
-                'type'   => 'boolean_numeric',
+                'type' => 'boolean_numeric',
                 'widget' => array('select', $playlists)
             );
 
@@ -393,6 +394,19 @@ class Search extends playlist_object
                 'widget' => array('select', $playlists)
             );
 
+            $metadataFields          = array();
+            $metadataFieldRepository = new \lib\Metadata\Repository\MetadataField();
+            foreach ($metadataFieldRepository->findAll() as $metadata) {
+                $metadataFields[$metadata->getId()] = $metadata->getName();
+            }
+            $this->types[] = array(
+                'name' => 'metadata',
+                'label' => T_('Metadata'),
+                'type' => 'multiple',
+                'subtypes' => $metadataFields,
+                'widget' => array('subtypes', array('input', 'text'))
+            );
+
             $licenses = array();
             foreach (License::get_licenses() as $license_id) {
                 $license               = new License($license_id);
@@ -406,6 +420,7 @@ class Search extends playlist_object
                     'widget' => array('select', $licenses)
                 );
             }
+
         break;
         case 'album':
             $this->types[] = array(
@@ -814,7 +829,8 @@ class Search extends playlist_object
                     $this->rules[] = array(
                         $value,
                         $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'],
-                        $input
+                        $input,
+                        $data['rule_' . $ruleID . '_subtype']
                     );
                 }
             }
@@ -858,7 +874,7 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $js .= '<script type="text/javascript">' .
                 'SearchRow.add("' . $rule[0] . '","' .
-                $rule[1] . '","' . $rule[2] . '"); </script>';
+                $rule[1] . '","' . $rule[2] . '", "' . $rule[3] . '"); </script>';
         }
         return $js;
     }
@@ -1272,6 +1288,16 @@ class Search extends playlist_object
                 case 'updated':
                     $input   = strtotime($input);
                     $where[] = "`song`.`update_time` $sql_match_operator $input";
+                    break;
+                case 'metadata':
+                    // Need to create a join for every field so we can create and / or queries with only one table
+                    $tableAlias         = 'metadata' . uniqid();
+                    $field              = (int) $rule[3];
+                    $join[$tableAlias]  = true;
+                    $parsedInput        = is_numeric($input) ? $input : '"' . $input . '"';
+                    $where[]            = "(`$tableAlias`.`field` = {$field} AND `$tableAlias`.`data` $sql_match_operator $parsedInput)";
+                    $table[$tableAlias] = 'LEFT JOIN `metadata` AS ' . $tableAlias . ' ON `song`.`id` = `' . $tableAlias . '`.`object_id`';
+                    break;
                 default:
                     // NOSSINK!
                 break;

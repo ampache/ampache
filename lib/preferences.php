@@ -380,6 +380,16 @@ function create_preference_input($name,$value)
             echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
             echo "</select>\n";
         break;
+        case 'disabled_custom_metadata_fields':
+            $ids             = explode(',', $value);
+            $options         = array();
+            $fieldRepository = new \lib\Metadata\Repository\MetadataField();
+            foreach ($fieldRepository->findAll() as $field) {
+                $selected  = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
+                $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
+            }
+            echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
+            break;
         case 'lastfm_grant_link':
         case 'librefm_grant_link':
             // construct links for granting access Ampache application to Last.fm and Libre.fm

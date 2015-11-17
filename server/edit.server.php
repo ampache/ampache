@@ -85,10 +85,14 @@ switch ($_REQUEST['action']) {
         ob_end_clean();
     break;
     case 'edit_object':
-        // Scrub the data
-        foreach ($_POST as $key => $data) {
-            $_POST[$key] = unhtmlentities(scrub_in($data));
-        }
+        // Scrub the data, walk recursive through array
+        $entities = function(&$data) use (&$entities) {
+            foreach ($data as $key => $value) {
+                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
+            }
+            return $data;
+        };
+        $entities($_POST);
 
         $libitem = new $object_type($_POST['id']);
         if ($libitem->get_user_owner() == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
