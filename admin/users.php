@@ -243,7 +243,7 @@ switch ($_REQUEST['action']) {
         $client->delete_avatar();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
-        show_confirmation(T_('User Avater Deleted'), T_('User Avatar has been deleted'), $next_url);
+        show_confirmation(T_('User Avatar Deleted'), T_('User Avatar has been deleted'), $next_url);
     break;
     case 'show_generate_apikey':
         $user_id = $_REQUEST['user_id'];
