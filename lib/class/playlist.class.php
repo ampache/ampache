@@ -312,7 +312,7 @@ class Playlist extends playlist_object
      */
     private function _update_item($field,$value,$level)
     {
-        if ($GLOBALS['user']->id != $this->user AND !Access::check('interface',$level)) {
+        if ($GLOBALS['user']->id != $this->user and !Access::check('interface',$level)) {
             return false;
         }
 

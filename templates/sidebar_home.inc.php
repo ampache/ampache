@@ -129,7 +129,7 @@
             <?php 
 }
     ?>
-            <?php if ($server_allow = AmpConfig::get('allow_localplay_playback') AND $controller = AmpConfig::get('localplay_controller') AND $access_check = Access::check('localplay','5')) {
+            <?php if ($server_allow = AmpConfig::get('allow_localplay_playback') and $controller = AmpConfig::get('localplay_controller') and $access_check = Access::check('localplay','5')) {
     ?>
             <?php
                 // Little bit of work to be done here

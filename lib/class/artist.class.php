@@ -196,7 +196,7 @@ class Artist extends database_object implements library_item
      */
     public static function build_cache($ids, $extra=false, $limit_threshold = '')
     {
-        if (!is_array($ids) OR !count($ids)) {
+        if (!is_array($ids) or !count($ids)) {
             return false;
         }
 

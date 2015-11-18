@@ -63,7 +63,7 @@ class Upload
                     }
 
                     $targetdir = realpath($targetdir);
-                    if (strpos($targetdir, $rootdir) === FALSE) {
+                    if (strpos($targetdir, $rootdir) === false) {
                         debug_event('upload', 'Something wrong with final upload path.', '1');
                         return self::rerror();
                     }

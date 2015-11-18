@@ -376,7 +376,7 @@ class VlcPlayer
         $msg = "GET /requests/$cmd";
 
         // Foreach our arguments 
-        foreach ($args AS $key => $val) {
+        foreach ($args as $key => $val) {
             $msg .= "$key=$val";
         }
 

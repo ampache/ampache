@@ -112,7 +112,7 @@
     ?>
     </td>
     <?php
-        if (($libitem->is_logged_in()) AND ($libitem->is_online())) {
+        if (($libitem->is_logged_in()) and ($libitem->is_online())) {
             echo "<td class=\"cel_online user_online\"> &nbsp; </td>";
         } elseif ($libitem->disabled == 1) {
             echo "<td class=\"cel_online user_disabled\"> &nbsp; </td>";

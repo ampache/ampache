@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface',100) OR AmpConfig::get('demo_mode')) {
+if (!Access::check('interface',100) or AmpConfig::get('demo_mode')) {
     UI::access_denied();
     exit();
 }

@@ -112,7 +112,7 @@ class fs
             return array('type'=>'folder', 'content'=> $id);
         }
         if (is_file($dir)) {
-            $ext = strpos($dir, '.') !== FALSE ? substr($dir, strrpos($dir, '.') + 1) : '';
+            $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
             $dat = array('type' => $ext, 'content' => '');
             switch ($ext) {
                 /*case 'txt':

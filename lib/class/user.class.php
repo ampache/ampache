@@ -538,7 +538,7 @@ class User extends database_object
         $db_results = Dba::read($sql);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $ip = $row['ip'] ? $row['ip'] : NULL;
+            $ip = $row['ip'] ? $row['ip'] : null;
             return $ip;
         }
 
@@ -593,7 +593,7 @@ class User extends database_object
             Error::add('username', T_('Error Username Required'));
         }
 
-        if ($data['password1'] != $data['password2'] AND !empty($data['password1'])) {
+        if ($data['password1'] != $data['password2'] and !empty($data['password1'])) {
             Error::add('password', T_("Error Passwords don't match"));
         }
 

@@ -81,7 +81,7 @@ class Preference extends database_object
             $name = self::name_from_id($preference);
             $id   = $preference;
         }
-        if ($applytoall AND Access::check('interface','100')) {
+        if ($applytoall and Access::check('interface','100')) {
             $user_check = "";
         } else {
             $user_check = " AND `user`='$user_id'";
@@ -91,7 +91,7 @@ class Preference extends database_object
             $value = implode(',', $value);
         }
 
-        if ($applytodefault AND Access::check('interface', '100')) {
+        if ($applytodefault and Access::check('interface', '100')) {
             $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$id'";
             Dba::write($sql);
         }
@@ -390,7 +390,7 @@ class Preference extends database_object
      */
     public static function load_from_session($uid=-1)
     {
-        if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) AND $_SESSION['userdata']['uid'] == $uid) {
+        if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) and $_SESSION['userdata']['uid'] == $uid) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
             return true;
         }

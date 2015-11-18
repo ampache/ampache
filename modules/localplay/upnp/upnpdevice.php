@@ -100,10 +100,10 @@ class UPnPDevice
         curl_setopt( $ch, CURLOPT_URL, $controlUrl );
         curl_setopt( $ch, CURLOPT_POST, 1 );
         curl_setopt( $ch, CURLOPT_POSTFIELDS, $body );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
-        curl_setopt( $ch, CURLOPT_HEADER, TRUE );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_HEADER, true );
         curl_setopt( $ch, CURLOPT_HTTPHEADER, $header );
-        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, TRUE );
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
 
         $response = curl_exec( $ch );
         curl_close( $ch );

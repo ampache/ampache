@@ -321,7 +321,7 @@ class Graph
         $myPicture = new CpChart\Classes\pImage($width,$height,$MyData);
 
         /* Turn of Antialiasing */
-        $myPicture->Antialias = FALSE;
+        $myPicture->Antialias = false;
 
         /* Draw a background */
         $Settings = array("R"=>90, "G"=>90, "B"=>90, "Dash"=>1, "DashR"=>120, "DashG"=>120, "DashB"=>120);
@@ -347,14 +347,14 @@ class Graph
         $myPicture->setGraphArea(60,40,$width-20,$height-50);
 
         /* Draw the scale */
-        $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"Floating"=>TRUE,"GridR"=>200,"GridG"=>200,"GridB"=>200,"RemoveSkippedAxis"=>TRUE,"DrawSubTicks"=>FALSE,"Mode"=>SCALE_MODE_START0,"LabelRotation"=>45,"LabelingMethod"=>LABELING_DIFFERENT);
+        $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"Floating"=>true,"GridR"=>200,"GridG"=>200,"GridB"=>200,"RemoveSkippedAxis"=>true,"DrawSubTicks"=>false,"Mode"=>SCALE_MODE_START0,"LabelRotation"=>45,"LabelingMethod"=>LABELING_DIFFERENT);
         $myPicture->drawScale($scaleSettings);
 
         /* Turn on Antialiasing */
-        $myPicture->Antialias = TRUE;
+        $myPicture->Antialias = true;
 
         /* Draw the line chart */
-        $myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
+        $myPicture->setShadow(true,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
         $myPicture->drawLineChart();
 
         /* Write a label over the chart */

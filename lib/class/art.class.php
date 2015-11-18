@@ -636,19 +636,19 @@ class Art extends database_object
         }
 
         // Check and make sure we can resize what you've asked us to
-        if (($type == 'jpg' OR $type == 'jpeg') AND !(imagetypes() & IMG_JPG)) {
+        if (($type == 'jpg' or $type == 'jpeg') and !(imagetypes() & IMG_JPG)) {
             debug_event('Art','PHP-GD Does not support JPGs - unable to resize',1);
             return false;
         }
-        if ($type == 'png' AND !imagetypes() & IMG_PNG) {
+        if ($type == 'png' and !imagetypes() & IMG_PNG) {
             debug_event('Art','PHP-GD Does not support PNGs - unable to resize',1);
             return false;
         }
-        if ($type == 'gif' AND !imagetypes() & IMG_GIF) {
+        if ($type == 'gif' and !imagetypes() & IMG_GIF) {
             debug_event('Art','PHP-GD Does not support GIFs - unable to resize',1);
             return false;
         }
-        if ($type == 'bmp' AND !imagetypes() & IMG_WBMP) {
+        if ($type == 'bmp' and !imagetypes() & IMG_WBMP) {
             debug_event('Art','PHP-GD Does not support BMPs - unable to resize',1);
             return false;
         }

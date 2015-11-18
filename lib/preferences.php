@@ -96,13 +96,13 @@ function update_preference($user_id,$name,$pref_id,$value)
     $level_check = "level_" . $name;
 
     /* First see if they are an administrator and we are applying this to everything */
-    if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) {
+    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$apply_check])) {
         Preference::update_all($pref_id,$value);
         return true;
     }
 
     /* Check and see if they are an admin and the level def is set */
-    if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$level_check])) {
+    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$level_check])) {
         Preference::update_level($pref_id,$_REQUEST[$level_check]);
     }
 

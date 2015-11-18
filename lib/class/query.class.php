@@ -540,7 +540,7 @@ class Query
      */
     public function reset_base()
     {
-        $this->_state['base'] = NULL;
+        $this->_state['base'] = null;
     } // reset_base
 
     /**

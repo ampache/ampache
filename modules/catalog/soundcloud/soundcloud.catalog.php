@@ -167,7 +167,7 @@ class Catalog_soundcloud extends Catalog
         $userid = $data['userid'];
         $secret = $data['secret'];
 
-        if (!strlen($userid) OR !strlen($secret)) {
+        if (!strlen($userid) or !strlen($secret)) {
             Error::add('general', T_('Error: UserID and Secret Required for SoundCloud Catalogs'));
             return false;
         }
@@ -274,7 +274,7 @@ class Catalog_soundcloud extends Catalog
                 if ($songs) {
                     foreach ($songs as $song) {
                         if ($song->streamable == true && $song->kind == 'track') {
-                            $data            = Array();
+                            $data            = array();
                             $data['artist']  = $song->user->username;
                             $data['album']   = $data['artist'];
                             $data['title']   = $song->title;

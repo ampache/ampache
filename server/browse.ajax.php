@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
 
         // Check 'value' with isset because it can null
         //(user type a "start with" word and deletes it)
-        if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) OR isset($_REQUEST['value']))) {
+        if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) or isset($_REQUEST['value']))) {
             // Set any new filters we've just added
             $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
             $browse->set_catalog($_SESSION['catalog']);

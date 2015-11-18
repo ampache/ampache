@@ -147,7 +147,7 @@ class Catalog_subsonic extends Catalog
             return false;
         }
 
-        if (!strlen($username) OR !strlen($password)) {
+        if (!strlen($username) or !strlen($password)) {
             Error::add('general', T_('Error: Username and Password Required for Subsonic Catalogs'));
             return false;
         }
@@ -221,7 +221,7 @@ class Catalog_subsonic extends Catalog
                                 if ($songs['success']) {
                                     foreach ($songs['data']['directory']['child'] as $song) {
                                         if (is_array($song)) {
-                                            $data            = Array();
+                                            $data            = array();
                                             $data['artist']  = html_entity_decode($song['artist']);
                                             $data['album']   = html_entity_decode($song['album']);
                                             $data['title']   = html_entity_decode($song['title']);

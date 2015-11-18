@@ -118,7 +118,7 @@ if ($client->f_avatar) {
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Status'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-    <?php if ($client->is_logged_in() AND $client->is_online()) {
+    <?php if ($client->is_logged_in() and $client->is_online()) {
     ?>
         <i style="color:green;"><?php echo T_('User is Online Now');
     ?></i>

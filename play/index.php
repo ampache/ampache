@@ -159,7 +159,7 @@ if (!$share_id) {
 
         // If require session is set then we need to make sure we're legit
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
+            if (!AmpConfig::get('require_localnet_session') and Access::check_network('network',$GLOBALS['user']->id,'5')) {
                 debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
             } else {
                 if (!Session::exists('stream', $sid)) {
@@ -211,7 +211,7 @@ if (AmpConfig::get('demo_mode') || (!Access::check('interface','25') )) {
    that they have enough access to play this mojo
 */
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
+    if (!Access::check_network('stream',$GLOBALS['user']->id,'25') and
         !Access::check_network('network',$GLOBALS['user']->id,'25')) {
         debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
         UI::access_denied();
@@ -377,7 +377,7 @@ $browser = new Horde_Browser();
 /* If they are just trying to download make sure they have rights
  * and then present them with the download file
  */
-if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
+if ($_GET['action'] == 'download' and AmpConfig::get('download')) {
     debug_event('play', 'Downloading file...', 5);
     // STUPID IE
     $media_name = str_replace(array('?','/','\\'),"_",$media->f_file);

@@ -67,7 +67,7 @@ switch ($_REQUEST['action']) {
             AmpConfig::set('play_type', $new, true);
         }
 
-        if (($new == 'localplay' AND $current != 'localplay') OR ($current == 'localplay' AND $new != 'localplay')) {
+        if (($new == 'localplay' and $current != 'localplay') or ($current == 'localplay' and $new != 'localplay')) {
             $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
         }
 

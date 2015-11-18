@@ -52,7 +52,7 @@ class Userflag extends database_object
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
-        if (!is_array($ids) OR !count($ids)) {
+        if (!is_array($ids) or !count($ids)) {
             return false;
         }
 

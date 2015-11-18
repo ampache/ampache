@@ -305,7 +305,7 @@ function install_create_config($download = false)
  */
 function install_create_account($username, $password, $password2)
 {
-    if (!strlen($username) OR !strlen($password)) {
+    if (!strlen($username) or !strlen($password)) {
         Error::add('general', T_('No Username/Password specified'));
         return false;
     }

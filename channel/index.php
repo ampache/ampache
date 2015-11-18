@@ -59,7 +59,7 @@ if ($channel->is_private) {
             Preference::init();
 
             if (AmpConfig::get('access_control')) {
-                if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
+                if (!Access::check_network('stream',$GLOBALS['user']->id,'25') and
                     !Access::check_network('network',$GLOBALS['user']->id,'25')) {
                     debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
                     UI::access_denied();

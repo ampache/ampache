@@ -844,7 +844,7 @@ class Catalog_local extends Catalog
     public function updateMetadata($media, $sort_pattern='', $rename_pattern='')
     {
         // Check for patterns
-        if (!$sort_pattern OR !$rename_pattern) {
+        if (!$sort_pattern or !$rename_pattern) {
             $catalog        = Catalog::create_from_id($media->catalog);
             $sort_pattern   = $catalog->sort_pattern;
             $rename_pattern = $catalog->rename_pattern;

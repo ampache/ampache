@@ -290,7 +290,7 @@ class Access
                     debug_event('access', 'ZLIB extension not loaded, batch download disabled', 3);
                     return false;
                 }
-                if (AmpConfig::get('allow_zip_download') AND $GLOBALS['user']->has_access('5')) {
+                if (AmpConfig::get('allow_zip_download') and $GLOBALS['user']->has_access('5')) {
                     return make_bool(AmpConfig::get('download'));
                 }
             break;

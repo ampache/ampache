@@ -302,7 +302,7 @@ class Upnp_Api
         #$ndUpdateID = $doc->createElement('UpdateID', (string) mt_rand(); # seems to be ignored by the WDTVL
         $ndBrowseResp->appendChild($ndUpdateID);
 
-        Return $doc;
+        return $doc;
     }
 
     public static function _musicMetadata($prmPath, $prmQuery = '')

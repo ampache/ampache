@@ -433,7 +433,7 @@ class HttpQPlayer
         $msg = "GET /$cmd?p=$this->password";
 
         // Foreach our arguments 
-        foreach ($args AS $key => $val) {
+        foreach ($args as $key => $val) {
             $msg = $msg . "&$key=$val";
         }
 

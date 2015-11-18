@@ -36,7 +36,7 @@ Session::_auto_init();
 // Set up for redirection on important error cases
 $path = get_web_path();
 if (isset($_SERVER['HTTP_HOST'])) {
-	$path = $http_type . $_SERVER['HTTP_HOST'] . $path;
+    $path = $http_type . $_SERVER['HTTP_HOST'] . $path;
 }
 
 // Check to make sure the config file exists. If it doesn't then go ahead and
@@ -199,7 +199,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user']->fullname = $auth['fullname'];
             $GLOBALS['user']->access   = intval($auth['access']);
         }
-        if (!$GLOBALS['user']->id AND !AmpConfig::get('demo_mode')) {
+        if (!$GLOBALS['user']->id and !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());
             exit;
         }

@@ -64,7 +64,7 @@ class Useractivity extends database_object
      */
     public static function build_cache($ids)
     {
-        if (!is_array($ids) OR !count($ids)) {
+        if (!is_array($ids) or !count($ids)) {
             return false;
         }
 

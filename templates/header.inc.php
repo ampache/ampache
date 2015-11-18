@@ -485,7 +485,7 @@ $_SESSION['login'] = false;
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
-                <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) {
+                <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') and $GLOBALS['user']->has_access(100)) {
     ?>
                 <div class="fatalerror">
                     <?php echo T_('Error Config File Out of Date');
