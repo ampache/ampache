@@ -1,3 +1,0 @@
-[submodule "modules/catalog/remote/ampacheapi-php.git"]
-	path = modules/catalog/remote/ampacheapi-php.git
-	url = https://github.com/ampache/ampacheapi-php.git

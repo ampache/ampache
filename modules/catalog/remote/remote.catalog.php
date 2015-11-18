@@ -125,8 +125,6 @@ class Catalog_remote extends Catalog
                 $this->$key = $value;
             }
         }
-        
-        require_once AmpConfig::get('prefix') . '/modules/catalog/remote/ampacheapi-php.git/AmpacheApi.lib.php';
     }
 
     /**
@@ -194,7 +192,7 @@ class Catalog_remote extends Catalog
     public function connect()
     {
         try {
-            $remote_handle = new AmpacheApi(array(
+            $remote_handle = new AmpacheApi\AmpacheApi(array(
                 'username' => $this->username,
                 'password' => $this->password,
                 'server' => $this->uri,
