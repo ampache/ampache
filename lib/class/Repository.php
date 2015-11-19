@@ -23,6 +23,8 @@
 
 namespace Lib;
 
+use Lib\Interfaces\Model;
+
 /**
  * Description of Repository
  *
@@ -178,7 +180,7 @@ class Repository
      * @param string $property
      * @param mixed $value
      */
-    protected function setPrivateProperty(Object $object, $property, $value)
+    protected function setPrivateProperty(Model $object, $property, $value)
     {
         $reflectionClass    = new \ReflectionClass(get_class($object));
         $ReflectionProperty = $reflectionClass->getProperty($property);
