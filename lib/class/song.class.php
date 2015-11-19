@@ -22,7 +22,7 @@
 
 class Song extends database_object implements media, library_item
 {
-    use \lib\Metadata\Metadata;
+    use \Lib\Metadata\Metadata;
 
     /* Variables from DB */
 
@@ -2031,4 +2031,3 @@ class Song extends database_object implements media, library_item
         return $deleted;
     }
 } // end of song class
-

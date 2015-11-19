@@ -21,7 +21,7 @@
  *
  */
 
-namespace lib\Metadata;
+namespace Lib\Metadata;
 
 /**
  * Description of metadata
@@ -59,8 +59,8 @@ trait Metadata
      */
     protected function initializeMetadata()
     {
-        $this->metadataRepository      = new \lib\Metadata\Repository\Metadata();
-        $this->metadataFieldRepository = new \lib\Metadata\Repository\MetadataField();
+        $this->metadataRepository      = new \Lib\Metadata\Repository\Metadata();
+        $this->metadataFieldRepository = new \Lib\Metadata\Repository\MetadataField();
     }
 
 
@@ -84,12 +84,12 @@ trait Metadata
 
     /**
      *
-     * @param \lib\Metadata\Model\MetadataField $field
+     * @param \Lib\Metadata\Model\MetadataField $field
      * @param type $data
      */
-    public function addMetadata(\lib\Metadata\Model\MetadataField $field, $data)
+    public function addMetadata(\Lib\Metadata\Model\MetadataField $field, $data)
     {
-        $metadata = new \lib\Metadata\Model\Metadata();
+        $metadata = new \Lib\Metadata\Model\Metadata();
         $metadata->setField($field);
         $metadata->setObjectId($this->id);
         $metadata->setType(get_class($this));
@@ -97,7 +97,7 @@ trait Metadata
         $this->metadataRepository->add($metadata);
     }
 
-    public function updateOrInsertMetadata(\lib\Metadata\Model\MetadataField $field, $data)
+    public function updateOrInsertMetadata(\Lib\Metadata\Model\MetadataField $field, $data)
     {
         /* @var $metadata Model\Metadata */
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, get_class($this));
@@ -114,11 +114,11 @@ trait Metadata
      *
      * @param type $name
      * @param type $public
-     * @return \lib\Metadata\Model\MetadataField
+     * @return \Lib\Metadata\Model\MetadataField
      */
     protected function createField($name, $public)
     {
-        $field = new \lib\Metadata\Model\MetadataField();
+        $field = new \Lib\Metadata\Model\MetadataField();
         $field->setName($name);
         if (!$public) {
             $field->hide();

@@ -395,7 +395,7 @@ class Search extends playlist_object
             );
 
             $metadataFields          = array();
-            $metadataFieldRepository = new \lib\Metadata\Repository\MetadataField();
+            $metadataFieldRepository = new \Lib\Metadata\Repository\MetadataField();
             foreach ($metadataFieldRepository->findAll() as $metadata) {
                 $metadataFields[$metadata->getId()] = $metadata->getName();
             }

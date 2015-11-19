@@ -21,7 +21,7 @@
  *
  */
 
-namespace lib\Interfaces;
+namespace Lib\Interfaces;
 
 /**
  * Description of Model

@@ -318,5 +318,11 @@
             "replace": false,
             "merge-extra": false
         }
-    }
+    },
+
+	"autoload": {
+		"psr-4": {
+			"Lib\\": "lib/class"
+		}
+	}
 }
