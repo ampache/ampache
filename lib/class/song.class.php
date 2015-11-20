@@ -22,7 +22,7 @@
 
 class Song extends database_object implements media, library_item
 {
-    use \lib\Metadata\Metadata;
+    use \Lib\Metadata\Metadata;
 
     /* Variables from DB */
 
@@ -853,6 +853,11 @@ class Song extends database_object implements media, library_item
 
         // Foreach them
         foreach ($fields as $key=>$value) {
+            // Skip the item if it is no string nor something we can turn into a string
+            if (!is_string($song->$key) || (is_object($song->$key) && method_exists($song->key, '__toString'))) {
+                continue;
+            }
+
             $key = trim($key);
             if (empty($key) || in_array($key,$skip_array)) {
                 continue;

@@ -1684,8 +1684,8 @@ abstract class Catalog extends database_object
         Tag::gc();
         
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
-        \lib\Metadata\Repository\Metadata::gc();
-        \lib\Metadata\Repository\MetadataField::gc();
+        \Lib\Metadata\Repository\Metadata::gc();
+        \Lib\Metadata\Repository\MetadataField::gc();
         debug_event('catalog', 'Database cleanup ended', 5);
     }
 

@@ -21,14 +21,14 @@
  *
  */
 
-namespace lib\Metadata\Model;
+namespace Lib\Metadata\Model;
 
 /**
  * Description of metadata
  *
  * @author raziel
  */
-class Metadata extends \lib\DatabaseObject implements \lib\Interfaces\Model
+class Metadata extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
 {
     /**
      * Database ID
@@ -44,7 +44,7 @@ class Metadata extends \lib\DatabaseObject implements \lib\Interfaces\Model
 
     /**
      * Tag Field
-     * @var Metadata_field
+     * @var MetadataField
      */
     protected $field;
 
@@ -66,7 +66,7 @@ class Metadata extends \lib\DatabaseObject implements \lib\Interfaces\Model
      * can initialize objects the right way
      */
     protected $fieldClassRelations = array(
-        'field' => '\lib\Metadata\Repository\MetadataField'
+        'field' => '\Lib\Metadata\Repository\MetadataField'
     );
 
     /**
@@ -98,18 +98,18 @@ class Metadata extends \lib\DatabaseObject implements \lib\Interfaces\Model
 
     /**
      *
-     * @param \library_item $object
+     * @param integer $object
      */
-    public function setObjectId(\library_item $object)
+    public function setObjectId($object)
     {
         $this->objectId = $object;
     }
 
     /**
      *
-     * @param Metadata_field $field
+     * @param MetadataField $field
      */
-    public function setField(Metadata_field $field)
+    public function setField(MetadataField $field)
     {
         $this->field = $field;
     }

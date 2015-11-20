@@ -616,8 +616,8 @@ class Catalog_local extends Catalog
             }
         }
 
-        \lib\Metadata\Repository\Metadata::gc();
-        \lib\Metadata\Repository\MetadataField::gc();
+        \Lib\Metadata\Repository\Metadata::gc();
+        \Lib\Metadata\Repository\MetadataField::gc();
         return $dead_total;
     }
 
@@ -813,16 +813,13 @@ class Catalog_local extends Catalog
      */
     protected function getCleanMetadata(library_item $libraryItem, $metadata)
     {
-        $tags = array_diff($metadata, get_object_vars($libraryItem));
-        $keys = array_merge(
-            isset($libraryItem::$aliases) ? $libraryItem::$aliases : array(),
-            array_keys(get_object_vars($libraryItem))
+        $tags = array_diff_key(
+            $metadata,
+            get_object_vars($libraryItem),
+            array_flip($libraryItem::$aliases ?: array())
         );
-        foreach ($keys as $key) {
-            unset($tags[$key]);
-        }
 
-        return $tags;
+        return array_filter($tags);
     }
 
     /**
@@ -861,7 +858,7 @@ class Catalog_local extends Catalog
 
         $tags = $this->getCleanMetadata($media, $results);
         if (method_exists($media, 'updateOrInsertMetadata') && $media::isCustomMetadataEnabled()) {
-            $tags = array_diff_key($results, array_flip($media->getDisabledMetadataFields()));
+            $tags = array_diff_key($tags, array_flip($media->getDisabledMetadataFields()));
             foreach ($tags as $tag => $value) {
                 $field = $media->getField($tag);
                 $media->updateOrInsertMetadata($field, $value);

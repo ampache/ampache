@@ -21,16 +21,16 @@
  *
  */
 
-namespace lib\Metadata\Repository;
+namespace Lib\Metadata\Repository;
 
 /**
  * Description of Metadata
  *
  * @author raziel
  */
-class Metadata extends \lib\Repository
+class Metadata extends \Lib\Repository
 {
-    protected $modelClassName = '\lib\Metadata\Model\Metadata';
+    protected $modelClassName = '\Lib\Metadata\Model\Metadata';
 
     public static function gc()
     {

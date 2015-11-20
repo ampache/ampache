@@ -21,7 +21,7 @@
  *
  */
 
-namespace lib;
+namespace Lib;
 
 /**
  * Description of Model
