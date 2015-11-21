@@ -21,16 +21,16 @@
  *
  */
 
-namespace Lib\Metadata\Repository;
+namespace lib\Metadata\Repository;
 
 /**
  * Description of Metadata_field
  *
  * @author raziel
  */
-class MetadataField extends \Lib\Repository
+class MetadataField extends \lib\Repository
 {
-    protected $modelClassName = '\Lib\Metadata\Model\MetadataField';
+    protected $modelClassName = '\lib\Metadata\Model\MetadataField';
 
     public static function gc()
     {

@@ -22,7 +22,7 @@
 
 class Song extends database_object implements media, library_item
 {
-    use \Lib\Metadata\Metadata;
+    use \lib\Metadata\Metadata;
 
     /* Variables from DB */
 

@@ -616,8 +616,8 @@ class Catalog_local extends Catalog
             }
         }
 
-        \Lib\Metadata\Repository\Metadata::gc();
-        \Lib\Metadata\Repository\MetadataField::gc();
+        \lib\Metadata\Repository\Metadata::gc();
+        \lib\Metadata\Repository\MetadataField::gc();
         return $dead_total;
     }
 
