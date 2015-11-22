@@ -383,7 +383,7 @@ function create_preference_input($name,$value)
         case 'disabled_custom_metadata_fields':
             $ids             = explode(',', $value);
             $options         = array();
-            $fieldRepository = new \lib\Metadata\Repository\MetadataField();
+            $fieldRepository = new \Lib\Metadata\Repository\MetadataField();
             foreach ($fieldRepository->findAll() as $field) {
                 $selected  = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
                 $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
