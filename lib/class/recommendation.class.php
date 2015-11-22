@@ -334,6 +334,7 @@ class Recommendation
 
         $results                = array();
         $results['summary']     = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
+        $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed']  = (string) $xml->artist->bio->yearformed;
         $results['smallphoto']  = $xml->artist->image[0];

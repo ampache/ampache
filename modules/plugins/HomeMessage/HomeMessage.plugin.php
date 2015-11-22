@@ -56,7 +56,7 @@ class AmpacheHomeMessage
         }
 
         Preference::insert('hm_message','Home Message text','','75','string','plugins');
-		Preference::insert('hm_level','Home Message level','3','75','integer','plugins');
+        Preference::insert('hm_level','Home Message level','3','75','integer','plugins');
 
         return true;
     }
@@ -69,7 +69,7 @@ class AmpacheHomeMessage
     public function uninstall()
     {
         Preference::delete('hm_message');
-		Preference::delete('hm_level');
+        Preference::delete('hm_level');
 
         return true;
     }
@@ -91,23 +91,22 @@ class AmpacheHomeMessage
     {
         if (!empty($this->message)) {
             UI::show_box_top(T_('Global Message'));
-			$dstyle = '';
-			switch ($this->level)
-			{
-				case 1:
-					$dstyle .= 'color: #C33; font-weight: bold;';
-					break;
-				case 2:
-					$dstyle .= 'color: #FF0; font-weight: bold;';
-					break;
-				default:
-					$dstyle .= '';
-					break;
-			}
-			echo '<div style="' . $dstyle . '">';
-			echo $this->message;
-			echo '</div>';
-			UI::show_box_bottom();
+            $dstyle = '';
+            switch ($this->level) {
+                case 1:
+                    $dstyle .= 'color: #C33; font-weight: bold;';
+                    break;
+                case 2:
+                    $dstyle .= 'color: #FF0; font-weight: bold;';
+                    break;
+                default:
+                    $dstyle .= '';
+                    break;
+            }
+            echo '<div style="' . $dstyle . '">';
+            echo $this->message;
+            echo '</div>';
+            UI::show_box_bottom();
         }
     }
 
@@ -122,7 +121,7 @@ class AmpacheHomeMessage
         $data = $user->prefs;
 
         $this->message = $data['hm_message'];
-		$this->level = $data['hm_level'];
+        $this->level   = $data['hm_level'];
         
 
         return true;

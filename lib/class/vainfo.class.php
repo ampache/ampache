@@ -416,10 +416,12 @@ class vainfo
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
             $info['art']               = $info['art'] ?: trim($tags['art']);
             
-            // Add rest of the tags without typecast to the array
-            foreach ($tags as $tag => $value) {
-                if (!isset($info[$tag])) {
-                    $info[$tag] = trim($value);
+            if (AmpConfig::get('enable_custom_metadata')) {
+                // Add rest of the tags without typecast to the array
+                foreach ($tags as $tag => $value) {
+                    if (!isset($info[$tag])) {
+                        $info[$tag] = (!is_array($value)) ? trim($value) : $value;
+                    }
                 }
             }
         }
