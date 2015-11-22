@@ -4,9 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "390523abc8c42729295d02806e12f51b",
-    "content-hash": "448dad51f8ab465bde932dfe125d98da",
+    "hash": "4fb2d0daab737eaf344eaf30c270b080",
+    "content-hash": "dda24185dc0813bb703fda5de899af94",
     "packages": [
+        {
+            "name": "Afterster/php-echonest-api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Afterster/php-echonest-api.git",
+                "reference": "master"
+            },
+            "type": "library",
+            "time": "2013-12-28 15:29:50"
+        },
         {
             "name": "aehlke/tag-it",
             "version": "2.0",
@@ -109,17 +120,6 @@
                     ]
                 }
             }
-        },
-        {
-            "name": "bshaffer/php-echonest-api",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bshaffer/php-echonest-api.git",
-                "reference": "master"
-            },
-            "type": "library",
-            "time": "2012-11-19 06:40:23"
         },
         {
             "name": "carhartl/jquery-cookie",
@@ -3248,7 +3248,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bshaffer/php-echonest-api": 20,
+        "afterster/php-echonest-api": 20,
         "jeromeetienne/jquery-qrcode": 20,
         "kumailht/responsive-elements": 20,
         "krixon/xbmc-php-rpc": 20
@@ -3256,7 +3256,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.0"
+        "php": ">=5.4.0"
     },
     "platform-dev": [],
     "platform-overrides": {

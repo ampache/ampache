@@ -49,7 +49,7 @@
 		"sabre/dav": "3.*",
 		"maennchen/zipstream-php": "0.*",
 		
-		"bshaffer/php-echonest-api": "dev-master",
+		"Afterster/php-echonest-api": "dev-master",
 		
 		"components/jquery": "2.0.*",
 		"components/jqueryui": "1.*",
@@ -71,10 +71,10 @@
 		{
 			"type": "package",
 			"package": {
-				"name": "bshaffer/php-echonest-api",
+				"name": "Afterster/php-echonest-api",
 				"version": "dev-master",
 				"source": {
-					"url": "https://github.com/bshaffer/php-echonest-api.git",
+					"url": "https://github.com/Afterster/php-echonest-api.git",
 					"type": "git",
 					"reference": "master"
 				}
