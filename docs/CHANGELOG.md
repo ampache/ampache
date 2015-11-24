@@ -1,6 +1,59 @@
 CHANGELOG
 =========
 
+3.8.1
+----------
+- Added Home Message plugin to display a simple custom message at home page
+- Moved AmpacheApi class to a separate ampacheapi-php git repository
+- Added timeline / friends timeline feature
+- Fixed disabled song display to regular users (thanks shangril)
+- Fixed random albums art size (thanks Bidules079)
+- Moved tag cloud to artist browsing by default
+- Fixed utf8 BOM empty string on song comparison
+- Improved recently played and user stats queries performance (thanks thinca)
+- Renamed SAMPLE_RATE to TRANSCODE_BITRATE on transcoding
+- Fixed tag deletion sql error (thanks stebe)
+- Moved to PNG default blank image instead of JPG (thanks Psy-Virus)
+- Fixed temporary playlist initial position when scrolling down (thanks RobertoCarlo)
+- Added Radio stations to UPnP backend
+- Fixed Subsonic API art to use album art if song doesn't have a custom art (thanks hypfvieh)
+- Fixed Subsonic API search when object count parameter is 0 (thanks hypfvieh)
+- Fixed UPnP UUID to be based on host information
+- Moved to Composer for dependencies management
+- Fixed catalog action when not using Ajax page loading (thanks Razrael)
+- Fixed unrated song default value (thanks Combustible)
+- Added custom metadata support from files (thanks Razrael)
+- Improved Subsonic API getArtists performance (thanks nicklan)
+- Fixed theme color setting behavior
+- Moved audioscrobbler API to v2
+- Added m3u8 playlist import
+- Fixed utf8 id3v2 comments support
+- Added write_playlists script to export playlists to file
+- Fixed Tvdb and Tmdb plugins (thanks wagnered)
+- Improved Video filename parsing (thanks wagnered)
+- Fixed non scalar settings value printing on debug page
+- Improved Subsonic API getAlbumList error handling
+- Fixed user login with browser used during the installation
+- Fixed iTunes 12 browsing when using DAAP (thanks Chattaway83)
+- Moved http_port user preference to ampache.cfg.php
+- Upgraded last.fm and libre.fm scrobbling to latest API version (thanks nioc)
+- Added missing space between track and album in localplay playlist (thanks arnaudbey)
+- Added check fo mbstring.func_overload support before using id3 write functionality (thanks anonymous2ch)
+- Fixed file size calculation when using id3v2 tag (thanks hypfvieh)
+- Added rating from id3 tag (thanks nioc)
+- Added track number on streaming playlist (thanks Fondor1)
+- Fixed catalog export (thanks shellshocker)
+- Fixed file change detection
+- Improved XML API with more information and new functions (advanced_search, toggle_follow, last_shouts, rate, timeline, friends_timeline)
+- Fixed 'Next' button when browsing start offset is aligned to offset limit (thanks wagnered)
+- Fixed stream kill OS detection (thanks nan4k7)
+- Fixed calculate_art_size script to support storage on disk (thanks nan4k7)
+- Fixed sql script semicolon typo (thanks jack)
+- Added support for .opus files (thanks mrpi)
+- Fixed podcast owner xml information
+- Fixed ldap filter parameter check (thanks ChrGeiss)
+- Fixed 'Add to existing playlist' link for regular users (thanks Niols)
+
 3.8.0
 ----------
 - Added Portuguese (Brasil) language (thanks Ione Souza Junior)
