@@ -274,7 +274,7 @@ class TVShow extends database_object implements library_item
      *
      * Checks for an existing tv show; if none exists, insert one.
      */
-    public static function check($name, $year, $readonly = false)
+    public static function check($name, $year, $overview, $readonly = false)
     {
         // null because we don't have any unique id like mbid for now
         if (isset(self::$_mapcache[$name]['null'])) {
@@ -313,10 +313,10 @@ class TVShow extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`) ' .
-            'VALUES(?, ?, ?)';
+        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `overview`)' .
+            'VALUES(?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array($name, $prefix, $year));
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $overview));
         if (!$db_results) {
             return null;
         }
@@ -336,7 +336,7 @@ class TVShow extends database_object implements library_item
         $current_id = $this->id;
         $name = isset($data['name']) ? $data['name'] : $this->name;
         $year = isset($data['year']) ? $data['year'] : $this->year;
-        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $overview = isset($data['overview']) ? $data['overview'] : $this->overview;
 
         // Check if name is different than current name
         if ($this->name != $name || $this->year != $year) {
@@ -359,13 +359,13 @@ class TVShow extends database_object implements library_item
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
 
-        $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
-        Dba::write($sql, array($name, $prefix, $year, $summary, $current_id));
+        $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `overview` = ? WHERE `id` = ?';
+        Dba::write($sql, array($name, $prefix, $year, $overview, $current_id));
 
         $this->name = $name;
         $this->prefix = $prefix;
         $this->year = $year;
-        $this->summary = $summary;
+        $this->overview = $overview;
 
         $override_childs = false;
         if ($data['overwrite_childs'] == 'checked') {

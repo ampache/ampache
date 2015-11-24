@@ -26,7 +26,7 @@ class AmpacheTvdb
     public $categories     = 'metadata';
     public $description    = 'Tvdb metadata integration';
     public $url            = 'http://thetvdb.com';
-    public $version        = '000002';
+    public $version        = '000003';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
     
@@ -117,7 +117,7 @@ class AmpacheTvdb
                     $release = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId ;
-                $results['summary'] = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
+                $results['overview'] = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
                     $results['tvshow'] = $release->name;
                 if ($release->FirstAired) {
                     $results['tvshow_year'] = $release->firstAired->format('Y');
@@ -161,7 +161,7 @@ class AmpacheTvdb
                             $results['year'] = $release->firstAired->format('Y');
                             ;
                         }
-                        $results['description'] = $release->overview;
+                        $results['summary'] = substr($release->overview,0,255);
                         if ($release->thumbnail) {
                             $results['art'] = $tvdburl . '/banners/' . $release->thumbnail;
                         }
