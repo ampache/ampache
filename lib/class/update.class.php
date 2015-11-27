@@ -520,9 +520,6 @@ class Update
         $update_string = " - Add user_activity table.<br />";
         $version[] = array('version' => '370040','description' => $update_string);
 
-        $update_string = " - Change tvshow.summary to tvshow.overview to remove conflict.<br />";
-        $version[] = array('version' => '370041','description' => $update_string);
-
         return $version;
     }
 
@@ -3606,23 +3603,6 @@ class Update
             "`object_type` VARCHAR( 32 ) NOT NULL, " .
             "`activity_date` INT( 11 ) UNSIGNED NOT NULL" .
             ") ENGINE = MYISAM";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        return $retval;
-    }
-
-    /**
-     * Changed tvshow.summary to tvshow.overview to remove
-     * conflict.
-     *
-     */
-    public static function update_370041()
-    {
-        $retval = true;
-
-        $sql = "ALTER TABLE `tvshow` " .
-            "CHANGE COLUMN `summary` `overview` VARCHAR(256) " .
-            "CHARACTER SET 'utf8' NULL DEFAULT NULL" ;
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;

@@ -274,7 +274,7 @@ class TVShow extends database_object implements library_item
      *
      * Checks for an existing tv show; if none exists, insert one.
      */
-    public static function check($name, $year, $overview, $readonly = false)
+    public static function check($name, $year, $tvshow_summary, $readonly = false)
     {
         // null because we don't have any unique id like mbid for now
         if (isset(self::$_mapcache[$name]['null'])) {
@@ -313,10 +313,8 @@ class TVShow extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `overview`)' .
-            'VALUES(?, ?, ?, ?)';
-
-        $db_results = Dba::write($sql, array($name, $prefix, $year, $overview));
+        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `summary`) VALUES(?, ?, ?, ?)';
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $tvshow_summary));
         if (!$db_results) {
             return null;
         }
@@ -359,13 +357,13 @@ class TVShow extends database_object implements library_item
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
 
-        $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `overview` = ? WHERE `id` = ?';
-        Dba::write($sql, array($name, $prefix, $year, $overview, $current_id));
+        $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
+        Dba::write($sql, array($name, $prefix, $year, $data['summary'], $current_id));
 
         $this->name = $name;
         $this->prefix = $prefix;
         $this->year = $year;
-        $this->overview = $overview;
+        $this->summary = $data['summary'];
 
         $override_childs = false;
         if ($data['overwrite_childs'] == 'checked') {

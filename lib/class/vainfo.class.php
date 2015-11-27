@@ -411,7 +411,7 @@ class vainfo
             $info['tvshow_episode'] = $info['tvshow_episode'] ?: trim($tags['tvshow_episode']);
             $info['release_date'] = $info['release_date'] ?: trim($tags['release_date']);
             $info['summary'] = $info['summary'] ?: trim($tags['summary']);
-            $info['overview'] = $info['overview'] ?: trim($tags['overview']);
+            $info['tvshow_summary'] = $info['tvshow_summary'] ?: trim($tags['tvshow_summary']);
             
             $info['tvshow_art'] = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);

@@ -32,10 +32,10 @@ UI::show_box_top($tvshow->f_name, 'info-box');
     <?php
     Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6);
     ?>
-    <?php if ($tvshow->overview) {
+    <?php if ($tvshow->summary) {
     ?>
     <div id="item_summary">
-        <?php echo $tvshow->overview;
+        <?php echo $tvshow->summary;
     ?>
     </div>
     <?php 

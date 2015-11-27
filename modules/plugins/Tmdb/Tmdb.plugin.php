@@ -155,7 +155,7 @@ class AmpacheTmdb
                             $results['tvshow_background_art'] = $imageHelper->getUrl($release['backdrop_path']);
                         }
                         $results['genre'] = self::get_genres($release);
-                        $results['overview'] = substr($release['overview'], 0, 255);
+                        $results['tvshow_summary'] = substr($release['overview'], 0, 255);
                         if ($media_info['tvshow_season']) {
                             $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'], $media_info['tvshow_season']);
                             if ($release['id']) {
