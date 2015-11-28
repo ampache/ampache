@@ -255,6 +255,13 @@ class Search extends playlist_object
             );
 
             $this->types[] = array(
+                'name'   => 'album_tag',
+                'label'  => T_('Album tag'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
                 'name'   => 'file',
                 'label'  => T_('Filename'),
                 'type'   => 'text',
@@ -1202,6 +1209,12 @@ class Search extends playlist_object
                     $where[]           = "`realtag_$key`.`match` > 0";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
                 break;
+                case 'album_tag':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`realtag_$key`.`match` > 0";
+                    $join['album_tag'][$key] = "$sql_match_operator '$input'";
+                    $join['album']           = true;
+                break;
                 case 'title':
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
                 break;
@@ -1328,6 +1341,17 @@ class Search extends playlist_object
                 "AND `tag`.`name` $value GROUP BY `object_id`" .
                 ") AS realtag_$key " .
                 "ON `song`.`id`=`realtag_$key`.`object_id`";
+        }
+        foreach ($join['album_tag'] as $key => $value) {
+            $table['tag_' . $key] =
+                "LEFT JOIN (" .
+                "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                "FROM `tag` LEFT JOIN `tag_map` " .
+                "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                "WHERE `tag_map`.`object_type`='album' " .
+                "AND `tag`.`name` $value  GROUP BY `object_id`" .
+                ") AS realtag_$key " .
+                "ON `album`.`id`=`realtag_$key`.`object_id`";
         }
         if ($join['rating']) {
             $userid          = $GLOBALS['user']->id;
