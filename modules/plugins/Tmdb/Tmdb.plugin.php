@@ -26,7 +26,7 @@ class AmpacheTmdb
     public $categories     = 'metadata';
     public $description    = 'Tmdb metadata integration';
     public $url            = 'https://www.themoviedb.org';
-    public $version        = '000002';
+    public $version        = '000003';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
     
@@ -132,6 +132,7 @@ class AmpacheTmdb
                             $results['background_art'] = $imageHelper->getUrl($release['backdrop_path']);
                         }
                         $results['genre'] = self::get_genres($release);
+                        $results['summary'] = substr($release['overview'], 0, 255);
                     }
                 }
             }
@@ -154,7 +155,7 @@ class AmpacheTmdb
                             $results['tvshow_background_art'] = $imageHelper->getUrl($release['backdrop_path']);
                         }
                         $results['genre'] = self::get_genres($release);
-                        
+                        $results['tvshow_summary'] = substr($release['overview'], 0, 255);
                         if ($media_info['tvshow_season']) {
                             $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'], $media_info['tvshow_season']);
                             if ($release['id']) {
@@ -172,7 +173,7 @@ class AmpacheTmdb
                                             $results['release_date'] = strtotime($release['air_date']);
                                             $results['year']         = date("Y", $results['release_date']);
                                         }
-                                        $results['summary'] = $release['overview'];
+                                        $results['summary'] = substr($release['overview'], 0, 255);
                                         if ($release['still_path']) {
                                             $results['art'] = $imageHelper->getUrl($release['still_path']);
                                         }

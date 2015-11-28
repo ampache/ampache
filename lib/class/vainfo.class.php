@@ -409,8 +409,14 @@ class vainfo
             $info['tvshow_year']    = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
             $info['tvshow_season']  = $info['tvshow_season'] ?: trim($tags['tvshow_season']);
             $info['tvshow_episode'] = $info['tvshow_episode'] ?: trim($tags['tvshow_episode']);
+<<<<<<< HEAD
             $info['release_date']   = $info['release_date'] ?: trim($tags['release_date']);
             $info['summary']        = $info['summary'] ?: trim($tags['summary']);
+=======
+            $info['release_date'] = $info['release_date'] ?: trim($tags['release_date']);
+            $info['summary'] = $info['summary'] ?: trim($tags['summary']);
+            $info['tvshow_summary'] = $info['tvshow_summary'] ?: trim($tags['tvshow_summary']);
+>>>>>>> 81b2aef0f942701dbb6e151ec3481a6ec58921d7
             
             $info['tvshow_art']        = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
@@ -1053,7 +1059,7 @@ class vainfo
                 preg_match("~(?<=[Ss])\d+~", $file, $season);
                 preg_match("~(?<=[Ee])\d+~", $file, $episode);
             } else {
-                if (preg_match("~[\.\s\-\_](\d)[xX](\d{1,2})~", $file, $seasonEpisode)) {
+                if (preg_match("~[\_\-\.\s](\d{1,2})[xX](\d{1,2})~", $file, $seasonEpisode)) {
                     $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~",$file);
                     preg_match("~\d+(?=[Xx])~", $file, $season);
                     preg_match("~(?<=[Xx])\d+~", $file, $episode);
@@ -1063,9 +1069,15 @@ class vainfo
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
                         preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
                     } else {
+<<<<<<< HEAD
                         if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
                             $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
                             $season[0]  = $seasonEpisode[1];
+=======
+                        if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
+                            $temp = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                            $season[0] = $seasonEpisode[1];
+>>>>>>> 81b2aef0f942701dbb6e151ec3481a6ec58921d7
                             $episode[0] = $seasonEpisode[2];
                         }
                     }
@@ -1098,7 +1110,7 @@ class vainfo
                                     $results['original_name']  = $this->formatVideoName($matches[2]);
                                 } else {
                                     //Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
-                                    preg_match("~(\d)(\d\d)[\_\-\.\s]*~", $file, $matches);
+                                    preg_match("~(\d)(\d\d)[\_\-\.\s]?~", $file, $matches);
                                     $results['tvshow_episode'] = $matches[2];
                                 }
                             }
