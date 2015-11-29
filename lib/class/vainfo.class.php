@@ -409,14 +409,9 @@ class vainfo
             $info['tvshow_year']    = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
             $info['tvshow_season']  = $info['tvshow_season'] ?: trim($tags['tvshow_season']);
             $info['tvshow_episode'] = $info['tvshow_episode'] ?: trim($tags['tvshow_episode']);
-<<<<<<< HEAD
-            $info['release_date']   = $info['release_date'] ?: trim($tags['release_date']);
-            $info['summary']        = $info['summary'] ?: trim($tags['summary']);
-=======
             $info['release_date'] = $info['release_date'] ?: trim($tags['release_date']);
             $info['summary'] = $info['summary'] ?: trim($tags['summary']);
             $info['tvshow_summary'] = $info['tvshow_summary'] ?: trim($tags['tvshow_summary']);
->>>>>>> 81b2aef0f942701dbb6e151ec3481a6ec58921d7
             
             $info['tvshow_art']        = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
@@ -936,6 +931,7 @@ class vainfo
                 }
             }
         }
+        
 
         return $parsed;
     }
@@ -993,7 +989,7 @@ class vainfo
                     $parsed['mb_artistid'] = $data[0];
                 break;
                 case 'MusicBrainz Album Type':
-                    $parsed['release_type'] = $data[0];
+                $parsed['release_type'] = $data[0];
                 break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
@@ -1069,24 +1065,24 @@ class vainfo
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
                         preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
                     } else {
-<<<<<<< HEAD
                         if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
                             $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
                             $season[0]  = $seasonEpisode[1];
-=======
-                        if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
-                            $temp = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
-                            $season[0] = $seasonEpisode[1];
->>>>>>> 81b2aef0f942701dbb6e151ec3481a6ec58921d7
-                            $episode[0] = $seasonEpisode[2];
+                            if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
+                                $temp = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                                $season[0] = $seasonEpisode[1];
+                                $episode[0] = $seasonEpisode[2];
+                            }
                         }
                     }
                 }
             }
-            $results['tvshow_season']  = $season[0];
-            $results['tvshow_episode'] = $episode[0];
-            $results['tvshow']         = $this->formatVideoName($temp[0]);
-            $results['original_name']  = $this->formatVideoName($temp[1]);
+        }
+    
+        $results['tvshow_season']  = $season[0];
+        $results['tvshow_episode'] = $episode[0];
+        $results['tvshow']         = $this->formatVideoName($temp[0]);
+        $results['original_name']  = $this->formatVideoName($temp[1]);
 
             // Try to identify the show information from parent folder
             if (!$results['tvshow']) {
@@ -1119,8 +1115,8 @@ class vainfo
                 }
             }
 
-            $results['title'] = $results['tvshow'];
-        }
+        $results['title'] = $results['tvshow'];
+        
     
         if (in_array('movie', $this->gather_types)) {
             $results['original_name'] = $results['title'] = $this->formatVideoName($file);
@@ -1170,7 +1166,7 @@ class vainfo
         }
         return $results;
     }
-   
+    
     private function removeCommonAbbreviations($name)
     {
         $abbr         = explode(",",AmpConfig::get('common_abbr'));
