@@ -464,12 +464,14 @@ class Subsonic_Api
 
         $albumid = self::check_parameter($input, 'id');
 
+        $addAmpacheInfo = ($input['ampache'] == "1");
+
         $album = new Album(Subsonic_XML_Data::getAmpacheId($albumid));
         if (empty($album->name)) {
             $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Album not found.");
         } else {
             $r = Subsonic_XML_Data::createSuccessResponse();
-            Subsonic_XML_Data::addAlbum($r, $album, true);
+            Subsonic_XML_Data::addAlbum($r, $album, true, $addAmpacheInfo);
         }
 
         self::apiOutput($input, $r);
