@@ -568,7 +568,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
 INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`) VALUES
 (1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options'),
 (4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface'),
-(19, 'sample_rate', '64', 'Transcode Bitrate', 25, 'string', 'streaming'),
+(19, 'transcode_bitrate', '64', 'Transcode Bitrate', 25, 'string', 'streaming'),
 (22, 'site_title', 'Ampache :: For the love of Music', 'Website Title', 100, 'string', 'system'),
 (23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system'),
 (24, 'force_http_play', '0', 'Forces Http play regardless of port', 100, 'boolean', 'system'),
@@ -590,11 +590,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal'),
 (71, 'httpq_active', '0', 'HTTPQ Active Instance', 25, 'integer', 'internal'),
 (72, 'shoutcast_active', '0', 'Shoutcast Active Instance', 25, 'integer', 'internal'),
-(73, 'lastfm_user', '', 'Last.FM Username', 25, 'string', 'plugins'),
-(74, 'lastfm_md5_pass', '', 'Last.FM Password', 25, 'string', 'plugins'),
-(75, 'lastfm_port', '', 'Last.FM Submit Port', 25, 'string', 'internal'),
-(76, 'lastfm_host', '', 'Last.FM Submit Host', 25, 'string', 'internal'),
-(77, 'lastfm_url', '', 'Last.FM Submit URL', 25, 'string', 'internal'),
+(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal'),
 (78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal'),
 (102, 'share', '0', 'Allow Share', 100, 'boolean', 'system'),
 (123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface'),
@@ -656,6 +652,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system'),
 (140, 'notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options'),
 (141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface');
+(142, 'disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system');
+(143, 'disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system');
 
 -- --------------------------------------------------------
 
@@ -1075,8 +1073,8 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '370038'),
-('Plugin_Last.FM', '000004');
+('db_version', '370041'),
+('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
 
@@ -1188,10 +1186,6 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 70, '0'),
 (-1, 71, '0'),
 (-1, 72, '0'),
-(-1, 73, ''),
-(-1, 74, ''),
-(-1, 75, ''),
-(-1, 76, ''),
 (-1, 77, ''),
 (-1, 78, ''),
 (-1, 114, '1'),
@@ -1254,6 +1248,8 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 139, '0'),
 (-1, 140, '0'),
 (-1, 141, 'dark'),
+(-1, 142, ''),
+(-1, 143, ''),
 (-1, 96, ''),
 (-1, 97, ''),
 (-1, 98, '');
@@ -1423,6 +1419,59 @@ CREATE TABLE IF NOT EXISTS `user_follower` (
   `follow_user` int(11) unsigned NOT NULL,
   `follow_date` int(11) unsigned  NULL,
   `creation_date` int(11) unsigned NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_activity`
+--
+
+DROP TABLE IF EXISTS `user_activity`;
+CREATE TABLE IF NOT EXISTS `user_activity` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user` int(11) unsigned NOT NULL,
+  `action` varchar(20) NOT NULL,
+  `object_id` int(11) unsigned NOT NULL,
+  `object_type` varchar(32) NOT NULL,
+  `activity_date` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `metadata_field`
+--
+
+DROP TABLE IF EXISTS `metadata_field`;
+CREATE TABLE IF NOT EXISTS `metadata_field` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `public` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `metadata`
+--
+
+DROP TABLE IF EXISTS `metadata`;
+CREATE TABLE IF NOT EXISTS `metadata` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `object_id` int(11) unsigned NOT NULL,
+  `field` int(11) unsigned NOT NULL,
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  KEY `field` (`field`),
+  KEY `object_id` (`object_id`),
+  KEY `type` (`type`),
+  KEY `objecttype` (`object_id`,`type`),
+  KEY `objectfield` (`object_id`,`field`,`type`),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
