@@ -263,15 +263,23 @@ class Stream
 
         debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
 
+        $parray  = array();
         $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
-        $parray  = array(
-            'process' => $process,
-            'handle' => $pipes[1],
-            'stderr' => $pipes[2]
-        );
+        if ($process === false) {
+            debug_event('stream', 'Transcode command failed to open.', 1);
+            $parray = array(
+                'handle' => null
+            );
+        } else {
+            $parray  = array(
+                'process' => $process,
+                'handle' => $pipes[1],
+                'stderr' => $pipes[2]
+            );
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-            stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+            if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+                stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+            }
         }
 
         return array_merge($parray, $settings);

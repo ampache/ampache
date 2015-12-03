@@ -313,7 +313,7 @@ class TVShow extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `summary`) VALUES(?, ?, ?, ?)';
+        $sql        = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `summary`) VALUES(?, ?, ?, ?)';
         $db_results = Dba::write($sql, array($name, $prefix, $year, $tvshow_summary));
         if (!$db_results) {
             return null;

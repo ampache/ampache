@@ -20,4 +20,4 @@
  *
  */
 $videoprops[gettext_noop('Summary')]   = $video->summary;
-$videoprops[gettext_noop('Year')]   = $video->year;
+$videoprops[gettext_noop('Year')]      = $video->year;

@@ -409,8 +409,8 @@ class vainfo
             $info['tvshow_year']    = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
             $info['tvshow_season']  = $info['tvshow_season'] ?: trim($tags['tvshow_season']);
             $info['tvshow_episode'] = $info['tvshow_episode'] ?: trim($tags['tvshow_episode']);
-            $info['release_date'] = $info['release_date'] ?: trim($tags['release_date']);
-            $info['summary'] = $info['summary'] ?: trim($tags['summary']);
+            $info['release_date']   = $info['release_date'] ?: trim($tags['release_date']);
+            $info['summary']        = $info['summary'] ?: trim($tags['summary']);
             $info['tvshow_summary'] = $info['tvshow_summary'] ?: trim($tags['tvshow_summary']);
             
             $info['tvshow_art']        = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
@@ -1069,8 +1069,8 @@ class vainfo
                             $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
                             $season[0]  = $seasonEpisode[1];
                             if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
-                                $temp = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
-                                $season[0] = $seasonEpisode[1];
+                                $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                                $season[0]  = $seasonEpisode[1];
                                 $episode[0] = $seasonEpisode[2];
                             }
                         }
