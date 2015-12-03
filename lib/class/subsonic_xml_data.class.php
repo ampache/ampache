@@ -290,7 +290,7 @@ class Subsonic_XML_Data
         }
     }
 
-    public static function addAlbum($xml, $album, $songs=false, $elementName="album")
+    public static function addAlbum($xml, $album, $songs=false, $addAmpacheInfo=false, $elementName="album")
     {
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', self::getAlbumId($album->id));
@@ -330,17 +330,17 @@ class Subsonic_XML_Data
             $allsongs = $album->get_songs();
             foreach ($allsongs as $id) {
                 $song = new Song($id);
-                self::addSong($xalbum, $song);
+                self::addSong($xalbum, $song, $addAmpacheInfo);
             }
         }
     }
 
-    public static function addSong($xml, $song, $elementName='song')
+    public static function addSong($xml, $song, $addAmpacheInfo=false, $elementName='song')
     {
-        self::createSong($xml, $song, $elementName);
+        self::createSong($xml, $song, $addAmpacheInfo, $elementName);
     }
 
-    public static function createSong($xml, $song, $elementName='song')
+    public static function createSong($xml, $song, $addAmpacheInfo=false, $elementName='song')
     {
         // Don't create entries for disabled songs
         if (!$song->enabled) {
@@ -364,6 +364,9 @@ class Subsonic_XML_Data
         $xsong->addAttribute('coverArt', self::getAlbumId($album->id));
         $xsong->addAttribute('duration', $song->time);
         $xsong->addAttribute('bitRate', intval($song->bitrate / 1000));
+        if ($addAmpacheInfo) {
+            $xsong->addAttribute('playCount', $song->object_cnt);
+        }
         $rating      = new Rating($song->id, "song");
         $user_rating = $rating->get_user_rating();
         if ($user_rating > 0) {
@@ -431,7 +434,7 @@ class Subsonic_XML_Data
         $allalbums = $artist->get_albums();
         foreach ($allalbums as $id) {
             $album = new Album($id);
-            self::addAlbum($xdir, $album, false, "child");
+            self::addAlbum($xdir, $album, false, false, "child");
         }
     }
 
@@ -451,7 +454,7 @@ class Subsonic_XML_Data
             $allsongs = $disc->get_songs();
             foreach ($allsongs as $id) {
                 $song = new Song($id);
-                self::addSong($xdir, $song, "child");
+                self::addSong($xdir, $song, false, "child");
             }
         }
     }
@@ -541,7 +544,7 @@ class Subsonic_XML_Data
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $id) {
                 $song = new Song($id);
-                self::addSong($xplaylist, $song, "entry");
+                self::addSong($xplaylist, $song, false, "entry");
             }
         }
     }
@@ -559,7 +562,7 @@ class Subsonic_XML_Data
             $allitems = $playlist->get_items();
             foreach ($allitems as $item) {
                 $song = new Song($item['object_id']);
-                self::addSong($xplaylist, $song, "entry");
+                self::addSong($xplaylist, $song, false, "entry");
             }
         }
     }
@@ -586,7 +589,7 @@ class Subsonic_XML_Data
     {
         $xplaynow = $xml->addChild('nowPlaying');
         foreach ($data as $d) {
-            $track = self::createSong($xplaynow, $d['media'], "entry");
+            $track = self::createSong($xplaynow, $d['media'], false, "entry");
             if ($track !== null) {
                 $track->addAttribute('username', $d['client']->username);
                 $track->addAttribute('minutesAgo', intval(time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
@@ -698,20 +701,20 @@ class Subsonic_XML_Data
 
         if ($share->object_type == 'song') {
             $song = new Song($share->object_id);
-            self::addSong($xshare, $song, "entry");
+            self::addSong($xshare, $song, false, "entry");
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
             foreach ($songs as $id) {
                 $song = new Song($id);
-                self::addSong($xshare, $song, "entry");
+                self::addSong($xshare, $song, false, "entry");
             }
         } elseif ($share->object_type == 'album') {
             $album = new Album($share->object_id);
             $songs = $album->get_songs();
             foreach ($songs as $id) {
                 $song = new Song($id);
-                self::addSong($xshare, $song, "entry");
+                self::addSong($xshare, $song, false, "entry");
             }
         }
     }
@@ -735,7 +738,7 @@ class Subsonic_XML_Data
         foreach ($tracks as $track) {
             if ($track['oid']) {
                 $song = new Song($track['oid']);
-                self::createSong($xjbox, $song, 'entry');
+                self::createSong($xjbox, $song, false, 'entry');
             }
         }
     }
