@@ -188,7 +188,7 @@ switch ($_REQUEST['action']) {
         $results = parse_ini_file($configfile);
         AmpConfig::set_by_array($results, true);
 
-        $password2 = scrub_in($_REQUEST['local_pass2']);
+        $password2 = $_REQUEST['local_pass2'];
 
         if (!install_create_account($username, $password, $password2)) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
