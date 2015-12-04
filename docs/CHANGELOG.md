@@ -3,6 +3,8 @@ CHANGELOG
 
 3.8.1
 ----------
+- Fixed PHP7 Error class conflict (thanks trampi)
+- Fixed user password with special characters at install time (thanks jagerman)
 - Moved Ampache project license from GPLv2 to AGPLv3
 - Add Ampache specific information on Subsonic API getAlbum using a new `ampache` parameter (thanks nicklan)
 - Added 'album tag' option in song search (thanks DanielMaly)
