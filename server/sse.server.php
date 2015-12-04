@@ -75,7 +75,7 @@ switch ($worker) {
             ob_flush();
             flush();
         } else {
-            Error::display('general');
+            AmpError::display('general');
         }
 
         break;

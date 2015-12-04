@@ -59,25 +59,25 @@ switch ($_REQUEST['action']) {
 
         /* Verify Input */
         if (empty($username)) {
-            Error::add('username', T_("Error Username Required"));
+            AmpError::add('username', T_("Error Username Required"));
         } else {
             if ($username != $client->username) {
                 if (!User::check_username($username)) {
-                    Error::add('username', T_("Error Username already exists"));
+                    AmpError::add('username', T_("Error Username already exists"));
                 }
             }
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
-            Error::add('password', T_("Error Passwords don't match"));
+            AmpError::add('password', T_("Error Passwords don't match"));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            Error::add('email', T_('Invalid email address'));
+            AmpError::add('email', T_('Invalid email address'));
         }
 
         /* If we've got an error then show edit form! */
-        if (Error::occurred()) {
+        if (AmpError::occurred()) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_edit_user.inc.php');
             break;
         }
@@ -134,25 +134,25 @@ switch ($_REQUEST['action']) {
         $city           = (string) scrub_in($_POST['city']);
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
-            Error::add('password', T_("Error Passwords don't match"));
+            AmpError::add('password', T_("Error Passwords don't match"));
         }
 
         if (empty($username)) {
-            Error::add('username', T_('Error Username Required'));
+            AmpError::add('username', T_('Error Username Required'));
         }
 
         /* make sure the username doesn't already exist */
         if (!User::check_username($username)) {
-            Error::add('username', T_('Error Username already exists'));
+            AmpError::add('username', T_('Error Username already exists'));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            Error::add('email', T_('Invalid email address'));
+            AmpError::add('email', T_('Invalid email address'));
         }
 
         /* If we've got an error then show add form! */
-        if (Error::occurred()) {
+        if (AmpError::occurred()) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_user.inc.php');
             break;
         }
@@ -160,7 +160,7 @@ switch ($_REQUEST['action']) {
         /* Attempt to create the user */
         $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
         if (!$user_id) {
-            Error::add('general', T_("Error: Insert Failed"));
+            AmpError::add('general', T_("Error: Insert Failed"));
         }
         $user = new User($user_id);
         $user->upload_avatar();

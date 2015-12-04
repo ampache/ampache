@@ -27,7 +27,7 @@
  * hello static functions and variables
  *
  */
-class Error
+class AmpError
 {
     private static $state  = false; // set to one when an error occurs
     private static $errors = array(); // Errors array key'd array with errors that have occured
@@ -60,21 +60,21 @@ class Error
     public static function add($name,$message,$clobber=0)
     {
         // Make sure its set first
-        if (!isset(Error::$errors[$name])) {
-            Error::$errors[$name]      = $message;
-            Error::$state              = true;
+        if (!isset(AmpError::$errors[$name])) {
+            AmpError::$errors[$name]      = $message;
+            AmpError::$state              = true;
             $_SESSION['errors'][$name] = $message;
         }
         // They want us to clobber it
         elseif ($clobber) {
-            Error::$state              = true;
-            Error::$errors[$name]      = $message;
+            AmpError::$state              = true;
+            AmpError::$errors[$name]      = $message;
             $_SESSION['errors'][$name] = $message;
         }
         // They want us to append the error, add a BR\n and then the message
         else {
-            Error::$state = true;
-            Error::$errors[$name] .= "<br />\n" . $message;
+            AmpError::$state = true;
+            AmpError::$errors[$name] .= "<br />\n" . $message;
             $_SESSION['errors'][$name] .=  "<br />\n" . $message;
         }
 
@@ -105,11 +105,11 @@ class Error
      */
     public static function get($name)
     {
-        if (!isset(Error::$errors[$name])) {
+        if (!isset(AmpError::$errors[$name])) {
             return '';
         }
 
-        return Error::$errors[$name];
+        return AmpError::$errors[$name];
     } // get
 
     /**
@@ -120,11 +120,11 @@ class Error
     public static function display($name)
     {
         // Be smart about this, if no error don't print
-        if (!isset(Error::$errors[$name])) {
+        if (!isset(AmpError::$errors[$name])) {
             return '';
         }
 
-        echo '<p class="alert alert-danger">' . T_(Error::$errors[$name]) . '</p>';
+        echo '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
     } // display
 
     /**

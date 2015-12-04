@@ -24,7 +24,7 @@
 
 $display_fields = (array) AmpConfig::get('registration_display_fields');
 ?>
-<?php Error::display('general'); ?>
+<?php AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <?php if (in_array('fullname', $display_fields)) {
@@ -84,7 +84,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
             <td>
-                <?php Error::display('password'); ?>
+                <?php AmpError::display('password'); ?>
                 <input type="password" name="password1" id="password1" />
             </td>
         </tr>

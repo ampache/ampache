@@ -620,7 +620,7 @@ class Update
                     if ($success) {
                         self::set_version('db_version', $version['version']);
                     } else {
-                        Error::display('update');
+                        AmpError::display('update');
                         return false;
                     }
                 }
@@ -2595,14 +2595,14 @@ class Update
             $created = false;
             if (check_htaccess_play_writable()) {
                 if (!install_rewrite_rules($htaccess_play_file, AmpConfig::get('raw_web_path'), false)) {
-                    Error::add('general', T_('File copy error.'));
+                    AmpError::add('general', T_('File copy error.'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                Error::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_play_file . '.dist</b> to <b>' . $htaccess_play_file . '</b>.');
+                AmpError::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_play_file . '.dist</b> to <b>' . $htaccess_play_file . '</b>.');
                 $ret = false;
             }
         }
@@ -2611,14 +2611,14 @@ class Update
             $created = false;
             if (check_htaccess_rest_writable()) {
                 if (!install_rewrite_rules($htaccess_rest_file, AmpConfig::get('raw_web_path'), false)) {
-                    Error::add('general', T_('File copy error.'));
+                    AmpError::add('general', T_('File copy error.'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                Error::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_rest_file . '.dist</b> to <b>' . $htaccess_rest_file . '</b>.');
+                AmpError::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_rest_file . '.dist</b> to <b>' . $htaccess_rest_file . '</b>.');
                 $ret = false;
             }
         }
@@ -2627,14 +2627,14 @@ class Update
             $created = false;
             if (check_htaccess_channel_writable()) {
                 if (!install_rewrite_rules($htaccess_channel_file, AmpConfig::get('raw_web_path'), false)) {
-                    Error::add('general', T_('File copy error.'));
+                    AmpError::add('general', T_('File copy error.'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                Error::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_channel_file . '.dist</b> to <b>' . $htaccess_channel_file . '</b>.');
+                AmpError::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_channel_file . '.dist</b> to <b>' . $htaccess_channel_file . '</b>.');
                 $ret = false;
             }
         }

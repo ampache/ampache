@@ -82,7 +82,7 @@ class AmpConfig
     {
         if (isset(self::$_global[$name]) && !$clobber) {
             debug_event('Config', "Tried to overwrite existing key $name without setting clobber", 5);
-            Error::add('Config Global', sprintf(T_('Trying to clobber \'%s\' without setting clobber'), $name));
+            AmpError::add('Config Global', sprintf(T_('Trying to clobber \'%s\' without setting clobber'), $name));
             return false;
         }
 

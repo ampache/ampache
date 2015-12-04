@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Adding a New User'), 'box box_add_user'); ?>
-<?php Error::display('general'); ?>
+<?php AmpError::display('general'); ?>
 <form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
@@ -30,14 +30,14 @@
             </td>
             <td>
                 <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($_POST['username']); ?>" />
-                <?php Error::display('username'); ?>
+                <?php AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo  T_('Full Name'); ?>:</td>
             <td>
                 <input type="text" name="fullname" value="<?php echo scrub_out($_POST['fullname']); ?>" />
-                <?php Error::display('fullname'); ?>
+                <?php AmpError::display('fullname'); ?>
             </td>
         </tr>
         <tr>
@@ -46,7 +46,7 @@
             </td>
             <td>
                 <input type="text" name="email" value="<?php echo scrub_out($_POST['email']); ?>" />
-                <?php Error::display('email'); ?>
+                <?php AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
@@ -55,7 +55,7 @@
             </td>
             <td>
                 <input type="text" name="website" value="<?php echo scrub_out($_POST['website']); ?>" />
-                <?php Error::display('website'); ?>
+                <?php AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
@@ -64,7 +64,7 @@
             </td>
             <td>
                 <input type="password" name="password_1" value="" />
-                <?php Error::display('password'); ?>
+                <?php AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>

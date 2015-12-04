@@ -22,7 +22,7 @@
 
 ?>
 <?php UI::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
-<?php Error::display('general'); ?>
+<?php AmpError::display('general'); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
     <table class="option-tabledata" cellpadding="5" cellspacing="0">
         <tr>
@@ -100,7 +100,7 @@
         <tr>
             <td>
                 <?php echo T_('Start'); ?>:
-                    <?php Error::display('start'); ?>
+                    <?php AmpError::display('start'); ?>
                     <input type="text" name="start" value="<?php
                 if ($action == 'show_add_current') {
                     echo scrub_out($_SERVER['REMOTE_ADDR']);
@@ -110,7 +110,7 @@
             </td>
             <td>
                 <?php echo T_('End'); ?>:
-                    <?php Error::display('end'); ?>
+                    <?php AmpError::display('end'); ?>
                     <input type="text" name="end" value="<?php
                     if ($action == 'show_add_current') {
                         echo scrub_out($_SERVER['REMOTE_ADDR']);

@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Editing existing User')); ?>
-<?php Error::display('general'); ?>
+<?php AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php"; ?>">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
@@ -33,7 +33,7 @@
             </td>
             <td>
                 <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
-                <?php Error::display('username'); ?>
+                <?php AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
@@ -43,7 +43,7 @@
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
     echo "checked";
 } ?> /> <?php echo T_('Public'); ?>
-                <?php Error::display('fullname'); ?>
+                <?php AmpError::display('fullname'); ?>
             </td>
         </tr>
         <tr>
@@ -52,7 +52,7 @@
             </td>
             <td>
                 <input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
-                <?php Error::display('email'); ?>
+                <?php AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
@@ -61,7 +61,7 @@
             </td>
             <td>
                 <input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
-                <?php Error::display('website'); ?>
+                <?php AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
@@ -70,7 +70,7 @@
             </td>
             <td>
                 <input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" />
-                <?php Error::display('state'); ?>
+                <?php AmpError::display('state'); ?>
             </td>
         </tr>
         <tr>
@@ -79,7 +79,7 @@
             </td>
             <td>
                 <input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" />
-                <?php Error::display('city'); ?>
+                <?php AmpError::display('city'); ?>
             </td>
         </tr>
         <tr>
@@ -88,7 +88,7 @@
             </td>
             <td>
                 <input type="password" name="password_1" value="" />
-                <?php Error::display('password'); ?>
+                <?php AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>

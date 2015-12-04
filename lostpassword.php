@@ -36,9 +36,9 @@ switch ($action) {
             $result     = send_newpassword($email, $current_ip);
         }
         if ($result) {
-            Error::add('general', T_('Password has been sent'));
+            AmpError::add('general', T_('Password has been sent'));
         } else {
-            Error::add('general', T_('Password has not been sent'));
+            AmpError::add('general', T_('Password has not been sent'));
         }
 
         require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');

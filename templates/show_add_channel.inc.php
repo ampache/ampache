@@ -35,35 +35,35 @@
     <td><?php echo T_('Name'); ?></td>
     <td>
         <input type="text" name="name" value="<?php echo scrub_out($_REQUEST['secret']); ?>" />
-        <?php Error::display('name'); ?>
+        <?php AmpError::display('name'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Description'); ?></td>
     <td>
         <input type="text" name="description" value="<?php echo scrub_out($_REQUEST['description']); ?>" />
-        <?php Error::display('description'); ?>
+        <?php AmpError::display('description'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('URL'); ?></td>
     <td>
         <input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url'] ?: AmpConfig::get('web_path')); ?>" />
-        <?php Error::display('url'); ?>
+        <?php AmpError::display('url'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Interface'); ?></td>
     <td>
         <input type="text" name="interface" value="<?php echo scrub_out($_REQUEST['interface'] ?: '127.0.0.1'); ?>" />
-        <?php Error::display('interface'); ?>
+        <?php AmpError::display('interface'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Port'); ?></td>
     <td>
         <input type="text" name="port" value="<?php echo scrub_out($_REQUEST['port'] ?: Channel::get_next_port()); ?>" />
-        <?php Error::display('port'); ?>
+        <?php AmpError::display('port'); ?>
     </td>
 </tr>
 <tr>
@@ -88,21 +88,21 @@
     <td><?php echo T_('Max Listeners'); ?></td>
     <td>
         <input type="text" name="max_listeners" value="<?php echo scrub_out($_REQUEST['max_listeners'] ?: '32'); ?>" />
-        <?php Error::display('max_listeners'); ?>
+        <?php AmpError::display('max_listeners'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Stream Type'); ?></td>
     <td>
         <input type="text" name="stream_type" value="<?php echo scrub_out($_REQUEST['stream_type'] ?: 'mp3'); ?>" />
-        <?php Error::display('stream_type'); ?>
+        <?php AmpError::display('stream_type'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Bitrate'); ?></td>
     <td>
         <input type="text" name="bitrate" value="<?php echo scrub_out($_REQUEST['bitrate'] ?: '128'); ?>" />
-        <?php Error::display('bitrate'); ?>
+        <?php AmpError::display('bitrate'); ?>
     </td>
 </tr>
 </table>

@@ -100,7 +100,7 @@ class Catalog_beetsremote extends Beets\Catalog
         $uri = $data['uri'];
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
-            Error::add('general', T_('Error: Beets selected, but path is not a URL'));
+            AmpError::add('general', T_('Error: Beets selected, but path is not a URL'));
             return false;
         }
 
@@ -110,7 +110,7 @@ class Catalog_beetsremote extends Beets\Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
-            Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+            AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
             return false;
         }
 

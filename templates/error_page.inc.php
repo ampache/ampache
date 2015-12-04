@@ -51,7 +51,7 @@
             <p><?php echo (T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?></p>
         </div>
         <h2><?php echo(T_("Error messages"));?>:</h2>
-        <?php Error::display('general'); ?>
+        <?php AmpError::display('general'); ?>
     </div>
 </body>
 </html>

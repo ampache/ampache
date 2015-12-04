@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
             Access::create($_POST);
         }
 
-        if (!Error::occurred()) {
+        if (!AmpError::occurred()) {
             $url = AmpConfig::get('web_path') . '/admin/access.php';
             show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'),$url);
         } else {
@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
         }
         $access = new Access($_REQUEST['access_id']);
         $access->update($_POST);
-        if (!Error::occurred()) {
+        if (!AmpError::occurred()) {
             show_confirmation(T_('Updated'), T_('Access List Entry updated'), AmpConfig::get('web_path') . '/admin/access.php');
         } else {
             $access->format();

@@ -138,15 +138,15 @@ class PrivateMsg extends database_object
         $message = trim(strip_tags($data['message']));
 
         if (empty($subject)) {
-            Error::add('subject', T_('Error: Subject Required'));
+            AmpError::add('subject', T_('Error: Subject Required'));
         }
 
         $to_user = User::get_from_username($data['to_user']);
         if (!$to_user->id) {
-            Error::add('to_user', T_('Error: Unknown user'));
+            AmpError::add('to_user', T_('Error: Unknown user'));
         }
 
-        if (!Error::occurred()) {
+        if (!AmpError::occurred()) {
             $from_user     = $data['from_user'] ?: $GLOBALS['user']->id;
             $creation_date = $data['creation_date'] ?: time();
             $is_read       = $data['is_read'] ?: 0;

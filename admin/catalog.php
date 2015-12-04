@@ -169,11 +169,11 @@ switch ($_REQUEST['action']) {
         ob_end_flush();
 
         if (!strlen($_POST['type']) || $_POST['type'] == 'none') {
-            Error::add('general', T_('Error: Please select a catalog type'));
+            AmpError::add('general', T_('Error: Please select a catalog type'));
         }
 
         if (!strlen($_POST['name'])) {
-            Error::add('general', T_('Error: Name not specified'));
+            AmpError::add('general', T_('Error: Name not specified'));
         }
 
         if (!Core::form_verify('add_catalog','post')) {
@@ -182,7 +182,7 @@ switch ($_REQUEST['action']) {
         }
 
         // If an error hasn't occured
-        if (!Error::occurred()) {
+        if (!AmpError::occurred()) {
             $catalog_id = Catalog::create($_POST);
 
             if (!$catalog_id) {

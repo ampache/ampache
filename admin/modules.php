@@ -35,8 +35,8 @@ switch ($_REQUEST['action']) {
     case 'install_localplay':
         $localplay = new Localplay($_REQUEST['type']);
         if (!$localplay->player_loaded()) {
-            Error::add('general', T_('Install Failed, Controller Error'));
-            Error::display('general');
+            AmpError::add('general', T_('Install Failed, Controller Error'));
+            AmpError::display('general');
             break;
         }
         // Install it!
@@ -58,8 +58,8 @@ switch ($_REQUEST['action']) {
         $type    = (string) scrub_in($_REQUEST['type']);
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            Error::add('general', T_('Install Failed, Catalog Error'));
-            Error::display('general');
+            AmpError::add('general', T_('Install Failed, Catalog Error'));
+            AmpError::display('general');
             break;
         }
 
@@ -102,8 +102,8 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            Error::add('general', T_('Uninstall Failed, Catalog Error'));
-            Error::display('general');
+            AmpError::add('general', T_('Uninstall Failed, Catalog Error'));
+            AmpError::display('general');
             break;
         }
         $catalog->uninstall();

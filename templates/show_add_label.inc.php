@@ -27,7 +27,7 @@
     <td><?php echo T_('Name'); ?></td>
     <td>
         <input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
-        <?php Error::display('name'); ?>
+        <?php AmpError::display('name'); ?>
     </td>
 </tr>
 <tr>
@@ -50,28 +50,28 @@
     <td><?php echo T_('Summary'); ?></td>
     <td>
         <textarea name="summary" cols="44" rows="4"><?php echo scrub_out($_REQUEST['summary']); ?></textarea>
-        <?php Error::display('summary'); ?>
+        <?php AmpError::display('summary'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Address'); ?></td>
     <td>
         <input type="text" name="address" value="<?php echo scrub_out($_REQUEST['address']); ?>" />
-        <?php Error::display('address'); ?>
+        <?php AmpError::display('address'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Email'); ?></td>
     <td>
         <input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email']); ?>" />
-        <?php Error::display('email'); ?>
+        <?php AmpError::display('email'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Website'); ?></td>
     <td>
         <input type="text" name="website" value="<?php echo scrub_out($_REQUEST['website']); ?>" />
-        <?php Error::display('website'); ?>
+        <?php AmpError::display('website'); ?>
     </td>
 </tr>
 </table>

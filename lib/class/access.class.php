@@ -154,16 +154,16 @@ class Access
         $endn   = @inet_pton($endp);
 
         if (!$startn && $startp != '0.0.0.0' && $startp != '::') {
-            Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
+            AmpError::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
             return false;
         }
         if (!$endn) {
-            Error::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
+            AmpError::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
         }
 
         if (strlen(bin2hex($startn)) != strlen(bin2hex($endn))) {
-            Error::add('start', T_('IP Address Version Mismatch'));
-            Error::add('end', T_('IP Address Version Mismatch'));
+            AmpError::add('start', T_('IP Address Version Mismatch'));
+            AmpError::add('end', T_('IP Address Version Mismatch'));
             return false;
         }
 
@@ -217,7 +217,7 @@ class Access
         // Check existing ACLs to make sure we're not duplicating values here
         if (self::exists($data)) {
             debug_event('ACL Create', 'Error: An ACL equal to the created one already exists. Not adding another one: ' . $data['start'] . ' - ' . $data['end'], 1);
-            Error::add('general', T_('Duplicate ACL defined'));
+            AmpError::add('general', T_('Duplicate ACL defined'));
             return false;
         }
 

@@ -47,12 +47,12 @@
         <tr>
             <td><?php echo T_('Start'); ?>:</td>
             <td>
-                <?php Error::display('start'); ?>
+                <?php AmpError::display('start'); ?>
                 <input type="text" name="start" value="<?php echo $access->f_start; ?>" />
             </td>
             <td><?php echo T_('End'); ?>:</td>
             <td>
-                <?php Error::display('end'); ?>
+                <?php AmpError::display('end'); ?>
                 <input type="text" name="end" value="<?php echo $access->f_end; ?>" />
             </td>
         </tr>

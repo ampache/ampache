@@ -68,7 +68,7 @@ define('TABLE_RENDERED', 1);
                         <?php echo T_('Remember Me'); ?>&nbsp;</label><input type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> />
                     </div>
                     <?php echo AmpConfig::get('login_message'); ?>
-                    <?php Error::display('general'); ?>
+                    <?php AmpError::display('general'); ?>
 
                     <div class="formValidation">
                         <a rel="nohtml" class="button" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>

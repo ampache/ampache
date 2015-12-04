@@ -35,14 +35,14 @@
     <td><?php echo T_('Secret'); ?></td>
     <td>
         <input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: Share::generate_secret()); ?>" />
-        <?php Error::display('secret'); ?>
+        <?php AmpError::display('secret'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Max Counter'); ?></td>
     <td>
         <input type="text" name="max_counter" value="<?php echo scrub_out($_REQUEST['max_counter'] ?: '0'); ?>" />
-        <?php Error::display('max_counter'); ?>
+        <?php AmpError::display('max_counter'); ?>
     </td>
 </tr>
 <tr>

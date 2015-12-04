@@ -143,12 +143,12 @@ class Catalog_subsonic extends Catalog
         $password = $data['password'];
 
         if (substr($uri,0,7) != 'http://' && substr($uri,0,8) != 'https://') {
-            Error::add('general', T_('Error: Subsonic selected, but path is not a URL'));
+            AmpError::add('general', T_('Error: Subsonic selected, but path is not a URL'));
             return false;
         }
 
         if (!strlen($username) or !strlen($password)) {
-            Error::add('general', T_('Error: Username and Password Required for Subsonic Catalogs'));
+            AmpError::add('general', T_('Error: Username and Password Required for Subsonic Catalogs'));
             return false;
         }
 
@@ -158,7 +158,7 @@ class Catalog_subsonic extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
-            Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+            AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
             return false;
         }
 
@@ -240,7 +240,7 @@ class Catalog_subsonic extends Catalog
                                                 debug_event('subsonic_catalog', 'Adding song ' . $song['path'], 5, 'ampache-catalog');
                                                 if (!Song::insert($data)) {
                                                     debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
-                                                    Error::add('general', T_('Unable to Insert Song - %s'), $song['path']);
+                                                    AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
                                                 } else {
                                                     $songsadded++;
                                                 }
@@ -249,13 +249,13 @@ class Catalog_subsonic extends Catalog
                                     }
                                 } else {
                                     debug_event('subsonic_catalog', 'Song error:' . $songs['error'], 3);
-                                    Error::add('general', T_('Song Error.') . ": " . $songs['error']);
+                                    AmpError::add('general', T_('Song Error.') . ": " . $songs['error']);
                                 }
                             }
                         }
                     } else {
                         debug_event('subsonic_catalog', 'Album error:' . $albums['error'], 3);
-                        Error::add('general', T_('Album Error.') . ": " . $albums['error']);
+                        AmpError::add('general', T_('Album Error.') . ": " . $albums['error']);
                     }
                 }
             }
@@ -266,7 +266,7 @@ class Catalog_subsonic extends Catalog
             $this->update_last_update();
         } else {
             debug_event('subsonic_catalog', 'Artist error:' . $artists['error'], 3);
-            Error::add('general', T_('Artist Error.') . ": " . $artists['error']);
+            AmpError::add('general', T_('Artist Error.') . ": " . $artists['error']);
         }
 
         debug_event('subsonic_catalog', 'Catalog updated.', 5);

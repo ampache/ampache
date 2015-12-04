@@ -87,7 +87,7 @@ AmpConfig::set_by_array(array(
 // Install the database
 if (!install_insert_db($new_db_user, $new_db_pass, true, $force, true)) { 
     echo T_('Database creation failed'), "\n"; 
-    echo Error::get('general'), "\n\n"; 
+    echo AmpError::get('general'), "\n\n"; 
     exit(1); 
 } 
 
@@ -99,7 +99,7 @@ AmpConfig::set_by_array(array(
 // Write the config file
 if (!install_create_config()) { 
     echo T_('Config file creation failed'), "\n"; 
-    echo Error::get('general') . "\n\n"; 
+    echo AmpError::get('general') . "\n\n"; 
     exit(1); 
 } 
 

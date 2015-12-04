@@ -77,7 +77,7 @@ if (empty($_REQUEST['step'])) {
                 exit();
             } else {
                 debug_event('Login', scrub_out($username) . ' From ' . $_SERVER['REMOTE_ADDR'] . ' attempted to login and failed', '1');
-                Error::add('general', T_('Error Username or Password incorrect, please try again'));
+                AmpError::add('general', T_('Error Username or Password incorrect, please try again'));
             }
         }
     }
@@ -88,7 +88,7 @@ if (empty($_REQUEST['step'])) {
         $username = $auth['username'];
     } else {
         debug_event('Login', 'Second step authentication failed', '1');
-        Error::add('general', $auth['error']);
+        AmpError::add('general', $auth['error']);
     }
 }
 
@@ -97,7 +97,7 @@ if (!empty($username) && isset($auth)) {
 
     if ($user->disabled) {
         $auth['success'] = false;
-        Error::add('general', T_('User Disabled please contact Admin'));
+        AmpError::add('general', T_('User Disabled please contact Admin'));
         debug_event('Login', scrub_out($username) . ' is disabled and attempted to login', '1');
     } // if user disabled
     elseif (AmpConfig::get('prevent_multiple_logins')) {
@@ -105,7 +105,7 @@ if (!empty($username) && isset($auth)) {
         $current_ip = inet_pton($_SERVER['REMOTE_ADDR']);
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
-            Error::add('general', T_('User Already Logged in'));
+            AmpError::add('general', T_('User Already Logged in'));
             debug_event('Login', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, '1');
         } // if logged in multiple times
     } // if prevent multiple logins
@@ -126,7 +126,7 @@ if (!empty($username) && isset($auth)) {
             $user = User::get_from_username($username);
         } else {
             $auth['success'] = false;
-            Error::add('general', T_('Unable to create local account'));
+            AmpError::add('general', T_('Unable to create local account'));
         }
     } // End if auto_create
 

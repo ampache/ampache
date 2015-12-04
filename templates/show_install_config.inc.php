@@ -58,11 +58,11 @@ require $prefix . '/templates/install_header.inc.php';
                 <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
             </ul>
             </div>
-            <?php Error::display('general'); ?>
+            <?php AmpError::display('general'); ?>
 
             <h2><?php echo T_('Generate Config File'); ?></h2>
             <h3><?php echo T_('Database connection'); ?></h3>
-            <?php Error::display('config'); ?>
+            <?php AmpError::display('config'); ?>
 <form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
 <div class="form-group">
     <label for="web_path" class="col-sm-4 control-label"><?php echo T_('Web Path'); ?></label>

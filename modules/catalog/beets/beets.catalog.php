@@ -99,7 +99,7 @@ class Catalog_beets extends Beets\Catalog
         $beetsdb = $data['beetsdb'];
 
         if (preg_match('/^[\s]+$/', $beetsdb)) {
-            Error::add('general', T_('Error: Beets selected, but no Beets DB File provided'));
+            AmpError::add('general', T_('Error: Beets selected, but no Beets DB File provided'));
             return false;
         }
 
@@ -109,7 +109,7 @@ class Catalog_beets extends Beets\Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
-            Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $beetsdb));
+            AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $beetsdb));
             return false;
         }
 
