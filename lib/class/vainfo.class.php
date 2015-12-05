@@ -615,8 +615,13 @@ class vainfo
     private function _parse_general($tags)
     {
         $parsed = array();
+        
+        if ((in_array('movie', $this->gather_types)) || (in_array('tvshow', $this->gather_types))) {
+            $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
+        } else {
+            $parsed['title'] = urldecode($this->_pathinfo['filename']);
+        }
 
-        $parsed['title'] = urldecode($this->_pathinfo['filename']);
         $parsed['mode']  = $tags['audio']['bitrate_mode'];
         if ($parsed['mode'] == 'con') {
             $parsed['mode'] = 'cbr';
