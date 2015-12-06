@@ -651,8 +651,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface'),
 (139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system'),
 (140, 'notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options'),
-(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface');
-(142, 'disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system');
+(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface'),
+(142, 'disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system'),
 (143, 'disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system');
 
 -- --------------------------------------------------------
