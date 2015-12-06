@@ -32,6 +32,10 @@
                 <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Content Rating') ?></td>
+                <td><input type="text" name="content_rating" value="<?php echo scrub_out($libitem->content_rating); ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
                 <td><input type="number" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
             </tr>

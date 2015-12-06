@@ -5,7 +5,7 @@
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software: you can redistribute it and/or modify
+ *  This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -412,6 +412,8 @@ class vainfo
             $info['release_date']   = $info['release_date'] ?: trim($tags['release_date']);
             $info['summary']        = $info['summary'] ?: trim($tags['summary']);
             $info['tvshow_summary'] = $info['tvshow_summary'] ?: trim($tags['tvshow_summary']);
+            $info['certification']  = $info['certification'] ?: trim($tags['certification']);
+            $info['content_rating'] = $info['content_rating'] ?: trim($tags['content_rating']);
             
             $info['tvshow_art']        = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
@@ -1014,9 +1016,20 @@ class vainfo
                 case 'tv_show_name':
                     $parsed['tvshow'] = $data[0];
                     break;
+                case 'description':
+                    $parsed['summary'] = substr($data[0], 0, 255);
+                    break;
+                case 'iTunEXTC': //Format is: us-tv|TV-14|500
+                        $rating = explode("|", $data[0], 3);
+                    if (in_array('tvshow',$this->gather_types)) {
+                        $parsed['content_rating'] = $rating[1];
+                    } elseif (in_array('movie',$this->gather_types)) {
+                        $parsed['certification'] = $rating[1];
+                    }
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
-                break;
+                    break;
             }
         }
 
@@ -1040,23 +1053,21 @@ class vainfo
     {
         $origin  = $filepath;
         $results = array();
+        $season  = array();
+        $episode = array();
+        $tvyear  = array();
+        $temp    = array();
         if (strpos($filepath, '/') !== false) {
-            $slash_type      = '/';
-            $slash_type_preg = $slash_type;
+            $slash_type      = '~/~';
+            $slash_type_preg = trim($slash_type,"~");
         } else {
-            $slash_type      = "\\";
-            $slash_type_preg = $slash_type . $slash_type;
+            $slash_type      = "~\\~";
+            $slash_type_preg = trim($slash_type,"~") . trim($slash_type,"~");
         }
         $file = pathinfo($filepath,PATHINFO_FILENAME);
-        
+        preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath,$tvyear);
+        $results['year'] = !empty($tvyear) ? intval($tvyear[0]) : null;
         if (in_array('tvshow', $this->gather_types)) {
-            $season  = array();
-            $episode = array();
-            $tvyear  = array();
-            $temp    = array();
-            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath,$tvyear);
-            $results['year'] = !empty($tvyear) ? intval($tvyear[0]) : null;
-        
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
                 $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~",$file,2);
                 preg_match("~(?<=[Ss])\d+~", $file, $season);
@@ -1084,15 +1095,16 @@ class vainfo
                     }
                 }
             }
+        }
     
-            $results['tvshow_season']  = $season[0];
-            $results['tvshow_episode'] = $episode[0];
-            $results['tvshow']         = $this->formatVideoName($temp[0]);
-            $results['original_name']  = $this->formatVideoName($temp[1]);
+        $results['tvshow_season']  = $season[0];
+        $results['tvshow_episode'] = $episode[0];
+        $results['tvshow']         = $this->formatVideoName($temp[0]);
+        $results['original_name']  = $this->formatVideoName($temp[1]);
 
             // Try to identify the show information from parent folder
             if (!$results['tvshow']) {
-                $folders = preg_split("~" . $slash_type . "~", $filepath, -1, PREG_SPLIT_NO_EMPTY);
+                $folders = preg_split($slash_type, $filepath, -1, PREG_SPLIT_NO_EMPTY);
                 if ($results['tvshow_season'] && $results['tvshow_episode']) {
                     // We have season and episode, we assume parent folder is the tvshow name
                     $filetitle         = end($folders);
@@ -1121,8 +1133,8 @@ class vainfo
                 }
             }
 
-            $results['title'] = $results['tvshow'];
-        }
+        $results['title'] = $results['tvshow'];
+        
     
         if (in_array('movie', $this->gather_types)) {
             $results['original_name'] = $results['title'] = $this->formatVideoName($file);

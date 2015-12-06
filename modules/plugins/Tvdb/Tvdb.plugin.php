@@ -114,7 +114,7 @@ class AmpacheTvdb
                     throw new Exception("TV Show not found");
                 }
                     // Get first match
-                    $release               = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
+                $release = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId ;
                 $results['tvshow_summary'] = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
@@ -127,7 +127,7 @@ class AmpacheTvdb
                     $results['tvshow_banner_art'] = $tvdburl . '/banners/' . $release->banner;
                 }
                 $baseSeries = $client->getSerie($results['tvdb_tvshow_id']);
-                    
+                $results['content_rating'] =  (strlen($baseSeries->contentRating) > 0) ? $baseSeries->contentRating : "N/R";
                 if (count($baseSeries->genres) > 0) {
                     $results['genre'] = $baseSeries->genres;
                 }

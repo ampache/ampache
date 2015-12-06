@@ -20,4 +20,5 @@
  *
  */
 ?>
+<td class="cel_Certification"><?php echo $libitem->certification; ?></td>
 <td class="cel_year"><?php echo $libitem->year; ?></td>
