@@ -133,6 +133,8 @@ class AmpacheTmdb
                         }
                         $results['genre']   = self::get_genres($release);
                         $results['summary'] = substr($release['overview'], 0, 255);
+                        $certifications = $client->getMoviesApi()->getReleases($results['tmdb_id']);
+                        $results['certification'] = $this->select_CR($certifications, $gather_types);
                     }
                 }
             }
@@ -156,6 +158,8 @@ class AmpacheTmdb
                         }
                         $results['genre']          = self::get_genres($release);
                         $results['tvshow_summary'] = substr($release['overview'], 0, 255);
+                        $contentRatings = $client->getTvApi()->getcontentRatings($results['tmdb_tvshow_id']);
+                        $results['content_rating'] = $this->select_CR($contentRatings,$gather_types);
                         if ($media_info['tvshow_season']) {
                             $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'], $media_info['tvshow_season']);
                             if ($release['id']) {
@@ -190,6 +194,22 @@ class AmpacheTmdb
         
         return $results;
     } // get_metadata
+
+   private function select_CR($content_ratings, $gather_types)
+   {
+       $idx = in_array("movie", $gather_types) ? "countries" : "results";
+       $country = AmpConfig::get("tmdb_cr_country") ?: "us";
+       foreach ($content_ratings[$idx] as $results ) {
+           if ($results['iso_3166_1'] = $country) {
+               if ($idx == "countries") {
+                   return $results['certification'];
+               } else {
+                   return $results['rating'];
+               }
+           }
+       }
+       return "N/R";
+   }
 
     public function gather_arts($type, $options = array(), $limit = 5)
     {

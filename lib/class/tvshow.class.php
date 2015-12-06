@@ -26,7 +26,7 @@ class TVShow extends database_object implements library_item
     public $id;
     public $name;
     public $prefix;
-    public $summary;
+    public $overview;
     public $year;
 
     public $catalog_id;
@@ -274,7 +274,7 @@ class TVShow extends database_object implements library_item
      *
      * Checks for an existing tv show; if none exists, insert one.
      */
-    public static function check($name, $year, $tvshow_summary, $readonly = false)
+    public static function check($name, $year, $tvshow_summary, $content_rating, $readonly = false)
     {
         // null because we don't have any unique id like mbid for now
         if (isset(self::$_mapcache[$name]['null'])) {
@@ -313,8 +313,10 @@ class TVShow extends database_object implements library_item
             return null;
         }
 
-        $sql        = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `summary`) VALUES(?, ?, ?, ?)';
-        $db_results = Dba::write($sql, array($name, $prefix, $year, $tvshow_summary));
+        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `summary`, `content_rating`)' .
+            'VALUES(?, ?, ?, ?, ?)';
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $tvshow_summary, $content_rating));
+
         if (!$db_results) {
             return null;
         }
@@ -335,7 +337,8 @@ class TVShow extends database_object implements library_item
         $name       = isset($data['name']) ? $data['name'] : $this->name;
         $year       = isset($data['year']) ? $data['year'] : $this->year;
         $summary    = isset($data['summary']) ? $data['summary'] : $this->summary;
-
+        $content_rating = isset($data['content_rating']) ? $data['content_rating'] : $this->content_rating;
+        
         // Check if name is different than current name
         if ($this->name != $name || $this->year != $year) {
             $tvshow_id = self::check($name, $year, true);
@@ -357,8 +360,9 @@ class TVShow extends database_object implements library_item
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
 
-        $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
-        Dba::write($sql, array($name, $prefix, $year, $summary, $current_id));
+        $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ?,' .
+            '`content_rating` = ? WHERE `id` = ?';
+        Dba::write($sql, array($name, $prefix, $year, $summary, $content_rating, $current_id));
 
         $this->name    = $name;
         $this->prefix  = $prefix;
@@ -376,7 +380,8 @@ class TVShow extends database_object implements library_item
         }
 
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs,
+                 $current_id, true);
         }
 
         return $current_id;

@@ -40,6 +40,7 @@ $thcount  = 8;
         <?php 
 } ?>
             <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'),'tvshow_sort_name'); ?></th>
+            <th class="cel_content_rating optional"><?php echo T_('Content Rating'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
@@ -110,6 +111,7 @@ $thcount  = 8;
         <?php 
 } ?>
             <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'),'tvshow_sort_name'); ?></th>
+            <th class="cel_content_rating optional"><?php echo T_('Content Rating'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>

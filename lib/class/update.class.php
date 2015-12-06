@@ -523,6 +523,9 @@ class Update
         $update_string = "- Add basic metadata tables.<br />";
         $version[]     = array('version' => '370041', 'description' => $update_string);
 
+        $update_string = "- Add columns tvshow.content_rating and movie.certification.<br />";
+        $version[]     = array('version' => '370042', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -3654,6 +3657,22 @@ class Update
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
         $retval &= Dba::write($sql, array($id));
 
+        return $retval;
+    }
+    /**
+     * update_370042
+     *
+     * Add tvshow.content_rating and movie.certification columns
+     * 
+     */
+    public static function update_370042()
+    {
+        $retval = true;
+        $sql = "ALTER TABLE `movie` ADD COLUMN `certification` VARCHAR(12) NULL DEFAULT NULL";
+        $retval &= Dba::write($sql);
+        $sql = "ALTER TABLE `tvshow` ADD COLUMN `content_rating` VARCHAR(12) NULL DEFAULT NULL";
+        $retval &= Dba::write($sql);
+    
         return $retval;
     }
 }
