@@ -20,19 +20,15 @@
  *
  */
 
-class AmpacheHomeMessage
+class AmpacheMOTDHome
 {
-    public $name           = 'Home Message';
+    public $name           = 'Message of the Day';
     public $categories     = 'home';
-    public $description    = 'Message on homepage';
+    public $description    = 'Message of the Day on homepage';
     public $url            = '';
     public $version        = '000001';
     public $min_ampache    = '370040';
     public $max_ampache    = '999999';
-
-    // These are internal settings used by this class, run this->load to
-    // fill them out
-    private $message;
 
     /**
      * Constructor
@@ -50,14 +46,6 @@ class AmpacheHomeMessage
      */
     public function install()
     {
-        // Check and see if it's already installed
-        if (Preference::exists('hm_message')) {
-            return false;
-        }
-
-        Preference::insert('hm_message','Home Message text','','75','string','plugins');
-        Preference::insert('hm_level','Home Message level','3','75','integer','plugins');
-
         return true;
     }
 
@@ -68,9 +56,6 @@ class AmpacheHomeMessage
      */
     public function uninstall()
     {
-        Preference::delete('hm_message');
-        Preference::delete('hm_level');
-
         return true;
     }
 
@@ -89,24 +74,12 @@ class AmpacheHomeMessage
      */
     public function display_home()
     {
-        if (!empty($this->message)) {
-            UI::show_box_top(T_('Global Message'));
-            $dstyle = '';
-            switch ($this->level) {
-                case 1:
-                    $dstyle .= 'color: #C33; font-weight: bold;';
-                    break;
-                case 2:
-                    $dstyle .= 'color: #FF0; font-weight: bold;';
-                    break;
-                default:
-                    $dstyle .= '';
-                    break;
-            }
-            echo '<div style="' . $dstyle . '">';
-            echo $this->message;
-            echo '</div>';
+        if (@is_readable(AmpConfig::get('prefix') . '/config/motd.php')) {
+            echo '<div id="motd">';
+            UI::show_box_top(T_('Message of the Day'));
+            require_once AmpConfig::get('prefix') . '/config/motd.php';
             UI::show_box_bottom();
+            echo '</div>';
         }
     }
 
@@ -117,13 +90,6 @@ class AmpacheHomeMessage
      */
     public function load($user)
     {
-        $user->set_preferences();
-        $data = $user->prefs;
-
-        $this->message = $data['hm_message'];
-        $this->level   = $data['hm_level'];
-        
-
         return true;
     }
 }

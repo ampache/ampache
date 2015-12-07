@@ -17,3 +17,5 @@ log/
 *.log
 /lib/vendor/
 /lib/components/
+web.config
+config/motd.php
