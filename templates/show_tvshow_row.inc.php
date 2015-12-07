@@ -44,6 +44,7 @@
     }
 ?>
 <td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
+<td class="cel_content_ratings"><?php echo $libitem->content_rating; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>

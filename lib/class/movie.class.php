@@ -27,6 +27,7 @@ class Movie extends Video
     public $summary;
     public $year;
     public $video;
+    public $certification;
 
     public $f_original_name;
 
@@ -69,9 +70,10 @@ class Movie extends Video
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
 
-        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) " .
-            "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
+        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `certification`, `year`) " .
+            "VALUES (?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'],  $data['certification'],
+             $data['year']));
 
         return $data['id'];
     } // create
@@ -92,17 +94,20 @@ class Movie extends Video
             $name   = $this->original_name;
             $prefix = $this->prefix;
         }
-        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $year    = isset($data['year']) ? $data['year'] : $this->year;
-
-        $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
+        $summary       = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $year          = isset($data['year']) ? $data['year'] : $this->year;
+        $certification = isset($data['certification']) ? $data['certification'] : $this->certification;
+        
+        $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?," .
+        " `year` = ?, `certification` = ? WHERE `id` = ?";
+        Dba::write($sql, array($name, $prefix, $summary, $year, $certification, $this->id));
 
         $this->original_name = $name;
         $this->prefix        = $prefix;
         $this->summary       = $summary;
         $this->year          = $year;
-
+        $this->certification = $certification;
+        
         return $this->id;
     } // update
 
