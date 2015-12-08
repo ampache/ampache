@@ -1522,6 +1522,17 @@ abstract class Catalog extends database_object
 
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
+        
+        if (Song::isCustomMetadataEnabled()) {
+            $ctags = self::get_clean_metadata($song, $results);
+            if (method_exists($song, 'updateOrInsertMetadata') && $song::isCustomMetadataEnabled()) {
+                $ctags = array_diff_key($ctags, array_flip($song->getDisabledMetadataFields()));
+                foreach ($ctags as $tag => $value) {
+                    $field = $song->getField($tag);
+                    $song->updateOrInsertMetadata($field, $value);
+                }
+            }
+        }
 
         $info = Song::compare_song_information($song, $new_song);
         if ($info['change']) {
@@ -1573,6 +1584,38 @@ abstract class Catalog extends database_object
     {
         // TODO: implement this
         return null;
+    }
+    
+    /**
+     * Get rid of all tags found in the libraryItem
+     * @param library_item $libraryItem
+     * @param array $metadata
+     * @return array
+     */
+    private static function get_clean_metadata(library_item $libraryItem, $metadata)
+    {
+        $tags = array_diff_key(
+            $metadata,
+            get_object_vars($libraryItem),
+            array_flip($libraryItem::$aliases ?: array())
+        );
+
+        return array_filter($tags);
+    }
+
+    /**
+     *
+     * @param library_item $libraryItem
+     * @param type $metadata
+     */
+    public static function add_metadata(library_item $libraryItem, $metadata)
+    {
+        $tags = self::get_clean_metadata($libraryItem, $metadata);
+
+        foreach ($tags as $tag => $value) {
+            $field = $libraryItem->getField($tag);
+            $libraryItem->addMetadata($field, $value);
+        }
     }
 
     /**

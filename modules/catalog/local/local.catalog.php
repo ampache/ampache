@@ -557,9 +557,7 @@ class Catalog_local extends Catalog
             }
 
             $media = new $media_type($row['id']);
-            $this->updateMetadata($media, $this->sort_pattern,$this->rename_pattern);
-
-            $info = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
+            $info  = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
             if ($info['change']) {
                 $changed++;
             }
@@ -714,7 +712,7 @@ class Catalog_local extends Catalog
                 $song = new Song($id);
             }
             $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
-            $this->addMetadata($song, $results);
+            self::add_metadata($song, $results);
         }
         $this->added_songs_to_gather[] = $id;
 
@@ -803,67 +801,6 @@ class Catalog_local extends Catalog
     {
         // Do nothing, it's just file...
         return $media;
-    }
-
-    /**
-     * Get rid of all tags found in the libraryItem
-     * @param library_item $libraryItem
-     * @param array $metadata
-     * @return array
-     */
-    protected function getCleanMetadata(library_item $libraryItem, $metadata)
-    {
-        $tags = array_diff_key(
-            $metadata,
-            get_object_vars($libraryItem),
-            array_flip($libraryItem::$aliases ?: array())
-        );
-
-        return array_filter($tags);
-    }
-
-    /**
-     *
-     * @param library_item $libraryItem
-     * @param type $metadata
-     */
-    public function addMetadata(library_item $libraryItem, $metadata)
-    {
-        $tags = $this->getCleanMetadata($libraryItem, $metadata);
-
-        foreach ($tags as $tag => $value) {
-            $field = $libraryItem->getField($tag);
-            $libraryItem->addMetadata($field, $value);
-        }
-    }
-
-    // TODO: Get rid of duplicated code...
-    public function updateMetadata($media, $sort_pattern='', $rename_pattern='')
-    {
-        // Check for patterns
-        if (!$sort_pattern or !$rename_pattern) {
-            $catalog        = Catalog::create_from_id($media->catalog);
-            $sort_pattern   = $catalog->sort_pattern;
-            $rename_pattern = $catalog->rename_pattern;
-        }
-
-        debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
-
-        $vainfo = new vainfo($media->file,array('music'),'','','',$sort_pattern,$rename_pattern);
-        $vainfo->get_info();
-
-        $key = vainfo::get_tag_type($vainfo->tags);
-
-        $results = vainfo::clean_tag_info($vainfo->tags,$key,$media->file);
-
-        $tags = $this->getCleanMetadata($media, $results);
-        if (method_exists($media, 'updateOrInsertMetadata') && $media::isCustomMetadataEnabled()) {
-            $tags = array_diff_key($tags, array_flip($media->getDisabledMetadataFields()));
-            foreach ($tags as $tag => $value) {
-                $field = $media->getField($tag);
-                $media->updateOrInsertMetadata($field, $value);
-            }
-        }
     }
 } // end of local catalog class
 

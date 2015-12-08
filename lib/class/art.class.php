@@ -204,7 +204,7 @@ class Art extends database_object
         // Check to make sure PHP:GD exists.  If so, we can sanity check
         // the image.
         if (function_exists('ImageCreateFromString')) {
-            $image = ImageCreateFromString($source);
+            $image = @ImageCreateFromString($source);
             if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('Art', 'Image failed PHP-GD test',1);
                 $test = false;
