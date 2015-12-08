@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,8 +33,8 @@ error_reporting(E_ERROR); // Only show fatal errors in production
 $load_time_begin = microtime(true);
 
 $ampache_path = dirname(__FILE__);
-$prefix = realpath($ampache_path . "/../");
-$configfile = $prefix . '/config/ampache.cfg.php';
+$prefix       = realpath($ampache_path . "/../");
+$configfile   = $prefix . '/config/ampache.cfg.php';
 
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if (!defined('CLI')) {
@@ -51,11 +51,14 @@ require_once $prefix . '/modules/php-gettext/gettext.inc';
 // Define some base level config options
 AmpConfig::set('prefix', $prefix);
 
-// Register the autoloader
+// Register autoloaders
 spl_autoload_register(array('Core', 'autoload'), true, true);
-
-require_once $prefix . '/modules/requests/Requests.php';
-Requests::register_autoloader();
+$composer_autoload = $prefix . '/lib/vendor/autoload.php';
+if (file_exists($composer_autoload)) {
+    require_once $composer_autoload;
+    require_once $prefix . '/lib/vendor/Afterster/php-echonest-api/lib/EchoNest/Autoloader.php';
+    EchoNest_Autoloader::register();
+}
 
 // Check to see if this is http or https
 if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' )
@@ -67,8 +70,10 @@ if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PRO
 
 if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
     $http_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
-} else if (isset($_SERVER['SERVER_PORT'])) {
-    $http_port = $_SERVER['SERVER_PORT'];
+} else {
+    if (isset($_SERVER['SERVER_PORT'])) {
+        $http_port = $_SERVER['SERVER_PORT'];
+    }
 }
 if (!isset($http_port) || empty($http_port)) {
     $http_port = 80;

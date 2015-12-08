@@ -2,22 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -47,7 +46,6 @@ class Random
         $results = Dba::fetch_assoc($db_results);
 
         return $results['id'];
-
     } // artist
 
     /**
@@ -65,7 +63,6 @@ class Random
         $results = Dba::fetch_assoc($db_results);
 
         return $results['id'];
-
     } // playlist
 
     /**
@@ -80,10 +77,9 @@ class Random
             $method_name = 'get_default';
         }
         $song_ids = self::$method_name(1);
-        $song_id = array_pop($song_ids);
+        $song_id  = array_pop($song_ids);
 
         return $song_id;
-
     } // get_single_song
 
     /**
@@ -112,7 +108,6 @@ class Random
         }
 
         return $results;
-
     } // get_default
 
     /**
@@ -125,7 +120,7 @@ class Random
         $results = array();
 
         // Get the last album played by us
-        $data = $GLOBALS['user']->get_recently_played('1', 'album');
+        $data      = $GLOBALS['user']->get_recently_played('1', 'album');
         $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`album`='" . $data[0] . "' ";
@@ -146,7 +141,6 @@ class Random
         }
 
         return $results;
-
     } // get_album
 
     /**
@@ -158,7 +152,7 @@ class Random
     {
         $results = array();
 
-        $data = $GLOBALS['user']->get_recently_played('1','artist');
+        $data      = $GLOBALS['user']->get_recently_played('1','artist');
         $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
@@ -179,7 +173,6 @@ class Random
         }
 
         return $results;
-
     } // get_artist
 
     /**
@@ -196,7 +189,11 @@ class Random
 
         /* If they've passed -1 as limit then get everything */
         $limit_sql = "";
-        if ($data['random'] == "-1") { unset($data['random']); } else { $limit_sql = "LIMIT " . Dba::escape($limit); }
+        if ($data['random'] == "-1") {
+            unset($data['random']);
+        } else {
+            $limit_sql = "LIMIT " . Dba::escape($limit);
+        }
 
         $search_data = Search::clean_request($data);
 
@@ -275,7 +272,7 @@ class Random
 
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
 
         $size_total = 0;
         $fuzzy_size = 0;
@@ -300,11 +297,12 @@ class Random
                 }
 
                 $size_total = $size_total + $new_size;
-                $results[] = $row['id'];
+                $results[]  = $row['id'];
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
-                    break; }
+                    break;
+                }
             } // if size_limit
 
             // If length really does matter
@@ -313,7 +311,8 @@ class Random
                 $new_time = floor($row['time'] / 60);
 
                 if ($fuzzy_time > 100) {
-                    break;;
+                    break;
+                    ;
                 }
 
                 // If the new one would go over skip!
@@ -323,7 +322,7 @@ class Random
                 }
 
                 $time_total = $time_total + $new_time;
-                $results[] = $row['id'];
+                $results[]  = $row['id'];
 
                 // If there are less then 2 min of free space return
                 if (($data['length'] - $time_total) < 2) {
@@ -334,7 +333,6 @@ class Random
             if (!$data['size_limit'] && !$data['length']) {
                 $results[] = $row['id'];
             }
-
         } // end while results
 
         switch ($type) {
@@ -351,12 +349,12 @@ class Random
                 $songs = array();
                 foreach ($results as $result) {
                     $artist = new Artist($result);
-                    $songs = array_merge($songs, $artist->get_songs());
+                    $songs  = array_merge($songs, $artist->get_songs());
                 }
                 return $songs;
             default:
                 return false;
         }
     } // advanced
-
 } //end of random class
+

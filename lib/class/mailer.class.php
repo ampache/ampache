@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -44,7 +44,6 @@ class Mailer
     public function __construct()
     {
         // Eh bien.
-
     } // Constructor
 
     /**
@@ -80,7 +79,7 @@ class Mailer
             $fromname = 'Ampache';
         }
 
-        $this->sender = $user . '@' . $domain;
+        $this->sender      = $user . '@' . $domain;
         $this->sender_name = $fromname;
     } // set_default_sender
 
@@ -100,7 +99,7 @@ class Mailer
             break ;
             case 'inactive':
                 $inactive = time() - (30 * 86400);
-                $sql = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
+                $sql      = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
             break;
             case 'all':
             default:
@@ -117,7 +116,6 @@ class Mailer
         }
 
         return $results;
-
     } // get_users
 
     /**
@@ -140,12 +138,12 @@ class Mailer
             $mail = $phpmailer;
         }
 
-        $mail->CharSet    = AmpConfig::get('site_charset');
+        $mail->CharSet     = AmpConfig::get('site_charset');
         $mail->Encoding    = 'base64';
-        $mail->From    = $this->sender;
-        $mail->Sender    = $this->sender;
+        $mail->From        = $this->sender;
+        $mail->Sender      = $this->sender;
         $mail->FromName    = $this->sender_name;
-        $mail->Subject    = $this->subject;
+        $mail->Subject     = $this->subject;
 
         if (function_exists('mb_eregi_replace')) {
             $this->message = mb_eregi_replace("\r\n", "\n", $this->message);
@@ -209,5 +207,5 @@ class Mailer
 
         return $this->send($mail);
     }
-
 } // Mailer class
+

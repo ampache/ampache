@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -62,7 +62,6 @@ class Waveform
     {
         // Static
         return false;
-
     } // Constructor
 
     /**
@@ -72,7 +71,7 @@ class Waveform
      */
     public static function get($song_id)
     {
-        $song = new Song($song_id);
+        $song     = new Song($song_id);
         $waveform = null;
 
         if ($song->id) {
@@ -81,9 +80,9 @@ class Waveform
             if (!$waveform) {
                 $catalog = Catalog::create_from_id($song->catalog);
                 if ($catalog->get_type() == 'local') {
-                    $transcode_to = 'wav';
+                    $transcode_to  = 'wav';
                     $transcode_cfg = AmpConfig::get('transcode');
-                    $valid_types = $song->get_stream_types();
+                    $valid_types   = $song->get_stream_types();
 
                     if ($song->type != $transcode_to) {
                         $basedir = AmpConfig::get('tmp_dir_path');
@@ -98,7 +97,7 @@ class Waveform
                                 }
 
                                 $transcoder = Stream::start_transcode($song, $transcode_to);
-                                $fp = $transcoder['handle'];
+                                $fp         = $transcoder['handle'];
                                 if (!is_resource($fp)) {
                                     debug_event('waveform', "Failed to open " . $song->file . " for waveform.", 3);
                                     return null;
@@ -161,7 +160,7 @@ class Waveform
             hexdec(substr($input, 2, 2)),
             hexdec(substr($input, 4, 2))
         );
-      }
+    }
 
       /**
        * Create waveform from song file.
@@ -174,19 +173,19 @@ class Waveform
             return null;
         }
 
-        $detail = 5;
-        $width = 400;
-        $height = 32;
+        $detail     = 5;
+        $width      = 400;
+        $height     = 32;
         $foreground = AmpConfig::get('waveform_color') ?: '#FF0000';
         $background = '';
-        $draw_flat = true;
+        $draw_flat  = true;
 
         // generate foreground color
         list($r, $g, $b) = self::html2rgb($foreground);
 
         $handle = fopen($filename, "r");
         // wav file header retrieval
-        $heading = array();
+        $heading   = array();
         $heading[] = fread($handle, 4);
         $heading[] = bin2hex(fread($handle, 4));
         $heading[] = fread($handle, 4);
@@ -212,7 +211,7 @@ class Waveform
 
         // start putting together the initial canvas
         // $data_size = (size_of_file - header_bytes_read) / skipped_bytes + 1
-        $data_size = floor((Core::get_filesize($filename) - 44) / ($ratio + $byte) + 1);
+        $data_size  = floor((Core::get_filesize($filename) - 44) / ($ratio + $byte) + 1);
         $data_point = 0;
 
         // create original image width based on amount of detail
@@ -222,32 +221,35 @@ class Waveform
 
         // fill background of image
         if ($background == "") {
-          // transparent background specified
+            // transparent background specified
           imagesavealpha($img, true);
-          $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
-          imagefill($img, 0, 0, $transparentColor);
+            $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
+            imagefill($img, 0, 0, $transparentColor);
         } else {
-          list($br, $bg, $bb) = self::html2rgb($background);
-          imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $br, $bg, $bb));
-        } while (!feof($handle) && $data_point < $data_size) {
+            list($br, $bg, $bb) = self::html2rgb($background);
+            imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $br, $bg, $bb));
+        }
+        while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail == 0) {
-              $bytes = array();
+                $bytes = array();
 
               // get number of bytes depending on bitrate
-              for ($i = 0; $i < $byte; $i++)
-                $bytes[$i] = fgetc($handle);
+              for ($i = 0; $i < $byte; $i++) {
+                  $bytes[$i] = fgetc($handle);
+              }
 
-              switch ($byte) {
+                switch ($byte) {
                 // get value for 8-bit wav
                 case 1:
                   $data = self::findValues($bytes[0], $bytes[1]);
                 break;
                 // get value for 16-bit wav
                 case 2:
-                  if(ord($bytes[1]) & 128)
-                    $temp = 0;
-                  else
-                    $temp = 128;
+                  if (ord($bytes[1]) & 128) {
+                      $temp = 0;
+                  } else {
+                      $temp = 128;
+                  }
                   $temp = chr((ord($bytes[1]) & 127) + $temp);
                   $data = floor(self::findValues($bytes[0], $temp) / 256);
                 break;
@@ -265,8 +267,8 @@ class Waveform
               $v = (int) ($data / 255 * $height);
 
               // don't print flat values on the canvas if not necessary
-              if (!($v / $height == 0.5 && !$draw_flat))
-                // draw the line on the image using the $v value and centering it vertically on the canvas
+              if (!($v / $height == 0.5 && !$draw_flat)) {
+                  // draw the line on the image using the $v value and centering it vertically on the canvas
                 imageline(
                   $img,
                   // x1
@@ -279,9 +281,9 @@ class Waveform
                   $height - ($height - $v),
                   imagecolorallocate($img, $r, $g, $b)
                 );
-
+              }
             } else {
-              // skip this one due to lack of detail
+                // skip this one due to lack of detail
               fseek($handle, $ratio + $byte, SEEK_CUR);
             }
         }
@@ -322,5 +324,5 @@ class Waveform
         $sql = "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
         return Dba::write($sql, array($waveform, $song_id));
     }
-
 } // Waveform class
+

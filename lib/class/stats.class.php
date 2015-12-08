@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -46,7 +46,6 @@ class Stats
     public function __construct()
     {
         return true;
-
     } // Constructor
 
     /**
@@ -100,19 +99,26 @@ class Stats
         if (!self::is_already_inserted($type, $oid, $user)) {
             $type = self::validate_type($type);
 
-            $latitude = null;
+            $latitude  = null;
             $longitude = null;
-            $geoname = null;
-            if (isset($location['latitude']))
+            $geoname   = null;
+            if (isset($location['latitude'])) {
                 $latitude = $location['latitude'];
-            if (isset($location['longitude']))
+            }
+            if (isset($location['longitude'])) {
                 $longitude = $location['longitude'];
-            if (isset($location['name']))
+            }
+            if (isset($location['name'])) {
                 $geoname = $location['name'];
+            }
 
             $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`count_type`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $db_results = Dba::write($sql, array($type, $oid, $count_type, time(), $user, $agent, $latitude, $longitude, $geoname));
+            
+            if (Core::is_media($type)) {
+                Useractivity::post_activity($user, 'play', $type, $oid);
+            }
 
             if (!$db_results) {
                 debug_event('statistics', 'Unabled to insert statistics:' . $sql, '3');
@@ -135,14 +141,13 @@ class Stats
         $sql .= "ORDER BY `object_count`.`date` DESC";
 
         $db_results = Dba::read($sql, array($user, $type, $oid, $count_type, $delay));
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
 
         return count($results) > 0;
-
     } // is_already_inserted
 
     /**
@@ -170,8 +175,8 @@ class Stats
 
     public static function get_cached_place_name($latitude, $longitude)
     {
-        $name = null;
-        $sql = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
+        $name       = null;
+        $sql        = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($latitude, $longitude));
         if ($results = Dba::fetch_assoc($db_results)) {
             $name = $results['geo_name'];
@@ -205,7 +210,6 @@ class Stats
         $results = Dba::fetch_assoc($db_results);
 
         return $results;
-
     } // get_last_song
 
     /**
@@ -236,7 +240,6 @@ class Stats
         }
 
         return $results;
-
     } // get_object_history
 
     /**
@@ -254,7 +257,7 @@ class Stats
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
-            " WHERE `object_type` = '" . $type ."' AND `date` >= '" . $date . "' ";
+            " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
@@ -291,7 +294,6 @@ class Stats
             $results[] = $row['id'];
         }
         return $results;
-
     } // get_top
 
     /**
@@ -308,7 +310,7 @@ class Stats
         }
 
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM object_count" .
-            " WHERE `object_type` = '" . $type ."'" . $user_sql;
+            " WHERE `object_type` = '" . $type . "'" . $user_sql;
         if (AmpConfig::get('catalog_disable')) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
@@ -328,7 +330,7 @@ class Stats
         }
 
         $count = intval($count);
-        $type = self::validate_type($type);
+        $type  = self::validate_type($type);
         if (!$offset) {
             $limit = $count;
         } else {
@@ -345,7 +347,6 @@ class Stats
         }
 
         return $results;
-
     } // get_recent
 
     /**
@@ -356,7 +357,7 @@ class Stats
     public static function get_user($count,$type,$user,$full='')
     {
         $count = intval($count);
-        $type = self::validate_type($type);
+        $type  = self::validate_type($type);
 
         /* If full then don't limit on date */
         if ($full) {
@@ -379,7 +380,6 @@ class Stats
         }
 
         return $results;
-
     } // get_user
 
     /**
@@ -404,7 +404,6 @@ class Stats
             default:
                 return 'song';
         } // end switch
-
     } // validate_type
 
     /**
@@ -418,16 +417,16 @@ class Stats
         $base_type = 'song';
         if ($type == 'video') {
             $base_type = $type;
-            $type = $type . '`.`id';
+            $type      = $type . '`.`id';
         }
 
         $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
         $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
         if (AmpConfig::get('catalog_disable')) {
-                $sql .= "WHERE `catalog`.`enabled` = '1' ";
+            $sql .= "WHERE `catalog`.`enabled` = '1' ";
         }
         if ($catalog > 0) {
-            $sql .= "AND `catalog` = '" . scrub_in($catalog) ."' ";
+            $sql .= "AND `catalog` = '" . scrub_in($catalog) . "' ";
         }
         $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
 
@@ -441,7 +440,9 @@ class Stats
      */
     public static function get_newest($type, $count='', $offset='', $catalog=0)
     {
-        if (!$count) { $count = AmpConfig::get('popular_threshold'); }
+        if (!$count) {
+            $count = AmpConfig::get('popular_threshold');
+        }
         if (!$offset) {
             $limit = $count;
         } else {
@@ -459,7 +460,6 @@ class Stats
         } // end while results
 
         return $items;
-
     } // get_newest
-
 } // Stats class
+

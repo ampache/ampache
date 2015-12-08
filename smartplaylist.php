@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2010 - 2015 Ampache.org
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
 
         foreach ($_REQUEST as $key => $value) {
             $prefix = substr($key, 0, 4);
-            $value = trim($value);
+            $value  = trim($value);
 
             if ($prefix == 'rule' && strlen($value)) {
                 $rules[$key] = Dba::escape($value);
@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Search(null, 'song');
         $playlist->parse_rules($data);
         $playlist->logic_operator = $operator;
-        $playlist->name = $playlist_name;
+        $playlist->name           = $playlist_name;
         $playlist->save();
 
     break;
@@ -80,7 +80,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Search($_REQUEST['playlist_id'], 'song');
         $playlist->format();
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
     break;
     case 'update_playlist':
         $playlist = new Search($_REQUEST['playlist_id'], 'song');
@@ -93,11 +93,11 @@ switch ($_REQUEST['action']) {
             break;
         }
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
     break;
     default:
         $object_ids = $playlist->get_items();
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
     break;
 } // switch on the action
 

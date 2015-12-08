@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -50,7 +50,9 @@ class Share extends database_object
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -65,7 +67,7 @@ class Share extends database_object
 
     public static function delete_share($id)
     {
-        $sql = "DELETE FROM `share` WHERE `id` = ?";
+        $sql    = "DELETE FROM `share` WHERE `id` = ?";
         $params = array( $id );
         if (!$GLOBALS['user']->has_access('75')) {
             $sql .= " AND `user` = ?";
@@ -91,7 +93,7 @@ class Share extends database_object
     public static function generate_secret($length = 8)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $secret = '';
+        $secret     = '';
         for ($i = 0; $i < $length; $i++) {
             $secret .= $characters[rand(0, strlen($characters) - 1)];
         }
@@ -115,11 +117,15 @@ class Share extends database_object
     public static function create_share($object_type, $object_id, $allow_stream=true, $allow_download=true, $expire=0, $secret='', $max_counter=0, $description='')
     {
         $object_type = self::format_type($object_type);
-        if (empty($object_type)) return '';
+        if (empty($object_type)) {
+            return '';
+        }
 
-        if (!$allow_stream && !$allow_download) return '';
+        if (!$allow_stream && !$allow_download) {
+            return '';
+        }
 
-        $sql = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array($GLOBALS['user']->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
         Dba::write($sql, $params);
 
@@ -170,9 +176,9 @@ class Share extends database_object
 
     public static function get_share_list()
     {
-        $sql = self::get_share_list_sql();
+        $sql        = self::get_share_list_sql();
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -183,9 +189,9 @@ class Share extends database_object
 
     public static function get_shares($object_type, $object_id)
     {
-        $sql = "SELECT `id` FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
+        $sql        = "SELECT `id` FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id));
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -197,8 +203,8 @@ class Share extends database_object
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75') || $this->user == $GLOBALS['user']->id) {
-                echo "<a id=\"edit_share_ " . $this->id ."\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
+                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
@@ -208,25 +214,25 @@ class Share extends database_object
         if ($details) {
             $object = new $this->object_type($this->object_id);
             $object->format();
-            $this->f_name = $object->get_fullname();
+            $this->f_name        = $object->get_fullname();
             $this->f_object_link = $object->f_link;
-            $user = new User($this->user);
+            $user                = new User($this->user);
             $user->format();
             $this->f_user = $user->f_name;
         }
-        $this->f_allow_stream = $this->allow_stream;
+        $this->f_allow_stream   = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
-        $this->f_creation_date = date("Y-m-d H:i:s", $this->creation_date);
+        $this->f_creation_date  = date("Y-m-d H:i:s", $this->creation_date);
         $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", $this->creation_date) : '';
     }
 
     public function update(array $data)
     {
-        $this->max_counter = intval($data['max_counter']);
-        $this->expire_days = intval($data['expire']);
-        $this->allow_stream = $data['allow_stream'] == '1';
+        $this->max_counter    = intval($data['max_counter']);
+        $this->expire_days    = intval($data['expire']);
+        $this->allow_stream   = $data['allow_stream'] == '1';
         $this->allow_download = $data['allow_download'] == '1';
-        $this->description = isset($data['description']) ? $data['description'] : $this->description;
+        $this->description    = isset($data['description']) ? $data['description'] : $this->description;
 
         $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .
             "WHERE `id` = ?";
@@ -288,13 +294,13 @@ class Share extends database_object
     public function create_fake_playlist()
     {
         $playlist = new Stream_Playlist(-1);
-        $medias = array();
+        $medias   = array();
 
         switch ($this->object_type) {
             case 'album':
             case 'playlist':
                 $object = new $this->object_type($this->object_id);
-                $songs = $object->get_medias('song');
+                $songs  = $object->get_medias('song');
                 foreach ($songs as $song) {
                     $medias[] = $song;
                 }
@@ -318,10 +324,12 @@ class Share extends database_object
             case 'album':
             case 'playlist':
                 $object = new $this->object_type($this->object_id);
-                $songs = $object->get_songs();
+                $songs  = $object->get_songs();
                 foreach ($songs as $id) {
                     $is_shared = ($media_id == $id);
-                    if ($is_shared) { break; }
+                    if ($is_shared) {
+                        break;
+                    }
                 }
             break;
             default:
@@ -349,7 +357,7 @@ class Share extends database_object
     public static function display_ui_links($object_type, $object_id)
     {
         echo "<ul>";
-        echo "<li><a onclick=\"handleShareAction('". AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . UI::get_icon('share', T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
+        echo "<li><a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . UI::get_icon('share', T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
         if (AmpConfig::get('download')) {
             $dllink = "";
             if ($object_type == "song" || $object_type == "video") {
@@ -370,10 +378,10 @@ class Share extends database_object
         echo "<li style='padding-top: 8px; text-align: right;'>";
         $plugins = Plugin::get_plugins('external_share');
         foreach ($plugins as $plugin_name) {
-            echo "<a onclick=\"handleShareAction('". AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower($plugin_name), $plugin_name) . "</a>&nbsp;";
+            echo "<a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower($plugin_name), $plugin_name) . "</a>&nbsp;";
         }
         echo "</li>";
         echo "</ul>";
     }
-
 } // end of recommendation class
+

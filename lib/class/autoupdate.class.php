@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -45,7 +45,7 @@ class AutoUpdate
     protected static function is_develop()
     {
         $version = AmpConfig::get('version');
-        $vspart = explode('-', $version);
+        $vspart  = explode('-', $version);
 
         return ($vspart[count($vspart) - 1] == 'develop');
     }
@@ -77,7 +77,7 @@ class AutoUpdate
     {
         try {
             // https is mandatory
-            $url = "https://api.github.com/repos/ampache/ampache" . $action;
+            $url     = "https://api.github.com/repos/ampache/ampache" . $action;
             $request = Requests::get($url, array(), Core::requests_options());
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
@@ -195,8 +195,8 @@ class AutoUpdate
         debug_event('autoupdate', 'Checking latest version online...', '5');
 
         $available = false;
-        $current = self::get_current_version();
-        $latest = self::get_latest_version();
+        $current   = self::get_current_version();
+        $latest    = self::get_latest_version();
 
         if ($current != $latest && !empty($current)) {
             if (self::is_develop()) {
@@ -243,12 +243,27 @@ class AutoUpdate
      */
     public static function update_files()
     {
-        echo T_('Updating Ampache sources with `git pull` ...') . '<br />';
+        $cmd = 'git pull https://github.com/ampache/ampache.git';
+        echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         ob_flush();
         chdir(AmpConfig::get('prefix'));
-        exec('git pull https://github.com/ampache/ampache.git');
+        exec($cmd);
         echo T_('Done') . '<br />';
         ob_flush();
         self::get_latest_version(true);
+    }
+    
+    /**
+     * Update project dependencies.
+     */
+    public static function update_dependencies()
+    {
+        $cmd = 'composer install --prefer-source --no-interaction';
+        echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
+        ob_flush();
+        chdir(AmpConfig::get('prefix'));
+        exec($cmd);
+        echo T_('Done') . '<br />';
+        ob_flush();
     }
 }

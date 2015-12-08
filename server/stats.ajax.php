@@ -2,37 +2,39 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
     case 'geolocation':
         if (AmpConfig::get('geolocation')) {
             if ($GLOBALS['user']->id) {
-                $latitude = floatval($_REQUEST['latitude']);
+                $latitude  = floatval($_REQUEST['latitude']);
                 $longitude = floatval($_REQUEST['longitude']);
-                $name = $_REQUEST['name'];
+                $name      = $_REQUEST['name'];
                 if (empty($name)) {
                     // First try to get from local cache (avoid external api requests)
                     $name = Stats::get_cached_place_name($latitude, $longitude);
@@ -41,8 +43,9 @@ switch ($_REQUEST['action']) {
                             $plugin = new Plugin($plugin_name);
                             if ($plugin->load($GLOBALS['user'])) {
                                 $name = $plugin->_plugin->get_location_name($latitude, $longitude);
-                                if (!empty($name))
+                                if (!empty($name)) {
                                     break;
+                                }
                             }
                         }
                     }

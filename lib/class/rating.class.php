@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,11 +39,10 @@ class Rating extends database_object
      */
     public function __construct($id, $type)
     {
-        $this->id = intval($id);
+        $this->id   = intval($id);
         $this->type = $type;
 
         return true;
-
     } // Constructor
 
     /**
@@ -76,13 +75,15 @@ class Rating extends database_object
      */
     public static function build_cache($type, $ids)
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) or !count($ids)) {
+            return false;
+        }
 
-        $ratings = array();
+        $ratings      = array();
         $user_ratings = array();
 
         $idlist = '(' . implode(',', $ids) . ')';
-        $sql = "SELECT `rating`, `object_id` FROM `rating` " .
+        $sql    = "SELECT `rating`, `object_id` FROM `rating` " .
             "WHERE `user` = ? AND `object_id` IN $idlist " .
             "AND `object_type` = ?";
         $db_results = Dba::read($sql, array($GLOBALS['user']->id, $type));
@@ -119,7 +120,6 @@ class Rating extends database_object
         }
 
         return true;
-
     } // build_cache
 
     /**
@@ -129,29 +129,28 @@ class Rating extends database_object
      */
      public function get_user_rating($user_id = null)
      {
-        if (is_null($user_id)) {
-            $user_id = $GLOBALS['user']->id;
-        }
+         if (is_null($user_id)) {
+             $user_id = $GLOBALS['user']->id;
+         }
 
-        $key = 'rating_' . $this->type . '_user' . $user_id;
-        if (parent::is_cached($key, $this->id)) {
-            return parent::get_from_cache($key, $this->id);
-        }
+         $key = 'rating_' . $this->type . '_user' . $user_id;
+         if (parent::is_cached($key, $this->id)) {
+             return parent::get_from_cache($key, $this->id);
+         }
 
-        $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? ".
+         $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
-        $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
+         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
-        $rating = 0;
+         $rating = 0;
 
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $rating = $results['rating'];
-        }
+         if ($results = Dba::fetch_assoc($db_results)) {
+             $rating = $results['rating'];
+         }
 
-        parent::add_to_cache($key, $this->id, $rating);
-        return $rating;
-
-    } // get_user_rating
+         parent::add_to_cache($key, $this->id, $rating);
+         return $rating;
+     } // get_user_rating
 
     /**
      * get_average_rating
@@ -172,7 +171,6 @@ class Rating extends database_object
 
         parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results['rating']);
         return $results['rating'];
-
     } // get_average_rating
 
     /**
@@ -182,7 +180,7 @@ class Rating extends database_object
     public static function get_highest_sql($type)
     {
         $type = Stats::validate_type($type);
-        $sql = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating` FROM rating" .
+        $sql  = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating` FROM rating" .
             " WHERE object_type = '" . $type . "'";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
@@ -219,7 +217,6 @@ class Rating extends database_object
         }
 
         return $results;
-
     }
 
     /**
@@ -261,7 +258,6 @@ class Rating extends database_object
         }
 
         return true;
-
     } // set_rating
 
     /**
@@ -272,16 +268,17 @@ class Rating extends database_object
     public static function show($object_id, $type, $static=false)
     {
         // If ratings aren't enabled don't do anything
-        if (!AmpConfig::get('ratings')) { return false; }
+        if (!AmpConfig::get('ratings')) {
+            return false;
+        }
 
         $rating = new Rating($object_id, $type);
 
         if ($static) {
-            require AmpConfig::get('prefix') . '/templates/show_static_object_rating.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_static_object_rating.inc.php');
         } else {
-            require AmpConfig::get('prefix') . '/templates/show_object_rating.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
         }
-
     } // show
-
 } //end rating class
+

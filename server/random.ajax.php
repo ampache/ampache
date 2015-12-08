@@ -2,35 +2,40 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
     case 'song':
         $songs = Random::get_default();
 
-        if (!count($songs)) { $results['rfc3514'] = '0x1'; break; }
+        if (!count($songs)) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         foreach ($songs as $song_id) {
             $GLOBALS['user']->playlist->add_object($song_id, 'song');
@@ -40,7 +45,10 @@ switch ($_REQUEST['action']) {
     case 'album':
         $album_id = Album::get_random();
 
-        if (!$album_id) { $results['rfc3514'] = '0x1'; break; }
+        if (!$album_id) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         $album = new Album($album_id[0]);
         $songs = $album->get_songs();
@@ -52,10 +60,13 @@ switch ($_REQUEST['action']) {
     case 'artist':
         $artist_id = Random::artist();
 
-        if (!$artist_id) { $results['rfc3514'] = '0x1'; break; }
+        if (!$artist_id) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         $artist = new Artist($artist_id);
-        $songs = $artist->get_songs();
+        $songs  = $artist->get_songs();
         foreach ($songs as $song_id) {
             $GLOBALS['user']->playlist->add_object($song_id, 'song');
         }
@@ -64,10 +75,13 @@ switch ($_REQUEST['action']) {
     case 'playlist':
         $playlist_id = Random::playlist();
 
-        if (!$playlist_id) { $results['rfc3514'] = '0x1'; break; }
+        if (!$playlist_id) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         $playlist = new Playlist($playlist_id);
-        $items = $playlist->get_items();
+        $items    = $playlist->get_items();
         foreach ($items as $item) {
             $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
         }

@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 ?>
@@ -24,9 +24,27 @@
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>">
 <table class="tabledata" cellpadding="3" cellspacing="0">
 <tr id="search_location">
-    <td><?php if ($_REQUEST['type'] != 'song') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php } else { echo T_('Songs'); } ?></td>
-    <td><?php if ($_REQUEST['type'] != 'album') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo T_('Albums'); ?></a><?php } else { echo T_('Albums'); } ?></td>
-    <td><?php if ($_REQUEST['type'] != 'artist') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists'); ?></a><?php } else { echo T_('Artists'); } ?></td>
+    <td><?php if ($_REQUEST['type'] != 'song') {
+    ?><a href="<?php echo AmpConfig::get('web_path');
+    ?>/random.php?action=advanced&type=song"><?php echo T_('Songs');
+    ?></a><?php 
+} else {
+    echo T_('Songs');
+} ?></td>
+    <td><?php if ($_REQUEST['type'] != 'album') {
+    ?><a href="<?php echo AmpConfig::get('web_path');
+    ?>/random.php?action=advanced&type=album"><?php echo T_('Albums');
+    ?></a><?php 
+} else {
+    echo T_('Albums');
+} ?></td>
+    <td><?php if ($_REQUEST['type'] != 'artist') {
+    ?><a href="<?php echo AmpConfig::get('web_path');
+    ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists');
+    ?></a><?php 
+} else {
+    echo T_('Artists');
+} ?></td>
 </tr>
 <tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>
@@ -96,7 +114,7 @@
 </tr>
 </table>
 
-<?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . UI::find_template('show_rules.inc.php'); ?>
 
 <div class="formValidation">
         <input type="submit" value="<?php echo T_('Enqueue'); ?>" />

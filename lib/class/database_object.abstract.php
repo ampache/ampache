@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -45,23 +45,26 @@ abstract class database_object
         $table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
 
         // Make sure we've got a real id
-        if (!is_numeric($id)) { return array(); }
+        if (!is_numeric($id)) {
+            return array();
+        }
 
         if (self::is_cached($table_name,$id)) {
             return self::get_from_cache($table_name,$id);
         }
 
-        $sql = "SELECT * FROM `$table_name` WHERE `id`='$id'";
+        $sql        = "SELECT * FROM `$table_name` WHERE `id`='$id'";
         $db_results = Dba::read($sql);
 
-        if (!$db_results) { return array(); }
+        if (!$db_results) {
+            return array();
+        }
 
         $row = Dba::fetch_assoc($db_results);
 
         self::add_to_cache($table_name,$id,$row);
 
         return $row;
-
     } // get_info
 
     /**
@@ -79,10 +82,11 @@ abstract class database_object
     public static function is_cached($index, $id)
     {
         // Make sure we've got some parents here before we dive below
-        if (!isset(self::$object_cache[$index])) { return false; }
+        if (!isset(self::$object_cache[$index])) {
+            return false;
+        }
 
         return isset(self::$object_cache[$index][$id]);
-
     } // is_cached
 
     /**
@@ -98,7 +102,6 @@ abstract class database_object
         }
 
         return false;
-
     } // get_from_cache
 
     /**
@@ -107,11 +110,12 @@ abstract class database_object
      */
     public static function add_to_cache($index, $id, $data)
     {
-        if (!self::$_enabled) { return false; }
+        if (!self::$_enabled) {
+            return false;
+        }
 
-        $value = is_null($data) ? false : $data;
+        $value                           = is_null($data) ? false : $data;
         self::$object_cache[$index][$id] = $value;
-
     } // add_to_cache
 
     /**
@@ -124,7 +128,6 @@ abstract class database_object
         if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {
             unset(self::$object_cache[$index][$id]);
         }
-
     } // remove_from_cache
 
     /**
@@ -134,7 +137,6 @@ abstract class database_object
     public static function _auto_init()
     {
         self::$_enabled = AmpConfig::get('memory_cache');
-
     } // _auto_init
-
 } // end database_object
+

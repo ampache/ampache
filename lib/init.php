@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +25,7 @@
 ob_start();
 
 $ampache_path = dirname(__FILE__);
-$prefix = realpath($ampache_path . "/../");
+$prefix       = realpath($ampache_path . "/../");
 require_once $prefix . '/lib/init-tiny.php';
 
 // Explicitly load and enable the custom session handler.
@@ -35,7 +35,9 @@ Session::_auto_init();
 
 // Set up for redirection on important error cases
 $path = get_web_path();
-$path = $http_type . $_SERVER['HTTP_HOST'] . $path;
+if (isset($_SERVER['HTTP_HOST'])) {
+    $path = $http_type . $_SERVER['HTTP_HOST'] . $path;
+}
 
 // Check to make sure the config file exists. If it doesn't then go ahead and
 // send them over to the install script.
@@ -53,7 +55,7 @@ if (!file_exists($configfile)) {
 
 // Verify that a few important but commonly disabled PHP functions exist and
 // that we're on a usable version
-if (!check_php()) {
+if (!check_php() || !check_dependencies_folder()) {
     $link = $path . '/test.php';
 }
 
@@ -65,14 +67,14 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']        = '3.8.0';
-$results['int_config_version'] = '29';
+$results['version']            = '3.8.1';
+$results['int_config_version'] = '32';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
 }
 
-if ($ow_config) {
+if (isset($ow_config) && is_array($ow_config)) {
     foreach ($ow_config as $key => $value) {
         $results[$key] = $value;
     }
@@ -80,16 +82,20 @@ if ($ow_config) {
 
 $results['raw_web_path'] = $results['web_path'];
 if (empty($results['http_host'])) {
-    $results['http_host'] = $_SERVER['HTTP_HOST'];
+    $results['http_host'] = $_SERVER['SERVER_NAME'];
 }
 if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
 }
-$results['web_path'] = $http_type . $results['http_host'] . $results['web_path'];
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
+$results['web_path']  = $http_type . $results['http_host'] .
+        (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
+        $results['web_path'];
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
-$results['max_upload_size'] = $results['max_upload_size'] ?: 1048576;
+if (!isset($results['max_upload_size'])) {
+    $results['max_upload_size'] = 1048576;
+}
 $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
 
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
@@ -97,30 +103,16 @@ if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) 
 }
 
 /* Variables needed for Auth class */
-$results['cookie_path']     = $results['raw_web_path'];
-$results['cookie_domain']    = $results['http_port'];
+$results['cookie_path']        = $results['raw_web_path'];
+$results['cookie_domain']      = $results['http_port'];
 $results['cookie_life']        = $results['session_cookielife'];
-$results['cookie_secure']    = $results['session_cookiesecure'];
+$results['cookie_secure']      = $results['session_cookiesecure'];
 
 // Library and module includes we can't do with the autoloader
-require_once $prefix . '/modules/getid3/getid3.php';
-require_once $prefix . '/modules/phpmailer/class.phpmailer.php';
-require_once $prefix . '/modules/phpmailer/class.smtp.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
-require_once $prefix . '/modules/musicbrainz/MusicBrainz.php';
-require_once $prefix . '/modules/musicbrainz/Exception.php';
-require_once $prefix . '/modules/musicbrainz/Clients/MbClient.php';
-require_once $prefix . '/modules/musicbrainz/Clients/RequestsMbClient.php';
-require_once $prefix . '/modules/musicbrainz/Artist.php';
-require_once $prefix . '/modules/musicbrainz/Filters/AbstractFilter.php';
-require_once $prefix . '/modules/musicbrainz/Filters/FilterInterface.php';
-require_once $prefix . '/modules/musicbrainz/Filters/ArtistFilter.php';
-require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
-require_once $prefix . '/modules/EchoNest/Autoloader.php';
-EchoNest_Autoloader::register();
-
-require_once $prefix . '/modules/SabreDAV/autoload.php';
+//require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.phpmailer.php';
+//require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.smtp.php';
 
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
@@ -180,33 +172,34 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     /* Load preferences and theme */
     $GLOBALS['user']->update_last_seen();
 } elseif (!AmpConfig::get('use_auth')) {
-    $auth['success'] = 1;
-    $auth['username'] = '-1';
-    $auth['fullname'] = "Ampache User";
-    $auth['id'] = -1;
+    $auth['success']      = 1;
+    $auth['username']     = '-1';
+    $auth['fullname']     = "Ampache User";
+    $auth['id']           = -1;
     $auth['offset_limit'] = 50;
-    $auth['access'] = AmpConfig::get('default_auth_level') ? User::access_name_to_level(AmpConfig::get('default_auth_level')) : '100';
+    $auth['access']       = AmpConfig::get('default_auth_level') ? User::access_name_to_level(AmpConfig::get('default_auth_level')) : '100';
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         Session::create_cookie();
         Session::create($auth);
         Session::check();
-        $GLOBALS['user'] = new User($auth['username']);
+        $GLOBALS['user']           = new User($auth['username']);
         $GLOBALS['user']->username = $auth['username'];
         $GLOBALS['user']->fullname = $auth['fullname'];
-        $GLOBALS['user']->access = intval($auth['access']);
+        $GLOBALS['user']->access   = intval($auth['access']);
     } else {
         Session::check();
         if ($_SESSION['userdata']['username']) {
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
         } else {
-            $GLOBALS['user'] = new User($auth['username']);
-            $GLOBALS['user']->id = -1;
+            $GLOBALS['user']           = new User($auth['username']);
+            $GLOBALS['user']->id       = -1;
             $GLOBALS['user']->username = $auth['username'];
             $GLOBALS['user']->fullname = $auth['fullname'];
-            $GLOBALS['user']->access = intval($auth['access']);
+            $GLOBALS['user']->access   = intval($auth['access']);
         }
-        if (!$GLOBALS['user']->id AND !AmpConfig::get('demo_mode')) {
-            Auth::logout(session_id()); exit;
+        if (!$GLOBALS['user']->id and !AmpConfig::get('demo_mode')) {
+            Auth::logout(session_id());
+            exit;
         }
         $GLOBALS['user']->update_last_seen();
     }
@@ -221,7 +214,6 @@ else {
     } else {
         $GLOBALS['user'] = new User();
     }
-
 } // If NO_SESSION passed
 
 $GLOBALS['user']->format(false);

@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -36,10 +36,10 @@ function get_media_files($media_ids)
         if (is_array($element)) {
             if (isset($element['object_type'])) {
                 $type = $element['object_type'];
-                $id = $element['object_id'];
+                $id   = $element['object_id'];
             } else {
                 $type = array_shift($element);
-                $id = array_shift($element);
+                $id   = array_shift($element);
             }
             $media = new $type($id);
         } else {
@@ -49,7 +49,7 @@ function get_media_files($media_ids)
             $media->format();
             $total_size += sprintf("%.2f",($media->size/1048576));
             $dirname = '';
-            $parent = $media->get_parent();
+            $parent  = $media->get_parent();
             if ($parent != null) {
                 $pobj = new $parent['object_type']($parent['object_id']);
                 $pobj->format();
@@ -77,8 +77,11 @@ function get_media_files($media_ids)
 function send_zip($name, $media_files)
 {
     /* Require needed library */
-    require_once AmpConfig::get('prefix') . '/modules/ZipStream/ZipStream.php';
-    $arc = new ZipStream\ZipStream($name . ".zip" );
+    if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/maennchen/zipstream-php/src/ZipStream.php')) {
+        throw new Exception('Missing ZipStream dependency.');
+    }
+    
+    $arc     = new ZipStream\ZipStream($name . ".zip" );
     $options = array(
         'comment'       => AmpConfig::get('file_zip_comment'),
     );
@@ -103,7 +106,7 @@ function check_can_zip($object_type)
 {
     $allowed = true;
     if (AmpConfig::get('allow_zip_types')) {
-        $allowed = false;
+        $allowed       = false;
         $allowed_types = explode(',', AmpConfig::get('allow_zip_types'));
         foreach ($allowed_types as $atype) {
             if (trim($atype) == $object_type) {

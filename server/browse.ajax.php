@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,7 +29,9 @@ if (!Core::is_session_started()) {
     session_start();
 }
 
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 if (isset($_REQUEST['browse_id'])) {
     $browse_id = $_REQUEST['browse_id'];
@@ -37,7 +39,7 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
-debug_event('browse.ajax.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
+debug_event('browse.ajax.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
 
 $browse = new Browse($browse_id);
 
@@ -57,7 +59,7 @@ switch ($_REQUEST['action']) {
 
         // Check 'value' with isset because it can null
         //(user type a "start with" word and deletes it)
-        if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) OR isset($_REQUEST['value']))) {
+        if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) or isset($_REQUEST['value']))) {
             // Set any new filters we've just added
             $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
             $browse->set_catalog($_SESSION['catalog']);
@@ -102,7 +104,9 @@ switch ($_REQUEST['action']) {
             case 'playlist':
                 // Check the perms we need to on this
                 $playlist = new Playlist($_REQUEST['id']);
-                if (!$playlist->has_access()) { exit; }
+                if (!$playlist->has_access()) {
+                    exit;
+                }
 
                 // Delete it!
                 $playlist->delete();
@@ -110,12 +114,16 @@ switch ($_REQUEST['action']) {
             break;
             case 'smartplaylist':
                 $playlist = new Search($_REQUEST['id'], 'song');
-                if (!$playlist->has_access()) { exit; }
+                if (!$playlist->has_access()) {
+                    exit;
+                }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
-                if (!$GLOBALS['user']->has_access('75')) { exit; }
+                if (!$GLOBALS['user']->has_access('75')) {
+                    exit;
+                }
                 $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
@@ -142,12 +150,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'get_filters':
         ob_start();
-        require_once AmpConfig::get('prefix') . '/templates/browse_filters.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('browse_filters.inc.php');
         $results['browse_filters'] = ob_get_clean();
     break;
     case 'options':
         $option = $_REQUEST['option'];
-        $value = $_REQUEST['value'];
+        $value  = $_REQUEST['value'];
 
         switch ($option) {
             case 'use_pages':
@@ -194,7 +202,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'get_share_links':
         $object_type = $_REQUEST['object_type'];
-        $object_id = intval($_REQUEST['object_id']);
+        $object_id   = intval($_REQUEST['object_id']);
 
         if (Core::is_library_item($object_type) && $object_id > 0) {
             Share::display_ui_links($object_type, $object_id);

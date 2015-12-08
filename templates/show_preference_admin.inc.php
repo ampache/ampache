@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -34,19 +34,31 @@ UI::show_box_top(T_('Preference Administration'));
 </tr>
 <?php foreach ($preferences as $preference) {
     unset($is_25,$is_5,$is_100);
-?>
-<tr class="<?php echo UI::flip_class(); ?>">
-    <td class="cel_preference"><?php echo scrub_out(T_($preference['description'])); ?></td>
+    ?>
+<tr class="<?php echo UI::flip_class();
+    ?>">
+    <td class="cel_preference"><?php echo scrub_out(T_($preference['description']));
+    ?></td>
     <td class="cel_level">
-        <?php $level_name = "is_" . $preference['level']; ${$level_name} = 'selected="selected"'; ?>
-        <select name="prefs[<?php echo scrub_out($preference['name']); ?>]">
-            <option value="5" <?php echo $is_5; ?>><?php echo T_('Guest'); ?></option>
-            <option value="25" <?php echo $is_25; ?>><?php echo T_('User'); ?></option>
-            <option value="100" <?php echo $is_100; ?>><?php echo T_('Admin'); ?></option>
+        <?php $level_name = "is_" . $preference['level'];
+    ${$level_name}        = 'selected="selected"';
+    ?>
+        <select name="prefs[<?php echo scrub_out($preference['name']);
+    ?>]">
+            <option value="5" <?php echo $is_5;
+    ?>><?php echo T_('Guest');
+    ?></option>
+            <option value="25" <?php echo $is_25;
+    ?>><?php echo T_('User');
+    ?></option>
+            <option value="100" <?php echo $is_100;
+    ?>><?php echo T_('Admin');
+    ?></option>
         </select>
     </td>
 </tr>
-<?php } ?>
+<?php 
+} ?>
 <tr class="th-bottom">
     <th class="cel_preference"><?php echo T_('Preference'); ?></th>
     <th class="cel_level"><?php echo T_('Level'); ?></th>

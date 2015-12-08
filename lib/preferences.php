@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -32,7 +32,9 @@ function update_preferences($pref_id=0)
     $sql = "SELECT `id`,`name`,`type` FROM `preference`";
 
     /* If it isn't the System Account's preferences */
-    if ($pref_id != '-1') { $sql .= " WHERE `catagory` != 'system'"; }
+    if ($pref_id != '-1') {
+        $sql .= " WHERE `catagory` != 'system'";
+    }
 
     $db_results = Dba::read($sql);
 
@@ -45,15 +47,15 @@ function update_preferences($pref_id=0)
     /* Foreach through possible keys and assign them */
     foreach ($results as $data) {
         /* Get the Value from POST/GET var called $data */
-        $name         = $data['name'];
+        $name            = $data['name'];
         $apply_to_all    = 'check_' . $data['name'];
-        $new_level    = 'level_' . $data['name'];
-        $id        = $data['id'];
-        $value         = scrub_in($_REQUEST[$name]);
+        $new_level       = 'level_' . $data['name'];
+        $id              = $data['id'];
+        $value           = scrub_in($_REQUEST[$name]);
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
-            case 'sample_rate':
+            case 'transcode_bitrate':
                 $value = Stream::validate_bitrate($value);
             break;
             default:
@@ -61,8 +63,12 @@ function update_preferences($pref_id=0)
         }
 
         if (preg_match('/_pass$/', $name)) {
-            if ($value == '******') { unset($_REQUEST[$name]); } else if (preg_match('/md5_pass$/', $name)) {
-                $value = md5($value);
+            if ($value == '******') {
+                unset($_REQUEST[$name]);
+            } else {
+                if (preg_match('/md5_pass$/', $name)) {
+                    $value = md5($value);
+                }
             }
         }
 
@@ -74,12 +80,10 @@ function update_preferences($pref_id=0)
         if (Access::check('interface','100') && $_REQUEST[$new_level]) {
             Preference::update_level($id,$_REQUEST[$new_level]);
         }
-
     } // end foreach preferences
 
     // Now that we've done that we need to invalidate the cached preverences
     Preference::clear_from_session();
-
 } // update_preferences
 
 /**
@@ -92,13 +96,13 @@ function update_preference($user_id,$name,$pref_id,$value)
     $level_check = "level_" . $name;
 
     /* First see if they are an administrator and we are applying this to everything */
-    if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) {
+    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$apply_check])) {
         Preference::update_all($pref_id,$value);
         return true;
     }
 
     /* Check and see if they are an admin and the level def is set */
-    if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$level_check])) {
+    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$level_check])) {
         Preference::update_level($pref_id,$_REQUEST[$level_check]);
     }
 
@@ -110,7 +114,6 @@ function update_preference($user_id,$name,$pref_id,$value)
     }
 
     return false;
-
 } // update_preference
 
 /**
@@ -196,10 +199,11 @@ function create_preference_input($name,$value)
         case 'upload_allow_remove':
         case 'webdav_backend':
         case 'notify_email':
-            $is_true = '';
+            $is_true  = '';
             $is_false = '';
             if ($value == '1') {
-                $is_true = "selected=\"selected\""; } else {
+                $is_true = "selected=\"selected\"";
+            } else {
                 $is_false = "selected=\"selected\"";
             }
             echo "<select name=\"$name\">\n";
@@ -211,10 +215,10 @@ function create_preference_input($name,$value)
             show_catalog_select('upload_catalog', $value, '', true);
         break;
         case 'play_type':
-            $is_localplay = '';
+            $is_localplay  = '';
             $is_democratic = '';
             $is_web_player = '';
-            $is_stream = '';
+            $is_stream     = '';
             if ($value == 'localplay') {
                 $is_localplay = 'selected="selected"';
             } elseif ($value == 'democratic') {
@@ -239,7 +243,7 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'playlist_type':
-            $var_name = $value . "_type";
+            $var_name    = $value . "_type";
             ${$var_name} = "selected=\"selected\"";
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"m3u\" $m3u_type>" . T_('M3U') . "</option>\n";
@@ -264,16 +268,20 @@ function create_preference_input($name,$value)
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
             foreach ($controllers as $controller) {
-                if (!Localplay::is_enabled($controller)) { continue; }
+                if (!Localplay::is_enabled($controller)) {
+                    continue;
+                }
                 $is_selected = '';
-                if ($value == $controller) { $is_selected = 'selected="selected"'; }
+                if ($value == $controller) {
+                    $is_selected = 'selected="selected"';
+                }
                 echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
             } // end foreach
             echo "</select>\n";
         break;
         case 'localplay_level':
-            $is_user = '';
-            $is_admin = '';
+            $is_user    = '';
+            $is_admin   = '';
             $is_manager = '';
             if ($value == '25') {
                 $is_user = 'selected="selected"';
@@ -294,10 +302,27 @@ function create_preference_input($name,$value)
             echo "<select name=\"$name\">\n";
             foreach ($themes as $theme) {
                 $is_selected = "";
-                if ($value == $theme['path']) { $is_selected = "selected=\"selected\""; }
+                if ($value == $theme['path']) {
+                    $is_selected = "selected=\"selected\"";
+                }
                 echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
             } // foreach themes
             echo "</select>\n";
+        break;
+        case 'theme_color':
+            // This include a two-step configuration (first change theme and save, then change theme color and save)
+            $theme_cfg = get_theme(AmpConfig::get('theme_name'));
+            if ($theme_cfg !== null) {
+                echo "<select name=\"$name\">\n";
+                foreach ($theme_cfg['colors'] as $color) {
+                    $is_selected = "";
+                    if ($value == strtolower($color)) {
+                        $is_selected = "selected=\"selected\"";
+                    }
+                    echo "\t<option value=\"" . strtolower($color) . "\" $is_selected>" . $color . "</option>\n";
+                } // foreach themes
+                echo "</select>\n";
+            }
         break;
         case 'playlist_method':
             ${$value} = ' selected="selected"';
@@ -317,7 +342,7 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'show_lyrics':
-            $is_true = '';
+            $is_true  = '';
             $is_false = '';
             if ($value == '1') {
                 $is_true = "selected=\"selected\"";
@@ -330,11 +355,11 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'album_sort':
-            $is_sort_year_asc = '';
+            $is_sort_year_asc  = '';
             $is_sort_year_desc = '';
-            $is_sort_name_asc = '';
+            $is_sort_name_asc  = '';
             $is_sort_name_desc = '';
-            $is_sort_default = '';
+            $is_sort_default   = '';
             if ($value == 'year_asc') {
                 $is_sort_year_asc = 'selected="selected"';
             } elseif ($value == 'year_desc') {
@@ -355,14 +380,34 @@ function create_preference_input($name,$value)
             echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
             echo "</select>\n";
         break;
+        case 'disabled_custom_metadata_fields':
+            $ids             = explode(',', $value);
+            $options         = array();
+            $fieldRepository = new \Lib\Metadata\Repository\MetadataField();
+            foreach ($fieldRepository->findAll() as $field) {
+                $selected  = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
+                $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
+            }
+            echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
+            break;
+        case 'lastfm_grant_link':
+        case 'librefm_grant_link':
+            // construct links for granting access Ampache application to Last.fm and Libre.fm
+            $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
+            $plugin      = new Plugin($plugin_name);
+            $url         = $plugin->_plugin->url;
+            $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
+            $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', T_("Click for grant Ampache to ") . $plugin_name) . '</a>';
+        break;
         default:
             if (preg_match('/_pass$/', $name)) {
                 echo '<input type="password" name="' . $name . '" value="******" />';
             } else {
-                echo '<input type="text" name="' . $name . '" value="' . $value .'" />';
+                echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
             }
         break;
 
     }
-
 } // create_preference_input
+

@@ -10,7 +10,7 @@ if (!AmpConfig::get('upnp_backend')) {
 set_time_limit(600);
 
 header ("Content-Type: text/html; charset=UTF-8");
-$rootMediaItems = array();
+$rootMediaItems   = array();
 $rootMediaItems[] = Upnp_Api::_musicMetadata('');
 $rootMediaItems[] = Upnp_Api::_videoMetadata('');
 
@@ -25,13 +25,13 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
         exit;
     }
 
-    $items = array();
-    $totMatches = 0;
+    $items        = array();
+    $totMatches   = 0;
     $responseType = "u:Error";
     switch ($upnpRequest['action']) {
         case 'search':
             $responseType = 'u:SearchResponse';
-            $items = Upnp_Api::_callSearch($upnpRequest['searchcriteria']);
+            $items        = Upnp_Api::_callSearch($upnpRequest['searchcriteria']);
             break;
         case 'browse':
             $responseType = 'u:BrowseResponse';
@@ -89,10 +89,10 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     $totMatches = ($totMatches == 0) ? count($items) : $totMatches;
     if ($items == null || $totMatches == 0) {
         $domDIDL = Upnp_Api::createDIDL('');
-        $numRet = 0;
+        $numRet  = 0;
     } else {
         $domDIDL = Upnp_Api::createDIDL($items);
-        $numRet = count($items);
+        $numRet  = count($items);
     }
 
     $xmlDIDL = $domDIDL->saveXML();

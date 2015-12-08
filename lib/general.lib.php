@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,12 +33,11 @@ function set_memory_limit($new_limit)
     }
 
     $current_limit = UI::unformat_bytes($current_limit);
-    $new_limit = UI::unformat_bytes($new_limit);
+    $new_limit     = UI::unformat_bytes($new_limit);
 
     if ($current_limit < $new_limit) {
         ini_set (memory_limit, $new_limit);
     }
-
 } // set_memory_limit
 
 /**
@@ -47,16 +46,16 @@ function set_memory_limit($new_limit)
  */
 function generate_password($length)
 {
-    $vowels = 'aAeEuUyY12345';
+    $vowels     = 'aAeEuUyY12345';
     $consonants = 'bBdDgGhHjJmMnNpPqQrRsStTvVwWxXzZ6789';
-    $password = '';
+    $password   = '';
 
     $alt = time() % 2;
 
     for ($i = 0; $i < $length; $i++) {
         if ($alt == 1) {
             $password .= $consonants[(rand(0,strlen($consonants)-1))];
-        $alt = 0;
+            $alt = 0;
         } else {
             $password .= $vowels[(rand(0,strlen($vowels)-1))];
             $alt = 1;
@@ -64,7 +63,6 @@ function generate_password($length)
     }
 
     return $password;
-
 } // generate_password
 
 /**
@@ -93,7 +91,6 @@ function scrub_in($input)
 function scrub_out($string)
 {
     return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset'));
-
 } // scrub_out
 
 /**
@@ -103,7 +100,6 @@ function scrub_out($string)
 function unhtmlentities($string)
 {
     return html_entity_decode($string, ENT_QUOTES, AmpConfig::get('site_charset'));
-
 } //unhtmlentities
 
 /**
@@ -132,7 +128,6 @@ function make_bool($string)
     }
 
     return (bool) $string;
-
 } // make_bool
 
 /**
@@ -142,7 +137,6 @@ function make_bool($string)
 function invert_bool($value)
 {
     return make_bool($value) ? false : true;
-
 } // invert_bool
 
 /**
@@ -164,12 +158,10 @@ function get_languages()
     $results = array();
 
     while (false !== ($file = readdir($handle))) {
-
         $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
 
         /* Check to see if it's a directory */
-        if (is_dir($full_file) AND substr($file,0,1) != '.' AND $file != 'base') {
-
+        if (is_dir($full_file) and substr($file,0,1) != '.' and $file != 'base') {
             switch ($file) {
                 case 'af_ZA'; $name = 'Afrikaans'; break; /* Afrikaans */
                 case 'bg_BG'; $name = '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;'; break; /* Bulgarian */
@@ -216,13 +208,12 @@ function get_languages()
                 case 'ar_SA'; $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'; break; /* Arabic */
                 case 'he_IL'; $name = '&#1506;&#1489;&#1512;&#1497;&#1514;'; break; /* Hebrew */
                 case 'fa_IR'; $name = '&#1601;&#1575;&#1585;&#1587;&#1610;'; break; /* Farsi */
-                default: $name = T_('Unknown'); break;
+                default: $name      = T_('Unknown'); break;
             } // end switch
 
 
             $results[$file] = $name;
         }
-
     } // end while
 
     // Sort the list of languages by country code
@@ -232,7 +223,6 @@ function get_languages()
     $results = array( "en_US" => "English (US)" ) + $results;
 
     return $results;
-
 } // get_languages
 
 /**
@@ -266,7 +256,6 @@ function translate_pattern_code($code)
     }
 
     return false;
-
 } // translate_pattern_code
 
 /**
@@ -279,8 +268,8 @@ function generate_config($current)
 {
     // Start building the new config file
     $distfile = AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist';
-    $handle = fopen($distfile,'r');
-    $dist = fread($handle,filesize($distfile));
+    $handle   = fopen($distfile,'r');
+    $dist     = fread($handle,filesize($distfile));
     fclose($handle);
 
     $data = explode("\n",$dist);
@@ -290,7 +279,6 @@ function generate_config($current)
         if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
-
             $key    = $matches[1];
             $value  = $matches[2];
 
@@ -342,13 +330,17 @@ if (!function_exists('apache_request_headers')) {
         $headers = array();
         foreach ($_SERVER as $name => $value) {
             if (substr($name, 0, 5) == 'HTTP_') {
-                $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+                $name           = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
                 $headers[$name] = $value;
-            } else if ($name == "CONTENT_TYPE") {
-               $headers["Content-Type"] = $value;
-           } else if ($name == "CONTENT_LENGTH") {
-               $headers["Content-Length"] = $value;
-           }
+            } else {
+                if ($name == "CONTENT_TYPE") {
+                    $headers["Content-Type"] = $value;
+                } else {
+                    if ($name == "CONTENT_LENGTH") {
+                        $headers["Content-Length"] = $value;
+                    }
+                }
+            }
         }
         return $headers;
     }

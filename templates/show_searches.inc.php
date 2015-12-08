@@ -2,35 +2,42 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check('interface', 25)) { ?>
+        <?php if (Access::check('interface', 25)) {
+    ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Smart Playlist'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path');
+    ?>/search.php?type=song"><?php echo UI::get_icon('add', T_('Add'));
+    ?> <?php echo T_('Add Smart Playlist');
+    ?></a>
         </li>
-        <?php } ?>
+        <?php 
+} ?>
     </ul>
 </div>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="smartplaylist">
     <thead>
         <tr class="th-top">
@@ -49,16 +56,24 @@
         foreach ($object_ids as $playlist_id) {
             $libitem = new Search($playlist_id, 'song');
             $libitem->format();
-        ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="smartplaylist_row_<?php echo $libitem->id; ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_search_row.inc.php'; ?>
+            ?>
+        <tr class="<?php echo UI::flip_class();
+            ?>" id="smartplaylist_row_<?php echo $libitem->id;
+            ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_search_row.inc.php');
+            ?>
         </tr>
-        <?php } // end foreach ($playlists as $playlist) ?>
-        <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
+        <?php 
+        } // end foreach ($playlists as $playlist) ?>
+        <?php if (!count($object_ids)) {
+    ?>
+        <tr class="<?php echo UI::flip_class();
+    ?>">
+            <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found');
+    ?></span></td>
         </tr>
-        <?php } ?>
+        <?php 
+} ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -74,4 +89,6 @@
     </tfoot>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>

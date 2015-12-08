@@ -3,21 +3,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -64,10 +64,11 @@ abstract class Catalog extends \Catalog
      *
      * Catalog class constructor, pulls catalog information
      */
-    public function __construct($catalog_id = null) { // TODO: Basic constructer should be provided from parent
+    public function __construct($catalog_id = null)
+    { // TODO: Basic constructer should be provided from parent
         if ($catalog_id) {
             $this->id = intval($catalog_id);
-            $info = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
                 $this->$key = $value;
@@ -115,7 +116,7 @@ abstract class Catalog extends \Catalog
     public function add_to_catalog($options = null)
     {
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_adds_catalog.inc.php');
             flush();
         }
         set_time_limit(0);
@@ -144,10 +145,43 @@ abstract class Catalog extends \Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            if ($this->insertSong($song)) {
+            $songId = $this->insertSong($song);
+            if (Song::isCustomMetadataEnabled() && $songId) {
+                $songObj = new Song($songId);
+                $this->addMetadata($songObj, $song);
                 $this->updateUi('add', ++$this->addedSongs, $song);
             }
         }
+    }
+
+    public function addMetadata(\library_item $libraryItem, $metadata)
+    {
+        $tags = $this->getCleanMetadata($libraryItem, $metadata);
+
+        foreach ($tags as $tag => $value) {
+            $field = $libraryItem->getField($tag);
+            $libraryItem->addMetadata($field, $value);
+        }
+    }
+
+    /**
+     * Get rid of all tags found in the libraryItem
+     * @param \library_item $libraryItem
+     * @param array $metadata
+     * @return array
+     */
+    protected function getCleanMetadata(\library_item $libraryItem, $metadata)
+    {
+        $tags = array_diff($metadata, get_object_vars($libraryItem));
+        $keys = array_merge(
+            isset($libraryItem::$aliases) ? $libraryItem::$aliases : array(),
+            array_keys(get_object_vars($libraryItem))
+        );
+        foreach ($keys as $key) {
+            unset($tags[$key]);
+        }
+
+        return $tags;
     }
 
     /**
@@ -162,8 +196,8 @@ abstract class Catalog extends \Catalog
             debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
         } else {
             debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
-            Error::add('general', T_('Unable to Insert Song - %s'), $song['file']);
-            Error::display('general');
+            AmpError::add('general', T_('Unable to Insert Song - %s'), $song['file']);
+            AmpError::display('general');
         }
         flush();
         return $inserted;
@@ -196,6 +230,10 @@ abstract class Catalog extends \Catalog
         $song = new Song($this->getIdFromPath($beetsSong['file']));
         if ($song->id) {
             $song->update($beetsSong);
+            if (Song::isCustomMetadataEnabled()) {
+                $tags = $this->getCleanMetadata($song, $beetsSong);
+                $this->updateMetadata($song, $tags);
+            }
             $this->updateUi('verify', ++$this->verifiedSongs, $beetsSong);
         }
     }
@@ -208,12 +246,16 @@ abstract class Catalog extends \Catalog
      */
     public function clean_catalog_proc()
     {
-        $parser = $this->getParser();
+        $parser      = $this->getParser();
         $this->songs = $this->getAllSongfiles();
         $parser->setHandler($this, 'removeFromDeleteList');
         $parser->start($this->listCommand);
         $count = count($this->songs);
         $this->deleteSongs($this->songs);
+        if (Song::isCustomMetadataEnabled()) {
+            \Lib\Metadata\Repository\Metadata::gc();
+            \Lib\Metadata\Repository\MetadataField::gc();
+        }
         $this->updateUi('clean', $this->cleanCounter, null, true);
         return $count;
     }
@@ -250,7 +292,7 @@ abstract class Catalog extends \Catalog
      */
     protected function getIdFromPath($path)
     {
-        $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
+        $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));
 
         $row = Dba::fetch_row($db_results);
@@ -263,7 +305,7 @@ abstract class Catalog extends \Catalog
      */
     public function getAllSongfiles()
     {
-        $sql = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
+        $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
         $db_results = Dba::read($sql, array($this->id));
 
         $files = array();
@@ -332,4 +374,11 @@ abstract class Catalog extends \Catalog
         parent::format();
     }
 
+    public function updateMetadata($song, $tags)
+    {
+        foreach ($tags as $tag => $value) {
+            $field = $song->getField($tag);
+            $song->updateOrInsertMetadata($field, $value);
+        }
+    }
 }

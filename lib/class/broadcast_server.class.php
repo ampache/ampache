@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,15 +25,15 @@ use Ratchet\ConnectionInterface;
 
 class Broadcast_Server implements MessageComponentInterface
 {
-    const BROADCAST_SONG = "SONG";
-    const BROADCAST_SONG_POSITION = "SONG_POSITION";
-    const BROADCAST_PLAYER_PLAY = "PLAYER_PLAY";
+    const BROADCAST_SONG               = "SONG";
+    const BROADCAST_SONG_POSITION      = "SONG_POSITION";
+    const BROADCAST_PLAYER_PLAY        = "PLAYER_PLAY";
     const BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
-    const BROADCAST_REGISTER_LISTENER = "REGISTER_LISTENER";
-    const BROADCAST_ENDED = "ENDED";
-    const BROADCAST_INFO = "INFO";
-    const BROADCAST_NB_LISTENERS = "NB_LISTENERS";
-    const BROADCAST_AUTH_SID = "AUTH_SID";
+    const BROADCAST_REGISTER_LISTENER  = "REGISTER_LISTENER";
+    const BROADCAST_ENDED              = "ENDED";
+    const BROADCAST_INFO               = "INFO";
+    const BROADCAST_NB_LISTENERS       = "NB_LISTENERS";
+    const BROADCAST_AUTH_SID           = "AUTH_SID";
 
     public $verbose;
     /**
@@ -55,10 +55,10 @@ class Broadcast_Server implements MessageComponentInterface
 
     public function __construct()
     {
-        $this->verbose = false;
-        $this->clients = array();
-        $this->sids = array();
-        $this->listeners = array();
+        $this->verbose      = false;
+        $this->clients      = array();
+        $this->sids         = array();
+        $this->listeners    = array();
         $this->broadcasters = array();
     }
 
@@ -109,13 +109,13 @@ class Broadcast_Server implements MessageComponentInterface
                         break;
                         default:
                             if ($this->verbose) {
-                                echo "[" . time() ."][warning]Unknown message code." . "\r\n";
+                                echo "[" . time() . "][warning]Unknown message code." . "\r\n";
                             }
                         break;
                     }
                 } else {
                     if ($this->verbose) {
-                        echo "[" . time() ."][error]Wrong message format (" . $command . ")." . "\r\n";
+                        echo "[" . time() . "][error]Wrong message format (" . $command . ")." . "\r\n";
                     }
                 }
             }
@@ -129,7 +129,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function getSongJS($song_id)
     {
-        $media = array();
+        $media   = array();
         $media[] = array(
             'object_type' => 'song',
             'object_id' => $song_id
@@ -148,7 +148,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
-            $clients = $this->getListeners($broadcast);
+            $clients   = $this->getListeners($broadcast);
 
             Session::extend(Stream::get_session(), 'stream');
 
@@ -156,7 +156,7 @@ class Broadcast_Server implements MessageComponentInterface
             $this->broadcastMessage($clients, self::BROADCAST_SONG, base64_encode($this->getSongJS($song_id)));
 
             if ($this->verbose) {
-                echo "[" . time() ."][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n";
+                echo "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n";
             }
         } else {
             debug_event('broadcast', 'Action unauthorized.', '3');
@@ -172,7 +172,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
-            $seekdiff = $broadcast->song_position - $song_position;
+            $seekdiff  = $broadcast->song_position - $song_position;
             if ($seekdiff > 2 || $seekdiff < -2) {
                 $clients = $this->getListeners($broadcast);
                 $this->broadcastMessage($clients, self::BROADCAST_SONG_POSITION, $song_position);
@@ -180,7 +180,7 @@ class Broadcast_Server implements MessageComponentInterface
             $broadcast->song_position = $song_position;
 
             if ($this->verbose) {
-                echo "[" . time() ."][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n";
+                echo "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n";
             }
         } else {
             debug_event('broadcast', 'Action unauthorized.', '3');
@@ -196,11 +196,11 @@ class Broadcast_Server implements MessageComponentInterface
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
-            $clients = $this->getListeners($broadcast);
+            $clients   = $this->getListeners($broadcast);
             $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play ? 'true' : 'false');
 
             if ($this->verbose) {
-                echo "[" . time() ."][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n";
+                echo "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n";
             }
         } else {
             debug_event('broadcast', 'Action unauthorized.', '3');
@@ -215,11 +215,11 @@ class Broadcast_Server implements MessageComponentInterface
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
-            $clients = $this->getListeners($broadcast);
+            $clients   = $this->getListeners($broadcast);
             $this->broadcastMessage($clients, self::BROADCAST_ENDED);
 
             if ($this->verbose) {
-                echo "[" . time() ."][info]Broadcast " . $broadcast->id . " ended." . "\r\n";
+                echo "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n";
             }
         } else {
             debug_event('broadcast', 'Action unauthorized.', '3');
@@ -236,7 +236,7 @@ class Broadcast_Server implements MessageComponentInterface
         $broadcast = Broadcast::get_broadcast($broadcast_key);
         if ($broadcast) {
             $this->broadcasters[$from->resourceId] = $broadcast;
-            $this->listeners[$broadcast->id] = array();
+            $this->listeners[$broadcast->id]       = array();
 
             if ($this->verbose) {
                 echo "[info]Broadcast " . $broadcast->id . " registered." . "\r\n";
@@ -251,7 +251,7 @@ class Broadcast_Server implements MessageComponentInterface
     protected function unregisterBroadcast(ConnectionInterface $conn)
     {
         $broadcast = $this->broadcasters[$conn->resourceId];
-        $clients = $this->getListeners($broadcast);
+        $clients   = $this->getListeners($broadcast);
         $this->broadcastMessage($clients, self::BROADCAST_ENDED);
         $broadcast->update_state(false);
 
@@ -259,7 +259,7 @@ class Broadcast_Server implements MessageComponentInterface
         unset($this->broadcasters[$conn->resourceId]);
 
         if ($this->verbose) {
-            echo "[" . time() ."][info]Broadcast " . $broadcast->id . " unregistered." . "\r\n";
+            echo "[" . time() . "][info]Broadcast " . $broadcast->id . " unregistered." . "\r\n";
         }
     }
 
@@ -353,8 +353,8 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcaster_id = array_search($broadcast, $this->broadcasters);
         if ($broadcaster_id) {
-            $clients = $this->listeners[$broadcast->id];
-            $clients[] = $this->clients[$broadcaster_id];
+            $clients      = $this->listeners[$broadcast->id];
+            $clients[]    = $this->clients[$broadcaster_id];
             $nb_listeners = count($this->listeners[$broadcast->id]);
             $broadcast->update_listeners($nb_listeners);
             $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, $nb_listeners);
@@ -433,10 +433,10 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $websocket_address = AmpConfig::get('websocket_address');
         if (empty($websocket_address)) {
-            $websocket_address = 'ws://' . $_SERVER['HTTP_HOST'] . ':8100';
+            $websocket_address = 'ws://' . $_SERVER['SERVER_NAME'] . ':8100';
         }
 
         return $websocket_address . '/broadcast';
     }
-
 } // end of broadcast_server class
+

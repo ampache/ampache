@@ -2,29 +2,31 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-if (INIT_LOADED != '1') { exit; }
+if (INIT_LOADED != '1') {
+    exit;
+}
 
-$web_path = AmpConfig::get('web_path');
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$location = get_location();
+$web_path          = AmpConfig::get('web_path');
+$htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
+$location          = get_location();
 $_SESSION['login'] = false;
 ?>
 
@@ -32,43 +34,57 @@ $_SESSION['login'] = false;
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
-        <?php UI::show_custom_style(); ?>
         <link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
-        <?php if (AmpConfig::get('use_rss')) { ?>
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_artist" />
-        <?php if (AmpConfig::get('sociable')) { ?>
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
-        <?php } ?>
-        <?php } ?>
+        <?php if (AmpConfig::get('use_rss')) {
+    ?>
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing');
+    ?>" href="<?php echo $web_path;
+    ?>/rss.php" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played');
+    ?>" href="<?php echo $web_path;
+    ?>/rss.php?type=recently_played" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums');
+    ?>" href="<?php echo $web_path;
+    ?>/rss.php?type=latest_album" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists');
+    ?>" href="<?php echo $web_path;
+    ?>/rss.php?type=latest_artist" />
+        <?php if (AmpConfig::get('sociable')) {
+    ?>
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts');
+    ?>" href="<?php echo $web_path;
+    ?>/rss.php?type=latest_shout" />
+        <?php 
+}
+    ?>
+        <?php 
+} ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
-        <?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
+        <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-editdialog.css'); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-file-upload.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jstree/themes/default/style.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/tag-it/jquery.tagit.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-file-upload.css'); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/dist/themes/default/style.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
-        <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/tag-it/tag-it.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-qrcode/jquery.qrcode.min.js" language="javascript" type="text/javascript"></script>
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
+        <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/src/jquery.qrcode.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-datetimepicker/jquery.datetimepicker.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-knob/jquery.knob.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
@@ -76,9 +92,11 @@ $_SESSION['login'] = false;
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function(){
                 $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
-                <?php if (AmpConfig::get('geolocation')) { ?>
+                <?php if (AmpConfig::get('geolocation')) {
+    ?>
                     geolocate_user();
-                <?php } ?>
+                <?php 
+} ?>
             });
 
             // Using the following workaround to set global variable available from any javascript script.
@@ -92,11 +110,12 @@ $_SESSION['login'] = false;
         <?php
         if (AmpConfig::get('ajax_load')) {
             $iframed = true;
-        ?>
-            <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
+            ?>
+            <script src="<?php echo $web_path;
+            ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
         <?php
-            require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
-        ?>
+            require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php');
+            ?>
         <script type="text/javascript">
             function NavigateTo(url)
             {
@@ -118,8 +137,9 @@ $_SESSION['login'] = false;
             }
         </script>
         <?php
+
         } else {
-        ?>
+            ?>
         <script type="text/javascript">
             function NavigateTo(url)
             {
@@ -131,7 +151,8 @@ $_SESSION['login'] = false;
                 return btoa(window.location.href);
             }
         </script>
-        <?php } ?>
+        <?php 
+        } ?>
         <script type="text/javascript">
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 _renderItem: function( ul, item ) {
@@ -282,10 +303,12 @@ $_SESSION['login'] = false;
                 }
             });
         </script>
-        <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) { ?>
+        <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
+    ?>
         <script type="text/javascript" language="javascript">
         noty({text: '<?php printf(json_encode(nl2br(/* HINT: Translator, "%s" is replaced by "cookie settings" */T_("We have placed cookies on your computer to help make this website better. You can change your %s at any time.\nOtherwise, we will assume you are OK to continue.\n\nClick on this message to not display it again."))),
-                    "<a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_('cookie settings') . "</a>"); ?>',
+                    "<a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_('cookie settings') . "</a>");
+    ?>',
                 type: 'warning',
                 layout: 'bottom',
                 timeout: false,
@@ -296,7 +319,8 @@ $_SESSION['login'] = false;
                 },
             });
         </script>
-        <?php } ?>
+        <?php 
+} ?>
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
         <div id="notification" class="notification-out"><img src="<?php echo $web_path; ?>/images/icon_info.png" /><span id="notification-content"></span></div>
@@ -309,24 +333,47 @@ $_SESSION['login'] = false;
                 </h1>
                 <div id="headerbox">
                     <?php UI::show_box_top('','box box_headerbox'); ?>
-                    <?php require_once AmpConfig::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
-                    <?php if (User::is_registered()) { ?>
-                        <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
+                    <?php require_once AmpConfig::get('prefix') . UI::find_template('show_search_bar.inc.php'); ?>
+                    <?php if (User::is_registered()) {
+    ?>
+                        <?php require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php');
+    ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id; ?>"><?php echo $GLOBALS['user']->fullname; ?></a>
-                            <?php if (AmpConfig::get('sociable')) { ?>
-                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true)); ?>)</a>
-                            <?php } ?>
-                            <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
+                            <a href="<?php echo $web_path;
+    ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id;
+    ?>"><?php echo $GLOBALS['user']->fullname;
+    ?></a>
+                            <?php if (AmpConfig::get('sociable')) {
+    ?>
+                            <a href="<?php echo $web_path;
+    ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages');
+    ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true));
+    ?>)</a>
+                            <?php 
+}
+    ?>
+                            <a rel="nohtml" href="<?php echo $web_path;
+    ?>/logout.php">[<?php echo T_('Log out');
+    ?>]</a>
                         </span>
-                    <?php } else { ?>
+                    <?php 
+} else {
+    ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
-                            <?php if (AmpConfig::get('allow_public_registration')) { ?>
-                                / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
-                            <?php } ?>
+                            <a href="<?php echo $web_path;
+    ?>/login.php" rel="nohtml"><?php echo T_('Login');
+    ?></a>
+                            <?php if (AmpConfig::get('allow_public_registration')) {
+    ?>
+                                / <a href="<?php echo $web_path;
+    ?>/register.php" rel="nohtml"><?php echo T_('Register');
+    ?></a>
+                            <?php 
+}
+    ?>
                         </span>
-                    <?php } ?>
+                    <?php 
+} ?>
                     <span id="updateInfo">
                     <?php
                     if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
@@ -341,42 +388,57 @@ $_SESSION['login'] = false;
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
 
-        <?php if (AmpConfig::get('topmenu')) { ?>
-            <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
+        <?php if (AmpConfig::get('topmenu')) {
+    ?>
+            <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float';
+    ?>">
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/index.php">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-home.png" />
-                        <span><?php echo T_('Home'); ?></span>
+                    <a href="<?php echo $web_path;
+    ?>/index.php">
+                        <img src="<?php echo $web_path;
+    ?>/images/topmenu-home.png" />
+                        <span><?php echo T_('Home');
+    ?></span>
                     </a>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=artist">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-music.png" />
-                        <span><?php echo T_('Artists'); ?></span>
+                    <a href="<?php echo $web_path;
+    ?>/browse.php?action=artist">
+                        <img src="<?php echo $web_path;
+    ?>/images/topmenu-music.png" />
+                        <span><?php echo T_('Artists');
+    ?></span>
                     </a>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=playlist">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-playlist.png" />
-                        <span><?php echo T_('Playlists'); ?></span>
+                    <a href="<?php echo $web_path;
+    ?>/browse.php?action=playlist">
+                        <img src="<?php echo $web_path;
+    ?>/images/topmenu-playlist.png" />
+                        <span><?php echo T_('Playlists');
+    ?></span>
                     </a>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-favorite.png" />
-                        <span><?php echo T_('Favorites'); ?></span>
+                    <a href="<?php echo $web_path;
+    ?>/stats.php?action=userflag">
+                        <img src="<?php echo $web_path;
+    ?>/images/topmenu-favorite.png" />
+                        <span><?php echo T_('Favorites');
+    ?></span>
                     </a>
                 </div>
             </div>
-        <?php } ?>
+        <?php 
+} ?>
             <?php $isCollapsed = $_COOKIE['sidebar_state'] == "collapsed"; ?>
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" ><span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span></div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
-                    <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
+                    <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php'); ?>
                 </div>
                 <div id="sidebar-content-light" class="<?php echo $isCollapsed ? 'sidebar-content-light-collapsed' : ''; ?>" >
-                    <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.light.inc.php'; ?>
+                    <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.light.inc.php'); ?>
                 </div>
             </div>
             <!-- Handle collapsed visibility -->
@@ -414,7 +476,7 @@ $_SESSION['login'] = false;
             </script>
 
             <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo $count_temp_playlist ? '' : 'hidden' ?>">
-                <?php require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php'; ?>
+                <?php require_once AmpConfig::get('prefix') . UI::find_template('rightbar.inc.php'); ?>
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
@@ -423,11 +485,18 @@ $_SESSION['login'] = false;
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
-                <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
+                <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') and $GLOBALS['user']->has_access(100)) {
+    ?>
                 <div class="fatalerror">
-                    <?php echo T_('Error Config File Out of Date'); ?>
-                    <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a> |
-                    <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write New Config'); ?></a>
+                    <?php echo T_('Error Config File Out of Date');
+    ?>
+                    <a rel="nohtml" href="<?php echo $web_path;
+    ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config');
+    ?></a> |
+                    <a rel="nohtml" href="<?php echo $web_path;
+    ?>/admin/system.php?action=write_config"><?php echo T_('Write New Config');
+    ?></a>
                 </div>
-                <?php } ?>
+                <?php 
+} ?>
                 <div id="guts">

@@ -5,11 +5,11 @@ header('Connection: Close');
 
 set_time_limit(0);
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
-require_once $prefix . '/modules/localplay/upnp.controller.php';
-require_once $prefix . '/modules/upnp/upnpplayer.class.php';
+require_once $prefix . '/modules/localplay/upnp/upnp.controller.php';
+require_once $prefix . '/modules/localplay/upnp/upnpplayer.class.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     die("UPnP backend disabled..");
@@ -17,7 +17,7 @@ if (!AmpConfig::get('upnp_backend')) {
 
 // get current UPnP player instance
 $controller = new AmpacheUPnP();
-$instance = $controller->get_instance();
+$instance   = $controller->get_instance();
 echo "UPnP instance = " . $instance['name'] . "\n";
 
 $deviceDescr = $instance['url'];
@@ -40,10 +40,11 @@ echo "STATE = " . $state . "\n";
 // Do not start anything if playback was stopped from beginning
 if ($played) {
     echo "UPnP play next" . "\n";
-    if ($player->Next(false))
+    if ($player->Next(false)) {
         echo "Next song started" . "\n";
-    else
+    } else {
         echo "Next song FAILED!" . "\n";
+    }
 }
 
 ?>

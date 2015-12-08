@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,23 +28,23 @@
  */
 class vainfo
 {
-    public $encoding = '';
+    public $encoding       = '';
     public $encoding_id3v1 = '';
     public $encoding_id3v2 = '';
 
     public $filename = '';
-    public $type = '';
-    public $tags = array();
+    public $type     = '';
+    public $tags     = array();
     public $islocal;
     public $gather_types = array();
 
-    protected $_raw = array();
-    protected $_getID3 = null;
+    protected $_raw        = array();
+    protected $_getID3     = null;
     protected $_forcedSize = 0;
 
     protected $_file_encoding = '';
-    protected $_file_pattern = '';
-    protected $_dir_pattern = '';
+    protected $_file_pattern  = '';
+    protected $_dir_pattern   = '';
 
     private $_pathinfo;
     private $_broken = false;
@@ -58,10 +58,10 @@ class vainfo
      */
     public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
     {
-        $this->islocal = $islocal;
-        $this->filename = $file;
+        $this->islocal      = $islocal;
+        $this->filename     = $file;
         $this->gather_types = $gather_types;
-        $this->encoding = $encoding ?: AmpConfig::get('site_charset');
+        $this->encoding     = $encoding ?: AmpConfig::get('site_charset');
 
         /* These are needed for the filename mojo */
         $this->_file_pattern = $file_pattern;
@@ -80,14 +80,14 @@ class vainfo
             // Initialize getID3 engine
             $this->_getID3 = new getID3();
 
-            $this->_getID3->option_md5_data = false;
+            $this->_getID3->option_md5_data        = false;
             $this->_getID3->option_md5_data_source = false;
-            $this->_getID3->option_tags_html = false;
-            $this->_getID3->option_extra_info = true;
-            $this->_getID3->option_tag_lyrics3 = true;
-            $this->_getID3->option_tags_process = true;
-            $this->_getID3->option_tag_apetag = true;
-            $this->_getID3->encoding = $this->encoding;
+            $this->_getID3->option_tags_html       = false;
+            $this->_getID3->option_extra_info      = true;
+            $this->_getID3->option_tag_lyrics3     = true;
+            $this->_getID3->option_tags_process    = true;
+            $this->_getID3->option_tag_apetag      = true;
+            $this->_getID3->encoding               = $this->encoding;
 
             // get id3tag encoding (try to work around off-spec id3v1 tags)
             try {
@@ -131,7 +131,7 @@ class vainfo
                     }
                 }
 
-                $this->encoding_id3v2 = self::_detect_encoding($tags, $mb_order);
+                $this->encoding_id3v2    = self::_detect_encoding($tags, $mb_order);
                 $this->_getID3->encoding = $this->encoding_id3v2;
             }
 
@@ -152,31 +152,35 @@ class vainfo
      */
     private static function _detect_encoding($tags, $mb_order)
     {
-        if (!function_exists('mb_detect_encoding'))
+        if (!function_exists('mb_detect_encoding')) {
             return 'ISO-8859-1';
+        }
 
         $encodings = array();
         if (is_array($tags)) {
             foreach ($tags as $tag) {
-                if (is_array($tag))
+                if (is_array($tag)) {
                     $tag = implode(" ", $tag);
+                }
                 $enc = mb_detect_encoding($tag, $mb_order, true);
-                if ($enc != false)
+                if ($enc != false) {
                     $encodings[$enc]++;
+                }
             }
         } else {
             $enc = mb_detect_encoding($tags, $mb_order, true);
-            if ($enc != false)
+            if ($enc != false) {
                 $encodings[$enc]++;
+            }
         }
 
         //!!debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
-        $high = 0;
+        $high     = 0;
         $encoding = 'ISO-8859-1';
         foreach ($encodings as $key => $value) {
             if ($value > $high) {
                 $encoding = $key;
-                $high = $value;
+                $high     = $value;
             }
         }
 
@@ -236,14 +240,14 @@ class vainfo
         $this->read_id3();
         if (isset($this->_raw['tags']['id3v2'])) {
             getid3_lib::IncludeDependency(GETID3_INCLUDEPATH . 'write.php', __FILE__, true);
-            $tagWriter = new getid3_writetags();
+            $tagWriter           = new getid3_writetags();
             $tagWriter->filename = $this->filename;
             //'id3v2.4' doesn't saves the year;
-            $tagWriter->tagformats = array('id3v1', 'id3v2.3');
-            $tagWriter->overwrite_tags = true;
+            $tagWriter->tagformats        = array('id3v1', 'id3v2.3');
+            $tagWriter->overwrite_tags    = true;
             $tagWriter->remove_other_tags = true;
-            $tagWriter->tag_encoding = 'UTF-8';
-            $TagData = $this->_raw['tags']['id3v2'];
+            $tagWriter->tag_encoding      = 'UTF-8';
+            $TagData                      = $this->_raw['tags']['id3v2'];
 
             // Foreach what we've got
             foreach ($data as $key=>$value) {
@@ -253,10 +257,10 @@ class vainfo
             }
 
             if (isset($data['APIC'])) {
-                $TagData['attached_picture'][0]['data'] = $data['APIC']['data'];
+                $TagData['attached_picture'][0]['data']          = $data['APIC']['data'];
                 $TagData['attached_picture'][0]['picturetypeid'] = '3';
-                $TagData['attached_picture'][0]['description'] = 'Cover';
-                $TagData['attached_picture'][0]['mime'] = $data['APIC']['mime'];
+                $TagData['attached_picture'][0]['description']   = 'Cover';
+                $TagData['attached_picture'][0]['mime']          = $data['APIC']['mime'];
             }
 
             $tagWriter->tag_data = $TagData;
@@ -341,20 +345,20 @@ class vainfo
         foreach ($keys as $key) {
             $tags = $results[$key];
 
-            $info['file'] = $info['file'] ?: $tags['file'];
+            $info['file']    = $info['file'] ?: $tags['file'];
             $info['bitrate'] = $info['bitrate'] ?: intval($tags['bitrate']);
-            $info['rate'] = $info['rate'] ?: intval($tags['rate']);
-            $info['mode'] = $info['mode'] ?: $tags['mode'];
-            $info['size'] = $info['size'] ?: $tags['size'];
-            $info['mime'] = $info['mime'] ?: $tags['mime'];
+            $info['rate']    = $info['rate'] ?: intval($tags['rate']);
+            $info['mode']    = $info['mode'] ?: $tags['mode'];
+            // size will be added later, because of conflicts between real file size and getID3 reported filesize
+            $info['mime']     = $info['mime'] ?: $tags['mime'];
             $info['encoding'] = $info['encoding'] ?: $tags['encoding'];
-            $info['rating'] = $info['rating'] ?: $tags['rating'];
-            $info['time'] = $info['time'] ?: intval($tags['time']);
+            $info['rating']   = $info['rating'] ?: $tags['rating'];
+            $info['time']     = $info['time'] ?: intval($tags['time']);
             $info['channels'] = $info['channels'] ?: $tags['channels'];
 
             // This because video title are almost always bad...
             $info['original_name'] = $info['original_name'] ?: stripslashes(trim($tags['original_name']));
-            $info['title'] = $info['title'] ?: stripslashes(trim($tags['title']));
+            $info['title']         = $info['title'] ?: stripslashes(trim($tags['title']));
 
             $info['year'] = $info['year'] ?: intval($tags['year']);
 
@@ -362,26 +366,26 @@ class vainfo
 
             $info['totaldisks'] = $info['totaldisks'] ?: intval($tags['totaldisks']);
 
-            $info['artist']    = $info['artist'] ?: trim($tags['artist']);
+            $info['artist']         = $info['artist'] ?: trim($tags['artist']);
             $info['albumartist']    = $info['albumartist'] ?: trim($tags['albumartist']);
 
             $info['album'] = $info['album'] ?: trim($tags['album']);
 
-            $info['band'] = $info['band'] ?: trim($tags['band']);
-            $info['composer'] = $info['composer'] ?: trim($tags['composer']);
+            $info['band']      = $info['band'] ?: trim($tags['band']);
+            $info['composer']  = $info['composer'] ?: trim($tags['composer']);
             $info['publisher'] = $info['publisher'] ?: trim($tags['publisher']);
 
             $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
-            $info['mb_trackid'] = $info['mb_trackid'] ?: trim($tags['mb_trackid']);
-            $info['mb_albumid'] = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
+            $info['mb_trackid']       = $info['mb_trackid'] ?: trim($tags['mb_trackid']);
+            $info['mb_albumid']       = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
             $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim($tags['mb_albumid_group']);
-            $info['mb_artistid'] = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
+            $info['mb_artistid']      = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
             $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
-            $info['release_type'] = $info['release_type'] ?: trim($tags['release_type']);
+            $info['release_type']     = $info['release_type'] ?: trim($tags['release_type']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
-            $info['comment'] = $info['comment'] ?: trim($tags['comment']);
+            $info['comment']  = $info['comment'] ?: trim($tags['comment']);
 
             $info['lyrics']    = $info['lyrics']
                     ?: strip_tags(nl2br($tags['lyrics']), "<br>");
@@ -390,33 +394,53 @@ class vainfo
             $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
             $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: floatval($tags['replaygain_album_peak']);
 
-            $info['track'] = $info['track'] ?: intval($tags['track']);
-            $info['resolution_x'] = $info['resolution_x'] ?: intval($tags['resolution_x']);
-            $info['resolution_y'] = $info['resolution_y'] ?: intval($tags['resolution_y']);
-            $info['display_x'] = $info['display_x'] ?: intval($tags['display_x']);
-            $info['display_y'] = $info['display_y'] ?: intval($tags['display_y']);
-            $info['frame_rate'] = $info['frame_rate'] ?: floatval($tags['frame_rate']);
+            $info['track']         = $info['track'] ?: intval($tags['track']);
+            $info['resolution_x']  = $info['resolution_x'] ?: intval($tags['resolution_x']);
+            $info['resolution_y']  = $info['resolution_y'] ?: intval($tags['resolution_y']);
+            $info['display_x']     = $info['display_x'] ?: intval($tags['display_x']);
+            $info['display_y']     = $info['display_y'] ?: intval($tags['display_y']);
+            $info['frame_rate']    = $info['frame_rate'] ?: floatval($tags['frame_rate']);
             $info['video_bitrate'] = $info['video_bitrate'] ?: intval($tags['video_bitrate']);
-            $info['audio_codec'] = $info['audio_codec'] ?: trim($tags['audio_codec']);
-            $info['video_codec'] = $info['video_codec'] ?: trim($tags['video_codec']);
-            $info['description'] = $info['description'] ?: trim($tags['description']);
+            $info['audio_codec']   = $info['audio_codec'] ?: trim($tags['audio_codec']);
+            $info['video_codec']   = $info['video_codec'] ?: trim($tags['video_codec']);
+            $info['description']   = $info['description'] ?: trim($tags['description']);
 
-            $info['tvshow'] = $info['tvshow'] ?: trim($tags['tvshow']);
-            $info['tvshow_year'] = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
-            $info['tvshow_season'] = $info['tvshow_season'] ?: trim($tags['tvshow_season']);
+            $info['tvshow']         = $info['tvshow'] ?: trim($tags['tvshow']);
+            $info['tvshow_year']    = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
+            $info['tvshow_season']  = $info['tvshow_season'] ?: trim($tags['tvshow_season']);
             $info['tvshow_episode'] = $info['tvshow_episode'] ?: trim($tags['tvshow_episode']);
-            $info['release_date'] = $info['release_date'] ?: trim($tags['release_date']);
-
-            $info['tvshow_art'] = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
+            $info['release_date']   = $info['release_date'] ?: trim($tags['release_date']);
+            $info['summary']        = $info['summary'] ?: trim($tags['summary']);
+            $info['tvshow_summary'] = $info['tvshow_summary'] ?: trim($tags['tvshow_summary']);
+            
+            $info['tvshow_art']        = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
-            $info['art'] = $info['art'] ?: trim($tags['art']);
+            $info['art']               = $info['art'] ?: trim($tags['art']);
+            
+            if (AmpConfig::get('enable_custom_metadata') && is_array($tags)) {
+                // Add rest of the tags without typecast to the array
+                foreach ($tags as $tag => $value) {
+                    if (!isset($info[$tag]) && !is_array($value)) {
+                        $info[$tag] = (!is_array($value)) ? trim($value) : $value;
+                    }
+                }
+            }
         }
-
+        
         // Some things set the disk number even though there aren't multiple
         if ($info['totaldisks'] == 1 && $info['disk'] == 1) {
             unset($info['disk']);
             unset($info['totaldisks']);
         }
+
+    // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
+        if (isset($results['general']['size'])) {
+            $size = $results['general']['size'];
+        } else {
+            $size = Core::get_filesize(Core::conv_lc_file($filename));
+        }
+
+        $info['size'] = $info['size'] ?: $size;
 
         return $info;
     }
@@ -536,7 +560,7 @@ class vainfo
 
         $results['general'] = $this->_parse_general($this->_raw);
 
-        $cleaned = self::clean_tag_info($results, self::get_tag_type($results, 'getid3_tag_order'), $this->filename);
+        $cleaned        = self::clean_tag_info($results, self::get_tag_type($results, 'getid3_tag_order'), $this->filename);
         $cleaned['raw'] = $results;
 
         return $cleaned;
@@ -571,7 +595,7 @@ class vainfo
         $plugin_names = Plugin::get_plugins('get_metadata');
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
-                $plugin = new Plugin($tag_source);
+                $plugin            = new Plugin($tag_source);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {
                     if ($plugin->load($GLOBALS['user'])) {
@@ -591,26 +615,31 @@ class vainfo
     private function _parse_general($tags)
     {
         $parsed = array();
+        
+        if ((in_array('movie', $this->gather_types)) || (in_array('tvshow', $this->gather_types))) {
+            $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
+        } else {
+            $parsed['title'] = urldecode($this->_pathinfo['filename']);
+        }
 
-        $parsed['title'] = urldecode($this->_pathinfo['filename']);
-        $parsed['mode'] = $tags['audio']['bitrate_mode'];
+        $parsed['mode']  = $tags['audio']['bitrate_mode'];
         if ($parsed['mode'] == 'con') {
             $parsed['mode'] = 'cbr';
         }
-        $parsed['bitrate'] = $tags['audio']['bitrate'];
-        $parsed['channels'] = intval($tags['audio']['channels']);
-        $parsed['rate'] = intval($tags['audio']['sample_rate']);
-        $parsed['size'] = $this->_forcedSize ?: $tags['filesize'];
-        $parsed['encoding'] = $tags['encoding'];
-        $parsed['mime'] = $tags['mime_type'];
-        $parsed['time'] = ($this->_forcedSize ? ((($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate']) : $tags['playtime_seconds']);
-        $parsed['audio_codec'] = $tags['audio']['dataformat'];
-        $parsed['video_codec'] = $tags['video']['dataformat'];
-        $parsed['resolution_x'] = $tags['video']['resolution_x'];
-        $parsed['resolution_y'] = $tags['video']['resolution_y'];
-        $parsed['display_x'] = $tags['video']['display_x'];
-        $parsed['display_y'] = $tags['video']['display_y'];
-        $parsed['frame_rate'] = $tags['video']['frame_rate'];
+        $parsed['bitrate']       = $tags['audio']['bitrate'];
+        $parsed['channels']      = intval($tags['audio']['channels']);
+        $parsed['rate']          = intval($tags['audio']['sample_rate']);
+        $parsed['size']          = $this->_forcedSize ?: $tags['filesize'];
+        $parsed['encoding']      = $tags['encoding'];
+        $parsed['mime']          = $tags['mime_type'];
+        $parsed['time']          = ($this->_forcedSize ? ((($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate']) : $tags['playtime_seconds']);
+        $parsed['audio_codec']   = $tags['audio']['dataformat'];
+        $parsed['video_codec']   = $tags['video']['dataformat'];
+        $parsed['resolution_x']  = $tags['video']['resolution_x'];
+        $parsed['resolution_y']  = $tags['video']['resolution_y'];
+        $parsed['display_x']     = $tags['video']['display_x'];
+        $parsed['display_y']     = $tags['video']['display_y'];
+        $parsed['frame_rate']    = $tags['video']['frame_rate'];
         $parsed['video_bitrate'] = $tags['video']['bitrate'];
 
         if (isset($tags['ape'])) {
@@ -745,8 +774,8 @@ class vainfo
                     $parsed['track'] = $data[0];
                 break;
                 case 'discnumber':
-                    $elements = explode('/', $data[0]);
-                    $parsed['disk'] = $elements[0];
+                    $elements             = explode('/', $data[0]);
+                    $parsed['disk']       = $elements[0];
                     $parsed['totaldisks'] = $elements[1];
                 break;
                 case 'date':
@@ -817,12 +846,16 @@ class vainfo
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'part_of_a_set':
-                    $elements = explode('/', $data[0]);
-                    $parsed['disk'] = $elements[0];
+                    $elements             = explode('/', $data[0]);
+                    $parsed['disk']       = $elements[0];
                     $parsed['totaldisks'] = $elements[1];
                 break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
+                break;
+                case 'comment':
+                    // First array key can be xFF\xFE in case of UTF-8, better to get it this way
+                    $parsed['comment'] = reset($data);
                 break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
@@ -897,8 +930,13 @@ class vainfo
                         $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
                     }
                 }
+                // Rating made by an unknow user, adding it to super user (id=-1)
+                else {
+                    $parsed['rating'][-1] = $popm['rating'] / 255 * 5;
+                }
             }
         }
+        
 
         return $parsed;
     }
@@ -956,7 +994,7 @@ class vainfo
                     $parsed['mb_artistid'] = $data[0];
                 break;
                 case 'MusicBrainz Album Type':
-                    $parsed['release_type'] = $data[0];
+                $parsed['release_type'] = $data[0];
                 break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
@@ -984,55 +1022,140 @@ class vainfo
 
         return $parsed;
     }
-
     /**
-     * _parse_filename
-     *
      * This function uses the file and directory patterns to pull out extra tag
      * information.
+     *  parses TV show name variations:
+     *    1. title.[date].S#[#]E#[#].ext		(Upper/lower case)
+     *    2. title.[date].#[#]X#[#].ext		(both upper/lower case letters
+     *    3. title.[date].Season #[#] Episode #[#].ext
+     *    4. title.[date].###.ext		(maximum of 9 seasons)
+     *  parse directory  path for name, season and episode numbers
+     *   /TV shows/show name [(year)]/[season ]##/##.Episode.Title.ext
+     *  parse movie names:
+     *    title.[date].ext
+     *    /movie title [(date)]/title.ext
      */
-    private function _parse_filename($filename)
+    private function _parse_filename($filepath)
     {
-        $origin = $filename;
+        $origin  = $filepath;
         $results = array();
-
-        if (in_array('music', $this->gather_types) || in_array('clip', $this->gather_types)) {
-            // Correctly detect the slash we need to use here
-            if (strpos($filename, '/') !== false) {
-                $slash_type = '/';
-                $slash_type_preg = $slash_type;
+        if (strpos($filepath, '/') !== false) {
+            $slash_type      = '/';
+            $slash_type_preg = $slash_type;
+        } else {
+            $slash_type      = "\\";
+            $slash_type_preg = $slash_type . $slash_type;
+        }
+        $file = pathinfo($filepath,PATHINFO_FILENAME);
+        
+        if (in_array('tvshow', $this->gather_types)) {
+            $season  = array();
+            $episode = array();
+            $tvyear  = array();
+            $temp    = array();
+            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath,$tvyear);
+            $results['year'] = !empty($tvyear) ? intval($tvyear[0]) : null;
+        
+            if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
+                $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~",$file,2);
+                preg_match("~(?<=[Ss])\d+~", $file, $season);
+                preg_match("~(?<=[Ee])\d+~", $file, $episode);
             } else {
-                $slash_type = '\\';
-                $slash_type_preg = $slash_type . $slash_type;
+                if (preg_match("~[\_\-\.\s](\d{1,2})[xX](\d{1,2})~", $file, $seasonEpisode)) {
+                    $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~",$file);
+                    preg_match("~\d+(?=[Xx])~", $file, $season);
+                    preg_match("~(?<=[Xx])\d+~", $file, $episode);
+                } else {
+                    if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
+                        $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",$file,3);
+                        preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
+                        preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
+                    } else {
+                        if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
+                            $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                            $season[0]  = $seasonEpisode[1];
+                            if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
+                                $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                                $season[0]  = $seasonEpisode[1];
+                                $episode[0] = $seasonEpisode[2];
+                            }
+                        }
+                    }
+                }
+            }
+    
+            $results['tvshow_season']  = $season[0];
+            $results['tvshow_episode'] = $episode[0];
+            $results['tvshow']         = $this->formatVideoName($temp[0]);
+            $results['original_name']  = $this->formatVideoName($temp[1]);
+
+            // Try to identify the show information from parent folder
+            if (!$results['tvshow']) {
+                $folders = preg_split("~" . $slash_type . "~", $filepath, -1, PREG_SPLIT_NO_EMPTY);
+                if ($results['tvshow_season'] && $results['tvshow_episode']) {
+                    // We have season and episode, we assume parent folder is the tvshow name
+                    $filetitle         = end($folders);
+                    $results['tvshow'] = $this->formatVideoName($filetitle);
+                } else {
+                    // Or we assume each parent folder contains one missing information
+                    if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filepath, $matches)) {
+                        if ($matches != null) {
+                            $results['tvshow']        = $this->formatVideoName($matches[1]);
+                            $results['tvshow_season'] = $matches[2];
+                            if (isset($matches[5])) {
+                                $results['tvshow_episode'] = $matches[5];
+                            } else {
+                                //match pattern like 10.episode name.mp4
+                                if (preg_match("~^(\d\d)[\_\-\.\s]?(.*)~", $file, $matches)) {
+                                    $results['tvshow_episode'] = $matches[1];
+                                    $results['original_name']  = $this->formatVideoName($matches[2]);
+                                } else {
+                                    //Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
+                                    preg_match("~(\d)(\d\d)[\_\-\.\s]?~", $file, $matches);
+                                    $results['tvshow_episode'] = $matches[2];
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
+            $results['title'] = $results['tvshow'];
+        }
+    
+        if (in_array('movie', $this->gather_types)) {
+            $results['original_name'] = $results['title'] = $this->formatVideoName($file);
+        }
+        
+        if (in_array('music', $this->gather_types) || in_array('clip', $this->gather_types)) {
             // Combine the patterns
             $pattern = preg_quote($this->_dir_pattern) . $slash_type_preg . preg_quote($this->_file_pattern);
-
+            
             // Remove first left directories from filename to match pattern
             $cntslash = substr_count($pattern, preg_quote($slash_type)) + 1;
-            $filepart = explode($slash_type, $filename);
+            $filepart = explode($slash_type, $filepath);
             if (count($filepart) > $cntslash) {
-                $filename = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
+                $filepath = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
             }
-
+            
             // Pull out the pattern codes into an array
             preg_match_all('/\%\w/', $pattern, $elements);
-
+            
             // Mangle the pattern by turning the codes into regex captures
             $pattern = preg_replace('/\%[Ty]/', '([0-9]+?)', $pattern);
             $pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
             $pattern = str_replace('/', '\/', $pattern);
             $pattern = str_replace(' ', '\s', $pattern);
             $pattern = '/' . $pattern . '\..+$/';
-
+            
             // Pull out our actual matches
-            preg_match($pattern, $filename, $matches);
+            preg_match($pattern, $filepath, $matches);
             if ($matches != null) {
                 // The first element is the full match text
                 $matched = array_shift($matches);
-                debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
-
+                debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filepath, 5);
+            
                 // Iterate over what we found
                 foreach ($matches as $key => $value) {
                     $new_key = translate_pattern_code($elements['0'][$key]);
@@ -1041,162 +1164,34 @@ class vainfo
                     }
                 }
 
-                $results['title'] = $results['title'] ?: basename($filename);
+                $results['title'] = $results['title'] ?: basename($filepath);
                 if ($this->islocal) {
                     $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
                 }
             }
         }
-
-        if (in_array('tvshow', $this->gather_types)) {
-            $pathinfo = pathinfo($filename);
-            $filetitle = $pathinfo['filename'];
-
-            $results = array_merge($results, $this->parseEpisodeName($filetitle));
-            if (!$results['tvshow']) {
-                // Try to identify the show information from parent folder
-                $filetitle = basename($pathinfo['dirname']);
-                $results = array_merge($results, $this->parseEpisodeName($filetitle));
-
-                if (!$results['tvshow']) {
-                    if ($results['tvshow_season'] && $results['tvshow_episode']) {
-                        // We have season and episode, we assume parent folder is the tvshow name
-                        $pathinfo = pathinfo($pathinfo['dirname']);
-                        $filetitle = basename($pathinfo['dirname']);
-                        $results['tvshow'] = $this->fixSerieName($filetitle);
-                    } else {
-                        // Or we assume each parent folder contains one missing information
-                        if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filename, $matches)) {
-                            if ($matches != null) {
-                                $results['tvshow'] = $this->fixSerieName($matches[1]);
-                                $results['tvshow_season'] = $matches[2];
-                                if (isset($matches[5])) {
-                                    $results['tvshow_episode'] = $matches[5];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (in_array('movie', $this->gather_types)) {
-            $pathinfo = pathinfo($filename);
-            $filetitle = $pathinfo['filename'];
-            $results['title'] = $this->fixVideoReleaseName($filetitle);
-            if (!$results['title']) {
-                // Try to identify the movie information from parent folder
-                $filetitle = basename($pathinfo['dirname']);
-                $results['title'] = $this->fixVideoReleaseName($filetitle);
-            }
-        }
-
         return $results;
     }
-
-    private function parseEpisodeName($filetitle)
+    
+    private function removeCommonAbbreviations($name)
     {
-        $patterns = array(
-            '/(.*)s(\d\d)e(\d\d)(\D.*)/i',
-            '/(.*)s(\d\d)(\D)(.*)/i',
-            '/(.*)\D(\d{1,2})x(\d\d)(\D)(.*)/i',
-            '/(.*)\D(\d{1,2})x(\d\d)$/i',
-            '/(\D*)[\.|\-|_](\d)(\d\d)([\.|\-|_]\D.*)/i',
-            '/(\D*)(\d)[^0-9](\d\d)(\D.*)/i'
-        );
+        $abbr         = explode(",",AmpConfig::get('common_abbr'));
+        $commonabbr   = preg_replace("~\n~", '',$abbr);
+        $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
 
-        $results = array();
-        for ($i=0;$i<count($patterns);$i++) {
-            if (preg_match($patterns[$i], $filetitle, $matches)) {
-                $name = $this->fixSerieName($matches[1]);
-                if (empty($name)) {
-                    continue;
-                }
-
-                $season = floatval($matches[2]);
-                if ($season == 0) {
-                    continue;
-                }
-
-                $episode = floatval($matches[3]);
-                $leftover = $matches[4];
-
-                if ($episode == 0) {
-                    // Some malformed string
-                    $leftover = $filetitle;
-                }
-
-                $results['tvshow'] = $name;
-                $results['tvshow_season'] = $season;
-                $results['tvshow_episode'] = $episode;
-                $results['title'] = $this->fixVideoReleaseName($leftover);
-                break;
-            }
-        }
-
-        return $results;
+       //scan for brackets, braces, etc and ignore case.
+       for ($i=0; $i< count($commonabbr);$i++) {
+           $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
+       }
+        $string = preg_replace($commonabbr,'',$name);
+        return $string;
+    }
+    
+    private function formatVideoName($name)
+    {
+        return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ', $name), "\s\t\n\r\0\x0B\.\_\-")));
     }
 
-    private function fixSerieName($name)
-    {
-        $name = str_replace('_', ' ', $name);
-        $name = str_replace('.', ' ', $name);
-        $name = str_replace('  ', ' ', $name);
-        $name = $this->removeStartingDashesAndSpaces($name);
-        $name = $this->removeEndingDashesAndSpaces($name);
-
-        return ucwords($name);
-    }
-
-    private function fixVideoReleaseName($name)
-    {
-        $commonabbr = array(
-            'divx', 'xvid', 'dvdrip', 'hdtv', 'lol', 'axxo', 'repack', 'xor',
-            'pdtv', 'real', 'vtv', 'caph', '2hd', 'proper', 'fqm', 'uncut',
-            'topaz', 'tvt', 'notv', 'fpn', 'fov', 'orenji', '0tv', 'omicron',
-            'dsr', 'ws', 'sys', 'crimson', 'wat', 'hiqt', 'internal', 'brrip',
-            'boheme', 'vost', 'vostfr', 'fastsub', 'addiction'
-        );
-        for ($i=0; $i<count($commonabbr); $i++) {
-            $name = preg_replace('/[\W|_]' . $commonabbr[$i] . '[\W|_](.*)/i', '.', $name);
-        }
-
-        while (strpos($name, '..') !== false) {
-            $name = preg_replace('/\.\./', '.', $name);
-        }
-        $name = preg_replace('/\.\w*$/', ' ', $name);
-        $name = preg_replace('/\[.*$/', '', $name);
-
-        return $this->fixSerieName($name);
-    }
-
-    private function removeStartingDashesAndSpaces($name)
-    {
-        if (empty($name)) {
-            return $name;
-        }
-
-        while (strpos($name, ' ') === 0 || strpos($name, '-') === 0) {
-            $name = preg_replace('/^ /', '', $name);
-            $name = preg_replace('/^-/', '', $name);
-        }
-
-        return $name;
-    }
-
-    private function removeEndingDashesAndSpaces($name)
-    {
-        if (empty($name)) {
-            return $name;
-        }
-
-        while (strrpos($name, ' ') === strlen($name) - 1 || strrpos($name, '-') === strlen($name) - 1) {
-            $name = preg_replace('/ $/', '', $name);
-            $name = preg_replace('/-$/', '', $name);
-        }
-
-        return $name;
-    }
 
     /**
      * set_broken
@@ -1216,10 +1211,10 @@ class vainfo
 
         $key = array_shift($order);
 
-        $broken = array();
-        $broken[$key] = array();
-        $broken[$key]['title'] = '**BROKEN** ' . $this->filename;
-        $broken[$key]['album'] = 'Unknown (Broken)';
+        $broken                 = array();
+        $broken[$key]           = array();
+        $broken[$key]['title']  = '**BROKEN** ' . $this->filename;
+        $broken[$key]['album']  = 'Unknown (Broken)';
         $broken[$key]['artist'] = 'Unknown (Broken)';
 
         return $broken;
@@ -1238,7 +1233,7 @@ class vainfo
         $delimiters = AmpConfig::get('additional_genre_delimiters');
         if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
-            $genres = preg_split($pattern, reset($data));
+            $genres  = preg_split($pattern, reset($data));
             if ($genres === false) {
                 throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~).');
             }
@@ -1248,3 +1243,4 @@ class vainfo
         return $data;
     }
 } // end class vainfo
+

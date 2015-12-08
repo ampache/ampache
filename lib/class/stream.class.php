@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -45,7 +45,7 @@ class Stream
     {
         if (!self::$session) {
             // Generate the session ID.  This is slightly wasteful.
-            $data = array();
+            $data         = array();
             $data['type'] = 'stream';
             // This shouldn't be done here but at backend endpoint side
             if (isset($_REQUEST['client'])) {
@@ -82,11 +82,11 @@ class Stream
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate');
         // FIXME: This should be configurable for each output type
-        $user_sample_rate = AmpConfig::get('sample_rate');
+        $user_bit_rate = AmpConfig::get('transcode_bitrate');
 
         // If the user's crazy, that's no skin off our back
-        if ($user_sample_rate < $min_bitrate) {
-            $min_bitrate = $user_sample_rate;
+        if ($user_bit_rate < $min_bitrate) {
+            $min_bitrate = $user_bit_rate;
         }
 
         // Are there site-wide constraints? (Dynamic downsampling.)
@@ -101,7 +101,7 @@ class Stream
                 "AND `user_preference`.`value` = 'downsample')";
 
             $db_results = Dba::read($sql);
-            $results = Dba::fetch_row($db_results);
+            $results    = Dba::fetch_row($db_results);
 
             $active_streams = intval($results[0]) ?: 0;
             debug_event('stream', 'Active transcoding streams: ' . $active_streams, 5);
@@ -109,25 +109,25 @@ class Stream
             // We count as one for the algorithm
             // FIXME: Should this reflect the actual bit rates?
             $active_streams++;
-            $sample_rate = floor($max_bitrate / $active_streams);
+            $bit_rate = floor($max_bitrate / $active_streams);
 
             // Exit if this would be insane
-            if ($sample_rate < ($min_bitrate ?: 8)) {
+            if ($bit_rate < ($min_bitrate ?: 8)) {
                 debug_event('stream', 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
                 exit();
             }
 
             // Never go over the user's sample rate
-            if ($sample_rate > $user_sample_rate) {
-                $sample_rate = $user_sample_rate;
+            if ($bit_rate > $user_bit_rate) {
+                $bit_rate = $user_bit_rate;
             }
         } // end if we've got bitrates
         else {
-            $sample_rate = $user_sample_rate;
+            $bit_rate = $user_bit_rate;
         }
 
-        return $sample_rate;
+        return $bit_rate;
     }
 
     /**
@@ -138,32 +138,32 @@ class Stream
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
-        debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Options: ' . print_r($options, true) . '}...', 5);
+        debug_event('stream.class.php', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, true) . '}...', 5);
 
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
-        if ($transcode_settings == false) {
+        if ($transcode_settings === false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
             return false;
         }
 
         //$media_rate = $media->video_bitrate ?: $media->bitrate;
         if (!$options['bitrate']) {
-            $sample_rate = self::get_allowed_bitrate($media);
-            debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
+            $bit_rate = self::get_allowed_bitrate($media);
+            debug_event('stream', 'Configured bitrate is ' . $bit_rate, 5);
             // Validate the bitrate
-            $sample_rate = self::validate_bitrate($sample_rate);
+            $bit_rate = self::validate_bitrate($bit_rate);
         } else {
-            $sample_rate = $options['bitrate'];
+            $bit_rate = $options['bitrate'];
         }
 
         // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($sample_rate * 1000) > $media->bitrate) {
-            debug_event('stream', 'Clamping bitrate to avoid upsampling to ' . $sample_rate, 5);
-            $sample_rate = self::validate_bitrate($media->bitrate / 1000);
+        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate) {
+            debug_event('stream', 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
+            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
         }
 
-        debug_event('stream', 'Final transcode bitrate is ' . $sample_rate, 5);
+        debug_event('stream', 'Final transcode bitrate is ' . $bit_rate, 5);
 
         $song_file = scrub_arg($media->file);
 
@@ -172,7 +172,8 @@ class Stream
 
         $string_map = array(
             '%FILE%'   => $song_file,
-            '%SAMPLE%' => $sample_rate
+            '%SAMPLE%' => $bit_rate,   // Deprecated
+            '%BITRATE%' => $bit_rate
         );
         if (isset($options['maxbitrate'])) {
             $string_map['%MAXBITRATE%'] = $options['maxbitrate'];
@@ -180,11 +181,11 @@ class Stream
             $string_map['%MAXBITRATE%'] = 8000;
         }
         if (isset($options['frame'])) {
-            $frame = gmdate("H:i:s", $options['frame']);
+            $frame                = gmdate("H:i:s", $options['frame']);
             $string_map['%TIME%'] = $frame;
         }
         if (isset($options['duration'])) {
-            $duration = gmdate("H:i:s", $options['duration']);
+            $duration                 = gmdate("H:i:s", $options['duration']);
             $string_map['%DURATION%'] = $duration;
         }
         if (isset($options['resolution'])) {
@@ -215,12 +216,11 @@ class Stream
     public static function get_image_preview($media)
     {
         $image = null;
-        $sec = ($media->time >= 30) ? 30 : intval($media->time / 2);
+        $sec   = ($media->time >= 30) ? 30 : intval($media->time / 2);
         $frame = gmdate("H:i:s", $sec);
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
-
-            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
+            $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
                 '%FILE%'   => scrub_arg($media->file),
                 '%TIME%' => $frame
@@ -255,22 +255,31 @@ class Stream
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             // Windows doesn't like to provide stderr as a pipe
             $descriptors[2] = array('pipe', 'w');
-            $cmdPrefix = "exec ";
-        } else
+            $cmdPrefix      = "exec ";
+        } else {
             $cmdPrefix = "start /B ";
+        }
 
 
         debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
 
-        $process = proc_open($cmdPrefix.$command, $descriptors, $pipes);
-        $parray = array(
-            'process' => $process,
-            'handle' => $pipes[1],
-            'stderr' => $pipes[2]
-        );
+        $parray  = array();
+        $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
+        if ($process === false) {
+            debug_event('stream', 'Transcode command failed to open.', 1);
+            $parray = array(
+                'handle' => null
+            );
+        } else {
+            $parray  = array(
+                'process' => $process,
+                'handle' => $pipes[1],
+                'stderr' => $pipes[2]
+            );
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-            stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+            if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+                stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+            }
         }
 
         return array_merge($parray, $settings);
@@ -283,7 +292,7 @@ class Stream
             $pid = $status['pid'];
             debug_event('stream', 'Stream process about to be killed. pid:' . $pid, 1);
 
-            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("taskkill /F /T /PID $pid") : exec("kill -9 $pid");
+            (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("kill -9 $pid") : exec("taskkill /F /T /PID $pid");
 
             proc_close($transcoder['process']);
         } else {
@@ -298,9 +307,9 @@ class Stream
     public static function validate_bitrate($bitrate)
     {
         /* Round to standard bitrates */
-        $sample_rate = 16*(floor($bitrate/16));
+        $bit_rate = 16*(floor($bitrate/16));
 
-        return $sample_rate;
+        return $bit_rate;
     }
 
     /**
@@ -384,7 +393,7 @@ class Stream
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $type = $row['object_type'];
+            $type  = $row['object_type'];
             $media = new $type($row['object_id']);
             $media->format();
             $client = new User($row['user']);
@@ -398,7 +407,6 @@ class Stream
         } // end while
 
         return $results;
-
     } // get_now_playing
 
     /**
@@ -431,7 +439,9 @@ class Stream
     public static function run_playlist_method()
     {
         // If this wasn't ajax included run away
-        if (!defined('AJAX_INCLUDE')) { return false; }
+        if (!defined('AJAX_INCLUDE')) {
+            return false;
+        }
 
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
@@ -449,9 +459,8 @@ class Stream
 
         // Load our javascript
         echo "<script type=\"text/javascript\">";
-        echo Core::get_reloadutil() . "('".$_SESSION['iframe']['target']."');";
+        echo Core::get_reloadutil() . "('" . $_SESSION['iframe']['target'] . "');";
         echo "</script>";
-
     } // run_playlist_method
 
     /**
@@ -487,7 +496,6 @@ class Stream
         $url = $web_path . "/play/index.php?$session_string";
 
         return $url;
-
     } // get_base_url
-
 } //end of stream class
+

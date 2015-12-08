@@ -135,6 +135,10 @@
     border: 2px solid #ffc763;
 }
 
+.edit_dialog_content .metadataAccordion {
+	display: none;
+}
+
 /***********************************************
            jQuery add to playlist dialog                         
 ***********************************************/

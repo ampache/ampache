@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -34,7 +34,7 @@ $headers = apache_request_headers();
 //$daapAccessIndex = $headers['Client-DAAP-Access-Index'];
 //$daapVersion = $headers['Client-DAAP-Version'];
 //$daapValidation = $headers['Client-DAAP-Validation']; // That's header hash, we don't care about it (only required by iTunes >= 7.0)
-debug_event('daap', 'Request headers: '. print_r($headers, true), '5');
+debug_event('daap', 'Request headers: ' . print_r($headers, true), '5');
 
 // Get the list of possible methods for the Plex API
 $methods = get_class_methods('daap_api');
@@ -50,7 +50,9 @@ if (count($params) > 0) {
         $act = strtolower(implode('_', array_slice($params, 0, $i)));
         $act = str_replace("-", "_", $act);
         foreach ($methods as $method) {
-            if (in_array($method, $internal_functions)) { continue; }
+            if (in_array($method, $internal_functions)) {
+                continue;
+            }
 
             // If the method is the same as the action being called
             // Then let's call this function!
@@ -59,7 +61,6 @@ if (count($params) > 0) {
                 // We only allow a single function to be called, and we assume it's cleaned up!
                 exit();
             }
-
         } // end foreach methods in API
     }
 }

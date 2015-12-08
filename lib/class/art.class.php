@@ -2,26 +2,26 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 use MusicBrainz\MusicBrainz;
-use MusicBrainz\Clients\RequestsMbClient;
+use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
 /**
  * Art Class
@@ -81,12 +81,12 @@ class Art extends database_object
      */
     public function __construct($uid, $type = 'album', $kind = 'default')
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return false;
+        }
         $this->type = $type;
-        $this->uid = intval($uid);
+        $this->uid  = intval($uid);
         $this->kind = $kind;
-
     } // constructor
 
     /**
@@ -99,9 +99,11 @@ class Art extends database_object
      */
     public static function build_cache($object_ids)
     {
-        if (!is_array($object_ids) || !count($object_ids)) { return false; }
-        $uidlist = '(' . implode(',', $object_ids) . ')';
-        $sql = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $uidlist";
+        if (!is_array($object_ids) || !count($object_ids)) {
+            return false;
+        }
+        $uidlist    = '(' . implode(',', $object_ids) . ')';
+        $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $uidlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -110,7 +112,6 @@ class Art extends database_object
         }
 
         return true;
-
     } // build_cache
 
     /**
@@ -170,13 +171,14 @@ class Art extends database_object
      */
     public static function extension($mime)
     {
-        $data = explode("/", $mime);
+        $data      = explode("/", $mime);
         $extension = $data['1'];
 
-        if ($extension == 'jpeg') { $extension = 'jpg'; }
+        if ($extension == 'jpeg') {
+            $extension = 'jpg';
+        }
 
         return $extension;
-
     } // extension
 
     /**
@@ -202,8 +204,8 @@ class Art extends database_object
         // Check to make sure PHP:GD exists.  If so, we can sanity check
         // the image.
         if (function_exists('ImageCreateFromString')) {
-             $image = ImageCreateFromString($source);
-             if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
+            $image = @ImageCreateFromString($source);
+            if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('Art', 'Image failed PHP-GD test',1);
                 $test = false;
             }
@@ -234,7 +236,6 @@ class Art extends database_object
         } else {
             return $this->thumb;
         }
-
     } // get
 
 
@@ -247,7 +248,7 @@ class Art extends database_object
      */
     public function get_db()
     {
-        $sql = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $sql        = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, array($this->type, $this->uid, $this->kind));
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -258,18 +259,22 @@ class Art extends database_object
                     $this->raw = $results['image'];
                 }
                 $this->raw_mime = $results['mime'];
-            } else if (AmpConfig::get('resize_images') && $results['size'] == '275x275') {
-                if (AmpConfig::get('album_art_store_disk')) {
-                    $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind);
-                } else {
-                    $this->thumb = $results['image'];
+            } else {
+                if (AmpConfig::get('resize_images') && $results['size'] == '275x275') {
+                    if (AmpConfig::get('album_art_store_disk')) {
+                        $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind);
+                    } else {
+                        $this->thumb = $results['image'];
+                    }
+                    $this->raw_mime = $results['mime'];
                 }
-                $this->raw_mime = $results['mime'];
             }
             $this->id = $results['id'];
         }
         // If we get nothing return false
-        if (!$this->raw) { return false; }
+        if (!$this->raw) {
+            return false;
+        }
 
         // If there is no thumb and we want thumbs
         if (!$this->thumb && AmpConfig::get('resize_images')) {
@@ -278,7 +283,7 @@ class Art extends database_object
             // If it works save it!
             if ($data) {
                 $this->save_thumb($data['thumb'], $data['thumb_mime'], $size);
-                $this->thumb = $data['thumb'];
+                $this->thumb      = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
             } else {
                 debug_event('Art','Unable to retrieve or generate thumbnail for ' . $this->type . '::' . $this->id,1);
@@ -286,7 +291,6 @@ class Art extends database_object
         } // if no thumb, but art and we want to resize
 
         return true;
-
     } // get_db
 
     /**
@@ -298,9 +302,9 @@ class Art extends database_object
      */
     public static function has_db($object_id, $object_type, $kind = 'default')
     {
-        $sql = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $sql        = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id, $kind));
-        $nb_img = 0;
+        $nb_img     = 0;
         if ($results = Dba::fetch_assoc($db_results)) {
             $nb_img = $results['nb_img'];
         }
@@ -316,8 +320,8 @@ class Art extends database_object
     {
         debug_event('art', 'Insert art from url ' . $url, '5');
         $image = Art::get_from_source(array('url' => $url), $this->type);
-        $rurl = pathinfo($url);
-        $mime = "image/" . $rurl['extension'];
+        $rurl  = pathinfo($url);
+        $mime  = "image/" . $rurl['extension'];
         $this->insert($image, $mime);
     }
 
@@ -330,7 +334,7 @@ class Art extends database_object
         debug_event('art', 'Insert art from file on disk ' . $filepath, '5');
         $image = Art::get_from_source(array('file' => $filepath), $this->type);
         $rfile = pathinfo($filepath);
-        $mime = "image/" . $rfile['extension'];
+        $mime  = "image/" . $rfile['extension'];
         $this->insert($image, $mime);
     }
 
@@ -345,7 +349,9 @@ class Art extends database_object
     public function insert($source, $mime = '')
     {
         // Disabled in demo mode cause people suck and upload porn
-        if (AmpConfig::get('demo_mode')) { return false; }
+        if (AmpConfig::get('demo_mode')) {
+            return false;
+        }
 
         // Check to make sure we like this image
         if (!self::test_image($source)) {
@@ -366,7 +372,7 @@ class Art extends database_object
                 foreach ($songs as $song_id) {
                     $song = new Song($song_id);
                     $song->format();
-                    $id3 = new vainfo($song->file);
+                    $id3  = new vainfo($song->file);
                     $data = $id3->read_id3();
                     if (isset($data['tags']['id3v2'])) {
                         $image_from_tag = '';
@@ -374,10 +380,10 @@ class Art extends database_object
                             $image_from_tag = $data['id3v2']['APIC'][0]['data'];
                         }
                         if ($image_from_tag != $source) {
-                            $ndata = array();
+                            $ndata                 = array();
                             $ndata['APIC']['data'] = $source;
                             $ndata['APIC']['mime'] = $mime;
-                            $ndata = array_merge($ndata, $song->get_metadata());
+                            $ndata                 = array_merge($ndata, $song->get_metadata());
                             $id3->write_id3($ndata);
                         }
                     }
@@ -386,9 +392,9 @@ class Art extends database_object
         }
 
         $dimensions = Core::image_dimensions($source);
-        $width = intval($dimensions['width']);
-        $height = intval($dimensions['height']);
-        $sizetext = 'original';
+        $width      = intval($dimensions['width']);
+        $height     = intval($dimensions['height']);
+        $sizetext   = 'original';
 
         if (!self::check_dimensions($dimensions)) {
             return false;
@@ -404,7 +410,6 @@ class Art extends database_object
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
 
         return true;
-
     } // insert
 
     public static function check_dimensions($dimensions)
@@ -432,7 +437,7 @@ class Art extends database_object
         return true;
     }
 
-    private static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
+    public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
@@ -498,7 +503,7 @@ class Art extends database_object
         }
 
         $image = '';
-        $fp = fopen($path, "rb");
+        $fp    = fopen($path, "rb");
         do {
             $image .= fread($fp, 2048);
         } while (!feof($fp));
@@ -521,9 +526,13 @@ class Art extends database_object
 
         if (Core::is_readable($path)) {
             foreach (scandir($path) as $file) {
-                if ('.' === $file || '..' === $file) continue;
-                elseif (is_dir($path . '/' . $file)) self::delete_rec_dir($path . '/' . $file);
-                else unlink($path . '/' . $file);
+                if ('.' === $file || '..' === $file) {
+                    continue;
+                } elseif (is_dir($path . '/' . $file)) {
+                    self::delete_rec_dir($path . '/' . $file);
+                } else {
+                    unlink($path . '/' . $file);
+                }
             }
             rmdir($path);
         }
@@ -557,8 +566,8 @@ class Art extends database_object
             return false;
         }
 
-        $width = intval($size['width']);
-        $height = intval($size['height']);
+        $width    = intval($size['width']);
+        $height   = intval($size['height']);
         $sizetext = $width . 'x' . $height;
 
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
@@ -581,8 +590,8 @@ class Art extends database_object
      */
     public function get_thumb($size)
     {
-        $sizetext = $size['width'] . 'x' . $size['height'];
-        $sql = "SELECT `image`, `mime` FROM `image` WHERE `size` = ? AND `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $sizetext   = $size['width'] . 'x' . $size['height'];
+        $sql        = "SELECT `image`, `mime` FROM `image` WHERE `size` = ? AND `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, array($sizetext, $this->type, $this->uid, $this->kind));
 
         $results = Dba::fetch_assoc($db_results);
@@ -599,7 +608,6 @@ class Art extends database_object
         }
 
         return $results;
-
     } // get_thumb
 
     /**
@@ -628,19 +636,19 @@ class Art extends database_object
         }
 
         // Check and make sure we can resize what you've asked us to
-        if (($type == 'jpg' OR $type == 'jpeg') AND !(imagetypes() & IMG_JPG)) {
+        if (($type == 'jpg' or $type == 'jpeg') and !(imagetypes() & IMG_JPG)) {
             debug_event('Art','PHP-GD Does not support JPGs - unable to resize',1);
             return false;
         }
-        if ($type == 'png' AND !imagetypes() & IMG_PNG) {
+        if ($type == 'png' and !imagetypes() & IMG_PNG) {
             debug_event('Art','PHP-GD Does not support PNGs - unable to resize',1);
             return false;
         }
-        if ($type == 'gif' AND !imagetypes() & IMG_GIF) {
+        if ($type == 'gif' and !imagetypes() & IMG_GIF) {
             debug_event('Art','PHP-GD Does not support GIFs - unable to resize',1);
             return false;
         }
-        if ($type == 'bmp' AND !imagetypes() & IMG_WBMP) {
+        if ($type == 'bmp' and !imagetypes() & IMG_WBMP) {
             debug_event('Art','PHP-GD Does not support BMPs - unable to resize',1);
             return false;
         }
@@ -702,7 +710,6 @@ class Art extends database_object
         }
 
         return array('thumb' => $data, 'thumb_mime' => $mime_type);
-
     } // generate_thumb
 
     /**
@@ -726,9 +733,9 @@ class Art extends database_object
 
         // If it came from the database
         if (isset($data['db'])) {
-            $sql = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` =? AND `size`='original'";
+            $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` =? AND `size`='original'";
             $db_results = Dba::read($sql, array($type, $data['db']));
-            $row = Dba::fetch_assoc($db_results);
+            $row        = Dba::fetch_assoc($db_results);
             return $row['art'];
         } // came from the db
 
@@ -737,8 +744,8 @@ class Art extends database_object
             $options = array();
             try {
                 $options['timeout'] = 3;
-                $request = Requests::get($data['url'], array(), Core::requests_options($options));
-                $raw = $request->body;
+                $request            = Requests::get($data['url'], array(), Core::requests_options($options));
+                $raw                = $request->body;
             } catch (Exception $e) {
                 debug_event('Art', 'Error getting art: ' . $e->getMessage(), '1');
                 $raw = null;
@@ -749,7 +756,7 @@ class Art extends database_object
 
         // Check to see if it's a FILE
         if (isset($data['file'])) {
-            $handle = fopen($data['file'],'rb');
+            $handle     = fopen($data['file'],'rb');
             $image_data = fread($handle,Core::get_filesize($data['file']));
             fclose($handle);
             return $image_data;
@@ -759,7 +766,7 @@ class Art extends database_object
         if (isset($data['song'])) {
             // If we find a good one, stop looking
             $getID3 = new getID3();
-            $id3 = $getID3->analyze($data['song']);
+            $id3    = $getID3->analyze($data['song']);
 
             if ($id3['format_name'] == "WMA") {
                 return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
@@ -772,7 +779,6 @@ class Art extends database_object
         } // if data song
 
         return null;
-
     } // get_from_source
 
     /**
@@ -786,8 +792,9 @@ class Art extends database_object
      */
     public static function url($uid,$type,$sid=null,$thumb=null)
     {
-        if (!Core::is_library_item($type))
+        if (!Core::is_library_item($type)) {
             return null;
+        }
 
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
@@ -801,28 +808,30 @@ class Art extends database_object
         $key = $type . $uid;
 
         if (parent::is_cached('art', $key . '275x275') && AmpConfig::get('resize_images')) {
-            $row = parent::get_from_cache('art', $key . '275x275');
+            $row  = parent::get_from_cache('art', $key . '275x275');
             $mime = $row['mime'];
         }
         if (parent::is_cached('art', $key . 'original')) {
-            $row = parent::get_from_cache('art', $key . 'original');
+            $row        = parent::get_from_cache('art', $key . 'original');
             $thumb_mime = $row['mime'];
         }
         if (!isset($mime) && !isset($thumb_mime)) {
-            $sql = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+            $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, array($type, $uid));
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 parent::add_to_cache('art', $key . $row['size'], $row);
                 if ($row['size'] == 'original') {
                     $mime = $row['mime'];
-                } else if ($row['size'] == '275x275' && AmpConfig::get('resize_images')) {
-                    $thumb_mime = $row['mime'];
+                } else {
+                    if ($row['size'] == '275x275' && AmpConfig::get('resize_images')) {
+                        $thumb_mime = $row['mime'];
+                    }
                 }
             }
         }
 
-        $mime = isset($thumb_mime) ? $thumb_mime : (isset($mime) ? $mime : null);
+        $mime      = isset($thumb_mime) ? $thumb_mime : (isset($mime) ? $mime : null);
         $extension = self::extension($mime);
 
         if (AmpConfig::get('stream_beautiful_url')) {
@@ -846,7 +855,6 @@ class Art extends database_object
         }
 
         return $url;
-
     } // url
 
     /**
@@ -912,7 +920,7 @@ class Art extends database_object
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
         if (AmpConfig::get('album_art_store_disk')) {
-            $sql = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+            $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, array($object_type, $old_object_id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind']);
@@ -937,7 +945,7 @@ class Art extends database_object
     {
         // Define vars
         $results = array();
-        $type = $this->type;
+        $type    = $this->type;
         if (isset($options['type'])) {
             $type = $options['type'];
         }
@@ -946,7 +954,7 @@ class Art extends database_object
             debug_event('Art', 'No options for art search, skipped.', 3);
             return array();
         }
-        $config = AmpConfig::get('art_order');
+        $config  = AmpConfig::get('art_order');
         $methods = get_class_methods('Art');
 
         /* If it's not set */
@@ -966,15 +974,16 @@ class Art extends database_object
 
             $data = array();
             if (in_array($method, $plugin_names)) {
-                $plugin = new Plugin($method);
+                $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {
                     if ($plugin->load($GLOBALS['user'])) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }
-            } else if (in_array($method_name, $methods)) {
-                debug_event('Art', "Method used: $method_name", 3);
+            } else {
+                if (in_array($method_name, $methods)) {
+                    debug_event('Art', "Method used: $method_name", 3);
                 // Some of these take options!
                 switch ($method_name) {
                     case 'gather_lastfm':
@@ -987,8 +996,9 @@ class Art extends database_object
                         $data = $this->{$method_name}($limit);
                     break;
                 }
-            } else {
-                debug_event("Art", $method_name . " not defined", 1);
+                } else {
+                    debug_event("Art", $method_name . " not defined", 1);
+                }
             }
 
             // Add the results we got to the current set
@@ -997,11 +1007,9 @@ class Art extends database_object
             if ($limit && count($results) >= $limit) {
                 return array_slice($results, 0, $limit);
             }
-
         } // end foreach
 
         return $results;
-
     } // gather
 
     ///////////////////////////////////////////////////////////////////////
@@ -1047,7 +1055,7 @@ class Art extends database_object
             return $images;
         }
 
-        $mb = new MusicBrainz(new RequestsMbClient());
+        $mb       = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array(
             'url-rels'
         );
@@ -1057,7 +1065,7 @@ class Art extends database_object
             return $images;
         }
 
-        $asin = $release['asin'];
+        $asin = $release->asin;
 
         if ($asin) {
             debug_event('mbz-gatherart', "Found ASIN: " . $asin, '5');
@@ -1091,7 +1099,7 @@ class Art extends database_object
         // that displays cover art.
         // I'm leaving in the releaseuri info for the moment, though
         // it's not going to be used.
-        $coverartsites = array();
+        $coverartsites   = array();
         $coverartsites[] = array(
             'name' => "CD Baby",
             'domain' => "cdbaby.com",
@@ -1173,7 +1181,6 @@ class Art extends database_object
         } // end foreach
 
         return $images;
-
     } // gather_musicbrainz
 
     /**
@@ -1190,7 +1197,7 @@ class Art extends database_object
             $limit = 5;
         }
 
-        $results = array();
+        $results   = array();
         $preferred = false;
         // For storing which directories we've already done
         $processed = array();
@@ -1213,12 +1220,14 @@ class Art extends database_object
             $media = new Album($this->uid);
             $songs = $media->get_songs();
             foreach ($songs as $song_id) {
-                $song = new Song($song_id);
+                $song   = new Song($song_id);
                 $dirs[] = Core::conv_lc_file( dirname($song->file) );
             }
-        } else if ($this->type == 'video') {
-            $media = new Video($this->uid);
-            $dirs[] = Core::conv_lc_file( dirname($media->file) );
+        } else {
+            if ($this->type == 'video') {
+                $media  = new Video($this->uid);
+                $dirs[] = Core::conv_lc_file( dirname($media->file) );
+            }
         }
 
         foreach ($dirs as $dir) {
@@ -1232,7 +1241,7 @@ class Art extends database_object
             $handle = opendir($dir);
 
             if (!$handle) {
-                Error::add('general', T_('Error: Unable to open') . ' ' . $dir);
+                AmpError::add('general', T_('Error: Unable to open') . ' ' . $dir);
                 debug_event('folder_art', "Error: Unable to open $dir for album art read", 2);
                 continue;
             }
@@ -1284,10 +1293,8 @@ class Art extends database_object
                     'mime' => 'image/' . $extension,
                     'title' => 'Folder'
                 );
-
             } // end while reading dir
             closedir($handle);
-
         } // end foreach dirs
 
         if (is_array($preferred)) {
@@ -1302,7 +1309,6 @@ class Art extends database_object
         }
 
         return array_values($results);
-
     } // gather_folder
 
     /**
@@ -1351,7 +1357,7 @@ class Art extends database_object
 
         // grab the songs and define our results
         $songs = $album->get_songs();
-        $data = array();
+        $data  = array();
 
         // Foreach songs in this album
         foreach ($songs as $song_id) {
@@ -1373,15 +1379,17 @@ class Art extends database_object
      */
     protected function gather_media_tags($media)
     {
-        $mtype = strtolower(get_class($media));
-        $data = array();
+        $mtype  = strtolower(get_class($media));
+        $data   = array();
         $getID3 = new getID3();
-        try { $id3 = $getID3->analyze($media->file); } catch (Exception $error) {
+        try {
+            $id3 = $getID3->analyze($media->file);
+        } catch (Exception $error) {
             debug_event('getid3', $error->getMessage(), 1);
         }
 
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
-            $image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
+            $image  = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
             $data[] = array(
                 $mtype => $media->file,
                 'raw' => $image['data'],
@@ -1401,7 +1409,7 @@ class Art extends database_object
         }
 
         if (isset($id3['comments']['picture']['0'])) {
-            $image = $id3['comments']['picture']['0'];
+            $image  = $id3['comments']['picture']['0'];
             $data[] = array(
             $mtype => $media->file,
             'raw' => $image['data'],
@@ -1411,7 +1419,6 @@ class Art extends database_object
         }
 
         return $data;
-
     }
 
     /**
@@ -1431,7 +1438,7 @@ class Art extends database_object
 
         $images = array();
         $search = rawurlencode($data['keyword']);
-        $size = '&imgsz=m'; // Medium
+        $size   = '&imgsz=m'; // Medium
 
         $url = "http://images.google.com/images?source=hp&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
         debug_event('Art', 'Search url: ' . $url, '5');
@@ -1442,18 +1449,19 @@ class Art extends database_object
                 'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11',
             );
             $query = Requests::get($url, $headers, Core::requests_options());
-            $html = $query->body;
+            $html  = $query->body;
 
             if (preg_match_all("|imgres\?imgurl\=(http.+?)&|", $html, $matches, PREG_PATTERN_ORDER)) {
                 foreach ($matches[1] as $match) {
                     $match = rawurldecode($match);
                     debug_event('Art', 'Found image at: ' . $match, '5');
                     $results = pathinfo($match);
-                    $mime = 'image/' . $results['extension'];
+                    $mime    = 'image/' . $results['extension'];
 
                     $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
-                    if ($limit > 0 && count($images) >= $limit)
+                    if ($limit > 0 && count($images) >= $limit) {
                         break;
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -1461,7 +1469,6 @@ class Art extends database_object
         }
 
         return $images;
-
     } // gather_google
 
     /**
@@ -1487,22 +1494,31 @@ class Art extends database_object
         try {
             $xmldata = Recommendation::album_search($data['artist'], $data['album']);
 
-            if (!count($xmldata)) { return array(); }
+            if (!count($xmldata)) {
+                return array();
+            }
 
-            $coverart = (array) $xmldata->coverart;
-            if (!$coverart) { return array(); }
+            $xalbum = $xmldata->album;
+            if (!$xalbum) {
+                return array();
+            }
+            
+            $coverart = (array) $xalbum->image;
+            if (!$coverart) {
+                return array();
+            }
 
             ksort($coverart);
             foreach ($coverart as $url) {
                 // We need to check the URL for the /noimage/ stuff
-                if (strpos($url, '/noimage/') !== false) {
+                if (is_array($url) || strpos($url, '/noimage/') !== false) {
                     debug_event('LastFM', 'Detected as noimage, skipped ' . $url, 3);
                     continue;
                 }
 
                 // HACK: we shouldn't rely on the extension to determine file type
-                $results = pathinfo($url);
-                $mime = 'image/' . $results['extension'];
+                $results  = pathinfo($url);
+                $mime     = 'image/' . $results['extension'];
                 $images[] = array('url' => $url, 'mime' => $mime, 'title' => 'LastFM');
                 if ($limit && count($images) >= $limit) {
                     return $images;
@@ -1513,7 +1529,6 @@ class Art extends database_object
         }
 
         return $images;
-
     } // gather_lastfm
 
     /**
@@ -1524,60 +1539,60 @@ class Art extends database_object
      */
     public static function gather_metadata_plugin($plugin, $type, $options)
     {
-        $gtypes = array();
+        $gtypes     = array();
         $media_info = array();
         switch ($type) {
             case 'tvshow':
             case 'tvshow_season':
             case 'tvshow_episode':
-                $gtypes[] = 'tvshow';
-                $media_info['tvshow'] = $options['tvshow'];
-                $media_info['tvshow_season'] = $options['tvshow_season'];
+                $gtypes[]                     = 'tvshow';
+                $media_info['tvshow']         = $options['tvshow'];
+                $media_info['tvshow_season']  = $options['tvshow_season'];
                 $media_info['tvshow_episode'] = $options['tvshow_episode'];
             break;
             case 'song':
                 $media_info['mb_trackid'] = $options['mb_trackid'];
-                $media_info['title'] = $options['title'];
-                $media_info['artist'] = $options['artist'];
-                $media_info['album'] = $options['album'];
-                $gtypes[] = 'song';
+                $media_info['title']      = $options['title'];
+                $media_info['artist']     = $options['artist'];
+                $media_info['album']      = $options['album'];
+                $gtypes[]                 = 'song';
                 break;
             case 'album':
-                $media_info['mb_albumid'] = $options['mb_albumid'];
+                $media_info['mb_albumid']       = $options['mb_albumid'];
                 $media_info['mb_albumid_group'] = $options['mb_albumid_group'];
-                $media_info['artist'] = $options['artist'];
-                $media_info['title'] = $options['album'];
-                $gtypes[] = 'music';
-                $gtypes[] = 'album';
+                $media_info['artist']           = $options['artist'];
+                $media_info['title']            = $options['album'];
+                $gtypes[]                       = 'music';
+                $gtypes[]                       = 'album';
                 break;
             case 'artist':
                 $media_info['mb_artistid'] = $options['mb_artistid'];
-                $media_info['title'] = $options['artist'];
-                $gtypes[] = 'music';
-                $gtypes[] = 'artist';
+                $media_info['title']       = $options['artist'];
+                $gtypes[]                  = 'music';
+                $gtypes[]                  = 'artist';
                 break;
             case 'movie':
-                $gtypes[] = 'movie';
+                $gtypes[]            = 'movie';
                 $media_info['title'] = $options['keyword'];
             break;
         }
 
-        $meta = $plugin->get_metadata($gtypes, $media_info);
+        $meta   = $plugin->get_metadata($gtypes, $media_info);
         $images = array();
 
         if ($meta['art']) {
-            $url = $meta['art'];
-            $ures = pathinfo($url);
+            $url      = $meta['art'];
+            $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
         }
         if ($meta['tvshow_season_art']) {
-            $url = $meta['tvshow_season_art'];
-            $ures = pathinfo($url);
+            $url      = $meta['tvshow_season_art'];
+            $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
         }
         if ($meta['tvshow_art']) {
-            $url = $meta['tvshow_art'];
-            $ures = pathinfo($url);
+            $url      = $meta['tvshow_art'];
+            $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
         }
 
@@ -1596,55 +1611,55 @@ class Art extends database_object
         switch ($thumb) {
             case 1:
                 /* This is used by the now_playing / browse stuff */
-                $size['height'] = 100;
+                $size['height']   = 100;
                 $size['width']    = 100;
             break;
             case 2:
                 $size['height']    = 128;
-                $size['width']    = 128;
+                $size['width']     = 128;
             break;
             case 3:
                 /* This is used by the embedded web player */
                 $size['height']    = 80;
-                $size['width']    = 80;
+                $size['width']     = 80;
             break;
             case 4:
                 /* Web Player size */
                 $size['height'] = 200;
-                $size['width'] = 200; // 200px width, set via CSS
+                $size['width']  = 200; // 200px width, set via CSS
             break;
             case 5:
                 /* Web Player size */
                 $size['height'] = 32;
-                $size['width'] = 32;
+                $size['width']  = 32;
             break;
             case 6:
                 /* Video browsing size */
                 $size['height'] = 150;
-                $size['width'] = 100;
+                $size['width']  = 100;
             break;
             case 7:
                 /* Video page size */
                 $size['height'] = 300;
-                $size['width'] = 200;
+                $size['width']  = 200;
             break;
             case 8:
                 /* Video preview size */
                  $size['height'] = 200;
-                 $size['width'] = 470;
+                 $size['width']  = 470;
             break;
             case 9:
                 /* Video preview size */
                  $size['height'] = 100;
-                 $size['width'] = 235;
+                 $size['width']  = 235;
             break;
             case 10:
                 /* Search preview size */
                  $size['height'] = 24;
-                 $size['width'] = 24;
+                 $size['width']  = 24;
             break;
             default:
-                $size['height'] = 275;
+                $size['height']   = 275;
                 $size['width']    = 275;
             break;
         }
@@ -1677,8 +1692,9 @@ class Art extends database_object
      */
     public static function display($object_type, $object_id, $name, $thumb, $link = null, $show_default = true, $kind = 'default')
     {
-        if (!Core::is_library_item($object_type))
+        if (!Core::is_library_item($object_type)) {
             return false;
+        }
 
         if (!$show_default) {
             // Don't show any image if not available
@@ -1686,7 +1702,7 @@ class Art extends database_object
                 return false;
             }
         }
-        $size = self::get_thumb_size($thumb);
+        $size        = self::get_thumb_size($thumb);
         $prettyPhoto = ($link == null);
         if ($link == null) {
             $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
@@ -1711,7 +1727,7 @@ class Art extends database_object
         if ($prettyPhoto) {
             if ($size['width'] >= 150) {
                 echo "<div class=\"item_art_play\">";
-                echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' .$object_id);
+                echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' . $object_id);
                 echo "</div>";
             }
 
@@ -1733,5 +1749,5 @@ class Art extends database_object
 
         return true;
     }
-
 } // Art
+

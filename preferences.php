@@ -2,29 +2,29 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 require_once 'lib/init.php';
 
-$title = "";
-$text = "";
-$next_url = "";
+$title             = "";
+$text              = "";
+$next_url          = "";
 $notification_text = "";
 
 // Switch on the action
@@ -43,12 +43,12 @@ switch ($_REQUEST['action']) {
         $system = false;
         /* Reset the Theme */
         if ($_POST['method'] == 'admin') {
-            $user_id = '-1';
-            $system = true;
-            $fullname = T_('Server');
+            $user_id            = '-1';
+            $system             = true;
+            $fullname           = T_('Server');
             $_REQUEST['action'] = 'admin';
         } else {
-            $user_id = $GLOBALS['user']->id;
+            $user_id  = $GLOBALS['user']->id;
             $fullname = $GLOBALS['user']->fullname;
         }
 
@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             exit;
         }
-        $fullname= T_('Server');
+        $fullname    = T_('Server');
         $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], true);
     break;
     case 'user':
@@ -98,8 +98,8 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             exit;
         }
-        $client = new User($_REQUEST['user_id']);
-        $fullname = $client->fullname;
+        $client      = new User($_REQUEST['user_id']);
+        $fullname    = $client->fullname;
         $preferences = $client->get_preferences($_REQUEST['tab']);
     break;
     case 'update_user':
@@ -123,33 +123,57 @@ switch ($_REQUEST['action']) {
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
-            Error::add('fullname', T_("Please fill in your full name (Firstname Lastname)"));
+            AmpError::add('fullname', T_("Please fill in your full name (Firstname Lastname)"));
         }
         if (in_array('website', $mandatory_fields) && !$_POST['website']) {
-            Error::add('website', T_("Please fill in your website"));
+            AmpError::add('website', T_("Please fill in your website"));
         }
         if (in_array('state', $mandatory_fields) && !$_POST['state']) {
-            Error::add('state', T_("Please fill in your state"));
+            AmpError::add('state', T_("Please fill in your state"));
         }
         if (in_array('city', $mandatory_fields) && !$_POST['city']) {
-            Error::add('city', T_("Please fill in your city"));
+            AmpError::add('city', T_("Please fill in your city"));
         }
 
         if (!$GLOBALS['user']->update($_POST)) {
-            Error::add('general', T_('Error Update Failed'));
+            AmpError::add('general', T_('Error Update Failed'));
         } else {
             $GLOBALS['user']->upload_avatar();
 
             //$_REQUEST['action'] = 'confirm';
-            $title = T_('Updated');
-            $text = T_('Your Account has been updated');
+            $title    = T_('Updated');
+            $text     = T_('Your Account has been updated');
             $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=account';
         }
 
         $notification_text = T_('User updated successfully');
     break;
+    case 'grant':
+        // Make sure we're a user and they came from the form
+        if (!Access::check('interface','25') && $GLOBALS['user']->id > 0) {
+            UI::access_denied();
+            exit;
+        }
+        if ($_REQUEST['token'] && in_array($_REQUEST['plugin'], Plugin::get_plugins('save_mediaplay'))) {
+            // we receive a token for a valid plugin, have to call getSession and obtain a session key
+            if ($plugin = new Plugin($_REQUEST['plugin'])) {
+                $plugin->load($GLOBALS['user']);
+                if ($plugin->_plugin->get_session($GLOBALS['user']->id, $_REQUEST['token'])) {
+                    $title    = T_('Updated');
+                    $text     = T_('Your Account has been updated') . ' : ' . $_REQUEST['plugin'];
+                    $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
+                } else {
+                    $title    = T_('Error');
+                    $text     = T_('Your Account has not been updated') . ' : ' . $_REQUEST['plugin'];
+                    $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
+                }
+            }
+        }
+        $fullname    = $GLOBALS['user']->fullname;
+        $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab']);
+    break;
     default:
-        $fullname = $GLOBALS['user']->fullname;
+        $fullname    = $GLOBALS['user']->fullname;
         $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab']);
     break;
 } // End Switch Action
@@ -161,6 +185,7 @@ UI::show_header();
  */
 switch ($_REQUEST['action']) {
     case 'confirm':
+    case 'grant':
         show_confirmation($title,$text,$next_url,$cancel);
     break;
     default:
@@ -169,7 +194,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Show the default preferences page
-        require AmpConfig::get('prefix') . '/templates/show_preferences.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_preferences.inc.php');
     break;
 } // end switch on action
 

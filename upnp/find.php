@@ -5,7 +5,6 @@ ini_set('display_errors', 1);
 
 class UPnPFind
 {
-
     /**
      * Find devices by UPnP multicast message and stores them to cache
      *
@@ -91,9 +90,9 @@ class UPnPFind
             $buf = null;
             @socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);
 
-            if (!is_null($buf))
+            if (!is_null($buf)) {
                 $response[] = self::discoveryReponse2Array($buf);
-
+            }
         } while (!is_null($buf));
         //socket_close($socket);
 
@@ -110,7 +109,7 @@ class UPnPFind
     private static function discoveryReponse2Array($res)
     {
         $result = array();
-        $lines = explode("\n", trim($res));
+        $lines  = explode("\n", trim($res));
 
         if (trim($lines[0]) == 'HTTP/1.1 200 OK') {
             array_shift($lines);
@@ -119,7 +118,7 @@ class UPnPFind
         foreach ($lines as $line) {
             $tmp = explode(':', trim($line));
 
-            $key = strtoupper(array_shift($tmp));
+            $key   = strtoupper(array_shift($tmp));
             $value = (count($tmp) > 0 ? trim(join(':', $tmp)) : null);
 
             $result[$key] = $value;
@@ -127,7 +126,6 @@ class UPnPFind
 
         return (Object)$result;
     }
-
 }
 
 

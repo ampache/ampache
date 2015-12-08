@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,23 +29,23 @@ set_error_handler('ampache_error_handler');
 // Redirect if installation is already complete.
 if (!install_check_status($configfile)) {
     $redirect_url = 'login.php';
-    require_once AmpConfig::get('prefix') . '/templates/error_page.inc.php';
+    require_once AmpConfig::get('prefix') . UI::find_template('error_page.inc.php');
     exit;
 }
 
 define('INSTALL', 1);
 
-$htaccess_play_file = AmpConfig::get('prefix') . '/play/.htaccess';
-$htaccess_rest_file = AmpConfig::get('prefix') . '/rest/.htaccess';
+$htaccess_play_file    = AmpConfig::get('prefix') . '/play/.htaccess';
+$htaccess_rest_file    = AmpConfig::get('prefix') . '/rest/.htaccess';
 $htaccess_channel_file = AmpConfig::get('prefix') . '/channel/.htaccess';
 
 // Clean up incoming variables
-$web_path = scrub_in($_REQUEST['web_path']);
-$username = scrub_in($_REQUEST['local_username']);
-$password = $_REQUEST['local_pass'];
-$hostname = scrub_in($_REQUEST['local_host']);
-$database = scrub_in($_REQUEST['local_db']);
-$port = scrub_in($_REQUEST['local_port']);
+$web_path   = scrub_in($_REQUEST['web_path']);
+$username   = scrub_in($_REQUEST['local_username']);
+$password   = $_REQUEST['local_pass'];
+$hostname   = scrub_in($_REQUEST['local_host']);
+$database   = scrub_in($_REQUEST['local_db']);
+$port       = scrub_in($_REQUEST['local_port']);
 $skip_admin = isset($_REQUEST['skip_admin']);
 
 AmpConfig::set_by_array(array(
@@ -91,9 +91,9 @@ if (!$htmllang) {
         $lang = 'en_US';
     }
     if (strpos($lang, '.')) {
-        $langtmp = explode('.', $lang);
+        $langtmp  = explode('.', $lang);
         $htmllang = $langtmp[0];
-        $charset = $langtmp[1];
+        $charset  = $langtmp[1];
     } else {
         $htmllang = $lang;
     }
@@ -119,7 +119,7 @@ switch ($_REQUEST['action']) {
             $new_pass = $_POST['db_password'];
 
             if (!strlen($new_user) || !strlen($new_pass)) {
-                Error::add('general', T_('Error: Ampache SQL Username or Password missing'));
+                AmpError::add('general', T_('Error: Ampache SQL Username or Password missing'));
                 require_once 'templates/show_install.inc.php';
                 break;
             }
@@ -138,17 +138,17 @@ switch ($_REQUEST['action']) {
         require_once 'templates/show_install_config.inc.php';
     break;
     case 'create_config':
-        $all = (isset($_POST['create_all']));
+        $all  = (isset($_POST['create_all']));
         $skip = (isset($_POST['skip_config']));
         if (!$skip) {
-            $write = (isset($_POST['write']));
-            $download = (isset($_POST['download']));
+            $write                     = (isset($_POST['write']));
+            $download                  = (isset($_POST['download']));
             $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
-            $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
-            $download_htaccess_play = (isset($_POST['download_htaccess_play']));
-            $write_htaccess_channel = (isset($_POST['write_htaccess_channel']));
-            $write_htaccess_rest = (isset($_POST['write_htaccess_rest']));
-            $write_htaccess_play = (isset($_POST['write_htaccess_play']));
+            $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
+            $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
+            $write_htaccess_channel    = (isset($_POST['write_htaccess_channel']));
+            $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
+            $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
 
             $created_config = true;
             if ($write_htaccess_channel || $download_htaccess_channel || $all) {
@@ -166,18 +166,20 @@ switch ($_REQUEST['action']) {
         }
     case 'show_create_account':
         $results = parse_ini_file($configfile);
-        if (!isset($created_config)) $created_config = true;
+        if (!isset($created_config)) {
+            $created_config = true;
+        }
 
         /* Make sure we've got a valid config file */
         if (!check_config_values($results) || !$created_config) {
-            Error::add('general', T_('Error: Config files not found or unreadable'));
-            require_once AmpConfig::get('prefix') . '/templates/show_install_config.inc.php';
+            AmpError::add('general', T_('Error: Config files not found or unreadable'));
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_config.inc.php');
             break;
         }
 
         // Don't try to add administrator user on existing database
         if (install_check_status($configfile)) {
-            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
         } else {
             header ("Location: " . $web_path . '/login.php');
         }
@@ -186,18 +188,12 @@ switch ($_REQUEST['action']) {
         $results = parse_ini_file($configfile);
         AmpConfig::set_by_array($results, true);
 
-        $password2 = scrub_in($_REQUEST['local_pass2']);
+        $password2 = $_REQUEST['local_pass2'];
 
         if (!install_create_account($username, $password, $password2)) {
-            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
             break;
         }
-
-        // Automatically log-in the newly created user
-        Session::create_cookie();
-        Session::create(array('type' => 'mysql', 'username' => $username));
-        $_SESSION['userdata']['username'] = $username;
-        Session::check();
 
         header ("Location: " . $web_path . '/index.php');
     break;
@@ -212,3 +208,4 @@ switch ($_REQUEST['action']) {
         require_once 'templates/show_install_lang.inc.php';
     break;
 } // end action switch
+

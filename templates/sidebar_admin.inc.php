@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 ?>
@@ -47,25 +47,47 @@
       <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
       <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>
       <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo T_('Export Catalog'); ?></a></li>
-      <?php if (AmpConfig::get('sociable')) { ?>
-      <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
-      <?php } ?>
-      <?php if (AmpConfig::get('licensing')) { ?>
-      <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
-      <?php } ?>
+      <?php if (AmpConfig::get('sociable')) {
+    ?>
+      <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path;
+    ?>/admin/shout.php"><?php echo T_('Manage Shoutbox');
+    ?></a></li>
+      <?php 
+} ?>
+      <?php if (AmpConfig::get('licensing')) {
+    ?>
+      <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path;
+    ?>/admin/license.php"><?php echo T_('Manage Licenses');
+    ?></a></li>
+      <?php 
+} ?>
     </ul>
   </li>
-<?php if (Access::check('interface','100')) { ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config'); ?>"><?php echo T_('Server Config'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo isset($_COOKIE['sb_server_config']) ? $_COOKIE['sb_server_config'] : 'expanded'; ?>" id="server_config" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
+<?php if (Access::check('interface','100')) {
+    ?>
+  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config');
+    ?>"><?php echo T_('Server Config');
+    ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path');
+    ?>/images/icons/icon_all.png" class="header-img <?php echo isset($_COOKIE['sb_server_config']) ? $_COOKIE['sb_server_config'] : 'expanded';
+    ?>" id="server_config" alt="<?php echo T_('Expand/Collapse');
+    ?>" title="<?php echo T_('Expand/Collapse');
+    ?>" /></h4>
     <ul class="sb3" id="sb_preferences_sc">
 <?php
     $catagories = Preference::get_catagories();
-        foreach ($catagories as $name) {
-                $f_name = ucfirst($name);
-?>
-      <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
-<?php } ?>
+    foreach ($catagories as $name) {
+        $f_name = ucfirst($name);
+        ?>
+      <li id="sb_preferences_sc_<?php echo $f_name;
+        ?>"><a href="<?php echo $web_path;
+        ?>/preferences.php?action=admin&amp;tab=<?php echo $name;
+        ?>"><?php echo T_($f_name);
+        ?></a></li>
+<?php 
+    }
+    ?>
     </ul>
   </li>
-<?php } ?>
+<?php 
+} ?>
 </ul>

@@ -2,28 +2,30 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -42,7 +44,7 @@ switch ($_REQUEST['action']) {
 
         // We should also refesh the sidebar
         ob_start();
-        require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php');
         $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
     break;
@@ -75,7 +77,7 @@ switch ($_REQUEST['action']) {
                 // We actually want to refresh something here
                 ob_start();
                 $objects = $localplay->get();
-                require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
+                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
             break;
@@ -127,7 +129,7 @@ switch ($_REQUEST['action']) {
         // Wait in case we just deleted what we were playing
         sleep(3);
         $objects = $localplay->get();
-        $status = $localplay->status();
+        $status  = $localplay->status();
 
         ob_start();
         $browse = new Browse();
@@ -151,7 +153,7 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->delete_instance($_REQUEST['instance']);
 
-        $key = 'localplay_instance_' . $_REQUEST['instance'];
+        $key           = 'localplay_instance_' . $_REQUEST['instance'];
         $results[$key] = '';
     break;
     case 'repeat':
@@ -168,7 +170,7 @@ switch ($_REQUEST['action']) {
 
         ob_start();
         $objects = $localplay->get();
-        require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();
 
@@ -187,7 +189,7 @@ switch ($_REQUEST['action']) {
 
         ob_start();
         $objects = $localplay->get();
-        require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();
 

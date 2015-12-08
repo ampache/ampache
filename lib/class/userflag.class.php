@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,11 +39,10 @@ class Userflag extends database_object
      */
     public function __construct($id, $type)
     {
-        $this->id = intval($id);
+        $this->id   = intval($id);
         $this->type = $type;
 
         return true;
-
     } // Constructor
 
     /**
@@ -53,7 +52,9 @@ class Userflag extends database_object
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) or !count($ids)) {
+            return false;
+        }
 
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
@@ -62,7 +63,7 @@ class Userflag extends database_object
         $userflags = array();
 
         $idlist = '(' . implode(',', $ids) . ')';
-        $sql = "SELECT `object_id` FROM `user_flag` " .
+        $sql    = "SELECT `object_id` FROM `user_flag` " .
             "WHERE `user` = ? AND `object_id` IN $idlist " .
             "AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $type));
@@ -81,7 +82,6 @@ class Userflag extends database_object
         }
 
         return true;
-
     } // build_cache
 
     /**
@@ -118,7 +118,7 @@ class Userflag extends database_object
             return parent::get_from_cache($key, $this->id);
         }
 
-        $sql = "SELECT `id` FROM `user_flag` WHERE `user` = ? ".
+        $sql = "SELECT `id` FROM `user_flag` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
@@ -129,7 +129,6 @@ class Userflag extends database_object
 
         parent::add_to_cache($key, $this->id, $flagged);
         return $flagged;
-
     }
 
     /**
@@ -157,13 +156,33 @@ class Userflag extends database_object
             "(`object_id`, `object_type`, `user`, `date`) " .
             "VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $user_id, time());
+            
+            Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
         }
         Dba::write($sql, $params);
 
         parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, $flagged);
 
-        return true;
+        // Forward flag to last.fm and Libre.fm (song only)
+        if ($this->type == 'song') {
+            $user = new User($user_id);
+            $song = new Song($this->id);
+            if ($song) {
+                $song->format();
+                foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
+                    try {
+                        $plugin = new Plugin($plugin_name);
+                        if ($plugin->load($user)) {
+                            $plugin->_plugin->set_flag($song, $flagged);
+                        }
+                    } catch (Exception $e) {
+                        debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
+                    }
+                }
+            }
+        }
 
+        return true;
     } // set_flag
 
     /**
@@ -233,7 +252,6 @@ class Userflag extends database_object
         }
 
         return $results;
-
     } // get_latest
 
     /**
@@ -244,11 +262,12 @@ class Userflag extends database_object
     public static function show($object_id, $type)
     {
         // If user flags aren't enabled don't do anything
-        if (!AmpConfig::get('userflags')) { return false; }
+        if (!AmpConfig::get('userflags')) {
+            return false;
+        }
 
         $userflag = new Userflag($object_id, $type);
-        require AmpConfig::get('prefix') . '/templates/show_object_userflag.inc.php';
-
+        require AmpConfig::get('prefix') . UI::find_template('show_object_userflag.inc.php');
     } // show
-
 } //end rating class
+

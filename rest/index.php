@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,7 +33,7 @@ $action = strtolower($_REQUEST['ssaction']);
 if (empty($action)) {
     $action = strtolower($_REQUEST['action']);
 }
-$f = $_REQUEST['f'];
+$f        = $_REQUEST['f'];
 $callback = $_REQUEST['callback'];
 /* Set the correct default headers */
 if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
@@ -57,7 +57,7 @@ $password = $_SERVER['PHP_AUTH_PW'];
 if (empty($password)) {
     $password = $_REQUEST['p'];
 }
-$version = $_REQUEST['v'];
+$version   = $_REQUEST['v'];
 $clientapp = $_REQUEST['c'];
 
 if (empty($_SERVER['HTTP_USER_AGENT'])) {
@@ -114,12 +114,12 @@ $query  = explode('&', $query_string);
 $params = array();
 foreach ($query as $param) {
     list($name, $value) = explode('=', $param);
-    $decname = urldecode($name);
-    $decvalue = urldecode($value);
+    $decname            = urldecode($name);
+    $decvalue           = urldecode($value);
     if (array_key_exists($decname, $params)) {
         if (!is_array($params[$decname])) {
-            $oldvalue = $params[$decname];
-            $params[$decname] = array();
+            $oldvalue           = $params[$decname];
+            $params[$decname]   = array();
             $params[$decname][] = $oldvalue;
         }
         $params[$decname][] = $decvalue;
@@ -132,7 +132,9 @@ foreach ($query as $param) {
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
-    if (in_array($method,$internal_functions)) { continue; }
+    if (in_array($method,$internal_functions)) {
+        continue;
+    }
 
     // If the method is the same as the action being called
     // Then let's call this function!
@@ -141,7 +143,6 @@ foreach ($methods as $method) {
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit();
     }
-
 } // end foreach methods in API
 
 // If we manage to get here, we still need to hand out an XML document

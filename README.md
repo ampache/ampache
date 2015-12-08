@@ -28,7 +28,6 @@ Latest changes but unstable is [develop branch](https://github.com/ampache/ampac
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
 [![Codacy Badge](https://www.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/ee067d0e-3432-4062-a969-01b4ee037f48/mini.png)](https://insight.sensiolabs.com/projects/ee067d0e-3432-4062-a969-01b4ee037f48)
 
 Requirements
 ------------
@@ -70,7 +69,7 @@ License
 -------
 
 Ampache is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License v2
+modify it under the terms of the GNU Affero General Public License v3
 as published by the Free Software Foundation.
 
 Ampache includes some external modules that carry their own licensing.
@@ -83,7 +82,6 @@ Ampache includes some external modules that carry their own licensing.
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
 * [jQuery](http://jquery.org): MIT
 * [Requests](http://requests.ryanmccue.info): ISC Licensed
-* [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 * [xbmc-php-rpc](https://github.com/karlrixon/xbmc-php-rpc): GPL v3
 * [Dropbox SDK](https://github.com/dropbox/dropbox-sdk-php): MIT
 * [jPlayer](http://jplayer.org): MIT

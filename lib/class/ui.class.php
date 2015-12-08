@@ -2,22 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -35,6 +34,26 @@ class UI
     }
 
     /**
+     * find_template
+     *
+     * Return the path to the template file wanted. The file can be overwriten
+     * by the theme if it's not a php file, or if it is and if option
+     * allow_php_themes is set to true.
+     */
+    public static function find_template($template)
+    {
+        $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
+        $realpath  = AmpConfig::get('prefix') . $path;
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (($extension != 'php' || AmpConfig::get('allow_php_themes'))
+           && file_exists($realpath) && is_file($realpath)) {
+            return $path;
+        } else {
+            return '/templates/' . $template;
+        }
+    }
+
+    /**
      * access_denied
      *
      * Throw an error when they try to do something naughty.
@@ -44,7 +63,7 @@ class UI
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 $error");
-        require_once AmpConfig::get('prefix') . '/templates/show_denied.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_denied.inc.php');
         exit;
     }
 
@@ -57,7 +76,7 @@ class UI
     public static function ajax_include($template)
     {
         ob_start();
-        require AmpConfig::get('prefix') . '/templates/' . $template;
+        require AmpConfig::get('prefix') . UI::find_template('') . $template;
         $output = ob_get_contents();
         ob_end_clean();
 
@@ -158,11 +177,11 @@ END;
         }
 
         switch ($pass) {
-            case 1: $unit = 'kB'; break;
-            case 2: $unit = 'MB'; break;
-            case 3: $unit = 'GB'; break;
-            case 4: $unit = 'TB'; break;
-            case 5: $unit = 'PB'; break;
+            case 1: $unit  = 'kB'; break;
+            case 2: $unit  = 'MB'; break;
+            case 3: $unit  = 'GB'; break;
+            case 4: $unit  = 'TB'; break;
+            case 5: $unit  = 'PB'; break;
             default: $unit = 'B'; break;
         }
 
@@ -178,7 +197,7 @@ END;
     {
         if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', $value, $matches)) {
             $value = $matches[1];
-            $unit = strtolower(substr($matches[2], 0, 1));
+            $unit  = strtolower(substr($matches[2], 0, 1));
         } else {
             return $value;
         }
@@ -210,7 +229,7 @@ END;
 
         if (is_array($name)) {
             $hover_name = $name[1];
-            $name = $name[0];
+            $name       = $name[0];
         }
 
         $title = $title ?: T_(ucfirst($name));
@@ -220,7 +239,7 @@ END;
             $hover_url = self::_find_icon($hover_name);
         }
         if ($bUseSprite) {
-            $tag = '<span class="sprite sprite-icon_'.$name.'"';
+            $tag = '<span class="sprite sprite-icon_' . $name . '" ';
         } else {
             $tag = '<img src="' . $icon_url . '" ';
         }
@@ -257,11 +276,11 @@ END;
         }
 
         $filename = 'icon_' . $name . '.png';
-        $path = AmpConfig::get('theme_path') . '/images/icons/';
+        $path     = AmpConfig::get('theme_path') . '/images/icons/';
         if (!file_exists(AmpConfig::get('prefix') . $path . $filename)) {
             $path = '/images/';
         }
-        $url = AmpConfig::get('web_path') . $path . $filename;
+        $url                      = AmpConfig::get('web_path') . $path . $filename;
         self::$_icon_cache[$name] = $url;
 
         return $url;
@@ -274,7 +293,7 @@ END;
      */
     public static function show_header()
     {
-        require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
     }
 
     /**
@@ -296,7 +315,7 @@ END;
             }
         }
 
-        require_once AmpConfig::get('prefix') . '/templates/footer.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('footer.inc.php');
         if (isset($_REQUEST['profiling'])) {
             Dba::show_profile();
         }
@@ -309,7 +328,7 @@ END;
      */
     public static function show_box_top($title = '', $class = '')
     {
-        require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
     }
 
     /**
@@ -319,7 +338,7 @@ END;
      */
     public static function show_box_bottom()
     {
-        require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
     }
 
     public static function show_custom_style()
@@ -352,7 +371,7 @@ END;
             echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
         } else {
             if (!empty($field)) {
-                echo "<script>updateText('" . $field . "', '" . json_encode($value) ."');</script>\n";
+                echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
             } else {
                 echo "<br />" . $value . "<br /><br />\n";
             }

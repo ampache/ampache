@@ -2,22 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +24,7 @@
 
 class Stream_URL extends memory_object
 {
-    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec');
+    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec', 'track_num');
 
     /**
      * parse
@@ -38,19 +37,20 @@ class Stream_URL extends memory_object
             $posargs = strpos($url, '/play/');
             if ($posargs !== false) {
                 $argsstr = substr($url, $posargs + 6);
-                $url = substr($url, 0, $posargs + 6) . 'index.php?';
-                $args = explode('/', $argsstr);
+                $url     = substr($url, 0, $posargs + 6) . 'index.php?';
+                $args    = explode('/', $argsstr);
                 for ($i = 0; $i < count($args); $i += 2) {
-                    if ($i > 0)
+                    if ($i > 0) {
                         $url .= '&';
+                    }
                     $url .= $args[$i] . '=' . $args[$i + 1];
                 }
             }
         }
 
-        $query = parse_url($url, PHP_URL_QUERY);
+        $query    = parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
-        $results = array();
+        $results  = array();
 
         $results['base_url'] = $url;
 

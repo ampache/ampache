@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -52,9 +52,9 @@ class Upload
                         return self::rerror();
                     }
 
-                    $rootdir = self::get_root($catalog);
+                    $rootdir   = self::get_root($catalog);
                     $targetdir = $rootdir;
-                    $folder = $_POST['folder'];
+                    $folder    = $_POST['folder'];
                     if ($folder == '..') {
                         $folder = '';
                     }
@@ -63,7 +63,7 @@ class Upload
                     }
 
                     $targetdir = realpath($targetdir);
-                    if (strpos($targetdir, $rootdir) === FALSE) {
+                    if (strpos($targetdir, $rootdir) === false) {
                         debug_event('upload', 'Something wrong with final upload path.', '1');
                         return self::rerror();
                     }
@@ -82,22 +82,22 @@ class Upload
                             exec(AmpConfig::get('upload_script'));
                         }
 
-                        $options = array();
+                        $options                = array();
                         $options['user_upload'] = $GLOBALS['user']->id;
                         if (isset($_POST['license'])) {
                             $options['license'] = $_POST['license'];
                         }
                         $artist_id = intval($_REQUEST['artist']);
-                        $album_id = intval($_REQUEST['album']);
+                        $album_id  = intval($_REQUEST['album']);
 
                         // Override artist information with artist's user
                         if (AmpConfig::get('upload_user_artist')) {
                             $artists = $GLOBALS['user']->get_artists();
-                            $artist = null;
+                            $artist  = null;
                             // No associated artist yet, we create a default one for the user sender
                             if (count($artists) == 0) {
                                 $artists[] = Artist::check($GLOBALS['user']->f_name);
-                                $artist = new Artist($artists[0]);
+                                $artist    = new Artist($artists[0]);
                                 $artist->update_artist_user($GLOBALS['user']->id);
                             } else {
                                 $artist = new Artist($artists[0]);
@@ -112,7 +112,7 @@ class Upload
                                     return self::rerror($targetfile);
                                 } else {
                                     $artist_id = Artist::check($_REQUEST['artist_name']);
-                                    $artist = new Artist($artist_id);
+                                    $artist    = new Artist($artist_id);
                                     if (!$artist->get_user_owner()) {
                                         $artist->update_artist_user($GLOBALS['user']->id);
                                     }
@@ -217,5 +217,5 @@ class Upload
 
         return $rootdir;
     }
-
 } // Upload class
+

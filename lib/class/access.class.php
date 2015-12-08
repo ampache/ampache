@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -93,7 +93,9 @@ class Access
      */
     public function __construct($access_id = null)
     {
-        if (!$access_id) { return false; }
+        if (!$access_id) {
+            return false;
+        }
 
         /* Assign id for use in get_info() */
         $this->id = intval($access_id);
@@ -114,7 +116,7 @@ class Access
      */
     private function _get_info()
     {
-        $sql = 'SELECT * FROM `access_list` WHERE `id` = ?';
+        $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -131,11 +133,11 @@ class Access
     public function format()
     {
         $this->f_start = inet_ntop($this->start);
-        $this->f_end = inet_ntop($this->end);
+        $this->f_end   = inet_ntop($this->end);
 
-        $this->f_user = $this->get_user_name();
+        $this->f_user  = $this->get_user_name();
         $this->f_level = $this->get_level_name();
-        $this->f_type = $this->get_type_name();
+        $this->f_type  = $this->get_type_name();
     }
 
     /**
@@ -149,19 +151,19 @@ class Access
     private static function _verify_range($startp, $endp)
     {
         $startn = @inet_pton($startp);
-        $endn = @inet_pton($endp);
+        $endn   = @inet_pton($endp);
 
         if (!$startn && $startp != '0.0.0.0' && $startp != '::') {
-            Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
+            AmpError::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
             return false;
         }
         if (!$endn) {
-            Error::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
+            AmpError::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
         }
 
         if (strlen(bin2hex($startn)) != strlen(bin2hex($endn))) {
-            Error::add('start', T_('IP Address Version Mismatch'));
-            Error::add('end', T_('IP Address Version Mismatch'));
+            AmpError::add('start', T_('IP Address Version Mismatch'));
+            AmpError::add('end', T_('IP Address Version Mismatch'));
             return false;
         }
 
@@ -182,12 +184,12 @@ class Access
             return false;
         }
 
-        $start = @inet_pton($data['start']);
-        $end = @inet_pton($data['end']);
-        $name = $data['name'];
-        $type = self::validate_type($data['type']);
-        $level = intval($data['level']);
-        $user = $data['user'] ?: '-1';
+        $start   = @inet_pton($data['start']);
+        $end     = @inet_pton($data['end']);
+        $name    = $data['name'];
+        $type    = self::validate_type($data['type']);
+        $level   = intval($data['level']);
+        $user    = $data['user'] ?: '-1';
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
         $sql = 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' .
@@ -215,16 +217,16 @@ class Access
         // Check existing ACLs to make sure we're not duplicating values here
         if (self::exists($data)) {
             debug_event('ACL Create', 'Error: An ACL equal to the created one already exists. Not adding another one: ' . $data['start'] . ' - ' . $data['end'], 1);
-            Error::add('general', T_('Duplicate ACL defined'));
+            AmpError::add('general', T_('Duplicate ACL defined'));
             return false;
         }
 
-        $start = @inet_pton($data['start']);
-        $end = @inet_pton($data['end']);
-        $name = $data['name'];
-        $user = $data['user'] ?: '-1';
-        $level = intval($data['level']);
-        $type = self::validate_type($data['type']);
+        $start   = @inet_pton($data['start']);
+        $end     = @inet_pton($data['end']);
+        $name    = $data['name'];
+        $user    = $data['user'] ?: '-1';
+        $level   = intval($data['level']);
+        $type    = self::validate_type($data['type']);
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
         $sql = 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, ' .
@@ -232,7 +234,6 @@ class Access
         Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
 
         return true;
-
     }
 
     /**
@@ -246,9 +247,9 @@ class Access
     public static function exists(array $data)
     {
         $start = inet_pton($data['start']);
-        $end = inet_pton($data['end']);
-        $type = self::validate_type($data['type']);
-        $user = $data['user'] ?: '-1';
+        $end   = inet_pton($data['end']);
+        $type  = self::validate_type($data['type']);
+        $user  = $data['user'] ?: '-1';
 
         $sql = 'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' .
             'AND `type` = ? AND `user` = ?';
@@ -289,7 +290,7 @@ class Access
                     debug_event('access', 'ZLIB extension not loaded, batch download disabled', 3);
                     return false;
                 }
-                if (AmpConfig::get('allow_zip_download') AND $GLOBALS['user']->has_access('5')) {
+                if (AmpConfig::get('allow_zip_download') and $GLOBALS['user']->has_access('5')) {
                     return make_bool(AmpConfig::get('download'));
                 }
             break;
@@ -433,7 +434,7 @@ class Access
      */
     public static function get_access_lists()
     {
-        $sql = 'SELECT `id` FROM `access_list`';
+        $sql        = 'SELECT `id` FROM `access_list`';
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -476,7 +477,9 @@ class Access
      */
     public function get_user_name()
     {
-        if ($this->user == '-1') { return T_('All'); }
+        if ($this->user == '-1') {
+            return T_('All');
+        }
 
         $user = new User($this->user);
         return $user->fullname . " (" . $user->username . ")";

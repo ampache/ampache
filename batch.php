@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -43,10 +43,10 @@ if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
 /* Drop the normal Time limit constraints, this can take a while */
 set_time_limit(0);
 
-$media_ids = array();
+$media_ids    = array();
 $default_name = "Unknown.zip";
-$object_type = scrub_in($_REQUEST['action']);
-$name = $default_name;
+$object_type  = scrub_in($_REQUEST['action']);
+$name         = $default_name;
 
 if ($object_type == 'browse') {
     $object_type = $_REQUEST['type'];
@@ -68,7 +68,7 @@ if (Core::is_playable_item($_REQUEST['action'])) {
         $libitem = new $object_type($i);
         if ($libitem->id) {
             $libitem->format();
-            $name = $libitem->get_fullname();
+            $name      = $libitem->get_fullname();
             $media_ids = array_merge($media_ids, $libitem->get_medias());
         }
     }
@@ -76,16 +76,16 @@ if (Core::is_playable_item($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
         case 'tmp_playlist':
             $media_ids = $GLOBALS['user']->playlist->get_items();
-            $name = $GLOBALS['user']->username . ' - Playlist';
+            $name      = $GLOBALS['user']->username . ' - Playlist';
         break;
         case 'browse':
-            $id = intval(scrub_in($_REQUEST['browse_id']));
-            $browse = new Browse($id);
+            $id               = intval(scrub_in($_REQUEST['browse_id']));
+            $browse           = new Browse($id);
             $browse_media_ids = $browse->get_saved();
             foreach ($browse_media_ids as $media_id) {
                 switch ($object_type) {
                     case 'album':
-                        $album = new Album($media_id);
+                        $album     = new Album($media_id);
                         $media_ids = array_merge($media_ids, $album->get_songs());
                     break;
                     case 'song':

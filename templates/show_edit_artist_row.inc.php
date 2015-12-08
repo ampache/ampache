@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 ?>
@@ -30,11 +30,14 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
                 <td>
-                    <?php if (Access::check('interface', 50)) { ?>
-                    <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
-                    <?php } else { ?>
-                    <?php echo $libitem->mbid; ?>
-                    <?php } ?>
+                    <?php if (Access::check('interface', 50)) {
+    ?>
+                    <input type="text" name="mbid" value="<?php echo $libitem->mbid;
+    ?>" />
+                    <?php 
+} else {
+    echo $libitem->mbid;
+} ?>
                 </td>
             </tr>
             <tr>
@@ -53,12 +56,15 @@
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
-            <?php if (AmpConfig::get('label')) { ?>
+            <?php if (AmpConfig::get('label')) {
+    ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Labels') ?></td>
-                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->labels); ?>" /></td>
+                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->labels);
+    ?>" /></td>
             </tr>
-            <?php } ?>
+            <?php 
+} ?>
             <tr>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub albums and sub songs') ?></td>

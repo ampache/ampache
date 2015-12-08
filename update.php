@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,6 +39,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
 
         set_time_limit(300);
         AutoUpdate::update_files();
+        AutoUpdate::update_dependencies();
         echo '<script language="javascript" type="text/javascript">window.location="' . AmpConfig::get('web_path') . '";</script>';
         exit;
     } else {
@@ -59,8 +60,8 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?php echo AmpConfig::get('site_title'); ?> - Update</title>
-    <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
 </head>
 <body>
@@ -80,15 +81,19 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
              <p><?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with database version <strong>%s</strong>.'), AmpConfig::get('version'), $version); ?></p>
              <p><?php echo T_('The following updates need to be performed:'); ?></p>
         </div>
-        <?php Error::display('general'); ?>
+        <?php AmpError::display('general'); ?>
         <div class="content">
             <?php Update::display_update(); ?>
         </div>
-        <?php if (Update::need_update()) { ?>
-            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
-                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!'); ?></button>
+        <?php if (Update::need_update()) {
+    ?>
+            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path');
+    ?>/update.php?action=update">
+                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!');
+    ?></button>
             </form>
-        <?php } ?>
+        <?php 
+} ?>
     </div>
 </body>
 </html>

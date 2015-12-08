@@ -24,16 +24,15 @@
 name = "Reborn"
 
 ; Theme CSS Bases
-; Structure: [css_path]
+; Structure: [css_path]|[media_type]
 ; Multiples bases must be separated with ','
-base = "templates/default.css"
+base = "default.css|screen"
 
 ; Theme CSS Colors
-; Structure: [name]|[css_path]|[css_preview] (| = pipe)
+; Structure: [name]
 ; Multiples colors must be separated with ','
-; Example: "Blue|blue.css|blue_preview.png,Red|red.css|red_preview.png"
-; DEFAULT : N/A
-colors = "Dark|templates/dark.css|templates/dark_preview.png,Light|templates/light.css|templates/light_preview.png"
+; Example: "Dark,Blue,Red"
+colors = "Dark,Light"
 
 ; Theme Author
 author = "SUTJael"

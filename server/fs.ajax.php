@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,9 +39,13 @@ class fs
     protected function real($path)
     {
         $temp = realpath($path);
-        if (!$temp) { throw new Exception('Path does not exist: ' . $path); }
+        if (!$temp) {
+            throw new Exception('Path does not exist: ' . $path);
+        }
         if ($this->base && strlen($this->base)) {
-            if (strpos($temp, $this->base) !== 0) { throw new Exception('Path is not inside base ('.$this->base.'): ' . $temp); }
+            if (strpos($temp, $this->base) !== 0) {
+                throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
+            }
         }
         return $temp;
     }
@@ -64,19 +68,27 @@ class fs
     public function __construct($base)
     {
         $this->base = $this->real($base);
-        if (!$this->base) { throw new Exception('Base directory does not exist'); }
+        if (!$this->base) {
+            throw new Exception('Base directory does not exist');
+        }
     }
 
     public function lst($id, $with_root = false)
     {
         $dir = $this->path($id);
         $lst = @scandir($dir);
-        if (!$lst) { throw new Exception('Could not list path: ' . $dir); }
+        if (!$lst) {
+            throw new Exception('Could not list path: ' . $dir);
+        }
         $res = array();
         foreach ($lst as $item) {
-            if ($item == '.' || $item == '..' || $item === null) { continue; }
+            if ($item == '.' || $item == '..' || $item === null) {
+                continue;
+            }
             $tmp = preg_match('([^ a-zа-я-_0-9.]+)ui', $item);
-            if ($tmp === false || $tmp === 1) { continue; }
+            if ($tmp === false || $tmp === 1) {
+                continue;
+            }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 $res[] = array('text' => $item, 'children' => true,  'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
             } else {
@@ -100,7 +112,7 @@ class fs
             return array('type'=>'folder', 'content'=> $id);
         }
         if (is_file($dir)) {
-            $ext = strpos($dir, '.') !== FALSE ? substr($dir, strrpos($dir, '.') + 1) : '';
+            $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
             $dat = array('type' => $ext, 'content' => '');
             switch ($ext) {
                 /*case 'txt':
@@ -131,7 +143,7 @@ class fs
                     $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64,'.base64_encode(file_get_contents($dir));
                     break;*/
                 default:
-                    $dat['content'] = 'File not recognized: '.$this->id($dir);
+                    $dat['content'] = 'File not recognized: ' . $this->id($dir);
                     break;
             }
             return $dat;
@@ -164,7 +176,9 @@ class fs
         array_pop($new);
         array_push($new, $name);
         $new = implode(DIRECTORY_SEPARATOR, $new);
-        if (is_file($new) || is_dir($new)) { throw new Exception('Path already exists: ' . $new); }
+        if (is_file($new) || is_dir($new)) {
+            throw new Exception('Path already exists: ' . $new);
+        }
         rename($dir, $new);
         return array('id' => $this->id($new));
     }
@@ -202,7 +216,9 @@ class fs
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
         $new = $par . DIRECTORY_SEPARATOR . $new;
-        if (is_file($new) || is_dir($new)) { throw new Exception('Path already exists: ' . $new); }
+        if (is_file($new) || is_dir($new)) {
+            throw new Exception('Path already exists: ' . $new);
+        }
 
         if (is_dir($dir)) {
             mkdir($new);
@@ -218,7 +234,6 @@ class fs
 }
 
 if (isset($_GET['operation'])) {
-
     $fs = new fs($rootdir);
     try {
         $rslt = null;

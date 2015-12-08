@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -24,51 +24,67 @@
 
 $display_fields = (array) AmpConfig::get('registration_display_fields');
 ?>
-<?php Error::display('general'); ?>
+<?php AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
-        <?php if (in_array('fullname', $display_fields)) { ?>
+        <?php if (in_array('fullname', $display_fields)) {
+    ?>
             <tr>
-                <td><?php echo T_('Full Name'); ?>:</td>
+                <td><?php echo T_('Full Name');
+    ?>:</td>
                 <td>
-                    <input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+                    <input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname);
+    ?>" />
                 </td>
             </tr>
-        <?php } ?>
+        <?php 
+} ?>
         <tr>
             <td><?php echo T_('E-mail'); ?>:</td>
             <td>
                 <input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" />
             </td>
         </tr>
-        <?php if (in_array('website', $display_fields)) { ?>
+        <?php if (in_array('website', $display_fields)) {
+    ?>
             <tr>
-                <td><?php echo T_('Website'); ?>:</td>
+                <td><?php echo T_('Website');
+    ?>:</td>
                 <td>
-                    <input type="text" name="website" id="website" value="<?php echo scrub_out($client->website); ?>" />
+                    <input type="text" name="website" id="website" value="<?php echo scrub_out($client->website);
+    ?>" />
                 </td>
             </tr>
-        <?php } ?>
-        <?php if (in_array('state', $display_fields)) { ?>
+        <?php 
+} ?>
+        <?php if (in_array('state', $display_fields)) {
+    ?>
             <tr>
-                <td><?php echo T_('State'); ?>:</td>
+                <td><?php echo T_('State');
+    ?>:</td>
                 <td>
-                    <input type="text" name="state" id="state" value="<?php echo scrub_out($client->state); ?>" />
+                    <input type="text" name="state" id="state" value="<?php echo scrub_out($client->state);
+    ?>" />
                 </td>
             </tr>
-        <?php } ?>
-        <?php if (in_array('city', $display_fields)) { ?>
+        <?php 
+} ?>
+        <?php if (in_array('city', $display_fields)) {
+    ?>
             <tr>
-                <td><?php echo T_('City'); ?>:</td>
+                <td><?php echo T_('City');
+    ?>:</td>
                 <td>
-                    <input type="text" name="city" id="city" value="<?php echo scrub_out($client->city); ?>" />
+                    <input type="text" name="city" id="city" value="<?php echo scrub_out($client->city);
+    ?>" />
                 </td>
             </tr>
-        <?php } ?>
+        <?php 
+} ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
             <td>
-                <?php Error::display('password'); ?>
+                <?php AmpError::display('password'); ?>
                 <input type="password" name="password1" id="password1" />
             </td>
         </tr>
@@ -96,24 +112,28 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             <td>
                 <span>
                     <?php if ($client->apikey) {
-                        $urlinfo = parse_url(AmpConfig::get('web_path'));
-                        $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
-                        if ($urlinfo['port'] && $urlinfo['port'] != 80) {
-                            $apikey_qrcode .= ":" . $urlinfo['port'];
-                        }
-                        $apikey_qrcode .= $urlinfo['path'];
-                        if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
-                            $apikey_qrcode .= "#ssl=true";
-                        }
-                    ?>
+    $urlinfo       = parse_url(AmpConfig::get('web_path'));
+    $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
+    if ($urlinfo['port'] && $urlinfo['port'] != 80) {
+        $apikey_qrcode .= ":" . $urlinfo['port'];
+    }
+    $apikey_qrcode .= $urlinfo['path'];
+    if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
+        $apikey_qrcode .= "#ssl=true";
+    }
+    ?>
                     <br />
                     <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
-                        <a href="<?php echo $apikey_qrcode; ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
+                        <a href="<?php echo $apikey_qrcode;
+    ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
                     </div>
                     <br />
-                    <script language="javascript" type="text/javascript">$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
-                    <?php echo $client->apikey; ?>
-                    <?php } ?>
+                    <script language="javascript" type="text/javascript">$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode;
+    ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <?php echo $client->apikey;
+    ?>
+                    <?php 
+} ?>
                 </span>
             </td>
         </tr>

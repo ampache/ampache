@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -36,7 +36,6 @@ class Core
     private function __construct()
     {
         return false;
-
     } // construction
 
     /**
@@ -48,39 +47,79 @@ class Core
      */
     public static function autoload($class)
     {
+        $possiblePaths = array();
         if (strpos($class, '\\') === false) {
-            $file = AmpConfig::get('prefix') . '/lib/class/' .
-                strtolower($class) . '.class.php';
+            $possiblePaths = self::getNonNamespacedPaths($class);
+        } else {
+            $possiblePaths = self::getNamespacedPaths($class);
+        }
 
-            if (Core::is_readable($file)) {
-                require_once $file;
-
-                // Call _auto_init if it exists
-                $autocall = array($class, '_auto_init');
-                if (is_callable($autocall)) {
-                    call_user_func($autocall);
-                }
+        foreach ($possiblePaths as $path) {
+            if (is_file($path) && Core::is_readable($path)) {
+                require_once($path);
+                self::executeAutoCall($class);
             } else {
                 debug_event('autoload', "'$class' not found!", 1);
             }
-        } else {
-            // Class with namespace are not used by Ampache but probably by modules
-            $split = explode('\\', $class);
-            $path = AmpConfig::get('prefix') . '/modules';
-            for ($i = 0; $i < count($split); ++$i) {
-                $path .= '/' . $split[$i];
-                if ($i != count($split)-1) {
-                    if (!is_dir($path)) {
-                        break;
-                    }
-                } else {
-                    $path .= '.php';
-                    if (Core::is_readable($path)) {
-                        require_once $path;
-                    }
-                }
-            }
         }
+    }
+
+    /**
+     * Execute _auto_init if availlable
+     * @param string $class
+     */
+    private static function executeAutoCall($class)
+    {
+        $autocall = array($class, '_auto_init');
+        if (is_callable($autocall)) {
+            call_user_func($autocall);
+        }
+    }
+
+    /**
+     * Place a new key on a specific position in array
+     * @param array $array
+     * @param integer $position
+     * @param array $add
+     * @return array
+     */
+    private static function insertInArray(array $array, $position, array $add)
+    {
+        return array_slice($array, 0, $position, true) +
+                $add +
+                array_slice($array, $position, null, true);
+    }
+
+    /**
+     * Get possible filepaths of namespaced classes
+     * @param string $class
+     * @return string
+     */
+    private static function getNamespacedPaths($class)
+    {
+        $possiblePaths   = array();
+        $namespaceParts  = explode('\\', $class);
+        $possiblePaths[] = AmpConfig::get('prefix') . '/modules/' . implode('/', $namespaceParts) . '.php';
+
+        $classedPath = array('path' => AmpConfig::get('prefix')) +
+                self::insertInArray($namespaceParts, 1, array('add' => 'class'));
+        $possiblePaths[] = implode('/', $classedPath) . '.php';
+
+        return $possiblePaths;
+    }
+
+    /**
+     * Get possible filepaths of non namespaced classes
+     * @param string $class
+     * @return string
+     */
+    private static function getNonNamespacedPaths($class)
+    {
+        $possiblePaths   = array();
+        $possiblePaths[] = AmpConfig::get('prefix') . '/lib/class/' .
+                strtolower($class) . '.class.php';
+
+        return $possiblePaths;
     }
 
     /**
@@ -91,7 +130,7 @@ class Core
     public static function form_register($name, $type = 'post')
     {
         // Make ourselves a nice little sid
-        $sid =  md5(uniqid(rand(), true));
+        $sid    =  md5(uniqid(rand(), true));
         $window = AmpConfig::get('session_length');
         $expire = time() + $window;
 
@@ -110,7 +149,6 @@ class Core
         } // end switch on type
 
         return $string;
-
     } // form_register
 
     /**
@@ -160,7 +198,6 @@ class Core
         // OMG HAX0RZ
         debug_event('Core', "$type form $sid failed consistency check, rejecting request", 2);
         return false;
-
     } // form_verify
 
     /**
@@ -171,19 +208,24 @@ class Core
     */
     public static function image_dimensions($image_data)
     {
-        if (!function_exists('ImageCreateFromString')) { return false; }
+        if (!function_exists('ImageCreateFromString')) {
+            return false;
+        }
 
         $image = ImageCreateFromString($image_data);
 
-        if (!$image) { return false; }
+        if (!$image) {
+            return false;
+        }
 
-        $width = imagesx($image);
+        $width  = imagesx($image);
         $height = imagesy($image);
 
-        if (!$width || !$height) { return false; }
+        if (!$width || !$height) {
+            return false;
+        }
 
         return array('width'=>$width,'height'=>$height);
-
     } // image_dimensions
 
     /*
@@ -224,7 +266,7 @@ class Core
                 return false;
             }
             $offset = PHP_INT_MAX - 1;
-            $size = (float) $offset;
+            $size   = (float) $offset;
             if (!fseek($fp, $offset)) {
                 return false;
             }
@@ -246,9 +288,9 @@ class Core
      */
     public static function conv_lc_file($filename)
     {
-        $lc_filename = $filename;
+        $lc_filename  = $filename;
         $site_charset = AmpConfig::get('site_charset');
-        $lc_charset = AmpConfig::get('lc_charset');
+        $lc_charset   = AmpConfig::get('lc_charset');
         if ($lc_charset && $lc_charset != $site_charset) {
             if (function_exists('iconv')) {
                 $lc_filename = iconv($site_charset, $lc_charset, $filename);
@@ -312,7 +354,7 @@ class Core
 
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
-                $proxy = array();
+                $proxy   = array();
                 $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
                 if (AmpConfig::get('proxy_user')) {
                     $proxy[] = AmpConfig::get('proxy_user');
@@ -326,3 +368,4 @@ class Core
         return $options;
     }
 } // Core
+

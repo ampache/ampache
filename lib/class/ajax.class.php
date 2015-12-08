@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -40,7 +40,6 @@ class Ajax
     public function __construct()
     {
         // Rien a faire
-
     } // constructor
 
     /**
@@ -63,22 +62,21 @@ class Ajax
             $source_txt = "'#$source'";
         }
 
-        $observe = "<script type=\"text/javascript\">";
+        $observe   = "<script type=\"text/javascript\">";
         $methodact = (($method == 'click') ? "update_action();" : "");
         if (AmpConfig::get('ajax_load') && $method == 'load') {
             $source_txt = "$( document ).ready(";
         } else {
-            $source_txt = "$(".$source_txt.").on('".$method."', ";
+            $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";
         }
         if (!empty($confirm)) {
-            $observe .= $source_txt . "function(){ ".$methodact." if (confirm(\"".$confirm."\")) { ".$action." }});";
+            $observe .= $source_txt . "function(){ " . $methodact . " if (confirm(\"" . $confirm . "\")) { " . $action . " }});";
         } else {
-            $observe .= $source_txt . "function(){ ".$methodact." ".$action.";});";
+            $observe .= $source_txt . "function(){ " . $methodact . " " . $action . ";});";
         }
         $observe .= "</script>";
 
         return $observe;
-
     } // observe
 
     /**
@@ -120,7 +118,6 @@ class Ajax
         }
 
         return $ajax_string;
-
     } // action
 
     /**
@@ -143,7 +140,7 @@ class Ajax
 
         // If they passed a span class
         if ($class) {
-            $class = ' class="'.$class.'"';
+            $class = ' class="' . $class . '"';
         }
 
         $string = UI::get_icon($icon, $alt);
@@ -151,12 +148,11 @@ class Ajax
         // Generate an <a> so that it's more compliant with older
         // browsers (ie :hover actions) and also to unify linkbuttons
         // (w/o ajax) display
-        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>".$string."</a>\n";
+        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>" . $string . "</a>\n";
 
         $string .= self::observe($source, 'click', $ajax_string, $confirm);
 
         return $string;
-
     } // button
 
     /**
@@ -193,7 +189,6 @@ class Ajax
         }
 
         return $string;
-
     } // text
 
     /**
@@ -206,7 +201,6 @@ class Ajax
         echo "<script type=\"text/javascript\"><!--\n";
         echo "$action";
         echo "\n--></script>";
-
     } // run
 
     /**
@@ -218,7 +212,6 @@ class Ajax
     public static function set_include_override($value)
     {
         self::$include_override = make_bool($value);
-
     } // set_include_override
 
     /**
@@ -230,14 +223,15 @@ class Ajax
      */
     public static function start_container($name, $class = '')
     {
-        if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
+        if (defined('AJAX_INCLUDE') && !self::$include_override) {
+            return true;
+        }
 
         echo '<div id="' . scrub_out($name) . '"';
         if (!empty($class)) {
             echo ' class="' . scrub_out($class) . '"';
         }
         echo '>';
-
     } // start_container
 
     /**
@@ -246,12 +240,13 @@ class Ajax
      */
     public static function end_container()
     {
-        if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
+        if (defined('AJAX_INCLUDE') && !self::$include_override) {
+            return true;
+        }
 
         echo "</div>";
 
         self::$include_override = false;
-
     } // end_container
-
 } // end Ajax class
+

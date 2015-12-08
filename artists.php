@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,19 +29,23 @@ UI::show_header();
  */
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $artist_id = scrub_in($_REQUEST['artist_id']);
         show_confirmation(
             T_('Artist Deletion'),
             T_('Are you sure you want to permanently delete this artist?'),
-            AmpConfig::get('web_path')."/artists.php?action=confirm_delete&artist_id=" . $artist_id,
+            AmpConfig::get('web_path') . "/artists.php?action=confirm_delete&artist_id=" . $artist_id,
             1,
             'delete_artist'
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $artist = new Artist($_REQUEST['artist_id']);
         if (!Catalog::can_remove($artist)) {
@@ -65,30 +69,34 @@ switch ($_REQUEST['action']) {
             $object_ids = $artist->get_albums($_REQUEST['catalog']);
         }
         $object_type = 'album';
-        require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
         $object_type = 'song';
-        $object_ids = $artist->get_songs();
-        require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
+        $object_ids  = $artist->get_songs();
+        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         break;
     case 'update_from_tags':
-        $type  = 'artist';
-        $object_id = intval($_REQUEST['artist']);
+        $type       = 'artist';
+        $object_id  = intval($_REQUEST['artist']);
         $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
-        require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
-        if ($match == "Browse" || $match == "Show_all") { $chr = ""; } else { $chr = $match; }
+        if ($match == "Browse" || $match == "Show_all") {
+            $chr = "";
+        } else {
+            $chr = $match;
+        }
         /* Enclose this in the purty box! */
-        require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
         show_alphabet_list('artists','artists.php',$match);
         show_alphabet_form($chr, T_('Show Artists starting with'),"artists.php?action=match");
-        require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
 
         if ($match === "Browse") {
             show_artists();
@@ -105,10 +113,10 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_missing':
         set_time_limit(600);
-        $mbid = $_REQUEST['mbid'];
+        $mbid    = $_REQUEST['mbid'];
         $wartist = Wanted::get_missing_artist($mbid);
 
-        require AmpConfig::get('prefix') . '/templates/show_missing_artist.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_missing_artist.inc.php');
     break;
 } // end switch
 

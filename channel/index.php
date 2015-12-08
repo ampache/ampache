@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -53,13 +53,13 @@ if ($channel->is_private) {
 
         $auth = Auth::login($htusername, $htpassword);
         if ($auth['success']) {
-            $username = $auth['username'];
+            $username        = $auth['username'];
             $GLOBALS['user'] = new User($username);
-            $is_auth = true;
+            $is_auth         = true;
             Preference::init();
 
             if (AmpConfig::get('access_control')) {
-                if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
+                if (!Access::check_network('stream',$GLOBALS['user']->id,'25') and
                     !Access::check_network('network',$GLOBALS['user']->id,'25')) {
                     debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
                     UI::access_denied();
@@ -79,9 +79,9 @@ if ($channel->is_private) {
 
 $url = 'http://' . $channel->interface . ':' . $channel->port . '/' . $_REQUEST['target'];
 // Redirect request to the real channel server
-$headers = getallheaders();
+$headers         = getallheaders();
 $headers['Host'] = $channel->interface;
-$reqheaders = array();
+$reqheaders      = array();
 foreach ($headers as $key => $value) {
     $reqheaders[] = $key . ': ' . $value;
 }

@@ -2,44 +2,48 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 require_once 'lib/init.php';
 
-require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
+require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $album_id = scrub_in($_REQUEST['album_id']);
         show_confirmation(
             T_('Album Deletion'),
             T_('Are you sure you want to permanently delete this album?'),
-            AmpConfig::get('web_path')."/albums.php?action=confirm_delete&album_id=" . $album_id,
+            AmpConfig::get('web_path') . "/albums.php?action=confirm_delete&album_id=" . $album_id,
             1,
             'delete_album'
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $album = new Album($_REQUEST['album_id']);
         if (!Catalog::can_remove($album)) {
@@ -61,10 +65,10 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        $type         = 'album';
+        $type          = 'album';
         $object_id     = intval($_REQUEST['album_id']);
         $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
-        require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
     case 'set_track_numbers':
         debug_event('albums', 'Set track numbers called.', '5');
@@ -77,7 +81,7 @@ switch ($_REQUEST['action']) {
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities(scrub_in($data));
-            debug_event('albums', $key.'='.$_GET[$key], '5');
+            debug_event('albums', $key . '=' . $_GET[$key], '5');
         }
 
         if (isset($_GET['order'])) {
@@ -93,14 +97,14 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_missing':
         set_time_limit(600);
-        $mbid = $_REQUEST['mbid'];
+        $mbid   = $_REQUEST['mbid'];
         $walbum = new Wanted(Wanted::get_wanted($mbid));
 
         if (!$walbum->id) {
             $walbum->mbid = $mbid;
             if (isset($_REQUEST['artist'])) {
-                $artist = new Artist($_REQUEST['artist']);
-                $walbum->artist = $artist->id;
+                $artist              = new Artist($_REQUEST['artist']);
+                $walbum->artist      = $artist->id;
                 $walbum->artist_mbid = $artist->mbid;
             } elseif (isset($_REQUEST['artist_mbid'])) {
                 $walbum->artist_mbid = $_REQUEST['artist_mbid'];
@@ -108,7 +112,7 @@ switch ($_REQUEST['action']) {
         }
         $walbum->load_all();
         $walbum->format();
-        require AmpConfig::get('prefix') . '/templates/show_missing_album.inc.php';
+        require AmpConfig::get('prefix') . UI::find_template('show_missing_album.inc.php');
     break;
     // Browse by Album
     case 'show':
@@ -117,9 +121,9 @@ switch ($_REQUEST['action']) {
         $album->format();
 
         if (!count($album->album_suite)) {
-            require AmpConfig::get('prefix') . '/templates/show_album.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');
         } else {
-            require AmpConfig::get('prefix') . '/templates/show_album_group_disks.inc.php';
+            require AmpConfig::get('prefix') . UI::find_template('show_album_group_disks.inc.php');
         }
 
     break;

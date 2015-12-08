@@ -1,0 +1,328 @@
+{
+	"name": "ampache/ampache",
+	"description": "A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.",
+	"homepage": "http://ampache.org",
+	"keywords": ["php", "music", "video", "player", "stream"],
+	"type": "project",
+	"license": "GPL-2.0",
+	"config":
+	{
+        "vendor-dir": "lib/vendor",
+		"component-dir": "lib/components",
+		
+		"platform": {
+			"ext-curl": "1.0",
+			"ext-gd": "1.0",
+			"ext-gmp": "1.0",
+			"ext-dom": "1.0",
+			"ext-pcre": "1.0",
+			"ext-spl": "1.0",
+			"ext-simplexml": "1.0",
+			"ext-ctype": "1.0",
+			"ext-date": "1.0",
+			"ext-iconv": "1.0",
+			"ext-libxml": "1.0",
+			"ext-mbstring": "1.0",
+			"ext-xmlwriter": "1.0",
+			"ext-xmlreader": "1.0",
+			"lib-libxml": "2.6.20"
+		}
+    },
+    "require": {
+		"php": ">=5.4.0",
+		"wikimedia/composer-merge-plugin": "1.*",
+		
+        "james-heinrich/getid3": "1.9.*",
+		"mikealmond/musicbrainz": "0.2.*",
+		"phpmailer/phpmailer": "5.2.*",
+		"rmccue/requests": "1.6.*",
+		"react/react": "0.4.*",
+		"cboden/ratchet": "0.3.*",
+		"symfony/event-dispatcher": "2.7.*",
+		"symfony/routing": "2.7.*",
+		"symfony/http-foundation": "2.7.*",
+		"szymach/c-pchart": "1.*",
+		"evenement/evenement": "2.*",
+		"happyworm/jplayer": "2.*",
+		"needim/noty": "2.3.*",
+		"openid/php-openid": "2.*",
+		"sabre/dav": "3.*",
+		"maennchen/zipstream-php": "0.*",
+		
+		"Afterster/php-echonest-api": "dev-master",
+		
+		"components/jquery": "2.0.*",
+		"components/jqueryui": "1.*",
+		"vakata/jstree": "3.*",
+		"components/bootstrap": "3.*",
+		"aehlke/tag-it": "2.*",
+		"scaron/prettyphoto": "3.*",
+		"jeromeetienne/jquery-qrcode": "dev-master",
+		"carhartl/jquery-cookie": "1.*",
+		"xdan/datetimepicker": "2.*",
+		"blueimp/jQuery-File-Upload": "9.*",
+		"aterrien/jQuery-Knob": "1.2.*",
+		"pklauzinski/jscroll": "2.*",
+		"kumailht/responsive-elements": "dev-master"
+    },
+	
+	"repositories":
+	[
+		{
+			"type": "package",
+			"package": {
+				"name": "Afterster/php-echonest-api",
+				"version": "dev-master",
+				"source": {
+					"url": "https://github.com/Afterster/php-echonest-api.git",
+					"type": "git",
+					"reference": "master"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "jeromeetienne/jquery-qrcode",
+				"type": "component",
+				"version": "dev-master",
+				"source": {
+					"url": "https://github.com/jeromeetienne/jquery-qrcode.git",
+					"type": "git",
+					"reference": "master"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"src/jquery.qrcode.js",
+							"src/qrcode.js"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "carhartl/jquery-cookie",
+				"type": "component",
+				"version": "1.4.1",
+				"source": {
+					"url": "https://github.com/carhartl/jquery-cookie.git",
+					"type": "git",
+					"reference": "v1.4.1"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"jquery.cookie.js"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "aehlke/tag-it",
+				"type": "component",
+				"version": "2.0",
+				"source": {
+					"url": "https://github.com/aehlke/tag-it.git",
+					"type": "git",
+					"reference": "v2.0"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"js/tag-it.js"
+						],
+						"styles": [
+							"css/jquery.tagit.css"
+						],
+						"files": [
+							"js/tag-it.min.js"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "scaron/prettyphoto",
+				"type": "component",
+				"version": "3.1.6",
+				"source": {
+					"url": "https://github.com/scaron/prettyphoto.git",
+					"type": "git",
+					"reference": "3.1.6"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"js/jquery.prettyPhoto.js"
+						],
+						"styles": [
+							"css/prettyPhoto.css"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "xdan/datetimepicker",
+				"type": "component",
+				"version": "2.4.5",
+				"source": {
+					"url": "https://github.com/xdan/datetimepicker.git",
+					"type": "git",
+					"reference": "2.4.5"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"jquery.datetimepicker.js"
+						],
+						"styles": [
+							"jquery.datetimepicker.css"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "blueimp/jQuery-File-Upload",
+				"type": "component",
+				"version": "9.11.2",
+				"source": {
+					"url": "https://github.com/blueimp/jQuery-File-Upload.git",
+					"type": "git",
+					"reference": "9.11.2"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"js/jquery.fileupload.js",
+							"js/jquery.iframe-transport.js"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "aterrien/jQuery-Knob",
+				"type": "component",
+				"version": "1.2.11",
+				"source": {
+					"url": "https://github.com/aterrien/jQuery-Knob.git",
+					"type": "git",
+					"reference": "1.2.11"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"js/jquery.knob.js"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "pklauzinski/jscroll",
+				"type": "component",
+				"version": "2.3.4",
+				"source": {
+					"url": "https://github.com/pklauzinski/jscroll.git",
+					"type": "git",
+					"reference": "v2.3.4"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"jquery.jscroll.js"
+						],
+						"files": [
+							"jquery.jscroll.min.js"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "kumailht/responsive-elements",
+				"type": "component",
+				"version": "dev-master",
+				"source": {
+					"url": "https://github.com/kumailht/responsive-elements.git",
+					"type": "git",
+					"reference": "master"
+				},
+				"extra": {
+					"component": {
+						"scripts": [
+							"responsive-elements.js"
+						]
+					}
+				},
+				"require": {
+					"robloach/component-installer": "*"
+				}
+			}
+		}
+	],
+	
+	"extra": {
+        "merge-plugin": {
+            "include": [
+                "composer.local.json",
+				"modules/catalog/*/composer.json",
+				"modules/localplay/*/composer.json",
+                "modules/plugins/*/composer.json"
+            ],
+            "recurse": false,
+            "replace": false,
+            "merge-extra": false
+        }
+    },
+
+	"autoload": {
+		"psr-4": {
+			"Lib\\": "lib/class"
+		}
+	}
+}

@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -78,7 +78,9 @@ class Broadcast extends database_object implements library_item
      */
     public function __construct($id=0)
     {
-        if (!$id) { return true; }
+        if (!$id) {
+            return true;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -125,7 +127,7 @@ class Broadcast extends database_object implements library_item
         $sql = "UPDATE `broadcast` SET `song` = ? " .
             "WHERE `id` = ?";
         Dba::write($sql, array($song_id, $this->id));
-        $this->song = $song_id;
+        $this->song          = $song_id;
         $this->song_position = 0;
     }
 
@@ -148,7 +150,7 @@ class Broadcast extends database_object implements library_item
     public static function create($name, $description='')
     {
         if (!empty($name)) {
-            $sql = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
+            $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
             $params = array($GLOBALS['user']->id, $name, $description);
             Dba::write($sql, $params);
             return Dba::insert_id();
@@ -181,7 +183,7 @@ class Broadcast extends database_object implements library_item
         $this->f_name = $this->name;
         $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
         if ($details) {
-            $this->tags = Tag::get_top_tags('broadcast', $this->id);
+            $this->tags   = Tag::get_top_tags('broadcast', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
         }
     }
@@ -308,9 +310,9 @@ class Broadcast extends database_object implements library_item
      */
     public static function get_broadcast_list()
     {
-        $sql = self::get_broadcast_list_sql();
+        $sql        = self::get_broadcast_list_sql();
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -336,7 +338,7 @@ class Broadcast extends database_object implements library_item
      */
     public static function get_broadcast($key)
     {
-        $sql = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
+        $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
         $db_results = Dba::read($sql, array($key));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -354,7 +356,7 @@ class Broadcast extends database_object implements library_item
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75')) {
                 echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
+                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
@@ -392,7 +394,7 @@ class Broadcast extends database_object implements library_item
      */
     public static function get_broadcasts($user_id)
     {
-        $sql = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
+        $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($user_id));
 
         $broadcasts = array();
@@ -404,7 +406,6 @@ class Broadcast extends database_object implements library_item
 
     public static function gc()
     {
-
     }
 
     /*
@@ -421,5 +422,5 @@ class Broadcast extends database_object implements library_item
     {
         return $oid;
     }
-
 } // end of broadcast class
+

@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -48,11 +48,11 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
-        debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
-        ob_end_clean();
-        echo XML_Data::error('401', T_('Session Expired'));
-        exit();
+if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
+    debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
+    ob_end_clean();
+    echo XML_Data::error('401', T_('Session Expired'));
+    exit();
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
@@ -62,15 +62,15 @@ $username =
     : Session::username($_REQUEST['auth']);
 
 if (!Access::check_network('init-api', $username, 5)) {
-        debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
-        ob_end_clean();
-        echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
-        exit();
+    debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    ob_end_clean();
+    echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
+    exit();
 }
 
-if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
-        Session::extend($_REQUEST['auth']);
-        $GLOBALS['user'] = User::get_from_username($username);
+if ($_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
+    Session::extend($_REQUEST['auth']);
+    $GLOBALS['user'] = User::get_from_username($username);
 }
 
 // Make sure beautiful url is disabled as it is not supported by most Ampache clients
@@ -84,7 +84,9 @@ $internal_functions = array('set_filter');
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
-    if (in_array($method,$internal_functions)) { continue; }
+    if (in_array($method,$internal_functions)) {
+        continue;
+    }
 
     // If the method is the same as the action being called
     // Then let's call this function!
@@ -93,7 +95,6 @@ foreach ($methods as $method) {
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;
     }
-
 } // end foreach methods in API
 
 // If we manage to get here, we still need to hand out an XML document

@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -27,19 +27,23 @@ UI::show_header();
 // Switch on the incomming action
 switch ($_REQUEST['action']) {
     case 'delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $label_id = scrub_in($_REQUEST['label_id']);
         show_confirmation(
             T_('Label Deletion'),
             T_('Are you sure you want to permanently delete this label?'),
-            AmpConfig::get('web_path')."/labels.php?action=confirm_delete&label_id=" . $label_id,
+            AmpConfig::get('web_path') . "/labels.php?action=confirm_delete&label_id=" . $label_id,
             1,
             'delete_label'
         );
     break;
     case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
 
         $label = new Label($_REQUEST['label_id']);
         if (!Catalog::can_remove($label)) {
@@ -76,9 +80,9 @@ switch ($_REQUEST['action']) {
 
         $label_id = Label::create($_POST);
         if (!$label_id) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_label.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
-            $body = T_('Label Added');
+            $body  = T_('Label Added');
             $title = '';
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=label');
         }
@@ -93,15 +97,15 @@ switch ($_REQUEST['action']) {
         if ($label_id > 0) {
             $label = new Label($label_id);
             $label->format();
-            $object_ids = $label->get_artists();
+            $object_ids  = $label->get_artists();
             $object_type = 'artist';
-            require_once AmpConfig::get('prefix') . '/templates/show_label.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_label.inc.php');
             UI::show_footer();
             exit;
         }
     case 'show_add_label':
         if (Access::check('interface','50') || AmpConfig::get('upload_allow_edit')) {
-            require_once AmpConfig::get('prefix') . '/templates/show_add_label.inc.php';
+            require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
             echo T_('Label cannot be found.');
         }

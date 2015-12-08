@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -49,7 +49,9 @@ class TVShow extends database_object implements library_item
     public function __construct($id='')
     {
         /* If they failed to pass in an id, just run for it */
-        if (!$id) { return false; }
+        if (!$id) {
+            return false;
+        }
 
         /* Get the information from the db */
         $info = $this->get_info($id);
@@ -59,7 +61,6 @@ class TVShow extends database_object implements library_item
         } // foreach info
 
         return true;
-
     } //constructor
 
     /**
@@ -80,14 +81,13 @@ class TVShow extends database_object implements library_item
      */
     public static function get_from_name($name)
     {
-        $sql = "SELECT `id` FROM `tvshow` WHERE `name` = ?'";
+        $sql        = "SELECT `id` FROM `tvshow` WHERE `name` = ?'";
         $db_results = Dba::read($sql, array($name));
 
         $row = Dba::fetch_assoc($db_results);
 
         $object = new TVShow($row['id']);
         return $object;
-
     } // get_from_name
 
     /**
@@ -97,15 +97,14 @@ class TVShow extends database_object implements library_item
      */
     public function get_seasons()
     {
-        $sql = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
+        $sql        = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
         $db_results = Dba::read($sql, array($this->id));
-        $results = array();
+        $results    = array();
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = $r['id'];
         }
 
         return $results;
-
     } // get_seasons
 
     /**
@@ -133,7 +132,6 @@ class TVShow extends database_object implements library_item
         }
 
         return $results;
-
     } // get_episodes
 
     /**
@@ -151,24 +149,23 @@ class TVShow extends database_object implements library_item
                 "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " .
                 "WHERE `tvshow_season`.`tvshow` = ?";
             $db_results = Dba::read($sql, array($this->id));
-            $row = Dba::fetch_assoc($db_results);
+            $row        = Dba::fetch_assoc($db_results);
 
             $sql = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` " .
                 "WHERE `tvshow_season`.`tvshow` = ?";
-            $db_results = Dba::read($sql, array($this->id));
-            $row2 = Dba::fetch_assoc($db_results);
+            $db_results          = Dba::read($sql, array($this->id));
+            $row2                = Dba::fetch_assoc($db_results);
             $row['season_count'] = $row2['season_count'];
 
             parent::add_to_cache('tvshow_extra',$this->id,$row);
         }
 
         /* Set Object Vars */
-        $this->episodes = $row['episode_count'];
-        $this->seasons = $row['season_count'];
+        $this->episodes   = $row['episode_count'];
+        $this->seasons    = $row['season_count'];
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
-
     } // _get_extra_info
 
     /**
@@ -178,12 +175,12 @@ class TVShow extends database_object implements library_item
     public function format($details = true)
     {
         $this->f_name = trim($this->prefix . " " . $this->name);
-        $this->link = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
+        $this->link   = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
 
         if ($details) {
             $this->_get_extra_info();
-            $this->tags = Tag::get_top_tags('tvshow', $this->id);
+            $this->tags   = Tag::get_top_tags('tvshow', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
         }
 
@@ -192,7 +189,7 @@ class TVShow extends database_object implements library_item
 
     public function get_keywords()
     {
-        $keywords = array();
+        $keywords           = array();
         $keywords['tvshow'] = array('important' => true,
             'label' => T_('TV Show'),
             'value' => $this->f_name);
@@ -277,32 +274,32 @@ class TVShow extends database_object implements library_item
      *
      * Checks for an existing tv show; if none exists, insert one.
      */
-    public static function check($name, $year, $readonly = false)
+    public static function check($name, $year, $tvshow_summary, $readonly = false)
     {
         // null because we don't have any unique id like mbid for now
         if (isset(self::$_mapcache[$name]['null'])) {
             return self::$_mapcache[$name]['null'];
         }
 
-        $id = 0;
+        $id     = 0;
         $exists = false;
 
         $trimmed = Catalog::trim_prefix(trim($name));
-        $name = $trimmed['string'];
-        $prefix = $trimmed['prefix'];
+        $name    = $trimmed['string'];
+        $prefix  = $trimmed['prefix'];
 
         if (!$exists) {
-            $sql = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
+            $sql        = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
             $db_results = Dba::read($sql, array($name, $year));
 
             $id_array = array();
             while ($row = Dba::fetch_assoc($db_results)) {
-                $key = 'null';
+                $key            = 'null';
                 $id_array[$key] = $row['id'];
             }
 
             if (count($id_array)) {
-                $id = array_shift($id_array);
+                $id     = array_shift($id_array);
                 $exists = true;
             }
         }
@@ -316,10 +313,8 @@ class TVShow extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`) ' .
-            'VALUES(?, ?, ?)';
-
-        $db_results = Dba::write($sql, array($name, $prefix, $year));
+        $sql        = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `summary`) VALUES(?, ?, ?, ?)';
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $tvshow_summary));
         if (!$db_results) {
             return null;
         }
@@ -327,7 +322,6 @@ class TVShow extends database_object implements library_item
 
         self::$_mapcache[$name]['null'] = $id;
         return $id;
-
     }
 
     /**
@@ -338,9 +332,9 @@ class TVShow extends database_object implements library_item
     {
         // Save our current ID
         $current_id = $this->id;
-        $name = isset($data['name']) ? $data['name'] : $this->name;
-        $year = isset($data['year']) ? $data['year'] : $this->year;
-        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $name       = isset($data['name']) ? $data['name'] : $this->name;
+        $year       = isset($data['year']) ? $data['year'] : $this->year;
+        $summary    = isset($data['summary']) ? $data['summary'] : $this->summary;
 
         // Check if name is different than current name
         if ($this->name != $name || $this->year != $year) {
@@ -360,15 +354,15 @@ class TVShow extends database_object implements library_item
         }
 
         $trimmed = Catalog::trim_prefix(trim($name));
-        $name = $trimmed['string'];
-        $prefix = $trimmed['prefix'];
+        $name    = $trimmed['string'];
+        $prefix  = $trimmed['prefix'];
 
         $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
         Dba::write($sql, array($name, $prefix, $year, $summary, $current_id));
 
-        $this->name = $name;
-        $this->prefix = $prefix;
-        $this->year = $year;
+        $this->name    = $name;
+        $this->prefix  = $prefix;
+        $this->year    = $year;
         $this->summary = $summary;
 
         $override_childs = false;
@@ -386,7 +380,6 @@ class TVShow extends database_object implements library_item
         }
 
         return $current_id;
-
     } // update
 
     /**
@@ -412,29 +405,30 @@ class TVShow extends database_object implements library_item
 
     public function remove_from_disk()
     {
-        $deleted = true;
+        $deleted    = true;
         $season_ids = $this->get_seasons();
         foreach ($season_ids as $id) {
-            $season = new TVShow_Season($id);
+            $season  = new TVShow_Season($id);
             $deleted = $season->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow', 'Error when deleting the season `' . $id .'`.', 1);
+                debug_event('tvshow', 'Error when deleting the season `' . $id . '`.', 1);
                 break;
             }
         }
 
         if ($deleted) {
-            $sql = "DELETE FROM `tvshow` WHERE `id` = ?";
+            $sql     = "DELETE FROM `tvshow` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
                 Art::gc('tvshow', $this->id);
                 Userflag::gc('tvshow', $this->id);
                 Rating::gc('tvshow', $this->id);
                 Shoutbox::gc('tvshow', $this->id);
+                Useractivity::gc('tvshow', $this->id);
             }
         }
 
         return $deleted;
     }
-
 } // end of tvshow class
+

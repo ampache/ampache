@@ -2,22 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; version 2
- * of the License.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,22 +30,22 @@
 class Plex_XML_Data
 {
     // Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
-    const AMPACHEID_ARTIST = 10000000;
-    const AMPACHEID_ALBUM = 20000000;
-    const AMPACHEID_TRACK = 30000000;
-    const AMPACHEID_SONG = 40000000;
-    const AMPACHEID_TVSHOW = 50000000;
+    const AMPACHEID_ARTIST        = 10000000;
+    const AMPACHEID_ALBUM         = 20000000;
+    const AMPACHEID_TRACK         = 30000000;
+    const AMPACHEID_SONG          = 40000000;
+    const AMPACHEID_TVSHOW        = 50000000;
     const AMPACHEID_TVSHOW_SEASON = 60000000;
-    const AMPACHEID_VIDEO = 70000000;
-    const AMPACHEID_PLAYLIST = 80000000;
-    const AMPACHEID_PART = 100000000;
+    const AMPACHEID_VIDEO         = 70000000;
+    const AMPACHEID_PLAYLIST      = 80000000;
+    const AMPACHEID_PART          = 100000000;
 
-    const PLEX_ARTIST = 8;
-    const PLEX_ALBUM = 9;
-    const PLEX_TVSHOW = 2;
-    const PLEX_SEASON = 3;
-    const PLEX_EPISODE = 4;
-    const PLEX_MOVIE = 1;
+    const PLEX_ARTIST   = 8;
+    const PLEX_ALBUM    = 9;
+    const PLEX_TVSHOW   = 2;
+    const PLEX_SEASON   = 3;
+    const PLEX_EPISODE  = 4;
+    const PLEX_MOVIE    = 1;
     const PLEX_PLAYLIST = 15;
 
     /**
@@ -300,7 +299,7 @@ class Plex_XML_Data
 
     public static function getKeyFromFullUri($uri)
     {
-        $key = '';
+        $key  = '';
         $puri = parse_url($uri);
         if ($puri['scheme'] == 'library') {
             // We ignore library uuid (= $puri['host'])
@@ -371,7 +370,7 @@ class Plex_XML_Data
         $xml->addAttribute('friendlyName', self::getServerName());
         $xml->addAttribute('machineIdentifier', self::getMachineIdentifier());
 
-        $myplex_username = self::getMyPlexUsername();
+        $myplex_username  = self::getMyPlexUsername();
         $myplex_authtoken = self::getMyPlexAuthToken();
         $myplex_published = self::getMyPlexPublished();
         if ($myplex_username) {
@@ -477,7 +476,7 @@ class Plex_XML_Data
                 $dir->addAttribute('machineIdentifier', self::getMachineIdentifier());
                 $dir->addAttribute('serverName', self::getServerName());
                 $dir->addAttribute('path', self::getSectionUri($id));
-                $ip = self::getServerAddress();
+                $ip   = self::getServerAddress();
                 $port = self::getServerPort();
                 $dir->addAttribute('host', $ip);
                 $dir->addAttribute('local', ($ip == "127.0.0.1") ? '1' : '0');
@@ -749,7 +748,7 @@ class Plex_XML_Data
         self::addCatalogIdentity($xml, $catalog);
         self::setSectionXContent($xml, $catalog, 'album');
 
-        $data = array();
+        $data          = array();
         $data['album'] = $albums;
         self::_setCustomView($xml, $data);
     }
@@ -815,7 +814,7 @@ class Plex_XML_Data
     public static function addArtist(SimpleXMLElement $xml, Artist $artist)
     {
         $xdir = $xml->addChild('Directory');
-        $id = self::getArtistId($artist->id);
+        $id   = self::getArtistId($artist->id);
         $xdir->addAttribute('ratingKey', $id);
         $xdir->addAttribute('type', 'artist');
         $xdir->addAttribute('title', $artist->name);
@@ -823,7 +822,7 @@ class Plex_XML_Data
         $xdir->addAttribute('addedAt', '');
         $xdir->addAttribute('updatedAt', '');
 
-        $rating = new Rating($artist->id, "artist");
+        $rating       = new Rating($artist->id, "artist");
         $rating_value = $rating->get_average_rating();
         if ($rating_value > 0) {
             $xdir->addAttribute('rating', intval($rating_value * 2));
@@ -845,8 +844,8 @@ class Plex_XML_Data
 
     protected static function addArtistThumb(SimpleXMLElement $xml, $artist_id, $attrthumb = 'thumb')
     {
-        $id = self::getArtistId($artist_id);
-        $art = new Art($artist_id, 'artist');
+        $id    = self::getArtistId($artist_id);
+        $art   = new Art($artist_id, 'artist');
         $thumb = '';
         if ($art->get_db()) {
             $thumb = self::getMetadataUri($id) . '/thumb/' . $id;
@@ -856,7 +855,7 @@ class Plex_XML_Data
 
     public static function addAlbum(SimpleXMLElement $xml, Album $album)
     {
-        $id = self::getAlbumId($album->id);
+        $id   = self::getAlbumId($album->id);
         $xdir = $xml->addChild('Directory');
         self::addAlbumMeta($xdir, $album);
         $xdir->addAttribute('ratingKey', $id);
@@ -871,7 +870,7 @@ class Plex_XML_Data
             $xdir->addAttribute('year', $album->year);
         }
 
-        $rating = new Rating($album->id, "album");
+        $rating       = new Rating($album->id, "album");
         $rating_value = $rating->get_average_rating();
         if ($rating_value > 0) {
             $xdir->addAttribute('rating', intval($rating_value * 2));
@@ -907,7 +906,7 @@ class Plex_XML_Data
 
     public static function addTVShow(SimpleXMLElement $xml, TVShow $tvshow)
     {
-        $id = self::getTVShowId($tvshow->id);
+        $id   = self::getTVShowId($tvshow->id);
         $xdir = $xml->addChild('Directory');
         $xdir->addAttribute('ratingKey', $id);
         $xdir->addAttribute('key', self::getMetadataUri($id) . '/children');
@@ -917,7 +916,7 @@ class Plex_XML_Data
         $xdir->addAttribute('title', $tvshow->f_name);
         $xdir->addAttribute('titleSort', $tvshow->name);
         $xdir->addAttribute('index', '1');
-        $rating = new Rating($tvshow->id, "tvshow");
+        $rating       = new Rating($tvshow->id, "tvshow");
         $rating_value = $rating->get_average_rating();
         if ($rating_value > 0) {
             $xdir->addAttribute('rating', intval($rating_value * 2));
@@ -1050,7 +1049,7 @@ class Plex_XML_Data
 
     public static function addTVShowSeason(SimpleXMLElement $xml, TVShow_Season $season)
     {
-        $id = self::getTVShowSeasonId($season->id);
+        $id   = self::getTVShowSeasonId($season->id);
         $xdir = $xml->addChild('Directory');
         $xdir->addAttribute('ratingKey', $id);
         $xdir->addAttribute('key', self::getMetadataUri($id) . '/children');
@@ -1099,57 +1098,57 @@ class Plex_XML_Data
 
     public static function addSong(SimpleXMLElement $xml, Song $song)
     {
-       $xdir = $xml->addChild('Track');
-       self::addSongMeta($xdir, $song);
-       $time = $song->time * 1000;
-       $xdir->addAttribute('title', $song->title);
-       $id = self::getAlbumId($song->id);
-       $albumid = self::getAlbumId($song->album);
-       $artistid = self::getAlbumId($song->artist);
-       $xdir->addAttribute('grandparentRatingKey', $artistid);
-       $xdir->addAttribute('parentRatingKey', $albumid);
-       $xdir->addAttribute('grandparentKey', self::getMetadataUri($albumid));
-       $xdir->addAttribute('parentKey', self::getMetadataUri($albumid));
-       $xdir->addAttribute('grandparentTitle', $song->f_artist);
-       $xdir->addAttribute('parentTitle', $song->f_album);
-       $xdir->addAttribute('originalTitle', $song->f_artist);
-       $xdir->addAttribute('summary', '');
-       $xdir->addAttribute('art', self::getMetadataUri($id) . '/art/' . $id);
-       $xdir->addAttribute('grandparentThumb', self::getMetadataUri($artistid) . '/thumb/' . $artistid);
-       $xdir->addAttribute('parentThumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid);
-       $xdir->addAttribute('thumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid); // No song art, set album art
+        $xdir = $xml->addChild('Track');
+        self::addSongMeta($xdir, $song);
+        $time = $song->time * 1000;
+        $xdir->addAttribute('title', $song->title);
+        $id       = self::getAlbumId($song->id);
+        $albumid  = self::getAlbumId($song->album);
+        $artistid = self::getAlbumId($song->artist);
+        $xdir->addAttribute('grandparentRatingKey', $artistid);
+        $xdir->addAttribute('parentRatingKey', $albumid);
+        $xdir->addAttribute('grandparentKey', self::getMetadataUri($albumid));
+        $xdir->addAttribute('parentKey', self::getMetadataUri($albumid));
+        $xdir->addAttribute('grandparentTitle', $song->f_artist);
+        $xdir->addAttribute('parentTitle', $song->f_album);
+        $xdir->addAttribute('originalTitle', $song->f_artist);
+        $xdir->addAttribute('summary', '');
+        $xdir->addAttribute('art', self::getMetadataUri($id) . '/art/' . $id);
+        $xdir->addAttribute('grandparentThumb', self::getMetadataUri($artistid) . '/thumb/' . $artistid);
+        $xdir->addAttribute('parentThumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid);
+        $xdir->addAttribute('thumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid); // No song art, set album art
        $xdir->addAttribute('index', $song->track);
-       $xdir->addAttribute('duration', $time);
-       $xdir->addAttribute('type', 'track');
-       $xdir->addAttribute('addedAt', '');
-       $xdir->addAttribute('updatedAt', '');
+        $xdir->addAttribute('duration', $time);
+        $xdir->addAttribute('type', 'track');
+        $xdir->addAttribute('addedAt', '');
+        $xdir->addAttribute('updatedAt', '');
 
-       $rating = new Rating($song->id, "song");
-       $rating_value = $rating->get_average_rating();
-       if ($rating_value > 0) {
-           $xdir->addAttribute('rating', intval($rating_value * 2));
-       }
+        $rating       = new Rating($song->id, "song");
+        $rating_value = $rating->get_average_rating();
+        if ($rating_value > 0) {
+            $xdir->addAttribute('rating', intval($rating_value * 2));
+        }
 
-       $xmedia = $xdir->addChild('Media');
-       $mediaid = self::getSongId($song->id);
-       $xmedia->addAttribute('id', $mediaid);
-       $xmedia->addAttribute('duration', $time);
-       $xmedia->addAttribute('bitrate', intval($song->bitrate / 1000));
-       $xmedia->addAttribute('audioChannels', $song->channels);
+        $xmedia  = $xdir->addChild('Media');
+        $mediaid = self::getSongId($song->id);
+        $xmedia->addAttribute('id', $mediaid);
+        $xmedia->addAttribute('duration', $time);
+        $xmedia->addAttribute('bitrate', intval($song->bitrate / 1000));
+        $xmedia->addAttribute('audioChannels', $song->channels);
        // Type != Codec != Container, but that's how Ampache works today...
        $xmedia->addAttribute('audioCodec', $song->type);
-       $xmedia->addAttribute('container', $song->type);
+        $xmedia->addAttribute('container', $song->type);
 
-       $xpart = $xmedia->addChild('Part');
-       $partid = self::getPartId($mediaid);
-       $xpart->addAttribute('id', $partid);
-       $xpart->addAttribute('key', self::getPartUri($partid, $song->type));
-       $xpart->addAttribute('duration', $time);
-       $xpart->addAttribute('file', $song->file);
-       $xpart->addAttribute('size', $song->size);
-       $xpart->addAttribute('container', $song->type);
+        $xpart  = $xmedia->addChild('Part');
+        $partid = self::getPartId($mediaid);
+        $xpart->addAttribute('id', $partid);
+        $xpart->addAttribute('key', self::getPartUri($partid, $song->type));
+        $xpart->addAttribute('duration', $time);
+        $xpart->addAttribute('file', $song->file);
+        $xpart->addAttribute('size', $song->size);
+        $xpart->addAttribute('container', $song->type);
 
-       return $xdir;
+        return $xdir;
     }
 
     public static function addSongMeta(SimpleXMLElement $xml, Song $song)
@@ -1179,7 +1178,7 @@ class Plex_XML_Data
 
     public static function addEpisode(SimpleXMLElement $xml, TVShow_Episode $episode, $details = false)
     {
-        $xvid = self::addVideo($xml, $episode, $details);
+        $xvid     = self::addVideo($xml, $episode, $details);
         $seasonid = self::getTVShowSeasonId($episode->season);
         $xvid->addAttribute('parentRatingKey', $seasonid);
         $xvid->addAttribute('parentKey', self::getMetadataUri($seasonid));
@@ -1204,7 +1203,7 @@ class Plex_XML_Data
 
     private static function addVideo(SimpleXMLElement $xml, Video $video, $details = false)
     {
-        $id = self::getVideoId($video->id);
+        $id   = self::getVideoId($video->id);
         $xvid = $xml->addChild('Video');
         $xvid->addAttribute('ratingKey', $id);
         $xvid->addAttribute('key', self::getMetadataUri($id));
@@ -1216,7 +1215,7 @@ class Plex_XML_Data
             }
             $xvid->addAttribute('originallyAvailableAt', $video->f_release_date);
         }
-        $rating = new Rating($video->id, "video");
+        $rating       = new Rating($video->id, "video");
         $rating_value = $rating->get_average_rating();
         if ($rating_value > 0) {
             $xvid->addAttribute('rating', intval($rating_value * 2));
@@ -1227,29 +1226,29 @@ class Plex_XML_Data
         $xvid->addAttribute('updatedAt', '');
         $xvid->addAttribute('thumb', self::getMetadataUri($id) . '/thumb/' . $id);
 
-       $xmedia = $xvid->addChild('Media');
-       $xmedia->addAttribute('id', $id); // Same ID that video => OK?
+        $xmedia = $xvid->addChild('Media');
+        $xmedia->addAttribute('id', $id); // Same ID that video => OK?
        $xmedia->addAttribute('duration', $time);
-       $xmedia->addAttribute('bitrate', intval($video->bitrate / 1000));
-       $xmedia->addAttribute('audioChannels', $video->channels);
+        $xmedia->addAttribute('bitrate', intval($video->bitrate / 1000));
+        $xmedia->addAttribute('audioChannels', $video->channels);
        // Type != Codec != Container, but that's how Ampache works today...
        $xmedia->addAttribute('audioCodec', $video->audio_codec);
-       $xmedia->addAttribute('videoCodec', $video->video_codec);
-       $xmedia->addAttribute('container', $video->type);
-       $xmedia->addAttribute('width', $video->resolution_x);
-       $xmedia->addAttribute('height', $video->resolution_y);
+        $xmedia->addAttribute('videoCodec', $video->video_codec);
+        $xmedia->addAttribute('container', $video->type);
+        $xmedia->addAttribute('width', $video->resolution_x);
+        $xmedia->addAttribute('height', $video->resolution_y);
        //$xmedia->addAttribute('videoResolution', 'sd'); // TODO
        //$xmedia->addAttribute('aspectRatio', '1.78'); // TODO
        $xmedia->addAttribute('videoFrameRate', intval(ceil($video->frame_rate)) . 'p');
 
-       $xpart = $xmedia->addChild('Part');
-       $partid = self::getPartId($id);
-       $xpart->addAttribute('id', $partid);
-       $xpart->addAttribute('key', self::getPartUri($partid, $video->type));
-       $xpart->addAttribute('duration', $time);
-       $xpart->addAttribute('file', $video->file);
-       $xpart->addAttribute('size', $video->size);
-       $xpart->addAttribute('container', $video->type);
+        $xpart  = $xmedia->addChild('Part');
+        $partid = self::getPartId($id);
+        $xpart->addAttribute('id', $partid);
+        $xpart->addAttribute('key', self::getPartUri($partid, $video->type));
+        $xpart->addAttribute('duration', $time);
+        $xpart->addAttribute('file', $video->file);
+        $xpart->addAttribute('size', $video->size);
+        $xpart->addAttribute('container', $video->type);
 
        // TODO: support Writer/Director tags here as part of Video/
        /*
@@ -1267,29 +1266,29 @@ class Plex_XML_Data
             }
         }
 
-       if ($details) {
-           // Subtitles
+        if ($details) {
+            // Subtitles
            $subtitles = $video->get_subtitles();
-           foreach ($subtitles as $subtitle) {
-               $streamid = hexdec(bin2hex($subtitle['lang_code'])) . $partid;
-               $xstream = $xpart->addChild('Stream');
-               $xstream->addAttribute('id', $streamid);
-               $xstream->addAttribute('key', '/library/streams/' . $streamid);
-               $xstream->addAttribute('streamType', '3');
-               $xstream->addAttribute('codec', 'srt');
-               $xstream->addAttribute('language', $subtitle['lang_name']);
-               $xstream->addAttribute('languageCode', $subtitle['lang_code']);
-               $xstream->addAttribute('format', 'srt');
-           }
+            foreach ($subtitles as $subtitle) {
+                $streamid = hexdec(bin2hex($subtitle['lang_code'])) . $partid;
+                $xstream  = $xpart->addChild('Stream');
+                $xstream->addAttribute('id', $streamid);
+                $xstream->addAttribute('key', '/library/streams/' . $streamid);
+                $xstream->addAttribute('streamType', '3');
+                $xstream->addAttribute('codec', 'srt');
+                $xstream->addAttribute('language', $subtitle['lang_name']);
+                $xstream->addAttribute('languageCode', $subtitle['lang_code']);
+                $xstream->addAttribute('format', 'srt');
+            }
 
            // TODO: support real audio/video streams!
            /*
             <Stream id="93" streamType="1" codec="mpeg4" index="0" bitrate="833" bitDepth="8" chromaSubsampling="4:2:0" colorSpace="yuv" duration="2989528" frameRate="23,976" gmc="0" height="352" level="5" profile="asp" qpel="0" scanType="progressive" width="624" />
             <Stream id="94" streamType="2" selected="1" codec="mp3" index="1" channels="2" bitrate="135" bitrateMode="vbr" duration="2989488" samplingRate="48000" />
             */
-       }
+        }
 
-       return $xvid;
+        return $xvid;
     }
 
     public static function setPlaylists(SimpleXMLElement $xml)
@@ -1304,7 +1303,7 @@ class Plex_XML_Data
 
     public static function addPlaylist(SimpleXMLElement $xml, $playlist)
     {
-        $id = self::getPlaylistId($playlist->id);
+        $id  = self::getPlaylistId($playlist->id);
         $xpl = $xml->addChild('Playlist');
         $xpl->addAttribute('ratingKey', $id);
         $xpl->addAttribute('key', '/playlists/' . $id . '/items');
@@ -1359,7 +1358,7 @@ class Plex_XML_Data
             $id = self::getKeyFromMetadataUri($key);
         } elseif (!empty($uri)) {
             $key = self::getKeyFromFullUri($uri);
-            $id = self::getKeyFromMetadataUri($key);
+            $id  = self::getKeyFromMetadataUri($key);
         }
 
         $plmedias = array();
@@ -1397,14 +1396,14 @@ class Plex_XML_Data
             $xml->addAttribute('playQueueVersion', '1');
 
             $items = $GLOBALS['user']->playlist->get_items();
-            $c = count($items);
+            $c     = count($items);
             if ($c > 0) {
                 self::addPlaylistsItems($xml, $items, 'playQueueItemID');
 
                 // TODO: This should be the real selected item.
                 // But we're missing this information in Ampache playlist
                 $currentIndex = 0;
-                $currentItem = $items[$currentIndex];
+                $currentItem  = $items[$currentIndex];
                 if (isset($currentItem['track_id'])) {
                     $xml->addAttribute('playQueueSelectedItemID', $currentItem['track_id']);
                 }
@@ -1417,8 +1416,8 @@ class Plex_XML_Data
 
     public static function createMyPlexAccount()
     {
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><MyPlex/>');
-        $myplex_username = self::getMyPlexUsername();
+        $xml              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><MyPlex/>');
+        $myplex_username  = self::getMyPlexUsername();
         $myplex_authtoken = self::getMyPlexAuthToken();
         $myplex_published = self::getMyPlexPublished();
         if ($myplex_username) {
@@ -1575,7 +1574,7 @@ class Plex_XML_Data
     public static function createLibraryItem($id)
     {
         $item = null;
-        $oid = self::getAmpacheId($id);
+        $oid  = self::getAmpacheId($id);
         $type = self::getLibraryItemType($id);
 
         if ($type) {
@@ -1738,10 +1737,11 @@ class Plex_XML_Data
 
     protected static function getPathDelimiter()
     {
-        if (strpos(PHP_OS, 'WIN') === 0)
+        if (strpos(PHP_OS, 'WIN') === 0) {
             return '\\';
-        else
+        } else {
             return '/';
+        }
     }
 
     public static function setBrowseService(SimpleXMLElement $xml, $path)
@@ -1781,12 +1781,12 @@ class Plex_XML_Data
     public static function addDirPath(SimpleXMLElement $xml, $path, $title='', $isHome=false)
     {
         $delim = self::getPathDelimiter();
-        $dir = $xml->addChild('Path');
+        $dir   = $xml->addChild('Path');
         if ($isHome) {
             $dir->addAttribute('isHome', '1');
         }
         if (empty($title)) {
-            $pp = explode($delim, $path);
+            $pp    = explode($delim, $path);
             $title = $pp[count($pp)-1];
             if (empty($title)) {
                 $title = $path;
@@ -1846,7 +1846,7 @@ class Plex_XML_Data
     public static function addPhoto(SimpleXMLElement $xml, $id, $kind = 'default')
     {
         $xart = $xml->addChild('Photo');
-        $uri = self::getMetadataUri($id) . '/' . self::getPhotoPlexKind($kind) . '/' . $id;
+        $uri  = self::getMetadataUri($id) . '/' . self::getPhotoPlexKind($kind) . '/' . $id;
         $xart->addAttribute('key', $uri);
         $xart->addAttribute('ratingKey', $uri);
         $xart->addAttribute('thumb', $uri);

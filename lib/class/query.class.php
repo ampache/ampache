@@ -2,21 +2,21 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -89,15 +89,14 @@ class Query
 
             $db_results = Dba::read($sql, array($id, $sid));
             if ($results = Dba::fetch_assoc($db_results)) {
-
-                $this->id = $id;
+                $this->id     = $id;
                 $this->_state = (array) self::_unserialize($results['data']);
 
                 return true;
             }
         }
 
-        Error::add('browse', T_('Browse not found or expired, try reloading the page'));
+        AmpError::add('browse', T_('Browse not found or expired, try reloading the page'));
         return false;
     }
 
@@ -485,14 +484,24 @@ class Query
             case 'regex_match':
             case 'regex_not_match':
             case 'starts_with':
-                if ($this->is_static_content()) { return false; }
+                if ($this->is_static_content()) {
+                    return false;
+                }
                 $this->_state['filter'][$key] = $value;
-                if ($key == 'regex_match') unset($this->_state['filter']['regex_not_match']);
-                if ($key == 'regex_not_match') unset($this->_state['filter']['regex_match']);
+                if ($key == 'regex_match') {
+                    unset($this->_state['filter']['regex_not_match']);
+                }
+                if ($key == 'regex_not_match') {
+                    unset($this->_state['filter']['regex_match']);
+                }
             break;
             case 'playlist_type':
                 // Must be a content manager to turn this off
-                if (Access::check('interface','100')) { unset($this->_state['filter'][$key]); } else { $this->_state['filter'][$key] = '1'; }
+                if (Access::check('interface','100')) {
+                    unset($this->_state['filter'][$key]);
+                } else {
+                    $this->_state['filter'][$key] = '1';
+                }
             break;
             default:
                 // Rien a faire
@@ -504,7 +513,6 @@ class Query
         $this->set_start(0);
 
         return true;
-
     } // set_filter
 
     /**
@@ -524,7 +532,6 @@ class Query
         $this->set_is_simple(false);
         $this->set_start(0);
         $this->set_offset(AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25');
-
     } // reset
 
     /**
@@ -533,8 +540,7 @@ class Query
      */
     public function reset_base()
     {
-        $this->_state['base'] = NULL;
-
+        $this->_state['base'] = null;
     } // reset_base
 
     /**
@@ -544,7 +550,6 @@ class Query
     public function reset_select()
     {
         $this->_state['select'] = array();
-
     } // reset_select
 
     /**
@@ -554,7 +559,6 @@ class Query
     public function reset_having()
     {
         unset($this->_state['having']);
-
     } // reset_having
 
     /**
@@ -564,7 +568,6 @@ class Query
     public function reset_join()
     {
         unset($this->_state['join']);
-
     } // reset_join
 
     /**
@@ -574,7 +577,6 @@ class Query
     public function reset_filters()
     {
         $this->_state['filter'] = array();
-
     } // reset_filters
 
     /**
@@ -584,7 +586,6 @@ class Query
     public function reset_total()
     {
         unset($this->_state['total']);
-
     } // reset_total
 
     /**
@@ -599,7 +600,6 @@ class Query
         return isset($this->_state['filter'][$key])
             ? $this->_state['filter'][$key]
             : false;
-
     } // get_filter
 
     /**
@@ -610,7 +610,6 @@ class Query
     public function get_start()
     {
         return $this->_state['start'];
-
     } // get_start
 
     /**
@@ -654,12 +653,11 @@ class Query
         }
 
         $db_results = Dba::read($this->get_sql(false));
-        $num_rows = Dba::num_rows($db_results);
+        $num_rows   = Dba::num_rows($db_results);
 
         $this->_state['total'] = $num_rows;
 
         return $num_rows;
-
     } // get_total
 
     /**
@@ -735,7 +733,6 @@ class Query
     public function get_type()
     {
         return $this->_state['type'];
-
     } // get_type
 
     /**
@@ -754,21 +751,20 @@ class Query
         $this->reset_join();
 
         if ($order) {
-            $order = ($order == 'DESC') ? 'DESC' : 'ASC';
-            $this->_state['sort'] = array();
+            $order                       = ($order == 'DESC') ? 'DESC' : 'ASC';
+            $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = $order;
         } elseif ($this->_state['sort'][$sort] == 'DESC') {
             // Reset it till I can figure out how to interface the hotness
-            $this->_state['sort'] = array();
+            $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = 'ASC';
         } else {
             // Reset it till I can figure out how to interface the hotness
-            $this->_state['sort'] = array();
+            $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = 'DESC';
         }
 
         $this->resort_objects();
-
     } // set_sort
 
     /**
@@ -779,7 +775,6 @@ class Query
     public function set_offset($offset)
     {
         $this->_state['offset'] = abs($offset);
-
     } // set_offset
 
     /**
@@ -802,7 +797,6 @@ class Query
     public function set_select($field)
     {
         $this->_state['select'][] = $field;
-
     } // set_select
 
     /**
@@ -817,7 +811,6 @@ class Query
     public function set_join($type, $table, $source, $dest, $priority)
     {
         $this->_state['join'][$priority][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest;
-
     } // set_join
 
     /**
@@ -829,7 +822,6 @@ class Query
     public function set_having($condition)
     {
         $this->_state['having'] = $condition;
-
     } // set_having
 
     /**
@@ -841,7 +833,7 @@ class Query
      */
     public function set_start($start)
     {
-        $start = intval($start);
+        $start                 = intval($start);
         $this->_state['start'] = $start;
     } // set_start
 
@@ -853,9 +845,8 @@ class Query
      */
     public function set_is_simple($value)
     {
-        $value = make_bool($value);
+        $value                  = make_bool($value);
         $this->_state['simple'] = $value;
-
     } // set_is_simple
 
     /**
@@ -870,7 +861,6 @@ class Query
         $value = make_bool($value);
 
         $this->_state['static'] = $value;
-
     } // set_static_content
 
     /**
@@ -890,7 +880,6 @@ class Query
     public function is_simple()
     {
         return $this->_state['simple'];
-
     } // is_simple
 
     /**
@@ -920,7 +909,6 @@ class Query
         }
 
         return $objects;
-
     } // get_saved
 
     /**
@@ -934,7 +922,7 @@ class Query
     {
         // First we need to get the SQL statement we are going to run
         // This has to run against any possible filters (dependent on type)
-        $sql = $this->get_sql(true);
+        $sql        = $this->get_sql(true);
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -942,7 +930,7 @@ class Query
             $results[] = $data;
         }
 
-        $results = $this->post_process($results);
+        $results  = $this->post_process($results);
         $filtered = array();
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
@@ -955,7 +943,6 @@ class Query
         $this->save_objects($filtered);
 
         return $filtered;
-
     } // get_objects
 
     /**
@@ -967,12 +954,14 @@ class Query
     private function set_base_sql($force = false, $custom_base = '')
     {
         // Only allow it to be set once
-        if (strlen($this->_state['base']) && !$force) { return true; }
+        if (strlen($this->_state['base']) && !$force) {
+            return true;
+        }
 
         // Custom sql base
         if ($force && !empty($custom_base)) {
             $this->_state['custom'] = true;
-            $sql = $custom_base;
+            $sql                    = $custom_base;
         } else {
             switch ($this->get_type()) {
                 case 'album':
@@ -1094,7 +1083,6 @@ class Query
     {
         $select_string = implode(", ", $this->_state['select']);
         return $select_string;
-
     } // get_select
 
     /**
@@ -1107,7 +1095,6 @@ class Query
     {
         $sql = str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
         return $sql;
-
     } // get_base_sql
 
     /**
@@ -1125,7 +1112,6 @@ class Query
 
         foreach ($this->_state['filter']
             as $key => $value) {
-
             $sql .= $this->sql_filter($key, $value);
         }
 
@@ -1149,7 +1135,6 @@ class Query
         $sql = rtrim($sql,'AND ') . ' ';
 
         return $sql;
-
     } // get_filter_sql
 
     /**
@@ -1174,7 +1159,6 @@ class Query
         $sql = rtrim($sql,',');
 
         return $sql;
-
     } // get_sort_sql
 
     /**
@@ -1184,12 +1168,13 @@ class Query
      */
     private function get_limit_sql()
     {
-        if (!$this->is_simple() || $this->get_start() < 0) { return ''; }
+        if (!$this->is_simple() || $this->get_start() < 0) {
+            return '';
+        }
 
         $sql = ' LIMIT ' . intval($this->get_start()) . ',' . intval($this->get_offset());
 
         return $sql;
-
     } // get_limit_sql
 
     /**
@@ -1212,7 +1197,6 @@ class Query
         } // end foreach of this level of joins
 
         return $sql;
-
     } // get_join_sql
 
     /**
@@ -1225,7 +1209,6 @@ class Query
         $sql = isset($this->_state['having']) ? $this->_state['having'] : '';
 
         return $sql;
-
     } // get_having_sql
 
     /**
@@ -1241,25 +1224,24 @@ class Query
         $sql = $this->get_base_sql();
 
         $filter_sql = "";
-        $join_sql = "";
+        $join_sql   = "";
         $having_sql = "";
-        $order_sql = "";
+        $order_sql  = "";
         if (!isset($this->_state['custom']) || !$this->_state['custom']) {
             $filter_sql = $this->get_filter_sql();
-            $order_sql = $this->get_sort_sql();
-            $join_sql = $this->get_join_sql();
+            $order_sql  = $this->get_sort_sql();
+            $join_sql   = $this->get_join_sql();
             $having_sql = $this->get_having_sql();
         }
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         if ( $this->get_type() == 'artist' && !$this->_state['custom'] ) {
-             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
+            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
         }
         $final_sql .= $order_sql . $limit_sql;
 
         return $final_sql;
-
     } // get_sql
 
     /**
@@ -1278,7 +1260,7 @@ class Query
         }
 
         $tag_count = sizeof($tags);
-        $count = array();
+        $count     = array();
 
         foreach ($data as $row) {
             $count[$row['id']]++;
@@ -1293,7 +1275,6 @@ class Query
         } // end foreach
 
         return $results;
-
     } // post_process
 
     /**
@@ -1328,10 +1309,14 @@ class Query
                     $filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `song`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `song`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `song`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `song`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1343,10 +1328,10 @@ class Query
                     $filter_sql = " `song`.`played`='0' AND ";
                 break;
                 case 'album':
-                    $filter_sql = " `song`.`album` = '". Dba::escape($value) . "' AND ";
+                    $filter_sql = " `song`.`album` = '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'artist':
-                    $filter_sql = " `song`.`artist` = '". Dba::escape($value) . "' AND ";
+                    $filter_sql = " `song`.`artist` = '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'add_gt':
                     $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
@@ -1392,10 +1377,14 @@ class Query
                     $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
@@ -1405,7 +1394,7 @@ class Query
                     }
                 break;
                 case 'artist':
-                    $filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
+                    $filter_sql = " `artist`.`id` = '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'add_lt':
                     $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
@@ -1465,10 +1454,14 @@ class Query
                     $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
@@ -1509,10 +1502,14 @@ class Query
                     $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1532,16 +1529,20 @@ class Query
                     $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'playlist_type':
-                    $user_id = intval($GLOBALS['user']->id);
+                    $user_id    = intval($GLOBALS['user']->id);
                     $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
                 break;
                 default;
@@ -1555,16 +1556,20 @@ class Query
                     $filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `search`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `search`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'playlist_type':
-                    $user_id = intval($GLOBALS['user']->id);
+                    $user_id    = intval($GLOBALS['user']->id);
                     $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
                 break;
             } // end switch on $filter
@@ -1575,10 +1580,14 @@ class Query
                     $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'exact_match':
                     $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1606,10 +1615,14 @@ class Query
                     $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1625,10 +1638,14 @@ class Query
                     $filter_sql = " `license`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `license`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `license`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'exact_match':
                     $filter_sql = " `license`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1644,10 +1661,14 @@ class Query
                     $filter_sql = " `tvshow`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `tvshow`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `tvshow`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `tvshow`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `tvshow`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'exact_match':
                     $filter_sql = " `tvshow`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1695,10 +1716,14 @@ class Query
                     $filter_sql = " `label`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `label`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `label`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `label`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `label`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `label`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1714,10 +1739,14 @@ class Query
                     $filter_sql = " `user_pvmsg`.`subject` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `user_pvmsg`.`subject` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `user_pvmsg`.`subject` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `user_pvmsg`.`subject` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) {
+                        $filter_sql = " `user_pvmsg`.`subject` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
                 break;
                 case 'starts_with':
                     $filter_sql = " `user_pvmsg`.`subject` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1749,7 +1778,6 @@ class Query
         } // end switch on type
 
         return $filter_sql;
-
     } // sql_filter
 
     /**
@@ -1766,7 +1794,6 @@ class Query
     private function logic_filter($object_id)
     {
         return true;
-
     } // logic_filter
 
     /**
@@ -1781,7 +1808,9 @@ class Query
      */
     private function sql_sort($field, $order)
     {
-        if ($order != 'DESC') { $order == 'ASC'; }
+        if ($order != 'DESC') {
+            $order == 'ASC';
+        }
 
         // Depending on the type of browsing we are doing we can apply
         // different filters that apply to different fields
@@ -2123,10 +2152,11 @@ class Query
             break;
         } // end switch
 
-        if (isset($sql) && !empty($sql)) { return "$sql $order,"; }
+        if (isset($sql) && !empty($sql)) {
+            return "$sql $order,";
+        }
 
         return "";
-
     } // sql_sort
 
     /**
@@ -2188,7 +2218,7 @@ class Query
             if (!count($objects) or !is_array($objects)) {
                 return false;
             }
-            $type = $this->get_type();
+            $type      = $this->get_type();
             $where_sql = "WHERE `$type`.`id` IN (";
 
             foreach ($objects as $object_id) {
@@ -2223,7 +2253,6 @@ class Query
         $this->save_objects($results);
 
         return true;
-
     } // resort_objects
 
     /**
@@ -2269,7 +2298,6 @@ class Query
         }
 
         return true;
-
     } // save_objects
 
     /**
@@ -2280,7 +2308,6 @@ class Query
     public function get_state()
     {
         return $this->_state;
-
     } // get_state
 
     /**
@@ -2304,5 +2331,5 @@ class Query
     {
         $this->_state['ak'] = $ak;
     }
-
 } // query
+
