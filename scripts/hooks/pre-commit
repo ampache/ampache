@@ -20,7 +20,7 @@ else
 	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
 fi
 
-FIXERS='indentation,linefeed,trailing_spaces,short_tag,braces,controls_spaces,eof_ending,visibility,align_equals,concat_with_spaces,elseif,line_after_namespace,lowercase_constants,lowercase_keywords'
+FIXERS='indentation,linefeed,trailing_spaces,short_tag,braces,controls_spaces,eof_ending,visibility,align_equals,concat_with_spaces,elseif,line_after_namespace,lowercase_constants'
 
 ST=0 # Global exit status
 

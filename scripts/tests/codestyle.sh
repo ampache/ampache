@@ -14,7 +14,7 @@ fi
 
 PHPCSFIXERARGS="fix -v --fixers="
 # Mandatory fix
-FIXERS1="indentation,linefeed,trailing_spaces,short_tag,braces,controls_spaces,eof_ending,visibility,align_equals,concat_with_spaces,elseif,line_after_namespace,lowercase_constants,lowercase_keywords"
+FIXERS1="indentation,linefeed,trailing_spaces,short_tag,braces,controls_spaces,eof_ending,visibility,align_equals,concat_with_spaces,elseif,line_after_namespace,lowercase_constants"
 # Optionnal fix & false positive
 #FIXERS2="visibility"
 
