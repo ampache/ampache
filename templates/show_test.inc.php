@@ -44,7 +44,15 @@
             <h1><?php echo T_('Ampache Debug'); ?></h1>
         </div>
         <div class="well">
-            <p><?php echo T_('You may have reached this page because a configuration error has occured. Debug information is below.'); ?></p>
+            <p>
+                <?php echo T_('You may have reached this page because a configuration error has occured. Debug information is below.'); ?>
+                <?php if (!is_readable($configfile)) {
+    ?>
+                | <a href="install.php"><?php echo T_('Web Installation');
+    ?></a>
+                <?php 
+} ?>
+            </p>
         </div>
         <div>
             <table class="table" cellpadding="3" cellspacing="0">

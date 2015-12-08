@@ -8,7 +8,7 @@ CHANGELOG
 - Moved Ampache project license from GPLv2 to AGPLv3
 - Add Ampache specific information on Subsonic API getAlbum using a new `ampache` parameter (thanks nicklan)
 - Added 'album tag' option in song search (thanks DanielMaly)
-- Added Home Message plugin to display a simple custom message at home page
+- Added Message of the Day plugin to display MOTD at home page
 - Moved AmpacheApi class to a separate ampacheapi-php git repository
 - Added timeline / friends timeline feature
 - Fixed disabled song display to regular users (thanks shangril)
