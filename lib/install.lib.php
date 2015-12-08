@@ -476,7 +476,7 @@ function install_config_use_case($case)
     }
 }
 
-function install_config_backends(Array $backends)
+function install_config_backends(array $backends)
 {
     $dbconfig = array(
         'subsonic_backend' => '0',

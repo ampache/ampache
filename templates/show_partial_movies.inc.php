@@ -21,4 +21,5 @@
  */
 
 ?>
+<th class="cel_certification optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=movie&sort=certification', T_('Certification'),'sort_video_cert'); ?></th>
 <th class="cel_year optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=movie&sort=year', T_('Year'),'sort_video_year'); ?></th>
