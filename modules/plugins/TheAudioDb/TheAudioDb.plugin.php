@@ -105,17 +105,7 @@ class AmpacheTheaudiodb
         }
 
         try {
-            if ($media_info['mb_trackid'] && in_array('song', $gather_types)) {
-                $track = $this->get_track($media_info['mb_trackid']);
-                if ($track) {
-                    $track                       = $track->track[0];
-                    $results['mb_artistid']      = $track->strMusicBrainzArtistID;
-                    $results['mb_albumid_group'] = $track->strMusicBrainzAlbumID;
-                    $results['album']            = $track->strAlbum;
-                    $results['artist']           = $track->strArtist;
-                    $results['title']            = $track->strTrack;
-                }
-            } elseif (in_array('album', $gather_types)) {
+            if (in_array('album', $gather_types)) {
                 $release = null;
                 if ($media_info['mb_albumid_group']) {
                     $album = $this->get_album($media_info['mb_albumid_group']);
@@ -152,6 +142,16 @@ class AmpacheTheaudiodb
                     $results['title']      = $release->strArtist;
                     $results['summary']    = $release->strBiographyEN;
                     $results['yearformed'] = $release->intFormedYear;
+                }
+            } elseif ($media_info['mb_trackid']) {
+                $track = $this->get_track($media_info['mb_trackid']);
+                if ($track) {
+                    $track                       = $track->track[0];
+                    $results['mb_artistid']      = $track->strMusicBrainzArtistID;
+                    $results['mb_albumid_group'] = $track->strMusicBrainzAlbumID;
+                    $results['album']            = $track->strAlbum;
+                    $results['artist']           = $track->strArtist;
+                    $results['title']            = $track->strTrack;
                 }
             }
         } catch (Exception $e) {

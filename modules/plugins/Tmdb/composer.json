@@ -4,7 +4,7 @@
 	"homepage": "http://ampache.org",
 	"keywords": ["ampache", "tmdb", "plugin"],
 	"type": "ampache-plugin",
-	"license": "GPL-2.0",
+	"license": "AGPL-3.0",
     "require": {
 		"php-tmdb/api": "2.*"
     }
