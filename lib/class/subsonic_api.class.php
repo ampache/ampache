@@ -332,6 +332,7 @@ class Subsonic_Api
      public static function getindexes($input)
      {
          self::check_version($input);
+         set_time_limit(300);
 
          $musicFolderId   = $input['musicFolderId'];
          $ifModifiedSince = $input['ifModifiedSince'];

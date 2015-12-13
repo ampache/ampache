@@ -21,3 +21,4 @@ web.config
 /config/motd.php
 /config/registration_agreement.php
 /.maintenance
+/modules/plugins/ampache-*

@@ -4,7 +4,7 @@
 	"homepage": "http://ampache.org",
 	"keywords": ["php", "music", "video", "player", "stream"],
 	"type": "project",
-	"license": "GPL-2.0",
+	"license": "AGPL-3.0",
 	"config":
 	{
         "vendor-dir": "lib/vendor",
