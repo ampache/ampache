@@ -1,6 +1,6 @@
 Ampache
 =======
-[www.ampache.org](http://www.ampache.org) |
+[www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 
 Basics
@@ -26,7 +26,7 @@ Currently, the recommended version is [git HEAD](https://github.com/ampache/ampa
 Latest changes but unstable is [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
-[![Codacy Badge](https://www.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
+[![Codacy Badge](https://api.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
 Requirements
@@ -80,15 +80,15 @@ Ampache includes some external modules that carry their own licensing.
 * [MusicBrainz](https://github.com/mikealmond/MusicBrainz): MIT
 * PHP MPD interface: GPL v2
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
-* [jQuery](http://jquery.org): MIT
+* [jQuery](https://jquery.org/): MIT
 * [Requests](http://requests.ryanmccue.info): ISC Licensed
-* [xbmc-php-rpc](https://github.com/karlrixon/xbmc-php-rpc): GPL v3
+* [xbmc-php-rpc](https://github.com/krixon/xbmc-php-rpc): GPL v3
 * [Dropbox SDK](https://github.com/dropbox/dropbox-sdk-php): MIT
 * [jPlayer](http://jplayer.org): MIT
 * [prettyPhoto](http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone): GPL v2
 * [Tag-it!] (http://aehlke.github.io/tag-it): MIT
 * [PHP Echo Nest API] (https://github.com/bshaffer/php-echonest-api): MIT
-* [Noty] (http://ned.im/noty): MIT
+* [Noty] (http://ned.im/noty/): MIT
 * [jScroll] (https://github.com/pklauzinski/jscroll): MIT
 * [jquery.qrcode] (http://jeromeetienne.github.io/jquery-qrcode): MIT
 * [PHP OpenID] (https://github.com/openid/php-openid): Apache License
@@ -97,14 +97,14 @@ Ampache includes some external modules that carry their own licensing.
 * [Guzzle] (https://github.com/guzzle/guzzle): MIT
 * [Symfony Components] (https://github.com/symfony): MIT
 * [Evenement] (https://github.com/igorw/evenement): MIT
-* [RhinoSlider] (http://rhinoslider.com): MIT
+* [RhinoSlider] (http://www.rhinoslider.com/): MIT
 * [MediaTable] (https://github.com/edenspiekermann/MediaTable): MIT
 * [Responsive Elements] (https://github.com/kumailht/responsive-elements): MIT
 * [Bootstrap] (http://getbootstrap.com): MIT
 * [jQuery Knob] (https://github.com/aterrien/jQuery-Knob): MIT
 * [jQuery File Upload] (https://github.com/blueimp/jQuery-File-Upload): MIT
-* [jsTree] (http://www.jstree.com): MIT
-* [php-tmdb-api] (https://github.com/wtfzdotnet/php-tmdb-api) : MIT
+* [jsTree] (https://www.jstree.com/): MIT
+* [php-tmdb-api] (https://github.com/php-tmdb/api) : MIT
 * [TvDb] (https://github.com/Moinax/TvDb) : MIT
 * [jQuery DateTimePicker] (https://github.com/xdan/datetimepicker) : MIT
 * [pChart] (http://www.pchart.net) : GPL v3
@@ -151,7 +151,7 @@ Contact Us
 Hate it? Love it? Let us know. Also let us know if you think of any
 more features, encounter bugs, etc.
 
-* [Public Repository](http://github.com/ampache)
+* [Public Repository](https://github.com/ampache)
 * IRC: chat.freenode.net #ampache
 * [Forum](https://groups.google.com/forum/#!forum/ampache)
 * [Issue Tracker](https://github.com/ampache/ampache/issues)
