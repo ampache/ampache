@@ -80,10 +80,20 @@ class Subsonic_XML_Data
     {
         return $id + Subsonic_XML_Data::AMPACHEID_VIDEO;
     }
+    
+    private static function cleanId($id)
+    {
+        // Remove all al-, ar-, ... prefixs
+        $tpos = strpos($id, "-");
+        if ($tpos !== false) {
+            $id = intval(substr($id, $tpos + 1));
+        }
+        return $id;
+    }
 
     public static function getAmpacheId($id)
     {
-        return ($id % Subsonic_XML_Data::AMPACHEID_ARTIST);
+        return (self::cleanId($id) % Subsonic_XML_Data::AMPACHEID_ARTIST);
     }
 
     public static function getAmpacheIds($ids)
@@ -97,26 +107,31 @@ class Subsonic_XML_Data
 
     public static function isArtist($id)
     {
+        $id = self::cleanId($id);
         return ($id >= Subsonic_XML_Data::AMPACHEID_ARTIST && $id < Subsonic_XML_Data::AMPACHEID_ALBUM);
     }
 
     public static function isAlbum($id)
     {
+        $id = self::cleanId($id);
         return ($id >= Subsonic_XML_Data::AMPACHEID_ALBUM && $id < Subsonic_XML_Data::AMPACHEID_SONG);
     }
 
     public static function isSong($id)
     {
+        $id = self::cleanId($id);
         return ($id >= Subsonic_XML_Data::AMPACHEID_SONG);
     }
 
     public static function isSmartPlaylist($id)
     {
+        $id = self::cleanId($id);
         return ($id >= Subsonic_XML_Data::AMPACHEID_SMARTPL);
     }
 
     public static function isVideo($id)
     {
+        $id = self::cleanId($id);
         return ($id >= Subsonic_XML_Data::AMPACHEID_VIDEO);
     }
 

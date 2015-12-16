@@ -309,10 +309,9 @@
 	"extra": {
         "merge-plugin": {
             "include": [
-                "composer.local.json",
-				"modules/catalog/*/composer.json",
-				"modules/localplay/*/composer.json",
-                "modules/plugins/*/composer.json"
+				"modules/catalog/*/composer.module.json",
+				"modules/localplay/*/composer.module.json",
+                "modules/plugins/*/composer.module.json"
             ],
             "recurse": false,
             "replace": false,
