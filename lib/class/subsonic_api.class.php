@@ -108,6 +108,7 @@ class Subsonic_Api
         set_time_limit(0);
         ob_end_clean();
 
+        header("Access-Control-Allow-Origin: *");
         if (function_exists('curl_version')) {
             $headers      = apache_request_headers();
             $reqheaders   = array();
@@ -155,7 +156,7 @@ class Subsonic_Api
                 header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
             }
         }
-        header("access-control-allow-origin: *");
+        header("Access-Control-Allow-Origin: *");
     }
 
     public static function apiOutput($input, $xml)
@@ -1099,6 +1100,7 @@ class Subsonic_Api
             }
         }
 
+        header("Access-Control-Allow-Origin: *");
         if ($art != null) {
             $art->get_db();
             if ($size) {

@@ -140,6 +140,7 @@ if (!empty($image)) {
         header('Cache-Control: private');
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
     }
+    header("Access-Control-Allow-Origin: *");
     $browser->downloadHeaders($filename, $mime, true);
     echo $image;
 }

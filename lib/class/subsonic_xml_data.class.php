@@ -315,7 +315,7 @@ class Subsonic_XML_Data
         $xalbum->addAttribute('isDir', 'true');
         $album->format();
         if ($album->has_art) {
-            $xalbum->addAttribute('coverArt', self::getAlbumId($album->id));
+            $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
         }
         $xalbum->addAttribute('songCount', $album->song_count);
         $xalbum->addAttribute('duration', $album->total_duration);
