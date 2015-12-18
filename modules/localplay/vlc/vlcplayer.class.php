@@ -61,7 +61,7 @@ class VlcPlayer
                    
         $args    = array('command'=>'in_enqueue','&input'=>$aurl);
         $results = $this->sendCommand('status.xml?', $args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -76,7 +76,7 @@ class VlcPlayer
     {
         $args    = array();
         $results = $this->sendCommand('status.xml',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
        
@@ -92,7 +92,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_empty');
         $results = $this->sendCommand('status.xml?', $args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -107,7 +107,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_next');
         $results = $this->sendCommand('status.xml?', $args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -122,7 +122,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_previous');
         $results = $this->sendCommand("status.xml?", $args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
     
@@ -137,7 +137,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_play','&id'=>$pos);
         $results = $this->sendCommand('status.xml?',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -154,7 +154,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_play');
         $results = $this->sendCommand("status.xml?", $args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -169,7 +169,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_pause');
         $results = $this->sendCommand("status.xml?", $args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -184,7 +184,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_stop');
         $results = $this->sendCommand('status.xml?', $args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -199,7 +199,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_repeat');
         $results = $this->sendCommand('status.xml?',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -214,7 +214,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_random');
         $results = $this->sendCommand('status.xml?',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -229,7 +229,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_delete','&id'=>$track);
         $results = $this->sendCommand('status.xml?',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -269,7 +269,7 @@ class VlcPlayer
         $args = array();
         
         $results = $this->sendCommand('status.xml',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
         return $results;
@@ -284,7 +284,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'volume','&val'=>'%2B20');
         $results = $this->sendCommand('status.xml?',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -299,7 +299,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'volume','&val'=>'-20');
         $results = $this->sendCommand('status.xml?',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -317,7 +317,7 @@ class VlcPlayer
         $value   = $value*4;
         $args    = array('command'=>'volume','&val'=>$value);
         $results = $this->sendCommand('status.xml?',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -332,7 +332,7 @@ class VlcPlayer
     {
         $args    = array('command'=>'pl_empty');
         $results = $this->sendcommand('status.xml?',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
 
@@ -351,7 +351,7 @@ class VlcPlayer
         $args = array();
         
         $results = $this->sendCommand('playlist.xml',$args);
-        if (is_null($results)) {
+        if ($results === null) {
             return null;
         }
     
