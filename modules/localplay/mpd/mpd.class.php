@@ -188,10 +188,15 @@ class mpd
         }
 
         $this->_debug('construct', 'constructor called', 5);
+        
+        if (empty($this->host)) {
+            $this->_error('construct', 'Host is empty');
+            return false;
+        }
 
         $response = $this->Connect();
         if (!$response) {
-            $this->_error('Could not connect');
+            $this->_error('construct', 'Could not connect');
             return false;
         }
 

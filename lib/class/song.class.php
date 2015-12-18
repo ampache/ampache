@@ -410,8 +410,6 @@ class Song extends database_object implements media, library_item
             $composer, $channels));
 
         if (!$db_results) {
-            var_dump(Dba::error());
-            exit;
             debug_event('song', 'Unable to insert ' . $file, 2);
             return false;
         }
@@ -995,6 +993,7 @@ class Song extends database_object implements media, library_item
                 }
                 $id3 = new vainfo($this->file);
                 $id3->write_id3($meta);
+                Catalog::update_media_from_tags($this);
             }
         }
     }

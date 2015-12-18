@@ -1331,27 +1331,31 @@ class Search extends playlist_object
         if ($join['song_data']) {
             $table['song_data'] = "LEFT JOIN `song_data` ON `song`.`id`=`song_data`.`song_id`";
         }
-        foreach ($join['tag'] as $key => $value) {
-            $table['tag_' . $key] =
-                "LEFT JOIN (" .
-                "SELECT `object_id`, COUNT(`name`) AS `match` " .
-                "FROM `tag` LEFT JOIN `tag_map` " .
-                "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                "WHERE `tag_map`.`object_type`='song' " .
-                "AND `tag`.`name` $value GROUP BY `object_id`" .
-                ") AS realtag_$key " .
-                "ON `song`.`id`=`realtag_$key`.`object_id`";
+        if ($join['tag']) {
+            foreach ($join['tag'] as $key => $value) {
+                $table['tag_' . $key] =
+                    "LEFT JOIN (" .
+                    "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                    "FROM `tag` LEFT JOIN `tag_map` " .
+                    "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                    "WHERE `tag_map`.`object_type`='song' " .
+                    "AND `tag`.`name` $value GROUP BY `object_id`" .
+                    ") AS realtag_$key " .
+                    "ON `song`.`id`=`realtag_$key`.`object_id`";
+            }
         }
-        foreach ($join['album_tag'] as $key => $value) {
-            $table['tag_' . $key] =
-                "LEFT JOIN (" .
-                "SELECT `object_id`, COUNT(`name`) AS `match` " .
-                "FROM `tag` LEFT JOIN `tag_map` " .
-                "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                "WHERE `tag_map`.`object_type`='album' " .
-                "AND `tag`.`name` $value  GROUP BY `object_id`" .
-                ") AS realtag_$key " .
-                "ON `album`.`id`=`realtag_$key`.`object_id`";
+        if ($join['album_tag']) {
+            foreach ($join['album_tag'] as $key => $value) {
+                $table['tag_' . $key] =
+                    "LEFT JOIN (" .
+                    "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                    "FROM `tag` LEFT JOIN `tag_map` " .
+                    "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                    "WHERE `tag_map`.`object_type`='album' " .
+                    "AND `tag`.`name` $value  GROUP BY `object_id`" .
+                    ") AS realtag_$key " .
+                    "ON `album`.`id`=`realtag_$key`.`object_id`";
+            }
         }
         if ($join['rating']) {
             $userid          = $GLOBALS['user']->id;

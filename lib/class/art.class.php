@@ -385,6 +385,7 @@ class Art extends database_object
                             $ndata['APIC']['mime'] = $mime;
                             $ndata                 = array_merge($ndata, $song->get_metadata());
                             $id3->write_id3($ndata);
+                            Catalog::update_media_from_tags($song);
                         }
                     }
                 }

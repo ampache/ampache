@@ -92,10 +92,10 @@ class scrobbler
             // If there are paramters for GET request, adding the "?" caracter before
             $params='?' . $params;
         }
-        //debug_event('SCROBBLER', "$this->scheme://$this->host$url$params", 5);
-        //debug_event('SCROBBLER', serialize($opts), 5);
-        $fp = fopen("$this->scheme://$this->host$url$params", 'r', false, $context);
+        $target = $this->scheme . '://' . $this->host . $url . $params;
+        $fp = @fopen($target, 'r', false, $context);
         if (!$fp) {
+            debug_event('Scrobbler', 'Cannot access ' . $target, 1);
             return false;
         }
         ob_start();
@@ -103,7 +103,6 @@ class scrobbler
         $buffer = ob_get_contents();
         ob_end_clean();
         fclose($fp);
-        //debug_event('SCROBBLER', $buffer, 5);
         return $buffer;
     } // call_url
 
