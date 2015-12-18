@@ -31,7 +31,7 @@
     ?>
             <div class="np_cell cel_similar_artist">
             <?php
-                if (is_null($a['id'])) {
+                if ($a['id'] === null) {
                     if (AmpConfig::get('wanted') && $a['mbid']) {
                         echo "<a class=\"missing_album\" href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $a['mbid'] . "\" title=\"" . scrub_out($a['name']) . "\">" . scrub_out($a['name']) . "</a>";
                     } else {
