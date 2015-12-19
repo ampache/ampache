@@ -1659,6 +1659,7 @@ class Art extends database_object
                  $size['height'] = 24;
                  $size['width']  = 24;
             break;
+            case 11:
             default:
                 $size['height']   = 275;
                 $size['width']    = 275;
@@ -1725,13 +1726,14 @@ class Art extends database_object
             $imgurl .= '&kind=' . $kind;
         }
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
+        
+        if ($size['height'] > 150) {
+            echo "<div class=\"item_art_play\">";
+            echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' . $object_id);
+            echo "</div>";
+        }
+        
         if ($prettyPhoto) {
-            if ($size['width'] >= 150) {
-                echo "<div class=\"item_art_play\">";
-                echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' . $object_id);
-                echo "</div>";
-            }
-
             $libitem = new $object_type($object_id);
             echo "<div class=\"item_art_actions\">";
             if ($GLOBALS['user']->has_access(50) || ($GLOBALS['user']->has_access(25) && $GLOBALS['user']->id == $libitem->get_user_owner())) {
@@ -1745,6 +1747,7 @@ class Art extends database_object
             }
             echo"</div>";
         }
+        
         echo "</a>\n";
         echo "</div>";
 

@@ -49,6 +49,7 @@ class Browse extends Query
         if (!$id) {
             $this->set_use_pages(true);
             $this->set_use_alpha(false);
+            $this->set_grid_view(true);
         }
         $this->show_header = true;
     }
@@ -423,6 +424,10 @@ class Browse extends Query
                 $this->set_filter('regex_not_match', '');
             }
         }
+        $cn = 'browse_' . $type . '_grid_view';
+        if (isset($_COOKIE[$cn])) {
+            $this->set_grid_view($_COOKIE[$cn] == 'true');
+        }
 
         parent::set_type($type, $custom_base);
     }
@@ -456,6 +461,25 @@ class Browse extends Query
     public function get_use_pages()
     {
         return $this->_state['use_pages'];
+    }
+    
+    /**
+     *
+     * @param boolean $grid_view
+     */
+    public function set_grid_view($grid_view)
+    {
+        $this->save_cookie_params('grid_view', $grid_view ? 'true' : 'false');
+        $this->_state['grid_view'] = $grid_view;
+    }
+    
+    /**
+     *
+     * @return boolean
+     */
+    public function get_grid_view()
+    {
+        return $this->_state['grid_view'];
     }
 
     /**
@@ -529,6 +553,19 @@ class Browse extends Query
     public function get_threshold()
     {
         return $this->_state['threshold'];
+    }
+    
+    /**
+     *
+     * @return string
+     */
+    public function get_css_class()
+    {
+        $css = '';
+        if (!$this->_state['grid_view']) {
+            $css = 'disablegv';
+        }
+        return $css;
     }
 } // browse
 

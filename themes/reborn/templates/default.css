@@ -957,6 +957,43 @@ div.box.box_current_configuration {
     margin-top: 20px;
 }
 
+table.disablegv thead {
+    display: none;
+}
+
+table.disablegv tr {
+    float: left;
+    text-align: center;
+    width: 285px;
+    padding: 20px;
+}
+
+table.disablegv tr.odd {
+    background-color: rgba(255, 255, 255, 0) !important;
+}
+
+table.disablegv td {
+    display: block !important;
+    height: 25px;
+}
+
+table.disablegv td.optional {
+    display: none !important;
+}
+
+table.disablegv td.cel_cover {
+    display: block !important;
+    height: auto !important;
+}
+
+table.disablegv td.cel_play, table.disablegv td.cel_add, table.disablegv td.cel_action, table.disablegv td.cel_year, table.disablegv td.cel_drag {
+    display: none !important;
+}
+
+table.disablegv td.cel_rating {
+    display: inline-block !important;
+}
+
 /***********************************************
            Content (info-box)
 ***********************************************/

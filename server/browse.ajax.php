@@ -175,6 +175,10 @@ switch ($_REQUEST['action']) {
                     $browse->set_filter('regex_not_match', '');
                 }
             break;
+            case 'grid_view':
+                $value = ($value == 'true');
+                $browse->set_grid_view($value);
+            break;
             case 'limit':
                 $value = intval($value);
                 if ($value > 0) {

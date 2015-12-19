@@ -42,7 +42,8 @@ if (Art::is_enabled()) {
     ?>
 <td class="cel_cover">
     <?php
-    Art::display('album', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id);
+    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
+    Art::display('album', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id);
     ?>
 </td>
 <?php 
