@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cb41a7b1a1cdad5377b7233c30fabf50",
-    "content-hash": "cca87ec925519f95367d64afc2f59512",
+    "hash": "cd81719362206d0a8aca7eebaef4ad1e",
+    "content-hash": "8771633a86294cc67847734a48419144",
     "packages": [
         {
             "name": "Afterster/php-echonest-api",
@@ -541,6 +541,119 @@
                 "event-emitter"
             ],
             "time": "2012-11-02 14:49:47"
+        },
+        {
+            "name": "gettext/gettext",
+            "version": "v3.5.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oscarotero/Gettext.git",
+                "reference": "ccf607daf072f54b5a868a58b6d8cf70310ff94d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/ccf607daf072f54b5a868a58b6d8cf70310ff94d",
+                "reference": "ccf607daf072f54b5a868a58b6d8cf70310ff94d",
+                "shasum": ""
+            },
+            "require": {
+                "gettext/languages": "2.*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "illuminate/view": "*",
+                "phpunit/phpunit": "~4.0",
+                "twig/extensions": "*",
+                "twig/twig": "*"
+            },
+            "suggest": {
+                "illuminate/view": "Is necessary if you want to use the Blade extractor",
+                "twig/extensions": "Is necessary if you want to use the Twig extractor",
+                "twig/twig": "Is necessary if you want to use the Twig extractor"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gettext\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oscar Otero",
+                    "email": "oom@oscarotero.com",
+                    "homepage": "http://oscarotero.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP gettext manager",
+            "homepage": "https://github.com/oscarotero/Gettext",
+            "keywords": [
+                "JS",
+                "gettext",
+                "i18n",
+                "mo",
+                "po",
+                "translation"
+            ],
+            "time": "2015-11-17 16:17:24"
+        },
+        {
+            "name": "gettext/languages",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/cldr-to-gettext-plural-rules.git",
+                "reference": "c43ade7e3fb68bcf2379036513dce8d20553d9c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/cldr-to-gettext-plural-rules/zipball/c43ade7e3fb68bcf2379036513dce8d20553d9c8",
+                "reference": "c43ade7e3fb68bcf2379036513dce8d20553d9c8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gettext\\Languages\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "mlocati@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "gettext languages with plural rules",
+            "homepage": "https://github.com/mlocati/cldr-to-gettext-plural-rules",
+            "keywords": [
+                "cldr",
+                "i18n",
+                "internationalization",
+                "l10n",
+                "language",
+                "languages",
+                "localization",
+                "php",
+                "plural",
+                "plural rules",
+                "plurals",
+                "translate",
+                "translations",
+                "unicode"
+            ],
+            "time": "2015-03-27 11:32:41"
         },
         {
             "name": "guzzle/common",

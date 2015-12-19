@@ -93,7 +93,7 @@ class scrobbler
             $params='?' . $params;
         }
         $target = $this->scheme . '://' . $this->host . $url . $params;
-        $fp = @fopen($target, 'r', false, $context);
+        $fp     = @fopen($target, 'r', false, $context);
         if (!$fp) {
             debug_event('Scrobbler', 'Cannot access ' . $target, 1);
             return false;

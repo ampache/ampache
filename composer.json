@@ -32,6 +32,7 @@
 		"php": ">=5.4.0",
 		"wikimedia/composer-merge-plugin": "1.*",
 		
+		"gettext/gettext": "3.5.*",
         "james-heinrich/getid3": "1.9.*",
 		"mikealmond/musicbrainz": "0.2.*",
 		"phpmailer/phpmailer": "5.2.*",

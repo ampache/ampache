@@ -216,10 +216,13 @@ else {
     }
 } // If NO_SESSION passed
 
-$GLOBALS['user']->format(false);
-
 // Load the Preferences from the database
 Preference::init();
+
+// Load gettext mojo
+load_gettext();
+
+$GLOBALS['user']->format(false);
 
 if (session_id()) {
     Session::extend(session_id());
@@ -230,9 +233,6 @@ if (session_id()) {
 /* Add in some variables for ajax done here because we need the user */
 AmpConfig::set('ajax_url', AmpConfig::get('web_path') . '/server/ajax.server.php', true);
 AmpConfig::set('ajax_server', AmpConfig::get('web_path') . '/server', true);
-
-// Load gettext mojo
-load_gettext();
 
 /* Set CHARSET */
 header ("Content-Type: text/html; charset=" . AmpConfig::get('site_charset'));
