@@ -1678,7 +1678,7 @@ class Art extends database_object
      */
     public static function display_item($item, $thumb, $link = null)
     {
-        return self::display($item->type, $item->id, $item->get_fullname(), $thumb, $link);
+        return self::display($item->type ?: strtolower(get_class($item)), $item->id, $item->get_fullname(), $thumb, $link);
     }
 
     /**

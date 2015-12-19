@@ -390,4 +390,14 @@ END;
             return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache.png';
         }
     }
+    
+    public static function is_grid_view($type)
+    {
+        $isgv = true;
+        $cn   = 'browse_' . $type . '_grid_view';
+        if (isset($_COOKIE[$cn])) {
+            $isgv = ($_COOKIE[$cn] == 'true');
+        }
+        return $isgv;
+    }
 }

@@ -1014,7 +1014,6 @@ table.disablegv td.cel_rating {
 .random_selection .random_album, .random_selection .random_video {
     float: left;
     width: 16%;
-    max-width: 175px;
     margin-bottom: 10px;
     text-align: center;
 }
@@ -1024,8 +1023,6 @@ table.disablegv td.cel_rating {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    width: 100px;
-    height: 100px;
     margin: 2px;
 }
 
