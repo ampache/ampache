@@ -20,10 +20,10 @@ choosing a suitable method for doing so.
 Recommended Version
 -------------------
 
-Currently, the recommended version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
+The recommended and most stable version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
 
-Latest changes but unstable is [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
+You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
 [![Codacy Badge](https://api.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
@@ -117,7 +117,8 @@ Translations
 
 Ampache is currently translated (at least partially) into the
 following languages. If you are interested in updating an existing
-translation or adding a new one please see /locale/base/TRANSLATIONS
+translation, simply visit us on [Transifex](https://www.transifex.com/ampache/ampache).
+If you prefer it oldscool or want to work offline, take a look at [/locale/base/TRANSLATIONS](https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md)
 for more instructions.
 
 * English       (en_US)
@@ -148,12 +149,15 @@ Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWL
 Contact Us
 ----------
 
-Hate it? Love it? Let us know. Also let us know if you think of any
-more features, encounter bugs, etc.
+Hate it? Love it? Let us know! Dozens of people send ideas for amazing new features, report bugs and further develop Ampache actively. Be a part of Ampache with it's more than 10 years long history and get in touch with an awesome and friendly community!
 
-* [Public Repository](https://github.com/ampache)
-* IRC: chat.freenode.net #ampache
-* [Forum](https://groups.google.com/forum/#!forum/ampache)
-* [Issue Tracker](https://github.com/ampache/ampache/issues)
-* [Documentation](https://github.com/ampache/ampache/wiki)
+* For Live discussions, visit us on our IRC Channel at chat.freenode.net #ampache
+* For harder cases or general discussion about Ampache take a look an our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
+* Found a bug or Ampache isn't working as expected? Head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
+
+Further Information and basic Help
+----------------------------------
+
+* Everything related to the Ampache Project can be found on our [Public Repository](https://github.com/ampache)
+* Want to know, how to get Apache to work? See our [Documentation](https://github.com/ampache/ampache/wiki)
 
