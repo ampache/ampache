@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 32
+config_version = 33
 
 ;#########################################################
 ; Path Vars                                              #
@@ -553,6 +553,12 @@ channel = "true"
 ; possibility for users to add new live streams.
 ; DEFAULT: true
 live_stream = "true"
+
+; Podcasts
+; Set this to true to enable podcasts and the
+; possibility for admins to subscribe to new podcasts.
+; DEFAULT: false
+;podcast = "false"
 
 ; Web Socket address
 ; Declare the web socket server address

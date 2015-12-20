@@ -460,6 +460,38 @@ class Upnp_Api
                     break;
                 }
             break;
+            
+            case 'podcasts':
+                switch (count($pathreq)) {
+                    case 1:
+                        $counts = Catalog::count_medias();
+                        $meta   = array(
+                            'id'            => $root . '/podcasts',
+                            'parentID'      => $root,
+                            'restricted'    => '1',
+                            'childCount'    => $counts['podcasts'],
+                            'dc:title'      => T_('Podcasts'),
+                            'upnp:class'    => 'object.container',
+                        );
+                    break;
+                
+                    case 2:
+                        $podcast = new Podcast($pathreq[1]);
+                        if ($podcast->id) {
+                            $podcast->format();
+                            $meta = self::_itemPodcast($podcast, $root . '/podcasts');
+                        }
+                    break;
+                    
+                    case 3:
+                        $episode = new Podcast_Episode($pathreq[2]);
+                        if ($episode->id) {
+                            $episode->format();
+                            $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
+                        }
+                    break;
+                }
+            break;
 
             default:
                 $meta = array(
@@ -638,6 +670,31 @@ class Upnp_Api
                     break;
                 }
             break;
+            
+            case 'podcasts':
+                switch (count($pathreq)) {
+                    case 1: // Get podcasts list
+                        $podcasts                  = Catalog::get_podcasts();
+                        list($maxCount, $podcasts) = self::_slice($podcasts, $start, $count);
+                        foreach ($podcasts as $podcast) {
+                            $podcast->format();
+                            $mediaItems[] = self::_itemPodcast($podcast, $parent);
+                        }
+                    break;
+                    case 2: // Get podcast episodes list
+                        $podcast = new Podcast($pathreq[1]);
+                        if ($podcast->id) {
+                            $episodes                  = $podcast->get_episodes();
+                            list($maxCount, $episodes) = self::_slice($episodes, $start, $count);
+                            foreach ($episodes as $episode_id) {
+                                $episode = new Podcast_Episode($episode_id);
+                                $episode->format();
+                                $mediaItems[] = self::_itemPodcastEpisode($episode, $parent);
+                            }
+                        }
+                    break;
+                }
+            break;
 
             default:
                 $mediaItems[] = self::_musicMetadata('artists');
@@ -645,7 +702,12 @@ class Upnp_Api
                 $mediaItems[] = self::_musicMetadata('songs');
                 $mediaItems[] = self::_musicMetadata('playlists');
                 $mediaItems[] = self::_musicMetadata('smartplaylists');
-                $mediaItems[] = self::_musicMetadata('live_streams');
+                if (AmpConfig::get('live_stream')) {
+                    $mediaItems[] = self::_musicMetadata('live_streams');
+                }
+                if (AmpConfig::get('podcast')) {
+                    $mediaItems[] = self::_musicMetadata('podcasts');
+                }
             break;
         }
 
@@ -1067,6 +1129,44 @@ class Upnp_Api
             'size'                      => $video->size,
             'duration'                  => $video->f_time_h . '.0',
         );
+    }
+    
+    private static function _itemPodcast($podcast, $parent)
+    {
+        return array(
+            'id'            => 'amp://music/podcasts/' . $podcast->id,
+            'parentID'      => $parent,
+            'restricted'    => '1',
+            'childCount'    => count($podcast->get_episodes()),
+            'dc:title'      => self::_replaceSpecialSymbols($podcast->f_title),
+            'upnp:class'    => 'object.container',
+        );
+    }
+    
+    private static function _itemPodcastEpisode($episode, $parent)
+    {
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $art_url     = Art::url($episode->podcast, 'podcast', $api_session);
+
+        $fileTypesByExt = self::_getFileTypes();
+        $arrFileType    = (!empty($episode->type)) ? $fileTypesByExt[$episode->type] : array();
+
+        $ret = array(
+            'id'                        => 'amp://music/podcasts/' . $episode->podcast . '/' . $episode->id,
+            'parentID'                  => $parent,
+            'restricted'                => '1',
+            'dc:title'                  => self::_replaceSpecialSymbols($episode->f_title),
+            'upnp:album'                => self::_replaceSpecialSymbols($episode->f_podcast),
+            'upnp:class'                => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
+            'upnp:albumArtURI'          => $art_url
+        );
+        if (isset($arrFileType['mime'])) {
+            $ret['res']          = Podcast_Episode::play_url($episode->id, '', 'api');
+            $ret['protocolInfo'] = $arrFileType['mime'];
+            $ret['size']         = $episode->size;
+            $ret['duration']     = $episode->f_time_h . '.0';
+        }
+        return $ret;
     }
 
     private static function _getFileTypes()

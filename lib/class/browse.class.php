@@ -333,6 +333,14 @@ class Browse extends Query
                 $box_title = T_('Private Messages');
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_pvmsgs.inc.php');
             break;
+            case 'podcast':
+                $box_title = T_('Podcasts');
+                $box_req   = AmpConfig::get('prefix') . UI::find_template('show_podcasts.inc.php');
+            break;
+            case 'podcast_episode':
+                $box_title  = T_('Podcast Episodes');
+                $box_req    = AmpConfig::get('prefix') . UI::find_template('show_podcast_episodes.inc.php');
+            break;
             default:
                 // Rien a faire
             break;

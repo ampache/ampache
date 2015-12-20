@@ -91,7 +91,7 @@ class Userflag extends database_object
      */
     public static function gc($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
 
         if ($object_type != null) {
             if (in_array($object_type, $types)) {

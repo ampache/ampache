@@ -129,13 +129,16 @@ switch ($_REQUEST['action']) {
                 'object_type' => 'song',
                 'object_id' => scrub_in($_REQUEST['song_id'])
             );
-        } else {
-            if (isset($_REQUEST['video_id'])) {
-                $media_ids[] = array(
+        } elseif (isset($_REQUEST['video_id'])) {
+            $media_ids[] = array(
                 'object_type' => 'video',
                 'object_id' => scrub_in($_REQUEST['video_id'])
             );
-            }
+        } elseif (isset($_REQUEST['podcast_episode_id'])) {
+            $media_ids[] = array(
+                'object_type' => 'podcast_episode',
+                'object_id' => scrub_in($_REQUEST['podcast_episode_id'])
+            );
         }
     break;
     default:

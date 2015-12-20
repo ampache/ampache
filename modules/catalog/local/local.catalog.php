@@ -435,29 +435,34 @@ class Catalog_local extends Catalog
         // Prevent the script from timing out and flush what we've got
         set_time_limit(0);
 
-        /* Get the songs and then insert them into the db */
-        $this->add_files($this->path, $options);
+        // If podcast catalog, we don't want to analyze files for now
+        if ($this->gather_types == "podcast") {
+            $this->sync_podcasts();
+        } else {
+            /* Get the songs and then insert them into the db */
+            $this->add_files($this->path, $options);
 
-        if ($options['parse_playlist'] && count($this->_playlists)) {
-            // Foreach Playlists we found
-            foreach ($this->_playlists as $full_file) {
-                $result = $this->import_playlist($full_file);
-                if ($result['success']) {
-                    $file = basename($full_file);
-                } // end if import worked
-            } // end foreach playlist files
-        }
-
-        /* Do a little stats mojo here */
-        $current_time = time();
-
-        if ($options['gather_art']) {
-            $catalog_id = $this->id;
-            if (!defined('SSE_OUTPUT')) {
-                require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
-                flush();
+            if ($options['parse_playlist'] && count($this->_playlists)) {
+                // Foreach Playlists we found
+                foreach ($this->_playlists as $full_file) {
+                    $result = $this->import_playlist($full_file);
+                    if ($result['success']) {
+                        $file = basename($full_file);
+                    } // end if import worked
+                } // end foreach playlist files
             }
-            $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
+
+            /* Do a little stats mojo here */
+            $current_time = time();
+
+            if ($options['gather_art']) {
+                $catalog_id = $this->id;
+                if (!defined('SSE_OUTPUT')) {
+                    require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
+                    flush();
+                }
+                $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
+            }
         }
 
         /* Update the Catalog last_update */
@@ -754,6 +759,19 @@ class Catalog_local extends Catalog
 
         return $id;
     } // insert_local_video
+
+    private function sync_podcasts()
+    {
+        $podcasts = $this->get_podcasts();
+        foreach ($podcasts as $podcast) {
+            $episodes = $podcast->get_episodes('pending');
+            foreach ($episodes as $episode_id) {
+                $episode = new Podcast_Episode($episode_id);
+                $episode->gather();
+                $this->count++;
+            }
+        }
+    }
 
     /**
      * check_local_mp3

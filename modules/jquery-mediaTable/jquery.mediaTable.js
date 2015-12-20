@@ -320,7 +320,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
   $.fn.mediaTable = function() {
 
     var cfg = false;
-    var hasMenu = !$(this).hasClass('disablegv');
+    var hasMenu = (!$(this).hasClass('disablegv') && ($(this).attr('data-objecttype') !== undefined));
     
     // Default configuration block
     if ( !arguments.length || $.isPlainObject(arguments[0]) ) cfg = $.extend({},{

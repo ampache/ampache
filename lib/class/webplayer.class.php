@@ -290,7 +290,7 @@ class WebPlayer
 
         $js['filetype'] = $types['player'];
         $js['url']      = $url;
-        if ($urlinfo['type'] == 'song') {
+        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
             $js['poster'] = $item->image_url;
         }
 

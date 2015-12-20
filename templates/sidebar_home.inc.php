@@ -63,6 +63,13 @@
     ?></a></li>
             <?php 
 } ?>
+            <?php if (AmpConfig::get('podcast')) {
+    ?>
+            <li id="sb_home_browse_music_podcast"><a href="<?php echo $web_path;
+    ?>/browse.php?action=podcast"><?php echo T_('Podcasts');
+    ?></a></li>
+            <?php 
+} ?>
             <?php if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) {
     ?>
             <li id="sb_home_browse_music_upload"><a href="<?php echo $web_path;

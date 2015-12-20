@@ -1650,6 +1650,7 @@ class Song extends database_object implements media, library_item
             }
         }
 
+        $media->format();
         $media_name = $media->get_stream_name() . "." . $type;
         $media_name = str_replace("/", "-", $media_name);
         $media_name = str_replace("?", "", $media_name);

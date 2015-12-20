@@ -1315,7 +1315,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `addition_time` int(11) unsigned NOT NULL,
   `update_time` int(11) unsigned DEFAULT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT '1',
-  `played` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `played` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `release_date` int(11) DEFAULT NULL,
   `channels` mediumint(9) DEFAULT NULL,
   `bitrate` mediumint(8) DEFAULT NULL,

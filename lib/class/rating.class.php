@@ -52,7 +52,7 @@ class Rating extends database_object
      */
     public static function gc()
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'playlist', 'label');
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'playlist', 'label', 'podcast', 'podcast_episode');
 
         if ($object_type != null) {
             if (in_array($object_type, $types)) {

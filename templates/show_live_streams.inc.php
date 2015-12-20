@@ -19,8 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-$web_path = AmpConfig::get('web_path');
 ?>
 <?php if ($browse->get_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');

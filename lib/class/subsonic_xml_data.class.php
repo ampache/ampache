@@ -41,11 +41,13 @@ class Subsonic_XML_Data
     const SSERROR_DATA_NOTFOUND     = 70;
 
     // Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
-    const AMPACHEID_ARTIST  = 100000000;
-    const AMPACHEID_ALBUM   = 200000000;
-    const AMPACHEID_SONG    = 300000000;
-    const AMPACHEID_SMARTPL = 400000000;
-    const AMPACHEID_VIDEO   = 500000000;
+    const AMPACHEID_ARTIST    = 100000000;
+    const AMPACHEID_ALBUM     = 200000000;
+    const AMPACHEID_SONG      = 300000000;
+    const AMPACHEID_SMARTPL   = 400000000;
+    const AMPACHEID_VIDEO     = 500000000;
+    const AMPACHEID_PODCAST   = 600000000;
+    const AMPACHEID_PODCASTEP = 700000000;
 
     /**
      * constructor
@@ -79,6 +81,16 @@ class Subsonic_XML_Data
     public static function getVideoId($id)
     {
         return $id + Subsonic_XML_Data::AMPACHEID_VIDEO;
+    }
+    
+    public static function getPodcastId($id)
+    {
+        return $id + Subsonic_XML_Data::AMPACHEID_PODCAST;
+    }
+    
+    public static function getPodcastEpId($id)
+    {
+        return $id + Subsonic_XML_Data::AMPACHEID_PODCASTEP;
     }
     
     private static function cleanId($id)
@@ -120,19 +132,31 @@ class Subsonic_XML_Data
     public static function isSong($id)
     {
         $id = self::cleanId($id);
-        return ($id >= Subsonic_XML_Data::AMPACHEID_SONG);
+        return ($id >= Subsonic_XML_Data::AMPACHEID_SONG && $id < Subsonic_XML_Data::AMPACHEID_SMARTPL);
     }
 
     public static function isSmartPlaylist($id)
     {
         $id = self::cleanId($id);
-        return ($id >= Subsonic_XML_Data::AMPACHEID_SMARTPL);
+        return ($id >= Subsonic_XML_Data::AMPACHEID_SMARTPL && $id < Subsonic_XML_Data::AMPACHEID_VIDEO);
     }
 
     public static function isVideo($id)
     {
         $id = self::cleanId($id);
-        return ($id >= Subsonic_XML_Data::AMPACHEID_VIDEO);
+        return ($id >= Subsonic_XML_Data::AMPACHEID_VIDEO && $id < Subsonic_XML_Data::AMPACHEID_PODCAST);
+    }
+    
+    public static function isPodcast($id)
+    {
+        $id = self::cleanId($id);
+        return ($id >= Subsonic_XML_Data::AMPACHEID_PODCAST && $id < Subsonic_XML_Data::AMPACHEID_PODCASTEP);
+    }
+    
+    public static function isPodcastEp($id)
+    {
+        $id = self::cleanId($id);
+        return ($id >= Subsonic_XML_Data::AMPACHEID_PODCASTEP);
     }
 
     public static function createFailedResponse($version = "")
@@ -818,6 +842,67 @@ class Subsonic_XML_Data
             if ($song->id) {
                 self::addSong($xsimilar, $song);
             }
+        }
+    }
+    
+    public static function addPodcasts($xml, $podcasts, $includeEpisodes = false)
+    {
+        $xpodcasts = $xml->addChild("podcasts");
+        foreach ($podcasts as $podcast) {
+            $podcast->format();
+            $xchannel = $xpodcasts->addChild("channel");
+            $xchannel->addAttribute("id", self::getPodcastId($podcast->id));
+            $xchannel->addAttribute("url", $podcast->feed);
+            $xchannel->addAttribute("title", $podcast->f_title);
+            $xchannel->addAttribute("description", $podcast->f_description);
+            if (Art::has_db($podcast->id, 'podcast')) {
+                $xchannel->addAttribute("coverArt", "pod-" . self::getPodcastId($podcast->id));
+            }
+            $xchannel->addAttribute("status", "completed");
+            if ($includeEpisodes) {
+                $episodes = $podcast->get_episodes();
+                foreach ($episodes as $episode_id) {
+                    $episode = new Podcast_Episode($episode_id);
+                    self::addPodcastEpisode($xchannel, $episode);
+                }
+            }
+        }
+    }
+    
+    private static function addPodcastEpisode($xml, $episode)
+    {
+        $episode->format();
+        $xepisode = $xml->addChild("episode");
+        $xepisode->addAttribute("id", self::getPodcastEpId($episode->id));
+        $xepisode->addAttribute("channelId", self::getPodcastId($episode->podcast));
+        $xepisode->addAttribute("title", $episode->f_title);
+        $xepisode->addAttribute("album", $episode->f_podcast);
+        $xepisode->addAttribute("description", $episode->f_description);
+        $xepisode->addAttribute("duration", $episode->time);
+        $xepisode->addAttribute("genre", "Podcast");
+        $xepisode->addAttribute("isDir", "false");
+        $xepisode->addAttribute("publishDate", date("c", $episode->pubdate));
+        $xepisode->addAttribute("status", $episode->state);
+        if (Art::has_db($episode->podcast, 'podcast')) {
+            $xepisode->addAttribute("coverArt",self::getPodcastId($episode->podcast));
+        }
+        if ($episode->file) {
+            $xepisode->addAttribute("streamId", self::getPodcastEpId($episode->id));
+            $xepisode->addAttribute("size", $episode->size);
+            $xepisode->addAttribute("suffix", $episode->type);
+            $xepisode->addAttribute("contentType", $episode->mime);
+            // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
+            $path = basename($episode->file);
+            $xepisode->addAttribute("path", $path);
+        }
+    }
+    
+    public static function addNewestPodcastEpisodes($xml, $episodes)
+    {
+        $xpodcasts = $xml->addChild("newestPodcasts");
+        foreach ($episodes as $episode) {
+            $episode->format();
+            self::addPodcastEpisode($xpodcasts, $episode);
         }
     }
 }

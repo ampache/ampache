@@ -526,10 +526,16 @@ abstract class Catalog extends database_object
      * of what you find
      * @return int[]
      */
-    public static function get_catalogs()
+    public static function get_catalogs($filter_type='')
     {
-        $sql        = "SELECT `id` FROM `catalog` ORDER BY `name`";
-        $db_results = Dba::read($sql);
+        $params     = array();
+        $sql        = "SELECT `id` FROM `catalog` ";
+        if (!empty($filter_type)) {
+            $sql   .= "WHERE `gather_types` = ? ";
+            $params[] = $filter_type;
+        }
+        $sql       .= "ORDER BY `name`";
+        $db_results = Dba::read($sql, $params);
 
         $results = array();
 
@@ -615,7 +621,7 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video'))) {
+        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
             return 0;
         }
 
@@ -722,6 +728,11 @@ abstract class Catalog extends database_object
         $db_results   = Dba::read($sql, $params);
         $data         = Dba::fetch_row($db_results);
         $live_streams = $data[0];
+        
+        $sql          = 'SELECT COUNT(`id`) FROM `podcast`';
+        $db_results   = Dba::read($sql, $params);
+        $data         = Dba::fetch_row($db_results);
+        $podcasts     = $data[0];
 
         $results                   = array();
         $results['songs']          = $songs;
@@ -730,7 +741,7 @@ abstract class Catalog extends database_object
         $results['artists']        = $artists;
         $results['playlists']      = $playlists;
         $results['smartplaylists'] = $smartplaylists;
-        $results['live_streams']   = $live_streams;
+        $results['podcasts']       = $podcasts;
         $results['size']           = $size;
         $results['time']           = $time;
 
@@ -1070,6 +1081,94 @@ abstract class Catalog extends database_object
         $results    = array();
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = $r['id'];
+        }
+
+        return $results;
+    }
+    
+    /**
+     * get_podcast_ids
+     *
+     * This returns an array of ids of podcasts in this catalog
+     * @return int[]
+     */
+    public function get_podcast_ids()
+    {
+        $results = array();
+
+        $sql = 'SELECT `podcast`.`id` FROM `podcast` ';
+        $sql .= 'WHERE `podcast`.`catalog` = ?';
+        $db_results = Dba::read($sql, array($this->id));
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $results[] = $r['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     *
+     * @param int[]|null $catalogs
+     * @return \Podcast[]
+     */
+    public static function get_podcasts($catalogs = null)
+    {
+        if (!$catalogs) {
+            $catalogs = self::get_catalogs();
+        }
+
+        $results = array();
+        foreach ($catalogs as $catalog_id) {
+            $catalog     = Catalog::create_from_id($catalog_id);
+            $podcast_ids = $catalog->get_podcast_ids();
+            foreach ($podcast_ids as $podcast_id) {
+                $results[] = new Podcast($podcast_id);
+            }
+        }
+
+        return $results;
+    }
+    
+    /**
+     * get_newest_podcasts_ids
+     *
+     * This returns an array of ids of latest podcast episodes in this catalog
+     * @return int[]
+     */
+    public function get_newest_podcasts_ids()
+    {
+        $results = array();
+
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ' .
+                'INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ' .
+                'WHERE `podcast`.`catalog` = ? ' .
+                'ORDER BY `podcast_episode`.`pubdate` DESC';
+        $db_results = Dba::read($sql, array($this->id));
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $results[] = $r['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     *
+     * @param int[]|null $catalogs
+     * @return \Podcast_Episode[]
+     */
+    public static function get_newest_podcasts($catalogs = null)
+    {
+        if (!$catalogs) {
+            $catalogs = self::get_catalogs();
+        }
+
+        $results = array();
+        foreach ($catalogs as $catalog_id) {
+            $catalog     = Catalog::create_from_id($catalog_id);
+            $episode_ids = $catalog->get_newest_podcasts_ids();
+            foreach ($episode_ids as $episode_id) {
+                $results[] = new Podcast_Episode($episode_id);
+            }
         }
 
         return $results;

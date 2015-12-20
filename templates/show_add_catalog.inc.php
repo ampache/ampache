@@ -82,7 +82,15 @@ $default_sort   = "%a/%A";
     ?></option>
             <?php
 
-} ?>
+}
+            if (AmpConfig::get('podcast')) {
+                ?>
+                    <option value="podcast"><?php echo T_('Podcast');
+                ?></option>
+            <?php
+
+            }
+            ?>
                 </select>
             </td>
         </tr>
