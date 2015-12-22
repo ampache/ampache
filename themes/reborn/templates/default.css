@@ -1019,6 +1019,8 @@ table.disablegv td.cel_rating {
 }
 
 .random_selection .random_album .art_album img {
+    height: 100px;
+    width: 100px;
     vertical-align: middle;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
