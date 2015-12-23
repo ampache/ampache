@@ -1105,7 +1105,7 @@ class Subsonic_Api
         header("Access-Control-Allow-Origin: *");
         if ($art != null) {
             $art->get_db();
-            if ($size) {
+            if ($size && AmpConfig::get('resize_images')) {
                 $dim           = array();
                 $dim['width']  = $size;
                 $dim['height'] = $size;

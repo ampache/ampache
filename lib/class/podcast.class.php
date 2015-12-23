@@ -268,7 +268,7 @@ class Podcast extends database_object implements library_item
     {
         $feed = $data['feed'];
         // Feed must be http/https
-        if (strpos($data['feed'], "http://") !== 0 && strpos($data['feed'], "https://") !== 0) {
+        if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             AmpError::add('feed', T_('Wrong feed url'));
         }
         
@@ -437,6 +437,8 @@ class Podcast extends database_object implements library_item
     
     public function sync_episodes($gather=false)
     {
+        debug_event('podcast', 'Syncing feed ' . $this->feed . ' ...', 5);
+        
         $xmlstr = file_get_contents($this->feed);
         if ($xmlstr === false) {
             debug_event('podcast', 'Cannot access feed ' . $this->feed, 1);

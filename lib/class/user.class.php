@@ -892,6 +892,12 @@ class User extends database_object
             $sip = $_SERVER['REMOTE_ADDR'];
             debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
         }
+        
+        // Remove port information if any
+        if (strstr($sip, ':') !== false) {
+            $sipar = explode(':', $sip);
+            $sip = $sipar[0];
+        }
 
         $ip    = Dba::escape(inet_pton($sip));
         $date  = time();
