@@ -158,6 +158,27 @@ class Subsonic_XML_Data
         $id = self::cleanId($id);
         return ($id >= Subsonic_XML_Data::AMPACHEID_PODCASTEP);
     }
+    
+    public static function getAmpacheType($id)
+    {
+        if (self::isArtist($id)) {
+            return "artist";
+        } elseif (self::isAlbum($id)) {
+            return "album";
+        } elseif (self::isSong($id)) {
+            return "song";
+        } elseif (self::isSmartPlaylist($id)) {
+            return "search";
+        } elseif (self::isVideo($id)) {
+            return "video";
+        } elseif (self::isPodcast($id)) {
+            return "podcast";
+        } elseif (self::isPodcastEp($id)) {
+            return "podcast_episode";
+        }
+        
+        return "";
+    }
 
     public static function createFailedResponse($version = "")
     {
@@ -517,9 +538,9 @@ class Subsonic_XML_Data
         }
     }
 
-    public static function addVideo($xml, $video)
+    public static function addVideo($xml, $video, $elementName = 'video')
     {
-        $xvideo = $xml->addChild('video');
+        $xvideo = $xml->addChild($elementName);
         $xvideo->addAttribute('id', self::getVideoId($video->id));
         $xvideo->addAttribute('title', $video->f_full_title);
         $xvideo->addAttribute('isDir', 'false');
@@ -869,10 +890,10 @@ class Subsonic_XML_Data
         }
     }
     
-    private static function addPodcastEpisode($xml, $episode)
+    private static function addPodcastEpisode($xml, $episode, $elementName = 'episode')
     {
         $episode->format();
-        $xepisode = $xml->addChild("episode");
+        $xepisode = $xml->addChild($elementName);
         $xepisode->addAttribute("id", self::getPodcastEpId($episode->id));
         $xepisode->addAttribute("channelId", self::getPodcastId($episode->podcast));
         $xepisode->addAttribute("title", $episode->f_title);
@@ -903,6 +924,32 @@ class Subsonic_XML_Data
         foreach ($episodes as $episode) {
             $episode->format();
             self::addPodcastEpisode($xpodcasts, $episode);
+        }
+    }
+    
+    public static function addBookmarks($xml, $bookmarks)
+    {
+        $xbookmarks = $xml->addChild("bookmarks");
+        foreach ($bookmarks as $bookmark) {
+            $bookmark->format();
+            self::addBookmark($xbookmarks, $bookmark);
+        }
+    }
+    
+    private static function addBookmark($xml, $bookmark)
+    {
+        $xbookmark = $xml->addChild("bookmark");
+        $xbookmark->addAttribute("position", $bookmark->position);
+        $xbookmark->addAttribute("username", $bookmark->f_user);
+        $xbookmark->addAttribute("comment", $bookmark->comment);
+        $xbookmark->addAttribute("created", date("c", $bookmark->creation_date));
+        $xbookmark->addAttribute("changed", date("c", $bookmark->update_date));
+        if ($bookmark->object_type == "song") {
+            self::addSong($xbookmark, new Song($bookmark->object_id), false, 'entry');
+        } elseif ($bookmark->object_type == "video") {
+            self::addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
+        } elseif ($bookmark->object_type == "podcast_episode") {
+            self::addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
         }
     }
 }

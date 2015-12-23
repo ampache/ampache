@@ -525,6 +525,9 @@ class Update
         
         $update_string = "- Add podcasts.<br />";
         $version[]     = array('version' => '380001', 'description' => $update_string);
+        
+        $update_string = "- Add bookmarks.<br />";
+        $version[]     = array('version' => '380002', 'description' => $update_string);
 
         return $version;
     }
@@ -3717,6 +3720,29 @@ class Update
         $retval &= Dba::write($sql, array($id));
         
         $sql    = "ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380002
+     *
+     * Add bookmarks
+     */
+    public static function update_380002()
+    {
+        $retval = true;
+
+        $sql = "CREATE TABLE `bookmark` (`id` int( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+            "`user` int(11) UNSIGNED NOT NULL , " .
+            "`position` int(11) UNSIGNED DEFAULT '0' NOT NULL , " .
+            "`comment` varchar(255) CHARACTER SET utf8 NOT NULL , " .
+            "`object_type` varchar(64) NOT NULL , " .
+            "`object_id` int(11) UNSIGNED NOT NULL , " .
+            "`creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL , " .
+            "`update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL" .
+            ") ENGINE = MYISAM";
         $retval &= Dba::write($sql);
 
         return $retval;

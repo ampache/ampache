@@ -2046,6 +2046,77 @@ class Subsonic_Api
         self::apiOutput($input, $r);
     }
     
+    /**
+     * getBookmarks
+     * Get all user bookmarks.
+     * Takes no parameter.
+     * Not supported.
+     */
+    public static function getbookmarks($input)
+    {
+        self::check_version($input, "1.9.0");
+
+        $r         = Subsonic_XML_Data::createSuccessResponse();
+        $bookmarks = Bookmark::get_bookmarks();
+        Subsonic_XML_Data::addBookmarks($r, $bookmarks);
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * createBookmark
+     * Creates or updates a bookmark.
+     * Takes the file id and position with optional comment in parameters.
+     * Not supported.
+     */
+    public static function createbookmark($input)
+    {
+        self::check_version($input, "1.9.0");
+        $id       = self::check_parameter($input, 'id');
+        $position = self::check_parameter($input, 'position');
+        $comment  = $input['comment'];
+        $type     = Subsonic_XML_Data::getAmpacheType($id);
+
+        if (!empty($type)) {
+            $bookmark = new Bookmark(Subsonic_XML_Data::getAmpacheId($id), $type);
+            if ($bookmark->id) {
+                $bookmark->update($position);
+            } else {
+                Bookmark::create(array(
+                    'object_id' =>  Subsonic_XML_Data::getAmpacheId($id),
+                    'object_type' => $type,
+                    'comment' => $comment,
+                    'position' => $position
+                ));
+            }
+            $r = Subsonic_XML_Data::createSuccessResponse();
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        }
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * deleteBookmark
+     * Delete an existing bookmark.
+     * Takes the file id in parameter.
+     * Not supported.
+     */
+    public static function deletebookmark($input)
+    {
+        self::check_version($input, "1.9.0");
+        $id   = self::check_parameter($input, 'id');
+        $type = Subsonic_XML_Data::getAmpacheType($id);
+        
+        $bookmark = new Bookmark(Subsonic_XML_Data::getAmpacheId($id), $type);
+        if ($bookmark->id) {
+            $bookmark->remove();
+            $r = Subsonic_XML_Data::createSuccessResponse();
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        }
+        self::apiOutput($input, $r);
+    }
+    
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
 
     /**
@@ -2075,44 +2146,30 @@ class Subsonic_Api
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);
     }
-
+    
     /**
-     * getBookmarks
-     * Get all user bookmarks.
+     * getPlayQueue
+     * Geturns the state of the play queue for the authenticated user.
      * Takes no parameter.
      * Not supported.
      */
-    public static function getbookmarks($input)
+    public static function getplayqueue($input)
     {
-        self::check_version($input, "1.9.0");
+        self::check_version($input, "1.12.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);
     }
-
+    
     /**
-     * createBookmark
-     * Creates or updates a bookmark.
-     * Takes the file id and position with optional comment in parameters.
+     * savePlayQueue
+     * Save the state of the play queue for the authenticated user.
+     * Takes multiple song id in parameter with optional current id playing sond and position.
      * Not supported.
      */
-    public static function createbookmark($input)
+    public static function saveplayqueue($input)
     {
-        self::check_version($input, "1.9.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * deleteBookmark
-     * Delete an existing bookmark.
-     * Takes the file id in parameter.
-     * Not supported.
-     */
-    public static function deletebookmark($input)
-    {
-        self::check_version($input, "1.9.0");
+        self::check_version($input, "1.12.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);
