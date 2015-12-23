@@ -169,19 +169,21 @@ class Subsonic_Api
     public static function apiOutput2($f, $xml, $callback='')
     {
         if ($f == "json") {
-            echo json_encode(self::xml2json($xml), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+            $output = json_encode(self::xml2json($xml), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
         } else {
             if ($f == "jsonp") {
-                echo $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
+                $output = $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
             } else {
                 $xmlstr = $xml->asXml();
                 // Format xml output
                 $dom = new DOMDocument();
                 $dom->loadXML($xmlstr);
                 $dom->formatOutput = true;
-                echo $dom->saveXML();
+                $output            = $dom->saveXML();
             }
         }
+        
+        echo $output;
     }
 
     /**
@@ -195,7 +197,7 @@ class Subsonic_Api
             'attributePrefix' => '',   //to distinguish between attributes and nodes with the same name
             'alwaysArray' => array(),   //array of xml tag names which should always become arrays
             'autoArray' => true,        //only create arrays for tags which appear more than once
-            'textContent' => '$',       //key used for the text content of elements
+            'textContent' => 'value',       //key used for the text content of elements
             'autoText' => true,         //skip textContent key if node has no attributes or child nodes
             'keySearch' => false,       //optional search and replace on tag and attribute names
             'keyReplace' => false,      //replace values for above search values (as passed to str_replace())

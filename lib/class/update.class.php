@@ -529,6 +529,9 @@ class Update
         $update_string = "- Add bookmarks.<br />";
         $version[]     = array('version' => '380002', 'description' => $update_string);
 
+        $update_string = "- Add unique constraint on tag_map table.<br />";
+        $version[]     = array('version' => '380003', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -3743,6 +3746,21 @@ class Update
             "`creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL , " .
             "`update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL" .
             ") ENGINE = MYISAM";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380003
+     *
+     * Add unique constraint on tag_map table
+     */
+    public static function update_380003()
+    {
+        $retval = true;
+        
+        $sql = "ALTER TABLE `tag_map` ADD UNIQUE `UNIQUE_TAG_MAP` (`object_id`, `object_type`, `user`)";
         $retval &= Dba::write($sql);
 
         return $retval;

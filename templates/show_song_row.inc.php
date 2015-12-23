@@ -82,14 +82,14 @@ if ($libitem->enabled || Access::check('interface','50')) {
                 <?php Rating::show($libitem->id,'song') ?>  
             </td>
     <?php 
-            if (AmpConfig::get('userflags')) {
-                ?>
+        }
+        if (AmpConfig::get('userflags')) {
+            ?>
             <td class="cel_userflag" id="userflag_<?php echo $libitem->id;
-                ?>_song">
+            ?>_song">
                 <?php Userflag::show($libitem->id,'song') ?>
             </td>
     <?php 
-            }
         }
     }
     ?>

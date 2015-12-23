@@ -659,17 +659,24 @@ class Tag extends database_object implements library_item
      * This returns the count for the all objects associated with this tag
      * If a type is specific only counts for said type are returned
      */
-    public function count($type='')
+    public function count($type='', $user_id = 0)
     {
+        $params = array($this->id);
+        
         $filter_sql = "";
+        if ($user_id > 0) {
+            $filter_sql = " AND `user` = ?";
+            $params[]   = $user_id;
+        }
         if ($type) {
-            $filter_sql = " AND `object_type`='" . Dba::escape($type) . "'";
+            $filter_sql = " AND `object_type` = ?";
+            $params[]   = $type;
         }
 
         $results = array();
 
-        $sql        = "SELECT COUNT(`id`) AS `count`,`object_type` FROM `tag_map` WHERE `tag_id`='" . Dba::escape($this->id) . "'" .  $filter_sql . " GROUP BY `object_type`";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT DISTINCT(`object_type`), COUNT(`object_id`) AS `count` FROM `tag_map` WHERE `tag_id` = ?" .  $filter_sql . " GROUP BY `object_type`";
+        $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['object_type']] = $row['count'];

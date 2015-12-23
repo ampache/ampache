@@ -524,8 +524,11 @@ class Subsonic_XML_Data
         $xgenres = $xml->addChild('genres');
 
         foreach ($tags as $tag) {
-            $otag = new Tag($tag['id']);
-            $xgenres->addChild('genre', htmlspecialchars($otag->name));
+            $otag   = new Tag($tag['id']);
+            $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
+            $counts = $otag->count('', $GLOBALS['user']->id);
+            $xgenre->addAttribute("songCount", $counts['song']);
+            $xgenre->addAttribute("albumCount", $counts['album']);
         }
     }
 

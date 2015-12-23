@@ -1635,11 +1635,6 @@ class Art extends database_object
                 $size['height']    = 80;
                 $size['width']     = 80;
             break;
-            case 4:
-                /* Web Player size */
-                $size['height'] = 200;
-                $size['width']  = 200; // 200px width, set via CSS
-            break;
             case 5:
                 /* Web Player size */
                 $size['height'] = 32;
@@ -1670,10 +1665,13 @@ class Art extends database_object
                  $size['height'] = 24;
                  $size['width']  = 24;
             break;
+            case 4:
+                /* Popup Web Player size */
             case 11:
+                /* Large view browse size */
             default:
-                $size['height']   = 275;
-                $size['width']    = 275;
+                $size['height']   = 200;
+                $size['width']    = 200;
             break;
         }
 

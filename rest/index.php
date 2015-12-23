@@ -66,6 +66,7 @@ if (empty($_SERVER['HTTP_USER_AGENT'])) {
 
 if (empty($user) || empty($password) || empty($version) || empty($action) || empty($clientapp)) {
     ob_end_clean();
+    debug_event('subsonic', 'Missing Subsonic base parameters', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM), $callback);
     exit();
 }
@@ -92,6 +93,7 @@ $GLOBALS['user'] = User::get_from_username($user);
 // Check server version
 if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     ob_end_clean();
+    debug_event('subsonic', 'Requested client version is not supported', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER), $callback);
     exit();
 }
