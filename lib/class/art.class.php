@@ -597,9 +597,20 @@ class Art extends database_object
 
         $results = Dba::fetch_assoc($db_results);
         if (count($results)) {
-            return array(
-                'thumb' => (AmpConfig::get('album_art_store_disk')) ? self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind) : $results['image'],
-                'thumb_mime' => $results['mime']);
+            $image = null;
+            if (AmpConfig::get('album_art_store_disk')) {
+                $image = self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind);
+            } else {
+                $image = $results['image'];
+            }
+            
+            if ($image != null) {
+                return array(
+                    'thumb' => (AmpConfig::get('album_art_store_disk')) ? self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind) : $results['image'],
+                    'thumb_mime' => $results['mime']);
+            } else {
+                debug_event('art', 'Thumb entry found in database but associated data cannot be found.', 3);
+            }
         }
 
         // If we didn't get a result
