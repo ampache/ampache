@@ -896,7 +896,7 @@ class User extends database_object
         // Remove port information if any
         if (strstr($sip, ':') !== false) {
             $sipar = explode(':', $sip);
-            $sip = $sipar[0];
+            $sip   = $sipar[0];
         }
 
         $ip    = Dba::escape(inet_pton($sip));

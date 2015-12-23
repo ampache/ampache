@@ -124,9 +124,9 @@ UI::show_box_top($podcast->f_title, 'info-box');
             </a>
         </li>
         <li>
-            <?php echo Ajax::button('?page=podcast&action=sync&podcast_id=' . $libitem->id, 'file_refresh', T_('Sync'),'sync_podcast_' . $podcast->id);
+            <?php echo Ajax::button('?page=podcast&action=sync&podcast_id=' . $podcast->id, 'file_refresh', T_('Sync'),'sync_podcast_' . $podcast->id);
     ?>
-            <?php echo Ajax::text('?page=podcast&action=sync&podcast_id=' . $libitem->id, T_('Sync'),'sync_podcast_text_' . $podcast->id);
+            <?php echo Ajax::text('?page=podcast&action=sync&podcast_id=' . $podcast->id, T_('Sync'),'sync_podcast_text_' . $podcast->id);
     ?>
         </li>
         <?php 

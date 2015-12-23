@@ -30,16 +30,24 @@ if (!defined('AJAX_INCLUDE')) {
 switch ($_REQUEST['action']) {
     case 'sync':
         if (!Access::check('interface','75')) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to sync podcast', '1');
+            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to sync podcast', 1);
             exit;
         }
         
         if (isset($_REQUEST['podcast_id'])) {
             $podcast = new Podcast($_REQUEST['podcast_id']);
-            $podcast->sync_episodes(true);
+            if ($podcast->id) {
+                $podcast->sync_episodes(true);
+            } else {
+                debug_event('podcast', 'Cannot found podcast', 1);
+            }
         } elseif (isset($_REQUEST['podcast_episode_id'])) {
             $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
-            $episode->gather();
+            if ($episode->id) {
+                $episode->gather();
+            } else {
+                debug_event('podcast', 'Cannot found podcast episode', 1);
+            }
         }
         $results['rfc3514'] = '0x1';
     break;
