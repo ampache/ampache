@@ -1734,6 +1734,13 @@ class Art extends database_object
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
         }
+        // This to keep browser cache feature but force a refresh in case image just changed
+        if (Art::has_db($object_id, $object_type)) {
+            $art = new Art($object_id, $object_type);
+            if ($art->get_db()) {
+                $imgurl .= '&fooid=' . $art->id;
+            }
+        }
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
         
         if ($size['height'] > 150) {

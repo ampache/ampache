@@ -1,14 +1,12 @@
 <?php
 if ($iframed || $is_share) {
     ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black-iframed.css');
-    ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black-iframed.css') ?>" type="text/css" />
 <?php
 
 } else {
     ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black.css');
-    ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black.css') ?>" type="text/css" />
 <?php
 
 }
