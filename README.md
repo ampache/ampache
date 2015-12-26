@@ -47,7 +47,7 @@ receives the most testing:
     * hash
     * session
     * json
-	* simplexml (This is not strictly necessary, but may result in a better experience.)
+    * simplexml (This is not strictly necessary, but may result in a better experience.)
     * curl (This is not strictly necessary, but may result in a better experience.)
 
 * MySQL 5.x
@@ -62,7 +62,7 @@ Upgrading
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
-its place and then copying the old config/ampache.cfg.php, /rest/.htaccess,
+its place and then copying the old /config/ampache.cfg.php, /rest/.htaccess,
 and /play/.htaccess files if any. All database updates will be handled by Ampache.
 
 License
@@ -151,13 +151,16 @@ Contact Us
 
 Hate it? Love it? Let us know! Dozens of people send ideas for amazing new features, report bugs and further develop Ampache actively. Be a part of Ampache with it's more than 10 years long history and get in touch with an awesome and friendly community!
 
-* For Live discussions, visit us on our IRC Channel at chat.freenode.net #ampache
-* For harder cases or general discussion about Ampache take a look an our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
+* For Live discussions, visit us on our IRC Channel at chat.freenode.net #ampache or alternative via a [web based chat client](https://webchat.freenode.net)
+* For harder cases or general discussion about Ampache take a look at our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
 * Found a bug or Ampache isn't working as expected? Head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
 
 Further Information and basic Help
 ----------------------------------
 
 * Everything related to the Ampache Project can be found on our [Public Repository](https://github.com/ampache)
-* Want to know, how to get Apache to work? See our [Documentation](https://github.com/ampache/ampache/wiki)
+* Want to know, how to get Apache to work or learn more about the functions? See our [Documentation](https://github.com/ampache/ampache/wiki)
 
+We hope to see you soon and that you have fun with this Project!
+
+[Team Ampache](docs/ACKNOWLEDGEMENTS)
