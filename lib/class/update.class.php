@@ -3760,7 +3760,7 @@ class Update
     {
         $retval = true;
         
-        $sql = "ALTER TABLE `tag_map` ADD UNIQUE `UNIQUE_TAG_MAP` (`object_id`, `object_type`, `user`)";
+        $sql = "ALTER IGNORE TABLE `tag_map` ADD UNIQUE INDEX `UNIQUE_TAG_MAP` (`object_id`, `object_type`, `user`)";
         $retval &= Dba::write($sql);
 
         return $retval;
