@@ -64,7 +64,7 @@
 		"blueimp/jQuery-File-Upload": "9.*",
 		"aterrien/jQuery-Knob": "1.2.*",
 		"pklauzinski/jscroll": "2.*",
-		"kumailht/responsive-elements": "dev-master"
+		"kumailht/responsive-elements": "1.0.*"
     },
 	
 	"repositories":

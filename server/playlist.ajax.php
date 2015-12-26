@@ -79,15 +79,16 @@ switch ($_REQUEST['action']) {
         $item_id = $_REQUEST['item_id'];
 
         switch ($_REQUEST['item_type']) {
-            case 'smartplaylist':
+            case 'search':
+                debug_event('playlist', 'Adding all songs of smartplaylist {' . $item_id . '}...', 5);
                 $smartplaylist = new Search($item_id, 'song');
-                $items         = $playlist->get_items();
+                $items         = $smartplaylist->get_items();
                 foreach ($items as $item) {
                     $songs[] = $item['object_id'];
                 }
             break;
             case 'album':
-                debug_event('playlist', 'Adding all songs of album(s) {' . $item_id . '}...', '5');
+                debug_event('playlist', 'Adding all songs of album(s) {' . $item_id . '}...', 5);
                 $albums_array = explode(',', $item_id);
                 foreach ($albums_array as $a) {
                     $album  = new Album($a);
@@ -98,21 +99,22 @@ switch ($_REQUEST['action']) {
                 }
             break;
             case 'artist':
-                debug_event('playlist', 'Adding all songs of artist {' . $item_id . '}...', '5');
+                debug_event('playlist', 'Adding all songs of artist {' . $item_id . '}...', 5);
                 $artist  = new Artist($item_id);
                 $songs[] = $artist->get_songs();
             break;
             case 'song_preview':
             case 'song':
-                debug_event('playlist', 'Adding song {' . $item_id . '}...', '5');
+                debug_event('playlist', 'Adding song {' . $item_id . '}...', 5);
                 $songs = explode(',', $item_id);
             break;
             case 'playlist':
+                debug_event('playlist', 'Adding all songs of playlist {' . $item_id . '}...', 5);
                 $pl    = new Playlist($item_id);
                 $songs = $pl->get_songs();
             break;
             default:
-                debug_event('playlist', 'Adding all songs of current playlist...', '5');
+                debug_event('playlist', 'Adding all songs of current playlist...', 5);
                 $objects = $GLOBALS['user']->playlist->get_items();
 
                 foreach ($objects as $object_data) {
