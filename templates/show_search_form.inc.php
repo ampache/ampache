@@ -92,4 +92,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
             <input type="hidden" id="hiddenaction" name="action" value="search" />
 </div>
 </form>
+<script type="text/javascript">
+    document.getElementById('searchString').value = '';
+</script>
 <?php UI::show_box_bottom(); ?>
