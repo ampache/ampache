@@ -30,6 +30,7 @@
     },
     "require": {
 		"php": ">=5.4.0",
+        "symfony/process": "~2.1",
 		"wikimedia/composer-merge-plugin": "1.*",
 		
 		"gettext/gettext": "3.5.*",
@@ -64,7 +65,7 @@
 		"blueimp/jQuery-File-Upload": "9.*",
 		"aterrien/jQuery-Knob": "1.2.*",
 		"pklauzinski/jscroll": "2.*",
-		"kumailht/responsive-elements": "1.0.*"
+		"kumailht/responsive-elements": "dev-master"
     },
 	
 	"repositories":
