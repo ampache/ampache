@@ -61,7 +61,10 @@ switch ($_REQUEST['action']) {
                 break;
             }
 
-            $name        = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
+            $name        = $_REQUEST['name'];
+            if (empty($name)) {
+                $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
+            }
             $playlist_id = Playlist::create($name, 'private');
             if (!$playlist_id) {
                 break;
