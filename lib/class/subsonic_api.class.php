@@ -149,12 +149,12 @@ class Subsonic_Api
     {
         if (strtolower($f) == "json") {
             header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
+            Subsonic_XML_Data::$enable_json_checks = true;
+        } elseif (strtolower($f) == "jsonp") {
+            header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
+            Subsonic_XML_Data::$enable_json_checks = true;
         } else {
-            if (strtolower($f) == "jsonp") {
-                header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
-            } else {
-                header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
-            }
+            header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
         }
         header("Access-Control-Allow-Origin: *");
     }
