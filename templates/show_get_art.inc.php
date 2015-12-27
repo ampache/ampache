@@ -66,7 +66,7 @@
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
-        <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="window.location='<?php echo $burl; ?>';" />
+        <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo AmpConfig::get('web_path') . '/' . $burl; ?>');" />
         <input type="submit" value="<?php echo T_('Get Art'); ?>" />
     </div>
 </form>
