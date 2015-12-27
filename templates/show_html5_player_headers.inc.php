@@ -70,6 +70,7 @@ function convertMediaToJPMedia(media)
     jpmedia['artist_id'] = media['artist_id'];
     jpmedia['album_id'] = media['album_id'];
     jpmedia['media_id'] = media['media_id'];
+    jpmedia['media_type'] = media['media_type'];
     jpmedia['replaygain_track_gain'] = media['replaygain_track_gain'];
     jpmedia['replaygain_track_peak'] = media['replaygain_track_peak'];
     jpmedia['replaygain_album_gain'] = media['replaygain_album_gain'];
@@ -246,21 +247,24 @@ function ShowEqualizer()
 
 function SavePlaylist()
 {
-    var url = "<?php echo AmpConfig::get('ajax_url');
-    ?>?page=playlist&action=append_item&item_type=song&item_id=";
-    for (var i = 0; i < jplaylist['playlist'].length; i++) {
-        url += "," + jplaylist['playlist'][i]["media_id"];
+    if (jplaylist['playlist'].length > 0) {
+        var url = "<?php echo AmpConfig::get('ajax_url') ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]["media_type"] + "&item_id=";
+        for (var i = 0; i < jplaylist['playlist'].length; i++) {
+            url += "," + jplaylist['playlist'][i]["media_id"];
+        }
+        handlePlaylistAction(url, 'rb_append_dplaylist_new');
     }
-    handlePlaylistAction(url, 'rb_append_dplaylist_new');
 }
 
 function SaveToExistingPlaylist(event)
 {
-    var item_ids = "";
-    for (var i = 0; i < jplaylist['playlist'].length; i++) {
-        item_ids += "," + jplaylist['playlist'][i]["media_id"];
+    if (jplaylist['playlist'].length > 0) {
+        var item_ids = "";
+        for (var i = 0; i < jplaylist['playlist'].length; i++) {
+            item_ids += "," + jplaylist['playlist'][i]["media_id"];
+        }
+        showPlaylistDialog(event, jplaylist['playlist'][0]["media_type"], item_ids);
     }
-    showPlaylistDialog(event, 'song', item_ids);
 }
 
 var audioContext = null;

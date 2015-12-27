@@ -30,7 +30,7 @@
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
-            <th class="cel_songs optional"><?php echo T_('# Songs'); ?></th>
+            <th class="cel_medias optional"><?php echo T_('# Medias'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner'); ?></th>
             <?php if (User::is_registered()) {
     ?>
@@ -83,7 +83,7 @@
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
-            <th class="cel_songs optional"><?php echo T_('# Songs'); ?></th>
+            <th class="cel_medias optional"><?php echo T_('# Medias'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner_bottom'); ?></th>
             <?php if (User::is_registered()) {
     ?>

@@ -36,6 +36,7 @@ if ($browse->get_show_header()) {
         <?php 
 } ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
+            <th class="cel_add essential"></th>
 <?php
 if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . 's.inc.php');
@@ -112,6 +113,7 @@ if (isset($video_type) && $video_type != 'video') {
         <?php 
 } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
+            <th class="cel_add"></th>
 <?php
 if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . 's.inc.php');

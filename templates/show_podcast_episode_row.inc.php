@@ -37,6 +37,22 @@
     </div>
 </td>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+<?php
+    echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id);
+    if (Access::check('interface', '25')) {
+        ?>
+        <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id ?>')">
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
+        ?>
+        </a>
+    <?php
+
+    }
+    ?>
+    </span>
+</td>
 <td class="cel_podcast"><?php echo $libitem->f_podcast_link; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
 <td class="cel_pubdate"><?php echo $libitem->f_pubdate; ?></td>

@@ -28,12 +28,12 @@ debug_event('refresh_reordered.server.php', 'Called for action: {' . $_REQUEST['
 
 /* Switch on the action passed in */
 switch ($_REQUEST['action']) {
-    case 'refresh_playlist_songs':
+    case 'refresh_playlist_medias':
         $playlist = new Playlist($_REQUEST['id']);
         $playlist->format();
         $object_ids = $playlist->get_items();
         $browse     = new Browse();
-        $browse->set_type('playlist_song');
+        $browse->set_type('playlist_media');
         $browse->add_supplemental_object('playlist', $playlist->id);
         $browse->set_static_content(true);
         $browse->show_objects($object_ids);

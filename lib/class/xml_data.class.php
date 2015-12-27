@@ -401,7 +401,7 @@ class XML_Data
         foreach ($playlists as $playlist_id) {
             $playlist = new Playlist($playlist_id);
             $playlist->format();
-            $item_total = $playlist->get_song_count();
+            $item_total = $playlist->get_media_count('song');
 
             // Build this element
             $string .= "<playlist id=\"$playlist->id\">\n" .

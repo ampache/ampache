@@ -30,16 +30,13 @@ $web_path = AmpConfig::get('web_path');
         <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>
-                <th class="cel_song essential persist"><?php echo T_('Song Title'); ?></th>
+                <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
                 <th class="cel_add essential"></th>
-                <th class="cel_artist essential"><?php echo T_('Artist'); ?></th>
-                <th class="cel_album optional"><?php echo T_('Album'); ?></th>
-                <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time optional"><?php echo T_('Time'); ?></th>
                 <?php if (User::is_registered()) {
     ?>
                     <?php if (AmpConfig::get('ratings')) {
-    Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
+    ;
     ?>
                         <th class="cel_rating"><?php echo T_('Rating');
     ?></th>
@@ -47,7 +44,6 @@ $web_path = AmpConfig::get('web_path');
 }
     ?>
                     <?php if (AmpConfig::get('userflags')) {
-    Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
     ?>
                 <?php 
 }
@@ -65,27 +61,26 @@ $web_path = AmpConfig::get('web_path');
     if (!is_array($object)) {
         $object = (array) $object;
     }
-    $libitem = new Song($object['object_id']);
-    $libitem->format();
-    $playlist_track = $object['track'];
-    ?>
-                    <tr class="<?php echo UI::flip_class();
-    ?>" id="track_<?php echo $object['track_id'];
-    ?>">
-                        <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_song_row.inc.php');
-    ?>
-                    </tr>
-            <?php 
+    $object_type = $object['object_type'];
+    if (Core::is_library_item($object_type)) {
+        $libitem = new $object_type($object['object_id']);
+        $libitem->format();
+        $playlist_track = $object['track'];
+        ?>
+        <tr class="<?php echo UI::flip_class() ?>" id="track_<?php echo $object['track_id'] ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_media_row.inc.php');
+        ?>
+        </tr>
+        <?php
+
+    }
 } ?>
         </tbody>
         <tfoot>
             <tr class="th-bottom">
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
-                <th class="cel_song"><?php echo T_('Song Title'); ?></th>
+                <th class="cel_title"><?php echo T_('Title'); ?></th>
                 <th class="cel_add"></th>
-                <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-                <th class="cel_album"><?php echo T_('Album'); ?></th>
-                <th class="cel_tags"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time"><?php echo T_('Time'); ?></th>
                 <?php if (User::is_registered()) {
     ?>

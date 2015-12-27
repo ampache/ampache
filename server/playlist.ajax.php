@@ -42,7 +42,7 @@ switch ($_REQUEST['action']) {
         $object_ids = $playlist->get_items();
         ob_start();
         $browse = new Browse();
-        $browse->set_type('playlist_song');
+        $browse->set_type('playlist_media');
         $browse->add_supplemental_object('playlist',$playlist->id);
         $browse->save_objects($object_ids);
         $browse->show_objects($object_ids);
@@ -78,67 +78,26 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $songs   = array();
-        $item_id = $_REQUEST['item_id'];
+        $medias    = array();
+        $item_id   = $_REQUEST['item_id'];
+        $item_type = $_REQUEST['item_type'];
 
-        switch ($_REQUEST['item_type']) {
-            case 'search':
-                debug_event('playlist', 'Adding all songs of smartplaylist {' . $item_id . '}...', 5);
-                $smartplaylist = new Search($item_id, 'song');
-                $items         = $smartplaylist->get_items();
-                foreach ($items as $item) {
-                    $songs[] = $item['object_id'];
-                }
-            break;
-            case 'album':
-                debug_event('playlist', 'Adding all songs of album(s) {' . $item_id . '}...', 5);
-                $albums_array = explode(',', $item_id);
-                foreach ($albums_array as $a) {
-                    $album  = new Album($a);
-                    $asongs = $album->get_songs();
-                    foreach ($asongs as $song_id) {
-                        $songs[] = $song_id;
-                    }
-                }
-            break;
-            case 'artist':
-                debug_event('playlist', 'Adding all songs of artist {' . $item_id . '}...', 5);
-                $artist  = new Artist($item_id);
-                $songs[] = $artist->get_songs();
-            break;
-            case 'song_preview':
-            case 'song':
-                debug_event('playlist', 'Adding song {' . $item_id . '}...', 5);
-                $songs = explode(',', $item_id);
-            break;
-            case 'playlist':
-                debug_event('playlist', 'Adding all songs of playlist {' . $item_id . '}...', 5);
-                $pl    = new Playlist($item_id);
-                $songs = $pl->get_songs();
-            break;
-            default:
-                debug_event('playlist', 'Adding all songs of current playlist...', 5);
-                $objects = $GLOBALS['user']->playlist->get_items();
-
-                foreach ($objects as $object_data) {
-                    $type = array_shift($object_data);
-                    if ($type == 'song') {
-                        $songs[] = array_shift($object_data);
-                    }
-                }
-            break;
+        if (!empty($item_type) && Core::is_playable_item($item_type)) {
+            debug_event('playlist', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
+            $item_ids = explode(',', $item_id);
+            foreach ($item_ids as $iid) {
+                $libitem = new $item_type($iid);
+                $medias  = array_merge($medias, $libitem->get_medias());
+            }
+        } else {
+            debug_event('playlist', 'Adding all medias of current playlist...', 5);
+            $medias = $GLOBALS['user']->playlist->get_items();
         }
 
-        if (count($songs) > 0) {
+        if (count($medias) > 0) {
             Ajax::set_include_override(true);
-            $playlist->add_songs($songs, true);
-
-            /*$playlist->format();
-            $object_ids = $playlist->get_items();
-            ob_start();
-            require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
-            $results['content'] = ob_get_contents();
-            ob_end_clean();*/
+            $playlist->add_medias($medias, true);
+            
             debug_event('playlist', 'Items added successfully!', '5');
             ob_start();
             display_notification(T_('Added to playlist'));

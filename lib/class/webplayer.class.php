@@ -280,7 +280,8 @@ class WebPlayer
                 $js['replaygain_album_gain'] = $media->replaygain_album_gain;
                 $js['replaygain_album_peak'] = $media->replaygain_album_peak;
             }
-            $js['media_id'] = $media->id;
+            $js['media_id']   = $media->id;
+            $js['media_type'] = $urlinfo['type'];
 
             if ($media->type != $types['real']) {
                 $url .= '&transcode_to=' . $types['real'];

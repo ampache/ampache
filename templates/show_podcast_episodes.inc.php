@@ -29,6 +29,7 @@ $thcount  = 7;
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_episode_sort_title'); ?></th>
+            <th class="cel_add essential"></th>
             <th class="cel_podcast optional"><?php echo T_('Podcast'); ?></th>
             <th class="cel_time optional"><?php echo T_('Time'); ?></th>
             <th class="cel_pubdate optional"><?php echo T_('Publication Date'); ?></th>
@@ -98,6 +99,7 @@ $thcount  = 7;
         <?php 
 } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_episode_sort_title_bottom'); ?></th>
+            <th class="cel_add"></th>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
             <th class="cel_pubdate"><?php echo T_('Publication Date'); ?></th>

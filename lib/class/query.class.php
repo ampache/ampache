@@ -250,14 +250,6 @@ class Query
         }
 
         self::$allowed_sorts = array(
-            'playlist_song' => array(
-                'title',
-                'year',
-                'track',
-                'time',
-                'album',
-                'artist'
-            ),
             'song' => array(
                 'title',
                 'year',
@@ -711,7 +703,7 @@ class Query
             case 'user':
             case 'video':
             case 'playlist':
-            case 'playlist_song':
+            case 'playlist_media':
             case 'smartplaylist':
             case 'song':
             case 'catalog':
@@ -1093,7 +1085,8 @@ class Query
                     $this->set_select("`podcast_episode`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `podcast_episode` ";
                 break;
-                case 'playlist_song':
+                case 'playlist_media':
+                break;
                 case 'song':
                 default:
                     $this->set_select("DISTINCT(`song`.`id`)");

@@ -74,7 +74,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 <div>
 <?php
     $browse = new Browse();
-    $browse->set_type('playlist_song');
+    $browse->set_type('playlist_media');
     $browse->add_supplemental_object('search', $playlist->id);
     $browse->set_static_content(false);
     $browse->show_objects($object_ids);
