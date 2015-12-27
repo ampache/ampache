@@ -310,10 +310,11 @@ class Album extends database_object implements library_item
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         if (!count($this->album_suite)) {
-            $sql .= "GROUP BY `song`.`album`";
+            $sql .= "GROUP BY `song`.`album` ";
         } else {
-            $sql .= "GROUP BY `song`.`artist`";
+            $sql .= "GROUP BY `song`.`artist` ";
         }
+        $sql .= "LIMIT 1";
 
         $db_results = Dba::read($sql);
 

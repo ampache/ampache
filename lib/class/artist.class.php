@@ -397,7 +397,7 @@ class Artist extends database_object implements library_item
                 $sql .= " AND `catalog`.`enabled` = '1'";
             }
 
-            $sql .= "GROUP BY `song`.`artist`";
+            $sql .= "GROUP BY `song`.`artist` LIMIT 1";
 
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_assoc($db_results);

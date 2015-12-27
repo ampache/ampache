@@ -273,7 +273,12 @@ class Subsonic_XML_Data
 
     public static function addArtistsRoot($xml, $artists, $albumsSet = false)
     {
-        $xartists = $xml->addChild('artists');
+        $xartists        = $xml->addChild('artists');
+        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern');
+        if (!empty($ignoredArticles)) {
+            $ignoredArticles = str_replace("|", ",", $ignoredArticles);
+            $xartists->addAttribute('ignoredArticles', $ignoredArticles);
+        }
         self::addArtists($xartists, $artists, true, $albumsSet);
     }
 
@@ -326,7 +331,7 @@ class Subsonic_XML_Data
         }
 
         if ($extra) {
-            //$xartist->addAttribute('coverArt');
+            $xartist->addAttribute('coverArt', 'ar-' . self::getArtistId($artist->id));
             if ($albumsSet) {
                 $xartist->addAttribute('albumCount', $artist->albums);
             } else {
