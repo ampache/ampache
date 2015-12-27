@@ -57,8 +57,8 @@ class AmpacheBitly
             return false;
         }
 
-        Preference::insert('bitly_username','Bit.ly username','','75','string','plugins');
-        Preference::insert('bitly_api_key','Bit.ly api key','','75','string','plugins');
+        Preference::insert('bitly_username','Bit.ly username','','75','string','plugins',$this->name);
+        Preference::insert('bitly_api_key','Bit.ly api key','','75','string','plugins',$this->name);
 
         return true;
     } // install

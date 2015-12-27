@@ -51,8 +51,8 @@ class AmpacheDiscogs
         if (Preference::exists('discogs_api_key')) {
             return false;
         }
-        Preference::insert('discogs_api_key','Discogs consumer key','','75','string','plugins');
-        Preference::insert('discogs_secret_api_key','Discogs secret','','75','string','plugins');
+        Preference::insert('discogs_api_key','Discogs consumer key','','75','string','plugins',$this->name);
+        Preference::insert('discogs_secret_api_key','Discogs secret','','75','string','plugins',$this->name);
         return true;
     } // install
 

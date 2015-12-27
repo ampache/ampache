@@ -372,10 +372,10 @@ class User extends database_object
         }
 
 
-        $sql = "SELECT preference.name, preference.description, preference.catagory, preference.level, user_preference.value " .
+        $sql = "SELECT preference.name, preference.description, preference.catagory, preference.subcatagory, preference.level, user_preference.value " .
             "FROM preference INNER JOIN user_preference ON user_preference.preference=preference.id " .
             "WHERE user_preference.user='$user_id' " . $user_limit .
-            " ORDER BY preference.catagory, preference.description";
+            " ORDER BY preference.catagory, preference.subcatagory, preference.description";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -387,7 +387,7 @@ class User extends database_object
             if ($type == 'system') {
                 $admin = true;
             }
-            $type_array[$type][$r['name']] = array('name'=>$r['name'],'level'=>$r['level'],'description'=>$r['description'],'value'=>$r['value']);
+            $type_array[$type][$r['name']] = array('name'=>$r['name'],'level'=>$r['level'],'description'=>$r['description'],'value'=>$r['value'],'subcategory'=>$r['subcatagory']);
             $results[$type]                = array ('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
         } // end while
 

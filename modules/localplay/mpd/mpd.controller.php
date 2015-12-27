@@ -97,7 +97,7 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active','MPD Active Instance','0','25','integer','internal');
+        Preference::insert('mpd_active','MPD Active Instance','0','25','integer','internal','mpd');
 
         return true;
     } // install

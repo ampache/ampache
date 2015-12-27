@@ -54,7 +54,7 @@ class AmpacheTheaudiodb
         }
 
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key','TheAudioDb api key','41214789306c4690752dfb','75','string','plugins');
+        Preference::insert('tadb_api_key','TheAudioDb api key','41214789306c4690752dfb','75','string','plugins',$this->name);
         
         return true;
     } // install

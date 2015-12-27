@@ -55,8 +55,8 @@ class AmpacheCatalogFavorites
             return false;
         }
 
-        Preference::insert('catalogfav_max_items','Catalog favorites max items','5','25','integer','plugins');
-        Preference::insert('catalogfav_columns','Catalog favorites columns','1','25','integer','plugins');
+        Preference::insert('catalogfav_max_items','Catalog favorites max items','5','25','integer','plugins',$this->name);
+        Preference::insert('catalogfav_columns','Catalog favorites columns','1','25','integer','plugins',$this->name);
 
         return true;
     }

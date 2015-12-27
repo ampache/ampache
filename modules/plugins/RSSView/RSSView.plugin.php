@@ -56,8 +56,8 @@ class AmpacheRSSView
             return false;
         }
 
-        Preference::insert('rssview_feed_url','RSS Feed url','','25','string','plugins');
-        Preference::insert('rssview_max_items','RSS Feed max items','5','25','integer','plugins');
+        Preference::insert('rssview_feed_url','RSS Feed url','','25','string','plugins',$this->name);
+        Preference::insert('rssview_max_items','RSS Feed max items','5','25','integer','plugins',$this->name);
 
         return true;
     }

@@ -532,6 +532,9 @@ class Update
         $update_string = "- Add unique constraint on tag_map table.<br />";
         $version[]     = array('version' => '380003', 'description' => $update_string);
         
+        $update_string = "- Add preference subcategory.<br />";
+        $version[]     = array('version' => '380004', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -2297,7 +2300,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('share','0','Allow Share',100,'boolean','system')";
+            "VALUES ('share','0','Allow Share',100,'boolean','options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -2725,7 +2728,7 @@ class Update
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_upload','0','Allow users to upload media',75,'boolean','system')";
+            "VALUES ('allow_upload','0','Allow users to upload media',75,'boolean','options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -2941,7 +2944,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_video','1','Allow video features',75,'integer','system')";
+            "VALUES ('allow_video','1','Allow video features',75,'integer','options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -3702,7 +3705,7 @@ class Update
             "`description` varchar(4096) CHARACTER SET utf8 NULL , " .
             "`author` varchar(64) NULL , " .
             "`category` varchar(64) NULL , " .
-            "`played` tinyint(1) unsigned DEFAULT '0' NOT NULL , " .
+            "`played` tinyint(1) UNSIGNED DEFAULT '0' NOT NULL , " .
             "`pubdate` int(11) UNSIGNED NOT NULL , " .
             "`addition_time` int(11) UNSIGNED NOT NULL" .
             ") ENGINE = MYISAM";
@@ -3761,6 +3764,21 @@ class Update
         $retval = true;
         
         $sql = "ALTER IGNORE TABLE `tag_map` ADD UNIQUE INDEX `UNIQUE_TAG_MAP` (`object_id`, `object_type`, `user`)";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380004
+     *
+     * Add preference subcategory
+     */
+    public static function update_380004()
+    {
+        $retval = true;
+        
+        $sql = "ALTER TABLE `preference` ADD `subcatagory` varchar(128) CHARACTER SET utf8 DEFAULT NULL AFTER `catagory`";
         $retval &= Dba::write($sql);
 
         return $retval;

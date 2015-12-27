@@ -58,9 +58,9 @@ class AmpacheYourls
             return false;
         }
 
-        Preference::insert('yourls_domain','YOURLS domain name','','75','string','plugins');
-        Preference::insert('yourls_use_idn','YOURLS use IDN','0','75','boolean','plugins');
-        Preference::insert('yourls_api_key','YOURLS api key','','75','string','plugins');
+        Preference::insert('yourls_domain','YOURLS domain name','','75','string','plugins',$this->name);
+        Preference::insert('yourls_use_idn','YOURLS use IDN','0','75','boolean','plugins',$this->name);
+        Preference::insert('yourls_api_key','YOURLS api key','','75','string','plugins',$this->name);
 
         return true;
     } // install

@@ -95,7 +95,7 @@ class AmpacheHttpq extends localplay_controller
             $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('httpq_active','HTTPQ Active Instance','0','25','integer','internal');
+        Preference::insert('httpq_active','HTTPQ Active Instance','0','25','integer','internal','httpq');
 
             return true;
         } // install

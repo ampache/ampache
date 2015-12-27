@@ -55,7 +55,7 @@ class AmpacheGoogleAnalytics
             return false;
         }
 
-        Preference::insert('googleanalytics_tracking_id','Google Analytics Tracking ID','',100,'string','plugins');
+        Preference::insert('googleanalytics_tracking_id','Google Analytics Tracking ID','',100,'string','plugins',$this->name);
 
         return true;
     }

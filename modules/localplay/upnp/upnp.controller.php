@@ -93,7 +93,7 @@ class AmpacheUPnP extends localplay_controller
         $db_results = Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('upnp_active', 'UPnP Active Instance', '0', '25', 'integer', 'internal');
+        Preference::insert('upnp_active', 'UPnP Active Instance', '0', '25', 'integer', 'internal','upnp');
 
         return true;
     }

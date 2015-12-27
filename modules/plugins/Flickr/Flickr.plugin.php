@@ -51,7 +51,7 @@ class Ampacheflickr
         if (Preference::exists('flickr_api_key')) {
             return false;
         }
-        Preference::insert('flickr_api_key','Flickr api key','','75','string','plugins');
+        Preference::insert('flickr_api_key','Flickr api key','','75','string','plugins',$this->name);
         return true;
     } // install
 

@@ -53,7 +53,7 @@ class AmpacheTvdb
             return false;
         }
 
-        Preference::insert('tvdb_api_key','Tvdb api key','','75','string','plugins');
+        Preference::insert('tvdb_api_key','Tvdb api key','','75','string','plugins',$this->name);
         
         return true;
     } // install

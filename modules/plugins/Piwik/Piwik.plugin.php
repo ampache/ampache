@@ -56,8 +56,8 @@ class AmpachePiwik
             return false;
         }
 
-        Preference::insert('piwik_site_id','Piwik Site ID','1',100,'string','plugins');
-        Preference::insert('piwik_url','Piwik URL', AmpConfig::get('web_path') . '/piwik/',100,'string','plugins');
+        Preference::insert('piwik_site_id','Piwik Site ID','1',100,'string','plugins','piwik');
+        Preference::insert('piwik_url','Piwik URL', AmpConfig::get('web_path') . '/piwik/',100,'string','plugins',$this->name);
 
         return true;
     }
