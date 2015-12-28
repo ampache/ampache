@@ -562,7 +562,7 @@ class Catalog_local extends Catalog
             }
 
             $media = new $media_type($row['id']);
-            $info  = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
+            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern,$this->rename_pattern);
             if ($info['change']) {
                 $changed++;
             }

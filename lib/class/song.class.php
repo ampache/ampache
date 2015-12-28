@@ -841,18 +841,23 @@ class Song extends database_object implements media, library_item
     {
         // Remove some stuff we don't care about
         unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
-
-        $array        = array();
         $string_array = array('title','comment','lyrics','composer','tags');
         $skip_array   = array('id','tag_id','mime','artist_mbid','album_mbid','albumartist_mbid','albumartist','mbid','mb_albumid_group','waveform','object_cnt');
 
+        return self::compare_media_information($song, $new_song, $string_array, $skip_array);
+    } // compare_song_information
+
+    public static function compare_media_information($media, $new_media, $string_array, $skip_array)
+    {
+        $array        = array();
+
         // Pull out all the currently set vars
-        $fields = get_object_vars($song);
+        $fields = get_object_vars($media);
 
         // Foreach them
         foreach ($fields as $key=>$value) {
             // Skip the item if it is no string nor something we can turn into a string
-            if (!is_string($song->$key) || (is_object($song->$key) && method_exists($song->key, '__toString'))) {
+            if (!is_string($media->$key) || (is_object($media->$key) && method_exists($media->key, '__toString'))) {
                 continue;
             }
 
@@ -863,44 +868,44 @@ class Song extends database_object implements media, library_item
 
             // Represent the value as a string for simpler comparaison.
             // For array, ensure to sort similarly old/new values
-            if (is_array($song->$key)) {
-                $arr = $song->$key;
+            if (is_array($media->$key)) {
+                $arr = $media->$key;
                 sort($arr);
-                $songData = implode(" ", $arr);
+                $mediaData = implode(" ", $arr);
             } else {
-                $songData = $song->$key;
+                $mediaData = $media->$key;
             }
-            if (is_array($new_song->$key)) {
-                $arr = $new_song->$key;
+            if (is_array($new_media->$key)) {
+                $arr = $new_media->$key;
                 sort($arr);
-                $newSongData = implode(" ", $arr);
+                $newMediaData = implode(" ", $arr);
             } else {
-                $newSongData = $new_song->$key;
+                $newMediaData = $new_media->$key;
             }
 
             // If it's a stringie thing
             if (in_array($key, $string_array)) {
-                $songData    = self::clean_string_field_value($songData);
-                $newSongData = self::clean_string_field_value($newSongData);
-                if ($songData != $newSongData) {
+                $mediaData    = self::clean_string_field_value($mediaData);
+                $newMediaData = self::clean_string_field_value($newMediaData);
+                if ($mediaData != $newMediaData) {
                     $array['change']        = true;
-                    $array['element'][$key] = 'OLD: ' . $songData . ' --> ' . $newSongData;
+                    $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
                 }
             } // in array of stringies
             else {
-                if ($song->$key != $new_song->$key) {
+                if ($media->$key != $new_media->$key) {
                     $array['change']        = true;
-                    $array['element'][$key] = 'OLD:' . $songData . ' --> ' . $newSongData;
+                    $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
                 }
             } // end else
         } // end foreach
 
         if ($array['change']) {
-            debug_event('song-diff', json_encode($array['element']), 5);
+            debug_event('media-diff', json_encode($array['element']), 5);
         }
 
         return $array;
-    } // compare_song_information
+    }
 
     private static function clean_string_field_value($value)
     {

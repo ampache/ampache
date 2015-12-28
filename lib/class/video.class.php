@@ -184,10 +184,14 @@ class Video extends database_object implements media, library_item
      * Constructor
      * This pulls the information from the database and returns
      * a constructed object
-     * @param int $id
+     * @param int|null $id
      */
-    public function __construct($id)
+    public function __construct($id = null)
     {
+        if (!$id) {
+            return false;
+        }
+        
         // Load the data from the database
         $info = $this->get_info($id, 'video');
         foreach ($info as $key=>$value) {
@@ -633,6 +637,19 @@ class Video extends database_object implements media, library_item
         return $this->id;
     } // update
 
+    public static function update_video($video_id, Video $new_video)
+    {
+        $update_time = time();
+
+        $sql = "UPDATE `video` SET `title` = ?, `bitrate` = ?, " .
+            "`size` = ?, `time` = ?, `video_codec` = ?, `audio_codec` = ?, " .
+            "`resolution_x` = ?, `resolution_y` = ?, `release_date` = ?, `channels` = ?, " .
+            "`display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, " .
+            "`update_time` = ? WHERE `id` = ?";
+
+        Dba::write($sql, array($new_video->title, $new_video->bitrate, $new_video->size, $new_video->time, $new_video->video_codec, $new_video->audio_codec, $new_video->resolution_x, $new_video->resolution_y, $new_video->release_date, $new_video->channels, $new_video->display_x, $new_video->display_y, $new_video->frame_rate, $new_video->video_bitrate, $update_time, $video_id));
+    }
+
     /**
      * Get release item art.
      * @return array
@@ -715,6 +732,26 @@ class Video extends database_object implements media, library_item
 
         return true;
     } // set_played
+
+    /**
+     * compare_video_information
+     * this compares the new ID3 tags of a file against
+     * the ones in the database to see if they have changed
+     * it returns false if nothing has changes, or the true
+     * if they have. Static because it doesn't need this
+     * @param \Video $video
+     * @param \Video $new_video
+     * @return array
+     */
+    public static function compare_video_information(Video $video, Video $new_video)
+    {
+        // Remove some stuff we don't care about
+        unset($video->catalog,$video->played,$video->enabled,$video->addition_time,$video->update_time,$video->type);
+        $string_array = array('title','tags');
+        $skip_array   = array('id','tag_id','mime','object_cnt');
+
+        return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
+    } // compare_video_information
 
     /**
      * get_subtitles
