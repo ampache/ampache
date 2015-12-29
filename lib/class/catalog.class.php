@@ -953,7 +953,7 @@ abstract class Catalog extends database_object
         $sql_where = "";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist   = '(' . implode(',', $catalogs) . ')';
-            $sql_where = "WHERE `song`.`catalog` IN $catlist";
+            $sql_where = "WHERE `song`.`catalog` IN $catlist ";
         }
 
         $sql_limit = "";
@@ -967,10 +967,10 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
-        $sql = "SELECT `artist`.id, `artist`.`name`, `artist`.`summary`, (SELECT COUNT(DISTINCT album) from `song` as `inner_song` WHERE `inner_song`.`artist` = `song`.`artist`) AS `albums`" .
+        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`summary`, (SELECT COUNT(DISTINCT album) from `song` as `inner_song` WHERE `inner_song`.`artist` = `song`.`artist`) AS `albums`" .
                 "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " .
                 $sql_where .
-                "GROUP BY `song`.artist ORDER BY `artist`.`name` " .
+                "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " .
                 $sql_limit;
 
         $results    = array();
@@ -1035,7 +1035,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` $sql_where GROUP BY `song`.`album` ORDER BY `album`.`name` $sql_limit";
+        $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` $sql_where GROUP BY `album`.`id` ORDER BY `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -1074,7 +1074,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
+        $sql = "SELECT `song`.`album` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
             "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.`album` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
@@ -2261,11 +2261,11 @@ abstract class Catalog extends database_object
     protected static function getSongTags($type, $id)
     {
         $tags       = array();
-        $db_results = Dba::read('SELECT tag.name FROM tag'
-                        . ' JOIN tag_map ON tag.id = tag_map.tag_id'
-                        . ' JOIN song ON tag_map.object_id = song.id'
-                        . ' WHERE song.' . $type . ' = ? AND tag_map.object_type = "song"'
-                        . ' GROUP BY tag.id', array($id));
+        $db_results = Dba::read('SELECT `tag`.`name` FROM `tag`'
+                        . ' JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id`'
+                        . ' JOIN `song` ON `tag_map`.`object_id` = `song`.`id`'
+                        . ' WHERE `song`.`' . $type . '` = ? AND `tag_map`.`object_type` = "song"'
+                        . ' GROUP BY `tag`.`id`, `tag`.`name`', array($id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[] = $row['name'];
         }

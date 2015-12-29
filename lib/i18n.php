@@ -43,7 +43,11 @@ function load_gettext()
 
 function T_($msgid)
 {
-    return __($msgid);
+    if (function_exists('__')) {
+        return __($msgid);
+    }
+    
+    return $msgid;
 }
 
 /**

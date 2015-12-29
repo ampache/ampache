@@ -981,7 +981,7 @@ class Query
         } else {
             switch ($this->get_type()) {
                 case 'album':
-                    $this->set_select("DISTINCT(`album`.`id`)");
+                    $this->set_select("`album`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `album` ";
                 break;
                 case 'artist':
@@ -1017,24 +1017,24 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `video` ";
                 break;
                 case 'tag':
-                    $this->set_select("DISTINCT(`tag`.`id`)");
+                    $this->set_select("`tag`.`id`");
                     $this->set_join('left', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
                     $sql = "SELECT %%SELECT%% FROM `tag` ";
                 break;
                 case 'wanted':
-                    $this->set_select("DISTINCT(`wanted`.`id`)");
+                    $this->set_select("`wanted`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `wanted` ";
                 break;
                 case 'share':
-                    $this->set_select("DISTINCT(`share`.`id`)");
+                    $this->set_select("`share`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `share` ";
                 break;
                 case 'channel':
-                    $this->set_select("DISTINCT(`channel`.`id`)");
+                    $this->set_select("`channel`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `channel` ";
                 break;
                 case 'broadcast':
-                    $this->set_select("DISTINCT(`broadcast`.`id`)");
+                    $this->set_select("`broadcast`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `broadcast` ";
                 break;
                 case 'license':
@@ -1089,7 +1089,7 @@ class Query
                 break;
                 case 'song':
                 default:
-                    $this->set_select("DISTINCT(`song`.`id`)");
+                    $this->set_select("`song`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `song` ";
                 break;
             } // end base sql
@@ -1262,7 +1262,7 @@ class Query
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         if ( $this->get_type() == 'artist' && !$this->_state['custom'] ) {
-            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
+            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
 

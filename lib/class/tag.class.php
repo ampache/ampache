@@ -429,7 +429,7 @@ class Tag extends database_object implements library_item
         $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
             "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " .
-            "GROUP BY `tag`.`name` LIMIT $limit";
+            "LIMIT $limit";
 
         $db_results = Dba::read($sql);
 
@@ -520,7 +520,8 @@ class Tag extends database_object implements library_item
         $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "WHERE `tag`.`is_hidden` = false ";
+            "WHERE `tag`.`is_hidden` = false " .
+            "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         if (!empty($type)) {
             $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
         }
@@ -528,14 +529,13 @@ class Tag extends database_object implements library_item
         if ($order == 'count') {
             $order .= " DESC";
         }
-        $sql .="GROUP BY `tag`.`name` ORDER BY " . $order;
+        $sql .= "ORDER BY " . $order;
 
         if ($limit > 0) {
             $sql .= " LIMIT $limit";
         }
 
         $db_results = Dba::read($sql);
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['tag_id']] = array('id'=>$row['tag_id'], 'name'=>$row['name'], 'is_hidden'=>$row['is_hidden'], 'count'=>$row['count']);
         }

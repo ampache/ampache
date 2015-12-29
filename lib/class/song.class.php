@@ -691,7 +691,7 @@ class Song extends database_object implements media, library_item
         $where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
         $sql       = 'SELECT `id`, `artist`, `album`, `title`, ' .
             'COUNT(`title`) FROM `song` ' . $where_sql .
-            ' GROUP BY `title`';
+            ' GROUP BY `id`, `artist`, `album`, `title`';
 
         if ($search_type == 'artist_title' ||
             $search_type == 'artist_album_title') {
@@ -722,25 +722,28 @@ class Song extends database_object implements media, library_item
      */
     public static function get_duplicate_info($dupe, $search_type)
     {
-        $sql = 'SELECT `id` FROM `song` ' .
-            "WHERE `title`='" . Dba::escape($dupe['title']) . "' ";
-
-        if ($search_type == 'artist_title' ||
-            $search_type == 'artist_album_title') {
-            $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
-        }
-        if ($search_type == 'artist_album_title') {
-            $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
-        }
-
-        $sql .= 'ORDER BY `time`,`bitrate`,`size`';
-        $db_results = Dba::read($sql);
-
         $results = array();
+        if (isset($dupe['id'])) {
+            $results[] = $dupe['id'];
+        } else {
+            $sql = "SELECT `id` FROM `song` WHERE " .
+                    "`title`='" . Dba::escape($dupe['title']) . "' ";
 
-        while ($item = Dba::fetch_assoc($db_results)) {
-            $results[] = $item['id'];
-        } // end while
+            if ($search_type == 'artist_title' ||
+                $search_type == 'artist_album_title') {
+                $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
+            }
+            if ($search_type == 'artist_album_title') {
+                $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
+            }
+
+            $sql .= 'ORDER BY `time`,`bitrate`,`size`';
+            $db_results = Dba::read($sql);
+
+            while ($item = Dba::fetch_assoc($db_results)) {
+                $results[] = $item['id'];
+            } // end while
+        }
 
         return $results;
     }

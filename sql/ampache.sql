@@ -1011,8 +1011,7 @@ CREATE TABLE IF NOT EXISTS `tag_map` (
   `object_type` varchar(16) CHARACTER SET utf8 DEFAULT NULL,
   `user` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `tag_id` (`tag_id`),
-  UNIQUE KEY `unique_tag_map` (`object_id`, `object_type`, `user`)
+  UNIQUE KEY `unique_tag_map` (`object_id`, `object_type`, `user`, `tag_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
