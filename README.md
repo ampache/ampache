@@ -11,7 +11,7 @@ manager allowing you to access your music & videos from anywhere,
 using almost any internet enabled device.
 
 Ampache's usefulness is heavily dependent on being able to extract
-correct metadata from embedded tags in your files and/or the filename.
+correct metadata from embedded tags in your files and/or the file name.
 Ampache is not a media organiser; it is meant to be a tool which
 presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
@@ -118,27 +118,12 @@ Translations
 Ampache is currently translated (at least partially) into the
 following languages. If you are interested in updating an existing
 translation, simply visit us on [Transifex](https://www.transifex.com/ampache/ampache).
-If you prefer it oldscool or want to work offline, take a look at [/locale/base/TRANSLATIONS](https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md)
+If you prefer it old school or want to work offline, take a look at [/locale/base/TRANSLATIONS](https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md)
 for more instructions.
 
-* English       (en_US)
-* Arabic        (ar_SA)
-* Catalan       (ca_ES)
-* Catalan       (ca_ES)
-* Czech         (cs_CZ)
-* Dutch         (nl_NL)
-* French        (fr_FR)
-* German        (de_DE)
-* Greek         (el_GR)
-* Italian       (it_IT) 
-* Japanese      (ja_JP)
-* Norwegian     (nb_NO)
-* Persian       (fa_IR)
-* Polish        (pl_PL)
-* Russian       (ru_RU)
-* Spanish       (es_ES)
-* Swedish       (sv_SE)
-* UK English    (en_GB)
+Translation progress so far:
+
+[![Transifex](https://www.transifex.com/projects/p/ampache/resource/messagespot/chart/image_png)](https://www.transifex.com/projects/p/ampache/)
 
 Credits
 -------
