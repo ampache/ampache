@@ -81,13 +81,18 @@ class Art extends database_object
      */
     public function __construct($uid, $type = 'album', $kind = 'default')
     {
-        if (!Core::is_library_item($type)) {
+        if (!Art::is_valid_type($type)) {
             return false;
         }
         $this->type = $type;
         $this->uid  = intval($uid);
         $this->kind = $kind;
     } // constructor
+    
+    public static function is_valid_type($type)
+    {
+        return (Core::is_library_item($type) || $type == 'user');
+    }
 
     /**
      * build_cache
@@ -804,7 +809,7 @@ class Art extends database_object
      */
     public static function url($uid,$type,$sid=null,$thumb=null)
     {
-        if (!Core::is_library_item($type)) {
+        if (!self::is_valid_type($type)) {
             return null;
         }
 
@@ -1703,7 +1708,7 @@ class Art extends database_object
      */
     public static function display($object_type, $object_id, $name, $thumb, $link = null, $show_default = true, $kind = 'default')
     {
-        if (!Core::is_library_item($object_type)) {
+        if (!self::is_valid_type($object_type)) {
             return false;
         }
 

@@ -51,7 +51,7 @@ if (!isset($_GET['object_type'])) {
 }
 
 $type = $_GET['object_type'];
-if (!Core::is_library_item($type)) {
+if (!Art::is_valid_type($type)) {
     exit;
 }
 
