@@ -240,6 +240,11 @@ function check_php_simplexml()
     return function_exists('simplexml_load_string');
 }
 
+function check_php_gd()
+{
+    return (extension_loaded('gd') || extension_loaded('gd2'));
+}
+
 function return_bytes($val)
 {
     $val  = trim($val);

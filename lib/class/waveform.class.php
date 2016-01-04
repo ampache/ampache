@@ -170,6 +170,12 @@ class Waveform
     protected static function create_waveform($filename)
     {
         if (!file_exists($filename)) {
+            debug_event('waveform', 'File ' . $filename . ' doesn\'t exists', 1);
+            return null;
+        }
+        
+        if (!check_php_gd()) {
+            debug_event('waveform', 'GD extension must be loaded', 1);
             return null;
         }
 
