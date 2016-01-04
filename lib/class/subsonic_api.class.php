@@ -1173,7 +1173,7 @@ class Subsonic_Api
         self::check_version($input, "1.7.0");
 
         $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist'), Userflag::get_latest('album'), Userflag::get_latest('song'), $elementName);
+        Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist',null,99999), Userflag::get_latest('album',null,99999), Userflag::get_latest('song',null,99999), $elementName);
         self::apiOutput($input, $r);
     }
 
