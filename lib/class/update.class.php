@@ -535,6 +535,9 @@ class Update
         $update_string = "- Add preference subcategory.<br />";
         $version[]     = array('version' => '380004', 'description' => $update_string);
         
+        $update_string = "- Add manual update flag on artist.<br />";
+        $version[]     = array('version' => '380005', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -3779,6 +3782,21 @@ class Update
         $retval = true;
         
         $sql = "ALTER TABLE `preference` ADD `subcatagory` varchar(128) CHARACTER SET utf8 DEFAULT NULL AFTER `catagory`";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380005
+     *
+     * Add manual update flag on artist
+     */
+    public static function update_380005()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `artist` ADD COLUMN `manual_update` SMALLINT( 1 ) DEFAULT '0'";
         $retval &= Dba::write($sql);
 
         return $retval;

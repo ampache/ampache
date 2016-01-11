@@ -88,7 +88,7 @@ class Art extends database_object
         $this->uid  = intval($uid);
         $this->kind = $kind;
     } // constructor
-    
+
     public static function is_valid_type($type)
     {
         return (Core::is_library_item($type) || $type == 'user');

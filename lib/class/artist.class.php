@@ -76,6 +76,10 @@ class Artist extends database_object implements library_item
      *  @var int $user
      */
     public $user;
+    /**
+     * @var boolean $manual_update
+     */
+    public $manual_update;
 
     /**
      *  @var array $tags
@@ -864,7 +868,7 @@ class Artist extends database_object implements library_item
      */
     public function update_artist_info($summary, $placeformed, $yearformed)
     {
-        $sql    = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ? WHERE `id` = ?";
+        $sql    = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `manual_update` = 1, `last_update` = ? WHERE `id` = ?";
         $sqlret = Dba::write($sql, array($summary, $placeformed, intval($yearformed), time(), $this->id));
 
         $this->summary     = $summary;
