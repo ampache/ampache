@@ -808,7 +808,7 @@ class Artist extends database_object implements library_item
             Dba::write($sql, array($name, $current_id));
         }
 
-        $this->update_artist_info($summary, $placeformed, $yearformed);
+        $this->update_artist_info($summary, $placeformed, $yearformed, true);
 
         $this->name = $name;
         $this->mbid = $mbid;
@@ -866,10 +866,10 @@ class Artist extends database_object implements library_item
      * @param int $yearformed
      * @return boolean
      */
-    public function update_artist_info($summary, $placeformed, $yearformed)
+    public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
     {
-        $sql    = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `manual_update` = 1, `last_update` = ? WHERE `id` = ?";
-        $sqlret = Dba::write($sql, array($summary, $placeformed, intval($yearformed), time(), $this->id));
+        $sql    = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
+        $sqlret = Dba::write($sql, array($summary, $placeformed, intval($yearformed), time(), $manual ? 1 : 0, $this->id));
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
