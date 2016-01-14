@@ -35,14 +35,16 @@ usage() {
     echo ""
     echo -e "\033[32m usage: $0 [-h|--help][-g|--get][-gu|--getutds][-i|--init][-m|--merge][-f|--format][-a|--all][-au|--allutds]\033[0m"
     echo ""
-    echo -e "[-g|--get]\t Creates the messages.pot file from translation strings within the source code."
-    echo -e "[-gu|--getutds]\t Generates the Pot file from translation strings within the source code\n\t\t and creates or updates the 'translatable-database-strings.txt' from the database-preference-table strings.\n\t\t Ampache needs to be fully setup for this to work."
-    echo -e "[-i|--init]\t Creates a new language catalog and its directory structure."
-    echo -e "[-m|--merge]\t Merges the messages.pot into the language catalogs and shows obsolet translations."
-    echo -e "[-f|--format]\t Compiles the .mo file for its related .po file."
-    echo -e "[-a|--all]\t Does all except --init and --utds."
-    echo -e "[-au|--allutds]\t Does all except --init"
-    echo -e "[-h|--help]\t Shows this help screen."
+    echo -e "[-g|--get]\t\t Creates the messages.pot file from translation strings within the source code."
+    echo -e "[-gu|--getutds]\t\t Generates the Pot file from translation strings within the source code\n\t\t\t and creates or updates the 'translatable-database-strings.txt' from the database-preference-table strings.\n\t\t\t Ampache needs to be fully setup for this to work."
+    echo -e "[-i|--init]\t\t Creates a new language catalog and its directory structure."
+    echo -e "[-m|--merge]\t\t Merges the messages.pot into the language catalogs and shows obsolet translations."
+    echo -e "[-ma|--mergeall]\t Same as -m but for all translations."
+    echo -e "[-f|--format]\t\t Compiles the .mo file for its related .po file."
+    echo -e "[-fa|--formatall]\t Same as -f but for all translations."
+    echo -e "[-a|--all]\t\t Does all except --init and --utds."
+    echo -e "[-au|--allutds]\t\t Does all except --init"
+    echo -e "[-h|--help]\t\t Shows this help screen."
     echo ""
     echo -e "\033[32m If you encounter any bugs, please report them on Transifex (https://www.transifex.com/projects/p/ampache/)\033[0m"
     echo -e "\033[32m See also: https://github.com/ampache/ampache/blob/master/locale/base/TRANSLATIONS\033[0m"
@@ -219,16 +221,6 @@ case $1 in
             do_msgfmt $i
         done
     ;;
-    '-af'|'--allformat')
-        for i in $(ls ../ | grep -v base); do
-            do_msgfmt $i
-        done
-    ;;
-    '-am'|'--allmerge')
-        for i in $(ls ../ | grep -v base); do
-            do_msgmerge $i
-        done
-    ;;
     '-g'|'--get')
         generate_pot
     ;;
@@ -243,8 +235,18 @@ case $1 in
     '-f'|'--format'|'format')
         do_msgfmt $OLANG
     ;;
+    '-fa'|'--formatall')
+        for i in $(ls ../ | grep -v base); do
+            do_msgfmt $i
+        done
+    ;;
     '-m'|'--merge'|'merge')
         do_msgmerge $OLANG
+    ;;
+    '-ma'|'--mergeall')
+        for i in $(ls ../ | grep -v base); do
+            do_msgmerge $i
+        done
     ;;
     '-h'|'--help'|'help'|'*')
         usage
