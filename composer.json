@@ -33,9 +33,10 @@
         "symfony/process": "~2.1",
 		"wikimedia/composer-merge-plugin": "1.*",
 		
+        "doctrine/cache": "1.5.4",
 		"gettext/gettext": "3.5.*",
         "james-heinrich/getid3": "1.9.*",
-		"mikealmond/musicbrainz": "0.2.*",
+		"mikealmond/musicbrainz": "dev-master",
 		"phpmailer/phpmailer": "5.2.*",
 		"rmccue/requests": "1.6.*",
 		"react/react": "0.4.*",
@@ -48,7 +49,7 @@
 		"happyworm/jplayer": "2.*",
 		"needim/noty": "2.3.*",
 		"openid/php-openid": "2.*",
-		"sabre/dav": "3.*",
+		"sabre/dav": "3.0.5",
 		"maennchen/zipstream-php": "0.*",
 		
 		"Afterster/php-echonest-api": "dev-master",
