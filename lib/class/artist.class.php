@@ -869,7 +869,7 @@ class Artist extends database_object implements library_item
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
     {
         $sql    = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
-        $sqlret = Dba::write($sql, array($summary, $placeformed, intval($yearformed), time(), $manual ? 1 : 0, $this->id));
+        $sqlret = Dba::write($sql, array($summary, $placeformed, Catalog::normalize_year($yearformed), time(), $manual ? 1 : 0, $this->id));
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;

@@ -359,7 +359,7 @@ class Song extends database_object implements media, library_item
         $artist_mbid           = $results['mb_artistid'];
         $albumartist_mbid      = $results['mb_albumartistid'];
         $disk                  = $results['disk'] ?: 0;
-        $year                  = $results['year'] ?: 0;
+        $year                  = Catalog::normalize_year($results['year'] ?: 0);
         $comment               = $results['comment'];
         $tags                  = $results['genre']; // multiple genre support makes this an array
         $lyrics                = $results['lyrics'];
@@ -1660,9 +1660,7 @@ class Song extends database_object implements media, library_item
 
         $media->format();
         $media_name = $media->get_stream_name() . "." . $type;
-        $media_name = str_replace("/", "-", $media_name);
-        $media_name = str_replace("?", "", $media_name);
-        $media_name = str_replace("#", "", $media_name);
+        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
         $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params;

@@ -400,7 +400,7 @@ class Album extends database_object implements library_item
         $release_type = empty($release_type) ? null : $release_type;
 
         // Not even sure if these can be negative, but better safe than llama.
-        $year = abs(intval($year));
+        $year = Catalog::normalize_year($year);
         $disk = abs(intval($disk));
 
         if (!$name) {

@@ -1890,6 +1890,20 @@ abstract class Catalog extends database_object
         return array('string' => $string, 'prefix' => $prefix);
     } // trim_prefix
 
+    public static function normalize_year($year)
+    {
+        if (empty($year)) {
+            return 0;
+        }
+        
+        $year = intval($year);
+        if ($year < 0 || $year > 9999) {
+            return 0;
+        }
+        
+        return $year;
+    }
+
     /**
      * trim_featuring
      * Splits artists featuring from the string
