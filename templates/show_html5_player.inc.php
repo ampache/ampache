@@ -548,7 +548,7 @@ if ($isVideo) {
       </div>
 <?php 
 } ?>
-      <div class="jp-playlist" style="position: absolute;">
+      <div class="jp-playlist">
           <ul>
               <li></li>
           </ul>
