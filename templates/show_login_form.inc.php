@@ -54,7 +54,7 @@ define('TABLE_RENDERED', 1);
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
             </div>
             <div id="loginbox">
-                <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
+                <h2><?php echo AmpConfig::get('site_title'); ?></h2>
                 <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
                     <div class="loginfield" id="usernamefield">
                         <label for="username"><?php echo  T_('Username'); ?>:</label>
