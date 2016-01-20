@@ -42,7 +42,7 @@ define('TABLE_RENDERED', 1);
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
-        <title> <?php echo scrub_out(AmpConfig::get('site_title')); ?> </title>
+        <title> <?php echo AmpConfig::get('site_title'); ?> </title>
         <script type="text/javascript" language="javascript">
             function focus(){ document.login.username.focus(); }
         </script>
