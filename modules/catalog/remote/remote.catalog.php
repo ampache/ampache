@@ -200,6 +200,7 @@ class Catalog_remote extends Catalog
                 'api_secure' => (substr($this->uri, 0, 8) == 'https://')
             ));
         } catch (Exception $e) {
+            debug_event('catalog', 'Connection error: ' . $e->getMessage(), 1);
             AmpError::add('general', $e->getMessage());
             AmpError::display('general');
             flush();
@@ -248,6 +249,7 @@ class Catalog_remote extends Catalog
             try {
                 $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
             } catch (Exception $e) {
+                debug_event('catalog', 'Songs parsing error: ' . $e->getMessage(), 1);
                 AmpError::add('general',$e->getMessage());
                 AmpError::display('general');
                 flush();
@@ -306,6 +308,7 @@ class Catalog_remote extends Catalog
                 $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
             } catch (Exception $e) {
                 // FIXME: What to do, what to do
+                debug_event('catalog', 'url_to_song parsing error: ' . $e->getMessage(), 1);
             }
 
             if (count($song) == 1) {

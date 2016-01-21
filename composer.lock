@@ -46,16 +46,16 @@
         },
         {
             "name": "ampache/ampacheapi-php",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ampache/ampacheapi-php.git",
-                "reference": "0328dc468eb41953df3271c8645bd04c2d79ede4"
+                "reference": "7185626d7bf806e9b25927a66dbca5d9ce64d319"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/0328dc468eb41953df3271c8645bd04c2d79ede4",
-                "reference": "0328dc468eb41953df3271c8645bd04c2d79ede4",
+                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/7185626d7bf806e9b25927a66dbca5d9ce64d319",
+                "reference": "7185626d7bf806e9b25927a66dbca5d9ce64d319",
                 "shasum": ""
             },
             "require": {
@@ -78,7 +78,7 @@
                 "api",
                 "library"
             ],
-            "time": "2015-11-18 20:13:35"
+            "time": "2016-01-21 20:36:19"
         },
         {
             "name": "aterrien/jQuery-Knob",
@@ -544,16 +544,16 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v3.5.7",
+            "version": "v3.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Gettext.git",
-                "reference": "46f2b50350752668d612aaf12431478a968425c4"
+                "reference": "e93f74356280016bd50c41c62cc858c3005791e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/46f2b50350752668d612aaf12431478a968425c4",
-                "reference": "46f2b50350752668d612aaf12431478a968425c4",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/e93f74356280016bd50c41c62cc858c3005791e7",
+                "reference": "e93f74356280016bd50c41c62cc858c3005791e7",
                 "shasum": ""
             },
             "require": {
@@ -562,7 +562,6 @@
             },
             "require-dev": {
                 "illuminate/view": "*",
-                "phpunit/phpunit": "~4.0",
                 "twig/extensions": "*",
                 "twig/twig": "*"
             },
@@ -599,7 +598,7 @@
                 "po",
                 "translation"
             ],
-            "time": "2015-12-22 10:02:19"
+            "time": "2016-01-20 22:08:43"
         },
         {
             "name": "gettext/languages",
