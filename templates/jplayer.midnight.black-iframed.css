@@ -565,6 +565,7 @@ div.jp-playlist {
 	text-shadow: 0 1px 0 rgba(0,0,0,0.3);
 	z-index: 9999;
     opacity: 0.9;
+	position: absolute;
 }
 div.jp-type-single div.jp-title,
 div.jp-type-playlist div.jp-title,
