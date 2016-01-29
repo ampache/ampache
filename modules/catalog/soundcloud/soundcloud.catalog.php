@@ -306,12 +306,15 @@ class Catalog_soundcloud extends Catalog
                     $this->update_last_update();
                 } else {
                     AmpError::add('general', T_('API Error: cannot get song list.'));
+                    debug_event('soundcloud_catalog', 'API Error: cannot get song list.', 1);
                 }
             } else {
                 AmpError::add('general', T_('API Error: cannot connect to SoundCloud.'));
+                debug_event('soundcloud_catalog', 'API Error: cannot connect to SoundCloud.', 1);
             }
         } catch (Exception $ex) {
             AmpError::add('general', T_('SoundCloud exception: ') . $ex->getMessage());
+            debug_event('soundcloud_catalog', 'SoundCloud exception: ' . $ex->getMessage(), 1);
         }
 
         return true;
@@ -431,16 +434,18 @@ class Catalog_soundcloud extends Catalog
 
                 $headers = $api->stream($track);
                 if (isset($headers['Location'])) {
-                    header('Location: ' . $headers['Location']);
                     debug_event('play', 'Started remote stream - ' . $headers['Location'], 5);
+                    header('Location: ' . $headers['Location']);
                 } else {
                     debug_event('play', 'Cannot get remote stream for song ' . $media->file, 5);
                 }
             } else {
+                debug_event('play', 'API Error: cannot connect to SoundCloud.', 1);
                 echo "<p>" . T_('API Error: cannot connect to SoundCloud.') . "</p><hr />\n";
                 flush();
             }
         } catch (Exception $ex) {
+            debug_event('play', 'SoundCloud exception: ' . $ex->getMessage(), 1);
             echo "<p>" . T_('SoundCloud exception: ') . $ex->getMessage() . "</p><hr />\n";
         }
 
