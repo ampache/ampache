@@ -67,7 +67,7 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']            = '3.8.2';
+$results['version']            = '3.8.3-develop';
 $results['int_config_version'] = '33';
 
 if (!empty($results['force_ssl'])) {
