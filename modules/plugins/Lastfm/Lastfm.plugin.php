@@ -63,8 +63,8 @@ class AmpacheLastfm
             return false;
         }
 
-        Preference::insert('lastfm_challenge','Last.FM Submit Challenge','','25','string','internal');
-        Preference::insert('lastfm_grant_link','Last.FM Grant URL','','25','string','plugins');
+        Preference::insert('lastfm_challenge','Last.FM Submit Challenge','','25','string','internal',$this->name);
+        Preference::insert('lastfm_grant_link','Last.FM Grant URL','','25','string','plugins',$this->name);
 
         return true;
     } // install

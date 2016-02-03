@@ -507,6 +507,53 @@ dl.media_details dt {
 }
 
 /***********************************************
+        Web Player
+***********************************************/
+div.jp-audio,
+div.jp-audio-stream,
+div.jp-video {
+	color: #999;
+	border: 1px solid #191919;
+}
+
+div.jp-video div.jp-interface {
+	border-top: 1px solid #191919;
+}
+
+div.jp-title,
+div.jp-playlist {
+	background-color: #202020;
+	border-top: 1px solid #191919;
+}
+
+.jp-no-solution {
+	background: #121112 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+	border-top: 1px solid #191919;
+}
+
+#webplayer {
+	background-color: #191919 !important;
+}
+
+div.playing_title a {
+	color: #EEE;
+}
+
+div.playing_artist a {
+	color: #EEE;
+}
+
+div.jp-interface {
+	/*background: #191919 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;*/
+    background-color: #191919;
+}
+
+div.jp-playlist li {
+	border-bottom: 1px solid #121212;
+	/*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
+}
+
+/***********************************************
         Other
 ***********************************************/
 .jscroll-next {
@@ -541,4 +588,8 @@ span.item-count {
 
 a.option-list:hover {
 	border-color: #1d1d1d;
+}
+
+#tabs li.tab_active a {
+	color: #fff;
 }

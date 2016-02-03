@@ -66,7 +66,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo AmpConfig::get('web_path');
     ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id;
-    ?>', 'refresh_playlist_songs')">
+    ?>', 'refresh_playlist_medias')">
                 <?php echo UI::get_icon('save', T_('Save Tracks Order'));
     ?>
                 &nbsp;&nbsp;<?php echo T_('Save Tracks Order');
@@ -168,7 +168,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 <div id='reordered_list_<?php echo $playlist->id; ?>'>
 <?php
     $browse = new Browse();
-    $browse->set_type('playlist_song');
+    $browse->set_type('playlist_media');
     $browse->add_supplemental_object('playlist', $playlist->id);
     $browse->set_static_content(true);
     $browse->show_objects($object_ids, true);

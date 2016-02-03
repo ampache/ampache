@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `access_list` (
   KEY `end` (`end`),
   KEY `level` (`level`),
   KEY `enabled` (`enabled`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `access_list`
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `album` (
   KEY `year` (`year`),
   KEY `disk` (`disk`),
   FULLTEXT KEY `name_2` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -111,7 +111,26 @@ CREATE TABLE IF NOT EXISTS `artist` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   FULLTEXT KEY `name_2` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bookmark`
+--
+
+DROP TABLE IF EXISTS `bookmark`;
+CREATE TABLE IF NOT EXISTS `bookmark` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user` int(11) NOT NULL,
+  `position` int(11) unsigned DEFAULT '0' NOT NULL,
+  `comment` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `object_type` varchar(64) NOT NULL,
+  `object_id` int(11) unsigned NOT NULL,
+  `creation_date` int(11) unsigned DEFAULT '0' NOT NULL,
+  `update_date` int(11) unsigned DEFAULT '0' NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -153,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `catalog` (
   `gather_types` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `enabled` (`enabled`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -318,7 +337,7 @@ CREATE TABLE IF NOT EXISTS `license` (
   `description` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
   `external_link` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `license`
@@ -544,6 +563,55 @@ CREATE TABLE IF NOT EXISTS `playlist_data` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `podcast`
+--
+
+DROP TABLE IF EXISTS `podcast`;
+CREATE TABLE IF NOT EXISTS `podcast` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `feed` varchar(4096) NOT NULL,
+  `catalog` int(11) NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `website` varchar(255) NULL,
+  `description` varchar(4096) CHARACTER SET utf8 NULL,
+  `language` varchar(5) NULL,
+  `copyright` varchar(64) NULL,
+  `generator` varchar(64) NULL,
+  `lastbuilddate` int(11) unsigned DEFAULT '0' NOT NULL,
+  `lastsync` int(11) unsigned DEFAULT '0' NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `podcast_episode`
+--
+
+DROP TABLE IF EXISTS `podcast_episode`;
+CREATE TABLE IF NOT EXISTS `podcast_episode` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `guid` varchar(255) NOT NULL,
+  `podcast` int(11) NOT NULL,
+  `state` varchar(32) NOT NULL,
+  `file` varchar(4096) CHARACTER SET utf8 NULL,
+  `source` varchar(4096) NULL,
+  `size` bigint(20) unsigned DEFAULT '0' NOT NULL,
+  `time` smallint(5) unsigned DEFAULT '0' NOT NULL,
+  `website` varchar(255) NULL,
+  `description` varchar(4096) CHARACTER SET utf8 NULL,
+  `author` varchar(64) NULL,
+  `category` varchar(64) NULL,
+  `played` tinyint(1) unsigned DEFAULT '0' NOT NULL,
+  `pubdate` int(11) unsigned NOT NULL,
+  `addition_time` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `preference`
 --
 
@@ -556,104 +624,107 @@ CREATE TABLE IF NOT EXISTS `preference` (
   `level` int(11) unsigned NOT NULL DEFAULT '100',
   `type` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   `catagory` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `subcatagory` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=135 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `preference`
 --
 
-INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`) VALUES
-(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options'),
-(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface'),
-(19, 'transcode_bitrate', '64', 'Transcode Bitrate', 25, 'string', 'streaming'),
-(22, 'site_title', 'Ampache :: For the love of Music', 'Website Title', 100, 'string', 'system'),
-(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system'),
-(24, 'force_http_play', '0', 'Forces Http play regardless of port', 100, 'boolean', 'system'),
-(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options'),
-(29, 'play_type', 'web_player', 'Type of Playback', 25, 'special', 'streaming'),
-(31, 'lang', 'fr_FR', 'Language', 100, 'special', 'interface'),
-(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist'),
-(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface'),
-(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface'),
-(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options'),
-(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'system'),
-(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'system'),
-(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'system'),
-(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface'),
-(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming'),
-(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist'),
-(55, 'transcode', 'default', 'Transcoding', 25, 'string', 'streaming'),
-(69, 'show_lyrics', '0', 'Show Lyrics', 0, 'boolean', 'interface'),
-(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal'),
-(71, 'httpq_active', '0', 'HTTPQ Active Instance', 25, 'integer', 'internal'),
-(72, 'shoutcast_active', '0', 'Shoutcast Active Instance', 25, 'integer', 'internal'),
-(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal'),
-(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal'),
-(102, 'share', '0', 'Allow Share', 100, 'boolean', 'system'),
-(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface'),
-(82, 'now_playing_per_user', '1', 'Now playing filtered per user', 50, 'boolean', 'interface'),
-(83, 'album_sort', '0', 'Album Default Sort', 25, 'string', 'interface'),
-(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface'),
-(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface'),
-(86, 'subsonic_backend', '1', 'Use SubSonic backend', 100, 'boolean', 'system'),
-(87, 'plex_backend', '0', 'Use Plex backend', 100, 'boolean', 'system'),
-(88, 'webplayer_flash', '1', 'Authorize Flash Web Player(s)', 25, 'boolean', 'streaming'),
-(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player(s)', 25, 'boolean', 'streaming'),
-(90, 'allow_personal_info_now', '1', 'Personal information visibility - Now playing', 25, 'boolean', 'interface'),
-(91, 'allow_personal_info_recent', '1', 'Personal information visibility - Recently played', 25, 'boolean', 'interface'),
-(92, 'allow_personal_info_time', '1', 'Personal information visibility - Recently played - Allow to show streaming date/time', 25, 'boolean', 'interface'),
-(93, 'allow_personal_info_agent', '1', 'Personal information visibility - Recently played - Allow to show streaming agent', 25, 'boolean', 'interface'),
-(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface'),
-(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system'),
-(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal'),
-(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal'),
-(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal'),
-(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface'),
-(100, 'webplayer_pausetabs', '1', 'Auto-pause betweens tabs', 25, 'boolean', 'interface'),
-(101, 'stream_beautiful_url', '0', 'Enable url rewriting', 100, 'boolean', 'streaming'),
-(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system'),
-(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface'),
-(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming'),
-(106, 'concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface'),
-(107, 'concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface'),
-(108, 'album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface'),
-(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface'),
-(110, 'demo_clear_sessions', '0', 'Clear democratic votes of expired user sessions', 25, 'boolean', 'playlist'),
-(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface'),
-(112, 'upload_catalog', '-1', 'Uploads catalog destination', 75, 'integer', 'system'),
-(113, 'allow_upload', '0', 'Allow users to upload media', 75, 'boolean', 'system'),
-(114, 'upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)', 75, 'boolean', 'system'),
-(115, 'upload_user_artist', '0', 'Upload: consider the user sender as the track''s artist', 75, 'boolean', 'system'),
-(116, 'upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)', 75, 'string', 'system'),
-(117, 'upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs', 75, 'boolean', 'system'),
-(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system'),
-(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system'),
-(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system'),
-(121, 'allow_video', '1', 'Allow video features', 75, 'integer', 'system'),
-(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface'),
-(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface'),
-(125, 'home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface'),
-(126, 'home_moment_videos', '1', 'Show Videos of the moment at home page', 25, 'integer', 'interface'),
-(127, 'home_recently_played', '1', 'Show Recently Played at home page', 25, 'integer', 'interface'),
-(128, 'home_now_playing', '1', 'Show Now Playing at home page', 25, 'integer', 'interface'),
-(129, 'custom_logo', '', 'Custom logo url', 25, 'string', 'interface'),
-(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort', 25, 'string', 'interface'),
-(131, 'browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface'),
-(132, 'browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)', 25, 'integer', 'interface'),
-(133, 'geolocation', '0', 'Allow geolocation', 25, 'integer', 'options'),
-(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming'),
-(135, 'upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 75, 'boolean', 'system'),
-(136, 'custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface'),
-(137, 'custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface'),
-(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface'),
-(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system'),
-(140, 'notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options'),
-(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface'),
-(142, 'disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system'),
-(143, 'disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system');
+INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES
+(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'),
+(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'),
+(19, 'transcode_bitrate', '64', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'),
+(22, 'site_title', 'Ampache :: For the love of Music', 'Website Title', 100, 'string', 'interface', 'custom'),
+(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', null),
+(24, 'force_http_play', '0', 'Forces Http play regardless of port', 100, 'boolean', 'system', null),
+(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'),
+(29, 'play_type', 'web_player', 'Type of Playback', 25, 'special', 'streaming', null),
+(31, 'lang', 'fr_FR', 'Language', 100, 'special', 'interface', null),
+(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', null),
+(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'),
+(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'),
+(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'),
+(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature'),
+(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature'),
+(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay'),
+(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query'),
+(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding'),
+(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist', null),
+(55, 'transcode', 'default', 'Transcoding', 25, 'string', 'streaming', 'transcoding'),
+(69, 'show_lyrics', '0', 'Show Lyrics', 0, 'boolean', 'interface', 'player'),
+(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'),
+(71, 'httpq_active', '0', 'HTTPQ Active Instance', 25, 'integer', 'internal', 'httpq'),
+(72, 'shoutcast_active', '0', 'Shoutcast Active Instance', 25, 'integer', 'internal', 'shoutcast'),
+(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'),
+(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'),
+(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'),
+(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null),
+(82, 'now_playing_per_user', '1', 'Now playing filtered per user', 50, 'boolean', 'interface', 'home'),
+(83, 'album_sort', '0', 'Album Default Sort', 25, 'string', 'interface', 'library'),
+(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'library'),
+(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'),
+(86, 'subsonic_backend', '1', 'Use SubSonic backend', 100, 'boolean', 'system', 'backend'),
+(87, 'plex_backend', '0', 'Use Plex backend', 100, 'boolean', 'system', 'backend'),
+(88, 'webplayer_flash', '1', 'Authorize Flash Web Player(s)', 25, 'boolean', 'streaming', 'player'),
+(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player(s)', 25, 'boolean', 'streaming', 'player'),
+(90, 'allow_personal_info_now', '1', 'Personal information visibility - Now playing', 25, 'boolean', 'interface', 'privacy'),
+(91, 'allow_personal_info_recent', '1', 'Personal information visibility - Recently played', 25, 'boolean', 'interface', 'privacy'),
+(92, 'allow_personal_info_time', '1', 'Personal information visibility - Recently played - Allow to show streaming date/time', 25, 'boolean', 'interface', 'privacy'),
+(93, 'allow_personal_info_agent', '1', 'Personal information visibility - Recently played - Allow to show streaming agent', 25, 'boolean', 'interface', 'privacy'),
+(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'),
+(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system', 'update'),
+(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'),
+(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'),
+(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'),
+(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'),
+(100, 'webplayer_pausetabs', '1', 'Auto-pause betweens tabs', 25, 'boolean', 'interface', 'player'),
+(101, 'stream_beautiful_url', '0', 'Enable url rewriting', 100, 'boolean', 'streaming', null),
+(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'),
+(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'),
+(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'),
+(106, 'concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface', 'query'),
+(107, 'concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface', 'query'),
+(108, 'album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'),
+(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'),
+(110, 'demo_clear_sessions', '0', 'Clear democratic votes of expired user sessions', 25, 'boolean', 'playlist', null),
+(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null),
+(112, 'upload_catalog', '-1', 'Uploads catalog destination', 75, 'integer', 'system', 'upload'),
+(113, 'allow_upload', '0', 'Allow users to upload media', 75, 'boolean', 'system', 'upload'),
+(114, 'upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)', 75, 'boolean', 'system', 'upload'),
+(115, 'upload_user_artist', '0', 'Upload: consider the user sender as the track''s artist', 75, 'boolean', 'system', 'upload'),
+(116, 'upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)', 75, 'string', 'system', 'upload'),
+(117, 'upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'),
+(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'),
+(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'),
+(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'),
+(121, 'allow_video', '1', 'Allow video features', 75, 'integer', 'options', 'feature'),
+(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'),
+(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'),
+(125, 'home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface', 'home'),
+(126, 'home_moment_videos', '1', 'Show Videos of the moment at home page', 25, 'integer', 'interface', 'home'),
+(127, 'home_recently_played', '1', 'Show Recently Played at home page', 25, 'integer', 'interface', 'home'),
+(128, 'home_now_playing', '1', 'Show Now Playing at home page', 25, 'integer', 'interface', 'home'),
+(129, 'custom_logo', '', 'Custom logo url', 25, 'string', 'interface', 'custom'),
+(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort', 25, 'string', 'interface', 'library'),
+(131, 'browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface', 'notification'),
+(132, 'browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'),
+(133, 'geolocation', '0', 'Allow geolocation', 25, 'integer', 'options', 'feature'),
+(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming', 'player'),
+(135, 'upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 75, 'boolean', 'system', 'upload'),
+(136, 'custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface', 'custom'),
+(137, 'custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface', 'custom'),
+(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'),
+(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'),
+(140, 'notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options', null),
+(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'),
+(142, 'disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system', 'metadata'),
+(143, 'disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system', 'metadata'),
+(144, 'podcast_keep', '10', 'Podcast: # latest episodes to keep', 100, 'integer', 'system', 'podcast'),
+(145, 'podcast_new_download', '1', 'Podcast: # episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast');
 
 -- --------------------------------------------------------
 
@@ -665,7 +736,7 @@ DROP TABLE IF EXISTS `rating`;
 CREATE TABLE IF NOT EXISTS `rating` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
-  `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season') CHARACTER SET utf8 DEFAULT NULL,
+  `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 DEFAULT NULL,
   `object_id` int(11) unsigned NOT NULL DEFAULT '0',
   `rating` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
@@ -842,7 +913,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   KEY `played` (`played`),
   KEY `enabled` (`enabled`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=44 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -924,7 +995,7 @@ CREATE TABLE IF NOT EXISTS `tag` (
   `is_hidden` tinyint(1) NOT NULL DEFAULT '0',
   UNIQUE KEY `name` (`name`),
   KEY `map_id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -940,11 +1011,8 @@ CREATE TABLE IF NOT EXISTS `tag_map` (
   `object_type` varchar(16) CHARACTER SET utf8 DEFAULT NULL,
   `user` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `object_id` (`object_id`),
-  KEY `object_type` (`object_type`),
-  KEY `user_id` (`user`),
-  KEY `tag_id` (`tag_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=70 ;
+  UNIQUE KEY `unique_tag_map` (`object_id`, `object_type`, `user`, `tag_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -990,7 +1058,7 @@ CREATE TABLE IF NOT EXISTS `tmp_playlist` (
   PRIMARY KEY (`id`),
   KEY `session` (`session`),
   KEY `type` (`type`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1007,7 +1075,7 @@ CREATE TABLE IF NOT EXISTS `tmp_playlist_data` (
   `track` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `tmp_playlist` (`tmp_playlist`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1073,7 +1141,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '370041'),
+('db_version', '380004'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1101,7 +1169,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `fullname_public` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1252,7 +1320,9 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 143, ''),
 (-1, 96, ''),
 (-1, 97, ''),
-(-1, 98, '');
+(-1, 98, ''),
+(-1, 144, '10'),
+(-1, 145, '1');
 
 -- --------------------------------------------------------
 
@@ -1315,7 +1385,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `addition_time` int(11) unsigned NOT NULL,
   `update_time` int(11) unsigned DEFAULT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT '1',
-  `played` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `played` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `release_date` int(11) DEFAULT NULL,
   `channels` mediumint(9) DEFAULT NULL,
   `bitrate` mediumint(8) DEFAULT NULL,

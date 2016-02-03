@@ -54,8 +54,8 @@ class Ampache7digital
         if (Preference::exists('7digital_api_key')) {
             return false;
         }
-        Preference::insert('7digital_api_key','7digital consumer key','','75','string','plugins');
-        Preference::insert('7digital_secret_api_key','7digital secret','','75','string','plugins');
+        Preference::insert('7digital_api_key','7digital consumer key','','75','string','plugins',$this->name);
+        Preference::insert('7digital_secret_api_key','7digital secret','','75','string','plugins',$this->name);
         return true;
     } // install
 

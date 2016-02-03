@@ -55,8 +55,8 @@ class AmpacheCatalogFavorites
             return false;
         }
 
-        Preference::insert('catalogfav_max_items','Catalog favorites max items','5','25','integer','plugins');
-        Preference::insert('catalogfav_columns','Catalog favorites columns','1','25','integer','plugins');
+        Preference::insert('catalogfav_max_items','Catalog favorites max items','5','25','integer','plugins',$this->name);
+        Preference::insert('catalogfav_columns','Catalog favorites columns','1','25','integer','plugins',$this->name);
 
         return true;
     }
@@ -123,7 +123,8 @@ class AmpacheCatalogFavorites
 
                     echo '<div style="margin-left: 30px;">';
                     echo '<div style="float: left; margin-right: 20px;">';
-                    $item->display_art(2);
+                    $thumb = UI::is_grid_view('album') ? 2 : 11;
+                    $item->display_art($thumb);
                     echo '</div>';
 
                     echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';

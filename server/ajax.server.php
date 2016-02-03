@@ -77,6 +77,9 @@ switch ($page) {
     case 'user':
         require_once AmpConfig::get('prefix') . '/server/user.ajax.php';
         exit;
+    case 'podcast':
+        require_once AmpConfig::get('prefix') . '/server/podcast.ajax.php';
+        exit;
     default:
         // A taste of compatibility
     break;

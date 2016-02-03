@@ -52,8 +52,9 @@ if ($directplay_limit > 0) {
         <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22&type=album" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
     <?php
-        $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
-        Art::display('album', $album->id, $name, 2);
+        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
+        $thumb = UI::is_grid_view('album') ? 2 : 11;
+        Art::display('album', $album->id, $name, $thumb);
     ?>
 </div>
 <?php if (User::is_registered()) {

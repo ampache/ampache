@@ -449,8 +449,10 @@ function install_config_use_case($case)
             $dbconfig['download']    = '0';
             $dbconfig['allow_video'] = '0';
 
-            // Hide sidebar by default to have a better 'minimalist first look'.
+            // Default local UI preferences to have a better 'minimalist first look'.
             setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
+            setcookie('browse_album_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
+            setcookie('browse_artist_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
             break;
         case 'community':
             $trconfig['use_auth']                  = 'false';

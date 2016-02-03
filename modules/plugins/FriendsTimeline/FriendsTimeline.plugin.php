@@ -55,7 +55,7 @@ class AmpacheFriendsTimeline
             return false;
         }
 
-        Preference::insert('ftl_max_items','Friends timeline max items','5','25','integer','plugins');
+        Preference::insert('ftl_max_items','Friends timeline max items','5','25','integer','plugins',$this->name);
 
         return true;
     }

@@ -1314,7 +1314,7 @@ class Plex_XML_Data
         //$xpl->addAttribute('composite', '');
         $xpl->addAttribute('playlistType', 'audio');
         $xpl->addAttribute('duration', $playlist->get_total_duration() * 1000);
-        $xpl->addAttribute('leafCount', $playlist->get_song_count());
+        $xpl->addAttribute('leafCount', $playlist->get_media_count('song'));
         $xpl->addAttribute('addedAt', '');
         $xpl->addAttribute('updatedAt', '');
     }
@@ -1322,7 +1322,7 @@ class Plex_XML_Data
     public static function setPlaylistItems(SimpleXMLElement $xml, $playlist)
     {
         $xml->addAttribute('duration', $playlist->get_total_duration() * 1000);
-        $xml->addAttribute('leafCount', $playlist->get_song_count());
+        $xml->addAttribute('leafCount', $playlist->get_media_count('song'));
         $items = $playlist->get_items();
         self::addPlaylistsItems($xml, $items);
     }

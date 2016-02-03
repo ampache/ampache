@@ -217,19 +217,24 @@ class Playlist extends playlist_object
     } // get_songs
 
     /**
-     * get_song_count
-     * This simply returns a int of how many song elements exist in this playlist
-     * For now let's consider a dyn_song a single entry
+     * get_media_count
+     * This simply returns a int of how many media elements exist in this playlist
+     * For now let's consider a dyn_media a single entry
      */
-    public function get_song_count()
+    public function get_media_count($type = '')
     {
+        $params     = array($this->id);
         $sql        = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist` = ?";
-        $db_results = Dba::read($sql, array($this->id));
+        if (!empty($type)) {
+            $sql .= " AND `object_type` = ?";
+            $params[] = $type;
+        }
+        $db_results = Dba::read($sql, $params);
 
         $results = Dba::fetch_row($db_results);
 
         return $results['0'];
-    } // get_song_count
+    } // get_media_count
 
     /**
     * get_total_duration
@@ -369,7 +374,7 @@ class Playlist extends playlist_object
         $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($this->id));
         $data       = Dba::fetch_assoc($db_results);
-        $base_track = $data['track'];
+        $base_track = $data['track'] ?: 0;
         debug_event('add_medias', 'Track number: ' . $base_track, '5');
 
         $i = 0;

@@ -53,7 +53,7 @@ class AmpacheTmdb
             return false;
         }
 
-        Preference::insert('tmdb_api_key','Tmdb api key','','75','string','plugins');
+        Preference::insert('tmdb_api_key','Tmdb api key','','75','string','plugins',$this->name);
         
         return true;
     } // install

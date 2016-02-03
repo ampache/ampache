@@ -55,7 +55,7 @@ class AmpacheShoutHome
             return false;
         }
 
-        Preference::insert('shouthome_max_items','Shoutbox on homepage max items','5','25','integer','plugins');
+        Preference::insert('shouthome_max_items','Shoutbox on homepage max items','5','25','integer','plugins',$this->name);
 
         return true;
     }

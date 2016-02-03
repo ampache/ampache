@@ -51,13 +51,30 @@ if (Art::is_enabled()) {
         $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
     }
     if (!$art_showed) {
-        Art::display('video', $libitem->id, $libitem->f_title, 6, $libitem->link);
+        $thumb = (isset($browse) && !$browse->get_grid_view()) ? 7 : 6;
+        Art::display('video', $libitem->id, $libitem->f_title, $thumb, $libitem->link);
     }
     ?>
 </td>
 <?php 
 } ?>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+<?php
+    echo Ajax::button('?action=basket&type=video&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id);
+    if (Access::check('interface', '25')) {
+        ?>
+        <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $libitem->id ?>')">
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
+        ?>
+        </a>
+    <?php
+
+    }
+    ?>
+    </span>
+</td>
 <?php
 if ($video_type != 'video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . '_row.inc.php');

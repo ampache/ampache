@@ -95,7 +95,7 @@ class AmpacheVlc extends localplay_controller
             $db_results = Dba::query($sql);
 
             // Add an internal preference for the users current active instance
-            Preference::insert('vlc_active','VLC Active Instance','0','25','integer','internal');
+            Preference::insert('vlc_active','VLC Active Instance','0','25','integer','internal','vlc');
 
             return true;
         } // install
@@ -231,7 +231,7 @@ class AmpacheVlc extends localplay_controller
 
     public function add_url(Stream_URL $url)
     {
-        if (is_null($this->_vlc->add($url->title, $url->url))) {
+        if ($this->_vlc->add($url->title, $url->url) === null) {
             debug_event('vlc', 'add_url failed to add: ' . json_encode($url), 1);
             return false;
         }
@@ -246,7 +246,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function delete_track($object_id)
     {
-        if (is_null($this->_vlc->delete_pos($object_id))) {
+        if ($this->_vlc->delete_pos($object_id) === null) {
             debug_event('vlc_del','ERROR Unable to delete ' . $object_id . ' from Vlc','1');
             return false;
         }
@@ -260,7 +260,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function clear_playlist()
     {
-        if (is_null($this->_vlc->clear())) {
+        if ($this->_vlc->clear() === null) {
             return false;
         }
 
@@ -284,7 +284,7 @@ class AmpacheVlc extends localplay_controller
             return true;
         }
 
-        if (is_null($this->_vlc->play())) {
+        if ($this->_vlc->play() === null) {
             return false;
         }
         return true;
@@ -297,7 +297,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function stop()
     {
-        if (is_null($this->_vlc->stop())) {
+        if ($this->_vlc->stop() === null) {
             return false;
         }
         return true;
@@ -309,7 +309,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function skip($song)
     {
-        if (is_null($this->_vlc->skip($song))) {
+        if ($this->_vlc->skip($song) === null) {
             return false;
         }
         return true;
@@ -320,7 +320,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function volume_up()
     {
-        if (is_null($this->_vlc->volume_up())) {
+        if ($this->_vlc->volume_up() === null) {
             return false;
         }
         return true;
@@ -331,7 +331,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function volume_down()
     {
-        if (is_null($this->_vlc->volume_down())) {
+        if ($this->_vlc->volume_down() === null) {
             return false;
         }
         return true;
@@ -344,7 +344,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function next()
     {
-        if (is_null($this->_vlc->next())) {
+        if ($this->_vlc->next() === null) {
             return false;
         }
 
@@ -357,7 +357,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function prev()
     {
-        if (is_null($this->_vlc->prev())) {
+        if ($this->_vlc->prev() === null) {
             return false;
         }
 
@@ -370,7 +370,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function pause()
     {
-        if (is_null($this->_vlc->pause())) {
+        if ($this->_vlc->pause() === null) {
             return false;
         }
         return true;
@@ -383,7 +383,7 @@ class AmpacheVlc extends localplay_controller
         */
        public function volume($volume)
        {
-           if (is_null($this->_vlc->set_volume($volume))) {
+           if ($this->_vlc->set_volume($volume) === null) {
                return false;
            }
            return true;
@@ -395,7 +395,7 @@ class AmpacheVlc extends localplay_controller
         */
        public function repeat($state)
        {
-           if (is_null($this->_vlc->repeat($state))) {
+           if ($this->_vlc->repeat($state) === null) {
                return false;
            }
            return true;
@@ -407,7 +407,7 @@ class AmpacheVlc extends localplay_controller
         */
        public function random($onoff)
        {
-           if (is_null($this->_vlc->random($onoff))) {
+           if ($this->_vlc->random($onoff) === null) {
                return false;
            }
            return true;
@@ -571,7 +571,7 @@ class AmpacheVlc extends localplay_controller
 
         // Test our connection by retriving the version, no version in status file, just need to see if returned
         //Not yet working all values returned are true for beta testing purpose
-        if (!is_null($this->_vlc->version())) {
+        if ($this->_vlc->version() !== null) {
             return true;
         }
 

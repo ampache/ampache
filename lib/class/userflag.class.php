@@ -56,7 +56,7 @@ class Userflag extends database_object
             return false;
         }
 
-        if (is_null($user_id)) {
+        if ($user_id === null) {
             $user_id = $GLOBALS['user']->id;
         }
 
@@ -91,7 +91,7 @@ class Userflag extends database_object
      */
     public static function gc($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
 
         if ($object_type != null) {
             if (in_array($object_type, $types)) {
@@ -109,7 +109,7 @@ class Userflag extends database_object
 
     public function get_flag($user_id = null)
     {
-        if (is_null($user_id)) {
+        if ($user_id === null) {
             $user_id = $GLOBALS['user']->id;
         }
 
@@ -138,7 +138,7 @@ class Userflag extends database_object
      */
     public function set_flag($flagged, $user_id = null)
     {
-        if (is_null($user_id)) {
+        if ($user_id === null) {
             $user_id = $GLOBALS['user']->id;
         }
         $user_id = intval($user_id);
@@ -191,7 +191,7 @@ class Userflag extends database_object
      */
     public static function get_latest_sql($type, $user_id=null)
     {
-        if (is_null($user_id)) {
+        if ($user_id === null) {
             $user_id = $GLOBALS['user']->id;
         }
         $user_id = intval($user_id);
@@ -202,7 +202,7 @@ class Userflag extends database_object
             $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
                     " WHERE `user`.`access` >= 50";
         }
-        if (!is_null($type)) {
+        if ($type !== null) {
             if ($user_id <= 0) {
                 $sql .= " AND";
             } else {
@@ -244,7 +244,7 @@ class Userflag extends database_object
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            if (is_null($type)) {
+            if ($type === null) {
                 $results[] = $row;
             } else {
                 $results[] = $row['id'];

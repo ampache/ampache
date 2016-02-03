@@ -49,23 +49,30 @@ class Plugin
      * This actually loads the config file for the plugin the name of the
      * class contained within the config file must be Plugin[NAME OF FILE]
      */
-    public function _get_info($name)
+    public function _get_info($cname)
     {
         try {
+            $basedir = AmpConfig::get('prefix') . '/modules/plugins';
+            if (is_dir($basedir . '/' . $cname)) {
+                $name = $cname;
+            } else {
+                $name = 'ampache-' . strtolower($cname);
+            }
+            
             /* Require the file we want */
-            if (!@include_once(AmpConfig::get('prefix') . '/modules/plugins/' . $name . '/' . $name . '.plugin.php')) {
-                debug_event('plugin', 'Cannot include plugin `' . $name . '`.', 1);
+            if (!@include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
+                debug_event('plugin', 'Cannot include plugin `' . $cname . '`.', 1);
                 return false;
             }
 
-            $plugin_name   = "Ampache$name";
+            $plugin_name   = "Ampache$cname";
             $this->_plugin = new $plugin_name();
 
             if (!$this->is_valid()) {
                 return false;
             }
         } catch (Exception $ex) {
-            debug_event('plugin', 'Error when initializing plugin `' . $name . '`: ' . $ex->getMessage(), 1);
+            debug_event('plugin', 'Error when initializing plugin `' . $cname . '`: ' . $ex->getMessage(), 1);
             return false;
         }
 
@@ -105,29 +112,36 @@ class Plugin
                 continue;
             }
             
+            // If directory name start with ampache-, this is an external plugin and some parsing is required
+            if (strpos($file, "ampache-") === 0) {
+                $cfile = ucfirst(substr($file, 8));
+            } else {
+                $cfile = $file;
+            }
+            
             // Make sure the plugin base file exists inside the plugin directory
-            if (! file_exists($basedir . '/' . $file . '/' . $file . '.plugin.php')) {
-                debug_event('Plugins', 'Missing class for ' . $file, 3);
+            if (! file_exists($basedir . '/' . $file . '/' . $cfile . '.plugin.php')) {
+                debug_event('Plugins', 'Missing class for ' . $cfile, 3);
                 continue;
             }
             
             if ($type != '') {
-                $plugin = new Plugin($file);
+                $plugin = new Plugin($cfile);
                 if (! Plugin::is_installed($plugin->_plugin->name)) {
                     debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (! $plugin->is_valid()) {
-                    debug_event('Plugins', 'Plugin ' . $file . ' is not valid, skipping', 6);
+                    debug_event('Plugins', 'Plugin ' . $cfile . ' is not valid, skipping', 6);
                     continue;
                 }
                 if (! method_exists($plugin->_plugin, $type)) {
-                    debug_event('Plugins', 'Plugin ' . $file . ' does not support ' . $type . ', skipping', 6);
+                    debug_event('Plugins', 'Plugin ' . $cfile . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }
             // It's a plugin record it
-            $plugins_list[$type][$file] = $file;
+            $plugins_list[$type][$cfile] = $cfile;
         } // end while
 
         // Little stupid but hey

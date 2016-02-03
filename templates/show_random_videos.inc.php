@@ -34,7 +34,8 @@ if ($videos) {
         <div class="art_album">
             <?php if (Art::is_enabled()) {
     $release_art = $video->get_release_item_art();
-    Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), 6, $video->link);
+    $thumb       = UI::is_grid_view('video') ? 6 : 7;
+    Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
 } else {
     ?>
                 <?php echo $video->get_fullname();

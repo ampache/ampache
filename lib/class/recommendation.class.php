@@ -314,7 +314,7 @@ class Recommendation
             $fullname = $artist->f_full_name;
 
             // Data newer than 6 months, use it
-            if (($artist->last_update + 15768000) > time()) {
+            if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
                 $results                = array();
                 $results['id']          = $artist_id;
                 $results['summary']     = $artist->summary;

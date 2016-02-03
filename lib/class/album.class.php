@@ -280,19 +280,16 @@ class Album extends database_object implements library_item
             return parent::get_from_cache('album_extra', $this->id);
         }
 
+        // Calculation
         $sql = "SELECT " .
             "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
             "COUNT(`song`.`id`) AS `song_count`, " .
-            "SUM(`song`.`time`) as `total_duration`," .
-            "`song`.`catalog` as `catalog_id`," .
-            "`artist`.`name` AS `artist_name`, " .
-            "`artist`.`prefix` AS `artist_prefix`, " .
-            "`artist`.`id` AS `artist_id` " .
-            "FROM `song` INNER JOIN `artist` " .
-            "ON `artist`.`id`=`song`.`artist` ";
+            "SUM(`song`.`time`) as `total_duration` " .
+            "FROM `song` ";
 
+        $sqlj = '';
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+            $sqlj = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
 
         $suite_array = array();
@@ -304,20 +301,34 @@ class Album extends database_object implements library_item
         }
 
         $idlist = '(' . implode(',', $suite_array) . ')';
-        $sql .= "WHERE `song`.`album` IN $idlist ";
+        $sqlw   = "WHERE `song`.`album` IN $idlist ";
 
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
+            $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
+        $sql .= $sqlj . $sqlw;
         if (!count($this->album_suite)) {
-            $sql .= "GROUP BY `song`.`album`";
+            $sql .= "GROUP BY `song`.`album` ";
         } else {
-            $sql .= "GROUP BY `song`.`artist`";
+            $sql .= "GROUP BY `song`.`artist` ";
         }
+        
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
+        
+        
+        // Get associated information from first song only
+        $sql = "SELECT " .
+            "`song`.`catalog` as `catalog_id`," .
+            "`artist`.`name` AS `artist_name`, " .
+            "`artist`.`prefix` AS `artist_prefix`, " .
+            "`artist`.`id` AS `artist_id` " .
+            "FROM `song` INNER JOIN `artist` " .
+            "ON `artist`.`id`=`song`.`artist` ";
+        $sql .= $sqlj . $sqlw . "LIMIT 1";
 
         $db_results = Dba::read($sql);
-
-        $results = Dba::fetch_assoc($db_results);
+        $results    = array_merge($results, Dba::fetch_assoc($db_results));
 
         $art = new Art($this->id, 'album');
         $art->get_db();
@@ -389,7 +400,7 @@ class Album extends database_object implements library_item
         $release_type = empty($release_type) ? null : $release_type;
 
         // Not even sure if these can be negative, but better safe than llama.
-        $year = abs(intval($year));
+        $year = Catalog::normalize_year($year);
         $disk = abs(intval($disk));
 
         if (!$name) {
@@ -545,7 +556,7 @@ class Album extends database_object implements library_item
             $catalog_where .= " AND `catalog`.`enabled` = '1'";
         }
 
-        $sql = "SELECT DISTINCT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE `album`.`mbid`='$this->mbid' $catalog_where ORDER BY `album`.`disk` ASC";
 
         $db_results = Dba::read($sql);

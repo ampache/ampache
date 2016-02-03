@@ -245,11 +245,14 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
     // Columns Initialization Loop.
     wdg.$table.find('thead th').each(function(i){ __thInit.call( this, i, wdg );  });
 
-    wdg.$menu.$list.append(wdg.$menu.$footer);
-    
-    wdg.$menu.$footer.bind('click',function(){
-        __reset.call(_this);
-      });
+    if (wdg.$menu.$list !== undefined) {
+        wdg.$menu.$list.append(wdg.$menu.$footer);
+    }
+    if (wdg.$menu.$footer !== undefined) {
+        wdg.$menu.$footer.bind('click',function(){
+            __reset.call(_this);
+          });
+    }
 
   }
   
@@ -317,12 +320,13 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
   $.fn.mediaTable = function() {
 
     var cfg = false;
-
+    var hasMenu = (!$(this).hasClass('disablegv') && ($(this).attr('data-objecttype') !== undefined));
+    
     // Default configuration block
     if ( !arguments.length || $.isPlainObject(arguments[0]) ) cfg = $.extend({},{
 
       // Teach the widget to create a toggle menu to declare column's visibility
-      menu:   true,
+      menu: hasMenu,
       menuTitle:  'Columns',
       menuReset:  'Reset',
 

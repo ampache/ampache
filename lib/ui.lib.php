@@ -52,9 +52,9 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 function catalog_worker($action, $catalogs = null, $options = null)
 {
     if (AmpConfig::get('ajax_load')) {
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(serialize($catalogs));
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs));
         if ($options) {
-            $sse_url .= "&options=" . urlencode(serialize($_POST));
+            $sse_url .= "&options=" . urlencode(json_encode($_POST));
         }
         sse_worker($sse_url);
     } else {
@@ -398,12 +398,18 @@ function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  */
-function show_catalog_select($name='catalog',$catalog_id=0,$style='', $allow_none=false)
+function show_catalog_select($name='catalog', $catalog_id=0, $style='', $allow_none=false, $filter_type='')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
-    $sql        = "SELECT `id`, `name` FROM `catalog` ORDER BY `name`";
-    $db_results = Dba::read($sql);
+    $params     = array();
+    $sql        = "SELECT `id`, `name` FROM `catalog` ";
+    if (!empty($filter_type)) {
+        $sql   .= "WHERE `gather_types` = ?";
+        $params[] = $filter_type;
+    }
+    $sql       .= "ORDER BY `name`";
+    $db_results = Dba::read($sql, $params);
 
     if ($allow_none) {
         echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";

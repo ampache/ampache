@@ -101,7 +101,7 @@ class AmpacheXbmc extends localplay_controller
         $db_results = Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('xbmc_active','XBMC Active Instance','0','25','integer','internal');
+        Preference::insert('xbmc_active','XBMC Active Instance','0','25','integer','internal','xbmc');
 
         return true;
     } // install

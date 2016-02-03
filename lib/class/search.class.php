@@ -52,7 +52,7 @@ class Search extends playlist_object
                 $this->$key = $value;
             }
 
-            $this->rules = unserialize($this->rules);
+            $this->rules = json_decode($this->rules, true);
         }
 
         // Define our basetypes
@@ -863,7 +863,7 @@ class Search extends playlist_object
         }
 
         $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator, $this->random, $this->limit));
+        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, json_encode($this->rules), $this->logic_operator, $this->random ? 1 : 0, $this->limit));
         $insert_id = Dba::insert_id();
         $this->id  = $insert_id;
         return $insert_id;
@@ -915,7 +915,7 @@ class Search extends playlist_object
         }
 
         $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
-        Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->random, $this->limit, $this->id));
+        Dba::write($sql, array($this->name, $this->type, json_encode($this->rules), $this->logic_operator, $this->random, $this->limit, $this->id));
 
         return $this->id;
     }
@@ -1331,27 +1331,31 @@ class Search extends playlist_object
         if ($join['song_data']) {
             $table['song_data'] = "LEFT JOIN `song_data` ON `song`.`id`=`song_data`.`song_id`";
         }
-        foreach ($join['tag'] as $key => $value) {
-            $table['tag_' . $key] =
-                "LEFT JOIN (" .
-                "SELECT `object_id`, COUNT(`name`) AS `match` " .
-                "FROM `tag` LEFT JOIN `tag_map` " .
-                "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                "WHERE `tag_map`.`object_type`='song' " .
-                "AND `tag`.`name` $value GROUP BY `object_id`" .
-                ") AS realtag_$key " .
-                "ON `song`.`id`=`realtag_$key`.`object_id`";
+        if ($join['tag']) {
+            foreach ($join['tag'] as $key => $value) {
+                $table['tag_' . $key] =
+                    "LEFT JOIN (" .
+                    "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                    "FROM `tag` LEFT JOIN `tag_map` " .
+                    "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                    "WHERE `tag_map`.`object_type`='song' " .
+                    "AND `tag`.`name` $value GROUP BY `object_id`" .
+                    ") AS realtag_$key " .
+                    "ON `song`.`id`=`realtag_$key`.`object_id`";
+            }
         }
-        foreach ($join['album_tag'] as $key => $value) {
-            $table['tag_' . $key] =
-                "LEFT JOIN (" .
-                "SELECT `object_id`, COUNT(`name`) AS `match` " .
-                "FROM `tag` LEFT JOIN `tag_map` " .
-                "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                "WHERE `tag_map`.`object_type`='album' " .
-                "AND `tag`.`name` $value  GROUP BY `object_id`" .
-                ") AS realtag_$key " .
-                "ON `album`.`id`=`realtag_$key`.`object_id`";
+        if ($join['album_tag']) {
+            foreach ($join['album_tag'] as $key => $value) {
+                $table['tag_' . $key] =
+                    "LEFT JOIN (" .
+                    "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                    "FROM `tag` LEFT JOIN `tag_map` " .
+                    "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                    "WHERE `tag_map`.`object_type`='album' " .
+                    "AND `tag`.`name` $value  GROUP BY `object_id`" .
+                    ") AS realtag_$key " .
+                    "ON `album`.`id`=`realtag_$key`.`object_id`";
+            }
         }
         if ($join['rating']) {
             $userid          = $GLOBALS['user']->id;

@@ -54,7 +54,7 @@
     </span>
 </td>
 <td class="cel_type"><?php echo $libitem->f_type; ?></td>
-<td class="cel_songs"><?php echo $libitem->get_song_count(); ?></td>
+<td class="cel_medias"><?php echo $libitem->get_media_count(); ?></td>
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <?php
     if (User::is_registered()) {

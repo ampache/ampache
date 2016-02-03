@@ -263,16 +263,16 @@ class Preference extends database_object
             $user_limit = "AND `preference`.`catagory` != 'system'";
         }
 
-        $sql = "SELECT `preference`.`name`,`preference`.`description`,`user_preference`.`value` FROM `preference` " .
+        $sql = "SELECT `preference`.`name`,`preference`.`description`,`preference`.`subcatagory`,`user_preference`.`value` FROM `preference` " .
             " INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
             " WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit " .
-            " ORDER BY `preference`.`description`";
+            " ORDER BY `preference`.`subcatagory`,`preference`.`description`";
 
         $db_results = Dba::read($sql);
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('name'=>$row['name'],'level'=>$row['level'],'description'=>$row['description'],'value'=>$row['value']);
+            $results[] = array('name'=>$row['name'],'level'=>$row['level'],'description'=>$row['description'],'value'=>$row['value'],'subcategory'=>$row['subcatagory']);
         }
 
         return $results;
@@ -283,11 +283,14 @@ class Preference extends database_object
      * This inserts a new preference into the preference table
      * it does NOT sync up the users, that should be done independently
      */
-    public static function insert($name,$description,$default,$level,$type,$catagory)
+    public static function insert($name,$description,$default,$level,$type,$catagory,$subcatagory=null)
     {
-        $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`) " .
-            "VALUES (?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, intval($level), $type, $catagory));
+        if ($subcatagory !== null) {
+            $subcatagory = strtolower($subcatagory);
+        }
+        $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`,`subcatagory`) " .
+            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($name, $description, $default, intval($level), $type, $catagory, $subcatagory));
 
         if (!$db_results) {
             return false;

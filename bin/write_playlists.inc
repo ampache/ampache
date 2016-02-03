@@ -68,7 +68,8 @@ foreach ($items as $item) {
     $name = $item->get_fullname();
     // We don't know about file system encoding / specificity
     // For now, we only keep simple characters to be sure it will work everywhere
-    $name = preg_replace('/[^a-zA-Z0-9\.]/', '', $name);
+    $name = preg_replace('/[:]/', '.', $name);
+    $name = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
     $filename = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
     $medias = $item->get_medias();
     $pl = new Stream_Playlist(-1);

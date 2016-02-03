@@ -57,8 +57,8 @@ class AmpacheHeadphones
             return false;
         }
 
-        Preference::insert('headphones_api_url','Headphones url','','25','string','plugins');
-        Preference::insert('headphones_api_key','Headphones api key','','25','string','plugins');
+        Preference::insert('headphones_api_url','Headphones url','','25','string','plugins',$this->name);
+        Preference::insert('headphones_api_key','Headphones api key','','25','string','plugins',$this->name);
 
         return true;
     } // install
@@ -94,6 +94,11 @@ class AmpacheHeadphones
         set_time_limit(0);
         
         $artist     = new Artist($wanted->artist);
+        if (empty($artist->mbid)) {
+            debug_event($this->name, 'Artist `' . $artist->name . '` doesn\'t have MusicBrainz Id. Skipped.', 3);
+            return false;
+        }
+        
         $headartist = json_decode($this->headphones_call('getArtist', array(
             'id' => $artist->mbid
         )));

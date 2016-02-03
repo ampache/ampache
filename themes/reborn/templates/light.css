@@ -489,6 +489,53 @@ dl.media_details dt {
 }
 
 /***********************************************
+        Web Player
+***********************************************/
+div.jp-audio,
+div.jp-audio-stream,
+div.jp-video {
+	color: #999;
+	border: 1px solid #F8F8F8;
+}
+
+div.jp-video div.jp-interface {
+	border-top: 1px solid #F8F8F8;
+}
+
+div.jp-title,
+div.jp-playlist {
+	background-color: #CCC;
+	border-top: 1px solid #F8F8F8;
+}
+
+.jp-no-solution {
+	background: #121112 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+	border-top: 1px solid #F8F8F8;
+}
+
+#webplayer {
+	background-color: #F8F8F8 !important;
+}
+
+div.playing_title a {
+	color: #999;
+}
+
+div.playing_artist a {
+	color: #999;
+}
+
+div.jp-interface {
+	/*background: #F8F8F8 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;*/
+    background-color: #F8F8F8;
+}
+
+div.jp-playlist li {
+	border-bottom: 1px solid #BFBFBF;
+	/*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
+}
+
+/***********************************************
         Other
 ***********************************************/
 .jscroll-next {
@@ -523,4 +570,12 @@ span.item-count {
 
 a.option-list:hover {
 	border-color: #fff;
+}
+
+.editdialogstyle.ui-dialog {
+    background-image: url("../../../images/background.light.png") !important;
+}
+
+#tabs li.tab_active a {
+	color: #000;
 }

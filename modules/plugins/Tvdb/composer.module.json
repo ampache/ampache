@@ -4,7 +4,7 @@
 	"homepage": "http://ampache.org",
 	"keywords": ["ampache", "tvdb", "plugin"],
 	"type": "ampache-plugin",
-	"license": "GPL-2.0",
+	"license": "AGPL-3.0",
     "require": {
 		"moinax/tvdb": "1.*"
     }

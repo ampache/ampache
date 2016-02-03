@@ -522,7 +522,22 @@ class Update
 
         $update_string = "- Add basic metadata tables.<br />";
         $version[]     = array('version' => '370041', 'description' => $update_string);
+        
+        $update_string = "- Add podcasts.<br />";
+        $version[]     = array('version' => '380001', 'description' => $update_string);
+        
+        $update_string = "- Add bookmarks.<br />";
+        $version[]     = array('version' => '380002', 'description' => $update_string);
 
+        $update_string = "- Add unique constraint on tag_map table.<br />";
+        $version[]     = array('version' => '380003', 'description' => $update_string);
+        
+        $update_string = "- Add preference subcategory.<br />";
+        $version[]     = array('version' => '380004', 'description' => $update_string);
+        
+        $update_string = "- Add manual update flag on artist.<br />";
+        $version[]     = array('version' => '380005', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -2288,7 +2303,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('share','0','Allow Share',100,'boolean','system')";
+            "VALUES ('share','0','Allow Share',100,'boolean','options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -2716,7 +2731,7 @@ class Update
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_upload','0','Allow users to upload media',75,'boolean','system')";
+            "VALUES ('allow_upload','0','Allow users to upload media',75,'boolean','options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -2882,7 +2897,7 @@ class Update
         $retval = true;
 
         $sql = "ALTER TABLE `video` ADD `release_date` date NULL AFTER `enabled`, " .
-             "ADD `played` tinyint(1) unsigned DEFAULT '1' NOT NULL AFTER `enabled`";
+             "ADD `played` tinyint(1) unsigned DEFAULT '0' NOT NULL AFTER `enabled`";
         $retval &= Dba::write($sql);
 
         $sql = "CREATE TABLE `tvshow` (" .
@@ -2932,7 +2947,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_video','1','Allow video features',25,'integer','system')";
+            "VALUES ('allow_video','1','Allow video features',75,'integer','options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -3612,7 +3627,7 @@ class Update
     }
 
     /**
-     * update_370040
+     * update_370041
      *
      * Add Metadata tables and preferences
      */
@@ -3653,6 +3668,136 @@ class Update
         $id  = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
         $retval &= Dba::write($sql, array($id));
+
+        return $retval;
+    }
+    
+    /**
+     * update_380001
+     *
+     * Add podcasts
+     */
+    public static function update_380001()
+    {
+        $retval = true;
+
+        $sql = "CREATE TABLE `podcast` (`id` int( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+            "`feed` varchar(4096) NOT NULL , " .
+            "`catalog` int(11) NOT NULL , " .
+            "`title` varchar(255) CHARACTER SET utf8 NOT NULL , " .
+            "`website` varchar(255) NULL , " .
+            "`description` varchar(4096) CHARACTER SET utf8 NULL , " .
+            "`language` varchar(5) NULL , " .
+            "`copyright` varchar(64) NULL , " .
+            "`generator` varchar(64) NULL , " .
+            "`lastbuilddate` int(11) UNSIGNED DEFAULT '0' NOT NULL , " .
+            "`lastsync` int(11) UNSIGNED DEFAULT '0' NOT NULL" .
+            ") ENGINE = MYISAM";
+        $retval &= Dba::write($sql);
+        
+        $sql = "CREATE TABLE `podcast_episode` (`id` int( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+            "`title` varchar(255) CHARACTER SET utf8 NOT NULL , " .
+            "`guid` varchar(255) NOT NULL , " .
+            "`podcast` int(11) NOT NULL , " .
+            "`state` varchar(32) NOT NULL , " .
+            "`file` varchar(4096) CHARACTER SET utf8 NULL , " .
+            "`source` varchar(4096) NULL , " .
+            "`size` bigint(20) UNSIGNED DEFAULT '0' NOT NULL , " .
+            "`time` smallint(5) UNSIGNED DEFAULT '0' NOT NULL , " .
+            "`website` varchar(255) NULL , " .
+            "`description` varchar(4096) CHARACTER SET utf8 NULL , " .
+            "`author` varchar(64) NULL , " .
+            "`category` varchar(64) NULL , " .
+            "`played` tinyint(1) UNSIGNED DEFAULT '0' NOT NULL , " .
+            "`pubdate` int(11) UNSIGNED NOT NULL , " .
+            "`addition_time` int(11) UNSIGNED NOT NULL" .
+            ") ENGINE = MYISAM";
+        $retval &= Dba::write($sql);
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                "VALUES ('podcast_keep','10','Podcast: # latest episodes to keep',100,'integer','system')";
+        $retval &= Dba::write($sql);
+        $id  = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'10')";
+        $retval &= Dba::write($sql, array($id));
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                "VALUES ('podcast_new_download','1','Podcast: # episodes to download when new episodes are available',100,'integer','system')";
+        $retval &= Dba::write($sql);
+        $id  = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval &= Dba::write($sql, array($id));
+        
+        $sql    = "ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380002
+     *
+     * Add bookmarks
+     */
+    public static function update_380002()
+    {
+        $retval = true;
+
+        $sql = "CREATE TABLE `bookmark` (`id` int( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+            "`user` int(11) UNSIGNED NOT NULL , " .
+            "`position` int(11) UNSIGNED DEFAULT '0' NOT NULL , " .
+            "`comment` varchar(255) CHARACTER SET utf8 NOT NULL , " .
+            "`object_type` varchar(64) NOT NULL , " .
+            "`object_id` int(11) UNSIGNED NOT NULL , " .
+            "`creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL , " .
+            "`update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL" .
+            ") ENGINE = MYISAM";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380003
+     *
+     * Add unique constraint on tag_map table
+     */
+    public static function update_380003()
+    {
+        $retval = true;
+        
+        $sql = "ALTER IGNORE TABLE `tag_map` ADD UNIQUE INDEX `UNIQUE_TAG_MAP` (`object_id`, `object_type`, `user`, `tag_id`)";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380004
+     *
+     * Add preference subcategory
+     */
+    public static function update_380004()
+    {
+        $retval = true;
+        
+        $sql = "ALTER TABLE `preference` ADD `subcatagory` varchar(128) CHARACTER SET utf8 DEFAULT NULL AFTER `catagory`";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380005
+     *
+     * Add manual update flag on artist
+     */
+    public static function update_380005()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `artist` ADD COLUMN `manual_update` SMALLINT( 1 ) DEFAULT '0'";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }

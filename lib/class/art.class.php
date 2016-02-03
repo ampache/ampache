@@ -81,13 +81,18 @@ class Art extends database_object
      */
     public function __construct($uid, $type = 'album', $kind = 'default')
     {
-        if (!Core::is_library_item($type)) {
+        if (!Art::is_valid_type($type)) {
             return false;
         }
         $this->type = $type;
         $this->uid  = intval($uid);
         $this->kind = $kind;
     } // constructor
+
+    public static function is_valid_type($type)
+    {
+        return (Core::is_library_item($type) || $type == 'user');
+    }
 
     /**
      * build_cache
@@ -385,6 +390,7 @@ class Art extends database_object
                             $ndata['APIC']['mime'] = $mime;
                             $ndata                 = array_merge($ndata, $song->get_metadata());
                             $id3->write_id3($ndata);
+                            Catalog::update_media_from_tags($song);
                         }
                     }
                 }
@@ -596,9 +602,20 @@ class Art extends database_object
 
         $results = Dba::fetch_assoc($db_results);
         if (count($results)) {
-            return array(
-                'thumb' => (AmpConfig::get('album_art_store_disk')) ? self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind) : $results['image'],
-                'thumb_mime' => $results['mime']);
+            $image = null;
+            if (AmpConfig::get('album_art_store_disk')) {
+                $image = self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind);
+            } else {
+                $image = $results['image'];
+            }
+            
+            if ($image != null) {
+                return array(
+                    'thumb' => (AmpConfig::get('album_art_store_disk')) ? self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind) : $results['image'],
+                    'thumb_mime' => $results['mime']);
+            } else {
+                debug_event('art', 'Thumb entry found in database but associated data cannot be found.', 3);
+            }
         }
 
         // If we didn't get a result
@@ -792,7 +809,7 @@ class Art extends database_object
      */
     public static function url($uid,$type,$sid=null,$thumb=null)
     {
-        if (!Core::is_library_item($type)) {
+        if (!self::is_valid_type($type)) {
             return null;
         }
 
@@ -1623,11 +1640,6 @@ class Art extends database_object
                 $size['height']    = 80;
                 $size['width']     = 80;
             break;
-            case 4:
-                /* Web Player size */
-                $size['height'] = 200;
-                $size['width']  = 200; // 200px width, set via CSS
-            break;
             case 5:
                 /* Web Player size */
                 $size['height'] = 32;
@@ -1658,9 +1670,13 @@ class Art extends database_object
                  $size['height'] = 24;
                  $size['width']  = 24;
             break;
+            case 4:
+                /* Popup Web Player size */
+            case 11:
+                /* Large view browse size */
             default:
-                $size['height']   = 275;
-                $size['width']    = 275;
+                $size['height']   = 200;
+                $size['width']    = 200;
             break;
         }
 
@@ -1676,7 +1692,7 @@ class Art extends database_object
      */
     public static function display_item($item, $thumb, $link = null)
     {
-        return self::display($item->type, $item->id, $item->get_fullname(), $thumb, $link);
+        return self::display($item->type ?: strtolower(get_class($item)), $item->id, $item->get_fullname(), $thumb, $link);
     }
 
     /**
@@ -1692,7 +1708,7 @@ class Art extends database_object
      */
     public static function display($object_type, $object_id, $name, $thumb, $link = null, $show_default = true, $kind = 'default')
     {
-        if (!Core::is_library_item($object_type)) {
+        if (!self::is_valid_type($object_type)) {
             return false;
         }
 
@@ -1723,14 +1739,22 @@ class Art extends database_object
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
         }
-        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
-        if ($prettyPhoto) {
-            if ($size['width'] >= 150) {
-                echo "<div class=\"item_art_play\">";
-                echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' . $object_id);
-                echo "</div>";
+        // This to keep browser cache feature but force a refresh in case image just changed
+        if (Art::has_db($object_id, $object_type)) {
+            $art = new Art($object_id, $object_type);
+            if ($art->get_db()) {
+                $imgurl .= '&fooid=' . $art->id;
             }
-
+        }
+        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
+        
+        if ($size['height'] > 150) {
+            echo "<div class=\"item_art_play\">";
+            echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' . $object_id);
+            echo "</div>";
+        }
+        
+        if ($prettyPhoto) {
             $libitem = new $object_type($object_id);
             echo "<div class=\"item_art_actions\">";
             if ($GLOBALS['user']->has_access(50) || ($GLOBALS['user']->has_access(25) && $GLOBALS['user']->id == $libitem->get_user_owner())) {
@@ -1744,6 +1768,7 @@ class Art extends database_object
             }
             echo"</div>";
         }
+        
         echo "</a>\n";
         echo "</div>";
 

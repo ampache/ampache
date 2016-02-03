@@ -24,7 +24,7 @@
 <?php if ($browse->get_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata" cellpadding="0" cellspacing="0"  data-objecttype="broadcast">
+<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0"  data-objecttype="broadcast">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

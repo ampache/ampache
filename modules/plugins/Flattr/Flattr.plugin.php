@@ -56,7 +56,7 @@ class AmpacheFlattr
             return false;
         }
 
-        Preference::insert('flattr_user_id','Flattr User ID','',25,'string','plugins');
+        Preference::insert('flattr_user_id','Flattr User ID','',25,'string','plugins',$this->name);
 
         return true;
     }

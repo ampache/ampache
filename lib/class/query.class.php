@@ -230,6 +230,18 @@ class Query
             'follower' => array(
                 'user',
                 'to_user',
+            ),
+            'podcast' => array(
+                'alpha_match',
+                'regex_match',
+                'regex_not_match',
+                'starts_with'
+            ),
+            'podcast_episode' => array(
+                'alpha_match',
+                'regex_match',
+                'regex_not_match',
+                'starts_with'
             )
         );
 
@@ -238,14 +250,6 @@ class Query
         }
 
         self::$allowed_sorts = array(
-            'playlist_song' => array(
-                'title',
-                'year',
-                'track',
-                'time',
-                'album',
-                'artist'
-            ),
             'song' => array(
                 'title',
                 'year',
@@ -392,6 +396,16 @@ class Query
                 'user',
                 'follow_user',
                 'follow_date'
+            ),
+            'podcast' => array(
+                'title'
+            ),
+            'podcast_episode' => array(
+                'title',
+                'category',
+                'author',
+                'time',
+                'pubDate'
             )
         );
 
@@ -689,7 +703,7 @@ class Query
             case 'user':
             case 'video':
             case 'playlist':
-            case 'playlist_song':
+            case 'playlist_media':
             case 'smartplaylist':
             case 'song':
             case 'catalog':
@@ -715,6 +729,8 @@ class Query
             case 'label':
             case 'pvmsg':
             case 'follower':
+            case 'podcast':
+            case 'podcast_episode':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -965,7 +981,7 @@ class Query
         } else {
             switch ($this->get_type()) {
                 case 'album':
-                    $this->set_select("DISTINCT(`album`.`id`)");
+                    $this->set_select("`album`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `album` ";
                 break;
                 case 'artist':
@@ -1001,24 +1017,24 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `video` ";
                 break;
                 case 'tag':
-                    $this->set_select("DISTINCT(`tag`.`id`)");
+                    $this->set_select("`tag`.`id`");
                     $this->set_join('left', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
                     $sql = "SELECT %%SELECT%% FROM `tag` ";
                 break;
                 case 'wanted':
-                    $this->set_select("DISTINCT(`wanted`.`id`)");
+                    $this->set_select("`wanted`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `wanted` ";
                 break;
                 case 'share':
-                    $this->set_select("DISTINCT(`share`.`id`)");
+                    $this->set_select("`share`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `share` ";
                 break;
                 case 'channel':
-                    $this->set_select("DISTINCT(`channel`.`id`)");
+                    $this->set_select("`channel`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `channel` ";
                 break;
                 case 'broadcast':
-                    $this->set_select("DISTINCT(`broadcast`.`id`)");
+                    $this->set_select("`broadcast`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `broadcast` ";
                 break;
                 case 'license':
@@ -1061,10 +1077,19 @@ class Query
                     $this->set_select("`user_follower`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `user_follower` ";
                 break;
-                case 'playlist_song':
+                case 'podcast':
+                    $this->set_select("`podcast`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `podcast` ";
+                break;
+                case 'podcast_episode':
+                    $this->set_select("`podcast_episode`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `podcast_episode` ";
+                break;
+                case 'playlist_media':
+                break;
                 case 'song':
                 default:
-                    $this->set_select("DISTINCT(`song`.`id`)");
+                    $this->set_select("`song`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `song` ";
                 break;
             } // end base sql
@@ -1237,7 +1262,7 @@ class Query
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         if ( $this->get_type() == 'artist' && !$this->_state['custom'] ) {
-            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
+            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
 
@@ -1775,6 +1800,52 @@ class Query
                 break;
             } // end filter
         break;
+        case 'podcast':
+            switch ($filter) {
+                case 'alpha_match':
+                    $filter_sql = " `podcast`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    if (!empty($value)) {
+                        $filter_sql = " `podcast`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
+                break;
+                case 'regex_not_match':
+                    if (!empty($value)) {
+                        $filter_sql = " `podcast`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
+                break;
+                case 'starts_with':
+                    $filter_sql = " `podcast`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
+        case 'podcast_episode':
+            switch ($filter) {
+                case 'alpha_match':
+                    $filter_sql = " `podcast_episode`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    if (!empty($value)) {
+                        $filter_sql = " `podcast_episode`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
+                break;
+                case 'regex_not_match':
+                    if (!empty($value)) {
+                        $filter_sql = " `podcast_episode`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    }
+                break;
+                case 'starts_with':
+                    $filter_sql = " `podcast_episode`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
         } // end switch on type
 
         return $filter_sql;
@@ -2144,6 +2215,32 @@ class Query
                     break;
                     case 'follow_date':
                         $sql = "`user_follower`.`follow_date`";
+                    break;
+                }
+            break;
+            case 'podcast':
+                switch ($field) {
+                    case 'title':
+                        $sql = "`podcast`.`title`";
+                    break;
+                }
+            break;
+            case 'podcast_episode':
+                switch ($field) {
+                    case 'title':
+                        $sql = "`podcast_episode`.`title`";
+                    break;
+                    case 'category':
+                        $sql = "`podcast_episode`.`category`";
+                    break;
+                    case 'author':
+                        $sql = "`podcast_episode`.`author`";
+                    break;
+                    case 'time':
+                        $sql = "`podcast_episode`.`time`";
+                    break;
+                    case 'pubDate':
+                        $sql = "`podcast_episode`.`pubDate`";
                     break;
                 }
             break;

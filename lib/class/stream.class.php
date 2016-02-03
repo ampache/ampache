@@ -370,7 +370,7 @@ class Stream
 
         if (AmpConfig::get('now_playing_per_user')) {
             $sql .= 'INNER JOIN ( ' .
-                'SELECT MAX(`insertion`) AS `max_insertion`, `user`, `id` ' .
+                'SELECT MAX(`insertion`) AS `max_insertion`, `user` ' .
                 'FROM `now_playing` ' .
                 'GROUP BY `user`' .
                 ') `np2` ' .

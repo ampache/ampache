@@ -359,7 +359,7 @@ class Song extends database_object implements media, library_item
         $artist_mbid           = $results['mb_artistid'];
         $albumartist_mbid      = $results['mb_albumartistid'];
         $disk                  = $results['disk'] ?: 0;
-        $year                  = $results['year'] ?: 0;
+        $year                  = Catalog::normalize_year($results['year'] ?: 0);
         $comment               = $results['comment'];
         $tags                  = $results['genre']; // multiple genre support makes this an array
         $lyrics                = $results['lyrics'];
@@ -410,8 +410,6 @@ class Song extends database_object implements media, library_item
             $composer, $channels));
 
         if (!$db_results) {
-            var_dump(Dba::error());
-            exit;
             debug_event('song', 'Unable to insert ' . $file, 2);
             return false;
         }
@@ -693,7 +691,7 @@ class Song extends database_object implements media, library_item
         $where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
         $sql       = 'SELECT `id`, `artist`, `album`, `title`, ' .
             'COUNT(`title`) FROM `song` ' . $where_sql .
-            ' GROUP BY `title`';
+            ' GROUP BY `id`, `artist`, `album`, `title`';
 
         if ($search_type == 'artist_title' ||
             $search_type == 'artist_album_title') {
@@ -724,25 +722,28 @@ class Song extends database_object implements media, library_item
      */
     public static function get_duplicate_info($dupe, $search_type)
     {
-        $sql = 'SELECT `id` FROM `song` ' .
-            "WHERE `title`='" . Dba::escape($dupe['title']) . "' ";
-
-        if ($search_type == 'artist_title' ||
-            $search_type == 'artist_album_title') {
-            $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
-        }
-        if ($search_type == 'artist_album_title') {
-            $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
-        }
-
-        $sql .= 'ORDER BY `time`,`bitrate`,`size`';
-        $db_results = Dba::read($sql);
-
         $results = array();
+        if (isset($dupe['id'])) {
+            $results[] = $dupe['id'];
+        } else {
+            $sql = "SELECT `id` FROM `song` WHERE " .
+                    "`title`='" . Dba::escape($dupe['title']) . "' ";
 
-        while ($item = Dba::fetch_assoc($db_results)) {
-            $results[] = $item['id'];
-        } // end while
+            if ($search_type == 'artist_title' ||
+                $search_type == 'artist_album_title') {
+                $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
+            }
+            if ($search_type == 'artist_album_title') {
+                $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
+            }
+
+            $sql .= 'ORDER BY `time`,`bitrate`,`size`';
+            $db_results = Dba::read($sql);
+
+            while ($item = Dba::fetch_assoc($db_results)) {
+                $results[] = $item['id'];
+            } // end while
+        }
 
         return $results;
     }
@@ -843,21 +844,21 @@ class Song extends database_object implements media, library_item
     {
         // Remove some stuff we don't care about
         unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
-
-        $array        = array();
         $string_array = array('title','comment','lyrics','composer','tags');
         $skip_array   = array('id','tag_id','mime','artist_mbid','album_mbid','albumartist_mbid','albumartist','mbid','mb_albumid_group','waveform','object_cnt');
 
+        return self::compare_media_information($song, $new_song, $string_array, $skip_array);
+    } // compare_song_information
+
+    public static function compare_media_information($media, $new_media, $string_array, $skip_array)
+    {
+        $array        = array();
+
         // Pull out all the currently set vars
-        $fields = get_object_vars($song);
+        $fields = get_object_vars($media);
 
         // Foreach them
         foreach ($fields as $key=>$value) {
-            // Skip the item if it is no string nor something we can turn into a string
-            if (!is_string($song->$key) || (is_object($song->$key) && method_exists($song->key, '__toString'))) {
-                continue;
-            }
-
             $key = trim($key);
             if (empty($key) || in_array($key,$skip_array)) {
                 continue;
@@ -865,44 +866,52 @@ class Song extends database_object implements media, library_item
 
             // Represent the value as a string for simpler comparaison.
             // For array, ensure to sort similarly old/new values
-            if (is_array($song->$key)) {
-                $arr = $song->$key;
+            if (is_array($media->$key)) {
+                $arr = $media->$key;
                 sort($arr);
-                $songData = implode(" ", $arr);
+                $mediaData = implode(" ", $arr);
             } else {
-                $songData = $song->$key;
+                $mediaData = $media->$key;
             }
-            if (is_array($new_song->$key)) {
-                $arr = $new_song->$key;
+            
+            // Skip the item if it is no string nor something we can turn into a string
+            if (!is_string($mediaData) && !is_numeric($mediaData) && !is_bool($mediaData)) {
+                if (is_object($mediaData) && !method_exists($mediaData, '__toString')) {
+                    continue;
+                }
+            }
+            
+            if (is_array($new_media->$key)) {
+                $arr = $new_media->$key;
                 sort($arr);
-                $newSongData = implode(" ", $arr);
+                $newMediaData = implode(" ", $arr);
             } else {
-                $newSongData = $new_song->$key;
+                $newMediaData = $new_media->$key;
             }
 
             // If it's a stringie thing
             if (in_array($key, $string_array)) {
-                $songData    = self::clean_string_field_value($songData);
-                $newSongData = self::clean_string_field_value($newSongData);
-                if ($songData != $newSongData) {
+                $mediaData    = self::clean_string_field_value($mediaData);
+                $newMediaData = self::clean_string_field_value($newMediaData);
+                if ($mediaData != $newMediaData) {
                     $array['change']        = true;
-                    $array['element'][$key] = 'OLD: ' . $songData . ' --> ' . $newSongData;
+                    $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
                 }
             } // in array of stringies
             else {
-                if ($song->$key != $new_song->$key) {
+                if ($media->$key != $new_media->$key) {
                     $array['change']        = true;
-                    $array['element'][$key] = 'OLD:' . $songData . ' --> ' . $newSongData;
+                    $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
                 }
             } // end else
         } // end foreach
 
         if ($array['change']) {
-            debug_event('song-diff', json_encode($array['element']), 5);
+            debug_event('media-diff', json_encode($array['element']), 5);
         }
 
         return $array;
-    } // compare_song_information
+    }
 
     private static function clean_string_field_value($value)
     {
@@ -995,6 +1004,7 @@ class Song extends database_object implements media, library_item
                 }
                 $id3 = new vainfo($this->file);
                 $id3->write_id3($meta);
+                Catalog::update_media_from_tags($this);
             }
         }
     }
@@ -1651,10 +1661,9 @@ class Song extends database_object implements media, library_item
             }
         }
 
+        $media->format();
         $media_name = $media->get_stream_name() . "." . $type;
-        $media_name = str_replace("/", "-", $media_name);
-        $media_name = str_replace("?", "", $media_name);
-        $media_name = str_replace("#", "", $media_name);
+        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
         $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params;

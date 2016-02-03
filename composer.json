@@ -4,7 +4,7 @@
 	"homepage": "http://ampache.org",
 	"keywords": ["php", "music", "video", "player", "stream"],
 	"type": "project",
-	"license": "GPL-2.0",
+	"license": "AGPL-3.0",
 	"config":
 	{
         "vendor-dir": "lib/vendor",
@@ -30,10 +30,13 @@
     },
     "require": {
 		"php": ">=5.4.0",
+        "symfony/process": "~2.1",
 		"wikimedia/composer-merge-plugin": "1.*",
 		
+        "doctrine/cache": "1.5.4",
+		"gettext/gettext": "3.5.*",
         "james-heinrich/getid3": "1.9.*",
-		"mikealmond/musicbrainz": "0.2.*",
+		"mikealmond/musicbrainz": "dev-master",
 		"phpmailer/phpmailer": "5.2.*",
 		"rmccue/requests": "1.6.*",
 		"react/react": "0.4.*",
@@ -46,7 +49,7 @@
 		"happyworm/jplayer": "2.*",
 		"needim/noty": "2.3.*",
 		"openid/php-openid": "2.*",
-		"sabre/dav": "3.*",
+		"sabre/dav": "3.0.5",
 		"maennchen/zipstream-php": "0.*",
 		
 		"Afterster/php-echonest-api": "dev-master",
@@ -309,10 +312,9 @@
 	"extra": {
         "merge-plugin": {
             "include": [
-                "composer.local.json",
-				"modules/catalog/*/composer.json",
-				"modules/localplay/*/composer.json",
-                "modules/plugins/*/composer.json"
+				"modules/catalog/*/composer.module.json",
+				"modules/localplay/*/composer.module.json",
+                "modules/plugins/*/composer.module.json"
             ],
             "recurse": false,
             "replace": false,

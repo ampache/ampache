@@ -108,7 +108,7 @@ class TVShow extends database_object implements library_item
     } // get_seasons
 
     /**
-     * get_songs
+     * get_episodes
      * gets all episodes for this tv show
      */
     public function get_episodes()

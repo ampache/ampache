@@ -20,6 +20,8 @@
  *
  */
 
+use Gettext\Translator;
+
 /**
  * load_gettext
  * Sets up our local gettext settings.
@@ -29,16 +31,24 @@
 function load_gettext()
 {
     $lang    = AmpConfig::get('lang');
-    $charset = AmpConfig::get('site_charset') ?: 'UTF-8';
-    $locale  = $lang . '.' . $charset;
-    //debug_event('i18n', 'Setting locale to ' . $locale, 5);
-    T_setlocale(LC_MESSAGES, $locale);
-    /* Bind the Text Domain */
-    T_bindtextdomain('messages', AmpConfig::get('prefix') . "/locale/");
-    T_bind_textdomain_codeset('messages', $charset);
-    T_textdomain('messages');
-    //debug_event('i18n', 'gettext is ' . (locale_emulation() ? 'emulated' : 'native'), 5);
+    $popath  = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
+    
+    $t = new Translator();
+    if (file_exists($popath)) {
+        $translations = Gettext\Translations::fromPoFile($popath);
+        $t->loadTranslations($translations);
+    }
+    $t->register();
 } // load_gettext
+
+function T_($msgid)
+{
+    if (function_exists('__')) {
+        return __($msgid);
+    }
+    
+    return $msgid;
+}
 
 /**
  * gettext_noop

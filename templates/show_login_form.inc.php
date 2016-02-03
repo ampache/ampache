@@ -42,7 +42,7 @@ define('TABLE_RENDERED', 1);
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
-        <title> <?php echo scrub_out(AmpConfig::get('site_title')); ?> </title>
+        <title> <?php echo AmpConfig::get('site_title'); ?> </title>
         <script type="text/javascript" language="javascript">
             function focus(){ document.login.username.focus(); }
         </script>
@@ -54,7 +54,7 @@ define('TABLE_RENDERED', 1);
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
             </div>
             <div id="loginbox">
-                <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
+                <h2><?php echo AmpConfig::get('site_title'); ?></h2>
                 <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
                     <div class="loginfield" id="usernamefield">
                         <label for="username"><?php echo  T_('Username'); ?>:</label>

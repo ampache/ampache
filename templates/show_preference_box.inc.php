@@ -54,15 +54,27 @@ if (Access::check('interface','100') && $_REQUEST['action'] == 'admin') {
     </tr>
 </thead>
 <tbody>
-    <?php foreach ($preferences['prefs'] as $pref) {
-    ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
+    <?php
+    $lastsubcat = '';
+    foreach ($preferences['prefs'] as $pref) {
+        if ($pref['subcategory'] != $lastsubcat) {
+            $lastsubcat = $pref['subcategory'];
+            $fsubcat    = $lastsubcat;
+            if (!empty($fsubcat)) {
+                $fsubcat = ucwords($fsubcat);
+                ?>
+                <tr class="<?php echo UI::flip_class() ?>"><td colspan="4"><h5><?php echo T_($fsubcat) ?></h5></td></tr>
+                <?php
+
+            }
+        }
+        ?>
+        <tr class="<?php echo UI::flip_class() ?>">
             <td class="cel_preference"><?php echo T_($pref['description']);
-    ?></td>
+        ?></td>
             <td class="cel_value">
                 <?php create_preference_input($pref['name'], $pref['value']);
-    ?>
+        ?>
             </td>
             <?php if ($is_admin) {
     ?>
@@ -95,10 +107,10 @@ if (Access::check('interface','100') && $_REQUEST['action'] == 'admin') {
                 </td>
             <?php 
 }
-    ?>
+        ?>
         </tr>
     <?php 
-} // End foreach ($preferences['prefs'] as $pref) ?>
+    } // End foreach ($preferences['prefs'] as $pref) ?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">

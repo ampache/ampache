@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 32
+config_version = 33
 
 ;#########################################################
 ; Path Vars                                              #
@@ -106,7 +106,7 @@ session_cookielife = 0
 ; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
 ; running a secure site (HTTPS).
 ; DEFAULT: 0
-session_cookiesecure       = 0
+session_cookiesecure = 0
 
 ; Auth Methods
 ; This defines which auth methods Auth will attempt to use and in which order.
@@ -238,21 +238,21 @@ catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac
 
 ; Video Pattern
 ; This defines which video file types Ampache will attempt to catalog
-; You can specify any file extension you want in here seperating them with
+; You can specify any file extension you want in here separating them with
 ; a | but ampache may not be able to parse them
 ; DEAFULT: avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts
 catalog_video_pattern = "avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts"
 
 ; Playlist Pattern
 ; This defines which playlist types Ampache will attempt to catalog
-; You can specify any file extension you want in here seperating them with
+; You can specify any file extension you want in here separating them with
 ; a | but ampache may not be able to parse them
 ; DEFAULT: m3u|m3u8|pls|asx|xspf
 catalog_playlist_pattern = "m3u|m3u8|pls|asx|xspf"
 
 ; Prefix Pattern
 ; This defines which prefix Ampache will ignore when importing tags from
-; your music. You may add any prefix you want seperating them with a |
+; your music. You may add any prefix you want separating them with a |
 ; DEFAULT: The|An|A|Die|Das|Ein|Eine|Les|Le|La
 catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
@@ -554,6 +554,12 @@ channel = "true"
 ; DEFAULT: true
 live_stream = "true"
 
+; Podcasts
+; Set this to true to enable podcasts and the
+; possibility for admins to subscribe to new podcasts.
+; DEFAULT: false
+;podcast = "false"
+
 ; Web Socket address
 ; Declare the web socket server address
 ; DEFAULT: determined automatically
@@ -617,7 +623,7 @@ debug_level = 5
 ;log_path = "/var/log/ampache"
 
 ; Log filename pattern
-; This defines where the log file name pattern.
+; This defines where the log file name pattern
 ; %name.%Y%m%d.log will create a different log file every day.
 ; DEFAULT: %name.%Y%m%d.log
 log_filename = "%name.%Y%m%d.log"

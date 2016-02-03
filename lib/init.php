@@ -67,8 +67,8 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']            = '3.8.1';
-$results['int_config_version'] = '32';
+$results['version']            = '3.8.2';
+$results['int_config_version'] = '33';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -216,10 +216,13 @@ else {
     }
 } // If NO_SESSION passed
 
-$GLOBALS['user']->format(false);
-
 // Load the Preferences from the database
 Preference::init();
+
+// Load gettext mojo
+load_gettext();
+
+$GLOBALS['user']->format(false);
 
 if (session_id()) {
     Session::extend(session_id());
@@ -230,9 +233,6 @@ if (session_id()) {
 /* Add in some variables for ajax done here because we need the user */
 AmpConfig::set('ajax_url', AmpConfig::get('web_path') . '/server/ajax.server.php', true);
 AmpConfig::set('ajax_server', AmpConfig::get('web_path') . '/server', true);
-
-// Load gettext mojo
-load_gettext();
 
 /* Set CHARSET */
 header ("Content-Type: text/html; charset=" . AmpConfig::get('site_charset'));

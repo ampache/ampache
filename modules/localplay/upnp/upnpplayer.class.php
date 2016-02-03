@@ -44,7 +44,7 @@ class UPnPPlayer
      */
     private function Device()
     {
-        if (is_null($this->_device)) {
+        if ($this->_device === null) {
             $this->_device = new UPnPDevice($this->_description_url);
         }
         return $this->_device;
@@ -56,7 +56,7 @@ class UPnPPlayer
      */
     private function Playlist()
     {
-        if (is_null($this->_playlist)) {
+        if ($this->_playlist === null) {
             $this->_playlist = new UPnPPlaylist($this->_description_url);
         }
         return $this->_playlist;
@@ -367,7 +367,7 @@ class UPnPPlayer
         $this->_intState = $state;
 
         $sid  = 'upnp_ply_' . $this->_description_url;
-        $data = serialize($this->_intState);
+        $data = json_encode($this->_intState);
         if (! Session::exists('api', $sid)) {
             Session::create(array('type' => 'api', 'sid' => $sid, 'value' => $data ));
         } else {
@@ -381,7 +381,7 @@ class UPnPPlayer
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = Session::read($sid);
 
-        $this->_intState = unserialize($data);
+        $this->_intState = json_decode($data, true);
         debug_event('upnpPlayer', 'ReadIndState:' . $this->_intState, 5);
     }
 } // End UPnPPlayer Class

@@ -42,12 +42,12 @@ if (!$_REQUEST['html']) {
 
 $worker = isset($_REQUEST['worker']) ? $_REQUEST['worker'] : null;
 if (isset($_REQUEST['options'])) {
-    $options = unserialize(urldecode($_REQUEST['options']));
+    $options = json_decode(urldecode($_REQUEST['options']), true);
 } else {
     $options = null;
 }
 if (isset($_REQUEST['catalogs'])) {
-    $catalogs = scrub_in(unserialize(urldecode($_REQUEST['catalogs'])));
+    $catalogs = scrub_in(json_decode(urldecode($_REQUEST['catalogs']), true));
 } else {
     $catalogs = null;
 }

@@ -283,18 +283,19 @@ if ($type == 'song') {
     /* Base Checks passed create the song object */
     $media = new Song($oid);
     $media->format();
+} elseif ($type == 'song_preview') {
+    $media = new Song_Preview($oid);
+    $media->format();
+} elseif ($type == 'podcast_episode') {
+    $media = new Podcast_Episode($oid);
+    $media->format();
 } else {
-    if ($type == 'song_preview') {
-        $media = new Song_Preview($oid);
-        $media->format();
-    } else {
-        $type  = 'video';
-        $media = new Video($oid);
-        if (isset($_REQUEST['subtitle'])) {
-            $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
-        }
-        $media->format();
+    $type  = 'video';
+    $media = new Video($oid);
+    if (isset($_REQUEST['subtitle'])) {
+        $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
     }
+    $media->format();
 }
 
 if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
@@ -308,7 +309,7 @@ if ($media->catalog) {
     $catalog = Catalog::create_from_id($media->catalog);
 
     /* If the media is disabled */
-    if (!make_bool($media->enabled)) {
+    if (isset($media->enabled) && !make_bool($media->enabled)) {
         debug_event('Play', "Error: $media->file is currently disabled, song skipped", '5');
         // Check to see if this is a democratic playlist, if so remove it completely
         if ($demo_id && isset($democratic)) {

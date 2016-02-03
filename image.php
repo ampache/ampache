@@ -51,7 +51,7 @@ if (!isset($_GET['object_type'])) {
 }
 
 $type = $_GET['object_type'];
-if (!Core::is_library_item($type)) {
+if (!Art::is_valid_type($type)) {
     exit;
 }
 
@@ -140,6 +140,7 @@ if (!empty($image)) {
         header('Cache-Control: private');
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
     }
+    header("Access-Control-Allow-Origin: *");
     $browser->downloadHeaders($filename, $mime, true);
     echo $image;
 }

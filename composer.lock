@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4fb2d0daab737eaf344eaf30c270b080",
-    "content-hash": "dda24185dc0813bb703fda5de899af94",
+    "hash": "a508ef4a596b9370ba3cd9eb09bdea92",
+    "content-hash": "42595bff0174254854852652772f9ed7",
     "packages": [
         {
             "name": "Afterster/php-echonest-api",
@@ -46,16 +46,16 @@
         },
         {
             "name": "ampache/ampacheapi-php",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ampache/ampacheapi-php.git",
-                "reference": "0328dc468eb41953df3271c8645bd04c2d79ede4"
+                "reference": "7185626d7bf806e9b25927a66dbca5d9ce64d319"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/0328dc468eb41953df3271c8645bd04c2d79ede4",
-                "reference": "0328dc468eb41953df3271c8645bd04c2d79ede4",
+                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/7185626d7bf806e9b25927a66dbca5d9ce64d319",
+                "reference": "7185626d7bf806e9b25927a66dbca5d9ce64d319",
                 "shasum": ""
             },
             "require": {
@@ -78,7 +78,7 @@
                 "api",
                 "library"
             ],
-            "time": "2015-11-18 20:13:35"
+            "time": "2016-01-21 20:36:19"
         },
         {
             "name": "aterrien/jQuery-Knob",
@@ -143,24 +143,24 @@
         },
         {
             "name": "cboden/ratchet",
-            "version": "v0.3.3",
+            "version": "v0.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ratchetphp/Ratchet.git",
-                "reference": "6b247c05251b4b5cbd14243366b649f99a0e5681"
+                "reference": "a177819dd0e6eb1d7e4192aeafadfa43a84867f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/6b247c05251b4b5cbd14243366b649f99a0e5681",
-                "reference": "6b247c05251b4b5cbd14243366b649f99a0e5681",
+                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/a177819dd0e6eb1d7e4192aeafadfa43a84867f1",
+                "reference": "a177819dd0e6eb1d7e4192aeafadfa43a84867f1",
                 "shasum": ""
             },
             "require": {
                 "guzzle/http": "^3.6",
                 "php": ">=5.3.9",
                 "react/socket": "^0.3 || ^0.4",
-                "symfony/http-foundation": "^2.2",
-                "symfony/routing": "^2.2"
+                "symfony/http-foundation": "^2.2|^3.0",
+                "symfony/routing": "^2.2|^3.0"
             },
             "type": "library",
             "autoload": {
@@ -187,24 +187,24 @@
                 "server",
                 "sockets"
             ],
-            "time": "2015-05-27 12:51:05"
+            "time": "2015-12-23 15:06:48"
         },
         {
             "name": "components/bootstrap",
-            "version": "3.3.5",
+            "version": "3.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/bootstrap.git",
-                "reference": "d71c2a234c61f53f1109a26ba8155902a51f8ca5"
+                "reference": "fb4923919c620b8b2aa8a11eda16b49b0a9e8a27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/bootstrap/zipball/d71c2a234c61f53f1109a26ba8155902a51f8ca5",
-                "reference": "d71c2a234c61f53f1109a26ba8155902a51f8ca5",
+                "url": "https://api.github.com/repos/components/bootstrap/zipball/fb4923919c620b8b2aa8a11eda16b49b0a9e8a27",
+                "reference": "fb4923919c620b8b2aa8a11eda16b49b0a9e8a27",
                 "shasum": ""
             },
             "require": {
-                "components/jquery": ">=1.9.1 <3.0"
+                "components/jquery": "1.9.1 - 2"
             },
             "suggest": {
                 "components/bootstrap-default": "Provide a theme for Bootstrap as components/bootstrap only provides the CSS as file assets"
@@ -255,7 +255,7 @@
                 "responsive",
                 "web"
             ],
-            "time": "2015-06-17 06:08:09"
+            "time": "2015-11-24 20:19:41"
         },
         {
             "name": "components/jquery",
@@ -389,16 +389,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.5.1",
+            "version": "v1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "2b9cec5a5e722010cbebc91713d4c11eaa064d5e"
+                "reference": "47cdc76ceb95cc591d9c79a36dc3794975b5d136"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/2b9cec5a5e722010cbebc91713d4c11eaa064d5e",
-                "reference": "2b9cec5a5e722010cbebc91713d4c11eaa064d5e",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/47cdc76ceb95cc591d9c79a36dc3794975b5d136",
+                "reference": "47cdc76ceb95cc591d9c79a36dc3794975b5d136",
                 "shasum": ""
             },
             "require": {
@@ -455,7 +455,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-11-02 18:35:48"
+            "time": "2015-12-19 05:03:47"
         },
         {
             "name": "dropbox/dropbox-sdk",
@@ -541,6 +541,118 @@
                 "event-emitter"
             ],
             "time": "2012-11-02 14:49:47"
+        },
+        {
+            "name": "gettext/gettext",
+            "version": "v3.5.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oscarotero/Gettext.git",
+                "reference": "e93f74356280016bd50c41c62cc858c3005791e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/e93f74356280016bd50c41c62cc858c3005791e7",
+                "reference": "e93f74356280016bd50c41c62cc858c3005791e7",
+                "shasum": ""
+            },
+            "require": {
+                "gettext/languages": "2.*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "illuminate/view": "*",
+                "twig/extensions": "*",
+                "twig/twig": "*"
+            },
+            "suggest": {
+                "illuminate/view": "Is necessary if you want to use the Blade extractor",
+                "twig/extensions": "Is necessary if you want to use the Twig extractor",
+                "twig/twig": "Is necessary if you want to use the Twig extractor"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gettext\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oscar Otero",
+                    "email": "oom@oscarotero.com",
+                    "homepage": "http://oscarotero.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP gettext manager",
+            "homepage": "https://github.com/oscarotero/Gettext",
+            "keywords": [
+                "JS",
+                "gettext",
+                "i18n",
+                "mo",
+                "po",
+                "translation"
+            ],
+            "time": "2016-01-20 22:08:43"
+        },
+        {
+            "name": "gettext/languages",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/cldr-to-gettext-plural-rules.git",
+                "reference": "c43ade7e3fb68bcf2379036513dce8d20553d9c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/cldr-to-gettext-plural-rules/zipball/c43ade7e3fb68bcf2379036513dce8d20553d9c8",
+                "reference": "c43ade7e3fb68bcf2379036513dce8d20553d9c8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gettext\\Languages\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "mlocati@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "gettext languages with plural rules",
+            "homepage": "https://github.com/mlocati/cldr-to-gettext-plural-rules",
+            "keywords": [
+                "cldr",
+                "i18n",
+                "internationalization",
+                "l10n",
+                "language",
+                "languages",
+                "localization",
+                "php",
+                "plural",
+                "plural rules",
+                "plurals",
+                "translate",
+                "translations",
+                "unicode"
+            ],
+            "time": "2015-03-27 11:32:41"
         },
         {
             "name": "guzzle/common",
@@ -1180,16 +1292,16 @@
         },
         {
             "name": "james-heinrich/getid3",
-            "version": "v1.9.10",
+            "version": "v1.9.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "835a0db62993cb1d85925f9a8aefe13e4ebe2b67"
+                "reference": "da7c657f2bcc865ef1bef53cf90c2638f344469b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/835a0db62993cb1d85925f9a8aefe13e4ebe2b67",
-                "reference": "835a0db62993cb1d85925f9a8aefe13e4ebe2b67",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/da7c657f2bcc865ef1bef53cf90c2638f344469b",
+                "reference": "da7c657f2bcc865ef1bef53cf90c2638f344469b",
                 "shasum": ""
             },
             "require": {
@@ -1212,17 +1324,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2015-09-14 05:42:21"
-        },
-        {
-            "name": "jamiebicknell/Growl-GNTP",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jamiebicknell/Growl-GNTP.git",
-                "reference": "1.0.0"
-            },
-            "type": "library"
+            "time": "2015-12-24 10:50:02"
         },
         {
             "name": "jeromeetienne/jquery-qrcode",
@@ -1408,16 +1510,16 @@
         },
         {
             "name": "mikealmond/musicbrainz",
-            "version": "v0.2.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikealmond/MusicBrainz.git",
-                "reference": "c5a6fe502bf8d2be4e269543a3536b759f7a50d4"
+                "reference": "1f29ae0684b4ddbf7388fb08000d04e8cb306486"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikealmond/MusicBrainz/zipball/c5a6fe502bf8d2be4e269543a3536b759f7a50d4",
-                "reference": "c5a6fe502bf8d2be4e269543a3536b759f7a50d4",
+                "url": "https://api.github.com/repos/mikealmond/MusicBrainz/zipball/1f29ae0684b4ddbf7388fb08000d04e8cb306486",
+                "reference": "1f29ae0684b4ddbf7388fb08000d04e8cb306486",
                 "shasum": ""
             },
             "require": {
@@ -1462,20 +1564,20 @@
                 "musicbrainz",
                 "php"
             ],
-            "time": "2015-09-17 16:46:51"
+            "time": "2015-12-29 18:01:42"
         },
         {
             "name": "moinax/tvdb",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Moinax/TvDb.git",
-                "reference": "278c9e7d40b3e96717a0d317d9b9e8e676815deb"
+                "reference": "b21f619353035385987dd5a6e64c45ea3a8e2e10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Moinax/TvDb/zipball/278c9e7d40b3e96717a0d317d9b9e8e676815deb",
-                "reference": "278c9e7d40b3e96717a0d317d9b9e8e676815deb",
+                "url": "https://api.github.com/repos/Moinax/TvDb/zipball/b21f619353035385987dd5a6e64c45ea3a8e2e10",
+                "reference": "b21f619353035385987dd5a6e64c45ea3a8e2e10",
                 "shasum": ""
             },
             "require": {
@@ -1502,7 +1604,7 @@
             "keywords": [
                 "api"
             ],
-            "time": "2014-11-22 10:42:41"
+            "time": "2015-12-21 08:14:43"
         },
         {
             "name": "mptre/php-soundcloud",
@@ -1516,16 +1618,16 @@
         },
         {
             "name": "needim/noty",
-            "version": "v2.3.7",
+            "version": "v2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/needim/noty.git",
-                "reference": "25f66d6741914b4c0ed2cb6c8d5fe5036420dfea"
+                "reference": "6fe2cf81c7b8ecdbdafaa875b82b78cf65e2f100"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/needim/noty/zipball/25f66d6741914b4c0ed2cb6c8d5fe5036420dfea",
-                "reference": "25f66d6741914b4c0ed2cb6c8d5fe5036420dfea",
+                "url": "https://api.github.com/repos/needim/noty/zipball/6fe2cf81c7b8ecdbdafaa875b82b78cf65e2f100",
+                "reference": "6fe2cf81c7b8ecdbdafaa875b82b78cf65e2f100",
                 "shasum": ""
             },
             "suggest": {
@@ -1550,7 +1652,7 @@
                 "notification",
                 "noty"
             ],
-            "time": "2015-09-14 13:45:35"
+            "time": "2016-01-11 13:30:39"
         },
         {
             "name": "openid/php-openid",
@@ -2551,22 +2653,22 @@
         },
         {
             "name": "sabre/http",
-            "version": "4.1.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruux/sabre-http.git",
-                "reference": "5874c9c449e690242cf32884da9d32a3369a2c78"
+                "reference": "2e93bc8321524c67be4ca5b8415daebd4c8bf85e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruux/sabre-http/zipball/5874c9c449e690242cf32884da9d32a3369a2c78",
-                "reference": "5874c9c449e690242cf32884da9d32a3369a2c78",
+                "url": "https://api.github.com/repos/fruux/sabre-http/zipball/2e93bc8321524c67be4ca5b8415daebd4c8bf85e",
+                "reference": "2e93bc8321524c67be4ca5b8415daebd4c8bf85e",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "php": ">=5.4",
-                "sabre/event": ">=1.0.0,<3.0.0",
+                "sabre/event": ">=1.0.0,<4.0.0",
                 "sabre/uri": "~1.0"
             },
             "require-dev": {
@@ -2602,7 +2704,7 @@
             "keywords": [
                 "http"
             ],
-            "time": "2015-09-04 21:56:22"
+            "time": "2016-01-06 23:00:08"
         },
         {
             "name": "sabre/uri",
@@ -2657,16 +2759,16 @@
         },
         {
             "name": "sabre/vobject",
-            "version": "3.4.7",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruux/sabre-vobject.git",
-                "reference": "7b3690545451159fc608dfac6696110f6770ff5d"
+                "reference": "061dd47ce40074bf63da8e3d6dbe7f18b5a4f3a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruux/sabre-vobject/zipball/7b3690545451159fc608dfac6696110f6770ff5d",
-                "reference": "7b3690545451159fc608dfac6696110f6770ff5d",
+                "url": "https://api.github.com/repos/fruux/sabre-vobject/zipball/061dd47ce40074bf63da8e3d6dbe7f18b5a4f3a4",
+                "reference": "061dd47ce40074bf63da8e3d6dbe7f18b5a4f3a4",
                 "shasum": ""
             },
             "require": {
@@ -2719,20 +2821,20 @@
                 "jCard",
                 "vCard"
             ],
-            "time": "2015-09-04 15:17:58"
+            "time": "2016-01-11 18:13:23"
         },
         {
             "name": "sabre/xml",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruux/sabre-xml.git",
-                "reference": "a3eeef9f3f13ee42503a1e06e5df3a6fc95b479b"
+                "reference": "420400f36655d79894fae8ce970516a71ea8f5f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruux/sabre-xml/zipball/a3eeef9f3f13ee42503a1e06e5df3a6fc95b479b",
-                "reference": "a3eeef9f3f13ee42503a1e06e5df3a6fc95b479b",
+                "url": "https://api.github.com/repos/fruux/sabre-xml/zipball/420400f36655d79894fae8ce970516a71ea8f5f5",
+                "reference": "420400f36655d79894fae8ce970516a71ea8f5f5",
                 "shasum": ""
             },
             "require": {
@@ -2751,7 +2853,11 @@
             "autoload": {
                 "psr-4": {
                     "Sabre\\Xml\\": "lib/"
-                }
+                },
+                "files": [
+                    "lib/Deserializer/functions.php",
+                    "lib/Serializer/functions.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2763,9 +2869,14 @@
                     "email": "me@evertpot.com",
                     "homepage": "http://evertpot.com/",
                     "role": "Developer"
+                },
+                {
+                    "name": "Markus Staab",
+                    "email": "markus.staab@redaxo.de",
+                    "role": "Developer"
                 }
             ],
-            "description": "The Sabre XML parser is the only XML library that you may not hate.",
+            "description": "sabre/xml is an XML library that you may not hate.",
             "homepage": "https://sabre.io/xml/",
             "keywords": [
                 "XMLReader",
@@ -2773,7 +2884,7 @@
                 "dom",
                 "xml"
             ],
-            "time": "2015-08-30 07:57:48"
+            "time": "2015-12-29 20:51:22"
         },
         {
             "name": "scaron/prettyphoto",
@@ -2800,16 +2911,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.7.6",
+            "version": "v2.7.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "87a5db5ea887763fa3a31a5471b512ff1596d9b8"
+                "reference": "79493b6421786e5a0fc2d161410aa86f400bcaea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/87a5db5ea887763fa3a31a5471b512ff1596d9b8",
-                "reference": "87a5db5ea887763fa3a31a5471b512ff1596d9b8",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/79493b6421786e5a0fc2d161410aa86f400bcaea",
+                "reference": "79493b6421786e5a0fc2d161410aa86f400bcaea",
                 "shasum": ""
             },
             "require": {
@@ -2835,7 +2946,10 @@
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\EventDispatcher\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2853,20 +2967,20 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2015-10-11 09:39:48"
+            "time": "2016-01-13 10:26:43"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.7.6",
+            "version": "v2.7.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "7598eea151ae3d4134df1f9957364b17809eea75"
+                "reference": "2f9d240056f026af5f7ba7f7052b0c6709bf288c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/7598eea151ae3d4134df1f9957364b17809eea75",
-                "reference": "7598eea151ae3d4134df1f9957364b17809eea75",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/2f9d240056f026af5f7ba7f7052b0c6709bf288c",
+                "reference": "2f9d240056f026af5f7ba7f7052b0c6709bf288c",
                 "shasum": ""
             },
             "require": {
@@ -2887,6 +3001,9 @@
                 },
                 "classmap": [
                     "Resources/stubs"
+                ],
+                "exclude-from-classmap": [
+                    "/Tests/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2905,20 +3022,20 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2015-10-23 14:47:27"
+            "time": "2016-01-13 10:26:43"
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v2.7.6",
+            "version": "v2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "85fd10e551677d3c9a4632def78b8ec4670b247d"
+                "reference": "b98ca04f85240531b9ea8a0f00a21f2ecfbdfa51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/85fd10e551677d3c9a4632def78b8ec4670b247d",
-                "reference": "85fd10e551677d3c9a4632def78b8ec4670b247d",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/b98ca04f85240531b9ea8a0f00a21f2ecfbdfa51",
+                "reference": "b98ca04f85240531b9ea8a0f00a21f2ecfbdfa51",
                 "shasum": ""
             },
             "require": {
@@ -2927,13 +3044,16 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\OptionsResolver\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2956,20 +3076,20 @@
                 "configuration",
                 "options"
             ],
-            "time": "2015-10-11 09:39:48"
+            "time": "2016-01-03 15:33:41"
         },
         {
             "name": "symfony/process",
-            "version": "v2.7.6",
+            "version": "v2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "4a959dd4e19c2c5d7512689413921e0a74386ec7"
+                "reference": "6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/4a959dd4e19c2c5d7512689413921e0a74386ec7",
-                "reference": "4a959dd4e19c2c5d7512689413921e0a74386ec7",
+                "url": "https://api.github.com/repos/symfony/process/zipball/6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac",
+                "reference": "6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac",
                 "shasum": ""
             },
             "require": {
@@ -2978,13 +3098,16 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Process\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3002,20 +3125,20 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2015-10-23 14:47:27"
+            "time": "2016-01-06 09:59:23"
         },
         {
             "name": "symfony/routing",
-            "version": "v2.7.6",
+            "version": "v2.7.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "f353e1f588679c3ec987624e6c617646bd01ba38"
+                "reference": "6fec77993acfe19aecf60544b9c7d32f3d5b2506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/f353e1f588679c3ec987624e6c617646bd01ba38",
-                "reference": "f353e1f588679c3ec987624e6c617646bd01ba38",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/6fec77993acfe19aecf60544b9c7d32f3d5b2506",
+                "reference": "6fec77993acfe19aecf60544b9c7d32f3d5b2506",
                 "shasum": ""
             },
             "require": {
@@ -3048,7 +3171,10 @@
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Routing\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3072,7 +3198,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2015-10-27 15:38:06"
+            "time": "2016-01-03 15:32:00"
         },
         {
             "name": "szymach/c-pchart",
@@ -3248,6 +3374,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "mikealmond/musicbrainz": 20,
         "afterster/php-echonest-api": 20,
         "jeromeetienne/jquery-qrcode": 20,
         "kumailht/responsive-elements": 20,
