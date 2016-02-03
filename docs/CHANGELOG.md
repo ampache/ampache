@@ -1,12 +1,46 @@
 CHANGELOG
 =========
 
+3.8.2
+----------
+- Fixed potential security vulnerability on smartplaylist search rule and catalog management actions (thanks Roman Ammann)
+- Fixed song comparison issue on arrays (genre ...) when updating from tag
+- Fixed song insertion issue if track year is out of range
+- Fixed unexpected artist summary autoupdate
+- Improved generated playlist filename (thanks yam655)
+- Fixed user avatar upload (thanks vader083)
+- Fixed waveform temporary file deletion issue if GD library is unavailable
+- Fixed max number of items returned from Subsonic getStarred.view (thanks zerodogg)
+- Fixed video update from tags (thanks stebe)
+- Reverted PHP 5.5.9 dependency to PHP 5.4
+- Added video playlist support (thanks SurvivalHive)
+- Added preference subcategory
+- Added prompt for new playlist name
+- Fixed page refresh when canceling album art change (thanks EvilLivesHere)
+- Added /play htaccess rewrite rule to avoid default max limit redirection 
+- Fixed Subsonic artist/album/song name JSON parsing if the name is numeric only
+- Added ignored articles and cover art to Subsonic getArtists.view function
+- Fixed MySQL requests to support ONLY_FULL_GROUP_BY mode
+- Fixed Ajax art refresh after changing it (thanks gnujeremie)
+- Fixed playlist creation from smartplaylist (thanks stebe)
+- Added SQL unique constraint on tag map
+- Fixed Subsonic genres with JSON format
+- Added Bookmarks feature on Subsonic API
+- Fixed thumb art regeneration if entry found in database without data (thanks s4astliv)
+- Added Podcast feature
+- Added large view / grid view option on artist and albums collection
+- Moved from php-gettext to oscarotero/Gettext
+- Added `Access-Control-Allow-Origin: *` header on Subsonic images & streams
+- Fixed Subsonic item identifier parsing
+- Added logic for external plugin directories (ampache-*)
+- Added Discogs metadata plugin
+
 3.8.1
 ----------
 - Fixed PHP7 Error class conflict (thanks trampi)
 - Fixed user password with special characters at install time (thanks jagerman)
 - Moved Ampache project license from GPLv2 to AGPLv3
-- Add Ampache specific information on Subsonic API getAlbum using a new `ampache` parameter (thanks nicklan)
+- Added Ampache specific information on Subsonic API getAlbum using a new `ampache` parameter (thanks nicklan)
 - Added 'album tag' option in song search (thanks DanielMaly)
 - Added Message of the Day plugin to display MOTD at home page
 - Moved AmpacheApi class to a separate ampacheapi-php git repository

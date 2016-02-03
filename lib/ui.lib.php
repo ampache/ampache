@@ -52,9 +52,9 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 function catalog_worker($action, $catalogs = null, $options = null)
 {
     if (AmpConfig::get('ajax_load')) {
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(serialize($catalogs));
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs));
         if ($options) {
-            $sse_url .= "&options=" . urlencode(serialize($_POST));
+            $sse_url .= "&options=" . urlencode(json_encode($_POST));
         }
         sse_worker($sse_url);
     } else {

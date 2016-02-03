@@ -859,11 +859,6 @@ class Song extends database_object implements media, library_item
 
         // Foreach them
         foreach ($fields as $key=>$value) {
-            // Skip the item if it is no string nor something we can turn into a string
-            if (!is_string($media->$key) || (is_object($media->$key) && method_exists($media->key, '__toString'))) {
-                continue;
-            }
-
             $key = trim($key);
             if (empty($key) || in_array($key,$skip_array)) {
                 continue;
@@ -878,6 +873,14 @@ class Song extends database_object implements media, library_item
             } else {
                 $mediaData = $media->$key;
             }
+            
+            // Skip the item if it is no string nor something we can turn into a string
+            if (!is_string($mediaData) && !is_numeric($mediaData) && !is_bool($mediaData)) {
+                if (is_object($mediaData) && !method_exists($mediaData, '__toString')) {
+                    continue;
+                }
+            }
+            
             if (is_array($new_media->$key)) {
                 $arr = $new_media->$key;
                 sort($arr);

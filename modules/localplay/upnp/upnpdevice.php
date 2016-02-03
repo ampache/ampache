@@ -23,7 +23,7 @@ class UPnPDevice
     private function restoreDescriptionUrl($descriptionUrl)
     {
         debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
-        $this->_settings = unserialize(Session::read('upnp_dev_' . $descriptionUrl));
+        $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);
 
         if ($this->_settings['descriptionURL'] == $descriptionUrl) {
             debug_event('upnpdevice', 'service Urls restored from session.', 5);
@@ -61,7 +61,7 @@ class UPnPDevice
         Session::create(array(
             'type' => 'api',
             'sid' => 'upnp_dev_' . $descriptionUrl,
-            'value' => serialize($this->_settings)
+            'value' => json_encode($this->_settings)
         ));
     }
 
