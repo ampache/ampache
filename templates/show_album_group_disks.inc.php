@@ -149,10 +149,7 @@ if ($directplay_limit > 0) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
-                <a href="<?php echo AmpConfig::get('web_path');
-    ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id;
-    ?>"><?php echo UI::get_icon('comment', T_('Post Shout'));
-    ?></a>
+                <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo UI::get_icon('comment', T_('Post Shout')) ?></a>
             <?php 
 }
     ?>
@@ -177,18 +174,12 @@ if ($directplay_limit > 0) {
         ?>
         <?php if (Access::check('interface','50')) {
     ?>
-            <a onclick="submitNewItemsOrder('<?php echo $c_album->id;
-    ?>', 'reorder_songs_table_<?php echo $c_album->id;
-    ?>', 'song_',
-                                            '<?php echo AmpConfig::get('web_path');
-    ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
+            <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
+                                            '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
                 <?php echo UI::get_icon('save', T_('Save Tracks Order'));
     ?>
             </a>
-            <a href="javascript:NavigateTo('<?php echo $web_path;
-    ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id;
-    ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?');
-    ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">
                 <?php echo UI::get_icon('file_refresh', T_('Update from tags'));
     ?>
             </a>

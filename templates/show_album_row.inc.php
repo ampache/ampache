@@ -124,10 +124,7 @@ if (Art::is_enabled()) {
     }
     if (Access::check_function('batch_download') && check_can_zip('album')) {
         ?>
-            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-        ?>
-            /batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id');
-        ?>">
+            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path') ?>batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
                 <?php echo UI::get_icon('batch_download', T_('Batch Download'));
         ?>
             </a>
@@ -143,9 +140,7 @@ if (Art::is_enabled()) {
     }
     if (Catalog::can_remove($libitem)) {
         ?>
-            <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path');
-        ?>/albums.php?action=delete&album_id=<?php echo $libitem->id;
-        ?>">
+            <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
             <?php echo UI::get_icon('delete', T_('Delete'));
         ?>
             </a>
