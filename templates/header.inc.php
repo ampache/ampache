@@ -70,6 +70,7 @@ $_SESSION['login'] = false;
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
         <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
@@ -85,6 +86,7 @@ $_SESSION['login'] = false;
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
@@ -303,6 +305,7 @@ $_SESSION['login'] = false;
                 }
             });
         </script>
+        
         <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
     ?>
         <script type="text/javascript" language="javascript">
@@ -321,6 +324,37 @@ $_SESSION['login'] = false;
         </script>
         <?php 
 } ?>
+        
+        <?php if (AmpConfig::get('libitem_contextmenu')) {
+    ?>
+        <script type="text/javascript" language="javascript">
+            function libitem_action(item, action)
+            {
+                var iinfo = item.attr('id').split('_', 2);
+                var object_type = iinfo[0];
+                var object_id = iinfo[1];
+                
+                if (action !== undefined && action !== '') {
+                    ajaxPut(jsAjaxUrl + action + '&object_type=' + object_type + '&object_id=' + object_id);
+                } else {
+                    showPlaylistDialog(this, object_type, object_id);
+                }
+            }
+            
+            $.contextMenu({
+                selector: ".libitem_menu",
+                items: {
+                    play: {name: "<?php echo T_('Play') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay'); }},
+                    play_next: {name: "<?php echo T_('Play next') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&playnext=true'); }},
+                    play_last: {name: "<?php echo T_('Play last') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&append=true'); }},
+                    add_tmp_playlist: {name: "<?php echo T_('Add to temporary playlist') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?action=basket'); }},
+                    add_playlist: {name: "<?php echo T_('Add to existing playlist') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, ''); }}
+                }
+            });
+        </script>
+        <?php 
+} ?>
+        
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
         <div id="notification" class="notification-out"><img src="<?php echo $web_path; ?>/images/icon_info.png" /><span id="notification-content"></span></div>

@@ -538,6 +538,9 @@ class Update
         $update_string = "- Add manual update flag on artist.<br />";
         $version[]     = array('version' => '380005', 'description' => $update_string);
         
+        $update_string = "- Add library item context menu option.<br />";
+        $version[]     = array('version' => '380006', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -3798,6 +3801,25 @@ class Update
 
         $sql    = "ALTER TABLE `artist` ADD COLUMN `manual_update` SMALLINT( 1 ) DEFAULT '0'";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380006
+     *
+     * Add library item context menu option
+     */
+    public static function update_380006()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`, `subcatagory`) " .
+            "VALUES ('libitem_contextmenu','1','Library item context menu',0,'boolean','interface','library')";
+        $retval &= Dba::write($sql);
+        $id     = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval &= Dba::write($sql, array($id));
 
         return $retval;
     }

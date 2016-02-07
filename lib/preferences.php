@@ -199,6 +199,7 @@ function create_preference_input($name,$value)
         case 'upload_allow_remove':
         case 'webdav_backend':
         case 'notify_email':
+        case 'libitem_contextmenu':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {

@@ -98,9 +98,7 @@ $thcount  = 8;
                 }
             }
             ?>
-        <tr id="album_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?>">
+        <tr id="album_<?php echo $libitem->id ?>" class="<?php echo UI::flip_class() ?> libitem_menu">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_album_row.inc.php');
             ?>
         </tr>

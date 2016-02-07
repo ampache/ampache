@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a508ef4a596b9370ba3cd9eb09bdea92",
-    "content-hash": "42595bff0174254854852652772f9ed7",
+    "hash": "8735119914c4f5b3566860dadd716ce6",
+    "content-hash": "5d7072f1ba9104edad9c18f2c4460a97",
     "packages": [
         {
             "name": "Afterster/php-echonest-api",
@@ -1021,16 +1021,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "4d0bdbe1206df7440219ce14c972aa57cc5e4982"
+                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/4d0bdbe1206df7440219ce14c972aa57cc5e4982",
-                "reference": "4d0bdbe1206df7440219ce14c972aa57cc5e4982",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5d04bdd2881ac89abde1fb78cc234bce24327bb",
+                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb",
                 "shasum": ""
             },
             "require": {
@@ -1075,7 +1075,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2015-11-03 01:34:55"
+            "time": "2016-01-23 01:23:02"
         },
         {
             "name": "guzzlehttp/retry-subscriber",
@@ -1568,16 +1568,16 @@
         },
         {
             "name": "moinax/tvdb",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Moinax/TvDb.git",
-                "reference": "b21f619353035385987dd5a6e64c45ea3a8e2e10"
+                "reference": "7ddf816552966fcc75c85bb7f92ce4c6c9190dc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Moinax/TvDb/zipball/b21f619353035385987dd5a6e64c45ea3a8e2e10",
-                "reference": "b21f619353035385987dd5a6e64c45ea3a8e2e10",
+                "url": "https://api.github.com/repos/Moinax/TvDb/zipball/7ddf816552966fcc75c85bb7f92ce4c6c9190dc2",
+                "reference": "7ddf816552966fcc75c85bb7f92ce4c6c9190dc2",
                 "shasum": ""
             },
             "require": {
@@ -1604,7 +1604,7 @@
             "keywords": [
                 "api"
             ],
-            "time": "2015-12-21 08:14:43"
+            "time": "2016-02-03 08:52:14"
         },
         {
             "name": "mptre/php-soundcloud",
@@ -2905,6 +2905,33 @@
                     ],
                     "styles": [
                         "css/prettyPhoto.css"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "swisnl/jQuery-contextMenu",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swisnl/jQuery-contextMenu.git",
+                "reference": "2.1.0"
+            },
+            "require": {
+                "robloach/component-installer": "*"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "dist/jquery.contextMenu.js"
+                    ],
+                    "styles": [
+                        "dist/jquery.contextMenu.css"
+                    ],
+                    "files": [
+                        "dist/jquery.contextMenu.min.js",
+                        "dist/jquery.contextMenu.min.css"
                     ]
                 }
             }
