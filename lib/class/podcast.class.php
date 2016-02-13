@@ -89,7 +89,7 @@ class Podcast extends database_object implements library_item
     
     /**
      * get_episodes
-     * gets all episodes for this tv show
+     * gets all episodes for this podcast
      */
     public function get_episodes($state_filter = '')
     {

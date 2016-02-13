@@ -386,7 +386,7 @@ class Podcast_Episode extends database_object implements media, library_item
             $file    = $podcast->get_root_path();
             if (!empty($file)) {
                 $pinfo = pathinfo($this->source);
-                $file .= DIRECTORY_SEPARATOR . $this->id . '-' . $pinfo['basename'];
+                $file .= DIRECTORY_SEPARATOR . $this->id . '-' . strtok($pinfo['basename'], '?');
                 debug_event('podcast_episode', 'Downloading ' . $this->source . ' to ' . $file . ' ...', 5);
                 if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
                     debug_event('podcast_episode', 'Download completed.', 5);
