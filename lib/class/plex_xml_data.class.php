@@ -300,10 +300,9 @@ class Plex_XML_Data
     public static function getKeyFromFullUri($uri)
     {
         $key  = '';
-        $puri = parse_url($uri);
-        if ($puri['scheme'] == 'library') {
-            // We ignore library uuid (= $puri['host'])
-            $ppath = explode('/', $puri['path']);
+        if (strpos($uri, "library://") === 0) {
+            // We ignore library uuid
+            $ppath = explode('/', substr($uri, 10));
             if (count($ppath) == 3) {
                 if ($ppath['1'] == 'item') {
                     $key = rawurldecode($ppath[2]);
