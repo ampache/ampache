@@ -224,6 +224,10 @@ class Waveform
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
         $img = imagecreatetruecolor($data_size / $detail, $height);
+        if ($img === false) {
+            debug_event('waveform', 'Cannot create image.', 1);
+            return null;
+        }
 
         // fill background of image
         if ($background == "") {
