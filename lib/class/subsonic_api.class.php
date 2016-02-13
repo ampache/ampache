@@ -1722,31 +1722,36 @@ class Subsonic_Api
     {
         self::check_version($input, "1.5.0");
 
-        $id = self::check_parameter($input, 'id');
+        $id         = self::check_parameter($input, 'id');
+        $submission = $input['submission'];
         //$time = $input['time'];
-        //$submission = $input['submission'];
 
-        if (!is_array($id)) {
-            $rid   = array();
-            $rid[] = $id;
-            $id    = $rid;
-        }
-
-        foreach ($id as $i) {
-            $aid = Subsonic_XML_Data::getAmpacheId($i);
-            if (Subsonic_XML_Data::isVideo($i)) {
-                $type = 'video';
-            } else {
-                $type = 'song';
+        if ($submission === 'false' || $submission == 0) {
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            self::apiOutput($input, $r);
+        } else {
+            if (!is_array($id)) {
+                $rid   = array();
+                $rid[] = $id;
+                $id    = $rid;
             }
 
-            $media = new $type($aid);
-            $media->format();
-            $GLOBALS['user']->save_mediaplay($GLOBALS['user'], $media);
-        }
+            foreach ($id as $i) {
+                $aid = Subsonic_XML_Data::getAmpacheId($i);
+                if (Subsonic_XML_Data::isVideo($i)) {
+                    $type = 'video';
+                } else {
+                    $type = 'song';
+                }
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        self::apiOutput($input, $r);
+                $media = new $type($aid);
+                $media->format();
+                $GLOBALS['user']->save_mediaplay($GLOBALS['user'], $media);
+            }
+
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            self::apiOutput($input, $r);
+        }
     }
 
     /**
