@@ -764,6 +764,7 @@ class Catalog_local extends Catalog
     {
         $podcasts = $this->get_podcasts();
         foreach ($podcasts as $podcast) {
+            $podcast->sync_episodes(false);
             $episodes = $podcast->get_episodes('pending');
             foreach ($episodes as $episode_id) {
                 $episode = new Podcast_Episode($episode_id);
