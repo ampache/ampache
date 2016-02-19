@@ -201,9 +201,9 @@ class XML_Data
             return "";
         }
         $playlist_track = "";
-        foreach ($playlist as $playlist_data) {
-            if ($playlist_data["object_id"] == $song->id) {
-                return "\t<playlisttrack>" . $playlist_data["track"] . "</playlisttrack>\n";
+        foreach ($playlist_data as $playlist) {
+            if ($playlist["object_id"] == $song->id) {
+                return "\t<playlisttrack>" . $playlist["track"] . "</playlisttrack>\n";
             }
         }
         return "";
