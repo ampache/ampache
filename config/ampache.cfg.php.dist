@@ -680,41 +680,58 @@ site_charset = UTF-8
 ; LDAP login info (optional)                             #
 ;#########################################################
 
-; LDAP filter string to use (required)
-; For OpenLDAP use "uid"
-; For Microsoft Active Directory (MAD) use "sAMAccountName"
+; LDAP server URL (required)
 ; DEFAULT: none
-;ldap_filter = "(sAMAccountName=%v)"
+;ldap_url = "ldap://localhost/"
+;ldap_url = "ldaps://localhost/"
 
-; LDAP objectclass (required)
-; OpanLDAP objectclass = "*"
-; MAD objectclass = "organizationalPerson"
-; DEFAULT null
-;ldap_objectclass = "organizationalPerson"
-
-; Initial credentials to bind with for searching (optional)
+; LDAP credentials (optional)
 ; DEFAULT: none
 ;ldap_username = ""
 ;ldap_password = ""
+
+; LDAP Base DN for the search (required)
+; DEFAULT: none
+;ldap_search_dn = "ou=People,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
+
+; LDAP objectClass (required)
+; DEFAULT: none
+;ldap_objectclass = "posixAccount"          ; OpenLDAP
+;ldap_objectclass = "organizationalPerson"  ; Microsoft Active Directory
+
+; LDAP filter for search (required)
+; DEFAULT: none
+;ldap_filter = "(uid=%v)"                   ; OpenLDAP
+;ldap_filter = "(sAMAccountName=%v)"        ; Microsoft Active Directory
 
 ; Require that the user is in a specific group (optional)
 ; DEFAULT: none
 ;ldap_require_group = "cn=yourgroup,ou=yourorg,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
-; This is the search dn used to find users (required)
-; DEFAULT: none
-;ldap_search_dn = "ou=People,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
+; LDAP name field
+; DEFAULT = "cn"
+;ldap_name_field = "cn"
+;ldap_name_field = "givenName sn"
 
-; This is the address of your ldap server (required)
-; DEFAULT: none
-;ldap_url = ""
-
-; Attributes where additional user information is stored (optional)
-; OpenLDAP ldap_name_field = "cn"
-; MAD ldap_name_field = "displayname"
-; DEFAULT: none
+; LDAP email field
+; DEFAULT = "mail"
 ;ldap_email_field = "mail"
-;ldap_name_field  = "cn"
+
+; LDAP protocol version to use
+; DEFAULT: 3
+;ldap_protocol_version = 3
+
+; LDAP StartTLS
+; DEFAULT: false
+;ldap_start_tls = "false"
+
+; LDAP member attribute name.
+; That's the name of the attribute of the group that will contain
+; the usernames.
+; DEFAULT: member
+;ldap_member_attribute = "member"
+;ldap_member_attribute = "memberuid"
+
 
 
 ;#########################################################
