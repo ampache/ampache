@@ -866,6 +866,7 @@ class User extends database_object
 
     public static function save_mediaplay($user, $media)
     {
+        debug_event('user.class.php', 'save_mediaplay...', 5);
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
@@ -873,7 +874,7 @@ class User extends database_object
                     $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $e) {
-                debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
+                debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), 1);
             }
         }
     }

@@ -1726,7 +1726,7 @@ class Subsonic_Api
         $submission = $input['submission'];
         //$time = $input['time'];
 
-        if ($submission === 'false' || $submission == 0) {
+        if ($submission === 'false' || $submission === '0') {
             $r = Subsonic_XML_Data::createSuccessResponse();
             self::apiOutput($input, $r);
         } else {
@@ -1746,7 +1746,7 @@ class Subsonic_Api
 
                 $media = new $type($aid);
                 $media->format();
-                $GLOBALS['user']->save_mediaplay($GLOBALS['user'], $media);
+                User::save_mediaplay($GLOBALS['user'], $media);
             }
 
             $r = Subsonic_XML_Data::createSuccessResponse();
