@@ -20,6 +20,7 @@
  *
  */
 
+
 /**
  *
  * This class handles all of the session related stuff in Ampache
@@ -266,129 +267,14 @@ class Auth
 
     /**
      * ldap_auth
-     * Step one, connect to the LDAP server and perform a search for the
-     * username provided.
-     * Step two, attempt to bind using that username and the password
-     * provided.
-     * Step three, figure out if they are authorized to use ampache:
-     * TODO: in config but unimplemented:
-     *      * require-dn "Grant access if the DN in the directive matches
-     *        the DN fetched from the LDAP directory"
-     *      * require-attribute "an attribute fetched from the LDAP
-     *        directory matches the given value"
      * @param string $username
      * @param string $password
      * @return array
      */
     private static function ldap_auth($username, $password)
     {
-        $ldap_username    = AmpConfig::get('ldap_username');
-        $ldap_password    = AmpConfig::get('ldap_password');
-
-        $require_group    = AmpConfig::get('ldap_require_group');
-
-        // This is the DN for the users (required)
-        $ldap_dn    = AmpConfig::get('ldap_search_dn');
-
-        // This is the server url (required)
-        $ldap_url    = AmpConfig::get('ldap_url');
-
-        // This is the ldap filter string (required)
-        $ldap_filter    = AmpConfig::get('ldap_filter');
-
-        //This is the ldap objectclass (required)
-        $ldap_class    = AmpConfig::get('ldap_objectclass');
-
-        $results = array();
-        if (!($ldap_dn && $ldap_url && $ldap_filter && $ldap_class)) {
-            debug_event('ldap_auth', 'Required config value missing', 1);
-            $results['success'] = false;
-            $results['error']   = 'Incomplete LDAP config';
-            return $results;
-        }
-
-        if (strpos($ldap_filter, "%v") !== false) {
-            $ldap_filter = str_replace("%v", $username, $ldap_filter);
-        } else {
-            // This to support previous configuration where only the fieldname was set
-            $ldap_filter = "($ldap_filter=$username)";
-        }
-
-        $ldap_name_field     = AmpConfig::get('ldap_name_field');
-        $ldap_email_field    = AmpConfig::get('ldap_email_field');
-
-        if ($ldap_link = ldap_connect($ldap_url) ) {
-
-            /* Set to Protocol 3 */
-            ldap_set_option($ldap_link, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-            // bind using our auth if we need to for initial search
-            if (!ldap_bind($ldap_link, $ldap_username, $ldap_password)) {
-                $results['success'] = false;
-                $results['error']   = 'Could not bind to LDAP server.';
-                return $results;
-            } // If bind fails
-
-            $searchstr = "(&(objectclass=$ldap_class)$ldap_filter)";
-            debug_event('ldap_auth', 'ldap_search: ' . $searchstr, 5);
-            $sr   = ldap_search($ldap_link, $ldap_dn, $searchstr);
-            $info = ldap_get_entries($ldap_link, $sr);
-
-            if ($info["count"] == 1) {
-                $user_entry = ldap_first_entry($ldap_link, $sr);
-                $user_dn    = ldap_get_dn($ldap_link, $user_entry);
-                // bind using the user..
-                $retval = ldap_bind($ldap_link, $user_dn, $password);
-
-                if ($retval) {
-                    // When the current user needs to be in
-                    // a specific group to access Ampache,
-                    // check whether the 'member' list of
-                    // the group contains the DN
-                    if ($require_group) {
-                        $group_result = ldap_read($ldap_link, $require_group, 'objectclass=*', array('member'));
-                        if (!$group_result) {
-                            debug_event('ldap_auth', "Failure reading $require_group", 1);
-                            $results['success'] = false;
-                            $results['error']   = 'The LDAP group could not be read';
-                            return $results;
-                        }
-
-                        $group_info = ldap_get_entries($ldap_link, $group_result);
-
-                        if ($group_info['count'] < 1) {
-                            debug_event('ldap_auth', "No members found in $require_group", 1);
-                            $results['success'] = false;
-                            $results['error']   = 'Empty LDAP group';
-                            return $results;
-                        }
-
-                        $group_match = preg_grep("/^$user_dn\$/i", $group_info[0]['member']);
-                        if (!$group_match) {
-                            debug_event('ldap_auth', "$user_dn is not a member of $require_group",1);
-                            $results['success'] = false;
-                            $results['error']   = 'LDAP login attempt failed';
-                            return $results;
-                        }
-                    }
-                    ldap_close($ldap_link);
-                    $results['success']  = true;
-                    $results['type']     = "ldap";
-                    $results['username'] = $username;
-                    $results['name']     = $info[0][$ldap_name_field][0];
-                    $results['email']    = $info[0][$ldap_email_field][0];
-
-                    return $results;
-                } // if we get something good back
-            } // if something was sent back
-        } // if failed connect
-
-        /* Default to bad news */
-        $results['success'] = false;
-        $results['error']   = 'LDAP login attempt failed';
-
-        return $results;
-    } // ldap_auth
+        return LDAP::auth($username, $password);
+    }
 
     /**
      * http_auth
