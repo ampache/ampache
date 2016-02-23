@@ -48,6 +48,7 @@
     <td><?php echo T_('Codec'); ?></td>
     <td>
         <input type="text" name="codec" value="<?php echo scrub_out($_REQUEST['codec']); ?>" />
+        <?php AmpError::display('codec'); ?>
     </td>
 </tr>
 <tr>
