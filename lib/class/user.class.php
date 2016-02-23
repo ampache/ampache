@@ -895,9 +895,10 @@ class User extends database_object
         }
         
         // Remove port information if any
-        if (strstr($sip, ':') !== false) {
-            $sipar = explode(':', $sip);
-            $sip   = $sipar[0];
+        if (!empty($sip)) {
+            // Use parse_url to support easily ipv6
+            $sipar = parse_url("http://" . $sip);
+            $sip = $sipar['host'];
         }
 
         $ip    = (!empty($sip)) ? Dba::escape(inet_pton($sip)) : '';
