@@ -1261,7 +1261,7 @@ class Query
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if ( $this->get_type() == 'artist' && !$this->_state['custom'] ) {
+        if ( ($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom'] ) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
