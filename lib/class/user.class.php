@@ -898,7 +898,7 @@ class User extends database_object
         if (!empty($sip)) {
             // Use parse_url to support easily ipv6
             $sipar = parse_url("http://" . $sip);
-            $sip = $sipar['host'];
+            $sip   = $sipar['host'];
         }
 
         $ip    = (!empty($sip)) ? Dba::escape(inet_pton($sip)) : '';

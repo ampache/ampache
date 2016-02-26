@@ -117,7 +117,7 @@ class WebPlayer
                 $types['real'] = $ftype;
             }
 
-            if ($urlinfo['type'] == 'song') {
+            if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
                 if ($types['real'] == "ogg" || $types['real'] == "opus") {
                     $types['player'] = "oga";
                 } else {

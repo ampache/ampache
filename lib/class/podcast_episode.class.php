@@ -412,4 +412,16 @@ class Podcast_Episode extends database_object implements media, library_item
             debug_event('podcast_episode', 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
         }
     }
+    
+    /**
+     * type_to_mime
+     *
+     * Returns the mime type for the specified file extension/type
+     * @param string $type
+     * @return string
+     */
+    public static function type_to_mime($type)
+    {
+        return Song::type_to_mime($type);
+    }
 }
