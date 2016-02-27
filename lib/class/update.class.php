@@ -541,6 +541,9 @@ class Update
         $update_string = "- Add library item context menu option.<br />";
         $version[]     = array('version' => '380006', 'description' => $update_string);
         
+        $update_string = "- Add upload rename pattern and ignore duplicate options.<br />";
+        $version[]     = array('version' => '380007', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -3819,6 +3822,32 @@ class Update
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval &= Dba::write($sql, array($id));
+
+        return $retval;
+    }
+    
+    /**
+     * update_380007
+     *
+     * Add upload rename pattern and ignore duplicate options
+     */
+    public static function update_380007()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`, `subcatagory`) " .
+            "VALUES ('upload_catalog_pattern','0','Rename uploaded file according to catalog pattern',0,'boolean','system','upload')";
+        $retval &= Dba::write($sql);
+        $id     = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $retval &= Dba::write($sql, array($id));
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`, `subcatagory`) " .
+            "VALUES ('catalog_check_duplicate','0','Check library item at import time and don\'t import duplicates',0,'boolean','system','catalog')";
+        $retval &= Dba::write($sql);
+        $id     = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval &= Dba::write($sql, array($id));
 
         return $retval;

@@ -200,6 +200,7 @@ function create_preference_input($name,$value)
         case 'webdav_backend':
         case 'notify_email':
         case 'libitem_contextmenu':
+        case 'upload_catalog_pattern':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {

@@ -691,37 +691,86 @@ class Catalog_local extends Catalog
         if (isset($options['artist_id'])) {
             $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
+            $artist                    = new Artist($results['artist_id']);
+            if ($artist->id) {
+                $results['artist'] = $artist->name;
+            }
         }
 
         if (isset($options['album_id'])) {
             $results['album_id'] = $options['album_id'];
+            $album               = new Album($results['album_id']);
+            if ($album->id) {
+                $results['album'] = $album->name;
+            }
+        }
+        
+        if (count($this->get_gather_types('music')) > 0) {
+            if (AmpConfig::get('catalog_check_duplicate')) {
+                if (Song::find($results)) {
+                    debug_event('catalog', 'Song already found, skipped to avoid duplicate', 5);
+                    return false;
+                }
+            }
+
+            if ($options['move_match_pattern']) {
+                $patres = vainfo::parse_pattern($file, $this->sort_pattern, $this->rename_pattern);
+                if ($patres['artist'] != $results['artist'] || $patres['album'] != $results['album'] || $patres['track'] != $results['track'] || $patres['title'] != $results['title']) {
+                    // Remove first left directories from filename to match pattern
+                    $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
+                    $filepart = explode(DIRECTORY_SEPARATOR, $file);
+                    if (count($filepart) > $cntslash) {
+                        $mvfile  = implode(DIRECTORY_SEPARATOR, array_slice($filepart, 0, count($filepart) - $cntslash));
+                        $pattern = $this->sort_pattern . DIRECTORY_SEPARATOR . $this->rename_pattern;
+                        preg_match_all('/\%\w/', $pattern, $elements);
+                        foreach ($elements[0] as $key => $value) {
+                            $key     = translate_pattern_code($value);
+                            $pattern = str_replace($value, $results[$key], $pattern);
+                        }
+                        $mvfile .= DIRECTORY_SEPARATOR . $pattern . '.' . pathinfo($file, PATHINFO_EXTENSION);
+                        debug_event('catalog', 'Unmatching pattern, moving `' . $file . '` to `' . $mvfile . '`...', 5);
+
+                        $mvdir = pathinfo($mvfile, PATHINFO_DIRNAME);
+                        if (!is_dir($mvdir)) {
+                            mkdir($mvdir, 0777, true);
+                        }
+                        if (rename($file, $mvfile)) {
+                            $results['file'] = $mvfile;
+                        } else {
+                            debug_event('catalog', 'File rename failed', 5);
+                        }
+                    }
+                }
+            }
         }
 
         $id = Song::insert($results);
-        // If song rating tag exists and is well formed (array user=>rating), add it
-        if ($id && array_key_exists('rating', $results) && is_array($results['rating'])) {
-            // For each user's ratings, call the function
-            foreach ($results['rating'] as $user => $rating) {
-                debug_event('Rating', "Setting rating for Song $id to $rating for user $user", 5);
-                $o_rating = new Rating($id, 'song');
-                $o_rating->set_rating($rating, $user);
+        if ($id) {
+            // If song rating tag exists and is well formed (array user=>rating), add it
+            if (array_key_exists('rating', $results) && is_array($results['rating'])) {
+                // For each user's ratings, call the function
+                foreach ($results['rating'] as $user => $rating) {
+                    debug_event('Rating', "Setting rating for Song $id to $rating for user $user", 5);
+                    $o_rating = new Rating($id, 'song');
+                    $o_rating->set_rating($rating, $user);
+                }
             }
-        }
-        // Extended metadata loading is not deferred, retrieve it now
-        if ($id && !AmpConfig::get('deferred_ext_metadata')) {
-            $song = new Song($id);
-            Recommendation::get_artist_info($song->artist);
-        }
-        if (Song::isCustomMetadataEnabled()) {
-            if (!$song) {
+            // Extended metadata loading is not deferred, retrieve it now
+            if (!AmpConfig::get('deferred_ext_metadata')) {
                 $song = new Song($id);
+                Recommendation::get_artist_info($song->artist);
             }
-            $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
-            self::add_metadata($song, $results);
-        }
-        $this->added_songs_to_gather[] = $id;
+            if (Song::isCustomMetadataEnabled()) {
+                if (!$song) {
+                    $song = new Song($id);
+                }
+                $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
+                self::add_metadata($song, $results);
+            }
+            $this->added_songs_to_gather[] = $id;
 
-        $this->_filecache[strtolower($file)] = $id;
+            $this->_filecache[strtolower($file)] = $id;
+        }
 
         return $id;
     }

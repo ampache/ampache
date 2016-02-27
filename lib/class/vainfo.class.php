@@ -1040,14 +1040,7 @@ class vainfo
     {
         $origin  = $filepath;
         $results = array();
-        if (strpos($filepath, '/') !== false) {
-            $slash_type      = '/';
-            $slash_type_preg = $slash_type;
-        } else {
-            $slash_type      = "\\";
-            $slash_type_preg = $slash_type . $slash_type;
-        }
-        $file = pathinfo($filepath,PATHINFO_FILENAME);
+        $file    = pathinfo($filepath, PATHINFO_FILENAME);
         
         if (in_array('tvshow', $this->gather_types)) {
             $season  = array();
@@ -1092,7 +1085,7 @@ class vainfo
 
             // Try to identify the show information from parent folder
             if (!$results['tvshow']) {
-                $folders = preg_split("~" . $slash_type . "~", $filepath, -1, PREG_SPLIT_NO_EMPTY);
+                $folders = preg_split("~" . DIRECTORY_SEPARATOR . "~", $filepath, -1, PREG_SPLIT_NO_EMPTY);
                 if ($results['tvshow_season'] && $results['tvshow_episode']) {
                     // We have season and episode, we assume parent folder is the tvshow name
                     $filetitle         = end($folders);
@@ -1129,46 +1122,58 @@ class vainfo
         }
         
         if (in_array('music', $this->gather_types) || in_array('clip', $this->gather_types)) {
-            // Combine the patterns
-            $pattern = preg_quote($this->_dir_pattern) . $slash_type_preg . preg_quote($this->_file_pattern);
-            
-            // Remove first left directories from filename to match pattern
-            $cntslash = substr_count($pattern, preg_quote($slash_type)) + 1;
-            $filepart = explode($slash_type, $filepath);
-            if (count($filepart) > $cntslash) {
-                $filepath = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
+            $patres  = vainfo::parse_pattern($filepath, $this->_dir_pattern, $this->_file_pattern);
+            $results = array_merge($results, $patres);
+            if ($this->islocal) {
+                $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
             }
-            
-            // Pull out the pattern codes into an array
-            preg_match_all('/\%\w/', $pattern, $elements);
-            
-            // Mangle the pattern by turning the codes into regex captures
-            $pattern = preg_replace('/\%[Ty]/', '([0-9]+?)', $pattern);
-            $pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
-            $pattern = str_replace('/', '\/', $pattern);
-            $pattern = str_replace(' ', '\s', $pattern);
-            $pattern = '/' . $pattern . '\..+$/';
-            
-            // Pull out our actual matches
-            preg_match($pattern, $filepath, $matches);
-            if ($matches != null) {
-                // The first element is the full match text
-                $matched = array_shift($matches);
-                debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filepath, 5);
-            
-                // Iterate over what we found
-                foreach ($matches as $key => $value) {
-                    $new_key = translate_pattern_code($elements['0'][$key]);
-                    if ($new_key) {
-                        $results[$new_key] = $value;
-                    }
-                }
+        }
+        return $results;
+    }
+    
+    public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
+    {
+        $results         = array();
+        $slash_type_preg = DIRECTORY_SEPARATOR;
+        if ($slash_type_preg == '\\') {
+            $slash_type_preg .= DIRECTORY_SEPARATOR;
+        }
+        // Combine the patterns
+        $pattern = preg_quote($dir_pattern) . $slash_type_preg . preg_quote($file_pattern);
 
-                $results['title'] = $results['title'] ?: basename($filepath);
-                if ($this->islocal) {
-                    $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
+        // Remove first left directories from filename to match pattern
+        $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
+        $filepart = explode(DIRECTORY_SEPARATOR, $filepath);
+        if (count($filepart) > $cntslash) {
+            $filepath = implode(DIRECTORY_SEPARATOR, array_slice($filepart, count($filepart) - $cntslash));
+        }
+
+        // Pull out the pattern codes into an array
+        preg_match_all('/\%\w/', $pattern, $elements);
+
+        // Mangle the pattern by turning the codes into regex captures
+        $pattern = preg_replace('/\%[Ty]/', '([0-9]+?)', $pattern);
+        $pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
+        $pattern = str_replace('/', '\/', $pattern);
+        $pattern = str_replace(' ', '\s', $pattern);
+        $pattern = '/' . $pattern . '\..+$/';
+
+        // Pull out our actual matches
+        preg_match($pattern, $filepath, $matches);
+        if ($matches != null) {
+            // The first element is the full match text
+            $matched = array_shift($matches);
+            debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filepath, 5);
+
+            // Iterate over what we found
+            foreach ($matches as $key => $value) {
+                $new_key = translate_pattern_code($elements['0'][$key]);
+                if ($new_key) {
+                    $results[$new_key] = $value;
                 }
             }
+
+            $results['title'] = $results['title'] ?: basename($filepath);
         }
         return $results;
     }

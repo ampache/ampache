@@ -381,7 +381,7 @@ class Song extends database_object implements media, library_item
             if ($albumartist) {
                 // Multiple artist per songs not supported for now
                 if ($albumartist_mbid) {
-                    $mbids            = split('/', $albumartist_mbid);
+                    $mbids            = explode('/', $albumartist_mbid);
                     $albumartist_mbid = trim($mbids[0]);
                 }
                 $albumartist_id = Artist::check($albumartist, $albumartist_mbid);
@@ -393,7 +393,7 @@ class Song extends database_object implements media, library_item
         if (!isset($results['artist_id'])) {
             // Multiple artist per songs not supported for now
             if ($artist_mbid) {
-                $mbids       = split('/', $artist_mbid);
+                $mbids       = explode('/', $artist_mbid);
                 $artist_mbid = trim($mbids[0]);
             }
             $artist_id = Artist::check($artist, $artist_mbid);
@@ -722,6 +722,51 @@ class Song extends database_object implements media, library_item
         } // end while
 
         return $results;
+    }
+    
+    public static function find($data)
+    {
+        $sql_base = "SELECT `song`.`id` FROM `song`";
+        if ($data['mb_trackid']) {
+            $sql        = $sql_base . " WHERE `song`.`mbid` = ? LIMIT 1";
+            $db_results = Dba::read($sql, array($data['mb_trackid']));
+            if ($results = Dba::fetch_assoc($db_results)) {
+                return $results['id'];
+            }
+        }
+        
+        $where  = "WHERE `song`.`title` = ?";
+        $sql    = $sql_base;
+        $params = array($data['title']);
+        if ($data['track']) {
+            $where .= " AND `song`.`track` = ?";
+            $params[] = $data['track'];
+        }
+        
+        $sql .= " INNER JOIN `album` ON `album`.`id` = `song`.`album`";
+        if ($data['mb_albumid']) {
+            $where .= " AND `album`.`mbid` = ?";
+            $params[] = $data['mb_albumid'];
+        } else {
+            $where .= " AND `album`.`name` = ?";
+            $params[] = $data['album'];
+            
+            if ($data['mb_artistid']) {
+                $where .= " AND `artist`.`mbid` = ?";
+                $params[] = $data['mb_artistid'];
+            } else {
+                $where .= " AND `artist`.`name` = ?";
+                $params[] = $data['artist'];
+            }
+        }
+        
+        $sql .= $where . " LIMIT 1";
+        $db_results = Dba::read($sql, $params);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return $results['id'];
+        }
+        
+        return false;
     }
 
     /**

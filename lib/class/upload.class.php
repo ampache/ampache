@@ -64,18 +64,22 @@ class Upload
 
                     $targetdir = realpath($targetdir);
                     if (strpos($targetdir, $rootdir) === false) {
-                        debug_event('upload', 'Something wrong with final upload path.', '1');
+                        debug_event('upload', 'Something wrong with final upload path.', 1);
                         return self::rerror();
                     }
 
-                    $targetfile = $targetdir . DIRECTORY_SEPARATOR . time() . '_' . $_FILES['upl']['name'];
+                    $targetfile = $targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name'];
                     if (Core::is_readable($targetfile)) {
-                        debug_event('upload', 'File `' . $targetfile . '` already exists.', '1');
-                        return self::rerror();
+                        debug_event('upload', 'File `' . $targetfile . '` already exists.', 3);
+                        $targetfile .= '_' . time();
+                        if (Core::is_readable($targetfile)) {
+                            debug_event('upload', 'File `' . $targetfile . '` already exists.', 1);
+                            return self::rerror();
+                        }
                     }
 
                     if (move_uploaded_file($_FILES['upl']['tmp_name'], $targetfile)) {
-                        debug_event('upload', 'File uploaded to `' . $targetfile . '`.', '5');
+                        debug_event('upload', 'File uploaded to `' . $targetfile . '`.', 5);
 
                         if (AmpConfig::get('upload_script')) {
                             chdir($targetdir);
@@ -157,8 +161,13 @@ class Upload
                         if ($album_id) {
                             $options['album_id'] = $album_id;
                         }
+                        if (AmpConfig::get('upload_catalog_pattern')) {
+                            $options['move_match_pattern'] = true;
+                        }
 
-                        $catalog->add_file($targetfile, $options);
+                        if (!$catalog->add_file($targetfile, $options)) {
+                            return self::rerror($targetfile);
+                        }
 
                         ob_get_contents();
                         ob_end_clean();
