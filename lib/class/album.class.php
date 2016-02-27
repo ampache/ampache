@@ -824,7 +824,8 @@ class Album extends database_object implements library_item
         }
 
         if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+            $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->f_name;
+            Art::display($type, $id, $title, $thumb, $this->link);
         }
     }
 

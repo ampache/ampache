@@ -65,7 +65,12 @@
     ?>
 <div class="np_group" id="np_group_3">
   <div class="np_cell cel_albumart">
-      <?php Art::display('album', $media->album, $media->get_fullname(), 1, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $media->album);
+      <?php
+      $album = new Album($media->album);
+    if ($album->id) {
+        $album->format();
+        $album->display_art(1);
+    }
     ?>
   </div>
 </div>
