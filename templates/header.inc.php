@@ -427,41 +427,34 @@ $_SESSION['login'] = false;
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float';
     ?>">
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path;
-    ?>/index.php">
-                        <img src="<?php echo $web_path;
-    ?>/images/topmenu-home.png" />
-                        <span><?php echo T_('Home');
-    ?></span>
+                    <a href="<?php echo $web_path ?>/index.php">
+                        <img src="<?php echo $web_path ?>/images/topmenu-home.png" />
+                        <span><?php echo T_('Home') ?></span>
                     </a>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path;
-    ?>/browse.php?action=artist">
-                        <img src="<?php echo $web_path;
-    ?>/images/topmenu-music.png" />
-                        <span><?php echo T_('Artists');
-    ?></span>
+                    <a href="<?php echo $web_path ?>/browse.php?action=artist">
+                        <img src="<?php echo $web_path ?>/images/topmenu-music.png" />
+                        <span><?php echo T_('Artists') ?></span>
                     </a>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path;
-    ?>/browse.php?action=playlist">
-                        <img src="<?php echo $web_path;
-    ?>/images/topmenu-playlist.png" />
-                        <span><?php echo T_('Playlists');
-    ?></span>
+                    <a href="<?php echo $web_path ?>/browse.php?action=playlist">
+                        <img src="<?php echo $web_path ?>/images/topmenu-playlist.png" />
+                        <span><?php echo T_('Playlists') ?></span>
                     </a>
                 </div>
+                <?php if (Access::check('interface', '25')) {
+    ?>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path;
-    ?>/stats.php?action=userflag">
-                        <img src="<?php echo $web_path;
-    ?>/images/topmenu-favorite.png" />
-                        <span><?php echo T_('Favorites');
-    ?></span>
+                    <a href="<?php echo $web_path ?>/stats.php?action=userflag">
+                        <img src="<?php echo $web_path ?>/images/topmenu-favorite.png" />
+                        <span><?php echo T_('Favorites') ?></span>
                     </a>
                 </div>
+                <?php 
+}
+    ?>
             </div>
         <?php 
 } ?>

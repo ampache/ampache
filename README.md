@@ -29,6 +29,11 @@ You get the latest version with recent changes and fixes but maybe in an unstabl
 [![Codacy Badge](https://api.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
+Installation
+------------
+
+Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
+
 Requirements
 ------------
 
@@ -47,15 +52,10 @@ receives the most testing:
     * hash
     * session
     * json
-    * simplexml (This is not strictly necessary, but may result in a better experience.)
-    * curl (This is not strictly necessary, but may result in a better experience.)
+    * simplexml (optional)
+    * curl (optional)
 
 * MySQL 5.x
-
-Installation
-------------
-
-Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
 
 Upgrading
 ---------
@@ -72,45 +72,7 @@ Ampache is free software; you can redistribute it and/or
 modify it under the terms of the GNU Affero General Public License v3 (AGPLv3)
 as published by the Free Software Foundation.
 
-Ampache includes some external modules that carry their own licensing.
-
-* [getID3](http://getid3.sourceforge.net): GPL v2
-* [Horde_Browser](http://www.horde.org): LGPL v2.1
-* [Gettext](https://github.com/oscarotero/Gettext): MIT
-* [MusicBrainz](https://github.com/mikealmond/MusicBrainz): MIT
-* PHP MPD interface: GPL v2
-* [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
-* [jQuery](https://jquery.org/): MIT
-* [Requests](http://requests.ryanmccue.info): ISC Licensed
-* [xbmc-php-rpc](https://github.com/krixon/xbmc-php-rpc): GPL v3
-* [Dropbox SDK](https://github.com/dropbox/dropbox-sdk-php): MIT
-* [jPlayer](http://jplayer.org): MIT
-* [prettyPhoto](http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone): GPL v2
-* [Tag-it!] (http://aehlke.github.io/tag-it): MIT
-* [PHP Echo Nest API] (https://github.com/bshaffer/php-echonest-api): MIT
-* [Noty] (http://ned.im/noty/): MIT
-* [jScroll] (https://github.com/pklauzinski/jscroll): MIT
-* [jquery.qrcode] (http://jeromeetienne.github.io/jquery-qrcode): MIT
-* [PHP OpenID] (https://github.com/openid/php-openid): Apache License
-* [Ratchet] (http://socketo.me): MIT
-* [ReactPHP] (https://github.com/reactphp/react): MIT
-* [Guzzle] (https://github.com/guzzle/guzzle): MIT
-* [Symfony Components] (https://github.com/symfony): MIT
-* [Evenement] (https://github.com/igorw/evenement): MIT
-* [RhinoSlider] (http://www.rhinoslider.com/): MIT
-* [MediaTable] (https://github.com/edenspiekermann/MediaTable): MIT
-* [Responsive Elements] (https://github.com/kumailht/responsive-elements): MIT
-* [Bootstrap] (http://getbootstrap.com): MIT
-* [jQuery Knob] (https://github.com/aterrien/jQuery-Knob): MIT
-* [jQuery File Upload] (https://github.com/blueimp/jQuery-File-Upload): MIT
-* [jsTree] (https://www.jstree.com/): MIT
-* [php-tmdb-api] (https://github.com/php-tmdb/api) : MIT
-* [TvDb] (https://github.com/Moinax/TvDb) : MIT
-* [jQuery DateTimePicker] (https://github.com/xdan/datetimepicker) : MIT
-* [pChart] (http://www.pchart.net) : GPL v3
-* [ZipStream-PHP] (https://github.com/maennchen/ZipStream-PHP) : [ZipStream-PHP license] (modules/zipstream/COPYING)
-* [SabreDAV] (https://github.com/fruux/sabre-dav) : New BSD
-
+Ampache includes some [external modules](https://github.com/ampache/ampache/blob/develop/composer.lock) that carry their own licensing.
 
 Translations
 ------------

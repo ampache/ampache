@@ -201,6 +201,7 @@ function create_preference_input($name,$value)
         case 'notify_email':
         case 'libitem_contextmenu':
         case 'upload_catalog_pattern':
+        case 'catalogfav_gridview':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {

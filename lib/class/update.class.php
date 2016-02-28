@@ -2782,7 +2782,7 @@ class Update
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         $retval &= Dba::write($sql);
 
-        $sql    = "INSERT INTO `license`(`name`, `external_link`) VALUES ('_default', '')";
+        $sql    = "INSERT INTO `license`(`name`, `external_link`) VALUES ('0 - default', '')";
         $retval &= Dba::write($sql);
         $sql    = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY', 'https://creativecommons.org/licenses/by/3.0/')";
         $retval &= Dba::write($sql);

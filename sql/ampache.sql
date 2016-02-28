@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `license` (
 --
 
 INSERT INTO `license` (`id`, `name`, `description`, `external_link`) VALUES
-(1, '_default', NULL, ''),
+(1, '0 - default', NULL, ''),
 (2, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/3.0/'),
 (3, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/3.0/'),
 (4, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/3.0/'),

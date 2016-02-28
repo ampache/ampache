@@ -33,6 +33,7 @@ class AmpacheCatalogFavorites
     // These are internal settings used by this class, run this->load to
     // fill them out
     private $maxitems;
+    private $gridview;
 
     /**
      * Constructor
@@ -56,7 +57,7 @@ class AmpacheCatalogFavorites
         }
 
         Preference::insert('catalogfav_max_items','Catalog favorites max items','5','25','integer','plugins',$this->name);
-        Preference::insert('catalogfav_columns','Catalog favorites columns','1','25','integer','plugins',$this->name);
+        Preference::insert('catalogfav_gridview','Catalog favorites grid view display','1','25','boolean','plugins',$this->name);
 
         return true;
     }
@@ -69,6 +70,7 @@ class AmpacheCatalogFavorites
     public function uninstall()
     {
         Preference::delete('catalogfav_max_items');
+        Preference::delete('catalogfav_gridview');
 
         return true;
     }
@@ -81,7 +83,7 @@ class AmpacheCatalogFavorites
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version < 2) {
-            Preference::insert('catalogfav_columns','Catalog favorites columns','1','25','integer','plugins');
+            Preference::insert('catalogfav_gridview','Catalog favorites grid view display','1','25','boolean','plugins');
         }
         return true;
     }
@@ -95,7 +97,11 @@ class AmpacheCatalogFavorites
         if (AmpConfig::get('userflags')) {
             $userflags = Userflag::get_latest(null, -1, $this->maxitems);
             $i         = 0;
-            echo '<div class="home_plugin"><table class="tabledata">';
+            echo '<div class="home_plugin"><table class="tabledata';
+            if (!$this->gridview) {
+                echo " disablegv";
+            }
+            echo '">';
             foreach ($userflags as $userflag) {
                 $item = new $userflag['type']($userflag['id']);
                 $item->format();
@@ -103,33 +109,38 @@ class AmpacheCatalogFavorites
                 $user->format();
                 
                 if ($item->id) {
-                    echo '<tr class="' . ((($i % 2) == 0) ? 'even' : 'odd') . '"><td>';
-                    echo '<div>';
-                    echo '<div style="float: left;">';
-                    echo '<span style="font-weight: bold;">' . $item->f_link . '</span> ';
-                    echo '<span style="margin-right: 10px;">';
-                    if (AmpConfig::get('directplay')) {
-                        echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'],'play', T_('Play'),'play_' . $userflag['type'] . '_' . $userflag['id']);
-                        if (Stream_Playlist::check_autoplay_append()) {
-                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&append=true','play_add', T_('Play last'),'addplay_' . $userflag['type'] . '_' . $userflag['id']);
+                    echo '<tr class="' . ((($i % 2) == 0) ? 'even' : 'odd') . '">';
+                    echo '<td style="height: auto;">';
+                    if ($this->gridview) {
+                        echo '<span style="font-weight: bold;">' . $item->f_link . '</span> ';
+                        echo '<span style="margin-right: 10px;">';
+                        if (AmpConfig::get('directplay')) {
+                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'],'play', T_('Play'),'play_' . $userflag['type'] . '_' . $userflag['id']);
+                            if (Stream_Playlist::check_autoplay_append()) {
+                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&append=true','play_add', T_('Play last'),'addplay_' . $userflag['type'] . '_' . $userflag['id']);
+                            }
                         }
+                        echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'],'add', T_('Add to temporary playlist'),'play_full_' . $userflag['id']);
+                        echo '</span>';
                     }
-                    echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'],'add', T_('Add to temporary playlist'),'play_full_' . $userflag['id']);
-                    echo '</span>';
-                    echo '</div>';
-                    echo '<div style="float: right; opacity: 0.5;">' . T_('recommended by') . ' ' . $user->f_link . '</div>';
 
-                    echo '</div><br />';
-
-                    echo '<div style="margin-left: 30px;">';
                     echo '<div style="float: left; margin-right: 20px;">';
-                    $thumb = UI::is_grid_view('album') ? 2 : 11;
+                    $thumb = $this->gridview ? 2 : 11;
                     $item->display_art($thumb);
                     echo '</div>';
-
+                    echo '</td>';
+                    
+                    if (!$this->gridview) {
+                        echo '<td>' . $item->f_link . '</td>';
+                    }
+                    
+                    echo '<td class="optional">';
                     echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';
                     echo '</div>';
-
+                    if ($this->gridview) {
+                        echo '<div style="float: right; opacity: 0.5;">' . T_('recommended by') . ' ' . $user->f_link . '</div>';
+                        echo '</div><br />';
+                    }
                     echo '</td></tr>';
 
                     $i++;
@@ -153,6 +164,7 @@ class AmpacheCatalogFavorites
         if ($this->maxitems < 1) {
             $this->maxitems = 5;
         }
+        $this->gridview = ($data['catalogfav_gridview'] == '1');
 
         return true;
     }

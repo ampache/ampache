@@ -446,7 +446,7 @@ function show_license_select($name='license',$license_id=0,$song_id=0)
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
 
-    $sql        = "SELECT `id`, `name` FROM `license` ORDER BY `name`";
+    $sql        = "SELECT `id`, `name`, `description`, `external_link` FROM `license` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
     while ($r = Dba::fetch_assoc($db_results)) {
@@ -455,10 +455,18 @@ function show_license_select($name='license',$license_id=0,$song_id=0)
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . $r['name'] . "</option>\n";
+        echo "\t<option value=\"" . $r['id'] . "\" $selected";
+        if (!empty($r['description'])) {
+            echo " title=\"" . addslashes($r['description']) . "\"";
+        }
+        if (!empty($r['external_link'])) {
+            echo " data-link=\"" . $r['external_link'] . "\"";
+        }
+        echo ">" . $r['name'] . "</option>\n";
     } // end while
 
     echo "</select>\n";
+    echo "<a href=\"javascript:show_selected_license_link('" . $key . "');\">" . T_('View License') . "</a>";
 } // show_license_select
 
 /**
