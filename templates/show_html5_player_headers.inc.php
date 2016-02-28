@@ -96,6 +96,7 @@ function ExitPlayer()
 {
     $("#webplayer").text('');
     $("#webplayer").hide();
+    $("#webplayer-minimize").hide();
 
 <?php
 if (AmpConfig::get('song_page_title')) {
@@ -103,6 +104,28 @@ if (AmpConfig::get('song_page_title')) {
 }
 ?>
     document.onbeforeunload = null;
+}
+
+function TogglePlayerVisibility()
+{
+    if ($("#webplayer").is(":visible")) {
+        $("#webplayer").slideUp();
+    } else {
+        $("#webplayer").slideDown();
+    }
+}
+
+function TogglePlaylistExpand()
+{
+    if ($(".jp-playlist").css("opacity") !== '1') {
+        $(".jp-playlist").css('top', '-255%');
+        $(".jp-playlist").css('opacity', '1');
+        $(".jp-playlist").css('height', '350%');
+    } else {
+        $(".jp-playlist").css('top', '0px');
+        $(".jp-playlist").css('opacity', '0.9');
+        $(".jp-playlist").css('height', '95%');
+    }
 }
 </script>
 <?php
@@ -207,6 +230,7 @@ function ShowVisualizer()
             vizPrevPlayerColor = $('#webplayer').css('background-color');
             $('#webplayer').css('cssText', 'background-color: #000 !important;');
             $('#webplayer').show();
+            $("#webplayer-minimize").show();
             $('.jp-interface').css('background-color', '#000');
             $('.jp-playlist').css('background-color', '#000');
         } else {

@@ -59,6 +59,7 @@ if ($_REQUEST['append']) {
         <?php echo WebPlayer::play_next_js($this); ?>
     } else {
         $webplayer.show();
+        $("#webplayer-minimize").show();
         $.get('<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>', function (data) {
             var $response = $(data);
             $webplayer.empty().append($response);

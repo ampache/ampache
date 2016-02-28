@@ -837,6 +837,21 @@ a.jp-shuffle-off:hover {
     z-index: 9999;
 }
 
+#webplayer-minimize {
+    font-size: 0.67em;
+    text-align: left;
+    position: fixed;
+	display: none;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+#webplayer-minimize a{
+    color: #CCC;
+    z-index: 10000;
+}
+
 .player_actions {
     position: absolute;
     top: 2px;
