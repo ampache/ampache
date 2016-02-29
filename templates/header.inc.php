@@ -444,7 +444,13 @@ $_SESSION['login'] = false;
                         <span><?php echo T_('Playlists') ?></span>
                     </a>
                 </div>
-                <?php if (Access::check('interface', '25')) {
+                <div id="topmenu_item">
+                    <a href="<?php echo $web_path ?>/browse.php?action=tag">
+                        <img src="<?php echo $web_path ?>/images/topmenu-tagcloud.png" />
+                        <span><?php echo T_('Tag Cloud') ?></span>
+                    </a>
+                </div>
+                <?php if (AmpConfig::get('userflags') && Access::check('interface', '25')) {
     ?>
                 <div id="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
@@ -455,10 +461,21 @@ $_SESSION['login'] = false;
                 <?php 
 }
     ?>
+                <?php if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) {
+    ?>
+                <div id="topmenu_item">
+                    <a href="<?php echo $web_path ?>/upload.php">
+                        <img src="<?php echo $web_path ?>/images/topmenu-upload.png" />
+                        <span><?php echo T_('Upload') ?></span>
+                    </a>
+                </div>
+                <?php 
+}
+    ?>
             </div>
         <?php 
 } ?>
-            <?php $isCollapsed = $_COOKIE['sidebar_state'] == "collapsed"; ?>
+            <?php $isCollapsed = ((AmpConfig::get('sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed"); ?>
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" ><span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span></div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >

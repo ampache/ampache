@@ -808,7 +808,7 @@ class Album extends database_object implements library_item
         return $artist->get_description();
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
@@ -817,7 +817,7 @@ class Album extends database_object implements library_item
             $id   = $this->id;
             $type = 'album';
         } else {
-            if (Art::has_db($this->artist_id, 'artist')) {
+            if (Art::has_db($this->artist_id, 'artist') || $force) {
                 $id   = $this->artist_id;
                 $type = 'artist';
             }

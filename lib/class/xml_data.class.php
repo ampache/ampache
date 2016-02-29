@@ -195,9 +195,9 @@ class XML_Data
      * This returns the formatted 'playlistTrack' string for an xml document
      *
      */
-    private static function playlist_song_tracks_string($song,$playlist_data)
+    private static function playlist_song_tracks_string($song, $playlist_data)
     {
-        if ($playlist_data == "") {
+        if (empty($playlist_data)) {
             return "";
         }
         $playlist_track = "";
@@ -424,7 +424,7 @@ class XML_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs,$playlist_data='')
+    public static function songs($songs, $playlist_data='')
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);

@@ -157,7 +157,7 @@ abstract class playlist_object extends database_object implements library_item
         return null;
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         // no art
     }

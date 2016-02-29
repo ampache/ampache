@@ -126,7 +126,7 @@ class AmpacheCatalogFavorites
 
                     echo '<div style="float: left; margin-right: 20px;">';
                     $thumb = ($this->gridview && UI::is_grid_view('album')) ? 2 : 11;
-                    $item->display_art($thumb);
+                    $item->display_art($thumb, true);
                     echo '</div>';
                     echo '</td>';
                     

@@ -437,7 +437,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .sidebar-collapsed {
-    width: 50px !important;
+    width: 70px !important;
 }
 
 .sidebar-header-title {
@@ -471,7 +471,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .sidebar-header-collapsed {
-    width: 50px !important;
+    width: 70px !important;
     position: fixed;
 }
 
@@ -495,16 +495,20 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #sidebar-content-light {
     padding: 0px;
     display: none;
-    width: 50px;
+    width: 70px;
 }
 
 #sidebar-light {
-    width: 50px;
+    width: 70px;
     position: fixed;
     left: 0px;
     margin: 17px auto 5px 5px;
     padding: 10px 0 10px 0;
     text-align: center;
+}
+
+#sidebar-light li {
+	padding-top: 10px;
 }
 
 #sidebar-light img {
@@ -777,7 +781,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .content-left-wild {
-    margin-left: 70px !important;
+    margin-left: 90px !important;
 }
 
 .content-fixed {

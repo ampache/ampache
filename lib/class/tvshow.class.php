@@ -262,9 +262,9 @@ class TVShow extends database_object implements library_item
         return $this->summary;
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'tvshow')) {
+        if (Art::has_db($this->id, 'tvshow') || $force) {
             Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }

@@ -206,7 +206,7 @@ class Podcast_Episode extends database_object implements media, library_item
         return $this->f_description;
     }
     
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
@@ -215,7 +215,7 @@ class Podcast_Episode extends database_object implements media, library_item
             $id   = $this->id;
             $type = 'podcast_episode';
         } else {
-            if (Art::has_db($this->podcast, 'podcast')) {
+            if (Art::has_db($this->podcast, 'podcast') || $force) {
                 $id   = $this->podcast;
                 $type = 'podcast';
             }

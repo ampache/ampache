@@ -227,7 +227,7 @@ class TVShow_Season extends database_object implements library_item
         return $tvshow->get_description();
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
@@ -236,7 +236,7 @@ class TVShow_Season extends database_object implements library_item
             $id   = $this->id;
             $type = 'tvshow_season';
         } else {
-            if (Art::has_db($this->tvshow, 'tvshow')) {
+            if (Art::has_db($this->tvshow, 'tvshow') || $force) {
                 $id   = $this->tvshow;
                 $type = 'tvshow';
             }

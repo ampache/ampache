@@ -226,9 +226,9 @@ class Podcast extends database_object implements library_item
         return $this->f_description;
     }
     
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'podcast')) {
+        if (Art::has_db($this->id, 'podcast') || $force) {
             Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }

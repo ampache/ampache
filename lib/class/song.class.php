@@ -1592,7 +1592,7 @@ class Song extends database_object implements media, library_item
         return $album->get_description();
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
@@ -1605,7 +1605,7 @@ class Song extends database_object implements media, library_item
                 $id   = $this->album;
                 $type = 'album';
             } else {
-                if (Art::has_db($this->artist, 'artist')) {
+                if (Art::has_db($this->artist, 'artist') || $force) {
                     $id   = $this->artist;
                     $type = 'artist';
                 }

@@ -619,12 +619,12 @@ class Artist extends database_object implements library_item
         return $this->summary;
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
 
-        if (Art::has_db($this->id, 'artist')) {
+        if (Art::has_db($this->id, 'artist') || $force) {
             $id   = $this->id;
             $type = 'artist';
         }

@@ -544,6 +544,9 @@ class Update
         $update_string = "- Add upload rename pattern and ignore duplicate options.<br />";
         $version[]     = array('version' => '380007', 'description' => $update_string);
         
+        $update_string = "- Add browse filter and light sidebar options.<br />";
+        $version[]     = array('version' => '380008', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -3837,14 +3840,40 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`, `subcatagory`) " .
-            "VALUES ('upload_catalog_pattern','0','Rename uploaded file according to catalog pattern',0,'boolean','system','upload')";
+            "VALUES ('upload_catalog_pattern','0','Rename uploaded file according to catalog pattern',100,'boolean','system','upload')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval &= Dba::write($sql, array($id));
         
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`, `subcatagory`) " .
-            "VALUES ('catalog_check_duplicate','0','Check library item at import time and don\'t import duplicates',0,'boolean','system','catalog')";
+            "VALUES ('catalog_check_duplicate','0','Check library item at import time and don\'t import duplicates',100,'boolean','system','catalog')";
+        $retval &= Dba::write($sql);
+        $id     = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $retval &= Dba::write($sql, array($id));
+
+        return $retval;
+    }
+    
+    /**
+     * update_380008
+     *
+     * Add browse filter and light sidebar options
+     */
+    public static function update_380008()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`, `subcatagory`) " .
+            "VALUES ('browse_filter','1','Show filter box on browse',25,'boolean','interface','library')";
+        $retval &= Dba::write($sql);
+        $id     = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval &= Dba::write($sql, array($id));
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`, `subcatagory`) " .
+            "VALUES ('sidebar_light','0','Light sidebar by default',25,'boolean','interface','theme')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
