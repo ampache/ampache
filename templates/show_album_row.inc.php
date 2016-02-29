@@ -118,9 +118,6 @@ if (Art::is_enabled()) {
         if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
             Share::display_ui('album', $libitem->id, false);
         }
-        if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
-            Share::display_ui('album', $libitem->id, false);
-        }
     }
     if (Access::check_function('batch_download') && check_can_zip('album')) {
         ?>
