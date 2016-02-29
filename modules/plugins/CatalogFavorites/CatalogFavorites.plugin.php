@@ -109,7 +109,7 @@ class AmpacheCatalogFavorites
                 $user->format();
                 
                 if ($item->id) {
-                    echo '<tr class="' . ((($i % 2) == 0) ? 'even' : 'odd') . '">';
+                    echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="' . ((($i % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
                     echo '<td style="height: auto;">';
                     if ($this->gridview) {
                         echo '<span style="font-weight: bold;">' . $item->f_link . '</span> ';

@@ -64,7 +64,7 @@
 <?php if (Art::is_enabled()) {
     ?>
 <div class="np_group" id="np_group_3">
-  <div class="np_cell cel_albumart">
+  <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
       <?php
       $album = new Album($media->album);
     if ($album->id) {

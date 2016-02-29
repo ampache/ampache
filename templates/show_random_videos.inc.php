@@ -31,7 +31,7 @@ if ($videos) {
         $video->format();
         ?>
     <div class="random_video">
-        <div class="art_album">
+        <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
             <?php if (Art::is_enabled()) {
     $release_art = $video->get_release_item_art();
     $thumb       = UI::is_grid_view('video') ? 6 : 7;

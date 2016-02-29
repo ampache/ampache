@@ -32,7 +32,7 @@ if ($albums) {
         $show_play = true;
         ?>
     <div class="random_album">
-        <div class="art_album">
+        <div id="album_<?php echo $album_id ?>" class="art_album libitem_menu">
             <?php
             if (Art::is_enabled()) {
                 $thumb = 1;
