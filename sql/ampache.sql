@@ -477,10 +477,10 @@ CREATE TABLE IF NOT EXISTS `now_playing` (
 DROP TABLE IF EXISTS `object_count`;
 CREATE TABLE IF NOT EXISTS `object_count` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video') CHARACTER SET utf8 DEFAULT NULL,
+  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET utf8 DEFAULT NULL,
   `object_id` int(11) unsigned NOT NULL DEFAULT '0',
   `date` int(11) unsigned NOT NULL DEFAULT '0',
-  `user` int(11) unsigned NOT NULL,
+  `user` int(11) NOT NULL,
   `agent` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `geo_latitude` decimal(10,6) DEFAULT NULL,
   `geo_longitude` decimal(10,6) DEFAULT NULL,

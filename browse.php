@@ -131,6 +131,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'playlist':
         $browse->set_sort('type','ASC');
+        $browse->set_sort('last_update','DESC');
         $browse->set_filter('playlist_type','1');
         $browse->update_browse_from_session();
         $browse->show_objects();

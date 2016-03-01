@@ -547,6 +547,9 @@ class Update
         $update_string = "- Add browse filter and light sidebar options.<br />";
         $version[]     = array('version' => '380008', 'description' => $update_string);
         
+        $update_string = "- Add update date to playlist.<br />";
+        $version[]     = array('version' => '380009', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -3878,6 +3881,21 @@ class Update
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval &= Dba::write($sql, array($id));
+
+        return $retval;
+    }
+    
+    /**
+     * update_380009
+     *
+     * Add update date to playlist
+     */
+    public static function update_380009()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `playlist` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }

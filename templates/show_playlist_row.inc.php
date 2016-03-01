@@ -36,7 +36,16 @@
     ?>
     </div>
 </td>
-<td class="cel_playlist"><?php echo $libitem->f_link; ?></td>
+<?php if (AmpConfig::get('playlist_art')) {
+    ?>
+<td class="cel_cover">
+    <?php
+    $libitem->display_art(3);
+    ?>
+</td>
+<?php 
+} ?>
+<td class="cel_playlist"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php
@@ -53,6 +62,7 @@
         ?>
     </span>
 </td>
+<td class="cel_last_update"><?php echo $libitem->f_last_update ?></td>
 <td class="cel_type"><?php echo $libitem->f_type; ?></td>
 <td class="cel_medias"><?php echo $libitem->get_media_count(); ?></td>
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>

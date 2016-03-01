@@ -159,7 +159,36 @@ abstract class playlist_object extends database_object implements library_item
 
     public function display_art($thumb = 2, $force = false)
     {
-        // no art
+        if (AmpConfig::get('playlist_art')) {
+            $medias     = $this->get_medias();
+            $media_arts = array();
+            foreach ($medias as $media) {
+                if (Core::is_library_item($media['object_type'])) {
+                    if (!Art::has_db($media['object_id'], $media['object_type'])) {
+                        $libitem = new $media['object_type']($media['object_id']);
+                        $parent  = $libitem->get_parent();
+                        if ($parent !== null) {
+                            $media = $parent;
+                        } elseif (!$force) {
+                            $media = null;
+                        }
+                    }
+
+                    if ($media !== null) {
+                        if (!in_array($media, $media_arts)) {
+                            $media_arts[] = $media;
+                            if (count($media_arts) >= 4) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            foreach ($media_arts as $media) {
+                Art::display($media['object_type'], $media['object_id'], $this->get_fullname(), $thumb, $this->link);
+            }
+        }
     }
 
     /**

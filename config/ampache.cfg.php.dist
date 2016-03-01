@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 33
+config_version = 34
 
 ;#########################################################
 ; Path Vars                                              #
@@ -471,6 +471,13 @@ sociable = "true"
 ; If you have high-quality album art and a small upload cap
 ; DEFAULT: false
 ;resize_images = "false"
+
+; Playlist Cover Art
+; Set this to true if you want Ampache to generate
+; cover art for playlists automatically based on
+; the content.
+; DEFAULT: false
+;playlist_art = "false"
 
 ; Statistical Graphs * Requires PHP-GD *
 ; Set this to true if you want Ampache to generate statistical

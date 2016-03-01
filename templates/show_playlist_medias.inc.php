@@ -26,10 +26,15 @@ $web_path = AmpConfig::get('web_path');
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
-    <table id="reorder_playlist_table" class="tabledata" cellpadding="0" cellspacing="0">
+    <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="media">
         <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>
+                <?php if (Art::is_enabled()) {
+    ?>
+                <th class="cel_cover optional"><?php echo T_('Art') ?></th>
+                <?php 
+} ?>
                 <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
                 <th class="cel_add essential"></th>
                 <th class="cel_time optional"><?php echo T_('Time'); ?></th>
@@ -38,7 +43,7 @@ $web_path = AmpConfig::get('web_path');
                     <?php if (AmpConfig::get('ratings')) {
     ;
     ?>
-                        <th class="cel_rating"><?php echo T_('Rating');
+                        <th class="cel_rating optional"><?php echo T_('Rating');
     ?></th>
                     <?php 
 }
@@ -48,7 +53,7 @@ $web_path = AmpConfig::get('web_path');
                 <?php 
 }
     ?>
-                <th class="cel_userflag essential"><?php echo T_('Fav.');
+                <th class="cel_userflag optional"><?php echo T_('Fav.');
     ?></th>
             <?php 
 } ?>
@@ -79,6 +84,11 @@ $web_path = AmpConfig::get('web_path');
         <tfoot>
             <tr class="th-bottom">
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
+                <?php if (Art::is_enabled()) {
+    ?>
+                <th class="cel_cover"><?php echo T_('Art') ?></th>
+                <?php 
+} ?>
                 <th class="cel_title"><?php echo T_('Title'); ?></th>
                 <th class="cel_add"></th>
                 <th class="cel_time"><?php echo T_('Time'); ?></th>

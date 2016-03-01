@@ -277,7 +277,8 @@ class Query
             ),
             'playlist' => array(
                 'name',
-                'user'
+                'user',
+                'last_update'
             ),
             'smartplaylist' => array(
                 'name',
@@ -1963,6 +1964,9 @@ class Query
                     break;
                     case 'user':
                         $sql = "`playlist`.`user`";
+                    break;
+                    case 'last_update':
+                        $sql = "`playlist`.`last_update`";
                     break;
                 } // end switch
             break;

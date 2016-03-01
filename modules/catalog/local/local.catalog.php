@@ -519,7 +519,6 @@ class Catalog_local extends Catalog
 
         debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5);
 
-        self::gc();
         $this->update_last_update();
 
         return array('total' => $number, 'updated' => $total_updated);

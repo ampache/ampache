@@ -1511,8 +1511,6 @@ abstract class Catalog extends database_object
                 flush();
             }
         } // foreach songs
-
-        self::gc();
     } // update_single_item
 
     /**
@@ -1800,9 +1798,6 @@ abstract class Catalog extends database_object
         $dead_total = $this->clean_catalog_proc();
 
         debug_event('clean', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
-
-        // Remove any orphaned artists/albums/etc.
-        self::gc();
 
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
@@ -2171,8 +2166,6 @@ abstract class Catalog extends database_object
         $sql = "DELETE FROM `catalog` WHERE `id` = ?";
         Dba::write($sql, array($catalog_id));
 
-        // Run the cleaners...
-        self::gc();
         return true;
     } // delete
 
@@ -2409,6 +2402,9 @@ abstract class Catalog extends database_object
                 }
                 break;
         }
+        
+        // Remove any orphaned artists/albums/etc.
+        self::gc();
     }
 }
 

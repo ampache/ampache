@@ -97,7 +97,9 @@ class AmpacheCatalogFavorites
         if (AmpConfig::get('userflags')) {
             $userflags = Userflag::get_latest(null, -1, $this->maxitems);
             $i         = 0;
-            echo '<div class="home_plugin"><table class="tabledata';
+            echo '<div class="home_plugin">';
+            UI::show_box_top(T_('Highlight'));
+            echo '<table class="tabledata';
             if (!$this->gridview) {
                 echo " disablegv";
             }
@@ -146,7 +148,9 @@ class AmpacheCatalogFavorites
                     $i++;
                 }
             }
-            echo '</table></div>';
+            echo '</table>';
+            UI::show_box_bottom();
+            echo '</div>';
         }
     }
 
