@@ -76,7 +76,9 @@ class vainfo
         }
         $this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']);
 
-        if ($this->islocal) {
+        $enabled_sources = (array) $this->get_metadata_order();
+
+        if (in_array('getID3', $enabled_sources) && $this->islocal) {
             // Initialize getID3 engine
             $this->_getID3 = new getID3();
 
@@ -206,7 +208,9 @@ class vainfo
             return true;
         }
 
-        if ($this->islocal) {
+        $enabled_sources = (array) $this->get_metadata_order();
+
+        if (in_array('getID3', $enabled_sources) && $this->islocal) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
             } catch (Exception $error) {
@@ -216,8 +220,6 @@ class vainfo
 
         /* Figure out what type of file we are dealing with */
         $this->type = $this->_get_type();
-
-        $enabled_sources = (array) $this->get_metadata_order();
 
         if (in_array('filename', $enabled_sources)) {
             $this->tags['filename'] = $this->_parse_filename($this->filename);
