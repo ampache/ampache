@@ -24,9 +24,14 @@ $web_path = AmpConfig::get('web_path');
 ?>
 
 <ul id="sidebar-light">
-    <li><a href="<?php echo $web_path ?>/browse.php?action=artist"><img src="<?php echo $web_path ?>/images/topmenu-music.png" title="<?php echo T_('Artists') ?>" /><br /><?php echo T_('Artists') ?></a></li>
+    <li><a href="<?php echo $web_path ?>/mashup.php?action=artist"><img src="<?php echo $web_path ?>/images/topmenu-music.png" title="<?php echo T_('Artists') ?>" /><br /><?php echo T_('Artists') ?></a></li>
     <li><a href="<?php echo $web_path ?>/browse.php?action=playlist"><img src="<?php echo $web_path ?>/images/topmenu-playlist.png" title="<?php echo T_('Playlists') ?>" /><br /><?php echo T_('Playlists') ?></a></li>
     <li><a href="<?php echo $web_path ?>/browse.php?action=tag"><img src="<?php echo $web_path ?>/images/topmenu-tagcloud.png" title="<?php echo T_('Tag Cloud') ?>" /><br /><?php echo T_('Tag Cloud') ?></a></li>
+    <?php if (AmpConfig::get('live_stream') && Access::check('interface', 25)) {
+    ?>
+    <li><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><img src="<?php echo $web_path ?>/images/topmenu-radio.png" title="<?php echo T_('Radio Stations') ?>" /><br /><?php echo T_('Radio') ?></a></li>
+    <?php 
+} ?>
     <?php if (AmpConfig::get('userflags') && Access::check('interface', 25)) {
     ?>
     <li><a href="<?php echo $web_path ?>/stats.php?action=userflag"><img src="<?php echo $web_path ?>/images/topmenu-favorite.png" title="<?php echo T_('Favorites') ?>" /><br /><?php echo T_('Favorites') ?></a></li>
