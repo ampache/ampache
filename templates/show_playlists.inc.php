@@ -64,14 +64,19 @@
         foreach ($object_ids as $playlist_id) {
             $libitem = new Playlist($playlist_id);
             $libitem->format();
-            ?>
+            
+            // Don't show empty playlist if not admin or the owner
+            if (Access::check('interface','100') || $libitem->get_user_owner() == $GLOBALS['user']->id || $libitem->get_media_count() > 0) {
+                ?>
         <tr class="<?php echo UI::flip_class();
-            ?>" id="playlist_row_<?php echo $libitem->id;
-            ?>">
+                ?>" id="playlist_row_<?php echo $libitem->id;
+                ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php');
-            ?>
+                ?>
         </tr>
-        <?php 
+        <?php
+
+            }
         } // end foreach ($playlists as $playlist) ?>
         <?php if (!count($object_ids)) {
     ?>
