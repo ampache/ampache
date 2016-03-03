@@ -880,7 +880,7 @@ class Art extends database_object
      */
     public static function gc($object_type = null, $object_id = null)
     {
-        $types = array('album', 'artist','tvshow','tvshow_season','video','user');
+        $types = array('album', 'artist','tvshow','tvshow_season','video','user','live_stream');
 
         if ($object_type != null) {
             if (in_array($object_type, $types)) {

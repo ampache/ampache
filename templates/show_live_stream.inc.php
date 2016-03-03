@@ -19,22 +19,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 ?>
-<?php if (Access::check('interface', '50')) {
+
+<?php UI::show_box_top($radio->f_name . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
+<div class="item_right_info">
+    <?php
+        $thumb = UI::is_grid_view('live_stream') ? 2 : 11;
+        Art::display('live_stream', $radio->id, $radio->f_name, $thumb);
     ?>
-<?php UI::show_box_top(T_('Manage Radio Stations'),'info-box');
-    ?>
-<div id="information_actions">
-<ul>
-<li>
-    <a href="<?php echo AmpConfig::get('web_path');
-    ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add'));
-    ?> <?php echo T_('Add Radio Station');
-    ?></a>
-</li>
-</ul>
 </div>
-<?php UI::show_box_bottom();
+<dl class="media_details">
+<?php $rowparity = UI::flip_class(); ?>
+<dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
+    <dd class="<?php echo $rowparity; ?>">
+        <?php if (AmpConfig::get('directplay')) {
     ?>
-<?php 
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id, 'play', T_('Play'),'play_live_stream_' . $radio->id);
+    ?>
+            <?php if (Stream_Playlist::check_autoplay_append()) {
+    ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true','play_add', T_('Play last'),'addplay_live_stream_' . $radio->id);
+    ?>
+            <?php 
+}
+    ?>
+        <?php 
 } ?>
+        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id,'add', T_('Add to temporary playlist'),'add_live_stream_' . $radio->id); ?>
+    </dd>
+<?php
+    $itemprops[gettext_noop('Name')]   = $radio->f_name;
+    $itemprops[gettext_noop('Website')]  = $radio->f_link;
+    $itemprops[gettext_noop('Stream')]  = $radio->f_url_link;
+    $itemprops[gettext_noop('Codec')]    = scrub_out($video->codec);
+  
+    foreach ($itemprops as $key => $value) {
+        if (trim($value)) {
+            $rowparity = UI::flip_class();
+            echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
+        }
+    }
+?>
+</dl>
+<?php UI::show_box_bottom(); ?>

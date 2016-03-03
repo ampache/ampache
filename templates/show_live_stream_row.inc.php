@@ -30,6 +30,12 @@
     ?>
     </div>
 </td>
+<td class="cel_cover">
+    <?php
+    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
+    $libitem->display_art($thumb);
+    ?>
+</td>
 <td class="cel_streamname"><?php echo $libitem->f_link; ?></td>
 <td class="cel_streamurl"><?php echo $libitem->f_url_link; ?></td>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>

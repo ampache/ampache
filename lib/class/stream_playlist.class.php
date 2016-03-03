@@ -196,6 +196,7 @@ class Stream_Playlist
                         $url['title'] .= ' (' . $object->site_url . ')';
                     }
                     $url['codec'] = $object->codec;
+                    $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                 break;
                 case 'song_preview':
                     $url['title']  = $object->title;

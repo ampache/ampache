@@ -57,6 +57,11 @@ class Live_Stream extends database_object implements media, library_item
     public $catalog;
 
     /**
+     *  @var string $f_name
+     */
+    public $f_name;
+    
+    /**
      *  @var string $f_link
      */
     public $f_link;
@@ -95,8 +100,10 @@ class Live_Stream extends database_object implements media, library_item
     public function format($details = true)
     {
         // Default link used on the rightbar
-        $this->f_link         = "<a href=\"" . $this->url . "\">" . $this->name . "</a>";
-        $this->f_name_link    = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->name . "</a>";
+        $this->f_name = scrub_out($this->name);
+        $this->link = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
+        $this->f_link         = "<a href=\"" . $this->link . "\">" . $this->f_name . "</a>";
+        $this->f_name_link    = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
         $this->f_url_link     = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
 
         return true;

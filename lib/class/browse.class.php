@@ -228,7 +228,6 @@ class Browse extends Query
                 $box_req = AmpConfig::get('prefix') . UI::find_template('show_artists.inc.php');
             break;
             case 'live_stream':
-                require_once AmpConfig::get('prefix') . UI::find_template('show_live_stream.inc.php');
                 $box_title = T_('Radio Stations') . $match;
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_live_streams.inc.php');
             break;
