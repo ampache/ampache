@@ -20,6 +20,13 @@
  *
  */
 
+
+if (@is_readable(AmpConfig::get('prefix') . '/config/motd.php')) {
+    echo '<div id="motd">';
+    require_once AmpConfig::get('prefix') . '/config/motd.php';
+    echo '</div><br />';
+}
+
 foreach (Plugin::get_plugins('display_home') as $plugin_name) {
     $plugin = new Plugin($plugin_name);
     if ($plugin->load($GLOBALS['user'])) {

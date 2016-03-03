@@ -280,6 +280,10 @@ class Song extends database_object implements media, library_item
      * @var string $f_composer
      */
     public $f_composer;
+    /**
+     * @var string $f_license
+     */
+    public $f_license;
 
     /* Setting Variables */
     /**
@@ -1472,6 +1476,12 @@ class Song extends database_object implements media, library_item
 
         $this->f_publisher = $this->label;
         $this->f_composer  = $this->composer;
+        
+        if (AmpConfig::get('licensing') && $this->license) {
+            $license = new License($this->license);
+            $license->format();
+            $this->f_license = $license->f_link;
+        }
     } // format
 
     /**

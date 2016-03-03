@@ -100,8 +100,8 @@ class Live_Stream extends database_object implements media, library_item
     public function format($details = true)
     {
         // Default link used on the rightbar
-        $this->f_name = scrub_out($this->name);
-        $this->link = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
+        $this->f_name         = scrub_out($this->name);
+        $this->link           = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
         $this->f_link         = "<a href=\"" . $this->link . "\">" . $this->f_name . "</a>";
         $this->f_name_link    = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
         $this->f_url_link     = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
