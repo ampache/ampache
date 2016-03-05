@@ -301,7 +301,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: false
 ;allow_zip_download = "false"
 
-Allow Zip Types
+; Allow Zip Types
 ; This setting allows/disallows zip download of specific object types
 ; If empty, all supported object types can be zipped.
 ; Otherwise, only the given object list can be zipped.

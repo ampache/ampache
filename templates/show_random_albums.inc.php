@@ -40,7 +40,7 @@ if ($albums) {
                     $thumb     = 11;
                     $show_play = false;
                 }
-                $album->display_art($thumb);
+                $album->display_art($thumb, true);
             } else {
                 ?>
             <a href="<?php $album->link;

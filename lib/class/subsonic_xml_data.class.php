@@ -395,6 +395,8 @@ class Subsonic_XML_Data
         if ($avg_rating > 0) {
             $xalbum->addAttribute('averageRating', ceil($avg_rating));
         }
+        
+        self::setIfStarred($xalbum, $album);
 
         if ($songs) {
             $allsongs = $album->get_songs();
@@ -446,6 +448,7 @@ class Subsonic_XML_Data
         if ($avg_rating > 0) {
             $xsong->addAttribute('averageRating', ceil($avg_rating));
         }
+        self::setIfStarred($xsong, $song);
         if ($song->track > 0) {
             $xsong->addAttribute('track', $song->track);
         }
@@ -588,7 +591,9 @@ class Subsonic_XML_Data
         $xvideo->addAttribute('contentType', $video->mime);
         // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
         $path = basename($video->file);
-        $xvideo->addAttribute('path', $path);
+        $xvideo->addAttribute('path', $video);
+        
+        self::setIfStarred($xvideo, $song);
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
@@ -700,6 +705,19 @@ class Subsonic_XML_Data
         foreach ($songs as $id) {
             $song = new Song($id);
             self::addSong($xresult, $song);
+        }
+    }
+    
+    private static function setIfStarred($xml, $libitem)
+    {
+        $object_type = strtolower(get_class($libitem));
+        if (Core::is_library_item($object_type)) {
+            if (AmpConfig::get('userflags')) {
+                $starred = new Userflag($libitem->id, $object_type);
+                if ($starred->get_flag()) {
+                    $xml->addAttribute('starred', 'true');
+                }
+            }
         }
     }
 
@@ -932,9 +950,13 @@ class Subsonic_XML_Data
         $xepisode->addAttribute("isDir", "false");
         $xepisode->addAttribute("publishDate", date("c", $episode->pubdate));
         $xepisode->addAttribute("status", $episode->state);
+        $xepisode->addAttribute("parent", self::getPodcastId($episode->podcast));
         if (Art::has_db($episode->podcast, 'podcast')) {
-            $xepisode->addAttribute("coverArt",self::getPodcastId($episode->podcast));
+            $xepisode->addAttribute("coverArt", self::getPodcastId($episode->podcast));
         }
+        
+        self::setIfStarred($xepisode, $episode);
+        
         if ($episode->file) {
             $xepisode->addAttribute("streamId", self::getPodcastEpId($episode->id));
             $xepisode->addAttribute("size", $episode->size);
