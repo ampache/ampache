@@ -550,6 +550,9 @@ class Update
         $update_string = "- Add update date to playlist.<br />";
         $version[]     = array('version' => '380009', 'description' => $update_string);
         
+        $update_string = "- Add custom blank album/video default image and alphabet browsing options.<br />";
+        $version[]     = array('version' => '380010', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -3779,7 +3782,9 @@ class Update
         $retval = true;
         
         $sql = "ALTER IGNORE TABLE `tag_map` ADD UNIQUE INDEX `UNIQUE_TAG_MAP` (`object_id`, `object_type`, `user`, `tag_id`)";
-        $retval &= Dba::write($sql);
+        // This could fail if using MySQL >= 5.7
+        // Not strictly necessary, it was here to clean entries related to a bug present on 3.8 release
+        Dba::write($sql);
 
         return $retval;
     }
@@ -3896,6 +3901,39 @@ class Update
 
         $sql    = "ALTER TABLE `playlist` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT '0'";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380010
+     *
+     * Add custom blank album/video default image and alphabet browsing options
+     */
+    public static function update_380010()
+    {
+        $retval = true;
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`,`subcatagory`) " .
+            "VALUES ('custom_blankalbum','','Custom blank album default image',75,'string','interface','custom')";
+        $retval &= Dba::write($sql);
+        $id     = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval &= Dba::write($sql, array($id));
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`,`subcatagory`) " .
+            "VALUES ('custom_blankmovie','','Custom blank video default image',75,'string','interface','custom')";
+        $retval &= Dba::write($sql);
+        $id     = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval &= Dba::write($sql, array($id));
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`,`subcatagory`) " .
+            "VALUES ('libitem_browse_alpha','','Alphabet browsing by default for following library items (album,artist,...)',75,'string','interface','library')";
+        $retval &= Dba::write($sql);
+        $id     = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval &= Dba::write($sql, array($id));
 
         return $retval;
     }

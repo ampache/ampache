@@ -423,12 +423,10 @@ class Browse extends Query
         $cn = 'browse_' . $type . '_alpha';
         if (isset($_COOKIE[$cn])) {
             $this->set_use_alpha($_COOKIE[$cn] == 'true');
-            if ($this->get_use_alpha()) {
-                if (count($this->_state['filter']) == 0) {
-                    $this->set_filter('regex_match', '^A');
-                }
-            } else {
-                $this->set_filter('regex_not_match', '');
+        } else {
+            $default_alpha = explode(",", AmpConfig::get('libitem_browse_alpha'));
+            if (in_array($type, $default_alpha)) {
+                $this->set_use_alpha(true, false);
             }
         }
         $cn = 'browse_' . $type . '_grid_view';
@@ -455,9 +453,11 @@ class Browse extends Query
      *
      * @param boolean $use_pages
      */
-    public function set_use_pages($use_pages)
+    public function set_use_pages($use_pages, $savecookie = true)
     {
-        $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
+        if ($savecookie) {
+            $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
+        }
         $this->_state['use_pages'] = $use_pages;
     }
 
@@ -474,9 +474,11 @@ class Browse extends Query
      *
      * @param boolean $grid_view
      */
-    public function set_grid_view($grid_view)
+    public function set_grid_view($grid_view, $savecookie = true)
     {
-        $this->save_cookie_params('grid_view', $grid_view ? 'true' : 'false');
+        if ($savecookie) {
+            $this->save_cookie_params('grid_view', $grid_view ? 'true' : 'false');
+        }
         $this->_state['grid_view'] = $grid_view;
     }
     
@@ -493,10 +495,20 @@ class Browse extends Query
      *
      * @param boolean $use_alpha
      */
-    public function set_use_alpha($use_alpha)
+    public function set_use_alpha($use_alpha, $savecookie = true)
     {
-        $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
+        if ($savecookie) {
+            $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
+        }
         $this->_state['use_alpha'] = $use_alpha;
+        
+        if ($use_alpha) {
+            if (count($this->_state['filter']) == 0) {
+                $this->set_filter('regex_match', '^A');
+            }
+        } else {
+            $this->set_filter('regex_not_match', '');
+        }
     }
 
     /**

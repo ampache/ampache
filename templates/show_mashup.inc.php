@@ -33,7 +33,7 @@ $object_ids = Stats::get_top($object_type, $count, 7);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
-$browse->set_grid_view(false);
+$browse->set_grid_view(false, false);
 $browse->show_objects($object_ids);
 UI::show_box_bottom();
 
@@ -44,7 +44,7 @@ $object_ids = Stats::get_newest($object_type, $count);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
-$browse->set_grid_view(false);
+$browse->set_grid_view(false, false);
 $browse->show_objects($object_ids);
 UI::show_box_bottom();
 ?>
@@ -54,6 +54,6 @@ $object_ids = Stats::get_top($object_type, $count, $threshold);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
-$browse->set_grid_view(false);
+$browse->set_grid_view(false, false);
 $browse->show_objects($object_ids);
 UI::show_box_bottom();

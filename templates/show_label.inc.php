@@ -124,6 +124,7 @@ if ($label->website) {
         <div id="artists" class="tab_content" style="display: block;">
 <?php
     $browse->show_objects($object_ids, true);
+    $browse->set_use_alpha(false, false);
     $browse->store();
 ?>
         </div>

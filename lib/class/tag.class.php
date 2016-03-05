@@ -133,7 +133,7 @@ class Tag extends database_object implements library_item
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
      */
-    public static function add($type, $id, $value, $user=false)
+    public static function add($type, $id, $value, $user=true)
     {
         if (!Core::is_library_item($type)) {
             return false;
@@ -149,7 +149,13 @@ class Tag extends database_object implements library_item
             return false;
         }
 
-        $uid = ($user === false) ? intval($user) : intval($GLOBALS['user']->id);
+        if ($user === true) {
+            $uid = intval($GLOBALS['user']->id);
+        } elseif ($user === false) {
+            $uid = 0;
+        } else {
+            $uid = intval($user);
+        }
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (!$tag_id = self::tag_exists($cleaned_value)) {
@@ -279,9 +285,16 @@ class Tag extends database_object implements library_item
      * add_tag_map
      * This adds a specific tag to the map for specified object
      */
-    public static function add_tag_map($type,$object_id,$tag_id,$user='')
+    public static function add_tag_map($type,$object_id,$tag_id,$user=true)
     {
-        $uid    = ($user == '') ? intval($GLOBALS['user']->id) : intval($user);
+        if ($user === true) {
+            $uid = intval($GLOBALS['user']->id);
+        } elseif ($user === false) {
+            $uid = 0;
+        } else {
+            $uid = intval($user);
+        }
+        
         $tag_id = intval($tag_id);
         if (!Core::is_library_item($type)) {
             debug_event('tag.class', $type . " is not a library item.", 3);
@@ -398,9 +411,10 @@ class Tag extends database_object implements library_item
      * This looks to see if the current mapping of the current object of the current tag of the current
      * user exists, lots of currents... taste good in scones.
      */
-    public static function tag_map_exists($type,$object_id,$tag_id,$user)
+    public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
         if (!Core::is_library_item($type)) {
+            debug_event('tag', 'Requested type is not a library item.', 3);
             return false;
         }
 
@@ -611,7 +625,7 @@ class Tag extends database_object implements library_item
                     } else {
                         if ($overwrite) {
                             debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
-                            $ctag->remove_map($type, $object_id);
+                            $ctag->remove_map($type, $object_id, false);
                         }
                     }
                 }
@@ -689,16 +703,22 @@ class Tag extends database_object implements library_item
      * remove_map
      * This will only remove tag maps for the current user
      */
-    public function remove_map($type, $object_id)
+    public function remove_map($type, $object_id, $user=true)
     {
         if (!Core::is_library_item($type)) {
             return false;
         }
 
-        // TODO: Review the tag edition per user.
+        if ($user === true) {
+            $uid = intval($GLOBALS['user']->id);
+        } elseif ($user === false) {
+            $uid = 0;
+        } else {
+            $uid = intval($user);
+        }
 
-        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? "; //AND `user` = ?";
-        Dba::write($sql, array($this->id, $type, $object_id));//, $GLOBALS['user']->id));
+        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
+        Dba::write($sql, array($this->id, $type, $object_id, $uid));
 
         return true;
     } // remove_map
@@ -785,6 +805,33 @@ class Tag extends database_object implements library_item
         if (Art::has_db($this->id, 'tag') || $force) {
             Art::display('tag', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
+    }
+    
+    public static function can_edit_tag_map($object_type, $object_id, $user = true)
+    {
+        if ($user === true) {
+            $uid = intval($GLOBALS['user']->id);
+        } elseif ($user === false) {
+            $uid = 0;
+        } else {
+            $uid = intval($user);
+        }
+        
+        if ($uid > 0) {
+            return Access::check('interface', '25');
+        }
+        
+        if (Access::check('interface', '75')) {
+            return true;
+        }
+        
+        if (Core::is_library_item($object_type)) {
+            $libitem = new $object_type($object_id);
+            $owner   = $libitem->get_user_owner();
+            return ($owner !== null && $owner == $uid);
+        }
+        
+        return false;
     }
 } // end of Tag class
 
