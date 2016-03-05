@@ -85,7 +85,7 @@ class Waveform
                     $valid_types   = $song->get_stream_types();
 
                     if ($song->type != $transcode_to) {
-                        $basedir = AmpConfig::get('tmp_dir_path');
+                        $basedir = Core::get_tmp_dir();
                         if ($basedir) {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
                                 $tmpfile = tempnam($basedir, $transcode_to);

@@ -481,7 +481,7 @@ class XML_Data
                 "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
                 "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
                 "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
-                "\t<composer>" . $song->composer . "</composer>\n" .
+                "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                 "\t<channels>" . $song->channels . "</channels>\n" .
                 "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
 
@@ -719,17 +719,17 @@ class XML_Data
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function rss_feed($data,$title,$description,$date)
+    public static function rss_feed($data, $title, $description, $date = null)
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if ($date != null) {
-            $string .= "<pubDate>" . date("r",$date) . "</pubDate>\n";
+            $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
         }
 
         // Pass it to the keyed array xml function
         foreach ($data as $item) {
             // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item'=>$item),1);
+            $string .= self::keyed_array(array('item'=>$item), 1);
         }
 
         $final = self::_header() . $string . self::_footer();

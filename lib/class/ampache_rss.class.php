@@ -68,12 +68,12 @@ class Ampache_RSS
 
             $data     = call_user_func(array('Ampache_RSS',$data_function));
             $pub_date = null;
-            if (method_exists('Ampache_RSS', $data_function)) {
-                $pub_date = call_user_func(array('Ampache_RSS',$pub_date_function));
+            if (method_exists('Ampache_RSS', $pub_date_function)) {
+                $pub_date = call_user_func(array('Ampache_RSS', $pub_date_function));
             }
 
             XML_Data::set_type('rss');
-            $xml_document = XML_Data::rss_feed($data,$this->get_title(),$this->get_description(),$pub_date);
+            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $this->get_description(), $pub_date);
 
             return $xml_document;
         }
