@@ -102,7 +102,7 @@ class WebPlayer
 
                     // Transcode is not forced, transcode only if required
                     if (!$transcode) {
-                        if (!in_array('native', $valid_types)) {
+                        if ($transcode_cfg == 'always' || !in_array('native', $valid_types)) {
                             $transcode_settings = $media->get_transcode_settings(null, 'webplayer');
                             if ($transcode_settings) {
                                 $types['real'] = $transcode_settings['format'];
