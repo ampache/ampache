@@ -1,8 +1,8 @@
 [main]
 host = https://www.transifex.com
 
-[project_slug.resource_slug]
-file_filter = locale/<lang>_<lang>/LC_MESSAGES/messages.po
+[ampache.messagespot]
+file_filter = locale/<lang>/LC_MESSAGES/messages.po
 source_file = locale/base/messages.pot
-source_lang = en_US
+source_lang = en
 type = PO
