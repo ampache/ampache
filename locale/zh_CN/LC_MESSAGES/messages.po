@@ -3,294 +3,293 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# fengjiongmax <fengjiongmax@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2016-03-07 02:21+0100\n"
 "PO-Revision-Date: 2016-03-04 21:21+0000\n"
-"Last-Translator: Afterster\n"
-"Language-Team: Italian (Italy) (http://www.transifex.com/ampache/ampache/"
-"language/it_IT/)\n"
-"Language: it_IT\n"
+"Last-Translator: fengjiongmax <fengjiongmax@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/"
+"language/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../admin/access.php:40
 msgid "Deleted"
-msgstr "Cancellato"
+msgstr "已删除"
 
 #: ../../admin/access.php:40
 msgid "Your Access List Entry has been removed"
-msgstr ""
+msgstr "访问控制列表条目已删除"
 
 #: ../../admin/access.php:47 ../../admin/users.php:222
 msgid "Deletion Request"
-msgstr ""
+msgstr "删除请求"
 
 #: ../../admin/access.php:47
 msgid "Are you sure you want to permanently delete"
-msgstr ""
+msgstr "确定永久删除"
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:346
 #: ../../templates/show_song.inc.php:238
 #: ../../templates/show_video.inc.php:200
 msgid "Added"
-msgstr "Aggiunti"
+msgstr "已添加"
 
 #: ../../admin/access.php:74
 msgid "Your new Access Control List(s) have been created"
-msgstr ""
+msgstr "新的(多个)访问控制列表已创建"
 
 #: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1502
 #: ../../lib/class/search.class.php:353 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
-msgstr "Aggiornato"
+msgstr "已更新"
 
 #: ../../admin/access.php:88
 msgid "Access List Entry updated"
-msgstr ""
+msgstr "访问控制列表条目已更新"
 
 #: ../../admin/catalog.php:54 ../../admin/catalog.php:62
 #: ../../admin/catalog.php:66 ../../admin/catalog.php:74
 #: ../../admin/catalog.php:83
 msgid "Catalog Update started..."
-msgstr ""
+msgstr "开始更新目录..."
 
 #: ../../admin/catalog.php:105
 msgid "Catalog Deleted"
-msgstr ""
+msgstr "目录已删除"
 
 #: ../../admin/catalog.php:105
 msgid "The Catalog and all associated records have been deleted"
-msgstr ""
+msgstr "目录以及所有相关记录已删除"
 
 #: ../../admin/catalog.php:107 ../../admin/users.php:192
 #: ../../preferences.php:166 ../../templates/error_page.inc.php:50
 msgid "Error"
-msgstr "Errore"
+msgstr "出现错误"
 
 #: ../../admin/catalog.php:107
 msgid "Cannot delete the catalog"
-msgstr ""
+msgstr "无法删除目录"
 
 #: ../../admin/catalog.php:112
 msgid "Catalog Delete"
-msgstr ""
+msgstr "删除目录"
 
 #: ../../admin/catalog.php:112 ../../admin/users.php:230
 #: ../../broadcast.php:38 ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
-msgstr ""
+msgstr "确认删除请求"
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "歌曲启用"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
-msgstr ""
+msgstr "未发现禁用的歌曲"
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "处理禁用歌曲"
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
-msgstr ""
+msgstr "开始清理目录..."
 
 #: ../../admin/catalog.php:151
 msgid "Catalog Updated"
-msgstr ""
+msgstr "目录已更新"
 
 #: ../../admin/catalog.php:161
 msgid "Subdirectory update started..."
-msgstr ""
+msgstr "开始更新订阅..."
 
 #: ../../admin/catalog.php:172
 msgid "Error: Please select a catalog type"
-msgstr ""
+msgstr "错误：请选择目录类型"
 
 #: ../../admin/catalog.php:176
 msgid "Error: Name not specified"
-msgstr ""
+msgstr "错误：未指定名称"
 
 #: ../../admin/catalog.php:195
 msgid "Catalog Creation started..."
-msgstr ""
+msgstr "开始创建目录..."
 
 #: ../../admin/catalog.php:207
 msgid "Catalog statistics cleared"
-msgstr ""
+msgstr "已清除目录统计"
 
 #: ../../admin/catalog.php:220
 msgid "Now Playing Cleared"
-msgstr "'In esecuzione ora' cancellato"
+msgstr "已清除正在播放目录"
 
 #: ../../admin/catalog.php:220
 msgid "All now playing data has been cleared"
-msgstr "Tutti gli 'In esecuzione ora' sono stati cancellati"
+msgstr "正在播放列表及相关数据已清除"
 
 #: ../../admin/catalog.php:232
 msgid "No Disabled songs found"
-msgstr ""
+msgstr "未发现禁用歌曲"
 
 #: ../../admin/catalog.php:244
 msgid "Delete Catalog"
-msgstr ""
+msgstr "删除目录"
 
 #: ../../admin/catalog.php:244
 msgid "Do you really want to delete this catalog?"
-msgstr "Vuoi veramente cancellare questo catalogo?"
+msgstr "确定删除此目录？"
 
 #: ../../admin/catalog.php:253
 msgid "Media Art Search started..."
-msgstr ""
+msgstr "开始搜索媒体"
 
 #: ../../admin/license.php:39
 msgid "License Updated"
-msgstr ""
+msgstr "许可已更新"
 
 #: ../../admin/license.php:42
 msgid "License Created"
-msgstr ""
+msgstr "许可已创建"
 
 #: ../../admin/license.php:53
 msgid "License Deleted"
-msgstr ""
+msgstr "许可已删除"
 
 #: ../../admin/mail.php:63
 msgid "E-mail Sent"
-msgstr ""
+msgstr "邮件已发送"
 
 #: ../../admin/mail.php:64
 msgid "Your E-mail was successfully sent."
-msgstr ""
+msgstr "你的邮件已成功发送。"
 
 #: ../../admin/mail.php:66
 msgid "E-mail Not Sent"
-msgstr ""
+msgstr "邮件未发送"
 
 #: ../../admin/mail.php:67
 msgid "Your E-mail was not sent."
-msgstr ""
+msgstr "你的邮件未发送。"
 
 #: ../../admin/modules.php:38
 msgid "Install Failed, Controller Error"
-msgstr ""
+msgstr "安装失败，控制器出错"
 
 #: ../../admin/modules.php:53
 msgid "Localplay Installed"
-msgstr ""
+msgstr "本地播放器已安装"
 
 #: ../../admin/modules.php:61
 msgid "Install Failed, Catalog Error"
-msgstr ""
+msgstr "安装失败，目录出错"
 
 #: ../../admin/modules.php:70
 msgid "Plugin Installed"
-msgstr ""
+msgstr "插件已完毕"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
 #: ../../admin/modules.php:146
 msgid "Are you sure you want to remove this plugin?"
-msgstr ""
+msgstr "确定删除此插件？"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
 #: ../../admin/modules.php:165
 msgid "Plugin Deactivated"
-msgstr ""
+msgstr "插件已禁用"
 
 #: ../../admin/modules.php:105
 msgid "Uninstall Failed, Catalog Error"
-msgstr ""
+msgstr "卸载失败，目录出错"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
-msgstr ""
+msgstr "无法安装插件"
 
 #: ../../admin/modules.php:139
 msgid "Plugin Activated"
-msgstr ""
+msgstr "插件已启用"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
-msgstr ""
+msgstr "插件已更新"
 
 #: ../../admin/modules.php:186
 msgid "Plugins"
-msgstr ""
+msgstr "插件"
 
 #: ../../admin/modules.php:192
 msgid "Localplay Controllers"
-msgstr ""
+msgstr "本地播放控制器"
 
 #: ../../admin/modules.php:198
 msgid "Catalog Types"
-msgstr ""
+msgstr "目录类型"
 
 #: ../../admin/shout.php:39
 msgid "Shoutbox Post Updated"
-msgstr ""
+msgstr "留言板的发言已更新"
 
 #: ../../admin/shout.php:51
 msgid "Shoutbox Post Deleted"
-msgstr ""
+msgstr "已删除留言板的发言"
 
 #: ../../admin/system.php:51
 msgid "Database Charset Updated"
-msgstr ""
+msgstr "数据库字符集更新完毕"
 
 #: ../../admin/system.php:51
 msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
-msgstr ""
+msgstr "数据库及相关表已更新至符合你设置的字符集（编码）"
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
-msgstr ""
+msgstr "缓存已清除"
 
 #: ../../admin/system.php:66
 msgid "Your cache has been cleared successfully."
-msgstr ""
+msgstr "缓存已成功清除"
 
 #: ../../admin/users.php:62 ../../admin/users.php:141
 #: ../../lib/class/user.class.php:593
 msgid "Error Username Required"
-msgstr "Errore, E' necessario un nome utente"
+msgstr "错误，需要用户名"
 
 #: ../../admin/users.php:66 ../../admin/users.php:146 ../../register.php:121
 msgid "Error Username already exists"
-msgstr "Errore, Nome utente già in uso"
+msgstr "错误，用户名已存在"
 
 #: ../../admin/users.php:71 ../../admin/users.php:137
 #: ../../lib/class/user.class.php:597
 msgid "Error Passwords don't match"
-msgstr "Errore password non corrispondente"
+msgstr "错误，密码不一致"
 
 #: ../../admin/users.php:76 ../../admin/users.php:151 ../../register.php:95
 msgid "Invalid email address"
-msgstr ""
+msgstr "无效的邮件地址"
 
 #: ../../admin/users.php:114
 msgid "User Updated"
-msgstr ""
+msgstr "用户数据已更新"
 
 #: ../../admin/users.php:114
 msgid "updated"
-msgstr ""
+msgstr "已更新"
 
 #: ../../admin/users.php:163 ../../register.php:150
 msgid "Error: Insert Failed"
-msgstr "Errore: inserimento fallito"
+msgstr "错误：插入失败"
 
 #: ../../admin/users.php:169 ../../lib/class/democratic.class.php:158
 #: ../../lib/class/shoutbox.class.php:328
@@ -299,7 +298,7 @@ msgstr "Errore: inserimento fallito"
 #: ../../templates/show_preference_admin.inc.php:49
 #: ../../templates/show_preference_box.inc.php:90
 msgid "Guest"
-msgstr ""
+msgstr "访客"
 
 #: ../../admin/users.php:171 ../../lib/class/democratic.class.php:161
 #: ../../lib/preferences.php:300
@@ -320,7 +319,7 @@ msgstr ""
 #: ../../templates/show_shared_objects.inc.php:28
 #: ../../templates/show_wanted_albums.inc.php:29
 msgid "User"
-msgstr "Utente"
+msgstr "用户"
 
 #: ../../admin/users.php:173 ../../lib/class/democratic.class.php:170
 #: ../../lib/preferences.php:302 ../../templates/show_add_user.inc.php:89
@@ -333,277 +332,281 @@ msgstr "Utente"
 #: ../../templates/show_preference_box.inc.php:102
 #: ../../templates/sidebar.inc.php:39
 msgid "Admin"
-msgstr "Amministrazione"
+msgstr "管理员"
 
 #. HINT: %1 Username, %2 Access num
 #: ../../admin/users.php:177
 msgid "New User Added"
-msgstr ""
+msgstr "新用户已创建"
 
 #: ../../admin/users.php:177
 #, php-format
 msgid "%1$s has been created with an access level of %2$s"
-msgstr ""
+msgstr "拥有 %2$s 访问权限的 %1$s 已经成功创建"
 
 #: ../../admin/users.php:185
 msgid "User Enabled"
-msgstr ""
+msgstr "用户已启用"
 
 #: ../../admin/users.php:190
 msgid "User Disabled"
-msgstr ""
+msgstr "用户已禁用"
 
 #: ../../admin/users.php:192
 msgid "Unable to Disabled last Administrator"
-msgstr ""
+msgstr "无法禁用上一个管理员帐号"
 
 #: ../../admin/users.php:212
 msgid "User Deleted"
-msgstr "Utente cancellato"
+msgstr "用户已删除"
 
 #: ../../admin/users.php:212
 #, php-format
 msgid "%s has been Deleted"
-msgstr ""
+msgstr "%s 已删除"
 
 #: ../../admin/users.php:214
 msgid "Delete Error"
-msgstr "Errore di cancellazione"
+msgstr "删除错误"
 
 #: ../../admin/users.php:214
 msgid "Unable to delete last Admin User"
-msgstr "Impossibile cancellare l' ultimo utente amministratore"
+msgstr "无法删除上一个管理员用户帐号"
 
 #: ../../admin/users.php:223
 #, php-format
 msgid "Are you sure you want to permanently delete %s?"
-msgstr ""
+msgstr "确定永久删除 %s ？"
 
 #: ../../admin/users.php:230
 msgid "User Avatar Delete"
-msgstr ""
+msgstr "删除用户头像"
 
 #: ../../admin/users.php:246
 msgid "User Avatar Deleted"
-msgstr ""
+msgstr "用户头像已删除"
 
 #: ../../admin/users.php:246
 msgid "User Avatar has been deleted"
-msgstr ""
+msgstr "用户头像已删除"
 
 #: ../../admin/users.php:252 ../../templates/show_account.inc.php:110
 #: ../../templates/show_edit_user.inc.php:133
 msgid "Generate new API Key"
-msgstr ""
+msgstr "生成新 API 密钥"
 
 #: ../../admin/users.php:252
 msgid "Confirm API Key Generation"
-msgstr ""
+msgstr "确认生成 API 密钥"
 
 #: ../../admin/users.php:268
 msgid "API Key Generated"
-msgstr ""
+msgstr "API 密钥已生成"
 
 #: ../../admin/users.php:268
 msgid "New user API Key has been generated."
-msgstr ""
+msgstr "新的用户 API 密钥已生成"
 
 #: ../../albums.php:36 ../../albums.php:56 ../../albums.php:58
 msgid "Album Deletion"
-msgstr ""
+msgstr "删除专辑"
 
 #: ../../albums.php:37
 msgid "Are you sure you want to permanently delete this album?"
-msgstr ""
+msgstr "确认永久删除专辑？"
 
 #: ../../albums.php:56
 msgid "Album has been deleted."
-msgstr ""
+msgstr "专辑已删除。"
 
 #: ../../albums.php:58
 msgid "Cannot delete this album."
-msgstr ""
+msgstr "无法删除此专辑。"
 
 #: ../../artists.php:38 ../../artists.php:58 ../../artists.php:60
 msgid "Artist Deletion"
-msgstr ""
+msgstr "删除艺术家"
 
 #: ../../artists.php:39
 msgid "Are you sure you want to permanently delete this artist?"
-msgstr ""
+msgstr "确认永久删除此艺术家？"
 
 #: ../../artists.php:58
 msgid "Artist has been deleted."
-msgstr ""
+msgstr "艺术家已删除。"
 
 #: ../../artists.php:60
 msgid "Cannot delete this artist."
-msgstr ""
+msgstr "无法删除此艺术家。"
 
 #: ../../artists.php:98
 msgid "Show Artists starting with"
-msgstr "Mostra artisti che iniziano per"
+msgstr "将艺术家排序，依据"
 
 #: ../../arts.php:50
 msgid "Art Cleared"
-msgstr ""
+msgstr "封面已清除"
 
 #: ../../arts.php:50
 msgid "Art information has been removed from the database"
-msgstr ""
+msgstr "封面信息已从数据库删除"
 
 #: ../../arts.php:56 ../../arts.php:72 ../../arts.php:139
 msgid "Art Not Located"
-msgstr ""
+msgstr "未定位封面"
 
 #: ../../arts.php:56 ../../arts.php:72 ../../arts.php:139
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
 msgstr ""
+"这次操作无法定位封面。这可能是因为没有写入权限，或者是因为文件没有被正确接"
+"收。"
 
 #: ../../arts.php:68 ../../arts.php:94
 msgid "Art Inserted"
-msgstr ""
+msgstr "封面已经插入"
 
 #: ../../bin/broadcast.inc:32
 msgid "Starting broadcasts..."
-msgstr ""
+msgstr "正在开始广播..."
 
 #: ../../bin/broadcast.inc:35
 msgid "UPnP broadcast... "
-msgstr ""
+msgstr "UPnP广播中..."
 
 #: ../../bin/broadcast.inc:37
 msgid "Done."
-msgstr ""
+msgstr "完成。"
 
 #: ../../bin/broadcast.inc:39
 msgid "UPnP backend disabled. Broadcast skipped."
-msgstr ""
+msgstr "UPnP 已禁用后台程序。跳过广播。"
 
 #: ../../bin/catalog_update.inc:41
 msgid "Doing all catalog operations"
-msgstr ""
+msgstr "正在执行所有目录操作"
 
 #: ../../bin/catalog_update.inc:48
 msgid "Temporary deactivate PHP memory limit"
-msgstr ""
+msgstr "暂时性禁用 PHP 的内存限制"
 
 #: ../../bin/catalog_update.inc:52
 msgid "Cleaning catalog/s"
-msgstr ""
+msgstr "正在清除目录"
 
 #: ../../bin/catalog_update.inc:56
 msgid "Verifying catalog/s"
-msgstr ""
+msgstr "正在验证目录"
 
 #: ../../bin/catalog_update.inc:60
 msgid "Adding new media to catalog/s"
-msgstr ""
+msgstr "正在往目录中添加新媒体"
 
 #: ../../bin/catalog_update.inc:64
 msgid "Gathering new media art"
-msgstr ""
+msgstr "正在收集新的封面"
 
 #: ../../bin/catalog_update.inc:68
 msgid "Importing playlist/s"
-msgstr ""
+msgstr "导入目录"
 
 #: ../../bin/catalog_update.inc:72
 msgid "Database table optimization"
-msgstr ""
+msgstr "数据库表单调整"
 
 #: ../../bin/catalog_update.inc:95
 msgid "Starting catalog operations..."
-msgstr ""
+msgstr "正在开始目录操作..."
 
 #: ../../bin/catalog_update.inc:101
 msgid "Deactivated PHP memory limit"
-msgstr ""
+msgstr "禁用 PHP 内存限制"
 
 #: ../../bin/catalog_update.inc:108
 msgid "Gathering art"
-msgstr ""
+msgstr "正在收集封面"
 
 #: ../../bin/catalog_update.inc:114
 msgid "Parsing playlists"
-msgstr ""
+msgstr "正在解析播放列表"
 
 #: ../../bin/catalog_update.inc:131
 #, php-format
 msgid "Reading catalog: %s"
-msgstr ""
+msgstr "正在读取 %s 播放列表"
 
 #: ../../bin/catalog_update.inc:137
 msgid "Start cleaning orphaned media entries"
-msgstr ""
+msgstr "开始清除孤立的媒体条目"
 
 #: ../../bin/catalog_update.inc:144
 msgid "Start verifying media related to catalog entries"
-msgstr ""
+msgstr "开始验证与媒体相关的目录条目"
 
 #: ../../bin/catalog_update.inc:151
 msgid "Start adding new media"
-msgstr ""
+msgstr "开始增加新的媒体"
 
 #: ../../bin/catalog_update.inc:158
 msgid "Start searching new media art"
-msgstr ""
+msgstr "开始搜索新的媒体"
 
 #: ../../bin/catalog_update.inc:166
 msgid "Optimizing database tables"
-msgstr ""
+msgstr "正在优化数据库表单"
 
 #: ../../bin/catalog_update.inc:191
 msgid "- Catalog Update Help -"
-msgstr ""
+msgstr "- 目录更新相关帮助 -"
 
 #: ../../bin/catalog_update.inc:193
 msgid "Usage: catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
-msgstr ""
+msgstr "用法：catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
 
 #: ../../bin/catalog_update.inc:197
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
-msgstr ""
+msgstr "默认不会暂时性停用 PHP 内存限制"
 
 #: ../../bin/catalog_update.inc:201
 msgid "Temporarily deactivates PHP memory limit."
-msgstr ""
+msgstr "暂时停用 PHP 内存限制"
 
 #: ../../bin/catalog_update.inc:203
 msgid "Cleans catalogs from orphaned entries."
-msgstr ""
+msgstr "清理孤立条目中的目录"
 
 #: ../../bin/catalog_update.inc:205
 msgid ""
 "Verifies catalog entries and updates them if related files have new "
 "information."
-msgstr ""
+msgstr "若文件有新的信息则验证并更新目录"
 
 #: ../../bin/catalog_update.inc:207
 msgid "Adds new media to catalogs."
-msgstr ""
+msgstr "向目录中增加新的媒体"
 
 #: ../../bin/catalog_update.inc:209
 msgid "Gathers media Art."
-msgstr ""
+msgstr "收集封面。"
 
 #: ../../bin/catalog_update.inc:211
 msgid "Imports playlists."
-msgstr ""
+msgstr "导入播放列表"
 
 #: ../../bin/catalog_update.inc:213
 msgid "Optimizes Database Tables."
-msgstr ""
+msgstr "优化数据库表单"
 
 #: ../../bin/catalog_update.inc:216
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
 msgstr ""
+"使用此功能需要您自行承担奉献！你的系统可能会崩溃或者因为大量内存消耗导致系统"
+"无响应。"
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
@@ -611,433 +614,435 @@ msgid ""
 "finish and extremely slow down other database processes if you have big "
 "catalogs!"
 msgstr ""
+"根据您的系统性能，此选项在您的目录条目众多的时候会需要很长一段时间去执行，并"
+"会严重影响其他数据库操作！"
 
 #: ../../bin/catalog_update.inc:218
 msgid ""
 "The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
 "v|-a|-g] is used."
-msgstr ""
+msgstr "只有当使用了[-ci-vi-ai-g]选项的时候，[-ml-il-o]才能够使用"
 
 #: ../../bin/channel_run.inc:46
 msgid "- Channel "
-msgstr ""
+msgstr "- 通道"
 
 #: ../../bin/channel_run.inc:49 ../../bin/websocket_run.inc:42
 msgid "- Verbose"
-msgstr ""
+msgstr "- 详细"
 
 #: ../../bin/channel_run.inc:54 ../../bin/websocket_run.inc:47
 msgid "- Port "
-msgstr ""
+msgstr "- 端口"
 
 #: ../../bin/channel_run.inc:71
 msgid "Starting Channel..."
-msgstr ""
+msgstr "正在开启通道..."
 
 #: ../../bin/channel_run.inc:75
 msgid "Unknown channel."
-msgstr ""
+msgstr "未知通道。"
 
 #: ../../bin/channel_run.inc:90
 msgid "Found available port "
-msgstr ""
+msgstr "发现可用端口"
 
 #: ../../bin/channel_run.inc:107
 msgid "Listening on "
-msgstr ""
+msgstr "正在监听端口"
 
 #: ../../bin/channel_run.inc:306
 msgid "- Channel Listening -"
-msgstr ""
+msgstr "- 正在监听通道 -"
 
 #: ../../bin/channel_run.inc:308
 msgid "Usage: channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]"
-msgstr ""
+msgstr "用法：channel_run.inc [-c [通道ID] | -p [端口号] | -v]"
 
 #: ../../bin/channel_run.inc:311
 msgid "Channel id to start"
-msgstr ""
+msgstr "起始的通道ID"
 
 #: ../../bin/channel_run.inc:313
 msgid "Listening port, default get an available port automatically"
-msgstr ""
+msgstr "正在监听端口，默认会自动获取可用端口"
 
 #: ../../bin/channel_run.inc:315 ../../bin/websocket_run.inc:74
 msgid "Verbose"
-msgstr ""
+msgstr "详细"
 
 #: ../../bin/delete_disabled.inc:37
 msgid "DEBUG ENABLED WILL NOT DELETE FILES!"
-msgstr ""
+msgstr "开启了 DEBUG 并不会删除文件！"
 
 #: ../../bin/delete_disabled.inc:45
 #, php-format
 msgid "Would Delete: %s"
-msgstr ""
+msgstr "会删除：%s"
 
 #: ../../bin/delete_disabled.inc:49
 #, php-format
 msgid "Deleting: %s"
-msgstr ""
+msgstr "正在删除：%s"
 
 #: ../../bin/fix_filenames.inc:42
 msgid "ERROR: Iconv required for this functionality, quiting"
-msgstr ""
+msgstr "错误：Iconv 需要这项功能，正在退出"
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
 msgid "%s For the Love of Music"
-msgstr ""
+msgstr "%s 只因热爱音乐"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
-msgstr ""
+msgstr "正在测试简单翻译功能，以下的两条字符串应该是一致的"
 
 #: ../../bin/fix_filenames.inc:54
 msgid "Original: For the Love of Music"
-msgstr ""
+msgstr "原文：只因热爱音乐"
 
 #: ../../bin/fix_filenames.inc:56
 #, php-format
 msgid "Translated: %s"
-msgstr ""
+msgstr "翻译：%s"
 
 #: ../../bin/fix_filenames.inc:59
 #, php-format
 msgid "Input Charset (%s):"
-msgstr ""
+msgstr "输入字符(%s):"
 
 #: ../../bin/fix_filenames.inc:63
 #, php-format
 msgid "Using %s as source character set"
-msgstr ""
+msgstr "正在使用 %s 作为源字符集"
 
 #: ../../bin/fix_filenames.inc:72
 #, php-format
 msgid "Checking %s (%s)"
-msgstr ""
+msgstr "正在检查 %s (%s)"
 
 #: ../../bin/fix_filenames.inc:78
 msgid "Finished checking file names for valid characters"
-msgstr ""
+msgstr "文件名字符检查完成"
 
 #: ../../bin/fix_filenames.inc:104
 #, php-format
 msgid "ERROR: Unable to open %s"
-msgstr ""
+msgstr "错误：无法打开 %s"
 
 #: ../../bin/fix_filenames.inc:110
 #, php-format
 msgid "ERROR: Unable to chdir to %s"
-msgstr ""
+msgstr "错误：无法切换目录到 %s"
 
 #: ../../bin/fix_filenames.inc:133
 msgid "Translation failure, stripping non-valid characters"
-msgstr ""
+msgstr "翻译转换失败，剥离非有效字符"
 
 #: ../../bin/fix_filenames.inc:138
 #, php-format
 msgid "Attempting to Transcode to %s"
-msgstr ""
+msgstr "正在尝试转码至 %s"
 
 #: ../../bin/fix_filenames.inc:141
 #, php-format
 msgid "OLD: %s has invalid chars"
-msgstr ""
+msgstr "旧: %s 有无效字符"
 
 #: ../../bin/fix_filenames.inc:143
 #, php-format
 msgid "NEW: %s"
-msgstr ""
+msgstr "新: %s"
 
 #: ../../bin/fix_filenames.inc:147
 msgid "Rename File (Y/N):"
-msgstr ""
+msgstr "重命名文件 (Y/N):"
 
 #: ../../bin/fix_filenames.inc:150
 msgid "Not Renaming..."
-msgstr ""
+msgstr "正在撤销重命名..."
 
 #: ../../bin/fix_filenames.inc:182
 #, php-format
 msgid "Error: Unable to create %s move failed, stopping"
-msgstr ""
+msgstr "错误：无法创建 %s 移动失败，正在停止"
 
 #: ../../bin/fix_filenames.inc:194
 msgid "Error: Copy Failed, not deleting old file"
-msgstr ""
+msgstr "错误：复制失败，未删除旧文件"
 
 #: ../../bin/fix_filenames.inc:203 ../../bin/sort_files.inc:288
 #, php-format
 msgid "Error: Size Inconsistency, not deleting %s"
-msgstr ""
+msgstr "错误：大小不一致，未删除 %s"
 
 #: ../../bin/fix_filenames.inc:210 ../../bin/sort_files.inc:295
 #, php-format
 msgid "Error: Unable to delete %s"
-msgstr ""
+msgstr "错误：无法删除 %s"
 
 #: ../../bin/fix_filenames.inc:212
 msgid "File Moved..."
-msgstr ""
+msgstr "文件已移动.."
 
 #: ../../bin/install/add_user.inc:50
 #, php-format
 msgid "Created %s user %s with password %s"
-msgstr ""
+msgstr "已创建 %s 用户 %s ，密码是 %s"
 
 #: ../../bin/install/add_user.inc:54
 msgid "User creation failed"
-msgstr ""
+msgstr "用户创建失败"
 
 #: ../../bin/install/install_db.inc:68
 msgid "Existing Ampache installation found."
-msgstr ""
+msgstr "发现存在的 Ampache 安装"
 
 #: ../../bin/install/install_db.inc:70
 msgid "Force specified, proceeding anyway."
-msgstr ""
+msgstr "强制指定的，无论如何执行下去。"
 
 #: ../../bin/install/install_db.inc:73
 msgid "Exiting."
-msgstr ""
+msgstr "已存在。"
 
 #: ../../bin/install/install_db.inc:89
 msgid "Database creation failed"
-msgstr ""
+msgstr "数据库创建失败"
 
 #: ../../bin/install/install_db.inc:101
 msgid "Config file creation failed"
-msgstr ""
+msgstr "配置文件创建失败"
 
 #: ../../bin/install/update_db.inc:44 ../../update.php:82
 msgid "The following updates need to be performed:"
-msgstr ""
+msgstr "以下更新需要执行："
 
 #: ../../bin/migrate_config.inc:50
 msgid "Parsing old config file..."
-msgstr ""
+msgstr "正在解析旧的配置文件..."
 
 #: ../../bin/migrate_config.inc:80
 msgid "Parse complete, writing"
-msgstr ""
+msgstr "解析完成，正在写入"
 
 #: ../../bin/migrate_config.inc:88
 msgid "Write success, config migrated"
-msgstr ""
+msgstr "写入完成，配置已迁移"
 
 #: ../../bin/migrate_config.inc:92
 msgid "Access Denied, config migration failed"
-msgstr ""
+msgstr "拒绝访问，配置迁移失败"
 
 #: ../../bin/print_tags.inc:37
 msgid "File not found."
-msgstr ""
+msgstr "文件未找到。"
 
 #: ../../bin/print_tags.inc:43
 #, php-format
 msgid "Reading: %s"
-msgstr ""
+msgstr "正在读取：%s"
 
 #: ../../bin/print_tags.inc:58
 #, php-format
 msgid "Using: %s AND %s for file pattern matching"
-msgstr ""
+msgstr "正在使用： %s 和 %s 以进行文件模式匹配"
 
 #: ../../bin/print_tags.inc:67
 msgid "Raw results:"
-msgstr ""
+msgstr "原始结果："
 
 #: ../../bin/print_tags.inc:71
 #, php-format
 msgid "Final results seen by Ampache using %s:"
-msgstr ""
+msgstr "Ampache 使用 %s 的最终结果是："
 
 #: ../../bin/print_tags.inc:78
 #, php-format
 msgid "%s Version %s"
-msgstr ""
+msgstr "%s 版本为 %s"
 
 #: ../../bin/print_tags.inc:80
 msgid "Usage:"
-msgstr ""
+msgstr "用法："
 
 #: ../../bin/print_tags.inc:82
 msgid "php print_tags.inc <Filename>"
-msgstr ""
+msgstr "php print_tags.inc <Filename>"
 
 #: ../../bin/sort_files.inc:61
 #, php-format
 msgid "Starting Catalog: %s"
-msgstr ""
+msgstr "起始目录： %s"
 
 #: ../../bin/sort_files.inc:75
 msgid "Moving File..."
-msgstr ""
+msgstr "正在移动文件..."
 
 #: ../../bin/sort_files.inc:77
 #, php-format
 msgid "Source: %s"
-msgstr ""
+msgstr "来源：%s"
 
 #: ../../bin/sort_files.inc:79
 #, php-format
 msgid "Dest: %s"
-msgstr ""
+msgstr "目标：%s"
 
 #: ../../bin/sort_files.inc:229
 #, php-format
 msgid "Making %s Directory"
-msgstr ""
+msgstr "正在创建 %s 目录"
 
 #: ../../bin/sort_files.inc:236
 #, php-format
 msgid "Error: Unable to create %s move failed"
-msgstr ""
+msgstr "错误：无法创建 %s ，移动失败"
 
 #. HINT: %1$s: file, %2$s: directory
 #: ../../bin/sort_files.inc:249
 #, php-format
 msgid "Copying %1$s to %2$s"
-msgstr ""
+msgstr "正在复制：从 %1$s 到 %2$s"
 
 #: ../../bin/sort_files.inc:260
 #, php-format
 msgid "Error: %s already exists"
-msgstr ""
+msgstr "错误：%s 已存在"
 
 #: ../../bin/sort_files.inc:281
 #, php-format
 msgid "Error: Unable to copy file to %s"
-msgstr ""
+msgstr "错误：无法复制文件到 %s"
 
 #: ../../bin/websocket_run.inc:67
 msgid "- WebSocket server -"
-msgstr ""
+msgstr "- WebSocket 服务器 -"
 
 #: ../../bin/websocket_run.inc:69
 msgid "Usage: websocket_run.inc [-p {PORT}|-v]"
-msgstr ""
+msgstr "用法：websocket_run.inc [-p {PORT}|-v]"
 
 #: ../../bin/websocket_run.inc:72
 msgid "Listening port, default 8100"
-msgstr ""
+msgstr "正在监听端口，默认为 8100"
 
 #: ../../bin/write_playlists.inc:40
 #, php-format
 msgid "Error: Directory %s is not writable"
-msgstr ""
+msgstr "错误：目录 %s 不可写入"
 
 #: ../../bin/write_playlists.inc:93
 msgid "This will dump a collection of playlists files based on type"
-msgstr ""
+msgstr "这将会转储一系列基于类型的播放列表文件"
 
 #: ../../bin/write_playlists.inc:94
 msgid "Types:"
-msgstr ""
+msgstr "类型："
 
 #: ../../bin/write_playlists.inc:95
 msgid "Dumps all of your Playlists"
-msgstr ""
+msgstr "转储所有播放列表"
 
 #: ../../bin/write_playlists.inc:96
 msgid "Dumps all Albums as individual playlists"
-msgstr ""
+msgstr "将所有专辑转储为独立的播放列表"
 
 #: ../../bin/write_playlists.inc:97
 msgid "Dumps all Artists as individual playlists"
-msgstr ""
+msgstr "将所有艺术家转储为独立的播放列表"
 
 #: ../../bin/write_playlists.inc:98
 msgid "Extensions: m3u (default), xspf, pls"
-msgstr ""
+msgstr "拓展：m3u(默认)，xspf，pls"
 
 #: ../../broadcast.php:38
 msgid "Broadcast Delete"
-msgstr ""
+msgstr "删除广播"
 
 #: ../../broadcast.php:51
 msgid "Broadcast Deleted"
-msgstr ""
+msgstr "广播已删除"
 
 #: ../../broadcast.php:51
 msgid "The Broadcast has been deleted"
-msgstr ""
+msgstr "广播已删除"
 
 #: ../../browse.php:94 ../../lib/class/browse.class.php:262
 #: ../../templates/header.inc.php:450 ../../templates/sidebar_home.inc.php:40
 #: ../../templates/sidebar_home.inc.php:82
 #: ../../templates/sidebar.light.inc.php:30
 msgid "Tag Cloud"
-msgstr ""
+msgstr "标签云"
 
 #: ../../channel/index.php:75 ../../plex/web/init.php:38
 msgid "Unauthorized."
-msgstr ""
+msgstr "未授权。"
 
 #: ../../channel.php:61
 msgid "Channel Created"
-msgstr ""
+msgstr "已创建通道"
 
 #: ../../channel.php:70
 msgid "Channel Delete"
-msgstr ""
+msgstr "删除通道"
 
 #: ../../channel.php:83
 msgid "Channel Deleted"
-msgstr ""
+msgstr "通道已删除"
 
 #: ../../channel.php:83
 msgid "The Channel has been deleted"
-msgstr ""
+msgstr "通道已删除"
 
 #: ../../democratic.php:57
 msgid "The Requested Playlist has been deleted."
-msgstr ""
+msgstr "请求的播放列表已被删除"
 
 #: ../../install.php:122
 msgid "Error: Ampache SQL Username or Password missing"
-msgstr ""
+msgstr "错误：Ampache 的数据库用户名或密码丢失（缺少）"
 
 #: ../../install.php:175
 msgid "Error: Config files not found or unreadable"
-msgstr ""
+msgstr "错误：配置文件未找到或不可读"
 
 #: ../../labels.php:36 ../../labels.php:56 ../../labels.php:58
 msgid "Label Deletion"
-msgstr ""
+msgstr "删除标签"
 
 #: ../../labels.php:37
 msgid "Are you sure you want to permanently delete this label?"
-msgstr ""
+msgstr "确定永久删除此标签？"
 
 #: ../../labels.php:56
 msgid "Label has been deleted."
-msgstr ""
+msgstr "标签已删除"
 
 #: ../../labels.php:58
 msgid "Cannot delete this label."
-msgstr ""
+msgstr "无法删除此标签"
 
 #: ../../labels.php:85
 msgid "Label Added"
-msgstr ""
+msgstr "已添加标签"
 
 #: ../../labels.php:110
 msgid "Label cannot be found."
-msgstr ""
+msgstr "无法找到标签"
 
 #: ../../lib/class/access.class.php:157 ../../lib/class/access.class.php:161
 msgid "Invalid IPv4 / IPv6 Address Entered"
-msgstr ""
+msgstr "输入了错误的 IPv4 或 IPv6 地址"
 
 #: ../../lib/class/access.class.php:165 ../../lib/class/access.class.php:166
 msgid "IP Address Version Mismatch"
-msgstr ""
+msgstr "IP 地址版本不符合"
 
 #: ../../lib/class/access.class.php:220
 msgid "Duplicate ACL defined"
-msgstr ""
+msgstr "复制ACL定义"
 
 #: ../../lib/class/access.class.php:459 ../../lib/class/access.class.php:481
 #: ../../lib/ui.lib.php:480 ../../templates/browse_filters.inc.php:110
@@ -1050,7 +1055,7 @@ msgstr ""
 #: ../../templates/show_mail_users.inc.php:31
 #: ../../templates/show_random.inc.php:66
 msgid "All"
-msgstr "Tutti"
+msgstr "全部"
 
 #: ../../lib/class/access.class.php:462
 #: ../../templates/list_header.inc.php:146
@@ -1059,19 +1064,19 @@ msgstr "Tutti"
 #: ../../templates/show_graphs.inc.php:89
 #: ../../templates/show_tagcloud.inc.php:33
 msgid "View"
-msgstr "Visualizza"
+msgstr "视图"
 
 #: ../../lib/class/access.class.php:465
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_edit_access.inc.php:70
 msgid "Read"
-msgstr ""
+msgstr "读取"
 
 #: ../../lib/class/access.class.php:468
 #: ../../templates/show_add_access.inc.php:39
 #: ../../templates/show_edit_access.inc.php:71
 msgid "Read/Write"
-msgstr ""
+msgstr "读/写"
 
 #: ../../lib/class/access.class.php:498
 #: ../../templates/show_add_access.inc.php:56
@@ -1080,7 +1085,7 @@ msgstr ""
 #: ../../templates/show_add_access.inc.php:84
 #: ../../templates/show_edit_access.inc.php:38
 msgid "API/RPC"
-msgstr ""
+msgstr "API/RPC"
 
 #: ../../lib/class/access.class.php:500
 #: ../../templates/show_add_access.inc.php:68
@@ -1089,13 +1094,13 @@ msgstr ""
 #: ../../templates/show_add_access.inc.php:82
 #: ../../templates/show_edit_access.inc.php:37
 msgid "Local Network Definition"
-msgstr ""
+msgstr "本地网络定义"
 
 #: ../../lib/class/access.class.php:502
 #: ../../templates/show_add_access.inc.php:80
 #: ../../templates/show_edit_access.inc.php:36
 msgid "Web Interface"
-msgstr ""
+msgstr "Web界面"
 
 #: ../../lib/class/access.class.php:505
 #: ../../templates/show_add_access.inc.php:58
@@ -1103,13 +1108,13 @@ msgstr ""
 #: ../../templates/show_add_access.inc.php:78
 #: ../../templates/show_edit_access.inc.php:35
 msgid "Stream Access"
-msgstr ""
+msgstr "流访问"
 
 #: ../../lib/class/album.class.php:407 ../../lib/class/artist.class.php:679
 #: ../../templates/show_album_group_disks.inc.php:50
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
-msgstr ""
+msgstr "未知（或被孤立）"
 
 #: ../../lib/class/album.class.php:642
 #: ../../lib/class/subsonic_xml_data.class.php:495
@@ -1119,7 +1124,7 @@ msgstr ""
 #: ../../templates/show_edit_album_row.inc.php:70
 #: ../../templates/show_song_previews.inc.php:40
 msgid "Disk"
-msgstr ""
+msgstr "磁盘"
 
 #: ../../lib/class/album.class.php:654 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:329 ../../lib/ui.lib.php:180
@@ -1136,20 +1141,20 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:210
 #: ../../templates/sidebar.light.inc.php:27
 msgid "Artists"
-msgstr "Artisti"
+msgstr "艺术家"
 
 #: ../../lib/class/album.class.php:654 ../../lib/class/album.class.php:655
 #: ../../templates/show_edit_album_row.inc.php:38
 msgid "Various"
-msgstr "Vari"
+msgstr "各种"
 
 #: ../../lib/class/album.class.php:674
 msgid "Album MusicBrainzID"
-msgstr ""
+msgstr "专辑 MusicBrainzID"
 
 #: ../../lib/class/album.class.php:677
 msgid "Release Group MusicBrainzID"
-msgstr ""
+msgstr "发行集团 MusicBrainzID"
 
 #: ../../lib/class/album.class.php:680 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:223
@@ -1188,7 +1193,7 @@ msgstr ""
 #: ../../templates/show_wanted_albums.inc.php:27
 #: ../../templates/sidebar_home.inc.php:198
 msgid "Artist"
-msgstr "Artista"
+msgstr "艺术家"
 
 #: ../../lib/class/album.class.php:683 ../../lib/class/search.class.php:216
 #: ../../templates/show_add_upload.inc.php:192
@@ -1215,119 +1220,119 @@ msgstr "Artista"
 #: ../../templates/show_wanted_albums.inc.php:26
 #: ../../templates/sidebar_home.inc.php:197
 msgid "Album"
-msgstr "Album"
+msgstr "专辑"
 
 #: ../../lib/class/ampache_rss.class.php:91
 #: ../../lib/class/localplay.class.php:607 ../../templates/header.inc.php:40
 #: ../../templates/show_localplay_status.inc.php:31
 #: ../../templates/show_now_playing.inc.php:33
 msgid "Now Playing"
-msgstr "In esecuzione"
+msgstr "正在播放"
 
 #: ../../lib/class/ampache_rss.class.php:92 ../../templates/header.inc.php:43
 #: ../../templates/show_recently_played.inc.php:24
 #: ../../templates/show_user.inc.php:139
 msgid "Recently Played"
-msgstr ""
+msgstr "最近播放"
 
 #: ../../lib/class/ampache_rss.class.php:93 ../../templates/header.inc.php:46
 msgid "Newest Albums"
-msgstr ""
+msgstr "最新的专辑"
 
 #: ../../lib/class/ampache_rss.class.php:94 ../../templates/header.inc.php:49
 msgid "Newest Artists"
-msgstr ""
+msgstr "最新的艺术家"
 
 #: ../../lib/class/ampache_rss.class.php:95 ../../templates/header.inc.php:54
 msgid "Newest Shouts"
-msgstr ""
+msgstr "最新的流言"
 
 #: ../../lib/class/ampache_rss.class.php:149
 msgid "RSS Feed"
-msgstr ""
+msgstr "RSS 源"
 
 #: ../../lib/class/ampache_rss.class.php:226
 msgid "seconds ago"
-msgstr ""
+msgstr "数秒前"
 
 #: ../../lib/class/ampache_rss.class.php:226
 msgid "minutes ago"
-msgstr ""
+msgstr "数分钟前"
 
 #: ../../lib/class/ampache_rss.class.php:226
 msgid "hours ago"
-msgstr ""
+msgstr "数小时前"
 
 #: ../../lib/class/ampache_rss.class.php:226
 msgid "days ago"
-msgstr ""
+msgstr "几天前"
 
 #: ../../lib/class/ampache_rss.class.php:226
 msgid "weeks ago"
-msgstr ""
+msgstr "几周前"
 
 #: ../../lib/class/ampache_rss.class.php:226
 msgid "months ago"
-msgstr ""
+msgstr "几个月前"
 
 #: ../../lib/class/ampache_rss.class.php:226
 msgid "years ago"
-msgstr ""
+msgstr "几年前"
 
 #: ../../lib/class/ampache_rss.class.php:353
 #: ../../modules/plugins/Flattr/Flattr.plugin.php:91
 #: ../../modules/plugins/Paypal/Paypal.plugin.php:94
 msgid "on"
-msgstr ""
+msgstr "在"
 
 #: ../../lib/class/ampconfig.class.php:85
 #, php-format
 msgid "Trying to clobber '%s' without setting clobber"
-msgstr ""
+msgstr "正在尝试修正 %s 的乱码"
 
 #: ../../lib/class/api.class.php:143
 msgid "Login Failed: version too old"
-msgstr ""
+msgstr "登录失败：版本太旧"
 
 #: ../../lib/class/api.class.php:171 ../../lib/class/api.class.php:172
 msgid "Login Failed: timestamp out of range"
-msgstr ""
+msgstr "登录失败：时间戳超出范围"
 
 #: ../../lib/class/api.class.php:172 ../../lib/class/api.class.php:184
 #: ../../lib/class/api.class.php:263
 msgid "Error Invalid Handshake - "
-msgstr ""
+msgstr "错误，无效的握手 -"
 
 #: ../../lib/class/api.class.php:183 ../../lib/class/api.class.php:184
 #: ../../lib/class/api.class.php:263
 msgid "Invalid Username/Password"
-msgstr ""
+msgstr "无效的用户名或密码"
 
 #: ../../lib/class/api.class.php:642 ../../lib/class/api.class.php:660
 #: ../../lib/class/api.class.php:678
 msgid "Access denied to this playlist."
-msgstr ""
+msgstr "无法访问该播放列表。"
 
 #: ../../lib/class/api.class.php:796 ../../lib/class/api.class.php:857
 #: ../../server/xml.server.php:102
 msgid "Invalid Request"
-msgstr ""
+msgstr "无效的请求"
 
 #: ../../lib/class/api.class.php:817 ../../lib/class/api.class.php:835
 msgid "Media Object Invalid or Not Specified"
-msgstr ""
+msgstr "媒体对象无效或未指定"
 
 #: ../../lib/class/api.class.php:1050
 msgid "Wrong library item type."
-msgstr ""
+msgstr "错误的库项目类型。"
 
 #: ../../lib/class/api.class.php:1054
 msgid "Library item not found."
-msgstr ""
+msgstr "未找到库类型。"
 
 #: ../../lib/class/art.class.php:1261
 msgid "Error: Unable to open"
-msgstr "Errore: Impossibile aprire"
+msgstr "错误：无法打开"
 
 #: ../../lib/class/art.class.php:1753 ../../lib/class/shoutbox.class.php:309
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:120
@@ -1363,60 +1368,60 @@ msgstr "Errore: Impossibile aprire"
 #: ../../templates/show_video.inc.php:104
 #: ../../templates/show_video_row.inc.php:33
 msgid "Play"
-msgstr "Riproduci"
+msgstr "播放"
 
 #: ../../lib/class/art.class.php:1762
 msgid "Edit/Find Art"
-msgstr ""
+msgstr "编辑或查找封面"
 
 #: ../../lib/class/art.class.php:1765
 msgid "Do you really want to reset art?"
-msgstr ""
+msgstr "确定要重设封面？"
 
 #: ../../lib/class/art.class.php:1766
 msgid "Reset Art"
-msgstr ""
+msgstr "重设封面"
 
 #: ../../lib/class/artist.class.php:498
 msgid "Artist MusicBrainzID"
-msgstr ""
+msgstr "艺术家 MusicBrainzID"
 
 #: ../../lib/class/autoupdate.class.php:230
 msgid "Update available"
-msgstr ""
+msgstr "更新可用"
 
 #: ../../lib/class/autoupdate.class.php:233
 msgid "See"
-msgstr ""
+msgstr "查看"
 
 #: ../../lib/class/autoupdate.class.php:233
 msgid "changes"
-msgstr ""
+msgstr "变更"
 
 #: ../../lib/class/autoupdate.class.php:234
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #: ../../lib/class/autoupdate.class.php:234
 msgid "download"
-msgstr ""
+msgstr "下载"
 
 #: ../../lib/class/autoupdate.class.php:247
 msgid "Updating Ampache sources with `"
-msgstr ""
+msgstr "更新 Ampache 源中，使用的是`"
 
 #: ../../lib/class/autoupdate.class.php:251
 #: ../../lib/class/autoupdate.class.php:266
 msgid "Done"
-msgstr ""
+msgstr "完成"
 
 #: ../../lib/class/autoupdate.class.php:262
 msgid "Updating dependencies with `"
-msgstr ""
+msgstr "更新依赖中，更新的是`"
 
 #: ../../lib/class/broadcast.class.php:358
 msgid "Broadcast edit"
-msgstr ""
+msgstr "编辑广播"
 
 #: ../../lib/class/broadcast.class.php:358
 #: ../../lib/class/channel.class.php:186 ../../lib/class/share.class.php:206
@@ -1450,7 +1455,7 @@ msgstr ""
 #: ../../templates/show_video.inc.php:164
 #: ../../templates/show_video_row.inc.php:133
 msgid "Edit"
-msgstr "Modifica"
+msgstr "编辑"
 
 #: ../../lib/class/broadcast.class.php:359
 #: ../../lib/class/channel.class.php:187 ../../lib/class/share.class.php:207
@@ -1500,15 +1505,15 @@ msgstr "Modifica"
 #: ../../templates/show_video.inc.php:174
 #: ../../templates/show_video_row.inc.php:141
 msgid "Delete"
-msgstr "Cancella"
+msgstr "删除"
 
 #: ../../lib/class/broadcast.class.php:371
 msgid "Broadcast"
-msgstr ""
+msgstr "广播"
 
 #: ../../lib/class/broadcast.class.php:384
 msgid "Unbroadcast"
-msgstr ""
+msgstr "未广播"
 
 #: ../../lib/class/browse.class.php:204 ../../lib/class/browse.class.php:284
 #: ../../lib/class/upnp_api.class.php:377 ../../server/index.ajax.php:324
@@ -1528,7 +1533,7 @@ msgstr ""
 #: ../../templates/show_stats.inc.php:35 ../../templates/show_stats.inc.php:75
 #: ../../templates/sidebar_home.inc.php:208
 msgid "Songs"
-msgstr "Brani"
+msgstr "歌曲"
 
 #: ../../lib/class/browse.class.php:210 ../../lib/class/upnp_api.class.php:353
 #: ../../lib/ui.lib.php:176 ../../server/search.ajax.php:90
@@ -1547,17 +1552,17 @@ msgstr "Brani"
 #: ../../templates/sidebar_home.inc.php:209
 #: ../../templates/sidebar.light.inc.php:28
 msgid "Albums"
-msgstr "Albums"
+msgstr "专辑"
 
 #: ../../lib/class/browse.class.php:222 ../../server/search.ajax.php:229
 msgid "Users"
-msgstr ""
+msgstr "用户"
 
 #: ../../lib/class/browse.class.php:231 ../../lib/class/upnp_api.class.php:449
 #: ../../templates/sidebar_home.inc.php:55
 #: ../../templates/sidebar.light.inc.php:33
 msgid "Radio Stations"
-msgstr ""
+msgstr "广播站"
 
 #: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:401
 #: ../../server/search.ajax.php:148 ../../templates/header.inc.php:444
@@ -1566,30 +1571,30 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:211
 #: ../../templates/sidebar.light.inc.php:29
 msgid "Playlists"
-msgstr "Playlists"
+msgstr "播放列表"
 
 #: ../../lib/class/browse.class.php:240
 #, fuzzy
 msgid "Playlist Medias"
-msgstr "Playlists"
+msgstr "播放列表"
 
 #: ../../lib/class/browse.class.php:244
 msgid "Current Playlist"
-msgstr ""
+msgstr "当前播放列表"
 
 #: ../../lib/class/browse.class.php:249 ../../lib/class/upnp_api.class.php:425
 #: ../../templates/sidebar_home.inc.php:42
 msgid "Smart Playlists"
-msgstr ""
+msgstr "智能播放列表"
 
 #: ../../lib/class/browse.class.php:253 ../../templates/show_stats.inc.php:27
 #: ../../templates/sidebar_admin.inc.php:24
 msgid "Catalogs"
-msgstr ""
+msgstr "目录"
 
 #: ../../lib/class/browse.class.php:257
 msgid "Shoutbox Records"
-msgstr ""
+msgstr "留言板记录"
 
 #: ../../lib/class/browse.class.php:268
 #: ../../templates/show_search_form.inc.php:51
@@ -1597,48 +1602,48 @@ msgstr ""
 #: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:76
 #: ../../templates/sidebar_home.inc.php:214
 msgid "Videos"
-msgstr ""
+msgstr "视频"
 
 #: ../../lib/class/browse.class.php:272
 #: ../../templates/show_democratic.inc.php:23
 msgid "Democratic Playlist"
-msgstr ""
+msgstr "投票的播放列表"
 
 #: ../../lib/class/browse.class.php:276
 msgid "Wanted Albums"
-msgstr ""
+msgstr "想要的播放列表"
 
 #: ../../lib/class/browse.class.php:280
 #: ../../templates/sidebar_home.inc.php:171
 msgid "Shared Objects"
-msgstr ""
+msgstr "共享项目"
 
 #: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:225
 #: ../../templates/show_video.inc.php:193
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Channels"
-msgstr ""
+msgstr "通道"
 
 #: ../../lib/class/browse.class.php:292
 #: ../../templates/sidebar_home.inc.php:50
 msgid "Broadcasts"
-msgstr ""
+msgstr "广播"
 
 #: ../../lib/class/browse.class.php:296
 msgid "Media Licenses"
-msgstr ""
+msgstr "媒体许可"
 
 #: ../../lib/class/browse.class.php:300 ../../lib/class/upnp_api.class.php:739
 #: ../../templates/sidebar_home.inc.php:79
 msgid "TV Shows"
-msgstr ""
+msgstr "电视节目"
 
 #: ../../lib/class/browse.class.php:304
 #: ../../templates/show_tvshow.inc.php:125
 #: ../../templates/show_tvshows.inc.php:44
 #: ../../templates/show_tvshows.inc.php:114
 msgid "Seasons"
-msgstr ""
+msgstr "季"
 
 #: ../../lib/class/browse.class.php:308
 #: ../../templates/show_podcast.inc.php:153
@@ -1650,21 +1655,21 @@ msgstr ""
 #: ../../templates/show_tvshows.inc.php:43
 #: ../../templates/show_tvshows.inc.php:113
 msgid "Episodes"
-msgstr ""
+msgstr "集"
 
 #: ../../lib/class/browse.class.php:313 ../../lib/class/upnp_api.class.php:803
 #: ../../templates/sidebar_home.inc.php:80
 msgid "Movies"
-msgstr ""
+msgstr "电影"
 
 #: ../../lib/class/browse.class.php:318 ../../lib/class/upnp_api.class.php:779
 msgid "Clips"
-msgstr ""
+msgstr "剪辑"
 
 #: ../../lib/class/browse.class.php:323 ../../lib/class/upnp_api.class.php:827
 #: ../../templates/sidebar_home.inc.php:81
 msgid "Personal Videos"
-msgstr ""
+msgstr "个人视频"
 
 #: ../../lib/class/browse.class.php:328 ../../server/search.ajax.php:178
 #: ../../templates/show_artist.inc.php:312
@@ -1672,109 +1677,108 @@ msgstr ""
 #: ../../templates/show_edit_artist_row.inc.php:62
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Labels"
-msgstr ""
+msgstr "标签"
 
 #: ../../lib/class/browse.class.php:332
 msgid "Private Messages"
-msgstr ""
+msgstr "私人信息"
 
 #: ../../lib/class/browse.class.php:336 ../../lib/class/upnp_api.class.php:473
 #: ../../templates/sidebar_home.inc.php:60
+#, fuzzy
 msgid "Podcasts"
-msgstr ""
+msgstr "广播"
 
 #: ../../lib/class/browse.class.php:340
+#, fuzzy
 msgid "Podcast Episodes"
-msgstr ""
+msgstr "集"
 
 #: ../../lib/class/browse.class.php:381 ../../templates/rightbar.inc.php:154
 #: ../../templates/show_recently_played.inc.php:203
 msgid "More"
-msgstr ""
+msgstr "更多"
 
 #: ../../lib/class/catalog.class.php:513 ../../lib/class/catalog.class.php:516
 #: ../../lib/class/catalog.class.php:519 ../../lib/class/user.class.php:1006
 #: ../../lib/preferences.php:344 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:81
 msgid "Never"
-msgstr ""
+msgstr "从不"
 
 #: ../../lib/class/catalog.class.php:599
 msgid "day"
 msgid_plural "days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "天"
 
 #: ../../lib/class/catalog.class.php:601
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "小时"
 
 #: ../../lib/class/catalog.class.php:646
 msgid "Catalog Insert Failed check debug logs"
-msgstr ""
+msgstr "插入目录失败，请检查debug日志"
 
 #: ../../lib/class/catalog.class.php:1509
 msgid "No Update Needed"
-msgstr "Non è necessario aggiornare"
+msgstr "无需更新"
 
 #: ../../lib/class/catalog.class.php:1805
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:1830
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
-msgstr ""
+msgstr "目录校验完成。%d 中 %d 文件被更新。"
 
 #: ../../lib/class/catalog.class.php:2014
 msgid "Failed to create playlist."
-msgstr ""
+msgstr "创建播放列表失败。"
 
 #: ../../lib/class/catalog.class.php:2031
 msgid "No valid songs found in playlist file."
-msgstr ""
+msgstr "未找到有效的播放列表文件。"
 
 #: ../../lib/class/catalog.class.php:2386
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
-msgstr ""
+msgstr "这个子目录不是已存在的目录中的一部分。更新无法继续。"
 
 #: ../../lib/class/channel.class.php:184
 msgid "Start Channel"
-msgstr ""
+msgstr "开启通道"
 
 #: ../../lib/class/channel.class.php:185
 msgid "Stop Channel"
-msgstr ""
+msgstr "停止通道"
 
 #: ../../lib/class/channel.class.php:186
 msgid "Channel edit"
-msgstr ""
+msgstr "编辑通道"
 
 #: ../../lib/class/channel.class.php:337
 msgid "Running"
-msgstr ""
+msgstr "运行中"
 
 #: ../../lib/class/channel.class.php:339
 #: ../../lib/class/localplay.class.php:609
 msgid "Stopped"
-msgstr ""
+msgstr "已停止"
 
 #: ../../lib/class/democratic.class.php:153
 #: ../../lib/class/video.class.php:287
 #: ../../templates/show_create_democratic.inc.php:36
 msgid "minutes"
-msgstr ""
+msgstr "分"
 
 #: ../../lib/class/democratic.class.php:154
 msgid "Primary"
-msgstr ""
+msgstr "首要"
 
 #: ../../lib/class/democratic.class.php:164
 #: ../../templates/show_add_user.inc.php:87
@@ -1782,7 +1786,7 @@ msgstr ""
 #: ../../templates/show_edit_user.inc.php:111
 #: ../../templates/show_preference_box.inc.php:96
 msgid "Content Manager"
-msgstr ""
+msgstr "内容管理器"
 
 #: ../../lib/class/democratic.class.php:167
 #: ../../templates/show_add_user.inc.php:88
@@ -1790,7 +1794,7 @@ msgstr ""
 #: ../../templates/show_edit_user.inc.php:112
 #: ../../templates/show_preference_box.inc.php:99
 msgid "Catalog Manager"
-msgstr ""
+msgstr "目录管理器"
 
 #: ../../lib/class/label.class.php:152 ../../lib/class/search.class.php:244
 #: ../../templates/show_edit_song_row.inc.php:82
@@ -1799,22 +1803,22 @@ msgstr ""
 #: ../../templates/show_search_bar.inc.php:38
 #: ../../templates/show_song.inc.php:221
 msgid "Label"
-msgstr ""
+msgstr "标签"
 
 #: ../../lib/class/live_stream.class.php:191
 #: ../../lib/class/live_stream.class.php:228
 msgid "Name Required"
-msgstr ""
+msgstr "需要名称"
 
 #: ../../lib/class/live_stream.class.php:199
 msgid "Invalid URL must be mms:// , https:// or http://"
-msgstr ""
+msgstr "无效的 URL ，必须是 mms:// ，https:// 或 http://"
 
 #: ../../lib/class/live_stream.class.php:205
 #: ../../lib/class/live_stream.class.php:239
 #: ../../lib/class/live_stream.class.php:245
 msgid "Invalid URL must be http:// or https://"
-msgstr ""
+msgstr "无效的 URL ，必须是 http:// 或 https://"
 
 #: ../../lib/class/live_stream.class.php:231
 msgid "Codec (eg. MP3, OGG...) Required"
@@ -1822,11 +1826,11 @@ msgstr ""
 
 #: ../../lib/class/live_stream.class.php:252
 msgid "Invalid Catalog"
-msgstr ""
+msgstr "无效的目录"
 
 #: ../../lib/class/localplay.class.php:611
 msgid "Paused"
-msgstr ""
+msgstr "已停止"
 
 #: ../../lib/class/localplay.class.php:613
 #: ../../lib/class/playlist.class.php:138
@@ -1838,13 +1842,13 @@ msgstr ""
 #: ../../modules/localplay/mpd/mpd.controller.php:491
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:82
 msgid "Unknown"
-msgstr "Sconosciuto"
+msgstr "未知"
 
 #: ../../lib/class/playlist_object.abstract.php:70
 #: ../../templates/show_edit_playlist_row.inc.php:37
 #: ../../templates/show_edit_search_row.inc.php:37
 msgid "Private"
-msgstr ""
+msgstr "私人"
 
 #: ../../lib/class/podcast.class.php:173
 #: ../../lib/class/podcast_episode.class.php:153
@@ -1855,27 +1859,30 @@ msgstr ""
 #: ../../templates/show_podcast_episodes.inc.php:103
 #: ../../templates/show_podcast.inc.php:110
 msgid "Podcast"
-msgstr ""
+msgstr "广播"
 
 #: ../../lib/class/podcast.class.php:272
 msgid "Wrong feed url"
 msgstr ""
 
 #: ../../lib/class/podcast.class.php:277
+#, fuzzy
 msgid "Target catalog required"
-msgstr ""
+msgstr "需要授权"
 
 #: ../../lib/class/podcast.class.php:281
+#, fuzzy
 msgid "Wrong target catalog type"
-msgstr ""
+msgstr "错误：请选择目录类型"
 
 #: ../../lib/class/podcast.class.php:301
 msgid "Cannot access the feed."
 msgstr ""
 
 #: ../../lib/class/podcast.class.php:305
+#, fuzzy
 msgid "Cannot read the feed."
-msgstr ""
+msgstr "无法删除此标签"
 
 #: ../../lib/class/podcast_episode.class.php:156
 #: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:435
@@ -1902,19 +1909,19 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:38
 #: ../../templates/show_videos.inc.php:115
 msgid "Title"
-msgstr "Titolo"
+msgstr "标题"
 
 #: ../../lib/class/privatemsg.class.php:141
 msgid "Error: Subject Required"
-msgstr ""
+msgstr "错误：需要一个主题"
 
 #: ../../lib/class/privatemsg.class.php:146
 msgid "Error: Unknown user"
-msgstr ""
+msgstr "错误：未知用户"
 
 #: ../../lib/class/privatemsg.class.php:166
 msgid "Private Message"
-msgstr ""
+msgstr "私人信息"
 
 #: ../../lib/class/privatemsg.class.php:167
 #, php-format
@@ -1929,15 +1936,23 @@ msgid ""
 "        %s\n"
 "        "
 msgstr ""
+"你刚收到一条来自 %s 的私人信息。\n"
+"\n"
+"\n"
+"----------------------\n"
+"%s\n"
+"----------------------\n"
+"\n"
+"%s"
 
 #: ../../lib/class/query.class.php:99
 msgid "Browse not found or expired, try reloading the page"
-msgstr ""
+msgstr "页面没有找到或已过期，请尝试重新加载页面"
 
 #: ../../lib/class/registration.class.php:53
 #, php-format
 msgid "New User Registration at %s"
-msgstr ""
+msgstr "新用户在 %s 注册"
 
 #: ../../lib/class/registration.class.php:55
 #, php-format
@@ -1958,6 +1973,19 @@ msgid ""
 "\n"
 "Thank you for registering\n"
 msgstr ""
+"感谢您的注册\n"
+"\n"
+"\n"
+"请保留此电子邮件作为您的记录。您的帐号信息如下：\n"
+"----------------------\n"
+"用户名： %s\n"
+"----------------------\n"
+"\n"
+"您的帐号尚未激活。因此在您访问如下链接前不能使用您的帐号：\n"
+"\n"
+"%s\n"
+"\n"
+"再次感谢您的注册\n"
 
 #: ../../lib/class/registration.class.php:77
 #, php-format
@@ -1971,11 +1999,18 @@ msgid ""
 "Website: %s\n"
 "\n"
 msgstr ""
+"一个新注册的用户\n"
+"以下是该用户输入的信息。\n"
+"\n"
+"用户名：%s\n"
+"全名：%s\n"
+"邮箱：%s\n"
+"网站：%s\n"
 
 #: ../../lib/class/registration.class.php:104
 #, php-format
 msgid "Account enabled at %s"
-msgstr ""
+msgstr "帐号已在 %s 激活"
 
 #: ../../lib/class/registration.class.php:105
 #, php-format
@@ -1985,100 +2020,104 @@ msgid ""
 "\n"
 "            Please logon using %s"
 msgstr ""
+"您的帐号已在 %s 激活\n"
+"\n"
+"\n"
+"请用 %s 登录"
 
 #: ../../lib/class/search.class.php:62
 msgid "is greater than or equal to"
-msgstr ""
+msgstr "大于或等于"
 
 #: ../../lib/class/search.class.php:68
 msgid "is less than or equal to"
-msgstr ""
+msgstr "小于或等于"
 
 #: ../../lib/class/search.class.php:74 ../../lib/class/search.class.php:142
 #: ../../lib/class/search.class.php:161 ../../lib/class/search.class.php:174
 msgid "is"
-msgstr ""
+msgstr "是"
 
 #: ../../lib/class/search.class.php:80 ../../lib/class/search.class.php:167
 #: ../../lib/class/search.class.php:180
 msgid "is not"
-msgstr ""
+msgstr "否"
 
 #: ../../lib/class/search.class.php:86
 msgid "is greater than"
-msgstr ""
+msgstr "大于"
 
 #: ../../lib/class/search.class.php:92
 msgid "is less than"
-msgstr ""
+msgstr "小于"
 
 #: ../../lib/class/search.class.php:99
 msgid "is true"
-msgstr ""
+msgstr "为真"
 
 #: ../../lib/class/search.class.php:104
 msgid "is false"
-msgstr ""
+msgstr "为否"
 
 #: ../../lib/class/search.class.php:110
 msgid "contains"
-msgstr ""
+msgstr "包含"
 
 #: ../../lib/class/search.class.php:118
 msgid "does not contain"
-msgstr ""
+msgstr "不包含"
 
 #: ../../lib/class/search.class.php:126
 msgid "starts with"
-msgstr ""
+msgstr "始于"
 
 #: ../../lib/class/search.class.php:134
 msgid "ends with"
-msgstr ""
+msgstr "结束于"
 
 #: ../../lib/class/search.class.php:148
 msgid "sounds like"
-msgstr ""
+msgstr "听起来像"
 
 #: ../../lib/class/search.class.php:154
 msgid "does not sound like"
-msgstr ""
+msgstr "听起来不像"
 
 #: ../../lib/class/search.class.php:187
 msgid "before"
-msgstr ""
+msgstr "之前"
 
 #: ../../lib/class/search.class.php:193
 msgid "after"
-msgstr ""
+msgstr "之后"
 
 #: ../../lib/class/search.class.php:202
 msgid "Any searchable text"
-msgstr ""
+msgstr "任何能搜索的文本"
 
 #: ../../lib/class/search.class.php:230
 #: ../../templates/show_edit_song_row.inc.php:78
 #: ../../templates/show_song.inc.php:214
 msgid "Composer"
-msgstr ""
+msgstr "作曲家"
 
 #: ../../lib/class/search.class.php:237
 #: ../../templates/show_manage_shoutbox.inc.php:31
 #: ../../templates/show_manage_shoutbox.inc.php:65
 #: ../../templates/show_song.inc.php:220
 msgid "Comment"
-msgstr "Commento"
+msgstr "评论"
 
 #: ../../lib/class/search.class.php:252 ../../lib/class/search.class.php:502
 #: ../../lib/class/search.class.php:536 ../../lib/class/tag.class.php:734
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
-msgstr ""
+msgstr "标签"
 
 #: ../../lib/class/search.class.php:259
 #, fuzzy
 msgid "Album tag"
-msgstr "Copertine"
+msgstr "专辑封面"
 
 #: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:510
 #: ../../templates/show_disabled_songs.inc.php:32
@@ -2089,7 +2128,7 @@ msgstr "Copertine"
 #: ../../templates/show_song.inc.php:233
 #: ../../templates/show_video.inc.php:195
 msgid "Filename"
-msgstr "Nome file"
+msgstr "文件名"
 
 #: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:449
 #: ../../lib/class/search.class.php:524 ../../templates/show_albums.inc.php:44
@@ -2105,11 +2144,11 @@ msgstr "Nome file"
 #: ../../templates/show_song.inc.php:216
 #: ../../templates/show_wanted_albums.inc.php:28
 msgid "Year"
-msgstr "Anno"
+msgstr "年"
 
 #: ../../lib/class/search.class.php:280
 msgid "Length (in minutes)"
-msgstr ""
+msgstr "长度（以分钟为单位）"
 
 #: ../../lib/class/search.class.php:288 ../../lib/class/search.class.php:471
 #: ../../templates/show_albums.inc.php:57
@@ -2139,7 +2178,7 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:60
 #: ../../templates/show_videos.inc.php:137
 msgid "Rating"
-msgstr "Voto"
+msgstr "评级"
 
 #: ../../lib/class/search.class.php:306 ../../templates/show_albums.inc.php:47
 #: ../../templates/show_albums.inc.php:134
@@ -2151,7 +2190,7 @@ msgstr "Voto"
 #: ../../templates/show_videos.inc.php:51
 #: ../../templates/show_videos.inc.php:128
 msgid "# Played"
-msgstr ""
+msgstr "# 已播放"
 
 #: ../../lib/class/search.class.php:314
 #: ../../templates/show_add_channel.inc.php:102
@@ -2161,12 +2200,12 @@ msgstr ""
 #: ../../templates/show_edit_channel_row.inc.php:84
 #: ../../templates/show_song.inc.php:224
 msgid "Bitrate"
-msgstr "Bitrate"
+msgstr "比特率"
 
 #: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:88
 #: ../../templates/show_artist.inc.php:91
 msgid "Played"
-msgstr "Ascoltato"
+msgstr "已播放"
 
 #: ../../lib/class/search.class.php:366 ../../lib/class/search.class.php:494
 #: ../../templates/browse_filters.inc.php:107
@@ -2174,7 +2213,7 @@ msgstr "Ascoltato"
 #: ../../templates/show_add_podcast.inc.php:34
 #: ../../templates/show_export.inc.php:32
 msgid "Catalog"
-msgstr "Catalogo"
+msgstr "目录"
 
 #: ../../lib/class/search.class.php:379 ../../lib/ui.lib.php:135
 #: ../../templates/show_manage_democratic.inc.php:26
@@ -2183,7 +2222,7 @@ msgstr "Catalogo"
 #: ../../templates/sidebar_home.inc.php:97
 #: ../../templates/sidebar_home.inc.php:199
 msgid "Playlist"
-msgstr "Playlist"
+msgstr "播放列表"
 
 #: ../../lib/class/search.class.php:386
 #: ../../templates/show_playlists.inc.php:35
@@ -2191,11 +2230,11 @@ msgstr "Playlist"
 #: ../../templates/show_searches.inc.php:45
 #: ../../templates/show_searches.inc.php:81
 msgid "Playlist Name"
-msgstr "Nome playlist"
+msgstr "播放列表名称"
 
 #: ../../lib/class/search.class.php:399
 msgid "Smart Playlist"
-msgstr ""
+msgstr "智能播放列表"
 
 #: ../../lib/class/search.class.php:411
 msgid "Metadata"
@@ -2205,15 +2244,15 @@ msgstr ""
 #: ../../templates/show_add_upload.inc.php:203
 #: ../../templates/show_edit_song_row.inc.php:99
 msgid "Music License"
-msgstr ""
+msgstr "音乐授权"
 
 #: ../../lib/class/search.class.php:456
 msgid "Image Width"
-msgstr ""
+msgstr "图像宽度"
 
 #: ../../lib/class/search.class.php:463
 msgid "Image Height"
-msgstr ""
+msgstr "图像高度"
 
 #: ../../lib/class/search.class.php:518 ../../lib/class/search.class.php:544
 #: ../../lib/class/search.class.php:552
@@ -2255,13 +2294,13 @@ msgstr ""
 #: ../../templates/show_plugins.inc.php:80
 #: ../../templates/show_stats.inc.php:70
 msgid "Name"
-msgstr "Nome"
+msgstr "名称"
 
 #: ../../lib/class/search.class.php:530
 #: ../../templates/show_concerts.inc.php:28
 #: ../../templates/show_concerts.inc.php:62
 msgid "Place"
-msgstr ""
+msgstr "位置"
 
 #: ../../lib/class/search.class.php:558
 #: ../../templates/show_add_label.inc.php:34
@@ -2271,7 +2310,7 @@ msgstr ""
 #: ../../templates/show_labels.inc.php:91
 #: ../../templates/show_podcast_episode.inc.php:177
 msgid "Category"
-msgstr ""
+msgstr "类别"
 
 #: ../../lib/class/search.class.php:566
 #: ../../modules/catalog/remote/remote.catalog.php:103
@@ -2288,28 +2327,28 @@ msgstr ""
 #: ../../templates/show_user_registration.inc.php:85
 #: ../../templates/show_users.inc.php:50 ../../templates/show_users.inc.php:95
 msgid "Username"
-msgstr "Nome utente"
+msgstr "用户名"
 
 #: ../../lib/class/share.class.php:206
 msgid "Share edit"
-msgstr ""
+msgstr "编辑共享"
 
 #: ../../lib/class/share.class.php:350 ../../lib/class/share.class.php:352
 #: ../../templates/show_shares.inc.php:23
 msgid "Share"
-msgstr ""
+msgstr "共享"
 
 #: ../../lib/class/share.class.php:360
 msgid "Advanced Share"
-msgstr ""
+msgstr "高级共享"
 
 #: ../../lib/class/share.class.php:375
 msgid "Temporary direct link"
-msgstr ""
+msgstr "暂时直接链接"
 
 #: ../../lib/class/shoutbox.class.php:232
 msgid "New shout on your content"
-msgstr ""
+msgstr "您的内容里有新的留言"
 
 #: ../../lib/class/shoutbox.class.php:233
 #, php-format
@@ -2324,6 +2363,14 @@ msgid ""
 "    %s\n"
 "    "
 msgstr ""
+"您刚收到一条来自 %s  的新留言 “　%s ”。\n"
+"\n"
+"\n"
+"----------------------\n"
+"%s \n"
+"----------------------\n"
+"\n"
+"%s"
 
 #: ../../lib/class/shoutbox.class.php:310
 #: ../../templates/show_add_label.inc.php:80
@@ -2334,7 +2381,7 @@ msgstr ""
 #: ../../templates/show_podcasts.inc.php:30
 #: ../../templates/show_searches.inc.php:30
 msgid "Add"
-msgstr "Aggiungi"
+msgstr "添加"
 
 #: ../../lib/class/shoutbox.class.php:313
 #: ../../templates/show_album_group_disks.inc.php:152
@@ -2353,24 +2400,24 @@ msgstr "Aggiungi"
 #: ../../templates/show_video.inc.php:122
 #: ../../templates/show_video_row.inc.php:113
 msgid "Post Shout"
-msgstr ""
+msgstr "发表留言"
 
 #: ../../lib/class/shoutbox.class.php:317
 msgid "by"
-msgstr ""
+msgstr "来自"
 
 #: ../../lib/class/song.class.php:1469
 #: ../../templates/show_html5_player.inc.php:161
 msgid "Show Lyrics"
-msgstr ""
+msgstr "显示歌词"
 
 #: ../../lib/class/song.class.php:1495
 msgid "Track MusicBrainzID"
-msgstr ""
+msgstr "音乐（track） 的 MusicBrainzID"
 
 #: ../../lib/class/stream_playlist.class.php:592
 msgid "Vote added"
-msgstr ""
+msgstr "已添加投票"
 
 #: ../../lib/class/tvshow.class.php:194
 #: ../../lib/class/tvshow_episode.class.php:176
@@ -2384,7 +2431,7 @@ msgstr ""
 #: ../../templates/show_tvshows.inc.php:42
 #: ../../templates/show_tvshows.inc.php:112
 msgid "TV Show"
-msgstr ""
+msgstr "电视节目"
 
 #: ../../lib/class/tvshow_episode.class.php:179
 #: ../../lib/class/tvshow_season.class.php:133
@@ -2395,947 +2442,947 @@ msgstr ""
 #: ../../templates/show_tvshow_seasons.inc.php:40
 #: ../../templates/show_tvshow_seasons.inc.php:107
 msgid "Season"
-msgstr ""
+msgstr "季"
 
 #: ../../lib/class/tvshow_episode.class.php:183
 #: ../../templates/show_partial_tvshow_episode.inc.php:25
 #: ../../templates/show_partial_tvshow_episodes.inc.php:23
 msgid "Episode"
-msgstr ""
+msgstr "集"
 
 #: ../../lib/class/update.class.php:600
 msgid "No updates needed."
-msgstr ""
+msgstr "无需更新"
 
 #: ../../lib/class/update.class.php:602
 msgid "Return to main page"
-msgstr ""
+msgstr "返回主页"
 
 #: ../../lib/class/update.class.php:2628 ../../lib/class/update.class.php:2644
 #: ../../lib/class/update.class.php:2660
 msgid "File copy error."
-msgstr ""
+msgstr "复制文件出错"
 
 #: ../../lib/class/update.class.php:2635 ../../lib/class/update.class.php:2651
 #: ../../lib/class/update.class.php:2667
 msgid "Cannot copy default .htaccess file."
-msgstr ""
+msgstr "无法复制的默认.htaccess文件。"
 
 #: ../../lib/class/upnp_api.class.php:502
 #: ../../templates/show_add_catalog.inc.php:72
 #: ../../templates/sidebar_home.inc.php:24
 msgid "Music"
-msgstr ""
+msgstr "音乐"
 
 #: ../../lib/class/upnp_api.class.php:848
 #: ../../templates/show_now_playing_video_row.inc.php:41
 #: ../../templates/show_tagcloud.inc.php:27
 #: ../../templates/sidebar_home.inc.php:72
 msgid "Video"
-msgstr ""
+msgstr "视频"
 
 #: ../../lib/class/useractivity.class.php:207
 msgid "commented on"
-msgstr ""
+msgstr "评论于"
 
 #: ../../lib/class/useractivity.class.php:210
 msgid "uploaded"
-msgstr ""
+msgstr "已上传"
 
 #: ../../lib/class/useractivity.class.php:213
 msgid "played"
-msgstr ""
+msgstr "已播放"
 
 #: ../../lib/class/useractivity.class.php:216
 msgid "favorited"
-msgstr ""
+msgstr "已收藏"
 
 #: ../../lib/class/useractivity.class.php:219
 msgid "started to follow"
-msgstr ""
+msgstr "已订阅"
 
 #: ../../lib/class/useractivity.class.php:222
 msgid "did something on"
-msgstr ""
+msgstr "做了些什么，在"
 
 #: ../../lib/class/user.class.php:1042
 #: ../../templates/show_tagcloud.inc.php:98
 msgid "Not Enough Data"
-msgstr "Dati insufficienti"
+msgstr "数据不足"
 
 #: ../../lib/class/user.class.php:1330
 msgid "User avatar"
-msgstr ""
+msgstr "用户头像"
 
 #: ../../lib/class/user.class.php:1526
 msgid "Unfollow"
-msgstr ""
+msgstr "取消订阅"
 
 #: ../../lib/class/user.class.php:1526
 msgid "Follow"
-msgstr ""
+msgstr "订阅"
 
 #: ../../lib/class/video.class.php:795
 msgid "Afar"
-msgstr ""
+msgstr "阿法尔语（Afar）"
 
 #: ../../lib/class/video.class.php:796
 msgid "Abkhazian"
-msgstr ""
+msgstr "阿布哈兹语（Abkhazian）"
 
 #: ../../lib/class/video.class.php:797
 msgid "Avestan"
-msgstr ""
+msgstr "阿维斯陀语（Avestan）"
 
 #: ../../lib/class/video.class.php:798
 msgid "Afrikaans"
-msgstr ""
+msgstr "南非语（Afrikaans）"
 
 #: ../../lib/class/video.class.php:799
 msgid "Akan"
-msgstr ""
+msgstr "阿坎语（Akan）"
 
 #: ../../lib/class/video.class.php:800
 msgid "Amharic"
-msgstr ""
+msgstr "阿姆哈拉语 （Amharic）"
 
 #: ../../lib/class/video.class.php:801
 msgid "Aragonese"
-msgstr ""
+msgstr "阿拉贡语（Aragonese）"
 
 #: ../../lib/class/video.class.php:802
 msgid "Arabic"
-msgstr ""
+msgstr "阿拉伯语（Arabic）"
 
 #: ../../lib/class/video.class.php:803
 msgid "Assamese"
-msgstr ""
+msgstr "阿萨姆语（Assamese）"
 
 #: ../../lib/class/video.class.php:804
 msgid "Avaric"
-msgstr ""
+msgstr "阿瓦尔语（Avaric）"
 
 #: ../../lib/class/video.class.php:805
 msgid "Aymara"
-msgstr ""
+msgstr "艾马拉语（Ayamara）"
 
 #: ../../lib/class/video.class.php:806
 msgid "Azerbaijani"
-msgstr ""
+msgstr "阿塞拜疆语（Azerbaijiani）"
 
 #: ../../lib/class/video.class.php:807
 msgid "Bashkir"
-msgstr ""
+msgstr "巴什基尔语（Bashkir）"
 
 #: ../../lib/class/video.class.php:808
 msgid "Belarusian"
-msgstr ""
+msgstr "白俄罗斯语 （Belarusian）"
 
 #: ../../lib/class/video.class.php:809
 msgid "Bulgarian"
-msgstr ""
+msgstr "保加利亚语（Bulgarian）"
 
 #: ../../lib/class/video.class.php:810
 msgid "Bihari"
-msgstr ""
+msgstr "比哈尔语（Bihari）"
 
 #: ../../lib/class/video.class.php:811
 msgid "Bislama"
-msgstr ""
+msgstr "比斯拉马语（Bislama）"
 
 #: ../../lib/class/video.class.php:812
 msgid "Bambara"
-msgstr ""
+msgstr "班巴拉语（Bambara）"
 
 #: ../../lib/class/video.class.php:813
 msgid "Bengali"
-msgstr ""
+msgstr "孟加拉语（Bengali）"
 
 #: ../../lib/class/video.class.php:814
 msgid "Tibetan"
-msgstr ""
+msgstr "藏语（Tibetan）"
 
 #: ../../lib/class/video.class.php:815
 msgid "Breton"
-msgstr ""
+msgstr "布列塔尼语（Breton）"
 
 #: ../../lib/class/video.class.php:816
 msgid "Bosnian"
-msgstr ""
+msgstr "波斯尼亚语（Bosnian）"
 
 #: ../../lib/class/video.class.php:817
 msgid "Catalan"
-msgstr ""
+msgstr "加泰罗尼亚语（Catalan）"
 
 #: ../../lib/class/video.class.php:818
 msgid "Chechen"
-msgstr ""
+msgstr "车臣语（Chechen）"
 
 #: ../../lib/class/video.class.php:819
 msgid "Chamorro"
-msgstr ""
+msgstr "查莫罗语（Chamorro）"
 
 #: ../../lib/class/video.class.php:820
 msgid "Corsican"
-msgstr ""
+msgstr "科西嘉语（Corsican）"
 
 #: ../../lib/class/video.class.php:821
 msgid "Cree"
-msgstr ""
+msgstr "克里语（Cree）"
 
 #: ../../lib/class/video.class.php:822
 msgid "Czech"
-msgstr ""
+msgstr "捷克语（Czech）"
 
 #: ../../lib/class/video.class.php:823
 msgid "Church Slavic"
-msgstr ""
+msgstr "教会斯拉夫语（Church Slavic）"
 
 #: ../../lib/class/video.class.php:824
 msgid "Chuvash"
-msgstr ""
+msgstr "匈人语（Chuvash）"
 
 #: ../../lib/class/video.class.php:825
 msgid "Welsh"
-msgstr ""
+msgstr "威尔士英语（Welsh）"
 
 #: ../../lib/class/video.class.php:826
 msgid "Danish"
-msgstr ""
+msgstr "丹麦语（Danish）"
 
 #: ../../lib/class/video.class.php:827
 msgid "German"
-msgstr ""
+msgstr "德语（German）"
 
 #: ../../lib/class/video.class.php:828
 msgid "Divehi"
-msgstr ""
+msgstr "迪维西语（Divehi）"
 
 #: ../../lib/class/video.class.php:829
 msgid "Dzongkha"
-msgstr ""
+msgstr "宗喀语（Dzongkha）"
 
 #: ../../lib/class/video.class.php:830
 msgid "Ewe"
-msgstr ""
+msgstr "埃维语（Ewe）"
 
 #: ../../lib/class/video.class.php:831
 msgid "Greek"
-msgstr ""
+msgstr "希腊语（Greek）"
 
 #: ../../lib/class/video.class.php:832
 msgid "English"
-msgstr ""
+msgstr "英语（English）"
 
 #: ../../lib/class/video.class.php:833
 msgid "Esperanto"
-msgstr ""
+msgstr "世界语（Esperanto）"
 
 #: ../../lib/class/video.class.php:834
 msgid "Spanish"
-msgstr ""
+msgstr "西班牙语（Spanish）"
 
 #: ../../lib/class/video.class.php:835
 msgid "Estonian"
-msgstr ""
+msgstr "爱沙尼亚语（Estonian）"
 
 #: ../../lib/class/video.class.php:836
 msgid "Basque"
-msgstr ""
+msgstr "巴斯克语（Basque）"
 
 #: ../../lib/class/video.class.php:837
 msgid "Persian"
-msgstr ""
+msgstr "波斯语（Persian）"
 
 #: ../../lib/class/video.class.php:838
 msgid "Fulah"
-msgstr ""
+msgstr "富拉语（Fulah）"
 
 #: ../../lib/class/video.class.php:839
 msgid "Finnish"
-msgstr ""
+msgstr "芬兰语（Finnish）"
 
 #: ../../lib/class/video.class.php:840
 msgid "Fijian"
-msgstr ""
+msgstr "斐济语（Fijian）"
 
 #: ../../lib/class/video.class.php:841
 msgid "Faroese"
-msgstr ""
+msgstr "法罗语（Faroese）"
 
 #: ../../lib/class/video.class.php:842
 msgid "French"
-msgstr ""
+msgstr "法语（French）"
 
 #: ../../lib/class/video.class.php:843
 msgid "Western Frisian"
-msgstr ""
+msgstr "西弗里西亚语（Western Frisian）"
 
 #: ../../lib/class/video.class.php:844
 msgid "Irish"
-msgstr ""
+msgstr "爱尔兰语（Irish）"
 
 #: ../../lib/class/video.class.php:845
 msgid "Scottish Gaelic"
-msgstr ""
+msgstr "苏格兰盖尔语（Scottish Gaelic）"
 
 #: ../../lib/class/video.class.php:846
 msgid "Galician"
-msgstr ""
+msgstr "葡萄牙语（Galician）"
 
 #: ../../lib/class/video.class.php:847
 msgid "Guarani"
-msgstr ""
+msgstr "瓜拉尼语（Guarani）"
 
 #: ../../lib/class/video.class.php:848
 msgid "Gujarati"
-msgstr ""
+msgstr "古吉拉特语（Gujarati）"
 
 #: ../../lib/class/video.class.php:849
 msgid "Manx"
-msgstr ""
+msgstr "曼岛语（Manx）"
 
 #: ../../lib/class/video.class.php:850
 msgid "Hausa"
-msgstr ""
+msgstr "豪萨语(Hausa)"
 
 #: ../../lib/class/video.class.php:851
 msgid "Hebrew"
-msgstr ""
+msgstr "希伯来语（Hebrew）"
 
 #: ../../lib/class/video.class.php:852
 msgid "Hindi"
-msgstr ""
+msgstr "印地语（Hindi）"
 
 #: ../../lib/class/video.class.php:853
 msgid "Hiri Motu"
-msgstr ""
+msgstr "希里莫图（Hiri Motu）"
 
 #: ../../lib/class/video.class.php:854
 msgid "Croatian"
-msgstr ""
+msgstr "克罗地亚语（Croatian）"
 
 #: ../../lib/class/video.class.php:855
 msgid "Haitian"
-msgstr ""
+msgstr "海地克里奥尔语（Haitian）"
 
 #: ../../lib/class/video.class.php:856
 msgid "Hungarian"
-msgstr ""
+msgstr "匈牙利语（Hungarian）"
 
 #: ../../lib/class/video.class.php:857
 msgid "Armenian"
-msgstr ""
+msgstr "亚美尼亚语（Armenian）"
 
 #: ../../lib/class/video.class.php:858
 msgid "Herero"
-msgstr ""
+msgstr "赫雷罗语（Herero）"
 
 #: ../../lib/class/video.class.php:859
 msgid "Interlingua (International Auxiliary Language Association)"
-msgstr ""
+msgstr "国际语（Interlingua(International Auxiliary Language Association)）"
 
 #: ../../lib/class/video.class.php:860
 msgid "Indonesian"
-msgstr ""
+msgstr "印尼语（Indonesian）"
 
 #: ../../lib/class/video.class.php:861
 msgid "Interlingue"
-msgstr ""
+msgstr "人工语言（Interlingue）"
 
 #: ../../lib/class/video.class.php:862
 msgid "Igbo"
-msgstr ""
+msgstr "伊博语（Igbo）"
 
 #: ../../lib/class/video.class.php:863
 msgid "Sichuan Yi"
-msgstr ""
+msgstr "彝语（Sichuan Yi）"
 
 #: ../../lib/class/video.class.php:864
 msgid "Inupiaq"
-msgstr ""
+msgstr "依努庇克语（Inupiaq）"
 
 #: ../../lib/class/video.class.php:865
 msgid "Ido"
-msgstr ""
+msgstr "伊多语（Ido）"
 
 #: ../../lib/class/video.class.php:866
 msgid "Icelandic"
-msgstr ""
+msgstr "冰岛语（Icelandic）"
 
 #: ../../lib/class/video.class.php:867
 msgid "Italian"
-msgstr ""
+msgstr "意大利语（Italian）"
 
 #: ../../lib/class/video.class.php:868
 msgid "Inuktitut"
-msgstr ""
+msgstr "伊努伊特语（Inuktitut）"
 
 #: ../../lib/class/video.class.php:869
 msgid "Japanese"
-msgstr ""
+msgstr "日语（Japanese）"
 
 #: ../../lib/class/video.class.php:870
 msgid "Javanese"
-msgstr ""
+msgstr "爪哇语（Javanese）"
 
 #: ../../lib/class/video.class.php:871
 msgid "Georgian"
-msgstr ""
+msgstr "格鲁吉亚语（Georgian）"
 
 #: ../../lib/class/video.class.php:872
 msgid "Kongo"
-msgstr ""
+msgstr "刚果语（Kongo）"
 
 #: ../../lib/class/video.class.php:873
 msgid "Kikuyu"
-msgstr ""
+msgstr "基库尤语（Kikuyu）"
 
 #: ../../lib/class/video.class.php:874
 msgid "Kwanyama"
-msgstr ""
+msgstr "宽亚玛语（Kwanyama）"
 
 #: ../../lib/class/video.class.php:875
 msgid "Kazakh"
-msgstr ""
+msgstr "哈萨克语（Kazakh）"
 
 #: ../../lib/class/video.class.php:876
 msgid "Kalaallisut"
-msgstr ""
+msgstr "格陵兰语（Kalaallisut）"
 
 #: ../../lib/class/video.class.php:877
 msgid "Khmer"
-msgstr ""
+msgstr "高棉语（Khmer）"
 
 #: ../../lib/class/video.class.php:878
 msgid "Kannada"
-msgstr ""
+msgstr "坎纳达语（Kannada）"
 
 #: ../../lib/class/video.class.php:879
 msgid "Korean"
-msgstr ""
+msgstr "韩语（Korean）"
 
 #: ../../lib/class/video.class.php:880
 msgid "Kanuri"
-msgstr ""
+msgstr "卡努里语（Kanuri）"
 
 #: ../../lib/class/video.class.php:881
 msgid "Kashmiri"
-msgstr ""
+msgstr "克什米尔语（Kashmiri）"
 
 #: ../../lib/class/video.class.php:882
 msgid "Kurdish"
-msgstr ""
+msgstr "库尔德语（Kurdish）"
 
 #: ../../lib/class/video.class.php:883
 msgid "Komi"
-msgstr ""
+msgstr "科米语（Komi）"
 
 #: ../../lib/class/video.class.php:884
 msgid "Cornish"
-msgstr ""
+msgstr "康沃尔语（Cornish）"
 
 #: ../../lib/class/video.class.php:885
 msgid "Kirghiz"
-msgstr ""
+msgstr "吉尔吉斯语（Kirghiz）"
 
 #: ../../lib/class/video.class.php:886
 msgid "Latin"
-msgstr ""
+msgstr "拉丁语（Latin）"
 
 #: ../../lib/class/video.class.php:887
 msgid "Luxembourgish"
-msgstr ""
+msgstr "卢森堡语（Luxembourgish）"
 
 #: ../../lib/class/video.class.php:888
 msgid "Ganda"
-msgstr ""
+msgstr "干达语（Ganda）"
 
 #: ../../lib/class/video.class.php:889
 msgid "Limburgish"
-msgstr ""
+msgstr "林堡语（Limburgish）"
 
 #: ../../lib/class/video.class.php:890
 msgid "Lingala"
-msgstr ""
+msgstr "林加拉语（Lingala）"
 
 #: ../../lib/class/video.class.php:891
 msgid "Lao"
-msgstr ""
+msgstr "老挝语（Lao）"
 
 #: ../../lib/class/video.class.php:892
 msgid "Lithuanian"
-msgstr ""
+msgstr "立陶宛语（Lithuanian）"
 
 #: ../../lib/class/video.class.php:893
 msgid "Luba-Katanga"
-msgstr ""
+msgstr "卢巴-加丹加语（Luba-Katanga）"
 
 #: ../../lib/class/video.class.php:894
 msgid "Latvian"
-msgstr ""
+msgstr "拉脱维亚语（Latvian）"
 
 #: ../../lib/class/video.class.php:895
 msgid "Malagasy"
-msgstr ""
+msgstr "马达加斯加语（Malagasy）"
 
 #: ../../lib/class/video.class.php:896
 msgid "Marshallese"
-msgstr ""
+msgstr "马绍尔语（Marshallese）"
 
 #: ../../lib/class/video.class.php:897
 msgid "Maori"
-msgstr ""
+msgstr "毛利语（Maori）"
 
 #: ../../lib/class/video.class.php:898
 msgid "Macedonian"
-msgstr ""
+msgstr "马其顿语（Macedonian）"
 
 #: ../../lib/class/video.class.php:899
 msgid "Malayalam"
-msgstr ""
+msgstr "马拉亚拉姆语（Malayalam）"
 
 #: ../../lib/class/video.class.php:900
 msgid "Mongolian"
-msgstr ""
+msgstr "蒙古语（Mongolian）"
 
 #: ../../lib/class/video.class.php:901
 msgid "Marathi"
-msgstr ""
+msgstr "马拉提语（Marathi）"
 
 #: ../../lib/class/video.class.php:902
 msgid "Malay"
-msgstr ""
+msgstr "马来语（Malay）"
 
 #: ../../lib/class/video.class.php:903
 msgid "Maltese"
-msgstr ""
+msgstr "马耳他语（Maltese）"
 
 #: ../../lib/class/video.class.php:904
 msgid "Burmese"
-msgstr ""
+msgstr "缅甸语（Burmese）"
 
 #: ../../lib/class/video.class.php:905
 msgid "Nauru"
-msgstr ""
+msgstr "瑙鲁语（Nauru）"
 
 #: ../../lib/class/video.class.php:906
 msgid "Norwegian Bokmal"
-msgstr ""
+msgstr "挪威布克莫尔语（Norwegian Bokmal）"
 
 #: ../../lib/class/video.class.php:907
 msgid "North Ndebele"
-msgstr ""
+msgstr "北恩德贝勒语（North Ndebele）"
 
 #: ../../lib/class/video.class.php:908
 msgid "Nepali"
-msgstr ""
+msgstr "尼泊尔语（Nepali）"
 
 #: ../../lib/class/video.class.php:909
 msgid "Ndonga"
-msgstr ""
+msgstr "恩敦加语（Ndonga）"
 
 #: ../../lib/class/video.class.php:910
 msgid "Dutch"
-msgstr ""
+msgstr "荷兰语（Dutch）"
 
 #: ../../lib/class/video.class.php:911
 msgid "Norwegian Nynorsk"
-msgstr ""
+msgstr "新挪威语（Norwegian Nynorsk）"
 
 #: ../../lib/class/video.class.php:912
 msgid "Norwegian"
-msgstr ""
+msgstr "挪威语（Norwegian）"
 
 #: ../../lib/class/video.class.php:913
 msgid "South Ndebele"
-msgstr ""
+msgstr "南恩德贝勒语（South Ndebele）"
 
 #: ../../lib/class/video.class.php:914
 msgid "Navajo"
-msgstr ""
+msgstr "纳瓦霍语（Navajo）"
 
 #: ../../lib/class/video.class.php:915
 msgid "Chichewa"
-msgstr ""
+msgstr "尼扬贾语（Chichewa）"
 
 #: ../../lib/class/video.class.php:916
 msgid "Occitan"
-msgstr ""
+msgstr "奥克西唐语（Occitan）"
 
 #: ../../lib/class/video.class.php:917
 msgid "Ojibwa"
-msgstr ""
+msgstr "奥吉布瓦语（Ojibwa）"
 
 #: ../../lib/class/video.class.php:918
 msgid "Oromo"
-msgstr ""
+msgstr "阿芳·奥洛莫语（Oromo）"
 
 #: ../../lib/class/video.class.php:919
 msgid "Oriya"
-msgstr ""
+msgstr "奥利亚语（Oriya）"
 
 #: ../../lib/class/video.class.php:920
 msgid "Ossetian"
-msgstr ""
+msgstr "奥塞梯语（Ossetian）"
 
 #: ../../lib/class/video.class.php:921
 msgid "Panjabi"
-msgstr ""
+msgstr "旁遮普语（Panjabi）"
 
 #: ../../lib/class/video.class.php:922
 msgid "Pali"
-msgstr ""
+msgstr "巴利语（Pali）"
 
 #: ../../lib/class/video.class.php:923
 msgid "Polish"
-msgstr ""
+msgstr "波兰语（Polish）"
 
 #: ../../lib/class/video.class.php:924
 msgid "Pashto"
-msgstr ""
+msgstr "普什图语（Pashto）"
 
 #: ../../lib/class/video.class.php:925
 msgid "Portuguese"
-msgstr ""
+msgstr "葡萄牙语（Portuguese）"
 
 #: ../../lib/class/video.class.php:926
 msgid "Quechua"
-msgstr ""
+msgstr "凯楚亚语（Quechua）"
 
 #: ../../lib/class/video.class.php:927
 msgid "Raeto-Romance"
-msgstr ""
+msgstr "利托-罗曼语（Raeto-Romance）"
 
 #: ../../lib/class/video.class.php:928
 msgid "Kirundi"
-msgstr ""
+msgstr "基隆迪语（Kirundi）"
 
 #: ../../lib/class/video.class.php:929
 msgid "Romanian"
-msgstr ""
+msgstr "罗马尼亚语（Romanian）"
 
 #: ../../lib/class/video.class.php:930
 msgid "Russian"
-msgstr ""
+msgstr "俄语（Russian）"
 
 #: ../../lib/class/video.class.php:931
 msgid "Kinyarwanda"
-msgstr ""
+msgstr "基尼阿万达语（Kinyarwanda）"
 
 #: ../../lib/class/video.class.php:932
 msgid "Sanskrit"
-msgstr ""
+msgstr "梵语（Sanskrit）"
 
 #: ../../lib/class/video.class.php:933
 msgid "Sardinian"
-msgstr ""
+msgstr "撒丁语（Sardinian）"
 
 #: ../../lib/class/video.class.php:934
 msgid "Sindhi"
-msgstr ""
+msgstr "信德语（Sindhi）"
 
 #: ../../lib/class/video.class.php:935
 msgid "Northern Sami"
-msgstr ""
+msgstr "北萨米语（Northern Sami）"
 
 #: ../../lib/class/video.class.php:936
 msgid "Sango"
-msgstr ""
+msgstr "桑戈语（Sango）"
 
 #: ../../lib/class/video.class.php:937
 msgid "Sinhala"
-msgstr ""
+msgstr "僧加罗语（Sinhala）"
 
 #: ../../lib/class/video.class.php:938
 msgid "Slovak"
-msgstr ""
+msgstr "斯洛伐克语（Slovak）"
 
 #: ../../lib/class/video.class.php:939
 msgid "Slovenian"
-msgstr ""
+msgstr "斯洛文尼亚语（Slovenian）"
 
 #: ../../lib/class/video.class.php:940
 msgid "Samoan"
-msgstr ""
+msgstr "萨摩亚语（Samoan）"
 
 #: ../../lib/class/video.class.php:941
 msgid "Shona"
-msgstr ""
+msgstr "绍纳语（Shona）"
 
 #: ../../lib/class/video.class.php:942
 msgid "Somali"
-msgstr ""
+msgstr "索马里语（Somali）"
 
 #: ../../lib/class/video.class.php:943
 msgid "Albanian"
-msgstr ""
+msgstr "阿尔巴尼亚语（Albanian）"
 
 #: ../../lib/class/video.class.php:944
 msgid "Serbian"
-msgstr ""
+msgstr "塞尔维亚语（Serbian）"
 
 #: ../../lib/class/video.class.php:945
 msgid "Swati"
-msgstr ""
+msgstr "塞斯瓦替语（Swati）"
 
 #: ../../lib/class/video.class.php:946
 msgid "Southern Sotho"
-msgstr ""
+msgstr "塞索托语（Southern Sotho）"
 
 #: ../../lib/class/video.class.php:947
 msgid "Sundanese"
-msgstr ""
+msgstr "巽他语（Sundanese）"
 
 #: ../../lib/class/video.class.php:948
 msgid "Swedish"
-msgstr ""
+msgstr "瑞典语（Swedish）"
 
 #: ../../lib/class/video.class.php:949
 msgid "Swahili"
-msgstr ""
+msgstr "斯瓦希里语（Swahili）"
 
 #: ../../lib/class/video.class.php:950
 msgid "Tamil"
-msgstr ""
+msgstr "泰米尔语（Tamil）"
 
 #: ../../lib/class/video.class.php:951
 msgid "Telugu"
-msgstr ""
+msgstr "泰卢固语（Telugu）"
 
 #: ../../lib/class/video.class.php:952
 msgid "Tajik"
-msgstr ""
+msgstr "塔吉克语（Tajik）"
 
 #: ../../lib/class/video.class.php:953
 msgid "Thai"
-msgstr ""
+msgstr "傣语（Thai）"
 
 #: ../../lib/class/video.class.php:954
 msgid "Tigrinya"
-msgstr ""
+msgstr "提格里尼亚语（Tigrinya）"
 
 #: ../../lib/class/video.class.php:955
 msgid "Turkmen"
-msgstr ""
+msgstr "土库曼语（Turkmen）"
 
 #: ../../lib/class/video.class.php:956
 msgid "Tagalog"
-msgstr ""
+msgstr "他加禄语（Tagalog）"
 
 #: ../../lib/class/video.class.php:957
 msgid "Tswana"
-msgstr ""
+msgstr "塞茨瓦纳语（Tswana）"
 
 #: ../../lib/class/video.class.php:958
 msgid "Tonga"
-msgstr ""
+msgstr "汤加语（Tonga）"
 
 #: ../../lib/class/video.class.php:959
 msgid "Turkish"
-msgstr ""
+msgstr "土耳其语（Turkish）"
 
 #: ../../lib/class/video.class.php:960
 msgid "Tsonga"
-msgstr ""
+msgstr "宗加语（Tsonga）"
 
 #: ../../lib/class/video.class.php:961
 msgid "Tatar"
-msgstr ""
+msgstr "塔塔尔语（Tatar）"
 
 #: ../../lib/class/video.class.php:962
 msgid "Twi"
-msgstr ""
+msgstr "特威语（Twi）"
 
 #: ../../lib/class/video.class.php:963
 msgid "Tahitian"
-msgstr ""
+msgstr "塔希提语（Tahitian）"
 
 #: ../../lib/class/video.class.php:964
 msgid "Uighur"
-msgstr ""
+msgstr "维吾尔语（Uighur）"
 
 #: ../../lib/class/video.class.php:965
 msgid "Ukrainian"
-msgstr ""
+msgstr "乌克兰语（Ukrainian）"
 
 #: ../../lib/class/video.class.php:966
 msgid "Urdu"
-msgstr ""
+msgstr "乌尔都语（Urdu）"
 
 #: ../../lib/class/video.class.php:967
 msgid "Uzbek"
-msgstr ""
+msgstr "乌兹别克语（Uzbek）"
 
 #: ../../lib/class/video.class.php:968
 msgid "Venda"
-msgstr ""
+msgstr "文达语（Venda）"
 
 #: ../../lib/class/video.class.php:969
 msgid "Vietnamese"
-msgstr ""
+msgstr "越南语（Vietnamese）"
 
 #: ../../lib/class/video.class.php:970
 msgid "Volapuk"
-msgstr ""
+msgstr "沃拉普克语（Volapuk）"
 
 #: ../../lib/class/video.class.php:971
 msgid "Walloon"
-msgstr ""
+msgstr "沃伦语（Walloon）"
 
 #: ../../lib/class/video.class.php:972
 msgid "Wolof"
-msgstr ""
+msgstr "沃洛夫语（Wolof）"
 
 #: ../../lib/class/video.class.php:973
 msgid "Xhosa"
-msgstr ""
+msgstr "科萨语（Xhosa）"
 
 #: ../../lib/class/video.class.php:974
 msgid "Yiddish"
-msgstr ""
+msgstr "依地语（Yiddish）"
 
 #: ../../lib/class/video.class.php:975
 msgid "Yoruba"
-msgstr ""
+msgstr "约鲁巴语（Yoruba）"
 
 #: ../../lib/class/video.class.php:976
 msgid "Zhuang"
-msgstr ""
+msgstr "壮语（Zhuang）"
 
 #: ../../lib/class/video.class.php:977
 msgid "Chinese"
-msgstr ""
+msgstr "汉语（Chinese）"
 
 #: ../../lib/class/video.class.php:978
 msgid "Zulu"
-msgstr ""
+msgstr "祖鲁语（Zulu）"
 
 #: ../../lib/class/wanted.class.php:222
 msgid "Unknown Artist"
-msgstr ""
+msgstr "未知艺术家"
 
 #: ../../lib/class/wanted.class.php:411
 msgid "Accept"
-msgstr ""
+msgstr "接受"
 
 #: ../../lib/class/wanted.class.php:415
 #: ../../lib/javascript/search-data.php:51
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: ../../lib/class/wanted.class.php:418
 msgid "Add to wanted list"
-msgstr ""
+msgstr "添加到心愿单"
 
 #: ../../lib/debug.lib.php:310 ../../lib/debug.lib.php:327
 msgid "OK"
-msgstr ""
+msgstr "好的"
 
 #: ../../lib/debug.lib.php:310
 msgid "ERROR"
-msgstr ""
+msgstr "错误"
 
 #: ../../lib/debug.lib.php:327
 msgid "WARNING"
-msgstr ""
+msgstr "警告"
 
 #: ../../lib/install.lib.php:83
 msgid "Unable to connect to database, check your ampache config"
-msgstr ""
+msgstr "无法连接到数据库，请检查您的 ampache 相关设置"
 
 #: ../../lib/install.lib.php:91
 msgid "Unable to query database, check your ampache config"
-msgstr ""
+msgstr "无法进行数据库查询，请检查您的 ampache 相关设置"
 
 #: ../../lib/install.lib.php:98
 msgid "Existing Database detected, unable to continue installation"
-msgstr ""
+msgstr "探测到现有数据库，无法继续安装"
 
 #: ../../lib/install.lib.php:153 ../../lib/install.lib.php:288
 msgid "Error writing config file"
-msgstr ""
+msgstr "写入配置文件时出错"
 
 #: ../../lib/install.lib.php:178
 msgid "Error: Invalid database name."
-msgstr ""
+msgstr "错误：无效的数据库名称"
 
 #: ../../lib/install.lib.php:183
 #, php-format
 msgid "Error: Unable to make database connection: %s"
-msgstr ""
+msgstr "错误：无法与数据库进行 %s 链接"
 
 #: ../../lib/install.lib.php:193
 msgid "Error: Database already exists and overwrite not checked"
-msgstr ""
+msgstr "错误：数据库已存在且不允许覆盖"
 
 #: ../../lib/install.lib.php:200
 #, php-format
 msgid "Error: Unable to create database: %s"
-msgstr ""
+msgstr "错误：无法创建 %s 数据库"
 
 #: ../../lib/install.lib.php:217
 #, php-format
 msgid ""
 "Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s"
-msgstr ""
+msgstr "错误：在 %3$s : %4$s 中拥有 %2$s 权限的用户 %1$s 无法创建"
 
 #: ../../lib/install.lib.php:268
 msgid "Invalid configuration settings"
-msgstr ""
+msgstr "无效的配置设置"
 
 #: ../../lib/install.lib.php:274
 msgid "Database Connection Failed Check Hostname, Username and Password"
-msgstr ""
+msgstr "数据库连接错误，请检查主机名，用户名及密码"
 
 #: ../../lib/install.lib.php:283
 msgid "Config file is not writable"
-msgstr ""
+msgstr "配置文件不可写入"
 
 #: ../../lib/install.lib.php:309
 msgid "No Username/Password specified"
-msgstr ""
+msgstr "未指定用户名或密码"
 
 #: ../../lib/install.lib.php:314
 msgid "Passwords do not match"
-msgstr ""
+msgstr "密码不符"
 
 #: ../../lib/install.lib.php:319
 #, php-format
 msgid "Database connection failed: %s"
-msgstr ""
+msgstr "数据库连接出错： %s"
 
 #: ../../lib/install.lib.php:324
 #, php-format
 msgid "Database select failed: %s"
-msgstr ""
+msgstr "数据库选择失败：%s"
 
 #: ../../lib/install.lib.php:334
 #, php-format
 msgid "Administrative user creation failed: %s"
-msgstr ""
+msgstr "管理员权限用户创建失败：%s"
 
 #: ../../lib/login.php:80
 msgid "Error Username or Password incorrect, please try again"
-msgstr ""
+msgstr "错误未用户名或密码不符，请重试"
 
 #: ../../lib/login.php:100
 msgid "User Disabled please contact Admin"
-msgstr ""
+msgstr "用户被禁用，请联系管理员"
 
 #: ../../lib/login.php:108
 msgid "User Already Logged in"
-msgstr ""
+msgstr "用户已登录"
 
 #: ../../lib/login.php:129
 msgid "Unable to create local account"
-msgstr ""
+msgstr "无法创建本地账户"
 
 #: ../../lib/preferences.php:215 ../../lib/preferences.php:358
 #: ../../templates/show_disabled_songs.inc.php:77
 #: ../../templates/show_user_row.inc.php:98
 msgid "Enable"
-msgstr "Abilitato"
+msgstr "启用"
 
 #: ../../lib/preferences.php:216 ../../lib/preferences.php:359
 #: ../../templates/show_catalog_types.inc.php:45
@@ -3344,7 +3391,7 @@ msgstr "Abilitato"
 #: ../../templates/show_localplay_controllers.inc.php:45
 #: ../../templates/show_user_row.inc.php:100
 msgid "Disable"
-msgstr "Disabilitato"
+msgstr "禁用"
 
 #: ../../lib/preferences.php:237 ../../lib/preferences.php:274
 #: ../../lib/ui.lib.php:415 ../../lib/ui.lib.php:506
@@ -3355,13 +3402,13 @@ msgstr "Disabilitato"
 #: ../../templates/show_video.inc.php:42
 #: ../../templates/sidebar_localplay.inc.php:75
 msgid "None"
-msgstr ""
+msgstr "空"
 
 #: ../../lib/preferences.php:239 ../../templates/show_edit_user.inc.php:147
 #: ../../templates/show_live_stream.inc.php:54
 #: ../../templates/show_playtype_switch.inc.php:37
 msgid "Stream"
-msgstr "Stream"
+msgstr "流"
 
 #: ../../lib/preferences.php:242
 #: ../../modules/localplay/httpq/httpq.controller.php:471
@@ -3372,7 +3419,7 @@ msgstr "Stream"
 #: ../../templates/sidebar_home.inc.php:114
 #: ../../templates/sidebar_modules.inc.php:40
 msgid "Democratic"
-msgstr ""
+msgstr "投票的"
 
 #: ../../lib/preferences.php:245 ../../templates/show_edit_user.inc.php:145
 #: ../../templates/show_playtype_switch.inc.php:46
@@ -3380,12 +3427,12 @@ msgstr ""
 #: ../../templates/sidebar_localplay.inc.php:39
 #: ../../templates/sidebar_localplay.inc.php:40
 msgid "Localplay"
-msgstr ""
+msgstr "本地播放"
 
 #: ../../lib/preferences.php:247
 #: ../../templates/show_playtype_switch.inc.php:63
 msgid "Web Player"
-msgstr ""
+msgstr "网络播放器"
 
 #: ../../lib/preferences.php:254
 msgid "M3U"
@@ -3393,7 +3440,7 @@ msgstr "M3U"
 
 #: ../../lib/preferences.php:255
 msgid "Simple M3U"
-msgstr "M3U semplice"
+msgstr "Simple M3U"
 
 #: ../../lib/preferences.php:256
 msgid "PLS"
@@ -3409,91 +3456,91 @@ msgstr "RAM"
 
 #: ../../lib/preferences.php:259
 msgid "XSPF"
-msgstr ""
+msgstr "XSPF"
 
 #: ../../lib/preferences.php:299
 msgid "Disabled"
-msgstr ""
+msgstr "已禁用"
 
 #: ../../lib/preferences.php:301
 msgid "Manager"
-msgstr ""
+msgstr "管理器"
 
 #: ../../lib/preferences.php:335
 msgid "Send on Add"
-msgstr ""
+msgstr "发送添加"
 
 #: ../../lib/preferences.php:336
 msgid "Send and Clear on Add"
-msgstr ""
+msgstr "发送并清除添加"
 
 #: ../../lib/preferences.php:337
 msgid "Clear on Send"
-msgstr ""
+msgstr "清除已发送信息"
 
 #: ../../lib/preferences.php:338 ../../lib/preferences.php:345
 #: ../../lib/preferences.php:381
 #: ../../templates/show_install_config.inc.php:115
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
-msgstr ""
+msgstr "默认"
 
 #: ../../lib/preferences.php:346
 msgid "Always"
-msgstr ""
+msgstr "总是"
 
 #: ../../lib/preferences.php:382
 msgid "Year ascending"
-msgstr ""
+msgstr "按年升序"
 
 #: ../../lib/preferences.php:383
 msgid "Year descending"
-msgstr ""
+msgstr "按年降序"
 
 #: ../../lib/preferences.php:384
 msgid "Name ascending"
-msgstr ""
+msgstr "按名称升序"
 
 #: ../../lib/preferences.php:385
 msgid "Name descending"
-msgstr ""
+msgstr "按名称降序"
 
 #: ../../lib/preferences.php:406
 msgid "Click for grant Ampache to "
-msgstr ""
+msgstr "点击以授权 Ampache "
 
 #: ../../lib/rating.lib.php:42
 msgid "Don't Play"
-msgstr "Non riprodurre"
+msgstr "不播放"
 
 #: ../../lib/rating.lib.php:44
 msgid "It's Pretty Bad"
-msgstr ""
+msgstr "非常差"
 
 #: ../../lib/rating.lib.php:46
 msgid "It's Ok"
-msgstr "E' ok"
+msgstr "还行"
 
 #: ../../lib/rating.lib.php:48
 msgid "It's Pretty Good"
-msgstr ""
+msgstr "非常好"
 
 #: ../../lib/rating.lib.php:50
 msgid "I Love It!"
-msgstr "lo adoro!"
+msgstr "我太喜欢了！"
 
 #: ../../lib/rating.lib.php:52
 msgid "It's Insane"
-msgstr ""
+msgstr "如痴如醉"
 
 #: ../../lib/rating.lib.php:55
 msgid "Off the Charts!"
-msgstr ""
+msgstr "我爱死它了！"
 
 #: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:432
 #: ../../templates/sidebar.inc.php:33
 msgid "Home"
-msgstr "Inizio"
+msgstr "主页"
 
 #: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:469
 #: ../../templates/show_add_upload.inc.php:26
@@ -3504,102 +3551,103 @@ msgstr "Inizio"
 #: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/sidebar.light.inc.php:43
 msgid "Upload"
-msgstr ""
+msgstr "上传"
 
 #: ../../lib/ui.lib.php:129
 msgid "Local Play"
-msgstr "Riproduzione locale"
+msgstr "本地播放"
 
 #: ../../lib/ui.lib.php:132
 msgid "Random Play"
-msgstr ""
+msgstr "随机播放"
 
 #: ../../lib/ui.lib.php:138 ../../templates/show_search_bar.inc.php:47
 #: ../../templates/show_search_form.inc.php:85
 #: ../../templates/sidebar_home.inc.php:204
 msgid "Search"
-msgstr "Cerca"
+msgstr "搜索"
 
 #: ../../lib/ui.lib.php:141 ../../templates/show_user.inc.php:79
 #: ../../templates/show_user_row.inc.php:92 ../../templates/sidebar.inc.php:37
 #: ../../templates/sidebar_preferences.inc.php:30
 msgid "Preferences"
-msgstr "Impostazioni"
+msgstr "喜好设置"
 
 #: ../../lib/ui.lib.php:144 ../../lib/ui.lib.php:148
 msgid "Admin-Catalog"
-msgstr ""
+msgstr "管理员目录"
 
 #: ../../lib/ui.lib.php:152
 msgid "Admin-User Management"
-msgstr ""
+msgstr "管理员用户管理"
 
 #: ../../lib/ui.lib.php:156
 msgid "Admin-Mail Users"
-msgstr ""
+msgstr "管理员邮件用户"
 
 #: ../../lib/ui.lib.php:160
 msgid "Admin-Manage Access Lists"
-msgstr ""
+msgstr "管理员用户访问列表"
 
 #: ../../lib/ui.lib.php:164
 msgid "Admin-Site Preferences"
-msgstr ""
+msgstr "管理员站点设置"
 
 #: ../../lib/ui.lib.php:168
 msgid "Admin-Manage Modules"
-msgstr ""
+msgstr "管理员管理相关模组"
 
 #: ../../lib/ui.lib.php:172 ../../templates/sidebar_home.inc.php:24
 msgid "Browse Music"
-msgstr ""
+msgstr "浏览音乐"
 
 #: ../../lib/ui.lib.php:184 ../../templates/show_stats.inc.php:26
 #: ../../templates/sidebar_home.inc.php:183
 msgid "Statistics"
-msgstr ""
+msgstr "统计"
 
 #: ../../lib/ui.lib.php:251 ../../lib/ui.lib.php:304
 msgid "Add New"
-msgstr ""
+msgstr "添加"
 
 #: ../../lib/ui.lib.php:469
+#, fuzzy
 msgid "View License"
-msgstr ""
+msgstr "音乐授权"
 
 #: ../../lib/ui.lib.php:728
 msgid "On"
-msgstr ""
+msgstr "开"
 
 #: ../../lib/ui.lib.php:730
 msgid "Off"
-msgstr ""
+msgstr "关"
 
 #: ../../lostpassword.php:39
 msgid "Password has been sent"
-msgstr ""
+msgstr "密码已发送"
 
 #: ../../lostpassword.php:41
 msgid "Password has not been sent"
-msgstr ""
+msgstr "密码未发送"
 
 #: ../../lostpassword.php:60
 msgid "Lost Password"
-msgstr ""
+msgstr "忘记密码"
 
 #: ../../lostpassword.php:64
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
-msgstr ""
+msgstr "用户 %s 请求将密码重设为 ’%s‘。"
 
 #: ../../lostpassword.php:66
 #, php-format
 msgid "The password has been set to: %s"
-msgstr ""
+msgstr "密码已发送至：%s 。"
 
 #: ../../modules/Beets/Catalog.php:124
 msgid "Running Beets Update"
-msgstr ""
+msgstr "正在更新Beets"
 
 #: ../../modules/Beets/Catalog.php:199
 #: ../../modules/catalog/remote/remote.catalog.php:267
@@ -3607,15 +3655,15 @@ msgstr ""
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:243
 #, php-format
 msgid "Unable to Insert Song - %s"
-msgstr ""
+msgstr "无法插入歌曲 - %s"
 
 #: ../../modules/catalog/beets/beets.catalog.php:85
 msgid "Beets Database File"
-msgstr ""
+msgstr "Beets 数据库文件"
 
 #: ../../modules/catalog/beets/beets.catalog.php:102
 msgid "Error: Beets selected, but no Beets DB File provided"
-msgstr ""
+msgstr "错误：Beets 已经选中，但未提供 Beets 数据库文件"
 
 #: ../../modules/catalog/beets/beets.catalog.php:112
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:113
@@ -3626,187 +3674,190 @@ msgstr ""
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:161
 #, php-format
 msgid "Error: Catalog with %s already exists"
-msgstr ""
+msgstr "错误：具有 %s 的目录已存在"
 
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:86
 msgid "Beets Server URI"
-msgstr ""
+msgstr "Beets 服务器 URI"
 
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:103
 msgid "Error: Beets selected, but path is not a URL"
-msgstr ""
+msgstr "错误：Beets 已选中，但路径不是一个 URL"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:68
 msgid "Go to https://www.dropbox.com/developers/apps/create"
-msgstr ""
+msgstr "请前往 https://www.dropbox.com/developers/apps/create"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:69
 msgid "Select 'Dropbox API app'"
-msgstr ""
+msgstr "选择 “Dropbos API app”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:70
 msgid "Select 'Files and datastores'"
-msgstr ""
+msgstr "选择“Files and datastores”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:71
 msgid "Select 'No' at 'Can your app be limited to its own, private folder?'"
-msgstr ""
+msgstr "在“Can your app be limitedd to its own,private folder?”对话中选择“No”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:72
 msgid ""
 "Select 'Specific file types' at 'What type of files does your app need "
 "access to?'"
 msgstr ""
+"在“What type of files does your app need access to?”对话中选择“Specific file "
+"types”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Check Videos and Audio files"
-msgstr ""
+msgstr "检查视频及音频文件"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:74
 msgid "Give a name to your application and create it"
-msgstr ""
+msgstr "给您的应用程序命名并创建应用程序"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Copy your App key and App secret in the following fields."
-msgstr ""
+msgstr "复制您的 App key 和 App secret 到下面的文本框中。"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
 msgid ""
 "After preparing the catalog with pressing the 'Add catalog' button,<br /> "
 "you have to 'Make it ready' on the catalog table."
 msgstr ""
+"在准备完毕并点击“添加目录”按钮后，<br /> 您需要在目录表单中使其“准备完毕”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:114
 #: ../../templates/show_account.inc.php:109
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
-msgstr ""
+msgstr "API Key"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:115
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:107
 #: ../../templates/show_add_share.inc.php:35
 msgid "Secret"
-msgstr ""
+msgstr "Secret"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:116
 #: ../../modules/catalog/local/local.catalog.php:104
 #: ../../templates/show_stats.inc.php:71
 msgid "Path"
-msgstr "Percorso"
+msgstr "路径"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 msgid "Get chunked files on analyze"
-msgstr ""
+msgstr "获取有关分析分块文件"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:176
 msgid "Error: API Key and Secret Required for Dropbox Catalogs"
-msgstr ""
+msgstr "错误：需要API Key 及 Secret 才能使用 Dropbox Catalogs"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:182
 msgid "Invalid <dropbox-path>: "
-msgstr ""
+msgstr "无效的 <dropbox-path>："
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:213
 #, php-format
 msgid "Go to %s to generate the authorization code, then enter it bellow."
-msgstr ""
+msgstr "前往 %s 并生成授权码，然后将其输入至下面文本框中。"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:252
 msgid "Running Dropbox Remote Update"
-msgstr ""
+msgstr "正在 Dropbox 远程更新"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:294
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
-msgstr ""
+msgstr "目录已更新完毕。全部媒体：[%s]"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:296
 msgid "No media updated, do you respect the patterns?"
-msgstr ""
+msgstr "没有媒体被更新，您确定选对模式了吗？"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:299
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:441
 msgid "API Error: cannot connect to Dropbox."
-msgstr ""
+msgstr "API 错误：无法连接到 Dropbox 。"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:331
 msgid "API Error: Cannot access file/folder at "
-msgstr ""
+msgstr "API 错误：无法访问此位置的文件或文件夹："
 
 #: ../../modules/catalog/local/local.catalog.php:175
 msgid "Error: Path not specified"
-msgstr ""
+msgstr "错误：路径未指定"
 
 #: ../../modules/catalog/local/local.catalog.php:181
 msgid "Error: Defined Path is inside an existing catalog"
-msgstr ""
+msgstr "错误：指定的路径处于已存在的目录内"
 
 #: ../../modules/catalog/local/local.catalog.php:188
 #, php-format
 msgid "Error: %s is not readable or does not exist"
-msgstr ""
+msgstr "错误：%s 不可读或不存在"
 
 #: ../../modules/catalog/local/local.catalog.php:237
 #, php-format
 msgid "Error: Unable to open %s"
-msgstr ""
+msgstr "错误：无法打开 %s"
 
 #: ../../modules/catalog/local/local.catalog.php:244
 #: ../../modules/catalog/local/local.catalog.php:306
 #, php-format
 msgid "Error: Unable to change to directory %s"
-msgstr ""
+msgstr "错误：无法改变至 %s 目录"
 
 #. HINT: FullFile
 #: ../../modules/catalog/local/local.catalog.php:330
 #, php-format
 msgid "Error: Unable to get filesize for %s"
-msgstr ""
+msgstr "错误：无法获取为 %s 获取文件大小"
 
 #. HINT: FullFile
 #: ../../modules/catalog/local/local.catalog.php:337
 #, php-format
 msgid "%s is not readable by ampache"
-msgstr ""
+msgstr "ampache 无法读取 %s"
 
 #. HINT: FullFile
 #: ../../modules/catalog/local/local.catalog.php:359
 #, php-format
 msgid "%s does not match site charset"
-msgstr ""
+msgstr "%s 不符合站点的字符集设置"
 
 #: ../../modules/catalog/local/local.catalog.php:474
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: ../../modules/catalog/local/local.catalog.php:480
 #, php-format
 msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
 "Second: [%s]"
-msgstr ""
+msgstr "目录更新完毕。总共用时：[%s]，媒体总数：[%s]，每秒处理媒体数：[%s]"
 
 #: ../../modules/catalog/local/local.catalog.php:558
 #, php-format
 msgid "%s does not exist or is not readable"
-msgstr ""
+msgstr "%s 不存在或不可读"
 
 #: ../../modules/catalog/local/local.catalog.php:586
 msgid "Catalog Root unreadable, stopping clean"
-msgstr ""
+msgstr "目录的根不可读，正在停止清理"
 
 #: ../../modules/catalog/local/local.catalog.php:610
 msgid "All files would be removed. Doing nothing"
-msgstr ""
+msgstr "所有文件会被清除。无事可做"
 
 #: ../../modules/catalog/local/local.catalog.php:652
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
-msgstr ""
+msgstr "错误，文件未找到或大小为0：%s"
 
 #: ../../modules/catalog/remote/remote.catalog.php:102
 msgid "Uri"
-msgstr ""
+msgstr "Uri"
 
 #: ../../modules/catalog/remote/remote.catalog.php:104
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:104
@@ -3820,101 +3871,101 @@ msgstr ""
 #: ../../templates/show_login_form.inc.php:64
 #: ../../templates/show_user_registration.inc.php:158
 msgid "Password"
-msgstr "Password"
+msgstr "密码"
 
 #: ../../modules/catalog/remote/remote.catalog.php:144
 msgid "Error: Remote selected, but path is not a URL"
-msgstr ""
+msgstr "错误：远程控制已选中，但路径不是一个 URL"
 
 #: ../../modules/catalog/remote/remote.catalog.php:149
 msgid "Error: Username and Password Required for Remote Catalogs"
-msgstr ""
+msgstr "错误：需要用户名及密码以进行远程控制目录"
 
 #: ../../modules/catalog/remote/remote.catalog.php:177
 msgid "Running Remote Update"
-msgstr "Aggiornamento remoto in corso"
+msgstr "正在更新远程控制"
 
 #: ../../modules/catalog/remote/remote.catalog.php:212
 msgid "Error connecting to remote server"
-msgstr ""
+msgstr "在连接远程服务器过程中出现错误"
 
 #: ../../modules/catalog/remote/remote.catalog.php:239
 #, php-format
 msgid "%u remote catalog(s) found (%u songs)"
-msgstr ""
+msgstr "%u 的远程目录(多个)中发现(%u 的歌曲)"
 
 #: ../../modules/catalog/remote/remote.catalog.php:275
 msgid "Completed updating remote catalog(s)."
-msgstr ""
+msgstr "已完成更新远程目录(多个)。"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:106
 msgid "User ID"
-msgstr ""
+msgstr "用户ID"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:171
 msgid "Error: UserID and Secret Required for SoundCloud Catalogs"
-msgstr ""
+msgstr "错误：需要用户 ID 和 Secret 来设置 SoundCloud 目录"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:234
 msgid "Running SoundCloud Remote Update"
-msgstr ""
+msgstr "正在远程更新 Soundcloud "
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:303
 msgid "Completed updating SoundCloud catalog(s)."
-msgstr ""
+msgstr "远程更新 SoundCloud 目录(多个)完毕。"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:303
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:263
 msgid "Songs added."
-msgstr ""
+msgstr "歌曲已添加。"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:308
 msgid "API Error: cannot get song list."
-msgstr ""
+msgstr "API 错误：无法获取歌曲列表。"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:312
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:370
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:444
 msgid "API Error: cannot connect to SoundCloud."
-msgstr ""
+msgstr "API 错误：无法连接到 SoundCloud。"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:316
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:374
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:449
 msgid "SoundCloud exception: "
-msgstr ""
+msgstr "SoundCloud 返回错误："
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:102
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:146
 msgid "Error: Subsonic selected, but path is not a URL"
-msgstr ""
+msgstr "错误：Subsonic 已选中，但路径不是一个 URL"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:151
 msgid "Error: Username and Password Required for Subsonic Catalogs"
-msgstr ""
+msgstr "错误：需要用户名或密码以设置 Subsonic 目录"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:181
 msgid "Running Subsonic Remote Update"
-msgstr ""
+msgstr "正在远程更新 Subsonic "
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:252
 msgid "Song Error."
-msgstr ""
+msgstr "歌曲出错。"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:258
 msgid "Album Error."
-msgstr ""
+msgstr "专辑出错。"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:263
 msgid "Completed updating Subsonic catalog(s)."
-msgstr ""
+msgstr "已完成 Subsonic 目录(多个)更新。"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:269
 msgid "Artist Error."
-msgstr ""
+msgstr "艺术家出错。"
 
 #: ../../modules/localplay/httpq/httpq.controller.php:196
 #: ../../modules/localplay/mpd/mpd.controller.php:225
@@ -3922,14 +3973,14 @@ msgstr ""
 #: ../../modules/localplay/vlc/vlc.controller.php:180
 #: ../../modules/localplay/xbmc/xbmc.controller.php:187
 msgid "Instance Name"
-msgstr ""
+msgstr "实例名称"
 
 #: ../../modules/localplay/httpq/httpq.controller.php:197
 #: ../../modules/localplay/mpd/mpd.controller.php:226
 #: ../../modules/localplay/vlc/vlc.controller.php:181
 #: ../../modules/localplay/xbmc/xbmc.controller.php:188
 msgid "Hostname"
-msgstr ""
+msgstr "主机名"
 
 #: ../../modules/localplay/httpq/httpq.controller.php:198
 #: ../../modules/localplay/mpd/mpd.controller.php:227
@@ -3939,7 +3990,7 @@ msgstr ""
 #: ../../templates/show_channels.inc.php:34
 #: ../../templates/show_edit_channel_row.inc.php:60
 msgid "Port"
-msgstr ""
+msgstr "端口"
 
 #: ../../modules/localplay/httpq/httpq.controller.php:475
 #: ../../modules/localplay/mpd/mpd.controller.php:461
@@ -3953,13 +4004,13 @@ msgstr ""
 #: ../../templates/show_searches.inc.php:84
 #: ../../templates/sidebar_home.inc.php:192
 msgid "Random"
-msgstr "Casuale"
+msgstr "随机"
 
 #: ../../modules/localplay/upnp/upnp.controller.php:180
 #: ../../templates/show_add_channel.inc.php:49
 #: ../../templates/show_edit_channel_row.inc.php:52
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:101
 msgid "Highlight"
@@ -3992,7 +4043,7 @@ msgstr ""
 #: ../../templates/show_video.inc.php:108
 #: ../../templates/show_video_row.inc.php:37
 msgid "Play last"
-msgstr ""
+msgstr "播放列表"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:125
 #: ../../templates/header.inc.php:350
@@ -4017,358 +4068,363 @@ msgstr ""
 #: ../../templates/show_video.inc.php:115
 #: ../../templates/show_video_row.inc.php:65
 msgid "Add to temporary playlist"
-msgstr ""
+msgstr "添加到临时播放列表"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:143
 msgid "recommended by"
-msgstr ""
+msgstr "推荐于"
 
 #: ../../modules/plugins/FriendsTimeline/FriendsTimeline.plugin.php:96
 msgid "Friends Timeline"
-msgstr ""
+msgstr "好友时间轴"
 
 #: ../../modules/plugins/GoogleMaps/GoogleMaps.plugin.php:118
 msgid "Hits:"
-msgstr ""
+msgstr "点击数："
 
 #: ../../modules/plugins/GoogleMaps/GoogleMaps.plugin.php:119
 msgid "Last activity:"
-msgstr ""
+msgstr "最后的活动："
 
 #: ../../playlist.php:54
 msgid "Playlist Created"
-msgstr "Playlist creata."
+msgstr "播放列表已创建"
 
 #: ../../playlist.php:54
 #, php-format
 msgid "%1$s (%2$s) has been created"
-msgstr ""
+msgstr "%1$s (%2$s)已创建"
 
 #: ../../playlist.php:80
 msgid "Playlist Imported"
-msgstr ""
+msgstr "已导入播放列表"
 
 #: ../../playlist.php:83
 #, php-format
 msgid "Successfully imported playlist with %d song."
 msgid_plural "Successfully imported playlist with %d songs."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "成功导入播放列表中的 %d 首歌曲。"
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
-msgstr ""
+msgstr "播放列表未导入"
 
 #: ../../playlist.php:135
 msgid "Empty Playlists Deleted"
-msgstr ""
+msgstr "已删除空播放列表"
 
 #: ../../plex/web/index.php:32
 msgid ""
 "Changing the server UUID could break clients connectivity. Do you confirm?"
-msgstr ""
+msgstr "改变服务器的 UUID 可能会使得正在使用的用户断开链接。确定要进行下去吗？"
 
 #: ../../plex/web/index.php:84
 msgid "myPlex authentication completed."
-msgstr ""
+msgstr "myPlex 授权完成。"
 
 #: ../../plex/web/index.php:98
 msgid "Server registration completed."
-msgstr ""
+msgstr "服务器注册完成。"
 
 #: ../../plex/web/index.php:101
 msgid "Cannot register the server on myPlex."
-msgstr ""
+msgstr "无法让服务器注册到 myPlex 。"
 
 #: ../../plex/web/index.php:107
 msgid "Cannot authenticate on myPlex."
-msgstr ""
+msgstr "myPlex 无法认证。"
 
 #: ../../plex/web/index.php:135
 msgid "Server UUID changed."
-msgstr ""
+msgstr "服务器 UUID 已改变"
 
 #: ../../podcast_episode.php:35 ../../podcast_episode.php:55
 #: ../../podcast_episode.php:57
+#, fuzzy
 msgid "Podcast Episode Deletion"
-msgstr ""
+msgstr "删除艺术家"
 
 #: ../../podcast_episode.php:36
 #, fuzzy
 msgid "Are you sure you want to permanently delete this episode?"
-msgstr "Vuoi veramente cancellare questo catalogo?"
+msgstr "确定永久删除此歌曲？"
 
 #: ../../podcast_episode.php:55
+#, fuzzy
 msgid "Episode has been deleted."
-msgstr ""
+msgstr "艺术家已删除。"
 
 #: ../../podcast_episode.php:57
+#, fuzzy
 msgid "Cannot delete this episode."
-msgstr ""
+msgstr "无法删除此歌曲"
 
 #: ../../podcast.php:60
 msgid "Subscribed to Podcast"
 msgstr ""
 
 #: ../../podcast.php:73 ../../podcast.php:88 ../../podcast.php:90
+#, fuzzy
 msgid "Podcast Deletion"
-msgstr ""
+msgstr "删除广播"
 
 #: ../../podcast.php:74
 #, fuzzy
 msgid "Are you sure you want to delete this podcast?"
-msgstr "Vuoi veramente cancellare questo catalogo?"
+msgstr "确认永久删除此艺术家？"
 
 #: ../../podcast.php:88
+#, fuzzy
 msgid "Podcast has been deleted."
-msgstr ""
+msgstr "广播已删除"
 
 #: ../../podcast.php:90
+#, fuzzy
 msgid "Cannot delete this podcast."
-msgstr ""
+msgstr "无法删除此艺术家。"
 
 #: ../../preferences.php:48 ../../preferences.php:93
 msgid "Server"
-msgstr ""
+msgstr "服务器"
 
 #: ../../preferences.php:66
 msgid "Server preferences updated successfully"
-msgstr ""
+msgstr "服务器喜好设置已成功更新"
 
 #: ../../preferences.php:68
 msgid "User preferences updated successfully"
-msgstr ""
+msgstr "用户喜好设置已成功更新"
 
 #: ../../preferences.php:126 ../../register.php:100
 msgid "Please fill in your full name (Firstname Lastname)"
-msgstr ""
+msgstr "请填入您的全名( 姓和名 )"
 
 #: ../../preferences.php:129 ../../register.php:103
 msgid "Please fill in your website"
-msgstr ""
+msgstr "请填入您的网站"
 
 #: ../../preferences.php:132 ../../register.php:106
 msgid "Please fill in your state"
-msgstr ""
+msgstr "请填入您所处的州"
 
 #: ../../preferences.php:135 ../../register.php:109
 msgid "Please fill in your city"
-msgstr ""
+msgstr "请填入您所处的城市"
 
 #: ../../preferences.php:139
 msgid "Error Update Failed"
-msgstr ""
+msgstr "出错，更新失败"
 
 #: ../../preferences.php:145 ../../preferences.php:163
 msgid "Your Account has been updated"
-msgstr ""
+msgstr "您的账户已更新"
 
 #: ../../preferences.php:149
 msgid "User updated successfully"
-msgstr ""
+msgstr "成功更新用户"
 
 #: ../../preferences.php:167
 msgid "Your Account has not been updated"
-msgstr ""
+msgstr "您的帐号已更新"
 
 #: ../../pvmsg.php:67
 msgid "Message Sent"
-msgstr ""
+msgstr "信息已发送"
 
 #: ../../pvmsg.php:90
 msgid "Messages State Changed"
-msgstr ""
+msgstr "信息状态已改变"
 
 #: ../../pvmsg.php:90
 msgid "Messages state have been changed."
-msgstr ""
+msgstr "信息状态已改变"
 
 #: ../../pvmsg.php:99
 msgid "Message Deletion"
-msgstr ""
+msgstr "删除信息"
 
 #: ../../pvmsg.php:100
 msgid "Are you sure you want to permanently delete the selected messages?"
-msgstr ""
+msgstr "确定永久删除已选中的信息？"
 
 #: ../../pvmsg.php:124
 msgid "Messages Deletion"
-msgstr ""
+msgstr "删除信息"
 
 #: ../../pvmsg.php:124
 msgid "Messages have been deleted."
-msgstr ""
+msgstr "信息已删除"
 
 #: ../../radio.php:60
 msgid "Radio Station Added"
-msgstr ""
+msgstr "广播电台已添加"
 
 #: ../../register.php:72
 msgid "Error Captcha Required"
-msgstr "Errore Captcha richiesto"
+msgstr "需要填入验证码"
 
 #: ../../register.php:78
 msgid "Error Captcha Failed"
-msgstr "Errore Captcha fallito"
+msgstr "验证码错误"
 
 #: ../../register.php:85
 msgid "You <U>must</U> accept the user agreement"
-msgstr ""
+msgstr "您<U>必须<U/>接受使用许可"
 
 #: ../../register.php:90
 msgid "You did not enter a username"
-msgstr "Non hai inserito un nome utente"
+msgstr "您未输入用户名"
 
 #: ../../register.php:113
 msgid "You must enter a password"
-msgstr "Devi inserire una password"
+msgstr "您必须输入密码"
 
 #: ../../register.php:117
 msgid "Your passwords do not match"
-msgstr "Le passord non corrispondono"
+msgstr "您的密码不符和"
 
 #: ../../rest/index.php:47 ../../server/xml.server.php:43
 msgid "Access Control not Enabled"
-msgstr ""
+msgstr "访问控制未开启"
 
 #: ../../search.php:43
 msgid "View on MusicBrainz"
-msgstr ""
+msgstr "查看 MusicBrainz"
 
 #: ../../search.php:54
 msgid "Search Saved"
-msgstr ""
+msgstr "搜索已保存"
 
 #: ../../search.php:54
 #, php-format
 msgid "Your Search has been saved as a Smart Playlist with name %s"
-msgstr ""
+msgstr "您的搜索已保存至智能播放列表中，并被命名为 %s"
 
 #: ../../server/index.ajax.php:44
 #, php-format
 msgid ""
 "No catalog configured yet. To start streaming your media, you now need to %s "
 "add a catalog %s"
-msgstr ""
+msgstr "目录尚未配置。若要开始播放您的媒体，您需要开始 %s 添加一个目录 %s"
 
 #: ../../server/player.ajax.php:43
 #: ../../templates/show_html5_player.inc.php:489
 msgid "My Broadcast"
-msgstr ""
+msgstr "我的广播"
 
 #: ../../server/playlist.ajax.php:103
 msgid "Added to playlist"
-msgstr ""
+msgstr "已添加到播放列表"
 
 #: ../../server/search.ajax.php:193
 #: ../../templates/show_missing_artists.inc.php:23
 msgid "Missing Artists"
-msgstr ""
+msgstr "缺少艺术家"
 
 #: ../../server/xml.server.php:54
 msgid "Session Expired"
-msgstr ""
+msgstr "过期"
 
 #: ../../server/xml.server.php:67
 msgid "Unauthorized access attempt to API - ACL Error"
-msgstr ""
+msgstr "未授权的访问正尝试使用 API 导致 ACL 错误"
 
 #: ../../share.php:75
 msgid "Share created."
-msgstr ""
+msgstr "共享已创建。"
 
 #: ../../share.php:76
 msgid "You can now start sharing the following url:"
-msgstr ""
+msgstr "您可以使用以下链接共享："
 
 #: ../../share.php:81
 msgid ""
 "You can also embed this share as a web player into your website, with the "
 "following html code:"
-msgstr ""
+msgstr "您也可以将以下 html 代码作为网络播放器嵌入到您的网站中："
 
 #: ../../share.php:84
 msgid "Object Shared"
-msgstr ""
+msgstr "项目已共享"
 
 #: ../../share.php:94
 msgid "Share Delete"
-msgstr ""
+msgstr "删除共享"
 
 #: ../../share.php:107
 msgid "Share Deleted"
-msgstr ""
+msgstr "已删除共享"
 
 #: ../../share.php:107
 msgid "The Share has been deleted"
-msgstr ""
+msgstr "共享已删除"
 
 #: ../../share.php:120
 msgid "Shared Objects cleaned"
-msgstr ""
+msgstr "共享项目已删除"
 
 #: ../../share.php:120
 msgid "Expired shared objects have been cleaned."
-msgstr ""
+msgstr "过期的共享已被清理。"
 
 #: ../../shout.php:63
 msgid "Invalid Object Selected"
-msgstr ""
+msgstr "选中无效的共享项目"
 
 #: ../../song.php:36 ../../song.php:56 ../../song.php:58
 msgid "Song Deletion"
-msgstr ""
+msgstr "删除歌曲"
 
 #: ../../song.php:37
 msgid "Are you sure you want to permanently delete this song?"
-msgstr ""
+msgstr "确定永久删除此歌曲？"
 
 #: ../../song.php:56
 msgid "Song has been deleted."
-msgstr ""
+msgstr "歌曲已删除。"
 
 #: ../../song.php:58
 msgid "Cannot delete this song."
-msgstr ""
+msgstr "无法删除此歌曲"
 
 #: ../../templates/browse_filters.inc.php:30
 msgid "Filters"
-msgstr ""
+msgstr "过滤器"
 
 #: ../../templates/browse_filters.inc.php:35
 msgid "Starts With"
-msgstr ""
+msgstr "始于"
 
 #: ../../templates/browse_filters.inc.php:47
 msgid "Minimum Count"
-msgstr ""
+msgstr "最小计数"
 
 #: ../../templates/browse_filters.inc.php:56
 msgid "Rated"
-msgstr ""
+msgstr "已评价"
 
 #: ../../templates/browse_filters.inc.php:66
 msgid "Unplayed"
-msgstr ""
+msgstr "未播放"
 
 #: ../../templates/browse_filters.inc.php:74
 msgid "All Playlists"
-msgstr ""
+msgstr "所有播放列表"
 
 #: ../../templates/browse_filters.inc.php:87
 #: ../../templates/show_song_previews.inc.php:31
 #: ../../templates/show_songs.inc.php:33
 #: ../../templates/show_songs.inc.php:112
 msgid "Song Title"
-msgstr ""
+msgstr "歌曲标题"
 
 #: ../../templates/browse_filters.inc.php:136
 msgid "Toggle Artwork"
-msgstr ""
+msgstr "切换封面"
 
 #: ../../templates/cookie_disclaimer.inc.php:1
 msgid "Use of cookies by Ampache"
-msgstr ""
+msgstr "Ampache 对于 cookies 的使用"
 
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
@@ -4377,106 +4433,108 @@ msgid ""
 "more efficiently, as well as to provide information to the owners of the "
 "site."
 msgstr ""
+"Cookies 是由您所访问的网站保存于您的电脑中的文件，文件里面是一小段文本。"
+"Cookies 的存在使得网站能更好的为您（用户）服务，也未网站的拥有者提供了信息。"
 
 #: ../../templates/cookie_disclaimer.inc.php:5
 msgid "The table below explains the cookies we use and why."
-msgstr ""
+msgstr "以下的表单解释了我们所使用的 Cookies 及使用原因。"
 
 #: ../../templates/cookie_disclaimer.inc.php:13
 msgid "Cookie"
-msgstr ""
+msgstr "Cookie"
 
 #: ../../templates/cookie_disclaimer.inc.php:19
 msgid "Purpose"
-msgstr ""
+msgstr "目的"
 
 #: ../../templates/cookie_disclaimer.inc.php:27
 msgid "Hide the cookie disclaimer message."
-msgstr ""
+msgstr "隐藏 cookie 中的免责声明信息。"
 
 #: ../../templates/cookie_disclaimer.inc.php:32
 msgid "Ampache session."
-msgstr ""
+msgstr "Ampache 对话。"
 
 #: ../../templates/cookie_disclaimer.inc.php:37
 msgid "Ampache session username (if authenticated, information only)."
-msgstr ""
+msgstr "Ampache 对话用户名 ( if authenticated, information only)"
 
 #: ../../templates/cookie_disclaimer.inc.php:42
 msgid "Automatically authenticate users."
-msgstr ""
+msgstr "自动验证用户。"
 
 #: ../../templates/cookie_disclaimer.inc.php:47
 msgid "Keep latest web player volume."
-msgstr ""
+msgstr "保存最近一次的播放器音量。"
 
 #: ../../templates/cookie_disclaimer.inc.php:52
 msgid "Show/Hide column [column_index] when browsing [object_type] objects."
-msgstr ""
+msgstr "在浏览 [object_type] 的时候显示或隐藏[ column_index ]。"
 
 #: ../../templates/cookie_disclaimer.inc.php:57
 msgid "Use alphabet when browsing [object_type] objects."
-msgstr ""
+msgstr "在浏览 [object_type] 的时候使用字母。"
 
 #: ../../templates/cookie_disclaimer.inc.php:62
 msgid "Use pages when browsing [object_type] objects."
-msgstr ""
+msgstr "在浏览 [object_type] 的时候使用页数。"
 
 #: ../../templates/cookie_disclaimer.inc.php:67
 msgid "Collapse/Expand Sidebar [menu_section]."
-msgstr ""
+msgstr "收起或展开侧边栏 [menu_section]。"
 
 #: ../../templates/cookie_disclaimer.inc.php:72
 msgid "Collapse/Expand Sidebar."
-msgstr ""
+msgstr "收起或展开侧边栏。"
 
 #: ../../templates/error_page.inc.php:32
 msgid "Ampache error page"
-msgstr ""
+msgstr "Ampache 错误页面"
 
 #: ../../templates/error_page.inc.php:44
 #: ../../templates/show_mail_users.inc.php:43
 #: ../../templates/show_test.inc.php:38 ../../update.php:72
 msgid "Ampache"
-msgstr ""
+msgstr "Ampache "
 
 #: ../../templates/error_page.inc.php:51
 msgid ""
 "The folowing error has occured, you will automaticly be redirected after 10 "
 "seconds."
-msgstr ""
+msgstr "出现了如下错误，您将会在10秒钟后重定向。"
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
-msgstr ""
+msgstr "错误信息"
 
 #: ../../templates/footer.inc.php:40
 msgid "Donate"
-msgstr ""
+msgstr "捐赠"
 
 #: ../../templates/footer.inc.php:56
 #: ../../templates/show_lostpassword_form.inc.php:72
 msgid "Queries:"
-msgstr ""
+msgstr "查询："
 
 #: ../../templates/footer.inc.php:58
 #: ../../templates/show_lostpassword_form.inc.php:73
 msgid "Cache Hits:"
-msgstr ""
+msgstr "缓存命中："
 
 #: ../../templates/footer.inc.php:65
 msgid "Load time:"
-msgstr ""
+msgstr "加载时间："
 
 #: ../../templates/header.inc.php:108
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #: ../../templates/header.inc.php:109
 #: ../../templates/show_confirmation.inc.php:36
 #: ../../templates/show_get_art.inc.php:69
 msgid "Cancel"
-msgstr "Annulla"
+msgstr "取消"
 
 #. HINT: Translator, "%s" is replaced by "cookie settings"
 #: ../../templates/header.inc.php:312
@@ -4488,10 +4546,15 @@ msgid ""
 "\n"
 "Click on this message to not display it again."
 msgstr ""
+"我们已将 cookies 保存至您的电脑中以使得这个站点能更好。您也可以在任何时间改变"
+"您的 %s 。\n"
+"那么，我们假定您已准备就绪。\n"
+"\n"
+"不再显示此信息。"
 
 #: ../../templates/header.inc.php:313
 msgid "cookie settings"
-msgstr ""
+msgstr "cookie 设置"
 
 #: ../../templates/header.inc.php:348
 #: ../../templates/show_album_row.inc.php:32
@@ -4504,7 +4567,7 @@ msgstr ""
 #: ../../templates/show_song_row.inc.php:39
 #: ../../templates/show_video_row.inc.php:35
 msgid "Play next"
-msgstr ""
+msgstr "播放下一首"
 
 #: ../../templates/header.inc.php:351 ../../templates/show_album.inc.php:150
 #: ../../templates/show_album.inc.php:154
@@ -4520,98 +4583,98 @@ msgstr ""
 #: ../../templates/show_song_row.inc.php:56
 #: ../../templates/show_video_row.inc.php:69
 msgid "Add to existing playlist"
-msgstr ""
+msgstr "添加到存在的播放列表"
 
 #: ../../templates/header.inc.php:383
 msgid "New messages"
-msgstr ""
+msgstr "新的信息"
 
 #: ../../templates/header.inc.php:390
 msgid "Log out"
-msgstr ""
+msgstr "退出"
 
 #: ../../templates/header.inc.php:398
 #: ../../templates/show_login_form.inc.php:75
 msgid "Login"
-msgstr ""
+msgstr "登录"
 
 #: ../../templates/header.inc.php:403
 #: ../../templates/show_login_form.inc.php:82
 msgid "Register"
-msgstr "Registra"
+msgstr "注册"
 
 #: ../../templates/header.inc.php:458 ../../templates/sidebar_home.inc.php:159
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
-msgstr ""
+msgstr "最喜爱"
 
 #: ../../templates/header.inc.php:535
 msgid "Error Config File Out of Date"
-msgstr ""
+msgstr "错误，配置文件已过期"
 
 #: ../../templates/header.inc.php:538
 msgid "Generate New Config"
-msgstr ""
+msgstr "生成新配置"
 
 #: ../../templates/header.inc.php:541 ../../templates/show_debug.inc.php:30
 msgid "Write New Config"
-msgstr ""
+msgstr "写入新配置"
 
 #: ../../templates/install_header.inc.php:52
 #: ../../templates/show_install_lang.inc.php:27
 msgid "Ampache Installation"
-msgstr "Installazione Ampache"
+msgstr "Ampache 安装程序"
 
 #: ../../templates/list_header.inc.php:119
 msgid "Prev"
-msgstr "Precedente"
+msgstr "向前"
 
 #: ../../templates/list_header.inc.php:122
 msgid "Page"
-msgstr ""
+msgstr "一页"
 
 #: ../../templates/list_header.inc.php:131
 msgid "of"
-msgstr ""
+msgstr "的"
 
 #: ../../templates/list_header.inc.php:134
 #: ../../templates/show_localplay_control.inc.php:28
 msgid "Next"
-msgstr "Successivo"
+msgstr "往后"
 
 #: ../../templates/list_header.inc.php:148
 msgid "Pages"
-msgstr ""
+msgstr "一页"
 
 #: ../../templates/list_header.inc.php:149
 msgid "Infinite Scroll"
-msgstr ""
+msgstr "无限滚动"
 
 #: ../../templates/list_header.inc.php:150
 #, fuzzy
 msgid "Grid View"
-msgstr "Visualizza"
+msgstr "视图"
 
 #: ../../templates/list_header.inc.php:157
 msgid "Alphabet"
-msgstr ""
+msgstr "字母"
 
 #: ../../templates/list_header.inc.php:170
 msgid "Limit"
-msgstr ""
+msgstr "限制"
 
 #: ../../templates/list_header.inc.php:186
 msgid "Item Count"
-msgstr ""
+msgstr "项目计数"
 
 #: ../../templates/rightbar.inc.php:30
 msgid "Add to Playlist"
-msgstr ""
+msgstr "添加到播放列表"
 
 #: ../../templates/rightbar.inc.php:34
 #: ../../templates/show_playlists_dialog.inc.php:27
 msgid "Add to New Playlist"
-msgstr ""
+msgstr "添加到新的播放列表"
 
 #: ../../templates/rightbar.inc.php:61
 #: ../../templates/show_album_row.inc.php:125
@@ -4624,71 +4687,71 @@ msgstr ""
 #: ../../templates/show_search_options.inc.php:38
 #: ../../templates/show_search_row.inc.php:56
 msgid "Batch Download"
-msgstr ""
+msgstr "批量下载"
 
 #: ../../templates/rightbar.inc.php:68
 #: ../../templates/show_democratic.inc.php:56
 #: ../../templates/show_democratic.inc.php:58
 #: ../../templates/show_localplay_status.inc.php:51
 msgid "Clear Playlist"
-msgstr ""
+msgstr "清空播放列表"
 
 #: ../../templates/rightbar.inc.php:71
 msgid "Add Dynamic Items"
-msgstr ""
+msgstr "添加动态项目"
 
 #: ../../templates/rightbar.inc.php:74
 msgid "Random Song"
-msgstr ""
+msgstr "随机歌曲"
 
 #: ../../templates/rightbar.inc.php:77
 msgid "Random Artist"
-msgstr ""
+msgstr "随机艺术家"
 
 #: ../../templates/rightbar.inc.php:80
 msgid "Random Album"
-msgstr ""
+msgstr "随机专辑"
 
 #: ../../templates/rightbar.inc.php:83
 msgid "Random Playlist"
-msgstr ""
+msgstr "随机播放列表"
 
 #: ../../templates/rightbar.inc.php:146
 msgid "No items"
-msgstr ""
+msgstr "没有项目"
 
 #: ../../templates/show_access_list.inc.php:23
 #: ../../templates/sidebar_admin.inc.php:37
 msgid "Access Control"
-msgstr ""
+msgstr "访问控制"
 
 #: ../../templates/show_access_list.inc.php:27
 msgid "Add Current Host"
-msgstr ""
+msgstr "添加当前主机"
 
 #: ../../templates/show_access_list.inc.php:30
 msgid "Add API / RPC Host"
-msgstr ""
+msgstr "添加 API / RPC 主机"
 
 #: ../../templates/show_access_list.inc.php:33
 msgid "Add Local Network Definition"
-msgstr ""
+msgstr "添加本地网络定义"
 
 #: ../../templates/show_access_list.inc.php:35
 msgid "Advanced Add"
-msgstr ""
+msgstr "高级添加"
 
 #: ../../templates/show_access_list.inc.php:40
 msgid "Access Control Entries"
-msgstr ""
+msgstr "访问控制入口"
 
 #: ../../templates/show_access_list.inc.php:49
 msgid "Start Address"
-msgstr "Indirizzo iniziale"
+msgstr "起始地址"
 
 #: ../../templates/show_access_list.inc.php:51
 msgid "End Address"
-msgstr "Indirizzo finale"
+msgstr "结束地址"
 
 #: ../../templates/show_access_list.inc.php:53
 #: ../../templates/show_add_access.inc.php:35
@@ -4698,7 +4761,7 @@ msgstr "Indirizzo finale"
 #: ../../templates/show_preference_admin.inc.php:33
 #: ../../templates/show_preference_admin.inc.php:64
 msgid "Level"
-msgstr "Livello"
+msgstr "层级"
 
 #: ../../templates/show_access_list.inc.php:57
 #: ../../templates/show_add_playlist.inc.php:31
@@ -4711,7 +4774,7 @@ msgstr "Livello"
 #: ../../templates/show_searches.inc.php:47
 #: ../../templates/show_searches.inc.php:83
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #: ../../templates/show_access_list.inc.php:59
 #: ../../templates/show_artists.inc.php:74
@@ -4753,21 +4816,21 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:74
 #: ../../templates/show_videos.inc.php:151
 msgid "Action"
-msgstr "Azione"
+msgstr "动作"
 
 #: ../../templates/show_account.inc.php:33
 #: ../../templates/show_add_user.inc.php:37
 #: ../../templates/show_edit_user.inc.php:40
 #: ../../templates/show_user_registration.inc.php:96
 msgid "Full Name"
-msgstr "Nome completo"
+msgstr "全名"
 
 #: ../../templates/show_account.inc.php:43
 #: ../../templates/show_add_user.inc.php:45
 #: ../../templates/show_edit_user.inc.php:51
 #: ../../templates/show_user_registration.inc.php:107
 msgid "E-mail"
-msgstr "E-mail"
+msgstr "邮件"
 
 #: ../../templates/show_account.inc.php:51
 #: ../../templates/show_add_label.inc.php:71
@@ -4780,7 +4843,7 @@ msgstr "E-mail"
 #: ../../templates/show_podcast_episode.inc.php:181
 #: ../../templates/show_user_registration.inc.php:117
 msgid "Website"
-msgstr ""
+msgstr "站点"
 
 #: ../../templates/show_account.inc.php:63
 #: ../../templates/show_channels.inc.php:43
@@ -4790,17 +4853,17 @@ msgstr ""
 #: ../../templates/show_podcast_episodes.inc.php:106
 #: ../../templates/show_user_registration.inc.php:132
 msgid "State"
-msgstr ""
+msgstr "州"
 
 #: ../../templates/show_account.inc.php:75
 #: ../../templates/show_edit_user.inc.php:78
 #: ../../templates/show_user_registration.inc.php:147
 msgid "City"
-msgstr ""
+msgstr "城市"
 
 #: ../../templates/show_account.inc.php:85
 msgid "New Password"
-msgstr ""
+msgstr "新密码"
 
 #: ../../templates/show_account.inc.php:92
 #: ../../templates/show_add_user.inc.php:72
@@ -4808,32 +4871,32 @@ msgstr ""
 #: ../../templates/show_install_account.inc.php:63
 #: ../../templates/show_user_registration.inc.php:164
 msgid "Confirm Password"
-msgstr "Conferma password"
+msgstr "确认密码"
 
 #: ../../templates/show_account.inc.php:99
 #: ../../templates/show_add_user.inc.php:95
 #: ../../templates/show_edit_user.inc.php:119
 msgid "Avatar"
-msgstr ""
+msgstr "头像"
 
 #: ../../templates/show_account.inc.php:141
 #: ../../templates/show_edit_user.inc.php:158
 #: ../../templates/show_manage_catalogs.inc.php:45
 msgid "Clear Stats"
-msgstr "Azzera stati"
+msgstr "清除统计"
 
 #: ../../templates/show_account.inc.php:151
 msgid "Update Account"
-msgstr ""
+msgstr "更新账户"
 
 #: ../../templates/show_add_access.inc.php:24
 msgid "Add Access Control List"
-msgstr ""
+msgstr "添加访问控制列表"
 
 #: ../../templates/show_add_access.inc.php:50
 #: ../../templates/show_edit_access.inc.php:31
 msgid "ACL Type"
-msgstr ""
+msgstr "ACL　类型"
 
 #: ../../templates/show_add_access.inc.php:58
 #: ../../templates/show_add_access.inc.php:60
@@ -4841,142 +4904,141 @@ msgstr ""
 #: ../../templates/show_add_access.inc.php:72
 #, php-format
 msgid "%s + %s"
-msgstr ""
+msgstr "%s + %s"
 
 #: ../../templates/show_add_access.inc.php:96
 #: ../../templates/show_edit_access.inc.php:43
 msgid "IPv4 or IPv6 Addresses"
-msgstr ""
+msgstr "IPv4 或 IPV6　地址"
 
 #: ../../templates/show_add_access.inc.php:102
 #: ../../templates/show_edit_access.inc.php:48
 msgid "Start"
-msgstr ""
+msgstr "开始"
 
 #: ../../templates/show_add_access.inc.php:112
 #: ../../templates/show_edit_access.inc.php:53
 msgid "End"
-msgstr ""
+msgstr "及结束"
 
 #: ../../templates/show_add_access.inc.php:125
 msgid "Create ACL"
-msgstr ""
+msgstr "创建 ACL"
 
 #: ../../templates/show_add_catalog.inc.php:26
 #: ../../templates/sidebar_admin.inc.php:26
 msgid "Add a Catalog"
-msgstr "Aggiungi un catalogo"
+msgstr "添加目录"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"Nel formulario seguente inserisci od un percorso locale (ad es. /data/"
-"musica) o l' ULR ad una installazione remota di Ampache (ad es. http://"
-"theotherampache.com)"
+"在下面的表单中输入一个本地路径 ( 如：/data/music ) 或一个 URL 来控制 Ampache "
+"的安装程序 ( 如： http://theotherampache.com )"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
-msgstr "Nome catalogo"
+msgstr "目录名称"
 
 #: ../../templates/show_add_catalog.inc.php:37
 #: ../../templates/show_edit_catalog.inc.php:31
 msgid "Auto-inserted Fields"
-msgstr "Inserimento automatico campi"
+msgstr "自动填补域"
 
 #: ../../templates/show_add_catalog.inc.php:38
 #: ../../templates/show_edit_catalog.inc.php:32
 msgid "album name"
-msgstr "nome album"
+msgstr "专辑名"
 
 #: ../../templates/show_add_catalog.inc.php:39
 #: ../../templates/show_edit_catalog.inc.php:33
 msgid "artist name"
-msgstr "nome artista"
+msgstr "艺术家名"
 
 #: ../../templates/show_add_catalog.inc.php:40
 #: ../../templates/show_edit_catalog.inc.php:34
 msgid "id3 comment"
-msgstr " commento id3"
+msgstr "id3 评论"
 
 #: ../../templates/show_add_catalog.inc.php:41
 #: ../../templates/show_edit_catalog.inc.php:35
 msgid "track number (padded with leading 0)"
-msgstr "numero traccia (con aggiunta di 0 in fronte)"
+msgstr "曲目编号 ( 用前导0 )"
 
 #: ../../templates/show_add_catalog.inc.php:42
 #: ../../templates/show_edit_catalog.inc.php:36
 msgid "song title"
-msgstr "tiolo brano"
+msgstr "歌曲标题"
 
 #: ../../templates/show_add_catalog.inc.php:43
 #: ../../templates/show_edit_catalog.inc.php:37
 msgid "year"
-msgstr "anno"
+msgstr "年"
 
 #: ../../templates/show_add_catalog.inc.php:44
 #: ../../templates/show_edit_catalog.inc.php:38
 msgid "other"
-msgstr "altro"
+msgstr "其它"
 
 #: ../../templates/show_add_catalog.inc.php:48
 #: ../../templates/show_edit_catalog.inc.php:42
 msgid "Catalog Type"
-msgstr "tipo catalogo"
+msgstr "目录类型"
 
 #: ../../templates/show_add_catalog.inc.php:52
 msgid "Filename Pattern"
-msgstr "Filtro nome file"
+msgstr "文件名样式"
 
 #: ../../templates/show_add_catalog.inc.php:56
 #: ../../templates/show_edit_catalog.inc.php:53
 msgid "Folder Pattern"
-msgstr "Filtro cartelle"
+msgstr "目录样式"
 
 #: ../../templates/show_add_catalog.inc.php:56
 #: ../../templates/show_edit_catalog.inc.php:53
 msgid "(no leading or ending '/')"
-msgstr "(non inizianti o terminanti per '/')"
+msgstr "( 不使用 '/' 开头或结束 )"
 
 #: ../../templates/show_add_catalog.inc.php:60
 #: ../../templates/show_catalog_row.inc.php:54
 msgid "Gather Art"
-msgstr ""
+msgstr "收集封面"
 
 #: ../../templates/show_add_catalog.inc.php:64
 msgid "Build Playlists from playlist Files"
-msgstr ""
+msgstr "从播放列表文件中构建播放列表"
 
 #: ../../templates/show_add_catalog.inc.php:68
 msgid "Gather media types"
-msgstr ""
+msgstr "收集媒体类型"
 
 #: ../../templates/show_add_catalog.inc.php:75
 msgid "Music Clip"
-msgstr ""
+msgstr "音乐剪辑"
 
 #: ../../templates/show_add_catalog.inc.php:79
 msgid "Movie"
-msgstr ""
+msgstr "电影"
 
 #: ../../templates/show_add_catalog.inc.php:81
 msgid "Personal Video"
-msgstr ""
+msgstr "个人视频"
 
 #: ../../templates/show_add_catalog.inc.php:103
 msgid "Add Catalog"
-msgstr "Aggiungi catalogo"
+msgstr "添加目录"
 
 #: ../../templates/show_add_channel.inc.php:23
 msgid "Create Channel"
-msgstr ""
+msgstr "创建频道"
 
 #: ../../templates/show_add_channel.inc.php:29
 #: ../../templates/show_channels.inc.php:35
 #: ../../templates/show_edit_channel_row.inc.php:27
 msgid "Stream Source"
-msgstr ""
+msgstr "播放源"
 
 #: ../../templates/show_add_channel.inc.php:42
 #: ../../templates/show_catalog_types.inc.php:30
@@ -4993,63 +5055,63 @@ msgstr ""
 #: ../../templates/show_plugins.inc.php:81
 #: ../../templates/show_podcast_episode.inc.php:176
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #: ../../templates/show_add_channel.inc.php:56
 #: ../../templates/show_channels.inc.php:33
 #: ../../templates/show_edit_channel_row.inc.php:56
 msgid "Interface"
-msgstr "Interfaccia"
+msgstr "界面"
 
 #: ../../templates/show_add_channel.inc.php:70
 #: ../../templates/show_channel_row.inc.php:45
 #: ../../templates/show_edit_broadcast_row.inc.php:36
 #: ../../templates/show_edit_channel_row.inc.php:65
 msgid "Authentication Required"
-msgstr ""
+msgstr "需要授权"
 
 #: ../../templates/show_add_channel.inc.php:82
 #: ../../templates/show_channels.inc.php:37
 #: ../../templates/show_edit_channel_row.inc.php:73
 msgid "Loop"
-msgstr ""
+msgstr "循环"
 
 #: ../../templates/show_add_channel.inc.php:88
 #: ../../templates/show_edit_channel_row.inc.php:76
 msgid "Max Listeners"
-msgstr ""
+msgstr "听众最大值"
 
 #: ../../templates/show_add_channel.inc.php:95
 #: ../../templates/show_channels.inc.php:38
 #: ../../templates/show_edit_channel_row.inc.php:80
 msgid "Stream Type"
-msgstr ""
+msgstr "播放类型"
 
 #: ../../templates/show_add_channel.inc.php:111
 #: ../../templates/show_add_playlist.inc.php:41
 #: ../../templates/show_add_share.inc.php:75
 #: ../../templates/show_add_shout.inc.php:65
 msgid "Create"
-msgstr ""
+msgstr "创建"
 
 #: ../../templates/show_add_label.inc.php:23
 msgid "Add Label"
-msgstr ""
+msgstr "添加标签"
 
 #: ../../templates/show_add_label.inc.php:39
 #: ../../templates/show_edit_label_row.inc.php:36
 msgid "Personal"
-msgstr ""
+msgstr "私人的"
 
 #: ../../templates/show_add_label.inc.php:42
 #: ../../templates/show_edit_label_row.inc.php:39
 msgid "Association"
-msgstr ""
+msgstr "组织"
 
 #: ../../templates/show_add_label.inc.php:45
 #: ../../templates/show_edit_label_row.inc.php:42
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #: ../../templates/show_add_label.inc.php:50
 #: ../../templates/show_edit_artist_row.inc.php:44
@@ -5061,35 +5123,35 @@ msgstr ""
 #: ../../templates/show_partial_personal_video.inc.php:24
 #: ../../templates/show_partial_tvshow_episode.inc.php:26
 msgid "Summary"
-msgstr ""
+msgstr "简介"
 
 #: ../../templates/show_add_label.inc.php:57
 #: ../../templates/show_edit_label_row.inc.php:51
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #: ../../templates/show_add_label.inc.php:64
 #: ../../templates/show_edit_label_row.inc.php:55
 #: ../../templates/show_lostpassword_form.inc.php:62
 msgid "Email"
-msgstr ""
+msgstr "邮件"
 
 #: ../../templates/show_add_live_stream.inc.php:23
 #: ../../templates/show_live_streams.inc.php:32
 msgid "Add Radio Station"
-msgstr ""
+msgstr "添加广播电台"
 
 #: ../../templates/show_add_live_stream.inc.php:34
 #: ../../templates/show_edit_live_stream_row.inc.php:35
 msgid "Homepage"
-msgstr ""
+msgstr "主页"
 
 #: ../../templates/show_add_live_stream.inc.php:41
 #: ../../templates/show_edit_live_stream_row.inc.php:31
 #: ../../templates/show_live_streams.inc.php:50
 #: ../../templates/show_live_streams.inc.php:83
 msgid "Stream URL"
-msgstr ""
+msgstr "直播地址"
 
 #: ../../templates/show_add_live_stream.inc.php:48
 #: ../../templates/show_edit_live_stream_row.inc.php:39
@@ -5100,19 +5162,20 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:46
 #: ../../templates/show_videos.inc.php:123
 msgid "Codec"
-msgstr ""
+msgstr "编码"
 
 #: ../../templates/show_add_playlist.inc.php:23
 msgid "Create a new playlist"
-msgstr "Crea nuova playlist"
+msgstr "创建一个新播放列表"
 
 #: ../../templates/show_add_podcast.inc.php:23
 msgid "Subscribe to Podcast"
 msgstr ""
 
 #: ../../templates/show_add_podcast.inc.php:27
+#, fuzzy
 msgid "Podcast feed url"
-msgstr ""
+msgstr "广播"
 
 #: ../../templates/show_add_podcast.inc.php:43
 msgid "Subscribe"
@@ -5120,44 +5183,44 @@ msgstr ""
 
 #: ../../templates/show_add_pvmsg.inc.php:24
 msgid "Compose Message"
-msgstr ""
+msgstr "撰写邮件"
 
 #: ../../templates/show_add_pvmsg.inc.php:28
 #: ../../templates/show_pvmsgs.inc.php:52
 #: ../../templates/show_pvmsgs.inc.php:88
 msgid "Recipient"
-msgstr ""
+msgstr "接收者"
 
 #: ../../templates/show_add_pvmsg.inc.php:35
 #: ../../templates/show_mail_users.inc.php:48
 #: ../../templates/show_pvmsgs.inc.php:50
 #: ../../templates/show_pvmsgs.inc.php:86
 msgid "Subject"
-msgstr "Oggetto"
+msgstr "主题"
 
 #: ../../templates/show_add_pvmsg.inc.php:42
 #: ../../templates/show_mail_users.inc.php:54
 msgid "Message"
-msgstr "Messaggio"
+msgstr "正文"
 
 #: ../../templates/show_add_pvmsg.inc.php:51
 msgid "Send"
-msgstr ""
+msgstr "发送"
 
 #: ../../templates/show_adds_catalog.inc.php:23
 msgid "Starting New Media Search"
-msgstr ""
+msgstr "正在开始搜索新媒体"
 
 #. HINT: Catalog Name
 #: ../../templates/show_adds_catalog.inc.php:25
 #, php-format
 msgid "Starting New Media Search on %s catalog"
-msgstr ""
+msgstr "正在 %s 目录中搜索新媒体"
 
 #: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_run_add_catalog.inc.php:25
 msgid "Found"
-msgstr "Trovato"
+msgstr "找到"
 
 #: ../../templates/show_adds_catalog.inc.php:28
 #: ../../templates/show_clean_catalog.inc.php:28
@@ -5165,115 +5228,115 @@ msgstr "Trovato"
 #: ../../templates/show_run_add_catalog.inc.php:26
 #: ../../templates/show_verify_catalog.inc.php:28
 msgid "Reading"
-msgstr ""
+msgstr "读取中"
 
 #: ../../templates/show_add_share.inc.php:23
 msgid "Create Share"
-msgstr ""
+msgstr "创建共享"
 
 #: ../../templates/show_add_share.inc.php:29
 #: ../../templates/show_edit_share_row.inc.php:27
 msgid "Shared Object"
-msgstr ""
+msgstr "已分享项目"
 
 #: ../../templates/show_add_share.inc.php:42
 #: ../../templates/show_edit_share_row.inc.php:31
 #: ../../templates/show_shared_objects.inc.php:32
 msgid "Max Counter"
-msgstr ""
+msgstr "最大计数"
 
 #: ../../templates/show_add_share.inc.php:49
 #: ../../templates/show_edit_share_row.inc.php:35
 #: ../../templates/show_shared_objects.inc.php:35
 msgid "Expiry Days"
-msgstr ""
+msgstr "到期日"
 
 #: ../../templates/show_add_share.inc.php:55
 #: ../../templates/show_edit_share_row.inc.php:40
 #: ../../templates/show_shared_objects.inc.php:33
 msgid "Allow Stream"
-msgstr ""
+msgstr "允许直播"
 
 #: ../../templates/show_add_share.inc.php:63
 #: ../../templates/show_edit_share_row.inc.php:48
 #: ../../templates/show_shared_objects.inc.php:34
 msgid "Allow Download"
-msgstr ""
+msgstr "允许下载"
 
 #: ../../templates/show_add_shout.inc.php:30
 msgid "Post to Shoutbox"
-msgstr ""
+msgstr "发送到留言板"
 
 #: ../../templates/show_add_shout.inc.php:40
 #: ../../templates/show_edit_shout.inc.php:31
 msgid "Comment:"
-msgstr ""
+msgstr "评论："
 
 #: ../../templates/show_add_shout.inc.php:49
 #: ../../templates/show_edit_shout.inc.php:39
 msgid "Stick this comment"
-msgstr ""
+msgstr "置顶此评论"
 
 #: ../../templates/show_add_shout.inc.php:78
 #: ../../templates/show_shoutbox.inc.php:23
 msgid "Shoutbox"
-msgstr ""
+msgstr "留言板"
 
 #: ../../templates/show_add_upload.inc.php:38
 #: ../../templates/show_add_upload.inc.php:156
 msgid "Target folder"
-msgstr ""
+msgstr "目标文件夹"
 
 #: ../../templates/show_add_upload.inc.php:217
 msgid "Files"
-msgstr ""
+msgstr "文件"
 
 #: ../../templates/show_add_upload.inc.php:224
 msgid "Allowed file type"
-msgstr ""
+msgstr "允许文件类型"
 
 #: ../../templates/show_add_upload.inc.php:229
 msgid "Drop File Here"
-msgstr ""
+msgstr "将文件放到这里"
 
 #: ../../templates/show_add_upload.inc.php:230
 msgid "Browse"
-msgstr "Sfoglia"
+msgstr "浏览"
 
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
-msgstr "Aggiunta di un nuovo utente"
+msgstr "添加一个新用户"
 
 #: ../../templates/show_add_user.inc.php:80
 #: ../../templates/show_edit_user.inc.php:104
 msgid "User Access Level"
-msgstr "Livello accesso utente"
+msgstr "用户访问层级"
 
 #: ../../templates/show_add_user.inc.php:105
 #: ../../templates/sidebar_admin.inc.php:33
 msgid "Add User"
-msgstr "Aggiungi utente"
+msgstr "添加用户"
 
 #: ../../templates/show_album_group_disks.inc.php:45
 #: ../../templates/show_album.inc.php:50
 #: ../../templates/show_artist.inc.php:45
 #: ../../templates/show_label.inc.php:35 ../../templates/show_song.inc.php:217
 msgid "Search on Google ..."
-msgstr ""
+msgstr "在 Google 上搜索 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:46
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_artist.inc.php:48
 #: ../../templates/show_label.inc.php:36
 msgid "Search on Wikipedia ..."
-msgstr ""
+msgstr "在 Wikipedia 上搜索 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:52
 #: ../../templates/show_artist.inc.php:51
 #: ../../templates/show_label.inc.php:37 ../../templates/show_song.inc.php:218
 msgid "Search on Last.fm ..."
-msgstr ""
+msgstr "在 Last.fm 上搜索 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:58
 #: ../../templates/show_album.inc.php:110
@@ -5304,7 +5367,7 @@ msgstr ""
 #: ../../templates/show_tvshow_seasons.inc.php:128
 #: ../../templates/show_wanted_albums.inc.php:30
 msgid "Actions"
-msgstr "Azioni"
+msgstr "行为"
 
 #: ../../templates/show_album_group_disks.inc.php:90
 #: ../../templates/show_album_group_disks.inc.php:92
@@ -5315,7 +5378,7 @@ msgstr "Azioni"
 #: ../../templates/show_artist_row.inc.php:57
 #: ../../templates/show_playlist_row.inc.php:54
 msgid "Random to temporary playlist"
-msgstr ""
+msgstr "随机临时播放列表"
 
 #: ../../templates/show_album_group_disks.inc.php:102
 #: ../../templates/show_album_group_disks.inc.php:106
@@ -5337,7 +5400,7 @@ msgstr ""
 #: ../../templates/show_video.inc.php:148
 #: ../../templates/show_video_row.inc.php:126
 msgid "Download"
-msgstr "Scarica"
+msgstr "下载"
 
 #: ../../templates/show_album_group_disks.inc.php:179
 #: ../../templates/show_album.inc.php:221
@@ -5345,36 +5408,36 @@ msgstr "Scarica"
 #: ../../templates/show_playlist.inc.php:70
 #: ../../templates/show_playlist.inc.php:72
 msgid "Save Tracks Order"
-msgstr ""
+msgstr "保存曲目排序"
 
 #: ../../templates/show_album_group_disks.inc.php:182
 #: ../../templates/show_album.inc.php:230
 msgid "Do you really want to update from tags?"
-msgstr ""
+msgstr "确定根据标签更新？"
 
 #: ../../templates/show_album_group_disks.inc.php:183
 #: ../../templates/show_album.inc.php:231
 #: ../../templates/show_album.inc.php:232
 msgid "Update from tags"
-msgstr "Aggiorna dai Tags"
+msgstr "根据标签更新"
 
 #: ../../templates/show_album_group_disks.inc.php:186
 #: ../../templates/show_album.inc.php:255
 #: ../../templates/show_album.inc.php:259
 #: ../../templates/show_album_row.inc.php:132
 msgid "Album edit"
-msgstr ""
+msgstr "编辑专辑"
 
 #: ../../templates/show_album.inc.php:88
 #: ../../templates/show_artist.inc.php:91
 msgid "times"
-msgstr ""
+msgstr "时间"
 
 #: ../../templates/show_album.inc.php:102
 #: ../../templates/show_artist.inc.php:105
 #: ../../templates/show_song.inc.php:255
 msgid "Uploaded by"
-msgstr ""
+msgstr "上传自"
 
 #: ../../templates/show_album.inc.php:205
 #: ../../templates/show_album.inc.php:209
@@ -5386,11 +5449,11 @@ msgstr ""
 #: ../../templates/show_song.inc.php:167 ../../templates/show_user.inc.php:110
 #: ../../templates/show_video.inc.php:158
 msgid "Graphs"
-msgstr ""
+msgstr "图表"
 
 #: ../../templates/show_album.inc.php:260
 msgid "Edit Album"
-msgstr ""
+msgstr "编辑专辑"
 
 #: ../../templates/show_albums.inc.php:36
 #: ../../templates/show_albums.inc.php:123
@@ -5416,7 +5479,7 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:34
 #: ../../templates/show_videos.inc.php:111
 msgid "Art"
-msgstr ""
+msgstr "封面"
 
 #: ../../templates/show_albums.inc.php:51
 #: ../../templates/show_albums.inc.php:138
@@ -5438,7 +5501,7 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:55
 #: ../../templates/show_videos.inc.php:132
 msgid "Tags"
-msgstr ""
+msgstr "标签"
 
 #: ../../templates/show_albums.inc.php:65
 #: ../../templates/show_albums.inc.php:150
@@ -5466,11 +5529,11 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:67
 #: ../../templates/show_videos.inc.php:144
 msgid "Fav."
-msgstr ""
+msgstr "最爱。"
 
 #: ../../templates/show_albums.inc.php:112
 msgid "No album found"
-msgstr ""
+msgstr "未发现专辑"
 
 #: ../../templates/show_artist.inc.php:55
 #: ../../templates/show_artist.inc.php:346
@@ -5483,17 +5546,17 @@ msgstr ""
 #: ../../templates/show_now_playing_row.inc.php:88
 #: ../../templates/show_now_playing_row.inc.php:96
 msgid "Loading..."
-msgstr ""
+msgstr "载入中..."
 
 #: ../../templates/show_artist.inc.php:121
 #: ../../templates/show_artist.inc.php:126
 msgid "Show all"
-msgstr ""
+msgstr "显示全部"
 
 #: ../../templates/show_artist.inc.php:135
 #: ../../templates/show_artist.inc.php:140
 msgid "Show albums"
-msgstr ""
+msgstr "显示专辑"
 
 #: ../../templates/show_artist.inc.php:148
 #: ../../templates/show_artist.inc.php:150
@@ -5506,7 +5569,7 @@ msgstr ""
 #: ../../templates/show_tvshow_season.inc.php:67
 #: ../../templates/show_tvshow_season.inc.php:69
 msgid "Play all"
-msgstr ""
+msgstr "播放全部"
 
 #: ../../templates/show_artist.inc.php:156
 #: ../../templates/show_artist.inc.php:158
@@ -5519,7 +5582,7 @@ msgstr ""
 #: ../../templates/show_tvshow_season.inc.php:77
 #: ../../templates/show_tvshow_season.inc.php:79
 msgid "Play all last"
-msgstr ""
+msgstr "播放剩余全部"
 
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:170
@@ -5527,7 +5590,7 @@ msgstr ""
 #: ../../templates/show_playlist.inc.php:129
 #: ../../templates/show_playlist.inc.php:130
 msgid "Add all to temporary playlist"
-msgstr ""
+msgstr "将全部添加到临时播放列表"
 
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:177
@@ -5535,23 +5598,23 @@ msgstr ""
 #: ../../templates/show_playlist.inc.php:133
 #: ../../templates/show_playlist.inc.php:134
 msgid "Random all to temporary playlist"
-msgstr ""
+msgstr "将全部添加到随机临时播放列表"
 
 #: ../../templates/show_artist.inc.php:261
 #: ../../templates/show_artist.inc.php:265
 #: ../../templates/show_artist_row.inc.php:110
 msgid "Artist edit"
-msgstr ""
+msgstr "编辑艺术家"
 
 #: ../../templates/show_artist.inc.php:266
 msgid "Edit Artist"
-msgstr ""
+msgstr "编辑艺术家"
 
 #: ../../templates/show_artist.inc.php:294
 #: ../../templates/show_artist.inc.php:345
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
-msgstr ""
+msgstr "缺少专辑"
 
 #: ../../templates/show_artist.inc.php:300
 #: ../../templates/show_artist.inc.php:357
@@ -5559,12 +5622,12 @@ msgstr ""
 #: ../../templates/show_now_playing_similar.inc.php:28
 #: ../../templates/show_recommended_artists.inc.php:25
 msgid "Similar Artists"
-msgstr ""
+msgstr "类似艺术家"
 
 #: ../../templates/show_artist.inc.php:306
 #: ../../templates/show_artist.inc.php:369
 msgid "Events"
-msgstr ""
+msgstr "事件"
 
 #: ../../templates/show_artists.inc.php:46
 #: ../../templates/show_artists.inc.php:133
@@ -5581,85 +5644,85 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:48
 #: ../../templates/show_videos.inc.php:125
 msgid "Time"
-msgstr "Durata"
+msgstr "时间"
 
 #: ../../templates/show_artists.inc.php:114
 msgid "No artist found"
-msgstr ""
+msgstr "未发现艺术家"
 
 #: ../../templates/show_arts.inc.php:28
 msgid "Select New Art"
-msgstr ""
+msgstr "选择新作品"
 
 #: ../../templates/show_arts.inc.php:58
 msgid "Invalid"
-msgstr ""
+msgstr "无效"
 
 #: ../../templates/show_arts.inc.php:68
 #: ../../templates/show_disabled_songs.inc.php:28
 #: ../../templates/show_disabled_songs.inc.php:67
 #: ../../templates/show_pvmsg_row.inc.php:24
 msgid "Select"
-msgstr "Seleziona"
+msgstr "选择"
 
 #: ../../templates/show_big_art.inc.php:31
 msgid "Album Art"
-msgstr "Copertine"
+msgstr "专辑封面"
 
 #: ../../templates/show_big_art.inc.php:35
 msgid "Click to close window"
-msgstr ""
+msgstr "点击关闭窗口"
 
 #: ../../templates/show_broadcast_row.inc.php:33
 #: ../../templates/show_channel_row.inc.php:36
 #: ../../templates/show_channel_row.inc.php:37
 #: ../../templates/show_search_row.inc.php:46
 msgid "Yes"
-msgstr "Si"
+msgstr "是"
 
 #: ../../templates/show_broadcast_row.inc.php:33
 #: ../../templates/show_channel_row.inc.php:36
 #: ../../templates/show_channel_row.inc.php:37
 #: ../../templates/show_search_row.inc.php:46
 msgid "No"
-msgstr "No"
+msgstr "否"
 
 #: ../../templates/show_broadcasts_dialog.inc.php:44
 msgid "New broadcast"
-msgstr ""
+msgstr "新广播"
 
 #: ../../templates/show_broadcasts.inc.php:32
 #: ../../templates/show_edit_broadcast_row.inc.php:39
 #: ../../templates/show_edit_channel_row.inc.php:88
 #: ../../templates/show_song.inc.php:215
 msgid "Genre"
-msgstr "Genere"
+msgstr "流派"
 
 #: ../../templates/show_broadcasts.inc.php:33
 msgid "Started"
-msgstr ""
+msgstr "已开始"
 
 #: ../../templates/show_broadcasts.inc.php:34
 #: ../../templates/show_channels.inc.php:41
 msgid "Listeners"
-msgstr ""
+msgstr "听众"
 
 #: ../../templates/show_broadcasts.inc.php:56
 msgid "No broadcast found"
-msgstr ""
+msgstr "未发现广播"
 
 #: ../../templates/show_catalog_row.inc.php:38
 msgid "Make it ready ..."
-msgstr ""
+msgstr "使其准备完毕"
 
 #: ../../templates/show_catalog_row.inc.php:48
 msgid "Verify"
-msgstr ""
+msgstr "验证"
 
 #: ../../templates/show_catalog_row.inc.php:50
 #: ../../templates/show_shares.inc.php:27
 msgid "Clean"
-msgstr ""
+msgstr "清理"
 
 #: ../../templates/show_catalog_row.inc.php:52
 #: ../../templates/show_create_democratic.inc.php:70
@@ -5668,38 +5731,38 @@ msgstr ""
 #: ../../templates/show_manage_catalogs.inc.php:59
 #: ../../templates/show_preference_admin.inc.php:69
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #: ../../templates/show_catalog_row.inc.php:60
 msgid "Go"
-msgstr ""
+msgstr "走你"
 
 #: ../../templates/show_catalogs.inc.php:30
 #: ../../templates/show_catalogs.inc.php:65
 msgid "Info"
-msgstr ""
+msgstr "信息"
 
 #: ../../templates/show_catalogs.inc.php:31
 #: ../../templates/show_catalogs.inc.php:66
 #: ../../templates/show_stats.inc.php:72
 msgid "Last Verify"
-msgstr ""
+msgstr "最后一次验证"
 
 #: ../../templates/show_catalogs.inc.php:32
 #: ../../templates/show_catalogs.inc.php:67
 #: ../../templates/show_stats.inc.php:73
 msgid "Last Add"
-msgstr ""
+msgstr "最后一次添加"
 
 #: ../../templates/show_catalogs.inc.php:33
 #: ../../templates/show_catalogs.inc.php:68
 #: ../../templates/show_stats.inc.php:74
 msgid "Last Clean"
-msgstr ""
+msgstr "最后一次清除"
 
 #: ../../templates/show_catalogs.inc.php:55
 msgid "No catalog found"
-msgstr ""
+msgstr "未发现目录"
 
 #: ../../templates/show_catalog_types.inc.php:31
 #: ../../templates/show_catalog_types.inc.php:80
@@ -5708,13 +5771,13 @@ msgstr ""
 #: ../../templates/show_plugins.inc.php:31
 #: ../../templates/show_plugins.inc.php:82
 msgid "Version"
-msgstr ""
+msgstr "版本"
 
 #: ../../templates/show_catalog_types.inc.php:48
 #: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_plugins.inc.php:43
 msgid "Activate"
-msgstr ""
+msgstr "激活"
 
 #: ../../templates/show_catalog_types.inc.php:70
 #: ../../templates/show_disabled_songs.inc.php:59
@@ -5723,42 +5786,42 @@ msgstr ""
 #: ../../templates/show_manage_shoutbox.inc.php:54
 #: ../../templates/show_plugins.inc.php:72
 msgid "No Records Found"
-msgstr ""
+msgstr "未发现记录"
 
 #: ../../templates/show_channels.inc.php:31
 msgid "#"
-msgstr ""
+msgstr "第"
 
 #: ../../templates/show_channels.inc.php:40
 #: ../../templates/show_graphs.inc.php:60
 msgid "Start Date"
-msgstr ""
+msgstr "开始日期"
 
 #: ../../templates/show_channels.inc.php:42
 msgid "Stream Url"
-msgstr ""
+msgstr "直播地址"
 
 #: ../../templates/show_channels.inc.php:65
 msgid "No channel found"
-msgstr ""
+msgstr "未发现频道"
 
 #: ../../templates/show_clean_catalog.inc.php:23
 msgid "Clean Catalog"
-msgstr ""
+msgstr "清理目录"
 
 #. HINT: Catalog Name
 #: ../../templates/show_clean_catalog.inc.php:25
 #, php-format
 msgid "Cleaning the %s Catalog"
-msgstr ""
+msgstr "正在清理 %s 目录"
 
 #: ../../templates/show_clean_catalog.inc.php:27
 msgid "Checking"
-msgstr "Controllo in corso"
+msgstr "检查中"
 
 #: ../../templates/show_concerts.inc.php:23
 msgid "Coming Events"
-msgstr ""
+msgstr "活动预告"
 
 #: ../../templates/show_concerts.inc.php:27
 #: ../../templates/show_concerts.inc.php:61
@@ -5767,7 +5830,7 @@ msgstr ""
 #: ../../templates/show_pvmsgs.inc.php:53
 #: ../../templates/show_pvmsgs.inc.php:89
 msgid "Date"
-msgstr "Data"
+msgstr "日期"
 
 #: ../../templates/show_concerts.inc.php:29
 #: ../../templates/show_concerts.inc.php:63
@@ -5775,96 +5838,96 @@ msgstr "Data"
 #: ../../templates/show_partial_personal_video.inc.php:23
 #: ../../templates/show_partial_personal_videos.inc.php:23
 msgid "Location"
-msgstr ""
+msgstr "地址"
 
 #: ../../templates/show_concerts.inc.php:49
 msgid "No coming events found"
-msgstr ""
+msgstr "没有即将发生的事件"
 
 #: ../../templates/show_concerts.inc.php:57
 msgid "Past Events"
-msgstr ""
+msgstr "过去事件"
 
 #: ../../templates/show_concerts.inc.php:83
 msgid "No past events found"
-msgstr ""
+msgstr "没有过去的事件"
 
 #: ../../templates/show_confirmation.inc.php:29
 #: ../../templates/show_install_check.inc.php:67
 #: ../../templates/show_update_items.inc.php:28
 msgid "Continue"
-msgstr "Continua"
+msgstr "继续"
 
 #: ../../templates/show_create_democratic.inc.php:23
 #: ../../templates/show_democratic.inc.php:41
 #: ../../templates/show_democratic.inc.php:44
 msgid "Configure Democratic Playlist"
-msgstr ""
+msgstr "配置投票播放列表"
 
 #: ../../templates/show_create_democratic.inc.php:31
 #: ../../templates/show_manage_democratic.inc.php:27
 msgid "Base Playlist"
-msgstr ""
+msgstr "基本播放列表"
 
 #: ../../templates/show_create_democratic.inc.php:35
 msgid "Cooldown Time"
-msgstr ""
+msgstr "冷却时间"
 
 #: ../../templates/show_create_democratic.inc.php:57
 msgid "Make Default"
-msgstr ""
+msgstr "设置为默认"
 
 #: ../../templates/show_create_democratic.inc.php:64
 msgid "Force Democratic Play"
-msgstr ""
+msgstr "强制投票播放"
 
 #: ../../templates/show_debug.inc.php:23
 msgid "Debug Tools"
-msgstr ""
+msgstr "调试工具"
 
 #: ../../templates/show_debug.inc.php:27
 msgid "Generate Configuration"
-msgstr ""
+msgstr "生成配置"
 
 #: ../../templates/show_debug.inc.php:33
 msgid "Set Database Charset"
-msgstr ""
+msgstr "设置数据库字符集"
 
 #: ../../templates/show_debug.inc.php:36
 msgid "Clear Songs Cache"
-msgstr ""
+msgstr "清除歌曲缓存"
 
 #: ../../templates/show_debug.inc.php:39
 msgid "Clear Artists Cache"
-msgstr ""
+msgstr "清除艺术家缓存"
 
 #: ../../templates/show_debug.inc.php:42
 msgid "Clear Albums Cache"
-msgstr ""
+msgstr "清除专辑缓存"
 
 #: ../../templates/show_debug.inc.php:47 ../../update.php:78
 msgid "Ampache Update"
-msgstr ""
+msgstr "更新 Ampache"
 
 #: ../../templates/show_debug.inc.php:48
 msgid "Installed Ampache version"
-msgstr ""
+msgstr "已安装的 Ampache 版本"
 
 #: ../../templates/show_debug.inc.php:49
 msgid "Latest Ampache version"
-msgstr ""
+msgstr "最新的 Ampache 版本"
 
 #: ../../templates/show_debug.inc.php:50
 msgid "Force check"
-msgstr ""
+msgstr "强制检查更新"
 
 #: ../../templates/show_debug.inc.php:59
 msgid "PHP Settings"
-msgstr ""
+msgstr "PHP 设置"
 
 #: ../../templates/show_debug.inc.php:67
 msgid "Setting"
-msgstr ""
+msgstr "设置"
 
 #: ../../templates/show_debug.inc.php:68
 #: ../../templates/show_debug.inc.php:121
@@ -5873,51 +5936,51 @@ msgstr ""
 #: ../../templates/show_preference_box.inc.php:118
 #: ../../templates/show_user_preferences.inc.php:38
 msgid "Value"
-msgstr "Valore"
+msgstr "数值"
 
 #: ../../templates/show_debug.inc.php:73
 msgid "Memory Limit"
-msgstr ""
+msgstr "内存限制"
 
 #: ../../templates/show_debug.inc.php:77
 msgid "Maximum Execution Time"
-msgstr ""
+msgstr "最长执行时间"
 
 #: ../../templates/show_debug.inc.php:81
 msgid "Override Execution Time"
-msgstr ""
+msgstr "覆盖执行时间"
 
 #: ../../templates/show_debug.inc.php:82
 msgid "Failed"
-msgstr ""
+msgstr "失败"
 
 #: ../../templates/show_debug.inc.php:82
 msgid "Succeeded"
-msgstr ""
+msgstr "成功"
 
 #: ../../templates/show_debug.inc.php:85
 msgid "Safe Mode"
-msgstr ""
+msgstr "安全模式"
 
 #: ../../templates/show_debug.inc.php:93
 msgid "Zlib Support"
-msgstr ""
+msgstr "Zlib 支持"
 
 #: ../../templates/show_debug.inc.php:97
 msgid "GD Support"
-msgstr ""
+msgstr "GD 支持"
 
 #: ../../templates/show_debug.inc.php:101
 msgid "Iconv Support"
-msgstr ""
+msgstr "Iconv 支持"
 
 #: ../../templates/show_debug.inc.php:105
 msgid "Gettext Support"
-msgstr ""
+msgstr "Gettext 支持"
 
 #: ../../templates/show_debug.inc.php:112
 msgid "Current Configuration"
-msgstr ""
+msgstr "当前设置"
 
 #: ../../templates/show_debug.inc.php:120
 #: ../../templates/show_preference_admin.inc.php:32
@@ -5926,96 +5989,96 @@ msgstr ""
 #: ../../templates/show_preference_box.inc.php:117
 #: ../../templates/show_user_preferences.inc.php:37
 msgid "Preference"
-msgstr "Parametro"
+msgstr "偏好设置"
 
 #: ../../templates/show_democratic.inc.php:23
 #, php-format
 msgid "%s Playlist"
-msgstr ""
+msgstr "%s 播放列表"
 
 #: ../../templates/show_democratic.inc.php:31
 #: ../../templates/show_manage_democratic.inc.php:28
 msgid "Cooldown"
-msgstr ""
+msgstr "冷却"
 
 #: ../../templates/show_democratic.inc.php:52
 msgid "Play Democratic Playlist"
-msgstr ""
+msgstr "播放投票播放列表"
 
 #: ../../templates/show_democratic.inc.php:92
 msgid "Reload this page automatically"
-msgstr ""
+msgstr "自动重载此页面"
 
 #: ../../templates/show_democratic_playlist.inc.php:48
 msgid "Playing from base Playlist"
-msgstr ""
+msgstr "从基本播放列表中播放"
 
 #: ../../templates/show_democratic_playlist.inc.php:63
 #: ../../templates/show_democratic_playlist.inc.php:138
 msgid "Votes"
-msgstr ""
+msgstr "投票"
 
 #: ../../templates/show_democratic_playlist.inc.php:98
 msgid "Remove Vote"
-msgstr ""
+msgstr "删除投票"
 
 #: ../../templates/show_democratic_playlist.inc.php:103
 msgid "Add Vote"
-msgstr ""
+msgstr "添加投票"
 
 #: ../../templates/show_denied.inc.php:52
 #: ../../templates/sidebar_localplay.inc.php:118
 msgid "Access Denied"
-msgstr ""
+msgstr "拒绝访问"
 
 #: ../../templates/show_denied.inc.php:53
 #: ../../templates/show_denied.inc.php:62
 msgid "This event has been logged."
-msgstr ""
+msgstr "此事件已被记录"
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
 "You have been redirected to this page because you do not have access to this "
 "function."
-msgstr ""
+msgstr "您已被重定向至此页面因为您无法访问此项功能。"
 
 #: ../../templates/show_denied.inc.php:60
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
-msgstr ""
+msgstr "如果您认为这是一个错误请联系 Ampache 的管理员。"
 
 #: ../../templates/show_denied.inc.php:67
 msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
-msgstr ""
+msgstr "您已被重定向至此页面因为您尝试访问的功能无法在试用过程中使用。"
 
 #: ../../templates/show_disabled_songs.inc.php:33
 #: ../../templates/show_disabled_songs.inc.php:72
 msgid "Addition Time"
-msgstr ""
+msgstr "添加时间"
 
 #: ../../templates/show_duplicate.inc.php:23
 #: ../../templates/show_duplicate.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:33
 msgid "Find Duplicates"
-msgstr "Trova duplicati"
+msgstr "找出重复"
 
 #: ../../templates/show_duplicate.inc.php:27
 msgid "Search Type"
-msgstr "Tipo di ricerca"
+msgstr "搜索类型"
 
 #: ../../templates/show_duplicate.inc.php:30
 msgid "Artist and Title"
-msgstr "Artista e titolo"
+msgstr "艺术家及标题"
 
 #: ../../templates/show_duplicate.inc.php:31
 msgid "Artist, Album and Title"
-msgstr "Artista, album e titolo"
+msgstr "艺术家，专辑及标题"
 
 #: ../../templates/show_duplicates.inc.php:23
 msgid "Duplicate Songs"
-msgstr "Brani duplicati"
+msgstr "复制歌曲"
 
 #: ../../templates/show_duplicates.inc.php:28
 #: ../../templates/show_duplicates.inc.php:79
@@ -6027,7 +6090,7 @@ msgstr "Brani duplicati"
 #: ../../templates/show_tagcloud.inc.php:26
 #: ../../templates/sidebar_home.inc.php:196
 msgid "Song"
-msgstr "Brano"
+msgstr "歌曲"
 
 #: ../../templates/show_duplicates.inc.php:31
 #: ../../templates/show_duplicates.inc.php:82
@@ -6036,135 +6099,135 @@ msgstr "Brano"
 #: ../../templates/show_song.inc.php:219
 #: ../../templates/show_video.inc.php:182
 msgid "Length"
-msgstr "Durata"
+msgstr "长度"
 
 #: ../../templates/show_duplicates.inc.php:33
 #: ../../templates/show_duplicates.inc.php:84
 #: ../../templates/show_podcast_episode.inc.php:188
 msgid "Size"
-msgstr "Dimensione"
+msgstr "大小"
 
 #: ../../templates/show_dynamic.inc.php:23
 msgid "Advanced Random Rules"
-msgstr ""
+msgstr "高级重复规则"
 
 #: ../../templates/show_dynamic.inc.php:26
 msgid "Field"
-msgstr ""
+msgstr "域"
 
 #: ../../templates/show_dynamic.inc.php:27
 msgid "Operator"
-msgstr "Operatore"
+msgstr "操作者"
 
 #: ../../templates/show_dynamic.inc.php:29
 msgid "Method"
-msgstr "Modo"
+msgstr "方法"
 
 #: ../../templates/show_dynamic.inc.php:54
 msgid "Like"
-msgstr ""
+msgstr "像"
 
 #: ../../templates/show_dynamic.inc.php:62
 msgid "OR"
-msgstr "O"
+msgstr "或"
 
 #: ../../templates/show_dynamic.inc.php:63
 msgid "AND"
-msgstr "E"
+msgstr "并"
 
 #: ../../templates/show_dynamic.inc.php:69
 msgid "Add Rule"
-msgstr ""
+msgstr "添加规则"
 
 #: ../../templates/show_dynamic.inc.php:72
 msgid "Save Rules As"
-msgstr ""
+msgstr "保存规则为"
 
 #: ../../templates/show_dynamic.inc.php:75
 msgid "Load Saved Rules"
-msgstr ""
+msgstr "加载已保存的规则"
 
 #: ../../templates/show_edit_access.inc.php:23
 msgid "Edit Access Control List"
-msgstr ""
+msgstr "编辑访问控制列表"
 
 #: ../../templates/show_edit_album_row.inc.php:47
 #: ../../templates/show_song.inc.php:211
 msgid "Album Artist"
-msgstr ""
+msgstr "专辑艺术家"
 
 #: ../../templates/show_edit_album_row.inc.php:74
 #: ../../templates/show_edit_artist_row.inc.php:31
 #: ../../templates/show_edit_song_row.inc.php:63
 msgid "MusicBrainz ID"
-msgstr ""
+msgstr "MusicBrainz ID"
 
 #: ../../templates/show_edit_album_row.inc.php:89
 msgid "MusicBrainz Release Group ID"
-msgstr ""
+msgstr "MusicBrainz 的发布组 ID"
 
 #: ../../templates/show_edit_album_row.inc.php:103
 msgid "Release Type"
-msgstr ""
+msgstr "发布类型"
 
 #: ../../templates/show_edit_album_row.inc.php:114
 msgid "Overwrite tags of sub songs"
-msgstr ""
+msgstr "覆盖子歌曲的标签"
 
 #: ../../templates/show_edit_album_row.inc.php:118
 msgid "Add tags to sub songs"
-msgstr ""
+msgstr "添加标签到子歌曲中"
 
 #: ../../templates/show_edit_artist_row.inc.php:48
 msgid "Place Formed"
-msgstr ""
+msgstr "生成地点"
 
 #: ../../templates/show_edit_artist_row.inc.php:52
 msgid "Year Formed"
-msgstr ""
+msgstr "生成年份"
 
 #: ../../templates/show_edit_artist_row.inc.php:70
 msgid "Overwrite tags of sub albums and sub songs"
-msgstr ""
+msgstr "覆盖子专辑及子歌曲中的标签"
 
 #: ../../templates/show_edit_artist_row.inc.php:74
 msgid "Add tags to sub albums and sub songs"
-msgstr ""
+msgstr "添加标签至子专辑和子歌曲中"
 
 #: ../../templates/show_edit_catalog.inc.php:23
 #, php-format
 msgid "Settings for %s"
-msgstr ""
+msgstr "%s 的设置"
 
 #: ../../templates/show_edit_catalog.inc.php:46
 msgid "Filename pattern"
-msgstr "Filtro nome file"
+msgstr "文件名模式"
 
 #: ../../templates/show_edit_catalog.inc.php:63
 msgid "Save Catalog Settings"
-msgstr "Salva impostazioni catalogo"
+msgstr "保存目录设置"
 
 #: ../../templates/show_edit_license.inc.php:23
 msgid "Configure License"
-msgstr ""
+msgstr "配置许可"
 
 #: ../../templates/show_edit_license.inc.php:39
 msgid "Description:"
-msgstr ""
+msgstr "描述："
 
 #: ../../templates/show_edit_license.inc.php:45
 msgid "External Link"
-msgstr ""
+msgstr "外部链接"
 
 #: ../../templates/show_edit_license.inc.php:52
 msgid "Confirm"
-msgstr ""
+msgstr "确认"
 
 #: ../../templates/show_edit_playlist_row.inc.php:36
 #: ../../templates/show_edit_search_row.inc.php:36
 #: ../../templates/show_edit_user.inc.php:45
 msgid "Public"
-msgstr ""
+msgstr "公开"
 
 #: ../../templates/show_edit_podcast_episode_row.inc.php:35
 msgid "GUID"
@@ -6176,8 +6239,9 @@ msgid "Author"
 msgstr ""
 
 #: ../../templates/show_edit_podcast_row.inc.php:27
+#, fuzzy
 msgid "Feed"
-msgstr ""
+msgstr "RSS 源"
 
 #: ../../templates/show_edit_podcast_row.inc.php:39
 msgid "Language"
@@ -6189,24 +6253,24 @@ msgstr ""
 
 #: ../../templates/show_edit_search_row.inc.php:48
 msgid "Item Limit (0 = unlimited)"
-msgstr ""
+msgstr "项目限制 (0 = 无限制 )"
 
 #: ../../templates/show_edit_shout.inc.php:23
 msgid "Edit existing Shoutbox Post"
-msgstr ""
+msgstr "编辑已有的留言板发言"
 
 #. HINT: Client link, Object link
 #: ../../templates/show_edit_shout.inc.php:28
 #, php-format
 msgid "Created by: %s for %s"
-msgstr ""
+msgstr "由 %s 为 %s 创建"
 
 #: ../../templates/show_edit_song_row.inc.php:59
 #: ../../templates/show_localplay_playlist.inc.php:33
 #: ../../templates/show_localplay_playlist.inc.php:76
 #: ../../templates/show_song_previews.inc.php:39
 msgid "Track"
-msgstr "Traccia"
+msgstr "曲目"
 
 #: ../../templates/show_edit_song_row.inc.php:114
 msgid "More Metadata"
@@ -6214,135 +6278,136 @@ msgstr ""
 
 #: ../../templates/show_edit_tag_row.inc.php:32
 msgid "Re-tag"
-msgstr ""
+msgstr "重新标记"
 
 #: ../../templates/show_edit_tag_row.inc.php:38
 msgid "Persistent"
-msgstr ""
+msgstr "持续"
 
 #: ../../templates/show_edit_tag_row.inc.php:42
 msgid "Keep Existing"
-msgstr ""
+msgstr "保留现有"
 
 #: ../../templates/show_edit_tvshow_row.inc.php:31
+#, fuzzy
 msgid "summary"
-msgstr ""
+msgstr "简介"
 
 #: ../../templates/show_edit_tvshow_row.inc.php:44
 msgid "Overwrite tags of sub episodes"
-msgstr ""
+msgstr "覆盖子集的标签"
 
 #: ../../templates/show_edit_tvshow_row.inc.php:48
 msgid "Add tags to sub episodes"
-msgstr ""
+msgstr "向子集中添加标签"
 
 #: ../../templates/show_edit_user.inc.php:23
 msgid "Editing existing User"
-msgstr "Modifica utente esistente"
+msgstr "编辑现有用户"
 
 #: ../../templates/show_edit_user.inc.php:28
 msgid "User Properties"
-msgstr ""
+msgstr "用户属性"
 
 #: ../../templates/show_edit_user.inc.php:128
 msgid "Other Options"
-msgstr ""
+msgstr "其他选项"
 
 #: ../../templates/show_edit_user.inc.php:140
 msgid "Config Preset"
-msgstr ""
+msgstr "配置预设"
 
 #: ../../templates/show_edit_user.inc.php:146
 msgid "Flash"
-msgstr ""
+msgstr "Flash"
 
 #: ../../templates/show_edit_user.inc.php:152
 msgid "Prevent Preset Override"
-msgstr ""
+msgstr "防止预设被覆盖"
 
 #: ../../templates/show_edit_user.inc.php:154
 msgid "This Affects all non-Admin accounts"
-msgstr ""
+msgstr "这将会影响所有非管理员帐号"
 
 #: ../../templates/show_edit_user.inc.php:166
 msgid "Update User"
-msgstr "Aggiorna utente"
+msgstr "更新用户"
 
 #: ../../templates/show_edit_video_row.inc.php:35
 #: ../../templates/show_video.inc.php:186
 #: ../../templates/show_videos.inc.php:45
 #: ../../templates/show_videos.inc.php:122
 msgid "Release Date"
-msgstr ""
+msgstr "发布日期"
 
 #: ../../templates/show_export.inc.php:28
 #: ../../templates/sidebar_admin.inc.php:49
 msgid "Export Catalog"
-msgstr ""
+msgstr "导出目录"
 
 #: ../../templates/show_export.inc.php:55
 msgid "Format"
-msgstr ""
+msgstr "格式"
 
 #: ../../templates/show_export.inc.php:65
 msgid "Export"
-msgstr ""
+msgstr "导出"
 
 #: ../../templates/show_gather_art.inc.php:23
 msgid "Art Search"
-msgstr ""
+msgstr "封面搜索"
 
 #: ../../templates/show_gather_art.inc.php:24
 msgid "Starting Art Search"
-msgstr ""
+msgstr "正在开始搜索封面"
 
 #: ../../templates/show_gather_art.inc.php:25
 msgid "Searched"
-msgstr "Cercato"
+msgstr "搜索完毕"
 
 #: ../../templates/show_get_art.inc.php:23
 msgid "Customize Search"
-msgstr "Personalizza ricerca"
+msgstr "定制化搜索"
 
 #: ../../templates/show_get_art.inc.php:49
 msgid "Direct URL to Image"
-msgstr "URL diretto all' immagine"
+msgstr "图像的链接"
 
 #: ../../templates/show_get_art.inc.php:57
 msgid "Local Image"
-msgstr ""
+msgstr "本地图像"
 
 #: ../../templates/show_get_art.inc.php:70
 msgid "Get Art"
-msgstr "Preleva copertina"
+msgstr "获取封面"
 
 #: ../../templates/show_graphs.inc.php:23
 msgid "Statistical Graphs"
-msgstr ""
+msgstr "统计图表"
 
 #: ../../templates/show_graphs.inc.php:35
 msgid "Show large"
-msgstr ""
+msgstr "显示大数"
 
 #: ../../templates/show_graphs.inc.php:63
 msgid "End Date"
-msgstr ""
+msgstr "结束日期"
 
 #: ../../templates/show_graphs.inc.php:66
 msgid "Zoom"
-msgstr ""
+msgstr "缩放"
 
 #: ../../templates/show_graphs.inc.php:72
 msgid "Month"
-msgstr ""
+msgstr "月"
 
 #: ../../templates/show_graphs.inc.php:73
 msgid "Day"
-msgstr ""
+msgstr "日"
 
 #: ../../templates/show_graphs.inc.php:74
 msgid "Hour"
-msgstr ""
+msgstr "时"
 
 #: ../../templates/show_highest.inc.php:23
 #: ../../templates/show_newest.inc.php:23
@@ -6350,103 +6415,105 @@ msgstr ""
 #: ../../templates/show_recent.inc.php:23
 #: ../../templates/sidebar_home.inc.php:144
 msgid "Information"
-msgstr ""
+msgstr "信息"
 
 #: ../../templates/show_html5_player_headers.inc.php:237
 msgid "Your browser doesn't support this feature."
-msgstr ""
+msgstr "浏览器无法提供此功能。"
 
 #: ../../templates/show_html5_player_headers.inc.php:535
 msgid "Media is currently playing. Are you sure you want to close"
-msgstr ""
+msgstr "正在播放媒体。确定要取消播放吗"
 
 #: ../../templates/show_html5_player.inc.php:170
 msgid "Double click to post a new shout"
-msgstr ""
+msgstr "双击以发表新留言"
 
 #: ../../templates/show_html5_player.inc.php:520
 msgid "Slideshow"
-msgstr ""
+msgstr "幻灯片"
 
 #: ../../templates/show_html5_player.inc.php:523
+#, fuzzy
 msgid "Expand/Collapse Playlist"
-msgstr ""
+msgstr "随机播放列表"
 
 #: ../../templates/show_html5_player.inc.php:528
 msgid "Visualizer"
-msgstr ""
+msgstr "展示台"
 
 #: ../../templates/show_html5_player.inc.php:531
 msgid "Visualizer Full-Screen"
-msgstr ""
+msgstr "展示台全屏"
 
 #: ../../templates/show_html5_player.inc.php:534
 msgid "ReplayGain"
-msgstr ""
+msgstr "播放增益"
 
 #: ../../templates/show_html5_player.inc.php:537
 msgid "Equalizer"
-msgstr ""
+msgstr "均衡器"
 
 #: ../../templates/show_import_playlist.inc.php:23
 msgid "Importing a Playlist from a File"
-msgstr "Importazione playlist da file"
+msgstr "从文件中导入播放列表"
 
 #: ../../templates/show_import_playlist.inc.php:35
 msgid "Import Playlist"
-msgstr "Importa playlist"
+msgstr "导入播放列表"
 
 #: ../../templates/show_index.inc.php:52
 #: ../../templates/show_random_albums.inc.php:26
 msgid "Albums of the Moment"
-msgstr ""
+msgstr "正在播放的专辑"
 
 #: ../../templates/show_index.inc.php:64
 #: ../../templates/show_random_videos.inc.php:26
 msgid "Videos of the Moment"
-msgstr ""
+msgstr "正在播放的视频"
 
 #: ../../templates/show_install_account.inc.php:26
 #: ../../templates/show_install_config.inc.php:41
 #: ../../templates/show_install.inc.php:26
 msgid "Install progress"
-msgstr ""
+msgstr "安装进度"
 
 #: ../../templates/show_install_account.inc.php:38
 #: ../../templates/show_install_config.inc.php:52
 #: ../../templates/show_install.inc.php:37
 msgid "Step 1 - Create the Ampache database"
-msgstr ""
+msgstr "第一步 - 创建 Ampache 数据库"
 
 #: ../../templates/show_install_account.inc.php:39
 #: ../../templates/show_install_config.inc.php:53
 #: ../../templates/show_install.inc.php:42
 msgid "Step 2 - Create configuration files (ampache.cfg.php ...)"
-msgstr ""
+msgstr "第二步 - 创建配置文件 ( 如 ampache.cfg.php ... )"
 
 #: ../../templates/show_install_account.inc.php:41
 #: ../../templates/show_install_config.inc.php:58
 #: ../../templates/show_install.inc.php:43
 msgid "Step 3 - Set up the initial account"
-msgstr ""
+msgstr "第三步 - 设置初始帐号"
 
 #: ../../templates/show_install_account.inc.php:43
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
 msgstr ""
+"此步骤将会创建 Ampache 管理员帐号。建立完毕后将会将您重定向至登录页面。"
 
 #: ../../templates/show_install_account.inc.php:47
 msgid "Create Admin Account"
-msgstr "Crea account Amministratore"
+msgstr "创建管理员帐号"
 
 #: ../../templates/show_install_account.inc.php:69
 msgid "Create Account"
-msgstr "Crea account"
+msgstr "创建帐号"
 
 #: ../../templates/show_install_check.inc.php:28
 msgid "Requirements"
-msgstr ""
+msgstr "要求"
 
 #: ../../templates/show_install_check.inc.php:32
 msgid ""
@@ -6454,16 +6521,18 @@ msgid ""
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
 msgstr ""
+"此页面处理安装过程中 Ampache 数据库的安装及配置文件的创建。在您继续之前请确认"
+"您达到了以下要求："
 
 #: ../../templates/show_install_check.inc.php:35
 msgid ""
 "A MySQL server with a username and password that can create/modify databases"
-msgstr ""
+msgstr "一个 MySQL 数据库服务器的用户名及密码以创建或修改数据库"
 
 #: ../../templates/show_install_check.inc.php:36
 #, php-format
 msgid "Your webserver has read access to the files %s and %s"
-msgstr ""
+msgstr "您的 Web 服务器对文件 %s 及 %s 有读取权限。"
 
 #: ../../templates/show_install_check.inc.php:39
 #, php-format
@@ -6473,47 +6542,51 @@ msgid ""
 "values. If you would like to make changes to your Ampache install at a later "
 "date simply edit %s"
 msgstr ""
+"当您确定您已满足以上需求，请将相关信息填入下面的表单中。表单中只设计配置相关"
+"数值。若您想对您接下来的 Ampache 安装作出修改，修改 %s 即可。"
 
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:60
 msgid "CHECK"
-msgstr "CONTROLLO"
+msgstr "检查"
 
 #: ../../templates/show_install_check.inc.php:45
 #: ../../templates/show_test.inc.php:61
 msgid "STATUS"
-msgstr "STATO"
+msgstr "状态"
 
 #: ../../templates/show_install_check.inc.php:46
 #: ../../templates/show_test.inc.php:62
 msgid "DESCRIPTION"
-msgstr "DESCRIZIONE"
+msgstr "描述"
 
 #: ../../templates/show_install_check.inc.php:50
 #: ../../templates/show_install_check.inc.php:55
 #, php-format
 msgid "%s is readable"
-msgstr ""
+msgstr "%s 可读"
 
 #: ../../templates/show_install_check.inc.php:52
 msgid "This tests whether the configuration template can be read."
-msgstr ""
+msgstr "这将测试配置模板是否可读。"
 
 #: ../../templates/show_install_check.inc.php:57
 msgid ""
 "This tests whether the file needed to initialise the database structure is "
 "available."
-msgstr ""
+msgstr "此测试初始化​​数据库结构所需的文件是否可用。"
 
 #: ../../templates/show_install_check.inc.php:60
 msgid "ampache.cfg.php is writable"
-msgstr ""
+msgstr "ampache.cfg.php 可读"
 
 #: ../../templates/show_install_check.inc.php:62
 msgid ""
 "This tests whether PHP can write to config/. This is not strictly necessary, "
 "but will help streamline the installation process."
 msgstr ""
+"此测试将判断 PHP 对域 config/ 目录是否拥有写入权限。这不是必须的，但拥有写入"
+"权限将有助于简化安装过程。"
 
 #: ../../templates/show_install_config.inc.php:55
 #, php-format
@@ -6524,78 +6597,82 @@ msgid ""
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s"
 msgstr ""
+"此步骤需要一些基本的数值并生成配置文件。若您的 config/　目录是可以写入的，您"
+"可以选择“写入”让 Ampache 将配置文件写入到正确的配置目录中。如果您选择的是“下"
+"载”则会弹出配置文件的下载页面，下载完毕后需要您自行将配置文件放置到 %s 目录"
+"中。"
 
 #: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
-msgstr ""
+msgstr "生成配置文件"
 
 #: ../../templates/show_install_config.inc.php:64
 #: ../../templates/show_test_table.inc.php:234
 msgid "Database connection"
-msgstr ""
+msgstr "数据库链接"
 
 #: ../../templates/show_install_config.inc.php:68
 msgid "Web Path"
-msgstr "Percorso Web"
+msgstr "Web 路径"
 
 #: ../../templates/show_install_config.inc.php:74
 msgid "Database Name"
-msgstr ""
+msgstr "数据库名称"
 
 #: ../../templates/show_install_config.inc.php:80
 #: ../../templates/show_install.inc.php:56
 msgid "MySQL Hostname"
-msgstr "Server MySQL"
+msgstr "MySQL 主机名"
 
 #: ../../templates/show_install_config.inc.php:86
 msgid "MySQL Port (optional)"
-msgstr ""
+msgstr "MySQL 端口 ( 可选 )"
 
 #: ../../templates/show_install_config.inc.php:92
 msgid "MySQL Username"
-msgstr "Nome utente MySQL"
+msgstr "MySQL 用户名"
 
 #: ../../templates/show_install_config.inc.php:98
 msgid "MySQL Password"
-msgstr "Password MySQL"
+msgstr "MySQL 密码"
 
 #: ../../templates/show_install_config.inc.php:108
 msgid "Installation type"
-msgstr ""
+msgstr "安装类型"
 
 #: ../../templates/show_install_config.inc.php:109
 msgid ""
 "Configure Ampache at best for your use case, enabling / disabling features "
 "automatically."
-msgstr ""
+msgstr "自动开启或关闭一些功能以使得 Ampache 的配置最适合您。"
 
 #: ../../templates/show_install_config.inc.php:115
 msgid "Ampache is configured for personal use with most greatest features."
-msgstr ""
+msgstr "Ampache 已经为个人使用配置了极佳的功能特性。"
 
 #: ../../templates/show_install_config.inc.php:120
 msgid "Minimalist"
-msgstr ""
+msgstr "极简主义"
 
 #: ../../templates/show_install_config.inc.php:120
 msgid ""
 "only essential features are enabled to stream simply your music from a web "
 "interface."
-msgstr ""
+msgstr "为了在界面中仅播放您的音乐，我们只开启了必要功能"
 
 #: ../../templates/show_install_config.inc.php:125
 msgid "Community"
-msgstr ""
+msgstr "社区"
 
 #: ../../templates/show_install_config.inc.php:125
 msgid ""
 "use recommended settings when using Ampache as a frontend for a music "
 "community."
-msgstr ""
+msgstr "当使用 Ampache 作为一个音乐社区的前端界面时，建议使用推荐设置。"
 
 #: ../../templates/show_install_config.inc.php:130
 msgid "Transcoding"
-msgstr ""
+msgstr "转码"
 
 #: ../../templates/show_install_config.inc.php:132
 msgid ""
@@ -6606,6 +6683,10 @@ msgid ""
 "transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
 msgstr ""
+"转码能让文件从一个类型转换为另外一个类型。基于用户，播放器，IP地址 以及足够的"
+"带宽，Ampache 能将所有支持的文件类型转码。为了能够转码， Ampache 借助了一些知"
+"名程序，例如 ffmpeg 。为了能让您顺利使用，您需要先安装相关程序并确保能让您的"
+"服务器执行这些程序。"
 
 #: ../../templates/show_install_config.inc.php:134
 msgid ""
@@ -6613,15 +6694,17 @@ msgid ""
 "application you want to use. You may need to customize settings once this "
 "setup ended"
 msgstr ""
+"此部分根据您想要使用的应用程序来配置默认转码。您可能会需要调整相关设置直至此"
+"步骤结束。"
 
 #: ../../templates/show_install_config.inc.php:134
 #: ../../templates/show_install_config.inc.php:168
 msgid "See wiki page"
-msgstr ""
+msgstr "查看 wiki 页面"
 
 #: ../../templates/show_install_config.inc.php:138
 msgid "Template Configuration"
-msgstr ""
+msgstr "模板配置"
 
 #: ../../templates/show_install_config.inc.php:158
 msgid ""
@@ -6629,10 +6712,12 @@ msgid ""
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
 msgstr ""
+"未找到默认的转码应用程序。请安装一些流行的应用程序如 ( ffmpeg , avconv 等 ) "
+"或在安装结束之后再调整相关设置。"
 
 #: ../../templates/show_install_config.inc.php:166
 msgid "Players"
-msgstr ""
+msgstr "播放器"
 
 #: ../../templates/show_install_config.inc.php:167
 msgid ""
@@ -6731,7 +6816,7 @@ msgstr ""
 
 #: ../../templates/show_install.inc.php:50
 msgid "Desired Database Name"
-msgstr "Nome del database desiderato"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:62
 msgid "MySQL port (optional)"
@@ -6739,11 +6824,11 @@ msgstr ""
 
 #: ../../templates/show_install.inc.php:68
 msgid "MySQL Administrative Username"
-msgstr "Utente amministratore MySQL"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Password"
-msgstr "Password amministratore MySQL"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:80
 msgid "Create Database"
@@ -6763,15 +6848,15 @@ msgstr ""
 
 #: ../../templates/show_install.inc.php:118
 msgid "Ampache Database Username"
-msgstr "Nome utente del database Ampache"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:124
 msgid "Ampache Database User Password"
-msgstr "Password utente del database Ampache"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:133
 msgid "Insert Database"
-msgstr "Inserisci database"
+msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:30
 msgid "Choose Installation Language"
@@ -6888,15 +6973,15 @@ msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:36
 msgid "Decrease Volume"
-msgstr "Diminuisci volume"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:37
 msgid "Increase Volume"
-msgstr "Aumenta volume"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:38
 msgid "Volume"
-msgstr "Volume"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:43
 msgid "Repeat"
@@ -6904,7 +6989,7 @@ msgstr ""
 
 #: ../../templates/show_login_form.inc.php:68
 msgid "Remember Me"
-msgstr "Ricordami"
+msgstr ""
 
 #: ../../templates/show_login_form.inc.php:74
 msgid "Lost password"
@@ -6948,7 +7033,7 @@ msgstr ""
 
 #: ../../templates/show_mail_users.inc.php:61
 msgid "Send Mail"
-msgstr "Invia Mail"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:23
 #: ../../templates/sidebar_admin.inc.php:27
@@ -7001,7 +7086,7 @@ msgstr ""
 
 #: ../../templates/show_manage_democratic.inc.php:76
 msgid "Create New Playlist"
-msgstr "Crea nuova playlist"
+msgstr ""
 
 #: ../../templates/show_manage_license.inc.php:28
 msgid "Create new license"
@@ -7030,11 +7115,12 @@ msgstr ""
 #: ../../templates/show_mashup.inc.php:27
 #, fuzzy
 msgid "Browse Library"
-msgstr "Sfoglia"
+msgstr "浏览音乐"
 
 #: ../../templates/show_mashup.inc.php:31
+#, fuzzy
 msgid "Trending"
-msgstr ""
+msgstr "转码"
 
 #: ../../templates/show_mashup.inc.php:41
 #: ../../templates/sidebar_home.inc.php:147
@@ -7120,13 +7206,13 @@ msgstr ""
 #: ../../templates/show_playlists_dialog.inc.php:26
 #, fuzzy
 msgid "Playlist name"
-msgstr "Nome playlist"
+msgstr "播放列表名称"
 
 #: ../../templates/show_playlists.inc.php:37
 #: ../../templates/show_playlists.inc.php:101
 #, fuzzy
 msgid "Last Update"
-msgstr "Aggiornato"
+msgstr "更新"
 
 #: ../../templates/show_playlists.inc.php:39
 #: ../../templates/show_playlists.inc.php:103
@@ -7138,7 +7224,7 @@ msgstr ""
 #: ../../templates/show_searches.inc.php:50
 #: ../../templates/show_searches.inc.php:86
 msgid "Owner"
-msgstr "Proprietario"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:85
 msgid "No playlist found"
@@ -7171,14 +7257,13 @@ msgstr ""
 #: ../../templates/show_podcast_episode.inc.php:179
 #: ../../templates/show_podcast_episodes.inc.php:35
 #: ../../templates/show_podcast_episodes.inc.php:105
-#, fuzzy
 msgid "Publication Date"
-msgstr "Data registrazione"
+msgstr ""
 
 #: ../../templates/show_podcast_episode.inc.php:187
 #, fuzzy
 msgid "File"
-msgstr "Nome file"
+msgstr "文件"
 
 #: ../../templates/show_podcast_episode_row.inc.php:97
 #: ../../templates/show_podcast.inc.php:127
@@ -7188,30 +7273,35 @@ msgid "Sync"
 msgstr ""
 
 #: ../../templates/show_podcast_episode_row.inc.php:100
+#, fuzzy
 msgid "Podcast Episode edit"
-msgstr ""
+msgstr "编辑广播"
 
 #: ../../templates/show_podcast_episodes.inc.php:86
+#, fuzzy
 msgid "No podcast episode found"
-msgstr ""
+msgstr "没有过去的事件"
 
 #: ../../templates/show_podcast.inc.php:117
 #: ../../templates/show_podcast.inc.php:121
 #: ../../templates/show_podcast_row.inc.php:72
+#, fuzzy
 msgid "Podcast edit"
-msgstr ""
+msgstr "编辑广播"
 
 #: ../../templates/show_podcast.inc.php:122
+#, fuzzy
 msgid "Edit Podcast"
-msgstr ""
+msgstr "广播"
 
 #: ../../templates/show_podcasts.inc.php:31
 msgid "Subscribe Podcast"
 msgstr ""
 
 #: ../../templates/show_podcasts.inc.php:103
+#, fuzzy
 msgid "No podcast found"
-msgstr ""
+msgstr "未发现广播"
 
 #: ../../templates/show_preference_admin.inc.php:23
 msgid "Preference Administration"
@@ -7220,7 +7310,7 @@ msgstr ""
 #: ../../templates/show_preference_box.inc.php:48
 #: ../../templates/show_preference_box.inc.php:121
 msgid "Apply to All"
-msgstr "Applica a tutti"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:50
 #: ../../templates/show_preference_box.inc.php:123
@@ -7238,7 +7328,7 @@ msgstr ""
 #: ../../templates/show_preferences.inc.php:38
 #: ../../templates/show_user_preferences.inc.php:56
 msgid "Update Preferences"
-msgstr "Aggiorna impostazioni"
+msgstr ""
 
 #: ../../templates/show_pvmsg.inc.php:26
 msgid "Sent by"
@@ -7281,31 +7371,29 @@ msgstr ""
 
 #: ../../templates/show_random.inc.php:23
 msgid "Play Random Selection"
-msgstr "Riproduzione selezione casuale"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:53
 msgid "Item count"
-msgstr "Totale voci"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:80
 #: ../../templates/show_random.inc.php:104
 #: ../../templates/show_search_form.inc.php:64
 msgid "Unlimited"
-msgstr "Illimitato"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:86
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:88
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:97
 msgid "Size Limit"
@@ -7313,7 +7401,7 @@ msgstr ""
 
 #: ../../templates/show_random.inc.php:120
 msgid "Enqueue"
-msgstr "Accoda"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:35
 #: ../../templates/show_recently_played.inc.php:186
@@ -7330,56 +7418,48 @@ msgstr ""
 msgid "%d second ago"
 msgid_plural "%d seconds ago"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:76
 #, php-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:79
 #, php-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:82
 #, php-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:85
 #, php-format
 msgid "%d week ago"
 msgid_plural "%d weeks ago"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:88
 #, php-format
 msgid "%d month ago"
 msgid_plural "%d months ago"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:91
 #, php-format
 msgid "%d year ago"
 msgid_plural "%d years ago"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:94
 #, php-format
 msgid "%d decade ago"
 msgid_plural "%d decades ago"
 msgstr[0] ""
-msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:172
 msgid "No recently item found"
@@ -7398,7 +7478,7 @@ msgstr ""
 
 #: ../../templates/show_registration_confirmation.inc.php:40
 msgid "Registration Complete"
-msgstr "Registrazione completata"
+msgstr ""
 
 #: ../../templates/show_registration_confirmation.inc.php:46
 msgid "Your account has been created."
@@ -7440,7 +7520,7 @@ msgstr ""
 
 #: ../../templates/show_search_bar.inc.php:25
 msgid "Search..."
-msgstr "Ricerca..."
+msgstr ""
 
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
@@ -7469,7 +7549,7 @@ msgstr ""
 
 #: ../../templates/show_search_form.inc.php:23
 msgid "Search Ampache"
-msgstr "Cerca Ampache"
+msgstr ""
 
 #: ../../templates/show_search_form.inc.php:61
 msgid "Maximum Results"
@@ -7581,8 +7661,9 @@ msgstr ""
 
 #: ../../templates/show_songs.inc.php:41
 #: ../../templates/show_songs.inc.php:120
+#, fuzzy
 msgid "License"
-msgstr ""
+msgstr "音乐授权"
 
 #: ../../templates/show_songs.inc.php:103
 msgid "No song found"
@@ -7590,19 +7671,19 @@ msgstr ""
 
 #: ../../templates/show_stats.inc.php:31
 msgid "Connected Users"
-msgstr "Utenti connessi"
+msgstr ""
 
 #: ../../templates/show_stats.inc.php:32
 msgid "Total Users"
-msgstr "Totale utenti"
+msgstr ""
 
 #: ../../templates/show_stats.inc.php:38 ../../templates/show_stats.inc.php:77
 msgid "Catalog Size"
-msgstr "Dimensione catalogo"
+msgstr ""
 
 #: ../../templates/show_stats.inc.php:39
 msgid "Catalog Time"
-msgstr "Durata catalogo"
+msgstr ""
 
 #: ../../templates/show_tagcloud.inc.php:63
 msgid "Tag edit"
@@ -7616,7 +7697,7 @@ msgstr ""
 #: ../../templates/show_test.inc.php:44
 #: ../../templates/sidebar_admin.inc.php:47
 msgid "Ampache Debug"
-msgstr "Ampache Debug"
+msgstr ""
 
 #: ../../templates/show_test.inc.php:48
 msgid ""
@@ -7627,7 +7708,7 @@ msgstr ""
 #: ../../templates/show_test.inc.php:51
 #, fuzzy
 msgid "Web Installation"
-msgstr "Installazione Ampache"
+msgstr "Ampache 安装程序"
 
 #: ../../templates/show_test_table.inc.php:24
 msgid "PHP version"
@@ -7759,10 +7840,13 @@ msgid "PHP GD extension"
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:144
+#, fuzzy
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
 msgstr ""
+"此测试将判断 PHP 对域 config/ 目录是否拥有写入权限。这不是必须的，但拥有写入"
+"权限将有助于简化安装过程。"
 
 #: ../../templates/show_test_table.inc.php:148
 msgid "PHP safe mode disabled"
@@ -7905,7 +7989,7 @@ msgstr ""
 
 #: ../../templates/show_update_items.inc.php:23
 msgid "Starting Update from Tags"
-msgstr "Inizio aggiornamento da Tags"
+msgstr ""
 
 #: ../../templates/show_update_items.inc.php:27
 msgid "Update from Tags Complete"
@@ -7958,7 +8042,7 @@ msgstr ""
 #: ../../templates/show_user.inc.php:94 ../../templates/show_users.inc.php:51
 #: ../../templates/show_users.inc.php:96
 msgid "Last Seen"
-msgstr "Ultimo accesso"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:100 ../../templates/show_users.inc.php:55
 #: ../../templates/show_users.inc.php:100
@@ -7967,7 +8051,7 @@ msgstr ""
 
 #: ../../templates/show_user.inc.php:119
 msgid "Status"
-msgstr "Stato"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:123
 msgid "User is Online Now"
@@ -7996,15 +8080,15 @@ msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:66
 msgid "User Agreement"
-msgstr "Consenso utente"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:75
 msgid "I Accept"
-msgstr "Accetto"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:83
 msgid "User Information"
-msgstr "Informazioni utente"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:170
 msgid "* Required fields"
@@ -8012,15 +8096,15 @@ msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:182
 msgid "Register User"
-msgstr "Registra utente"
+msgstr ""
 
 #: ../../templates/show_users.inc.php:50 ../../templates/show_users.inc.php:95
 msgid "Fullname"
-msgstr "Nome completo"
+msgstr ""
 
 #: ../../templates/show_users.inc.php:52 ../../templates/show_users.inc.php:97
 msgid "Registration Date"
-msgstr "Data registrazione"
+msgstr ""
 
 #: ../../templates/show_users.inc.php:59
 #: ../../templates/show_users.inc.php:104
@@ -8030,7 +8114,7 @@ msgstr ""
 #: ../../templates/show_users.inc.php:73
 #: ../../templates/show_users.inc.php:118
 msgid "On-line"
-msgstr "In linea"
+msgstr ""
 
 #: ../../templates/show_verify_catalog.inc.php:23
 msgid "Verify Catalog"
@@ -8138,7 +8222,7 @@ msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:48
 msgid "Clear Now Playing"
-msgstr "Cancella 'Ora in ascolto'"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:53
 msgid "Manage Shoutbox"
@@ -8188,7 +8272,7 @@ msgstr ""
 
 #: ../../templates/sidebar.inc.php:72
 msgid "Logout"
-msgstr "Uscita"
+msgstr ""
 
 #: ../../templates/sidebar.light.inc.php:33
 msgid "Radio"
@@ -8234,7 +8318,7 @@ msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:34
 msgid "Mail Users"
-msgstr "Posta utenti"
+msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:44
 msgid "Manage Playlist"
@@ -8350,7 +8434,7 @@ msgstr ""
 
 #: Database preference table id 31 32
 msgid "Playlist Type"
-msgstr "Tipo playlist"
+msgstr ""
 
 #: Database preference table id 33
 msgid "Theme"
@@ -8693,8 +8777,9 @@ msgid "Podcast: # episodes to download when new episodes are available"
 msgstr ""
 
 #: Database preference table id 150
+#, fuzzy
 msgid "Library item context menu"
-msgstr ""
+msgstr "未找到库类型。"
 
 #: Database preference table id 151
 msgid "Rename uploaded file according to catalog pattern"
@@ -8725,11 +8810,5 @@ msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
 
-#~ msgid "# Songs"
-#~ msgstr "N° Brani"
-
-#~ msgid "Most Popular Albums"
-#~ msgstr "Album più popolare"
-
-#~ msgid "Most Popular Artists"
-#~ msgstr "Artista più popolare"
+#~ msgid "Playlist Songs"
+#~ msgstr "播放列表中的歌曲"

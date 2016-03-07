@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 17.09.2015 23:01:36 CEST 
+ # Last Update: 07.03.2016 02:21:07 CET 
 
  #######################################################################
 
@@ -36,8 +36,10 @@ msgid "Type of Playback"
 msgstr ""
 
 #: Database preference table id 31
-msgid "Language"
-msgstr ""
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "Language"
+# msgstr ""
 
 #: Database preference table id 32
 msgid "Playlist Type"
@@ -361,4 +363,52 @@ msgstr ""
 
 #: Database preference table id 145
 msgid "Theme color"
+msgstr ""
+
+#: Database preference table id 146
+msgid "Disable custom metadata fields (ctrl / shift click to select multiple)"
+msgstr ""
+
+#: Database preference table id 147
+msgid "Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above."
+msgstr ""
+
+#: Database preference table id 148
+msgid "Podcast: # latest episodes to keep"
+msgstr ""
+
+#: Database preference table id 149
+msgid "Podcast: # episodes to download when new episodes are available"
+msgstr ""
+
+#: Database preference table id 150
+msgid "Library item context menu"
+msgstr ""
+
+#: Database preference table id 151
+msgid "Rename uploaded file according to catalog pattern"
+msgstr ""
+
+#: Database preference table id 152
+msgid "Check library item at import time and don't import duplicates"
+msgstr ""
+
+#: Database preference table id 153
+msgid "Show filter box on browse"
+msgstr ""
+
+#: Database preference table id 154
+msgid "Light sidebar by default"
+msgstr ""
+
+#: Database preference table id 155
+msgid "Custom blank album default image"
+msgstr ""
+
+#: Database preference table id 156
+msgid "Custom blank video default image"
+msgstr ""
+
+#: Database preference table id 157
+msgid "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
