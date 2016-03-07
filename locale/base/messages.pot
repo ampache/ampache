@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-03-04 23:11+0100\n"
+"POT-Creation-Date: 2016-03-07 02:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1112,7 +1112,7 @@ msgid "Unknown (Orphaned)"
 msgstr ""
 
 #: ../../lib/class/album.class.php:642
-#: ../../lib/class/subsonic_xml_data.class.php:492
+#: ../../lib/class/subsonic_xml_data.class.php:495
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:123
 #: ../../templates/show_album.inc.php:31
@@ -1517,7 +1517,7 @@ msgstr ""
 #: ../../templates/show_artists.inc.php:44
 #: ../../templates/show_artists.inc.php:131
 #: ../../templates/show_label.inc.php:120
-#: ../../templates/show_label.inc.php:134
+#: ../../templates/show_label.inc.php:135
 #: ../../templates/show_manage_democratic.inc.php:31
 #: ../../templates/show_random.inc.php:29
 #: ../../templates/show_random.inc.php:32
@@ -1667,7 +1667,7 @@ msgstr ""
 
 #: ../../lib/class/browse.class.php:328 ../../server/search.ajax.php:178
 #: ../../templates/show_artist.inc.php:312
-#: ../../templates/show_artist.inc.php:380
+#: ../../templates/show_artist.inc.php:381
 #: ../../templates/show_edit_artist_row.inc.php:62
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Labels"
@@ -2069,7 +2069,7 @@ msgid "Comment"
 msgstr ""
 
 #: ../../lib/class/search.class.php:252 ../../lib/class/search.class.php:502
-#: ../../lib/class/search.class.php:536 ../../lib/class/tag.class.php:714
+#: ../../lib/class/search.class.php:536 ../../lib/class/tag.class.php:734
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
 msgstr ""
@@ -2401,21 +2401,21 @@ msgstr ""
 msgid "Episode"
 msgstr ""
 
-#: ../../lib/class/update.class.php:597
+#: ../../lib/class/update.class.php:600
 msgid "No updates needed."
 msgstr ""
 
-#: ../../lib/class/update.class.php:599
+#: ../../lib/class/update.class.php:602
 msgid "Return to main page"
 msgstr ""
 
-#: ../../lib/class/update.class.php:2625 ../../lib/class/update.class.php:2641
-#: ../../lib/class/update.class.php:2657
+#: ../../lib/class/update.class.php:2628 ../../lib/class/update.class.php:2644
+#: ../../lib/class/update.class.php:2660
 msgid "File copy error."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2632 ../../lib/class/update.class.php:2648
-#: ../../lib/class/update.class.php:2664
+#: ../../lib/class/update.class.php:2635 ../../lib/class/update.class.php:2651
+#: ../../lib/class/update.class.php:2667
 msgid "Cannot copy default .htaccess file."
 msgstr ""
 
@@ -3572,58 +3572,6 @@ msgstr ""
 #: ../../lib/ui.lib.php:730
 msgid "Off"
 msgstr ""
-
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:12
-msgid "Integer"
-msgstr ""
-
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:13
-msgid "This field cannot be blank."
-msgstr ""
-
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:14
-#, php-format
-msgid "Value %sr is not a valid choice."
-msgstr ""
-
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:17
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:18
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:60
-msgid "single"
-msgid_plural "more"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:43
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:44
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:45
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:46
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:47
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:48
-msgid "one file"
-msgid_plural "multiple files"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:53
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:54
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:55
-msgid "one"
-msgid_plural "more"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:67
-msgid "hello"
-msgstr ""
-
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:68
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:69
-#: ../../lib/vendor/gettext/gettext/tests/TranslatorTest.php:70
-msgid "world"
-msgid_plural "worlds"
-msgstr[0] ""
-msgstr[1] ""
 
 #: ../../lostpassword.php:39
 msgid "Password has been sent"
@@ -5517,12 +5465,12 @@ msgid "No album found"
 msgstr ""
 
 #: ../../templates/show_artist.inc.php:55
-#: ../../templates/show_artist.inc.php:345
-#: ../../templates/show_artist.inc.php:357
-#: ../../templates/show_artist.inc.php:369
-#: ../../templates/show_artist.inc.php:381
+#: ../../templates/show_artist.inc.php:346
+#: ../../templates/show_artist.inc.php:358
+#: ../../templates/show_artist.inc.php:370
+#: ../../templates/show_artist.inc.php:382
 #: ../../templates/show_index.inc.php:53 ../../templates/show_index.inc.php:65
-#: ../../templates/show_label.inc.php:134
+#: ../../templates/show_label.inc.php:135
 #: ../../templates/show_missing_artist.inc.php:33
 #: ../../templates/show_now_playing_row.inc.php:88
 #: ../../templates/show_now_playing_row.inc.php:96
@@ -5592,13 +5540,13 @@ msgid "Edit Artist"
 msgstr ""
 
 #: ../../templates/show_artist.inc.php:294
-#: ../../templates/show_artist.inc.php:344
+#: ../../templates/show_artist.inc.php:345
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
 msgstr ""
 
 #: ../../templates/show_artist.inc.php:300
-#: ../../templates/show_artist.inc.php:356
+#: ../../templates/show_artist.inc.php:357
 #: ../../templates/show_now_playing_row.inc.php:86
 #: ../../templates/show_now_playing_similar.inc.php:28
 #: ../../templates/show_recommended_artists.inc.php:25
@@ -5606,7 +5554,7 @@ msgid "Similar Artists"
 msgstr ""
 
 #: ../../templates/show_artist.inc.php:306
-#: ../../templates/show_artist.inc.php:368
+#: ../../templates/show_artist.inc.php:369
 msgid "Events"
 msgstr ""
 
@@ -8355,7 +8303,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 17.09.2015 23:01:36 CEST 
+ # Last Update: 07.03.2016 02:21:07 CET 
 
  #######################################################################
 
@@ -8388,8 +8336,10 @@ msgid "Type of Playback"
 msgstr ""
 
 #: Database preference table id 31
-msgid "Language"
-msgstr ""
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "Language"
+# msgstr ""
 
 #: Database preference table id 32
 msgid "Playlist Type"
@@ -8713,4 +8663,52 @@ msgstr ""
 
 #: Database preference table id 145
 msgid "Theme color"
+msgstr ""
+
+#: Database preference table id 146
+msgid "Disable custom metadata fields (ctrl / shift click to select multiple)"
+msgstr ""
+
+#: Database preference table id 147
+msgid "Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above."
+msgstr ""
+
+#: Database preference table id 148
+msgid "Podcast: # latest episodes to keep"
+msgstr ""
+
+#: Database preference table id 149
+msgid "Podcast: # episodes to download when new episodes are available"
+msgstr ""
+
+#: Database preference table id 150
+msgid "Library item context menu"
+msgstr ""
+
+#: Database preference table id 151
+msgid "Rename uploaded file according to catalog pattern"
+msgstr ""
+
+#: Database preference table id 152
+msgid "Check library item at import time and don't import duplicates"
+msgstr ""
+
+#: Database preference table id 153
+msgid "Show filter box on browse"
+msgstr ""
+
+#: Database preference table id 154
+msgid "Light sidebar by default"
+msgstr ""
+
+#: Database preference table id 155
+msgid "Custom blank album default image"
+msgstr ""
+
+#: Database preference table id 156
+msgid "Custom blank video default image"
+msgstr ""
+
+#: Database preference table id 157
+msgid "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
