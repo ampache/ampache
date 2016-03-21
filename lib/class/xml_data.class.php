@@ -105,8 +105,8 @@ class XML_Data
      */
     public static function error($code,$string)
     {
-        $string = self::_header() . "\t<error code=\"$code\"><![CDATA[$string]]></error>" . self::_footer();
-        return $string;
+        $string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
+        self::output_xml($string);
     } // error
 
     /**
@@ -241,7 +241,7 @@ class XML_Data
         } // end foreach
 
         if (!$callback) {
-            $string = self::_header() . $string . self::_footer();
+            $string = self::output_xml($string);
         }
 
         return $string;
@@ -277,9 +277,7 @@ class XML_Data
                     "</tag>\n";
         } // end foreach
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // tags
 
     /**
@@ -323,9 +321,7 @@ class XML_Data
                     "</artist>\n";
         } // end foreach artists
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // artists
 
     /**
@@ -376,9 +372,7 @@ class XML_Data
                     "</album>\n";
         } // end foreach
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // albums
 
     /**
@@ -412,10 +406,7 @@ class XML_Data
                 "</playlist>\n";
         } // end foreach
 
-        // Build the final and then send her off
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // playlists
 
     /**
@@ -498,7 +489,7 @@ class XML_Data
             $string .= "</song>\n";
         } // end foreach
 
-        return self::_header() . $string . self::_footer();
+        return self::output_xml($string);
     } // songs
 
     /**
@@ -530,9 +521,7 @@ class XML_Data
                     "</video>\n";
         } // end foreach
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // videos
 
     /**
@@ -588,9 +577,7 @@ class XML_Data
                     "</song>\n";
         } // end foreach
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // democratic
 
     /**
@@ -617,9 +604,7 @@ class XML_Data
         }
         $string .= "</user>\n";
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // user
 
     /**
@@ -639,9 +624,7 @@ class XML_Data
         }
         $string .= "</users>\n";
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // users
 
     /**
@@ -669,10 +652,13 @@ class XML_Data
         }
         $string .= "</shouts>\n";
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // shouts
+
+    public static function output_xml($string)
+    {
+        return self::_header() . UI::clean_utf8($string) . self::_footer();
+    }
 
     /**
      * timeline
