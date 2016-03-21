@@ -74,7 +74,7 @@ switch ($action) {
             break;
         }
 
-        $msgs = split(",", $_REQUEST['msgs']);
+        $msgs = explode(',', $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
             $pvmsg = new PrivateMsg(intval($msg_id));
             if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
@@ -108,7 +108,7 @@ switch ($action) {
             break;
         }
 
-        $msgs = split(",", $_REQUEST['msgs']);
+        $msgs = explode(',', $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
             $msg_id = intval($msg_id);
             $pvmsg  = new PrivateMsg($msg_id);
