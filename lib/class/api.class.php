@@ -107,6 +107,9 @@ class Api
             case 'exact_match':
                 self::$browse->set_filter('exact_match',$value);
             break;
+            case 'enabled':
+                self::$browse->set_filter('enabled',$value);
+            break;
             default:
                 // Rien a faire
             break;
@@ -515,6 +518,8 @@ class Api
         Api::set_filter($method,$input['filter']);
         Api::set_filter('add',$input['add']);
         Api::set_filter('update',$input['update']);
+        // Filter out disabled songs
+        Api::set_filter('enabled','1');
 
         $songs = self::$browse->get_objects();
 
