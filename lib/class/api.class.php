@@ -226,15 +226,15 @@ class Api
                 $row        = Dba::fetch_assoc($db_results);
 
                 // Now we need to quickly get the song totals
-                $sql = "SELECT COUNT(`id`) AS `song` FROM `song` WHERE `song`.`enabled`='1'";
+                $sql        = "SELECT COUNT(`id`) AS `song` FROM `song` WHERE `song`.`enabled`='1'";
                 $db_results = Dba::read($sql);
                 $song       = Dba::fetch_assoc($db_results);
 
-                $sql = "SELECT COUNT(`id`) AS `album` FROM `album`";
+                $sql        = "SELECT COUNT(`id`) AS `album` FROM `album`";
                 $db_results = Dba::read($sql);
                 $album      = Dba::fetch_assoc($db_results);
 
-                $sql = "SELECT COUNT(`id`) AS `artist` FROM `artist`";
+                $sql        = "SELECT COUNT(`id`) AS `artist` FROM `artist`";
                 $db_results = Dba::read($sql);
                 $artist     = Dba::fetch_assoc($db_results);
 
