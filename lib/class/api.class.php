@@ -232,7 +232,7 @@ class Api
 
                 $sql = "SELECT COUNT(`id`) AS `album` FROM `album`";
                 $db_results = Dba::read($sql);
-                $album     = Dba::fetch_assoc($db_results);
+                $album      = Dba::fetch_assoc($db_results);
 
                 $sql = "SELECT COUNT(`id`) AS `artist` FROM `artist`";
                 $db_results = Dba::read($sql);
