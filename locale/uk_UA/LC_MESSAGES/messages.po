@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-03-07 02:21+0100\n"
-"PO-Revision-Date: 2016-03-04 21:21+0000\n"
+"POT-Creation-Date: 2016-03-31 04:43+0200\n"
+"PO-Revision-Date: 2016-03-07 06:38+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/ampache/ampache/"
 "language/uk_UA/)\n"
@@ -1874,9 +1874,8 @@ msgid "Target catalog required"
 msgstr ""
 
 #: ../../lib/class/podcast.class.php:281
-#, fuzzy
 msgid "Wrong target catalog type"
-msgstr "Помилка: Будь ласка, виберіть тип каталогу"
+msgstr ""
 
 #: ../../lib/class/podcast.class.php:301
 msgid "Cannot access the feed."
@@ -4103,18 +4102,16 @@ msgid "Podcast Episode Deletion"
 msgstr ""
 
 #: ../../podcast_episode.php:36
-#, fuzzy
 msgid "Are you sure you want to permanently delete this episode?"
-msgstr "Ви впевнені, що хочете назавжди видалити"
+msgstr ""
 
 #: ../../podcast_episode.php:55
 msgid "Episode has been deleted."
 msgstr ""
 
 #: ../../podcast_episode.php:57
-#, fuzzy
 msgid "Cannot delete this episode."
-msgstr "Неможливо видалити каталол"
+msgstr ""
 
 #: ../../podcast.php:60
 msgid "Subscribed to Podcast"
@@ -4125,18 +4122,16 @@ msgid "Podcast Deletion"
 msgstr ""
 
 #: ../../podcast.php:74
-#, fuzzy
 msgid "Are you sure you want to delete this podcast?"
-msgstr "Ви впевнені, що хочете видалити цей плагін?"
+msgstr ""
 
 #: ../../podcast.php:88
 msgid "Podcast has been deleted."
 msgstr ""
 
 #: ../../podcast.php:90
-#, fuzzy
 msgid "Cannot delete this podcast."
-msgstr "Неможливо видалити каталол"
+msgstr ""
 
 #: ../../preferences.php:48 ../../preferences.php:93
 msgid "Server"
@@ -7129,9 +7124,8 @@ msgstr ""
 
 #: ../../templates/show_playlists.inc.php:37
 #: ../../templates/show_playlists.inc.php:101
-#, fuzzy
 msgid "Last Update"
-msgstr "Користувача оновлено"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:39
 #: ../../templates/show_playlists.inc.php:103
@@ -7594,9 +7588,8 @@ msgstr ""
 
 #: ../../templates/show_songs.inc.php:41
 #: ../../templates/show_songs.inc.php:120
-#, fuzzy
 msgid "License"
-msgstr "Ліцензію оновлено"
+msgstr ""
 
 #: ../../templates/show_songs.inc.php:103
 msgid "No song found"
@@ -8331,7 +8324,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 16.11.2015 01:36:06 CET
+# Last Update: 07.03.2016 02:21:07 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8361,6 +8354,10 @@ msgstr ""
 msgid "Type of Playback"
 msgstr ""
 
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "Language"
+# msgstr ""
 #: Database preference table id 31 32
 msgid "Playlist Type"
 msgstr ""
