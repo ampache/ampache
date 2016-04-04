@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-03-07 02:21+0100\n"
-"PO-Revision-Date: 2016-03-04 21:21+0000\n"
+"POT-Creation-Date: 2016-03-31 04:43+0200\n"
+"PO-Revision-Date: 2016-03-07 06:38+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/ampache/ampache/"
 "language/ru_RU/)\n"
@@ -1577,9 +1577,8 @@ msgid "Playlists"
 msgstr "Списки композиций"
 
 #: ../../lib/class/browse.class.php:240
-#, fuzzy
 msgid "Playlist Medias"
-msgstr "Метод обновления плейлиста"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:244
 msgid "Current Playlist"
@@ -2090,9 +2089,8 @@ msgid "Tag"
 msgstr "Тег"
 
 #: ../../lib/class/search.class.php:259
-#, fuzzy
 msgid "Album tag"
-msgstr "Обложка альбома"
+msgstr ""
 
 #: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:510
 #: ../../templates/show_disabled_songs.inc.php:32
@@ -4110,14 +4108,12 @@ msgid "Podcast Episode Deletion"
 msgstr ""
 
 #: ../../podcast_episode.php:36
-#, fuzzy
 msgid "Are you sure you want to permanently delete this episode?"
-msgstr "Вы уверены, что хотите удалить это расширение?"
+msgstr ""
 
 #: ../../podcast_episode.php:55
-#, fuzzy
 msgid "Episode has been deleted."
-msgstr "Список композиций был удален"
+msgstr ""
 
 #: ../../podcast_episode.php:57
 msgid "Cannot delete this episode."
@@ -4132,14 +4128,12 @@ msgid "Podcast Deletion"
 msgstr ""
 
 #: ../../podcast.php:74
-#, fuzzy
 msgid "Are you sure you want to delete this podcast?"
-msgstr "Вы уверены, что хотите удалить это расширение?"
+msgstr ""
 
 #: ../../podcast.php:88
-#, fuzzy
 msgid "Podcast has been deleted."
-msgstr "Список композиций был удален"
+msgstr ""
 
 #: ../../podcast.php:90
 msgid "Cannot delete this podcast."
@@ -4606,9 +4600,8 @@ msgid "Infinite Scroll"
 msgstr ""
 
 #: ../../templates/list_header.inc.php:150
-#, fuzzy
 msgid "Grid View"
-msgstr "Просмотр"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:157
 msgid "Alphabet"
@@ -6195,9 +6188,8 @@ msgid "Author"
 msgstr ""
 
 #: ../../templates/show_edit_podcast_row.inc.php:27
-#, fuzzy
 msgid "Feed"
-msgstr "RSS-канал"
+msgstr ""
 
 #: ../../templates/show_edit_podcast_row.inc.php:39
 msgid "Language"
@@ -6389,9 +6381,8 @@ msgid "Slideshow"
 msgstr ""
 
 #: ../../templates/show_html5_player.inc.php:523
-#, fuzzy
 msgid "Expand/Collapse Playlist"
-msgstr "Управление списком композиций"
+msgstr ""
 
 #: ../../templates/show_html5_player.inc.php:528
 msgid "Visualizer"
@@ -7049,14 +7040,12 @@ msgid "Date Added"
 msgstr "Дата добавления"
 
 #: ../../templates/show_mashup.inc.php:27
-#, fuzzy
 msgid "Browse Library"
-msgstr "Слушать музыку"
+msgstr ""
 
 #: ../../templates/show_mashup.inc.php:31
-#, fuzzy
 msgid "Trending"
-msgstr "Перекодирование"
+msgstr ""
 
 #: ../../templates/show_mashup.inc.php:41
 #: ../../templates/sidebar_home.inc.php:147
@@ -7140,15 +7129,13 @@ msgid "Playlist edit"
 msgstr ""
 
 #: ../../templates/show_playlists_dialog.inc.php:26
-#, fuzzy
 msgid "Playlist name"
-msgstr "Список композиций"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:37
 #: ../../templates/show_playlists.inc.php:101
-#, fuzzy
 msgid "Last Update"
-msgstr "Последнее обновление"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:39
 #: ../../templates/show_playlists.inc.php:103
@@ -7193,14 +7180,12 @@ msgstr "Ссылка"
 #: ../../templates/show_podcast_episode.inc.php:179
 #: ../../templates/show_podcast_episodes.inc.php:35
 #: ../../templates/show_podcast_episodes.inc.php:105
-#, fuzzy
 msgid "Publication Date"
-msgstr "Дата регистрации"
+msgstr ""
 
 #: ../../templates/show_podcast_episode.inc.php:187
-#, fuzzy
 msgid "File"
-msgstr "Файл"
+msgstr ""
 
 #: ../../templates/show_podcast_episode_row.inc.php:97
 #: ../../templates/show_podcast.inc.php:127
@@ -7224,18 +7209,16 @@ msgid "Podcast edit"
 msgstr ""
 
 #: ../../templates/show_podcast.inc.php:122
-#, fuzzy
 msgid "Edit Podcast"
-msgstr "Редактировать исполнителя"
+msgstr ""
 
 #: ../../templates/show_podcasts.inc.php:31
 msgid "Subscribe Podcast"
 msgstr ""
 
 #: ../../templates/show_podcasts.inc.php:103
-#, fuzzy
 msgid "No podcast found"
-msgstr "Записей не найдено"
+msgstr ""
 
 #: ../../templates/show_preference_admin.inc.php:23
 msgid "Preference Administration"
@@ -7669,9 +7652,8 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:51
-#, fuzzy
 msgid "Web Installation"
-msgstr "Установка Ampache"
+msgstr ""
 
 #: ../../templates/show_test_table.inc.php:24
 msgid "PHP version"
@@ -8364,7 +8346,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 16.11.2015 01:36:06 CET
+# Last Update: 07.03.2016 02:21:07 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8394,6 +8376,10 @@ msgstr "Использовать Http воспроизведение, незав
 msgid "Type of Playback"
 msgstr "Тип вещания"
 
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "Language"
+# msgstr ""
 #: Database preference table id 31 32
 msgid "Playlist Type"
 msgstr "Тип списка композиций"
@@ -8770,15 +8756,3 @@ msgstr ""
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
-
-#~ msgid "Playlist Songs"
-#~ msgstr "Композиции списка"
-
-#~ msgid "# Songs"
-#~ msgstr "Композиций"
-
-#~ msgid "Most Popular Albums"
-#~ msgstr "Самые популярные альбомы"
-
-#~ msgid "Most Popular Artists"
-#~ msgstr "Самые популярные исполнители"

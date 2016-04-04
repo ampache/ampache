@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-03-07 02:21+0100\n"
-"PO-Revision-Date: 2015-05-12 16:07+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2016-03-31 04:43+0200\n"
+"PO-Revision-Date: 2016-03-07 06:38+0000\n"
+"Last-Translator: Afterster\n"
 "Language-Team: German (Austria) (http://www.transifex.com/ampache/ampache/"
 "language/de_AT/)\n"
 "Language: de_AT\n"
@@ -8304,7 +8304,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 16.11.2015 01:36:06 CET
+# Last Update: 07.03.2016 02:21:07 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8334,6 +8334,10 @@ msgstr ""
 msgid "Type of Playback"
 msgstr ""
 
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "Language"
+# msgstr ""
 #: Database preference table id 31 32
 msgid "Playlist Type"
 msgstr ""

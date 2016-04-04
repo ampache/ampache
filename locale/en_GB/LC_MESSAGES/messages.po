@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Manuel <psyvirusx@gmail.com>, 2015
+# Manuel <psyvirusx@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-03-07 02:21+0100\n"
-"PO-Revision-Date: 2016-03-04 21:21+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2016-03-31 04:43+0200\n"
+"PO-Revision-Date: 2016-03-07 22:29+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/ampache/"
 "ampache/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -254,8 +254,6 @@ msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
 msgstr ""
-"Your Database and associated tables have been updated to match your "
-"currently configured charset"
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
@@ -1709,8 +1707,8 @@ msgstr ""
 #: ../../lib/class/catalog.class.php:599
 msgid "day"
 msgid_plural "days"
-msgstr[0] "day"
-msgstr[1] "days"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:601
 msgid "hour"
@@ -1736,7 +1734,7 @@ msgstr[1] "Catalog Clean Done. %d files removed."
 #: ../../lib/class/catalog.class.php:1830
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
-msgstr ""
+msgstr "Catalogue Verify Done. %d of %d files updated."
 
 #: ../../lib/class/catalog.class.php:2014
 msgid "Failed to create playlist."
@@ -1873,9 +1871,8 @@ msgid "Target catalog required"
 msgstr ""
 
 #: ../../lib/class/podcast.class.php:281
-#, fuzzy
 msgid "Wrong target catalog type"
-msgstr "Error: Please select a catalogue type"
+msgstr ""
 
 #: ../../lib/class/podcast.class.php:301
 msgid "Cannot access the feed."
@@ -4101,18 +4098,16 @@ msgid "Podcast Episode Deletion"
 msgstr ""
 
 #: ../../podcast_episode.php:36
-#, fuzzy
 msgid "Are you sure you want to permanently delete this episode?"
-msgstr "Do you really want to delete this catalogue?"
+msgstr ""
 
 #: ../../podcast_episode.php:55
 msgid "Episode has been deleted."
 msgstr ""
 
 #: ../../podcast_episode.php:57
-#, fuzzy
 msgid "Cannot delete this episode."
-msgstr "Cannot delete the catalogue"
+msgstr ""
 
 #: ../../podcast.php:60
 msgid "Subscribed to Podcast"
@@ -4123,18 +4118,16 @@ msgid "Podcast Deletion"
 msgstr ""
 
 #: ../../podcast.php:74
-#, fuzzy
 msgid "Are you sure you want to delete this podcast?"
-msgstr "Do you really want to delete this catalogue?"
+msgstr ""
 
 #: ../../podcast.php:88
 msgid "Podcast has been deleted."
 msgstr ""
 
 #: ../../podcast.php:90
-#, fuzzy
 msgid "Cannot delete this podcast."
-msgstr "Cannot delete the catalogue"
+msgstr ""
 
 #: ../../preferences.php:48 ../../preferences.php:93
 msgid "Server"
@@ -4880,8 +4873,6 @@ msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
@@ -5990,7 +5981,6 @@ msgstr ""
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
 msgstr ""
-"If you believe this is an error please contact an Ampache administrator."
 
 #: ../../templates/show_denied.inc.php:67
 msgid ""
@@ -7130,9 +7120,8 @@ msgstr ""
 
 #: ../../templates/show_playlists.inc.php:37
 #: ../../templates/show_playlists.inc.php:101
-#, fuzzy
 msgid "Last Update"
-msgstr "Catalogue Updated"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:39
 #: ../../templates/show_playlists.inc.php:103
@@ -7301,15 +7290,15 @@ msgstr ""
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] "%d minute"
-msgstr[1] "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:88
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] "%d hour"
-msgstr[1] "%d hours"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:97
 msgid "Size Limit"
@@ -7877,9 +7866,6 @@ msgid ""
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
 msgstr ""
-"This test makes sure that your web_path variable is set correctly and that "
-"we are able to get to the index page. If you do not see a check mark here "
-"then your web_path is not set correctly."
 
 #: ../../templates/show_tvshow.inc.php:95
 #: ../../templates/show_tvshow.inc.php:99
@@ -8324,7 +8310,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 16.11.2015 01:36:06 CET
+# Last Update: 07.03.2016 02:21:07 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8354,6 +8340,10 @@ msgstr ""
 msgid "Type of Playback"
 msgstr ""
 
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "Language"
+# msgstr ""
 #: Database preference table id 31 32
 msgid "Playlist Type"
 msgstr ""

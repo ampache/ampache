@@ -31,6 +31,8 @@ potfile='messages.pot'
 tdstxt='translatable-database-strings.txt'
 ampconf='../../config/ampache.cfg.php'
 
+##############################################################
+
 usage() {
     echo ""
     echo -e "\033[32m usage: $0 [-h|--help][-g|--get][-gu|--getutds][-i|--init][-m|--merge][-f|--format][-a|--all][-au|--allutds]\033[0m"
@@ -42,6 +44,8 @@ usage() {
     echo -e "[-ma|--mergeall]\t Same as -m but for all translations."
     echo -e "[-f|--format]\t\t Compiles the .mo file for its related .po file."
     echo -e "[-fa|--formatall]\t Same as -f but for all translations."
+    echo -e "[-ro|--rmobsolete]\t Delete obsolete/orphaned entries from source-translation file and compiles it."
+    echo -e "[-roa|--rmobsoleteall]\t Same as -ro but for all translations."
     echo -e "[-a|--all]\t\t Does all except --init and --utds."
     echo -e "[-au|--allutds]\t\t Does all except --init"
     echo -e "[-h|--help]\t\t Shows this help screen."
@@ -52,6 +56,9 @@ usage() {
     exit 1
 }
 
+##############################################################
+
+# Generate/overwrite messages.pot file from Source-Strings
 generate_pot() {
     echo "Generating/updating pot-file"
     xgettext    --from-code=UTF-8 \
@@ -70,6 +77,7 @@ generate_pot() {
     fi
 }
 
+# Generate/overwrite messages.pot file from Source- and Database-Strings
 generate_pot_utds() {
     echo ""
     echo "Generating/updating pot-file"
@@ -187,6 +195,7 @@ generate_pot_utds() {
     fi
 }
 
+# Merge old and new gathered translations
 do_msgmerge() {
     source=$potfile
     target="../$1/LC_MESSAGES/messages.po"
@@ -195,12 +204,22 @@ do_msgmerge() {
     echo "Obsolete messages in $target: " $(grep '^#~' $target | wc -l)
 }
 
+# Compiling translation files (create the messages.mo files)
 do_msgfmt() {
     source="../$1/LC_MESSAGES/messages.po"
     target="../$1/LC_MESSAGES/messages.mo"
     echo "Creating $target from $source"
     msgfmt --verbose --check $source -o $target
 }
+
+# Kill obsolete translation strings from translation (.po) files and format/compile them
+rm_obsolete() {
+    source="../$1/LC_MESSAGES/messages.po"
+    echo "Delete obsolete Entries in $source"
+    msgattrib --no-obsolete $source -o $source
+}
+
+##############################################################
 
 if [[ $# -eq 0 ]]; then
     usage
@@ -211,6 +230,7 @@ case $1 in
         generate_pot
         for i in $(ls ../ | grep -v base); do
             do_msgmerge $i
+            rm_obsolete $i
             do_msgfmt $i
         done
     ;;
@@ -218,6 +238,7 @@ case $1 in
         generate_pot_utds
         for i in $(ls ../ | grep -v base); do
             do_msgmerge $i
+            rm_obsolete $i
             do_msgfmt $i
         done
     ;;
@@ -237,6 +258,16 @@ case $1 in
     ;;
     '-fa'|'--formatall')
         for i in $(ls ../ | grep -v base); do
+            do_msgfmt $i
+        done
+    ;;
+    '-ro'|'--rmobsolete')
+            rm_obsolete $OLANG
+            do_msgfmt $OLANG
+    ;;
+    '-roa'|'--rmobsoleteall')
+        for i in $(ls ../ | grep -v base); do
+            rm_obsolete $i
             do_msgfmt $i
         done
     ;;
