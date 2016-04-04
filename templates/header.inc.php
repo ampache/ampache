@@ -434,7 +434,7 @@ $_SESSION['login'] = false;
                 </div>
                 <div id="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=artist">
-                        <img src="<?php echo $web_path ?>/images/topmenu-music.png" />
+                        <img src="<?php echo $web_path ?>/images/topmenu-artist.png" />
                         <span><?php echo T_('Artists') ?></span>
                     </a>
                 </div>
