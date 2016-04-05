@@ -154,7 +154,8 @@ class Query
                 'tag',
                 'catalog',
                 'catalog_enabled',
-                'composer'
+                'composer',
+                'enabled'
             ),
             'live_stream' => array(
                 'alpha_match',
@@ -492,6 +493,7 @@ class Query
             case 'season_eq':
             case 'user':
             case 'to_user':
+            case 'enabled':
                 $this->_state['filter'][$key] = intval($value);
             break;
             case 'exact_match':
@@ -1379,6 +1381,9 @@ class Query
                 case 'catalog_enabled':
                     $this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
                     $filter_sql = " `catalog`.`enabled` = '1' AND ";
+                    break;
+                case 'enabled':
+                    $filter_sql = " `song`.`enabled`= '$value' AND ";
                     break;
                 default:
                     // Rien a faire

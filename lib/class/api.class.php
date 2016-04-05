@@ -107,6 +107,9 @@ class Api
             case 'exact_match':
                 self::$browse->set_filter('exact_match',$value);
             break;
+            case 'enabled':
+                self::$browse->set_filter('enabled',$value);
+            break;
             default:
                 // Rien a faire
             break;
@@ -223,12 +226,17 @@ class Api
                 $row        = Dba::fetch_assoc($db_results);
 
                 // Now we need to quickly get the song totals
-                $sql = 'SELECT COUNT(`id`) AS `song`, ' .
-                    'COUNT(DISTINCT(`album`)) AS `album`, ' .
-                    'COUNT(DISTINCT(`artist`)) AS `artist` ' .
-                    'FROM `song`';
+                $sql        = "SELECT COUNT(`id`) AS `song` FROM `song` WHERE `song`.`enabled`='1'";
                 $db_results = Dba::read($sql);
-                $counts     = Dba::fetch_assoc($db_results);
+                $song       = Dba::fetch_assoc($db_results);
+
+                $sql        = "SELECT COUNT(`id`) AS `album` FROM `album`";
+                $db_results = Dba::read($sql);
+                $album      = Dba::fetch_assoc($db_results);
+
+                $sql        = "SELECT COUNT(`id`) AS `artist` FROM `artist`";
+                $db_results = Dba::read($sql);
+                $artist     = Dba::fetch_assoc($db_results);
 
                 // Next the video counts
                 $sql        = "SELECT COUNT(`id`) AS `video` FROM `video`";
@@ -249,9 +257,9 @@ class Api
                     'update'=>date("c",$row['update']),
                     'add'=>date("c",$row['add']),
                     'clean'=>date("c",$row['clean']),
-                    'songs'=>$counts['song'],
-                    'albums'=>$counts['album'],
-                    'artists'=>$counts['artist'],
+                    'songs'=>$song['song'],
+                    'albums'=>$album['album'],
+                    'artists'=>$artist['artist'],
                     'playlists'=>$playlist['playlist'],
                     'videos'=>$vcounts['video'],
                     'catalogs'=>$catalog['catalog']));
@@ -515,6 +523,8 @@ class Api
         Api::set_filter($method,$input['filter']);
         Api::set_filter('add',$input['add']);
         Api::set_filter('update',$input['update']);
+        // Filter out disabled songs
+        Api::set_filter('enabled','1');
 
         $songs = self::$browse->get_objects();
 
