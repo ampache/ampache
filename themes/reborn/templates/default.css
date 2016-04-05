@@ -248,10 +248,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     top: 20px;
 }
 
-#updateInfo {
-    float: left;
-}
-
 #sb_Subsearch input[type=submit] {
     min-width: 100px;
     font-size: 15px;

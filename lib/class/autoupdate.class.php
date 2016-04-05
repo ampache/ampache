@@ -226,7 +226,7 @@ class AutoUpdate
      */
     public static function show_new_version()
     {
-        echo '<div>';
+        echo '<div id="autoupdate">';
         echo '<font color="#ff0000">' . T_('Update available') . '</font>';
         echo ' (' . self::get_latest_version() . ').<br />';
 

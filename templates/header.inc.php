@@ -408,16 +408,7 @@ $_SESSION['login'] = false;
                         </span>
                     <?php 
 } ?>
-                    <span id="updateInfo">
-                    <?php
-                    if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
-                        if (AutoUpdate::is_update_available()) {
-                            AutoUpdate::show_new_version();
-                        }
-                    }
-                    $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
-                    ?>
-                    </span>
+
                     <?php UI::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
@@ -527,20 +518,35 @@ $_SESSION['login'] = false;
             <div id="ajax-loading">Loading . . .</div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
+            
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
-                <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') and $GLOBALS['user']->has_access(100)) {
-    ?>
-                <div class="fatalerror">
-                    <?php echo T_('Error Config File Out of Date');
-    ?>
-                    <a rel="nohtml" href="<?php echo $web_path;
-    ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config');
-    ?></a> |
-                    <a rel="nohtml" href="<?php echo $web_path;
-    ?>/admin/system.php?action=write_config"><?php echo T_('Write New Config');
-    ?></a>
-                </div>
-                <?php 
-} ?>
+                <?php
+                    if (Access::check('interface','100')) {
+                        echo '<div id=update_notify>';
+                        if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
+                            AutoUpdate::show_new_version();
+                            echo '<br />';
+                        }
+                        $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
+                        
+                        if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version')) {
+                            ?>
+                            <div class="fatalerror">
+                                <?php echo T_('Error: Your config file is out of date!');
+                            ?>
+                                <br />
+                                <a rel="nohtml" href="<?php echo $web_path;
+                            ?>/admin/system.php?action=generate_config"><?php echo T_('Generate and download new config file');
+                            ?></a> |
+                                <a rel="nohtml" href="<?php echo $web_path;
+                            ?>/admin/system.php?action=write_config"><?php echo T_('Write new config file to disk');
+                            ?></a>
+                            </div>
+                <?php
+
+                        }
+                        echo '</div>';
+                    }
+                ?>
                 <div id="guts">
