@@ -1597,4 +1597,3 @@ class User extends database_object
         return true;
     }
 } //end user class
-

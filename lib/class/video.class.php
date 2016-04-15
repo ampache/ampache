@@ -1069,4 +1069,3 @@ class Video extends database_object implements media, library_item
         return true;
     } // _update_item
 } // end Video class
-

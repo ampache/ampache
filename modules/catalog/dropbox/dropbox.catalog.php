@@ -511,4 +511,3 @@ class Catalog_dropbox extends Catalog
         return null;
     }
 } // end of catalog class
-

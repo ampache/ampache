@@ -1250,4 +1250,3 @@ class vainfo
         return $data;
     }
 } // end class vainfo
-

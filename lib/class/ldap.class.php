@@ -40,7 +40,7 @@ class LDAPException extends Exception
      */
     public function __construct ($message)
     {
-        if (is_int (message)) {
+        if (is_int ($message)) {
             $message = 'LDAP error: [' . $message . '] ' . ldap_err2str($message);
         }
 
@@ -68,6 +68,98 @@ class LDAP
 
 
     /**
+     * Connect to the LDAP
+     * Note: This does not open a connection. It checks whether
+     * the given parameters are plausibe and can be used to open a
+     * connection as soon as one is needed.
+     */
+    private static function connect ()
+    {
+        if (! $url = AmpConfig::get('ldap_url')) {
+            throw new LDAPException('Required configuration value missing: ldap_url');
+        }
+
+        if (! $link = ldap_connect ($url)) {
+            throw new LDAPException('Could not connect to ' . $url);
+        }
+
+        $protocol_version = AmpConfig::get('ldap_protocol_version', 3);
+        if (! ldap_set_option ($link, LDAP_OPT_PROTOCOL_VERSION, $protocol_version)) {
+            throw new LDAPException('Could not set option PROTOCOL_VERSION to ' . $protocol_version);
+        }
+
+        if (AmpConfig::get('ldap_start_tls', "false") != "false") {
+            if (! ldap_start_tls ($link)) {
+                throw new LDAPException('Could not use StartTLS');
+            }
+        }
+
+        return $link;
+    }
+
+    
+    /**
+     * Binds to the LDAP
+     */
+    private static function bind ($link, $username = null, $password = null)
+    {
+        if ($username === null && $password === null) {
+            $username = AmpConfig::get('ldap_username', '');
+            $password = AmpConfig::get('ldap_password', '');
+        }
+
+        if (! ldap_bind ($link, $ampache_username, $ampache_password)) {
+            throw new LDAPException("Could not bind to server using username `$username`");
+        }
+    }
+
+    
+    /**
+     * Unbinds from the LDAP
+     */
+    private static function unbind ($link)
+    {
+        ldap_unbind ($link);
+    }
+
+
+    /**
+     * Read attributes for a DN from the LDAP
+     */
+    private static function read ($link, $dn, $attrs = [], $filter='objectClass=*')
+    {
+        if (! $result = ldap_read ($link, $dn, $filter, $attrs)) {
+            $attrs = json_encode ($attrs);
+            throw new LDAPException("Could not read attributes `$attrs` for dn `$dn`");
+        }
+
+        if (! $infos = ldap_get_entries ($link, $result)) {
+            throw new LDAPException("Empty search result for dn `$dn`");
+        }
+
+        return $infos[0];
+    }
+
+
+    /**
+     * Search for a DN in the LDAP
+     */
+    private static function search ($link, $base_dn, $filter)
+    {
+        if (! $result = ldap_search ($link, $base_dn, $filter)) {
+            throw new LDAPException(ldap_errno($link));
+        }
+
+        if (! $entries = ldap_get_entries ($link, $result)) {
+            throw new LDAPException("Empty search results for filter `$filter`");
+        }
+
+        return $entries[0];
+    }
+    
+
+    
+    /**
      * ldap_auth
      *
      * This handles authentication against a LDAP server.
@@ -79,46 +171,8 @@ class LDAP
     public static function auth ($username, $password)
     {
         try {
-            /* Connect to the LDAP
-               Note: This does not open a connection. It checks whether
-               the given parameters are plausibe and can be used to open a
-               connection as soon as one is needed. */
-
-            if (! $url = AmpConfig::get('ldap_url')) {
-                throw new LDAPException('Required configuration value missing: ldap_url');
-            }
-
-            if (! $link = ldap_connect ($url)) {
-                throw new LDAPException('Could not connect to ' . $url);
-            }
-
-            /* Set the LDAP protocol version (default: 3) */
-
-            $protocol_version = AmpConfig::get('ldap_protocol_version', 3);
-            if (! ldap_set_option ($link, LDAP_OPT_PROTOCOL_VERSION, $protocol_version)) {
-                throw new LDAPException('Could not set option PROTOCOL_VERSION to ' . $protocol_version);
-            }
-
-            /* Use StartTLS if asked */
-
-            if (AmpConfig::get('ldap_start_tls', "false") != "false") {
-                if (! ldap_start_tls ($link)) {
-                    throw new LDAPException('Could not use StartTLS');
-                }
-            }
-
-            /* Connect to the LDAP using the given username and password.
-               If these parameters do not exist, an anonymous connection
-               will be used */
-
-            $ampache_username = AmpConfig::get('ldap_username');
-            $ampache_password = AmpConfig::get('ldap_password');
-
-            if (! ldap_bind ($link, $ampache_username, $ampache_password)) {
-                throw new LDAPException('Could not bind to server using username `'
-                                    . $ampache_username . '` and password `'
-                                    . $ampache_password . '`');
-            }
+            $link = self::connect ();
+            self::bind($link);
 
             /* Search for the user with given base_dn, filter, objectclass and username */
 
@@ -143,43 +197,25 @@ class LDAP
                 throw new LDAPException('Required configuration value missing: ldap_search_dn');
             }
 
-            if (! $result = ldap_search ($link, $base_dn, $search)) {
-                throw new LDAPException(ldap_errno($link));
-            }
-
-            /* Bind with the user's DN and the password */
-
-            if (! $user_entry = ldap_first_entry ($link, $result)) {
-                throw new LDAPException('Empty search result');
-            }
+            $user_entry = self::search ($link, $base_dn, $search);
 
             if (! $user_dn = ldap_get_dn ($link, $user_entry)) {
                 throw new LDAPException(ldap_errno($link));
             }
 
-            $user_entry = ldap_get_entries ($link, $result) [0];
-
-            if (! ldap_bind ($link, $user_dn, $password)) {
-                throw new LDAPException('Wrong password');
-            }
+            self::bind ($link, $user_dn, $password);
 
             /* Test if the user is in the required group (optional) */
 
             if ($group_dn = AmpConfig::get('ldap_require_group')) {
                 $member_attribute = AmpConfig::get('ldap_member_attribute', 'member');
 
-                if (! $group_result = ldap_read ($link, $group_dn, 'objectClass=*', [$member_attribute])) {
-                    throw new LDAPException("Could not read member attribute `$member_attribute`"
-                                            . " for group `$group_dn`");
-                }
+                $group_infos = self::read ($link, $group_dn, [$member_attribute]);
 
-                if (! $group_infos = ldap_get_entries ($link, $group_result) [0]) {
-                    throw new LDAPException('Empty group search result');
-                }
-
-                if (! in_array ($username, $group_infos[$member_attribute])) {
-                    throw new LDAPException("`$username` is not member of the group `$group_dn`");
-                }
+                /* if (! in_array ($username, $group_infos[$member_attribute])) { */
+        if (! preg_grep("/^$user_dn\$/i", $group_infos[$member_attribute])) {
+            throw new LDAPException("`$username` is not member of the group `$group_dn`");
+        }
             }
 
             /* Obtain name and email field. Reconstruct name field to allow
@@ -212,7 +248,9 @@ class LDAP
             ];
         }
 
-        ldap_unbind ($link);
+        if (isset ($link)) {
+            self::unbind ($link);
+        }
 
         debug_event('LDAP', 'Return value of authentication: ' . json_encode($return_value), 6);
 

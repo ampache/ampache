@@ -665,4 +665,3 @@ class AmpacheXbmc extends localplay_controller
         }
     } // connect
 } //end of AmpacheXbmc
-

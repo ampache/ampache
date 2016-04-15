@@ -423,4 +423,3 @@ class Broadcast extends database_object implements library_item
         return $oid;
     }
 } // end of broadcast class
-

@@ -2409,4 +2409,3 @@ abstract class Catalog extends database_object
 }
 
 // end of catalog class
-

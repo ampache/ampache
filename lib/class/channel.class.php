@@ -547,4 +547,3 @@ class Channel extends database_object implements media, library_item
         return($s);
     }
 } // end of channel class
-

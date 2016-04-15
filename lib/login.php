@@ -193,4 +193,3 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     header('Location: ' . AmpConfig::get('web_path') . '/index.php');
     exit();
 } // auth success
-

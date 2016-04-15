@@ -361,4 +361,3 @@ class Recommendation
         return $results;
     } // get_artist_info
 } // end of recommendation class
-

@@ -834,4 +834,3 @@ class Tag extends database_object implements library_item
         return false;
     }
 } // end of Tag class
-

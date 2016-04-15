@@ -229,4 +229,3 @@ class Upload
         return $rootdir;
     }
 } // Upload class
-

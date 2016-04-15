@@ -1120,4 +1120,3 @@ class Api
         }
     } // friends_timeline
 } // API class
-
