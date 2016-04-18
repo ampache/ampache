@@ -67,6 +67,58 @@ class LDAP
     }
 
 
+    /** Utility functions */
+
+
+    /**
+     * recompose_field
+     *
+     * This function allows custom fields like 'givenName sn' to be used.
+     */
+    private static function recompose_field ($field, $entry)
+    {
+        $fields = explode(' ', $field);
+        $values = array_map (function ($field) use ($entry) { return $entry[strtolower($field)][0]; }, $fields);
+
+        $value = trim(implode(' ', $values));
+
+        debug_event('LDAP', "recomposed field `$field` to obtain `$value`", 6);
+        
+        return $value;
+    }
+
+
+    /**
+     * clean_search_results
+     *
+     * This function is here to return a real array {number} => {field} => {value array}
+     * instead of the custom LDAP search results provided by the ldap_* library.
+     */
+    private static function clean_search_results ($sr)
+    {
+        $sr_clean = [];
+        
+        foreach (array_filter($sr, 'is_int', ARRAY_FILTER_USE_KEY) as $i => $result) {
+            $sr_clean[$i] = [];
+            
+            foreach ($result as $field => $values) {
+                if ($field == 'count' || is_int ($field)) {
+                    continue;
+                } elseif ($field == 'dn') {
+                    $sr_clean[$i][$field] = $values;
+                } else {
+                    $sr_clean[$i][$field] = array_filter($values, 'is_int', ARRAY_FILTER_USE_KEY);
+                }
+            }
+        }
+
+        return $sr_clean;
+    }
+    
+
+    /** Actual LDAP functions */
+    
+    
     /**
      * Connect to the LDAP
      * Note: This does not open a connection. It checks whether
@@ -103,12 +155,14 @@ class LDAP
      */
     private static function bind ($link, $username = null, $password = null)
     {
+        debug_event('LDAP', "binding with username `$username`", 5);
+        
         if ($username === null && $password === null) {
             $username = AmpConfig::get('ldap_username', '');
             $password = AmpConfig::get('ldap_password', '');
         }
 
-        if (! ldap_bind ($link, $ampache_username, $ampache_password)) {
+        if (! ldap_bind ($link, $username, $password)) {
             throw new LDAPException("Could not bind to server using username `$username`");
         }
     }
@@ -128,9 +182,11 @@ class LDAP
      */
     private static function read ($link, $dn, $attrs = [], $filter='objectClass=*')
     {
+        $attrs_json = json_encode ($attrs);
+        debug_event('LDAP', "reading attributes $attrs_json in `$dn`", 5);
+        
         if (! $result = ldap_read ($link, $dn, $filter, $attrs)) {
-            $attrs = json_encode ($attrs);
-            throw new LDAPException("Could not read attributes `$attrs` for dn `$dn`");
+            throw new LDAPException("Could not read attributes `$attrs_json` for dn `$dn`");
         }
 
         if (! $infos = ldap_get_entries ($link, $result)) {
@@ -140,27 +196,42 @@ class LDAP
         return $infos[0];
     }
 
-
+    
     /**
      * Search for a DN in the LDAP
      */
-    private static function search ($link, $base_dn, $filter)
+    private static function search ($link, $base_dn, $filter, $only_one_result = true)
     {
+        debug_event('LDAP', "searching in `$base_dn` for `$filter`", 5);
+        
         if (! $result = ldap_search ($link, $base_dn, $filter)) {
             throw new LDAPException(ldap_errno($link));
         }
 
-        if (! $entries = ldap_get_entries ($link, $result)) {
-            throw new LDAPException("Empty search results for filter `$filter`");
-        }
+        $entries = ldap_get_entries ($link, $result);
 
-        return $entries[0];
+        $entries = self::clean_search_results($entries);
+
+        if ($only_one_result) {
+            if (count ($entries) < 1) {
+                throw new LDAPException("Empty search results for filter `$filter`");
+            }
+
+            if (count ($entries) > 1) {
+                throw new LDAPException("Too many search results for filter `$filter`");
+            }
+
+            return $entries[0];
+        } else {
+            return $entries;
+        }
     }
     
 
     
     /**
      * ldap_auth
+
      *
      * This handles authentication against a LDAP server.
      *
@@ -197,12 +268,9 @@ class LDAP
                 throw new LDAPException('Required configuration value missing: ldap_search_dn');
             }
 
-            $user_entry = self::search ($link, $base_dn, $search);
-
-            if (! $user_dn = ldap_get_dn ($link, $user_entry)) {
-                throw new LDAPException(ldap_errno($link));
-            }
-
+            $user_entry = self::search ($link, $base_dn, $search, true);
+            $user_dn    = $user_entry['dn'];
+            
             self::bind ($link, $user_dn, $password);
 
             /* Test if the user is in the required group (optional) */
@@ -212,20 +280,16 @@ class LDAP
 
                 $group_infos = self::read ($link, $group_dn, [$member_attribute]);
 
-                /* if (! in_array ($username, $group_infos[$member_attribute])) { */
-        if (! preg_grep("/^$user_dn\$/i", $group_infos[$member_attribute])) {
-            throw new LDAPException("`$username` is not member of the group `$group_dn`");
-        }
+                if (! preg_grep("/^$user_dn\$/i", $group_infos[$member_attribute])) {
+                    throw new LDAPException("`$user_dn` is not member of the group `$group_dn`");
+                }
             }
 
             /* Obtain name and email field. Reconstruct name field to allow
                custom things like "givenName sn" */
 
             $name_field  = AmpConfig::get('ldap_name_field', 'cn');
-            $name_fields = explode(' ', $name_field);
-            $names       = array_map (function ($name_field) use ($user_entry) {
-                    return $user_entry[$name_field][0]; }, $name_fields);
-            $name = trim(implode(' ', $names));
+            $name        = self::recompose_field($name_field, $user_entry);
 
             $email_field = AmpConfig::get('ldap_email_field', 'mail');
             $email       = $user_entry[$email_field][0];
@@ -237,6 +301,14 @@ class LDAP
                 'name'     => $name,
                 'email'    => $email
             ];
+            
+            if (($state_field = AmpConfig::get('ldap_state_field')) !== null) {
+                $return_value['state'] = $user_entry[$state_field][0];
+            }
+
+            if (($city_field = AmpConfig::get('ldap_city_field')) !== null) {
+                $return_value['city'] = $user_entry[$city_field][0];
+            }
         } catch (LDAPException $e) {
             $message = $e->getMessage();
 
@@ -252,7 +324,7 @@ class LDAP
             self::unbind ($link);
         }
 
-        debug_event('LDAP', 'Return value of authentication: ' . json_encode($return_value), 6);
+        debug_event('LDAP', 'Return value of authentication: ' . json_encode($return_value), 5);
 
         return $return_value;
     }
