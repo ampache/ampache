@@ -120,9 +120,12 @@ if (!empty($username) && isset($auth)) {
         $city       = array_key_exists('city',    $auth) ? $auth['city']    : '';
 
         /* Attempt to create the user */
-        if (User::create($username, $name, $email, $website,
-             hash('sha256', mt_rand()), $access, $state, $city)) {
+        if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city)) {
             $user = User::get_from_username($username);
+
+            if (array_key_exists('avatar', $auth)) {
+                $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
+            }
         } else {
             $auth['success'] = false;
             AmpError::add('general', T_('Unable to create local account'));
@@ -146,6 +149,10 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     //   but naming this 'user' didn't work at all
     $_SESSION['userdata'] = $auth;
 
+    // You really don't want to store the avatar
+    //   in the SESSION.
+    unset($_SESSION['userdata']['avatar']);
+    
     // Record the IP of this person!
     if (AmpConfig::get('track_user_ip')) {
         $user->insert_ip_history();
@@ -175,6 +182,9 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     }
     if (($external_auto_update || empty($user->city))     && !empty($auth['city'])) {
         $user->update_city($auth['city']);
+    }
+    if (($external_auto_update || empty($user->f_avatar)) && !empty($auth['avatar'])) {
+        $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
     }
 
     $GLOBALS['user'] = $user;

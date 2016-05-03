@@ -1354,6 +1354,12 @@ class User extends database_object
         return $avatar;
     } // get_avatar
 
+    public function update_avatar ($data, $mime = '')
+    {
+        $art = new Art($this->id, 'user');
+        $art->insert($data, $mime);
+    }
+    
     public function upload_avatar()
     {
         $upload = array();
@@ -1364,8 +1370,7 @@ class User extends database_object
             $image_data     = Art::get_from_source($upload, 'user');
 
             if ($image_data) {
-                $art = new Art($this->id, 'user');
-                $art->insert($image_data, $upload['0']['mime']);
+                $this->update_avatar($image_data, $upload['0']['mime']);
             }
         }
     }

@@ -71,24 +71,6 @@ class LDAP
 
 
     /**
-     * recompose_field
-     *
-     * This function allows custom fields like 'givenName sn' to be used.
-     */
-    private static function recompose_field ($field, $entry)
-    {
-        $fields = explode(' ', $field);
-        $values = array_map (function ($field) use ($entry) { return $entry[strtolower($field)][0]; }, $fields);
-
-        $value = trim(implode(' ', $values));
-
-        debug_event('LDAP', "recomposed field `$field` to obtain `$value`", 6);
-        
-        return $value;
-    }
-
-
-    /**
      * clean_search_results
      *
      * This function is here to return a real array {number} => {field} => {value array}
@@ -289,10 +271,10 @@ class LDAP
                custom things like "givenName sn" */
 
             $name_field  = AmpConfig::get('ldap_name_field', 'cn');
-            $name        = self::recompose_field($name_field, $user_entry);
+            $name        = $user_entry[strtolower($name_field)][0];
 
             $email_field = AmpConfig::get('ldap_email_field', 'mail');
-            $email       = $user_entry[$email_field][0];
+            $email       = $user_entry[strtolower($email_field)][0];
 
             $return_value = [
                 'success'  => true,
@@ -303,11 +285,18 @@ class LDAP
             ];
             
             if (($state_field = AmpConfig::get('ldap_state_field')) !== null) {
-                $return_value['state'] = $user_entry[$state_field][0];
+                $return_value['state'] = $user_entry[strtolower($state_field)][0];
             }
 
             if (($city_field = AmpConfig::get('ldap_city_field')) !== null) {
-                $return_value['city'] = $user_entry[$city_field][0];
+                $return_value['city'] = $user_entry[strtolower($city_field)][0];
+            }
+
+            if (($avatar_field = AmpConfig::get('ldap_avatar_field')) !== null) {
+                $return_value['avatar'] = [
+            'data' => $user_entry[strtolower($avatar_field)][0],
+            'mime' => AmpConfig::get('ldap_avatar_mime', 'image/jpeg'),
+        ];
             }
         } catch (LDAPException $e) {
             $message = $e->getMessage();

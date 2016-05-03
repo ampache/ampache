@@ -718,11 +718,19 @@ site_charset = UTF-8
 ; LDAP name field
 ; DEFAULT = "cn"
 ;ldap_name_field = "cn"
-;ldap_name_field = "givenName sn"
+;ldap_name_field = "displayName"
 
 ; LDAP email field
 ; DEFAULT = "mail"
 ;ldap_email_field = "mail"
+
+; LDAP avatar field
+; DEFAULT: none
+;ldap_avatar_field = "jpegPhoto"
+
+; LDAP avatar mime type
+; DEFAULT: image/jpeg
+;ldap_avatar_mime = "image/jpeg"
 
 ; LDAP protocol version to use
 ; DEFAULT: 3
