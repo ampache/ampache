@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-03-31 04:43+0200\n"
+"POT-Creation-Date: 2016-04-14 23:36+0200\n"
 "PO-Revision-Date: 2016-03-07 06:38+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/ampache/ampache/"
@@ -989,7 +989,7 @@ msgid "The Broadcast has been deleted"
 msgstr "Transmisja została usunięta"
 
 #: ../../browse.php:94 ../../lib/class/browse.class.php:262
-#: ../../templates/header.inc.php:450 ../../templates/sidebar_home.inc.php:40
+#: ../../templates/header.inc.php:441 ../../templates/sidebar_home.inc.php:40
 #: ../../templates/sidebar_home.inc.php:82
 #: ../../templates/sidebar.light.inc.php:30
 msgid "Tag Cloud"
@@ -1148,7 +1148,7 @@ msgstr "Dysk"
 
 #: ../../lib/class/album.class.php:654 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:329 ../../lib/ui.lib.php:180
-#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:438
+#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:429
 #: ../../templates/show_label.inc.php:119
 #: ../../templates/show_labels.inc.php:52
 #: ../../templates/show_labels.inc.php:92
@@ -1310,43 +1310,43 @@ msgstr "na"
 msgid "Trying to clobber '%s' without setting clobber"
 msgstr ""
 
-#: ../../lib/class/api.class.php:143
+#: ../../lib/class/api.class.php:146
 msgid "Login Failed: version too old"
 msgstr "Logowanie nieudane: zbyt stara wersja"
 
-#: ../../lib/class/api.class.php:171 ../../lib/class/api.class.php:172
+#: ../../lib/class/api.class.php:174 ../../lib/class/api.class.php:175
 msgid "Login Failed: timestamp out of range"
 msgstr "Logowanie nieudane: znacznik czasu poza zakresem"
 
-#: ../../lib/class/api.class.php:172 ../../lib/class/api.class.php:184
-#: ../../lib/class/api.class.php:263
+#: ../../lib/class/api.class.php:175 ../../lib/class/api.class.php:187
+#: ../../lib/class/api.class.php:271
 msgid "Error Invalid Handshake - "
 msgstr "Błąd nieprawidłowy Handshake - "
 
-#: ../../lib/class/api.class.php:183 ../../lib/class/api.class.php:184
-#: ../../lib/class/api.class.php:263
+#: ../../lib/class/api.class.php:186 ../../lib/class/api.class.php:187
+#: ../../lib/class/api.class.php:271
 msgid "Invalid Username/Password"
 msgstr "Nieprawidłowa Nazwa użytkownika / Hasło"
 
-#: ../../lib/class/api.class.php:642 ../../lib/class/api.class.php:660
-#: ../../lib/class/api.class.php:678
+#: ../../lib/class/api.class.php:652 ../../lib/class/api.class.php:670
+#: ../../lib/class/api.class.php:688
 msgid "Access denied to this playlist."
 msgstr "Brak dostępu do tej listy odtwarzania."
 
-#: ../../lib/class/api.class.php:796 ../../lib/class/api.class.php:857
+#: ../../lib/class/api.class.php:806 ../../lib/class/api.class.php:867
 #: ../../server/xml.server.php:102
 msgid "Invalid Request"
 msgstr "Nieprawidłowe Żądanie"
 
-#: ../../lib/class/api.class.php:817 ../../lib/class/api.class.php:835
+#: ../../lib/class/api.class.php:827 ../../lib/class/api.class.php:845
 msgid "Media Object Invalid or Not Specified"
 msgstr "Nie określono obiektu multimediów lub jest on nieprawidłowy"
 
-#: ../../lib/class/api.class.php:1050
+#: ../../lib/class/api.class.php:1060
 msgid "Wrong library item type."
 msgstr "Nieprawidłowy typ elementu biblioteki"
 
-#: ../../lib/class/api.class.php:1054
+#: ../../lib/class/api.class.php:1064
 msgid "Library item not found."
 msgstr "Nie znaleziono biblioteki."
 
@@ -1585,7 +1585,7 @@ msgid "Radio Stations"
 msgstr "Stacje radiowe"
 
 #: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:401
-#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:444
+#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:435
 #: ../../templates/show_user.inc.php:146
 #: ../../templates/sidebar_home.inc.php:41
 #: ../../templates/sidebar_home.inc.php:211
@@ -3538,7 +3538,8 @@ msgid "Name descending"
 msgstr "Nazwa malejąco"
 
 #: ../../lib/preferences.php:406
-msgid "Click for grant Ampache to "
+#, fuzzy, php-format
+msgid "Click to grant %s access to Ampache"
 msgstr "Kliknij, aby dopuścić Ampache do"
 
 #: ../../lib/rating.lib.php:42
@@ -3569,12 +3570,12 @@ msgstr "Szaleństwo"
 msgid "Off the Charts!"
 msgstr "Poza skalą!"
 
-#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:432
+#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:423
 #: ../../templates/sidebar.inc.php:33
 msgid "Home"
 msgstr "Strona główna"
 
-#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:469
+#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:460
 #: ../../templates/show_add_upload.inc.php:26
 #: ../../templates/show_album.inc.php:245
 #: ../../templates/show_album.inc.php:247
@@ -4647,21 +4648,24 @@ msgstr "Zaloguj"
 msgid "Register"
 msgstr "Zarejestruj"
 
-#: ../../templates/header.inc.php:458 ../../templates/sidebar_home.inc.php:159
+#: ../../templates/header.inc.php:449 ../../templates/sidebar_home.inc.php:159
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
 msgstr "Ulubione"
 
-#: ../../templates/header.inc.php:535
-msgid "Error Config File Out of Date"
+#: ../../templates/header.inc.php:536
+#, fuzzy
+msgid "Error: Your config file is out of date!"
 msgstr "Błąd: Nieaktualny plik konfiguracyjny"
 
-#: ../../templates/header.inc.php:538
-msgid "Generate New Config"
-msgstr "Generuj nową konfigurację"
+#: ../../templates/header.inc.php:540
+#, fuzzy
+msgid "Generate and download new config file"
+msgstr "Generuj plik konfiguracyjny"
 
-#: ../../templates/header.inc.php:541 ../../templates/show_debug.inc.php:30
-msgid "Write New Config"
+#: ../../templates/header.inc.php:543
+#, fuzzy
+msgid "Write new config file to disk"
 msgstr "Zapisz nową konfigurację"
 
 #: ../../templates/install_header.inc.php:52
@@ -5930,6 +5934,10 @@ msgstr "Narzędzia debugowania"
 #: ../../templates/show_debug.inc.php:27
 msgid "Generate Configuration"
 msgstr "Generuj konfigurację"
+
+#: ../../templates/show_debug.inc.php:30
+msgid "Write New Config"
+msgstr "Zapisz nową konfigurację"
 
 #: ../../templates/show_debug.inc.php:33
 msgid "Set Database Charset"
