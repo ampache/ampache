@@ -270,4 +270,3 @@ class Userflag extends database_object
         require AmpConfig::get('prefix') . UI::find_template('show_object_userflag.inc.php');
     } // show
 } //end rating class
-

@@ -208,4 +208,3 @@ switch ($_REQUEST['action']) {
         require_once 'templates/show_install_lang.inc.php';
     break;
 } // end action switch
-

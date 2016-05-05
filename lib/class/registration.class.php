@@ -136,4 +136,3 @@ Website: %s
         echo $data;
     } // show_agreement
 } // end registration class
-

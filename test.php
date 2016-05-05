@@ -41,4 +41,3 @@ switch ($action) {
         require_once $prefix . '/templates/show_test.inc.php';
     break;
 } // end switch on action
-

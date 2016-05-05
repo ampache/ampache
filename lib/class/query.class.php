@@ -2438,4 +2438,3 @@ class Query
         $this->_state['ak'] = $ak;
     }
 } // query
-

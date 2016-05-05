@@ -281,4 +281,3 @@ class Rating extends database_object
         }
     } // show
 } //end rating class
-

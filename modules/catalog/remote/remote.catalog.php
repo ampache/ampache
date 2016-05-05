@@ -381,4 +381,3 @@ class Catalog_remote extends Catalog
         return null;
     }
 } // end of catalog class
-

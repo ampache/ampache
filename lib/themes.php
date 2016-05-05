@@ -115,4 +115,3 @@ function theme_exists($theme_name)
 
     return true;
 } // theme_exists
-

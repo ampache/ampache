@@ -718,11 +718,19 @@ site_charset = UTF-8
 ; LDAP name field
 ; DEFAULT = "cn"
 ;ldap_name_field = "cn"
-;ldap_name_field = "givenName sn"
+;ldap_name_field = "displayName"
 
 ; LDAP email field
 ; DEFAULT = "mail"
 ;ldap_email_field = "mail"
+
+; LDAP avatar field
+; DEFAULT: none
+;ldap_avatar_field = "jpegPhoto"
+
+; LDAP avatar mime type
+; DEFAULT: image/jpeg
+;ldap_avatar_mime = "image/jpeg"
 
 ; LDAP protocol version to use
 ; DEFAULT: 3
@@ -756,11 +764,17 @@ site_charset = UTF-8
 ;#########################################################
 
 ; This setting will silently create an ampache account
-; for anyone who can login using ldap (or any other login
+; for anyone who can login using LDAP (or any other login
 ; extension). The default is to create new users as guests
 ; see auto_user config option if you would like to change this
 ; DEFAULT: false
 ;auto_create = "false"
+
+; This setting will silently update an ampache account's
+; informations for anyone who can login using LDAP
+; (or any other login extension).
+; DEFAULT: false
+;external_auto_update = "false"
 
 ; This setting turns on/off public registration. It is
 ; recommended you leave this off, as it will allow anyone to

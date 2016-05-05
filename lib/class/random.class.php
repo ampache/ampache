@@ -356,4 +356,3 @@ class Random
         }
     } // advanced
 } //end of random class
-

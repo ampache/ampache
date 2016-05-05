@@ -587,4 +587,3 @@ class Browse extends Query
         return $css;
     }
 } // browse
-

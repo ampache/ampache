@@ -870,4 +870,3 @@ class Catalog_local extends Catalog
         return $media;
     }
 } // end of local catalog class
-

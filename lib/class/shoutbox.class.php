@@ -347,4 +347,3 @@ class Shoutbox
         return $results;
     }
 } // Shoutbox class
-

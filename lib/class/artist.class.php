@@ -917,4 +917,3 @@ class Artist extends database_object implements library_item
         return $deleted;
     }
 } // end of artist class
-

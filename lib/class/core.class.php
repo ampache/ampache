@@ -392,4 +392,3 @@ class Core
         return $tmp_dir;
     }
 } // Core
-

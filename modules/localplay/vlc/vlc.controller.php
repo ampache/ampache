@@ -578,4 +578,3 @@ class AmpacheVlc extends localplay_controller
         return false;
     } // connect
 } //end of AmpacheVlc
-

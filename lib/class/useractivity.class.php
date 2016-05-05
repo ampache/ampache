@@ -235,4 +235,3 @@ class Useractivity extends database_object
         echo '</div><br />';
     } // show
 } //end useractivity class
-

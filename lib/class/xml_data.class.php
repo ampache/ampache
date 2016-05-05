@@ -867,4 +867,3 @@ class XML_Data
         }
     }
 } // XML_Data
-
