@@ -26,7 +26,7 @@ class AmpacheTheaudiodb
     public $categories     = 'metadata';
     public $description    = 'TheAudioDb metadata integration';
     public $url            = 'http://www.theaudiodb.com';
-    public $version        = '000001';
+    public $version        = '000002';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
     
@@ -128,15 +128,14 @@ class AmpacheTheaudiodb
                 if ($media_info['mb_artistid']) {
                     $artist = $this->get_artist($media_info['mb_artistid']);
                     if ($artist) {
-                        $release = $artist->artist[0];
+                        $release = $artist->artists[0];
                     }
                 } else {
                     $artists = $this->search_artists($media_info['title']);
                     if ($artists) {
-                        $release = $artists->artist[0];
+                        $release = $artists->artists[0];
                     }
                 }
-                
                 if ($release) {
                     $results['art']        = $release->strArtistThumb;
                     $results['title']      = $release->strArtist;
@@ -172,6 +171,7 @@ class AmpacheTheaudiodb
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
         debug_event('tadb', 'API call: ' . $url, 5);
         $request = Requests::get($url, array(), Core::requests_options());
+
         if ($request->status_code != 200) {
             return null;
         }
