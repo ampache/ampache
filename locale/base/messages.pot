@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-04-14 23:36+0200\n"
+"POT-Creation-Date: 2016-05-17 23:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Your new Access Control List(s) have been created"
 msgstr ""
 
-#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1502
+#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1503
 #: ../../lib/class/search.class.php:353 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
@@ -1325,11 +1325,11 @@ msgstr ""
 msgid "Library item not found."
 msgstr ""
 
-#: ../../lib/class/art.class.php:1261
+#: ../../lib/class/art.class.php:1286
 msgid "Error: Unable to open"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1753 ../../lib/class/shoutbox.class.php:309
+#: ../../lib/class/art.class.php:1779 ../../lib/class/shoutbox.class.php:309
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:120
 #: ../../templates/header.inc.php:347 ../../templates/rightbar.inc.php:25
 #: ../../templates/show_album_group_disks.inc.php:63
@@ -1365,15 +1365,15 @@ msgstr ""
 msgid "Play"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1762
+#: ../../lib/class/art.class.php:1788
 msgid "Edit/Find Art"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1765
+#: ../../lib/class/art.class.php:1791
 msgid "Do you really want to reset art?"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1766
+#: ../../lib/class/art.class.php:1792
 msgid "Reset Art"
 msgstr ""
 
@@ -1714,31 +1714,31 @@ msgstr[1] ""
 msgid "Catalog Insert Failed check debug logs"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1509
+#: ../../lib/class/catalog.class.php:1510
 msgid "No Update Needed"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1805
+#: ../../lib/class/catalog.class.php:1806
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:1830
+#: ../../lib/class/catalog.class.php:1831
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2014
+#: ../../lib/class/catalog.class.php:2015
 msgid "Failed to create playlist."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2031
+#: ../../lib/class/catalog.class.php:2032
 msgid "No valid songs found in playlist file."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2386
+#: ../../lib/class/catalog.class.php:2387
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -2465,11 +2465,11 @@ msgstr ""
 msgid "User avatar"
 msgstr ""
 
-#: ../../lib/class/user.class.php:1526
+#: ../../lib/class/user.class.php:1531
 msgid "Unfollow"
 msgstr ""
 
-#: ../../lib/class/user.class.php:1526
+#: ../../lib/class/user.class.php:1531
 msgid "Follow"
 msgstr ""
 
@@ -3325,7 +3325,7 @@ msgstr ""
 msgid "User Already Logged in"
 msgstr ""
 
-#: ../../lib/login.php:129
+#: ../../lib/login.php:131
 msgid "Unable to create local account"
 msgstr ""
 
@@ -8308,7 +8308,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 14.04.2016 23:36:12 CEST 
+ # Last Update: 17.05.2016 23:16:44 CEST 
 
  #######################################################################
 
