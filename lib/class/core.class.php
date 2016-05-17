@@ -212,6 +212,11 @@ class Core
             return false;
         }
 
+        if (empty($image_data)) {
+            debug_event('Core', "Cannot create image from empty data", 2);
+            return false;
+        }
+
         $image = ImageCreateFromString($image_data);
 
         if (!$image) {
@@ -392,3 +397,4 @@ class Core
         return $tmp_dir;
     }
 } // Core
+

@@ -428,14 +428,37 @@ class Art extends database_object
             $maxw = AmpConfig::get('album_art_max_width');
             $minh = AmpConfig::get('album_art_min_height');
             $maxh = AmpConfig::get('album_art_max_height');
-
-            if ($minw > 0 && ($w < $minw || $w > $maxw)) {
-                debug_event('Art', 'Image width not in range.', 1);
-                return false;
+            
+            // setup 'defaults' if config was not set
+            if (empty($minw)) {
+                $minw = 0;
+            }
+            if (empty($maxw)) {
+                $maxw = 0;
+            }
+            if (empty($minh)) {
+                $minh = 0;
+            }
+            if (empty($maxh)) {
+                $maxh = 0;
             }
 
-            if ($minh > 0 && ($h < $minh || $h > $maxh)) {
-                debug_event('Art', 'Image height not in range.', 1);
+            // minimum width is set and current width is too low
+            if ($minw > 0 && $w < $minw) {
+                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$w).", 1);
+                return false;
+            }
+            // max width is set and current width is too high
+            if ($maxw > 0 && $w > $maxw) {
+                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$w).", 1);
+                return false;
+            }
+            if ($minh > 0 && $h < $minh) {
+                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$h).", 1);
+                return false;
+            }
+            if ($maxh > 0 && $h > $maxh) {
+                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$h).", 1);
                 return false;
             }
         }
@@ -1020,6 +1043,8 @@ class Art extends database_object
 
             // Add the results we got to the current set
             $results = array_merge($results, (array) $data);
+        
+            debug_event('Art','results:' . json_encode($results), 3);
 
             if ($limit && count($results) >= $limit) {
                 return array_slice($results, 0, $limit);
@@ -1457,18 +1482,19 @@ class Art extends database_object
         $search = rawurlencode($data['keyword']);
         $size   = '&imgsz=m'; // Medium
 
-        $url = "http://images.google.com/images?source=hp&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
+        $url = "http://www.google.com/search?source=hp&tbm=isch&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
         debug_event('Art', 'Search url: ' . $url, '5');
 
         try {
             // Need this to not be considered as a bot (are we? ^^)
             $headers = array(
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11',
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0',
             );
+
             $query = Requests::get($url, $headers, Core::requests_options());
             $html  = $query->body;
 
-            if (preg_match_all("|imgres\?imgurl\=(http.+?)&|", $html, $matches, PREG_PATTERN_ORDER)) {
+            if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)) {
                 foreach ($matches[1] as $match) {
                     $match = rawurldecode($match);
                     debug_event('Art', 'Found image at: ' . $match, '5');
@@ -1775,3 +1801,4 @@ class Art extends database_object
         return true;
     }
 } // Art
+
