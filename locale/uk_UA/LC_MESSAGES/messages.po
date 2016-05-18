@@ -1,24 +1,23 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
-# Serhiy <serhiy.lunak@gmail.com>, 2015
+# Serhiy Lunak <serhiy.lunak@gmail.com>, 2016
+# Serhiy Lunak <serhiy.lunak@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2016-04-14 23:36+0200\n"
-"PO-Revision-Date: 2016-03-07 06:38+0000\n"
+"PO-Revision-Date: 2016-04-14 10:12+0000\n"
 "Last-Translator: Afterster\n"
-"Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/ampache/ampache/"
-"language/uk_UA/)\n"
-"Language: uk_UA\n"
+"Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/ampache/ampache/language/uk_UA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: uk_UA\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: ../../admin/access.php:40
 msgid "Deleted"
@@ -30,7 +29,7 @@ msgstr "Запис видалено із Списку Контролю Дост�
 
 #: ../../admin/access.php:47 ../../admin/users.php:222
 msgid "Deletion Request"
-msgstr ""
+msgstr "Видалення"
 
 #: ../../admin/access.php:47
 msgid "Are you sure you want to permanently delete"
@@ -77,7 +76,7 @@ msgstr "Помилка"
 
 #: ../../admin/catalog.php:107
 msgid "Cannot delete the catalog"
-msgstr "Неможливо видалити каталол"
+msgstr "Неможливо видалити каталог"
 
 #: ../../admin/catalog.php:112
 msgid "Catalog Delete"
@@ -91,20 +90,20 @@ msgstr "Підтвердити видалення"
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Пісню увімкнено"
+msgstr[1] "Пісні увімкнено"
+msgstr[2] "Пісні увімкнено"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
-msgstr ""
+msgstr "Не вибрано неувімкнених пісень"
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Неувімкнену пісню оброблено"
+msgstr[1] "Неувімкнені пісні оброблено"
+msgstr[2] "Неувімкнені пісні оброблено"
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
@@ -112,11 +111,11 @@ msgstr "Очистка каталогу почалася"
 
 #: ../../admin/catalog.php:151
 msgid "Catalog Updated"
-msgstr "Каталог Оноволено"
+msgstr "Каталог оноволено"
 
 #: ../../admin/catalog.php:161
 msgid "Subdirectory update started..."
-msgstr "Оновлення Підкаталогу почалося..."
+msgstr "Оновлення підкаталогу почалося..."
 
 #: ../../admin/catalog.php:172
 msgid "Error: Please select a catalog type"
@@ -144,7 +143,7 @@ msgstr "Всі Зараз Грає дані були очищені"
 
 #: ../../admin/catalog.php:232
 msgid "No Disabled songs found"
-msgstr ""
+msgstr "Неувімкнених пісень не знайдено"
 
 #: ../../admin/catalog.php:244
 msgid "Delete Catalog"
@@ -188,15 +187,15 @@ msgstr "Електронний лист не відправлено"
 
 #: ../../admin/modules.php:38
 msgid "Install Failed, Controller Error"
-msgstr ""
+msgstr "Інсталяція не вдалася, помилка контролера"
 
 #: ../../admin/modules.php:53
 msgid "Localplay Installed"
-msgstr ""
+msgstr "Локальне відтворення встановлено"
 
 #: ../../admin/modules.php:61
 msgid "Install Failed, Catalog Error"
-msgstr ""
+msgstr "Інсталяція не вдалася, помилка каталога"
 
 #: ../../admin/modules.php:70
 msgid "Plugin Installed"
@@ -214,7 +213,7 @@ msgstr "Плагін вимкнено"
 
 #: ../../admin/modules.php:105
 msgid "Uninstall Failed, Catalog Error"
-msgstr ""
+msgstr "Деінсталяція не вдалася, помилка каталога"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
@@ -226,7 +225,7 @@ msgstr "Плагін увімкнено"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
-msgstr ""
+msgstr "Плагін оновлено"
 
 #: ../../admin/modules.php:186
 msgid "Plugins"
@@ -234,11 +233,11 @@ msgstr "Плагіни"
 
 #: ../../admin/modules.php:192
 msgid "Localplay Controllers"
-msgstr ""
+msgstr "Контролери локального відтворення"
 
 #: ../../admin/modules.php:198
 msgid "Catalog Types"
-msgstr ""
+msgstr "Типи каталогів"
 
 #: ../../admin/shout.php:39
 msgid "Shoutbox Post Updated"
@@ -256,9 +255,7 @@ msgstr "Кодировку бази даних оновлено"
 msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
-msgstr ""
-"Базу даних та пов'язані з нею таблиці були оновлені, щоб відповідати вашій "
-"поточній конфігурації"
+msgstr "Базу даних та пов'язані з нею таблиці були оновлені, щоб відповідати вашій поточній конфігурації"
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
@@ -296,7 +293,7 @@ msgstr "оновлено"
 
 #: ../../admin/users.php:163 ../../register.php:150
 msgid "Error: Insert Failed"
-msgstr ""
+msgstr "Помилка: Вставка не вдалася"
 
 #: ../../admin/users.php:169 ../../lib/class/democratic.class.php:158
 #: ../../lib/class/shoutbox.class.php:328
@@ -353,193 +350,193 @@ msgstr "%1$s був створений з рівнем доступу %2$s"
 
 #: ../../admin/users.php:185
 msgid "User Enabled"
-msgstr ""
+msgstr "Корситувача увімкнено"
 
 #: ../../admin/users.php:190
 msgid "User Disabled"
-msgstr ""
+msgstr "Корситувача вимкнено"
 
 #: ../../admin/users.php:192
 msgid "Unable to Disabled last Administrator"
-msgstr ""
+msgstr "Неможливо вимкнути останнього адміністратора"
 
 #: ../../admin/users.php:212
 msgid "User Deleted"
-msgstr ""
+msgstr "Користувача видалено"
 
 #: ../../admin/users.php:212
 #, php-format
 msgid "%s has been Deleted"
-msgstr ""
+msgstr "%s видалено"
 
 #: ../../admin/users.php:214
 msgid "Delete Error"
-msgstr ""
+msgstr "Помилка видалення"
 
 #: ../../admin/users.php:214
 msgid "Unable to delete last Admin User"
-msgstr ""
+msgstr "Неможливо вимкнути останнього адміністратора"
 
 #: ../../admin/users.php:223
 #, php-format
 msgid "Are you sure you want to permanently delete %s?"
-msgstr ""
+msgstr "Ви впевнені, що хочете назавжди видалити %s?"
 
 #: ../../admin/users.php:230
 msgid "User Avatar Delete"
-msgstr ""
+msgstr "Видалити аватар користувача"
 
 #: ../../admin/users.php:246
 msgid "User Avatar Deleted"
-msgstr ""
+msgstr "Аватар користувача видалено"
 
 #: ../../admin/users.php:246
 msgid "User Avatar has been deleted"
-msgstr ""
+msgstr "Аватар користувача видалено"
 
 #: ../../admin/users.php:252 ../../templates/show_account.inc.php:110
 #: ../../templates/show_edit_user.inc.php:133
 msgid "Generate new API Key"
-msgstr ""
+msgstr "Згенерувати новий API ключ"
 
 #: ../../admin/users.php:252
 msgid "Confirm API Key Generation"
-msgstr ""
+msgstr "Підтвердити генерацію API ключа"
 
 #: ../../admin/users.php:268
 msgid "API Key Generated"
-msgstr ""
+msgstr "API ключ згенеровано"
 
 #: ../../admin/users.php:268
 msgid "New user API Key has been generated."
-msgstr ""
+msgstr "Новий API ключ користувача згенеровано"
 
 #: ../../albums.php:36 ../../albums.php:56 ../../albums.php:58
 msgid "Album Deletion"
-msgstr ""
+msgstr "Видалити альбом"
 
 #: ../../albums.php:37
 msgid "Are you sure you want to permanently delete this album?"
-msgstr ""
+msgstr "Ви впевнені, що хочете назавжди видалити цей альбом?"
 
 #: ../../albums.php:56
 msgid "Album has been deleted."
-msgstr ""
+msgstr "Альбом видалено"
 
 #: ../../albums.php:58
 msgid "Cannot delete this album."
-msgstr ""
+msgstr "Неможливо видалити цей альбом"
 
 #: ../../artists.php:38 ../../artists.php:58 ../../artists.php:60
 msgid "Artist Deletion"
-msgstr ""
+msgstr "Видалити виконавця"
 
 #: ../../artists.php:39
 msgid "Are you sure you want to permanently delete this artist?"
-msgstr ""
+msgstr "Ви впевнені, що хочете назавжди видалити цього виконавця?"
 
 #: ../../artists.php:58
 msgid "Artist has been deleted."
-msgstr ""
+msgstr "Виконавця видалено"
 
 #: ../../artists.php:60
 msgid "Cannot delete this artist."
-msgstr ""
+msgstr "Неможливо видалити цього виконавця"
 
 #: ../../artists.php:98
 msgid "Show Artists starting with"
-msgstr ""
+msgstr "Показати виконавців, які починаються з букви"
 
 #: ../../arts.php:50
 msgid "Art Cleared"
-msgstr ""
+msgstr "Обкладинки очищено"
 
 #: ../../arts.php:50
 msgid "Art information has been removed from the database"
-msgstr ""
+msgstr "Інформацію про обкладинки видалено з бази даних"
 
 #: ../../arts.php:56 ../../arts.php:72 ../../arts.php:139
 msgid "Art Not Located"
-msgstr ""
+msgstr "Обкладинку не знайдено"
 
 #: ../../arts.php:56 ../../arts.php:72 ../../arts.php:139
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
-msgstr ""
+msgstr "Обкладинку наразі не знайдено. Це може бути через помилки запису або файл не було завантажено."
 
 #: ../../arts.php:68 ../../arts.php:94
 msgid "Art Inserted"
-msgstr ""
+msgstr "Обкладинку вставлено"
 
 #: ../../bin/broadcast.inc:32
 msgid "Starting broadcasts..."
-msgstr ""
+msgstr "Запуск трансляції..."
 
 #: ../../bin/broadcast.inc:35
 msgid "UPnP broadcast... "
-msgstr ""
+msgstr "UPnP мовлення..."
 
 #: ../../bin/broadcast.inc:37
 msgid "Done."
-msgstr ""
+msgstr "Зроблено."
 
 #: ../../bin/broadcast.inc:39
 msgid "UPnP backend disabled. Broadcast skipped."
-msgstr ""
+msgstr "UPnP backend відключено. Трансляцію пропущено."
 
 #: ../../bin/catalog_update.inc:41
 msgid "Doing all catalog operations"
-msgstr ""
+msgstr "Виконання всіх операцій каталогу"
 
 #: ../../bin/catalog_update.inc:48
 msgid "Temporary deactivate PHP memory limit"
-msgstr ""
+msgstr "Тимчасово відключити ліміт пам'яті PHP"
 
 #: ../../bin/catalog_update.inc:52
 msgid "Cleaning catalog/s"
-msgstr ""
+msgstr "Очищення каталогу / ів"
 
 #: ../../bin/catalog_update.inc:56
 msgid "Verifying catalog/s"
-msgstr ""
+msgstr "Перевірка каталогу / ів"
 
 #: ../../bin/catalog_update.inc:60
 msgid "Adding new media to catalog/s"
-msgstr ""
+msgstr "Додавання нових записів в каталог / ів"
 
 #: ../../bin/catalog_update.inc:64
 msgid "Gathering new media art"
-msgstr ""
+msgstr "Збір нових обкладинок"
 
 #: ../../bin/catalog_update.inc:68
 msgid "Importing playlist/s"
-msgstr ""
+msgstr "імпорт списка/ів відтворення"
 
 #: ../../bin/catalog_update.inc:72
 msgid "Database table optimization"
-msgstr ""
+msgstr "Database table optimization"
 
 #: ../../bin/catalog_update.inc:95
 msgid "Starting catalog operations..."
-msgstr ""
+msgstr "Запуск операцій каталогу..."
 
 #: ../../bin/catalog_update.inc:101
 msgid "Deactivated PHP memory limit"
-msgstr ""
+msgstr "Деактивовано обмеження пам'яті PHP"
 
 #: ../../bin/catalog_update.inc:108
 msgid "Gathering art"
-msgstr ""
+msgstr "Збір обкладинок"
 
 #: ../../bin/catalog_update.inc:114
 msgid "Parsing playlists"
-msgstr ""
+msgstr "аналіз списків відтворення"
 
 #: ../../bin/catalog_update.inc:131
 #, php-format
 msgid "Reading catalog: %s"
-msgstr ""
+msgstr "Читання каталогу: %s"
 
 #: ../../bin/catalog_update.inc:137
 msgid "Start cleaning orphaned media entries"
@@ -547,37 +544,37 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:144
 msgid "Start verifying media related to catalog entries"
-msgstr ""
+msgstr "Початок перевірки мультимедійних файлів, пов'язаних із записами каталога"
 
 #: ../../bin/catalog_update.inc:151
 msgid "Start adding new media"
-msgstr ""
+msgstr "Початок додавання нових мультимедійних файлів"
 
 #: ../../bin/catalog_update.inc:158
 msgid "Start searching new media art"
-msgstr ""
+msgstr "Початок пошуку нових обкладинок"
 
 #: ../../bin/catalog_update.inc:166
 msgid "Optimizing database tables"
-msgstr ""
+msgstr "Оптимізація таблиць бази даних"
 
 #: ../../bin/catalog_update.inc:191
 msgid "- Catalog Update Help -"
-msgstr ""
+msgstr "- Допомога: Оновлення каталогу -"
 
 #: ../../bin/catalog_update.inc:193
 msgid "Usage: catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
-msgstr ""
+msgstr "Використання: catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
 
 #: ../../bin/catalog_update.inc:197
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
-msgstr ""
+msgstr "За замовчуванням робити все, за винятком тимчасово відключити обмеження PHP пам'яті"
 
 #: ../../bin/catalog_update.inc:201
 msgid "Temporarily deactivates PHP memory limit."
-msgstr ""
+msgstr "Тимчасово відключає ліміт пам'яті PHP"
 
 #: ../../bin/catalog_update.inc:203
 msgid "Cleans catalogs from orphaned entries."
@@ -587,41 +584,41 @@ msgstr ""
 msgid ""
 "Verifies catalog entries and updates them if related files have new "
 "information."
-msgstr ""
+msgstr "Перевіряє записи каталогу і оновлює їх, якщо пов'язані з ним файли мають нову інформацію."
 
 #: ../../bin/catalog_update.inc:207
 msgid "Adds new media to catalogs."
-msgstr ""
+msgstr "Додає нові обкладинки до каталогу."
 
 #: ../../bin/catalog_update.inc:209
 msgid "Gathers media Art."
-msgstr ""
+msgstr "Збирає нові обкладинки."
 
 #: ../../bin/catalog_update.inc:211
 msgid "Imports playlists."
-msgstr ""
+msgstr "імпортує списки відтворення"
 
 #: ../../bin/catalog_update.inc:213
 msgid "Optimizes Database Tables."
-msgstr ""
+msgstr "Оптимізує таблиці бази даних"
 
 #: ../../bin/catalog_update.inc:216
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr ""
+msgstr "Використовуйте цю опцію на свій страх і ризик! Ваша система може зазнати збій і перестати відповідати на запити через величезну споживання пам'яті!"
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
-"Depending on your systems performance, this option could need a long time to "
-"finish and extremely slow down other database processes if you have big "
+"Depending on your systems performance, this option could need a long time to"
+" finish and extremely slow down other database processes if you have big "
 "catalogs!"
-msgstr ""
+msgstr "Залежно від можливостей вашої системи, виконання цієї функції може зайняти багато часу і вкрай уповільнити інші процеси в базі даних, якщо у вас є великі каталоги!"
 
 #: ../../bin/catalog_update.inc:218
 msgid ""
-"The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
-"v|-a|-g] is used."
+"The switches [-m|-i|-o] can only be used, if one of the other switches "
+"[-c|-v|-a|-g] is used."
 msgstr ""
 
 #: ../../bin/channel_run.inc:46
@@ -1953,14 +1950,12 @@ msgid ""
 "Thank you for registering\n"
 "\n"
 "\n"
-"Please keep this e-mail for your records. Your account information is as "
-"follows:\n"
+"Please keep this e-mail for your records. Your account information is as follows:\n"
 "----------------------\n"
 "Username: %s\n"
 "----------------------\n"
 "\n"
-"Your account is currently inactive. You cannot use it until you've visited "
-"the following link:\n"
+"Your account is currently inactive. You cannot use it until you've visited the following link:\n"
 "\n"
 "%s\n"
 "\n"
@@ -4254,8 +4249,8 @@ msgstr ""
 #: ../../server/index.ajax.php:44
 #, php-format
 msgid ""
-"No catalog configured yet. To start streaming your media, you now need to %s "
-"add a catalog %s"
+"No catalog configured yet. To start streaming your media, you now need to %s"
+" add a catalog %s"
 msgstr ""
 
 #: ../../server/player.ajax.php:43
@@ -4380,8 +4375,8 @@ msgstr ""
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work "
-"more efficiently, as well as to provide information to the owners of the "
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
 "site."
 msgstr ""
 
@@ -4489,8 +4484,7 @@ msgstr ""
 #: ../../templates/header.inc.php:312
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. "
-"You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
@@ -4875,8 +4869,8 @@ msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:34
@@ -5982,8 +5976,8 @@ msgstr ""
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this "
-"function."
+"You have been redirected to this page because you do not have access to this"
+" function."
 msgstr ""
 
 #: ../../templates/show_denied.inc.php:60
@@ -6477,8 +6471,8 @@ msgstr ""
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later "
-"date simply edit %s"
+"values. If you would like to make changes to your Ampache install at a later"
+" date simply edit %s"
 msgstr ""
 
 #: ../../templates/show_install_check.inc.php:44
@@ -6518,16 +6512,16 @@ msgstr ""
 
 #: ../../templates/show_install_check.inc.php:62
 msgid ""
-"This tests whether PHP can write to config/. This is not strictly necessary, "
-"but will help streamline the installation process."
+"This tests whether PHP can write to config/. This is not strictly necessary,"
+" but will help streamline the installation process."
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:55
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache "
-"write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache"
+" write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s"
 msgstr ""
@@ -6728,8 +6722,8 @@ msgstr ""
 #: ../../templates/show_install.inc.php:39
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
-"MySQL account with database creation rights. This step may take some time on "
-"slower computers."
+"MySQL account with database creation rights. This step may take some time on"
+" slower computers."
 msgstr ""
 
 #: ../../templates/show_install.inc.php:47
@@ -7660,8 +7654,8 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:42
 msgid ""
-"Please download and install Composer from http://getcomposer.org and install "
-"it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
+"Please download and install Composer from http://getcomposer.org and install"
+" it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
 "install --prefer-source --no-interaction` on Ampache directory."
 msgstr ""
 
@@ -7711,8 +7705,8 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:90
 msgid ""
-"This tests whether you have the session extension enabled. This extension is "
-"required by Ampache."
+"This tests whether you have the session extension enabled. This extension is"
+" required by Ampache."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:94
@@ -7741,8 +7735,8 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:117
 msgid ""
-"This tests whether you have the curl extension enabled. This is not strictly "
-"necessary, but may result in a better experience."
+"This tests whether you have the curl extension enabled. This is not strictly"
+" necessary, but may result in a better experience."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:121
@@ -7751,8 +7745,8 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:126
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly "
-"necessary, but may result in a better experience (zip download)."
+"This tests whether you have the zlib extension enabled. This is not strictly"
+" necessary, but may result in a better experience (zip download)."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:130
@@ -7801,8 +7795,8 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:171
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time. "
-"This is not strictly necessary, but may result in a better experience."
+"This tests whether Ampache can override the limit on maximum execution time."
+" This is not strictly necessary, but may result in a better experience."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:175
@@ -8329,8 +8323,8 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 07.03.2016 02:21:07 CET
-#
+# Last Update: 14.04.2016 23:36:12 CEST
+# 
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr ""
@@ -8363,7 +8357,7 @@ msgstr ""
 # but to avoid confusion, it's added and commented
 # msgid "Language"
 # msgstr ""
-#: Database preference table id 31 32
+#: Database preference table id 31 Database preference table id 32
 msgid "Playlist Type"
 msgstr ""
 
@@ -8415,7 +8409,8 @@ msgstr ""
 # but to avoid confusion, it's added and commented
 # msgid "Show Lyrics"
 # msgstr ""
-#: Database preference table id 55 69 72
+#: Database preference table id 55 Database preference table id 69 Database
+#: preference table id 72
 msgid "Shoutcast Active Instance"
 msgstr ""
 
