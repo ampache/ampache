@@ -465,8 +465,8 @@ class Subsonic_XML_Data
         }
         $xsong->addAttribute('suffix', $song->type);
         $xsong->addAttribute('contentType', $song->mime);
-        // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
-        $path = $artist->name . '/' . $album->name . '/' . basename($song->file);
+        // Return a file path relative to the catalog root path
+        $path = $song->get_rel_path();
         $xsong->addAttribute('path', $path);
 
         // Set transcoding information if required
