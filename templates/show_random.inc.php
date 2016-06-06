@@ -83,9 +83,9 @@
                 ($_POST['length'] == $i
                     ? 'selected="selected"' : '') . '>';
             if ($i < 60) {
-                printf(ngettext('%d minute', '%d minutes', $i), $i);
+                printf(nT_('%d minute', '%d minutes', $i), $i);
             } else {
-                printf(ngettext('%d hour', '%d hours', $i / 60), $i / 60);
+                printf(nT_('%d hour', '%d hours', $i / 60), $i / 60);
             }
             echo "</option>\n";
         }

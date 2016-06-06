@@ -65,7 +65,7 @@ generate_pot() {
                 --add-comment=HINT: \
                 --msgid-bugs-address="https://www.transifex.com/projects/p/ampache/" \
                 -L php \
-                --keyword=gettext_noop --keyword=T_ --keyword=T_gettext --keyword=T_ngettext --keyword=ngettext \
+                --keyword=gettext_noop --keyword=T_ --keyword=nT_ \
                 -o $potfile \
                 $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
     if [[ $? -eq 0 ]]; then
@@ -86,7 +86,7 @@ generate_pot_utds() {
                 --add-comment=HINT: \
                 --msgid-bugs-address="https://www.transifex.com/projects/p/ampache/" \
                 -L php \
-                --keyword=gettext_noop --keyword=T_ --keyword=T_gettext --keyword=T_ngettext --keyword=ngettext \
+                --keyword=gettext_noop --keyword=T_ --keyword=nT_ \
                 -o $potfile \
                 $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
     if [[ $? -eq 0 ]]; then

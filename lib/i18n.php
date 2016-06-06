@@ -32,7 +32,7 @@ function load_gettext()
 {
     $lang    = AmpConfig::get('lang');
     $popath  = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
-    
+
     $t = new Translator();
     if (file_exists($popath)) {
         $translations = Gettext\Translations::fromPoFile($popath);
@@ -46,8 +46,17 @@ function T_($msgid)
     if (function_exists('__')) {
         return __($msgid);
     }
-    
+
     return $msgid;
+}
+
+function nT_($original, $plural, $value)
+{
+    if (function_exists('n__')) {
+        return n__($original, $plural, $value);
+    }
+
+    return $plural;
 }
 
 /**
