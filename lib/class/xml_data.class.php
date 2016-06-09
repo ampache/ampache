@@ -106,7 +106,7 @@ class XML_Data
     public static function error($code,$string)
     {
         $string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
-        self::output_xml($string);
+        return self::output_xml($string);
     } // error
 
     /**
