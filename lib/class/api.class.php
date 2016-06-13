@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -118,6 +118,47 @@ class Api
         return true;
     } // set_filter
 
+
+    /**
+     * logout
+     *
+     * This function allows the user to destroy the auth key
+     * Takes auth key
+     * @param array
+     * @return boolean
+     */
+    public static function logout($input)
+    {
+        $authKey = $input['auth'];
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        // Log the attempt
+        debug_event('API', "Destroy Auth Key Attempt, IP:$ip Key:$authKey", 5);
+
+        if(isset($authKey)){
+            if(Session::destroy($authKey)) {
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::single_string('success');
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::single_string('success');
+                }
+                return true;
+            }
+            else { //This shouldn't really happen
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::error('401', T_('Something went wrong'));
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::error('401', T_('Something went wrong'));
+                }
+                return false;
+            }
+            
+        }   
+    }
     /**
      * handshake
      *
@@ -136,6 +177,9 @@ class Api
         $username = trim($input['user']);
         $ip       = $_SERVER['REMOTE_ADDR'];
         $version  = $input['version'];
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
         // Log the attempt
         debug_event('API', "Handshake Attempt, IP:$ip User:$username Version:$version", 5);
@@ -172,7 +216,12 @@ class Api
                     ($timestamp > (time() + 1800))) {
                     debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    if ($outputFormat == 'json') {
+                      echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    }
+                    else {  // Defaults to XML
+                      echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    }
                     return false;
                 }
 
@@ -184,7 +233,12 @@ class Api
                 if (!$realpwd) {
                     debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Invalid Username/Password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    if ($outputFormat == 'json') {
+                      echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    }
+                    else {  // Defaults to XML
+                      echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    }
                     return false;
                 }
 
@@ -251,7 +305,8 @@ class Api
                 $db_results = Dba::read($sql);
                 $catalog    = Dba::fetch_assoc($db_results);
 
-                echo XML_Data::keyed_array(array('auth'=>$token,
+                $outputArray = array(
+                    'auth'=>$token,
                     'api'=>self::$version,
                     'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
                     'update'=>date("c",$row['update']),
@@ -262,14 +317,27 @@ class Api
                     'artists'=>$artist['artist'],
                     'playlists'=>$playlist['playlist'],
                     'videos'=>$vcounts['video'],
-                    'catalogs'=>$catalog['catalog']));
+                    'catalogs'=>$catalog['catalog']
+                );
+
+                if ($outputFormat == 'json') {
+                  echo json_encode($outputArray, JSON_PRETTY_PRINT);
+                }
+                else {  // Defaults to XML
+                  echo XML_Data::keyed_array($outputArray);
+                }
+
                 return true;
             } // match
         } // end while
 
         debug_event('API','Login Failed, unable to match passphrase','1');
-        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
-
+        if ($outputFormat == 'json') {
+          echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        }
+        else {  // Defaults to XML
+          echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        }
         return false;
     } // handshake
 
@@ -292,7 +360,16 @@ class Api
         debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'],'5');
 
         ob_end_clean();
-        echo XML_Data::keyed_array($xmldata);
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+            echo json_encode($xmldata, JSON_PRETTY_PRINT);
+        }
+        else {  // Defaults to XML
+            echo XML_Data::keyed_array($xmldata);
+        }
     } // ping
 
     /**
@@ -313,14 +390,29 @@ class Api
         Api::set_filter('add',$input['add']);
         Api::set_filter('update',$input['update']);
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        $artists = self::$browse->get_objects();
-        // echo out the resulting xml document
-        ob_end_clean();
-        echo XML_Data::artists($artists);
+        if ($outputFormat == 'json') {
+            // Set the offset
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+
+            $artists = self::$browse->get_objects();
+            // echo out the resulting xml document
+            ob_end_clean();
+            echo JSON_Data::artists($artists);
+        }
+        else {  // Defaults to XML
+            // Set the offset
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+
+            $artists = self::$browse->get_objects();
+            // echo out the resulting xml document
+            ob_end_clean();
+            echo XML_Data::artists($artists);
+        }
     } // artists
 
     /**
@@ -346,11 +438,23 @@ class Api
 
         $albums = $artist->get_albums(null, true);
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-        ob_end_clean();
-        echo XML_Data::albums($albums);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+        
+        if ($outputFormat == 'json') {
+            // Set the offset
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+            ob_end_clean();
+            echo JSON_Data::albums($albums);
+        }
+        else {  // Defaults to XML
+            // Set the offset
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+            ob_end_clean();
+            echo XML_Data::albums($albums);
+        }
     } // artist_albums
 
     /**
@@ -363,11 +467,23 @@ class Api
         $artist = new Artist($input['filter']);
         $songs  = $artist->get_songs();
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-        ob_end_clean();
-        echo XML_Data::songs($songs);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+        
+        if ($outputFormat == 'json') {
+            // Set the offset
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+            ob_end_clean();
+            echo JSON_Data::songs($songs);
+        }
+        else {  // Defaults to XML
+            // Set the offset
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+            ob_end_clean();
+            echo XML_Data::songs($songs);
+        }
     } // artist_songs
 
     /**
@@ -387,11 +503,23 @@ class Api
 
         $albums = self::$browse->get_objects();
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-        ob_end_clean();
-        echo XML_Data::albums($albums);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+        
+        if ($outputFormat == 'json') {
+            // Set the offset
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+            ob_end_clean();
+            echo JSON_Data::albums($albums);
+        }
+        else {  // Defaults to XML
+            // Set the offset
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+            ob_end_clean();
+            echo XML_Data::albums($albums);
+        }
     } // albums
 
     /**
@@ -402,7 +530,16 @@ class Api
     public static function album($input)
     {
         $uid = scrub_in($input['filter']);
-        echo XML_Data::albums(array($uid));
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+            echo JSON_Data::albums(array($uid));
+        }
+        else {  // Defaults to XML
+            echo XML_Data::albums(array($uid));
+        }
     } // album
 
     /**
@@ -415,12 +552,27 @@ class Api
         $album = new Album($input['filter']);
         $songs = $album->get_songs();
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        ob_end_clean();
-        echo XML_Data::songs($songs);
+        if ($outputFormat == 'json') {
+            // Set the offset
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+
+            ob_end_clean();
+            echo JSON_Data::songs($songs);
+        }
+        else {  // Defaults to XML
+            // Set the offset
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+
+            ob_end_clean();
+            echo XML_Data::songs($songs);
+        }
+
+
     } // album_songs
 
     /**
@@ -443,7 +595,16 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::tags($tags);
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::tags($tags);
+        }
+        else {  // Defaults to XML
+          echo XML_Data::tags($tags);
+        }
     } // tags
 
     /**
@@ -455,7 +616,17 @@ class Api
     {
         $uid = scrub_in($input['filter']);
         ob_end_clean();
-        echo XML_Data::tags(array($uid));
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::tags(array($uid));
+        }
+        else {  // Defaults to XML
+          echo XML_Data::tags(array($uid));
+        }
+
     } // tag
 
     /**
@@ -465,13 +636,27 @@ class Api
      */
     public static function tag_artists($input)
     {
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
         $artists = Tag::get_tag_objects('artist',$input['filter']);
         if ($artists) {
-            XML_Data::set_offset($input['offset']);
-            XML_Data::set_limit($input['limit']);
+            if ($outputFormat == 'json') {
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
 
-            ob_end_clean();
-            echo XML_Data::artists($artists);
+                ob_end_clean();
+                echo JSON_Data::artists($artists);
+            }
+            else {  // Defaults to XML
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+
+                ob_end_clean();
+                echo XML_Data::artists($artists);
+            }
+
+
         }
     } // tag_artists
 
@@ -484,11 +669,24 @@ class Api
     {
         $albums = Tag::get_tag_objects('album',$input['filter']);
         if ($albums) {
-            XML_Data::set_offset($input['offset']);
-            XML_Data::set_limit($input['limit']);
 
-            ob_end_clean();
-            echo XML_Data::albums($albums);
+            //Whatever format the user wants
+            $outputFormat = $input['format'];
+
+            if ($outputFormat == 'json') {
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+
+                ob_end_clean();
+                echo JSON_Data::albums($albums);
+            }
+            else {  // Defaults to XML
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+
+                ob_end_clean();
+                echo XML_Data::albums($albums);
+            }
         }
     } // tag_albums
 
@@ -501,11 +699,23 @@ class Api
     {
         $songs = Tag::get_tag_objects('song',$input['filter']);
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        ob_end_clean();
-        echo XML_Data::songs($songs);
+        if ($outputFormat == 'json') {
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+
+            ob_end_clean();
+            echo JSON_Data::songs($songs);
+        }
+        else {  // Defaults to XML
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+
+            ob_end_clean();
+            echo XML_Data::songs($songs);
+        }
     } // tag_songs
 
     /**
@@ -528,12 +738,23 @@ class Api
 
         $songs = self::$browse->get_objects();
 
+        //TODO: Implement the JSON counterpart
         // Set the offset
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::songs($songs);
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::songs($songs);
+        }
+        else {  // Defaults to XML
+          echo XML_Data::songs($songs);
+        }
+
     } // songs
 
     /**
@@ -546,7 +767,16 @@ class Api
         $uid = scrub_in($input['filter']);
 
         ob_end_clean();
-        echo XML_Data::songs(array($uid));
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::songs(array($uid));
+        }
+        else { // Defaults to XML
+          echo XML_Data::songs(array($uid));
+        }
     } // song
 
     /**
@@ -560,7 +790,16 @@ class Api
         // Don't scrub, the function needs her raw and juicy
         $data = Stream_URL::parse($input['url']);
         ob_end_clean();
-        echo XML_Data::songs(array($data['id']));
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+            echo JSON_Data::songs(array($data['id']));
+        }
+        else { // Defaults to XML
+            echo XML_Data::songs(array($data['id']));
+        }
     }
 
     /**
@@ -579,11 +818,27 @@ class Api
         self::$browse->set_filter('playlist_type', '1');
 
         $playlist_ids = self::$browse->get_objects();
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
 
-        ob_end_clean();
-        echo XML_Data::playlists($playlist_ids);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          JSON_Data::set_offset($input['offset']);
+          JSON_Data::set_limit($input['limit']);
+
+          ob_end_clean();
+          echo JSON_Data::playlists($playlist_ids);
+        }
+        else {  // Defaults to XML
+          XML_Data::set_offset($input['offset']);
+          XML_Data::set_limit($input['limit']);
+
+          ob_end_clean();
+          echo XML_Data::playlists($playlist_ids);
+        }
+
+
+
     } // playlists
 
     /**
@@ -596,7 +851,17 @@ class Api
         $uid = scrub_in($input['filter']);
 
         ob_end_clean();
-        echo XML_Data::playlists(array($uid));
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::playlists(array($uid));
+        }
+        else {  // Defaults to XML
+          echo XML_Data::playlists(array($uid));
+        }
+
     } // playlist
 
     /**
@@ -616,10 +881,23 @@ class Api
             }
         } // end foreach
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-        ob_end_clean();
-        echo XML_Data::songs($songs,$items);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          JSON_Data::set_offset($input['offset']);
+          JSON_Data::set_limit($input['limit']);
+          ob_end_clean();
+          echo JSON_Data::songs($songs,$items);
+        }
+        else {  // Defaults to XML
+          XML_Data::set_offset($input['offset']);
+          XML_Data::set_limit($input['limit']);
+          ob_end_clean();
+          echo XML_Data::songs($songs,$items);
+        }
+
+
     } // playlist_songs
 
     /**
@@ -636,7 +914,16 @@ class Api
         }
 
         $uid = Playlist::create($name, $type);
-        echo XML_Data::playlists(array($uid));
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+            echo JSON_Data::playlists(array($uid));
+        }
+        else {  // Defaults to XML
+            echo XML_Data::playlists(array($uid));
+        }
     }
 
     /**
@@ -648,11 +935,25 @@ class Api
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
         if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
+            if ($outputFormat == 'json') {
+                echo JSON_Data::error('401', T_('Access denied to this playlist.'));
+            }
+            else {  // Defaults to XML
+                echo XML_Data::error('401', T_('Access denied to this playlist.'));
+            }
         } else {
             $playlist->delete();
-            echo XML_Data::single_string('success');
+            if ($outputFormat == 'json') {
+                echo JSON_Data::single_string('success');
+            }
+            else {  // Defaults to XML
+                echo XML_Data::single_string('success');
+            }
         }
     } // playlist_delete
 
@@ -666,12 +967,28 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
-        if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
-        } else {
-            $playlist->add_songs(array($song));
-            echo XML_Data::single_string('success');
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          if (!$playlist->has_access()) {
+              echo JSON_Data::error('401', T_('Access denied to this playlist.'));
+          } else {
+              $playlist->add_songs(array($song));
+              echo JSON_Data::single_string('success');
+          }
         }
+        else {  // Defaults to XML
+          if (!$playlist->has_access()) {
+              echo XML_Data::error('401', T_('Access denied to this playlist.'));
+          } else {
+              $playlist->add_songs(array($song));
+              echo XML_Data::single_string('success');
+          }
+        }
+
+
     } // playlist_add_song
 
     /**
@@ -684,12 +1001,27 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $track    = scrub_in($input['track']);
-        if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
-        } else {
-            $playlist->delete_track_number($track);
-            echo XML_Data::single_string('success');
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          if (!$playlist->has_access()) {
+              echo JSON_Data::error('401', T_('Access denied to this playlist.'));
+          } else {
+              $playlist->delete_track_number($track);
+              echo JSON_Data::single_string('success');
+          }
         }
+        else {  // Defaults to XML
+          if (!$playlist->has_access()) {
+              echo XML_Data::error('401', T_('Access denied to this playlist.'));
+          } else {
+              $playlist->delete_track_number($track);
+              echo XML_Data::single_string('success');
+          }
+        }
+
     } // playlist_remove_song
 
     /**
@@ -707,12 +1039,25 @@ class Api
 
         ob_end_clean();
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        $results = Search::run($array);
+        if ($outputFormat == 'json') {
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
 
-        echo XML_Data::songs($results);
+            $results = Search::run($array);
+
+            echo JSON_Data::songs($results);
+        }
+        else {  // Defaults to XML
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+
+            $results = Search::run($array);
+
+            echo XML_Data::songs($results);
+        }
     } // search_songs
 
     /**
@@ -724,26 +1069,55 @@ class Api
     {
         ob_end_clean();
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        $results = Search::run($input);
+        if ($outputFormat == 'json') {
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
 
-        $type = 'song';
-        if (isset($input['type'])) {
-            $type = $input['type'];
+            $results = Search::run($input);
+
+            $type = 'song';
+            if (isset($input['type'])) {
+                $type = $input['type'];
+            }
+
+            switch ($type) {
+                case 'artist':
+                    echo JSON_Data::artists($results);
+                    break;
+                case 'album':
+                    echo JSON_Data::albums($results);
+                    break;
+                default:
+                    echo JSON_Data::songs($results);
+                    break;
+            }
         }
-        
-        switch ($type) {
-            case 'artist':
-                echo XML_Data::artists($results);
-                break;
-            case 'album':
-                echo XML_Data::albums($results);
-                break;
-            default:
-                echo XML_Data::songs($results);
-                break;
+        else {  // Defaults to XML
+
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+
+            $results = Search::run($input);
+
+            $type = 'song';
+            if (isset($input['type'])) {
+                $type = $input['type'];
+            }
+
+            switch ($type) {
+                case 'artist':
+                    echo XML_Data::artists($results);
+                    break;
+                case 'album':
+                    echo XML_Data::albums($results);
+                    break;
+                default:
+                    echo XML_Data::songs($results);
+                    break;
+            }
         }
     } // advanced_search
 
@@ -763,10 +1137,21 @@ class Api
 
         $video_ids = self::$browse->get_objects();
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        echo XML_Data::videos($video_ids);
+        if ($outputFormat == 'json') {
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+
+            echo JSON_Data::videos($video_ids);
+        }
+        else {  // Defaults to XML
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+
+            echo XML_Data::videos($video_ids);
+        }
     } // videos
 
     /**
@@ -777,8 +1162,16 @@ class Api
     public static function video($input)
     {
         $video_id = scrub_in($input['filter']);
+        
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        echo XML_Data::videos(array($video_id));
+        if ($outputFormat == 'json') {
+            echo JSON_Data::videos(array($video_id));
+        }
+        else {  // Defaults to XML
+            echo XML_Data::videos(array($video_id));
+        }
     } // video
 
     /**
@@ -792,18 +1185,33 @@ class Api
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+
         switch ($input['command']) {
             case 'next':
             case 'prev':
             case 'play':
             case 'stop':
                 $result_status = $localplay->$input['command']();
-                $xml_array     = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
-                echo XML_Data::keyed_array($xml_array);
+                $outputArray     = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
+                if ($outputFormat == 'json') {
+                    echo json_encode($outputArray, JSON_PRETTY_PRINT);
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::keyed_array($outputArray);
+                }
+
             break;
             default:
                 // They are doing it wrong
-                echo XML_Data::error('405', T_('Invalid Request'));
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::error('405', T_('Invalid Request'));
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::error('405', T_('Invalid Request'));
+                }
             break;
         } // end switch on command
     } // localplay
@@ -818,6 +1226,9 @@ class Api
         // Load up democratic information
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
         switch ($input['method']) {
             case 'vote':
@@ -835,36 +1246,74 @@ class Api
                 ));
 
                 // If everything was ok
-                $xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
-                echo XML_Data::keyed_array($xml_array);
+                $outputArray = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
+
+                if ($outputFormat == 'json') {
+                    echo json_encode($outputArray, JSON_PRETTY_PRINT);
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::keyed_array($outputArray);
+                }
+
             break;
             case 'devote':
                 $type  = 'song';
                 $media = new $type($input['oid']);
                 if (!$media->id) {
-                    echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    if ($outputFormat == 'json') {
+                        echo JSON_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    }
+                    else {  // Defaults to XML
+                        echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    }
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id,$type);
                 $democratic->remove_vote($uid);
 
                 // Everything was ok
-                $xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
-                echo XML_Data::keyed_array($xml_array);
+                $outputArray = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
+             
+                if ($outputFormat == 'json') {
+                    echo json_encode($outputArray, JSON_PRETTY_PRINT);
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::keyed_array($outputArray);
+                }
+
             break;
             case 'playlist':
                 $objects = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                echo XML_Data::democratic($objects);
+                
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::democratic($objects);
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::democratic($objects);
+                }
+
             break;
             case 'play':
                 $url       = $democratic->play_url();
-                $xml_array = array('url'=>$url);
-                echo XML_Data::keyed_array($xml_array);
+                $outputArray = array('url'=>$url);
+                
+                if ($outputFormat == 'json') {
+                    echo json_encode($outputArray, JSON_PRETTY_PRINT);
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::keyed_array($outputArray);
+                }
+
             break;
             default:
-                echo XML_Data::error('405', T_('Invalid Request'));
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::error('405', T_('Invalid Request'));
+                }
+                else {  // Defaults to XML                
+                    echo XML_Data::error('405', T_('Invalid Request'));
+                }
             break;
         } // switch on method
     } // democratic
@@ -879,6 +1328,9 @@ class Api
         $offset   = $input['offset'];
         $limit    = $input['limit'];
         $username = $input['username'];
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
         $albums = null;
         if ($type == "newest") {
@@ -917,7 +1369,12 @@ class Api
 
         if ($albums !== null) {
             ob_end_clean();
-            echo XML_Data::albums($albums);
+            if ($outputFormat == 'json') {
+                echo JSON_Data::albums($albums);                
+            }
+            else {  // Defaults to XML
+                echo XML_Data::albums($albums);
+            }
         }
     } // stats
 
@@ -929,11 +1386,20 @@ class Api
     public static function user($input)
     {
         $username = $input['username'];
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if ($user !== null) {
                 ob_end_clean();
-                echo XML_Data::user($user);
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::user($user);
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::user($user);
+                }
             } else {
                 debug_event('api', 'User `' . $username . '` cannot be found.', 1);
             }
@@ -954,9 +1420,19 @@ class Api
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
+
+                    //Whatever format the user wants
+                    $outputFormat = $input['format'];
+
                     $users = $user->get_followers();
                     ob_end_clean();
-                    echo XML_Data::users($user);
+
+                    if ($outputFormat == 'json') {
+                        echo JSON_Data::users($users);
+                    }
+                    else {  // Defaults to XML
+                        echo XML_Data::users($users);
+                    }
                 } else {
                     debug_event('api', 'User `' . $username . '` cannot be found.', 1);
                 }
@@ -980,9 +1456,20 @@ class Api
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
+
+                    //Whatever format the user wants
+                    $outputFormat = $input['format'];
+
                     $users = $user->get_following();
                     ob_end_clean();
-                    echo XML_Data::users($user);
+
+                    if ($outputFormat == 'json') {
+                        echo JSON_Data::users($users);
+                    }
+                    else {  // Defaults to XML
+                        echo XML_Data::users($users);
+                    }
+
                 } else {
                     debug_event('api', 'User `' . $username . '` cannot be found.', 1);
                 }
@@ -1006,9 +1493,19 @@ class Api
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
+
+                    //Whatever format the user wants
+                    $outputFormat = $input['format'];
+
                     $GLOBALS['user']->toggle_follow($user->id);
                     ob_end_clean();
-                    echo XML_Data::single_string('success');
+
+                    if ($outputFormat == 'json') {
+                        echo JSON_Data::single_string('success');                    
+                    }
+                    else {  // Defaults to XML                
+                        echo XML_Data::single_string('success');
+                    }
                 }
             } else {
                 debug_event('api', 'Username to toggle required on follow function call.', 1);
@@ -1037,8 +1534,16 @@ class Api
                 $shouts = Shoutbox::get_top($limit);
             }
 
+            //Whatever format the user wants
+            $outputFormat = $input['format'];
+
             ob_end_clean();
-            echo XML_Data::shouts($shouts);
+            if ($outputFormat == 'json') {
+                echo JSON_Data::shouts($shouts);
+            }
+            else {  // Defaults to XML
+                echo XML_Data::shouts($shouts);
+            }
         } else {
             debug_event('api', 'Sociable feature is not enabled.', 3);
         }
@@ -1055,17 +1560,35 @@ class Api
         $type   = $input['type'];
         $id     = $input['id'];
         $rating = $input['rating'];
-        
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
         if (!Core::is_library_item($type) || !$id) {
-            echo XML_Data::error('401', T_('Wrong library item type.'));
+            if ($outputFormat == 'json') {
+                echo JSON_Data::error('401', T_('Wrong library item type.'));
+            }
+            else {  // Defaults to XML
+                echo XML_Data::error('401', T_('Wrong library item type.'));
+            }
         } else {
             $item = new $type($id);
             if (!$item->id) {
-                echo XML_Data::error('404', T_('Library item not found.'));
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::error('404', T_('Library item not found.'));                    
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::error('404', T_('Library item not found.'));
+                }
             } else {
                 $r = new Rating($id, $type);
                 $r->set_rating($rating);
-                echo XML_Data::single_string('success');
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::single_string('success');                    
+                }
+                else {  // Defaults to XML                
+                    echo XML_Data::single_string('success');
+                }
             }
         }
     } // rate
@@ -1081,14 +1604,24 @@ class Api
             $username = $input['username'];
             $limit    = intval($input['limit']);
             $since    = intval($input['since']);
-            
+
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
+                        
+                        //Whatever format the user wants
+                        $outputFormat = $input['format'];
+
                         $activities = Useractivity::get_activities($user->id, $limit, $since);
                         ob_end_clean();
-                        echo XML_Data::timeline($activities);
+
+                        if ($outputFormat == 'json') {
+                            echo JSON_Data::timeline($activities);
+                        }
+                        else {  // Defaults to XML
+                            echo XML_Data::timeline($activities);
+                        }
                     }
                 }
             } else {
@@ -1109,11 +1642,19 @@ class Api
         if (AmpConfig::get('sociable')) {
             $limit = intval($input['limit']);
             $since = intval($input['since']);
-            
+
+            //Whatever format the user wants
+            $outputFormat = $input['format'];
+
             if ($GLOBALS['user']->id > 0) {
                 $activities = Useractivity::get_friends_activities($GLOBALS['user']->id, $limit, $since);
                 ob_end_clean();
-                echo XML_Data::timeline($activities);
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::timeline($activities);
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::timeline($activities);
+                }
             }
         } else {
             debug_event('api', 'Sociable feature is not enabled.', 3);

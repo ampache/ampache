@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -75,23 +75,6 @@ class XML_Data
         $limit       = intval($limit);
         self::$limit = $limit;
     } // set_limit
-
-    /**
-     * set_type
-     *
-     * This sets the type of XML_Data we are working on
-     *
-     * @param    string    $type    XML_Data type
-     * @return    void
-     */
-    public static function set_type($type)
-    {
-        if (!in_array($type,array('rss','xspf','itunes'))) {
-            return false;
-        }
-
-        self::$type = $type;
-    } // set_type
 
     /**
      * error
@@ -221,18 +204,18 @@ class XML_Data
     public static function keyed_array($array,$callback='')
     {
         $string = '';
-
         // Foreach it
         foreach ($array as $key=>$value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) and isset($value['<attributes>'])) {
-                $attribute = ' ' . $value['<attributes>'];
+            if (is_array($value) and isset($value['attributes'])) {
+                $attribute = ' ' . $value['attributes'];
                 $key       = $value['value'];
             }
 
             // If it's an array, run again
             if (is_array($value)) {
+
                 $value = self::keyed_array($value,1);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
@@ -673,13 +656,12 @@ class XML_Data
         $string = "<timeline>\n";
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
-            $shout->format();
             $user = new User($activity->user);
             $string .= "\t<activity id=\"" . $aid . "\">\n" .
                     "\t\t<date>" . $activity->activity_date . "</date>\n" .
                     "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" .
                     "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .
-                    "\t\t<action><![CDATA[" . $shout->text . "]]></action>\n";
+                    "\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }

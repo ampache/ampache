@@ -33,14 +33,14 @@ if ($_REQUEST['action'] != 'handshake') {
 }
 
 /* Set the correct headers */
-header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
-header("Content-Disposition: attachment; filename=information.xml");
+header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
+// header("Content-Disposition: attachment; filename=information.json");
 
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
-    debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3');
-    echo XML_Data::error('501', T_('Access Control not Enabled'));
+    debug_event('Access Control','Error Attempted to use JSON API with Access Control turned off','3');
+    echo JSON_Data::error('501', T_('Access Control not Enabled'));
     exit;
 }
 
@@ -51,7 +51,7 @@ if (!AmpConfig::get('access_control')) {
 if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
     debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
     ob_end_clean();
-    echo XML_Data::error('401', T_('Session Expired'));
+    echo JSON_Data::error('401', T_('Session Expired'));
     exit();
 }
 
@@ -64,7 +64,7 @@ $username =
 if (!Access::check_network('init-api', $username, 5)) {
     debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
     ob_end_clean();
-    echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
+    echo JSON_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
     exit();
 }
 
@@ -91,13 +91,13 @@ foreach ($methods as $method) {
     // If the method is the same as the action being called
     // Then let's call this function!
     if ($_GET['action'] == $method) {
-        $_GET['format'] = 'xml';
+        $_GET['format'] = 'json';
         call_user_func(array('api',$method),$_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;
     }
 } // end foreach methods in API
 
-// If we manage to get here, we still need to hand out an XML document
+// If we manage to get here, we still need to hand out a JSON document
 ob_end_clean();
-echo XML_Data::error('405', T_('Invalid Request'));
+echo JSON_Data::error('405', T_('Invalid Request'));
