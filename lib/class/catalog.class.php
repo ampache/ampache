@@ -1233,7 +1233,9 @@ abstract class Catalog extends database_object
                         $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
                     }
                 }
-                if ($inserted) break;
+                if ($inserted) {
+                    break;
+                }
             } else {
                 debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
             }
