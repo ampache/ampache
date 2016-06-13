@@ -172,7 +172,7 @@ class Api
                     ($timestamp > (time() + 1800))) {
                     debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
                     return false;
                 }
 
@@ -184,7 +184,7 @@ class Api
                 if (!$realpwd) {
                     debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Invalid Username/Password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
                     return false;
                 }
 
@@ -251,24 +251,28 @@ class Api
                 $db_results = Dba::read($sql);
                 $catalog    = Dba::fetch_assoc($db_results);
 
-                echo XML_Data::keyed_array(array('auth'=>$token,
-                    'api'=>self::$version,
-                    'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
-                    'update'=>date("c",$row['update']),
-                    'add'=>date("c",$row['add']),
-                    'clean'=>date("c",$row['clean']),
-                    'songs'=>$song['song'],
-                    'albums'=>$album['album'],
-                    'artists'=>$artist['artist'],
-                    'playlists'=>$playlist['playlist'],
-                    'videos'=>$vcounts['video'],
-                    'catalogs'=>$catalog['catalog']));
+                echo json_encode(
+                    array(
+                      'auth'=>$token,
+                      'api'=>self::$version,
+                      'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
+                      'update'=>date("c",$row['update']),
+                      'add'=>date("c",$row['add']),
+                      'clean'=>date("c",$row['clean']),
+                      'songs'=>$song['song'],
+                      'albums'=>$album['album'],
+                      'artists'=>$artist['artist'],
+                      'playlists'=>$playlist['playlist'],
+                      'videos'=>$vcounts['video'],
+                      'catalogs'=>$catalog['catalog'],
+                    ), JSON_HEX_QUOT | JSON_HEX_APOS | JSON_PRETTY_PRINT);
+                
                 return true;
             } // match
         } // end while
 
         debug_event('API','Login Failed, unable to match passphrase','1');
-        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
     } // handshake
@@ -443,7 +447,7 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::tags($tags);
+        echo JSON_Data::tags($tags);
     } // tags
 
     /**
@@ -455,7 +459,7 @@ class Api
     {
         $uid = scrub_in($input['filter']);
         ob_end_clean();
-        echo XML_Data::tags(array($uid));
+        echo JSON_Data::tags(array($uid));
     } // tag
 
     /**
@@ -533,7 +537,7 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::songs($songs);
+        echo JSON_Data::songs($songs);
     } // songs
 
     /**
