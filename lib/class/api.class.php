@@ -265,7 +265,7 @@ class Api
                       'playlists'=>$playlist['playlist'],
                       'videos'=>$vcounts['video'],
                       'catalogs'=>$catalog['catalog'],
-                    ), JSON_HEX_QUOT | JSON_HEX_APOS | JSON_PRETTY_PRINT);
+                    ), JSON_PRETTY_PRINT);
                 
                 return true;
             } // match
