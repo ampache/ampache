@@ -135,7 +135,13 @@ class Api
         }
         $username = trim($input['user']);
         $ip       = $_SERVER['REMOTE_ADDR'];
-        $version  = $input['version'];
+        if (isset($input['version'])) {
+            // If version is provided, use it
+            $version = $input['version'];
+        } else {
+            // Else, just use the latest version available
+            $version = self::$version;
+        }
 
         // Log the attempt
         debug_event('API', "Handshake Attempt, IP:$ip User:$username Version:$version", 5);
