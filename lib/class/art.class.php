@@ -1801,4 +1801,3 @@ class Art extends database_object
         return true;
     }
 } // Art
-
