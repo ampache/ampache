@@ -339,8 +339,7 @@ class Catalog_subsonic extends Catalog
 
     public function get_rel_path($file_path)
     {
-        $info         = $this->_get_info();
-        $catalog_path = rtrim($info->uri, "/");
+        $catalog_path = rtrim($this->uri, "/");
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
 

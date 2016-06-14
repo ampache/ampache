@@ -847,8 +847,7 @@ class Catalog_local extends Catalog
 
     public function get_rel_path($file_path)
     {
-        $info         = $this->_get_info();
-        $catalog_path = rtrim($info->path, "/");
+        $catalog_path = rtrim($this->path, "/");
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
 
