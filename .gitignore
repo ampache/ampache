@@ -24,3 +24,4 @@ web.config
 /modules/plugins/ampache-*
 robots.txt
 php-cs-fixer.phar
+.php_cs.cache
