@@ -122,12 +122,12 @@ switch ($_REQUEST['action']) {
             foreach ($songs as $song_id) {
                 Song::update_enabled(true, $song_id);
             }
-            $body = count($songs) . ngettext(' Song Enabled', ' Songs Enabled', count($songs));
+            $body = count($songs) . nT_(' Song Enabled', ' Songs Enabled', count($songs));
         } else {
             $body = T_('No Disabled Songs selected');
         }
         $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = count($songs) . ngettext(' Disabled Song Processed', ' Disabled Songs Processed', count($songs));
+        $title    = count($songs) . nT_(' Disabled Song Processed', ' Disabled Songs Processed', count($songs));
         show_confirmation($title,$body,$url);
     break;
     case 'clean_all_catalogs':

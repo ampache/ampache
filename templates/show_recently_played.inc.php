@@ -70,28 +70,28 @@ foreach ($data as $row) {
         $interval = intval(time() - $row['date']);
 
         if ($interval < 60) {
-            $time_string = sprintf(ngettext('%d second ago', '%d seconds ago', $interval), $interval);
+            $time_string = sprintf(nT_('%d second ago', '%d seconds ago', $interval), $interval);
         } elseif ($interval < 3600) {
             $interval    = floor($interval / 60);
-            $time_string = sprintf(ngettext('%d minute ago', '%d minutes ago', $interval), $interval);
+            $time_string = sprintf(nT_('%d minute ago', '%d minutes ago', $interval), $interval);
         } elseif ($interval < 86400) {
             $interval    = floor($interval / 3600);
-            $time_string = sprintf(ngettext('%d hour ago', '%d hours ago', $interval), $interval);
+            $time_string = sprintf(nT_('%d hour ago', '%d hours ago', $interval), $interval);
         } elseif ($interval < 604800) {
             $interval    = floor($interval / 86400);
-            $time_string = sprintf(ngettext('%d day ago', '%d days ago', $interval), $interval);
+            $time_string = sprintf(nT_('%d day ago', '%d days ago', $interval), $interval);
         } elseif ($interval < 2592000) {
             $interval    = floor($interval / 604800);
-            $time_string = sprintf(ngettext('%d week ago', '%d weeks ago', $interval), $interval);
+            $time_string = sprintf(nT_('%d week ago', '%d weeks ago', $interval), $interval);
         } elseif ($interval < 31556926) {
             $interval    = floor($interval / 2592000);
-            $time_string = sprintf(ngettext('%d month ago', '%d months ago', $interval), $interval);
+            $time_string = sprintf(nT_('%d month ago', '%d months ago', $interval), $interval);
         } elseif ($interval < 631138519) {
             $interval    = floor($interval / 31556926);
-            $time_string = sprintf(ngettext('%d year ago', '%d years ago', $interval), $interval);
+            $time_string = sprintf(nT_('%d year ago', '%d years ago', $interval), $interval);
         } else {
             $interval    = floor($interval / 315569260);
-            $time_string = sprintf(ngettext('%d decade ago', '%d decades ago', $interval), $interval);
+            $time_string = sprintf(nT_('%d decade ago', '%d decades ago', $interval), $interval);
         }
     }
     $song->format();
