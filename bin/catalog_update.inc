@@ -74,7 +74,7 @@ if (count($_SERVER['argv']) > 1) {
         }
         else {
             if ($where) $where .= " OR ";
-            $where .= "name LIKE '%" . Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x])) . "%'";
+            $where .= "name = '" . Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x])) . "'";
         }
     }
 }
