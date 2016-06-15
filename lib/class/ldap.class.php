@@ -22,6 +22,28 @@
 
 
 /**
+ * array_filter_key
+ *
+ * This function is here for retrocompatibility with PHP < 5.6.
+ * For PHP >= 5.6, one can use array_filter with flag ARRAY_FILTER_USE_KEY.
+ */
+function array_filter_key ($array, $callback)
+{
+    foreach ($array as $key => $value) {
+        if (! call_user_func ($callback, $key)) {
+            unset ($array[$key]);
+        }
+    }
+    return $array;
+}
+// function array_filter_key ($array, $callback)
+// {
+//     return array_filter ($array, $callback, ARRAY_FILTER_USE_KEY);
+// }
+
+
+
+/**
  * This class defines custom LDAP exceptions that will be used in the
  * main LDAP class.
  */
@@ -80,7 +102,7 @@ class LDAP
     {
         $sr_clean = [];
         
-        foreach (array_filter($sr, 'is_int', ARRAY_FILTER_USE_KEY) as $i => $result) {
+        foreach (array_filter_key($sr, 'is_int') as $i => $result) {
             $sr_clean[$i] = [];
             
             foreach ($result as $field => $values) {
@@ -89,7 +111,7 @@ class LDAP
                 } elseif ($field == 'dn') {
                     $sr_clean[$i][$field] = $values;
                 } else {
-                    $sr_clean[$i][$field] = array_filter($values, 'is_int', ARRAY_FILTER_USE_KEY);
+                    $sr_clean[$i][$field] = array_filter_key($values, 'is_int');
                 }
             }
         }
