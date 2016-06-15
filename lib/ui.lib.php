@@ -713,7 +713,7 @@ function toggle_visible($element)
 function display_notification($message, $timeout = 5000)
 {
     echo "<script type='text/javascript'>";
-    echo "displayNotification('" . json_encode($message) . "', " . $timeout . ");";
+    echo "displayNotification('" . addslashes(json_encode($message)) . "', " . $timeout . ");";
     echo "</script>\n";
 }
 
