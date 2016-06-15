@@ -295,7 +295,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
 if (AmpConfig::get('webplayer_aurora')) {
     $atypes = array();
     foreach ($supplied as $stype) {
-        if ($stype == 'ogg') {
+        if ($stype == 'ogg' || $stype == 'oga') {
             // Ogg could requires vorbis/opus codecs
             if (!in_array('ogg', $atypes)) {
                 $atypes[] = 'ogg';
