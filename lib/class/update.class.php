@@ -552,6 +552,9 @@ class Update
         
         $update_string = "- Add custom blank album/video default image and alphabet browsing options.<br />";
         $version[]     = array('version' => '380010', 'description' => $update_string);
+
+        $update_string = "- Fix username max size to be the same one across all tables.<br />";
+        $version[]     = array('version' => '380011', 'description' => $update_string);
         
         return $version;
     }
@@ -3934,6 +3937,30 @@ class Update
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'')";
         $retval &= Dba::write($sql, array($id));
+
+        return $retval;
+    }
+        
+    /**
+     * update_380011
+     *
+     * Fix username max size to be the same one across all tables.
+     */
+    public static function update_380011()
+    {
+        $retval = true;
+        
+        $sql = "ALTER TABLE session MODIFY username VARCHAR(255)";
+        $retval &= Dba::write($sql);
+        
+        $sql = "ALTER TABLE session_remember MODIFY username VARCHAR(255)";
+        $retval &= Dba::write($sql);
+        
+        $sql = "ALTER TABLE user MODIFY username VARCHAR(255)";
+        $retval &= Dba::write($sql);
+        
+        $sql = "ALTER TABLE user MODIFY fullname VARCHAR(255)";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }
