@@ -286,6 +286,12 @@ function generate_config($current)
             // Put in the current value
             if ($key == 'config_version') {
                 $line = $key . ' = ' . escape_ini($value);
+            } elseif ($key == 'secret_key' && !isset($current[$key])) {
+                $secret_key = Core::gen_secure_token(31);
+                if ($secret_key !== false) {
+                    $line = $key . ' = "' . escape_ini($secret_key) . '"';
+                }
+                // Else, unable to generate a cryptographically secure token, use the default one
             } elseif (isset($current[$key])) {
                 $line = $key . ' = "' . escape_ini($current[$key]) . '"';
                 unset($current[$key]);
