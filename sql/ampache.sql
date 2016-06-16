@@ -13,7 +13,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
--- 
+--
 -- Host: localhost    Database: ampache_clean
 -- ------------------------------------------------------
 -- Server version	5.4.16-log
@@ -804,7 +804,7 @@ CREATE TABLE IF NOT EXISTS `search` (
 DROP TABLE IF EXISTS `session`;
 CREATE TABLE IF NOT EXISTS `session` (
   `id` varchar(256) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `username` varchar(16) CHARACTER SET utf8 DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `expire` int(11) unsigned NOT NULL DEFAULT '0',
   `value` longtext COLLATE utf8_unicode_ci NOT NULL,
   `ip` varbinary(255) DEFAULT NULL,
@@ -826,7 +826,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 
 DROP TABLE IF EXISTS `session_remember`;
 CREATE TABLE IF NOT EXISTS `session_remember` (
-  `username` varchar(16) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `username` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `token` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `expire` int(11) DEFAULT NULL,
   PRIMARY KEY (`username`,`token`)
@@ -1153,8 +1153,8 @@ INSERT INTO `update_info` (`key`, `value`) VALUES
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
-  `fullname` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `fullname` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `email` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   `website` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `apikey` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
