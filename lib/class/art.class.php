@@ -360,7 +360,7 @@ class Art extends database_object
 
         // Check to make sure we like this image
         if (!self::test_image($source)) {
-            debug_event('Art', 'Not inserting image, invalid data passed', 1);
+            debug_event('Art', 'Not inserting image for ' . $this->type . ' ' . $this->uid . ', invalid data passed', 1);
             return false;
         }
 
@@ -371,7 +371,7 @@ class Art extends database_object
 
         if (AmpConfig::get('write_id3_art')) {
             if ($this->type == 'album') {
-                $album = new Album($this->uid );
+                $album = new Album($this->uid);
                 debug_event('Art', 'Inserting image Album ' . $album->name . ' on songs.', 5);
                 $songs = $album->get_songs();
                 foreach ($songs as $song_id) {
