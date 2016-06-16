@@ -61,15 +61,16 @@ require $prefix . '/templates/install_header.inc.php';
             <?php AmpError::display('general'); ?>
 
             <h2><?php echo T_('Generate Config File'); ?></h2>
-            <h3><?php echo T_('Database connection'); ?></h3>
-            <?php AmpError::display('config'); ?>
-<form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
+            <h3><?php echo T_('Various'); ?></h3>
 <div class="form-group">
     <label for="web_path" class="col-sm-4 control-label"><?php echo T_('Web Path'); ?></label>
     <div class="col-sm-8">
         <input type="text" class="form-control" id="web_path" name="web_path" value="<?php echo scrub_out($web_path_guess); ?>">
     </div>
 </div>
+            <h3><?php echo T_('Database connection'); ?></h3>
+            <?php AmpError::display('config'); ?>
+<form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
 <div class="form-group">
     <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Database Name'); ?></label>
     <div class="col-sm-8">

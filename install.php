@@ -164,6 +164,7 @@ switch ($_REQUEST['action']) {
                 $created_config = $created_config && install_create_config($download);
             }
         }
+        // No break on purpose
     case 'show_create_account':
         $results = parse_ini_file($configfile);
         if (!isset($created_config)) {
