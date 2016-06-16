@@ -1,0 +1,8 @@
+/vendor
+/node_modules
+/components
+/public/storage
+Homestead.yaml
+Homestead.json
+.env
+/nbproject/private

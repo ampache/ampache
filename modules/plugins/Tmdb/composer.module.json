@@ -1,0 +1,11 @@
+{
+	"name": "ampache/ampache-tmdb",
+	"description": "TMDB plugin for Ampache.",
+	"homepage": "http://ampache.org",
+	"keywords": ["ampache", "tmdb", "plugin"],
+	"type": "ampache-plugin",
+	"license": "AGPL-3.0",
+    "require": {
+		"php-tmdb/api": "2.*"
+    }
+}

@@ -1,0 +1,11 @@
+{
+	"name": "ampache/ampache-tvdb",
+	"description": "TVDB plugin for Ampache.",
+	"homepage": "http://ampache.org",
+	"keywords": ["ampache", "tvdb", "plugin"],
+	"type": "ampache-plugin",
+	"license": "AGPL-3.0",
+    "require": {
+		"moinax/tvdb": "1.*"
+    }
+}

@@ -1,0 +1,9 @@
+Benjamin Carlisle (bcarlisle@24oz.com)
+    * Original code
+
+Karl Vollmer (vollmer@ampache.org)
+    * Connection Timeout
+
+Paul Arthur (flowerysong00@yahoo.com)
+    * Rewritten for PHP5
+    * Generic error handling/debugging with optional callback
