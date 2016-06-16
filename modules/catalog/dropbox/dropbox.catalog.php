@@ -167,8 +167,8 @@ class Catalog_dropbox extends Catalog
      */
     public static function create_type($catalog_id, $data)
     {
-        $apikey   = $data['apikey'];
-        $secret   = $data['secret'];
+        $apikey   = trim($data['apikey']);
+        $secret   = trim($data['secret']);
         $path     = $data['path'];
         $getchunk = $data['getchunk'];
 
