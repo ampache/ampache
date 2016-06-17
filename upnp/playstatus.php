@@ -46,5 +46,3 @@ if ($played) {
         echo "Next song FAILED!" . "\n";
     }
 }
-
-?>

@@ -58,7 +58,7 @@ UI::show_box_top($tvshow->f_name, 'info-box');
     ?>
     <div style="display:table-cell;" id="userflag_<?php echo $tvshow->id;
     ?>_tvshow">
-            <?php Userflag::show($tvshow->id,'tvshow');
+            <?php Userflag::show($tvshow->id, 'tvshow');
     ?>
     </div>
     <?php 
@@ -72,9 +72,9 @@ UI::show_box_top($tvshow->f_name, 'info-box');
         <?php if (AmpConfig::get('directplay')) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id,'play', T_('Play all'),'directplay_full_' . $tvshow->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, 'play', T_('Play all'), 'directplay_full_' . $tvshow->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, T_('Play all'),'directplay_full_text_' . $tvshow->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, T_('Play all'), 'directplay_full_text_' . $tvshow->id);
     ?>
         </li>
         <?php 
@@ -82,14 +82,14 @@ UI::show_box_top($tvshow->f_name, 'info-box');
         <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true','play_add', T_('Play all last'),'addplay_tvshow_' . $tvshow->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_tvshow_' . $tvshow->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', T_('Play all last'),'addplay_tvshow_text_' . $tvshow->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', T_('Play all last'), 'addplay_tvshow_text_' . $tvshow->id);
     ?>
         </li>
         <?php 
 } ?>
-        <?php if (Access::check('interface','50')) {
+        <?php if (Access::check('interface', '50')) {
     ?>
         <li>
             <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">

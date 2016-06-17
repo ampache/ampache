@@ -76,7 +76,7 @@ $media->format();
         ?></label>
             <div id="userflag_<?php echo $media->id;
         ?>_video">
-                <?php Userflag::show($media->id,'video');
+                <?php Userflag::show($media->id, 'video');
         ?>
             </div>
         </div>

@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface',100) or AmpConfig::get('demo_mode')) {
+if (!Access::check('interface', 100) or AmpConfig::get('demo_mode')) {
     UI::access_denied();
     exit();
 }
@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
         $current = parse_ini_file(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
         $final   = generate_config($current);
         $browser = new Horde_Browser();
-        $browser->downloadHeaders('ampache.cfg.php', 'text/plain',false,filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
+        $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
         echo $final;
         exit;
     case 'write_config':

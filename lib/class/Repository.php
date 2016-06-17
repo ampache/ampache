@@ -102,7 +102,7 @@ class Repository
         $nameParts = explode('\\', $className);
         $tableName = preg_replace_callback(
                 '/(?<=.)([A-Z])/',
-                function($m) {
+                function ($m) {
                     return '_' . strtolower($m[0]);
                 }, end($nameParts));
         return lcfirst($tableName);
@@ -225,6 +225,6 @@ class Repository
 
     public function camelCaseToUnderscore($string)
     {
-        return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/','_$1', $string));
+        return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));
     }
 }

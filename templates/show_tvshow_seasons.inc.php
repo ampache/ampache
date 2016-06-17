@@ -37,8 +37,8 @@ $thcount  = 6;
     ?></th>
         <?php 
 } ?>
-            <th class="cel_season essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'),'season_sort_season'); ?></th>
-            <th class="cel_tvshow essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'),'season_sort_tvshow'); ?></th>
+            <th class="cel_season essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_season'); ?></th>
+            <th class="cel_tvshow essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_tvshow'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
             <?php if (User::is_registered()) {
     ?>
@@ -66,10 +66,10 @@ $thcount  = 6;
     <tbody>
         <?php
         if (AmpConfig::get('ratings')) {
-            Rating::build_cache('album',$object_ids);
+            Rating::build_cache('album', $object_ids);
         }
         if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('album',$object_ids);
+            Userflag::build_cache('album', $object_ids);
         }
 
         foreach ($object_ids as $season_id) {
@@ -104,8 +104,8 @@ $thcount  = 6;
     ?></th>
         <?php 
 } ?>
-            <th class="cel_season"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'),'season_sort_name_bottom'); ?></th>
-            <th class="cel_tvshow"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'),'season_sort_artist_bottom'); ?></th>
+            <th class="cel_season"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_name_bottom'); ?></th>
+            <th class="cel_tvshow"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_artist_bottom'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
             <?php if (User::is_registered()) {
     ?>

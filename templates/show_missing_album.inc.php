@@ -26,7 +26,7 @@ $web_path = AmpConfig::get('web_path');
 $title = scrub_out($walbum->name) . '&nbsp;(' . $walbum->year . ')';
 $title .= '&nbsp;-&nbsp;' . $walbum->f_artist_link;
 ?>
-<?php UI::show_box_top($title,'info-box missing'); ?>
+<?php UI::show_box_top($title, 'info-box missing'); ?>
 <div class="item_art">
 <?php
 // Attempt to find the art.

@@ -60,7 +60,7 @@ switch ($action) {
             exit;
         }
 
-        if (!Core::form_verify('add_share','post')) {
+        if (!Core::form_verify('add_share', 'post')) {
             UI::access_denied();
             exit;
         }

@@ -20,8 +20,8 @@
  *
  */
 
-$last_seen   = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) : T_('Never');
-$create_date = $client->create_date ? date("m\/d\/y - H:i",$client->create_date) : T_('Unknown');
+$last_seen   = $client->last_seen ? date("m\/d\/y - H:i", $client->last_seen) : T_('Never');
+$create_date = $client->create_date ? date("m\/d\/y - H:i", $client->create_date) : T_('Unknown');
 $client->format();
 ?>
 <?php UI::show_box_top($client->f_name); ?>
@@ -58,7 +58,7 @@ if ($client->f_avatar) {
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Display Name'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_name; ?>
-        <?php if (Access::check('interface','25') && AmpConfig::get('sociable')) {
+        <?php if (Access::check('interface', '25') && AmpConfig::get('sociable')) {
     ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo AmpConfig::get('web_path');
     ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username;
@@ -68,7 +68,7 @@ if ($client->f_avatar) {
             </a>
         <?php 
 } ?>
-        <?php if (Access::check('interface','100')) {
+        <?php if (Access::check('interface', '100')) {
     ?>
             <a href="<?php echo AmpConfig::get('web_path');
     ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id;
@@ -94,7 +94,7 @@ if ($client->f_avatar) {
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Last Seen'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
     <?php $rowparity = UI::flip_class(); ?>
-    <?php if (Access::check('interface','50')) {
+    <?php if (Access::check('interface', '50')) {
     ?>
     <dt class="<?php echo $rowparity;
     ?>"><?php echo T_('Activity');

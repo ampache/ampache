@@ -105,7 +105,7 @@ class TVShow_Season extends database_object implements library_item
     private function _get_extra_info()
     {
         // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('tvshow_extra', $this->id) ) {
+        if (parent::is_cached('tvshow_extra', $this->id)) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
             $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " .
@@ -114,7 +114,7 @@ class TVShow_Season extends database_object implements library_item
 
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
-            parent::add_to_cache('tvshow_extra',$this->id,$row);
+            parent::add_to_cache('tvshow_extra', $this->id, $row);
         }
 
         /* Set Object Vars */

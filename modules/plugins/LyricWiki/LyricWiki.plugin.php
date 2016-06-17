@@ -87,4 +87,4 @@ class Ampachelyricwiki
         return false;
     } // get_lyrics
 } // end Ampachelyricwiki
-?>
+;

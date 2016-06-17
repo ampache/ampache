@@ -57,8 +57,8 @@ class AmpacheBitly
             return false;
         }
 
-        Preference::insert('bitly_username','Bit.ly username','','75','string','plugins',$this->name);
-        Preference::insert('bitly_api_key','Bit.ly api key','','75','string','plugins',$this->name);
+        Preference::insert('bitly_username', 'Bit.ly username', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('bitly_api_key', 'Bit.ly api key', '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -118,17 +118,17 @@ class AmpacheBitly
         if (strlen(trim($data['bitly_username']))) {
             $this->bitly_username = trim($data['bitly_username']);
         } else {
-            debug_event($this->name,'No Bit.ly username, shortener skipped','3');
+            debug_event($this->name, 'No Bit.ly username, shortener skipped', '3');
             return false;
         }
         if (strlen(trim($data['bitly_api_key']))) {
             $this->bitly_api_key = trim($data['bitly_api_key']);
         } else {
-            debug_event($this->name,'No Bit.ly api key, shortener skipped','3');
+            debug_event($this->name, 'No Bit.ly api key, shortener skipped', '3');
             return false;
         }
 
         return true;
     } // load
 } // end AmpacheBitly
-?>
+;

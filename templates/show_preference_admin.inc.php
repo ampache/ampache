@@ -33,7 +33,7 @@ UI::show_box_top(T_('Preference Administration'));
     <th class="cel_level"><?php echo T_('Level'); ?></th>
 </tr>
 <?php foreach ($preferences as $preference) {
-    unset($is_25,$is_5,$is_100);
+    unset($is_25, $is_5, $is_100);
     ?>
 <tr class="<?php echo UI::flip_class();
     ?>">

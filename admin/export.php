@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','100')) {
+if (!Access::check('interface', '100')) {
     UI::access_denied();
     exit;
 }
@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
         header("Content-Transfer-Encoding: binary");
         header("Cache-control: public");
 
-        $date = date("d/m/Y",time());
+        $date = date("d/m/Y", time());
 
         switch ($_REQUEST['export_format']) {
             case 'itunes':

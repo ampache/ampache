@@ -20,7 +20,7 @@
  *
  */
 
-$htmllang = str_replace("_","-",AmpConfig::get('lang'));
+$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
 
 $_SESSION['login'] = true;

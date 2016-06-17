@@ -63,7 +63,7 @@
 } ?>
     </ul>
   </li>
-<?php if (Access::check('interface','100')) {
+<?php if (Access::check('interface', '100')) {
     ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config');
     ?>"><?php echo T_('Server Config');

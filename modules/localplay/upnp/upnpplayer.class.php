@@ -200,11 +200,11 @@ class UPnPPlayer
     private function CallAsyncURL($url)
     {
         $ch = curl_init();
-        curl_setopt( $ch, CURLOPT_URL, $url );
-        curl_setopt( $ch, CURLOPT_FRESH_CONNECT, true );
-        curl_setopt( $ch, CURLOPT_HEADER, false );
-        curl_exec( $ch );
-        curl_close( $ch );
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_exec($ch);
+        curl_close($ch);
     }
 
     /**
@@ -332,7 +332,7 @@ class UPnPPlayer
         $instanceId    = 0;
         $channel       = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice( 'SetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('SetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel,
             'DesiredVolume' => $desiredVolume
@@ -349,7 +349,7 @@ class UPnPPlayer
         $instanceId = 0;
         $channel    = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice( 'GetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('GetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel
         ));
@@ -385,4 +385,4 @@ class UPnPPlayer
         debug_event('upnpPlayer', 'ReadIndState:' . $this->_intState, 5);
     }
 } // End UPnPPlayer Class
-?>
+;

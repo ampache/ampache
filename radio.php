@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        if (!Core::form_verify('add_radio','post')) {
+        if (!Core::form_verify('add_radio', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
         } else {
             $body  = T_('Radio Station Added');
             $title = '';
-            show_confirmation($title,$body,AmpConfig::get('web_path') . '/browse.php?action=live_stream');
+            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=live_stream');
         }
     break;
     case 'show':

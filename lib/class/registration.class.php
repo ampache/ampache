@@ -124,13 +124,13 @@ Website: %s
         }
 
         /* Check for existance */
-        $fp = fopen($filename,'r');
+        $fp = fopen($filename, 'r');
 
         if (!$fp) {
             return false;
         }
 
-        $data = fread($fp,filesize($filename));
+        $data = fread($fp, filesize($filename));
 
         /* Scrub and show */
         echo $data;

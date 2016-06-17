@@ -21,7 +21,7 @@
  */
 
 UI::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
-Catalog::update_single_item($type,$object_id);
+Catalog::update_single_item($type, $object_id);
 ?>
 <br />
 <strong><?php echo T_('Update from Tags Complete'); ?></strong>&nbsp;&nbsp;

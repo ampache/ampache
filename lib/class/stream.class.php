@@ -378,7 +378,7 @@ class Stream
                 'AND `np`.`insertion` = `np2`.`max_insertion` ';
         }
 
-        if (!Access::check('interface','100')) {
+        if (!Access::check('interface', '100')) {
             // We need to check only for users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {
@@ -481,12 +481,12 @@ class Stream
         }
 
         if (AmpConfig::get('force_http_play')) {
-            $web_path = str_replace("https://", "http://",$web_path);
+            $web_path = str_replace("https://", "http://", $web_path);
         }
 
         $http_port = AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
-            if (preg_match("/:(\d+)/",$web_path,$matches)) {
+            if (preg_match("/:(\d+)/", $web_path, $matches)) {
                 $web_path = str_replace(':' . $matches['1'], ':' . $http_port, $web_path);
             } else {
                 $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, $web_path);

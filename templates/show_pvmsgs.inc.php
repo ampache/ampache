@@ -47,10 +47,10 @@ $thcount = 5;
     <thead>
         <tr class="th-top">
             <th class="cel_select essential persist"></th>
-            <th class="cel_subject essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=subject', T_('Subject'),'pvmsg_sort_subject'); ?></th>
-            <th class="cel_from_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=from_user', T_('Sender'),'pvmsg_sort_from_user'); ?></th>
-            <th class="cel_to_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=to_user', T_('Recipient'),'pvmsg_sort_to_user'); ?></th>
-            <th class="cel_creation_date essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=creation_date', T_('Date'),'pvmsg_sort_creation_date'); ?></th>
+            <th class="cel_subject essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=subject', T_('Subject'), 'pvmsg_sort_subject'); ?></th>
+            <th class="cel_from_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=from_user', T_('Sender'), 'pvmsg_sort_from_user'); ?></th>
+            <th class="cel_to_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=to_user', T_('Recipient'), 'pvmsg_sort_to_user'); ?></th>
+            <th class="cel_creation_date essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=creation_date', T_('Date'), 'pvmsg_sort_creation_date'); ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -83,10 +83,10 @@ $thcount = 5;
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_select essential persist"></th>
-            <th class="cel_subject essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=subject', T_('Subject'),'pvmsg_sort_subject'); ?></th>
-            <th class="cel_from_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=from_user', T_('Sender'),'pvmsg_sort_from_user'); ?></th>
-            <th class="cel_to_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=to_user', T_('Recipient'),'pvmsg_sort_to_user'); ?></th>
-            <th class="cel_creation_date essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=creation_date', T_('Date'),'pvmsg_sort_creation_date'); ?></th>
+            <th class="cel_subject essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=subject', T_('Subject'), 'pvmsg_sort_subject'); ?></th>
+            <th class="cel_from_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=from_user', T_('Sender'), 'pvmsg_sort_from_user'); ?></th>
+            <th class="cel_to_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=to_user', T_('Recipient'), 'pvmsg_sort_to_user'); ?></th>
+            <th class="cel_creation_date essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=creation_date', T_('Date'), 'pvmsg_sort_creation_date'); ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </tfoot>

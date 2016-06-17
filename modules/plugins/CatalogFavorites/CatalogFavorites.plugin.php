@@ -56,8 +56,8 @@ class AmpacheCatalogFavorites
             return false;
         }
 
-        Preference::insert('catalogfav_max_items','Catalog favorites max items','5','25','integer','plugins',$this->name);
-        Preference::insert('catalogfav_gridview','Catalog favorites grid view display','1','25','boolean','plugins',$this->name);
+        Preference::insert('catalogfav_max_items', 'Catalog favorites max items', '5', '25', 'integer', 'plugins', $this->name);
+        Preference::insert('catalogfav_gridview', 'Catalog favorites grid view display', '1', '25', 'boolean', 'plugins', $this->name);
 
         return true;
     }
@@ -83,7 +83,7 @@ class AmpacheCatalogFavorites
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version < 2) {
-            Preference::insert('catalogfav_gridview','Catalog favorites grid view display','1','25','boolean','plugins');
+            Preference::insert('catalogfav_gridview', 'Catalog favorites grid view display', '1', '25', 'boolean', 'plugins');
         }
         return true;
     }
@@ -117,12 +117,12 @@ class AmpacheCatalogFavorites
                         echo '<span style="font-weight: bold;">' . $item->f_link . '</span> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
-                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'],'play', T_('Play'),'play_' . $userflag['type'] . '_' . $userflag['id']);
+                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'], 'play', T_('Play'), 'play_' . $userflag['type'] . '_' . $userflag['id']);
                             if (Stream_Playlist::check_autoplay_append()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&append=true','play_add', T_('Play last'),'addplay_' . $userflag['type'] . '_' . $userflag['id']);
+                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&append=true', 'play_add', T_('Play last'), 'addplay_' . $userflag['type'] . '_' . $userflag['id']);
                             }
                         }
-                        echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'],'add', T_('Add to temporary playlist'),'play_full_' . $userflag['id']);
+                        echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'], 'add', T_('Add to temporary playlist'), 'play_full_' . $userflag['id']);
                         echo '</span>';
                     }
 

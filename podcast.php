@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        if (!Core::form_verify('add_podcast','post')) {
+        if (!Core::form_verify('add_podcast', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
         } else {
             $title  = T_('Subscribed to Podcast');
             $body   = '';
-            show_confirmation($title,$body,AmpConfig::get('web_path') . '/browse.php?action=podcast');
+            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
     break;
     case 'delete':

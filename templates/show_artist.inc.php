@@ -79,7 +79,7 @@ if (AmpConfig::get('lastfm_api_key')) {
     ?>
     <div style="display:table-cell;" id="userflag_<?php echo $artist->id;
     ?>_artist">
-            <?php Userflag::show($artist->id,'artist');
+            <?php Userflag::show($artist->id, 'artist');
     ?>
     </div>
     <?php 
@@ -148,17 +148,17 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($show_direct_play) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id,'play', T_('Play all'),'directplay_full_' . $artist->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play', T_('Play all'), 'directplay_full_' . $artist->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, T_('Play all'),'directplay_full_text_' . $artist->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, T_('Play all'), 'directplay_full_text_' . $artist->id);
     ?>
         </li>
             <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true','play_add', T_('Play all last'),'addplay_artist_' . $artist->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_artist_' . $artist->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', T_('Play all last'),'addplay_artist_text_' . $artist->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', T_('Play all last'), 'addplay_artist_text_' . $artist->id);
     ?>
         </li>
             <?php 
@@ -170,16 +170,16 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     ?>
         <li>
             <?php /* HINT: Artist Fullname */ ?>
-            <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add all to temporary playlist'),'add_' . $artist->id);
+            <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id, 'add', T_('Add all to temporary playlist'), 'add_' . $artist->id);
     ?>
-            <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id, T_('Add all to temporary playlist'),'add_text_' . $artist->id);
+            <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id, T_('Add all to temporary playlist'), 'add_text_' . $artist->id);
     ?>
         </li>
         <li>
             <?php /* HINT: Artist Fullname */ ?>
-            <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random all to temporary playlist'),'random_' . $artist->id);
+            <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id, 'random', T_('Random all to temporary playlist'), 'random_' . $artist->id);
     ?>
-            <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random all to temporary playlist'),'random_text_' . $artist->id);
+            <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random all to temporary playlist'), 'random_text_' . $artist->id);
     ?>
         </li>
         <?php 
@@ -192,7 +192,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php 
 } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -224,7 +224,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php
 
 } ?>
-        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface','50')) {
+        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', '50')) {
     ?>
             <?php if (AmpConfig::get('statistical_graphs')) {
     ?>
@@ -342,7 +342,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </div>
 <?php
 if (AmpConfig::get('wanted')) {
-    echo Ajax::observe('missing_albums_link','click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums'));
+    echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums'));
     ?>
         <div id="missing_albums" class="tab_content">
         <?php UI::show_box_top(T_('Missing Albums'), 'info-box');
@@ -354,7 +354,7 @@ if (AmpConfig::get('wanted')) {
 } ?>
 <?php
 if (AmpConfig::get('show_similar')) {
-    echo Ajax::observe('similar_artist_link','click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist'));
+    echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist'));
     ?>
         <div id="similar_artist" class="tab_content">
         <?php UI::show_box_top(T_('Similar Artists'), 'info-box');
@@ -366,7 +366,7 @@ if (AmpConfig::get('show_similar')) {
 } ?>
 <?php
 if (AmpConfig::get('show_concerts')) {
-    echo Ajax::observe('concerts_link','click', Ajax::action('?page=index&action=concerts&artist=' . $artist->id, 'concerts'));
+    echo Ajax::observe('concerts_link', 'click', Ajax::action('?page=index&action=concerts&artist=' . $artist->id, 'concerts'));
     ?>
         <div id="concerts" class="tab_content">
         <?php UI::show_box_top(T_('Events'), 'info-box');
@@ -378,7 +378,7 @@ if (AmpConfig::get('show_concerts')) {
 } ?>
 <?php
 if (AmpConfig::get('label')) {
-    echo Ajax::observe('labels_link','click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels'));
+    echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels'));
     ?>
         <div id="labels" class="tab_content">
         <?php UI::show_box_top(T_('Labels'), 'info-box');

@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','75')) {
+if (!Access::check('interface', '75')) {
     UI::access_denied();
     exit();
 }
@@ -67,7 +67,7 @@ switch ($_REQUEST['action']) {
             $body      = T_('Your E-mail was not sent.');
         }
         $url = AmpConfig::get('web_path') . '/admin/mail.php';
-        show_confirmation($title,$body,$url);
+        show_confirmation($title, $body, $url);
 
     break;
     default:

@@ -20,4 +20,4 @@
  *
  */
 ?>
-<th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=clip&sort=artist', T_('Artist'),'sort_video_artist'); ?></th>
+<th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=clip&sort=artist', T_('Artist'), 'sort_video_artist'); ?></th>

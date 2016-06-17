@@ -48,7 +48,7 @@
     ?></td>
                     <td class="cel_filename"><?php echo $song->file;
     ?></td>
-                    <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y",$song->addition_time);
+                    <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y", $song->addition_time);
     ?></td>
                 </tr>
             <?php 

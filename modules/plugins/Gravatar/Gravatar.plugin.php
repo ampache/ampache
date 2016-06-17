@@ -96,4 +96,4 @@ class AmpacheGravatar
         return true;
     } // load
 } // end AmpacheGravatar
-?>
+;

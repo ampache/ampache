@@ -20,7 +20,7 @@
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once 'init.php';
 require_once '../../lib/login.php';
 

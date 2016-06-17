@@ -56,7 +56,7 @@
     ?>/localplay.php?action=edit_instance&instance=<?php echo $uid;
     ?>"><?php echo UI::get_icon('edit', T_('Edit Instance'));
     ?></a>
-        <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid,'delete', T_('Delete'),'delete_instance_' . $uid);
+        <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid, 'delete', T_('Delete'), 'delete_instance_' . $uid);
     ?>
     </td>
 </tr>

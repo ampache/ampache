@@ -181,5 +181,3 @@ class SubsonicClient
         return $this->_querySubsonic($action, $o);
     }
 }
-
-?>

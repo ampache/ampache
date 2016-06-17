@@ -50,7 +50,7 @@ UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box');
     ?>
     <div style="display:table-cell;" id="userflag_<?php echo $season->id;
     ?>_tvshow_season">
-            <?php Userflag::show($season->id,'tvshow_season');
+            <?php Userflag::show($season->id, 'tvshow_season');
     ?>
     </div>
     <?php 
@@ -64,9 +64,9 @@ UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box');
         <?php if (AmpConfig::get('directplay')) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id,'play', T_('Play all'),'directplay_full_' . $season->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id, 'play', T_('Play all'), 'directplay_full_' . $season->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id, T_('Play all'),'directplay_full_text_' . $season->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id, T_('Play all'), 'directplay_full_text_' . $season->id);
     ?>
         </li>
         <?php 
@@ -74,14 +74,14 @@ UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box');
         <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true','play_add', T_('Play all last'),'addplay_season_' . $season->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_season_' . $season->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', T_('Play all last'),'addplay_season_text_' . $season->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', T_('Play all last'), 'addplay_season_text_' . $season->id);
     ?>
         </li>
         <?php 
 } ?>
-        <?php if (Access::check('interface','50')) {
+        <?php if (Access::check('interface', '50')) {
     ?>
         <li>
             <a id="<?php echo 'edit_tvshow_season_' . $season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_' . $season->id ?>', '<?php echo T_('Season edit') ?>', '')">

@@ -1225,7 +1225,7 @@ abstract class Catalog extends database_object
                 // If they've enabled resizing of images generate a thumbnail
                 if (AmpConfig::get('resize_images')) {
                     $size  = array('width' => 275, 'height' => 275);
-                    $thumb = $art->generate_thumb($image,$size ,$result['mime']);
+                    $thumb = $art->generate_thumb($image, $size, $result['mime']);
                     if (is_array($thumb)) {
                         $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
                     }
@@ -2293,7 +2293,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        return (Access::check('interface','75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
+        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
     }
 
     public static function process_action($action, $catalogs, $options = null)
@@ -2377,7 +2377,7 @@ abstract class Catalog extends database_object
                     if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
                         $songs = Song::get_from_path($options['update_path']);
                         foreach ($songs as $song_id) {
-                            Catalog::update_single_item('song',$song_id);
+                            Catalog::update_single_item('song', $song_id);
                         }
                     }
                 } // end if update

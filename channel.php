@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        if (!Core::form_verify('add_channel','post')) {
+        if (!Core::form_verify('add_channel', 'post')) {
             UI::access_denied();
             exit;
         }

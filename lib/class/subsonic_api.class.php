@@ -71,7 +71,7 @@ class Subsonic_Api
             $hex    = substr($password, 4);
             $decpwd = '';
             for ($i=0; $i<strlen($hex); $i+=2) {
-                $decpwd .= chr(hexdec(substr($hex,$i,2)));
+                $decpwd .= chr(hexdec(substr($hex, $i, 2)));
             }
             $password = $decpwd;
         }
@@ -97,7 +97,7 @@ class Subsonic_Api
         } else {
             if (substr($header, 0, 5) === "HTTP/") {
                 // if $header starts with HTTP/ assume it's the status line
-                http_response_code(curl_getinfo($ch,CURLINFO_HTTP_CODE));
+                http_response_code(curl_getinfo($ch, CURLINFO_HTTP_CODE));
             }
         }
         return strlen($header);
@@ -1181,7 +1181,7 @@ class Subsonic_Api
         self::check_version($input, "1.7.0");
 
         $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist',null,99999), Userflag::get_latest('album',null,99999), Userflag::get_latest('song',null,99999), $elementName);
+        Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist', null, 99999), Userflag::get_latest('album', null, 99999), Userflag::get_latest('song', null, 99999), $elementName);
         self::apiOutput($input, $r);
     }
 

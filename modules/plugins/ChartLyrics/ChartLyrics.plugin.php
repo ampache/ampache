@@ -88,4 +88,4 @@ class Ampachechartlyrics
         return false;
     } // get_lyrics
 } // end Ampachelyricwiki
-?>
+;

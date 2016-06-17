@@ -28,7 +28,7 @@
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <?php
-                if (Access::check('interface','75')) {
+                if (Access::check('interface', '75')) {
                     ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>

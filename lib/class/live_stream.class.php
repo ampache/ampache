@@ -193,9 +193,9 @@ class Live_Stream extends database_object implements media, library_item
 
         $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp','rtmp');
 
-        $elements = explode(":",$data['url']);
+        $elements = explode(":", $data['url']);
 
-        if (!in_array($elements['0'],$allowed_array)) {
+        if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('general', T_('Invalid URL must be mms:// , https:// or http://'));
         }
         

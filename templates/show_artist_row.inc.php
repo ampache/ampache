@@ -25,9 +25,9 @@
     <div class="cel_play_hover">
     <?php
         if ($show_direct_play) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id,'play', T_('Play'),'play_artist_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id, 'play', T_('Play'), 'play_artist_' . $libitem->id);
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_artist_' . $libitem->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_artist_' . $libitem->id);
                 if (Stream_Playlist::check_autoplay_next()) {
                     echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_artist_' . $libitem->id);
                 }
@@ -53,8 +53,8 @@ if (Art::is_enabled()) {
     <span class="cel_item_add">
     <?php
         if ($show_playlist_add) {
-            echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_artist_' . $libitem->id);
-            echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id,'random', T_('Random to temporary playlist'),'random_artist_' . $libitem->id);
+            echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_artist_' . $libitem->id);
+            echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'random', T_('Random to temporary playlist'), 'random_artist_' . $libitem->id);
             ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
                 <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
@@ -80,21 +80,21 @@ if (Art::is_enabled()) {
         if (AmpConfig::get('ratings')) {
             ?>
             <td class="cel_rating" id="rating_<?php echo $libitem->id;
-            ?>_artist"><?php Rating::show($libitem->id,'artist');
+            ?>_artist"><?php Rating::show($libitem->id, 'artist');
             ?></td>
         <?php 
         }
         if (AmpConfig::get('userflags')) {
             ?>
             <td class="cel_userflag" id="userflag_<?php echo $libitem->id;
-            ?>_artist"><?php Userflag::show($libitem->id,'artist');
+            ?>_artist"><?php Userflag::show($libitem->id, 'artist');
             ?></td>
         <?php 
         }
     }
 ?>
 <td class="cel_action">
-<?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
+<?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
     if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
         ?>
     <a href="<?php echo AmpConfig::get('web_path');

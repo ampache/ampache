@@ -112,4 +112,4 @@ class AmpacheMusicBrainz
         return $results;
     } // get_metadata
 } // end AmpacheMusicBrainz
-?>
+;

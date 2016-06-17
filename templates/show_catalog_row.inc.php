@@ -62,7 +62,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id;
     ?>
         <span id="<?php echo($button_flip_state_id);
     ?>">
-            <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, T_(ucfirst($icon)),'flip_state_' . $libitem->id);
+            <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, T_(ucfirst($icon)), 'flip_state_' . $libitem->id);
     ?>
         </span>
     <?php 

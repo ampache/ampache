@@ -28,17 +28,17 @@
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <th class="cel_id essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', T_('#'),'channel_sort_id'); ?></th>
-            <th class="cel_name essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=name', T_('Name'),'channel_sort_name'); ?></th>
-            <th class="cel_interface essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=interface', T_('Interface'),'channel_sort_interface'); ?></th>
-            <th class="cel_port essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=port', T_('Port'),'channel_sort_port'); ?></th>
+            <th class="cel_id essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', T_('#'), 'channel_sort_id'); ?></th>
+            <th class="cel_name essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=name', T_('Name'), 'channel_sort_name'); ?></th>
+            <th class="cel_interface essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=interface', T_('Interface'), 'channel_sort_interface'); ?></th>
+            <th class="cel_port essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=port', T_('Port'), 'channel_sort_port'); ?></th>
             <th class="cel_data optional"><?php echo T_('Stream Source'); ?></th>
             <!--<th class="cel_random"><?php echo T_('Random'); ?></th>
             <th class="cel_loop"><?php echo T_('Loop'); ?></th>-->
             <th class="cel_streamtype optional"><?php echo T_('Stream Type'); ?></th>
             <th class="cel_bitrate optional"><?php echo T_('Bitrate'); ?></th>
             <th class="cel_startdate optional"><?php echo T_('Start Date'); ?></th>
-            <th class="cel_listeners optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=listeners', T_('Listeners'),'channel_sort_listeners'); ?></th>
+            <th class="cel_listeners optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=listeners', T_('Listeners'), 'channel_sort_listeners'); ?></th>
             <th class="cel_streamurl essential"><?php echo T_('Stream Url'); ?></th>
             <th class="cel_state optional"><?php echo T_('State'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>

@@ -25,9 +25,9 @@
     <div class="cel_play_hover">
     <?php
         if (AmpConfig::get('directplay')) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $libitem->id,'play', T_('Play'),'play_season_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $libitem->id, 'play', T_('Play'), 'play_season_' . $libitem->id);
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_season_' . $libitem->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_season_' . $libitem->id);
             }
         }
     ?>
@@ -50,7 +50,7 @@
             ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id;
             ?>_tvshow_season">
-        <?php Rating::show($libitem->id,'tvshow_season');
+        <?php Rating::show($libitem->id, 'tvshow_season');
             ?>
     </td>
     <?php 
@@ -59,7 +59,7 @@
             ?>
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id;
             ?>_tvshow_season">
-        <?php Userflag::show($libitem->id,'tvshow_season');
+        <?php Userflag::show($libitem->id, 'tvshow_season');
             ?>
     </td>
     <?php 
@@ -68,7 +68,7 @@
 ?>
 <td class="cel_action">
 <?php
-    if (Access::check('interface','50')) {
+    if (Access::check('interface', '50')) {
         ?>
     <a id="<?php echo 'edit_tvshow_season_' . $libitem->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_season_' . $libitem->id ?>', '<?php echo T_('Season edit') ?>', 'tvshow_season_')">
         <?php echo UI::get_icon('edit', T_('Edit'));

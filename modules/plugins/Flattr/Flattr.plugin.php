@@ -56,7 +56,7 @@ class AmpacheFlattr
             return false;
         }
 
-        Preference::insert('flattr_user_id','Flattr User ID','',25,'string','plugins',$this->name);
+        Preference::insert('flattr_user_id', 'Flattr User ID', '', 25, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -107,7 +107,7 @@ class AmpacheFlattr
 
         $this->user_id = trim($data['flattr_user_id']);
         if (!strlen($this->user_id)) {
-            debug_event($this->name,'No Flattr User ID, user field plugin skipped','3');
+            debug_event($this->name, 'No Flattr User ID, user field plugin skipped', '3');
             return false;
         }
 

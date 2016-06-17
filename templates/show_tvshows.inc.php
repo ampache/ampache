@@ -39,7 +39,7 @@ $thcount  = 8;
     ?></th>
         <?php 
 } ?>
-            <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'),'tvshow_sort_name'); ?></th>
+            <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'), 'tvshow_sort_name'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
@@ -70,10 +70,10 @@ $thcount  = 8;
         <?php
         // Cache the ratings we are going to use
         if (AmpConfig::get('ratings')) {
-            Rating::build_cache('tvshow',$object_ids);
+            Rating::build_cache('tvshow', $object_ids);
         }
         if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('tvshow',$object_ids);
+            Userflag::build_cache('tvshow', $object_ids);
         }
 
         /* Foreach through every tv show that has been passed to us */
@@ -109,7 +109,7 @@ $thcount  = 8;
     ?></th>
         <?php 
 } ?>
-            <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'),'tvshow_sort_name'); ?></th>
+            <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'), 'tvshow_sort_name'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>

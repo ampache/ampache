@@ -28,7 +28,7 @@ $thcount  = 7;
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_episode_sort_title'); ?></th>
+            <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_episode_sort_title'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_podcast optional"><?php echo T_('Podcast'); ?></th>
             <th class="cel_time optional"><?php echo T_('Time'); ?></th>
@@ -60,10 +60,10 @@ $thcount  = 7;
     <tbody>
         <?php
         if (AmpConfig::get('ratings')) {
-            Rating::build_cache('podcast_episode',$object_ids);
+            Rating::build_cache('podcast_episode', $object_ids);
         }
         if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('podcast_episode',$object_ids);
+            Userflag::build_cache('podcast_episode', $object_ids);
         }
 
         foreach ($object_ids as $episode_id) {
@@ -98,7 +98,7 @@ $thcount  = 7;
     ?></th>
         <?php 
 } ?>
-            <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_episode_sort_title_bottom'); ?></th>
+            <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_episode_sort_title_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>

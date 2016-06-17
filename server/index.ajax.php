@@ -236,7 +236,7 @@ switch ($_REQUEST['action']) {
                 $button = $_REQUEST['button'];
             break;
             case 'admin':
-                if (Access::check('interface','100')) {
+                if (Access::check('interface', '100')) {
                     $button = $_REQUEST['button'];
                 } else {
                     exit;
@@ -254,7 +254,7 @@ switch ($_REQUEST['action']) {
         ob_end_clean();
     break;
     case 'start_channel':
-        if (Access::check('interface','75')) {
+        if (Access::check('interface', '75')) {
             ob_start();
             $channel = new Channel($_REQUEST['id']);
             if ($channel->id) {
@@ -269,7 +269,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'stop_channel':
-        if (Access::check('interface','75')) {
+        if (Access::check('interface', '75')) {
             ob_start();
             $channel = new Channel($_REQUEST['id']);
             if ($channel->id) {

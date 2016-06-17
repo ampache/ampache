@@ -56,7 +56,7 @@ class Ajax
     {
         $non_quoted = array('document', 'window');
 
-        if (in_array($source,$non_quoted)) {
+        if (in_array($source, $non_quoted)) {
             $source_txt = $source;
         } else {
             $source_txt = "'#$source'";
@@ -105,7 +105,7 @@ class Ajax
 
         $non_quoted = array('document','window');
 
-        if (in_array($source,$non_quoted)) {
+        if (in_array($source, $non_quoted)) {
             $source_txt = $source;
         } else {
             $source_txt = "'$source'";

@@ -33,7 +33,7 @@ require $prefix . '/templates/install_header.inc.php';
             </p>
             <ul>
                 <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
-                <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.php.dist'); ?></li>
+                <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'), $prefix . '/sql/ampache.sql', $prefix . '/config/ampache.cfg.php.dist'); ?></li>
             </ul>
             <p>
                 <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache.cfg.php'); ?>

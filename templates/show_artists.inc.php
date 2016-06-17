@@ -39,7 +39,7 @@ $thcount  = 8;
     ?></th>
             <?php 
 } ?>
-            <th class="cel_artist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
+            <th class="cel_artist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
@@ -78,10 +78,10 @@ $thcount  = 8;
         <?php
         // Cache the ratings we are going to use
         if (AmpConfig::get('ratings')) {
-            Rating::build_cache('artist',$object_ids);
+            Rating::build_cache('artist', $object_ids);
         }
         if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('artist',$object_ids);
+            Userflag::build_cache('artist', $object_ids);
         }
 
         $show_direct_play_cfg = AmpConfig::get('directplay');
@@ -126,7 +126,7 @@ $thcount  = 8;
     ?></th>
             <?php 
 } ?>
-            <th class="cel_artist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
+            <th class="cel_artist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>

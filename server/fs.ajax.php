@@ -22,7 +22,7 @@
 
  // jsTree file system browser
 
-define('AJAX_INCLUDE','1');
+define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 $rootdir = Upload::get_root();

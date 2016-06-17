@@ -52,11 +52,11 @@ $status = $localplay->status();
             </td>
             <td<?php echo $class;
             ?>>
-                <?php echo $localplay->format_name($object['name'],$object['id']);
+                <?php echo $localplay->format_name($object['name'], $object['id']);
             ?>
             </td>
             <td class="cel_action">
-            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']),'delete', T_('Delete'),'localplay_delete_' . intval($object['id']));
+            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']), 'delete', T_('Delete'), 'localplay_delete_' . intval($object['id']));
             ?>
             </td>
         </tr>

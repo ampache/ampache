@@ -20,8 +20,8 @@
  *
  */
 
-$string = $democratic->is_enabled() ? sprintf(T_('%s Playlist') ,$democratic->name) : T_('Democratic Playlist');
-UI::show_box_top($string , 'info-box');
+$string = $democratic->is_enabled() ? sprintf(T_('%s Playlist'), $democratic->name) : T_('Democratic Playlist');
+UI::show_box_top($string, 'info-box');
 ?>
 <div id="information_actions">
 <ul>
@@ -34,7 +34,7 @@ UI::show_box_top($string , 'info-box');
 </li>
 <?php 
 } ?>
-<?php if (Access::check('interface','75')) {
+<?php if (Access::check('interface', '75')) {
     ?>
 <li>
     <a href="<?php echo AmpConfig::get('web_path');
@@ -47,15 +47,15 @@ UI::show_box_top($string , 'info-box');
 <?php if ($democratic->is_enabled()) {
     ?>
 <li>
-    <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id,'all', T_('Play'),'play_democratic');
+    <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic');
     ?>
-    <?php echo Ajax::text('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, T_('Play Democratic Playlist'),'play_democratic_full_text');
+    <?php echo Ajax::text('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, T_('Play Democratic Playlist'), 'play_democratic_full_text');
     ?>
 </li>
 <li>
-    <?php echo Ajax::button('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id,'delete', T_('Clear Playlist'),'clear_democratic');
+    <?php echo Ajax::button('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id, 'delete', T_('Clear Playlist'), 'clear_democratic');
     ?>
-    <?php echo Ajax::text('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id, T_('Clear Playlist'),'clear_democratic_full_text');
+    <?php echo Ajax::text('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id, T_('Clear Playlist'), 'clear_democratic_full_text');
     ?>
 </li>
 <?php 
@@ -76,7 +76,7 @@ UI::show_box_top($string , 'info-box');
      echo " + '&reloadpage=1'";
  } ?>;
                     }
-                }, <?php echo (AmpConfig::get('refresh_limit') * 1000); ?>);
+                }, <?php echo(AmpConfig::get('refresh_limit') * 1000); ?>);
             }
         }
         <?php if (isset($_GET['reloadpage'])) {

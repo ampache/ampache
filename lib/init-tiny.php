@@ -60,7 +60,7 @@ if (file_exists($composer_autoload)) {
 }
 
 // Check to see if this is http or https
-if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' )
+if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
     || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
     $http_type = 'https://';
 } else {

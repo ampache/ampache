@@ -93,7 +93,7 @@ switch ($_REQUEST['action']) {
         // First add them to the active playlist
         if (is_array($object_ids)) {
             foreach ($object_ids as $object_id) {
-                $GLOBALS['user']->playlist->add_object($object_id,'song');
+                $GLOBALS['user']->playlist->add_object($object_id, 'song');
             }
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');

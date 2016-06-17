@@ -164,4 +164,4 @@ class AmpacheOmdb
         return Art::gather_metadata_plugin($this, $type, $options);
     }
 } // end AmpacheOmdb
-?>
+;

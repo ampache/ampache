@@ -24,7 +24,7 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) {
-    echo Ajax::button('?page=stream&action=directplay&object_type=channel&object_id=' . $libitem->id,'play', T_('Play'),'play_channel_' . $libitem->id);
+    echo Ajax::button('?page=stream&action=directplay&object_type=channel&object_id=' . $libitem->id, 'play', T_('Play'), 'play_channel_' . $libitem->id);
 } ?>
     </div>
 </td>
@@ -33,8 +33,8 @@
 <td class="cel_interface"><?php echo $libitem->interface; ?></td>
 <td class="cel_port"><?php echo $libitem->port; ?></td>
 <td class="cel_data"><?php echo $libitem->get_target_object()->f_link; ?></td>
-<!--<td class="cel_random"><?php echo ($libitem->random ? T_('Yes') : T_('No')); ?></td>
-<td class="cel_loop"><?php echo ($libitem->loop ? T_('Yes') : T_('No')); ?></td>-->
+<!--<td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_loop"><?php echo($libitem->loop ? T_('Yes') : T_('No')); ?></td>-->
 <td class="cel_streamtype"><?php echo $libitem->stream_type; ?></td>
 <td class="cel_bitrate"><?php echo $libitem->bitrate; ?></td>
 <td class="cel_startdate"><?php echo date("c", $libitem->start_date); ?></td>

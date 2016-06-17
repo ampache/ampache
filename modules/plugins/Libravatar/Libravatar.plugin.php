@@ -97,4 +97,4 @@ class AmpacheLibravatar
         return true;
     } // load
 } // end AmpacheLibravatar
-?>
+;

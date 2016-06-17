@@ -24,12 +24,12 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) {
-    echo Ajax::button('?page=stream&action=directplay&object_type=broadcast&object_id=' . $libitem->id,'play', T_('Play'),'play_broadcast_' . $libitem->id);
+    echo Ajax::button('?page=stream&action=directplay&object_type=broadcast&object_id=' . $libitem->id, 'play', T_('Play'), 'play_broadcast_' . $libitem->id);
 } ?>
     </div>
 </td>
 <td class="cel_name"><?php echo $libitem->name; ?></td>
 <td class="cel_genre"><?php echo $libitem->f_tags; ?></td>
-<td class="cel_started"><?php echo ($libitem->started ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_started"><?php echo($libitem->started ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_listeners"><?php echo $libitem->listeners; ?></td>
 <td class="cel_action"><?php $libitem->show_action_buttons(); ?></td>

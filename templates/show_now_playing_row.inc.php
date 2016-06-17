@@ -119,7 +119,7 @@ $(document).ready(function(){
             ?></label>
                 <div id="rating_<?php echo $media->id;
             ?>_song">
-                    <?php Rating::show($media->id,'song');
+                    <?php Rating::show($media->id, 'song');
             ?>
                 </div>
             </div>
@@ -132,7 +132,7 @@ $(document).ready(function(){
             ?></label>
                 <div id="userflag_<?php echo $media->id;
             ?>_song">
-                    <?php Userflag::show($media->id,'song');
+                    <?php Userflag::show($media->id, 'song');
             ?>
                 </div>
             </div>

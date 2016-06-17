@@ -214,7 +214,7 @@ class Wanted extends database_object
     {
         $wartist = array();
 
-        if (parent::is_cached('missing_artist', $mbid) ) {
+        if (parent::is_cached('missing_artist', $mbid)) {
             $wartist = parent::get_from_cache('missing_artist', $mbid);
         } else {
             $mb              = new MusicBrainz(new RequestsHttpAdapter());
@@ -408,14 +408,14 @@ class Wanted extends database_object
         if ($this->id) {
             if (!$this->accepted) {
                 if ($GLOBALS['user']->has_access('75')) {
-                    echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid,'enable', T_('Accept'),'wanted_accept_' . $this->mbid);
+                    echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'), 'wanted_accept_' . $this->mbid);
                 }
             }
             if ($GLOBALS['user']->has_access('75') || (Wanted::has_wanted($this->mbid) && $this->accepted != '1')) {
-                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid,'disable', T_('Remove'),'wanted_remove_' . $this->mbid);
+                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
         } else {
-            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode($this->name) . '&year=' . $this->year,'add_wanted', T_('Add to wanted list'),'wanted_add_' . $this->mbid);
+            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode($this->name) . '&year=' . $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
         }
     }
 

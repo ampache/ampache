@@ -152,7 +152,7 @@ class Random
     {
         $results = array();
 
-        $data      = $GLOBALS['user']->get_recently_played('1','artist');
+        $data      = $GLOBALS['user']->get_recently_played('1', 'artist');
         $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";

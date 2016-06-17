@@ -58,7 +58,7 @@
 <tr class="<?php echo UI::flip_class();
     ?>">
     <td class="cel_date">
-        <?php echo date("d/m/Y H\hi",$data['date']);
+        <?php echo date("d/m/Y H\hi", $data['date']);
     ?>
     </td>
     <td class="cel_ipaddress">

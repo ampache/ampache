@@ -51,8 +51,8 @@ class AmpacheDiscogs
         if (Preference::exists('discogs_api_key')) {
             return false;
         }
-        Preference::insert('discogs_api_key','Discogs consumer key','','75','string','plugins',$this->name);
-        Preference::insert('discogs_secret_api_key','Discogs secret','','75','string','plugins',$this->name);
+        Preference::insert('discogs_api_key', 'Discogs consumer key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('discogs_secret_api_key', 'Discogs secret', '', '75', 'string', 'plugins', $this->name);
         return true;
     } // install
 
@@ -80,13 +80,13 @@ class AmpacheDiscogs
         if (strlen(trim($data['discogs_api_key']))) {
             $this->api_key = trim($data['discogs_api_key']);
         } else {
-            debug_event($this->name,'No Discogs api key, metadata plugin skipped','3');
+            debug_event($this->name, 'No Discogs api key, metadata plugin skipped', '3');
             return false;
         }
         if (strlen(trim($data['discogs_secret_api_key']))) {
             $this->secret = trim($data['discogs_secret_api_key']);
         } else {
-            debug_event($this->name,'No Discogs secret, metadata plugin skipped','3');
+            debug_event($this->name, 'No Discogs secret, metadata plugin skipped', '3');
             return false;
         }
         

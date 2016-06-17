@@ -20,11 +20,11 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('Options'),'info-box'); ?>
+<?php UI::show_box_top(T_('Options'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
-    <?php echo Ajax::button('?action=basket&type=browse_set&browse_id=' . $browse->id,'add', T_('Add Search Results'),'add_search_results'); ?>
+    <?php echo Ajax::button('?action=basket&type=browse_set&browse_id=' . $browse->id, 'add', T_('Add Search Results'), 'add_search_results'); ?>
     <?php echo T_('Add Search Results'); ?>
 </li>
     <?php if (Access::check_function('batch_download') && check_can_zip($_REQUEST['type'])) {

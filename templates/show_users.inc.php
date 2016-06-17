@@ -47,9 +47,9 @@ $web_path = AmpConfig::get('web_path');
 </colgroup>
 <thead>
     <tr class="th-top">
-      <th class="cel_username essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Fullname'),'users_sort_fullname'); ?> (<?php echo Ajax::text('?page=browse&action=set_sort&type=user&sort=username', T_('Username'),'users_sort_username');?>)</th>
-      <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'),'users_sort_lastseen'); ?></th>
-      <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'),'users_sort_createdate'); ?></th>
+      <th class="cel_username essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Fullname'), 'users_sort_fullname'); ?> (<?php echo Ajax::text('?page=browse&action=set_sort&type=user&sort=username', T_('Username'), 'users_sort_username');?>)</th>
+      <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen'); ?></th>
+      <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate'); ?></th>
       <?php if (Access::check('interface', 50)) {
     ?>
       <th class="cel_activity"><?php echo T_('Activity');
@@ -78,8 +78,8 @@ $web_path = AmpConfig::get('web_path');
 foreach ($object_ids as $user_id) {
     $libitem = new User($user_id);
     $libitem->format();
-    $last_seen      = $libitem->last_seen ? date("m\/d\/Y - H:i",$libitem->last_seen) : T_('Never');
-    $create_date    = $libitem->create_date ? date("m\/d\/Y - H:i",$libitem->create_date) : T_('Unknown');
+    $last_seen      = $libitem->last_seen ? date("m\/d\/Y - H:i", $libitem->last_seen) : T_('Never');
+    $create_date    = $libitem->create_date ? date("m\/d\/Y - H:i", $libitem->create_date) : T_('Unknown');
     ?>
 <tr class="<?php echo UI::flip_class();
     ?>" id="admin_user_<?php echo $libitem->id;
@@ -92,9 +92,9 @@ foreach ($object_ids as $user_id) {
 </tbody>
 <tfoot>
     <tr class="th-bottom">
-        <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Fullname'),'users_sort_fullname1'); ?>( <?php echo Ajax::text('?page=browse&action=set_sort&type=user&sort=username', T_('Username'),'users_sort_username1');?>)</th>
-      <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'),'users_sort_lastseen1'); ?></th>
-      <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'),'users_sort_createdate1'); ?></th>
+        <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Fullname'), 'users_sort_fullname1'); ?>( <?php echo Ajax::text('?page=browse&action=set_sort&type=user&sort=username', T_('Username'), 'users_sort_username1');?>)</th>
+      <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen1'); ?></th>
+      <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate1'); ?></th>
       <?php if (Access::check('interface', 50)) {
     ?>
       <th class="cel_activity"><?php echo T_('Activity');

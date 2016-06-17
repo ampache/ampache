@@ -74,7 +74,7 @@ class Api
      * @param int|string|boolean|null $value
      * @return boolean
      */
-    public static function set_filter($filter,$value)
+    public static function set_filter($filter, $value)
     {
         if (!strlen($value)) {
             return false;
@@ -83,32 +83,32 @@ class Api
         switch ($filter) {
             case 'add':
                 // Check for a range, if no range default to gt
-                if (strpos($value,'/')) {
-                    $elements = explode('/',$value);
-                    self::$browse->set_filter('add_lt',strtotime($elements['1']));
-                    self::$browse->set_filter('add_gt',strtotime($elements['0']));
+                if (strpos($value, '/')) {
+                    $elements = explode('/', $value);
+                    self::$browse->set_filter('add_lt', strtotime($elements['1']));
+                    self::$browse->set_filter('add_gt', strtotime($elements['0']));
                 } else {
-                    self::$browse->set_filter('add_gt',strtotime($value));
+                    self::$browse->set_filter('add_gt', strtotime($value));
                 }
             break;
             case 'update':
                 // Check for a range, if no range default to gt
-                if (strpos($value,'/')) {
-                    $elements = explode('/',$value);
-                    self::$browse->set_filter('update_lt',strtotime($elements['1']));
-                    self::$browse->set_filter('update_gt',strtotime($elements['0']));
+                if (strpos($value, '/')) {
+                    $elements = explode('/', $value);
+                    self::$browse->set_filter('update_lt', strtotime($elements['1']));
+                    self::$browse->set_filter('update_gt', strtotime($elements['0']));
                 } else {
-                    self::$browse->set_filter('update_gt',strtotime($value));
+                    self::$browse->set_filter('update_gt', strtotime($value));
                 }
             break;
             case 'alpha_match':
-                self::$browse->set_filter('alpha_match',$value);
+                self::$browse->set_filter('alpha_match', $value);
             break;
             case 'exact_match':
-                self::$browse->set_filter('exact_match',$value);
+                self::$browse->set_filter('exact_match', $value);
             break;
             case 'enabled':
-                self::$browse->set_filter('enabled',$value);
+                self::$browse->set_filter('enabled', $value);
             break;
             default:
                 // Rien a faire
@@ -259,10 +259,10 @@ class Api
 
                 echo XML_Data::keyed_array(array('auth'=>$token,
                     'api'=>self::$version,
-                    'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
-                    'update'=>date("c",$row['update']),
-                    'add'=>date("c",$row['add']),
-                    'clean'=>date("c",$row['clean']),
+                    'session_expire'=>date("c", time()+AmpConfig::get('session_length')-60),
+                    'update'=>date("c", $row['update']),
+                    'add'=>date("c", $row['add']),
+                    'clean'=>date("c", $row['clean']),
                     'songs'=>$song['song'],
                     'albums'=>$album['album'],
                     'artists'=>$artist['artist'],
@@ -273,7 +273,7 @@ class Api
             } // match
         } // end while
 
-        debug_event('API','Login Failed, unable to match passphrase','1');
+        debug_event('API', 'Login Failed, unable to match passphrase', '1');
         echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
@@ -292,10 +292,10 @@ class Api
         // Check and see if we should extend the api sessions (done if valid sess is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire'=>date("c",time()+AmpConfig::get('session_length')-60)),$xmldata);
+            $xmldata = array_merge(array('session_expire'=>date("c", time()+AmpConfig::get('session_length')-60)), $xmldata);
         }
 
-        debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'],'5');
+        debug_event('API', 'Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'], '5');
 
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);
@@ -312,12 +312,12 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('artist');
-        self::$browse->set_sort('name','ASC');
+        self::$browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
-        Api::set_filter('add',$input['add']);
-        Api::set_filter('update',$input['update']);
+        Api::set_filter($method, $input['filter']);
+        Api::set_filter('add', $input['add']);
+        Api::set_filter('update', $input['update']);
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
@@ -385,11 +385,11 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('album');
-        self::$browse->set_sort('name','ASC');
+        self::$browse->set_sort('name', 'ASC');
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
-        Api::set_filter('add',$input['add']);
-        Api::set_filter('update',$input['update']);
+        Api::set_filter($method, $input['filter']);
+        Api::set_filter('add', $input['add']);
+        Api::set_filter('update', $input['update']);
 
         $albums = self::$browse->get_objects();
 
@@ -438,10 +438,10 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('tag');
-        self::$browse->set_sort('name','ASC');
+        self::$browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
+        Api::set_filter($method, $input['filter']);
         $tags = self::$browse->get_objects();
 
         // Set the offset
@@ -471,7 +471,7 @@ class Api
      */
     public static function tag_artists($input)
     {
-        $artists = Tag::get_tag_objects('artist',$input['filter']);
+        $artists = Tag::get_tag_objects('artist', $input['filter']);
         if ($artists) {
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
@@ -488,7 +488,7 @@ class Api
      */
     public static function tag_albums($input)
     {
-        $albums = Tag::get_tag_objects('album',$input['filter']);
+        $albums = Tag::get_tag_objects('album', $input['filter']);
         if ($albums) {
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
@@ -505,7 +505,7 @@ class Api
      */
     public static function tag_songs($input)
     {
-        $songs = Tag::get_tag_objects('song',$input['filter']);
+        $songs = Tag::get_tag_objects('song', $input['filter']);
 
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
@@ -523,14 +523,14 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('song');
-        self::$browse->set_sort('title','ASC');
+        self::$browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
-        Api::set_filter('add',$input['add']);
-        Api::set_filter('update',$input['update']);
+        Api::set_filter($method, $input['filter']);
+        Api::set_filter('add', $input['add']);
+        Api::set_filter('update', $input['update']);
         // Filter out disabled songs
-        Api::set_filter('enabled','1');
+        Api::set_filter('enabled', '1');
 
         $songs = self::$browse->get_objects();
 
@@ -578,10 +578,10 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('playlist');
-        self::$browse->set_sort('name','ASC');
+        self::$browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
+        Api::set_filter($method, $input['filter']);
         self::$browse->set_filter('playlist_type', '1');
 
         $playlist_ids = self::$browse->get_objects();
@@ -625,7 +625,7 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::songs($songs,$items);
+        echo XML_Data::songs($songs, $items);
     } // playlist_songs
 
     /**
@@ -762,10 +762,10 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('video');
-        self::$browse->set_sort('title','ASC');
+        self::$browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
+        Api::set_filter($method, $input['filter']);
 
         $video_ids = self::$browse->get_objects();
 
@@ -851,7 +851,7 @@ class Api
                     echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
                 }
 
-                $uid = $democratic->get_uid_from_object_id($media->id,$type);
+                $uid = $democratic->get_uid_from_object_id($media->id, $type);
                 $democratic->remove_vote($uid);
 
                 // Everything was ok

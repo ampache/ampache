@@ -475,7 +475,7 @@ class Album extends database_object implements library_item
      * @param string $artist
      * @return int[]
      */
-    public function get_songs($limit = 0,$artist='')
+    public function get_songs($limit = 0, $artist='')
     {
         $results = array();
 
@@ -881,7 +881,7 @@ class Album extends database_object implements library_item
             // Update every song
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
-                Song::update_artist($artist,$song_id);
+                Song::update_artist($artist, $song_id);
             }
             $updated = true;
             Artist::gc();
@@ -898,8 +898,8 @@ class Album extends database_object implements library_item
                 $songs = $this->get_songs();
             }
             foreach ($songs as $song_id) {
-                Song::update_album($album_id,$song_id);
-                Song::update_year($year,$song_id);
+                Song::update_album($album_id, $song_id);
+                Song::update_year($year, $song_id);
                 Song::write_id3_for_song($song_id);
             }
             $current_id = $album_id;

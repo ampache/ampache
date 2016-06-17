@@ -302,7 +302,7 @@ class Tmp_Playlist extends database_object
      * This adds the object of $this->object_type to this tmp playlist
      * it takes an optional type, default is song
      */
-    public function add_object($object_id,$object_type)
+    public function add_object($object_id, $object_type)
     {
         $sql = "INSERT INTO `tmp_playlist_data` " .
             "(`object_id`,`tmp_playlist`,`object_type`) " .

@@ -25,7 +25,7 @@
  */
 
 // Set that this is an ajax include
-define('AJAX_INCLUDE','1');
+define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 
@@ -86,7 +86,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'edit_object':
         // Scrub the data, walk recursive through array
-        $entities = function(&$data) use (&$entities) {
+        $entities = function (&$data) use (&$entities) {
             foreach ($data as $key => $value) {
                 $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
             }

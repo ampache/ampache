@@ -74,7 +74,7 @@ class Useractivity extends database_object
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('user_activity',$row['id'],$row);
+            parent::add_to_cache('user_activity', $row['id'], $row);
         }
     }
     /**

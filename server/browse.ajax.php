@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
         }
 
         if ($_REQUEST['catalog_key'] || $_SESSION['catalog'] != 0) {
-            $browse->set_filter('catalog',$_REQUEST['catalog_key']);
+            $browse->set_filter('catalog', $_REQUEST['catalog_key']);
             $_SESSION['catalog'] = $_REQUEST['catalog_key'];
         } elseif ($_REQUEST['catalog_key'] == 0) {
             $browse->set_filter('catalog', null);

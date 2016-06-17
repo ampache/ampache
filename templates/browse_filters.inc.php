@@ -29,7 +29,7 @@ if (!Core::is_session_started()) {
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
     <div class="sb3">
-    <?php if (in_array('starts_with',$allowed_filters)) {
+    <?php if (in_array('starts_with', $allowed_filters)) {
     ?>
         <form id="multi_alpha_filter_form" action="javascript:void(0);">
             <label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo T_('Starts With');
@@ -41,7 +41,7 @@ if (!Core::is_session_started()) {
         </form>
     <?php 
 } // end if alpha_match ?>
-    <?php if (in_array('minimum_count',$allowed_filters)) {
+    <?php if (in_array('minimum_count', $allowed_filters)) {
     ?>
         <input id="mincountCB" type="checkbox" value="1" />
         <label id="mincountLabel" for="mincountCB"><?php echo T_('Minimum Count');
@@ -50,7 +50,7 @@ if (!Core::is_session_started()) {
     ?>
     <?php 
 } ?>
-    <?php if (in_array('rated',$allowed_filters)) {
+    <?php if (in_array('rated', $allowed_filters)) {
     ?>
         <input id="ratedCB" type="checkbox" value="1" />
         <label id="ratedLabel" for="ratedCB"><?php echo T_('Rated');
@@ -59,7 +59,7 @@ if (!Core::is_session_started()) {
     ?>
     <?php 
 } ?>
-    <?php if (in_array('unplayed',$allowed_filters)) {
+    <?php if (in_array('unplayed', $allowed_filters)) {
     ?>
         <input id="unplayedCB" type="checkbox" <?php echo $string = $browse->get_filter('unplayed') ? 'checked="checked"' : '';
     ?>/>
@@ -67,17 +67,17 @@ if (!Core::is_session_started()) {
     ?></label><br />
     <?php 
 } ?>
-    <?php if (in_array('playlist_type',$allowed_filters)) {
+    <?php if (in_array('playlist_type', $allowed_filters)) {
     ?>
         <input id="show_allplCB" type="checkbox" <?php echo $string = $browse->get_filter('playlist_type') ? 'checked="checked"' : '';
     ?>/>
         <label id="show_allplLabel" for="showallplCB"><?php echo T_('All Playlists');
     ?></label><br />
-        <?php echo Ajax::observe('show_allplCB','click',Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1',''));
+        <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1', ''));
     ?>
     <?php 
 } // if playlist_type ?>
-    <?php if (in_array('object_type',$allowed_filters)) {
+    <?php if (in_array('object_type', $allowed_filters)) {
     ?>
         <?php $string = 'otype_' . $browse->get_filter('object_type');
     ${$string}        = 'selected="selected"';
@@ -86,22 +86,22 @@ if (!Core::is_session_started()) {
     ?>/>
         <label id="typeSongLabel" for="typeSongRadio"><?php echo T_('Song Title');
     ?></label><br />
-        <?php echo Ajax::observe('typeSongRadio','click',Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song',''));
+        <?php echo Ajax::observe('typeSongRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song', ''));
     ?>
         <input id="typeAlbumRadio" type="radio" name="object_type" value="1" />
         <label id="typeAlbumLabel" for="typeAlbumRadio"><?php echo T_('Albums');
     ?></label><br />
-        <?php echo Ajax::observe('typeAlbumRadio','click',Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=album',''));
+        <?php echo Ajax::observe('typeAlbumRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=album', ''));
     ?>
         <input id="typeArtistRadio" type="radio" name="object_type" value="1" />
         <label id="typeArtistLabel" for="typeArtistRadio"><?php echo T_('Artist');
     ?></label><br />
-        <?php echo Ajax::observe('typeArtistRadio','click',Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=artist',''));
+        <?php echo Ajax::observe('typeArtistRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=artist', ''));
     ?>
     <?php 
 } ?>
 
-    <?php if (in_array('catalog',$allowed_filters)) {
+    <?php if (in_array('catalog', $allowed_filters)) {
     ?>
         <form method="post" id="catalog_choice" action="javascript.void(0);">
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog');
@@ -112,7 +112,7 @@ if (!Core::is_session_started()) {
                 <?php
                     $sql = 'SELECT `id`,`name` FROM `catalog`';
     $db_results          = Dba::read($sql);
-    while ( $data = Dba::fetch_assoc($db_results) ) {
+    while ($data = Dba::fetch_assoc($db_results)) {
         $results[] = $data;
     }
 
@@ -126,17 +126,17 @@ if (!Core::is_session_started()) {
     ?>
 
             </select>
-        <?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id,'catalog_select', 'catalog_choice'));
+        <?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id, 'catalog_select', 'catalog_choice'));
     ?>
         </form>
     <?php 
 } ?>
-    <?php if (in_array('show_art',$allowed_filters)) {
+    <?php if (in_array('show_art', $allowed_filters)) {
     ?>
         <?php echo T_('Toggle Artwork');
     ?>&nbsp;<input id="show_artCB" type="checkbox" <?php echo Art::is_enabled() ? 'checked="checked"' : '';
     ?>/>
-        <?php echo Ajax::observe('show_artCB','click',Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, ''));
+        <?php echo Ajax::observe('show_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, ''));
     ?>
     <?php 
 } // if show_art ?>

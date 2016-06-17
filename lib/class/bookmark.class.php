@@ -45,7 +45,7 @@ class Bookmark extends database_object
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull for
      */
-    public function __construct ($object_id, $object_type = null, $user_id = null)
+    public function __construct($object_id, $object_type = null, $user_id = null)
     {
         if (!$object_id) {
             return false;

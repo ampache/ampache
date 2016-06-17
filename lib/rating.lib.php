@@ -24,9 +24,9 @@
  * show_rating
  * This takes an artist id and includes the right file
  */
-function show_rating($object_id,$type)
+function show_rating($object_id, $type)
 {
-    $rating = new Rating($object_id,$type);
+    $rating = new Rating($object_id, $type);
 
     require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
 } // show_rating

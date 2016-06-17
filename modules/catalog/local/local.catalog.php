@@ -154,7 +154,7 @@ class Catalog_local extends Catalog
             // Keep going until the path stops changing
             $old_path       = $component_path;
             $component_path = realpath($component_path . '/../');
-        } while (strcmp($component_path,$old_path) != 0);
+        } while (strcmp($component_path, $old_path) != 0);
 
         return false;
     }
@@ -169,7 +169,7 @@ class Catalog_local extends Catalog
     public static function create_type($catalog_id, $data)
     {
         // Clean up the path just in case
-        $path = rtrim(rtrim(trim($data['path']),'/'),'\\');
+        $path = rtrim(rtrim(trim($data['path']), '/'), '\\');
 
         if (!strlen($path)) {
             AmpError::add('general', T_('Error: Path not specified'));
@@ -248,9 +248,9 @@ class Catalog_local extends Catalog
         debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
 
         /* Recurse through this dir and create the files array */
-        while ( false !== ( $file = readdir($handle) ) ) {
+        while (false !== ($file = readdir($handle))) {
             /* Skip to next if we've got . or .. */
-            if (substr($file,0,1) == '.') {
+            if (substr($file, 0, 1) == '.') {
                 continue;
             }
 
@@ -298,7 +298,7 @@ class Catalog_local extends Catalog
 
         /* If it's a dir run this function again! */
         if (is_dir($full_file)) {
-            $this->add_files($full_file,$options);
+            $this->add_files($full_file, $options);
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
@@ -429,8 +429,8 @@ class Catalog_local extends Catalog
         $start_time = time();
 
         // Make sure the path doesn't end in a / or \
-        $this->path = rtrim($this->path,'/');
-        $this->path = rtrim($this->path,'\\');
+        $this->path = rtrim($this->path, '/');
+        $this->path = rtrim($this->path, '\\');
 
         // Prevent the script from timing out and flush what we've got
         set_time_limit(0);
@@ -549,7 +549,7 @@ class Catalog_local extends Catalog
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (UI::check_ticker()) {
-                $file = str_replace(array('(',')','\''), '', $row['file']);
+                $file = str_replace(array('(', ')', '\''), '', $row['file']);
                 UI::update_text('verify_count_' . $this->id, $count);
                 UI::update_text('verify_dir_' . $this->id, scrub_out($file));
             }
@@ -561,7 +561,7 @@ class Catalog_local extends Catalog
             }
 
             $media = new $media_type($row['id']);
-            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern,$this->rename_pattern);
+            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
             if ($info['change']) {
                 $changed++;
             }
@@ -613,7 +613,7 @@ class Catalog_local extends Catalog
             if ($dead_count) {
                 $dead_total += $dead_count;
                 $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
-                    '(' . implode(',',$dead) . ')';
+                    '(' . implode(',', $dead) . ')';
                 $db_results = Dba::write($sql);
             }
         }
@@ -642,7 +642,7 @@ class Catalog_local extends Catalog
             debug_event('clean', 'Starting work on ' . $results['file'] . '(' . $results['id'] . ')', 5);
             $count++;
             if (UI::check_ticker()) {
-                $file = str_replace(array('(',')', '\''), '', $results['file']);
+                $file = str_replace(array('(', ')', '\''), '', $results['file']);
                 UI::update_text('clean_count_' . $this->id, $count);
                 UI::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
@@ -784,11 +784,11 @@ class Catalog_local extends Catalog
     {
         /* Create the vainfo object and get info */
         $gtypes     = $this->get_gather_types('video');
-        $vainfo     = new vainfo($file, $gtypes,'','','',$this->sort_pattern,$this->rename_pattern);
+        $vainfo     = new vainfo($file, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
 
         $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
-        $results            = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file);
+        $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $file);
         $results['catalog'] = $this->id;
 
         $id = Video::insert($results, $gtypes, $options);
@@ -830,7 +830,7 @@ class Catalog_local extends Catalog
     {
         $file_date = filemtime($full_file);
         if ($file_date < $this->last_add) {
-            debug_event('Check','Skipping ' . $full_file . ' File modify time before last add run','3');
+            debug_event('Check', 'Skipping ' . $full_file . ' File modify time before last add run', '3');
             return true;
         }
 
@@ -848,7 +848,7 @@ class Catalog_local extends Catalog
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->path, "/");
-        return( str_replace( $catalog_path . "/", "", $file_path ) );
+        return(str_replace($catalog_path . "/", "", $file_path));
     }
 
     /**

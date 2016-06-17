@@ -63,7 +63,7 @@ if (Preference::has_access('play_type')) {
     ?>><?php echo T_('Web Player');
     ?></option>
         </select>
-        <?php echo Ajax::observe('play_type_select','change',Ajax::action('?page=stream&action=set_play_type','play_type_select','play_type_form'));
+        <?php echo Ajax::observe('play_type_select', 'change', Ajax::action('?page=stream&action=set_play_type', 'play_type_select', 'play_type_form'));
     ?>
     </form>
 <?php

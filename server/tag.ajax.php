@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
         Tag::add_tag_map($_GET['type'], $_GET['object_id'], $_GET['tag_id'], false);
     break;
     case 'add_tag_by_name':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to add new tag', 1);
             exit;
         }
@@ -57,7 +57,7 @@ switch ($_REQUEST['action']) {
         Tag::add($_GET['type'], $_GET['object_id'], $_GET['tag_name'], false);
     break;
     case 'delete':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to delete tag', 1);
             exit;
         }

@@ -77,8 +77,8 @@ switch ($_REQUEST['action']) {
         }
         /* Enclose this in the purty box! */
         require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
-        show_alphabet_list('tvshows','tvshows.php',$match);
-        show_alphabet_form($chr, T_('Show TV Shows starting with'),"tvshows.php?action=match");
+        show_alphabet_list('tvshows', 'tvshows.php', $match);
+        show_alphabet_form($chr, T_('Show TV Shows starting with'), "tvshows.php?action=match");
         require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
 
         if ($match === "Browse") {

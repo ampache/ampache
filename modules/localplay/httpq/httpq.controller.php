@@ -95,7 +95,7 @@ class AmpacheHttpq extends localplay_controller
             $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('httpq_active','HTTPQ Active Instance','0','25','integer','internal','httpq');
+        Preference::insert('httpq_active', 'HTTPQ Active Instance', '0', '25', 'integer', 'internal', 'httpq');
 
             return true;
         } // install
@@ -222,7 +222,7 @@ class AmpacheHttpq extends localplay_controller
          * set_active_instance
          * This sets the specified instance as the 'active' one
          */
-        public function set_active_instance($uid,$user_id='')
+        public function set_active_instance($uid, $user_id='')
         {
             // Not an admin? bubkiss!
         if (!$GLOBALS['user']->has_access('100')) {
@@ -231,7 +231,7 @@ class AmpacheHttpq extends localplay_controller
 
             $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
-            Preference::update('httpq_active',$user_id,intval($uid));
+            Preference::update('httpq_active', $user_id, intval($uid));
             AmpConfig::set('httpq_active', intval($uid), true);
 
             return true;
@@ -448,7 +448,7 @@ class AmpacheHttpq extends localplay_controller
             return array();
         }
 
-        $songs = explode("::",$list);
+        $songs = explode("::", $list);
 
         foreach ($songs as $key=>$entry) {
             $data = array();
@@ -551,7 +551,7 @@ class AmpacheHttpq extends localplay_controller
     public function connect()
     {
         $options      = self::get_instance();
-        $this->_httpq = new HttpQPlayer($options['host'],$options['password'],$options['port']);
+        $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
         // Test our connection by retriving the version
         if (!is_null($this->_httpq->version())) {

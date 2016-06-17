@@ -1,5 +1,5 @@
 <?php
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
@@ -9,7 +9,7 @@ if (!AmpConfig::get('upnp_backend')) {
 
 set_time_limit(600);
 
-header ("Content-Type: text/html; charset=UTF-8");
+header("Content-Type: text/html; charset=UTF-8");
 
 // Parse the request from UPnP player
 $requestRaw = file_get_contents('php://input');
@@ -28,5 +28,3 @@ switch ($upnpRequest['action']) {
         //$items = Upnp_Api::cm_getProtocolInfo();
     break;
 }
-
-?>

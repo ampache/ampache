@@ -228,7 +228,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
             $pieces[$i] = trim($pieces[$i]);
             if (!empty($pieces[$i]) && $pieces[$i] != '#') {
                 if (!$result = Dba::write($pieces[$i])) {
-                    $errors[] = array ( Dba::error(), $pieces[$i] );
+                    $errors[] = array( Dba::error(), $pieces[$i] );
                 }
             }
         }
@@ -328,7 +328,7 @@ function install_create_account($username, $password, $password2)
     $username = Dba::escape($username);
     $password = Dba::escape($password);
 
-    $insert_id = User::create($username,'Administrator','','',$password,'100');
+    $insert_id = User::create($username, 'Administrator', '', '', $password, '100');
 
     if (!$insert_id) {
         AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
@@ -478,7 +478,7 @@ function install_config_use_case($case)
     }
 }
 
-function install_config_backends(Array $backends)
+function install_config_backends(array $backends)
 {
     $dbconfig = array(
         'subsonic_backend' => '0',

@@ -20,7 +20,7 @@
  *
  */
 
-$htmllang = str_replace("_","-",AmpConfig::get('lang'));
+$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">

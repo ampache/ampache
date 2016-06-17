@@ -50,7 +50,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
         $version = Update::get_version();
     }
 }
-$htmllang = str_replace("_","-",AmpConfig::get('lang'));
+$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

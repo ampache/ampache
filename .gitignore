@@ -25,3 +25,4 @@ web.config
 robots.txt
 php-cs-fixer.phar
 .php_cs.cache
+cs_fixer_tmp_*
