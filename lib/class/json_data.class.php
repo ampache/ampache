@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,9 +21,9 @@
  */
 
 /**
- * XML_Data Class
+ * JSON_Data Class
  *
- * This class takes care of all of the xml document stuff in Ampache these
+ * This class takes care of all of the JSON document stuff in Ampache these
  * are all static calls
  *
  */

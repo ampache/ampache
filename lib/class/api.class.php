@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -137,7 +137,7 @@ class Api
         $ip       = $_SERVER['REMOTE_ADDR'];
         $version  = $input['version'];
 
-        //Whatever format the user wants, default to XML if not provided.
+        //Whatever format the user wants
         $outputFormat = $input['format'];
 
         // Log the attempt
@@ -481,6 +481,9 @@ class Api
 
         ob_end_clean();
 
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
         if ($outputFormat == 'json') {
           echo JSON_Data::tags($tags);
         }
@@ -498,6 +501,9 @@ class Api
     {
         $uid = scrub_in($input['filter']);
         ob_end_clean();
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
         if ($outputFormat == 'json') {
           echo JSON_Data::tags(array($uid));
@@ -584,6 +590,9 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
         if ($outputFormat == 'json') {
           echo JSON_Data::songs($songs);
