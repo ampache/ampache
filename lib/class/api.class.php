@@ -480,7 +480,13 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo JSON_Data::tags($tags);
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::tags($tags);
+        }
+        elseif ($outputFormat == 'xml') {
+          echo XML_Data::tags($tags);
+        }
     } // tags
 
     /**
@@ -492,7 +498,14 @@ class Api
     {
         $uid = scrub_in($input['filter']);
         ob_end_clean();
-        echo JSON_Data::tags(array($uid));
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::tags(array($uid));
+        }
+        elseif ($outputFormat == 'xml') {
+          echo XML_Data::tags(array($uid));
+        }        
+
     } // tag
 
     /**
@@ -565,12 +578,20 @@ class Api
 
         $songs = self::$browse->get_objects();
 
+        //TODO: Implement the JSON counterpart
         // Set the offset
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo JSON_Data::songs($songs);
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::songs($songs);
+        }
+        elseif ($outputFormat == 'xml') {
+          echo XML_Data::songs($songs);
+        }
+
     } // songs
 
     /**
