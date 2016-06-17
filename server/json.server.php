@@ -39,7 +39,7 @@ header("Content-type: application/json; charset=" . AmpConfig::get('site_charset
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
-    debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3');
+    debug_event('Access Control','Error Attempted to use JSON API with Access Control turned off','3');
     echo JSON_Data::error('501', T_('Access Control not Enabled'));
     exit;
 }
@@ -91,12 +91,13 @@ foreach ($methods as $method) {
     // If the method is the same as the action being called
     // Then let's call this function!
     if ($_GET['action'] == $method) {
+        $_GET['format'] = 'json';
         call_user_func(array('api',$method),$_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;
     }
 } // end foreach methods in API
 
-// If we manage to get here, we still need to hand out an XML document
+// If we manage to get here, we still need to hand out a JSON document
 ob_end_clean();
 echo JSON_Data::error('405', T_('Invalid Request'));

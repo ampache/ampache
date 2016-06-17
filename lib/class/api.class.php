@@ -137,6 +137,9 @@ class Api
         $ip       = $_SERVER['REMOTE_ADDR'];
         $version  = $input['version'];
 
+        //Whatever format the user wants, default to XML if not provided.
+        $outputFormat = $input['format'];
+
         // Log the attempt
         debug_event('API', "Handshake Attempt, IP:$ip User:$username Version:$version", 5);
 
@@ -172,7 +175,12 @@ class Api
                     ($timestamp > (time() + 1800))) {
                     debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    if ($outputFormat == 'json') {
+                      echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    }
+                    elseif ($outputFormat == 'xml') {
+                      echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    }
                     return false;
                 }
 
@@ -184,7 +192,12 @@ class Api
                 if (!$realpwd) {
                     debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Invalid Username/Password'));
-                    echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    if ($outputFormat == 'json') {
+                      echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    }
+                    elseif ($outputFormat == 'xml') {
+                      echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    }
                     return false;
                 }
 
@@ -272,8 +285,12 @@ class Api
         } // end while
 
         debug_event('API','Login Failed, unable to match passphrase','1');
-        echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
-
+        if ($outputFormat == 'json') {
+          echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        }
+        elseif ($outputFormat == 'xml') {
+          echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        }
         return false;
     } // handshake
 

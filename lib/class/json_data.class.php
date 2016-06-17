@@ -213,10 +213,10 @@ class JSON_Data
     /**
      * tags
      *
-     * This returns tags to the user, in a pretty xml document with the information
+     * This returns tags to the user, in a pretty JSON document with the information
      *
      * @param    array    $tags    (description here...)
-     * @return    string    return xml
+     * @return    string    return json
      */
     public static function tags($tags)
     {
@@ -376,7 +376,7 @@ class JSON_Data
     /**
      * songs
      *
-     * This returns an xml document from an array of song ids.
+     * This returns a JSON document from an array of song ids.
      * (Spiffy isn't it!)
      */
     public static function songs($songs, $playlist_data='')

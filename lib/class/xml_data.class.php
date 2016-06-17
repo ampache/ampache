@@ -221,18 +221,19 @@ class XML_Data
     public static function keyed_array($array,$callback='')
     {
         $string = '';
-
+        return $array;
         // Foreach it
         foreach ($array as $key=>$value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) and isset($value['<attributes>'])) {
-                $attribute = ' ' . $value['<attributes>'];
+            if (is_array($value) and isset($value['attributes'])) {
+                $attribute = ' ' . $value['attributes'];
                 $key       = $value['value'];
             }
 
             // If it's an array, run again
             if (is_array($value)) {
+
                 $value = self::keyed_array($value,1);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
