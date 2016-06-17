@@ -264,9 +264,25 @@ class Api
                 $db_results = Dba::read($sql);
                 $catalog    = Dba::fetch_assoc($db_results);
 
-                echo json_encode(
-                    array(
-                      'auth'=>$token,
+                if ($outputFormat == 'json') {
+                  echo json_encode(
+                      array(
+                        'auth'=>$token,
+                        'api'=>self::$version,
+                        'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
+                        'update'=>date("c",$row['update']),
+                        'add'=>date("c",$row['add']),
+                        'clean'=>date("c",$row['clean']),
+                        'songs'=>$song['song'],
+                        'albums'=>$album['album'],
+                        'artists'=>$artist['artist'],
+                        'playlists'=>$playlist['playlist'],
+                        'videos'=>$vcounts['video'],
+                        'catalogs'=>$catalog['catalog'],
+                      ), JSON_PRETTY_PRINT);
+                }
+                elseif ($outputFormat == 'xml') {
+                  echo XML_Data::keyed_array(array('auth'=>$token,
                       'api'=>self::$version,
                       'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
                       'update'=>date("c",$row['update']),
@@ -277,8 +293,8 @@ class Api
                       'artists'=>$artist['artist'],
                       'playlists'=>$playlist['playlist'],
                       'videos'=>$vcounts['video'],
-                      'catalogs'=>$catalog['catalog'],
-                    ), JSON_PRETTY_PRINT);
+                      'catalogs'=>$catalog['catalog']));
+                  }
                 
                 return true;
             } // match
