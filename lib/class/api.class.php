@@ -178,7 +178,7 @@ class Api
                     if ($outputFormat == 'json') {
                       echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
                     }
-                    elseif ($outputFormat == 'xml') {
+                    else {  // Defaults to XML
                       echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
                     }
                     return false;
@@ -195,7 +195,7 @@ class Api
                     if ($outputFormat == 'json') {
                       echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
                     }
-                    elseif ($outputFormat == 'xml') {
+                    else {  // Defaults to XML
                       echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
                     }
                     return false;
@@ -281,7 +281,7 @@ class Api
                         'catalogs'=>$catalog['catalog'],
                       ), JSON_PRETTY_PRINT);
                 }
-                elseif ($outputFormat == 'xml') {
+                else {  // Defaults to XML
                   echo XML_Data::keyed_array(array('auth'=>$token,
                       'api'=>self::$version,
                       'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
@@ -304,7 +304,7 @@ class Api
         if ($outputFormat == 'json') {
           echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
         }
-        elseif ($outputFormat == 'xml') {
+        else {  // Defaults to XML
           echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
         }
         return false;
@@ -487,7 +487,7 @@ class Api
         if ($outputFormat == 'json') {
           echo JSON_Data::tags($tags);
         }
-        elseif ($outputFormat == 'xml') {
+        else {  // Defaults to XML
           echo XML_Data::tags($tags);
         }
     } // tags
@@ -508,7 +508,7 @@ class Api
         if ($outputFormat == 'json') {
           echo JSON_Data::tags(array($uid));
         }
-        elseif ($outputFormat == 'xml') {
+        else {  // Defaults to XML
           echo XML_Data::tags(array($uid));
         }        
 
@@ -597,7 +597,7 @@ class Api
         if ($outputFormat == 'json') {
           echo JSON_Data::songs($songs);
         }
-        elseif ($outputFormat == 'xml') {
+        else {  // Defaults to XML
           echo XML_Data::songs($songs);
         }
 
