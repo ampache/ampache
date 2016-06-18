@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -613,7 +618,16 @@ class Api
         $uid = scrub_in($input['filter']);
 
         ob_end_clean();
-        echo XML_Data::songs(array($uid));
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::songs(array($uid));
+        }
+        else { // Defaults to XML
+          echo XML_Data::songs(array($uid));
+        }
     } // song
 
     /**
@@ -683,10 +697,23 @@ class Api
             }
         } // end foreach
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-        ob_end_clean();
-        echo XML_Data::songs($songs,$items);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          JSON_Data::set_offset($input['offset']);
+          JSON_Data::set_limit($input['limit']);
+          ob_end_clean();
+          echo JSON_Data::songs($songs,$items);
+        }
+        else {  // Defaults to XML
+          XML_Data::set_offset($input['offset']);
+          XML_Data::set_limit($input['limit']);
+          ob_end_clean();
+          echo XML_Data::songs($songs,$items);
+        }
+
+
     } // playlist_songs
 
     /**
@@ -733,12 +760,28 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
-        if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
-        } else {
-            $playlist->add_songs(array($song));
-            echo XML_Data::single_string('success');
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          if (!$playlist->has_access()) {
+              echo JSON_Data::error('401', T_('Access denied to this playlist.'));
+          } else {
+              $playlist->add_songs(array($song));
+              echo JSON_Data::single_string('success');
+          }
         }
+        else {  // Defaults to XML
+          if (!$playlist->has_access()) {
+              echo XML_Data::error('401', T_('Access denied to this playlist.'));
+          } else {
+              $playlist->add_songs(array($song));
+              echo XML_Data::single_string('success');
+          }
+        }
+
+
     } // playlist_add_song
 
     /**

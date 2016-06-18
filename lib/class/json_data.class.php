@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -122,13 +127,14 @@ class JSON_Data
     {
         $final = self::_header();
         if (!empty($string)) {
-            $final .= "\t<$key><![CDATA[$string]]></$key>";
+             $JSON = json_encode(array($key => $string), JSON_PRETTY_PRINT);
         } else {
-            $final .= "\t<$key />";
+            $JSON = json_encode(array("message" => $key), JSON_PRETTY_PRINT);
         }
+        //TODO: Figure out if this is needed
         $final .= self::_footer();
 
-        return $final;
+        return $JSON;
     } // single_string
 
     /**
