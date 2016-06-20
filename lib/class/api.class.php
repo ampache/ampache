@@ -660,11 +660,27 @@ class Api
         self::$browse->set_filter('playlist_type', '1');
 
         $playlist_ids = self::$browse->get_objects();
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        ob_end_clean();
-        echo XML_Data::playlists($playlist_ids);
+        if ($outputFormat == 'json') {
+          JSON_Data::set_offset($input['offset']);
+          JSON_Data::set_limit($input['limit']);
+
+          ob_end_clean();
+          echo JSON_Data::playlists($playlist_ids);
+        }
+        else {  // Defaults to XML
+          XML_Data::set_offset($input['offset']);
+          XML_Data::set_limit($input['limit']);
+
+          ob_end_clean();
+          echo XML_Data::playlists($playlist_ids);
+        }
+
+
+
     } // playlists
 
     /**
@@ -677,7 +693,17 @@ class Api
         $uid = scrub_in($input['filter']);
 
         ob_end_clean();
-        echo XML_Data::playlists(array($uid));
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          echo JSON_Data::playlists(array($uid));
+        }
+        else {  // Defaults to XML
+          echo XML_Data::playlists(array($uid));
+        }
+
     } // playlist
 
     /**
@@ -794,12 +820,27 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $track    = scrub_in($input['track']);
-        if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
-        } else {
-            $playlist->delete_track_number($track);
-            echo XML_Data::single_string('success');
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+          if (!$playlist->has_access()) {
+              echo JSON_Data::error('401', T_('Access denied to this playlist.'));
+          } else {
+              $playlist->delete_track_number($track);
+              echo JSON_Data::single_string('success');
+          }
         }
+        else {  // Defaults to XML
+          if (!$playlist->has_access()) {
+              echo XML_Data::error('401', T_('Access denied to this playlist.'));
+          } else {
+              $playlist->delete_track_number($track);
+              echo XML_Data::single_string('success');
+          }
+        }  
+
     } // playlist_remove_song
 
     /**

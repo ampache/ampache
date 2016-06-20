@@ -210,7 +210,7 @@ class JSON_Data
 
         foreach ($playlist_data as $playlist) {
             if ($playlist["object_id"] == $song->id) {
-                return array(playlisttrack => $playlist["track"]);
+                return $playlist["track"];
             }
         }
         return "";
@@ -359,7 +359,7 @@ class JSON_Data
             $playlists = array_slice($playlists,self::$offset,self::$limit);
         }
 
-        $string = '';
+        $allPlaylists = [];
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
@@ -367,16 +367,16 @@ class JSON_Data
             $playlist->format();
             $item_total = $playlist->get_media_count('song');
 
-            // Build this element
-            $string .= "<playlist id=\"$playlist->id\">\n" .
-                "\t<name><![CDATA[$playlist->name]]></name>\n" .
-                "\t<owner><![CDATA[$playlist->f_user]]></owner>\n" .
-                "\t<items>$item_total</items>\n" .
-                "\t<type>$playlist->type</type>\n" .
-                "</playlist>\n";
+            array_push($allPlaylists, array(
+                "playlist" => array(
+                    "id" => $playlist->id,
+                    "name" => $playlist->name,
+                    "owner" => $playlist->f_user, 
+                    "items" => $item_total,
+                    "type" => $playlist->type)));
         } // end foreach
 
-        return self::output_xml($string);
+        return json_encode($allPlaylists, JSON_PRETTY_PRINT);
     } // playlists
 
     /**
@@ -406,8 +406,8 @@ class JSON_Data
             }
 
             $song->format();
-            $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data); //How does this work!?
-            $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id));
+            $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
+            $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id)); //Same as genre?
             $rating                = new Rating($song_id, 'song');
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
 
@@ -430,6 +430,7 @@ class JSON_Data
                 
                     $ourSong['filename'] = $song->file;
                     $ourSong['track'] = $song->track;
+                    $ourSong['playlisttrack'] = $playlist_track_string;
                     $ourSong['time'] = $song->time;
                     $ourSong['year'] = $song->year;
                     $ourSong['bitrate'] = $song->bitrate;
