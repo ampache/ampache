@@ -101,6 +101,7 @@ class Session
         // Destroy our cookie!
         setcookie($session_name, null, -1, $cookie_path, $cookie_domain, $cookie_secure);
         setcookie($session_name . '_user', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_lang', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
 
         return true;
     }
@@ -457,6 +458,8 @@ class Session
      *
      * This function just creates the user cookie wich contains current username.
      * It must be used for information only.
+     *
+     * It also creates a cookie to store used language.
      */
     public static function create_user_cookie($username)
     {
@@ -467,6 +470,7 @@ class Session
         $cookie_secure = AmpConfig::get('cookie_secure');
 
         setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
     }
 
     /**
