@@ -202,13 +202,13 @@ function get_languages()
                 case 'tr_TR'; $name = 'T&#252;rk&#231;e'; break; /* Turkish */
                 case 'uk_UA'; $name = 'Українська'; break; /* Ukrainian */
                 case 'vi_VN'; $name = 'Ti&#7871;ng Vi&#7879;t'; break; /* Vietnamese */
-                case 'zh_CN'; $name = '&#31616;&#20307;&#20013;&#25991;'; break; /* Chinese */
-                case 'zn_TW'; $name = '&#32321;&#39636;&#20013;&#25991;'; break; /* Chinese */
+                case 'zh_CN'; $name = '&#31616;&#20307;&#20013;&#25991;'; break; /* Chinese (simplified)*/
+                case 'zh_TW'; $name = '&#32321;&#39636;&#20013;&#25991;'; break; /* Chinese (traditional)*/
                 /* These languages are right to left. */
                 case 'ar_SA'; $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'; break; /* Arabic */
                 case 'he_IL'; $name = '&#1506;&#1489;&#1512;&#1497;&#1514;'; break; /* Hebrew */
                 case 'fa_IR'; $name = '&#1601;&#1575;&#1585;&#1587;&#1610;'; break; /* Farsi */
-                default: $name      = T_('Unknown'); break;
+                default: $name      = sprintf(T_('Unknown %s'), ' (' . $file . ')'); break;
             } // end switch
 
 
