@@ -5,13 +5,15 @@ Ampache uses gettext to handle the translation between different languages.
 If you are interested in translating Ampache into a new language or updating
 an existing translation, simply follow the instructions provided below.
 
-### A) Getting the Necessary Tools
-
 Since 2015, you can contribute to Ampache's translation without any technical
 knowledge or tools, using the online translation platform
 [**Transifex**](https://www.transifex.com/ampache/ampache).
+It is also the recommended Method to translate Ampache.
 
-Otherwise if you don't want to use the online translation platform,
+### If you can't use Transifex, the following is for you.
+### A) Getting the Necessary Tools
+
+Otherwise if you can't use the online translation platform,
 you should contact us, before you start translating Ampache into a new language,
 on IRC (chat.freenode.net #ampache), just to make sure that nobody else is already working on a translation.
 Once you are ready to start your translation you will need to get a few tools:
