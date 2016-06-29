@@ -110,6 +110,11 @@ class Subsonic_Api
 
         header("Access-Control-Allow-Origin: *");
         if (function_exists('curl_version')) {
+            // Here, we use curl from the ampache server to download data from
+            // the ampache server, which can be a bit counter-intuitive.
+            // We use the curl `writefunction` and `headerfunction` callbacks
+            // to write the fetched data back to the open stream from the
+            // client.
             $headers      = apache_request_headers();
             $reqheaders   = array();
             $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
@@ -121,6 +126,7 @@ class Subsonic_Api
 
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
+                CURLOPT_FAILONERROR => true,
                 CURLOPT_HTTPHEADER => $reqheaders,
                 CURLOPT_HEADER => false,
                 CURLOPT_RETURNTRANSFER => false,
@@ -133,7 +139,9 @@ class Subsonic_Api
                 CURLOPT_SSL_VERIFYHOST => false,
                 CURLOPT_TIMEOUT => 0
             ));
-            curl_exec($ch);
+            if (curl_exec($ch) === false) {
+                debug_event('subsonic', 'Stream error: ' . curl_error($ch), 1);
+            }
             curl_close($ch);
         } else {
             // Stream media using http redirect if no curl support
