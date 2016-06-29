@@ -23,7 +23,7 @@
 $thcount = 5;
 ?>
 <script language="javascript" type="text/javascript">
-    public function getSelectionArray()
+    function getSelectionArray()
     {
         var checked = []
         $("input[name='pvmsg_select[]']:checked").each(function () {
