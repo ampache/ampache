@@ -269,38 +269,28 @@ class Api
                 $db_results = Dba::read($sql);
                 $catalog    = Dba::fetch_assoc($db_results);
 
+                $outputArray = array(
+                    'auth'=>$token,
+                    'api'=>self::$version,
+                    'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
+                    'update'=>date("c",$row['update']),
+                    'add'=>date("c",$row['add']),
+                    'clean'=>date("c",$row['clean']),
+                    'songs'=>$song['song'],
+                    'albums'=>$album['album'],
+                    'artists'=>$artist['artist'],
+                    'playlists'=>$playlist['playlist'],
+                    'videos'=>$vcounts['video'],
+                    'catalogs'=>$catalog['catalog']
+                );
+
                 if ($outputFormat == 'json') {
-                  echo json_encode(
-                      array(
-                        'auth'=>$token,
-                        'api'=>self::$version,
-                        'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
-                        'update'=>date("c",$row['update']),
-                        'add'=>date("c",$row['add']),
-                        'clean'=>date("c",$row['clean']),
-                        'songs'=>$song['song'],
-                        'albums'=>$album['album'],
-                        'artists'=>$artist['artist'],
-                        'playlists'=>$playlist['playlist'],
-                        'videos'=>$vcounts['video'],
-                        'catalogs'=>$catalog['catalog'],
-                      ), JSON_PRETTY_PRINT);
+                  echo json_encode($outputArray, JSON_PRETTY_PRINT);
                 }
                 else {  // Defaults to XML
-                  echo XML_Data::keyed_array(array('auth'=>$token,
-                      'api'=>self::$version,
-                      'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
-                      'update'=>date("c",$row['update']),
-                      'add'=>date("c",$row['add']),
-                      'clean'=>date("c",$row['clean']),
-                      'songs'=>$song['song'],
-                      'albums'=>$album['album'],
-                      'artists'=>$artist['artist'],
-                      'playlists'=>$playlist['playlist'],
-                      'videos'=>$vcounts['video'],
-                      'catalogs'=>$catalog['catalog']));
-                  }
-                
+                  echo XML_Data::keyed_array($outputArray);
+                }
+
                 return true;
             } // match
         } // end while
@@ -355,14 +345,29 @@ class Api
         Api::set_filter('add',$input['add']);
         Api::set_filter('update',$input['update']);
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
 
-        $artists = self::$browse->get_objects();
-        // echo out the resulting xml document
-        ob_end_clean();
-        echo XML_Data::artists($artists);
+        if ($outputFormat == 'json') {
+            // Set the offset
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+
+            $artists = self::$browse->get_objects();
+            // echo out the resulting xml document
+            ob_end_clean();
+            echo JSON_Data::artists($artists);
+        }
+        else {  // Defaults to XML
+            // Set the offset
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+
+            $artists = self::$browse->get_objects();
+            // echo out the resulting xml document
+            ob_end_clean();
+            echo XML_Data::artists($artists);
+        }
     } // artists
 
     /**
@@ -388,11 +393,23 @@ class Api
 
         $albums = $artist->get_albums(null, true);
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-        ob_end_clean();
-        echo XML_Data::albums($albums);
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+        
+        if ($outputFormat == 'json') {
+            // Set the offset
+            JSON_Data::set_offset($input['offset']);
+            JSON_Data::set_limit($input['limit']);
+            ob_end_clean();
+            echo JSON_Data::albums($albums);
+        }
+        else {  // Defaults to XML
+            // Set the offset
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
+            ob_end_clean();
+            echo XML_Data::albums($albums);
+        }
     } // artist_albums
 
     /**
@@ -515,7 +532,7 @@ class Api
         }
         else {  // Defaults to XML
           echo XML_Data::tags(array($uid));
-        }        
+        }
 
     } // tag
 
@@ -526,13 +543,27 @@ class Api
      */
     public static function tag_artists($input)
     {
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
         $artists = Tag::get_tag_objects('artist',$input['filter']);
         if ($artists) {
-            XML_Data::set_offset($input['offset']);
-            XML_Data::set_limit($input['limit']);
+            if ($outputFormat == 'json') {
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
 
-            ob_end_clean();
-            echo XML_Data::artists($artists);
+                ob_end_clean();
+                echo JSON_Data::artists($artists);
+            }
+            else {  // Defaults to XML
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+
+                ob_end_clean();
+                echo XML_Data::artists($artists);
+            }
+
+
         }
     } // tag_artists
 
@@ -660,7 +691,7 @@ class Api
         self::$browse->set_filter('playlist_type', '1');
 
         $playlist_ids = self::$browse->get_objects();
-        
+
         //Whatever format the user wants
         $outputFormat = $input['format'];
 
@@ -839,7 +870,7 @@ class Api
               $playlist->delete_track_number($track);
               echo XML_Data::single_string('success');
           }
-        }  
+        }
 
     } // playlist_remove_song
 
@@ -884,7 +915,7 @@ class Api
         if (isset($input['type'])) {
             $type = $input['type'];
         }
-        
+
         switch ($type) {
             case 'artist':
                 echo XML_Data::artists($results);
@@ -1206,7 +1237,7 @@ class Api
         $type   = $input['type'];
         $id     = $input['id'];
         $rating = $input['rating'];
-        
+
         if (!Core::is_library_item($type) || !$id) {
             echo XML_Data::error('401', T_('Wrong library item type.'));
         } else {
@@ -1232,7 +1263,7 @@ class Api
             $username = $input['username'];
             $limit    = intval($input['limit']);
             $since    = intval($input['since']);
-            
+
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
@@ -1260,7 +1291,7 @@ class Api
         if (AmpConfig::get('sociable')) {
             $limit = intval($input['limit']);
             $since = intval($input['since']);
-            
+
             if ($GLOBALS['user']->id > 0) {
                 $activities = Useractivity::get_friends_activities($GLOBALS['user']->id, $limit, $since);
                 ob_end_clean();

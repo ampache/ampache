@@ -244,7 +244,7 @@ class JSON_Data
                 videos => intval($counts['video']),
                 playlists => intval($counts['playlist']),
                 stream => intval($counts['live_stream'])
-            ))); 
+            )));
         } // end foreach
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
@@ -253,11 +253,11 @@ class JSON_Data
     /**
      * artists
      *
-     * This takes an array of artists and then returns a pretty xml document with the information
+     * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
      * @param    array    $artists    (description here...)
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function artists($artists)
     {
@@ -265,7 +265,7 @@ class JSON_Data
             $artists = array_splice($artists,self::$offset,self::$limit);
         }
 
-        $string = '';
+        $JSON = [];
 
         Rating::build_cache('artist',$artists);
 
@@ -276,31 +276,33 @@ class JSON_Data
             $rating     = new Rating($artist_id,'artist');
             $tag_string = self::tags_string($artist->tags);
 
-            $string .= "<artist id=\"" . $artist->id . "\">\n" .
-                    "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
-                    $tag_string .
-                    "\t<albums>" . ($artist->albums ?: 0) . "</albums>\n" .
-                    "\t<songs>" . ($artist->songs ?: 0) . "</songs>\n" .
-                    "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
-                    "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
-                    "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
-                    "\t<mbid>" . $artist->mbid . "</mbid>\n" .
-                    "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
-                    "\t<yearformed>" . $artist->yearformed . "</yearformed>\n" .
-                    "\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n" .
-                    "</artist>\n";
+            array_push($JSON, array("artist" => array(
+                id => $artist->id,
+                name => $artist->f_full_name,
+                albums => ($artist->albums ?: 0),
+                songs => ($artist->songs ?: 0),
+                preciserating => ($rating->get_user_rating() ?: 0),
+                rating => ($rating->get_user_rating() ?: 0),
+                averagerating => ($rating->get_average_rating() ?: 0),
+                mbid => $artist->mbid,
+                summary => $artist->summary,
+                yearformed => $artist->yearformed,
+                placeformed => $artist->placeformed
+            )));
+
+
         } // end foreach artists
 
-        return self::output_xml($string);
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // artists
 
     /**
      * albums
      *
-     * This echos out a standard albums XML document, it pays attention to the limit
+     * This echos out a standard albums JSON document, it pays attention to the limit
      *
      * @param    array    $albums    (description here...)
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function albums($albums)
     {
@@ -310,7 +312,7 @@ class JSON_Data
 
         Rating::build_cache('album',$albums);
 
-        $string = "";
+        $JSON = [];
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             $album->format();
@@ -320,29 +322,42 @@ class JSON_Data
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
 
-            $string .= "<album id=\"" . $album->id . "\">\n" .
-                    "\t<name><![CDATA[" . $album->name . "]]></name>\n";
+            $theArray = [];
+
+            $theArray["album"] = array(
+                id => $album->id,
+                name => $album->name
+            );
 
             // Do a little check for artist stuff
             if ($album->artist_count != 1) {
-                $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
+                $theArray['artist'] = array(
+                    id => 0,
+                    name => 'Various'
+                );
             } else {
-                $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n";
+                $theArray['album']['artist'] = array(
+                    id => $album->artist_id,
+                    name => $album->artist_name
+                );
+
             }
 
-            $string .= "\t<year>" . $album->year . "</year>\n" .
-                    "\t<tracks>" . $album->song_count . "</tracks>\n" .
-                    "\t<disk>" . $album->disk . "</disk>\n" .
-                    self::tags_string($album->tags) .
-                    "\t<art><![CDATA[$art_url]]></art>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
-                    "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
-                    "\t<mbid>" . $album->mbid . "</mbid>\n" .
-                    "</album>\n";
+            $theArray['album']['year'] = $album->year;
+            $theArray['album']['tracks'] = $album->song_count;
+            $theArray['album']['disk'] = $album->disk;
+            $theArray['album']['tags'] = self::tags_string($album->tags);
+            $theArray['album']['art'] = $art_url;
+            $theArray['album']['preciserating'] = $rating->get_user_rating();
+            $theArray['album']['rating'] = $rating->get_user_rating();
+            $theArray['album']['averagerating'] = $rating->get_average_rating();
+            $theArray['album']['mbid'] = $album->mbid;
+
+
+            array_push($JSON, $theArray);
         } // end foreach
 
-        return self::output_xml($string);
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // albums
 
     /**
@@ -371,7 +386,7 @@ class JSON_Data
                 "playlist" => array(
                     "id" => $playlist->id,
                     "name" => $playlist->name,
-                    "owner" => $playlist->f_user, 
+                    "owner" => $playlist->f_user,
                     "items" => $item_total,
                     "type" => $playlist->type)));
         } // end foreach
@@ -427,7 +442,7 @@ class JSON_Data
                         name => $song->get_album_artist_name()
                     );
                 }
-                
+
                     $ourSong['filename'] = $song->file;
                     $ourSong['track'] = $song->track;
                     $ourSong['playlisttrack'] = $playlist_track_string;
@@ -463,7 +478,7 @@ class JSON_Data
                     }
                     $ourSong['tags'] = $tags;
 
-            array_push($JSON, array("song" => $ourSong)); 
+            array_push($JSON, array("song" => $ourSong));
 
 
         } // end foreach
