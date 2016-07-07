@@ -76,7 +76,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <li>
             <a href="<?php echo AmpConfig::get('web_path');
     ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id;
-    ?>"><?php echo UI::get_icon('sort',_('Sort Tracks by Artist, Album, Song'));
+    ?>"><?php echo UI::get_icon('sort', T_('Sort Tracks by Artist, Album, Song'));
     ?>
             &nbsp;&nbsp;<?php echo T_('Sort Tracks by Artist, Album, Song');
     ?></a>
@@ -84,7 +84,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <li>
             <a href="<?php echo AmpConfig::get('web_path');
     ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id;
-    ?>"><?php echo UI::get_icon('wand',_('Remove duplicates'));
+    ?>"><?php echo UI::get_icon('wand', T_('Remove duplicates'));
     ?>
             &nbsp;&nbsp;<?php echo T_('Remove duplicates');
     ?></a>
