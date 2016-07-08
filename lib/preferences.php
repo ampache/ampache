@@ -244,7 +244,7 @@ function create_preference_input($name,$value)
             if (AmpConfig::get('allow_localplay_playback')) {
                 echo "\t<option value=\"localplay\" $is_localplay>" . T_('Localplay') . "</option>\n";
             }
-            echo "\t<option value=\"web_player\" $is_web_player>" . _('Web Player') . "</option>\n";
+            echo "\t<option value=\"web_player\" $is_web_player>" . T_('Web Player') . "</option>\n";
             echo "</select>\n";
         break;
         case 'playlist_type':
