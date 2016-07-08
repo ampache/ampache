@@ -221,7 +221,6 @@ class XML_Data
     public static function keyed_array($array,$callback='')
     {
         $string = '';
-        return $array;
         // Foreach it
         foreach ($array as $key=>$value) {
             $attribute = '';

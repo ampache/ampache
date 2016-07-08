@@ -501,10 +501,21 @@ class JSON_Data
         }
 
         $string = '';
+        $JSON = [];
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
             $video->format();
+            $JSON['video'] = array(
+                id => $video->id,
+                title => $video->title,
+                mime => $video->mime,
+                resolution => $video->f_resolution,
+                size => $video->size,
+                tags => self::tags_string($video->tags),
+                url => Video::play_url($video->id, '', 'api')
 
+
+            );
             $string .= "<video id=\"" . $video->id . "\">\n" .
                     "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
                     "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
@@ -514,8 +525,8 @@ class JSON_Data
                     "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api') . "]]></url>\n" .
                     "</video>\n";
         } // end foreach
-
-        return self::output_xml($string);
+        
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // videos
 
     /**
