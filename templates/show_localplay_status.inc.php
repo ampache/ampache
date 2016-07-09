@@ -23,7 +23,7 @@
 $status      = $localplay->status();
 $now_playing = $status['track_title'];
 if (!empty($status['track_album'])) {
-    $now_playing .= ' - ' .  $status['track_album'] . ' - ' . $status['track_artist'];
+    $now_playing .= ' - ' . $status['track_album'] . ' - ' . $status['track_artist'];
 }
 ?>
 <?php Ajax::start_container('localplay_status'); ?>

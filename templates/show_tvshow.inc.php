@@ -35,8 +35,7 @@ UI::show_box_top($tvshow->f_name, 'info-box');
     <?php if ($tvshow->summary) {
     ?>
     <div id="item_summary">
-        <?php echo $tvshow->summary;
-    ?>
+        <?php echo $tvshow->summary; ?>
     </div>
     <?php 
 } ?>
@@ -46,24 +45,18 @@ UI::show_box_top($tvshow->f_name, 'info-box');
     <?php
     if (AmpConfig::get('ratings')) {
         ?>
-    <div id="rating_<?php echo intval($tvshow->id);
-        ?>_tvshow" style="display:inline;">
-        <?php show_rating($tvshow->id, 'tvshow');
-        ?>
+    <div id="rating_<?php echo intval($tvshow->id); ?>_tvshow" style="display:inline;">
+        <?php show_rating($tvshow->id, 'tvshow'); ?>
     </div>
     <?php 
-    }
-    ?>
+    } ?>
     <?php if (AmpConfig::get('userflags')) {
     ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $tvshow->id;
-    ?>_tvshow">
-            <?php Userflag::show($tvshow->id,'tvshow');
-    ?>
+    <div style="display:table-cell;" id="userflag_<?php echo $tvshow->id; ?>_tvshow">
+            <?php Userflag::show($tvshow->id,'tvshow'); ?>
     </div>
     <?php 
-}
-    ?>
+} ?>
 <?php 
 } ?>
 <div id="information_actions">
@@ -72,20 +65,16 @@ UI::show_box_top($tvshow->f_name, 'info-box');
         <?php if (AmpConfig::get('directplay')) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id,'play', T_('Play all'),'directplay_full_' . $tvshow->id);
-    ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, T_('Play all'),'directplay_full_text_' . $tvshow->id);
-    ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id,'play', T_('Play all'),'directplay_full_' . $tvshow->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, T_('Play all'),'directplay_full_text_' . $tvshow->id); ?>
         </li>
         <?php 
 } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true','play_add', T_('Play all last'),'addplay_tvshow_' . $tvshow->id);
-    ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', T_('Play all last'),'addplay_tvshow_text_' . $tvshow->id);
-    ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true','play_add', T_('Play all last'),'addplay_tvshow_' . $tvshow->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', T_('Play all last'),'addplay_tvshow_text_' . $tvshow->id); ?>
         </li>
         <?php 
 } ?>
@@ -93,12 +82,10 @@ UI::show_box_top($tvshow->f_name, 'info-box');
     ?>
         <li>
             <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit'));
-    ?>
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
             <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">
-                <?php echo T_('Edit TV Show');
-    ?>
+                <?php echo T_('Edit TV Show'); ?>
             </a>
         </li>
         <?php 
@@ -106,12 +93,8 @@ UI::show_box_top($tvshow->f_name, 'info-box');
         <?php if (Catalog::can_remove($tvshow)) {
     ?>
         <li>
-            <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo AmpConfig::get('web_path');
-    ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id;
-    ?>">
-                <?php echo UI::get_icon('delete', T_('Delete'));
-    ?> <?php echo T_('Delete');
-    ?>
+            <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
+                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
             </a>
         </li>
         <?php 

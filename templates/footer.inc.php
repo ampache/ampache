@@ -37,8 +37,7 @@
         <div id="footer" class="<?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
         <?php if (AmpConfig::get('show_donate')) {
     ?>
-            <a id="donate" href="//ampache.github.io/donate.html" title="Donate" target="_blank"><?php echo ".:: " . T_('Donate') . " ::.";
-    ?></a> |
+            <a id="donate" href="//ampache.github.io/donate.html" title="Donate" target="_blank"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> |
         <?php 
 } ?>
         <?php
@@ -46,25 +45,17 @@
             echo AmpConfig::get('custom_text_footer');
         } else {
             ?>
-            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2015 Ampache.org">Ampache <?php echo AmpConfig::get('version');
-            ?></a>
+            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2015 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
         <?php 
         } ?>
         <?php if (AmpConfig::get('show_footer_statistics')) {
     ?>
             <br />
-            <?php echo T_('Queries:');
-    ?><?php echo Dba::$stats['query'];
-    ?> <?php echo T_('Cache Hits:');
-    ?><?php echo database_object::$cache_hit;
-    ?>
+            <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
             <?php
                 $load_time_end = microtime(true);
-    $load_time                 = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4);
-    ?>
-            | <?php echo T_('Load time:');
-    ?><?php echo $load_time;
-    ?>
+    $load_time                 = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4); ?>
+            | <?php echo T_('Load time:'); ?><?php echo $load_time; ?>
         <?php 
 } ?>
         </div>

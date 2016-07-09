@@ -44,8 +44,7 @@
     if (Access::check('interface', '25')) {
         ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
-        ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     <?php
 
@@ -61,19 +60,15 @@
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) {
             ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id;
-            ?>_podcast_episode">
-        <?php Rating::show($libitem->id,'podcast_episode');
-            ?>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast_episode">
+        <?php Rating::show($libitem->id,'podcast_episode'); ?>
     </td>
     <?php 
         }
         if (AmpConfig::get('userflags')) {
             ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id;
-            ?>_podcast_episode">
-        <?php Userflag::show($libitem->id,'podcast_episode');
-            ?>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
+        <?php Userflag::show($libitem->id,'podcast_episode'); ?>
     </td>
     <?php 
         }
@@ -82,34 +77,25 @@
 <td class="cel_action">
     <?php if (Access::check_function('download') && !empty($libitem->file)) {
     ?>
-            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-    ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $libitem->id;
-    ?>"><?php echo UI::get_icon('download', T_('Download'));
-    ?></a>
+            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
 
 } ?>
 <?php
     if (Access::check('interface','50')) {
         ?>
-    <span id="button_sync_<?php echo $libitem->id;
-        ?>">
-        <?php echo Ajax::button('?page=podcast&action=sync&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'),'sync_podcast_episode_' . $libitem->id);
-        ?>
+    <span id="button_sync_<?php echo $libitem->id; ?>">
+        <?php echo Ajax::button('?page=podcast&action=sync&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'),'sync_podcast_episode_' . $libitem->id); ?>
     </span>
     <a id="<?php echo 'edit_podcast_episode_' . $libitem->id ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id ?>', '<?php echo T_('Podcast Episode edit') ?>', 'podcast_episode_')">
-        <?php echo UI::get_icon('edit', T_('Edit'));
-        ?>
+        <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php 
     }
     if (Catalog::can_remove($libitem)) {
         ?>
-    <a id="<?php echo 'delete_podcast_episode_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path');
-        ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id;
-        ?>">
-        <?php echo UI::get_icon('delete', T_('Delete'));
-        ?>
+    <a id="<?php echo 'delete_podcast_episode_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
+        <?php echo UI::get_icon('delete', T_('Delete')); ?>
     </a>
     <?php 
     }

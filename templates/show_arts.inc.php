@@ -40,33 +40,19 @@ while ($i <= $rows) {
         } else {
             ?>
             <td align="center">
-                <a href="<?php echo $image_url;
-            ?>" title="<?php echo $_SESSION['form']['images'][$key]['title'];
-            ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url;
-            ?>" alt="<?php echo T_('Art');
-            ?>" border="0" height="175" width="175" /></a>
+                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" border="0" height="175" width="175" /></a>
                 <br />
                 <p align="center">
                 <?php if (is_array($dimensions)) {
     ?>
-                [<?php echo intval($dimensions['width']);
-    ?>x<?php echo intval($dimensions['height']);
-    ?>]
+                [<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['height']); ?>]
                 <?php 
 } else {
     ?>
-                <span class="error"><?php echo T_('Invalid');
-    ?></span>
+                <span class="error"><?php echo T_('Invalid'); ?></span>
                 <?php 
-}
-            ?>
-                [<a href="<?php echo AmpConfig::get('web_path');
-            ?>/arts.php?action=select_art&image=<?php echo $key;
-            ?>&object_type=<?php echo $object_type;
-            ?>&object_id=<?php echo $object_id;
-            ?>&burl=<?php echo base64_encode($burl);
-            ?>"><?php echo T_('Select');
-            ?></a>]
+} ?>
+                [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 </p>
             </td>
 <?php

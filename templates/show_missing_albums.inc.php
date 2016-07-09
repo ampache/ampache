@@ -36,11 +36,8 @@
         if ($walbums) {
             foreach ($walbums as $libitem) {
                 ?>
-        <tr id="walbum_<?php echo $libitem->mbid;
-                ?>" class="<?php echo UI::flip_class();
-                ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_wanted_album_row.inc.php');
-                ?>
+        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php
 
@@ -49,11 +46,8 @@
         ?>
         <?php if (!$walbums || !count($walbums)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No missing albums found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing albums found'); ?></span></td>
         </tr>
         <?php 
 } ?>

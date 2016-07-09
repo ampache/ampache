@@ -38,43 +38,34 @@ $thcount  = 8;
             <th class="cel_time optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
             <?php if (AmpConfig::get('licensing')) {
     ?>
-            <th class="cel_license optional"><?php echo T_('License');
-    ?></th>
+            <th class="cel_license optional"><?php echo T_('License'); ?></th>
             <?php 
 } ?>
             <?php if (AmpConfig::get('show_played_times')) {
     ?>
-            <th class="cel_counter optional"><?php echo T_('# Played');
-    ?></th>
+            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php 
 } ?>
             <?php if (User::is_registered()) {
     ?>
                 <?php if (AmpConfig::get('ratings')) {
     ++$thcount;
-    Rating::build_cache('song', $object_ids);
-    ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating');
-    ?></th>
+    Rating::build_cache('song', $object_ids); ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('userflags')) {
     ++$thcount;
-    Userflag::build_cache('song', $object_ids);
-    ?>
-                <th class="cel_userflag optional"><?php echo T_('Fav.');
-    ?></th>
+    Userflag::build_cache('song', $object_ids); ?>
+                <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
             <?php 
-}
-    ?>
+} ?>
                 <?php 
 }
     ?>
                 <th class="cel_action essential"><?php echo T_('Action'); ?></th>
             <?php if (isset($argument) && $argument) {
-    ++$thcount;
-    ?>
+    ++$thcount; ?>
                 <th class="cel_drag essential"></th>
             <?php 
 } ?>
@@ -84,24 +75,17 @@ $thcount  = 8;
         <?php
             foreach ($object_ids as $song_id) {
                 $libitem = new Song($song_id, $limit_threshold);
-                $libitem->format();
-                ?>
-            <tr class="<?php echo UI::flip_class();
-                ?>" id="song_<?php echo $libitem->id;
-                ?>">
-                <?php require AmpConfig::get('prefix') . UI::find_template('show_song_row.inc.php');
-                ?>
+                $libitem->format(); ?>
+            <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $libitem->id; ?>">
+                <?php require AmpConfig::get('prefix') . UI::find_template('show_song_row.inc.php'); ?>
             </tr>
         <?php 
             } ?>
 
     <?php if (!count($object_ids)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No song found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No song found'); ?></span></td>
         </tr>
     <?php 
 } ?>
@@ -117,31 +101,26 @@ $thcount  = 8;
             <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
             <?php if (AmpConfig::get('licensing')) {
     ?>
-            <th class="cel_license"><?php echo T_('License');
-    ?></th>
+            <th class="cel_license"><?php echo T_('License'); ?></th>
             <?php 
 } ?>
             <?php if (AmpConfig::get('show_played_times')) {
     ?>
-            <th class="cel_counter optional"><?php echo T_('# Played');
-    ?></th>
+            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php 
 } ?>
             <?php if (User::is_registered()) {
     ?>
                 <?php if (AmpConfig::get('ratings')) {
     ?>
-                    <th class="cel_rating"><?php echo T_('Rating');
-    ?></th>
+                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('userflags')) {
     ?>
                     <th class="cel_userflag"></th>
                 <?php 
-}
-    ?>
+} ?>
             <?php 
 } ?>
                 <th class="cel_action"></th>

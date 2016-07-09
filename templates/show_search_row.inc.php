@@ -50,19 +50,15 @@
         <?php
             if (Access::check_function('batch_download') && check_can_zip('search')) {
                 ?>
-                <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-                ?>/batch.php?action=search&amp;id=<?php echo $libitem->id;
-                ?>">
-                    <?php echo UI::get_icon('batch_download', T_('Batch Download'));
-                ?>
+                <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
+                    <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
                 </a>
         <?php 
             }
             if ($libitem->has_access()) {
                 ?>
                 <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Smart Playlist edit') ?>', 'smartplaylist_row_')">
-                    <?php echo UI::get_icon('edit', T_('Edit'));
-                ?>
+                    <?php echo UI::get_icon('edit', T_('Edit')); ?>
                 </a>
                 <?php
                 echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id,'delete', T_('Delete'),'delete_playlist_' . $libitem->id);

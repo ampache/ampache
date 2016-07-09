@@ -29,8 +29,7 @@
             if (Stream_Playlist::check_autoplay_append()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=song_preview&object_id=' . $libitem->id . '&append=true','play_add_preview', T_('Play last'),'addplay_song_' . $libitem->id);
             }
-        }
-    ?>
+        } ?>
 </td>
 <?php 
 } ?>
@@ -45,13 +44,11 @@
                 if (Access::check('interface', '25')) {
                     ?>
                     <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song_preview', '<?php echo $libitem->id ?>')">
-                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
-                    ?>
+                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
                     </a>
             <?php 
                 }
-            }
-    ?>
+            } ?>
     </span>
 </td>
 <?php 

@@ -26,9 +26,7 @@ $theme_color    = AmpConfig::get('theme_color');
 $theme_css_base = AmpConfig::get('theme_css_base');
 foreach ($theme_css_base as $css_base) {
     ?>
-    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $css_base[0];
-    ?>" type="text/css" media="<?php echo $css_base[1];
-    ?>" />
+    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $css_base[0]; ?>" type="text/css" media="<?php echo $css_base[1]; ?>" />
 <?php 
 } ?>
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css'; ?>" type="text/css" media="screen" />
@@ -37,8 +35,7 @@ foreach ($theme_css_base as $css_base) {
 <?php
 if (file_exists(AmpConfig::get('prefix') . $theme_path . '/icons.sprite.css')) {
     ?>
-<link rel="stylesheet" href="<?php echo $web_path . $theme_path;
-    ?>/icons.sprite.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/icons.sprite.css" type="text/css" media="screen" />
 <?php
 
 }
@@ -47,8 +44,7 @@ if (file_exists(AmpConfig::get('prefix') . $theme_path . '/icons.sprite.css')) {
 if (is_rtl(AmpConfig::get('lang'))
     && is_file(AmpConfig::get('prefix') . $theme_path . '/rtl.css')) {
     ?>
-<link rel="stylesheet" href="<?php echo $web_path . $theme_path;
-    ?>/rtl.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen" />
 <?php
 
 }

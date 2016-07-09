@@ -28,8 +28,7 @@ $button   = Ajax::button('?page=index&action=random_videos','random', T_('Refres
 if ($videos) {
     foreach ($videos as $video_id) {
         $video = Video::create_from_id($video_id);
-        $video->format();
-        ?>
+        $video->format(); ?>
     <div class="random_video">
         <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
             <?php if (Art::is_enabled()) {
@@ -38,39 +37,31 @@ if ($videos) {
     Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
 } else {
     ?>
-                <?php echo $video->get_fullname();
-    ?>
+                <?php echo $video->get_fullname(); ?>
             <?php 
-}
-        ?>
+} ?>
         </div>
         <div class="play_video">
         <?php if (AmpConfig::get('directplay')) {
     ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id,'play', T_('Play'),'play_album_' . $video->id);
-    ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id,'play', T_('Play'),'play_album_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id);
-    ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id); ?>
             <?php 
-}
-    ?>
+} ?>
         <?php 
-}
-        ?>
+} ?>
         </div>
         <?php
         if (AmpConfig::get('ratings') && Access::check('interface', '25')) {
             echo "<div id=\"rating_" . $video->id . "_video\">";
             show_rating($video->id, 'video');
             echo "</div>";
-        }
-        ?>
+        } ?>
     </div>
     <?php 
-    }
-    ?>
+    } ?>
 <?php 
 } ?>
 

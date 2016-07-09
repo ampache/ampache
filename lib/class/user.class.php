@@ -141,6 +141,11 @@ class User extends database_object
     public $f_avatar_medium;
 
     /**
+     * @var array $cache_bandwidths
+     */
+    private static $cache_bandwidths = [];
+    
+    /**
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
@@ -1022,13 +1027,19 @@ class User extends database_object
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
 
         if ($details) {
-            /* Calculate their total Bandwidth Usage */
-            $sql = "SELECT sum(`song`.`size`) as size FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
-                "WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
-            $db_results = Dba::read($sql);
+            if (! self::$cache_bandwidths) {
+                debug_event('user', 'Bandwidths haven\'t been computed yet. Getting them', 5);
+                $sql = "SELECT `object_count`.`user`, sum(`song`.`size`) as size "
+                     . "FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` "
+                     . "WHERE `object_count`.`object_type`='song' "
+                     . "GROUP BY `object_count`.`user`";
+                $db_results = Dba::read($sql);
+                while ($r = Dba::fetch_assoc($db_results)) {
+                    self::$cache_bandwidths[$r['user']] = $r['size'];
+                }
+            }
 
-            $result = Dba::fetch_assoc($db_results);
-            $total  = $result['size'];
+            $total = self::$cache_bandwidths[$this->id];
 
             $this->f_useage = UI::format_bytes($total);
 

@@ -38,13 +38,11 @@
 </td>
 <?php
 if (Art::is_enabled()) {
-    $name = '[' . $libitem->f_artist . '] ' . scrub_out($libitem->full_name);
-    ?>
+    $name = '[' . $libitem->f_artist . '] ' . scrub_out($libitem->full_name); ?>
 <td class="cel_cover">
     <?php
     $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
-    Art::display('album', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id);
-    ?>
+    Art::display('album', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id); ?>
 </td>
 <?php 
 } ?>
@@ -54,16 +52,13 @@ if (Art::is_enabled()) {
         <?php
             if ($show_playlist_add) {
                 echo Ajax::button('?action=basket&type=album&' . $libitem->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'add_album_' . $libitem->id);
-                echo Ajax::button('?action=basket&type=album_random&' . $libitem->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'random_album_' . $libitem->id);
-                ?>
+                echo Ajax::button('?action=basket&type=album_random&' . $libitem->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'random_album_' . $libitem->id); ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php if (!count($libitem->album_suite)) {
     echo $libitem->id;
 } else {
     echo implode(',', $libitem->album_suite);
-}
-                ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
-                ?>
+} ?>')">
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
             <?php 
             } ?>
@@ -77,8 +72,7 @@ if (Art::is_enabled()) {
 <?php
     if (AmpConfig::get('show_played_times')) {
         ?>
-        <td class="cel_counter"><?php echo $libitem->object_cnt;
-        ?></td>
+        <td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
     <?php
 
     }
@@ -88,16 +82,12 @@ if (Art::is_enabled()) {
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) {
             ?>
-            <td class="cel_rating" id="rating_<?php echo $libitem->id;
-            ?>_album"><?php Rating::show($libitem->id, 'album');
-            ?></td>
+            <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_album"><?php Rating::show($libitem->id, 'album'); ?></td>
     <?php 
         }
         if (AmpConfig::get('userflags')) {
             ?>
-            <td class="cel_userflag" id="userflag_<?php echo $libitem->id;
-            ?>_album"><?php Userflag::show($libitem->id, 'album');
-            ?></td>
+            <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_album"><?php Userflag::show($libitem->id, 'album'); ?></td>
     <?php 
         }
     }
@@ -106,11 +96,8 @@ if (Art::is_enabled()) {
     <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
     if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
         ?>
-        <a href="<?php echo AmpConfig::get('web_path');
-        ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id;
-        ?>">
-            <?php echo UI::get_icon('comment', T_('Post Shout'));
-        ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
+            <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
         </a>
     <?php 
     }
@@ -122,24 +109,21 @@ if (Art::is_enabled()) {
     if (Access::check_function('batch_download') && check_can_zip('album')) {
         ?>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
-                <?php echo UI::get_icon('batch_download', T_('Batch Download'));
-        ?>
+                <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
             </a>
     <?php 
     }
     if (Access::check('interface','50') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
         ?>
             <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo T_('Album edit') ?>', 'album_')">
-                <?php echo UI::get_icon('edit', T_('Edit'));
-        ?>
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
     <?php 
     }
     if (Catalog::can_remove($libitem)) {
         ?>
             <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
-            <?php echo UI::get_icon('delete', T_('Delete'));
-        ?>
+            <?php echo UI::get_icon('delete', T_('Delete')); ?>
             </a>
     <?php 
     }

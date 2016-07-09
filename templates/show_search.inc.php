@@ -32,12 +32,8 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
         <?php if (Access::check_function('batch_download') && check_can_zip('search')) {
     ?>
         <li>
-            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-    ?>/batch.php?action=search&amp;id=<?php echo $playlist->id;
-    ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download'));
-    ?></a>
-            <?php echo T_('Batch Download');
-    ?>
+            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+            <?php echo T_('Batch Download'); ?>
         </li>
             <?php 
 } ?>
@@ -48,14 +44,10 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
         <?php if ($playlist->has_access()) {
     ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path');
-    ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id;
-    ?>">
-                <?php echo UI::get_icon('delete');
-    ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
+                <?php echo UI::get_icon('delete'); ?>
             </a>
-            <?php echo T_('Delete');
-    ?>
+            <?php echo T_('Delete'); ?>
         </li>
         <?php 
 } ?>

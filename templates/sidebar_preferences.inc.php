@@ -34,13 +34,8 @@ $catagories = Preference::get_catagories();
         if ($name == 'system') {
             continue;
         }
-        $f_name = ucfirst($name);
-        ?>
-      <li id="sb_preferences_sections_<?php echo $f_name;
-        ?>"><a href="<?php echo $web_path;
-        ?>/preferences.php?tab=<?php echo $name;
-        ?>"><?php echo T_($f_name);
-        ?></a></li>
+        $f_name = ucfirst($name); ?>
+      <li id="sb_preferences_sections_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
 <?php 
     } ?>
       <li id="sb_preferences_sections_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>

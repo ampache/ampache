@@ -41,32 +41,23 @@ $status = $localplay->status();
             $class = ' class="cel_name"';
             if ($status['track'] == $object['track']) {
                 $class=' class="cel_name lp_current"';
-            }
-            ?>
-        <tr class="<?php echo UI::flip_class();
-            ?>" id="localplay_playlist_<?php echo $object['id'];
-            ?>">
+            } ?>
+        <tr class="<?php echo UI::flip_class(); ?>" id="localplay_playlist_<?php echo $object['id']; ?>">
             <td class="cel_track">
-                <?php echo scrub_out($object['track']);
-            ?>
+                <?php echo scrub_out($object['track']); ?>
             </td>
-            <td<?php echo $class;
-            ?>>
-                <?php echo $localplay->format_name($object['name'],$object['id']);
-            ?>
+            <td<?php echo $class; ?>>
+                <?php echo $localplay->format_name($object['name'],$object['id']); ?>
             </td>
             <td class="cel_action">
-            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']),'delete', T_('Delete'),'localplay_delete_' . intval($object['id']));
-            ?>
+            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']),'delete', T_('Delete'),'localplay_delete_' . intval($object['id'])); ?>
             </td>
         </tr>
         <?php 
         } if (!count($object_ids)) {
             ?>
-        <tr class="<?php echo UI::flip_class();
-            ?>">
-            <td colspan="3"><span class="error"><?php echo T_('No Records Found');
-            ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="3"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
         </tr>
         <?php 
         } ?>

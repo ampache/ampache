@@ -53,8 +53,7 @@ if (Art::is_enabled()) {
     if (!$art_showed) {
         $thumb = (isset($browse) && !$browse->get_grid_view()) ? 7 : 6;
         Art::display('video', $libitem->id, $libitem->f_title, $thumb, $libitem->link);
-    }
-    ?>
+    } ?>
 </td>
 <?php 
 } ?>
@@ -66,8 +65,7 @@ if (Art::is_enabled()) {
     if (Access::check('interface', '25')) {
         ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
-        ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     <?php
 
@@ -86,8 +84,7 @@ if ($video_type != 'video') {
 <td class="cel_length"><?php echo $libitem->f_length; ?></td>
 <?php if (AmpConfig::get('show_played_times')) {
     ?>
-<td class="cel_counter"><?php echo $libitem->object_cnt;
-    ?></td>
+<td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
 <?php 
 } ?>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
@@ -121,17 +118,13 @@ if ($video_type != 'video') {
      }
 if (Access::check_function('download')) {
     ?>
-    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-    ?>/stream.php?action=download&video_id=<?php echo $libitem->id;
-    ?>"><?php echo UI::get_icon('download', T_('Download'));
-    ?></a>
+    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
 <?php 
 }
     if (Access::check('interface','50')) {
         ?>
     <a id="<?php echo 'edit_video_' . $libitem->id ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_video_' . $libitem->id ?>', '<?php echo T_('Video edit') ?>', 'video_')">
-        <?php echo UI::get_icon('edit', T_('Edit'));
-        ?>
+        <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php 
     }

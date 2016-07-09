@@ -63,19 +63,15 @@ $_SESSION['login'] = true;
                     /*  If we should show the user agreement */
                     if (AmpConfig::get('user_agreement')) {
                         ?>
-                    <h3><?php echo T_('User Agreement');
-                        ?></h3>
+                    <h3><?php echo T_('User Agreement'); ?></h3>
                     <div class="registrationAgreement">
                         <div class="agreementContent">
-                            <?php Registration::show_agreement();
-                        ?>
+                            <?php Registration::show_agreement(); ?>
                         </div>
 
                         <div class="agreementCheckbox">
-                            <input type='checkbox' name='accept_agreement' /> <?php echo T_('I Accept');
-                        ?>
-                            <?php AmpError::display('user_agreement');
-                        ?>
+                            <input type='checkbox' name='accept_agreement' /> <?php echo T_('I Accept'); ?>
+                            <?php AmpError::display('user_agreement'); ?>
                         </div>
                     </div>
                     <?php 
@@ -91,14 +87,10 @@ $_SESSION['login'] = true;
     ?>
                         <div class="registerfield <?php if (in_array('fullname', $mandatory_fields)) {
     echo 'require';
-}
-    ?>">
-                            <label for="fullname"><?php echo T_('Full Name');
-    ?>:</label>
-                            <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname);
-    ?>' />
-                            <?php AmpError::display('fullname');
-    ?>
+} ?>">
+                            <label for="fullname"><?php echo T_('Full Name'); ?>:</label>
+                            <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
+                            <?php AmpError::display('fullname'); ?>
                         </div>
                     <?php 
 } ?>
@@ -112,14 +104,10 @@ $_SESSION['login'] = true;
     ?>
                         <div class="registerfield <?php if (in_array('website', $mandatory_fields)) {
     echo 'require';
-}
-    ?>">
-                            <label for="website"><?php echo T_('Website');
-    ?>:</label>
-                            <input type='text' name='website' id='website' value='<?php echo scrub_out($website);
-    ?>' />
-                            <?php AmpError::display('website');
-    ?>
+} ?>">
+                            <label for="website"><?php echo T_('Website'); ?>:</label>
+                            <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
+                            <?php AmpError::display('website'); ?>
                         </div>
                     <?php 
 } ?>
@@ -127,14 +115,10 @@ $_SESSION['login'] = true;
     ?>
                         <div class="registerfield <?php if (in_array('state', $mandatory_fields)) {
     echo 'require';
-}
-    ?>">
-                            <label for="state"><?php echo T_('State');
-    ?>:</label>
-                            <input type='text' name='state' id='state' value='<?php echo scrub_out($state);
-    ?>' />
-                            <?php AmpError::display('state');
-    ?>
+} ?>">
+                            <label for="state"><?php echo T_('State'); ?>:</label>
+                            <input type='text' name='state' id='state' value='<?php echo scrub_out($state); ?>' />
+                            <?php AmpError::display('state'); ?>
                         </div>
                     <?php 
 } ?>
@@ -142,14 +126,10 @@ $_SESSION['login'] = true;
     ?>
                         <div class="registerfield <?php if (in_array('city', $mandatory_fields)) {
     echo 'require';
-}
-    ?>">
-                            <label for="city"><?php echo T_('City');
-    ?>:</label>
-                            <input type='text' name='city' id='city' value='<?php echo scrub_out($city);
-    ?>' />
-                            <?php AmpError::display('city');
-    ?>
+} ?>">
+                            <label for="city"><?php echo T_('City'); ?>:</label>
+                            <input type='text' name='city' id='city' value='<?php echo scrub_out($city); ?>' />
+                            <?php AmpError::display('city'); ?>
                         </div>
                     <?php 
 } ?>
