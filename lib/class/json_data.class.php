@@ -489,10 +489,10 @@ class JSON_Data
     /**
      * videos
      *
-     * This builds the xml document for displaying video objects
+     * This builds the JSON document for displaying video objects
      *
      * @param    array    $videos    (description here...)
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function videos($videos)
     {
@@ -668,31 +668,33 @@ class JSON_Data
     /**
      * timeline
      *
-     * This handles creating an xml document for an activity list
+     * This handles creating an JSON document for an activity list
      *
      * @param    int[]    $activities    Activity identifier list
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function timeline($activities)
     {
-        $string = "<timeline>\n";
+        $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
-            $shout->format();
+            // $shout->format(); // Causing an error for me TODO: Look into
             $user = new User($activity->user);
-            $string .= "\t<activity id=\"" . $aid . "\">\n" .
-                    "\t\t<date>" . $activity->activity_date . "</date>\n" .
-                    "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" .
-                    "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .
-                    "\t\t<action><![CDATA[" . $shout->text . "]]></action>\n";
-            if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
-            }
-            $string .= "\t</activity>n";
-        }
-        $string .= "</timeline>\n";
+            $ourArray = array(
+                id => $aid,
+                data => $activity->activity_date,
+                object_type => $activity->object_type,
+                object_id => $activity->object_id,
+                action => $shout->text
+            );
 
-        $final = self::_header() . $string . self::_footer();
+            if ($user->id) {
+                $ourArray['username'] = $user->username;
+            }
+            array_push($JSON['timeline'], $ourArray);
+        }
+
+        $final = self::_header() . json_encode($JSON, JSON_PRETTY_PRINT) . self::_footer();
 
         return $final;
     } // timeline
