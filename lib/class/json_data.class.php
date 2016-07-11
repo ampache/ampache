@@ -91,6 +91,7 @@ class JSON_Data
      */
     public static function set_type($type)
     {
+        // echo "AYYY";
         if (!in_array($type,array('rss','xspf','itunes'))) {
             return false;
         }
@@ -120,58 +121,29 @@ class JSON_Data
      * This takes two values, first the key second the string
      *
      * @param    string    $key    (description here...)
-     * @param    string    $string    xml data
-     * @return    string    return xml
+     * @param    string    $string    JSON data
+     * @return    string    return JSON
      */
     public static function single_string($key, $string='')
     {
-        $final = self::_header();
         if (!empty($string)) {
-             $JSON = json_encode(array($key => $string), JSON_PRETTY_PRINT);
+            $JSON = json_encode(array($key => $string), JSON_PRETTY_PRINT);
         } else {
             $JSON = json_encode(array("message" => $key), JSON_PRETTY_PRINT);
         }
-        //TODO: Figure out if this is needed
-        $final .= self::_footer();
 
         return $JSON;
     } // single_string
 
     /**
-      * header
-     *
-     * This returns the header
-     *
-     * @see    _header()
-     * @return    string    return xml
-     */
-    public static function header($title = null)
-    {
-        return self::_header($title);
-    } // header
-
-    /**
-     * footer
-     *
-     * This returns the footer
-     *
-     * @see    _footer()
-     * @return    string    return xml
-     */
-    public static function footer()
-    {
-        return self::_footer();
-    } // footer
-
-    /**
      * tags_string
      *
-     * This returns the formatted 'tags' string for an xml document
+     * This returns the formatted 'tags' string for an JSON document
      *
      */
     private static function tags_string($tags)
     {
-        $JSON = [];
+        $JSON = null;
 
         if (is_array($tags)) {
             $atags = array();
@@ -198,7 +170,7 @@ class JSON_Data
     /**
      * playlist_song_tracks_string
      *
-     * This returns the formatted 'playlistTrack' string for an xml document
+     * This returns the formatted 'playlistTrack' string for an JSON document
      *
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
@@ -276,18 +248,20 @@ class JSON_Data
             $rating     = new Rating($artist_id,'artist');
             $tag_string = self::tags_string($artist->tags);
 
-            array_push($JSON, array("artist" => array(
-                id => $artist->id,
-                name => $artist->f_full_name,
-                albums => ($artist->albums ?: 0),
-                songs => ($artist->songs ?: 0),
-                preciserating => ($rating->get_user_rating() ?: 0),
-                rating => ($rating->get_user_rating() ?: 0),
-                averagerating => ($rating->get_average_rating() ?: 0),
-                mbid => $artist->mbid,
-                summary => $artist->summary,
-                yearformed => $artist->yearformed,
-                placeformed => $artist->placeformed
+            array_push($JSON, array(
+                "artist" => array(
+                    id => $artist->id,
+                    name => $artist->f_full_name,
+                    tags => $tag_string,
+                    albums => ($artist->albums ?: 0),
+                    songs => ($artist->songs ?: 0),
+                    preciserating => ($rating->get_user_rating() ?: 0),
+                    rating => ($rating->get_user_rating() ?: 0),
+                    averagerating => ($rating->get_average_rating() ?: 0),
+                    mbid => $artist->mbid,
+                    summary => $artist->summary,
+                    yearformed => $artist->yearformed,
+                    placeformed => $artist->placeformed
             )));
 
 
@@ -363,10 +337,10 @@ class JSON_Data
     /**
      * playlists
      *
-     * This takes an array of playlist ids and then returns a nice pretty XML document
+     * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
      * @param    array    $playlists    (description here...)
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function playlists($playlists)
     {
@@ -422,7 +396,6 @@ class JSON_Data
 
             $song->format();
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
-            $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id)); //Same as genre?
             $rating                = new Rating($song_id, 'song');
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
 
@@ -532,11 +505,11 @@ class JSON_Data
     /**
      * democratic
      *
-     * This handles creating an xml document for democratic items, this can be a little complicated
+     * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
      * @param    array    $object_ids    Object IDs
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function democratic($object_ids=array())
     {
@@ -546,7 +519,7 @@ class JSON_Data
 
         $democratic = Democratic::get_current_playlist();
 
-        $string = '';
+        $JSON = [];
 
         foreach ($object_ids as $row_id=>$data) {
             $song = new $data['object_type']($data['object_id']);
@@ -563,73 +536,73 @@ class JSON_Data
 
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
-            $string .= "<song id=\"" . $song->id . "\">\n" .
-                    "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
-                    "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n" .
-                    "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n" .
-                    "\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" .
-                    $tag_string .
-                    "\t<track>" . $song->track . "</track>\n" .
-                    "\t<time>" . $song->time . "</time>\n" .
-                    "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api') . "]]></url>\n" .
-                    "\t<size>" . $song->size . "</size>\n" .
-                    "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
-                    "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
-                    "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
-                    "</song>\n";
+            array_push($JSON, array(
+                id => $song->id,
+                title => $song->title,
+                artist => array(id => $song->artist, name => $song->f_artist_full),
+                album => array(id => $song->album, name => $song->f_album_full),
+                genre => array(id => $song->genre, name => $song->f_genre),
+                track => $song->track,
+                time => $song->time,
+                mime => $song->mime,
+                url => Song::play_url($song->id, '', 'api'),
+                size => $song->size,
+                art => $art_url,
+                preciserating => $rating->get_user_rating(),
+                rating => $rating->get_user_rating(),
+                averagerating => $rating->get_average_rating(),
+                vote => $democratic->get_vote($row_id)
+            ));
         } // end foreach
 
-        return self::output_xml($string);
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // democratic
 
     /**
      * user
      *
-     * This handles creating an xml document for an user
+     * This handles creating an JSON document for an user
      *
      * @param    User    $user    User
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function user(User $user)
     {
         $user->format();
 
-        $string = "<user id=\"" . $user->id . "\">\n" .
-                "\t<username><![CDATA[" . $user->username . "]]></username>\n" .
-                "\t<create_date>" . $user->create_date . "</create_date>\n" .
-                "\t<last_seen>" . $user->last_seen . "</last_seen>\n" .
-                "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
-                "\t<state><![CDATA[" . $user->state . "]]></state>\n" .
-                "\t<city><![CDATA[" . $user->city . "]]></city>\n";
-        if ($user->fullname_public) {
-            $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";
-        }
-        $string .= "</user>\n";
+        $JSON['user'] = array(
+            id => $user->id,
+            username => $user->username,
+            create_date => $user->create_date,
+            last_seen => $user->last_seen,
+            website => $user->website,
+            state => $user->state,
+            city => $user->city
+        );
 
-        return self::output_xml($string);
+        if ($user->fullname_public) {
+            $JSON['user']['fullname'] = $user->fullname;
+        }
+
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // user
 
     /**
      * users
      *
-     * This handles creating an xml document for an user list
+     * This handles creating an JSON document for an user list
      *
      * @param    int[]    $users    User identifier list
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function users($users)
     {
-        $string = "<users>\n";
+        $JSON = [];
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
+            array_push($JSON, $user->username);
         }
-        $string .= "</users>\n";
-
-        return self::output_xml($string);
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // users
 
     /**
@@ -660,11 +633,6 @@ class JSON_Data
         return self::output_xml($string);
     } // shouts
 
-    public static function output_xml($string)
-    {
-        return self::_header() . UI::clean_utf8($string) . self::_footer();
-    }
-
     /**
      * timeline
      *
@@ -694,117 +662,8 @@ class JSON_Data
             array_push($JSON['timeline'], $ourArray);
         }
 
-        $final = self::_header() . json_encode($JSON, JSON_PRETTY_PRINT) . self::_footer();
-
-        return $final;
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // timeline
-
-    /**
-     * rss_feed
-     *
-     * (description here...)
-     *
-     * @param    array    $data    (descriptiong here...)
-     * @param    string    $title    RSS feed title
-     * @param    string    $description    (not use yet?)
-     * @param    string    $date    publish date
-     * @return    string    RSS feed xml
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function rss_feed($data, $title, $description, $date = null)
-    {
-        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if ($date != null) {
-            $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
-        }
-
-        // Pass it to the keyed array xml function
-        foreach ($data as $item) {
-            // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item'=>$item), 1);
-        }
-
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
-    } // rss_feed
-
-    /**
-     * _header
-     *
-     * this returns a standard header, there are a few types
-     * so we allow them to pass a type if they want to
-     *
-     * @return    string    Header xml tag.
-     */
-    private static function _header($title = null)
-    {
-        switch (self::$type) {
-            case 'xspf':
-                $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
-                        "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n" .
-                        "<title>" . ($title ?: "Ampache XSPF Playlist") . "</title>\n" .
-                        "<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n" .
-                        "<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n" .
-                        "<info>" . AmpConfig::get('web_path') . "</info>\n" .
-                        "<trackList>\n";
-            break;
-            case 'itunes':
-                $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
-                "<!-- XML Generated by Ampache v." .  AmpConfig::get('version') . " -->\n";
-                "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-                "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-                "<plist version=\"1.0\">\n" .
-                "<dict>\n" .
-                "       <key>Major Version</key><integer>1</integer>\n" .
-                "       <key>Minor Version</key><integer>1</integer>\n" .
-                "       <key>Application Version</key><string>7.0.2</string>\n" .
-                "       <key>Features</key><integer>1</integer>\n" .
-                "       <key>Show Content Ratings</key><true/>\n" .
-                "       <key>Tracks</key>\n" .
-                "       <dict>\n";
-            break;
-            case 'rss':
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n " .
-                    "<!-- RSS Generated by Ampache v." . AmpConfig::get('version') . " on " . date("r",time()) . "-->\n" .
-                    "<rss version=\"2.0\">\n<channel>\n";
-            break;
-            default:
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n";
-            break;
-        } // end switch
-
-        return $header;
-    } // _header
-
-    /**
-      * _footer
-     *
-      * this returns the footer for this document, these are pretty boring
-     *
-     * @return    string    Footer xml tag.
-     */
-    private static function _footer()
-    {
-        switch (self::$type) {
-            case 'itunes':
-                $footer = "\t\t</dict>\t\n</dict>\n</plist>\n";
-            break;
-            case 'xspf':
-                $footer = "</trackList>\n</playlist>\n";
-            break;
-            case 'rss':
-                $footer = "\n</channel>\n</rss>\n";
-            break;
-            default:
-                $footer = "\n</root>\n";
-            break;
-        } // end switch on type
-
-
-        return $footer;
-    } // _footer
 
     public static function podcast(library_item $libitem)
     {

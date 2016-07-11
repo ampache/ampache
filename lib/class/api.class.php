@@ -1200,7 +1200,7 @@ class Api
                 $result_status = $localplay->$input['command']();
                 $outputArray     = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
                 if ($outputFormat == 'json') {
-                  echo json_encode($outputArray, JSON_PRETTY_PRINT);
+                    echo json_encode($outputArray, JSON_PRETTY_PRINT);
                 }
                 else {  // Defaults to XML
                     echo XML_Data::keyed_array($outputArray);
@@ -1252,7 +1252,7 @@ class Api
                 $outputArray = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
 
                 if ($outputFormat == 'json') {
-                    echo JSON_Data::keyed_array($outputArray);
+                    echo json_encode($outputArray, JSON_PRETTY_PRINT);
                 }
                 else {  // Defaults to XML
                     echo XML_Data::keyed_array($outputArray);
@@ -1263,7 +1263,12 @@ class Api
                 $type  = 'song';
                 $media = new $type($input['oid']);
                 if (!$media->id) {
-                    echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    if ($outputFormat == 'json') {
+                        echo JSON_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    }
+                    else {  // Defaults to XML
+                        echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    }
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id,$type);
@@ -1273,7 +1278,7 @@ class Api
                 $outputArray = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
              
                 if ($outputFormat == 'json') {
-                    echo JSON_Data::keyed_array($outputArray);
+                    echo json_encode($outputArray, JSON_PRETTY_PRINT);
                 }
                 else {  // Defaults to XML
                     echo XML_Data::keyed_array($outputArray);
@@ -1298,7 +1303,7 @@ class Api
                 $outputArray = array('url'=>$url);
                 
                 if ($outputFormat == 'json') {
-                    echo JSON_Data::keyed_array($outputArray);
+                    echo json_encode($outputArray, JSON_PRETTY_PRINT);
                 }
                 else {  // Defaults to XML
                     echo XML_Data::keyed_array($outputArray);
@@ -1426,10 +1431,10 @@ class Api
                     ob_end_clean();
 
                     if ($outputFormat == 'json') {
-                        echo JSON_Data::users($user);
+                        echo JSON_Data::users($users);
                     }
                     else {  // Defaults to XML
-                        echo XML_Data::users($user);
+                        echo XML_Data::users($users);
                     }
                 } else {
                     debug_event('api', 'User `' . $username . '` cannot be found.', 1);
@@ -1462,10 +1467,10 @@ class Api
                     ob_end_clean();
 
                     if ($outputFormat == 'json') {
-                        echo JSON_Data::users($user);
+                        echo JSON_Data::users($users);
                     }
                     else {  // Defaults to XML
-                        echo XML_Data::users($user);
+                        echo XML_Data::users($users);
                     }
 
                 } else {
@@ -1491,9 +1496,19 @@ class Api
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
+
+                    //Whatever format the user wants
+                    $outputFormat = $input['format'];
+
                     $GLOBALS['user']->toggle_follow($user->id);
                     ob_end_clean();
-                    echo XML_Data::single_string('success');
+
+                    if ($outputFormat == 'json') {
+                        echo JSON_Data::single_string('success');                    
+                    }
+                    else {  // Defaults to XML                
+                        echo XML_Data::single_string('success');
+                    }
                 }
             } else {
                 debug_event('api', 'Username to toggle required on follow function call.', 1);
@@ -1522,8 +1537,16 @@ class Api
                 $shouts = Shoutbox::get_top($limit);
             }
 
+            //Whatever format the user wants
+            $outputFormat = $input['format'];
+
             ob_end_clean();
-            echo XML_Data::shouts($shouts);
+            if ($outputFormat == 'json') {
+                echo JSON_Data::shouts($shouts);
+            }
+            else {  // Defaults to XML
+                echo XML_Data::shouts($shouts);
+            }
         } else {
             debug_event('api', 'Sociable feature is not enabled.', 3);
         }
@@ -1541,16 +1564,34 @@ class Api
         $id     = $input['id'];
         $rating = $input['rating'];
 
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
         if (!Core::is_library_item($type) || !$id) {
-            echo XML_Data::error('401', T_('Wrong library item type.'));
+            if ($outputFormat == 'json') {
+                echo JSON_Data::error('401', T_('Wrong library item type.'));
+            }
+            else {  // Defaults to XML
+                echo XML_Data::error('401', T_('Wrong library item type.'));
+            }
         } else {
             $item = new $type($id);
             if (!$item->id) {
-                echo XML_Data::error('404', T_('Library item not found.'));
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::error('404', T_('Library item not found.'));                    
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::error('404', T_('Library item not found.'));
+                }
             } else {
                 $r = new Rating($id, $type);
                 $r->set_rating($rating);
-                echo XML_Data::single_string('success');
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::single_string('success');                    
+                }
+                else {  // Defaults to XML                
+                    echo XML_Data::single_string('success');
+                }
             }
         }
     } // rate
@@ -1605,10 +1646,18 @@ class Api
             $limit = intval($input['limit']);
             $since = intval($input['since']);
 
+            //Whatever format the user wants
+            $outputFormat = $input['format'];
+
             if ($GLOBALS['user']->id > 0) {
                 $activities = Useractivity::get_friends_activities($GLOBALS['user']->id, $limit, $since);
                 ob_end_clean();
-                echo XML_Data::timeline($activities);
+                if ($outputFormat == 'json') {
+                    echo JSON_Data::timeline($activities);
+                }
+                else {  // Defaults to XML
+                    echo XML_Data::timeline($activities);
+                }
             }
         } else {
             debug_event('api', 'Sociable feature is not enabled.', 3);
