@@ -608,29 +608,30 @@ class JSON_Data
     /**
      * shouts
      *
-     * This handles creating an xml document for a shout list
+     * This handles creating an JSON document for a shout list
      *
      * @param    int[]    $shouts    Shout identifier list
-     * @return    string    return xml
+     * @return    string    return JSON
      */
     public static function shouts($shouts)
     {
-        $string = "<shouts>\n";
+        $JSON = [];
         foreach ($shouts as $shout_id) {
             $shout = new Shoutbox($shout_id);
             $shout->format();
             $user = new User($shout->user);
-            $string .= "\t<shout id=\"" . $shout_id . "\">\n" .
-                    "\t\t<date>" . $shout->date . "</date>\n" .
-                    "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
+            $ourArray = array(
+                id => $shout_id,
+                date => $shout->date,
+                text => $shout->text
+            );
             if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
+                $ourArray['username'] = $user->username;
             }
-            $string .= "\t</shout>n";
+            array_push($JSON, $ourArray);
         }
-        $string .= "</shouts>\n";
 
-        return self::output_xml($string);
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // shouts
 
     /**
@@ -646,14 +647,13 @@ class JSON_Data
         $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
-            // $shout->format(); // Causing an error for me TODO: Look into
             $user = new User($activity->user);
             $ourArray = array(
                 id => $aid,
                 data => $activity->activity_date,
                 object_type => $activity->object_type,
                 object_id => $activity->object_id,
-                action => $shout->text
+                action => $activity->action
             );
 
             if ($user->id) {

@@ -150,6 +150,7 @@ class Api
                 else {  // Defaults to XML
                     echo XML_Data::single_string('success');
                 }
+                return true;
             }
             else { //This shouldn't really happen
                 if ($outputFormat == 'json') {
@@ -158,6 +159,7 @@ class Api
                 else {  // Defaults to XML
                     echo XML_Data::error('401', T_('Something went wrong'));
                 }
+                return false;
             }
             
         }   
