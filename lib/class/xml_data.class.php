@@ -661,7 +661,7 @@ class XML_Data
                     "\t\t<date>" . $activity->activity_date . "</date>\n" .
                     "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" .
                     "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .
-                    "\t\t<action><![CDATA[" . $activity->shout . "]]></action>\n";
+                    "\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
