@@ -1,9 +1,4 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -80,24 +75,6 @@ class JSON_Data
         $limit       = intval($limit);
         self::$limit = $limit;
     } // set_limit
-
-    /**
-     * set_type
-     *
-     * This sets the type of XML_Data we are working on
-     *
-     * @param    string    $type    XML_Data type
-     * @return    void
-     */
-    public static function set_type($type)
-    {
-        // echo "AYYY";
-        if (!in_array($type,array('rss','xspf','itunes'))) {
-            return false;
-        }
-
-        self::$type = $type;
-    } // set_type
 
     /**
      * error
@@ -489,14 +466,7 @@ class JSON_Data
 
 
             );
-            $string .= "<video id=\"" . $video->id . "\">\n" .
-                    "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
-                    "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
-                    "\t<resolution>" . $video->f_resolution . "</resolution>\n" .
-                    "\t<size>" . $video->size . "</size>\n" .
-                    self::tags_string($video->tags) .
-                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api') . "]]></url>\n" .
-                    "</video>\n";
+
         } // end foreach
         
         return json_encode($JSON, JSON_PRETTY_PRINT);
@@ -732,4 +702,4 @@ class JSON_Data
             return $xmlstr;
         }
     }
-} // XML_Data
+} // JSON_Data

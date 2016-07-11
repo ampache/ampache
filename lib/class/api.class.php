@@ -1,9 +1,4 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *

@@ -34,7 +34,7 @@ if ($_REQUEST['action'] != 'handshake') {
 
 /* Set the correct headers */
 header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
-// header("Content-Disposition: attachment; filename=information.xml");
+header("Content-Disposition: attachment; filename=information.xml");
 
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {

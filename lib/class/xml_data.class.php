@@ -77,23 +77,6 @@ class XML_Data
     } // set_limit
 
     /**
-     * set_type
-     *
-     * This sets the type of XML_Data we are working on
-     *
-     * @param    string    $type    XML_Data type
-     * @return    void
-     */
-    public static function set_type($type)
-    {
-        if (!in_array($type,array('rss','xspf','itunes'))) {
-            return false;
-        }
-
-        self::$type = $type;
-    } // set_type
-
-    /**
      * error
      *
      * This generates a standard XML Error message
