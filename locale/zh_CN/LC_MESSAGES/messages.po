@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # BoneAsh <yjun0311@126.com>, 2016
 # fengjiongmax <fengjiongmax@gmail.com>, 2016
@@ -9,15 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-06-23 14:59+0200\n"
-"PO-Revision-Date: 2016-04-30 15:12+0000\n"
-"Last-Translator: BoneAsh <yjun0311@126.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/"
-"language/zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2016-06-23 15:00+0200\n"
+"PO-Revision-Date: 2016-06-29 08:19+0000\n"
+"Last-Translator: Afterster\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../admin/access.php:40
@@ -89,18 +88,16 @@ msgid "Confirm Deletion Request"
 msgstr "确认删除请求"
 
 #: ../../admin/catalog.php:125
-#, fuzzy
 msgid " Song Enabled"
-msgstr "歌曲启用"
+msgstr ""
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
 msgstr "未发现禁用的歌曲"
 
 #: ../../admin/catalog.php:130
-#, fuzzy
 msgid " Disabled Song Processed"
-msgstr "处理禁用歌曲"
+msgstr ""
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
@@ -460,9 +457,7 @@ msgstr "未定位封面"
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
-msgstr ""
-"这次操作无法定位封面。这可能是因为没有写入权限，或者是因为文件没有被正确接"
-"收。"
+msgstr "这次操作无法定位封面。这可能是因为没有写入权限，或者是因为文件没有被正确接收。"
 
 #: ../../arts.php:68 ../../arts.php:94
 msgid "Art Inserted"
@@ -605,23 +600,19 @@ msgstr "优化数据库表单"
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr ""
-"使用此功能需要您自行承担奉献！你的系统可能会崩溃或者因为大量内存消耗导致系统"
-"无响应。"
+msgstr "使用此功能需要您自行承担奉献！你的系统可能会崩溃或者因为大量内存消耗导致系统无响应。"
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
-"Depending on your systems performance, this option could need a long time to "
-"finish and extremely slow down other database processes if you have big "
+"Depending on your systems performance, this option could need a long time to"
+" finish and extremely slow down other database processes if you have big "
 "catalogs!"
-msgstr ""
-"根据您的系统性能，此选项在您的目录条目众多的时候会需要很长一段时间去执行，并"
-"会严重影响其他数据库操作！"
+msgstr "根据您的系统性能，此选项在您的目录条目众多的时候会需要很长一段时间去执行，并会严重影响其他数据库操作！"
 
 #: ../../bin/catalog_update.inc:218
 msgid ""
-"The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
-"v|-a|-g] is used."
+"The switches [-m|-i|-o] can only be used, if one of the other switches "
+"[-c|-v|-a|-g] is used."
 msgstr "只有当使用了[-ci-vi-ai-g]选项的时候，[-ml-il-o]才能够使用"
 
 #: ../../bin/channel_run.inc:46
@@ -1706,14 +1697,12 @@ msgid "Never"
 msgstr "从不"
 
 #: ../../lib/class/catalog.class.php:599
-#, fuzzy
 msgid "day"
-msgstr "天"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:601
-#, fuzzy
 msgid "hour"
-msgstr "小时"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:646
 msgid "Catalog Insert Failed check debug logs"
@@ -1724,9 +1713,9 @@ msgid "No Update Needed"
 msgstr "无需更新"
 
 #: ../../lib/class/catalog.class.php:1808
-#, fuzzy, php-format
+#, php-format
 msgid "Catalog Clean Done. %d file removed."
-msgstr "目录清理完成。 已删除 %d 个文件。"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1833
 #, php-format
@@ -1929,15 +1918,7 @@ msgid ""
 "\n"
 "        %s\n"
 "        "
-msgstr ""
-"你刚收到一条来自 %s 的私人信息。\n"
-"\n"
-"\n"
-"----------------------\n"
-"%s\n"
-"----------------------\n"
-"\n"
-"%s"
+msgstr "你刚收到一条来自 %s 的私人信息。\n\n\n----------------------\n%s\n----------------------\n\n%s"
 
 #: ../../lib/class/query.class.php:99
 msgid "Browse not found or expired, try reloading the page"
@@ -1954,32 +1935,17 @@ msgid ""
 "Thank you for registering\n"
 "\n"
 "\n"
-"Please keep this e-mail for your records. Your account information is as "
-"follows:\n"
+"Please keep this e-mail for your records. Your account information is as follows:\n"
 "----------------------\n"
 "Username: %s\n"
 "----------------------\n"
 "\n"
-"Your account is currently inactive. You cannot use it until you've visited "
-"the following link:\n"
+"Your account is currently inactive. You cannot use it until you've visited the following link:\n"
 "\n"
 "%s\n"
 "\n"
 "Thank you for registering\n"
-msgstr ""
-"感谢您的注册\n"
-"\n"
-"\n"
-"请保留此电子邮件作为您的记录。您的帐号信息如下：\n"
-"----------------------\n"
-"用户名： %s\n"
-"----------------------\n"
-"\n"
-"您的帐号尚未激活。因此在您访问如下链接前不能使用您的帐号：\n"
-"\n"
-"%s\n"
-"\n"
-"再次感谢您的注册\n"
+msgstr "感谢您的注册\n\n\n请保留此电子邮件作为您的记录。您的帐号信息如下：\n----------------------\n用户名： %s\n----------------------\n\n您的帐号尚未激活。因此在您访问如下链接前不能使用您的帐号：\n\n%s\n\n再次感谢您的注册\n"
 
 #: ../../lib/class/registration.class.php:77
 #, php-format
@@ -1992,14 +1958,7 @@ msgid ""
 "E-mail: %s\n"
 "Website: %s\n"
 "\n"
-msgstr ""
-"一个新注册的用户\n"
-"以下是该用户输入的信息。\n"
-"\n"
-"用户名：%s\n"
-"全名：%s\n"
-"邮箱：%s\n"
-"网站：%s\n"
+msgstr "一个新注册的用户\n以下是该用户输入的信息。\n\n用户名：%s\n全名：%s\n邮箱：%s\n网站：%s\n"
 
 #: ../../lib/class/registration.class.php:104
 #, php-format
@@ -2013,11 +1972,7 @@ msgid ""
 "\n"
 "\n"
 "            Please logon using %s"
-msgstr ""
-"您的帐号已在 %s 激活\n"
-"\n"
-"\n"
-"请用 %s 登录"
+msgstr "您的帐号已在 %s 激活\n\n\n请用 %s 登录"
 
 #: ../../lib/class/search.class.php:62
 msgid "is greater than or equal to"
@@ -2355,15 +2310,7 @@ msgid ""
 "\n"
 "    %s\n"
 "    "
-msgstr ""
-"您刚收到一条来自 %s  的新留言 “　%s ”。\n"
-"\n"
-"\n"
-"----------------------\n"
-"%s \n"
-"----------------------\n"
-"\n"
-"%s"
+msgstr "您刚收到一条来自 %s  的新留言 “　%s ”。\n\n\n----------------------\n%s \n----------------------\n\n%s"
 
 #: ../../lib/class/shoutbox.class.php:310
 #: ../../templates/show_add_label.inc.php:80
@@ -3281,9 +3228,9 @@ msgid "WARNING"
 msgstr "警告"
 
 #: ../../lib/general.lib.php:211
-#, fuzzy, php-format
+#, php-format
 msgid "Unknown %s"
-msgstr "未知"
+msgstr ""
 
 #: ../../lib/install.lib.php:83
 msgid "Unable to connect to database, check your ampache config"
@@ -3702,9 +3649,7 @@ msgstr "在“Can your app be limitedd to its own,private folder?”对话中选
 msgid ""
 "Select 'Specific file types' at 'What type of files does your app need "
 "access to?'"
-msgstr ""
-"在“What type of files does your app need access to?”对话中选择“Specific file "
-"types”"
+msgstr "在“What type of files does your app need access to?”对话中选择“Specific file types”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Check Videos and Audio files"
@@ -3722,8 +3667,7 @@ msgstr "复制您的 App key 和 App secret 到下面的文本框中。"
 msgid ""
 "After preparing the catalog with pressing the 'Add catalog' button,<br /> "
 "you have to 'Make it ready' on the catalog table."
-msgstr ""
-"在准备完毕并点击“添加目录”按钮后，<br /> 您需要在目录表单中使其“准备完毕”"
+msgstr "在准备完毕并点击“添加目录”按钮后，<br /> 您需要在目录表单中使其“准备完毕”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:114
 #: ../../templates/show_account.inc.php:109
@@ -4098,9 +4042,9 @@ msgid "Playlist Imported"
 msgstr "已导入播放列表"
 
 #: ../../playlist.php:83
-#, fuzzy, php-format
+#, php-format
 msgid "Successfully imported playlist with %d song."
-msgstr "成功导入播放列表中的 %d 首歌曲。"
+msgstr ""
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -4292,8 +4236,8 @@ msgstr "您的搜索已保存至智能播放列表中，并被命名为 %s"
 #: ../../server/index.ajax.php:44
 #, php-format
 msgid ""
-"No catalog configured yet. To start streaming your media, you now need to %s "
-"add a catalog %s"
+"No catalog configured yet. To start streaming your media, you now need to %s"
+" add a catalog %s"
 msgstr "目录尚未配置。若要开始播放您的媒体，您需要开始 %s 添加一个目录 %s"
 
 #: ../../server/player.ajax.php:43
@@ -4418,12 +4362,10 @@ msgstr "Ampache 对于 cookies 的使用"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work "
-"more efficiently, as well as to provide information to the owners of the "
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
 "site."
-msgstr ""
-"Cookies 是由您所访问的网站保存于您的电脑中的文件，文件里面是一小段文本。"
-"Cookies 的存在使得网站能更好的为您（用户）服务，也未网站的拥有者提供了信息。"
+msgstr "Cookies 是由您所访问的网站保存于您的电脑中的文件，文件里面是一小段文本。Cookies 的存在使得网站能更好的为您（用户）服务，也未网站的拥有者提供了信息。"
 
 #: ../../templates/cookie_disclaimer.inc.php:5
 msgid "The table below explains the cookies we use and why."
@@ -4529,17 +4471,11 @@ msgstr "取消"
 #: ../../templates/header.inc.php:312
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. "
-"You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
-msgstr ""
-"我们已将 cookies 保存至您的电脑中以使得这个站点能更好。您也可以在任何时间改变"
-"您的 %s 。\n"
-"那么，我们假定您已准备就绪。\n"
-"\n"
-"不再显示此信息。"
+msgstr "我们已将 cookies 保存至您的电脑中以使得这个站点能更好。您也可以在任何时间改变您的 %s 。\n那么，我们假定您已准备就绪。\n\n不再显示此信息。"
 
 #: ../../templates/header.inc.php:313
 msgid "cookie settings"
@@ -4920,11 +4856,9 @@ msgstr "添加目录"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-"在下面的表单中输入一个本地路径 ( 如：/data/music ) 或一个 URL 来控制 Ampache "
-"的安装程序 ( 如： http://theotherampache.com )"
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr "在下面的表单中输入一个本地路径 ( 如：/data/music ) 或一个 URL 来控制 Ampache 的安装程序 ( 如： http://theotherampache.com )"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
@@ -6029,8 +5963,8 @@ msgstr "此事件已被记录"
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this "
-"function."
+"You have been redirected to this page because you do not have access to this"
+" function."
 msgstr "您已被重定向至此页面因为您无法访问此项功能。"
 
 #: ../../templates/show_denied.inc.php:60
@@ -6488,8 +6422,7 @@ msgstr "第三步 - 设置初始帐号"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr ""
-"此步骤将会创建 Ampache 管理员帐号。建立完毕后将会将您重定向至登录页面。"
+msgstr "此步骤将会创建 Ampache 管理员帐号。建立完毕后将会将您重定向至登录页面。"
 
 #: ../../templates/show_install_account.inc.php:47
 msgid "Create Admin Account"
@@ -6508,9 +6441,7 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr ""
-"此页面处理安装过程中 Ampache 数据库的安装及配置文件的创建。在您继续之前请确认"
-"您达到了以下要求："
+msgstr "此页面处理安装过程中 Ampache 数据库的安装及配置文件的创建。在您继续之前请确认您达到了以下要求："
 
 #: ../../templates/show_install_check.inc.php:35
 msgid ""
@@ -6527,11 +6458,9 @@ msgstr "您的 Web 服务器对文件 %s 及 %s 有读取权限。"
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later "
-"date simply edit %s"
-msgstr ""
-"当您确定您已满足以上需求，请将相关信息填入下面的表单中。表单中只设计配置相关"
-"数值。若您想对您接下来的 Ampache 安装作出修改，修改 %s 即可。"
+"values. If you would like to make changes to your Ampache install at a later"
+" date simply edit %s"
+msgstr "当您确定您已满足以上需求，请将相关信息填入下面的表单中。表单中只设计配置相关数值。若您想对您接下来的 Ampache 安装作出修改，修改 %s 即可。"
 
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:60
@@ -6570,25 +6499,19 @@ msgstr "ampache.cfg.php 可读"
 
 #: ../../templates/show_install_check.inc.php:62
 msgid ""
-"This tests whether PHP can write to config/. This is not strictly necessary, "
-"but will help streamline the installation process."
-msgstr ""
-"此测试将判断 PHP 对域 config/ 目录是否拥有写入权限。这不是必须的，但拥有写入"
-"权限将有助于简化安装过程。"
+"This tests whether PHP can write to config/. This is not strictly necessary,"
+" but will help streamline the installation process."
+msgstr "此测试将判断 PHP 对域 config/ 目录是否拥有写入权限。这不是必须的，但拥有写入权限将有助于简化安装过程。"
 
 #: ../../templates/show_install_config.inc.php:55
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache "
-"write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache"
+" write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s"
-msgstr ""
-"此步骤需要一些基本的数值并生成配置文件。若您的 config/　目录是可以写入的，您"
-"可以选择“写入”让 Ampache 将配置文件写入到正确的配置目录中。如果您选择的是“下"
-"载”则会弹出配置文件的下载页面，下载完毕后需要您自行将配置文件放置到 %s 目录"
-"中。"
+msgstr "此步骤需要一些基本的数值并生成配置文件。若您的 config/　目录是可以写入的，您可以选择“写入”让 Ampache 将配置文件写入到正确的配置目录中。如果您选择的是“下载”则会弹出配置文件的下载页面，下载完毕后需要您自行将配置文件放置到 %s 目录中。"
 
 #: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
@@ -6670,20 +6593,14 @@ msgid ""
 "advantage of existing binary applications such as ffmpeg. In order for "
 "transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr ""
-"转码能让文件从一个类型转换为另外一个类型。基于用户，播放器，IP地址 以及足够的"
-"带宽，Ampache 能将所有支持的文件类型转码。为了能够转码， Ampache 借助了一些知"
-"名程序，例如 ffmpeg 。为了能让您顺利使用，您需要先安装相关程序并确保能让您的"
-"服务器执行这些程序。"
+msgstr "转码能让文件从一个类型转换为另外一个类型。基于用户，播放器，IP地址 以及足够的带宽，Ampache 能将所有支持的文件类型转码。为了能够转码， Ampache 借助了一些知名程序，例如 ffmpeg 。为了能让您顺利使用，您需要先安装相关程序并确保能让您的服务器执行这些程序。"
 
 #: ../../templates/show_install_config.inc.php:135
 msgid ""
 "This section apply default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once this "
 "setup ended"
-msgstr ""
-"此部分根据您想要使用的应用程序来配置默认转码。您可能会需要调整相关设置直至此"
-"步骤结束。"
+msgstr "此部分根据您想要使用的应用程序来配置默认转码。您可能会需要调整相关设置直至此步骤结束。"
 
 #: ../../templates/show_install_config.inc.php:135
 #: ../../templates/show_install_config.inc.php:169
@@ -6699,9 +6616,7 @@ msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
-msgstr ""
-"未找到默认的转码应用程序。请安装一些流行的应用程序如 ( ffmpeg , avconv 等 ) "
-"或在安装结束之后再调整相关设置。"
+msgstr "未找到默认的转码应用程序。请安装一些流行的应用程序如 ( ffmpeg , avconv 等 ) 或在安装结束之后再调整相关设置。"
 
 #: ../../templates/show_install_config.inc.php:167
 msgid "Players"
@@ -6711,9 +6626,7 @@ msgstr "播放器"
 msgid ""
 "Ampache is more than only a web interface. Several backends are implemented "
 "to ensure you can stream your media from anywhere."
-msgstr ""
-"Ampache 不仅仅是一个 Web 界面。某些在后台运行的程序能够确保您能在任何地方使用"
-"您自己的媒体文件。"
+msgstr "Ampache 不仅仅是一个 Web 界面。某些在后台运行的程序能够确保您能在任何地方使用您自己的媒体文件。"
 
 #: ../../templates/show_install_config.inc.php:169
 msgid ""
@@ -6796,11 +6709,9 @@ msgstr "创建配置文件"
 #: ../../templates/show_install.inc.php:39
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
-"MySQL account with database creation rights. This step may take some time on "
-"slower computers."
-msgstr ""
-"此步骤会对 Ampache 数据库进行创建和插入，请为 MySQL 帐号提供插创建权限。当在"
-"比较慢的主机上运行时，完成此步骤可能需要一定的时间。"
+"MySQL account with database creation rights. This step may take some time on"
+" slower computers."
+msgstr "此步骤会对 Ampache 数据库进行创建和插入，请为 MySQL 帐号提供插创建权限。当在比较慢的主机上运行时，完成此步骤可能需要一定的时间。"
 
 #: ../../templates/show_install.inc.php:47
 msgid "Insert Ampache Database"
@@ -7366,14 +7277,14 @@ msgid "Unlimited"
 msgstr "无限制"
 
 #: ../../templates/show_random.inc.php:86
-#, fuzzy, php-format
+#, php-format
 msgid "%d minute"
-msgstr "%d 分钟"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:88
-#, fuzzy, php-format
+#, php-format
 msgid "%d hour"
-msgstr "%d 小时"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:97
 msgid "Size Limit"
@@ -7394,44 +7305,44 @@ msgid "Agent"
 msgstr "代理"
 
 #: ../../templates/show_recently_played.inc.php:73
-#, fuzzy, php-format
+#, php-format
 msgid "%d second ago"
-msgstr "%d 秒前"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:76
-#, fuzzy, php-format
+#, php-format
 msgid "%d minute ago"
-msgstr "%d 分钟前"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:79
-#, fuzzy, php-format
+#, php-format
 msgid "%d hour ago"
-msgstr "%d 小时前"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:82
-#, fuzzy, php-format
+#, php-format
 msgid "%d day ago"
-msgstr "%d 天前"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:85
-#, fuzzy, php-format
+#, php-format
 msgid "%d week ago"
-msgstr "%d 周前"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:88
-#, fuzzy, php-format
+#, php-format
 msgid "%d month ago"
-msgstr "%d 月前"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:91
-#, fuzzy, php-format
+#, php-format
 msgid "%d year ago"
-msgstr "%d 年前"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:94
-#, fuzzy, php-format
+#, php-format
 msgid "%d decade ago"
-msgstr "%d 十年前"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:172
 msgid "No recently item found"
@@ -7464,9 +7375,7 @@ msgstr "请等待管理员激活您的帐号。"
 msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
 "check your e-mail for further information."
-msgstr ""
-"一封包含激活密钥的电子邮件已经发送至您所提供的电子邮箱地址。请登录您的邮箱查"
-"看更详细的信息。"
+msgstr "一封包含激活密钥的电子邮件已经发送至您所提供的电子邮箱地址。请登录您的邮箱查看更详细的信息。"
 
 #: ../../templates/show_registration_confirmation.inc.php:55
 msgid "Return to Login Page"
@@ -7702,13 +7611,10 @@ msgstr "此项测试将测试 Ampache 的依赖是否已安装。"
 
 #: ../../templates/show_test_table.inc.php:42
 msgid ""
-"Please download and install Composer from http://getcomposer.org and install "
-"it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
+"Please download and install Composer from http://getcomposer.org and install"
+" it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
 "install --prefer-source --no-interaction` on Ampache directory."
-msgstr ""
-"请从 http://getcomposer.org 下载并安装 Composer ( 可以将 composer.phar 移动"
-"至 /usr/local/bin/composer ) ，然后在 Ampache 目录中执行命令 `omposer "
-"install --prefer-source --no-interaction`"
+msgstr "请从 http://getcomposer.org 下载并安装 Composer ( 可以将 composer.phar 移动至 /usr/local/bin/composer ) ，然后在 Ampache 目录中执行命令 `omposer install --prefer-source --no-interaction`"
 
 #: ../../templates/show_test_table.inc.php:49
 msgid "PHP hash extension"
@@ -7756,8 +7662,8 @@ msgstr "PHP session 拓展"
 
 #: ../../templates/show_test_table.inc.php:90
 msgid ""
-"This tests whether you have the session extension enabled. This extension is "
-"required by Ampache."
+"This tests whether you have the session extension enabled. This extension is"
+" required by Ampache."
 msgstr "此项测试将测试您是否启用了 session 拓展。Ampache 需要此拓展。"
 
 #: ../../templates/show_test_table.inc.php:94
@@ -7786,11 +7692,9 @@ msgstr "PHP curl 拓展"
 
 #: ../../templates/show_test_table.inc.php:117
 msgid ""
-"This tests whether you have the curl extension enabled. This is not strictly "
-"necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试您是否启用了 curl 拓展。尽管此拓展不是必须的，但此拓展有助于提"
-"升您的使用体验。"
+"This tests whether you have the curl extension enabled. This is not strictly"
+" necessary, but may result in a better experience."
+msgstr "此项测试将测试您是否启用了 curl 拓展。尽管此拓展不是必须的，但此拓展有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:121
 msgid "PHP zlib extension"
@@ -7798,11 +7702,9 @@ msgstr "PHP zlib 拓展"
 
 #: ../../templates/show_test_table.inc.php:126
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly "
-"necessary, but may result in a better experience (zip download)."
-msgstr ""
-"此项测试将测试您是否启用了 zlib 拓展。尽管此拓展不是必须的，但启用此拓展经有"
-"助于提升您的使用体验 ( 压缩下载 )。"
+"This tests whether you have the zlib extension enabled. This is not strictly"
+" necessary, but may result in a better experience (zip download)."
+msgstr "此项测试将测试您是否启用了 zlib 拓展。尽管此拓展不是必须的，但启用此拓展经有助于提升您的使用体验 ( 压缩下载 )。"
 
 #: ../../templates/show_test_table.inc.php:130
 msgid "PHP simplexml extension"
@@ -7812,9 +7714,7 @@ msgstr "PHP simplexml 拓展"
 msgid ""
 "This tests whether you have the simplexml extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试您是否启用了 simplexml 拓展。尽管这不是必须的，但启用此拓展将有"
-"助于提升您的使用体验。"
+msgstr "此项测试将测试您是否启用了 simplexml 拓展。尽管这不是必须的，但启用此拓展将有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:139
 msgid "PHP GD extension"
@@ -7824,9 +7724,7 @@ msgstr "PHP GD 拓展"
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试您是否启用了 GD 拓展。尽管这不是必须的，但启用其拓展将有助于提"
-"升您的使用体验。"
+msgstr "此项测试将测试您是否启用了 GD 拓展。尽管这不是必须的，但启用其拓展将有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:148
 msgid "PHP safe mode disabled"
@@ -7836,9 +7734,7 @@ msgstr "已禁用 PHP 安全模式"
 msgid ""
 "This test makes sure that PHP is not running in safe mode. Some features of "
 "Ampache will not work correctly in safe mode."
-msgstr ""
-"此项测试确保 PHP 不是在安全模式下运行。Ampache 的某些功能在安全模式下不能正常"
-"运作。"
+msgstr "此项测试确保 PHP 不是在安全模式下运行。Ampache 的某些功能在安全模式下不能正常运作。"
 
 #: ../../templates/show_test_table.inc.php:157
 msgid "PHP memory limit override"
@@ -7848,9 +7744,7 @@ msgstr "PHP 内存限制覆盖"
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试 Ampache 能否覆盖内存限制。此项不是必须的，但会有助于提升您的使"
-"用体验。"
+msgstr "此项测试将测试 Ampache 能否覆盖内存限制。此项不是必须的，但会有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:166
 msgid "PHP execution time override"
@@ -7858,11 +7752,9 @@ msgstr "PHP 执行时间覆盖"
 
 #: ../../templates/show_test_table.inc.php:171
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time. "
-"This is not strictly necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试 Ampache 能否覆盖最大执行时间限制。这不是必须的，但有助于提升您"
-"的使用体验。"
+"This tests whether Ampache can override the limit on maximum execution time."
+" This is not strictly necessary, but may result in a better experience."
+msgstr "此项测试将测试 Ampache 能否覆盖最大执行时间限制。这不是必须的，但有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:175
 msgid "PHP max upload size"
@@ -7872,9 +7764,7 @@ msgstr "PHP 上传最大值限制"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试 Ampache 能否将中等大小 ( 不小于 20M ) 的文件上传。此项不是必须"
-"的，但会有助于提升您的使用体验。"
+msgstr "此项测试将测试 Ampache 能否将中等大小 ( 不小于 20M ) 的文件上传。此项不是必须的，但会有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:184
 msgid "PHP Integer Size"
@@ -7885,9 +7775,7 @@ msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
 "requires 64-bit operating system."
-msgstr ""
-"此项测试将测试 Ampache 能否对大于 2GB 的文件进行操作。此项不是必须的，但会有"
-"助于提升您的使用体验您"
+msgstr "此项测试将测试 Ampache 能否对大于 2GB 的文件进行操作。此项不是必须的，但会有助于提升您的使用体验您"
 
 #: ../../templates/show_test_table.inc.php:193
 msgid "PHP mbstring.func_overload"
@@ -7900,10 +7788,7 @@ msgid ""
 "is not stricly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr ""
-"此项测试将测试 PHP 的 %s 是否会破坏 MP3 文件曲目标签支持。此项不是必须的，开"
-"启 Ampache 的 MP3 文件曲目标签写入支持 ( 默认是关闭的 ) 以及 PHP 的 mbstring."
-"func_overload 可能会对您的音乐文件造成不可逆的损坏。"
+msgstr "此项测试将测试 PHP 的 %s 是否会破坏 MP3 文件曲目标签支持。此项不是必须的，开启 Ampache 的 MP3 文件曲目标签写入支持 ( 默认是关闭的 ) 以及 PHP 的 mbstring.func_overload 可能会对您的音乐文件造成不可逆的损坏。"
 
 #: ../../templates/show_test_table.inc.php:205
 msgid "Configuration file readability"
@@ -7913,9 +7798,7 @@ msgstr "配置文件的可读性"
 msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file "
 "either is not in the correct location or is not currently readable."
-msgstr ""
-"此项测试将尝试读取 config/ampache.cfg.php 。如果此项测试失败则表明文件不存在"
-"或不可读。"
+msgstr "此项测试将尝试读取 config/ampache.cfg.php 。如果此项测试失败则表明文件不存在或不可读。"
 
 #: ../../templates/show_test_table.inc.php:218
 msgid "Configuration file validity"
@@ -7925,9 +7808,7 @@ msgstr "配置文件的有效性"
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to completely parse your config file."
-msgstr ""
-"此项测试将确保您已经完成对所有参数的配置，以及 Ampache 能够完全开始解析您的配"
-"置文件。"
+msgstr "此项测试将确保您已经完成对所有参数的配置，以及 Ampache 能够完全开始解析您的配置文件。"
 
 #: ../../templates/show_test_table.inc.php:241
 msgid ""
@@ -7943,9 +7824,7 @@ msgstr "数据库表单"
 msgid ""
 "This checks a few key tables to make sure that you have successfully "
 "inserted the Ampache database and that the user has access to the database"
-msgstr ""
-"这将检查几张关键的表单以确保您已经完全将 Ampache 的数据库插入到您的数据库中，"
-"并且用户有权限访问数据库"
+msgstr "这将检查几张关键的表单以确保您已经完全将 Ampache 的数据库插入到您的数据库中，并且用户有权限访问数据库"
 
 #: ../../templates/show_test_table.inc.php:259
 msgid "Web path"
@@ -7956,9 +7835,7 @@ msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
-msgstr ""
-"此项测试将确保您的 web 路径参数的设置是正确的以让网站能够正常跳转到主页。如果"
-"没有看到正确的标识则表明您的 web 路径没有设置正确。"
+msgstr "此项测试将确保您的 web 路径参数的设置是正确的以让网站能够正常跳转到主页。如果没有看到正确的标识则表明您的 web 路径没有设置正确。"
 
 #: ../../templates/show_tvshow.inc.php:95
 #: ../../templates/show_tvshow.inc.php:99
@@ -8372,10 +8249,7 @@ msgid ""
 "This page handles all database updates to Ampache starting with "
 "<strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with "
 "database version <strong>%s</strong>."
-msgstr ""
-"本页面处理所有 Ampache 的数据库更新，更新最低版本为 <strong>3.3.3.5</"
-"strong>。当前版本为 <strong> %s </strong> ，数据库版本为 <strong> %s </"
-"strong>。"
+msgstr "本页面处理所有 Ampache 的数据库更新，更新最低版本为 <strong>3.3.3.5</strong>。当前版本为 <strong> %s </strong> ，数据库版本为 <strong> %s </strong>。"
 
 #: ../../update.php:92
 msgid "Update Now!"
@@ -8406,8 +8280,8 @@ msgstr "无法删除此视频。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 17.05.2016 23:16:44 CEST
-#
+# Last Update: 23.06.2016 15:00:05 CEST
+# 
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "开放下载"
@@ -8440,7 +8314,7 @@ msgstr "回放类型"
 # but to avoid confusion, it's added and commented
 # msgid "Language"
 # msgstr ""
-#: Database preference table id 31 32
+#: Database preference table id 31 Database preference table id 32
 msgid "Playlist Type"
 msgstr "播放列表类型"
 
@@ -8492,7 +8366,8 @@ msgstr "播放列表模式"
 # but to avoid confusion, it's added and commented
 # msgid "Show Lyrics"
 # msgstr ""
-#: Database preference table id 55 69 72
+#: Database preference table id 55 Database preference table id 69 Database
+#: preference table id 72
 msgid "Shoutcast Active Instance"
 msgstr "Shoutcast 激活实例"
 
@@ -8774,9 +8649,7 @@ msgstr "禁用自定义元数据字段（按ctrl/ shift点击选择多个）"
 msgid ""
 "Disable custom metadata fields. Insert them in a comma separated list. They "
 "will add to the fields selected above."
-msgstr ""
-"禁用自定义元数据字段。将他们插入一个以逗号分隔的列表，他们将加入到上面选择的"
-"领域。"
+msgstr "禁用自定义元数据字段。将他们插入一个以逗号分隔的列表，他们将加入到上面选择的领域。"
 
 #: Database preference table id 148
 msgid "Podcast: # latest episodes to keep"
@@ -8820,6 +8693,5 @@ msgid ""
 msgstr "为下列库项目默认字母浏览（专辑、艺术家等等）"
 
 #: Database preference table id 158
-#, fuzzy
 msgid "MPD Active Instance"
-msgstr "激活实例"
+msgstr ""
