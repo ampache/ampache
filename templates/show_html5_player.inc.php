@@ -40,7 +40,7 @@ var currentAudioElement = undefined;
                 shuffleTime: 'slow'
             },
             swfPath: "<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/jplayer",
-            preload: 'none',
+            preload: 'auto',
             audioFullScreen: true,
             smoothPlayBar: true,
             keyEnabled: true,
