@@ -673,13 +673,12 @@ class XML_Data
         $string = "<timeline>\n";
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
-            $shout->format();
             $user = new User($activity->user);
             $string .= "\t<activity id=\"" . $aid . "\">\n" .
                     "\t\t<date>" . $activity->activity_date . "</date>\n" .
                     "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" .
                     "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .
-                    "\t\t<action><![CDATA[" . $shout->text . "]]></action>\n";
+                    "\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
