@@ -119,8 +119,11 @@ switch ($_REQUEST['action']) {
     default:
         $album = new Album($_REQUEST['album']);
         $album->format();
-
-        if (!count($album->album_suite)) {
+        
+        if($album->id == null){
+            require AmpConfig::get('prefix') . UI::find_template('show_missing_album.inc.php');
+        }
+        elseif (!count($album->album_suite)) {
             require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');
         } else {
             require AmpConfig::get('prefix') . UI::find_template('show_album_group_disks.inc.php');
