@@ -24,8 +24,7 @@
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=edit">
 <?php if (isset($license)) {
     ?>
-<input type="hidden" name="license_id" value="<?php echo $license->id;
-    ?>" />
+<input type="hidden" name="license_id" value="<?php echo $license->id; ?>" />
 <?php 
 } ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">

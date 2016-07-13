@@ -37,21 +37,15 @@ $thcount  = 7;
             <?php if (User::is_registered()) {
     ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ++$thcount;
-    ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating');
-    ?></th>
+    ++$thcount; ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('userflags')) {
-    ++$thcount;
-    ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.');
-    ?></th>
+    ++$thcount; ?>
+                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
             <?php 
 } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
@@ -68,23 +62,16 @@ $thcount  = 7;
 
         foreach ($object_ids as $episode_id) {
             $libitem = new Podcast_Episode($episode_id);
-            $libitem->format();
-            ?>
-        <tr id="podcast_episode_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_podcast_episode_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr id="podcast_episode_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_podcast_episode_row.inc.php'); ?>
         </tr>
         <?php 
         } ?>
         <?php if (!count($object_ids)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No podcast episode found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast episode found'); ?></span></td>
         </tr>
         <?php 
 } ?>
@@ -94,8 +81,7 @@ $thcount  = 7;
             <th class="cel_play"></th>
         <?php if (Art::is_enabled()) {
     ?>
-            <th class="cel_cover"><?php echo T_('Art');
-    ?></th>
+            <th class="cel_cover"><?php echo T_('Art'); ?></th>
         <?php 
 } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_episode_sort_title_bottom'); ?></th>
@@ -108,18 +94,14 @@ $thcount  = 7;
     ?>
                 <?php if (AmpConfig::get('ratings')) {
     ?>
-                    <th class="cel_rating"><?php echo T_('Rating');
-    ?></th>
+                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('userflags')) {
     ?>
-                    <th class="cel_userflag"><?php echo T_('Fav.');
-    ?></th>
+                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
             <?php 
 } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>

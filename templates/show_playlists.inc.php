@@ -42,18 +42,14 @@
     ?>
                 <?php if (AmpConfig::get('ratings')) {
     ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating');
-    ?></th>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('userflags')) {
     ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.');
-    ?></th>
+                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
             <?php 
 } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
@@ -68,11 +64,8 @@
             // Don't show empty playlist if not admin or the owner
             if (Access::check('interface','100') || $libitem->get_user_owner() == $GLOBALS['user']->id || $libitem->get_media_count() > 0) {
                 ?>
-        <tr class="<?php echo UI::flip_class();
-                ?>" id="playlist_row_<?php echo $libitem->id;
-                ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php');
-                ?>
+        <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $libitem->id; ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php'); ?>
         </tr>
         <?php
 
@@ -80,10 +73,8 @@
         } // end foreach ($playlists as $playlist) ?>
         <?php if (!count($object_ids)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="7"><span class="nodata"><?php echo T_('No playlist found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="7"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
         </tr>
         <?php 
 } ?>
@@ -106,18 +97,14 @@
     ?>
                 <?php if (AmpConfig::get('ratings')) {
     ?>
-                    <th class="cel_rating"><?php echo T_('Rating');
-    ?></th>
+                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('userflags')) {
     ?>
-                    <th class="cel_userflag"><?php echo T_('Fav.');
-    ?></th>
+                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
             <?php 
 } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>

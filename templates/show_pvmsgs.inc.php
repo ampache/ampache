@@ -59,23 +59,16 @@ $thcount = 5;
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $pvmg_id) {
             $libitem = new PrivateMsg($pvmg_id);
-            $libitem->format();
-            ?>
-        <tr id="label_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?> <?php echo (!$libitem->is_read) ? "unread" : "" ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_pvmsg_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?> <?php echo (!$libitem->is_read) ? "unread" : "" ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_pvmsg_row.inc.php'); ?>
         </tr>
         <?php 
         } ?>
         <?php if (!count($object_ids)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No message found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No message found'); ?></span></td>
         </tr>
         <?php 
 } ?>

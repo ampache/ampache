@@ -45,10 +45,8 @@ if (Access::check('interface','100') && $_REQUEST['action'] == 'admin') {
         <th class="cel_value"><?php echo T_('Value'); ?></th>
         <?php if ($is_admin) {
     ?>
-        <th class="cel_applytoall"><?php echo T_('Apply to All');
-    ?></th>
-        <th class="cel_level"><?php echo T_('Access Level');
-    ?></th>
+        <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
+        <th class="cel_level"><?php echo T_('Access Level'); ?></th>
         <?php 
 } ?>
     </tr>
@@ -61,53 +59,34 @@ if (Access::check('interface','100') && $_REQUEST['action'] == 'admin') {
             $lastsubcat = $pref['subcategory'];
             $fsubcat    = $lastsubcat;
             if (!empty($fsubcat)) {
-                $fsubcat = ucwords($fsubcat);
-                ?>
+                $fsubcat = ucwords($fsubcat); ?>
                 <tr class="<?php echo UI::flip_class() ?>"><td colspan="4"><h5><?php echo T_($fsubcat) ?></h5></td></tr>
                 <?php
 
             }
-        }
-        ?>
+        } ?>
         <tr class="<?php echo UI::flip_class() ?>">
-            <td class="cel_preference"><?php echo T_($pref['description']);
-        ?></td>
+            <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
-                <?php create_preference_input($pref['name'], $pref['value']);
-        ?>
+                <?php create_preference_input($pref['name'], $pref['value']); ?>
             </td>
             <?php if ($is_admin) {
     ?>
-                <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name'];
-    ?>" value="1" /></td>
+                <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
                     <?php $name = 'on_' . $pref['level'];
-    ${$name}                    = 'selected="selected"';
-    ?>
-                    <select name="level_<?php echo $pref['name'];
-    ?>">
-                        <option value="5" <?php echo $on_5;
-    ?>><?php echo T_('Guest');
-    ?></option>
-                        <option value="25" <?php echo $on_25;
-    ?>><?php echo T_('User');
-    ?></option>
-                        <option value="50" <?php echo $on_50;
-    ?>><?php echo T_('Content Manager');
-    ?></option>
-                        <option value="75" <?php echo $on_75;
-    ?>><?php echo T_('Catalog Manager');
-    ?></option>
-                        <option value="100" <?php echo $on_100;
-    ?>><?php echo T_('Admin');
-    ?></option>
+    ${$name}                    = 'selected="selected"'; ?>
+                    <select name="level_<?php echo $pref['name']; ?>">
+                        <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
+                        <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
+                        <option value="50" <?php echo $on_50; ?>><?php echo T_('Content Manager'); ?></option>
+                        <option value="75" <?php echo $on_75; ?>><?php echo T_('Catalog Manager'); ?></option>
+                        <option value="100" <?php echo $on_100; ?>><?php echo T_('Admin'); ?></option>
                     </select>
-                    <?php unset(${$name});
-    ?>
+                    <?php unset(${$name}); ?>
                 </td>
             <?php 
-}
-        ?>
+} ?>
         </tr>
     <?php 
     } // End foreach ($preferences['prefs'] as $pref) ?>
@@ -118,10 +97,8 @@ if (Access::check('interface','100') && $_REQUEST['action'] == 'admin') {
         <th class="cel_value"><?php echo T_('Value'); ?></th>
         <?php if ($is_admin) {
     ?>
-        <th class="cel_applytoall"><?php echo T_('Apply to All');
-    ?></th>
-        <th class="cel_level"><?php echo T_('Access Level');
-    ?></th>
+        <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
+        <th class="cel_level"><?php echo T_('Access Level'); ?></th>
         <?php 
 } ?>
     </tr>

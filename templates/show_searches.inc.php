@@ -26,10 +26,7 @@
         <?php if (Access::check('interface', 25)) {
     ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path');
-    ?>/search.php?type=song"><?php echo UI::get_icon('add', T_('Add'));
-    ?> <?php echo T_('Add Smart Playlist');
-    ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Smart Playlist'); ?></a>
         </li>
         <?php 
 } ?>
@@ -55,22 +52,16 @@
         <?php
         foreach ($object_ids as $playlist_id) {
             $libitem = new Search($playlist_id, 'song');
-            $libitem->format();
-            ?>
-        <tr class="<?php echo UI::flip_class();
-            ?>" id="smartplaylist_row_<?php echo $libitem->id;
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_search_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr class="<?php echo UI::flip_class(); ?>" id="smartplaylist_row_<?php echo $libitem->id; ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_search_row.inc.php'); ?>
         </tr>
         <?php 
         } // end foreach ($playlists as $playlist) ?>
         <?php if (!count($object_ids)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
         </tr>
         <?php 
 } ?>

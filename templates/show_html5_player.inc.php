@@ -84,8 +84,7 @@ if ($isVideo) {
                 height: "108px",
 <?php
 
-    }
-    ?>
+    } ?>
                 cssClass: "jp-video-360p"
 <?php
 
@@ -105,8 +104,7 @@ if ($isVideo) {
 <?php
 
     }
-}
-    ?>
+} ?>
             }
 <?php 
 } ?>
@@ -178,8 +176,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
     } else {
         echo "var titleobj = obj.title;";
         echo "var artistobj = obj.artist;";
-    }
-    ?>
+    } ?>
                 $('.playing_title').html(titleobj);
                 $('.playing_artist').html(artistobj);
 <?php
@@ -370,8 +367,7 @@ if ($embed) {
 
 if (!$isVideo) {
     $containerClass = "jp-audio";
-    $playerClass    = "jp-jplayer-audio";
-    ?>
+    $playerClass    = "jp-jplayer-audio"; ?>
 <div class="playing_info">
     <div class="playing_artist"></div>
     <div class="playing_title"></div>
@@ -470,8 +466,7 @@ if ($isVideo) {
     ?>
             <div class="waveform"></div>
 <?php 
-}
-    ?>
+} ?>
 <?php 
 } ?>
         </div>
@@ -497,12 +492,10 @@ if ($isVideo) {
             echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script type="text/javascript">startBroadcast(\'' . $key . '\');</script>';
         } else {
             echo Broadcast::get_broadcast_link();
-        }
-    ?>
+        } ?>
         </div>
 <?php 
-}
-    ?>
+} ?>
 <?php if ($iframed) {
     ?>
         <?php if (Access::check('interface', '25')) {
@@ -514,8 +507,7 @@ if ($isVideo) {
             </div>
 
         <?php 
-}
-    ?>
+} ?>
         <div id="slideshow" class="slideshow action_button">
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')) ?></a>
         </div>
@@ -537,11 +529,9 @@ if ($isVideo) {
             <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')) ?></a>
         </div>
 <?php 
-}
-    ?>
+} ?>
 <?php 
-}
-    ?>
+} ?>
       </div>
 <?php 
 } ?>

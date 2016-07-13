@@ -1829,7 +1829,7 @@ class Song extends database_object implements media, library_item
         $types     = array();
         $transcode = AmpConfig::get('transcode_' . $type);
         if ($player) {
-            $player_transcode = AmpConfig::get('transcode_player_' . $player .  '_' . $type);
+            $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
             if ($player_transcode) {
                 $transcode = $player_transcode;
             }

@@ -35,15 +35,12 @@
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) {
     ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id, 'play', T_('Play'),'play_live_stream_' . $radio->id);
-    ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id, 'play', T_('Play'),'play_live_stream_' . $radio->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true','play_add', T_('Play last'),'addplay_live_stream_' . $radio->id);
-    ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true','play_add', T_('Play last'),'addplay_live_stream_' . $radio->id); ?>
             <?php 
-}
-    ?>
+} ?>
         <?php 
 } ?>
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id,'add', T_('Add to temporary playlist'),'add_live_stream_' . $radio->id); ?>

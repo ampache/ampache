@@ -48,22 +48,16 @@
         <?php
         foreach ($object_ids as $channel_id) {
             $libitem = new Channel($channel_id);
-            $libitem->format();
-            ?>
-        <tr class="<?php echo UI::flip_class();
-            ?>" id="channel_row_<?php echo $libitem->id;
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_channel_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $libitem->id; ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_channel_row.inc.php'); ?>
         </tr>
         <?php 
         } ?>
         <?php if (!count($object_ids)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="13"><span class="nodata"><?php echo T_('No channel found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="13"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
         </tr>
         <?php 
 } ?>

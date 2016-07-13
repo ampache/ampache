@@ -28,10 +28,8 @@
  */
 
 if (count($results)) {
-    $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : '';
-    ?>
-<?php UI::show_box_top(T_('Now Playing') . $link);
-    ?>
+    $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : ''; ?>
+<?php UI::show_box_top(T_('Now Playing') . $link); ?>
 <?php
 foreach ($results as $item) {
     $media   = $item['media'];
@@ -45,22 +43,19 @@ foreach ($results as $item) {
     }
     if (!$np_user->fullname) {
         $np_user->fullname = "Ampache User";
-    }
-    ?>
+    } ?>
 <div class="np_row">
 <?php
 if (strtolower(get_class($media)) == 'song') {
     require AmpConfig::get('prefix') . UI::find_template('show_now_playing_row.inc.php');
 } else {
     require AmpConfig::get('prefix') . UI::find_template('show_now_playing_video_row.inc.php');
-}
-    ?>
+} ?>
 </div>
 <?php
 
 } // end foreach
 ?>
-<?php UI::show_box_bottom();
-    ?>
+<?php UI::show_box_bottom(); ?>
 <?php 
 } // end if count results ?>

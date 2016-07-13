@@ -27,27 +27,22 @@
     <?php if (Access::check('interface', '25')) {
     ?>
         <li id="pl_add">
-            <?php echo UI::get_icon('playlist_add', T_('Add to Playlist'));
-    ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist');
-    ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
                 $playlists = Playlist::get_users($GLOBALS['user']->id);
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);
-        $playlist->format();
-        ?>
+        $playlist->format(); ?>
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->f_name, 'rb_append_playlist_' . $playlist->id);
-        ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->f_name, 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
             <?php 
-    }
-    ?>
+    } ?>
             </ul>
         </li>
     <?php 
@@ -55,11 +50,8 @@
 <?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) {
     ?>
     <li>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-    ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id;
-    ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch Download'));
-    ?>
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
+            <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     </li>
 <?php 
@@ -131,28 +123,21 @@
         if (in_array($type,$normal_array)) {
             $object = new $type(array_shift($object_data));
             $object->format();
-        }
-        ?>
-    <li class="<?php echo UI::flip_class();
-        ?>" >
-      <?php echo $object->f_link;
-        ?>
-        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem');
-        ?>
+        } ?>
+    <li class="<?php echo UI::flip_class(); ?>" >
+      <?php echo $object->f_link; ?>
+        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
     </li>
 <?php 
     } if (!count($objects)) {
         ?>
-    <li><span class="nodata"><?php echo T_('No items');
-        ?></span></li>
+    <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
 <?php 
     } ?>
 <?php if (isset($truncated)) {
     ?>
-    <li class="<?php echo UI::flip_class();
-    ?>">
-        <?php echo $truncated . ' ' . T_('More');
-    ?>...
+    <li class="<?php echo UI::flip_class(); ?>">
+        <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>
 <?php 
 } ?>

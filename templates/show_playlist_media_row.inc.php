@@ -32,8 +32,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
         if (Stream_Playlist::check_autoplay_append()) {
             echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_' . $object_type . '_' . $libitem->id);
         }
-    }
-    ?>
+    } ?>
     </div>
 </td>
 <?php if (Art::is_enabled()) {
@@ -41,12 +40,10 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
 <td class="cel_cover">
     <?php
     $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 5;
-    $libitem->display_art($thumb);
-    ?>
+    $libitem->display_art($thumb); ?>
 </td>
 <?php 
-}
-    ?>
+} ?>
 <td class="cel_title"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
@@ -57,8 +54,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
                 <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')) ?>
             </a>
         <?php 
-    }
-    ?>
+    } ?>
     </span>
 </td>
 <td class="cel_time"><?php echo $libitem->f_time ?></td>
@@ -73,8 +69,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php Userflag::show($libitem->id,$object_type) ?></td>
     <?php 
     }
-}
-    ?>
+} ?>
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) {
     ?>
@@ -90,8 +85,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     }
     if (get_class($playlist) == "Playlist" && $playlist->has_access()) {
         echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']);
-    }
-    ?>
+    } ?>
 </td>
 <?php if (Access::check('interface', '50') && get_class($playlist) == "Playlist") {
     ?>

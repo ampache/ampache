@@ -40,8 +40,7 @@
     ?>
 <td class="cel_cover">
     <?php
-    $libitem->display_art(3);
-    ?>
+    $libitem->display_art(3); ?>
 </td>
 <?php 
 } ?>
@@ -51,11 +50,9 @@
         <?php
             echo Ajax::button('?action=basket&type=playlist&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_playlist_' . $libitem->id);
             if (Access::check('interface', '25')) {
-                echo Ajax::button('?action=basket&type=playlist_random&id=' . $libitem->id,'random', T_('Random to temporary playlist'),'random_playlist_' . $libitem->id);
-                ?>
+                echo Ajax::button('?action=basket&type=playlist_random&id=' . $libitem->id,'random', T_('Random to temporary playlist'),'random_playlist_' . $libitem->id); ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'playlist', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
-                ?>
+                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
             </a>
         <?php 
             }
@@ -70,16 +67,12 @@
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) {
             ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id;
-            ?>_playlist"><?php Rating::show($libitem->id, 'playlist');
-            ?></td>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_playlist"><?php Rating::show($libitem->id, 'playlist'); ?></td>
     <?php 
         }
         if (AmpConfig::get('userflags')) {
             ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id;
-            ?>_playlist"><?php Userflag::show($libitem->id, 'playlist');
-            ?></td>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_playlist"><?php Userflag::show($libitem->id, 'playlist'); ?></td>
     <?php 
         }
     }
@@ -88,11 +81,8 @@
 <?php
     if (Access::check_function('batch_download') && check_can_zip('playlist')) {
         ?>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-        ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id;
-        ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch Download'));
-        ?>
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
+            <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
 <?php 
     }
@@ -104,8 +94,7 @@
     if ($libitem->has_access()) {
         ?>
     <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Playlist edit') ?>', 'playlist_row_')">
-        <?php echo UI::get_icon('edit', T_('Edit'));
-        ?>
+        <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', T_('Do you really want to delete the playlist?'));
     }

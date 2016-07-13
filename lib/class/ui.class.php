@@ -348,7 +348,7 @@ END;
         }
 
         $favicon = AmpConfig::get('custom_favicon') ?: AmpConfig::get('web_path') . "/favicon.ico";
-        echo "<link rel='shortcut icon' href='" .  $favicon . "' />\n";
+        echo "<link rel='shortcut icon' href='" . $favicon . "' />\n";
     }
 
     /**

@@ -22,20 +22,15 @@
 ?>
 <?php if (Access::check('interface', '50')) {
     ?>
-<?php UI::show_box_top(T_('Manage Radio Stations'),'info-box');
-    ?>
+<?php UI::show_box_top(T_('Manage Radio Stations'),'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path');
-    ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add'));
-    ?> <?php echo T_('Add Radio Station');
-    ?></a>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Radio Station'); ?></a>
 </li>
 </ul>
 </div>
-<?php UI::show_box_bottom();
-    ?>
+<?php UI::show_box_bottom(); ?>
 <?php 
 } ?>
 <?php if ($browse->get_show_header()) {
@@ -56,21 +51,16 @@
         <?php
         foreach ($object_ids as $radio_id) {
             $libitem = new Live_Stream($radio_id);
-            $libitem->format();
-            ?>
-        <tr id="live_stream_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php 
         } //end foreach ($artists as $artist) ?>
         <?php if (!count($object_ids)) {
     ?>
         <tr>
-            <td colspan="6"><span class="nodata"><?php echo T_('No live stream found');
-    ?></span></td>
+            <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
         </tr>
         <?php 
 } ?>
