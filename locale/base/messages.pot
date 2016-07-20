@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-07-12 18:53+0200\n"
+"POT-Creation-Date: 2016-07-20 17:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -183,33 +183,31 @@ msgid "Your E-mail was not sent."
 msgstr ""
 
 #: ../../admin/modules.php:38
-msgid "Install Failed, Controller Error"
+msgid "Failed to enable the module, Controller Error"
 msgstr ""
 
 #: ../../admin/modules.php:53
-msgid "Localplay Installed"
+msgid "localplay enabled"
 msgstr ""
 
 #: ../../admin/modules.php:61
-msgid "Install Failed, Catalog Error"
+msgid "Failed to enable the module, Catalog Error"
 msgstr ""
 
 #: ../../admin/modules.php:70
-msgid "Plugin Installed"
+msgid "Module enabled"
 msgstr ""
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
-#: ../../admin/modules.php:146
-msgid "Are you sure you want to remove this plugin?"
+msgid "Are you sure you want to disable this module?"
 msgstr ""
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
-#: ../../admin/modules.php:165
-msgid "Plugin Deactivated"
+msgid "Module disabled"
 msgstr ""
 
 #: ../../admin/modules.php:105
-msgid "Uninstall Failed, Catalog Error"
+msgid "Failed to disable module, Catalog Error"
 msgstr ""
 
 #: ../../admin/modules.php:128
@@ -217,7 +215,15 @@ msgid "Unable to Install Plugin"
 msgstr ""
 
 #: ../../admin/modules.php:139
-msgid "Plugin Activated"
+msgid "Plugin enabled"
+msgstr ""
+
+#: ../../admin/modules.php:146
+msgid "Are you sure you want to disable this plugin?"
+msgstr ""
+
+#: ../../admin/modules.php:165
+msgid "Plugin disabled"
 msgstr ""
 
 #: ../../admin/modules.php:180
@@ -3336,6 +3342,7 @@ msgstr ""
 
 #: ../../lib/preferences.php:215 ../../lib/preferences.php:358
 #: ../../templates/show_disabled_songs.inc.php:77
+#: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_user_row.inc.php:98
 msgid "Enable"
 msgstr ""
@@ -4444,7 +4451,7 @@ msgstr ""
 
 #: ../../templates/error_page.inc.php:51
 msgid ""
-"The folowing error has occured, you will automaticly be redirected after 10 "
+"The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
 msgstr ""
 
@@ -5716,7 +5723,6 @@ msgid "Version"
 msgstr ""
 
 #: ../../templates/show_catalog_types.inc.php:48
-#: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_plugins.inc.php:43
 msgid "Activate"
 msgstr ""
@@ -8321,7 +8327,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 12.07.2016 18:53:07 CEST 
+ # Last Update: 20.07.2016 17:13:04 CEST 
 
  #######################################################################
 
@@ -8731,6 +8737,30 @@ msgstr ""
 msgid "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
 
-#: Database preference table id 158
+#: Database preference table id 160
+msgid "HTTPQ Active Instance"
+msgstr ""
+
+#: Database preference table id 161
 msgid "MPD Active Instance"
+msgstr ""
+
+#: Database preference table id 164
+msgid "Amazon base url"
+msgstr ""
+
+#: Database preference table id 165
+msgid "Amazon max results pages"
+msgstr ""
+
+#: Database preference table id 166
+msgid "Amazon Access Key ID"
+msgstr ""
+
+#: Database preference table id 167
+msgid "Amazon Secret Access Key"
+msgstr ""
+
+#: Database preference table id 168
+msgid "Amazon associate tag"
 msgstr ""

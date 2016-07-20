@@ -1,21 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Shen-Ta Hsiea(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-06-23 15:00+0200\n"
-"PO-Revision-Date: 2016-06-29 08:19+0000\n"
-"Last-Translator: Afterster\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/language/zh_TW/)\n"
+"POT-Creation-Date: 2016-07-20 17:13+0200\n"
+"PO-Revision-Date: 2016-07-12 17:35+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
+"language/zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../admin/access.php:40
@@ -35,7 +36,7 @@ msgid "Are you sure you want to permanently delete"
 msgstr "您確定要永久刪除"
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:346
-#: ../../templates/show_song.inc.php:238
+#: ../../templates/show_song.inc.php:239
 #: ../../templates/show_video.inc.php:200
 msgid "Added"
 msgstr "已新增"
@@ -88,7 +89,8 @@ msgstr "確認刪除請求"
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
-msgstr ""
+msgid_plural " Songs Enabled"
+msgstr[0] ""
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
@@ -96,7 +98,8 @@ msgstr "沒有已停用的歌曲被選擇"
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
-msgstr ""
+msgid_plural " Disabled Songs Processed"
+msgstr[0] ""
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
@@ -179,42 +182,58 @@ msgid "Your E-mail was not sent."
 msgstr "您的電子郵件沒有寄送。"
 
 #: ../../admin/modules.php:38
-msgid "Install Failed, Controller Error"
+#, fuzzy
+msgid "Failed to enable the module, Controller Error"
 msgstr "安裝失敗，控制器錯誤"
 
 #: ../../admin/modules.php:53
-msgid "Localplay Installed"
-msgstr "本地播放器已安裝"
+#, fuzzy
+msgid "localplay enabled"
+msgstr "本地播放已停用"
 
 #: ../../admin/modules.php:61
-msgid "Install Failed, Catalog Error"
+#, fuzzy
+msgid "Failed to enable the module, Catalog Error"
 msgstr "安裝失敗，目錄錯誤"
 
 #: ../../admin/modules.php:70
-msgid "Plugin Installed"
-msgstr "套件已安裝"
+#, fuzzy
+msgid "Module enabled"
+msgstr "使用者已啟用"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
-#: ../../admin/modules.php:146
-msgid "Are you sure you want to remove this plugin?"
-msgstr "您確定要移除這個套件嗎？"
+#, fuzzy
+msgid "Are you sure you want to disable this module?"
+msgstr "您確定要刪除此播客嗎？"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
-#: ../../admin/modules.php:165
-msgid "Plugin Deactivated"
-msgstr "套件已停用"
+#, fuzzy
+msgid "Module disabled"
+msgstr "PHP 安全模式停用中"
 
 #: ../../admin/modules.php:105
-msgid "Uninstall Failed, Catalog Error"
-msgstr "解除安裝失敗，目錄錯誤"
+#, fuzzy
+msgid "Failed to disable module, Catalog Error"
+msgstr "安裝失敗，目錄錯誤"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
 msgstr "無法安裝套件"
 
 #: ../../admin/modules.php:139
-msgid "Plugin Activated"
-msgstr "套件已啟用"
+#, fuzzy
+msgid "Plugin enabled"
+msgstr "套件已安裝"
+
+#: ../../admin/modules.php:146
+#, fuzzy
+msgid "Are you sure you want to disable this plugin?"
+msgstr "您確定要移除這個套件嗎？"
+
+#: ../../admin/modules.php:165
+#, fuzzy
+msgid "Plugin disabled"
+msgstr "套件已安裝"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
@@ -599,19 +618,23 @@ msgstr "最佳化資料庫表格。"
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr "使用此選項時請自行承擔風險！您的系統可能當機，或因為使用過多記憶體而變得沒有反應！"
+msgstr ""
+"使用此選項時請自行承擔風險！您的系統可能當機，或因為使用過多記憶體而變得沒有"
+"反應！"
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
-"Depending on your systems performance, this option could need a long time to"
-" finish and extremely slow down other database processes if you have big "
+"Depending on your systems performance, this option could need a long time to "
+"finish and extremely slow down other database processes if you have big "
 "catalogs!"
-msgstr "依據您系統的效能，此選項可能需要很長時間。如果目錄過大，可能會嚴重拖慢其他資料庫操作！"
+msgstr ""
+"依據您系統的效能，此選項可能需要很長時間。如果目錄過大，可能會嚴重拖慢其他資"
+"料庫操作！"
 
 #: ../../bin/catalog_update.inc:218
 msgid ""
-"The switches [-m|-i|-o] can only be used, if one of the other switches "
-"[-c|-v|-a|-g] is used."
+"The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
+"v|-a|-g] is used."
 msgstr "只有使用了 [-c|-v|-a|-g] 選項時，[-m|-i|-o] 選項才能使用。"
 
 #: ../../bin/channel_run.inc:46
@@ -1102,7 +1125,7 @@ msgid "Stream Access"
 msgstr "串流存取"
 
 #: ../../lib/class/album.class.php:407 ../../lib/class/artist.class.php:679
-#: ../../templates/show_album_group_disks.inc.php:50
+#: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
 msgstr "未知 (遺孤)"
@@ -1110,7 +1133,7 @@ msgstr "未知 (遺孤)"
 #: ../../lib/class/album.class.php:642
 #: ../../lib/class/subsonic_xml_data.class.php:495
 #: ../../server/search.ajax.php:87
-#: ../../templates/show_album_group_disks.inc.php:123
+#: ../../templates/show_album_group_disks.inc.php:124
 #: ../../templates/show_album.inc.php:31
 #: ../../templates/show_edit_album_row.inc.php:70
 #: ../../templates/show_song_previews.inc.php:40
@@ -1120,7 +1143,7 @@ msgstr "片"
 #: ../../lib/class/album.class.php:654 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:329 ../../lib/ui.lib.php:180
 #: ../../server/search.ajax.php:57 ../../templates/header.inc.php:429
-#: ../../templates/show_label.inc.php:119
+#: ../../templates/show_label.inc.php:120
 #: ../../templates/show_labels.inc.php:52
 #: ../../templates/show_labels.inc.php:92
 #: ../../templates/show_random.inc.php:43
@@ -1329,11 +1352,11 @@ msgstr "錯誤：無法開啟"
 #: ../../lib/class/art.class.php:1779 ../../lib/class/shoutbox.class.php:309
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:120
 #: ../../templates/header.inc.php:347 ../../templates/rightbar.inc.php:25
-#: ../../templates/show_album_group_disks.inc.php:63
-#: ../../templates/show_album_group_disks.inc.php:65
-#: ../../templates/show_album_group_disks.inc.php:138
-#: ../../templates/show_album.inc.php:115
-#: ../../templates/show_album.inc.php:117
+#: ../../templates/show_album_group_disks.inc.php:64
+#: ../../templates/show_album_group_disks.inc.php:66
+#: ../../templates/show_album_group_disks.inc.php:139
+#: ../../templates/show_album.inc.php:116
+#: ../../templates/show_album.inc.php:118
 #: ../../templates/show_album_row.inc.php:28
 #: ../../templates/show_artist_row.inc.php:28
 #: ../../templates/show_broadcast_row.inc.php:27
@@ -1418,12 +1441,12 @@ msgstr "廣播編輯"
 #: ../../lib/class/broadcast.class.php:358
 #: ../../lib/class/channel.class.php:186 ../../lib/class/share.class.php:206
 #: ../../templates/show_access_list.inc.php:87
-#: ../../templates/show_album_group_disks.inc.php:187
-#: ../../templates/show_album.inc.php:256
+#: ../../templates/show_album_group_disks.inc.php:188
+#: ../../templates/show_album.inc.php:257
 #: ../../templates/show_album_row.inc.php:133
-#: ../../templates/show_artist.inc.php:262
+#: ../../templates/show_artist.inc.php:265
 #: ../../templates/show_artist_row.inc.php:111
-#: ../../templates/show_label.inc.php:90
+#: ../../templates/show_label.inc.php:91
 #: ../../templates/show_license_row.inc.php:28
 #: ../../templates/show_live_stream_row.inc.php:47
 #: ../../templates/show_playlist_row.inc.php:107
@@ -1454,17 +1477,17 @@ msgstr "編輯"
 #: ../../templates/rightbar.inc.php:140
 #: ../../templates/show_access_list.inc.php:91
 #: ../../templates/show_account.inc.php:103
-#: ../../templates/show_album.inc.php:286
 #: ../../templates/show_album.inc.php:287
+#: ../../templates/show_album.inc.php:288
 #: ../../templates/show_album_row.inc.php:141
-#: ../../templates/show_artist.inc.php:278
-#: ../../templates/show_artist.inc.php:279
+#: ../../templates/show_artist.inc.php:281
+#: ../../templates/show_artist.inc.php:282
 #: ../../templates/show_artist_row.inc.php:121
 #: ../../templates/show_catalog_row.inc.php:58
 #: ../../templates/show_democratic_playlist.inc.php:122
 #: ../../templates/show_edit_user.inc.php:123
-#: ../../templates/show_label.inc.php:106
 #: ../../templates/show_label.inc.php:107
+#: ../../templates/show_label.inc.php:108
 #: ../../templates/show_label_row.inc.php:49
 #: ../../templates/show_license_row.inc.php:31
 #: ../../templates/show_live_stream_row.inc.php:53
@@ -1513,8 +1536,8 @@ msgstr "停止廣播"
 #: ../../templates/show_albums.inc.php:130
 #: ../../templates/show_artists.inc.php:44
 #: ../../templates/show_artists.inc.php:131
-#: ../../templates/show_label.inc.php:120
-#: ../../templates/show_label.inc.php:135
+#: ../../templates/show_label.inc.php:121
+#: ../../templates/show_label.inc.php:136
 #: ../../templates/show_manage_democratic.inc.php:31
 #: ../../templates/show_random.inc.php:29
 #: ../../templates/show_random.inc.php:32
@@ -1530,7 +1553,7 @@ msgstr "歌曲"
 #: ../../lib/class/browse.class.php:210 ../../lib/class/upnp_api.class.php:353
 #: ../../lib/ui.lib.php:176 ../../server/search.ajax.php:90
 #: ../../templates/browse_filters.inc.php:92
-#: ../../templates/show_artist.inc.php:291
+#: ../../templates/show_artist.inc.php:294
 #: ../../templates/show_artists.inc.php:45
 #: ../../templates/show_artists.inc.php:132
 #: ../../templates/show_random.inc.php:36
@@ -1609,7 +1632,7 @@ msgstr "專輯願望清單"
 msgid "Shared Objects"
 msgstr "已共享的物件"
 
-#: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:225
+#: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:226
 #: ../../templates/show_video.inc.php:193
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Channels"
@@ -1663,8 +1686,8 @@ msgid "Personal Videos"
 msgstr "私人視訊"
 
 #: ../../lib/class/browse.class.php:328 ../../server/search.ajax.php:178
-#: ../../templates/show_artist.inc.php:312
-#: ../../templates/show_artist.inc.php:381
+#: ../../templates/show_artist.inc.php:315
+#: ../../templates/show_artist.inc.php:384
 #: ../../templates/show_edit_artist_row.inc.php:62
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Labels"
@@ -1697,11 +1720,13 @@ msgstr "不曾"
 
 #: ../../lib/class/catalog.class.php:599
 msgid "day"
-msgstr ""
+msgid_plural "days"
+msgstr[0] ""
 
 #: ../../lib/class/catalog.class.php:601
 msgid "hour"
-msgstr ""
+msgid_plural "hours"
+msgstr[0] ""
 
 #: ../../lib/class/catalog.class.php:646
 msgid "Catalog Insert Failed check debug logs"
@@ -1714,7 +1739,8 @@ msgstr "不需更新"
 #: ../../lib/class/catalog.class.php:1808
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
-msgstr ""
+msgid_plural "Catalog Clean Done. %d files removed."
+msgstr[0] ""
 
 #: ../../lib/class/catalog.class.php:1833
 #, php-format
@@ -1787,7 +1813,7 @@ msgstr "目錄管理"
 #: ../../templates/show_labels.inc.php:50
 #: ../../templates/show_labels.inc.php:90
 #: ../../templates/show_search_bar.inc.php:38
-#: ../../templates/show_song.inc.php:221
+#: ../../templates/show_song.inc.php:222
 msgid "Label"
 msgstr "標籤"
 
@@ -1838,8 +1864,8 @@ msgstr "私有"
 #: ../../lib/class/podcast.class.php:173
 #: ../../lib/class/podcast_episode.class.php:153
 #: ../../templates/show_add_catalog.inc.php:88
-#: ../../templates/show_album.inc.php:162
-#: ../../templates/show_artist.inc.php:187
+#: ../../templates/show_album.inc.php:163
+#: ../../templates/show_artist.inc.php:190
 #: ../../templates/show_podcast_episodes.inc.php:33
 #: ../../templates/show_podcast_episodes.inc.php:103
 #: ../../templates/show_podcast.inc.php:110
@@ -1917,7 +1943,16 @@ msgid ""
 "\n"
 "        %s\n"
 "        "
-msgstr "您剛收到一筆來自 %s 的新私人訊息。\n\n\n        ----------------------\n        %s\n        ----------------------\n\n        %s\n        "
+msgstr ""
+"您剛收到一筆來自 %s 的新私人訊息。\n"
+"\n"
+"\n"
+"        ----------------------\n"
+"        %s\n"
+"        ----------------------\n"
+"\n"
+"        %s\n"
+"        "
 
 #: ../../lib/class/query.class.php:99
 msgid "Browse not found or expired, try reloading the page"
@@ -1934,17 +1969,32 @@ msgid ""
 "Thank you for registering\n"
 "\n"
 "\n"
-"Please keep this e-mail for your records. Your account information is as follows:\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
 "----------------------\n"
 "Username: %s\n"
 "----------------------\n"
 "\n"
-"Your account is currently inactive. You cannot use it until you've visited the following link:\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
 "\n"
 "%s\n"
 "\n"
 "Thank you for registering\n"
-msgstr "感謝您註冊\n\n\n請保留這封電子郵件作為紀錄。您的帳號資訊如下：\n----------------------\n使用者名稱：%s\n----------------------\n\n您的帳號目前停用中。在您檢視以下網頁之前，您將無法使用該帳號：\n\n%s\n\n感謝您註冊\n"
+msgstr ""
+"感謝您註冊\n"
+"\n"
+"\n"
+"請保留這封電子郵件作為紀錄。您的帳號資訊如下：\n"
+"----------------------\n"
+"使用者名稱：%s\n"
+"----------------------\n"
+"\n"
+"您的帳號目前停用中。在您檢視以下網頁之前，您將無法使用該帳號：\n"
+"\n"
+"%s\n"
+"\n"
+"感謝您註冊\n"
 
 #: ../../lib/class/registration.class.php:77
 #, php-format
@@ -1957,7 +2007,15 @@ msgid ""
 "E-mail: %s\n"
 "Website: %s\n"
 "\n"
-msgstr "已有新使用者註冊\n他輸入了以下資訊。\n\n使用者名稱：%s\n全名：%s\n電子郵件：%s\n網站：%s\n\n"
+msgstr ""
+"已有新使用者註冊\n"
+"他輸入了以下資訊。\n"
+"\n"
+"使用者名稱：%s\n"
+"全名：%s\n"
+"電子郵件：%s\n"
+"網站：%s\n"
+"\n"
 
 #: ../../lib/class/registration.class.php:104
 #, php-format
@@ -1971,7 +2029,11 @@ msgid ""
 "\n"
 "\n"
 "            Please logon using %s"
-msgstr "您的帳號 %s 已被啟用\n\n\n            請使用 %s 登入"
+msgstr ""
+"您的帳號 %s 已被啟用\n"
+"\n"
+"\n"
+"            請使用 %s 登入"
 
 #: ../../lib/class/search.class.php:62
 msgid "is greater than or equal to"
@@ -2052,7 +2114,7 @@ msgstr "作曲者"
 #: ../../lib/class/search.class.php:237
 #: ../../templates/show_manage_shoutbox.inc.php:31
 #: ../../templates/show_manage_shoutbox.inc.php:65
-#: ../../templates/show_song.inc.php:220
+#: ../../templates/show_song.inc.php:221
 msgid "Comment"
 msgstr "註解"
 
@@ -2072,7 +2134,7 @@ msgstr "專輯標籤"
 #: ../../templates/show_duplicates.inc.php:34
 #: ../../templates/show_duplicates.inc.php:85
 #: ../../templates/show_import_playlist.inc.php:28
-#: ../../templates/show_song.inc.php:233
+#: ../../templates/show_song.inc.php:234
 #: ../../templates/show_video.inc.php:195
 msgid "Filename"
 msgstr "檔名"
@@ -2131,7 +2193,7 @@ msgstr "評比"
 #: ../../templates/show_albums.inc.php:134
 #: ../../templates/show_artists.inc.php:49
 #: ../../templates/show_artists.inc.php:136
-#: ../../templates/show_song.inc.php:240 ../../templates/show_songs.inc.php:47
+#: ../../templates/show_song.inc.php:241 ../../templates/show_songs.inc.php:47
 #: ../../templates/show_songs.inc.php:126
 #: ../../templates/show_video.inc.php:202
 #: ../../templates/show_videos.inc.php:51
@@ -2145,12 +2207,12 @@ msgstr "# 已播放"
 #: ../../templates/show_duplicates.inc.php:32
 #: ../../templates/show_duplicates.inc.php:83
 #: ../../templates/show_edit_channel_row.inc.php:84
-#: ../../templates/show_song.inc.php:224
+#: ../../templates/show_song.inc.php:225
 msgid "Bitrate"
 msgstr "位元率"
 
-#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:88
-#: ../../templates/show_artist.inc.php:91
+#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:89
+#: ../../templates/show_artist.inc.php:94
 msgid "Played"
 msgstr "已播放"
 
@@ -2309,7 +2371,16 @@ msgid ""
 "\n"
 "    %s\n"
 "    "
-msgstr "您剛收到一筆來自 %s 對您提供的內容「%s」的新留言。\n\n\n    ----------------------\n    %s\n    ----------------------\n\n    %s\n    "
+msgstr ""
+"您剛收到一筆來自 %s 對您提供的內容「%s」的新留言。\n"
+"\n"
+"\n"
+"    ----------------------\n"
+"    %s\n"
+"    ----------------------\n"
+"\n"
+"    %s\n"
+"    "
 
 #: ../../lib/class/shoutbox.class.php:310
 #: ../../templates/show_add_label.inc.php:80
@@ -2323,15 +2394,15 @@ msgid "Add"
 msgstr "新增"
 
 #: ../../lib/class/shoutbox.class.php:313
-#: ../../templates/show_album_group_disks.inc.php:152
-#: ../../templates/show_album.inc.php:173
-#: ../../templates/show_album.inc.php:177
+#: ../../templates/show_album_group_disks.inc.php:153
+#: ../../templates/show_album.inc.php:174
+#: ../../templates/show_album.inc.php:178
 #: ../../templates/show_album_row.inc.php:112
-#: ../../templates/show_artist.inc.php:198
-#: ../../templates/show_artist.inc.php:202
+#: ../../templates/show_artist.inc.php:201
+#: ../../templates/show_artist.inc.php:205
 #: ../../templates/show_artist_row.inc.php:103
 #: ../../templates/show_html5_player.inc.php:164
-#: ../../templates/show_label.inc.php:62 ../../templates/show_label.inc.php:66
+#: ../../templates/show_label.inc.php:63 ../../templates/show_label.inc.php:67
 #: ../../templates/show_label_row.inc.php:42
 #: ../../templates/show_podcast_episode.inc.php:108
 #: ../../templates/show_song.inc.php:126
@@ -3324,6 +3395,7 @@ msgstr "無法建立本機帳號"
 
 #: ../../lib/preferences.php:215 ../../lib/preferences.php:358
 #: ../../templates/show_disabled_songs.inc.php:77
+#: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_user_row.inc.php:98
 msgid "Enable"
 msgstr "啟用"
@@ -3489,10 +3561,10 @@ msgstr "首頁"
 
 #: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:460
 #: ../../templates/show_add_upload.inc.php:26
-#: ../../templates/show_album.inc.php:245
-#: ../../templates/show_album.inc.php:247
-#: ../../templates/show_artist.inc.php:251
-#: ../../templates/show_artist.inc.php:253
+#: ../../templates/show_album.inc.php:246
+#: ../../templates/show_album.inc.php:248
+#: ../../templates/show_artist.inc.php:254
+#: ../../templates/show_artist.inc.php:256
 #: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/sidebar.light.inc.php:43
 msgid "Upload"
@@ -3648,7 +3720,9 @@ msgstr "選擇 'No' 於 'Can your app be limited to its own, private folder?'"
 msgid ""
 "Select 'Specific file types' at 'What type of files does your app need "
 "access to?'"
-msgstr "選擇 'Specific file types' 於 'What type of files does your app need access to?'"
+msgstr ""
+"選擇 'Specific file types' 於 'What type of files does your app need access "
+"to?'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Check Videos and Audio files"
@@ -3959,11 +4033,11 @@ msgstr "強調"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:122
 #: ../../templates/header.inc.php:349
-#: ../../templates/show_album_group_disks.inc.php:71
-#: ../../templates/show_album_group_disks.inc.php:73
-#: ../../templates/show_album_group_disks.inc.php:140
-#: ../../templates/show_album.inc.php:123
-#: ../../templates/show_album.inc.php:125
+#: ../../templates/show_album_group_disks.inc.php:72
+#: ../../templates/show_album_group_disks.inc.php:74
+#: ../../templates/show_album_group_disks.inc.php:141
+#: ../../templates/show_album.inc.php:124
+#: ../../templates/show_album.inc.php:126
 #: ../../templates/show_album_row.inc.php:30
 #: ../../templates/show_artist_row.inc.php:30
 #: ../../templates/show_live_stream.inc.php:42
@@ -3988,11 +4062,11 @@ msgstr "最後播放"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:125
 #: ../../templates/header.inc.php:350
-#: ../../templates/show_album_group_disks.inc.php:84
-#: ../../templates/show_album_group_disks.inc.php:86
-#: ../../templates/show_album_group_disks.inc.php:144
-#: ../../templates/show_album.inc.php:137
-#: ../../templates/show_album.inc.php:139
+#: ../../templates/show_album_group_disks.inc.php:85
+#: ../../templates/show_album_group_disks.inc.php:87
+#: ../../templates/show_album_group_disks.inc.php:145
+#: ../../templates/show_album.inc.php:138
+#: ../../templates/show_album.inc.php:140
 #: ../../templates/show_album_row.inc.php:56
 #: ../../templates/show_artist_row.inc.php:56
 #: ../../templates/show_live_stream.inc.php:49
@@ -4043,7 +4117,8 @@ msgstr "已匯入播放清單"
 #: ../../playlist.php:83
 #, php-format
 msgid "Successfully imported playlist with %d song."
-msgstr ""
+msgid_plural "Successfully imported playlist with %d songs."
+msgstr[0] ""
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -4235,8 +4310,8 @@ msgstr "您的搜尋已被儲存為智慧播放清單，名為 %s"
 #: ../../server/index.ajax.php:44
 #, php-format
 msgid ""
-"No catalog configured yet. To start streaming your media, you now need to %s"
-" add a catalog %s"
+"No catalog configured yet. To start streaming your media, you now need to %s "
+"add a catalog %s"
 msgstr "目前沒有設定任何目錄。開始串流您的媒體之前，您必須要 %s 新增目錄 %s"
 
 #: ../../server/player.ajax.php:43
@@ -4361,10 +4436,12 @@ msgstr "Ampache 使用的 cookie"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work"
-" more efficiently, as well as to provide information to the owners of the "
+"that you visit. They are widely used in order to make websites work, or work "
+"more efficiently, as well as to provide information to the owners of the "
 "site."
-msgstr "Cookie 是由您瀏覽的網站設置所放置的許多小型純文字檔案。普遍使用於網站的基本運作，或是用來提昇網站運作效能，例如提供資訊給網站的所有者。"
+msgstr ""
+"Cookie 是由您瀏覽的網站設置所放置的許多小型純文字檔案。普遍使用於網站的基本運"
+"作，或是用來提昇網站運作效能，例如提供資訊給網站的所有者。"
 
 #: ../../templates/cookie_disclaimer.inc.php:5
 msgid "The table below explains the cookies we use and why."
@@ -4429,8 +4506,9 @@ msgid "Ampache"
 msgstr "Ampache"
 
 #: ../../templates/error_page.inc.php:51
+#, fuzzy
 msgid ""
-"The folowing error has occured, you will automaticly be redirected after 10 "
+"The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
 msgstr "已發生以下錯誤，10 秒後您會被自動導向。"
 
@@ -4470,11 +4548,16 @@ msgstr "取消"
 #: ../../templates/header.inc.php:312
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. "
+"You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
-msgstr "我們已在您的電腦內放置 cookie 來讓改善網站。您可以隨時更改您的 %s。\n否則，我們將會認為您同意並繼續。\n\n按下此訊息可使其不再顯示。"
+msgstr ""
+"我們已在您的電腦內放置 cookie 來讓改善網站。您可以隨時更改您的 %s。\n"
+"否則，我們將會認為您同意並繼續。\n"
+"\n"
+"按下此訊息可使其不再顯示。"
 
 #: ../../templates/header.inc.php:313
 msgid "cookie settings"
@@ -4493,8 +4576,8 @@ msgstr "cookie 設定"
 msgid "Play next"
 msgstr "下一首播放"
 
-#: ../../templates/header.inc.php:351 ../../templates/show_album.inc.php:150
-#: ../../templates/show_album.inc.php:154
+#: ../../templates/header.inc.php:351 ../../templates/show_album.inc.php:151
+#: ../../templates/show_album.inc.php:155
 #: ../../templates/show_album_row.inc.php:65
 #: ../../templates/show_artist_row.inc.php:60
 #: ../../templates/show_html5_player.inc.php:512
@@ -4855,9 +4938,11 @@ msgstr "新增目錄"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to"
-" a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr "在以下表單可以輸入本機路徑 (如：/data/music)，或是遠端 Ampache 的網址 (如：http://theotherampache.com)"
+"In the form below enter either a local path (i.e. /data/music) or the URL to "
+"a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+"在以下表單可以輸入本機路徑 (如：/data/music)，或是遠端 Ampache 的網址 (如："
+"http://theotherampache.com)"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
@@ -5247,27 +5332,34 @@ msgstr "在 Google 搜尋…"
 #: ../../templates/show_album_group_disks.inc.php:46
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_artist.inc.php:48
-#: ../../templates/show_label.inc.php:36
-msgid "Search on Wikipedia ..."
-msgstr "在 Wikipedia 搜尋…"
+#: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:218
+msgid "Search on DuckDuckGo ..."
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:52
 #: ../../templates/show_artist.inc.php:51
-#: ../../templates/show_label.inc.php:37 ../../templates/show_song.inc.php:218
+#: ../../templates/show_label.inc.php:37
+msgid "Search on Wikipedia ..."
+msgstr "在 Wikipedia 搜尋…"
+
+#: ../../templates/show_album_group_disks.inc.php:48
+#: ../../templates/show_album.inc.php:53
+#: ../../templates/show_artist.inc.php:54
+#: ../../templates/show_label.inc.php:38 ../../templates/show_song.inc.php:219
 msgid "Search on Last.fm ..."
 msgstr "在 Last.fm 搜尋…"
 
-#: ../../templates/show_album_group_disks.inc.php:58
-#: ../../templates/show_album.inc.php:110
+#: ../../templates/show_album_group_disks.inc.php:59
+#: ../../templates/show_album.inc.php:111
 #: ../../templates/show_albums.inc.php:72
 #: ../../templates/show_albums.inc.php:157
-#: ../../templates/show_artist.inc.php:113
+#: ../../templates/show_artist.inc.php:116
 #: ../../templates/show_broadcasts.inc.php:35
 #: ../../templates/show_catalogs.inc.php:34
 #: ../../templates/show_catalogs.inc.php:69
 #: ../../templates/show_channels.inc.php:44
-#: ../../templates/show_label.inc.php:53
+#: ../../templates/show_label.inc.php:54
 #: ../../templates/show_missing_album.inc.php:51
 #: ../../templates/show_missing_albums.inc.php:31
 #: ../../templates/show_playlists.inc.php:59
@@ -5289,24 +5381,24 @@ msgstr "在 Last.fm 搜尋…"
 msgid "Actions"
 msgstr "動作"
 
-#: ../../templates/show_album_group_disks.inc.php:90
-#: ../../templates/show_album_group_disks.inc.php:92
-#: ../../templates/show_album_group_disks.inc.php:145
-#: ../../templates/show_album.inc.php:143
-#: ../../templates/show_album.inc.php:145
+#: ../../templates/show_album_group_disks.inc.php:91
+#: ../../templates/show_album_group_disks.inc.php:93
+#: ../../templates/show_album_group_disks.inc.php:146
+#: ../../templates/show_album.inc.php:144
+#: ../../templates/show_album.inc.php:146
 #: ../../templates/show_album_row.inc.php:57
 #: ../../templates/show_artist_row.inc.php:57
 #: ../../templates/show_playlist_row.inc.php:54
 msgid "Random to temporary playlist"
 msgstr ""
 
-#: ../../templates/show_album_group_disks.inc.php:102
-#: ../../templates/show_album_group_disks.inc.php:106
-#: ../../templates/show_album_group_disks.inc.php:170
-#: ../../templates/show_album.inc.php:271
-#: ../../templates/show_album.inc.php:275
-#: ../../templates/show_artist.inc.php:214
-#: ../../templates/show_artist.inc.php:218
+#: ../../templates/show_album_group_disks.inc.php:103
+#: ../../templates/show_album_group_disks.inc.php:107
+#: ../../templates/show_album_group_disks.inc.php:171
+#: ../../templates/show_album.inc.php:272
+#: ../../templates/show_album.inc.php:276
+#: ../../templates/show_artist.inc.php:217
+#: ../../templates/show_artist.inc.php:221
 #: ../../templates/show_install_config.inc.php:223
 #: ../../templates/show_install_config.inc.php:248
 #: ../../templates/show_install_config.inc.php:273
@@ -5322,47 +5414,47 @@ msgstr ""
 msgid "Download"
 msgstr "下載"
 
-#: ../../templates/show_album_group_disks.inc.php:179
-#: ../../templates/show_album.inc.php:221
-#: ../../templates/show_album.inc.php:223
+#: ../../templates/show_album_group_disks.inc.php:180
+#: ../../templates/show_album.inc.php:222
+#: ../../templates/show_album.inc.php:224
 #: ../../templates/show_playlist.inc.php:70
 #: ../../templates/show_playlist.inc.php:72
 msgid "Save Tracks Order"
 msgstr "儲存音軌順序"
 
-#: ../../templates/show_album_group_disks.inc.php:182
-#: ../../templates/show_album.inc.php:230
+#: ../../templates/show_album_group_disks.inc.php:183
+#: ../../templates/show_album.inc.php:231
 msgid "Do you really want to update from tags?"
 msgstr "您確定要從標籤更新嗎？"
 
-#: ../../templates/show_album_group_disks.inc.php:183
-#: ../../templates/show_album.inc.php:231
+#: ../../templates/show_album_group_disks.inc.php:184
 #: ../../templates/show_album.inc.php:232
+#: ../../templates/show_album.inc.php:233
 msgid "Update from tags"
 msgstr "從標籤更新"
 
-#: ../../templates/show_album_group_disks.inc.php:186
-#: ../../templates/show_album.inc.php:255
-#: ../../templates/show_album.inc.php:259
+#: ../../templates/show_album_group_disks.inc.php:187
+#: ../../templates/show_album.inc.php:256
+#: ../../templates/show_album.inc.php:260
 #: ../../templates/show_album_row.inc.php:132
 msgid "Album edit"
 msgstr "專輯編輯"
 
-#: ../../templates/show_album.inc.php:88
-#: ../../templates/show_artist.inc.php:91
+#: ../../templates/show_album.inc.php:89
+#: ../../templates/show_artist.inc.php:94
 msgid "times"
 msgstr "次"
 
-#: ../../templates/show_album.inc.php:102
-#: ../../templates/show_artist.inc.php:105
-#: ../../templates/show_song.inc.php:255
+#: ../../templates/show_album.inc.php:103
+#: ../../templates/show_artist.inc.php:108
+#: ../../templates/show_song.inc.php:256
 msgid "Uploaded by"
 msgstr "上傳者"
 
-#: ../../templates/show_album.inc.php:205
-#: ../../templates/show_album.inc.php:209
-#: ../../templates/show_artist.inc.php:231
-#: ../../templates/show_artist.inc.php:235
+#: ../../templates/show_album.inc.php:206
+#: ../../templates/show_album.inc.php:210
+#: ../../templates/show_artist.inc.php:234
+#: ../../templates/show_artist.inc.php:238
 #: ../../templates/show_podcast_episode.inc.php:149
 #: ../../templates/show_podcast.inc.php:97
 #: ../../templates/show_podcast.inc.php:101
@@ -5371,7 +5463,7 @@ msgstr "上傳者"
 msgid "Graphs"
 msgstr "圖表"
 
-#: ../../templates/show_album.inc.php:260
+#: ../../templates/show_album.inc.php:261
 msgid "Edit Album"
 msgstr "編輯專輯"
 
@@ -5455,31 +5547,31 @@ msgstr "最愛"
 msgid "No album found"
 msgstr "找不到專輯"
 
-#: ../../templates/show_artist.inc.php:55
-#: ../../templates/show_artist.inc.php:346
-#: ../../templates/show_artist.inc.php:358
-#: ../../templates/show_artist.inc.php:370
-#: ../../templates/show_artist.inc.php:382
+#: ../../templates/show_artist.inc.php:58
+#: ../../templates/show_artist.inc.php:349
+#: ../../templates/show_artist.inc.php:361
+#: ../../templates/show_artist.inc.php:373
+#: ../../templates/show_artist.inc.php:385
 #: ../../templates/show_index.inc.php:53 ../../templates/show_index.inc.php:65
-#: ../../templates/show_label.inc.php:135
+#: ../../templates/show_label.inc.php:136
 #: ../../templates/show_missing_artist.inc.php:33
 #: ../../templates/show_now_playing_row.inc.php:88
 #: ../../templates/show_now_playing_row.inc.php:96
 msgid "Loading..."
 msgstr "載入中…"
 
-#: ../../templates/show_artist.inc.php:121
-#: ../../templates/show_artist.inc.php:126
+#: ../../templates/show_artist.inc.php:124
+#: ../../templates/show_artist.inc.php:129
 msgid "Show all"
 msgstr "顯示全部"
 
-#: ../../templates/show_artist.inc.php:135
-#: ../../templates/show_artist.inc.php:140
+#: ../../templates/show_artist.inc.php:138
+#: ../../templates/show_artist.inc.php:143
 msgid "Show albums"
 msgstr "顯示專輯"
 
-#: ../../templates/show_artist.inc.php:148
-#: ../../templates/show_artist.inc.php:150
+#: ../../templates/show_artist.inc.php:151
+#: ../../templates/show_artist.inc.php:153
 #: ../../templates/show_playlist.inc.php:111
 #: ../../templates/show_playlist.inc.php:113
 #: ../../templates/show_podcast.inc.php:73
@@ -5491,8 +5583,8 @@ msgstr "顯示專輯"
 msgid "Play all"
 msgstr "全部播放"
 
-#: ../../templates/show_artist.inc.php:156
-#: ../../templates/show_artist.inc.php:158
+#: ../../templates/show_artist.inc.php:159
+#: ../../templates/show_artist.inc.php:161
 #: ../../templates/show_playlist.inc.php:121
 #: ../../templates/show_playlist.inc.php:123
 #: ../../templates/show_podcast.inc.php:83
@@ -5505,47 +5597,47 @@ msgid "Play all last"
 msgstr "最後全部播放"
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:170
-#: ../../templates/show_artist.inc.php:172
+#: ../../templates/show_artist.inc.php:173
+#: ../../templates/show_artist.inc.php:175
 #: ../../templates/show_playlist.inc.php:129
 #: ../../templates/show_playlist.inc.php:130
 msgid "Add all to temporary playlist"
 msgstr ""
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:177
-#: ../../templates/show_artist.inc.php:179
+#: ../../templates/show_artist.inc.php:180
+#: ../../templates/show_artist.inc.php:182
 #: ../../templates/show_playlist.inc.php:133
 #: ../../templates/show_playlist.inc.php:134
 msgid "Random all to temporary playlist"
 msgstr ""
 
-#: ../../templates/show_artist.inc.php:261
-#: ../../templates/show_artist.inc.php:265
+#: ../../templates/show_artist.inc.php:264
+#: ../../templates/show_artist.inc.php:268
 #: ../../templates/show_artist_row.inc.php:110
 msgid "Artist edit"
 msgstr "作者編輯"
 
-#: ../../templates/show_artist.inc.php:266
+#: ../../templates/show_artist.inc.php:269
 msgid "Edit Artist"
 msgstr "編輯作者"
 
-#: ../../templates/show_artist.inc.php:294
-#: ../../templates/show_artist.inc.php:345
+#: ../../templates/show_artist.inc.php:297
+#: ../../templates/show_artist.inc.php:348
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
 msgstr "缺少專輯"
 
-#: ../../templates/show_artist.inc.php:300
-#: ../../templates/show_artist.inc.php:357
+#: ../../templates/show_artist.inc.php:303
+#: ../../templates/show_artist.inc.php:360
 #: ../../templates/show_now_playing_row.inc.php:86
 #: ../../templates/show_now_playing_similar.inc.php:28
 #: ../../templates/show_recommended_artists.inc.php:25
 msgid "Similar Artists"
 msgstr "相似的作者"
 
-#: ../../templates/show_artist.inc.php:306
-#: ../../templates/show_artist.inc.php:369
+#: ../../templates/show_artist.inc.php:309
+#: ../../templates/show_artist.inc.php:372
 msgid "Events"
 msgstr "事件"
 
@@ -5694,7 +5786,6 @@ msgid "Version"
 msgstr "版本"
 
 #: ../../templates/show_catalog_types.inc.php:48
-#: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_plugins.inc.php:43
 msgid "Activate"
 msgstr "啟用"
@@ -5962,8 +6053,8 @@ msgstr "這個事件已被紀錄到日誌。"
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this"
-" function."
+"You have been redirected to this page because you do not have access to this "
+"function."
 msgstr "您已被重新導向到此網頁，因為沒有權限存取此功能。"
 
 #: ../../templates/show_denied.inc.php:60
@@ -6020,7 +6111,7 @@ msgstr "歌曲"
 #: ../../templates/show_duplicates.inc.php:82
 #: ../../templates/show_podcast_episode.inc.php:183
 #: ../../templates/show_random.inc.php:72
-#: ../../templates/show_song.inc.php:219
+#: ../../templates/show_song.inc.php:220
 #: ../../templates/show_video.inc.php:182
 msgid "Length"
 msgstr "長度"
@@ -6421,7 +6512,9 @@ msgstr "第三步 - 設定第一個帳號"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr "這個步驟將建立您的第一個 Ampache 管理員帳號。當您的管理員帳號建立後，您將會被重新導向到登入頁面。"
+msgstr ""
+"這個步驟將建立您的第一個 Ampache 管理員帳號。當您的管理員帳號建立後，您將會被"
+"重新導向到登入頁面。"
 
 #: ../../templates/show_install_account.inc.php:47
 msgid "Create Admin Account"
@@ -6440,7 +6533,9 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr "這個頁面處理 Ampache 資料庫的安裝，與 ampache.cfg.php 檔案的建立。在繼續之前請確認您有以下的必要條件："
+msgstr ""
+"這個頁面處理 Ampache 資料庫的安裝，與 ampache.cfg.php 檔案的建立。在繼續之前"
+"請確認您有以下的必要條件："
 
 #: ../../templates/show_install_check.inc.php:35
 msgid ""
@@ -6457,9 +6552,11 @@ msgstr "您的網頁伺服器有 %s 與 %s 檔案的讀取權限"
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later"
-" date simply edit %s"
-msgstr "當您確認上面的需求都滿足以後，請在下方填入資訊。您將只會被詢問必備的設定值。如果您之後想要修改您的 Ampache 安裝，只要編輯 %s"
+"values. If you would like to make changes to your Ampache install at a later "
+"date simply edit %s"
+msgstr ""
+"當您確認上面的需求都滿足以後，請在下方填入資訊。您將只會被詢問必備的設定值。"
+"如果您之後想要修改您的 Ampache 安裝，只要編輯 %s"
 
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:60
@@ -6498,19 +6595,23 @@ msgstr "ampache.cfg.php 可寫入"
 
 #: ../../templates/show_install_check.inc.php:62
 msgid ""
-"This tests whether PHP can write to config/. This is not strictly necessary,"
-" but will help streamline the installation process."
-msgstr "這測試 PHP 是否有寫入 config/ 的權限。這並非必要，但是可以使安裝流程更順暢。"
+"This tests whether PHP can write to config/. This is not strictly necessary, "
+"but will help streamline the installation process."
+msgstr ""
+"這測試 PHP 是否有寫入 config/ 的權限。這並非必要，但是可以使安裝流程更順暢。"
 
 #: ../../templates/show_install_config.inc.php:55
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache"
-" write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache "
+"write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s"
-msgstr "這個步驟將要求一些基本的設定值，並產生設定檔。如果您的 config/ 資料夾可寫入，您可以選擇「寫入」來讓 Ampache 直接在正確位置寫入設定檔。如果您選取「下載」，將會使您下載設定檔，然後您可以自行將設定檔放於 %s 內"
+msgstr ""
+"這個步驟將要求一些基本的設定值，並產生設定檔。如果您的 config/ 資料夾可寫入，"
+"您可以選擇「寫入」來讓 Ampache 直接在正確位置寫入設定檔。如果您選取「下載」，"
+"將會使您下載設定檔，然後您可以自行將設定檔放於 %s 內"
 
 #: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
@@ -6592,14 +6693,19 @@ msgid ""
 "advantage of existing binary applications such as ffmpeg. In order for "
 "transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr "轉碼使您能轉換檔案類型。Ampache 支援即時轉碼到所有檔案類型，根據使用者、播放器、IP 位址或可用頻寬。Ampache 會依靠現存的應用程式如 ffmpeg 來實現轉碼功能。為了讓轉碼功能運作，您必須確認該程式可以被網頁伺服器執行。"
+msgstr ""
+"轉碼使您能轉換檔案類型。Ampache 支援即時轉碼到所有檔案類型，根據使用者、播放"
+"器、IP 位址或可用頻寬。Ampache 會依靠現存的應用程式如 ffmpeg 來實現轉碼功能。"
+"為了讓轉碼功能運作，您必須確認該程式可以被網頁伺服器執行。"
 
 #: ../../templates/show_install_config.inc.php:135
 msgid ""
 "This section apply default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once this "
 "setup ended"
-msgstr "這些設定已經根據您的使用模式，套用了預設轉碼設定。您可以在安裝結束時調整這些設定。"
+msgstr ""
+"這些設定已經根據您的使用模式，套用了預設轉碼設定。您可以在安裝結束時調整這些"
+"設定。"
 
 #: ../../templates/show_install_config.inc.php:135
 #: ../../templates/show_install_config.inc.php:169
@@ -6615,7 +6721,9 @@ msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
-msgstr "找不到預設轉碼程式。您可能需要安裝這些常見的轉碼程式(ffmpeg、avconv…)之一，或是在安裝結束後自行調整轉碼設定。"
+msgstr ""
+"找不到預設轉碼程式。您可能需要安裝這些常見的轉碼程式(ffmpeg、avconv…)之一，或"
+"是在安裝結束後自行調整轉碼設定。"
 
 #: ../../templates/show_install_config.inc.php:167
 msgid "Players"
@@ -6625,7 +6733,8 @@ msgstr "播放器"
 msgid ""
 "Ampache is more than only a web interface. Several backends are implemented "
 "to ensure you can stream your media from anywhere."
-msgstr "Ampache 不只有網頁界面。有許多後端已實做來保證您可以在任何地方串流您的媒體。"
+msgstr ""
+"Ampache 不只有網頁界面。有許多後端已實做來保證您可以在任何地方串流您的媒體。"
 
 #: ../../templates/show_install_config.inc.php:169
 msgid ""
@@ -6708,9 +6817,11 @@ msgstr "建立設定"
 #: ../../templates/show_install.inc.php:39
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
-"MySQL account with database creation rights. This step may take some time on"
-" slower computers."
-msgstr "這個步驟會建立 Ampache 資料庫並插入資料，所以請提供擁有建立資料庫權限的 MySQL 帳號。在低階電腦上，此步驟可能會需要一些時間。"
+"MySQL account with database creation rights. This step may take some time on "
+"slower computers."
+msgstr ""
+"這個步驟會建立 Ampache 資料庫並插入資料，所以請提供擁有建立資料庫權限的 "
+"MySQL 帳號。在低階電腦上，此步驟可能會需要一些時間。"
 
 #: ../../templates/show_install.inc.php:47
 msgid "Insert Ampache Database"
@@ -6787,15 +6898,15 @@ msgstr "顯示全部"
 msgid "IP Address"
 msgstr "IP 位址"
 
-#: ../../templates/show_label.inc.php:78 ../../templates/show_label.inc.php:81
+#: ../../templates/show_label.inc.php:79 ../../templates/show_label.inc.php:82
 msgid "Send e-mail"
 msgstr "寄送電子郵件"
 
-#: ../../templates/show_label.inc.php:89 ../../templates/show_label.inc.php:93
+#: ../../templates/show_label.inc.php:90 ../../templates/show_label.inc.php:94
 msgid "Label edit"
 msgstr "標籤編輯"
 
-#: ../../templates/show_label.inc.php:94
+#: ../../templates/show_label.inc.php:95
 msgid "Edit Label"
 msgstr "編輯標籤"
 
@@ -7278,12 +7389,14 @@ msgstr "無限制"
 #: ../../templates/show_random.inc.php:86
 #, php-format
 msgid "%d minute"
-msgstr ""
+msgid_plural "%d minutes"
+msgstr[0] ""
 
 #: ../../templates/show_random.inc.php:88
 #, php-format
 msgid "%d hour"
-msgstr ""
+msgid_plural "%d hours"
+msgstr[0] ""
 
 #: ../../templates/show_random.inc.php:97
 msgid "Size Limit"
@@ -7306,42 +7419,50 @@ msgstr "客戶端"
 #: ../../templates/show_recently_played.inc.php:73
 #, php-format
 msgid "%d second ago"
-msgstr ""
+msgid_plural "%d seconds ago"
+msgstr[0] ""
 
 #: ../../templates/show_recently_played.inc.php:76
 #, php-format
 msgid "%d minute ago"
-msgstr ""
+msgid_plural "%d minutes ago"
+msgstr[0] ""
 
 #: ../../templates/show_recently_played.inc.php:79
 #, php-format
 msgid "%d hour ago"
-msgstr ""
+msgid_plural "%d hours ago"
+msgstr[0] ""
 
 #: ../../templates/show_recently_played.inc.php:82
 #, php-format
 msgid "%d day ago"
-msgstr ""
+msgid_plural "%d days ago"
+msgstr[0] ""
 
 #: ../../templates/show_recently_played.inc.php:85
 #, php-format
 msgid "%d week ago"
-msgstr ""
+msgid_plural "%d weeks ago"
+msgstr[0] ""
 
 #: ../../templates/show_recently_played.inc.php:88
 #, php-format
 msgid "%d month ago"
-msgstr ""
+msgid_plural "%d months ago"
+msgstr[0] ""
 
 #: ../../templates/show_recently_played.inc.php:91
 #, php-format
 msgid "%d year ago"
-msgstr ""
+msgid_plural "%d years ago"
+msgstr[0] ""
 
 #: ../../templates/show_recently_played.inc.php:94
 #, php-format
 msgid "%d decade ago"
-msgstr ""
+msgid_plural "%d decades ago"
+msgstr[0] ""
 
 #: ../../templates/show_recently_played.inc.php:172
 msgid "No recently item found"
@@ -7374,7 +7495,8 @@ msgstr ""
 msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
 "check your e-mail for further information."
-msgstr "啟動金鑰已被寄送到您提供的電子郵件位址。請檢查您的電子郵件來獲得更多資訊。"
+msgstr ""
+"啟動金鑰已被寄送到您提供的電子郵件位址。請檢查您的電子郵件來獲得更多資訊。"
 
 #: ../../templates/show_registration_confirmation.inc.php:55
 msgid "Return to Login Page"
@@ -7501,35 +7623,36 @@ msgid "Waveform"
 msgstr "波形"
 
 #: ../../templates/show_song.inc.php:217 ../../templates/show_song.inc.php:218
+#: ../../templates/show_song.inc.php:219
 msgid "Links"
 msgstr "鍊結"
 
-#: ../../templates/show_song.inc.php:222
+#: ../../templates/show_song.inc.php:223
 msgid "Song Language"
 msgstr "歌曲語言"
 
-#: ../../templates/show_song.inc.php:223
+#: ../../templates/show_song.inc.php:224
 msgid "Catalog Number"
 msgstr "目錄編號"
 
-#: ../../templates/show_song.inc.php:227
+#: ../../templates/show_song.inc.php:228
 msgid "ReplayGain Track Gain"
 msgstr "音軌回放增益"
 
-#: ../../templates/show_song.inc.php:230
+#: ../../templates/show_song.inc.php:231
 msgid "ReplayGain Album Gain"
 msgstr "專輯回放增益"
 
-#: ../../templates/show_song.inc.php:236
+#: ../../templates/show_song.inc.php:237
 #: ../../templates/show_video.inc.php:198
 msgid "Last Updated"
 msgstr "最後更新"
 
-#: ../../templates/show_song.inc.php:244
+#: ../../templates/show_song.inc.php:245
 msgid "Lyrics"
 msgstr "歌詞"
 
-#: ../../templates/show_song.inc.php:248
+#: ../../templates/show_song.inc.php:249
 msgid "Licensing"
 msgstr "正在收聽"
 
@@ -7610,10 +7733,13 @@ msgstr "這是測試 Ampache 依賴的程式是否有安裝。"
 
 #: ../../templates/show_test_table.inc.php:42
 msgid ""
-"Please download and install Composer from http://getcomposer.org and install"
-" it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
+"Please download and install Composer from http://getcomposer.org and install "
+"it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
 "install --prefer-source --no-interaction` on Ampache directory."
-msgstr "請從 http://getcomposer.org 下載並安裝 Composer (如： mv composer.phar /usr/local/bin/composer)，然後在 Ampache 的資料夾內執行 `composer install --prefer-source --no-interaction`"
+msgstr ""
+"請從 http://getcomposer.org 下載並安裝 Composer (如： mv composer.phar /usr/"
+"local/bin/composer)，然後在 Ampache 的資料夾內執行 `composer install --"
+"prefer-source --no-interaction`"
 
 #: ../../templates/show_test_table.inc.php:49
 msgid "PHP hash extension"
@@ -7661,8 +7787,8 @@ msgstr "PHP session 擴展"
 
 #: ../../templates/show_test_table.inc.php:90
 msgid ""
-"This tests whether you have the session extension enabled. This extension is"
-" required by Ampache."
+"This tests whether you have the session extension enabled. This extension is "
+"required by Ampache."
 msgstr "這是測試您是否啟用了 session 擴展。Ampache 需要該擴展。"
 
 #: ../../templates/show_test_table.inc.php:94
@@ -7691,8 +7817,8 @@ msgstr "PHP curl 擴展"
 
 #: ../../templates/show_test_table.inc.php:117
 msgid ""
-"This tests whether you have the curl extension enabled. This is not strictly"
-" necessary, but may result in a better experience."
+"This tests whether you have the curl extension enabled. This is not strictly "
+"necessary, but may result in a better experience."
 msgstr "這會測試您是否有啟用 curl 擴展。雖然非必要，但是這可以提昇服務品質。"
 
 #: ../../templates/show_test_table.inc.php:121
@@ -7701,9 +7827,11 @@ msgstr "PHP zlib 擴展"
 
 #: ../../templates/show_test_table.inc.php:126
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly"
-" necessary, but may result in a better experience (zip download)."
-msgstr "這會測試您是否有啟用 zlib 擴展。雖然非必要，但是這可以提昇服務品質 (壓縮下載內容)。"
+"This tests whether you have the zlib extension enabled. This is not strictly "
+"necessary, but may result in a better experience (zip download)."
+msgstr ""
+"這會測試您是否有啟用 zlib 擴展。雖然非必要，但是這可以提昇服務品質 (壓縮下載"
+"內容)。"
 
 #: ../../templates/show_test_table.inc.php:130
 msgid "PHP simplexml extension"
@@ -7713,7 +7841,8 @@ msgstr "PHP simplexml 擴展"
 msgid ""
 "This tests whether you have the simplexml extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "這會測試您是否有啟用 simplexml 擴展。雖然非必要，但是這可以提昇服務品質。"
+msgstr ""
+"這會測試您是否有啟用 simplexml 擴展。雖然非必要，但是這可以提昇服務品質。"
 
 #: ../../templates/show_test_table.inc.php:139
 msgid "PHP GD extension"
@@ -7733,7 +7862,9 @@ msgstr "PHP 安全模式停用中"
 msgid ""
 "This test makes sure that PHP is not running in safe mode. Some features of "
 "Ampache will not work correctly in safe mode."
-msgstr "這會測試您是否在安全模式下執行 PHP。有些 Ampache 的功能無法正常在安全模式下執行。"
+msgstr ""
+"這會測試您是否在安全模式下執行 PHP。有些 Ampache 的功能無法正常在安全模式下執"
+"行。"
 
 #: ../../templates/show_test_table.inc.php:157
 msgid "PHP memory limit override"
@@ -7743,7 +7874,9 @@ msgstr "PHP 覆蓋記憶體限制設定"
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "這會測試 Ampache 是否可以覆蓋記憶體限制設定。雖然非必要，但是這可以提昇服務品質。"
+msgstr ""
+"這會測試 Ampache 是否可以覆蓋記憶體限制設定。雖然非必要，但是這可以提昇服務品"
+"質。"
 
 #: ../../templates/show_test_table.inc.php:166
 msgid "PHP execution time override"
@@ -7751,9 +7884,11 @@ msgstr "PHP 覆蓋最大執行時間"
 
 #: ../../templates/show_test_table.inc.php:171
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time."
-" This is not strictly necessary, but may result in a better experience."
-msgstr "這會測試 Ampache 是否可以覆蓋最大執行時間設定。雖然非必要，但是這可以提昇服務品質。"
+"This tests whether Ampache can override the limit on maximum execution time. "
+"This is not strictly necessary, but may result in a better experience."
+msgstr ""
+"這會測試 Ampache 是否可以覆蓋最大執行時間設定。雖然非必要，但是這可以提昇服務"
+"品質。"
 
 #: ../../templates/show_test_table.inc.php:175
 msgid "PHP max upload size"
@@ -7763,7 +7898,9 @@ msgstr "PHP 最大上傳大小"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "這會測試 Ampache 是否可以上傳中等大小檔案 (>= 20M)。雖然非必要，但是這可以提昇服務品質。"
+msgstr ""
+"這會測試 Ampache 是否可以上傳中等大小檔案 (>= 20M)。雖然非必要，但是這可以提"
+"昇服務品質。"
 
 #: ../../templates/show_test_table.inc.php:184
 msgid "PHP Integer Size"
@@ -7774,7 +7911,9 @@ msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
 "requires 64-bit operating system."
-msgstr "這會測試 Ampache 是否可以上傳大型大小檔案 (> 2GB)。雖然非必要，但是這可以提昇服務品質。這通常需要 64 位元的作業系統。"
+msgstr ""
+"這會測試 Ampache 是否可以上傳大型大小檔案 (> 2GB)。雖然非必要，但是這可以提昇"
+"服務品質。這通常需要 64 位元的作業系統。"
 
 #: ../../templates/show_test_table.inc.php:193
 msgid "PHP mbstring.func_overload"
@@ -7787,7 +7926,10 @@ msgid ""
 "is not stricly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr "這會測試 PHP 已設定 %s，因為可能會毀損 ID3 標籤支援功能。雖然非必要，但是可以使 Ampache 提供 ID3 標籤寫入支援 (預設為停用) ，因為 mbstring.func_overload 可能會導致您的音樂檔案遭受無法復原的毀損。"
+msgstr ""
+"這會測試 PHP 已設定 %s，因為可能會毀損 ID3 標籤支援功能。雖然非必要，但是可以"
+"使 Ampache 提供 ID3 標籤寫入支援 (預設為停用) ，因為 mbstring.func_overload "
+"可能會導致您的音樂檔案遭受無法復原的毀損。"
 
 #: ../../templates/show_test_table.inc.php:205
 msgid "Configuration file readability"
@@ -7797,7 +7939,9 @@ msgstr "設定檔可讀"
 msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file "
 "either is not in the correct location or is not currently readable."
-msgstr "這會測試讀取 config/ampache.cfg.php。如果失敗，該檔案可能沒有放在正確位置，或是目前無法讀取。"
+msgstr ""
+"這會測試讀取 config/ampache.cfg.php。如果失敗，該檔案可能沒有放在正確位置，或"
+"是目前無法讀取。"
 
 #: ../../templates/show_test_table.inc.php:218
 msgid "Configuration file validity"
@@ -7823,7 +7967,8 @@ msgstr "資料庫表格"
 msgid ""
 "This checks a few key tables to make sure that you have successfully "
 "inserted the Ampache database and that the user has access to the database"
-msgstr "這會檢查一些關鍵表格來確認您成功建立 Ampache 資料庫，且該使用者能存取資料庫"
+msgstr ""
+"這會檢查一些關鍵表格來確認您成功建立 Ampache 資料庫，且該使用者能存取資料庫"
 
 #: ../../templates/show_test_table.inc.php:259
 msgid "Web path"
@@ -7834,7 +7979,9 @@ msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
-msgstr "這會測試您提供正確的 web_path 設定值，而且我們可以拿到首頁。如果您沒有看到已檢查標記，則您的 web_path 沒有正確設定。"
+msgstr ""
+"這會測試您提供正確的 web_path 設定值，而且我們可以拿到首頁。如果您沒有看到已"
+"檢查標記，則您的 web_path 沒有正確設定。"
 
 #: ../../templates/show_tvshow.inc.php:95
 #: ../../templates/show_tvshow.inc.php:99
@@ -8248,7 +8395,9 @@ msgid ""
 "This page handles all database updates to Ampache starting with "
 "<strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with "
 "database version <strong>%s</strong>."
-msgstr "這個頁面管理所有從 Ampache <strong>3.3.3.5</strong> 開始的資料庫更新。您目前的版本為 <strong>%s</strong>，資料庫版本為 <strong>%s</strong>。"
+msgstr ""
+"這個頁面管理所有從 Ampache <strong>3.3.3.5</strong> 開始的資料庫更新。您目前"
+"的版本為 <strong>%s</strong>，資料庫版本為 <strong>%s</strong>。"
 
 #: ../../update.php:92
 msgid "Update Now!"
@@ -8279,8 +8428,8 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.06.2016 15:00:05 CEST
-# 
+# Last Update: 12.07.2016 18:53:07 CEST
+#
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "允許下載"
@@ -8313,7 +8462,7 @@ msgstr "播放方式"
 # but to avoid confusion, it's added and commented
 # msgid "Language"
 # msgstr ""
-#: Database preference table id 31 Database preference table id 32
+#: Database preference table id 31 32
 msgid "Playlist Type"
 msgstr "播放清單類型"
 
@@ -8365,8 +8514,7 @@ msgstr "播放清單行為"
 # but to avoid confusion, it's added and commented
 # msgid "Show Lyrics"
 # msgstr ""
-#: Database preference table id 55 Database preference table id 69 Database
-#: preference table id 72
+#: Database preference table id 55 69 72
 msgid "Shoutcast Active Instance"
 msgstr ""
 
@@ -8691,6 +8839,31 @@ msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr "預設使用首字母瀏覽於以下資料庫項目 (專輯、作者…等等)"
 
-#: Database preference table id 158
+#: Database preference table id 160
+#, fuzzy
+msgid "HTTPQ Active Instance"
+msgstr "使用的實體"
+
+#: Database preference table id 161
 msgid "MPD Active Instance"
+msgstr ""
+
+#: Database preference table id 164
+msgid "Amazon base url"
+msgstr ""
+
+#: Database preference table id 165
+msgid "Amazon max results pages"
+msgstr ""
+
+#: Database preference table id 166
+msgid "Amazon Access Key ID"
+msgstr ""
+
+#: Database preference table id 167
+msgid "Amazon Secret Access Key"
+msgstr ""
+
+#: Database preference table id 168
+msgid "Amazon associate tag"
 msgstr ""

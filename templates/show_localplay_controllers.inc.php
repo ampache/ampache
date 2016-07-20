@@ -45,7 +45,7 @@ $web_path = AmpConfig::get('web_path');
                 $action_txt    = T_('Disable');
             } else {
                 $action        = 'install_localplay';
-                $action_txt    = T_('Activate');
+                $action_txt    = T_('Enable');
             }
             ?>
         <tr class="<?php echo UI::flip_class();
