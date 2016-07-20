@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Carlos Alexandre <karuvuariyo@gmail.com>, 2015
 # Ione Souza Junior <junior@ionixjunior.com.br>, 2015-2016
@@ -10,14 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-06-23 15:00+0200\n"
-"PO-Revision-Date: 2016-06-29 08:19+0000\n"
-"Last-Translator: Afterster\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/ampache/ampache/language/pt_BR/)\n"
+"POT-Creation-Date: 2016-07-20 17:13+0200\n"
+"PO-Revision-Date: 2016-07-12 17:35+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/ampache/ampache/"
+"language/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../../admin/access.php:40
@@ -37,7 +38,7 @@ msgid "Are you sure you want to permanently delete"
 msgstr "Tem certeza que deseja excluir permanentemente"
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:346
-#: ../../templates/show_song.inc.php:238
+#: ../../templates/show_song.inc.php:239
 #: ../../templates/show_video.inc.php:200
 msgid "Added"
 msgstr "Adicionado"
@@ -90,7 +91,9 @@ msgstr "Confirmar solicitação de exclusão"
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
-msgstr ""
+msgid_plural " Songs Enabled"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
@@ -98,7 +101,9 @@ msgstr "Nenhuma música desabilitada selecionada"
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
-msgstr ""
+msgid_plural " Disabled Songs Processed"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
@@ -181,42 +186,58 @@ msgid "Your E-mail was not sent."
 msgstr "Seu e-mail não foi enviado."
 
 #: ../../admin/modules.php:38
-msgid "Install Failed, Controller Error"
+#, fuzzy
+msgid "Failed to enable the module, Controller Error"
 msgstr "Falha na instalação, erro no controlador"
 
 #: ../../admin/modules.php:53
-msgid "Localplay Installed"
+#, fuzzy
+msgid "localplay enabled"
 msgstr "Player local instalado"
 
 #: ../../admin/modules.php:61
-msgid "Install Failed, Catalog Error"
+#, fuzzy
+msgid "Failed to enable the module, Catalog Error"
 msgstr "Falha na instalação, erro no catálogo"
 
 #: ../../admin/modules.php:70
-msgid "Plugin Installed"
-msgstr "Plugin instalado"
+#, fuzzy
+msgid "Module enabled"
+msgstr "Usuário habilitado"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
-#: ../../admin/modules.php:146
-msgid "Are you sure you want to remove this plugin?"
+#, fuzzy
+msgid "Are you sure you want to disable this module?"
 msgstr "Tem certeza que deseja remover este plugin?"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
-#: ../../admin/modules.php:165
-msgid "Plugin Deactivated"
-msgstr "Plugin desativado"
+#, fuzzy
+msgid "Module disabled"
+msgstr "Modo de segurança do PHP desativado"
 
 #: ../../admin/modules.php:105
-msgid "Uninstall Failed, Catalog Error"
-msgstr "Falha na desinstalação, erro no catálogo"
+#, fuzzy
+msgid "Failed to disable module, Catalog Error"
+msgstr "Falha na instalação, erro no catálogo"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
 msgstr "Não é possível instalar plugin"
 
 #: ../../admin/modules.php:139
-msgid "Plugin Activated"
-msgstr "Plugin ativado"
+#, fuzzy
+msgid "Plugin enabled"
+msgstr "Plugin instalado"
+
+#: ../../admin/modules.php:146
+#, fuzzy
+msgid "Are you sure you want to disable this plugin?"
+msgstr "Tem certeza que deseja remover este plugin?"
+
+#: ../../admin/modules.php:165
+#, fuzzy
+msgid "Plugin disabled"
+msgstr "Plugin instalado"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
@@ -250,7 +271,9 @@ msgstr "Atualizado charset do banco de dados"
 msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
-msgstr "Seu banco de dados e tabelas associadas foram atualizados com a mesma configuração do charset atualmente configurado"
+msgstr ""
+"Seu banco de dados e tabelas associadas foram atualizados com a mesma "
+"configuração do charset atualmente configurado"
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
@@ -458,7 +481,9 @@ msgstr "Arte não localizada"
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
-msgstr "A arte não pode ser localizada no momento. Isto pode ser devido a erro de acesso de gravação, ou o arquivo não foi recebido corretamente."
+msgstr ""
+"A arte não pode ser localizada no momento. Isto pode ser devido a erro de "
+"acesso de gravação, ou o arquivo não foi recebido corretamente."
 
 #: ../../arts.php:68 ../../arts.php:94
 msgid "Art Inserted"
@@ -565,7 +590,9 @@ msgstr "Uso: catalog_update.inc [NOME DO CATÁLOGO] [-m|-c|-v|-a|-g|-i|-o]"
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
-msgstr "O comportamento padrão é faze tudo, exceto desativar temporariamente o limite de memória do PHP"
+msgstr ""
+"O comportamento padrão é faze tudo, exceto desativar temporariamente o "
+"limite de memória do PHP"
 
 #: ../../bin/catalog_update.inc:201
 msgid "Temporarily deactivates PHP memory limit."
@@ -579,7 +606,9 @@ msgstr "Limpa catálogos de entradas órfãs."
 msgid ""
 "Verifies catalog entries and updates them if related files have new "
 "information."
-msgstr "Verifique as entradas do catálogo e atualize-as se os arquivos relacionados possuírem novas informações."
+msgstr ""
+"Verifique as entradas do catálogo e atualize-as se os arquivos relacionados "
+"possuírem novas informações."
 
 #: ../../bin/catalog_update.inc:207
 msgid "Adds new media to catalogs."
@@ -601,20 +630,27 @@ msgstr "Otimiza as tabelas do banco de dados."
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr "Utilize esta opção por sua conta e risco! Seu sistema pode travar ou parar de responder devido ao enorme consumo de memória!"
+msgstr ""
+"Utilize esta opção por sua conta e risco! Seu sistema pode travar ou parar "
+"de responder devido ao enorme consumo de memória!"
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
-"Depending on your systems performance, this option could need a long time to"
-" finish and extremely slow down other database processes if you have big "
+"Depending on your systems performance, this option could need a long time to "
+"finish and extremely slow down other database processes if you have big "
 "catalogs!"
-msgstr "Dependendo da performance do seu sistema, esta opção pode precisar de um longo tempo para concluir e poderá tornar o banco de dados lento se você conter grandes catálogos."
+msgstr ""
+"Dependendo da performance do seu sistema, esta opção pode precisar de um "
+"longo tempo para concluir e poderá tornar o banco de dados lento se você "
+"conter grandes catálogos."
 
 #: ../../bin/catalog_update.inc:218
 msgid ""
-"The switches [-m|-i|-o] can only be used, if one of the other switches "
-"[-c|-v|-a|-g] is used."
-msgstr "Os parâmetros  [-m|-i|-o] só devem ser usados junto com os parâmetros [-c|-v|-a|-g]."
+"The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
+"v|-a|-g] is used."
+msgstr ""
+"Os parâmetros  [-m|-i|-o] só devem ser usados junto com os parâmetros [-c|-"
+"v|-a|-g]."
 
 #: ../../bin/channel_run.inc:46
 msgid "- Channel "
@@ -689,7 +725,9 @@ msgstr "%s Pelo Amor da Música"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
-msgstr "Testes básicos de tradução, as duas strings a seguir devem ter a mesma aparência"
+msgstr ""
+"Testes básicos de tradução, as duas strings a seguir devem ter a mesma "
+"aparência"
 
 #: ../../bin/fix_filenames.inc:54
 msgid "Original: For the Love of Music"
@@ -928,7 +966,8 @@ msgstr "Erro: O diretório %s não tem permissão para escrita"
 
 #: ../../bin/write_playlists.inc:93
 msgid "This will dump a collection of playlists files based on type"
-msgstr "Isto irá descarregar uma coleção de listas de reprodução baseadas no tipo"
+msgstr ""
+"Isto irá descarregar uma coleção de listas de reprodução baseadas no tipo"
 
 #: ../../bin/write_playlists.inc:94
 msgid "Types:"
@@ -1104,7 +1143,7 @@ msgid "Stream Access"
 msgstr "Acesso Stream"
 
 #: ../../lib/class/album.class.php:407 ../../lib/class/artist.class.php:679
-#: ../../templates/show_album_group_disks.inc.php:50
+#: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
 msgstr "Desconhecido (órfão)"
@@ -1112,7 +1151,7 @@ msgstr "Desconhecido (órfão)"
 #: ../../lib/class/album.class.php:642
 #: ../../lib/class/subsonic_xml_data.class.php:495
 #: ../../server/search.ajax.php:87
-#: ../../templates/show_album_group_disks.inc.php:123
+#: ../../templates/show_album_group_disks.inc.php:124
 #: ../../templates/show_album.inc.php:31
 #: ../../templates/show_edit_album_row.inc.php:70
 #: ../../templates/show_song_previews.inc.php:40
@@ -1122,7 +1161,7 @@ msgstr "Disco"
 #: ../../lib/class/album.class.php:654 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:329 ../../lib/ui.lib.php:180
 #: ../../server/search.ajax.php:57 ../../templates/header.inc.php:429
-#: ../../templates/show_label.inc.php:119
+#: ../../templates/show_label.inc.php:120
 #: ../../templates/show_labels.inc.php:52
 #: ../../templates/show_labels.inc.php:92
 #: ../../templates/show_random.inc.php:43
@@ -1331,11 +1370,11 @@ msgstr "Erro: Impossível abrir"
 #: ../../lib/class/art.class.php:1779 ../../lib/class/shoutbox.class.php:309
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:120
 #: ../../templates/header.inc.php:347 ../../templates/rightbar.inc.php:25
-#: ../../templates/show_album_group_disks.inc.php:63
-#: ../../templates/show_album_group_disks.inc.php:65
-#: ../../templates/show_album_group_disks.inc.php:138
-#: ../../templates/show_album.inc.php:115
-#: ../../templates/show_album.inc.php:117
+#: ../../templates/show_album_group_disks.inc.php:64
+#: ../../templates/show_album_group_disks.inc.php:66
+#: ../../templates/show_album_group_disks.inc.php:139
+#: ../../templates/show_album.inc.php:116
+#: ../../templates/show_album.inc.php:118
 #: ../../templates/show_album_row.inc.php:28
 #: ../../templates/show_artist_row.inc.php:28
 #: ../../templates/show_broadcast_row.inc.php:27
@@ -1420,12 +1459,12 @@ msgstr "Editar transmissão"
 #: ../../lib/class/broadcast.class.php:358
 #: ../../lib/class/channel.class.php:186 ../../lib/class/share.class.php:206
 #: ../../templates/show_access_list.inc.php:87
-#: ../../templates/show_album_group_disks.inc.php:187
-#: ../../templates/show_album.inc.php:256
+#: ../../templates/show_album_group_disks.inc.php:188
+#: ../../templates/show_album.inc.php:257
 #: ../../templates/show_album_row.inc.php:133
-#: ../../templates/show_artist.inc.php:262
+#: ../../templates/show_artist.inc.php:265
 #: ../../templates/show_artist_row.inc.php:111
-#: ../../templates/show_label.inc.php:90
+#: ../../templates/show_label.inc.php:91
 #: ../../templates/show_license_row.inc.php:28
 #: ../../templates/show_live_stream_row.inc.php:47
 #: ../../templates/show_playlist_row.inc.php:107
@@ -1456,17 +1495,17 @@ msgstr "Editar"
 #: ../../templates/rightbar.inc.php:140
 #: ../../templates/show_access_list.inc.php:91
 #: ../../templates/show_account.inc.php:103
-#: ../../templates/show_album.inc.php:286
 #: ../../templates/show_album.inc.php:287
+#: ../../templates/show_album.inc.php:288
 #: ../../templates/show_album_row.inc.php:141
-#: ../../templates/show_artist.inc.php:278
-#: ../../templates/show_artist.inc.php:279
+#: ../../templates/show_artist.inc.php:281
+#: ../../templates/show_artist.inc.php:282
 #: ../../templates/show_artist_row.inc.php:121
 #: ../../templates/show_catalog_row.inc.php:58
 #: ../../templates/show_democratic_playlist.inc.php:122
 #: ../../templates/show_edit_user.inc.php:123
-#: ../../templates/show_label.inc.php:106
 #: ../../templates/show_label.inc.php:107
+#: ../../templates/show_label.inc.php:108
 #: ../../templates/show_label_row.inc.php:49
 #: ../../templates/show_license_row.inc.php:31
 #: ../../templates/show_live_stream_row.inc.php:53
@@ -1515,8 +1554,8 @@ msgstr "Não transmitir"
 #: ../../templates/show_albums.inc.php:130
 #: ../../templates/show_artists.inc.php:44
 #: ../../templates/show_artists.inc.php:131
-#: ../../templates/show_label.inc.php:120
-#: ../../templates/show_label.inc.php:135
+#: ../../templates/show_label.inc.php:121
+#: ../../templates/show_label.inc.php:136
 #: ../../templates/show_manage_democratic.inc.php:31
 #: ../../templates/show_random.inc.php:29
 #: ../../templates/show_random.inc.php:32
@@ -1532,7 +1571,7 @@ msgstr "Músicas"
 #: ../../lib/class/browse.class.php:210 ../../lib/class/upnp_api.class.php:353
 #: ../../lib/ui.lib.php:176 ../../server/search.ajax.php:90
 #: ../../templates/browse_filters.inc.php:92
-#: ../../templates/show_artist.inc.php:291
+#: ../../templates/show_artist.inc.php:294
 #: ../../templates/show_artists.inc.php:45
 #: ../../templates/show_artists.inc.php:132
 #: ../../templates/show_random.inc.php:36
@@ -1611,7 +1650,7 @@ msgstr "Álbuns procurados"
 msgid "Shared Objects"
 msgstr "Objetos compartilhados"
 
-#: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:225
+#: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:226
 #: ../../templates/show_video.inc.php:193
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Channels"
@@ -1665,8 +1704,8 @@ msgid "Personal Videos"
 msgstr "Vídeos pessoais"
 
 #: ../../lib/class/browse.class.php:328 ../../server/search.ajax.php:178
-#: ../../templates/show_artist.inc.php:312
-#: ../../templates/show_artist.inc.php:381
+#: ../../templates/show_artist.inc.php:315
+#: ../../templates/show_artist.inc.php:384
 #: ../../templates/show_edit_artist_row.inc.php:62
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Labels"
@@ -1699,11 +1738,15 @@ msgstr "Nunca"
 
 #: ../../lib/class/catalog.class.php:599
 msgid "day"
-msgstr ""
+msgid_plural "days"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:601
 msgid "hour"
-msgstr ""
+msgid_plural "hours"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:646
 msgid "Catalog Insert Failed check debug logs"
@@ -1716,7 +1759,9 @@ msgstr "Nenhuma atualização é necessária"
 #: ../../lib/class/catalog.class.php:1808
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
-msgstr ""
+msgid_plural "Catalog Clean Done. %d files removed."
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:1833
 #, php-format
@@ -1729,13 +1774,16 @@ msgstr "Falha ao criar lista de reprodução."
 
 #: ../../lib/class/catalog.class.php:2034
 msgid "No valid songs found in playlist file."
-msgstr "Nenhuma música válida foi encontrada no arquivo da lista de reprodução."
+msgstr ""
+"Nenhuma música válida foi encontrada no arquivo da lista de reprodução."
 
 #: ../../lib/class/catalog.class.php:2389
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
-msgstr "Este subdiretório não é parte de um catálogo existente. A atualização não pode ser executada."
+msgstr ""
+"Este subdiretório não é parte de um catálogo existente. A atualização não "
+"pode ser executada."
 
 #: ../../lib/class/channel.class.php:184
 msgid "Start Channel"
@@ -1789,7 +1837,7 @@ msgstr "Gerenciador de catálogo"
 #: ../../templates/show_labels.inc.php:50
 #: ../../templates/show_labels.inc.php:90
 #: ../../templates/show_search_bar.inc.php:38
-#: ../../templates/show_song.inc.php:221
+#: ../../templates/show_song.inc.php:222
 msgid "Label"
 msgstr "Rótulo"
 
@@ -1840,8 +1888,8 @@ msgstr "Privado"
 #: ../../lib/class/podcast.class.php:173
 #: ../../lib/class/podcast_episode.class.php:153
 #: ../../templates/show_add_catalog.inc.php:88
-#: ../../templates/show_album.inc.php:162
-#: ../../templates/show_artist.inc.php:187
+#: ../../templates/show_album.inc.php:163
+#: ../../templates/show_artist.inc.php:190
 #: ../../templates/show_podcast_episodes.inc.php:33
 #: ../../templates/show_podcast_episodes.inc.php:103
 #: ../../templates/show_podcast.inc.php:110
@@ -1919,7 +1967,16 @@ msgid ""
 "\n"
 "        %s\n"
 "        "
-msgstr "Você acaba de receber uma mensagem privada de %s.\n\n\n        ----------------------\n        %s\n        ----------------------\n\n        %s\n        "
+msgstr ""
+"Você acaba de receber uma mensagem privada de %s.\n"
+"\n"
+"\n"
+"        ----------------------\n"
+"        %s\n"
+"        ----------------------\n"
+"\n"
+"        %s\n"
+"        "
 
 #: ../../lib/class/query.class.php:99
 msgid "Browse not found or expired, try reloading the page"
@@ -1936,17 +1993,33 @@ msgid ""
 "Thank you for registering\n"
 "\n"
 "\n"
-"Please keep this e-mail for your records. Your account information is as follows:\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
 "----------------------\n"
 "Username: %s\n"
 "----------------------\n"
 "\n"
-"Your account is currently inactive. You cannot use it until you've visited the following link:\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
 "\n"
 "%s\n"
 "\n"
 "Thank you for registering\n"
-msgstr "Obrigado por se registrar\n\n\nGuarde este e-mail para seus registros. Informação de sua conta:\n----------------------\nUsuário: %s\n----------------------\n\nSua conta atualmente está inativa. Para utiliza-la você deve acessar o seguinte link:\n\n%s\n\nObrigado por se registrar\n"
+msgstr ""
+"Obrigado por se registrar\n"
+"\n"
+"\n"
+"Guarde este e-mail para seus registros. Informação de sua conta:\n"
+"----------------------\n"
+"Usuário: %s\n"
+"----------------------\n"
+"\n"
+"Sua conta atualmente está inativa. Para utiliza-la você deve acessar o "
+"seguinte link:\n"
+"\n"
+"%s\n"
+"\n"
+"Obrigado por se registrar\n"
 
 #: ../../lib/class/registration.class.php:77
 #, php-format
@@ -1959,7 +2032,14 @@ msgid ""
 "E-mail: %s\n"
 "Website: %s\n"
 "\n"
-msgstr "Foi registrado um novo usuário\nForam digitados os seguintes valores.\n\nNome de usuário: %s\nNome completo: %s\nE-mail: %s\nWebsite: %s\n"
+msgstr ""
+"Foi registrado um novo usuário\n"
+"Foram digitados os seguintes valores.\n"
+"\n"
+"Nome de usuário: %s\n"
+"Nome completo: %s\n"
+"E-mail: %s\n"
+"Website: %s\n"
 
 #: ../../lib/class/registration.class.php:104
 #, php-format
@@ -1973,7 +2053,11 @@ msgid ""
 "\n"
 "\n"
 "            Please logon using %s"
-msgstr "Sua conta %s foi habilitada\n\n\nPor favor entrar usando %s"
+msgstr ""
+"Sua conta %s foi habilitada\n"
+"\n"
+"\n"
+"Por favor entrar usando %s"
 
 #: ../../lib/class/search.class.php:62
 msgid "is greater than or equal to"
@@ -2054,7 +2138,7 @@ msgstr "Compositor"
 #: ../../lib/class/search.class.php:237
 #: ../../templates/show_manage_shoutbox.inc.php:31
 #: ../../templates/show_manage_shoutbox.inc.php:65
-#: ../../templates/show_song.inc.php:220
+#: ../../templates/show_song.inc.php:221
 msgid "Comment"
 msgstr "Comentário"
 
@@ -2074,7 +2158,7 @@ msgstr ""
 #: ../../templates/show_duplicates.inc.php:34
 #: ../../templates/show_duplicates.inc.php:85
 #: ../../templates/show_import_playlist.inc.php:28
-#: ../../templates/show_song.inc.php:233
+#: ../../templates/show_song.inc.php:234
 #: ../../templates/show_video.inc.php:195
 msgid "Filename"
 msgstr "Nome do arquivo"
@@ -2133,7 +2217,7 @@ msgstr "Classificação"
 #: ../../templates/show_albums.inc.php:134
 #: ../../templates/show_artists.inc.php:49
 #: ../../templates/show_artists.inc.php:136
-#: ../../templates/show_song.inc.php:240 ../../templates/show_songs.inc.php:47
+#: ../../templates/show_song.inc.php:241 ../../templates/show_songs.inc.php:47
 #: ../../templates/show_songs.inc.php:126
 #: ../../templates/show_video.inc.php:202
 #: ../../templates/show_videos.inc.php:51
@@ -2147,12 +2231,12 @@ msgstr "# Tocado"
 #: ../../templates/show_duplicates.inc.php:32
 #: ../../templates/show_duplicates.inc.php:83
 #: ../../templates/show_edit_channel_row.inc.php:84
-#: ../../templates/show_song.inc.php:224
+#: ../../templates/show_song.inc.php:225
 msgid "Bitrate"
 msgstr "Taxa de bits"
 
-#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:88
-#: ../../templates/show_artist.inc.php:91
+#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:89
+#: ../../templates/show_artist.inc.php:94
 msgid "Played"
 msgstr "Tocado"
 
@@ -2311,7 +2395,15 @@ msgid ""
 "\n"
 "    %s\n"
 "    "
-msgstr "Você acabou de receber um nova notificação de %s no seu conteúdo `%s`.\n\n\n----------------------\n%s\n----------------------\n\n%s"
+msgstr ""
+"Você acabou de receber um nova notificação de %s no seu conteúdo `%s`.\n"
+"\n"
+"\n"
+"----------------------\n"
+"%s\n"
+"----------------------\n"
+"\n"
+"%s"
 
 #: ../../lib/class/shoutbox.class.php:310
 #: ../../templates/show_add_label.inc.php:80
@@ -2325,15 +2417,15 @@ msgid "Add"
 msgstr "Adicionar"
 
 #: ../../lib/class/shoutbox.class.php:313
-#: ../../templates/show_album_group_disks.inc.php:152
-#: ../../templates/show_album.inc.php:173
-#: ../../templates/show_album.inc.php:177
+#: ../../templates/show_album_group_disks.inc.php:153
+#: ../../templates/show_album.inc.php:174
+#: ../../templates/show_album.inc.php:178
 #: ../../templates/show_album_row.inc.php:112
-#: ../../templates/show_artist.inc.php:198
-#: ../../templates/show_artist.inc.php:202
+#: ../../templates/show_artist.inc.php:201
+#: ../../templates/show_artist.inc.php:205
 #: ../../templates/show_artist_row.inc.php:103
 #: ../../templates/show_html5_player.inc.php:164
-#: ../../templates/show_label.inc.php:62 ../../templates/show_label.inc.php:66
+#: ../../templates/show_label.inc.php:63 ../../templates/show_label.inc.php:67
 #: ../../templates/show_label_row.inc.php:42
 #: ../../templates/show_podcast_episode.inc.php:108
 #: ../../templates/show_song.inc.php:126
@@ -3235,7 +3327,9 @@ msgstr ""
 
 #: ../../lib/install.lib.php:83
 msgid "Unable to connect to database, check your ampache config"
-msgstr "Não é possível se conectar ao banco de dados, verifique sua configuração do Ampache"
+msgstr ""
+"Não é possível se conectar ao banco de dados, verifique sua configuração do "
+"Ampache"
 
 #: ../../lib/install.lib.php:91
 msgid "Unable to query database, check your ampache config"
@@ -3271,7 +3365,9 @@ msgstr "Erro: Não é possível criar o banco de dados: %s"
 #, php-format
 msgid ""
 "Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s"
-msgstr "Erro: Não é possível criar o usuário %1$s com permissões para %2$s em %3$s: %4$s"
+msgstr ""
+"Erro: Não é possível criar o usuário %1$s com permissões para %2$s em %3$s: "
+"%4$s"
 
 #: ../../lib/install.lib.php:268
 msgid "Invalid configuration settings"
@@ -3279,7 +3375,8 @@ msgstr "Definições de configuração inválidas"
 
 #: ../../lib/install.lib.php:274
 msgid "Database Connection Failed Check Hostname, Username and Password"
-msgstr "Conexão com banco de dados falhou ao verificar nome do host, usuário e senha"
+msgstr ""
+"Conexão com banco de dados falhou ao verificar nome do host, usuário e senha"
 
 #: ../../lib/install.lib.php:283
 msgid "Config file is not writable"
@@ -3326,6 +3423,7 @@ msgstr "Não é possível criar uma conta local"
 
 #: ../../lib/preferences.php:215 ../../lib/preferences.php:358
 #: ../../templates/show_disabled_songs.inc.php:77
+#: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_user_row.inc.php:98
 msgid "Enable"
 msgstr "Habilitado"
@@ -3491,10 +3589,10 @@ msgstr "Início"
 
 #: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:460
 #: ../../templates/show_add_upload.inc.php:26
-#: ../../templates/show_album.inc.php:245
-#: ../../templates/show_album.inc.php:247
-#: ../../templates/show_artist.inc.php:251
-#: ../../templates/show_artist.inc.php:253
+#: ../../templates/show_album.inc.php:246
+#: ../../templates/show_album.inc.php:248
+#: ../../templates/show_artist.inc.php:254
+#: ../../templates/show_artist.inc.php:256
 #: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/sidebar.light.inc.php:43
 msgid "Upload"
@@ -3609,7 +3707,9 @@ msgstr "Arquivo de Database do Beets"
 
 #: ../../modules/catalog/beets/beets.catalog.php:102
 msgid "Error: Beets selected, but no Beets DB File provided"
-msgstr "Erro: Beets selecionado, mas nenhum arquivo de banco de dados do Beets foi disponibilizado"
+msgstr ""
+"Erro: Beets selecionado, mas nenhum arquivo de banco de dados do Beets foi "
+"disponibilizado"
 
 #: ../../modules/catalog/beets/beets.catalog.php:112
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:113
@@ -3644,13 +3744,17 @@ msgstr "Selecionar 'Arquivos e banco de dados'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:71
 msgid "Select 'No' at 'Can your app be limited to its own, private folder?'"
-msgstr "Selecione 'Não' em 'Seu aplicativo pode ser limitado por sua própria (privada) pasta?'"
+msgstr ""
+"Selecione 'Não' em 'Seu aplicativo pode ser limitado por sua própria "
+"(privada) pasta?'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:72
 msgid ""
 "Select 'Specific file types' at 'What type of files does your app need "
 "access to?'"
-msgstr "Selecione 'Tipos específicos de arquivos' em 'Quais tipos de arquivos seu aplicativo precisa acessar?'"
+msgstr ""
+"Selecione 'Tipos específicos de arquivos' em 'Quais tipos de arquivos seu "
+"aplicativo precisa acessar?'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Check Videos and Audio files"
@@ -3668,7 +3772,9 @@ msgstr "Copie sua chave e segredo do aplicativo nos seguintes campos"
 msgid ""
 "After preparing the catalog with pressing the 'Add catalog' button,<br /> "
 "you have to 'Make it ready' on the catalog table."
-msgstr "Depois de preparar o catálogo pressionando o botão 'Adicionar catálogo',<br /> você tem que 'Deixar pronto' na tabela do catálogo."
+msgstr ""
+"Depois de preparar o catálogo pressionando o botão 'Adicionar catálogo',<br /"
+"> você tem que 'Deixar pronto' na tabela do catálogo."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:114
 #: ../../templates/show_account.inc.php:109
@@ -3703,7 +3809,8 @@ msgstr "<dropbox-path> inválido: "
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:213
 #, php-format
 msgid "Go to %s to generate the authorization code, then enter it bellow."
-msgstr "Acesse %s para gerar o código de autorização, em seguida, insira-o abaixo."
+msgstr ""
+"Acesse %s para gerar o código de autorização, em seguida, insira-o abaixo."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:252
 msgid "Running Dropbox Remote Update"
@@ -3778,7 +3885,9 @@ msgstr "N/D"
 msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
 "Second: [%s]"
-msgstr "Atualização de catálogo finalizada. Tempo total: [%s] Total de mídias: [%s] Mídia por segundo: [%s]"
+msgstr ""
+"Atualização de catálogo finalizada. Tempo total: [%s] Total de mídias: [%s] "
+"Mídia por segundo: [%s]"
 
 #: ../../modules/catalog/local/local.catalog.php:558
 #, php-format
@@ -3847,7 +3956,9 @@ msgstr "ID do usuário"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:171
 msgid "Error: UserID and Secret Required for SoundCloud Catalogs"
-msgstr "Erro: ID de usuário e chave secreta são obrigatórios para Catálogos SoundCloud"
+msgstr ""
+"Erro: ID de usuário e chave secreta são obrigatórios para Catálogos "
+"SoundCloud"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:234
 msgid "Running SoundCloud Remote Update"
@@ -3961,11 +4072,11 @@ msgstr ""
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:122
 #: ../../templates/header.inc.php:349
-#: ../../templates/show_album_group_disks.inc.php:71
-#: ../../templates/show_album_group_disks.inc.php:73
-#: ../../templates/show_album_group_disks.inc.php:140
-#: ../../templates/show_album.inc.php:123
-#: ../../templates/show_album.inc.php:125
+#: ../../templates/show_album_group_disks.inc.php:72
+#: ../../templates/show_album_group_disks.inc.php:74
+#: ../../templates/show_album_group_disks.inc.php:141
+#: ../../templates/show_album.inc.php:124
+#: ../../templates/show_album.inc.php:126
 #: ../../templates/show_album_row.inc.php:30
 #: ../../templates/show_artist_row.inc.php:30
 #: ../../templates/show_live_stream.inc.php:42
@@ -3990,11 +4101,11 @@ msgstr "Reproduzir último"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:125
 #: ../../templates/header.inc.php:350
-#: ../../templates/show_album_group_disks.inc.php:84
-#: ../../templates/show_album_group_disks.inc.php:86
-#: ../../templates/show_album_group_disks.inc.php:144
-#: ../../templates/show_album.inc.php:137
-#: ../../templates/show_album.inc.php:139
+#: ../../templates/show_album_group_disks.inc.php:85
+#: ../../templates/show_album_group_disks.inc.php:87
+#: ../../templates/show_album_group_disks.inc.php:145
+#: ../../templates/show_album.inc.php:138
+#: ../../templates/show_album.inc.php:140
 #: ../../templates/show_album_row.inc.php:56
 #: ../../templates/show_artist_row.inc.php:56
 #: ../../templates/show_live_stream.inc.php:49
@@ -4045,7 +4156,9 @@ msgstr "Lista de reprodução importada"
 #: ../../playlist.php:83
 #, php-format
 msgid "Successfully imported playlist with %d song."
-msgstr ""
+msgid_plural "Successfully imported playlist with %d songs."
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -4058,7 +4171,9 @@ msgstr "Listas de reprodução vazias removidas"
 #: ../../plex/web/index.php:32
 msgid ""
 "Changing the server UUID could break clients connectivity. Do you confirm?"
-msgstr "Alterar o UUID servidor poderá finalizar as conexões com os clientes. Você confirma?"
+msgstr ""
+"Alterar o UUID servidor poderá finalizar as conexões com os clientes. Você "
+"confirma?"
 
 #: ../../plex/web/index.php:84
 msgid "myPlex authentication completed."
@@ -4179,7 +4294,8 @@ msgstr "Exclusão de mensagem"
 
 #: ../../pvmsg.php:100
 msgid "Are you sure you want to permanently delete the selected messages?"
-msgstr "Tem certeza que deseja excluir permanentemente as mensagens selecionadas?"
+msgstr ""
+"Tem certeza que deseja excluir permanentemente as mensagens selecionadas?"
 
 #: ../../pvmsg.php:124
 msgid "Messages Deletion"
@@ -4237,9 +4353,11 @@ msgstr "Sua busca foi salva como Lista de Reprodução Inteligente com o nome %s
 #: ../../server/index.ajax.php:44
 #, php-format
 msgid ""
-"No catalog configured yet. To start streaming your media, you now need to %s"
-" add a catalog %s"
-msgstr "Nenhum catálogo configurado ainda. Para começar a transmitir sua mídia, você precisa %s adicionar um catálogo %s"
+"No catalog configured yet. To start streaming your media, you now need to %s "
+"add a catalog %s"
+msgstr ""
+"Nenhum catálogo configurado ainda. Para começar a transmitir sua mídia, você "
+"precisa %s adicionar um catálogo %s"
 
 #: ../../server/player.ajax.php:43
 #: ../../templates/show_html5_player.inc.php:489
@@ -4363,10 +4481,14 @@ msgstr "Uso de cookies por Ampache"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work"
-" more efficiently, as well as to provide information to the owners of the "
+"that you visit. They are widely used in order to make websites work, or work "
+"more efficiently, as well as to provide information to the owners of the "
 "site."
-msgstr "Cookies são pequenos arquivos de texto que são colocados no seu computador por sites que você visita. Eles são amplamente utilizados, a fim de fazer os websites trabalharem, ou trabalhar de forma mais eficiente, bem como para fornecer informações para os proprietários do site."
+msgstr ""
+"Cookies são pequenos arquivos de texto que são colocados no seu computador "
+"por sites que você visita. Eles são amplamente utilizados, a fim de fazer os "
+"websites trabalharem, ou trabalhar de forma mais eficiente, bem como para "
+"fornecer informações para os proprietários do site."
 
 #: ../../templates/cookie_disclaimer.inc.php:5
 msgid "The table below explains the cookies we use and why."
@@ -4431,10 +4553,13 @@ msgid "Ampache"
 msgstr "Ampache"
 
 #: ../../templates/error_page.inc.php:51
+#, fuzzy
 msgid ""
-"The folowing error has occured, you will automaticly be redirected after 10 "
+"The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
-msgstr "O seguinte erro aconteceu, você será automaticamente redirecionado após 10 segundos."
+msgstr ""
+"O seguinte erro aconteceu, você será automaticamente redirecionado após 10 "
+"segundos."
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
@@ -4472,11 +4597,17 @@ msgstr "Cancelar"
 #: ../../templates/header.inc.php:312
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. "
+"You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
-msgstr "Nós colocamos cookies no seu computador para ajudar a tornar este site melhor. Você pode mudar sua %s a qualquer momento.\nCaso contrário, vamos supor que você está de acordo para continuar.\n\nClique sobre essa mensagem para não exibi-la novamente."
+msgstr ""
+"Nós colocamos cookies no seu computador para ajudar a tornar este site "
+"melhor. Você pode mudar sua %s a qualquer momento.\n"
+"Caso contrário, vamos supor que você está de acordo para continuar.\n"
+"\n"
+"Clique sobre essa mensagem para não exibi-la novamente."
 
 #: ../../templates/header.inc.php:313
 msgid "cookie settings"
@@ -4495,8 +4626,8 @@ msgstr "definições de cookie"
 msgid "Play next"
 msgstr ""
 
-#: ../../templates/header.inc.php:351 ../../templates/show_album.inc.php:150
-#: ../../templates/show_album.inc.php:154
+#: ../../templates/header.inc.php:351 ../../templates/show_album.inc.php:151
+#: ../../templates/show_album.inc.php:155
 #: ../../templates/show_album_row.inc.php:65
 #: ../../templates/show_artist_row.inc.php:60
 #: ../../templates/show_html5_player.inc.php:512
@@ -4857,9 +4988,11 @@ msgstr "Adicionar um catálogo"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to"
-" a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr "No formulário abaixo insira um caminho local (exemplo /data/music) ou a URL para uma instalação remota do Ampache (exemplo http://theotherampache.com)"
+"In the form below enter either a local path (i.e. /data/music) or the URL to "
+"a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+"No formulário abaixo insira um caminho local (exemplo /data/music) ou a URL "
+"para uma instalação remota do Ampache (exemplo http://theotherampache.com)"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
@@ -5249,27 +5382,34 @@ msgstr "Pesquisar no Google ..."
 #: ../../templates/show_album_group_disks.inc.php:46
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_artist.inc.php:48
-#: ../../templates/show_label.inc.php:36
-msgid "Search on Wikipedia ..."
-msgstr "Pesquisar na Wikipedia ..."
+#: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:218
+msgid "Search on DuckDuckGo ..."
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:52
 #: ../../templates/show_artist.inc.php:51
-#: ../../templates/show_label.inc.php:37 ../../templates/show_song.inc.php:218
+#: ../../templates/show_label.inc.php:37
+msgid "Search on Wikipedia ..."
+msgstr "Pesquisar na Wikipedia ..."
+
+#: ../../templates/show_album_group_disks.inc.php:48
+#: ../../templates/show_album.inc.php:53
+#: ../../templates/show_artist.inc.php:54
+#: ../../templates/show_label.inc.php:38 ../../templates/show_song.inc.php:219
 msgid "Search on Last.fm ..."
 msgstr "Pesquisar no Last.fm ..."
 
-#: ../../templates/show_album_group_disks.inc.php:58
-#: ../../templates/show_album.inc.php:110
+#: ../../templates/show_album_group_disks.inc.php:59
+#: ../../templates/show_album.inc.php:111
 #: ../../templates/show_albums.inc.php:72
 #: ../../templates/show_albums.inc.php:157
-#: ../../templates/show_artist.inc.php:113
+#: ../../templates/show_artist.inc.php:116
 #: ../../templates/show_broadcasts.inc.php:35
 #: ../../templates/show_catalogs.inc.php:34
 #: ../../templates/show_catalogs.inc.php:69
 #: ../../templates/show_channels.inc.php:44
-#: ../../templates/show_label.inc.php:53
+#: ../../templates/show_label.inc.php:54
 #: ../../templates/show_missing_album.inc.php:51
 #: ../../templates/show_missing_albums.inc.php:31
 #: ../../templates/show_playlists.inc.php:59
@@ -5291,24 +5431,24 @@ msgstr "Pesquisar no Last.fm ..."
 msgid "Actions"
 msgstr "Ações"
 
-#: ../../templates/show_album_group_disks.inc.php:90
-#: ../../templates/show_album_group_disks.inc.php:92
-#: ../../templates/show_album_group_disks.inc.php:145
-#: ../../templates/show_album.inc.php:143
-#: ../../templates/show_album.inc.php:145
+#: ../../templates/show_album_group_disks.inc.php:91
+#: ../../templates/show_album_group_disks.inc.php:93
+#: ../../templates/show_album_group_disks.inc.php:146
+#: ../../templates/show_album.inc.php:144
+#: ../../templates/show_album.inc.php:146
 #: ../../templates/show_album_row.inc.php:57
 #: ../../templates/show_artist_row.inc.php:57
 #: ../../templates/show_playlist_row.inc.php:54
 msgid "Random to temporary playlist"
 msgstr ""
 
-#: ../../templates/show_album_group_disks.inc.php:102
-#: ../../templates/show_album_group_disks.inc.php:106
-#: ../../templates/show_album_group_disks.inc.php:170
-#: ../../templates/show_album.inc.php:271
-#: ../../templates/show_album.inc.php:275
-#: ../../templates/show_artist.inc.php:214
-#: ../../templates/show_artist.inc.php:218
+#: ../../templates/show_album_group_disks.inc.php:103
+#: ../../templates/show_album_group_disks.inc.php:107
+#: ../../templates/show_album_group_disks.inc.php:171
+#: ../../templates/show_album.inc.php:272
+#: ../../templates/show_album.inc.php:276
+#: ../../templates/show_artist.inc.php:217
+#: ../../templates/show_artist.inc.php:221
 #: ../../templates/show_install_config.inc.php:223
 #: ../../templates/show_install_config.inc.php:248
 #: ../../templates/show_install_config.inc.php:273
@@ -5324,47 +5464,47 @@ msgstr ""
 msgid "Download"
 msgstr "Baixar"
 
-#: ../../templates/show_album_group_disks.inc.php:179
-#: ../../templates/show_album.inc.php:221
-#: ../../templates/show_album.inc.php:223
+#: ../../templates/show_album_group_disks.inc.php:180
+#: ../../templates/show_album.inc.php:222
+#: ../../templates/show_album.inc.php:224
 #: ../../templates/show_playlist.inc.php:70
 #: ../../templates/show_playlist.inc.php:72
 msgid "Save Tracks Order"
 msgstr "Salvar ordem das faixas"
 
-#: ../../templates/show_album_group_disks.inc.php:182
-#: ../../templates/show_album.inc.php:230
+#: ../../templates/show_album_group_disks.inc.php:183
+#: ../../templates/show_album.inc.php:231
 msgid "Do you really want to update from tags?"
 msgstr "Você realmente quer atualizar a partir das etiquetas?"
 
-#: ../../templates/show_album_group_disks.inc.php:183
-#: ../../templates/show_album.inc.php:231
+#: ../../templates/show_album_group_disks.inc.php:184
 #: ../../templates/show_album.inc.php:232
+#: ../../templates/show_album.inc.php:233
 msgid "Update from tags"
 msgstr ""
 
-#: ../../templates/show_album_group_disks.inc.php:186
-#: ../../templates/show_album.inc.php:255
-#: ../../templates/show_album.inc.php:259
+#: ../../templates/show_album_group_disks.inc.php:187
+#: ../../templates/show_album.inc.php:256
+#: ../../templates/show_album.inc.php:260
 #: ../../templates/show_album_row.inc.php:132
 msgid "Album edit"
 msgstr "Editar álbum"
 
-#: ../../templates/show_album.inc.php:88
-#: ../../templates/show_artist.inc.php:91
+#: ../../templates/show_album.inc.php:89
+#: ../../templates/show_artist.inc.php:94
 msgid "times"
 msgstr "vezes"
 
-#: ../../templates/show_album.inc.php:102
-#: ../../templates/show_artist.inc.php:105
-#: ../../templates/show_song.inc.php:255
+#: ../../templates/show_album.inc.php:103
+#: ../../templates/show_artist.inc.php:108
+#: ../../templates/show_song.inc.php:256
 msgid "Uploaded by"
 msgstr ""
 
-#: ../../templates/show_album.inc.php:205
-#: ../../templates/show_album.inc.php:209
-#: ../../templates/show_artist.inc.php:231
-#: ../../templates/show_artist.inc.php:235
+#: ../../templates/show_album.inc.php:206
+#: ../../templates/show_album.inc.php:210
+#: ../../templates/show_artist.inc.php:234
+#: ../../templates/show_artist.inc.php:238
 #: ../../templates/show_podcast_episode.inc.php:149
 #: ../../templates/show_podcast.inc.php:97
 #: ../../templates/show_podcast.inc.php:101
@@ -5373,7 +5513,7 @@ msgstr ""
 msgid "Graphs"
 msgstr "Gráficos"
 
-#: ../../templates/show_album.inc.php:260
+#: ../../templates/show_album.inc.php:261
 msgid "Edit Album"
 msgstr "Editar álbum"
 
@@ -5457,31 +5597,31 @@ msgstr ""
 msgid "No album found"
 msgstr "Nenhum álbum encontrado"
 
-#: ../../templates/show_artist.inc.php:55
-#: ../../templates/show_artist.inc.php:346
-#: ../../templates/show_artist.inc.php:358
-#: ../../templates/show_artist.inc.php:370
-#: ../../templates/show_artist.inc.php:382
+#: ../../templates/show_artist.inc.php:58
+#: ../../templates/show_artist.inc.php:349
+#: ../../templates/show_artist.inc.php:361
+#: ../../templates/show_artist.inc.php:373
+#: ../../templates/show_artist.inc.php:385
 #: ../../templates/show_index.inc.php:53 ../../templates/show_index.inc.php:65
-#: ../../templates/show_label.inc.php:135
+#: ../../templates/show_label.inc.php:136
 #: ../../templates/show_missing_artist.inc.php:33
 #: ../../templates/show_now_playing_row.inc.php:88
 #: ../../templates/show_now_playing_row.inc.php:96
 msgid "Loading..."
 msgstr "Carregando..."
 
-#: ../../templates/show_artist.inc.php:121
-#: ../../templates/show_artist.inc.php:126
+#: ../../templates/show_artist.inc.php:124
+#: ../../templates/show_artist.inc.php:129
 msgid "Show all"
 msgstr "Mostrar tudo"
 
-#: ../../templates/show_artist.inc.php:135
-#: ../../templates/show_artist.inc.php:140
+#: ../../templates/show_artist.inc.php:138
+#: ../../templates/show_artist.inc.php:143
 msgid "Show albums"
 msgstr "Mostrar albuns"
 
-#: ../../templates/show_artist.inc.php:148
-#: ../../templates/show_artist.inc.php:150
+#: ../../templates/show_artist.inc.php:151
+#: ../../templates/show_artist.inc.php:153
 #: ../../templates/show_playlist.inc.php:111
 #: ../../templates/show_playlist.inc.php:113
 #: ../../templates/show_podcast.inc.php:73
@@ -5493,8 +5633,8 @@ msgstr "Mostrar albuns"
 msgid "Play all"
 msgstr ""
 
-#: ../../templates/show_artist.inc.php:156
-#: ../../templates/show_artist.inc.php:158
+#: ../../templates/show_artist.inc.php:159
+#: ../../templates/show_artist.inc.php:161
 #: ../../templates/show_playlist.inc.php:121
 #: ../../templates/show_playlist.inc.php:123
 #: ../../templates/show_podcast.inc.php:83
@@ -5507,47 +5647,47 @@ msgid "Play all last"
 msgstr ""
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:170
-#: ../../templates/show_artist.inc.php:172
+#: ../../templates/show_artist.inc.php:173
+#: ../../templates/show_artist.inc.php:175
 #: ../../templates/show_playlist.inc.php:129
 #: ../../templates/show_playlist.inc.php:130
 msgid "Add all to temporary playlist"
 msgstr ""
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:177
-#: ../../templates/show_artist.inc.php:179
+#: ../../templates/show_artist.inc.php:180
+#: ../../templates/show_artist.inc.php:182
 #: ../../templates/show_playlist.inc.php:133
 #: ../../templates/show_playlist.inc.php:134
 msgid "Random all to temporary playlist"
 msgstr ""
 
-#: ../../templates/show_artist.inc.php:261
-#: ../../templates/show_artist.inc.php:265
+#: ../../templates/show_artist.inc.php:264
+#: ../../templates/show_artist.inc.php:268
 #: ../../templates/show_artist_row.inc.php:110
 msgid "Artist edit"
 msgstr "Editar artista"
 
-#: ../../templates/show_artist.inc.php:266
+#: ../../templates/show_artist.inc.php:269
 msgid "Edit Artist"
 msgstr "Editar artista"
 
-#: ../../templates/show_artist.inc.php:294
-#: ../../templates/show_artist.inc.php:345
+#: ../../templates/show_artist.inc.php:297
+#: ../../templates/show_artist.inc.php:348
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
 msgstr "Álbuns em falta"
 
-#: ../../templates/show_artist.inc.php:300
-#: ../../templates/show_artist.inc.php:357
+#: ../../templates/show_artist.inc.php:303
+#: ../../templates/show_artist.inc.php:360
 #: ../../templates/show_now_playing_row.inc.php:86
 #: ../../templates/show_now_playing_similar.inc.php:28
 #: ../../templates/show_recommended_artists.inc.php:25
 msgid "Similar Artists"
 msgstr "Artistas similares"
 
-#: ../../templates/show_artist.inc.php:306
-#: ../../templates/show_artist.inc.php:369
+#: ../../templates/show_artist.inc.php:309
+#: ../../templates/show_artist.inc.php:372
 msgid "Events"
 msgstr "Eventos"
 
@@ -5696,7 +5836,6 @@ msgid "Version"
 msgstr "Versão"
 
 #: ../../templates/show_catalog_types.inc.php:48
-#: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_plugins.inc.php:43
 msgid "Activate"
 msgstr "Ativar"
@@ -5964,20 +6103,26 @@ msgstr "Este evento foi registrado."
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this"
-" function."
-msgstr "Você foi redirecionado para esta página porque você não tem acesso a esta função."
+"You have been redirected to this page because you do not have access to this "
+"function."
+msgstr ""
+"Você foi redirecionado para esta página porque você não tem acesso a esta "
+"função."
 
 #: ../../templates/show_denied.inc.php:60
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
-msgstr "Se você acredita que isso é um erro, por favor entre em contato com o administrador do Ampache."
+msgstr ""
+"Se você acredita que isso é um erro, por favor entre em contato com o "
+"administrador do Ampache."
 
 #: ../../templates/show_denied.inc.php:67
 msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
-msgstr "Você foi redirecionado para esta página porque você tentou acessar uma função que não está ativado na demo."
+msgstr ""
+"Você foi redirecionado para esta página porque você tentou acessar uma "
+"função que não está ativado na demo."
 
 #: ../../templates/show_disabled_songs.inc.php:33
 #: ../../templates/show_disabled_songs.inc.php:72
@@ -6022,7 +6167,7 @@ msgstr "Música"
 #: ../../templates/show_duplicates.inc.php:82
 #: ../../templates/show_podcast_episode.inc.php:183
 #: ../../templates/show_random.inc.php:72
-#: ../../templates/show_song.inc.php:219
+#: ../../templates/show_song.inc.php:220
 #: ../../templates/show_video.inc.php:182
 msgid "Length"
 msgstr "Comprimento"
@@ -6423,7 +6568,10 @@ msgstr "Passo 3 - Configurar a conta inicial"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr "Esta etapa cria sua conta inicial de administrador do Ampache. Uma vez que sua conta de administrador for criada, você será redirecionado para a página de login."
+msgstr ""
+"Esta etapa cria sua conta inicial de administrador do Ampache. Uma vez que "
+"sua conta de administrador for criada, você será redirecionado para a página "
+"de login."
 
 #: ../../templates/show_install_account.inc.php:47
 msgid "Create Admin Account"
@@ -6442,12 +6590,17 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr "Esta página processa a instalação do banco de dados do Ampache e a criação do arquivo ampache.cfg.php. Antes de continuar certifique-se de que você tem os seguintes pré-requisitos:"
+msgstr ""
+"Esta página processa a instalação do banco de dados do Ampache e a criação "
+"do arquivo ampache.cfg.php. Antes de continuar certifique-se de que você tem "
+"os seguintes pré-requisitos:"
 
 #: ../../templates/show_install_check.inc.php:35
 msgid ""
 "A MySQL server with a username and password that can create/modify databases"
-msgstr "Um servidor MySQL com um nome de usuário e senha que pode criar / modificar uma bases de dados"
+msgstr ""
+"Um servidor MySQL com um nome de usuário e senha que pode criar / modificar "
+"uma bases de dados"
 
 #: ../../templates/show_install_check.inc.php:36
 #, php-format
@@ -6459,8 +6612,8 @@ msgstr "Seu servidor web tenha acesso para leitura dos arquivos %s e %s"
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later"
-" date simply edit %s"
+"values. If you would like to make changes to your Ampache install at a later "
+"date simply edit %s"
 msgstr ""
 
 #: ../../templates/show_install_check.inc.php:44
@@ -6492,7 +6645,9 @@ msgstr "Isto testa se o modelo de configuração pode ser lido."
 msgid ""
 "This tests whether the file needed to initialise the database structure is "
 "available."
-msgstr "Isso testa se o arquivo necessário para inicializar a estrutura do banco de dados está disponível."
+msgstr ""
+"Isso testa se o arquivo necessário para inicializar a estrutura do banco de "
+"dados está disponível."
 
 #: ../../templates/show_install_check.inc.php:60
 msgid "ampache.cfg.php is writable"
@@ -6500,19 +6655,27 @@ msgstr "ampache.cfg.php tem permissão para escrita"
 
 #: ../../templates/show_install_check.inc.php:62
 msgid ""
-"This tests whether PHP can write to config/. This is not strictly necessary,"
-" but will help streamline the installation process."
-msgstr "Isso testa se o PHP pode escrever na pasta config/. Isto não é estritamente necessário, mas vai ajudar a agilizar o processo de instalação."
+"This tests whether PHP can write to config/. This is not strictly necessary, "
+"but will help streamline the installation process."
+msgstr ""
+"Isso testa se o PHP pode escrever na pasta config/. Isto não é estritamente "
+"necessário, mas vai ajudar a agilizar o processo de instalação."
 
 #: ../../templates/show_install_config.inc.php:55
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache"
-" write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache "
+"write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s"
-msgstr "Esta etapa leva os valores básicos de configuração e gera o arquivo de configuração. Se o diretório config/ tem permissão para escrita, você pode selecionar \"escrever\" para o Ampache criar o arquivo de configuração diretamente para o local correto. Se você selecionar \"baixar\" ele irá pedir-lhe para baixar o arquivo de configuração, e então você poderá colocá-lo manualmente em %s"
+msgstr ""
+"Esta etapa leva os valores básicos de configuração e gera o arquivo de "
+"configuração. Se o diretório config/ tem permissão para escrita, você pode "
+"selecionar \"escrever\" para o Ampache criar o arquivo de configuração "
+"diretamente para o local correto. Se você selecionar \"baixar\" ele irá "
+"pedir-lhe para baixar o arquivo de configuração, e então você poderá colocá-"
+"lo manualmente em %s"
 
 #: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
@@ -6594,7 +6757,13 @@ msgid ""
 "advantage of existing binary applications such as ffmpeg. In order for "
 "transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr "Transcodificação permite converter um tipo de arquivo para outro. Ampache apoia a transcodificação de todos os tipos de arquivos com base no usuário, player, endereço IP ou largura de banda disponível. Para transcodificar, Ampache tira proveito de aplicativos binários existentes, tal como ffmpeg. Para a transcodificação funcionar é preciso primeiro instalar as aplicações de suporte e garantir que elas sejam executáveis pelo servidor web."
+msgstr ""
+"Transcodificação permite converter um tipo de arquivo para outro. Ampache "
+"apoia a transcodificação de todos os tipos de arquivos com base no usuário, "
+"player, endereço IP ou largura de banda disponível. Para transcodificar, "
+"Ampache tira proveito de aplicativos binários existentes, tal como ffmpeg. "
+"Para a transcodificação funcionar é preciso primeiro instalar as aplicações "
+"de suporte e garantir que elas sejam executáveis pelo servidor web."
 
 #: ../../templates/show_install_config.inc.php:135
 msgid ""
@@ -6710,9 +6879,12 @@ msgstr "Criar configuração"
 #: ../../templates/show_install.inc.php:39
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
-"MySQL account with database creation rights. This step may take some time on"
-" slower computers."
-msgstr "Este passo cria e insere o banco de dados do Ampache, por isso, forneça uma conta MySQL com permissão para criação de banco de dados. Esta etapa pode levar algum tempo em computadores mais lentos."
+"MySQL account with database creation rights. This step may take some time on "
+"slower computers."
+msgstr ""
+"Este passo cria e insere o banco de dados do Ampache, por isso, forneça uma "
+"conta MySQL com permissão para criação de banco de dados. Esta etapa pode "
+"levar algum tempo em computadores mais lentos."
 
 #: ../../templates/show_install.inc.php:47
 msgid "Insert Ampache Database"
@@ -6789,15 +6961,15 @@ msgstr "Mostrar tudo"
 msgid "IP Address"
 msgstr "Endereço IP"
 
-#: ../../templates/show_label.inc.php:78 ../../templates/show_label.inc.php:81
+#: ../../templates/show_label.inc.php:79 ../../templates/show_label.inc.php:82
 msgid "Send e-mail"
 msgstr "Enviar e-mail"
 
-#: ../../templates/show_label.inc.php:89 ../../templates/show_label.inc.php:93
+#: ../../templates/show_label.inc.php:90 ../../templates/show_label.inc.php:94
 msgid "Label edit"
 msgstr ""
 
-#: ../../templates/show_label.inc.php:94
+#: ../../templates/show_label.inc.php:95
 msgid "Edit Label"
 msgstr ""
 
@@ -7280,12 +7452,16 @@ msgstr "Ilimitado"
 #: ../../templates/show_random.inc.php:86
 #, php-format
 msgid "%d minute"
-msgstr ""
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:88
 #, php-format
 msgid "%d hour"
-msgstr ""
+msgid_plural "%d hours"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:97
 msgid "Size Limit"
@@ -7308,42 +7484,58 @@ msgstr "Agente"
 #: ../../templates/show_recently_played.inc.php:73
 #, php-format
 msgid "%d second ago"
-msgstr ""
+msgid_plural "%d seconds ago"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:76
 #, php-format
 msgid "%d minute ago"
-msgstr ""
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:79
 #, php-format
 msgid "%d hour ago"
-msgstr ""
+msgid_plural "%d hours ago"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:82
 #, php-format
 msgid "%d day ago"
-msgstr ""
+msgid_plural "%d days ago"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:85
 #, php-format
 msgid "%d week ago"
-msgstr ""
+msgid_plural "%d weeks ago"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:88
 #, php-format
 msgid "%d month ago"
-msgstr ""
+msgid_plural "%d months ago"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:91
 #, php-format
 msgid "%d year ago"
-msgstr ""
+msgid_plural "%d years ago"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:94
 #, php-format
 msgid "%d decade ago"
-msgstr ""
+msgid_plural "%d decades ago"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:172
 msgid "No recently item found"
@@ -7376,7 +7568,9 @@ msgstr "Por favor, aguarde o administrador para ativar sua conta."
 msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
 "check your e-mail for further information."
-msgstr "Uma chave de ativação foi enviada para o endereço de e-mail que você forneceu. Por favor, verifique seu e-mail para mais informações."
+msgstr ""
+"Uma chave de ativação foi enviada para o endereço de e-mail que você "
+"forneceu. Por favor, verifique seu e-mail para mais informações."
 
 #: ../../templates/show_registration_confirmation.inc.php:55
 msgid "Return to Login Page"
@@ -7503,35 +7697,36 @@ msgid "Waveform"
 msgstr ""
 
 #: ../../templates/show_song.inc.php:217 ../../templates/show_song.inc.php:218
+#: ../../templates/show_song.inc.php:219
 msgid "Links"
 msgstr "Links"
 
-#: ../../templates/show_song.inc.php:222
+#: ../../templates/show_song.inc.php:223
 msgid "Song Language"
 msgstr "Língua da música"
 
-#: ../../templates/show_song.inc.php:223
+#: ../../templates/show_song.inc.php:224
 msgid "Catalog Number"
 msgstr "Número do catálogo"
 
-#: ../../templates/show_song.inc.php:227
+#: ../../templates/show_song.inc.php:228
 msgid "ReplayGain Track Gain"
 msgstr ""
 
-#: ../../templates/show_song.inc.php:230
+#: ../../templates/show_song.inc.php:231
 msgid "ReplayGain Album Gain"
 msgstr ""
 
-#: ../../templates/show_song.inc.php:236
+#: ../../templates/show_song.inc.php:237
 #: ../../templates/show_video.inc.php:198
 msgid "Last Updated"
 msgstr "Última atualização"
 
-#: ../../templates/show_song.inc.php:244
+#: ../../templates/show_song.inc.php:245
 msgid "Lyrics"
 msgstr "Letra"
 
-#: ../../templates/show_song.inc.php:248
+#: ../../templates/show_song.inc.php:249
 msgid "Licensing"
 msgstr "Licenciamento"
 
@@ -7586,7 +7781,9 @@ msgstr "Depuração do Ampache"
 msgid ""
 "You may have reached this page because a configuration error has occured. "
 "Debug information is below."
-msgstr "Você pode ter chegado a esta página porque um erro de configuração ocorreu. Informações de depuração estão abaixo."
+msgstr ""
+"Você pode ter chegado a esta página porque um erro de configuração ocorreu. "
+"Informações de depuração estão abaixo."
 
 #: ../../templates/show_test.inc.php:51
 msgid "Web Installation"
@@ -7600,7 +7797,9 @@ msgstr "Versão do PHP"
 msgid ""
 "This tests whether you are running at least the minimum version of PHP "
 "required by Ampache."
-msgstr "Isso testa se você está executando, pelo menos, a versão mínima do PHP exigido pelo Ampache."
+msgstr ""
+"Isso testa se você está executando, pelo menos, a versão mínima do PHP "
+"exigido pelo Ampache."
 
 #: ../../templates/show_test_table.inc.php:33
 msgid "Dependencies"
@@ -7612,8 +7811,8 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:42
 msgid ""
-"Please download and install Composer from http://getcomposer.org and install"
-" it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
+"Please download and install Composer from http://getcomposer.org and install "
+"it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
 "install --prefer-source --no-interaction` on Ampache directory."
 msgstr ""
 
@@ -7625,7 +7824,9 @@ msgstr "Extensão de hash PHP"
 msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão de hash habilitado. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão de hash habilitado. Esta extensão é "
+"necessária pelo Ampache."
 
 #: ../../templates/show_test_table.inc.php:58
 msgid "SHA256"
@@ -7635,7 +7836,9 @@ msgstr "SHA256"
 msgid ""
 "This tests whether the hash extension supports SHA256. This algorithm is "
 "required by Ampache."
-msgstr "Isso testa se a extensão de hash SHA256 é suportado. Este algoritmo é necessário pelo Ampache."
+msgstr ""
+"Isso testa se a extensão de hash SHA256 é suportado. Este algoritmo é "
+"necessário pelo Ampache."
 
 #: ../../templates/show_test_table.inc.php:67
 msgid "PHP PDO extension"
@@ -7645,7 +7848,9 @@ msgstr "Extensão PDO PHP"
 msgid ""
 "This tests whether you have the PDO extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão PDO ativado. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão PDO ativado. Esta extensão é necessária "
+"pelo Ampache."
 
 #: ../../templates/show_test_table.inc.php:76
 msgid "MySQL"
@@ -7655,7 +7860,9 @@ msgstr "MySQL"
 msgid ""
 "This tests whether the MySQL driver for PDO is enabled. This driver is "
 "required by Ampache."
-msgstr "Isso testa se o driver do MySQL para PDO está habilitado. Este driver é necessário pelo Ampache."
+msgstr ""
+"Isso testa se o driver do MySQL para PDO está habilitado. Este driver é "
+"necessário pelo Ampache."
 
 #: ../../templates/show_test_table.inc.php:85
 msgid "PHP session extension"
@@ -7663,9 +7870,11 @@ msgstr "Extensão session PHP"
 
 #: ../../templates/show_test_table.inc.php:90
 msgid ""
-"This tests whether you have the session extension enabled. This extension is"
-" required by Ampache."
-msgstr "Isso testa se você tem a extensão session habilitada. Esta extensão é necessária pelo Ampache."
+"This tests whether you have the session extension enabled. This extension is "
+"required by Ampache."
+msgstr ""
+"Isso testa se você tem a extensão session habilitada. Esta extensão é "
+"necessária pelo Ampache."
 
 #: ../../templates/show_test_table.inc.php:94
 msgid "PHP iconv extension"
@@ -7675,7 +7884,9 @@ msgstr "Extensão iconv PHP"
 msgid ""
 "This tests whether you have the iconv extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão iconv ativado. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão iconv ativado. Esta extensão é necessária "
+"pelo Ampache."
 
 #: ../../templates/show_test_table.inc.php:103
 msgid "PHP JSON extension"
@@ -7685,7 +7896,9 @@ msgstr "Extensão JSON PHP"
 msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão JSON habilitada. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão JSON habilitada. Esta extensão é "
+"necessária pelo Ampache."
 
 #: ../../templates/show_test_table.inc.php:112
 msgid "PHP curl extension"
@@ -7693,9 +7906,11 @@ msgstr "Extensão curl PHP"
 
 #: ../../templates/show_test_table.inc.php:117
 msgid ""
-"This tests whether you have the curl extension enabled. This is not strictly"
-" necessary, but may result in a better experience."
-msgstr "Isso testa se você tem a extensão curl habilitada. Isto não é estritamente necessário, mas pode resultar em uma melhor experiência."
+"This tests whether you have the curl extension enabled. This is not strictly "
+"necessary, but may result in a better experience."
+msgstr ""
+"Isso testa se você tem a extensão curl habilitada. Isto não é estritamente "
+"necessário, mas pode resultar em uma melhor experiência."
 
 #: ../../templates/show_test_table.inc.php:121
 msgid "PHP zlib extension"
@@ -7703,9 +7918,12 @@ msgstr "Extensão zlib PHP"
 
 #: ../../templates/show_test_table.inc.php:126
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly"
-" necessary, but may result in a better experience (zip download)."
-msgstr "Isso testa se você tem a extensão zlib habilitada. Isto não é estritamente necessário, mas pode resultar em uma melhor experiência (baixar arquivos em formato zip)."
+"This tests whether you have the zlib extension enabled. This is not strictly "
+"necessary, but may result in a better experience (zip download)."
+msgstr ""
+"Isso testa se você tem a extensão zlib habilitada. Isto não é estritamente "
+"necessário, mas pode resultar em uma melhor experiência (baixar arquivos em "
+"formato zip)."
 
 #: ../../templates/show_test_table.inc.php:130
 msgid "PHP simplexml extension"
@@ -7715,7 +7933,9 @@ msgstr "Extensão simplexml PHP"
 msgid ""
 "This tests whether you have the simplexml extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Isso testa se você tem a extensão simplexml habilitada. Isto não é estritamente necessário, mas pode resultar em uma melhor experiência."
+msgstr ""
+"Isso testa se você tem a extensão simplexml habilitada. Isto não é "
+"estritamente necessário, mas pode resultar em uma melhor experiência."
 
 #: ../../templates/show_test_table.inc.php:139
 msgid "PHP GD extension"
@@ -7735,7 +7955,10 @@ msgstr "Modo de segurança do PHP desativado"
 msgid ""
 "This test makes sure that PHP is not running in safe mode. Some features of "
 "Ampache will not work correctly in safe mode."
-msgstr "Este teste garante que o PHP não está sendo executado em modo de segurança. Algumas características do Ampache não irão funcionar corretamente no modo de segurança."
+msgstr ""
+"Este teste garante que o PHP não está sendo executado em modo de segurança. "
+"Algumas características do Ampache não irão funcionar corretamente no modo "
+"de segurança."
 
 #: ../../templates/show_test_table.inc.php:157
 msgid "PHP memory limit override"
@@ -7745,7 +7968,9 @@ msgstr "Substituir limite de memória do PHP"
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Isso testa se Ampache pode substituir o limite de memória. Isto não é estritamente necessário, mas pode resultar em uma melhor experiência."
+msgstr ""
+"Isso testa se Ampache pode substituir o limite de memória. Isto não é "
+"estritamente necessário, mas pode resultar em uma melhor experiência."
 
 #: ../../templates/show_test_table.inc.php:166
 msgid "PHP execution time override"
@@ -7753,9 +7978,12 @@ msgstr "Substituir tempo de execução do PHP"
 
 #: ../../templates/show_test_table.inc.php:171
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time."
-" This is not strictly necessary, but may result in a better experience."
-msgstr "Isso testa se Ampache pode substituir o limite de tempo máximo de execução do PHP. Isto não é estritamente necessário, mas pode resultar em uma melhor experiência."
+"This tests whether Ampache can override the limit on maximum execution time. "
+"This is not strictly necessary, but may result in a better experience."
+msgstr ""
+"Isso testa se Ampache pode substituir o limite de tempo máximo de execução "
+"do PHP. Isto não é estritamente necessário, mas pode resultar em uma melhor "
+"experiência."
 
 #: ../../templates/show_test_table.inc.php:175
 msgid "PHP max upload size"
@@ -7765,7 +7993,10 @@ msgstr "Tamanho máximo de upload do PHP"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Isso testa se o Ampache pode fazer upload de arquivos maiores (> = 20M). Isto não é estritamente necessário, mas pode resultar em uma melhor experiência."
+msgstr ""
+"Isso testa se o Ampache pode fazer upload de arquivos maiores (> = 20M). "
+"Isto não é estritamente necessário, mas pode resultar em uma melhor "
+"experiência."
 
 #: ../../templates/show_test_table.inc.php:184
 msgid "PHP Integer Size"
@@ -7789,7 +8020,12 @@ msgid ""
 "is not stricly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr "Isso testa se o PHP %s está definido, pois pode quebrar o apoio ID3 tag. Isto não é estritamente necessário, mas permitir o suporte de gravação Ampache tag ID3 (desabilitado por padrão), juntamente com mbstring.func_overload pode resultar em corrupção irreversível de seus arquivos de música."
+msgstr ""
+"Isso testa se o PHP %s está definido, pois pode quebrar o apoio ID3 tag. "
+"Isto não é estritamente necessário, mas permitir o suporte de gravação "
+"Ampache tag ID3 (desabilitado por padrão), juntamente com mbstring."
+"func_overload pode resultar em corrupção irreversível de seus arquivos de "
+"música."
 
 #: ../../templates/show_test_table.inc.php:205
 msgid "Configuration file readability"
@@ -8250,7 +8486,10 @@ msgid ""
 "This page handles all database updates to Ampache starting with "
 "<strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with "
 "database version <strong>%s</strong>."
-msgstr "Esta página lida com todas as atualizações do banco de dados do Ampache começando com <strong>3.3.3.5</strong>. Sua versão atual é <strong>%s</strong> com a versão <strong>%s</strong> do banco de dados."
+msgstr ""
+"Esta página lida com todas as atualizações do banco de dados do Ampache "
+"começando com <strong>3.3.3.5</strong>. Sua versão atual é <strong>%s</"
+"strong> com a versão <strong>%s</strong> do banco de dados."
 
 #: ../../update.php:92
 msgid "Update Now!"
@@ -8281,8 +8520,8 @@ msgstr "Não é possível excluir este vídeo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.06.2016 15:00:05 CEST
-# 
+# Last Update: 12.07.2016 18:53:07 CEST
+#
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "Permitir baixar"
@@ -8315,7 +8554,7 @@ msgstr ""
 # but to avoid confusion, it's added and commented
 # msgid "Language"
 # msgstr ""
-#: Database preference table id 31 Database preference table id 32
+#: Database preference table id 31 32
 msgid "Playlist Type"
 msgstr "Tipo de lista de reprodução"
 
@@ -8367,8 +8606,7 @@ msgstr ""
 # but to avoid confusion, it's added and commented
 # msgid "Show Lyrics"
 # msgstr ""
-#: Database preference table id 55 Database preference table id 69 Database
-#: preference table id 72
+#: Database preference table id 55 69 72
 msgid "Shoutcast Active Instance"
 msgstr ""
 
@@ -8440,13 +8678,17 @@ msgstr "Visibilidade das informações pessoais - Tocado recentemente"
 msgid ""
 "Personal information visibility - Recently played - Allow to show streaming "
 "date/time"
-msgstr "Visibilidade das informações pessoais - Tocado recentemente - Permitir que mostre data/hora da transmissão"
+msgstr ""
+"Visibilidade das informações pessoais - Tocado recentemente - Permitir que "
+"mostre data/hora da transmissão"
 
 #: Database preference table id 93
 msgid ""
 "Personal information visibility - Recently played - Allow to show streaming "
 "agent"
-msgstr "Visibilidade das informações pessoais - Tocado recentemente - Permitir que mostre o agente da transmissão"
+msgstr ""
+"Visibilidade das informações pessoais - Tocado recentemente - Permitir que "
+"mostre o agente da transmissão"
 
 #: Database preference table id 94
 msgid "Fix header position on compatible themes"
@@ -8693,6 +8935,31 @@ msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
 
-#: Database preference table id 158
+#: Database preference table id 160
+#, fuzzy
+msgid "HTTPQ Active Instance"
+msgstr "Ativar instância"
+
+#: Database preference table id 161
 msgid "MPD Active Instance"
+msgstr ""
+
+#: Database preference table id 164
+msgid "Amazon base url"
+msgstr ""
+
+#: Database preference table id 165
+msgid "Amazon max results pages"
+msgstr ""
+
+#: Database preference table id 166
+msgid "Amazon Access Key ID"
+msgstr ""
+
+#: Database preference table id 167
+msgid "Amazon Secret Access Key"
+msgstr ""
+
+#: Database preference table id 168
+msgid "Amazon associate tag"
 msgstr ""

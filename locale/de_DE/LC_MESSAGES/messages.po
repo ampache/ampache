@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Manuel <psyvirusx@gmail.com>, 2015-2016
 # Ott <ottnorml@gmail.com>, 2016
@@ -11,14 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-06-23 15:00+0200\n"
-"PO-Revision-Date: 2016-06-29 08:19+0000\n"
-"Last-Translator: Afterster\n"
-"Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/language/de_DE/)\n"
+"POT-Creation-Date: 2016-07-20 17:13+0200\n"
+"PO-Revision-Date: 2016-07-12 23:48+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/"
+"language/de_DE/)\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../admin/access.php:40
@@ -38,7 +39,7 @@ msgid "Are you sure you want to permanently delete"
 msgstr "Möchtest Du die folgende Regel wirklich löschen?:"
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:346
-#: ../../templates/show_song.inc.php:238
+#: ../../templates/show_song.inc.php:239
 #: ../../templates/show_video.inc.php:200
 msgid "Added"
 msgstr "Hinzugefügt"
@@ -91,7 +92,9 @@ msgstr "Bestätige die Löschanfrage"
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
-msgstr ""
+msgid_plural " Songs Enabled"
+msgstr[0] "Song aktiviert"
+msgstr[1] "Songs aktiviert"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
@@ -99,7 +102,9 @@ msgstr "Keine deaktivierten Songs augewählt"
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
-msgstr ""
+msgid_plural " Disabled Songs Processed"
+msgstr[0] "Deaktivierter Song bearbeitet"
+msgstr[1] "Deaktivierte Songs bearbeitet"
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
@@ -182,42 +187,60 @@ msgid "Your E-mail was not sent."
 msgstr "Deine E-Mail wurde nicht gesendet."
 
 #: ../../admin/modules.php:38
-msgid "Install Failed, Controller Error"
+#, fuzzy
+msgid "Failed to enable the module, Controller Error"
 msgstr "Installation fehlgeschlagen, Fehler im Controller"
 
 #: ../../admin/modules.php:53
-msgid "Localplay Installed"
-msgstr "Localplay installiert"
+#, fuzzy
+msgid "localplay enabled"
+msgstr "Lokale Wiedergabe deaktiviert"
 
 #: ../../admin/modules.php:61
-msgid "Install Failed, Catalog Error"
-msgstr "Die Installation ist fehlgeschlagen, der Katalog hat einen Fehler verursacht"
+#, fuzzy
+msgid "Failed to enable the module, Catalog Error"
+msgstr ""
+"Die Installation ist fehlgeschlagen, der Katalog hat einen Fehler verursacht"
 
 #: ../../admin/modules.php:70
-msgid "Plugin Installed"
-msgstr "Das Modul wurde installiert"
+#, fuzzy
+msgid "Module enabled"
+msgstr "Benutzer aktiviert"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
-#: ../../admin/modules.php:146
-msgid "Are you sure you want to remove this plugin?"
-msgstr "Bist Du Dir sicher, dass Du dieses Modul entfernen möchtest?"
+#, fuzzy
+msgid "Are you sure you want to disable this module?"
+msgstr "Bist du dir sicher, dass du diesen Podcast löschen willst?"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
-#: ../../admin/modules.php:165
-msgid "Plugin Deactivated"
-msgstr "Das Modul wurde deaktiviert"
+#, fuzzy
+msgid "Module disabled"
+msgstr "Der PHP-Sicherheits-Modus ist deaktiviert"
 
 #: ../../admin/modules.php:105
-msgid "Uninstall Failed, Catalog Error"
-msgstr "Die Deinstallation ist fehlgeschlagen, der Katalog hat einen Fehler verursacht"
+#, fuzzy
+msgid "Failed to disable module, Catalog Error"
+msgstr ""
+"Die Installation ist fehlgeschlagen, der Katalog hat einen Fehler verursacht"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
 msgstr "Das Modul kann nicht aktiviert werden"
 
 #: ../../admin/modules.php:139
-msgid "Plugin Activated"
-msgstr "Das Modul wurde aktiviert"
+#, fuzzy
+msgid "Plugin enabled"
+msgstr "Das Modul wurde installiert"
+
+#: ../../admin/modules.php:146
+#, fuzzy
+msgid "Are you sure you want to disable this plugin?"
+msgstr "Bist Du Dir sicher, dass Du dieses Modul entfernen möchtest?"
+
+#: ../../admin/modules.php:165
+#, fuzzy
+msgid "Plugin disabled"
+msgstr "Das Modul wurde installiert"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
@@ -251,7 +274,9 @@ msgstr "Der Zeichensatz der Datenbank wurde aktualisiert"
 msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
-msgstr "Deine Datenbank und die zugehörigen Tabellen wurden aktualisiert um dem eingestellten Zeichensatz zu entsprechen."
+msgstr ""
+"Deine Datenbank und die zugehörigen Tabellen wurden aktualisiert um dem "
+"eingestellten Zeichensatz zu entsprechen."
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
@@ -429,7 +454,8 @@ msgstr "Interpret löschen"
 
 #: ../../artists.php:39
 msgid "Are you sure you want to permanently delete this artist?"
-msgstr "Bist Du Dir sicher, dass Du diesen Interpreten permanent löschen willst?"
+msgstr ""
+"Bist Du Dir sicher, dass Du diesen Interpreten permanent löschen willst?"
 
 #: ../../artists.php:58
 msgid "Artist has been deleted."
@@ -459,7 +485,9 @@ msgstr "Cover nicht gefunden"
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
-msgstr "Das Cover konnte dieses Mal nicht gefunden werden. Das liegt eventuell an fehlenden Schreibrechten oder es wurde fehlerhaft empfangen."
+msgstr ""
+"Das Cover konnte dieses Mal nicht gefunden werden. Das liegt eventuell an "
+"fehlenden Schreibrechten oder es wurde fehlerhaft empfangen."
 
 #: ../../arts.php:68 ../../arts.php:94
 msgid "Art Inserted"
@@ -566,7 +594,9 @@ msgstr "Verwendung: catalog_update.inc [KATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
-msgstr "Standardmäßig wird alles außer dem deaktivieren des PHP SPeicherlimits vorgenommen"
+msgstr ""
+"Standardmäßig wird alles außer dem deaktivieren des PHP SPeicherlimits "
+"vorgenommen"
 
 #: ../../bin/catalog_update.inc:201
 msgid "Temporarily deactivates PHP memory limit."
@@ -580,7 +610,9 @@ msgstr "Bereinigt den Katalog von veralteten Einträgen"
 msgid ""
 "Verifies catalog entries and updates them if related files have new "
 "information."
-msgstr "Überprüft Katalogeinträge und aktualisiert sie, wenn die zugehörigen Dateien neue Informationen beinhalten."
+msgstr ""
+"Überprüft Katalogeinträge und aktualisiert sie, wenn die zugehörigen Dateien "
+"neue Informationen beinhalten."
 
 #: ../../bin/catalog_update.inc:207
 msgid "Adds new media to catalogs."
@@ -602,20 +634,27 @@ msgstr "Optimiert Datenbanktabellen."
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr "Verwende diese Option auf eigene Gefahr! Dein System könnte abstürzen oder, aufgrund des enormen Speicherverbrauchs, nicht mehr reagieren!"
+msgstr ""
+"Verwende diese Option auf eigene Gefahr! Dein System könnte abstürzen oder, "
+"aufgrund des enormen Speicherverbrauchs, nicht mehr reagieren!"
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
-"Depending on your systems performance, this option could need a long time to"
-" finish and extremely slow down other database processes if you have big "
+"Depending on your systems performance, this option could need a long time to "
+"finish and extremely slow down other database processes if you have big "
 "catalogs!"
-msgstr "Je nach Leistung deines Systems, kann diese Option eine lange Zeit in Anspruch nehmen und andere Datenbankoperationen verlangsamen, wenn deine Kataloge sehr groß sind."
+msgstr ""
+"Je nach Leistung deines Systems, kann diese Option eine lange Zeit in "
+"Anspruch nehmen und andere Datenbankoperationen verlangsamen, wenn deine "
+"Kataloge sehr groß sind."
 
 #: ../../bin/catalog_update.inc:218
 msgid ""
-"The switches [-m|-i|-o] can only be used, if one of the other switches "
-"[-c|-v|-a|-g] is used."
-msgstr "Die Argumente [-m|-i|-o] können nur verwendet werden, wenn eines der anderen Argumente [-c|-v|-a|-g] ebenfalls in Benutzung ist."
+"The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
+"v|-a|-g] is used."
+msgstr ""
+"Die Argumente [-m|-i|-o] können nur verwendet werden, wenn eines der anderen "
+"Argumente [-c|-v|-a|-g] ebenfalls in Benutzung ist."
 
 #: ../../bin/channel_run.inc:46
 msgid "- Channel "
@@ -690,7 +729,9 @@ msgstr "%s Aus Liebe zur Musik"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
-msgstr "Basistest der Übersetzung, die beiden folgenden Zeichenketten sollten gleich aussehen."
+msgstr ""
+"Basistest der Übersetzung, die beiden folgenden Zeichenketten sollten gleich "
+"aussehen."
 
 #: ../../bin/fix_filenames.inc:54
 msgid "Original: For the Love of Music"
@@ -732,7 +773,8 @@ msgstr "Fehler: In das Verzeichnis '%s' kann nicht gewechselt werden"
 
 #: ../../bin/fix_filenames.inc:133
 msgid "Translation failure, stripping non-valid characters"
-msgstr "Die Übersetzung ist fehlgeschlagen. Bitte entferne alle ungültigen Zeichen"
+msgstr ""
+"Die Übersetzung ist fehlgeschlagen. Bitte entferne alle ungültigen Zeichen"
 
 #: ../../bin/fix_filenames.inc:138
 #, php-format
@@ -760,7 +802,8 @@ msgstr "Wird nicht umbenannt..."
 #: ../../bin/fix_filenames.inc:182
 #, php-format
 msgid "Error: Unable to create %s move failed, stopping"
-msgstr "Fehler: Erstellen von %s ist gescheitert. Verschieben fehlgeschlagen, stoppe"
+msgstr ""
+"Fehler: Erstellen von %s ist gescheitert. Verschieben fehlgeschlagen, stoppe"
 
 #: ../../bin/fix_filenames.inc:194
 msgid "Error: Copy Failed, not deleting old file"
@@ -783,7 +826,8 @@ msgstr "Datei verschoben..."
 #: ../../bin/install/add_user.inc:50
 #, php-format
 msgid "Created %s user %s with password %s"
-msgstr "Benutzer mit Zugriffslevel %s, Benutzername %s und Passwort %s erstellt"
+msgstr ""
+"Benutzer mit Zugriffslevel %s, Benutzername %s und Passwort %s erstellt"
 
 #: ../../bin/install/add_user.inc:54
 msgid "User creation failed"
@@ -827,7 +871,8 @@ msgstr "Schreiben erfolgreich, Konfiguration wurde zusammengefügt"
 
 #: ../../bin/migrate_config.inc:92
 msgid "Access Denied, config migration failed"
-msgstr "Zugriff verweigert, das Zusammenfügen der Konfiguration ist gescheitert"
+msgstr ""
+"Zugriff verweigert, das Zusammenfügen der Konfiguration ist gescheitert"
 
 #: ../../bin/print_tags.inc:37
 msgid "File not found."
@@ -850,7 +895,8 @@ msgstr "Unbearbeitete Ergebnisse:"
 #: ../../bin/print_tags.inc:71
 #, php-format
 msgid "Final results seen by Ampache using %s:"
-msgstr "Ergebnisse wie sie in Ampache angezeigt werden, bei der Verwendung von %s:"
+msgstr ""
+"Ergebnisse wie sie in Ampache angezeigt werden, bei der Verwendung von %s:"
 
 #: ../../bin/print_tags.inc:78
 #, php-format
@@ -929,7 +975,8 @@ msgstr "Fehler: Das Verzeichnis '%s' kann nicht beschrieben werden"
 
 #: ../../bin/write_playlists.inc:93
 msgid "This will dump a collection of playlists files based on type"
-msgstr "Dies zeigt den Inhalt einer Zusammenstellung von Playlisten nach Typ an."
+msgstr ""
+"Dies zeigt den Inhalt einer Zusammenstellung von Playlisten nach Typ an."
 
 #: ../../bin/write_playlists.inc:94
 msgid "Types:"
@@ -996,11 +1043,15 @@ msgstr "Die angeforderte Playlist wurde gelöscht."
 
 #: ../../install.php:122
 msgid "Error: Ampache SQL Username or Password missing"
-msgstr "Fehler: Der Benutzername und/oder das Passwort für die Verbindung von Ampache zur Datenbank fehlen."
+msgstr ""
+"Fehler: Der Benutzername und/oder das Passwort für die Verbindung von "
+"Ampache zur Datenbank fehlen."
 
 #: ../../install.php:176
 msgid "Error: Config files not found or unreadable"
-msgstr "Fehler: Die Konfigurationsdateien wurden nicht gefunden oder sind nicht lesbar."
+msgstr ""
+"Fehler: Die Konfigurationsdateien wurden nicht gefunden oder sind nicht "
+"lesbar."
 
 #: ../../labels.php:36 ../../labels.php:56 ../../labels.php:58
 msgid "Label Deletion"
@@ -1105,7 +1156,7 @@ msgid "Stream Access"
 msgstr "Stream Zugriff"
 
 #: ../../lib/class/album.class.php:407 ../../lib/class/artist.class.php:679
-#: ../../templates/show_album_group_disks.inc.php:50
+#: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
 msgstr "Unbekannt (Verwaist)"
@@ -1113,7 +1164,7 @@ msgstr "Unbekannt (Verwaist)"
 #: ../../lib/class/album.class.php:642
 #: ../../lib/class/subsonic_xml_data.class.php:495
 #: ../../server/search.ajax.php:87
-#: ../../templates/show_album_group_disks.inc.php:123
+#: ../../templates/show_album_group_disks.inc.php:124
 #: ../../templates/show_album.inc.php:31
 #: ../../templates/show_edit_album_row.inc.php:70
 #: ../../templates/show_song_previews.inc.php:40
@@ -1123,7 +1174,7 @@ msgstr "Platte"
 #: ../../lib/class/album.class.php:654 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:329 ../../lib/ui.lib.php:180
 #: ../../server/search.ajax.php:57 ../../templates/header.inc.php:429
-#: ../../templates/show_label.inc.php:119
+#: ../../templates/show_label.inc.php:120
 #: ../../templates/show_labels.inc.php:52
 #: ../../templates/show_labels.inc.php:92
 #: ../../templates/show_random.inc.php:43
@@ -1301,7 +1352,8 @@ msgstr "Fehler: Der Handshake ist ungültig -"
 #: ../../lib/class/api.class.php:192 ../../lib/class/api.class.php:193
 #: ../../lib/class/api.class.php:277
 msgid "Invalid Username/Password"
-msgstr "Es wurde ein falscher Benutzername oder ein Falsches Passwort eingegeben"
+msgstr ""
+"Es wurde ein falscher Benutzername oder ein Falsches Passwort eingegeben"
 
 #: ../../lib/class/api.class.php:658 ../../lib/class/api.class.php:676
 #: ../../lib/class/api.class.php:694
@@ -1332,11 +1384,11 @@ msgstr "Fehler: Der Pfad '%s' Kann nicht geöffnet werden"
 #: ../../lib/class/art.class.php:1779 ../../lib/class/shoutbox.class.php:309
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:120
 #: ../../templates/header.inc.php:347 ../../templates/rightbar.inc.php:25
-#: ../../templates/show_album_group_disks.inc.php:63
-#: ../../templates/show_album_group_disks.inc.php:65
-#: ../../templates/show_album_group_disks.inc.php:138
-#: ../../templates/show_album.inc.php:115
-#: ../../templates/show_album.inc.php:117
+#: ../../templates/show_album_group_disks.inc.php:64
+#: ../../templates/show_album_group_disks.inc.php:66
+#: ../../templates/show_album_group_disks.inc.php:139
+#: ../../templates/show_album.inc.php:116
+#: ../../templates/show_album.inc.php:118
 #: ../../templates/show_album_row.inc.php:28
 #: ../../templates/show_artist_row.inc.php:28
 #: ../../templates/show_broadcast_row.inc.php:27
@@ -1421,12 +1473,12 @@ msgstr "Broadcast bearbeiten"
 #: ../../lib/class/broadcast.class.php:358
 #: ../../lib/class/channel.class.php:186 ../../lib/class/share.class.php:206
 #: ../../templates/show_access_list.inc.php:87
-#: ../../templates/show_album_group_disks.inc.php:187
-#: ../../templates/show_album.inc.php:256
+#: ../../templates/show_album_group_disks.inc.php:188
+#: ../../templates/show_album.inc.php:257
 #: ../../templates/show_album_row.inc.php:133
-#: ../../templates/show_artist.inc.php:262
+#: ../../templates/show_artist.inc.php:265
 #: ../../templates/show_artist_row.inc.php:111
-#: ../../templates/show_label.inc.php:90
+#: ../../templates/show_label.inc.php:91
 #: ../../templates/show_license_row.inc.php:28
 #: ../../templates/show_live_stream_row.inc.php:47
 #: ../../templates/show_playlist_row.inc.php:107
@@ -1457,17 +1509,17 @@ msgstr "Bearbeiten"
 #: ../../templates/rightbar.inc.php:140
 #: ../../templates/show_access_list.inc.php:91
 #: ../../templates/show_account.inc.php:103
-#: ../../templates/show_album.inc.php:286
 #: ../../templates/show_album.inc.php:287
+#: ../../templates/show_album.inc.php:288
 #: ../../templates/show_album_row.inc.php:141
-#: ../../templates/show_artist.inc.php:278
-#: ../../templates/show_artist.inc.php:279
+#: ../../templates/show_artist.inc.php:281
+#: ../../templates/show_artist.inc.php:282
 #: ../../templates/show_artist_row.inc.php:121
 #: ../../templates/show_catalog_row.inc.php:58
 #: ../../templates/show_democratic_playlist.inc.php:122
 #: ../../templates/show_edit_user.inc.php:123
-#: ../../templates/show_label.inc.php:106
 #: ../../templates/show_label.inc.php:107
+#: ../../templates/show_label.inc.php:108
 #: ../../templates/show_label_row.inc.php:49
 #: ../../templates/show_license_row.inc.php:31
 #: ../../templates/show_live_stream_row.inc.php:53
@@ -1516,8 +1568,8 @@ msgstr "Broadcast beenden"
 #: ../../templates/show_albums.inc.php:130
 #: ../../templates/show_artists.inc.php:44
 #: ../../templates/show_artists.inc.php:131
-#: ../../templates/show_label.inc.php:120
-#: ../../templates/show_label.inc.php:135
+#: ../../templates/show_label.inc.php:121
+#: ../../templates/show_label.inc.php:136
 #: ../../templates/show_manage_democratic.inc.php:31
 #: ../../templates/show_random.inc.php:29
 #: ../../templates/show_random.inc.php:32
@@ -1533,7 +1585,7 @@ msgstr "Songs"
 #: ../../lib/class/browse.class.php:210 ../../lib/class/upnp_api.class.php:353
 #: ../../lib/ui.lib.php:176 ../../server/search.ajax.php:90
 #: ../../templates/browse_filters.inc.php:92
-#: ../../templates/show_artist.inc.php:291
+#: ../../templates/show_artist.inc.php:294
 #: ../../templates/show_artists.inc.php:45
 #: ../../templates/show_artists.inc.php:132
 #: ../../templates/show_random.inc.php:36
@@ -1612,7 +1664,7 @@ msgstr "Gesuchte Alben"
 msgid "Shared Objects"
 msgstr "Freigegebene Objekte"
 
-#: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:225
+#: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:226
 #: ../../templates/show_video.inc.php:193
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Channels"
@@ -1666,8 +1718,8 @@ msgid "Personal Videos"
 msgstr "Persönliche Videos"
 
 #: ../../lib/class/browse.class.php:328 ../../server/search.ajax.php:178
-#: ../../templates/show_artist.inc.php:312
-#: ../../templates/show_artist.inc.php:381
+#: ../../templates/show_artist.inc.php:315
+#: ../../templates/show_artist.inc.php:384
 #: ../../templates/show_edit_artist_row.inc.php:62
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Labels"
@@ -1700,11 +1752,15 @@ msgstr "Niemals"
 
 #: ../../lib/class/catalog.class.php:599
 msgid "day"
-msgstr ""
+msgid_plural "days"
+msgstr[0] "Tag"
+msgstr[1] "Tage"
 
 #: ../../lib/class/catalog.class.php:601
 msgid "hour"
-msgstr ""
+msgid_plural "hours"
+msgstr[0] "Stunde"
+msgstr[1] "Stunden"
 
 #: ../../lib/class/catalog.class.php:646
 msgid "Catalog Insert Failed check debug logs"
@@ -1717,12 +1773,17 @@ msgstr "Es wird keine Aktualisierung benötigt."
 #: ../../lib/class/catalog.class.php:1808
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
-msgstr ""
+msgid_plural "Catalog Clean Done. %d files removed."
+msgstr[0] ""
+"Der Katalog wurde erfolgreich gesäubert. Es wurde %d Datei entfernt."
+msgstr[1] ""
+"Der Katalog wurde erfolgreich gesäubert. Es wurden %d Dateien entfernt."
 
 #: ../../lib/class/catalog.class.php:1833
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
-msgstr "Katalog wurde erfolgreich überprüft. %d von %d Dateien wurden aktualisiert."
+msgstr ""
+"Katalog wurde erfolgreich überprüft. %d von %d Dateien wurden aktualisiert."
 
 #: ../../lib/class/catalog.class.php:2017
 msgid "Failed to create playlist."
@@ -1736,7 +1797,9 @@ msgstr "Keine gültigen Songs in der Playlist gefunden."
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
-msgstr "Dieses Unterverzeichnis wurde in keinem Katalog gefunden. Das Update konnte nicht durchgeführt werden."
+msgstr ""
+"Dieses Unterverzeichnis wurde in keinem Katalog gefunden. Das Update konnte "
+"nicht durchgeführt werden."
 
 #: ../../lib/class/channel.class.php:184
 msgid "Start Channel"
@@ -1790,7 +1853,7 @@ msgstr "Katalogmanager"
 #: ../../templates/show_labels.inc.php:50
 #: ../../templates/show_labels.inc.php:90
 #: ../../templates/show_search_bar.inc.php:38
-#: ../../templates/show_song.inc.php:221
+#: ../../templates/show_song.inc.php:222
 msgid "Label"
 msgstr "Label"
 
@@ -1841,8 +1904,8 @@ msgstr "Privat"
 #: ../../lib/class/podcast.class.php:173
 #: ../../lib/class/podcast_episode.class.php:153
 #: ../../templates/show_add_catalog.inc.php:88
-#: ../../templates/show_album.inc.php:162
-#: ../../templates/show_artist.inc.php:187
+#: ../../templates/show_album.inc.php:163
+#: ../../templates/show_artist.inc.php:190
 #: ../../templates/show_podcast_episodes.inc.php:33
 #: ../../templates/show_podcast_episodes.inc.php:103
 #: ../../templates/show_podcast.inc.php:110
@@ -1920,11 +1983,22 @@ msgid ""
 "\n"
 "        %s\n"
 "        "
-msgstr "Du hast gerade eine neue private Nachricht von %s erhalten.\n\n\n        ----------------------\n        %s\n        ----------------------\n\n        %s\n        "
+msgstr ""
+"Du hast gerade eine neue private Nachricht von %s erhalten.\n"
+"\n"
+"\n"
+"        ----------------------\n"
+"        %s\n"
+"        ----------------------\n"
+"\n"
+"        %s\n"
+"        "
 
 #: ../../lib/class/query.class.php:99
 msgid "Browse not found or expired, try reloading the page"
-msgstr "Die Seite wurde nicht gefunden oder ist abgelaufen. Versuche bitte die Seite neu zu laden"
+msgstr ""
+"Die Seite wurde nicht gefunden oder ist abgelaufen. Versuche bitte die Seite "
+"neu zu laden"
 
 #: ../../lib/class/registration.class.php:53
 #, php-format
@@ -1937,17 +2011,36 @@ msgid ""
 "Thank you for registering\n"
 "\n"
 "\n"
-"Please keep this e-mail for your records. Your account information is as follows:\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
 "----------------------\n"
 "Username: %s\n"
 "----------------------\n"
 "\n"
-"Your account is currently inactive. You cannot use it until you've visited the following link:\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
 "\n"
 "%s\n"
 "\n"
 "Thank you for registering\n"
-msgstr "Vielen Dank für die Registrierung!\n\n\nWir empfehlen diese E-Mail zu behalten, da sie folgende wichtige Benutzerdaten enthält:\n----------------------\nBenutzername: %s\n----------------------\n\nKlicke auf den folgenden Link um Dein Benutzerkonto zu aktivieren und dich einloggen zu können:\n\n%s \n\nNochmals Danke für die Registrierung und viel Spaß wünscht dir:\n\nDie Administration\n"
+msgstr ""
+"Vielen Dank für die Registrierung!\n"
+"\n"
+"\n"
+"Wir empfehlen diese E-Mail zu behalten, da sie folgende wichtige "
+"Benutzerdaten enthält:\n"
+"----------------------\n"
+"Benutzername: %s\n"
+"----------------------\n"
+"\n"
+"Klicke auf den folgenden Link um Dein Benutzerkonto zu aktivieren und dich "
+"einloggen zu können:\n"
+"\n"
+"%s \n"
+"\n"
+"Nochmals Danke für die Registrierung und viel Spaß wünscht dir:\n"
+"\n"
+"Die Administration\n"
 
 #: ../../lib/class/registration.class.php:77
 #, php-format
@@ -1960,7 +2053,15 @@ msgid ""
 "E-mail: %s\n"
 "Website: %s\n"
 "\n"
-msgstr "Ein neuer Benutzer hat sich registriert\nFolgende Angaben wurden dabei gemacht.\n\nBenutzername: %s\nVollständiger Name: %s\nE-Mail: %s\nWebsite: %s\n\n"
+msgstr ""
+"Ein neuer Benutzer hat sich registriert\n"
+"Folgende Angaben wurden dabei gemacht.\n"
+"\n"
+"Benutzername: %s\n"
+"Vollständiger Name: %s\n"
+"E-Mail: %s\n"
+"Website: %s\n"
+"\n"
 
 #: ../../lib/class/registration.class.php:104
 #, php-format
@@ -1974,7 +2075,11 @@ msgid ""
 "\n"
 "\n"
 "            Please logon using %s"
-msgstr "Dein Account \"%s\" wurde aktiviert.\n\n\nDu kannst dich nun über %s einloggen."
+msgstr ""
+"Dein Account \"%s\" wurde aktiviert.\n"
+"\n"
+"\n"
+"Du kannst dich nun über %s einloggen."
 
 #: ../../lib/class/search.class.php:62
 msgid "is greater than or equal to"
@@ -2055,7 +2160,7 @@ msgstr "Komponist"
 #: ../../lib/class/search.class.php:237
 #: ../../templates/show_manage_shoutbox.inc.php:31
 #: ../../templates/show_manage_shoutbox.inc.php:65
-#: ../../templates/show_song.inc.php:220
+#: ../../templates/show_song.inc.php:221
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -2075,7 +2180,7 @@ msgstr "Album-Tag"
 #: ../../templates/show_duplicates.inc.php:34
 #: ../../templates/show_duplicates.inc.php:85
 #: ../../templates/show_import_playlist.inc.php:28
-#: ../../templates/show_song.inc.php:233
+#: ../../templates/show_song.inc.php:234
 #: ../../templates/show_video.inc.php:195
 msgid "Filename"
 msgstr "Dateiname"
@@ -2134,7 +2239,7 @@ msgstr "Bewertung"
 #: ../../templates/show_albums.inc.php:134
 #: ../../templates/show_artists.inc.php:49
 #: ../../templates/show_artists.inc.php:136
-#: ../../templates/show_song.inc.php:240 ../../templates/show_songs.inc.php:47
+#: ../../templates/show_song.inc.php:241 ../../templates/show_songs.inc.php:47
 #: ../../templates/show_songs.inc.php:126
 #: ../../templates/show_video.inc.php:202
 #: ../../templates/show_videos.inc.php:51
@@ -2148,12 +2253,12 @@ msgstr "# Gespielt"
 #: ../../templates/show_duplicates.inc.php:32
 #: ../../templates/show_duplicates.inc.php:83
 #: ../../templates/show_edit_channel_row.inc.php:84
-#: ../../templates/show_song.inc.php:224
+#: ../../templates/show_song.inc.php:225
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:88
-#: ../../templates/show_artist.inc.php:91
+#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:89
+#: ../../templates/show_artist.inc.php:94
 msgid "Played"
 msgstr "Gespielt"
 
@@ -2312,7 +2417,16 @@ msgid ""
 "\n"
 "    %s\n"
 "    "
-msgstr "%s hat einen neuen Shout zu dem Inhalt: `%s` gepostet\n\n\n    ----------------------\n    %s\n    ----------------------\n\n    %s\n    "
+msgstr ""
+"%s hat einen neuen Shout zu dem Inhalt: `%s` gepostet\n"
+"\n"
+"\n"
+"    ----------------------\n"
+"    %s\n"
+"    ----------------------\n"
+"\n"
+"    %s\n"
+"    "
 
 #: ../../lib/class/shoutbox.class.php:310
 #: ../../templates/show_add_label.inc.php:80
@@ -2326,15 +2440,15 @@ msgid "Add"
 msgstr "Hinzufügen"
 
 #: ../../lib/class/shoutbox.class.php:313
-#: ../../templates/show_album_group_disks.inc.php:152
-#: ../../templates/show_album.inc.php:173
-#: ../../templates/show_album.inc.php:177
+#: ../../templates/show_album_group_disks.inc.php:153
+#: ../../templates/show_album.inc.php:174
+#: ../../templates/show_album.inc.php:178
 #: ../../templates/show_album_row.inc.php:112
-#: ../../templates/show_artist.inc.php:198
-#: ../../templates/show_artist.inc.php:202
+#: ../../templates/show_artist.inc.php:201
+#: ../../templates/show_artist.inc.php:205
 #: ../../templates/show_artist_row.inc.php:103
 #: ../../templates/show_html5_player.inc.php:164
-#: ../../templates/show_label.inc.php:62 ../../templates/show_label.inc.php:66
+#: ../../templates/show_label.inc.php:63 ../../templates/show_label.inc.php:67
 #: ../../templates/show_label_row.inc.php:42
 #: ../../templates/show_podcast_episode.inc.php:108
 #: ../../templates/show_song.inc.php:126
@@ -3232,19 +3346,25 @@ msgstr "WARNUNG"
 #: ../../lib/general.lib.php:211
 #, php-format
 msgid "Unknown %s"
-msgstr ""
+msgstr "Unbekannt %s"
 
 #: ../../lib/install.lib.php:83
 msgid "Unable to connect to database, check your ampache config"
-msgstr "Die Verbindung zur Datenbank ist leider nicht möglich, prüfe bitte die Konfiguration von Ampache"
+msgstr ""
+"Die Verbindung zur Datenbank ist leider nicht möglich, prüfe bitte die "
+"Konfiguration von Ampache"
 
 #: ../../lib/install.lib.php:91
 msgid "Unable to query database, check your ampache config"
-msgstr "Die Datenbankabfrage ist leider nicht möglich, überprüfe doch bitte die Konfiguration von Ampache"
+msgstr ""
+"Die Datenbankabfrage ist leider nicht möglich, überprüfe doch bitte die "
+"Konfiguration von Ampache"
 
 #: ../../lib/install.lib.php:98
 msgid "Existing Database detected, unable to continue installation"
-msgstr "Die Datenbank existiert bereits. Die Installation kann so leider nicht fortgesetzt werden"
+msgstr ""
+"Die Datenbank existiert bereits. Die Installation kann so leider nicht "
+"fortgesetzt werden"
 
 #: ../../lib/install.lib.php:153 ../../lib/install.lib.php:288
 msgid "Error writing config file"
@@ -3257,22 +3377,31 @@ msgstr "Fehler: Der Name der Datenbank ist ungültig."
 #: ../../lib/install.lib.php:183
 #, php-format
 msgid "Error: Unable to make database connection: %s"
-msgstr "Fehler: Die Verbindung zur Datenbank kann leider nicht hergestellt werden. <br>Fehlerdetails: %s"
+msgstr ""
+"Fehler: Die Verbindung zur Datenbank kann leider nicht hergestellt werden. "
+"<br>Fehlerdetails: %s"
 
 #: ../../lib/install.lib.php:193
 msgid "Error: Database already exists and overwrite not checked"
-msgstr "Fehler: Die Datenbank existiert bereits, jedoch wurde das Überschreiben nicht erlaubt"
+msgstr ""
+"Fehler: Die Datenbank existiert bereits, jedoch wurde das Überschreiben "
+"nicht erlaubt"
 
 #: ../../lib/install.lib.php:200
 #, php-format
 msgid "Error: Unable to create database: %s"
-msgstr "Fehler: Es ist leider nicht möglich, die Datenbank zu erstellen. Fehlerdetails: %s"
+msgstr ""
+"Fehler: Es ist leider nicht möglich, die Datenbank zu erstellen. "
+"Fehlerdetails: %s"
 
 #: ../../lib/install.lib.php:217
 #, php-format
 msgid ""
 "Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s"
-msgstr "Fehler: Der Datenbankbenutzer '%1$s' und die erforderlichen Rechte für den Zugriff auf die Datenbank '%2$s' auf dem Server '%3$s', konnten nicht eingerichtet werden. Fehlerdetails: %4$s"
+msgstr ""
+"Fehler: Der Datenbankbenutzer '%1$s' und die erforderlichen Rechte für den "
+"Zugriff auf die Datenbank '%2$s' auf dem Server '%3$s', konnten nicht "
+"eingerichtet werden. Fehlerdetails: %4$s"
 
 #: ../../lib/install.lib.php:268
 msgid "Invalid configuration settings"
@@ -3280,7 +3409,9 @@ msgstr "Ungültige Konfigurationseinstellungen."
 
 #: ../../lib/install.lib.php:274
 msgid "Database Connection Failed Check Hostname, Username and Password"
-msgstr "Die Verbindung zur Datenbank konnte nicht hergestellt werden. Bitte überprüfe den Hostnamen, den Benutzernamen und das Passwort."
+msgstr ""
+"Die Verbindung zur Datenbank konnte nicht hergestellt werden. Bitte "
+"überprüfe den Hostnamen, den Benutzernamen und das Passwort."
 
 #: ../../lib/install.lib.php:283
 msgid "Config file is not writable"
@@ -3307,15 +3438,21 @@ msgstr "Datenbank konnte nicht gewählt werden. Grund: %s"
 #: ../../lib/install.lib.php:334
 #, php-format
 msgid "Administrative user creation failed: %s"
-msgstr "Der Administrative Datenbankbenutzer konnte nicht erstellt werden. Fehlerinformationen: %s"
+msgstr ""
+"Der Administrative Datenbankbenutzer konnte nicht erstellt werden. "
+"Fehlerinformationen: %s"
 
 #: ../../lib/login.php:80
 msgid "Error Username or Password incorrect, please try again"
-msgstr "Fehler: Der Benutzername und/oder das Passwort sind falsch. Bitte versuche es noch einmal."
+msgstr ""
+"Fehler: Der Benutzername und/oder das Passwort sind falsch. Bitte versuche "
+"es noch einmal."
 
 #: ../../lib/login.php:100
 msgid "User Disabled please contact Admin"
-msgstr "Der Benutzer ist deaktiviert. Falls Du das für einen Fehler hältst, kontaktiere bitte einen Administrator"
+msgstr ""
+"Der Benutzer ist deaktiviert. Falls Du das für einen Fehler hältst, "
+"kontaktiere bitte einen Administrator"
 
 #: ../../lib/login.php:108
 msgid "User Already Logged in"
@@ -3327,6 +3464,7 @@ msgstr "Es ist leider nicht möglich, das Lokale Konto zu erstellen."
 
 #: ../../lib/preferences.php:215 ../../lib/preferences.php:358
 #: ../../templates/show_disabled_songs.inc.php:77
+#: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_user_row.inc.php:98
 msgid "Enable"
 msgstr "Aktivieren"
@@ -3492,10 +3630,10 @@ msgstr "Hauptmenü"
 
 #: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:460
 #: ../../templates/show_add_upload.inc.php:26
-#: ../../templates/show_album.inc.php:245
-#: ../../templates/show_album.inc.php:247
-#: ../../templates/show_artist.inc.php:251
-#: ../../templates/show_artist.inc.php:253
+#: ../../templates/show_album.inc.php:246
+#: ../../templates/show_album.inc.php:248
+#: ../../templates/show_artist.inc.php:254
+#: ../../templates/show_artist.inc.php:256
 #: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/sidebar.light.inc.php:43
 msgid "Upload"
@@ -3585,7 +3723,9 @@ msgstr "Passwort vergessen?"
 #: ../../lostpassword.php:64
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
-msgstr "Ein Benutzer mit der IP: %s hat ein zurücksetzen des Passwortes für '%s' angefragt."
+msgstr ""
+"Ein Benutzer mit der IP: %s hat ein zurücksetzen des Passwortes für '%s' "
+"angefragt."
 
 #: ../../lostpassword.php:66
 #, php-format
@@ -3610,7 +3750,9 @@ msgstr "Beets Datenbankdatei"
 
 #: ../../modules/catalog/beets/beets.catalog.php:102
 msgid "Error: Beets selected, but no Beets DB File provided"
-msgstr "Fehler: Beets wurde ausgewählt, jedoch wurde keine Datenbankdatei für Beets angelegt"
+msgstr ""
+"Fehler: Beets wurde ausgewählt, jedoch wurde keine Datenbankdatei für Beets "
+"angelegt"
 
 #: ../../modules/catalog/beets/beets.catalog.php:112
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:113
@@ -3651,7 +3793,9 @@ msgstr "Wähle 'No' at 'Can your app be limited to its own, private folder?'"
 msgid ""
 "Select 'Specific file types' at 'What type of files does your app need "
 "access to?'"
-msgstr "Wähle 'Specific file types' at 'What type of files does your app need access to?'"
+msgstr ""
+"Wähle 'Specific file types' at 'What type of files does your app need access "
+"to?'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Check Videos and Audio files"
@@ -3663,13 +3807,16 @@ msgstr "Gib deiner App einen Namen und erstelle sie"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Copy your App key and App secret in the following fields."
-msgstr "Kopiere deinen 'App key' und dein 'App secret' in die folgenden Felder."
+msgstr ""
+"Kopiere deinen 'App key' und dein 'App secret' in die folgenden Felder."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
 msgid ""
 "After preparing the catalog with pressing the 'Add catalog' button,<br /> "
 "you have to 'Make it ready' on the catalog table."
-msgstr "Nachdem Du den Katalog mit einem Klick auf 'Katalog hinzufügen' vorbereitet hast, <br /> musst Du ihn noch in der Katalogtabelle 'Bereit stellen'."
+msgstr ""
+"Nachdem Du den Katalog mit einem Klick auf 'Katalog hinzufügen' vorbereitet "
+"hast, <br /> musst Du ihn noch in der Katalogtabelle 'Bereit stellen'."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:114
 #: ../../templates/show_account.inc.php:109
@@ -3695,7 +3842,9 @@ msgstr "Fragmentierte Dateien bei Analyse entdeckt"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:176
 msgid "Error: API Key and Secret Required for Dropbox Catalogs"
-msgstr "Fehler: Der API-Schlüssel und die geheime Phrase sind für Dropbox Kataloge erforderlich"
+msgstr ""
+"Fehler: Der API-Schlüssel und die geheime Phrase sind für Dropbox Kataloge "
+"erforderlich"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:182
 msgid "Invalid <dropbox-path>: "
@@ -3704,7 +3853,9 @@ msgstr "Ungültiger <Dropbox-Pfad>:"
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:213
 #, php-format
 msgid "Go to %s to generate the authorization code, then enter it bellow."
-msgstr "Klicke auf %s um den Autorisierungscode zu generieren. Danach kannst Du ihn in folgendem Feld eingeben."
+msgstr ""
+"Klicke auf %s um den Autorisierungscode zu generieren. Danach kannst Du ihn "
+"in folgendem Feld eingeben."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:252
 msgid "Running Dropbox Remote Update"
@@ -3713,7 +3864,8 @@ msgstr "Bearbeite entfernte Dropbox-Aktualisierung "
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:294
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
-msgstr "Die Katalogaktualisierung wurde mit %s bearbeiteten Medien abgeschlossen."
+msgstr ""
+"Die Katalogaktualisierung wurde mit %s bearbeiteten Medien abgeschlossen."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:296
 msgid "No media updated, do you respect the patterns?"
@@ -3726,7 +3878,9 @@ msgstr "API-Fehler: Die Verbindung zu Dropbox kann nicht aufgebaut werden."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:331
 msgid "API Error: Cannot access file/folder at "
-msgstr "API-Fehler: Der Zugriff auf die Datei oder den Ordner in '%s' kann nicht zugegriffen werden."
+msgstr ""
+"API-Fehler: Der Zugriff auf die Datei oder den Ordner in '%s' kann nicht "
+"zugegriffen werden."
 
 #: ../../modules/catalog/local/local.catalog.php:175
 msgid "Error: Path not specified"
@@ -3734,7 +3888,9 @@ msgstr "Fehler: Bitte gib einen gültigen Pfad an"
 
 #: ../../modules/catalog/local/local.catalog.php:181
 msgid "Error: Defined Path is inside an existing catalog"
-msgstr "Fehler: Der Angegebene Pfad befindet sich innerhalb eines schon existierenden Katalogs."
+msgstr ""
+"Fehler: Der Angegebene Pfad befindet sich innerhalb eines schon "
+"existierenden Katalogs."
 
 #: ../../modules/catalog/local/local.catalog.php:188
 #, php-format
@@ -3750,7 +3906,8 @@ msgstr "Fehler: Der Pfad '%s' Kann nicht geöffnet werden"
 #: ../../modules/catalog/local/local.catalog.php:306
 #, php-format
 msgid "Error: Unable to change to directory %s"
-msgstr "Fehler: Beim Wechsel in das Verzeichnis '%s' ist ein Fehler aufgetreten."
+msgstr ""
+"Fehler: Beim Wechsel in das Verzeichnis '%s' ist ein Fehler aufgetreten."
 
 #. HINT: FullFile
 #: ../../modules/catalog/local/local.catalog.php:330
@@ -3779,16 +3936,21 @@ msgstr "N/A"
 msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
 "Second: [%s]"
-msgstr "Das Update des Kataloges wurde fertig gestellt.<br>Benötigte Zeit: [%s]<br>bearbeitete Medien: [%s]<br>Medien pro Sekunde: [%s]"
+msgstr ""
+"Das Update des Kataloges wurde fertig gestellt.<br>Benötigte Zeit: "
+"[%s]<br>bearbeitete Medien: [%s]<br>Medien pro Sekunde: [%s]"
 
 #: ../../modules/catalog/local/local.catalog.php:558
 #, php-format
 msgid "%s does not exist or is not readable"
-msgstr "Die Datei %s ist entweder nicht vorhanden oder kann nicht gelesen werden"
+msgstr ""
+"Die Datei %s ist entweder nicht vorhanden oder kann nicht gelesen werden"
 
 #: ../../modules/catalog/local/local.catalog.php:586
 msgid "Catalog Root unreadable, stopping clean"
-msgstr "Das Verzeichnis des Kataloges kann nicht gelesen werden. Die Bereinigung wurde beendet"
+msgstr ""
+"Das Verzeichnis des Kataloges kann nicht gelesen werden. Die Bereinigung "
+"wurde beendet"
 
 #: ../../modules/catalog/local/local.catalog.php:610
 msgid "All files would be removed. Doing nothing"
@@ -3823,7 +3985,9 @@ msgstr "Fehler: Du hast 'entfernt' gewählt, jedoch ist der Pfad keine URL"
 
 #: ../../modules/catalog/remote/remote.catalog.php:149
 msgid "Error: Username and Password Required for Remote Catalogs"
-msgstr "Fehler: Es wird ein Benutzername und ein Passwort für den entfernten Katalog benötigt"
+msgstr ""
+"Fehler: Es wird ein Benutzername und ein Passwort für den entfernten Katalog "
+"benötigt"
 
 #: ../../modules/catalog/remote/remote.catalog.php:177
 msgid "Running Remote Update"
@@ -3831,7 +3995,8 @@ msgstr "Bearbeite entfernte Aktualisierung"
 
 #: ../../modules/catalog/remote/remote.catalog.php:212
 msgid "Error connecting to remote server"
-msgstr "Fehler: Bei der Verbindung zum entfernten Server ist ein Fehler aufgetreten"
+msgstr ""
+"Fehler: Bei der Verbindung zum entfernten Server ist ein Fehler aufgetreten"
 
 #: ../../modules/catalog/remote/remote.catalog.php:239
 #, php-format
@@ -3848,7 +4013,9 @@ msgstr "Benutzer ID"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:171
 msgid "Error: UserID and Secret Required for SoundCloud Catalogs"
-msgstr "Fehler: Die Benutzer ID und die geheime Phrase werden für SoundCloud Kataloge benötigt"
+msgstr ""
+"Fehler: Die Benutzer ID und die geheime Phrase werden für SoundCloud "
+"Kataloge benötigt"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:234
 msgid "Running SoundCloud Remote Update"
@@ -3856,7 +4023,8 @@ msgstr "Entfernte Aktualisierung von SoundCloud ist im Gange"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:303
 msgid "Completed updating SoundCloud catalog(s)."
-msgstr "Die Aktualisierung der/des Kataloge(s) auf SoundCloud wurden fertiggestellt"
+msgstr ""
+"Die Aktualisierung der/des Kataloge(s) auf SoundCloud wurden fertiggestellt"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:303
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:263
@@ -3871,7 +4039,8 @@ msgstr "API-Fehler: Die Song-Liste kann nicht empfangen werden."
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:370
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:444
 msgid "API Error: cannot connect to SoundCloud."
-msgstr "API-Fehler: Die Verbindung zur SoundCloud konnte nicht hergestellt werden."
+msgstr ""
+"API-Fehler: Die Verbindung zur SoundCloud konnte nicht hergestellt werden."
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:316
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:374
@@ -3889,7 +4058,9 @@ msgstr "Fehler: Du hast Subsonic gewählt, jedoch ist der Pfad keine URL"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:151
 msgid "Error: Username and Password Required for Subsonic Catalogs"
-msgstr "Fehler: Für die Verwendung von Subsonic Katalogen sind ein Benutzername und ein Passwort erforderlich"
+msgstr ""
+"Fehler: Für die Verwendung von Subsonic Katalogen sind ein Benutzername und "
+"ein Passwort erforderlich"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:181
 msgid "Running Subsonic Remote Update"
@@ -3962,11 +4133,11 @@ msgstr "Hervorheben"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:122
 #: ../../templates/header.inc.php:349
-#: ../../templates/show_album_group_disks.inc.php:71
-#: ../../templates/show_album_group_disks.inc.php:73
-#: ../../templates/show_album_group_disks.inc.php:140
-#: ../../templates/show_album.inc.php:123
-#: ../../templates/show_album.inc.php:125
+#: ../../templates/show_album_group_disks.inc.php:72
+#: ../../templates/show_album_group_disks.inc.php:74
+#: ../../templates/show_album_group_disks.inc.php:141
+#: ../../templates/show_album.inc.php:124
+#: ../../templates/show_album.inc.php:126
 #: ../../templates/show_album_row.inc.php:30
 #: ../../templates/show_artist_row.inc.php:30
 #: ../../templates/show_live_stream.inc.php:42
@@ -3991,11 +4162,11 @@ msgstr "Als letztes abspielen"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:125
 #: ../../templates/header.inc.php:350
-#: ../../templates/show_album_group_disks.inc.php:84
-#: ../../templates/show_album_group_disks.inc.php:86
-#: ../../templates/show_album_group_disks.inc.php:144
-#: ../../templates/show_album.inc.php:137
-#: ../../templates/show_album.inc.php:139
+#: ../../templates/show_album_group_disks.inc.php:85
+#: ../../templates/show_album_group_disks.inc.php:87
+#: ../../templates/show_album_group_disks.inc.php:145
+#: ../../templates/show_album.inc.php:138
+#: ../../templates/show_album.inc.php:140
 #: ../../templates/show_album_row.inc.php:56
 #: ../../templates/show_artist_row.inc.php:56
 #: ../../templates/show_live_stream.inc.php:49
@@ -4046,7 +4217,9 @@ msgstr "Playlist importiert"
 #: ../../playlist.php:83
 #, php-format
 msgid "Successfully imported playlist with %d song."
-msgstr ""
+msgid_plural "Successfully imported playlist with %d songs."
+msgstr[0] "Der Import der Playlist mit %d Song war erfolgreich."
+msgstr[1] "Der Import der Playlisten mit %d Songs war erfolgreich."
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -4059,7 +4232,9 @@ msgstr "Leere Playlisten wurden gelöscht"
 #: ../../plex/web/index.php:32
 msgid ""
 "Changing the server UUID could break clients connectivity. Do you confirm?"
-msgstr "Wenn Du die UUID des Servers änderst, können Clients den Dienst eventuell nicht mehr nutzen. Bist Du Dir sicher?"
+msgstr ""
+"Wenn Du die UUID des Servers änderst, können Clients den Dienst eventuell "
+"nicht mehr nutzen. Bist Du Dir sicher?"
 
 #: ../../plex/web/index.php:84
 msgid "myPlex authentication completed."
@@ -4180,7 +4355,9 @@ msgstr "Lösche Nachricht"
 
 #: ../../pvmsg.php:100
 msgid "Are you sure you want to permanently delete the selected messages?"
-msgstr "Bist Du Dir sicher, dass Du die ausgewählten Nachrichten permanent löschen willst?"
+msgstr ""
+"Bist Du Dir sicher, dass Du die ausgewählten Nachrichten permanent löschen "
+"willst?"
 
 #: ../../pvmsg.php:124
 msgid "Messages Deletion"
@@ -4238,9 +4415,11 @@ msgstr "Deune Suche wurde in der intelligenten Playlist '%s' gespeichert"
 #: ../../server/index.ajax.php:44
 #, php-format
 msgid ""
-"No catalog configured yet. To start streaming your media, you now need to %s"
-" add a catalog %s"
-msgstr "Es wurde noch kein Katalog erstellt. Um Deine Medien streamen zu können, musst du noch einen %s Katalog erstellen %s"
+"No catalog configured yet. To start streaming your media, you now need to %s "
+"add a catalog %s"
+msgstr ""
+"Es wurde noch kein Katalog erstellt. Um Deine Medien streamen zu können, "
+"musst du noch einen %s Katalog erstellen %s"
 
 #: ../../server/player.ajax.php:43
 #: ../../templates/show_html5_player.inc.php:489
@@ -4276,7 +4455,9 @@ msgstr "Deine Freigabe kann nun mit der folgenden URL besucht werden:"
 msgid ""
 "You can also embed this share as a web player into your website, with the "
 "following html code:"
-msgstr "Du kannst Deine Freigabe, mit dem folgenden HTML-Code, auch als Webplayer in Deine Webseite integrieren."
+msgstr ""
+"Du kannst Deine Freigabe, mit dem folgenden HTML-Code, auch als Webplayer in "
+"Deine Webseite integrieren."
 
 #: ../../share.php:84
 msgid "Object Shared"
@@ -4364,10 +4545,14 @@ msgstr "Die Verwendung von Cookies durch Ampache"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work"
-" more efficiently, as well as to provide information to the owners of the "
+"that you visit. They are widely used in order to make websites work, or work "
+"more efficiently, as well as to provide information to the owners of the "
 "site."
-msgstr "Cookies sind kleine Text Dateien, die durch Webseiten, die Du besuchst, auf deinem Computer gespeichert werden. Sie werden meistens verwendet, damit Webseiten effizienter funktionieren und/oder um dem Besitzer der Seite nützliche Informationen zukommen zu lassen."
+msgstr ""
+"Cookies sind kleine Text Dateien, die durch Webseiten, die Du besuchst, auf "
+"deinem Computer gespeichert werden. Sie werden meistens verwendet, damit "
+"Webseiten effizienter funktionieren und/oder um dem Besitzer der Seite "
+"nützliche Informationen zukommen zu lassen."
 
 #: ../../templates/cookie_disclaimer.inc.php:5
 msgid "The table below explains the cookies we use and why."
@@ -4391,7 +4576,8 @@ msgstr "Ampache Sitzung"
 
 #: ../../templates/cookie_disclaimer.inc.php:37
 msgid "Ampache session username (if authenticated, information only)."
-msgstr "Benutzername der Ampache Sitzung (Zur Information, falls authentifiziert)"
+msgstr ""
+"Benutzername der Ampache Sitzung (Zur Information, falls authentifiziert)"
 
 #: ../../templates/cookie_disclaimer.inc.php:42
 msgid "Automatically authenticate users."
@@ -4403,15 +4589,21 @@ msgstr "Die letzte Lautstärkeeinstellung des Webplayers behalten."
 
 #: ../../templates/cookie_disclaimer.inc.php:52
 msgid "Show/Hide column [column_index] when browsing [object_type] objects."
-msgstr "Anzeigen/Verstecken der Spalte [column_index] beim browsen durch [object_type] Objekte."
+msgstr ""
+"Anzeigen/Verstecken der Spalte [column_index] beim browsen durch "
+"[object_type] Objekte."
 
 #: ../../templates/cookie_disclaimer.inc.php:57
 msgid "Use alphabet when browsing [object_type] objects."
-msgstr "Die Verwendung der Filterung nach Alphabet beim browsen durch [object_type] Objekte."
+msgstr ""
+"Die Verwendung der Filterung nach Alphabet beim browsen durch [object_type] "
+"Objekte."
 
 #: ../../templates/cookie_disclaimer.inc.php:62
 msgid "Use pages when browsing [object_type] objects."
-msgstr "Die Verwendung der Seitenansicht für das Browsen durch [object_types] Objekte."
+msgstr ""
+"Die Verwendung der Seitenansicht für das Browsen durch [object_types] "
+"Objekte."
 
 #: ../../templates/cookie_disclaimer.inc.php:67
 msgid "Collapse/Expand Sidebar [menu_section]."
@@ -4432,10 +4624,12 @@ msgid "Ampache"
 msgstr "Ampache"
 
 #: ../../templates/error_page.inc.php:51
+#, fuzzy
 msgid ""
-"The folowing error has occured, you will automaticly be redirected after 10 "
+"The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
-msgstr "Der folgende Fehler ist aufgetreten, Du wirst in 10 Sekunden weitergeleitet."
+msgstr ""
+"Der folgende Fehler ist aufgetreten, Du wirst in 10 Sekunden weitergeleitet."
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
@@ -4473,11 +4667,18 @@ msgstr "Abbrechen"
 #: ../../templates/header.inc.php:312
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. "
+"You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
-msgstr "Wir haben Cookies auf Deinem Computer platziert. Dies hilft die Funktionen der Webseite zu verbessern. Du kannst Deine %s jederzeit ändern.\nAndererseits gehen wir davon aus, dass Du mit den Verhältnissen einverstanden bist.\n\nKlicke auf diese Nachricht um sie nicht wieder anzuzeigen."
+msgstr ""
+"Wir haben Cookies auf Deinem Computer platziert. Dies hilft die Funktionen "
+"der Webseite zu verbessern. Du kannst Deine %s jederzeit ändern.\n"
+"Andererseits gehen wir davon aus, dass Du mit den Verhältnissen "
+"einverstanden bist.\n"
+"\n"
+"Klicke auf diese Nachricht um sie nicht wieder anzuzeigen."
 
 #: ../../templates/header.inc.php:313
 msgid "cookie settings"
@@ -4496,8 +4697,8 @@ msgstr "Cookie-Einstellungen"
 msgid "Play next"
 msgstr "Als nächstes abspielen"
 
-#: ../../templates/header.inc.php:351 ../../templates/show_album.inc.php:150
-#: ../../templates/show_album.inc.php:154
+#: ../../templates/header.inc.php:351 ../../templates/show_album.inc.php:151
+#: ../../templates/show_album.inc.php:155
 #: ../../templates/show_album_row.inc.php:65
 #: ../../templates/show_artist_row.inc.php:60
 #: ../../templates/show_html5_player.inc.php:512
@@ -4858,9 +5059,12 @@ msgstr "Kataloge hinzufügen"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to"
-" a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr "Gib im folgenden Formular bitte entweder einen lokalen Pfad (z.B.: /daten/Musik) oder eine URL zu einem anderen Ampache Server (z.B.: http://theotherampache.com) ein."
+"In the form below enter either a local path (i.e. /data/music) or the URL to "
+"a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+"Gib im folgenden Formular bitte entweder einen lokalen Pfad (z.B.: /daten/"
+"Musik) oder eine URL zu einem anderen Ampache Server (z.B.: http://"
+"theotherampache.com) ein."
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
@@ -5250,27 +5454,34 @@ msgstr "Über Google suchen ..."
 #: ../../templates/show_album_group_disks.inc.php:46
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_artist.inc.php:48
-#: ../../templates/show_label.inc.php:36
-msgid "Search on Wikipedia ..."
-msgstr "Über Wikipedia suchen ..."
+#: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:218
+msgid "Search on DuckDuckGo ..."
+msgstr "Über DuckDuckGo suchen ..."
 
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:52
 #: ../../templates/show_artist.inc.php:51
-#: ../../templates/show_label.inc.php:37 ../../templates/show_song.inc.php:218
+#: ../../templates/show_label.inc.php:37
+msgid "Search on Wikipedia ..."
+msgstr "Über Wikipedia suchen ..."
+
+#: ../../templates/show_album_group_disks.inc.php:48
+#: ../../templates/show_album.inc.php:53
+#: ../../templates/show_artist.inc.php:54
+#: ../../templates/show_label.inc.php:38 ../../templates/show_song.inc.php:219
 msgid "Search on Last.fm ..."
 msgstr "Über Last.fm suchen ..."
 
-#: ../../templates/show_album_group_disks.inc.php:58
-#: ../../templates/show_album.inc.php:110
+#: ../../templates/show_album_group_disks.inc.php:59
+#: ../../templates/show_album.inc.php:111
 #: ../../templates/show_albums.inc.php:72
 #: ../../templates/show_albums.inc.php:157
-#: ../../templates/show_artist.inc.php:113
+#: ../../templates/show_artist.inc.php:116
 #: ../../templates/show_broadcasts.inc.php:35
 #: ../../templates/show_catalogs.inc.php:34
 #: ../../templates/show_catalogs.inc.php:69
 #: ../../templates/show_channels.inc.php:44
-#: ../../templates/show_label.inc.php:53
+#: ../../templates/show_label.inc.php:54
 #: ../../templates/show_missing_album.inc.php:51
 #: ../../templates/show_missing_albums.inc.php:31
 #: ../../templates/show_playlists.inc.php:59
@@ -5292,24 +5503,24 @@ msgstr "Über Last.fm suchen ..."
 msgid "Actions"
 msgstr "Aktionen"
 
-#: ../../templates/show_album_group_disks.inc.php:90
-#: ../../templates/show_album_group_disks.inc.php:92
-#: ../../templates/show_album_group_disks.inc.php:145
-#: ../../templates/show_album.inc.php:143
-#: ../../templates/show_album.inc.php:145
+#: ../../templates/show_album_group_disks.inc.php:91
+#: ../../templates/show_album_group_disks.inc.php:93
+#: ../../templates/show_album_group_disks.inc.php:146
+#: ../../templates/show_album.inc.php:144
+#: ../../templates/show_album.inc.php:146
 #: ../../templates/show_album_row.inc.php:57
 #: ../../templates/show_artist_row.inc.php:57
 #: ../../templates/show_playlist_row.inc.php:54
 msgid "Random to temporary playlist"
 msgstr "Zufällig zur momentanen Playlist hinzufügen"
 
-#: ../../templates/show_album_group_disks.inc.php:102
-#: ../../templates/show_album_group_disks.inc.php:106
-#: ../../templates/show_album_group_disks.inc.php:170
-#: ../../templates/show_album.inc.php:271
-#: ../../templates/show_album.inc.php:275
-#: ../../templates/show_artist.inc.php:214
-#: ../../templates/show_artist.inc.php:218
+#: ../../templates/show_album_group_disks.inc.php:103
+#: ../../templates/show_album_group_disks.inc.php:107
+#: ../../templates/show_album_group_disks.inc.php:171
+#: ../../templates/show_album.inc.php:272
+#: ../../templates/show_album.inc.php:276
+#: ../../templates/show_artist.inc.php:217
+#: ../../templates/show_artist.inc.php:221
 #: ../../templates/show_install_config.inc.php:223
 #: ../../templates/show_install_config.inc.php:248
 #: ../../templates/show_install_config.inc.php:273
@@ -5325,47 +5536,47 @@ msgstr "Zufällig zur momentanen Playlist hinzufügen"
 msgid "Download"
 msgstr "Download"
 
-#: ../../templates/show_album_group_disks.inc.php:179
-#: ../../templates/show_album.inc.php:221
-#: ../../templates/show_album.inc.php:223
+#: ../../templates/show_album_group_disks.inc.php:180
+#: ../../templates/show_album.inc.php:222
+#: ../../templates/show_album.inc.php:224
 #: ../../templates/show_playlist.inc.php:70
 #: ../../templates/show_playlist.inc.php:72
 msgid "Save Tracks Order"
 msgstr "Anordnung der Songs speichern"
 
-#: ../../templates/show_album_group_disks.inc.php:182
-#: ../../templates/show_album.inc.php:230
+#: ../../templates/show_album_group_disks.inc.php:183
+#: ../../templates/show_album.inc.php:231
 msgid "Do you really want to update from tags?"
 msgstr "Möchtest Du wirklich über die Tags Aktualisieren?"
 
-#: ../../templates/show_album_group_disks.inc.php:183
-#: ../../templates/show_album.inc.php:231
+#: ../../templates/show_album_group_disks.inc.php:184
 #: ../../templates/show_album.inc.php:232
+#: ../../templates/show_album.inc.php:233
 msgid "Update from tags"
 msgstr "Über Tags aktualisieren"
 
-#: ../../templates/show_album_group_disks.inc.php:186
-#: ../../templates/show_album.inc.php:255
-#: ../../templates/show_album.inc.php:259
+#: ../../templates/show_album_group_disks.inc.php:187
+#: ../../templates/show_album.inc.php:256
+#: ../../templates/show_album.inc.php:260
 #: ../../templates/show_album_row.inc.php:132
 msgid "Album edit"
 msgstr "Album bearbeiten"
 
-#: ../../templates/show_album.inc.php:88
-#: ../../templates/show_artist.inc.php:91
+#: ../../templates/show_album.inc.php:89
+#: ../../templates/show_artist.inc.php:94
 msgid "times"
 msgstr "mal"
 
-#: ../../templates/show_album.inc.php:102
-#: ../../templates/show_artist.inc.php:105
-#: ../../templates/show_song.inc.php:255
+#: ../../templates/show_album.inc.php:103
+#: ../../templates/show_artist.inc.php:108
+#: ../../templates/show_song.inc.php:256
 msgid "Uploaded by"
 msgstr "Hochgeladen von"
 
-#: ../../templates/show_album.inc.php:205
-#: ../../templates/show_album.inc.php:209
-#: ../../templates/show_artist.inc.php:231
-#: ../../templates/show_artist.inc.php:235
+#: ../../templates/show_album.inc.php:206
+#: ../../templates/show_album.inc.php:210
+#: ../../templates/show_artist.inc.php:234
+#: ../../templates/show_artist.inc.php:238
 #: ../../templates/show_podcast_episode.inc.php:149
 #: ../../templates/show_podcast.inc.php:97
 #: ../../templates/show_podcast.inc.php:101
@@ -5374,7 +5585,7 @@ msgstr "Hochgeladen von"
 msgid "Graphs"
 msgstr "Graphen"
 
-#: ../../templates/show_album.inc.php:260
+#: ../../templates/show_album.inc.php:261
 msgid "Edit Album"
 msgstr "Album bearbeiten"
 
@@ -5458,31 +5669,31 @@ msgstr "Fav."
 msgid "No album found"
 msgstr "Es wurde kein Album gefunden"
 
-#: ../../templates/show_artist.inc.php:55
-#: ../../templates/show_artist.inc.php:346
-#: ../../templates/show_artist.inc.php:358
-#: ../../templates/show_artist.inc.php:370
-#: ../../templates/show_artist.inc.php:382
+#: ../../templates/show_artist.inc.php:58
+#: ../../templates/show_artist.inc.php:349
+#: ../../templates/show_artist.inc.php:361
+#: ../../templates/show_artist.inc.php:373
+#: ../../templates/show_artist.inc.php:385
 #: ../../templates/show_index.inc.php:53 ../../templates/show_index.inc.php:65
-#: ../../templates/show_label.inc.php:135
+#: ../../templates/show_label.inc.php:136
 #: ../../templates/show_missing_artist.inc.php:33
 #: ../../templates/show_now_playing_row.inc.php:88
 #: ../../templates/show_now_playing_row.inc.php:96
 msgid "Loading..."
 msgstr "Lade..."
 
-#: ../../templates/show_artist.inc.php:121
-#: ../../templates/show_artist.inc.php:126
+#: ../../templates/show_artist.inc.php:124
+#: ../../templates/show_artist.inc.php:129
 msgid "Show all"
 msgstr "Alles anzeigen"
 
-#: ../../templates/show_artist.inc.php:135
-#: ../../templates/show_artist.inc.php:140
+#: ../../templates/show_artist.inc.php:138
+#: ../../templates/show_artist.inc.php:143
 msgid "Show albums"
 msgstr "Alben anzeigen"
 
-#: ../../templates/show_artist.inc.php:148
-#: ../../templates/show_artist.inc.php:150
+#: ../../templates/show_artist.inc.php:151
+#: ../../templates/show_artist.inc.php:153
 #: ../../templates/show_playlist.inc.php:111
 #: ../../templates/show_playlist.inc.php:113
 #: ../../templates/show_podcast.inc.php:73
@@ -5494,8 +5705,8 @@ msgstr "Alben anzeigen"
 msgid "Play all"
 msgstr "Alles abspielen"
 
-#: ../../templates/show_artist.inc.php:156
-#: ../../templates/show_artist.inc.php:158
+#: ../../templates/show_artist.inc.php:159
+#: ../../templates/show_artist.inc.php:161
 #: ../../templates/show_playlist.inc.php:121
 #: ../../templates/show_playlist.inc.php:123
 #: ../../templates/show_podcast.inc.php:83
@@ -5508,47 +5719,47 @@ msgid "Play all last"
 msgstr "Alles zuletzt abspielen"
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:170
-#: ../../templates/show_artist.inc.php:172
+#: ../../templates/show_artist.inc.php:173
+#: ../../templates/show_artist.inc.php:175
 #: ../../templates/show_playlist.inc.php:129
 #: ../../templates/show_playlist.inc.php:130
 msgid "Add all to temporary playlist"
 msgstr "Alles zur momentanen Playlist hinzufügen"
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:177
-#: ../../templates/show_artist.inc.php:179
+#: ../../templates/show_artist.inc.php:180
+#: ../../templates/show_artist.inc.php:182
 #: ../../templates/show_playlist.inc.php:133
 #: ../../templates/show_playlist.inc.php:134
 msgid "Random all to temporary playlist"
 msgstr "Alle zufällig zur momentanen Playlist hinzufügen"
 
-#: ../../templates/show_artist.inc.php:261
-#: ../../templates/show_artist.inc.php:265
+#: ../../templates/show_artist.inc.php:264
+#: ../../templates/show_artist.inc.php:268
 #: ../../templates/show_artist_row.inc.php:110
 msgid "Artist edit"
 msgstr "Interpreten bearbeiten"
 
-#: ../../templates/show_artist.inc.php:266
+#: ../../templates/show_artist.inc.php:269
 msgid "Edit Artist"
 msgstr "Bearbeite Interpreten"
 
-#: ../../templates/show_artist.inc.php:294
-#: ../../templates/show_artist.inc.php:345
+#: ../../templates/show_artist.inc.php:297
+#: ../../templates/show_artist.inc.php:348
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
 msgstr "Fehlende Alben"
 
-#: ../../templates/show_artist.inc.php:300
-#: ../../templates/show_artist.inc.php:357
+#: ../../templates/show_artist.inc.php:303
+#: ../../templates/show_artist.inc.php:360
 #: ../../templates/show_now_playing_row.inc.php:86
 #: ../../templates/show_now_playing_similar.inc.php:28
 #: ../../templates/show_recommended_artists.inc.php:25
 msgid "Similar Artists"
 msgstr "Ähnliche Interpreten"
 
-#: ../../templates/show_artist.inc.php:306
-#: ../../templates/show_artist.inc.php:369
+#: ../../templates/show_artist.inc.php:309
+#: ../../templates/show_artist.inc.php:372
 msgid "Events"
 msgstr "Ereignisse"
 
@@ -5697,7 +5908,6 @@ msgid "Version"
 msgstr "Version"
 
 #: ../../templates/show_catalog_types.inc.php:48
-#: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_plugins.inc.php:43
 msgid "Activate"
 msgstr "Aktiviere"
@@ -5965,20 +6175,26 @@ msgstr "Dieser Vorfall wurde protokolliert"
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this"
-" function."
-msgstr "Du wurdest auf diese Website umgeleitet, da Du keinen Zugang zu dieser Funktion hast."
+"You have been redirected to this page because you do not have access to this "
+"function."
+msgstr ""
+"Du wurdest auf diese Website umgeleitet, da Du keinen Zugang zu dieser "
+"Funktion hast."
 
 #: ../../templates/show_denied.inc.php:60
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
-msgstr "Wenn Du Glaubst, dass dies ein Fehler ist dann kontaktiere bitte die Administration."
+msgstr ""
+"Wenn Du Glaubst, dass dies ein Fehler ist dann kontaktiere bitte die "
+"Administration."
 
 #: ../../templates/show_denied.inc.php:67
 msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
-msgstr "Du wurdest auf diese Seite umgeleitet, da diese Funktion im Demo-Modus deaktiviert ist."
+msgstr ""
+"Du wurdest auf diese Seite umgeleitet, da diese Funktion im Demo-Modus "
+"deaktiviert ist."
 
 #: ../../templates/show_disabled_songs.inc.php:33
 #: ../../templates/show_disabled_songs.inc.php:72
@@ -6023,7 +6239,7 @@ msgstr "Song"
 #: ../../templates/show_duplicates.inc.php:82
 #: ../../templates/show_podcast_episode.inc.php:183
 #: ../../templates/show_random.inc.php:72
-#: ../../templates/show_song.inc.php:219
+#: ../../templates/show_song.inc.php:220
 #: ../../templates/show_video.inc.php:182
 msgid "Length"
 msgstr "Länge"
@@ -6348,7 +6564,9 @@ msgstr "Dein Browser unterstützt dieses Feature nicht."
 
 #: ../../templates/show_html5_player_headers.inc.php:535
 msgid "Media is currently playing. Are you sure you want to close"
-msgstr "Es wird gerade ein Medium abgespielt! Möchtest Du das Fenster wirklich schließen?"
+msgstr ""
+"Es wird gerade ein Medium abgespielt! Möchtest Du das Fenster wirklich "
+"schließen?"
 
 #: ../../templates/show_html5_player.inc.php:170
 msgid "Double click to post a new shout"
@@ -6424,7 +6642,9 @@ msgstr "Schritt 3 - Administrativen Benutzer für Ampache erstellen"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr "Dieser Schritt erstellt das Ampache Admin-Konto. Sobald Dein Admin-Konto erstellt wurde, wirst Du zur Login-Seite weitergeleitet."
+msgstr ""
+"Dieser Schritt erstellt das Ampache Admin-Konto. Sobald Dein Admin-Konto "
+"erstellt wurde, wirst Du zur Login-Seite weitergeleitet."
 
 #: ../../templates/show_install_account.inc.php:47
 msgid "Create Admin Account"
@@ -6443,26 +6663,39 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr "Diese Seite führt Dich durch die Installation der Ampache Datenbank und die Erstellung der Konfigurationsdatei 'ampache.cfg.php'. Bevor Du weiter machst, gehe auf Nummer sicher und prüfen noch einmal, ob alle folgenden Voraussetzungen erfüllt sind."
+msgstr ""
+"Diese Seite führt Dich durch die Installation der Ampache Datenbank und die "
+"Erstellung der Konfigurationsdatei 'ampache.cfg.php'. Bevor Du weiter "
+"machst, gehe auf Nummer sicher und prüfen noch einmal, ob alle folgenden "
+"Voraussetzungen erfüllt sind."
 
 #: ../../templates/show_install_check.inc.php:35
 msgid ""
 "A MySQL server with a username and password that can create/modify databases"
-msgstr "Du verwendest einen MySQL-Server, der über einen Benutzer inklusive Passwort verfügt und zudem über die Rechte zur Erstellung und Änderung der Datenbank verfügt."
+msgstr ""
+"Du verwendest einen MySQL-Server, der über einen Benutzer inklusive Passwort "
+"verfügt und zudem über die Rechte zur Erstellung und Änderung der Datenbank "
+"verfügt."
 
 #: ../../templates/show_install_check.inc.php:36
 #, php-format
 msgid "Your webserver has read access to the files %s and %s"
-msgstr "Dein Webserver besitzt Leserechte für die Datei '%s' und zusätzlich optional noch Schreibrechte für die Datei '%s'."
+msgstr ""
+"Dein Webserver besitzt Leserechte für die Datei '%s' und zusätzlich optional "
+"noch Schreibrechte für die Datei '%s'."
 
 #: ../../templates/show_install_check.inc.php:39
 #, php-format
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later"
-" date simply edit %s"
-msgstr "Wenn Du sicher bist, dass die oben stehenden Voraussetzungen erfüllt sind, kannst Du mit der Installation von Ampache beginnen. Es werden nur die wichtigsten Einstellungen abgefragt. Sämtliche ausführlicheren Anpassungen kannst Du später zu jeder Zeit in der Datei '%s' vornehmen."
+"values. If you would like to make changes to your Ampache install at a later "
+"date simply edit %s"
+msgstr ""
+"Wenn Du sicher bist, dass die oben stehenden Voraussetzungen erfüllt sind, "
+"kannst Du mit der Installation von Ampache beginnen. Es werden nur die "
+"wichtigsten Einstellungen abgefragt. Sämtliche ausführlicheren Anpassungen "
+"kannst Du später zu jeder Zeit in der Datei '%s' vornehmen."
 
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:60
@@ -6493,7 +6726,9 @@ msgstr "Dies testet, ob die Konfigurationsvorlage gelesen werden kann."
 msgid ""
 "This tests whether the file needed to initialise the database structure is "
 "available."
-msgstr "Dies testet, ob die Datei zur Initialisierung der Datenbankstruktur vorhanden ist."
+msgstr ""
+"Dies testet, ob die Datei zur Initialisierung der Datenbankstruktur "
+"vorhanden ist."
 
 #: ../../templates/show_install_check.inc.php:60
 msgid "ampache.cfg.php is writable"
@@ -6501,19 +6736,27 @@ msgstr "Die Konfigurationsdatei 'ampache.cfg.php' ist beschreibbar"
 
 #: ../../templates/show_install_check.inc.php:62
 msgid ""
-"This tests whether PHP can write to config/. This is not strictly necessary,"
-" but will help streamline the installation process."
-msgstr "Dies testet, ob das \"config/\" Verzeichnis von PHP beschreibbar ist. Es ist nicht nötig, vereinfacht jedoch den Installationsprozess."
+"This tests whether PHP can write to config/. This is not strictly necessary, "
+"but will help streamline the installation process."
+msgstr ""
+"Dies testet, ob das \"config/\" Verzeichnis von PHP beschreibbar ist. Es ist "
+"nicht nötig, vereinfacht jedoch den Installationsprozess."
 
 #: ../../templates/show_install_config.inc.php:55
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache"
-" write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache "
+"write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s"
-msgstr "Dieser Schritt sammelt die Basiskonfigurationsdaten und generiert die Konfigurationsdatei. Wenn das Verzeichnis 'config/' beschreibbar ist, kann die Konfigurationsdatei mit einem Klick auf \"schreiben\", von Ampache selbst gespeichert werden. Wenn Du \"Herunterladen\" wählst, kannst Du die Datei für ein späteres Setup speichern und sie hinterher manuell in '%s' einfügen."
+msgstr ""
+"Dieser Schritt sammelt die Basiskonfigurationsdaten und generiert die "
+"Konfigurationsdatei. Wenn das Verzeichnis 'config/' beschreibbar ist, kann "
+"die Konfigurationsdatei mit einem Klick auf \"schreiben\", von Ampache "
+"selbst gespeichert werden. Wenn Du \"Herunterladen\" wählst, kannst Du die "
+"Datei für ein späteres Setup speichern und sie hinterher manuell in '%s' "
+"einfügen."
 
 #: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
@@ -6557,11 +6800,15 @@ msgstr "Installationstyp"
 msgid ""
 "Configure Ampache at best for your use case, enabling / disabling features "
 "automatically."
-msgstr "Konfiguriere Ampache für deinen Anwendungsfall. Features werden automatisch aktiviert und deaktiviert."
+msgstr ""
+"Konfiguriere Ampache für deinen Anwendungsfall. Features werden automatisch "
+"aktiviert und deaktiviert."
 
 #: ../../templates/show_install_config.inc.php:116
 msgid "Ampache is configured for personal use with most greatest features."
-msgstr "Ampache wurde für die persönliche Nutzung, mit den umfangreichsten Features, konfiguriert."
+msgstr ""
+"Ampache wurde für die persönliche Nutzung, mit den umfangreichsten Features, "
+"konfiguriert."
 
 #: ../../templates/show_install_config.inc.php:121
 msgid "Minimalist"
@@ -6571,7 +6818,9 @@ msgstr "Minimal"
 msgid ""
 "only essential features are enabled to stream simply your music from a web "
 "interface."
-msgstr "Nur die wichtigsten Features, zum streamen deiner Musik über das Web Interface, wurden eingerichtet."
+msgstr ""
+"Nur die wichtigsten Features, zum streamen deiner Musik über das Web "
+"Interface, wurden eingerichtet."
 
 #: ../../templates/show_install_config.inc.php:126
 msgid "Community"
@@ -6581,7 +6830,9 @@ msgstr "Community"
 msgid ""
 "use recommended settings when using Ampache as a frontend for a music "
 "community."
-msgstr "Die Empfohlenen Einstellungen, wenn Ampache nur als Musik-Frontend dienen soll."
+msgstr ""
+"Die Empfohlenen Einstellungen, wenn Ampache nur als Musik-Frontend dienen "
+"soll."
 
 #: ../../templates/show_install_config.inc.php:131
 msgid "Transcoding"
@@ -6595,14 +6846,24 @@ msgid ""
 "advantage of existing binary applications such as ffmpeg. In order for "
 "transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr "Ampache unterstützt das sogenannte Transkodieren (Umwandeln), von einer Datei in eine andere, während des Streamens. Die Umwandlungseinstellungen können per Benutzer, IP-Adressbereich und Bandbreite eingestellt werden. Damit Ampache die zu streamenden Inhalte umwandeln kann, sind Programme wie z.B. ffmpeg oder avconv notwendig. Zudem solltest du darauf achten, dass der Webserver zugriff auf diese Programme hat."
+msgstr ""
+"Ampache unterstützt das sogenannte Transkodieren (Umwandeln), von einer "
+"Datei in eine andere, während des Streamens. Die Umwandlungseinstellungen "
+"können per Benutzer, IP-Adressbereich und Bandbreite eingestellt werden. "
+"Damit Ampache die zu streamenden Inhalte umwandeln kann, sind Programme wie "
+"z.B. ffmpeg oder avconv notwendig. Zudem solltest du darauf achten, dass der "
+"Webserver zugriff auf diese Programme hat."
 
 #: ../../templates/show_install_config.inc.php:135
 msgid ""
 "This section apply default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once this "
 "setup ended"
-msgstr "In diesem Bereich kannst du die Standard-Umwandlungseinstellungen für die Anwendung die du nutzen möchtest festlegen. Nachdem das Setup beendet ist, kannst du sämtliche weiterführenden Einstellungen in der Konfigurationsdatei festlegen."
+msgstr ""
+"In diesem Bereich kannst du die Standard-Umwandlungseinstellungen für die "
+"Anwendung die du nutzen möchtest festlegen. Nachdem das Setup beendet ist, "
+"kannst du sämtliche weiterführenden Einstellungen in der Konfigurationsdatei "
+"festlegen."
 
 #: ../../templates/show_install_config.inc.php:135
 #: ../../templates/show_install_config.inc.php:169
@@ -6618,7 +6879,11 @@ msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
-msgstr "Es wurde keine Standardanwendung zur Umwandlungen von Dateien gefunden. Du kannst zum Beispiel ffmpeg oder avconv installieren um dies zu beheben. Oder wenn du ein anderes Programm verwenden möchtest, kannst du die nötigen Einstellungen nach der Installation, in der Konfigurationsdatei, erledigen."
+msgstr ""
+"Es wurde keine Standardanwendung zur Umwandlungen von Dateien gefunden. Du "
+"kannst zum Beispiel ffmpeg oder avconv installieren um dies zu beheben. Oder "
+"wenn du ein anderes Programm verwenden möchtest, kannst du die nötigen "
+"Einstellungen nach der Installation, in der Konfigurationsdatei, erledigen."
 
 #: ../../templates/show_install_config.inc.php:167
 msgid "Players"
@@ -6628,13 +6893,18 @@ msgstr "Player"
 msgid ""
 "Ampache is more than only a web interface. Several backends are implemented "
 "to ensure you can stream your media from anywhere."
-msgstr "Ampache ist mehr als nur ein Web-Interface. Es wurden einige Backends umgesetzt, um sicher zu gehen, dass Du Deine Medien von überall aus gestreamt bekommst."
+msgstr ""
+"Ampache ist mehr als nur ein Web-Interface. Es wurden einige Backends "
+"umgesetzt, um sicher zu gehen, dass Du Deine Medien von überall aus "
+"gestreamt bekommst."
 
 #: ../../templates/show_install_config.inc.php:169
 msgid ""
 "Select backends to enable. Depending the backend, you may need to perform "
 "additional configuration."
-msgstr "Wähle die Backends, die aktiviert werden sollen. Je nach Backend, wirst Du wahrscheinlich noch weitergehende Konfigurationen durchführen müssen."
+msgstr ""
+"Wähle die Backends, die aktiviert werden sollen. Je nach Backend, wirst Du "
+"wahrscheinlich noch weitergehende Konfigurationen durchführen müssen."
 
 #: ../../templates/show_install_config.inc.php:209
 msgid "File Insight"
@@ -6711,9 +6981,14 @@ msgstr "Konfiguration erstellen"
 #: ../../templates/show_install.inc.php:39
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
-"MySQL account with database creation rights. This step may take some time on"
-" slower computers."
-msgstr "Dieser Schritt erstellt die Ampache Datenbank inklusive der Tabellen. Du benötigst ein Konto auf Deinem MySQL Server, welches sowohl Rechte zur Erstellung als auch zum ändern der Datenbank hat. Dieser Schritt kann, abhängig von der Geschwindigkeit Deines Computers, einige Zeit in Anspruch nehmen."
+"MySQL account with database creation rights. This step may take some time on "
+"slower computers."
+msgstr ""
+"Dieser Schritt erstellt die Ampache Datenbank inklusive der Tabellen. Du "
+"benötigst ein Konto auf Deinem MySQL Server, welches sowohl Rechte zur "
+"Erstellung als auch zum ändern der Datenbank hat. Dieser Schritt kann, "
+"abhängig von der Geschwindigkeit Deines Computers, einige Zeit in Anspruch "
+"nehmen."
 
 #: ../../templates/show_install.inc.php:47
 msgid "Insert Ampache Database"
@@ -6790,15 +7065,15 @@ msgstr "Alles anzeigen"
 msgid "IP Address"
 msgstr "IP Adresse"
 
-#: ../../templates/show_label.inc.php:78 ../../templates/show_label.inc.php:81
+#: ../../templates/show_label.inc.php:79 ../../templates/show_label.inc.php:82
 msgid "Send e-mail"
 msgstr "Sende E-Mail"
 
-#: ../../templates/show_label.inc.php:89 ../../templates/show_label.inc.php:93
+#: ../../templates/show_label.inc.php:90 ../../templates/show_label.inc.php:94
 msgid "Label edit"
 msgstr "Label bearbeiten"
 
-#: ../../templates/show_label.inc.php:94
+#: ../../templates/show_label.inc.php:95
 msgid "Edit Label"
 msgstr "Bearbeite Label"
 
@@ -7281,12 +7556,16 @@ msgstr "Unbegrenzt"
 #: ../../templates/show_random.inc.php:86
 #, php-format
 msgid "%d minute"
-msgstr ""
+msgid_plural "%d minutes"
+msgstr[0] "%d Minute"
+msgstr[1] "%d Minuten"
 
 #: ../../templates/show_random.inc.php:88
 #, php-format
 msgid "%d hour"
-msgstr ""
+msgid_plural "%d hours"
+msgstr[0] "%d Stunde"
+msgstr[1] "%d Stunden"
 
 #: ../../templates/show_random.inc.php:97
 msgid "Size Limit"
@@ -7309,42 +7588,58 @@ msgstr "Agent"
 #: ../../templates/show_recently_played.inc.php:73
 #, php-format
 msgid "%d second ago"
-msgstr ""
+msgid_plural "%d seconds ago"
+msgstr[0] "%d Sekunde"
+msgstr[1] "%d Sekunden"
 
 #: ../../templates/show_recently_played.inc.php:76
 #, php-format
 msgid "%d minute ago"
-msgstr ""
+msgid_plural "%d minutes ago"
+msgstr[0] "%d Minute"
+msgstr[1] "%d Minuten"
 
 #: ../../templates/show_recently_played.inc.php:79
 #, php-format
 msgid "%d hour ago"
-msgstr ""
+msgid_plural "%d hours ago"
+msgstr[0] "%d Stunde"
+msgstr[1] "%d Stunden"
 
 #: ../../templates/show_recently_played.inc.php:82
 #, php-format
 msgid "%d day ago"
-msgstr ""
+msgid_plural "%d days ago"
+msgstr[0] "%d Tag"
+msgstr[1] "%d Tagen"
 
 #: ../../templates/show_recently_played.inc.php:85
 #, php-format
 msgid "%d week ago"
-msgstr ""
+msgid_plural "%d weeks ago"
+msgstr[0] "%d Woche"
+msgstr[1] "%d Wochen"
 
 #: ../../templates/show_recently_played.inc.php:88
 #, php-format
 msgid "%d month ago"
-msgstr ""
+msgid_plural "%d months ago"
+msgstr[0] "%d Monat"
+msgstr[1] "%d Monaten"
 
 #: ../../templates/show_recently_played.inc.php:91
 #, php-format
 msgid "%d year ago"
-msgstr ""
+msgid_plural "%d years ago"
+msgstr[0] "%d Jahr"
+msgstr[1] "%d Jahren"
 
 #: ../../templates/show_recently_played.inc.php:94
 #, php-format
 msgid "%d decade ago"
-msgstr ""
+msgid_plural "%d decades ago"
+msgstr[0] "%d Dekade"
+msgstr[1] "%d Dekaden"
 
 #: ../../templates/show_recently_played.inc.php:172
 msgid "No recently item found"
@@ -7371,13 +7666,18 @@ msgstr "Dein Konto wurde erstellt."
 
 #: ../../templates/show_registration_confirmation.inc.php:49
 msgid "Please wait for an administrator to activate your account."
-msgstr "Bitte gedulde dich noch ein bisschen, bis ein Administrator dein Konto freigeschaltet hast."
+msgstr ""
+"Bitte gedulde dich noch ein bisschen, bis ein Administrator dein Konto "
+"freigeschaltet hast."
 
 #: ../../templates/show_registration_confirmation.inc.php:51
 msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
 "check your e-mail for further information."
-msgstr "Dein Benutzerkonto wurde erstellt und ein Aktivierungscode wurde schon an die angegebene E-Mail Adresse gesendet. Bitte Prüfe Dein E-Mail Postfach für weitere Informationen."
+msgstr ""
+"Dein Benutzerkonto wurde erstellt und ein Aktivierungscode wurde schon an "
+"die angegebene E-Mail Adresse gesendet. Bitte Prüfe Dein E-Mail Postfach für "
+"weitere Informationen."
 
 #: ../../templates/show_registration_confirmation.inc.php:55
 msgid "Return to Login Page"
@@ -7504,35 +7804,36 @@ msgid "Waveform"
 msgstr "Wellenform"
 
 #: ../../templates/show_song.inc.php:217 ../../templates/show_song.inc.php:218
+#: ../../templates/show_song.inc.php:219
 msgid "Links"
 msgstr "Links"
 
-#: ../../templates/show_song.inc.php:222
+#: ../../templates/show_song.inc.php:223
 msgid "Song Language"
 msgstr "Sprache des Liedes"
 
-#: ../../templates/show_song.inc.php:223
+#: ../../templates/show_song.inc.php:224
 msgid "Catalog Number"
 msgstr "Katalognummer"
 
-#: ../../templates/show_song.inc.php:227
+#: ../../templates/show_song.inc.php:228
 msgid "ReplayGain Track Gain"
 msgstr "Replay-Gain Track-Gain"
 
-#: ../../templates/show_song.inc.php:230
+#: ../../templates/show_song.inc.php:231
 msgid "ReplayGain Album Gain"
 msgstr "Replay-Gain Album-Gain"
 
-#: ../../templates/show_song.inc.php:236
+#: ../../templates/show_song.inc.php:237
 #: ../../templates/show_video.inc.php:198
 msgid "Last Updated"
 msgstr "Zuletzt aktualisiert"
 
-#: ../../templates/show_song.inc.php:244
+#: ../../templates/show_song.inc.php:245
 msgid "Lyrics"
 msgstr "Lied-Texte"
 
-#: ../../templates/show_song.inc.php:248
+#: ../../templates/show_song.inc.php:249
 msgid "Licensing"
 msgstr "Lizenzierung"
 
@@ -7587,7 +7888,9 @@ msgstr "Ampache Debug"
 msgid ""
 "You may have reached this page because a configuration error has occured. "
 "Debug information is below."
-msgstr "Du bist eventuell auf Grund eines Konfigurationsproblems auf dieser Seite gelandet. Debug-Informationen folgen."
+msgstr ""
+"Du bist eventuell auf Grund eines Konfigurationsproblems auf dieser Seite "
+"gelandet. Debug-Informationen folgen."
 
 #: ../../templates/show_test.inc.php:51
 msgid "Web Installation"
@@ -7601,7 +7904,9 @@ msgstr "PHP Version"
 msgid ""
 "This tests whether you are running at least the minimum version of PHP "
 "required by Ampache."
-msgstr "Mit diesem Test wird überprüft, ob Du die von Ampache benötigte PHP-Version installiert hast."
+msgstr ""
+"Mit diesem Test wird überprüft, ob Du die von Ampache benötigte PHP-Version "
+"installiert hast."
 
 #: ../../templates/show_test_table.inc.php:33
 msgid "Dependencies"
@@ -7613,10 +7918,14 @@ msgstr "Dies testet ob alle Abhängigkeiten für Ampache installiert sind."
 
 #: ../../templates/show_test_table.inc.php:42
 msgid ""
-"Please download and install Composer from http://getcomposer.org and install"
-" it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
+"Please download and install Composer from http://getcomposer.org and install "
+"it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
 "install --prefer-source --no-interaction` on Ampache directory."
-msgstr "Bitte lade dir Composer 'http://getcomposer.org' herunter und installiere es (z.B. mv composer.phar /usr/local/bin/composer) und führe danach `composer install --prefer-source --no-interaction` innerhalb deines Ampache Verzeichnisses aus."
+msgstr ""
+"Bitte lade dir Composer 'http://getcomposer.org' herunter und installiere es "
+"(z.B. mv composer.phar /usr/local/bin/composer) und führe danach `composer "
+"install --prefer-source --no-interaction` innerhalb deines Ampache "
+"Verzeichnisses aus."
 
 #: ../../templates/show_test_table.inc.php:49
 msgid "PHP hash extension"
@@ -7626,7 +7935,9 @@ msgstr "PHP-Hash Erweiterung"
 msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
-msgstr "Mit diesem Test wird geprüft ob die notwendige Hash-Erweiterung für PHP installiert ist. Diese ist nötig um z.B.: Passwörter zu verschlüsseln."
+msgstr ""
+"Mit diesem Test wird geprüft ob die notwendige Hash-Erweiterung für PHP "
+"installiert ist. Diese ist nötig um z.B.: Passwörter zu verschlüsseln."
 
 #: ../../templates/show_test_table.inc.php:58
 msgid "SHA256"
@@ -7636,7 +7947,10 @@ msgstr "SHA256 Unterstützung"
 msgid ""
 "This tests whether the hash extension supports SHA256. This algorithm is "
 "required by Ampache."
-msgstr "Mit diesem Test wird geprüft, ob die installierte Hash-Erweiterung den SHA256 Algorithmus beherrscht. Dieser wird von Ampache zur Verschlüsselung benötigt."
+msgstr ""
+"Mit diesem Test wird geprüft, ob die installierte Hash-Erweiterung den "
+"SHA256 Algorithmus beherrscht. Dieser wird von Ampache zur Verschlüsselung "
+"benötigt."
 
 #: ../../templates/show_test_table.inc.php:67
 msgid "PHP PDO extension"
@@ -7646,7 +7960,9 @@ msgstr "PHP PDO-Erweiterung"
 msgid ""
 "This tests whether you have the PDO extension enabled. This extension is "
 "required by Ampache."
-msgstr "In diesem Test überprüft Ampache ob die notwendige PHP-PDO-Erweiterung vorhanden ist."
+msgstr ""
+"In diesem Test überprüft Ampache ob die notwendige PHP-PDO-Erweiterung "
+"vorhanden ist."
 
 #: ../../templates/show_test_table.inc.php:76
 msgid "MySQL"
@@ -7656,7 +7972,9 @@ msgstr "MySQL"
 msgid ""
 "This tests whether the MySQL driver for PDO is enabled. This driver is "
 "required by Ampache."
-msgstr "Dieser Test prüft das Vorhandensein des MySQL-Treibers für die PHP-Data-Objects-Erweiterung, um mit der Datenbank kommunizieren zu können."
+msgstr ""
+"Dieser Test prüft das Vorhandensein des MySQL-Treibers für die PHP-Data-"
+"Objects-Erweiterung, um mit der Datenbank kommunizieren zu können."
 
 #: ../../templates/show_test_table.inc.php:85
 msgid "PHP session extension"
@@ -7664,9 +7982,11 @@ msgstr "PHP-Session-Erweiterung"
 
 #: ../../templates/show_test_table.inc.php:90
 msgid ""
-"This tests whether you have the session extension enabled. This extension is"
-" required by Ampache."
-msgstr "Die Session-Erweiterung ist ebenfalls für Ampache notwendig und wird mit diesem Test auf ihre Funktion überprüft."
+"This tests whether you have the session extension enabled. This extension is "
+"required by Ampache."
+msgstr ""
+"Die Session-Erweiterung ist ebenfalls für Ampache notwendig und wird mit "
+"diesem Test auf ihre Funktion überprüft."
 
 #: ../../templates/show_test_table.inc.php:94
 msgid "PHP iconv extension"
@@ -7676,7 +7996,9 @@ msgstr "PHP-Iconv-Erweiterung"
 msgid ""
 "This tests whether you have the iconv extension enabled. This extension is "
 "required by Ampache."
-msgstr "Das PHP-Modul 'Iconv' ist ebenfalls ein wichtiger Bestandteil von Ampache. Dieser Test überprüft deshalb die Funktion des Moduls."
+msgstr ""
+"Das PHP-Modul 'Iconv' ist ebenfalls ein wichtiger Bestandteil von Ampache. "
+"Dieser Test überprüft deshalb die Funktion des Moduls."
 
 #: ../../templates/show_test_table.inc.php:103
 msgid "PHP JSON extension"
@@ -7686,7 +8008,9 @@ msgstr "PHP-JSON-Unterstützung"
 msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
-msgstr "Dieser Test überprüft die Funktionsfähigkeit der JSON-Erweiterung. Diese Erweiterung ist wichtig für die Funktion von Ampache."
+msgstr ""
+"Dieser Test überprüft die Funktionsfähigkeit der JSON-Erweiterung. Diese "
+"Erweiterung ist wichtig für die Funktion von Ampache."
 
 #: ../../templates/show_test_table.inc.php:112
 msgid "PHP curl extension"
@@ -7694,9 +8018,12 @@ msgstr "PHP-Curl Erweiterung"
 
 #: ../../templates/show_test_table.inc.php:117
 msgid ""
-"This tests whether you have the curl extension enabled. This is not strictly"
-" necessary, but may result in a better experience."
-msgstr "Dieser Test fragt ab, ob die Erweiterung 'PHP-Curl' aktiviert ist. Es ist nicht zwingend notwendig, kann jedoch, wenn aktiviert, zu einer besseren Benutzererfahrung mit Ampache führen."
+"This tests whether you have the curl extension enabled. This is not strictly "
+"necessary, but may result in a better experience."
+msgstr ""
+"Dieser Test fragt ab, ob die Erweiterung 'PHP-Curl' aktiviert ist. Es ist "
+"nicht zwingend notwendig, kann jedoch, wenn aktiviert, zu einer besseren "
+"Benutzererfahrung mit Ampache führen."
 
 #: ../../templates/show_test_table.inc.php:121
 msgid "PHP zlib extension"
@@ -7704,9 +8031,12 @@ msgstr "PHP-Zlib Erweiterung"
 
 #: ../../templates/show_test_table.inc.php:126
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly"
-" necessary, but may result in a better experience (zip download)."
-msgstr "Dieser Test fragt ab, ob die Erweiterung 'PHP-Zlib' aktiviert ist. Es ist nicht zwingend notwendig, kann jedoch, wenn aktiviert, zu einer besseren Erfahrung mit Ampache führen."
+"This tests whether you have the zlib extension enabled. This is not strictly "
+"necessary, but may result in a better experience (zip download)."
+msgstr ""
+"Dieser Test fragt ab, ob die Erweiterung 'PHP-Zlib' aktiviert ist. Es ist "
+"nicht zwingend notwendig, kann jedoch, wenn aktiviert, zu einer besseren "
+"Erfahrung mit Ampache führen."
 
 #: ../../templates/show_test_table.inc.php:130
 msgid "PHP simplexml extension"
@@ -7716,7 +8046,10 @@ msgstr "PHP-SimpleXML Erweiterung"
 msgid ""
 "This tests whether you have the simplexml extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Dieser Test fragt ab, ob die Erweiterung 'PHP-SimpleXML' aktiviert ist. Es ist nicht zwingend notwendig, kann jedoch, wenn aktiviert, zu einer besseren Benutzererfahrung führen."
+msgstr ""
+"Dieser Test fragt ab, ob die Erweiterung 'PHP-SimpleXML' aktiviert ist. Es "
+"ist nicht zwingend notwendig, kann jedoch, wenn aktiviert, zu einer besseren "
+"Benutzererfahrung führen."
 
 #: ../../templates/show_test_table.inc.php:139
 msgid "PHP GD extension"
@@ -7726,7 +8059,9 @@ msgstr "PHP-GD Erweiterung"
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
-msgstr "Getestet wird, ob du die PHP-GD Erweiterung installiert hast. Sie wird nicht zwingend benötigt, resultiert aber in einer besseren Benutzererfahrung."
+msgstr ""
+"Getestet wird, ob du die PHP-GD Erweiterung installiert hast. Sie wird nicht "
+"zwingend benötigt, resultiert aber in einer besseren Benutzererfahrung."
 
 #: ../../templates/show_test_table.inc.php:148
 msgid "PHP safe mode disabled"
@@ -7736,7 +8071,9 @@ msgstr "Der PHP-Sicherheits-Modus ist deaktiviert"
 msgid ""
 "This test makes sure that PHP is not running in safe mode. Some features of "
 "Ampache will not work correctly in safe mode."
-msgstr "Dieser Test prüft, ob PHP im \"Safe-Modus\" läuft. Manche Funktionen funktionieren nicht, wenn der Sicherheits-Modus aktiviert ist."
+msgstr ""
+"Dieser Test prüft, ob PHP im \"Safe-Modus\" läuft. Manche Funktionen "
+"funktionieren nicht, wenn der Sicherheits-Modus aktiviert ist."
 
 #: ../../templates/show_test_table.inc.php:157
 msgid "PHP memory limit override"
@@ -7746,7 +8083,9 @@ msgstr "Überschreiben der maximalen speichergrenze"
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Dies testet, ob Ampache das Speicherlimit überschreiben kann. Nötig ist dies nicht, doch kann es zu einer besseren Leistung führen."
+msgstr ""
+"Dies testet, ob Ampache das Speicherlimit überschreiben kann. Nötig ist dies "
+"nicht, doch kann es zu einer besseren Leistung führen."
 
 #: ../../templates/show_test_table.inc.php:166
 msgid "PHP execution time override"
@@ -7754,9 +8093,11 @@ msgstr "Überschreiben der maximalen Ausführungszeit von PHP Skripten"
 
 #: ../../templates/show_test_table.inc.php:171
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time."
-" This is not strictly necessary, but may result in a better experience."
-msgstr "Dies testet, ob Ampache die maximale Zeit, die PHP Skripte für die Ausführung benötigen dürfen, überschreiben kann."
+"This tests whether Ampache can override the limit on maximum execution time. "
+"This is not strictly necessary, but may result in a better experience."
+msgstr ""
+"Dies testet, ob Ampache die maximale Zeit, die PHP Skripte für die "
+"Ausführung benötigen dürfen, überschreiben kann."
 
 #: ../../templates/show_test_table.inc.php:175
 msgid "PHP max upload size"
@@ -7766,7 +8107,9 @@ msgstr "PHP max upload Größe"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Dies testet, ob Ampache größere Dateien, (>=20MB), uploaden kann. Nötig ist dies nicht, doch kann dies zu einer besseren Erfahrung mit Ampache führen."
+msgstr ""
+"Dies testet, ob Ampache größere Dateien, (>=20MB), uploaden kann. Nötig ist "
+"dies nicht, doch kann dies zu einer besseren Erfahrung mit Ampache führen."
 
 #: ../../templates/show_test_table.inc.php:184
 msgid "PHP Integer Size"
@@ -7777,7 +8120,9 @@ msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
 "requires 64-bit operating system."
-msgstr "Dies testet, ob Ampache große Dateien, (>=2GB), verarbeiten kann. Nötig ist dies nicht, doch kann dies zu einer besseren Erfahrung mit Ampache führen."
+msgstr ""
+"Dies testet, ob Ampache große Dateien, (>=2GB), verarbeiten kann. Nötig ist "
+"dies nicht, doch kann dies zu einer besseren Erfahrung mit Ampache führen."
 
 #: ../../templates/show_test_table.inc.php:193
 msgid "PHP mbstring.func_overload"
@@ -7790,7 +8135,10 @@ msgid ""
 "is not stricly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr "Hier wird getestet, ob PHP %s aktiviert ist. Da diese Funktion die ID3 Tags von MP3 dateien unbrauchbar machen kann, wenn der die ID3 Tag- Schreibunterstützung (standardmäßig deaktiviert) aktiviert ist."
+msgstr ""
+"Hier wird getestet, ob PHP %s aktiviert ist. Da diese Funktion die ID3 Tags "
+"von MP3 dateien unbrauchbar machen kann, wenn der die ID3 Tag- "
+"Schreibunterstützung (standardmäßig deaktiviert) aktiviert ist."
 
 #: ../../templates/show_test_table.inc.php:205
 msgid "Configuration file readability"
@@ -7800,7 +8148,10 @@ msgstr "Lesbarkeit der Konfigurationsdatei"
 msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file "
 "either is not in the correct location or is not currently readable."
-msgstr "Es wird getestet, ob Ampache die Konfigurationsdatei 'ampache.cfg.php' im Verzeichnis 'config/' lesen kann. Ist dies nicht der Fall, ist sie möglicher Weise nicht an der richtigen Stelle oder nicht lesbar."
+msgstr ""
+"Es wird getestet, ob Ampache die Konfigurationsdatei 'ampache.cfg.php' im "
+"Verzeichnis 'config/' lesen kann. Ist dies nicht der Fall, ist sie möglicher "
+"Weise nicht an der richtigen Stelle oder nicht lesbar."
 
 #: ../../templates/show_test_table.inc.php:218
 msgid "Configuration file validity"
@@ -7810,13 +8161,17 @@ msgstr "Gültigkeit der Konfiguration"
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to completely parse your config file."
-msgstr "Dieser Test prüft ob alle benötigten Werte in der Konfigurationsdatei gesetzt sind und ob diese fehlerfrei gelesen werden kann."
+msgstr ""
+"Dieser Test prüft ob alle benötigten Werte in der Konfigurationsdatei "
+"gesetzt sind und ob diese fehlerfrei gelesen werden kann."
 
 #: ../../templates/show_test_table.inc.php:241
 msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
-msgstr "Ampache versucht nun sich, mit den von Dir eingestellten Werten aus der Konfigurationsdatei 'ampache.cfg.php', mit der Datenbank zu verbinden."
+msgstr ""
+"Ampache versucht nun sich, mit den von Dir eingestellten Werten aus der "
+"Konfigurationsdatei 'ampache.cfg.php', mit der Datenbank zu verbinden."
 
 #: ../../templates/show_test_table.inc.php:246
 msgid "Database tables"
@@ -7826,7 +8181,9 @@ msgstr "Datenbank Tabellen"
 msgid ""
 "This checks a few key tables to make sure that you have successfully "
 "inserted the Ampache database and that the user has access to the database"
-msgstr "Dies überprüft einige Schlüssel-Tabellen um sicherzugehen dass die Ampache Datenbank erreichbar ist und der gewählte Benutzer darauf Zugriff hat."
+msgstr ""
+"Dies überprüft einige Schlüssel-Tabellen um sicherzugehen dass die Ampache "
+"Datenbank erreichbar ist und der gewählte Benutzer darauf Zugriff hat."
 
 #: ../../templates/show_test_table.inc.php:259
 msgid "Web path"
@@ -7837,7 +8194,10 @@ msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
-msgstr "Dieser Test stellt sicher dass die Variable \"web_path\" korrekt gesetzt wurde und das es möglich ist die Startseite zu erreichen. Wenn Du hier kein Häkchen siehst ist \"web_path\" nicht richtig eingestellt."
+msgstr ""
+"Dieser Test stellt sicher dass die Variable \"web_path\" korrekt gesetzt "
+"wurde und das es möglich ist die Startseite zu erreichen. Wenn Du hier kein "
+"Häkchen siehst ist \"web_path\" nicht richtig eingestellt."
 
 #: ../../templates/show_tvshow.inc.php:95
 #: ../../templates/show_tvshow.inc.php:99
@@ -7892,7 +8252,9 @@ msgstr "Benutzer aktiviert"
 #: ../../templates/show_user_activate.inc.php:53
 #, php-format
 msgid "This User ID is activated and can be used %sLogin%s"
-msgstr "Dein Benutzerkonto wurde aktiviert. Du kannst dich ab sofort über folgende Loginseite anmelden: %slogin%s"
+msgstr ""
+"Dein Benutzerkonto wurde aktiviert. Du kannst dich ab sofort über folgende "
+"Loginseite anmelden: %slogin%s"
 
 #: ../../templates/show_user_activate.inc.php:59
 msgid "Validation Failed"
@@ -8251,7 +8613,11 @@ msgid ""
 "This page handles all database updates to Ampache starting with "
 "<strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with "
 "database version <strong>%s</strong>."
-msgstr "Auf dieser Seite werden Dir die verfügbaren Aktualisierungen, angefangen mit Version <strong>3.3.3.5</strong>, für Ampache angezeigt.<br />Momentan ist die Version <strong>%s</strong> von Ampache mit der Datenbankversion <strong>%s</strong> auf Deinem Server installiert."
+msgstr ""
+"Auf dieser Seite werden Dir die verfügbaren Aktualisierungen, angefangen mit "
+"Version <strong>3.3.3.5</strong>, für Ampache angezeigt.<br />Momentan ist "
+"die Version <strong>%s</strong> von Ampache mit der Datenbankversion <strong>"
+"%s</strong> auf Deinem Server installiert."
 
 #: ../../update.php:92
 msgid "Update Now!"
@@ -8282,8 +8648,8 @@ msgstr "Ich kann dieses Video nicht löschen."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.06.2016 15:00:05 CEST
-# 
+# Last Update: 12.07.2016 18:53:07 CEST
+#
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "Herunterladen erlauben"
@@ -8316,7 +8682,7 @@ msgstr "Art der Wiedergabe"
 # but to avoid confusion, it's added and commented
 # msgid "Language"
 # msgstr ""
-#: Database preference table id 31 Database preference table id 32
+#: Database preference table id 31 32
 msgid "Playlist Type"
 msgstr "Typ der Playlist"
 
@@ -8368,8 +8734,7 @@ msgstr "Verhalten der Playlist"
 # but to avoid confusion, it's added and commented
 # msgid "Show Lyrics"
 # msgstr ""
-#: Database preference table id 55 Database preference table id 69 Database
-#: preference table id 72
+#: Database preference table id 55 69 72
 msgid "Shoutcast Active Instance"
 msgstr "Aktive Shoutcast Sitzung"
 
@@ -8447,7 +8812,8 @@ msgstr "Anzeigen lassen, welche Songs Du wann gespielt hast"
 msgid ""
 "Personal information visibility - Recently played - Allow to show streaming "
 "agent"
-msgstr "Browser- und Betriebssysteminformationen im Streaming Agenten anzeigen lassen"
+msgstr ""
+"Browser- und Betriebssysteminformationen im Streaming Agenten anzeigen lassen"
 
 #: Database preference table id 94
 msgid "Fix header position on compatible themes"
@@ -8467,11 +8833,14 @@ msgstr "Autoupdate: Die letzte Version der letzten Überprüfung"
 
 #: Database preference table id 98
 msgid "AutoUpdate last version from last check is newer"
-msgstr "Autoupdate: Die letzte Version der letzten Prüfung ist neuer als die aktuelle"
+msgstr ""
+"Autoupdate: Die letzte Version der letzten Prüfung ist neuer als die aktuelle"
 
 #: Database preference table id 99
 msgid "Confirmation when closing current playing window"
-msgstr "Einen Bestätigungsdialog anzeigen, bevor das Fenster, indem derzeit etwas abgespielt wird geschlossen wird"
+msgstr ""
+"Einen Bestätigungsdialog anzeigen, bevor das Fenster, indem derzeit etwas "
+"abgespielt wird geschlossen wird"
 
 #: Database preference table id 100
 msgid "Auto-pause betweens tabs"
@@ -8541,7 +8910,9 @@ msgstr "Upload: Den Namen des Uploaders als Interpreten annehmen"
 msgid ""
 "Upload: run the following script after upload (current directory = upload "
 "target directory)"
-msgstr "Upload: Das folgende Skript nach einem Upload ausführen (Momentanes Verzeichnis = Uploadzielverzeichnis)"
+msgstr ""
+"Upload: Das folgende Skript nach einem Upload ausführen (Momentanes "
+"Verzeichnis = Uploadzielverzeichnis)"
 
 #: Database preference table id 117
 msgid "Upload: allow users to edit uploaded songs"
@@ -8613,7 +8984,8 @@ msgstr "Erlaube Geolocation"
 
 #: Database preference table id 134
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player(s)"
-msgstr "Die Verwendung des JavaScript decoders (Aurora.js) im WebPlayer erlauben"
+msgstr ""
+"Die Verwendung des JavaScript decoders (Aurora.js) im WebPlayer erlauben"
 
 #: Database preference table id 139
 msgid "Upload: allow users to remove uploaded songs"
@@ -8637,7 +9009,9 @@ msgstr "WebDAV Backend verwenden"
 
 #: Database preference table id 144
 msgid "Receive notifications by email (shouts, private messages, ...)"
-msgstr "Eine Benachrichtigung per E-Mail erhalten bei (Shouts, privaten Nachrichten, usw...)"
+msgstr ""
+"Eine Benachrichtigung per E-Mail erhalten bei (Shouts, privaten Nachrichten, "
+"usw...)"
 
 #: Database preference table id 145
 msgid "Theme color"
@@ -8645,13 +9019,17 @@ msgstr "Farbe des Themas"
 
 #: Database preference table id 146
 msgid "Disable custom metadata fields (ctrl / shift click to select multiple)"
-msgstr "Benutzerdefinierte Metadatenfelder deaktivieren (strg / shift um mehrere zu wählen)"
+msgstr ""
+"Benutzerdefinierte Metadatenfelder deaktivieren (strg / shift um mehrere zu "
+"wählen)"
 
 #: Database preference table id 147
 msgid ""
 "Disable custom metadata fields. Insert them in a comma separated list. They "
 "will add to the fields selected above."
-msgstr "Metadatenfelder deaktivieren. Füge eine durch Komma getrennte Liste ein, welche zu den oben selektierten Feldern hinzugefügt wird."
+msgstr ""
+"Metadatenfelder deaktivieren. Füge eine durch Komma getrennte Liste ein, "
+"welche zu den oben selektierten Feldern hinzugefügt wird."
 
 #: Database preference table id 148
 msgid "Podcast: # latest episodes to keep"
@@ -8692,8 +9070,34 @@ msgstr "Benutzerdefiniertes Bild für Cover lose Videos"
 #: Database preference table id 157
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
-msgstr "Album- und Interpret(en)-Bibliotheken standardmäßig alphabetisch ordnen"
+msgstr ""
+"Album- und Interpret(en)-Bibliotheken standardmäßig alphabetisch ordnen"
 
-#: Database preference table id 158
+#: Database preference table id 160
+#, fuzzy
+msgid "HTTPQ Active Instance"
+msgstr "Aktive MPD Instanz"
+
+#: Database preference table id 161
 msgid "MPD Active Instance"
+msgstr "Aktive MPD Instanz"
+
+#: Database preference table id 164
+msgid "Amazon base url"
+msgstr ""
+
+#: Database preference table id 165
+msgid "Amazon max results pages"
+msgstr ""
+
+#: Database preference table id 166
+msgid "Amazon Access Key ID"
+msgstr ""
+
+#: Database preference table id 167
+msgid "Amazon Secret Access Key"
+msgstr ""
+
+#: Database preference table id 168
+msgid "Amazon associate tag"
 msgstr ""
