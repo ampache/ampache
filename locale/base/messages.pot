@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-07-20 17:13+0200\n"
+"POT-Creation-Date: 2016-07-22 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -687,7 +687,7 @@ msgid "Deleting: %s"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:42
-msgid "ERROR: Iconv required for this functionality, quiting"
+msgid "ERROR: Iconv required for this functionality, quitting"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:51
@@ -8327,7 +8327,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 20.07.2016 17:13:04 CEST 
+ # Last Update: 22.07.2016 15:49:07 CEST 
 
  #######################################################################
 
@@ -8735,14 +8735,6 @@ msgstr ""
 
 #: Database preference table id 157
 msgid "Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-
-#: Database preference table id 160
-msgid "HTTPQ Active Instance"
-msgstr ""
-
-#: Database preference table id 161
-msgid "MPD Active Instance"
 msgstr ""
 
 #: Database preference table id 164
