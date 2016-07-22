@@ -83,7 +83,7 @@ class Catalog_beetsremote extends Beets\Catalog
 
     public function catalog_fields()
     {
-        $fields['uri'] = array('description' => T_('Beets Server URI'), 'type' => 'textbox');
+        $fields['uri'] = array('description' => T_('Beets Server URI'), 'type' => 'url');
 
         return $fields;
     }

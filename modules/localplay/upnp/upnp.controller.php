@@ -176,8 +176,8 @@ class AmpacheUPnP extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name'] = array('description' => T_('Instance Name'), 'type'=>'textbox');
-        $fields['url']  = array('description' => T_('URL'), 'type'=>'textbox');
+        $fields['name'] = array('description' => T_('Instance Name'), 'type'=>'text');
+        $fields['url']  = array('description' => T_('URL'), 'type'=>'url');
 
         return $fields;
     }

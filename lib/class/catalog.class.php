@@ -283,11 +283,8 @@ abstract class Catalog extends database_object
                         case 'checkbox':
                             echo "<input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
                             break;
-                        case 'password':
-                            echo "<input type='password' name='" . $key . "' value='" . $field['value'] . "' />";
-                            break;
                         default:
-                            echo "<input type='text' name='" . $key . "' value='" . $field['value'] . "' />";
+                            echo "<input type='".$field['type']."' name='" . $key . "' value='" . $field['value'] . "' />";
                             break;
                     }
                     echo "</td></tr>";
@@ -332,13 +329,13 @@ abstract class Catalog extends database_object
                 debug_event('catalog', $file . ' is not a directory.', 3);
                 continue;
             }
-            
+
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $file . '.catalog.php')) {
                 debug_event('catalog', 'Missing class for ' . $file, 3);
                 continue;
             }
-            
+
             $results[] = $file;
         } // end while
 
@@ -723,12 +720,12 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, $params);
         $data       = Dba::fetch_row($db_results);
         $playlists  = $data[0];
-        
+
         $sql          = 'SELECT COUNT(`id`) FROM `live_stream`';
         $db_results   = Dba::read($sql, $params);
         $data         = Dba::fetch_row($db_results);
         $live_streams = $data[0];
-        
+
         $sql          = 'SELECT COUNT(`id`) FROM `podcast`';
         $db_results   = Dba::read($sql, $params);
         $data         = Dba::fetch_row($db_results);
@@ -1085,7 +1082,7 @@ abstract class Catalog extends database_object
 
         return $results;
     }
-    
+
     /**
      * get_podcast_ids
      *
@@ -1128,7 +1125,7 @@ abstract class Catalog extends database_object
 
         return $results;
     }
-    
+
     /**
      * get_newest_podcasts_ids
      *
@@ -1622,7 +1619,7 @@ abstract class Catalog extends database_object
 
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
-        
+
         if (Song::isCustomMetadataEnabled()) {
             $ctags = self::get_clean_metadata($song, $results);
             if (method_exists($song, 'updateOrInsertMetadata') && $song::isCustomMetadataEnabled()) {
@@ -1707,11 +1704,11 @@ abstract class Catalog extends database_object
             }
         }
         $new_video->tags        = $results['genre'];
-        
+
         $info = Video::compare_video_information($video, $new_video);
         if ($info['change']) {
             debug_event('update', $video->file . " : differences found, updating database", 5);
-            
+
             $video->update_video($video->id, $new_video);
 
             if ($video->tags != $new_video->tags) {
@@ -1720,10 +1717,10 @@ abstract class Catalog extends database_object
         } else {
             debug_event('update', $video->file . " : no differences found", 5);
         }
-        
+
         return $info;
     }
-    
+
     /**
      * Get rid of all tags found in the libraryItem
      * @param library_item $libraryItem
@@ -1860,7 +1857,7 @@ abstract class Catalog extends database_object
         Tmp_Playlist::gc();
         Shoutbox::gc();
         Tag::gc();
-        
+
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         \Lib\Metadata\Repository\Metadata::gc();
         \Lib\Metadata\Repository\MetadataField::gc();
@@ -1893,12 +1890,12 @@ abstract class Catalog extends database_object
         if (empty($year)) {
             return 0;
         }
-        
+
         $year = intval($year);
         if ($year < 0 || $year > 9999) {
             return 0;
         }
-        
+
         return $year;
     }
 
@@ -2298,13 +2295,13 @@ abstract class Catalog extends database_object
 
         return (Access::check('interface','75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
     }
-    
+
     public static function process_action($action, $catalogs, $options = null)
     {
         if (!$options || !is_array($options)) {
             $options = array();
         }
-        
+
         switch ($action) {
             case 'add_to_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
@@ -2316,7 +2313,7 @@ abstract class Catalog extends database_object
                             $catalog->add_to_catalog($options);
                         }
                     }
-                    
+
                     if (!defined('SSE_OUTPUT')) {
                         AmpError::display('catalog_add');
                     }
@@ -2405,7 +2402,7 @@ abstract class Catalog extends database_object
                 }
                 break;
         }
-        
+
         // Remove any orphaned artists/albums/etc.
         self::gc();
     }

@@ -27,7 +27,7 @@
     ?>
         <th><?php echo $field['description'];
     ?></th>
-    <?php 
+    <?php
 } ?>
     <th><?php echo T_('Action'); ?></th>
 </tr>
@@ -39,9 +39,16 @@
     ?>">
     <?php foreach ($fields as $key=>$field) {
     ?>
-    <td><?php echo $instance[$key];
-    ?></td>
-    <?php 
+    <td>
+        <?php
+            if ($field["type"] != "password") {
+                echo $instance[$key];
+            } else {
+                echo "*****";
+            }
+        ?>
+    </td>
+    <?php
 }
     ?>
     <td>
@@ -53,7 +60,7 @@
     ?>
     </td>
 </tr>
-<?php 
+<?php
 } ?>
 </table>
 <?php UI::show_box_bottom(); ?>

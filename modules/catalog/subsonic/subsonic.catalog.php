@@ -99,8 +99,8 @@ class Catalog_subsonic extends Catalog
 
     public function catalog_fields()
     {
-        $fields['uri']           = array('description' => T_('URI'),'type'=>'textbox');
-        $fields['username']      = array('description' => T_('Username'),'type'=>'textbox');
+        $fields['uri']           = array('description' => T_('URI'),'type'=>'url');
+        $fields['username']      = array('description' => T_('Username'),'type'=>'text');
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
         return $fields;
@@ -202,7 +202,7 @@ class Catalog_subsonic extends Catalog
     public function update_remote_catalog()
     {
         debug_event('subsonic_catalog', 'Updating remote catalog...', 5);
-        
+
         $subsonic = $this->createClient();
 
         $songsadded = 0;
@@ -270,7 +270,7 @@ class Catalog_subsonic extends Catalog
         }
 
         debug_event('subsonic_catalog', 'Catalog updated.', 5);
-        
+
         return true;
     }
 

@@ -101,7 +101,7 @@ class Catalog_local extends Catalog
 
     public function catalog_fields()
     {
-        $fields['path']      = array('description' => T_('Path'),'type'=>'textbox');
+        $fields['path']      = array('description' => T_('Path'),'type'=>'url');
 
         return $fields;
     }
@@ -703,7 +703,7 @@ class Catalog_local extends Catalog
                 $results['album'] = $album->name;
             }
         }
-        
+
         if (count($this->get_gather_types('music')) > 0) {
             if (AmpConfig::get('catalog_check_duplicate')) {
                 if (Song::find($results)) {

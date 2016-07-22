@@ -82,7 +82,7 @@ class Catalog_beets extends Beets\Catalog
 
     public function catalog_fields()
     {
-        $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'textbox');
+        $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'text');
 
         return $fields;
     }
