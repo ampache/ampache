@@ -39,7 +39,7 @@ ob_end_clean();
 //$GLOBALS['i_am_crazy'] = true;
 
 if (!function_exists('iconv')) {
-    echo T_("ERROR: Iconv required for this functionality, quiting");
+    echo T_("ERROR: Iconv required for this functionality, quitting");
     echo "\n";
     exit;
 }
