@@ -99,8 +99,8 @@ class Catalog_remote extends Catalog
 
     public function catalog_fields()
     {
-        $fields['uri']           = array('description' => T_('Uri'),'type'=>'textbox');
-        $fields['username']      = array('description' => T_('Username'),'type'=>'textbox');
+        $fields['uri']           = array('description' => T_('Uri'),'type'=>'url');
+        $fields['username']      = array('description' => T_('Username'),'type'=>'text');
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
         return $fields;

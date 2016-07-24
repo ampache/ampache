@@ -222,10 +222,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name']        = array('description' => T_('Instance Name'),'type'=>'textbox');
-        $fields['host']        = array('description' => T_('Hostname'),'type'=>'textbox');
-        $fields['port']        = array('description' => T_('Port'),'type'=>'textbox');
-        $fields['password']    = array('description' => T_('Password'),'type'=>'textbox');
+        $fields['name']        = array('description' => T_('Instance Name'),'type'=>'text');
+        $fields['host']        = array('description' => T_('Hostname'),'type'=>'text');
+        $fields['port']        = array('description' => T_('Port'),'type'=>'number');
+        $fields['password']    = array('description' => T_('Password'),'type'=>'password');
 
         return $fields;
     } // instance_fields
