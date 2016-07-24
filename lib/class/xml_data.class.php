@@ -306,11 +306,15 @@ class XML_Data
             $rating     = new Rating($artist_id,'artist');
             $tag_string = self::tags_string($artist->tags);
 
+            // Build the Art URL, include session
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out($_REQUEST['auth']);
+
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
                     "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
                     $tag_string .
                     "\t<albums>" . ($artist->albums ?: 0) . "</albums>\n" .
                     "\t<songs>" . ($artist->songs ?: 0) . "</songs>\n" .
+                    "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
@@ -441,7 +445,9 @@ class XML_Data
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
+                // Title is an alias for name
                 "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
+                "\t<name><![CDATA[" . $song->title . "]]></name>\n" .
                 "\t<artist id=\"" . $song->artist .
                     '"><![CDATA[' . $song->get_artist_name() .
                     "]]></artist>\n" .
@@ -512,7 +518,9 @@ class XML_Data
             $video->format();
 
             $string .= "<video id=\"" . $video->id . "\">\n" .
+                    // Title is an alias for name
                     "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
+                    "\t<name><![CDATA[" . $video->title . "]]></name>\n" .
                     "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
                     "\t<resolution>" . $video->f_resolution . "</resolution>\n" .
                     "\t<size>" . $video->size . "</size>\n" .
@@ -559,7 +567,9 @@ class XML_Data
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
+                    // Title is an alias for name
                     "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
+                    "\t<name><![CDATA[" . $song->title . "]]></name>\n" .
                     "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n" .
                     "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n" .
                     "\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" .
