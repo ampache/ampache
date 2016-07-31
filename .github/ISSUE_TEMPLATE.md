@@ -1,4 +1,8 @@
-<!-- Delete any not relevant section in this template -->
+<!--
+1. Delete any not relevant section in this template.
+2. Before posting any issue, please try to reproduce with latest `develop` branch. Development is quite active and your issue may already have a fix pending for next version. No issue will be considered before confirmation on the `develop` branch.
+3. Don't worry for text between `<!--` and `--\>`, it will be automatically removed from the output.
+-->
 
 # Environment
 
