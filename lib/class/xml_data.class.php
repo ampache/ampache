@@ -287,9 +287,11 @@ class XML_Data
      * we want
      *
      * @param    array    $artists    (description here...)
+     * @param    array    $include    Array of other items to include.
+     * @param    bool     $full_xml  whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function artists($artists)
+    public static function artists($artists, $include=[], $full_xml=true)
     {
         if (count($artists) > self::$limit or self::$offset > 0) {
             $artists = array_splice($artists,self::$offset,self::$limit);
@@ -309,11 +311,23 @@ class XML_Data
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out($_REQUEST['auth']);
 
+            // Handle includes
+            if (in_array("albums", $include)) {
+                $albums = self::albums($artist->get_albums(null, true), $include, false);
+            } else {
+                $albums = ($artist->albums ?: 0);
+            }
+            if (in_array("songs", $include)) {
+                $songs = self::songs($artist->get_songs(), '', false);
+            } else {
+                $songs = ($artist->songs ?: 0);
+            }
+
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
                     "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
                     $tag_string .
-                    "\t<albums>" . ($artist->albums ?: 0) . "</albums>\n" .
-                    "\t<songs>" . ($artist->songs ?: 0) . "</songs>\n" .
+                    "\t<albums>" . $albums . "</albums>\n" .
+                    "\t<songs>" . $songs . "</songs>\n" .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
@@ -325,7 +339,7 @@ class XML_Data
                     "</artist>\n";
         } // end foreach artists
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     } // artists
 
     /**
@@ -334,9 +348,11 @@ class XML_Data
      * This echos out a standard albums XML document, it pays attention to the limit
      *
      * @param    array    $albums    (description here...)
+     * @param    array    $include    Array of other items to include.
+     * @param    bool     $full_xml  whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function albums($albums)
+    public static function albums($albums, $include=[], $full_xml=true)
     {
         if (count($albums) > self::$limit or self::$offset > 0) {
             $albums = array_splice($albums,self::$offset,self::$limit);
@@ -364,8 +380,15 @@ class XML_Data
                 $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n";
             }
 
+            // Handle includes
+            if (in_array("songs", $include)) {
+                $songs = self::songs($album->get_songs(), '', false);
+            } else {
+                $songs = $album->song_count;
+            }
+
             $string .= "\t<year>" . $album->year . "</year>\n" .
-                    "\t<tracks>" . $album->song_count . "</tracks>\n" .
+                    "\t<tracks>" . $songs . "</tracks>\n" .
                     "\t<disk>" . $album->disk . "</disk>\n" .
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
@@ -376,7 +399,7 @@ class XML_Data
                     "</album>\n";
         } // end foreach
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     } // albums
 
     /**
@@ -419,7 +442,7 @@ class XML_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs, $playlist_data='')
+    public static function songs($songs, $playlist_data='', $full_xml=true)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -495,7 +518,7 @@ class XML_Data
             $string .= "</song>\n";
         } // end foreach
 
-        return self::output_xml($string);
+        return self::output_xml($string, $full_xml);
     } // songs
 
     /**
@@ -665,9 +688,17 @@ class XML_Data
         return self::output_xml($string);
     } // shouts
 
-    public static function output_xml($string)
+    public static function output_xml($string, $full_xml=true)
     {
-        return self::_header() . UI::clean_utf8($string) . self::_footer();
+        $xml = "";
+        if ($full_xml) {
+            $xml .= self::_header();
+        }
+        $xml .= UI::clean_utf8($string);
+        if ($full_xml) {
+            $xml .= self::_footer();
+        }
+        return $xml;
     }
 
     /**

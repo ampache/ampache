@@ -326,7 +326,7 @@ class Api
         $artists = self::$browse->get_objects();
         // echo out the resulting xml document
         ob_end_clean();
-        echo XML_Data::artists($artists);
+        echo XML_Data::artists($artists, $input['include']);
     } // artists
 
     /**
@@ -338,7 +338,7 @@ class Api
     public static function artist($input)
     {
         $uid = scrub_in($input['filter']);
-        echo XML_Data::artists(array($uid));
+        echo XML_Data::artists(array($uid), $input['include']);
     } // artist
 
     /**
@@ -397,7 +397,7 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::albums($albums);
+        echo XML_Data::albums($albums, $input['include']);
     } // albums
 
     /**
@@ -408,7 +408,7 @@ class Api
     public static function album($input)
     {
         $uid = scrub_in($input['filter']);
-        echo XML_Data::albums(array($uid));
+        echo XML_Data::albums(array($uid), $input['include']);
     } // album
 
     /**
@@ -739,7 +739,7 @@ class Api
         if (isset($input['type'])) {
             $type = $input['type'];
         }
-        
+
         switch ($type) {
             case 'artist':
                 echo XML_Data::artists($results);
@@ -1061,7 +1061,7 @@ class Api
         $type   = $input['type'];
         $id     = $input['id'];
         $rating = $input['rating'];
-        
+
         if (!Core::is_library_item($type) || !$id) {
             echo XML_Data::error('401', T_('Wrong library item type.'));
         } else {
@@ -1087,7 +1087,7 @@ class Api
             $username = $input['username'];
             $limit    = intval($input['limit']);
             $since    = intval($input['since']);
-            
+
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
@@ -1115,7 +1115,7 @@ class Api
         if (AmpConfig::get('sociable')) {
             $limit = intval($input['limit']);
             $since = intval($input['since']);
-            
+
             if ($GLOBALS['user']->id > 0) {
                 $activities = Useractivity::get_friends_activities($GLOBALS['user']->id, $limit, $since);
                 ob_end_clean();
