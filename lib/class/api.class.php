@@ -305,7 +305,6 @@ class Api
      * artists
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
-     * //DEPRECATED
      * @param array $input
      */
     public static function artists($input)
@@ -332,7 +331,6 @@ class Api
     /**
      * artist
      * This returns a single artist based on the UID of said artist
-     * //DEPRECATED
      * @param array $input
      */
     public static function artist($input)
