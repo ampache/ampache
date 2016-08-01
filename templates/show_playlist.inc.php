@@ -43,6 +43,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     ?>
     </div>
     <?php
+
 }
     ?>
     <?php if (AmpConfig::get('userflags')) {
@@ -53,9 +54,11 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     ?>
     </div>
     <?php
+
 }
     ?>
 <?php
+
 } ?>
 <div id="information_actions">
     <ul>
@@ -90,6 +93,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     ?></a>
         </li>
     <?php
+
 } ?>
     <?php if (Access::check_function('batch_download') && check_can_zip('playlist')) {
     ?>
@@ -104,6 +108,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
     <?php
+
 } ?>
     <?php if (AmpConfig::get('directplay')) {
     ?>
@@ -114,6 +119,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     ?>
         </li>
     <?php
+
 } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
@@ -124,6 +130,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     ?>
         </li>
     <?php
+
 } ?>
         <li>
             <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add all to temporary playlist'), 'play_playlist'); ?>
@@ -146,6 +153,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
     <?php
+
 } ?>
     <?php if ($playlist->has_access()) {
     ?>
@@ -161,6 +169,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
     <?php
+
 } ?>
     </ul>
 </div>

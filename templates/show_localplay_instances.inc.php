@@ -28,6 +28,7 @@
         <th><?php echo $field['description'];
     ?></th>
     <?php
+
 } ?>
     <th><?php echo T_('Action'); ?></th>
 </tr>
@@ -46,9 +47,10 @@
             } else {
                 echo "*****";
             }
-        ?>
+    ?>
     </td>
     <?php
+
 }
     ?>
     <td>
@@ -61,6 +63,7 @@
     </td>
 </tr>
 <?php
+
 } ?>
 </table>
 <?php UI::show_box_bottom(); ?>

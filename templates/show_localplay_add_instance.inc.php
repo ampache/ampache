@@ -28,10 +28,12 @@
 <tr>
     <td><?php echo $field['description'];
     ?></td>
-    <td><input type="<?php echo $field["type"]; ?>" name="<?php echo $key;
+    <td><input type="<?php echo $field["type"];
+    ?>" name="<?php echo $key;
     ?>" /></td>
 </tr>
 <?php
+
 } ?>
 </table>
     <div class="formValidation">
