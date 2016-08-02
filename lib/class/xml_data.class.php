@@ -72,8 +72,11 @@ class XML_Data
             return false;
         }
 
-        $limit       = intval($limit);
-        self::$limit = $limit;
+        if (strtolower($limit) == "none") {
+            self::$limit = null;
+        } else {
+            self::$limit = intval($limit);
+        }
     } // set_limit
 
     /**
@@ -260,7 +263,11 @@ class XML_Data
         $string = '<total_count>' . count($tags) . '</total_count>\n';
 
         if (count($tags) > self::$limit or self::$offset > 0) {
-            $tags = array_splice($tags, self::$offset, self::$limit);
+            if (null !== self::$limit) {
+                $tags = array_splice($tags, self::$offset, self::$limit);
+            } else {
+                $tags = array_splice($tags, self::$offset);
+            }
         }
 
         foreach ($tags as $tag_id) {
@@ -296,7 +303,11 @@ class XML_Data
         $string = '<total_count>' . count($artists) . '</total_count>\n';
 
         if (count($artists) > self::$limit or self::$offset > 0) {
-            $artists = array_splice($artists, self::$offset, self::$limit);
+            if (null !== self::$limit) {
+                $artists = array_splice($artists, self::$offset, self::$limit);
+            } else {
+                $artists = array_splice($artists, self::$offset);
+            }
         }
 
         Rating::build_cache('artist', $artists);
@@ -357,7 +368,11 @@ class XML_Data
         $string = '<total_count>' . count($albums) . '</total_count>\n';
 
         if (count($albums) > self::$limit or self::$offset > 0) {
-            $albums = array_splice($albums, self::$offset, self::$limit);
+            if (null !== self::$limit) {
+                $albums = array_splice($albums, self::$offset, self::$limit);
+            } else {
+                $albums = array_splice($albums, self::$offset);
+            }
         }
 
         Rating::build_cache('album', $albums);
@@ -416,7 +431,11 @@ class XML_Data
         $string = '<total_count>' . count($playlists) . '</total_count>\n';
 
         if (count($playlists) > self::$limit or self::$offset > 0) {
-            $playlists = array_slice($playlists, self::$offset, self::$limit);
+            if (null !== self::$limit) {
+                $playlists = array_slice($playlists, self::$offset, self::$limit);
+            } else {
+                $playlists = array_slice($playlists, self::$offset);
+            }
         }
 
         // Foreach the playlist ids
@@ -448,7 +467,11 @@ class XML_Data
         $string = '<total_count>' . count($songs) . '</total_count>\n';
 
         if (count($songs) > self::$limit or self::$offset > 0) {
-            $songs = array_slice($songs, self::$offset, self::$limit);
+            if (null !== self::$limit) {
+                $songs = array_slice($songs, self::$offset, self::$limit);
+            } else {
+                $songs = array_slice($songs, self::$offset);
+            }
         }
 
         Song::build_cache($songs);
@@ -536,7 +559,11 @@ class XML_Data
         $string = '<total_count>' . count($videos) . '</total_count>\n';
 
         if (count($videos) > self::$limit or self::$offset > 0) {
-            $videos = array_slice($videos, self::$offset, self::$limit);
+            if (null !== self::$limit) {
+                $videos = array_slice($videos, self::$offset, self::$limit);
+            } else {
+                $videos = array_slice($videos, self::$offset);
+            }
         }
 
         foreach ($videos as $video_id) {
