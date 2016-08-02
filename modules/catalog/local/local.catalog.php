@@ -101,7 +101,7 @@ class Catalog_local extends Catalog
 
     public function catalog_fields()
     {
-        $fields['path']      = array('description' => T_('Path'),'type'=>'url');
+        $fields['path']      = array('description' => T_('Path'),'type'=>'text');
 
         return $fields;
     }
