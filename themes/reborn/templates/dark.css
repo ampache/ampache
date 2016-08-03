@@ -590,6 +590,14 @@ a.option-list:hover {
 	border-color: #1d1d1d;
 }
 
+#tabs li a {
+  color: #ff9d00;
+}
+
+#tabs li a:hover {
+  color: #ffc466;
+}
+
 #tabs li.tab_active a {
 	color: #fff;
 }
