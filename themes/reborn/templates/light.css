@@ -576,6 +576,14 @@ a.option-list:hover {
     background-image: url("../../../images/background.light.png") !important;
 }
 
+#tabs li a {
+  color: #1990db;
+}
+
+#tabs li a:hover {
+  color: #52aae4;
+}
+
 #tabs li.tab_active a {
 	color: #000;
 }
