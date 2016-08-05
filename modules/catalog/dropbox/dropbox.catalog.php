@@ -113,7 +113,7 @@ class Catalog_dropbox extends Catalog
     {
         $fields['apikey']        = array('description' => T_('API Key'), 'type'=>'text');
         $fields['secret']        = array('description' => T_('Secret'), 'type'=>'password');
-        $fields['path']          = array('description' => T_('Path'), 'type'=>'url', 'value' => '/');
+        $fields['path']          = array('description' => T_('Path'), 'type'=>'text', 'value' => '/');
         $fields['getchunk']      = array('description' => T_('Get chunked files on analyze'), 'type'=>'checkbox', 'value' => true);
 
         return $fields;
