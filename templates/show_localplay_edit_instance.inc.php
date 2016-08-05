@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,11 +28,13 @@
 <tr>
     <td><?php echo $field['description'];
     ?></td>
-    <td><input type="<?php echo $field['type'];?>" name="<?php echo $key;
+    <td><input type="<?php echo $field['type'];
+    ?>" name="<?php echo $key;
     ?>" value="<?php echo scrub_out($instance[$key]);
     ?>" /></td>
 </tr>
 <?php
+
 } ?>
 </table>
     <div class="formValidation">

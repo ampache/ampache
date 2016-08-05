@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ if ($label->website) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -130,7 +130,7 @@ if ($label->website) {
 ?>
         </div>
 <?php
-    echo Ajax::observe('songs_link','click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs'));
+    echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs'));
 ?>
         <div id="songs" class="tab_content">
         <?php UI::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>

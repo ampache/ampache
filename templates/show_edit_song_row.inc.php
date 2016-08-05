@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <?php
-                if (Access::check('interface','75')) {
+                if (Access::check('interface', '75')) {
                     ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -104,14 +104,14 @@ class Localplay
 
         if (!$include) {
             /* Throw Error Here */
-            debug_event('localplay','Unable to load ' . $this->type . ' controller','2');
+            debug_event('localplay', 'Unable to load ' . $this->type . ' controller', '2');
             return false;
         } // include
         else {
             $class_name    = "Ampache" . $this->type;
             $this->_player = new $class_name();
             if (!($this->_player instanceof localplay_controller)) {
-                debug_event('Localplay',$this->type . ' not an instance of controller abstract, unable to load','1');
+                debug_event('Localplay', $this->type . ' not an instance of controller abstract, unable to load', '1');
                 unset($this->_player);
                 return false;
             }
@@ -124,10 +124,10 @@ class Localplay
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
      */
-    public function format_name($name,$id)
+    public function format_name($name, $id)
     {
         $name = scrub_out($name);
-        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $id,$name,'localplay_skip_' . $id);
+        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $id, $name, 'localplay_skip_' . $id);
         return $name;
     } // format_name
 
@@ -142,7 +142,7 @@ class Localplay
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
-            debug_event('Localplay','Error: Unable to read localplay controller directory','1');
+            debug_event('Localplay', 'Error: Unable to read localplay controller directory', '1');
             return array();
         }
 
@@ -212,7 +212,7 @@ class Localplay
 
         // If its our current player, reset player to nothing
         if (AmpConfig::get('localplay_controller') == $this->type) {
-            Preference::update('localplay_controller',$GLOBALS['user']->id,'');
+            Preference::update('localplay_controller', $GLOBALS['user']->id, '');
         }
 
         return true;
@@ -226,7 +226,7 @@ class Localplay
     public function connect()
     {
         if (!$this->_player->connect()) {
-            debug_event('localplay','Error Unable to connect, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error Unable to connect, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -241,7 +241,7 @@ class Localplay
     public function play()
     {
         if (!$this->_player->play()) {
-            debug_event('localplay','Error Unable to start playback, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error Unable to start playback, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -256,7 +256,7 @@ class Localplay
     public function stop()
     {
         if (!$this->_player->stop()) {
-            debug_event('localplay','Error Unable to stop playback, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error Unable to stop playback, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -296,7 +296,7 @@ class Localplay
         $data = $this->_player->repeat($state);
 
         if (!$data) {
-            debug_event('localplay',"Error Unable to set Repeat to $state",'1');
+            debug_event('localplay', "Error Unable to set Repeat to $state", '1');
         }
 
         return $data;
@@ -312,7 +312,7 @@ class Localplay
         $data = $this->_player->random($state);
 
         if (!$data) {
-            debug_event('localplay',"Error Unable to set Random to $state",'1');
+            debug_event('localplay', "Error Unable to set Random to $state", '1');
         }
 
         return $data;
@@ -328,7 +328,7 @@ class Localplay
         $data = $this->_player->status();
 
         if (!count($data)) {
-            debug_event('localplay','Error Unable to get status, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error Unable to get status, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -346,7 +346,7 @@ class Localplay
         $data = $this->_player->get();
 
         if (!count($data) or !is_array($data)) {
-            debug_event('localplay','Error Unable to get song info, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error Unable to get song info, check ' . $this->type . ' controller', '1');
             return array();
         }
 
@@ -370,7 +370,7 @@ class Localplay
         }
 
         if (!$this->_player->volume($value)) {
-            debug_event('localplay','Error: Unable to set volume, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to set volume, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -385,7 +385,7 @@ class Localplay
     public function volume_up()
     {
         if (!$this->_player->volume_up()) {
-            debug_event('localplay','Error: Unable to increase volume, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to increase volume, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -400,7 +400,7 @@ class Localplay
     public function volume_down()
     {
         if (!$this->_player->volume_down()) {
-            debug_event('localplay','Error: Unable to decrese volume, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to decrese volume, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -415,7 +415,7 @@ class Localplay
     public function volume_mute()
     {
         if (!$this->_player->volume(0)) {
-            debug_event('localplay','Error: Unable to mute volume, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to mute volume, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -429,7 +429,7 @@ class Localplay
     public function skip($track_id)
     {
         if (!$this->_player->skip($track_id)) {
-            debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to skip to next song, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -444,7 +444,7 @@ class Localplay
     public function next()
     {
         if (!$this->_player->next()) {
-            debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to skip to next song, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -459,7 +459,7 @@ class Localplay
     public function prev()
     {
         if (!$this->_player->prev()) {
-            debug_event('localplay','Error: Unable to skip to previous song, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to skip to previous song, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -474,7 +474,7 @@ class Localplay
     public function pause()
     {
         if (!$this->_player->pause()) {
-            debug_event('localplay','Error: Unable to pause song, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to pause song, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -518,9 +518,9 @@ class Localplay
      * update_instance
      * This updates the specified instance with a named array of data (_POST most likely)
      */
-    public function update_instance($uid,$data)
+    public function update_instance($uid, $data)
     {
-        $data = $this->_player->update_instance($uid,$data);
+        $data = $this->_player->update_instance($uid, $data);
 
         return $data;
     } // update_instance
@@ -560,7 +560,7 @@ class Localplay
     public function delete_track($object_id)
     {
         if (!$this->_player->delete_track($object_id)) {
-            debug_event('localplay','Error: Unable to remove songs, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to remove songs, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -576,7 +576,7 @@ class Localplay
     public function delete_all()
     {
         if (!$this->_player->clear_playlist()) {
-            debug_event('localplay','Error: Unable to delete entire playlist, check ' . $this->type . ' controller','1');
+            debug_event('localplay', 'Error: Unable to delete entire playlist, check ' . $this->type . ' controller', '1');
             return false;
         }
 
@@ -629,7 +629,7 @@ class Localplay
         /* This is a cheezball fix for when we were unable to find a
          * artist/album (or one wasn't provided)
          */
-        $track_name = ltrim(ltrim($track_name,' - '),' - ');
+        $track_name = ltrim(ltrim($track_name, ' - '), ' - ');
 
         $track_name = "[" . $status['track'] . "] - " . $track_name;
 

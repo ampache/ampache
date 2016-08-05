@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,11 +103,11 @@ foreach ($data as $row) {
             <div class="cel_play_hover">
             <?php if (AmpConfig::get('directplay')) {
     ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id,'play', T_('Play'),'play_song_' . $nb . '_' . $song->id);
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $nb . '_' . $song->id);
     ?>
                 <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
-                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $nb . '_' . $song->id);
+                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $nb . '_' . $song->id);
     ?>
                 <?php 
 }

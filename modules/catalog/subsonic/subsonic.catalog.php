@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -142,7 +142,7 @@ class Catalog_subsonic extends Catalog
         $username = $data['username'];
         $password = $data['password'];
 
-        if (substr($uri,0,7) != 'http://' && substr($uri,0,8) != 'https://') {
+        if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Error: Subsonic selected, but path is not a URL'));
             return false;
         }
@@ -340,7 +340,7 @@ class Catalog_subsonic extends Catalog
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->uri, "/");
-        return( str_replace( $catalog_path . "/", "", $file_path ) );
+        return(str_replace($catalog_path . "/", "", $file_path));
     }
 
     public function url_to_songid($url)

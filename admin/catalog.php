@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@
 require_once '../lib/init.php';
 require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.php';
 
-if (!Access::check('interface','100')) {
+if (!Access::check('interface', '100')) {
     UI::access_denied();
     exit;
 }
@@ -109,7 +109,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_delete_catalog':
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);
-        show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
+        show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_catalog');
     break;
     case 'enable_disabled':
         if (AmpConfig::get('demo_mode')) {
@@ -128,7 +128,7 @@ switch ($_REQUEST['action']) {
         }
         $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = count($songs) . nT_(' Disabled Song Processed', ' Disabled Songs Processed', count($songs));
-        show_confirmation($title,$body,$url);
+        show_confirmation($title, $body, $url);
     break;
     case 'clean_all_catalogs':
         catalog_worker('clean_all_catalogs');
@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
         $url       = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title     = T_('Catalog Updated');
         $body      = '';
-        show_confirmation($title,$body,$url);
+        show_confirmation($title, $body, $url);
     break;
     case 'update_from':
         if (AmpConfig::get('demo_mode')) {
@@ -176,7 +176,7 @@ switch ($_REQUEST['action']) {
             AmpError::add('general', T_('Error: Name not specified'));
         }
 
-        if (!Core::form_verify('add_catalog','post')) {
+        if (!Core::form_verify('add_catalog', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -217,7 +217,7 @@ switch ($_REQUEST['action']) {
             break;
         }
         Stream::clear_now_playing();
-        show_confirmation(T_('Now Playing Cleared'), T_('All now playing data has been cleared'),AmpConfig::get('web_path') . '/admin/catalog.php');
+        show_confirmation(T_('Now Playing Cleared'), T_('All now playing data has been cleared'), AmpConfig::get('web_path') . '/admin/catalog.php');
     break;
     case 'show_disabled':
         /* Stop the demo hippies */
@@ -241,7 +241,7 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
-        show_confirmation(T_('Delete Catalog'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
+        show_confirmation(T_('Delete Catalog'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)", $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);

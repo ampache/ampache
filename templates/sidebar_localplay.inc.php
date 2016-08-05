@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@
 <?php
 $server_allow = AmpConfig::get('allow_localplay_playback');
 $controller   = AmpConfig::get('localplay_controller');
-$access_check = Access::check('localplay','5');
+$access_check = Access::check('localplay', '5');
 if ($server_allow && $controller && $access_check) {
     ?>
 <?php
@@ -34,7 +34,7 @@ if ($server_allow && $controller && $access_check) {
     $current_instance = $localplay->current_instance();
     $class            = $current_instance ? '' : ' class="active_instance"';
     ?>
-<?php if (Access::check('localplay','25')) {
+<?php if (Access::check('localplay', '25')) {
     ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay');
     ?>"><?php echo T_('Localplay');
@@ -44,7 +44,7 @@ if ($server_allow && $controller && $access_check) {
     ?>" title="<?php echo T_('Expand/Collapse');
     ?>" /></h4>
     <ul class="sb3" id="sb_localplay_info">
-<?php if (Access::check('localplay','75')) {
+<?php if (Access::check('localplay', '75')) {
     ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path;
     ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance');
@@ -72,7 +72,7 @@ if ($server_allow && $controller && $access_check) {
     ?>" /></h4>
     <ul class="sb3" id="sb_localplay_instances">
     <li id="sb_localplay_instances_none"<?php echo $class;
-    ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'),'localplay_instance_none');
+    ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'), 'localplay_instance_none');
     ?></li>
     <?php
         // Requires a little work.. :(
@@ -86,7 +86,7 @@ if ($server_allow && $controller && $access_check) {
         ?>
     <li id="sb_localplay_instances_<?php echo $uid;
         ?>"<?php echo $class;
-        ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid,$name,'localplay_instance_' . $uid);
+        ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid, $name, 'localplay_instance_' . $uid);
         ?></li>
     <?php 
     }

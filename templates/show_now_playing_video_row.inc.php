@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,7 +76,7 @@ $media->format();
         ?></label>
             <div id="userflag_<?php echo $media->id;
         ?>_video">
-                <?php Userflag::show($media->id,'video');
+                <?php Userflag::show($media->id, 'video');
         ?>
             </div>
         </div>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,8 +53,8 @@ class AmpacheStreamBandwidth
         if (Preference::exists('stream_control_bandwidth_max')) {
             return false;
         }
-        Preference::insert('stream_control_bandwidth_max','Stream control maximal bandwidth (Mo)','1024','50','integer','plugins',$this->name);
-        Preference::insert('stream_control_bandwidth_days','Stream control bandwidth history (days)','30','50','integer','plugins',$this->name);
+        Preference::insert('stream_control_bandwidth_max', 'Stream control maximal bandwidth (Mo)', '1024', '50', 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_bandwidth_days', 'Stream control bandwidth history (days)', '30', '50', 'integer', 'plugins', $this->name);
         return true;
     } // install
 

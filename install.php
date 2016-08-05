@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -101,7 +101,7 @@ if (!$htmllang) {
 AmpConfig::set('lang', $htmllang, true);
 AmpConfig::set('site_charset', $charset ?: 'UTF-8', true);
 load_gettext();
-header ('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
+header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 
 // Correct potential \ or / in the dirname
 $safe_dirname = get_web_path();
@@ -182,7 +182,7 @@ switch ($_REQUEST['action']) {
         if (install_check_status($configfile)) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
         } else {
-            header ("Location: " . $web_path . '/login.php');
+            header("Location: " . $web_path . '/login.php');
         }
     break;
     case 'create_account':
@@ -196,7 +196,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        header ("Location: " . $web_path . '/index.php');
+        header("Location: " . $web_path . '/index.php');
     break;
     case 'init':
         require_once 'templates/show_install.inc.php';

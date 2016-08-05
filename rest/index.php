@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('subsonic_backend')) {
@@ -42,7 +42,7 @@ if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $acti
 
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
-    debug_event('Access Control','Error Attempted to use Subsonic API with Access Control turned off','3');
+    debug_event('Access Control', 'Error Attempted to use Subsonic API with Access Control turned off', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
     exit;
@@ -76,14 +76,14 @@ $password = Subsonic_Api::decrypt_password($password);
 // Check user authentication
 $auth = Auth::login($user, $password, true);
 if (!$auth['success']) {
-    debug_event('Access Denied','Invalid authentication attempt to Subsonic API for user [' . $user . ']','3');
+    debug_event('Access Denied', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH), $callback);
     exit();
 }
 
 if (!Access::check_network('init-api', $user, 5)) {
-    debug_event('Access Denied','Unauthorized access attempt to Subsonic API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    debug_event('Access Denied', 'Unauthorized access attempt to Subsonic API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'), $callback);
     exit();
@@ -134,14 +134,14 @@ foreach ($query as $param) {
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
-    if (in_array($method,$internal_functions)) {
+    if (in_array($method, $internal_functions)) {
         continue;
     }
 
     // If the method is the same as the action being called
     // Then let's call this function!
     if ($action == $method) {
-        call_user_func(array('subsonic_api',$method),$params);
+        call_user_func(array('subsonic_api', $method), $params);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit();
     }

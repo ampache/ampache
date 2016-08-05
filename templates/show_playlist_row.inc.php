@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,11 +25,11 @@
     <div class="cel_play_hover">
     <?php
         if (AmpConfig::get('directplay')) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id,'play', T_('Play'),'play_playlist_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id, 'play', T_('Play'), 'play_playlist_' . $libitem->id);
             if (Stream_Playlist::check_autoplay_next()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $libitem->id);
                 if (Stream_Playlist::check_autoplay_append()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_playlist_' . $libitem->id);
+                    echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
                 }
             }
         }
@@ -49,9 +49,9 @@
 <td class="cel_add">
     <span class="cel_item_add">
         <?php
-            echo Ajax::button('?action=basket&type=playlist&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_playlist_' . $libitem->id);
+            echo Ajax::button('?action=basket&type=playlist&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_playlist_' . $libitem->id);
             if (Access::check('interface', '25')) {
-                echo Ajax::button('?action=basket&type=playlist_random&id=' . $libitem->id,'random', T_('Random to temporary playlist'),'random_playlist_' . $libitem->id);
+                echo Ajax::button('?action=basket&type=playlist_random&id=' . $libitem->id, 'random', T_('Random to temporary playlist'), 'random_playlist_' . $libitem->id);
                 ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'playlist', '<?php echo $libitem->id ?>')">
                 <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));

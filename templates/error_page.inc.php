@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,7 @@
 <!-- Propulsed by Ampache | ampache.org -->
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
 <?php UI::show_custom_style(); ?>
-<title><?php echo( T_("Ampache error page"));?></title>
+<title><?php echo(T_("Ampache error page"));?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
@@ -48,7 +48,7 @@
     <div class="container" role="main">
         <div class="jumbotron">
             <h1><?php echo T_('Error'); ?></h1>
-            <p><?php echo (T_("The following error has occured, you will automaticly be redirected after 10 seconds.") ); ?></p>
+            <p><?php echo(T_("The following error has occured, you will automaticly be redirected after 10 seconds.")); ?></p>
         </div>
         <h2><?php echo(T_("Error messages"));?>:</h2>
         <?php AmpError::display('general'); ?>

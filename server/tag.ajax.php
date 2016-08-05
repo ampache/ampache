@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
         Tag::add_tag_map($_GET['type'], $_GET['object_id'], $_GET['tag_id'], false);
     break;
     case 'add_tag_by_name':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to add new tag', 1);
             exit;
         }
@@ -57,7 +57,7 @@ switch ($_REQUEST['action']) {
         Tag::add($_GET['type'], $_GET['object_id'], $_GET['tag_name'], false);
     break;
     case 'delete':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to delete tag', 1);
             exit;
         }

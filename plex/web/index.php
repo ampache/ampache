@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,15 +44,15 @@ function changeUniqid()
 function init_db()
 {
     if (!Preference::exists('myplex_username')) {
-        Preference::insert('myplex_username','myPlex Username','','25','string','internal');
-        Preference::insert('myplex_authtoken','myPlex Auth Token','','25','string','internal');
-        Preference::insert('myplex_published','Plex Server is published to myPlex','0','25','boolean','internal');
-        Preference::insert('plex_uniqid','Plex Server Unique Id', uniqid(),'25','string','internal');
-        Preference::insert('plex_servername','Plex Server Name','Ampache','25','string','internal');
-        Preference::insert('plex_public_address','Plex Public Address','','25','string','internal');
-        Preference::insert('plex_public_port','Plex Public Port','32400','25','string','internal');
-        Preference::insert('plex_local_auth','myPlex authentication required on local network','0','25','boolean','internal');
-        Preference::insert('plex_match_email','Link myPlex users to Ampache based on e-mail address','1','25','boolean','internal');
+        Preference::insert('myplex_username', 'myPlex Username', '', '25', 'string', 'internal');
+        Preference::insert('myplex_authtoken', 'myPlex Auth Token', '', '25', 'string', 'internal');
+        Preference::insert('myplex_published', 'Plex Server is published to myPlex', '0', '25', 'boolean', 'internal');
+        Preference::insert('plex_uniqid', 'Plex Server Unique Id', uniqid(), '25', 'string', 'internal');
+        Preference::insert('plex_servername', 'Plex Server Name', 'Ampache', '25', 'string', 'internal');
+        Preference::insert('plex_public_address', 'Plex Public Address', '', '25', 'string', 'internal');
+        Preference::insert('plex_public_port', 'Plex Public Port', '32400', '25', 'string', 'internal');
+        Preference::insert('plex_local_auth', 'myPlex authentication required on local network', '0', '25', 'boolean', 'internal');
+        Preference::insert('plex_match_email', 'Link myPlex users to Ampache based on e-mail address', '1', '25', 'boolean', 'internal');
 
         User::rebuild_all_preferences();
     }
@@ -131,7 +131,7 @@ switch ($plexact) {
     break;
 
     case 'change_uniqid':
-        Preference::update('plex_uniqid', -1,uniqid(), true, true);
+        Preference::update('plex_uniqid', -1, uniqid(), true, true);
         echo T_('Server UUID changed.') . "<br />\r\n";
     break;
 }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@
  */
 
 // Set that this is an ajax include
-define('AJAX_INCLUDE','1');
+define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 
@@ -86,7 +86,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'edit_object':
         // Scrub the data, walk recursive through array
-        $entities = function(&$data) use (&$entities) {
+        $entities = function (&$data) use (&$entities) {
             foreach ($data as $key => $value) {
                 $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
             }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,6 +28,7 @@
         <th><?php echo $field['description'];
     ?></th>
     <?php
+
 } ?>
     <th><?php echo T_('Action'); ?></th>
 </tr>
@@ -46,9 +47,10 @@
             } else {
                 echo "*****";
             }
-        ?>
+    ?>
     </td>
     <?php
+
 }
     ?>
     <td>
@@ -56,11 +58,12 @@
     ?>/localplay.php?action=edit_instance&instance=<?php echo $uid;
     ?>"><?php echo UI::get_icon('edit', T_('Edit Instance'));
     ?></a>
-        <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid,'delete', T_('Delete'),'delete_instance_' . $uid);
+        <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid, 'delete', T_('Delete'), 'delete_instance_' . $uid);
     ?>
     </td>
 </tr>
 <?php
+
 } ?>
 </table>
 <?php UI::show_box_bottom(); ?>

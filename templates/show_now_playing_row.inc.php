@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -119,7 +119,7 @@ $(document).ready(function(){
             ?></label>
                 <div id="rating_<?php echo $media->id;
             ?>_song">
-                    <?php Rating::show($media->id,'song');
+                    <?php Rating::show($media->id, 'song');
             ?>
                 </div>
             </div>
@@ -132,7 +132,7 @@ $(document).ready(function(){
             ?></label>
                 <div id="userflag_<?php echo $media->id;
             ?>_song">
-                    <?php Userflag::show($media->id,'song');
+                    <?php Userflag::show($media->id, 'song');
             ?>
                 </div>
             </div>

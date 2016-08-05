@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -211,7 +211,7 @@ class Art extends database_object
         if (function_exists('ImageCreateFromString')) {
             $image = @ImageCreateFromString($source);
             if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
-                debug_event('Art', 'Image failed PHP-GD test',1);
+                debug_event('Art', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
             @imagedestroy($image);
@@ -291,7 +291,7 @@ class Art extends database_object
                 $this->thumb      = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
             } else {
-                debug_event('Art','Unable to retrieve or generate thumbnail for ' . $this->type . '::' . $this->id,1);
+                debug_event('Art', 'Unable to retrieve or generate thumbnail for ' . $this->type . '::' . $this->id, 1);
             }
         } // if no thumb, but art and we want to resize
 
@@ -514,7 +514,7 @@ class Art extends database_object
         }
         $fp = fopen($path, "wb");
         fwrite($fp, $source);
-        fclose ($fp);
+        fclose($fp);
 
         return true;
     }
@@ -662,7 +662,7 @@ class Art extends database_object
      */
     public function generate_thumb($image, $size, $mime)
     {
-        $data = explode("/",$mime);
+        $data = explode("/", $mime);
         $type = strtolower($data['1']);
 
         if (!self::test_image($image)) {
@@ -671,32 +671,32 @@ class Art extends database_object
         }
 
         if (!function_exists('gd_info')) {
-            debug_event('Art','PHP-GD Not found - unable to resize art',1);
+            debug_event('Art', 'PHP-GD Not found - unable to resize art', 1);
             return false;
         }
 
         // Check and make sure we can resize what you've asked us to
         if (($type == 'jpg' or $type == 'jpeg') and !(imagetypes() & IMG_JPG)) {
-            debug_event('Art','PHP-GD Does not support JPGs - unable to resize',1);
+            debug_event('Art', 'PHP-GD Does not support JPGs - unable to resize', 1);
             return false;
         }
         if ($type == 'png' and !imagetypes() & IMG_PNG) {
-            debug_event('Art','PHP-GD Does not support PNGs - unable to resize',1);
+            debug_event('Art', 'PHP-GD Does not support PNGs - unable to resize', 1);
             return false;
         }
         if ($type == 'gif' and !imagetypes() & IMG_GIF) {
-            debug_event('Art','PHP-GD Does not support GIFs - unable to resize',1);
+            debug_event('Art', 'PHP-GD Does not support GIFs - unable to resize', 1);
             return false;
         }
         if ($type == 'bmp' and !imagetypes() & IMG_WBMP) {
-            debug_event('Art','PHP-GD Does not support BMPs - unable to resize',1);
+            debug_event('Art', 'PHP-GD Does not support BMPs - unable to resize', 1);
             return false;
         }
 
         $source = imagecreatefromstring($image);
 
         if (!$source) {
-            debug_event('Art','Failed to create Image from string - Source Image is damaged / malformed',1);
+            debug_event('Art', 'Failed to create Image from string - Source Image is damaged / malformed', 1);
             return false;
         }
 
@@ -706,7 +706,7 @@ class Art extends database_object
         $thumbnail = imagecreatetruecolor($size['width'], $size['height']);
 
         if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'], $source_size['height'])) {
-            debug_event('Art','Unable to create resized image',1);
+            debug_event('Art', 'Unable to create resized image', 1);
             imagedestroy($source);
             imagedestroy($thumbnail);
             return false;
@@ -796,8 +796,8 @@ class Art extends database_object
 
         // Check to see if it's a FILE
         if (isset($data['file'])) {
-            $handle     = fopen($data['file'],'rb');
-            $image_data = fread($handle,Core::get_filesize($data['file']));
+            $handle     = fopen($data['file'], 'rb');
+            $image_data = fread($handle, Core::get_filesize($data['file']));
             fclose($handle);
             return $image_data;
         }
@@ -830,7 +830,7 @@ class Art extends database_object
      * @param int|null $thumb
      * @return string
      */
-    public static function url($uid,$type,$sid=null,$thumb=null)
+    public static function url($uid, $type, $sid=null, $thumb=null)
     {
         if (!self::is_valid_type($type)) {
             return null;
@@ -1006,7 +1006,7 @@ class Art extends database_object
             $config = array($config);
         }
 
-        debug_event('Art','Searching using:' . json_encode($config), 3);
+        debug_event('Art', 'Searching using:' . json_encode($config), 3);
 
         $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($config as $method) {
@@ -1044,7 +1044,7 @@ class Art extends database_object
             // Add the results we got to the current set
             $results = array_merge($results, (array) $data);
         
-            debug_event('Art','results:' . json_encode($results), 3);
+            debug_event('Art', 'results:' . json_encode($results), 3);
 
             if ($limit && count($results) >= $limit) {
                 return array_slice($results, 0, $limit);
@@ -1200,7 +1200,7 @@ class Art extends database_object
         );
         foreach ($release->relations as $ar) {
             $arurl = $ar->url->resource;
-            debug_event('mbz-gatherart', "Found URL AR: " . $arurl , '5');
+            debug_event('mbz-gatherart', "Found URL AR: " . $arurl, '5');
             foreach ($coverartsites as $casite) {
                 if (strpos($arurl, $casite['domain']) !== false) {
                     debug_event('mbz-gatherart', "Matched coverart site: " . $casite['name'], '5');
@@ -1263,12 +1263,12 @@ class Art extends database_object
             $songs = $media->get_songs();
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
-                $dirs[] = Core::conv_lc_file( dirname($song->file) );
+                $dirs[] = Core::conv_lc_file(dirname($song->file));
             }
         } else {
             if ($this->type == 'video') {
                 $media  = new Video($this->uid);
-                $dirs[] = Core::conv_lc_file( dirname($media->file) );
+                $dirs[] = Core::conv_lc_file(dirname($media->file));
             }
         }
 

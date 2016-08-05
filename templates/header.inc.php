@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -366,7 +366,7 @@ $_SESSION['login'] = false;
                   </a>
                 </h1>
                 <div id="headerbox">
-                    <?php UI::show_box_top('','box box_headerbox'); ?>
+                    <?php UI::show_box_top('', 'box box_headerbox'); ?>
                     <?php require_once AmpConfig::get('prefix') . UI::find_template('show_search_bar.inc.php'); ?>
                     <?php if (User::is_registered()) {
     ?>
@@ -519,10 +519,10 @@ $_SESSION['login'] = false;
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
             
-            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
+            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php
-                    if (Access::check('interface','100')) {
+                    if (Access::check('interface', '100')) {
                         echo '<div id=update_notify>';
                         if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
                             AutoUpdate::show_new_version();

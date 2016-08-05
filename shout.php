@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,12 +28,12 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'add_shout':
         // Must be at least a user to do this
-        if (!Access::check('interface','25')) {
+        if (!Access::check('interface', '25')) {
             UI::access_denied();
             exit;
         }
 
-        if (!Core::form_verify('add_shout','post')) {
+        if (!Core::form_verify('add_shout', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -57,7 +57,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_add_shout':
         // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'],$_REQUEST['id']);
+        $object = Shoutbox::get_object($_REQUEST['type'], $_REQUEST['id']);
 
         if (!$object || !$object->id) {
             AmpError::add('general', T_('Invalid Object Selected'));

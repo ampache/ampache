@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,8 +63,8 @@ class AmpacheLastfm
             return false;
         }
 
-        Preference::insert('lastfm_challenge','Last.FM Submit Challenge','','25','string','internal',$this->name);
-        Preference::insert('lastfm_grant_link','Last.FM Grant URL','','25','string','plugins',$this->name);
+        Preference::insert('lastfm_challenge', 'Last.FM Submit Challenge', '', '25', 'string', 'internal', $this->name);
+        Preference::insert('lastfm_grant_link', 'Last.FM Grant URL', '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -96,7 +96,7 @@ class AmpacheLastfm
             Preference::delete('lastfm_url');
             Preference::delete('lastfm_host');
             Preference::delete('lastfm_port');
-            Preference::insert('lastfm_grant_link','Last.FM Grant URL','','25','string','plugins');
+            Preference::insert('lastfm_grant_link', 'Last.FM Grant URL', '', '25', 'string', 'plugins');
         }
         return true;
     } // upgrade
@@ -113,7 +113,7 @@ class AmpacheLastfm
         }
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
-            debug_event($this->name,'Session key missing','5');
+            debug_event($this->name, 'Session key missing', '5');
             return false;
         }
 
@@ -124,12 +124,12 @@ class AmpacheLastfm
 
         // Make sure it wasn't within the last min
         if ($diff < 60) {
-            debug_event($this->name,'Last song played within ' . $diff . ' seconds, not recording stats','3');
+            debug_event($this->name, 'Last song played within ' . $diff . ' seconds, not recording stats', '3');
             return false;
         }
 
         if ($song->time < 30) {
-            debug_event($this->name,'Song less then 30 seconds not queueing','3');
+            debug_event($this->name, 'Song less then 30 seconds not queueing', '3');
             return false;
         }
 
@@ -137,17 +137,17 @@ class AmpacheLastfm
         $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
         // Check to see if the scrobbling works by queueing song
-        if (!$scrobbler->queue_track($song->f_artist_full,$song->f_album_full,$song->title,time(),$song->time,$song->track)) {
+        if (!$scrobbler->queue_track($song->f_artist_full, $song->f_album_full, $song->title, time(), $song->time, $song->track)) {
             return false;
         }
 
         // Go ahead and submit it now
         if (!$scrobbler->submit_tracks()) {
-            debug_event($this->name,'Error Submit Failed: ' . $scrobbler->error_msg,'3');
+            debug_event($this->name, 'Error Submit Failed: ' . $scrobbler->error_msg, '3');
             return false;
         }
 
-        debug_event($this->name,'Submission Successful','5');
+        debug_event($this->name, 'Submission Successful', '5');
 
         return true;
     } // submit
@@ -160,16 +160,16 @@ class AmpacheLastfm
     {
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
-            debug_event($this->name,'Session key missing','5');
+            debug_event($this->name, 'Session key missing', '5');
             return false;
         }
         // Create our scrobbler and then queue it
         $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
         if (!$scrobbler->love($flagged, 'song', $song->f_artist_full, $song->title, $song->f_album_full)) {
-            debug_event($this->name,'Error Love Failed: ' . $scrobbler->error_msg,'3');
+            debug_event($this->name, 'Error Love Failed: ' . $scrobbler->error_msg, '3');
             return false;
         }
-        debug_event($this->name,'Sent Love Successfully','5');
+        debug_event($this->name, 'Sent Love Successfully', '5');
         return true;
     } // set_flag
 
@@ -180,17 +180,17 @@ class AmpacheLastfm
      */
     public function get_session($user_id, $token)
     {
-        $scrobbler   = new scrobbler($this->api_key, $this->scheme, $this->api_host,'', $this->secret);
+        $scrobbler   = new scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
         if (!$session_key) {
-            debug_event($this->name,'getSession Failed: ' . $scrobbler->error_msg,'3');
+            debug_event($this->name, 'getSession Failed: ' . $scrobbler->error_msg, '3');
             return false;
         }
         $this->challenge = $session_key;
 
         // Update the preferences
-        Preference::update('lastfm_challenge',$user_id,$session_key);
-        debug_event($this->name,'getSession Successful','3');
+        Preference::update('lastfm_challenge', $user_id, $session_key);
+        debug_event($this->name, 'getSession Successful', '3');
 
         return true;
     } // get_session
@@ -211,11 +211,11 @@ class AmpacheLastfm
         if (strlen(trim($data['lastfm_challenge']))) {
             $this->challenge= trim($data['lastfm_challenge']);
         } else {
-            debug_event($this->name,'No session key, not scrobbling (need to grant Ampache to last.fm)','5');
+            debug_event($this->name, 'No session key, not scrobbling (need to grant Ampache to last.fm)', '5');
             return false;
         }
 
         return true;
     } // load
 } // end AmpacheLastfm
-?>
+;

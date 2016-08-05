@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -98,7 +98,7 @@ class Plugin
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
-            debug_event('Plugins','Unable to read plugins directory','1');
+            debug_event('Plugins', 'Unable to read plugins directory', '1');
         }
 
         // Recurse the directory
@@ -172,15 +172,15 @@ class Plugin
         }
 
         /* Make sure we've got the required methods */
-        if (!method_exists($this->_plugin,'install')) {
+        if (!method_exists($this->_plugin, 'install')) {
             return false;
         }
 
-        if (!method_exists($this->_plugin,'uninstall')) {
+        if (!method_exists($this->_plugin, 'uninstall')) {
             return false;
         }
 
-        if (!method_exists($this->_plugin,'load')) {
+        if (!method_exists($this->_plugin, 'load')) {
             return false;
         }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -83,7 +83,7 @@ function check_php_pdo_mysql()
 
 function check_mbstring_func_overload()
 {
-    if ( ini_get('mbstring.func_overload') > 0) {
+    if (ini_get('mbstring.func_overload') > 0) {
         return false;
     }
     return true;
@@ -138,7 +138,7 @@ function check_config_values($conf)
 function check_php_memory()
 {
     $current_memory = ini_get('memory_limit');
-    $current_memory = substr($current_memory,0,strlen($current_memory)-1);
+    $current_memory = substr($current_memory, 0, strlen($current_memory)-1);
 
     if (intval($current_memory) < 48) {
         return false;
@@ -178,11 +178,11 @@ function check_override_memory()
 {
     /* Check memory */
     $current_memory = ini_get('memory_limit');
-    $current_memory = substr($current_memory,0,strlen($current_memory)-1);
+    $current_memory = substr($current_memory, 0, strlen($current_memory)-1);
     $new_limit      = ($current_memory+16) . "M";
 
     /* Bump it by 16 megs (for getid3)*/
-    if (!ini_set('memory_limit',$new_limit)) {
+    if (!ini_set('memory_limit', $new_limit)) {
         return false;
     }
 

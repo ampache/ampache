@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,9 +32,9 @@ if (!empty($status['track_album'])) {
 <div id="information_actions">
     <ul>
         <li>
-        <?php echo Ajax::button('?page=localplay&action=command&command=volume_mute','volumemute', T_('Mute'),'localplay_mute'); ?>
-        <?php echo Ajax::button('?page=localplay&action=command&command=volume_down','volumedn', T_('Decrease Volume'),'localplay_volume_dn'); ?>
-        <?php echo Ajax::button('?page=localplay&action=command&command=volume_up','volumeup', T_('Increase Volume'),'localplay_volume_up'); ?>
+        <?php echo Ajax::button('?page=localplay&action=command&command=volume_mute', 'volumemute', T_('Mute'), 'localplay_mute'); ?>
+        <?php echo Ajax::button('?page=localplay&action=command&command=volume_down', 'volumedn', T_('Decrease Volume'), 'localplay_volume_dn'); ?>
+        <?php echo Ajax::button('?page=localplay&action=command&command=volume_up', 'volumeup', T_('Increase Volume'), 'localplay_volume_up'); ?>
         <?php echo T_('Volume'); ?>:<?php echo $status['volume']; ?>%
         </li>
         <li>
@@ -48,7 +48,7 @@ if (!empty($status['track_album'])) {
             <?php echo T_('Random'); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?page=localplay&action=command&command=delete_all','delete', T_('Clear Playlist'),'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
+            <?php echo Ajax::button('?page=localplay&action=command&command=delete_all', 'delete', T_('Clear Playlist'), 'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
         </li>
     </ul>
 </div>

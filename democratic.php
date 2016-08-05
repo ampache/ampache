@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
                 $democratic->set_parent();
                 $democratic->format();
     case 'show_create':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             UI::access_denied();
             break;
         }
@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_create_democratic.inc.php');
     break;
     case 'delete':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             UI::access_denied();
             break;
         }
@@ -56,11 +56,11 @@ switch ($_REQUEST['action']) {
         $title = '';
         $text  = T_('The Requested Playlist has been deleted.');
         $url   = AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists';
-        show_confirmation($title,$text,$url);
+        show_confirmation($title, $text, $url);
     break;
     case 'create':
         // Only power users here
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             UI::access_denied();
             break;
         }
@@ -89,7 +89,7 @@ switch ($_REQUEST['action']) {
         header("Location: " . AmpConfig::get('web_path') . "/democratic.php?action=show");
     break;
     case 'manage_playlists':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             UI::access_denied();
             break;
         }

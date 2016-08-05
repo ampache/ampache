@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@
  * This is accessed remotly to allow outside scripts access to ampache information
  * as such it needs to verify the session id that is passed
  */
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
@@ -39,7 +39,7 @@ header("Content-Disposition: attachment; filename=information.xml");
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
-    debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3');
+    debug_event('Access Control', 'Error Attempted to use XML API with Access Control turned off', '3');
     echo XML_Data::error('501', T_('Access Control not Enabled'));
     exit;
 }
@@ -49,7 +49,7 @@ if (!AmpConfig::get('access_control')) {
  * login via this interface so we do have an exception for action=login
  */
 if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
-    debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
+    debug_event('Access Denied', 'Invalid Session attempt to API [' . $_REQUEST['action'] . ']', '3');
     ob_end_clean();
     echo XML_Data::error('401', T_('Session Expired'));
     exit();
@@ -62,7 +62,7 @@ $username =
     : Session::username($_REQUEST['auth']);
 
 if (!Access::check_network('init-api', $username, 5)) {
-    debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
     exit();
@@ -84,14 +84,14 @@ $internal_functions = array('set_filter');
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
-    if (in_array($method,$internal_functions)) {
+    if (in_array($method, $internal_functions)) {
         continue;
     }
 
     // If the method is the same as the action being called
     // Then let's call this function!
     if ($_GET['action'] == $method) {
-        call_user_func(array('api',$method),$_GET);
+        call_user_func(array('api', $method), $_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;
     }

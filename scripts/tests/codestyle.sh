@@ -12,16 +12,12 @@ else
     exit 1
 fi
 
-PHPCSFIXERARGS="fix -v --fixers="
-# Mandatory fix
-FIXERS1="indentation,linefeed,trailing_spaces,short_tag,braces,controls_spaces,eof_ending,visibility,align_equals,concat_with_spaces,elseif,line_after_namespace,lowercase_constants,encoding"
-# Optionnal fix & false positive
-#FIXERS2="visibility"
+PHPCSFIXERARGS="fix -v --config-file=.php_cs"
 
 EXIT=0
 
 echo -e "\e[1;34mChecking mandatory formatting/coding standards\e[00m"
-$PHPCSFIXER $PHPCSFIXERARGS$FIXERS1 --dry-run --diff .
+$PHPCSFIXER $PHPCSFIXERARGS --dry-run --diff .
 rc=$?
 if [[ $rc == 0 ]]
 then

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
         $current = AmpConfig::get('play_type');
 
         // Go ahead and update their preference
-        if (Preference::update('play_type',$GLOBALS['user']->id,$new)) {
+        if (Preference::update('play_type', $GLOBALS['user']->id, $new)) {
             AmpConfig::set('play_type', $new, true);
         }
 
@@ -106,8 +106,8 @@ switch ($_REQUEST['action']) {
     case 'basket':
         // Go ahead and see if we should clear the playlist here or not,
         // we might not actually clear it in the session.
-        if ( ($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
-            define('NO_SONGS','1');
+        if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
+            define('NO_SONGS', '1');
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('rightbar.inc.php');
             $results['rightbar'] = ob_get_clean();

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,5 +36,5 @@ if (isset($_SESSION['iframe']['target'])) {
     header("Location: " . $target);
 } else {
     // Prevent the update query as it's pointless
-    define('NO_SESSION_UPDATE','1');
+    define('NO_SESSION_UPDATE', '1');
 }

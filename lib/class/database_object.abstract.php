@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,7 @@ abstract class database_object
      * get_info
      * retrieves the info from the database and puts it in the cache
      */
-    public function get_info($id,$table_name='')
+    public function get_info($id, $table_name='')
     {
         $table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
 
@@ -49,8 +49,8 @@ abstract class database_object
             return array();
         }
 
-        if (self::is_cached($table_name,$id)) {
-            return self::get_from_cache($table_name,$id);
+        if (self::is_cached($table_name, $id)) {
+            return self::get_from_cache($table_name, $id);
         }
 
         $sql        = "SELECT * FROM `$table_name` WHERE `id`='$id'";
@@ -62,7 +62,7 @@ abstract class database_object
 
         $row = Dba::fetch_assoc($db_results);
 
-        self::add_to_cache($table_name,$id,$row);
+        self::add_to_cache($table_name, $id, $row);
 
         return $row;
     } // get_info
@@ -123,7 +123,7 @@ abstract class database_object
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
      */
-    public static function remove_from_cache($index,$id)
+    public static function remove_from_cache($index, $id)
     {
         if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {
             unset(self::$object_cache[$index][$id]);

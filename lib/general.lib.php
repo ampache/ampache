@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@ function set_memory_limit($new_limit)
     $new_limit     = UI::unformat_bytes($new_limit);
 
     if ($current_limit < $new_limit) {
-        ini_set (memory_limit, $new_limit);
+        ini_set(memory_limit, $new_limit);
     }
 } // set_memory_limit
 
@@ -54,10 +54,10 @@ function generate_password($length)
 
     for ($i = 0; $i < $length; $i++) {
         if ($alt == 1) {
-            $password .= $consonants[(rand(0,strlen($consonants)-1))];
+            $password .= $consonants[(rand(0, strlen($consonants)-1))];
             $alt = 0;
         } else {
-            $password .= $vowels[(rand(0,strlen($vowels)-1))];
+            $password .= $vowels[(rand(0, strlen($vowels)-1))];
             $alt = 1;
         }
     }
@@ -123,7 +123,7 @@ function scrub_arg($arg)
  */
 function make_bool($string)
 {
-    if (strcasecmp($string,'false') == 0 || $string == '0') {
+    if (strcasecmp($string, 'false') == 0 || $string == '0') {
         return false;
     }
 
@@ -152,7 +152,7 @@ function get_languages()
     $handle    = @opendir(AmpConfig::get('prefix') . '/locale');
 
     if (!is_resource($handle)) {
-        debug_event('language','Error unable to open locale directory','1');
+        debug_event('language', 'Error unable to open locale directory', '1');
     }
 
     $results = array();
@@ -161,7 +161,7 @@ function get_languages()
         $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
 
         /* Check to see if it's a directory */
-        if (is_dir($full_file) and substr($file,0,1) != '.' and $file != 'base') {
+        if (is_dir($full_file) and substr($file, 0, 1) != '.' and $file != 'base') {
             switch ($file) {
                 case 'af_ZA'; $name = 'Afrikaans'; break; /* Afrikaans */
                 case 'bg_BG'; $name = '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;'; break; /* Bulgarian */
@@ -269,17 +269,17 @@ function generate_config($current)
 {
     // Start building the new config file
     $distfile = AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist';
-    $handle   = fopen($distfile,'r');
-    $dist     = fread($handle,filesize($distfile));
+    $handle   = fopen($distfile, 'r');
+    $dist     = fread($handle, filesize($distfile));
     fclose($handle);
 
-    $data = explode("\n",$dist);
+    $data = explode("\n", $dist);
 
     $final = "";
     foreach ($data as $line) {
-        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
+        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
-            || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
+            || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)) {
             $key    = $matches[1];
             $value  = $matches[2];
 

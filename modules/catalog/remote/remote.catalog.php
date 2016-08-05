@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -140,7 +140,7 @@ class Catalog_remote extends Catalog
         $username = $data['username'];
         $password = $data['password'];
 
-        if (substr($uri,0,7) != 'http://' && substr($uri,0,8) != 'https://') {
+        if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Error: Remote selected, but path is not a URL'));
             return false;
         }
@@ -250,7 +250,7 @@ class Catalog_remote extends Catalog
                 $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
             } catch (Exception $e) {
                 debug_event('catalog', 'Songs parsing error: ' . $e->getMessage(), 1);
-                AmpError::add('general',$e->getMessage());
+                AmpError::add('general', $e->getMessage());
                 AmpError::display('general');
                 flush();
             }
@@ -346,7 +346,7 @@ class Catalog_remote extends Catalog
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->uri, "/");
-        return( str_replace( $catalog_path . "/", "", $file_path ) );
+        return(str_replace($catalog_path . "/", "", $file_path));
     }
 
     /**

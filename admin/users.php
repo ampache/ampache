@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','100')) {
+if (!Access::check('interface', '100')) {
     UI::access_denied();
     exit();
 }
@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        if (!Core::form_verify('edit_user','post')) {
+        if (!Core::form_verify('edit_user', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -118,7 +118,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        if (!Core::form_verify('add_user','post')) {
+        if (!Core::form_verify('add_user', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -174,7 +174,7 @@ switch ($_REQUEST['action']) {
         }
 
         /* HINT: %1 Username, %2 Access num */
-        show_confirmation(T_('New User Added'),sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), AmpConfig::get('web_path') . '/admin/users.php');
+        show_confirmation(T_('New User Added'), sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'enable':
         $client = new User($_REQUEST['user_id']);
@@ -182,12 +182,12 @@ switch ($_REQUEST['action']) {
         if (!AmpConfig::get('user_no_email_confirm')) {
             Registration::send_account_enabled($client->username, $client->fullname, $client->email);
         }
-        show_confirmation(T_('User Enabled'),$client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
+        show_confirmation(T_('User Enabled'), $client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'disable':
         $client = new User($_REQUEST['user_id']);
         if ($client->disable()) {
-            show_confirmation(T_('User Disabled'),$client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
+            show_confirmation(T_('User Disabled'), $client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
         } else {
             show_confirmation(T_('Error'), T_('Unable to Disabled last Administrator'), AmpConfig::get('web_path') . '/admin/users.php');
         }
@@ -221,7 +221,7 @@ switch ($_REQUEST['action']) {
         $client = new User($_REQUEST['user_id']);
         show_confirmation(T_('Deletion Request'),
             sprintf(T_('Are you sure you want to permanently delete %s?'), $client->fullname),
-            AmpConfig::get('web_path') . "/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1,'delete_user');
+            AmpConfig::get('web_path') . "/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'], 1, 'delete_user');
     break;
     case 'show_delete_avatar':
         $user_id = $_REQUEST['user_id'];
@@ -234,7 +234,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        if (!Core::form_verify('delete_avatar','post')) {
+        if (!Core::form_verify('delete_avatar', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -256,7 +256,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        if (!Core::form_verify('generate_apikey','post')) {
+        if (!Core::form_verify('generate_apikey', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -273,7 +273,7 @@ switch ($_REQUEST['action']) {
         $working_user    = new User($_REQUEST['user_id']);
 
         if (!isset($_REQUEST['all'])) {
-            $history    = $working_user->get_ip_history(0,1);
+            $history    = $working_user->get_ip_history(0, 1);
         } else {
             $history    = $working_user->get_ip_history();
         }
@@ -295,7 +295,7 @@ switch ($_REQUEST['action']) {
         $browse->reset_filters();
         $browse->set_type('user');
         $browse->set_simple_browse(true);
-        $browse->set_sort('name','ASC');
+        $browse->set_sort('name', 'ASC');
         $user_ids = $browse->get_objects();
         $browse->show_objects($user_ids);
         $browse->store();

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -70,7 +70,7 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update($preference,$user_id,$value,$applytoall=false,$applytodefault=false)
+    public static function update($preference, $user_id, $value, $applytoall=false, $applytodefault=false)
     {
         // First prepare
         if (!is_numeric($preference)) {
@@ -80,7 +80,7 @@ class Preference extends database_object
             $name = self::name_from_id($preference);
             $id   = $preference;
         }
-        if ($applytoall and Access::check('interface','100')) {
+        if ($applytoall and Access::check('interface', '100')) {
             $user_check = "";
         } else {
             $user_check = " AND `user`='$user_id'";
@@ -117,7 +117,7 @@ class Preference extends database_object
      * update_level
      * This takes a preference ID and updates the level required to update it (performed by an admin)
      */
-    public static function update_level($preference,$level)
+    public static function update_level($preference, $level)
     {
         // First prepare
         if (!is_numeric($preference)) {
@@ -139,7 +139,7 @@ class Preference extends database_object
      * update_all
      * This takes a preference id and a value and updates all users with the new info
      */
-    public static function update_all($preference_id,$value)
+    public static function update_all($preference_id, $value)
     {
         $preference_id = Dba::escape($preference_id);
         $value         = Dba::escape($value);
@@ -184,7 +184,7 @@ class Preference extends database_object
         $db_results = Dba::read($sql);
         $data       = Dba::fetch_assoc($db_results);
 
-        if (Access::check('interface',$data['level'])) {
+        if (Access::check('interface', $data['level'])) {
             return true;
         }
 
@@ -283,7 +283,7 @@ class Preference extends database_object
      * This inserts a new preference into the preference table
      * it does NOT sync up the users, that should be done independently
      */
-    public static function insert($name,$description,$default,$level,$type,$catagory,$subcatagory=null)
+    public static function insert($name, $description, $default, $level, $type, $catagory, $subcatagory=null)
     {
         if ($subcatagory !== null) {
             $subcatagory = strtolower($subcatagory);
@@ -374,10 +374,10 @@ class Preference extends database_object
 
         foreach ($results as $key=>$data) {
             if (!is_array($data)) {
-                if (strcasecmp($data,"true") == "0") {
+                if (strcasecmp($data, "true") == "0") {
                     $results[$key] = 1;
                 }
-                if (strcasecmp($data,"false") == "0") {
+                if (strcasecmp($data, "false") == "0") {
                     $results[$key] = 0;
                 }
             }
@@ -431,7 +431,7 @@ class Preference extends database_object
                     'transcode_m4a','transcode_mp3','transcode_ogg','transcode_flac',
                     'shoutcast_active','httpq_active','show_lyrics');
 
-        if (in_array($key,$boolean_array)) {
+        if (in_array($key, $boolean_array)) {
             return true;
         }
 

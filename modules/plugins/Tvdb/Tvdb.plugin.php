@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ class AmpacheTvdb
             return false;
         }
 
-        Preference::insert('tvdb_api_key','Tvdb api key','','75','string','plugins',$this->name);
+        Preference::insert('tvdb_api_key', 'Tvdb api key', '', '75', 'string', 'plugins', $this->name);
         
         return true;
     } // install
@@ -82,7 +82,7 @@ class AmpacheTvdb
         if (strlen(trim($data['tvdb_api_key']))) {
             $this->api_key = trim($data['tvdb_api_key']);
         } else {
-            debug_event($this->name,'No Tvdb api key, metadata plugin skipped','3');
+            debug_event($this->name, 'No Tvdb api key, metadata plugin skipped', '3');
             return false;
         }
         
@@ -117,7 +117,7 @@ class AmpacheTvdb
                     $release               = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId ;
-                $results['tvshow_summary'] = substr($release->overview,0,255);   //Summary column in db is only 256 characters.
+                $results['tvshow_summary'] = substr($release->overview, 0, 255);   //Summary column in db is only 256 characters.
                 $results['tvshow']         = $release->name;
                 
                 if ($release->FirstAired) {
@@ -161,7 +161,7 @@ class AmpacheTvdb
                             $results['release_date'] = $release->firstAired->getTimestamp();
                             $results['year']         = $release->firstAired->format('Y');
                         }
-                        $results['summary'] = substr($release->overview,0,255);
+                        $results['summary'] = substr($release->overview, 0, 255);
                         if ($release->thumbnail) {
                             $results['art'] = $tvdburl . '/banners/' . $release->thumbnail;
                         }
@@ -202,4 +202,4 @@ class AmpacheTvdb
         return count($titles) > 0 ? $titles[0] : $results[0];
     }
 } // end AmpacheTvdb
-?>
+;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -97,7 +97,7 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active','MPD Active Instance','0','25','integer','internal','mpd');
+        Preference::insert('mpd_active', 'MPD Active Instance', '0', '25', 'integer', 'internal', 'mpd');
 
         return true;
     } // install
@@ -201,7 +201,7 @@ class AmpacheMpd extends localplay_controller
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      */
-    public function update_instance($uid,$data)
+    public function update_instance($uid, $data)
     {
         $uid     = Dba::escape($uid);
         $host    = $data['host'] ? Dba::escape($data['host']) : '127.0.0.1';
@@ -234,7 +234,7 @@ class AmpacheMpd extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      */
-    public function set_active_instance($uid,$user_id='')
+    public function set_active_instance($uid, $user_id='')
     {
         // Not an admin? bubkiss!
         if (!$GLOBALS['user']->has_access('100')) {
@@ -243,7 +243,7 @@ class AmpacheMpd extends localplay_controller
 
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
-        Preference::update('mpd_active',$user_id,intval($uid));
+        Preference::update('mpd_active', $user_id, intval($uid));
         AmpConfig::set('mpd_active', intval($uid), true);
 
         return true;

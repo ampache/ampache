@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,7 @@ if (!defined('AJAX_INCLUDE')) {
 
 switch ($_REQUEST['action']) {
     case 'sync':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to sync podcast', 1);
             exit;
         }

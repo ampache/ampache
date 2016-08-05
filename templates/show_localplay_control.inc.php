@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,9 +21,9 @@
  */
 ?>
 <div id="localplay-control">
-<?php echo Ajax::button('?page=localplay&action=command&command=prev','prev', T_('Previous'),'localplay_control_previous'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=stop','stop', T_('Stop'),'localplay_control_stop'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=pause','pause', T_('Pause'),'localplay_control_pause'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=play','play', T_('Play'),'localplay_control_play'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=next','next', T_('Next'),'localplay_control_next'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=prev', 'prev', T_('Previous'), 'localplay_control_previous'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=stop', 'stop', T_('Stop'), 'localplay_control_stop'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=pause', 'pause', T_('Pause'), 'localplay_control_pause'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=play', 'play', T_('Play'), 'localplay_control_play'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=next', 'next', T_('Next'), 'localplay_control_next'); ?>
 </div>

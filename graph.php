@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once 'lib/init.php';
 
 // Check to see if they've got an interface session or a valid API session, if not GTFO

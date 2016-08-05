@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,7 +43,7 @@ if ($directplay_limit > 0) {
     }
 }
 ?>
-<?php UI::show_box_top($title,'info-box'); ?>
+<?php UI::show_box_top($title, 'info-box'); ?>
 
 <div class="item_right_info">
     <div class="external_links">
@@ -64,7 +64,7 @@ if ($directplay_limit > 0) {
     ?>
     <div style="display:table-cell;" id="rating_<?php echo $album->id;
     ?>_album">
-            <?php Rating::show($album->id,'album');
+            <?php Rating::show($album->id, 'album');
     ?>
     </div>
     <?php 
@@ -74,7 +74,7 @@ if ($directplay_limit > 0) {
     ?>
     <div style="display:table-cell;" id="userflag_<?php echo $album->id;
     ?>_album">
-            <?php Userflag::show($album->id,'album');
+            <?php Userflag::show($album->id, 'album');
     ?>
     </div>
     <?php 
@@ -113,17 +113,17 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($show_direct_play) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'),'play', T_('Play'),'directplay_full_' . $album->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'directplay_full_' . $album->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), T_('Play'),'directplay_full_text_' . $album->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), T_('Play'), 'directplay_full_text_' . $album->id);
     ?>
         </li>
             <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true','play_add', T_('Play last'),'addplay_album_' . $album->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $album->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', T_('Play last'),'addplay_album_text_' . $album->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', T_('Play last'), 'addplay_album_text_' . $album->id);
     ?>
         </li>
             <?php 
@@ -135,13 +135,13 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($show_playlist_add) {
     ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'),'add', T_('Add to temporary playlist'),'play_full_' . $album->id);
+            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $album->id);
     ?>
             <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), T_('Add to temporary playlist'), 'play_full_text_' . $album->id);
     ?>
         </li>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'),'random', T_('Random to temporary playlist'),'play_random_' . $album->id);
+            <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $album->id);
     ?>
             <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to temporary playlist'), 'play_random_text_' . $album->id);
     ?>
@@ -165,7 +165,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php 
 } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -183,7 +183,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php 
 }
     ?>
-    <?php if (Access::check('interface','25')) {
+    <?php if (Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('share')) {
     ?>
@@ -196,7 +196,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     ?>
         <?php 
 } ?>
-        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface','50')) {
+        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', '50')) {
     ?>
         <?php if (AmpConfig::get('statistical_graphs')) {
     ?>
@@ -241,7 +241,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     ?>
                 <li>
                     <a href="<?php echo $web_path;
-    ?>/upload.php?artist=<?php echo ($album->album_artist ? $album->album_artist : $album->artist_id);
+    ?>/upload.php?artist=<?php echo($album->album_artist ? $album->album_artist : $album->artist_id);
     ?>&album=<?php echo $album->id ?>">
                         <?php echo UI::get_icon('upload', T_('Upload'));
     ?>

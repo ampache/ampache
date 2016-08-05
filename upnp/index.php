@@ -1,5 +1,5 @@
 <?php
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {

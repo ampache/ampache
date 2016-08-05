@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -93,7 +93,7 @@ class AmpacheUPnP extends localplay_controller
         $db_results = Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('upnp_active', 'UPnP Active Instance', '0', '25', 'integer', 'internal','upnp');
+        Preference::insert('upnp_active', 'UPnP Active Instance', '0', '25', 'integer', 'internal', 'upnp');
 
         return true;
     }

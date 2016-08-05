@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,8 +56,8 @@ class AmpachePiwik
             return false;
         }
 
-        Preference::insert('piwik_site_id','Piwik Site ID','1',100,'string','plugins','piwik');
-        Preference::insert('piwik_url','Piwik URL', AmpConfig::get('web_path') . '/piwik/',100,'string','plugins',$this->name);
+        Preference::insert('piwik_site_id', 'Piwik Site ID', '1', 100, 'string', 'plugins', 'piwik');
+        Preference::insert('piwik_url', 'Piwik URL', AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -125,13 +125,13 @@ class AmpachePiwik
 
         $this->site_id = trim($data['piwik_site_id']);
         if (!strlen($this->site_id)) {
-            debug_event($this->name,'No Piwik Site ID, user field plugin skipped','3');
+            debug_event($this->name, 'No Piwik Site ID, user field plugin skipped', '3');
             return false;
         }
 
         $this->piwik_url = trim($data['piwik_url']);
         if (!strlen($this->piwik_url)) {
-            debug_event($this->name,'No Piwik URL, user field plugin skipped','3');
+            debug_event($this->name, 'No Piwik URL, user field plugin skipped', '3');
             return false;
         }
 

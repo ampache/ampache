@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,11 +74,11 @@ function update_preferences($pref_id=0)
 
         /* Run the update for this preference only if it's set */
         if (isset($_REQUEST[$name])) {
-            Preference::update($id,$pref_id,$value,$_REQUEST[$apply_to_all]);
+            Preference::update($id, $pref_id, $value, $_REQUEST[$apply_to_all]);
         }
 
-        if (Access::check('interface','100') && $_REQUEST[$new_level]) {
-            Preference::update_level($id,$_REQUEST[$new_level]);
+        if (Access::check('interface', '100') && $_REQUEST[$new_level]) {
+            Preference::update_level($id, $_REQUEST[$new_level]);
         }
     } // end foreach preferences
 
@@ -90,20 +90,20 @@ function update_preferences($pref_id=0)
  * update_preference
  * This function updates a single preference and is called by the update_preferences function
  */
-function update_preference($user_id,$name,$pref_id,$value)
+function update_preference($user_id, $name, $pref_id, $value)
 {
     $apply_check = "check_" . $name;
     $level_check = "level_" . $name;
 
     /* First see if they are an administrator and we are applying this to everything */
     if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$apply_check])) {
-        Preference::update_all($pref_id,$value);
+        Preference::update_all($pref_id, $value);
         return true;
     }
 
     /* Check and see if they are an admin and the level def is set */
     if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$level_check])) {
-        Preference::update_level($pref_id,$_REQUEST[$level_check]);
+        Preference::update_level($pref_id, $_REQUEST[$level_check]);
     }
 
     /* Else make sure that the current users has the right to do this */
@@ -120,7 +120,7 @@ function update_preference($user_id,$name,$pref_id,$value)
  * create_preference_input
  * takes the key and then creates the correct type of input for updating it
  */
-function create_preference_input($name,$value)
+function create_preference_input($name, $value)
 {
     if (!Preference::has_access($name)) {
         if ($value == '1') {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -78,13 +78,13 @@ class Playlist extends playlist_object
             return false;
         }
 
-        $idlist = '(' . implode(',',$ids) . ')';
+        $idlist = '(' . implode(',', $ids) . ')';
 
         $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('playlist',$row['id'],$row);
+            parent::add_to_cache('playlist', $row['id'], $row);
         }
     } // build_cache
 
@@ -300,7 +300,7 @@ class Playlist extends playlist_object
      */
     private function update_type($new_type)
     {
-        if ($this->_update_item('type',$new_type,50)) {
+        if ($this->_update_item('type', $new_type, 50)) {
             $this->type = $new_type;
         }
     } // update_type
@@ -311,7 +311,7 @@ class Playlist extends playlist_object
      */
     private function update_name($new_name)
     {
-        if ($this->_update_item('name',$new_name,50)) {
+        if ($this->_update_item('name', $new_name, 50)) {
             $this->name = $new_name;
         }
     } // update_name
@@ -323,7 +323,7 @@ class Playlist extends playlist_object
     private function update_last_update()
     {
         $last_update = time();
-        if ($this->_update_item('last_update',$last_update,50)) {
+        if ($this->_update_item('last_update', $last_update, 50)) {
             $this->last_update = $last_update;
         }
     } // update_last_update
@@ -332,9 +332,9 @@ class Playlist extends playlist_object
      * _update_item
      * This is the generic update function, it does the escaping and error checking
      */
-    private function _update_item($field,$value,$level)
+    private function _update_item($field, $value, $level)
     {
-        if ($GLOBALS['user']->id != $this->user && !Access::check('interface',$level)) {
+        if ($GLOBALS['user']->id != $this->user && !Access::check('interface', $level)) {
             return false;
         }
 

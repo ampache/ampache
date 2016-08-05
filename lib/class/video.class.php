@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -235,13 +235,13 @@ class Video extends database_object implements media, library_item
             return false;
         }
 
-        $idlist = '(' . implode(',',$ids) . ')';
+        $idlist = '(' . implode(',', $ids) . ')';
 
         $sql        = "SELECT * FROM `video` WHERE `video`.`id` IN $idlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('video',$row['id'],$row);
+            parent::add_to_cache('video', $row['id'], $row);
         }
     } // build_cache
 
@@ -746,7 +746,7 @@ class Video extends database_object implements media, library_item
     public static function compare_video_information(Video $video, Video $new_video)
     {
         // Remove some stuff we don't care about
-        unset($video->catalog,$video->played,$video->enabled,$video->addition_time,$video->update_time,$video->type);
+        unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
         $string_array = array('title','tags');
         $skip_array   = array('id','tag_id','mime','object_cnt');
 
@@ -1036,7 +1036,7 @@ class Video extends database_object implements media, library_item
      */
     public static function update_played($new_played, $song_id)
     {
-        self::_update_item('played', ($new_played ? 1 : 0),$song_id,'25');
+        self::_update_item('played', ($new_played ? 1 : 0), $song_id, '25');
     } // update_played
 
     /**
@@ -1054,7 +1054,7 @@ class Video extends database_object implements media, library_item
     private static function _update_item($field, $value, $song_id, $level)
     {
         /* Check them Rights! */
-        if (!Access::check('interface',$level)) {
+        if (!Access::check('interface', $level)) {
             return false;
         }
 

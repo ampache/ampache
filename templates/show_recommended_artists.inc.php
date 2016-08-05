@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,11 +62,11 @@ $thcount = 8;
         <?php
         // Cache the ratings we are going to use
         if (AmpConfig::get('ratings')) {
-            Rating::build_cache('artist',$object_ids);
+            Rating::build_cache('artist', $object_ids);
         }
         // Cache the userflags we are going to use
         if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('artist',$object_ids);
+            Userflag::build_cache('artist', $object_ids);
         }
 
         /* Foreach through every artist that has been passed to us */
@@ -90,7 +90,7 @@ $thcount = 8;
             ?>" class="<?php echo UI::flip_class();
             ?>">
             <td></td>
-            <td colspan="<?php echo ($thcount - 1);
+            <td colspan="<?php echo($thcount - 1);
             ?>"><a class="missing_album" href="<?php echo AmpConfig::get('web_path');
             ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid'];
             ?>" title="<?php echo scrub_out($missing['name']);

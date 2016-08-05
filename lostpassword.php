@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once 'lib/init.php';
 
 $action = (isset($_POST['action'])) ? $_POST['action'] : "";
@@ -47,7 +47,7 @@ switch ($action) {
         require AmpConfig::get('prefix') . UI::find_template('show_lostpassword_form.inc.php');
 }
 
-function send_newpassword($email,$current_ip)
+function send_newpassword($email, $current_ip)
 {
     /* get the Client and set the new password */
     $client = User::get_from_email($email);

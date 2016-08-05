@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,8 +57,8 @@ class AmpacheHeadphones
             return false;
         }
 
-        Preference::insert('headphones_api_url','Headphones url','','25','string','plugins',$this->name);
-        Preference::insert('headphones_api_key','Headphones api key','','25','string','plugins',$this->name);
+        Preference::insert('headphones_api_url', 'Headphones url', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_key', 'Headphones api key', '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -154,17 +154,17 @@ class AmpacheHeadphones
         if (strlen(trim($data['headphones_api_url']))) {
             $this->api_url = trim($data['headphones_api_url']);
         } else {
-            debug_event($this->name,'No Headphones url, auto download skipped','3');
+            debug_event($this->name, 'No Headphones url, auto download skipped', '3');
             return false;
         }
         if (strlen(trim($data['headphones_api_key']))) {
             $this->api_key = trim($data['headphones_api_key']);
         } else {
-            debug_event($this->name,'No Headphones api key, auto download skipped','3');
+            debug_event($this->name, 'No Headphones api key, auto download skipped', '3');
             return false;
         }
 
         return true;
     } // load
 } // end AmpacheHeadphones
-?>
+;

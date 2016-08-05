@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
-        show_confirmation(T_('Search Saved'),sprintf(T_('Your Search has been saved as a Smart Playlist with name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
+        show_confirmation(T_('Search Saved'), sprintf(T_('Your Search has been saved as a Smart Playlist with name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
     break;
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@
                     ?>">
             <td class="cel_disable" id="<?php echo($button_flip_state_id);
                     ?>">
-                <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id,$button, T_(ucfirst($button)),'flip_state_' . $song_id);
+                <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id, $button, T_(ucfirst($button)), 'flip_state_' . $song_id);
                     ?>
             </td>
             <td class="cel_song"><?php echo $song->f_link;

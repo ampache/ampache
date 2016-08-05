@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@ UI::show_box_top($podcast->f_title, 'info-box');
     ?>
     <div style="display:table-cell;" id="userflag_<?php echo $podcast->id;
     ?>_podcast">
-            <?php Userflag::show($podcast->id,'podcast');
+            <?php Userflag::show($podcast->id, 'podcast');
     ?>
     </div>
     <?php 
@@ -70,9 +70,9 @@ UI::show_box_top($podcast->f_title, 'info-box');
         <?php if (AmpConfig::get('directplay')) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id,'play', T_('Play all'),'directplay_full_' . $podcast->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id, 'play', T_('Play all'), 'directplay_full_' . $podcast->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id, T_('Play all'),'directplay_full_text_' . $podcast->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id, T_('Play all'), 'directplay_full_text_' . $podcast->id);
     ?>
         </li>
         <?php 
@@ -80,14 +80,14 @@ UI::show_box_top($podcast->f_title, 'info-box');
         <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true','play_add', T_('Play all last'),'addplay_podcast_' . $podcast->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_podcast_' . $podcast->id);
     ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', T_('Play all last'),'addplay_podcast_text_' . $podcast->id);
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', T_('Play all last'), 'addplay_podcast_text_' . $podcast->id);
     ?>
         </li>
         <?php 
 } ?>
-        <?php if (Access::check('interface','50')) {
+        <?php if (Access::check('interface', '50')) {
     ?>
         <?php if (AmpConfig::get('statistical_graphs')) {
     ?>
@@ -124,14 +124,14 @@ UI::show_box_top($podcast->f_title, 'info-box');
             </a>
         </li>
         <li>
-            <?php echo Ajax::button('?page=podcast&action=sync&podcast_id=' . $podcast->id, 'file_refresh', T_('Sync'),'sync_podcast_' . $podcast->id);
+            <?php echo Ajax::button('?page=podcast&action=sync&podcast_id=' . $podcast->id, 'file_refresh', T_('Sync'), 'sync_podcast_' . $podcast->id);
     ?>
-            <?php echo Ajax::text('?page=podcast&action=sync&podcast_id=' . $podcast->id, T_('Sync'),'sync_podcast_text_' . $podcast->id);
+            <?php echo Ajax::text('?page=podcast&action=sync&podcast_id=' . $podcast->id, T_('Sync'), 'sync_podcast_text_' . $podcast->id);
     ?>
         </li>
         <?php 
 } ?>
-        <?php if (Access::check('interface','75')) {
+        <?php if (Access::check('interface', '75')) {
     ?>
         <li>
             <a id="<?php echo 'delete_podcast_' . $podcast->id ?>" href="<?php echo AmpConfig::get('web_path');

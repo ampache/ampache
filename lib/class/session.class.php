@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -512,7 +512,7 @@ class Session
         $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';
         if (isset($_COOKIE[$cname])) {
-            list ($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
+            list($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));

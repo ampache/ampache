@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -593,8 +593,8 @@ class Song extends database_object implements media, library_item
     {
         $id = intval($this->id);
 
-        if (parent::is_cached('song_data',$id)) {
-            return parent::get_from_cache('song_data',$id);
+        if (parent::is_cached('song_data', $id)) {
+            return parent::get_from_cache('song_data', $id);
         }
 
         $sql        = "SELECT * FROM song_data WHERE `song_id` = ?";
@@ -602,7 +602,7 @@ class Song extends database_object implements media, library_item
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('song_data',$id,$results);
+        parent::add_to_cache('song_data', $id, $results);
 
         return $results;
     } // _get_ext_info
@@ -902,7 +902,7 @@ class Song extends database_object implements media, library_item
     public static function compare_song_information(Song $song, Song $new_song)
     {
         // Remove some stuff we don't care about
-        unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
+        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = array('title','comment','lyrics','composer','tags');
         $skip_array   = array('id','tag_id','mime','artist_mbid','album_mbid','albumartist_mbid','albumartist','mbid','mb_albumid_group','waveform','object_cnt');
 
@@ -919,7 +919,7 @@ class Song extends database_object implements media, library_item
         // Foreach them
         foreach ($fields as $key=>$value) {
             $key = trim($key);
-            if (empty($key) || in_array($key,$skip_array)) {
+            if (empty($key) || in_array($key, $skip_array)) {
                 continue;
             }
 
@@ -1171,7 +1171,7 @@ class Song extends database_object implements media, library_item
      * @param string $new_title
      * @param int $song_id
      */
-    public static function update_title($new_title,$song_id)
+    public static function update_title($new_title, $song_id)
     {
         self::_update_item('title', $new_title, $song_id, 50, true);
     } // update_title
@@ -1401,7 +1401,7 @@ class Song extends database_object implements media, library_item
         }
 
         /* Check them rights boy! */
-        if (!Access::check('interface',$level)) {
+        if (!Access::check('interface', $level)) {
             return false;
         }
 
@@ -1637,7 +1637,7 @@ class Song extends database_object implements media, library_item
     {
         $fields = get_class_vars('Song');
 
-        unset($fields['id'],$fields['_transcoded'],$fields['_fake'],$fields['cache_hit'],$fields['mime'],$fields['type']);
+        unset($fields['id'], $fields['_transcoded'], $fields['_fake'], $fields['cache_hit'], $fields['mime'], $fields['type']);
 
         // Some additional fields
         $fields['tag']     = true;
@@ -1679,7 +1679,7 @@ class Song extends database_object implements media, library_item
      * @param int $catalog_id
      * @return string
      */
-    public function get_rel_path($file_path=null,$catalog_id=0)
+    public function get_rel_path($file_path=null, $catalog_id=0)
     {
         $info = null;
         if (!$file_path) {
@@ -1692,7 +1692,7 @@ class Song extends database_object implements media, library_item
             }
             $catalog_id = $info['catalog'];
         }
-        $catalog = Catalog::create_from_id( $catalog_id );
+        $catalog = Catalog::create_from_id($catalog_id);
         return $catalog->get_rel_path($file_path);
     } // get_rel_path
 
@@ -1785,7 +1785,7 @@ class Song extends database_object implements media, library_item
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `user`='$user_id' ";
         } else {
-            if (!Access::check('interface','100')) {
+            if (!Access::check('interface', '100')) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
                 if ($personal_info_id) {

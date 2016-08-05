@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_from_tags':
         // Make sure they are a 'power' user at least
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             UI::access_denied();
             exit;
         }
@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
     case 'set_track_numbers':
         debug_event('albums', 'Set track numbers called.', '5');
 
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             UI::access_denied();
             exit;
         }

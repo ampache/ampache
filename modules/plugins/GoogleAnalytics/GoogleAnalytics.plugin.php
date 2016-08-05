@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,7 @@ class AmpacheGoogleAnalytics
             return false;
         }
 
-        Preference::insert('googleanalytics_tracking_id','Google Analytics Tracking ID','',100,'string','plugins',$this->name);
+        Preference::insert('googleanalytics_tracking_id', 'Google Analytics Tracking ID', '', 100, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -111,7 +111,7 @@ class AmpacheGoogleAnalytics
 
         $this->tracking_id = trim($data['googleanalytics_tracking_id']);
         if (!strlen($this->tracking_id)) {
-            debug_event($this->name,'No Tracking ID, user field plugin skipped','3');
+            debug_event($this->name, 'No Tracking ID, user field plugin skipped', '3');
             return false;
         }
 

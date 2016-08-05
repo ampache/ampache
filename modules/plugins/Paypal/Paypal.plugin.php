@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,8 +57,8 @@ class AmpachePaypal
             return false;
         }
 
-        Preference::insert('paypal_business','Paypal ID','',25,'string','plugins',$this->name);
-        Preference::insert('paypal_currency_code','Paypal Currency Code','USD',25,'string','plugins',$this->name);
+        Preference::insert('paypal_business', 'Paypal ID', '', 25, 'string', 'plugins', $this->name);
+        Preference::insert('paypal_currency_code', 'Paypal Currency Code', 'USD', 25, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -123,7 +123,7 @@ class AmpachePaypal
 
         $this->business = trim($data['paypal_business']);
         if (!strlen($this->business)) {
-            debug_event($this->name,'No Paypal ID, user field plugin skipped','3');
+            debug_event($this->name, 'No Paypal ID, user field plugin skipped', '3');
             return false;
         }
 

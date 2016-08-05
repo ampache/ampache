@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@
  *
  */
 
-UI::show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog');
+UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog');
 ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -164,4 +164,4 @@ class AmpacheOmdb
         return Art::gather_metadata_plugin($this, $type, $options);
     }
 } // end AmpacheOmdb
-?>
+;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,7 @@ $web_path = AmpConfig::get('web_path');
 $title = scrub_out($walbum->name) . '&nbsp;(' . $walbum->year . ')';
 $title .= '&nbsp;-&nbsp;' . $walbum->f_artist_link;
 ?>
-<?php UI::show_box_top($title,'info-box missing'); ?>
+<?php UI::show_box_top($title, 'info-box missing'); ?>
 <div class="item_art">
 <?php
 // Attempt to find the art.

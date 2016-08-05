@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,7 @@ class scrobbler
      * Constructor
      * This is the constructer it takes a username and password
      */
-    public function __construct($api_key, $scheme='https',$host='',$challenge='', $secret='')
+    public function __construct($api_key, $scheme='https', $host='', $challenge='', $secret='')
     {
         $this->error_msg     = '';
         $this->challenge     = $challenge;
@@ -127,7 +127,7 @@ class scrobbler
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
      */
-    public function get_session_key ($token=null)
+    public function get_session_key($token=null)
     {
         if (!is_null($token)) {
             $vars = array(
@@ -169,10 +169,10 @@ class scrobbler
      * submit the track or talk to LastFM / Libre in anyway, kind of useless for our uses but its
      * here, and that's how it is.
      */
-    public function queue_track($artist, $album, $title, $timestamp, $length,$track)
+    public function queue_track($artist, $album, $title, $timestamp, $length, $track)
     {
         if ($length < 30) {
-            debug_event('Scrobbler',"Not queuing track, too short",'5');
+            debug_event('Scrobbler', "Not queuing track, too short", '5');
             return false;
         }
 

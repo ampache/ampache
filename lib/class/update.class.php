@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -646,8 +646,8 @@ class Update
             // exists and run the bugger.
             if ($version['version'] > $current_version) {
                 $update_function = "update_" . $version['version'];
-                if (in_array($update_function,$methods)) {
-                    $success = call_user_func(array('Update',$update_function));
+                if (in_array($update_function, $methods)) {
+                    $success = call_user_func(array('Update', $update_function));
 
                     // If the update fails drop out
                     if ($success) {
@@ -2196,9 +2196,9 @@ class Update
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         $retval &= Dba::write($sql, array($id));
 
-        Preference::insert('autoupdate_lastcheck','AutoUpdate last check time','','25','string','internal');
-        Preference::insert('autoupdate_lastversion','AutoUpdate last version from last check','','25','string','internal');
-        Preference::insert('autoupdate_lastversion_new','AutoUpdate last version from last check is newer','','25','boolean','internal');
+        Preference::insert('autoupdate_lastcheck', 'AutoUpdate last check time', '', '25', 'string', 'internal');
+        Preference::insert('autoupdate_lastversion', 'AutoUpdate last version from last check', '', '25', 'string', 'internal');
+        Preference::insert('autoupdate_lastversion_new', 'AutoUpdate last version from last check is newer', '', '25', 'boolean', 'internal');
 
         return $retval;
     }

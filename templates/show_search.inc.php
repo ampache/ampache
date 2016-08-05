@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@ ob_start();
 require AmpConfig::get('prefix') . UI::find_template('show_search_title.inc.php');
 $title = ob_get_contents();
 ob_end_clean();
-UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>' , 'box box_smartplaylist');
+UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist');
 ?>
 <div id="information_actions">
     <ul>
@@ -42,7 +42,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
             <?php 
 } ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=search&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
+            <?php echo Ajax::button('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
             <?php echo T_('Add All'); ?>
         </li>
         <?php if ($playlist->has_access()) {

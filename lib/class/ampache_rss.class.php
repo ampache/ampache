@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,7 +66,7 @@ class Ampache_RSS
             $data_function     = 'load_' . $this->type;
             $pub_date_function = 'pubdate_' . $this->type;
 
-            $data     = call_user_func(array('Ampache_RSS',$data_function));
+            $data     = call_user_func(array('Ampache_RSS', $data_function));
             $pub_date = null;
             if (method_exists('Ampache_RSS', $pub_date_function)) {
                 $pub_date = call_user_func(array('Ampache_RSS', $pub_date_function));
@@ -119,7 +119,7 @@ class Ampache_RSS
     {
         $valid_types = array('now_playing','recently_played','latest_album','latest_artist','latest_shout','podcast');
 
-        if (!in_array($type,$valid_types)) {
+        if (!in_array($type, $valid_types)) {
             return 'now_playing';
         }
 
@@ -252,7 +252,7 @@ class Ampache_RSS
                         $amount = floor($amount/4);
                     }
                     if ($time_place == '6') {
-                        $amount = floor ($amount/12);
+                        $amount = floor($amount/12);
                     }
                     if ($time_place > '6') {
                         $final = $amount . '+';
@@ -266,7 +266,7 @@ class Ampache_RSS
                             'link'=>str_replace('&amp;', '&', $song->link),
                             'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
                             'comments'=>$client->username,
-                            'pubDate'=>date("r",$item['date']));
+                            'pubDate'=>date("r", $item['date']));
                 $results[] = $xml_array;
             }
         } // end foreach

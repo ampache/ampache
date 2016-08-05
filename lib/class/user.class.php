@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -201,8 +201,8 @@ class User extends database_object
     {
         $id = intval($this->id);
 
-        if (parent::is_cached('user',$id)) {
-            return parent::get_from_cache('user',$id);
+        if (parent::is_cached('user', $id)) {
+            return parent::get_from_cache('user', $id);
         }
 
         $data = array();
@@ -219,7 +219,7 @@ class User extends database_object
 
         $data = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('user',$id,$data);
+        parent::add_to_cache('user', $id, $data);
 
         return $data;
     } // _get_info
@@ -331,8 +331,8 @@ class User extends database_object
      */
     public function get_catalogs()
     {
-        if (parent::is_cached('user_catalog',$this->id)) {
-            return parent::get_from_cache('user_catalog',$this->id);
+        if (parent::is_cached('user_catalog', $this->id)) {
+            return parent::get_from_cache('user_catalog', $this->id);
         }
 
         $sql        = "SELECT * FROM `user_catalog` WHERE `user` = ?";
@@ -343,7 +343,7 @@ class User extends database_object
             $catalogs[] = $row['catalog'];
         }
 
-        parent::add_to_cache('user_catalog',$this->id,$catalogs);
+        parent::add_to_cache('user_catalog', $this->id, $catalogs);
 
         return $catalogs;
     } // get_catalogs
@@ -388,7 +388,7 @@ class User extends database_object
                 $admin = true;
             }
             $type_array[$type][$r['name']] = array('name'=>$r['name'],'level'=>$r['level'],'description'=>$r['description'],'value'=>$r['value'],'subcategory'=>$r['subcatagory']);
-            $results[$type]                = array ('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
+            $results[$type]                = array('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
         } // end while
 
         return $results;
@@ -418,7 +418,7 @@ class User extends database_object
      */
     public function get_favorites($type)
     {
-        $results = Stats::get_user(AmpConfig::get('popular_threshold'),$type,$this->id,1);
+        $results = Stats::get_user(AmpConfig::get('popular_threshold'), $type, $this->id, 1);
 
         $items = array();
 
@@ -888,10 +888,10 @@ class User extends database_object
     {
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
+            debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
         } else {
             $sip = $_SERVER['REMOTE_ADDR'];
-            debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
+            debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
         }
         
         // Remove port information if any
@@ -910,7 +910,7 @@ class User extends database_object
         Dba::write($sql);
 
         /* Clean up old records... sometimes  */
-        if (rand(1,100) > 60) {
+        if (rand(1, 100) > 60) {
             $date = time() - (86400*AmpConfig::get('user_ip_cardinality'));
             $sql  = "DELETE FROM `ip_history` WHERE `date` < $date";
             Dba::write($sql);
@@ -981,7 +981,7 @@ class User extends database_object
      */
     public function update_password($new_password)
     {
-        $new_password = hash('sha256',$new_password);
+        $new_password = hash('sha256', $new_password);
 
         $new_password = Dba::escape($new_password);
         $sql          = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
@@ -1005,14 +1005,14 @@ class User extends database_object
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen);
+            $this->f_last_seen = date("m\/d\/Y - H:i", $this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date);
+            $this->f_create_date = date("m\/d\/Y - H:i", $this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
@@ -1232,7 +1232,7 @@ class User extends database_object
      * calcs difference between now and last_seen
      * if less than delay, we consider them still online
      */
-    public function is_online( $delay = 1200 )
+    public function is_online($delay = 1200)
     {
         return time() - $this->last_seen <= $delay;
     } // is_online
@@ -1256,7 +1256,7 @@ class User extends database_object
      * This gets the recently played items for this user respecting
      * the limit passed
      */
-    public function get_recently_played($limit,$type='')
+    public function get_recently_played($limit, $type='')
     {
         if (!$type) {
             $type = 'song';
@@ -1279,7 +1279,7 @@ class User extends database_object
      * This returns the ip_history from the
      * last AmpConfig::get('user_ip_cardinality') days
      */
-    public function get_ip_history($count='',$distinct='')
+    public function get_ip_history($count='', $distinct='')
     {
         $username     = Dba::escape($this->id);
         $count        = $count ? intval($count) : intval(AmpConfig::get('user_ip_cardinality'));
@@ -1354,7 +1354,7 @@ class User extends database_object
         return $avatar;
     } // get_avatar
 
-    public function update_avatar ($data, $mime = '')
+    public function update_avatar($data, $mime = '')
     {
         $art = new Art($this->id, 'user');
         $art->insert($data, $mime);

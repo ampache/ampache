@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,7 +45,7 @@ class Bookmark extends database_object
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull for
      */
-    public function __construct ($object_id, $object_type = null, $user_id = null)
+    public function __construct($object_id, $object_type = null, $user_id = null)
     {
         if (!$object_id) {
             return false;

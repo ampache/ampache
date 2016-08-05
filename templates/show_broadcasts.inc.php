@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,10 +28,10 @@
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <th class="cel_name essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=broadcast&sort=name', T_('Name'),'broadcast_sort_name'); ?></th>
+            <th class="cel_name essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=broadcast&sort=name', T_('Name'), 'broadcast_sort_name'); ?></th>
             <th class="cel_genre optional"><?php echo T_('Genre'); ?></th>
-            <th class="cel_started optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=broadcast&sort=started', T_('Started'),'broadcast_sort_started'); ?></th>
-            <th class="cel_listeners optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=broadcast&sort=listeners', T_('Listeners'),'broadcast_sort_listeners'); ?></th>
+            <th class="cel_started optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=broadcast&sort=started', T_('Started'), 'broadcast_sort_started'); ?></th>
+            <th class="cel_listeners optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=broadcast&sort=listeners', T_('Listeners'), 'broadcast_sort_listeners'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>

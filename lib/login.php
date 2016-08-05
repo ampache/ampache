@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -189,7 +189,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
 
     $GLOBALS['user'] = $user;
     // If an admin, check for update
-    if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
+    if (AmpConfig::get('autoupdate') && Access::check('interface', '100')) {
         AutoUpdate::is_update_available(true);
     }
 
@@ -203,7 +203,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         strpos($_POST['referrer'], 'logout.php')    === false &&
         strpos($_POST['referrer'], 'update.php')    === false &&
         strpos($_POST['referrer'], 'activate.php')    === false &&
-        strpos($_POST['referrer'], 'admin')        === false ) {
+        strpos($_POST['referrer'], 'admin')        === false) {
         header('Location: ' . $_POST['referrer']);
         exit();
     } // if we've got a referrer

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,21 +29,21 @@ if (!defined('AJAX_INCLUDE')) {
 
 switch ($_REQUEST['action']) {
     case 'flip_state':
-        if (!Access::check('interface','75')) {
-            debug_event('DENIED',$GLOBALS['user']->username . ' attempted to change the state of a song','1');
+        if (!Access::check('interface', '75')) {
+            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to change the state of a song', '1');
             exit;
         }
 
         $song        = new Song($_REQUEST['song_id']);
         $new_enabled = $song->enabled ? false : true;
-        $song->update_enabled($new_enabled,$song->id);
+        $song->update_enabled($new_enabled, $song->id);
         $song->enabled = $new_enabled;
         $song->format();
 
         //Return the new Ajax::button
         $id           = 'button_flip_state_' . $song->id;
         $button       = $song->enabled ? 'disable' : 'enable';
-        $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button, T_(ucfirst($button)),'flip_state_' . $song->id);
+        $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, T_(ucfirst($button)), 'flip_state_' . $song->id);
     break;
     case 'shouts':
         ob_start();

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -96,7 +96,7 @@ if (Core::is_playable_item($_REQUEST['action'])) {
                     break;
                 } // switch on type
             } // foreach media_id
-            $name = 'Batch-' . date("dmY",time());
+            $name = 'Batch-' . date("dmY", time());
         default:
             // Rien a faire
         break;
@@ -118,6 +118,6 @@ session_write_close();
 $song_files = get_media_files($media_ids);
 if (is_array($song_files['0'])) {
     set_memory_limit($song_files['1']+32);
-    send_zip($name,$song_files['0']);
+    send_zip($name, $song_files['0']);
 }
 exit;

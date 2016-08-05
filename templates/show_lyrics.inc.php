@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
  */
 
  $web_path = AmpConfig::get('web_path');
-UI::show_box_top("Song Lyrics" , 'box box_lyrics_song');
+UI::show_box_top("Song Lyrics", 'box box_lyrics_song');
 
 /* Prepare the variables */
 $title  = scrub_out($song->title);

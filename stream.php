@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,7 @@ if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
 
 if (!defined('NO_SESSION')) {
     /* If we are running a demo, quick while you still can! */
-    if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface','25')) {
+    if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface', '25')) {
         UI::access_denied();
         exit;
     }
@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
         $media_ids = $GLOBALS['user']->playlist->get_items();
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
-        if ( ($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
+        if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
             $GLOBALS['user']->playlist->clear();
         }
     break;
@@ -66,7 +66,7 @@ switch ($_REQUEST['action']) {
             case 'album':
                 foreach ($data as $value) {
                     $songs     = $value->get_songs();
-                    $media_ids = array_merge($media_ids,$songs);
+                    $media_ids = array_merge($media_ids, $songs);
                 }
             break;
             case 'song':
@@ -165,7 +165,7 @@ switch ($_REQUEST['action']) {
     break;
 }
 
-debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: ' . json_encode($media_ids), 5);
+debug_event('stream.php', 'Stream Type: ' . $stream_type . ' Media IDs: ' . json_encode($media_ids), 5);
 
 if (count($media_ids) || isset($urls)) {
     if ($stream_type != 'democratic') {
@@ -188,5 +188,5 @@ if (count($media_ids) || isset($urls)) {
     // Depending on the stream type, will either generate a redirect or actually do the streaming.
     $playlist->generate_playlist($stream_type, true);
 } else {
-    debug_event('stream.php' , 'No item. Ignoring...', 5);
+    debug_event('stream.php', 'No item. Ignoring...', 5);
 }

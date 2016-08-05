@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,7 @@
     ?></td>
                     <td class="cel_filename"><?php echo $song->file;
     ?></td>
-                    <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y",$song->addition_time);
+                    <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y", $song->addition_time);
     ?></td>
                 </tr>
             <?php 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -99,7 +99,7 @@ class Tag extends database_object implements library_item
             return false;
         }
 
-        $idlist = '(' . implode(',',$ids) . ')';
+        $idlist = '(' . implode(',', $ids) . ')';
 
         $sql = "SELECT `tag_map`.`id`,`tag_map`.`tag_id`, `tag`.`name`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
@@ -163,13 +163,13 @@ class Tag extends database_object implements library_item
         }
 
         if (!$tag_id) {
-            debug_event('Error','Error unable to create tag value:' . $cleaned_value . ' unknown error','1');
+            debug_event('Error', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', '1');
             return false;
         }
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!$map_id = self::tag_map_exists($type,$id,$tag_id,$uid)) {
-            $map_id = self::add_tag_map($type,$id,$tag_id,$uid);
+        if (!$map_id = self::tag_map_exists($type, $id, $tag_id, $uid)) {
+            $map_id = self::add_tag_map($type, $id, $tag_id, $uid);
         }
 
         return $map_id;
@@ -285,7 +285,7 @@ class Tag extends database_object implements library_item
      * add_tag_map
      * This adds a specific tag to the map for specified object
      */
-    public static function add_tag_map($type,$object_id,$tag_id,$user=true)
+    public static function add_tag_map($type, $object_id, $tag_id, $user=true)
     {
         if ($user === true) {
             $uid = intval($GLOBALS['user']->id);
@@ -319,7 +319,7 @@ class Tag extends database_object implements library_item
         }
         $insert_id = Dba::insert_id();
 
-        parent::add_to_cache('tag_map_' . $type,$insert_id,array('tag_id'=>$tag_id,'user'=>$uid,'object_type'=>$type,'object_id'=>$id));
+        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id'=>$tag_id, 'user'=>$uid, 'object_type'=>$type, 'object_id'=>$id));
 
         return $insert_id;
     } // add_tag_map
@@ -392,8 +392,8 @@ class Tag extends database_object implements library_item
      */
     public static function tag_exists($value)
     {
-        if (parent::is_cached('tag_name',$value)) {
-            return parent::get_from_cache('tag_name',$value);
+        if (parent::is_cached('tag_name', $value)) {
+            return parent::get_from_cache('tag_name', $value);
         }
 
         $sql        = "SELECT * FROM `tag` WHERE `name` = ?";
@@ -401,7 +401,7 @@ class Tag extends database_object implements library_item
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('tag_name',$results['name'],$results['id']);
+        parent::add_to_cache('tag_name', $results['name'], $results['id']);
 
         return $results['id'];
     } // tag_exists
@@ -485,7 +485,7 @@ class Tag extends database_object implements library_item
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      */
-    public static function get_tag_objects($type,$tag_id,$count='',$offset='')
+    public static function get_tag_objects($type, $tag_id, $count='', $offset='')
     {
         if (!Core::is_library_item($type)) {
             return false;

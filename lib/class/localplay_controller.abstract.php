@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,7 +45,7 @@ abstract class localplay_controller
     // For display we need the following 'instance' functions
     abstract public function add_instance($data);
     abstract public function delete_instance($id);
-    abstract public function update_instance($id,$post);
+    abstract public function update_instance($id, $post);
     abstract public function get_instances();
     abstract public function instance_fields();
     abstract public function set_active_instance($uid);
@@ -65,7 +65,7 @@ abstract class localplay_controller
 
         $class = get_class($object);
 
-        $url = call_user_func(array($class,'play_url'),$object->id);
+        $url = call_user_func(array($class, 'play_url'), $object->id);
 
         return $url;
     } // get_url
@@ -92,9 +92,9 @@ abstract class localplay_controller
         $primary_array = array('oid','demo_id','random');
         $data          = array();
 
-        $variables = parse_url($url,PHP_URL_QUERY);
+        $variables = parse_url($url, PHP_URL_QUERY);
         if ($variables) {
-            parse_str($variables,$data);
+            parse_str($variables, $data);
 
             foreach ($primary_array as $pkey) {
                 if ($data[$pkey]) {

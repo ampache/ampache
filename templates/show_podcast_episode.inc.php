@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,7 @@
         <dd class="<?php echo $rowparity;
     ?>">
             <div id="rating_<?php echo $episode->id;
-    ?>_podcast_episode"><?php Rating::show($episode->id,'podcast_episode');
+    ?>_podcast_episode"><?php Rating::show($episode->id, 'podcast_episode');
     ?>
             </div>
         </dd>
@@ -54,7 +54,7 @@
         <dd class="<?php echo $rowparity;
     ?>">
             <div id="userflag_<?php echo $episode->id;
-    ?>_podcast_episode"><?php Userflag::show($episode->id,'podcast_episode');
+    ?>_podcast_episode"><?php Userflag::show($episode->id, 'podcast_episode');
     ?>
             </div>
         </dd>
@@ -72,11 +72,11 @@
     ?>
         <?php if (AmpConfig::get('directplay')) {
     ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id, 'play', T_('Play'),'play_podcast_episode_' . $episode->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id, 'play', T_('Play'), 'play_podcast_episode_' . $episode->id);
     ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&append=true','play_add', T_('Play last'),'addplay_podcast_episode_' . $episode->id);
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&append=true', 'play_add', T_('Play last'), 'addplay_podcast_episode_' . $episode->id);
     ?>
             <?php
 
@@ -84,7 +84,7 @@
     ?>
             <?php if (Stream_Playlist::check_autoplay_next()) {
     ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true','play_next', T_('Play next'),'nextplay_podcast_episode_' . $episode->id);
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_podcast_episode_' . $episode->id);
     ?>
             <?php
 
@@ -94,11 +94,11 @@
 
 }
     ?>
-        <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id,'add', T_('Add to temporary playlist'),'add_podcast_episode_' . $episode->id);
+        <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to temporary playlist'), 'add_podcast_episode_' . $episode->id);
     ?>
         <?php 
 } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -115,7 +115,7 @@
         <?php 
 }
     ?>
-        <?php if (Access::check('interface','25')) {
+        <?php if (Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('share')) {
     ?>
@@ -140,7 +140,7 @@
         <?php
 
 } ?>
-        <?php if (Access::check('interface','50')) {
+        <?php if (Access::check('interface', '50')) {
     ?>
             <?php if (AmpConfig::get('statistical_graphs')) {
     ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -236,7 +236,7 @@ switch ($_REQUEST['action']) {
                 $button = $_REQUEST['button'];
             break;
             case 'admin':
-                if (Access::check('interface','100')) {
+                if (Access::check('interface', '100')) {
                     $button = $_REQUEST['button'];
                 } else {
                     exit;
@@ -254,7 +254,7 @@ switch ($_REQUEST['action']) {
         ob_end_clean();
     break;
     case 'start_channel':
-        if (Access::check('interface','75')) {
+        if (Access::check('interface', '75')) {
             ob_start();
             $channel = new Channel($_REQUEST['id']);
             if ($channel->id) {
@@ -269,7 +269,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'stop_channel':
-        if (Access::check('interface','75')) {
+        if (Access::check('interface', '75')) {
             ob_start();
             $channel = new Channel($_REQUEST['id']);
             if ($channel->id) {

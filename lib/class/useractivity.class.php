@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,7 +74,7 @@ class Useractivity extends database_object
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('user_activity',$row['id'],$row);
+            parent::add_to_cache('user_activity', $row['id'], $row);
         }
     }
     /**

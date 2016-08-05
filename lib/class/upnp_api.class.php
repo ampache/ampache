@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -178,12 +178,12 @@ class Upnp_Api
         $xmlDoc->appendChild($ndDIDL);
 
         # Return empty DIDL if no items present:
-        if ( (!isset($prmItems)) || (!is_array($prmItems)) ) {
+        if ((!isset($prmItems)) || (!is_array($prmItems))) {
             return $xmlDoc;
         }
 
         # sometimes here comes only one single item, not an array. Convert it to array. (TODO - UGLY)
-        if ( (count($prmItems) > 0) && (!is_array($prmItems[0])) ) {
+        if ((count($prmItems) > 0) && (!is_array($prmItems[0]))) {
             $prmItems = array($prmItems);
         }
 
@@ -259,7 +259,7 @@ class Upnp_Api
                         $ndTag = $xmlDoc->createElement($key);
                         $ndItem->appendChild($ndTag);
                         # check if string is already utf-8 encoded
-                        $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($value,'auto')=='UTF-8')?$value:utf8_encode($value));
+                        $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($value, 'auto')=='UTF-8')?$value:utf8_encode($value));
                         $ndTag->appendChild($ndTag_text);
                 }
                 if ($useRes) {
@@ -294,7 +294,7 @@ class Upnp_Api
         $ndEnvelope->appendChild($ndBody);
         $ndBrowseResp = $doc->createElementNS('urn:schemas-upnp-org:service:ContentDirectory:1', $prmResponseType);
         $ndBody->appendChild($ndBrowseResp);
-        $ndResult = $doc->createElement('Result',$prmDIDL);
+        $ndResult = $doc->createElement('Result', $prmDIDL);
         $ndBrowseResp->appendChild($ndResult);
         $ndNumRet = $doc->createElement('NumberReturned', $prmNumRet);
         $ndBrowseResp->appendChild($ndNumRet);
@@ -761,7 +761,7 @@ class Upnp_Api
                         $video = new TVShow_Episode($pathreq[3]);
                         if ($video->id) {
                             $video->format();
-                            $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2] );
+                            $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2]);
                         }
                     break;
                 }

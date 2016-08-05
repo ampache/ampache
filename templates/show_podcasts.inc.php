@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,7 +49,7 @@ $thcount  = 5;
     ?></th>
         <?php 
 } ?>
-            <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_sort_title'); ?></th>
+            <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
             <?php if (User::is_registered()) {
     ?>
@@ -77,10 +77,10 @@ $thcount  = 5;
     <tbody>
         <?php
         if (AmpConfig::get('ratings')) {
-            Rating::build_cache('podcast',$object_ids);
+            Rating::build_cache('podcast', $object_ids);
         }
         if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('podcast',$object_ids);
+            Userflag::build_cache('podcast', $object_ids);
         }
 
         foreach ($object_ids as $podcast_id) {
@@ -115,7 +115,7 @@ $thcount  = 5;
     ?></th>
         <?php 
 } ?>
-            <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_sort_title_bottom'); ?></th>
+            <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title_bottom'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
             <?php if (User::is_registered()) {
     ?>

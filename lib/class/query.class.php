@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -246,7 +246,7 @@ class Query
             )
         );
 
-        if (Access::check('interface','50')) {
+        if (Access::check('interface', '50')) {
             array_push(self::$allowed_filters['playlist'], 'playlist_type');
         }
 
@@ -514,7 +514,7 @@ class Query
             break;
             case 'playlist_type':
                 // Must be a content manager to turn this off
-                if (Access::check('interface','100')) {
+                if (Access::check('interface', '100')) {
                     unset($this->_state['filter'][$key]);
                 } else {
                     $this->_state['filter'][$key] = '1';
@@ -760,7 +760,7 @@ class Query
      * @param string $sort
      * @param string $order
      */
-    public function set_sort($sort,$order='')
+    public function set_sort($sort, $order='')
     {
         // If it's not in our list, smeg off!
         if (!in_array($sort, self::$allowed_sorts[$this->get_type()])) {
@@ -800,7 +800,7 @@ class Query
      *
      * @param int $catalog_number
      */
-    public function set_catalog( $catalog_number )
+    public function set_catalog($catalog_number)
     {
         $this->catalog = $catalog_number;
         debug_event("Catalog", "set catalog id: " . $this->catalog, "5");
@@ -1160,7 +1160,7 @@ class Query
             $sql .= $dis . " AND ";
         }
 
-        $sql = rtrim($sql,'AND ') . ' ';
+        $sql = rtrim($sql, 'AND ') . ' ';
 
         return $sql;
     } // get_filter_sql
@@ -1183,8 +1183,8 @@ class Query
             $sql .= $this->sql_sort($key, $value);
         }
 
-        $sql = rtrim($sql,'ORDER BY ');
-        $sql = rtrim($sql,',');
+        $sql = rtrim($sql, 'ORDER BY ');
+        $sql = rtrim($sql, ',');
 
         return $sql;
     } // get_sort_sql
@@ -1264,7 +1264,7 @@ class Query
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if ( ($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom'] ) {
+        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
@@ -1328,7 +1328,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql,'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
                 break;
                 case 'exact_match':
                     $filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
@@ -1399,7 +1399,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql,'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
                 break;
                 case 'exact_match':
                     $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1437,8 +1437,8 @@ class Query
                 break;
                 case 'catalog':
                     if ($value != 0) {
-                        $this->set_join('left','`song`','`album`.`id`','`song`.`album`', 100);
-                        $this->set_join('left','`catalog`','`song`.`catalog`','`catalog`.`id`', 100);
+                        $this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
+                        $this->set_join('left', '`catalog`', '`song`.`catalog`', '`catalog`.`id`', 100);
                         $filter_sql = " (`song`.`catalog` = '$value') AND ";
                     }
                 break;
@@ -1469,12 +1469,12 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql,'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
                 break;
                 case 'catalog':
                 if ($value != 0) {
-                    $this->set_join('left','`song`','`artist`.`id`','`song`.`artist`', 100);
-                    $this->set_join('left','`catalog`','`song`.`catalog`','`catalog`.`id`', 100);
+                    $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
+                    $this->set_join('left', '`catalog`', '`song`.`catalog`', '`catalog`.`id`', 100);
                     $filter_sql = "  (`catalog`.`id` = '$value') AND ";
                 }
                 break;
@@ -1640,7 +1640,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql,'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
                 break;
                 case 'alpha_match':
                     $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -2331,7 +2331,7 @@ class Query
                 $object_id = Dba::escape($object_id);
                 $where_sql .= "'$object_id',";
             }
-            $where_sql = rtrim($where_sql,',');
+            $where_sql = rtrim($where_sql, ',');
 
             $where_sql .= ")";
 
@@ -2343,8 +2343,8 @@ class Query
                 $order_sql .= $this->sql_sort($key, $value);
             }
             // Clean her up
-            $order_sql = rtrim($order_sql,"ORDER BY ");
-            $order_sql = rtrim($order_sql,",");
+            $order_sql = rtrim($order_sql, "ORDER BY ");
+            $order_sql = rtrim($order_sql, ",");
 
             $sql = $sql . $this->get_join_sql() . $where_sql . $order_sql;
         } // if not simple

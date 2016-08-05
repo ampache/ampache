@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ class AmpacheGoogleMaps
         if (Preference::exists('gmaps_api_key')) {
             return false;
         }
-        Preference::insert('gmaps_api_key','GoogleMaps api key','','75','string','plugins',$this->name);
+        Preference::insert('gmaps_api_key', 'GoogleMaps api key', '', '75', 'string', 'plugins', $this->name);
         return true;
     } // install
 

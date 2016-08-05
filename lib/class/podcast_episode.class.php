@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -282,7 +282,7 @@ class Podcast_Episode extends database_object implements media, library_item
      */
     public static function update_played($new_played, $id)
     {
-        self::_update_item('played', ($new_played ? 1 : 0),$id,'25');
+        self::_update_item('played', ($new_played ? 1 : 0), $id, '25');
     } // update_played
 
     /**
@@ -300,7 +300,7 @@ class Podcast_Episode extends database_object implements media, library_item
     private static function _update_item($field, $value, $song_id, $level)
     {
         /* Check them Rights! */
-        if (!Access::check('interface',$level)) {
+        if (!Access::check('interface', $level)) {
             return false;
         }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -269,10 +269,10 @@ class vainfo
 
             if ($tagWriter->WriteTags()) {
                 if (!empty($tagWriter->warnings)) {
-                    debug_event('vainfo' , 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
+                    debug_event('vainfo', 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
                 }
             } else {
-                debug_event('vainfo' , 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
+                debug_event('vainfo', 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
             }
         }
     } // write_id3
@@ -691,7 +691,7 @@ class vainfo
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
-                debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
+                debug_event('vainfo', 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, '5');
 
                 return $type;
         }
@@ -1049,29 +1049,29 @@ class vainfo
             $episode = array();
             $tvyear  = array();
             $temp    = array();
-            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath,$tvyear);
+            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath, $tvyear);
             $results['year'] = !empty($tvyear) ? intval($tvyear[0]) : null;
         
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
-                $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~",$file,2);
+                $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~", $file, 2);
                 preg_match("~(?<=[Ss])\d+~", $file, $season);
                 preg_match("~(?<=[Ee])\d+~", $file, $episode);
             } else {
                 if (preg_match("~[\_\-\.\s](\d{1,2})[xX](\d{1,2})~", $file, $seasonEpisode)) {
-                    $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~",$file);
+                    $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~", $file);
                     preg_match("~\d+(?=[Xx])~", $file, $season);
                     preg_match("~(?<=[Xx])\d+~", $file, $episode);
                 } else {
                     if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
-                        $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",$file,3);
+                        $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~", $file, 3);
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
                         preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
                     } else {
                         if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
-                            $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                            $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
                             $season[0]  = $seasonEpisode[1];
                             if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
-                                $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                                $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
                                 $season[0]  = $seasonEpisode[1];
                                 $episode[0] = $seasonEpisode[2];
                             }
@@ -1182,21 +1182,21 @@ class vainfo
     
     private function removeCommonAbbreviations($name)
     {
-        $abbr         = explode(",",AmpConfig::get('common_abbr'));
-        $commonabbr   = preg_replace("~\n~", '',$abbr);
+        $abbr         = explode(",", AmpConfig::get('common_abbr'));
+        $commonabbr   = preg_replace("~\n~", '', $abbr);
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
 
        //scan for brackets, braces, etc and ignore case.
        for ($i=0; $i< count($commonabbr);$i++) {
            $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
        }
-        $string = preg_replace($commonabbr,'',$name);
+        $string = preg_replace($commonabbr, '', $name);
         return $string;
     }
     
     private function formatVideoName($name)
     {
-        return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ', $name), "\s\t\n\r\0\x0B\.\_\-")));
+        return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name), "\s\t\n\r\0\x0B\.\_\-")));
     }
 
 

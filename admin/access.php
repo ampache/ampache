@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','100')) {
+if (!Access::check('interface', '100')) {
     UI::access_denied();
     exit();
 }
@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
         }
         Access::delete($_REQUEST['access_id']);
         $url = AmpConfig::get('web_path') . '/admin/access.php';
-        show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'),$url);
+        show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'), $url);
     break;
     case 'show_delete_record':
         if (AmpConfig::get('demo_mode')) {
@@ -45,12 +45,12 @@ switch ($_REQUEST['action']) {
         }
         $access = new Access($_GET['access_id']);
         show_confirmation(T_('Deletion Request'), T_('Are you sure you want to permanently delete') . ' ' . $access->name,
-                'admin/access.php?action=delete_record&amp;access_id=' . $access->id,1,'delete_access');
+                'admin/access.php?action=delete_record&amp;access_id=' . $access->id, 1, 'delete_access');
     break;
     case 'add_host':
 
         // Make sure we've got a valid form submission
-        if (!Core::form_verify('add_acl','post')) {
+        if (!Core::form_verify('add_acl', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
 
         if (!AmpError::occurred()) {
             $url = AmpConfig::get('web_path') . '/admin/access.php';
-            show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'),$url);
+            show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'), $url);
         } else {
             $action = 'show_add_' . $_POST['type'];
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');

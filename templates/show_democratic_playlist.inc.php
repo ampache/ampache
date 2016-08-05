@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ $web_path = AmpConfig::get('web_path');
   <col id="col_album" />
   <col id="col_artist" />
   <col id="col_time" />
-  <?php if (Access::check('interface','100')) {
+  <?php if (Access::check('interface', '100')) {
     ?>
   <col id="col_admin" />
   <?php 
@@ -70,7 +70,7 @@ else {
     ?></th>
         <th class="cel_time"><?php echo T_('Time');
     ?></th>
-        <?php if (Access::check('interface','100')) {
+        <?php if (Access::check('interface', '100')) {
     ?>
         <th class="cel_admin"><?php echo T_('Admin');
     ?></th>
@@ -95,12 +95,12 @@ $democratic = Democratic::get_current_playlist();
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) {
     ?>
-    <?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'],'delete', T_('Remove Vote'),'remove_vote_' . $item['id']);
+    <?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']);
     ?>
     <?php 
 } else {
     ?>
-    <?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']),'tick', T_('Add Vote'),'remove_vote_' . $item['id']);
+    <?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'remove_vote_' . $item['id']);
     ?>
     <?php 
 }
@@ -116,10 +116,10 @@ $democratic = Democratic::get_current_playlist();
         ?></td>
     <td class="cel_time"><?php echo $media->f_time;
         ?></td>
-    <?php if (Access::check('interface','100')) {
+    <?php if (Access::check('interface', '100')) {
     ?>
     <td class="cel_admin">
-    <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'],'disable', T_('Delete'),'delete_row_' . $item['id']);
+    <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']);
     ?>
     </td>
     <?php 
@@ -145,7 +145,7 @@ $democratic = Democratic::get_current_playlist();
     ?></th>
         <th class="cel_time"><?php echo T_('Time');
     ?></th>
-        <?php if (Access::check('interface','100')) {
+        <?php if (Access::check('interface', '100')) {
     ?>
         <th class="cel_admin"><?php echo T_('Admin');
     ?></th>

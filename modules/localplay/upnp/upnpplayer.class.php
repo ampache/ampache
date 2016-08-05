@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -69,8 +69,8 @@ class UPnPPlayer
      */
     public function __construct($name = "noname", $description_url = "http://localhost")
     {
-        require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/upnpdevice.php';
-        require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/upnpplaylist.php';
+        require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/UPnPDevice.php';
+        require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/UPnPPlaylist.php';
 
         debug_event('upnpPlayer', 'constructor: ' . $name . ' | ' . $description_url, 5);
         $this->_description_url = $description_url;
@@ -200,11 +200,11 @@ class UPnPPlayer
     private function CallAsyncURL($url)
     {
         $ch = curl_init();
-        curl_setopt( $ch, CURLOPT_URL, $url );
-        curl_setopt( $ch, CURLOPT_FRESH_CONNECT, true );
-        curl_setopt( $ch, CURLOPT_HEADER, false );
-        curl_exec( $ch );
-        curl_close( $ch );
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_exec($ch);
+        curl_close($ch);
     }
 
     /**
@@ -332,7 +332,7 @@ class UPnPPlayer
         $instanceId    = 0;
         $channel       = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice( 'SetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('SetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel,
             'DesiredVolume' => $desiredVolume
@@ -349,7 +349,7 @@ class UPnPPlayer
         $instanceId = 0;
         $channel    = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice( 'GetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('GetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel
         ));
@@ -385,4 +385,4 @@ class UPnPPlayer
         debug_event('upnpPlayer', 'ReadIndState:' . $this->_intState, 5);
     }
 } // End UPnPPlayer Class
-?>
+;

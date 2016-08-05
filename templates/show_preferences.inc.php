@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,7 @@
  */
 
 ?>
-<?php /* HINT: Username */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $fullname),'box box_preferences'); ?>
+<?php /* HINT: Username */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $fullname), 'box box_preferences'); ?>
 <?php  if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') {
      ?>
 
@@ -43,7 +43,7 @@
      ?>" />
     <input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']);
      ?>" />
-    <?php if (Access::check('interface','100')) {
+    <?php if (Access::check('interface', '100')) {
     ?>
         <input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']);
     ?>" />

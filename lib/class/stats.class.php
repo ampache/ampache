@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -217,7 +217,7 @@ class Stats
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarly by the democratic cooldown code
      */
-    public static function get_object_history($user_id='',$time)
+    public static function get_object_history($user_id='', $time)
     {
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
@@ -271,7 +271,7 @@ class Stats
      * This returns the top X for type Y from the
      * last stats_threshold days
      */
-    public static function get_top($type,$count='',$threshold = '',$offset='')
+    public static function get_top($type, $count='', $threshold = '', $offset='')
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
@@ -323,7 +323,7 @@ class Stats
      * get_recent
      * This returns the recent X for type Y
     */
-    public static function get_recent($type, $count='',$offset='')
+    public static function get_recent($type, $count='', $offset='')
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
@@ -354,7 +354,7 @@ class Stats
      * This gets all stats for atype based on user with thresholds and all
      * If full is passed, doesn't limit based on date
      */
-    public static function get_user($count,$type,$user,$full='')
+    public static function get_user($count, $type, $user, $full='')
     {
         $count = intval($count);
         $type  = self::validate_type($type);

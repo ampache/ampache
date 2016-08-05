@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,11 +52,11 @@ $status = $localplay->status();
             </td>
             <td<?php echo $class;
             ?>>
-                <?php echo $localplay->format_name($object['name'],$object['id']);
+                <?php echo $localplay->format_name($object['name'], $object['id']);
             ?>
             </td>
             <td class="cel_action">
-            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']),'delete', T_('Delete'),'localplay_delete_' . intval($object['id']));
+            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']), 'delete', T_('Delete'), 'localplay_delete_' . intval($object['id']));
             ?>
             </td>
         </tr>

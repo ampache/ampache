@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,7 @@ class AmpacheFriendsTimeline
             return false;
         }
 
-        Preference::insert('ftl_max_items','Friends timeline max items','5','25','integer','plugins',$this->name);
+        Preference::insert('ftl_max_items', 'Friends timeline max items', '5', '25', 'integer', 'plugins', $this->name);
 
         return true;
     }

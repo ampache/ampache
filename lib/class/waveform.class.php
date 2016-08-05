@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -154,7 +154,7 @@ class Waveform
      */
     protected static function html2rgb($input)
     {
-        $input=($input[0]=="#")?substr($input, 1,6):substr($input, 0,6);
+        $input=($input[0]=="#")?substr($input, 1, 6):substr($input, 0, 6);
         return array(
             hexdec(substr($input, 0, 2)),
             hexdec(substr($input, 2, 2)),
@@ -319,7 +319,7 @@ class Waveform
         imagedestroy($img);
 
         $imgdata = ob_get_contents();
-        ob_clean ();
+        ob_clean();
         return $imgdata;
     }
 

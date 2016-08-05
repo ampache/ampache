@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,7 @@
 if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
     $remember_disabled = 'disabled="disabled"';
 }
-$htmllang                             = str_replace("_","-",AmpConfig::get('lang'));
+$htmllang                             = str_replace("_", "-", AmpConfig::get('lang'));
 is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 
 $web_path = AmpConfig::get('web_path');

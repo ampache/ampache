@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
  */
 
 // Don't show disabled songs to normal users
-if ($libitem->enabled || Access::check('interface','50')) {
+if ($libitem->enabled || Access::check('interface', '50')) {
     ?>
 <td class="cel_play">
     <span class="cel_play_content">
@@ -49,7 +49,7 @@ if ($libitem->enabled || Access::check('interface','50')) {
 <td class="cel_add">
     <span class="cel_item_add">
 <?php
-    echo Ajax::button('?action=basket&type=song&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id);
+    echo Ajax::button('?action=basket&type=song&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_' . $libitem->id);
     if (Access::check('interface', '25')) {
         ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
@@ -85,7 +85,7 @@ if ($libitem->enabled || Access::check('interface','50')) {
             ?>
             <td class="cel_rating" id="rating_<?php echo $libitem->id;
             ?>_song">
-                <?php Rating::show($libitem->id,'song') ?>  
+                <?php Rating::show($libitem->id, 'song') ?>  
             </td>
     <?php 
         }
@@ -93,7 +93,7 @@ if ($libitem->enabled || Access::check('interface','50')) {
             ?>
             <td class="cel_userflag" id="userflag_<?php echo $libitem->id;
             ?>_song">
-                <?php Userflag::show($libitem->id,'song') ?>
+                <?php Userflag::show($libitem->id, 'song') ?>
             </td>
     <?php 
         }
@@ -101,14 +101,14 @@ if ($libitem->enabled || Access::check('interface','50')) {
     ?>
 <td class="cel_action">
     <a href="<?php echo $libitem->link ?>"><?php echo UI::get_icon('preferences', T_('Song Information')) ?></a>
-    <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
+    <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
     if (AmpConfig::get('sociable')) {
         ?>
             <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $libitem->id ?>"><?php echo UI::get_icon('comment', T_('Post Shout')) ?></a>
         <?php 
     }
 }
-    if (Access::check('interface','25')) {
+    if (Access::check('interface', '25')) {
         if (AmpConfig::get('share')) {
             Share::display_ui('song', $libitem->id, false);
         }
@@ -118,7 +118,7 @@ if ($libitem->enabled || Access::check('interface','50')) {
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&song_id=<?php echo $libitem->id ?>"><?php echo UI::get_icon('download', T_('Download')) ?></a>
 <?php 
     }
-    if (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
+    if (Access::check('interface', '50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
         ?>
         <a id="<?php echo 'edit_song_' . $libitem->id ?>" onclick="showEditDialog('song_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_song_' . $libitem->id ?>', '<?php echo T_('Song edit') ?>', 'song_')">
             <?php echo UI::get_icon('edit', T_('Edit'));
@@ -126,13 +126,13 @@ if ($libitem->enabled || Access::check('interface','50')) {
         </a>
 <?php 
     }
-    if (Access::check('interface','75') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
+    if (Access::check('interface', '75') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
         $icon                 = $libitem->enabled ? 'disable' : 'enable';
         $button_flip_state_id = 'button_flip_state_' . $libitem->id;
         ?>
         <span id="<?php echo($button_flip_state_id);
         ?>">
-            <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id,$icon, T_(ucfirst($icon)),'flip_song_' . $libitem->id);
+            <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id, $icon, T_(ucfirst($icon)), 'flip_song_' . $libitem->id);
         ?>
         </span>
 <?php 

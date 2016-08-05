@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -300,51 +300,51 @@ class Graph
             $height = 260;
         }
 
-        $MyData->setSerieDescription("TimeStamp","time");
+        $MyData->setSerieDescription("TimeStamp", "time");
         $MyData->setAbscissa("TimeStamp");
         switch ($zoom) {
             case 'hour':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_TIME,"H:00");
+                $MyData->setXAxisDisplay(AXIS_FORMAT_TIME, "H:00");
                 break;
             case 'year':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE,"Y");
+                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y");
                 break;
             case 'month':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE,"Y-m");
+                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y-m");
                 break;
             case 'day':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE,"Y-m-d");
+                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y-m-d");
                 break;
         }
 
         /* Create the pChart object */
-        $myPicture = new CpChart\Classes\pImage($width,$height,$MyData);
+        $myPicture = new CpChart\Classes\pImage($width, $height, $MyData);
 
         /* Turn of Antialiasing */
         $myPicture->Antialias = false;
 
         /* Draw a background */
         $Settings = array("R"=>90, "G"=>90, "B"=>90, "Dash"=>1, "DashR"=>120, "DashG"=>120, "DashB"=>120);
-        $myPicture->drawFilledRectangle(0,0,$width,$height,$Settings);
+        $myPicture->drawFilledRectangle(0, 0, $width, $height, $Settings);
 
         /* Overlay with a gradient */
         $Settings = array("StartR"=>200, "StartG"=>200, "StartB"=>200, "EndR"=>50, "EndG"=>50, "EndB"=>50, "Alpha"=>50);
-        $myPicture->drawGradientArea(0,0,$width,$height,DIRECTION_VERTICAL,$Settings);
-        $myPicture->drawGradientArea(0,0,$width,$height,DIRECTION_HORIZONTAL,$Settings);
+        $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_VERTICAL, $Settings);
+        $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_HORIZONTAL, $Settings);
 
         /* Add a border to the picture */
-        $myPicture->drawRectangle(0,0,$width-1,$height-1,array("R"=>0,"G"=>0,"B"=>0));
+        $myPicture->drawRectangle(0, 0, $width-1, $height-1, array("R"=>0, "G"=>0, "B"=>0));
 
         $font_path = AmpConfig::get('prefix') . "/lib/vendor/szymach/c-pchart/src/Resources/fonts";
         /* Write the chart title */
-        $myPicture->setFontProperties(array("FontName"=>$font_path . "/Forgotte.ttf","FontSize"=>11));
-        $myPicture->drawText(150,35,$title,array("FontSize"=>20,"Align"=>TEXT_ALIGN_BOTTOMMIDDLE));
+        $myPicture->setFontProperties(array("FontName"=>$font_path . "/Forgotte.ttf", "FontSize"=>11));
+        $myPicture->drawText(150, 35, $title, array("FontSize"=>20, "Align"=>TEXT_ALIGN_BOTTOMMIDDLE));
 
         /* Set the default font */
-        $myPicture->setFontProperties(array("FontName"=>$font_path . "/pf_arma_five.ttf","FontSize"=>6));
+        $myPicture->setFontProperties(array("FontName"=>$font_path . "/pf_arma_five.ttf", "FontSize"=>6));
 
         /* Define the chart area */
-        $myPicture->setGraphArea(60,40,$width-20,$height-50);
+        $myPicture->setGraphArea(60, 40, $width-20, $height-50);
 
         /* Draw the scale */
         $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"Floating"=>true,"GridR"=>200,"GridG"=>200,"GridB"=>200,"RemoveSkippedAxis"=>true,"DrawSubTicks"=>false,"Mode"=>SCALE_MODE_START0,"LabelRotation"=>45,"LabelingMethod"=>LABELING_DIFFERENT);
@@ -354,14 +354,14 @@ class Graph
         $myPicture->Antialias = true;
 
         /* Draw the line chart */
-        $myPicture->setShadow(true,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
+        $myPicture->setShadow(true, array("X"=>1, "Y"=>1, "R"=>0, "G"=>0, "B"=>0, "Alpha"=>10));
         $myPicture->drawLineChart();
 
         /* Write a label over the chart */
-        $myPicture->writeLabel("Inbound",720);
+        $myPicture->writeLabel("Inbound", 720);
 
         /* Write the chart legend */
-        $myPicture->drawLegend(280,20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+        $myPicture->drawLegend(280, 20, array("Style"=>LEGEND_NOBORDER, "Mode"=>LEGEND_HORIZONTAL));
 
         header("Content-Disposition: filename=\"ampache-graph.png\"");
         /* Render the picture (choose the best way) */
@@ -474,7 +474,7 @@ class Graph
             }
         }
         
-        if (($owner_id <= 0 || $owner_id != $GLOBALS['user']->id) && !Access::check('interface','50')) {
+        if (($owner_id <= 0 || $owner_id != $GLOBALS['user']->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
             $user_id      = $_REQUEST['user_id'];

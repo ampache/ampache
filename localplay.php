@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 UI::show_header();
 
 // Check to see if we've got the rights to be here
-if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface','25')) {
+if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '25')) {
     UI::access_denied();
     exit;
 }
@@ -33,7 +33,7 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface','2
 switch ($_REQUEST['action']) {
     case 'show_add_instance':
         // This requires 50 or better
-        if (!Access::check('localplay','75')) {
+        if (!Access::check('localplay', '75')) {
             UI::access_denied();
             break;
         }
@@ -45,7 +45,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'add_instance':
         // This requires 50 or better!
-        if (!Access::check('localplay','75')) {
+        if (!Access::check('localplay', '75')) {
             UI::access_denied();
             break;
         }
@@ -57,17 +57,17 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_instance':
         // Make sure they gots them rights
-        if (!Access::check('localplay','75')) {
+        if (!Access::check('localplay', '75')) {
             UI::access_denied();
             break;
         }
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        $localplay->update_instance($_REQUEST['instance'],$_POST);
+        $localplay->update_instance($_REQUEST['instance'], $_POST);
         header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
     break;
     case 'edit_instance':
         // Check to make sure they've got the access
-        if (!Access::check('localplay','75')) {
+        if (!Access::check('localplay', '75')) {
             UI::access_denied();
             break;
         }
@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_instances':
         // First build the localplay object and then get the instances
-        if (!Access::check('localplay','5')) {
+        if (!Access::check('localplay', '5')) {
             UI::access_denied();
             break;
         }
@@ -89,7 +89,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_playlist':
     default:
-        if (!Access::check('localplay','5')) {
+        if (!Access::check('localplay', '5')) {
             UI::access_denied();
             break;
         }

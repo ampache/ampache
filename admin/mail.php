@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','75')) {
+if (!Access::check('interface', '75')) {
     UI::access_denied();
     exit();
 }
@@ -67,7 +67,7 @@ switch ($_REQUEST['action']) {
             $body      = T_('Your E-mail was not sent.');
         }
         $url = AmpConfig::get('web_path') . '/admin/mail.php';
-        show_confirmation($title,$body,$url);
+        show_confirmation($title, $body, $url);
 
     break;
     default:

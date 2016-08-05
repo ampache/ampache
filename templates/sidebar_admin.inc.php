@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,7 +63,7 @@
 } ?>
     </ul>
   </li>
-<?php if (Access::check('interface','100')) {
+<?php if (Access::check('interface', '100')) {
     ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config');
     ?>"><?php echo T_('Server Config');

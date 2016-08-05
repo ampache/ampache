@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -338,8 +338,8 @@ class Core
      */
     public static function is_session_started()
     {
-        if (php_sapi_name() !== 'cli' ) {
-            if (version_compare(phpversion(), '5.4.0', '>=') ) {
+        if (php_sapi_name() !== 'cli') {
+            if (version_compare(phpversion(), '5.4.0', '>=')) {
                 return session_status() === PHP_SESSION_ACTIVE ? true : false;
             } else {
                 return session_id() === '' ? false : true;

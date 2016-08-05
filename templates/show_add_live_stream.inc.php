@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,7 +54,7 @@
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
     <td>
-        <?php echo show_catalog_select('catalog',intval($_REQUEST['catalog'])); ?>
+        <?php echo show_catalog_select('catalog', intval($_REQUEST['catalog'])); ?>
     </td>
 </tr>
 </table>

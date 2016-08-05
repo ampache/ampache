@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,11 +48,11 @@
     <form style="padding-left: 250px;" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_from">
         <table class="tabledata2" cellspacing="0" cellpadding="0">
             <tr>
-                <td><?php /* HINT: /data/myNewMusic */ ?><?php printf (T_('Add from [%s]'), '<span class="information">/data/myNewMusic</span>'); ?></td>
+                <td><?php /* HINT: /data/myNewMusic */ ?><?php printf(T_('Add from [%s]'), '<span class="information">/data/myNewMusic</span>'); ?></td>
                 <td><input type="text" name="add_path" value="/" /></td>
             </tr>
             <tr>
-                <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf (T_('Update from [%s]'), '<span class="information">/data/myUpdatedMusic</span>'); ?></td>
+                <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf(T_('Update from [%s]'), '<span class="information">/data/myUpdatedMusic</span>'); ?></td>
                 <td><input type="text" name="update_path" value="/" /></td>
             </tr>
             <tr>

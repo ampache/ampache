@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,7 @@
    the case.  Also this will update local statistics for songs as well.
    This is also where it decides if you need to be downsampled.
 */
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once '../lib/init.php';
 ob_end_clean();
 
@@ -59,9 +59,9 @@ if ($channel->is_private) {
             Preference::init();
 
             if (AmpConfig::get('access_control')) {
-                if (!Access::check_network('stream',$GLOBALS['user']->id,'25') and
-                    !Access::check_network('network',$GLOBALS['user']->id,'25')) {
-                    debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
+                if (!Access::check_network('stream', $GLOBALS['user']->id, '25') and
+                    !Access::check_network('network', $GLOBALS['user']->id, '25')) {
+                    debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access", '3');
                     UI::access_denied();
                     exit;
                 }

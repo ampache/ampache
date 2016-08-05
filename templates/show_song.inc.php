@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <dd class="<?php echo $rowparity;
     ?>">
             <div id="rating_<?php echo $song->id;
-    ?>_song"><?php Rating::show($song->id,'song');
+    ?>_song"><?php Rating::show($song->id, 'song');
     ?>
             </div>
         </dd>
@@ -57,7 +57,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <dd class="<?php echo $rowparity;
     ?>">
             <div id="userflag_<?php echo $song->id;
-    ?>_song"><?php Userflag::show($song->id,'song');
+    ?>_song"><?php Userflag::show($song->id, 'song');
     ?>
             </div>
         </dd>
@@ -92,11 +92,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) {
     ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'),'play_song_' . $song->id);
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $song->id);
     ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $song->id);
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $song->id);
     ?>
             <?php
 
@@ -104,7 +104,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     ?>
             <?php if (Stream_Playlist::check_autoplay_next()) {
     ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true','play_next', T_('Play next'),'nextplay_song_' . $song->id);
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $song->id);
     ?>
             <?php
 
@@ -115,8 +115,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <?php
 
 } ?>
-        <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add to temporary playlist'),'add_song_' . $song->id); ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
+        <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to temporary playlist'), 'add_song_' . $song->id); ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -133,7 +133,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <?php 
 }
     ?>
-        <?php if (Access::check('interface','25')) {
+        <?php if (Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('share')) {
     ?>
@@ -158,7 +158,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <?php
 
 } ?>
-        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface','50')) {
+        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', '50')) {
     ?>
             <?php if (AmpConfig::get('statistical_graphs')) {
     ?>
@@ -173,7 +173,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <?php
 
 } ?>
-        <?php if (Access::check('interface','50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
+        <?php if (Access::check('interface', '50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
     ?>
             <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_' . $song->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit'));
@@ -182,11 +182,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <?php
 
 } ?>
-        <?php if (Access::check('interface','75') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
+        <?php if (Access::check('interface', '75') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
     ?>
             <span id="<?php echo($button_flip_state_id);
     ?>">
-            <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id);
+            <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $icon, T_(ucfirst($icon)), 'flip_song_' . $song->id);
     ?>
             </span>
         <?php
@@ -230,13 +230,13 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   if ($song->replaygain_album_gain != 0) {
       $songprops[gettext_noop('ReplayGain Album Gain')]   = scrub_out($song->replaygain_album_gain);
   }
-  if (Access::check('interface','75')) {
+  if (Access::check('interface', '75')) {
       $songprops[gettext_noop('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
   }
   if ($song->update_time) {
-      $songprops[gettext_noop('Last Updated')]   = date("d/m/Y H:i",$song->update_time);
+      $songprops[gettext_noop('Last Updated')]   = date("d/m/Y H:i", $song->update_time);
   }
-  $songprops[gettext_noop('Added')]   = date("d/m/Y H:i",$song->addition_time);
+  $songprops[gettext_noop('Added')]   = date("d/m/Y H:i", $song->addition_time);
   if (AmpConfig::get('show_played_times')) {
       $songprops[gettext_noop('# Played')]   = scrub_out($song->object_cnt);
   }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','100')) {
+if (!Access::check('interface', '100')) {
     UI::access_denied();
     exit;
 }
@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
             License::create($_POST);
             $text = T_('License Created');
         }
-        show_confirmation($text,'',AmpConfig::get('web_path') . '/admin/license.php');
+        show_confirmation($text, '', AmpConfig::get('web_path') . '/admin/license.php');
     break;
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
         break;
     case 'delete':
         License::delete($_REQUEST['license_id']);
-        show_confirmation(T_('License Deleted'),'',AmpConfig::get('web_path') . '/admin/license.php');
+        show_confirmation(T_('License Deleted'), '', AmpConfig::get('web_path') . '/admin/license.php');
     break;
     default:
         $browse = new Browse();

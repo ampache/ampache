@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,8 +56,8 @@ class AmpacheRSSView
             return false;
         }
 
-        Preference::insert('rssview_feed_url','RSS Feed url','','25','string','plugins',$this->name);
-        Preference::insert('rssview_max_items','RSS Feed max items','5','25','integer','plugins',$this->name);
+        Preference::insert('rssview_feed_url', 'RSS Feed url', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('rssview_max_items', 'RSS Feed max items', '5', '25', 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -133,7 +133,7 @@ class AmpacheRSSView
         if (strlen(trim($data['rssview_feed_url']))) {
             $this->feed_url = trim($data['rssview_feed_url']);
         } else {
-            debug_event($this->name,'No rss feed url, home plugin skipped','3');
+            debug_event($this->name, 'No rss feed url, home plugin skipped', '3');
             return false;
         }
         $this->maxitems = intval($data['rssview_max_items']);

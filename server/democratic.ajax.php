@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
         $show_browse = true;
     break;
     case 'send_playlist':
-        if (!Access::check('interface','75')) {
+        if (!Access::check('interface', '75')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
             exit;
         }
@@ -65,7 +65,7 @@ switch ($_REQUEST['action']) {
         $results['rfc3514']           = '<script type="text/javascript">' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
     break;
     case 'clear_playlist':
-        if (!Access::check('interface','100')) {
+        if (!Access::check('interface', '100')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
             exit;
         }

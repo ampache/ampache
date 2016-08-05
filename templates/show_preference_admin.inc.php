@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ UI::show_box_top(T_('Preference Administration'));
     <th class="cel_level"><?php echo T_('Level'); ?></th>
 </tr>
 <?php foreach ($preferences as $preference) {
-    unset($is_25,$is_5,$is_100);
+    unset($is_25, $is_5, $is_100);
     ?>
 <tr class="<?php echo UI::flip_class();
     ?>">

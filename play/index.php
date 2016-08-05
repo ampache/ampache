@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,7 @@
    the case.  Also this will update local statistics for songs as well.
    This is also where it decides if you need to be downsampled.
 */
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once '../lib/init.php';
 ob_end_clean();
 
@@ -159,8 +159,8 @@ if (!$share_id) {
 
         // If require session is set then we need to make sure we're legit
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            if (!AmpConfig::get('require_localnet_session') and Access::check_network('network',$GLOBALS['user']->id,'5')) {
-                debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
+            if (!AmpConfig::get('require_localnet_session') and Access::check_network('network', $GLOBALS['user']->id, '5')) {
+                debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'], '5');
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
@@ -200,8 +200,8 @@ if (!$share_id) {
 }
 
 /* If we are in demo mode.. die here */
-if (AmpConfig::get('demo_mode') || (!Access::check('interface','25') )) {
-    debug_event('UI::access_denied', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
+if (AmpConfig::get('demo_mode') || (!Access::check('interface', '25'))) {
+    debug_event('UI::access_denied', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access, '3');
     UI::access_denied();
     exit;
 }
@@ -211,9 +211,9 @@ if (AmpConfig::get('demo_mode') || (!Access::check('interface','25') )) {
    that they have enough access to play this mojo
 */
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('stream',$GLOBALS['user']->id,'25') and
-        !Access::check_network('network',$GLOBALS['user']->id,'25')) {
-        debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
+    if (!Access::check_network('stream', $GLOBALS['user']->id, '25') and
+        !Access::check_network('network', $GLOBALS['user']->id, '25')) {
+        debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access", '3');
         UI::access_denied();
         exit;
     }
@@ -249,7 +249,7 @@ if ($demo_id) {
         $song_cool_check = 0;
         $oid             = $democratic->get_next_object($song_cool_check);
         $oids            = $democratic->get_cool_songs();
-        while (in_array($oid,$oids)) {
+        while (in_array($oid, $oids)) {
             $song_cool_check++;
             $oid = $democratic->get_next_object($song_cool_check);
             if ($song_cool_check >= '5') {
@@ -381,14 +381,14 @@ $browser = new Horde_Browser();
 if ($_GET['action'] == 'download' and AmpConfig::get('download')) {
     debug_event('play', 'Downloading file...', 5);
     // STUPID IE
-    $media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
+    $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
 
-    $browser->downloadHeaders($media_name,$media->mime,false,$media->size);
+    $browser->downloadHeaders($media_name, $media->mime, false, $media->size);
     $fp            = fopen(Core::conv_lc_file($media->file), 'rb');
     $bytesStreamed = 0;
 
     if (!is_resource($fp)) {
-        debug_event('Play',"Error: Unable to open $media->file for downloading",'2');
+        debug_event('Play', "Error: Unable to open $media->file for downloading", '2');
         exit();
     }
 
@@ -405,7 +405,7 @@ if ($_GET['action'] == 'download' and AmpConfig::get('download')) {
     // Check to see if we should be throttling because we can get away with it
     if (AmpConfig::get('rate_limit') > 0) {
         while (!feof($fp)) {
-            echo fread($fp,round(AmpConfig::get('rate_limit')*1024));
+            echo fread($fp, round(AmpConfig::get('rate_limit')*1024));
             $bytesStreamed += round(AmpConfig::get('rate_limit')*1024);
             flush();
             sleep(1);
@@ -597,7 +597,7 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
         }
     }
 } else {
-    debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
+    debug_event('play', 'Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
 if (!isset($_REQUEST['segment'])) {

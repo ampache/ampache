@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,7 +54,7 @@ class AmpacheTheaudiodb
         }
 
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key','TheAudioDb api key','41214789306c4690752dfb','75','string','plugins',$this->name);
+        Preference::insert('tadb_api_key', 'TheAudioDb api key', '41214789306c4690752dfb', '75', 'string', 'plugins', $this->name);
         
         return true;
     } // install
@@ -83,7 +83,7 @@ class AmpacheTheaudiodb
         if (strlen(trim($data['tadb_api_key']))) {
             $this->api_key = trim($data['tadb_api_key']);
         } else {
-            debug_event($this->name,'No TheAudioDb api key, metadata plugin skipped','3');
+            debug_event($this->name, 'No TheAudioDb api key, metadata plugin skipped', '3');
             return false;
         }
         
@@ -209,4 +209,4 @@ class AmpacheTheaudiodb
         return $this->api_call('track-mb.php?i=' . $mbid);
     }
 } // end AmpacheTheaudiodb
-?>
+;

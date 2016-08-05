@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -146,7 +146,7 @@ if ($directplay_limit > 0) {
             echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);
         }
         ?>
-        <?php if (Access::check('interface','25')) {
+        <?php if (Access::check('interface', '25')) {
     ?>
             <?php if (AmpConfig::get('sociable')) {
     ?>
@@ -173,7 +173,7 @@ if ($directplay_limit > 0) {
         <?php 
 }
         ?>
-        <?php if (Access::check('interface','50')) {
+        <?php if (Access::check('interface', '50')) {
     ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -73,17 +73,17 @@ switch ($_REQUEST['action']) {
     case 'file':
     break;
     case 'album':
-        $browse->set_filter('catalog',$_SESSION['catalog']);
+        $browse->set_filter('catalog', $_SESSION['catalog']);
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('name','ASC');
+        $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();  // Update current index depending on what is in session.
         $browse->show_objects();
     break;
     case 'tag':
         //FIXME: This whole thing is ugly, even though it works.
-        $browse->set_sort('count','ASC');
+        $browse->set_sort('count', 'ASC');
         // This one's a doozy
         $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'artist';
         $browse->set_simple_browse(false);
@@ -101,20 +101,20 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('browse_content.inc.php');
     break;
     case 'artist':
-        $browse->set_filter('catalog',$_SESSION['catalog']);
+        $browse->set_filter('catalog', $_SESSION['catalog']);
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('name','ASC');
+        $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'song':
-        $browse->set_filter('catalog',$_SESSION['catalog']);
+        $browse->set_filter('catalog', $_SESSION['catalog']);
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('title','ASC');
+        $browse->set_sort('title', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
@@ -122,7 +122,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('name','ASC');
+        $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
@@ -130,15 +130,15 @@ switch ($_REQUEST['action']) {
 
     break;
     case 'playlist':
-        $browse->set_sort('type','ASC');
-        $browse->set_sort('last_update','DESC');
-        $browse->set_filter('playlist_type','1');
+        $browse->set_sort('type', 'ASC');
+        $browse->set_sort('last_update', 'DESC');
+        $browse->set_filter('playlist_type', '1');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'smartplaylist':
         $browse->set_sort('type', 'ASC');
-        $browse->set_filter('playlist_type','1');
+        $browse->set_filter('playlist_type', '1');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
@@ -156,7 +156,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('title','ASC');
+        $browse->set_sort('title', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
@@ -164,7 +164,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('name','ASC');
+        $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
@@ -172,7 +172,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('season_number','ASC');
+        $browse->set_sort('season_number', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
@@ -190,12 +190,12 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('name','ASC');
+        $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
         break;
     case 'pvmsg':
-        $browse->set_sort('creation_date','DESC');
+        $browse->set_sort('creation_date', 'DESC');
         $folder = $_REQUEST['folder'];
         if ($folder === "sent") {
             $browse->set_filter('user', $GLOBALS['user']->id);
@@ -209,7 +209,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('title','ASC');
+        $browse->set_sort('title', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
         break;
@@ -217,7 +217,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('pubdate','DESC');
+        $browse->set_sort('pubdate', 'DESC');
         $browse->update_browse_from_session();
         $browse->show_objects();
         break;

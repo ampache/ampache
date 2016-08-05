@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,7 @@ if (Art::is_enabled()) {
 <td class="cel_category"><?php echo $libitem->category; ?></td>
 <td class="cel_artists"><?php echo $libitem->artists; ?></td>
 <td class="cel_action">
-<?php if (!AmpConfig::get('use_auth') || Access::check('interface','25')) {
+<?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
     if (AmpConfig::get('sociable')) {
         ?>
     <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=label&amp;id=<?php echo $libitem->id ?>">

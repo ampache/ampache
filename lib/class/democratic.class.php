@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -132,14 +132,14 @@ class Democratic extends Tmp_Playlist
         //FIXME: Code in single user stuff
 
         $preference_id = Preference::id_from_name('play_type');
-        Preference::update_level($preference_id,'75');
-        Preference::update_all($preference_id,'democratic');
+        Preference::update_level($preference_id, '75');
+        Preference::update_all($preference_id, 'democratic');
 
         $allow_demo = Preference::id_from_name('allow_democratic_playback');
-        Preference::update_all($allow_demo,'1');
+        Preference::update_all($allow_demo, '1');
 
         $play_method = Preference::id_from_name('playlist_method');
-        Preference::update_all($play_method,'clear');
+        Preference::update_all($play_method, 'clear');
 
         return true;
     } // set_user_preferences
@@ -470,14 +470,14 @@ class Democratic extends Tmp_Playlist
      * delete_from_oid
      * This takes an OID and type and removes the object from the democratic playlist
      */
-    public function delete_from_oid($oid,$object_type)
+    public function delete_from_oid($oid, $object_type)
     {
-        $row_id = $this->get_uid_from_object_id($oid,$object_type);
+        $row_id = $this->get_uid_from_object_id($oid, $object_type);
         if ($row_id) {
-            debug_event('Democratic','Removing Votes for ' . $oid . ' of type ' . $object_type,'5');
+            debug_event('Democratic', 'Removing Votes for ' . $oid . ' of type ' . $object_type, '5');
             $this->delete_votes($row_id);
         } else {
-            debug_event('Democratic','Unable to find Votes for ' . $oid . ' of type ' . $object_type,'3');
+            debug_event('Democratic', 'Unable to find Votes for ' . $oid . ' of type ' . $object_type, '3');
         }
 
         return true;

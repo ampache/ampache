@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -102,7 +102,7 @@ class Repository
         $nameParts = explode('\\', $className);
         $tableName = preg_replace_callback(
                 '/(?<=.)([A-Z])/',
-                function($m) {
+                function ($m) {
                     return '_' . strtolower($m[0]);
                 }, end($nameParts));
         return lcfirst($tableName);
@@ -225,6 +225,6 @@ class Repository
 
     public function camelCaseToUnderscore($string)
     {
-        return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/','_$1', $string));
+        return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));
     }
 }

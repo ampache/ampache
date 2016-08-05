@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
         <td><?php echo $democratic->count_items();
             ?></td>
         <td>
-        <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id,'all', T_('Play'),'play_democratic');
+        <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic');
             ?>
         <a href="<?php echo AmpConfig::get('web_path');
             ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id);

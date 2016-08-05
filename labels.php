@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,12 +60,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'add_label':
         // Must be at least a content manager or edit upload enabled
-        if (!Access::check('interface','50') && !AmpConfig::get('upload_allow_edit')) {
+        if (!Access::check('interface', '50') && !AmpConfig::get('upload_allow_edit')) {
             UI::access_denied();
             exit;
         }
 
-        if (!Core::form_verify('add_label','post')) {
+        if (!Core::form_verify('add_label', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
     case 'show_add_label':
-        if (Access::check('interface','50') || AmpConfig::get('upload_allow_edit')) {
+        if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
             echo T_('Label cannot be found.');

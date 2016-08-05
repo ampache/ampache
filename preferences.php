@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,12 +30,12 @@ $notification_text = "";
 // Switch on the action
 switch ($_REQUEST['action']) {
     case 'update_preferences':
-        if ($_POST['method'] == 'admin' && !Access::check('interface','100')) {
+        if ($_POST['method'] == 'admin' && !Access::check('interface', '100')) {
             UI::access_denied();
             exit;
         }
 
-        if (!Core::form_verify('update_preference','post')) {
+        if (!Core::form_verify('update_preference', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -70,12 +70,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'admin_update_preferences':
         // Make sure only admins here
-        if (!Access::check('interface','100')) {
+        if (!Access::check('interface', '100')) {
             UI::access_denied();
             exit;
         }
 
-        if (!Core::form_verify('update_preference','post')) {
+        if (!Core::form_verify('update_preference', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -86,7 +86,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'admin':
         // Make sure only admins here
-        if (!Access::check('interface','100')) {
+        if (!Access::check('interface', '100')) {
             UI::access_denied();
             exit;
         }
@@ -94,7 +94,7 @@ switch ($_REQUEST['action']) {
         $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], true);
     break;
     case 'user':
-        if (!Access::check('interface','100')) {
+        if (!Access::check('interface', '100')) {
             UI::access_denied();
             exit;
         }
@@ -104,12 +104,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface','25') && $GLOBALS['user']->id > 0) {
+        if (!Access::check('interface', '25') && $GLOBALS['user']->id > 0) {
             UI::access_denied();
             exit;
         }
 
-        if (!Core::form_verify('update_user','post')) {
+        if (!Core::form_verify('update_user', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'grant':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface','25') && $GLOBALS['user']->id > 0) {
+        if (!Access::check('interface', '25') && $GLOBALS['user']->id > 0) {
             UI::access_denied();
             exit;
         }
@@ -186,7 +186,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'confirm':
     case 'grant':
-        show_confirmation($title,$text,$next_url,$cancel);
+        show_confirmation($title, $text, $next_url, $cancel);
     break;
     default:
         if (!empty($notification_text)) {

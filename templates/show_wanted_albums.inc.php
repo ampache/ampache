@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,10 +23,10 @@
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="wanted">
     <thead>
         <tr class="th-top">
-            <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=name', T_('Album'),'sort_wanted_album'); ?></th>
-            <th class="cel_artist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=artist', T_('Artist'),'sort_wanted_artist'); ?></th>
-            <th class="cel_year optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=year', T_('Year'),'sort_wanted_year'); ?></th>
-            <th class="cel_user optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=user', T_('User'),'sort_wanted_user'); ?></th>
+            <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=name', T_('Album'), 'sort_wanted_album'); ?></th>
+            <th class="cel_artist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=artist', T_('Artist'), 'sort_wanted_artist'); ?></th>
+            <th class="cel_year optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=year', T_('Year'), 'sort_wanted_year'); ?></th>
+            <th class="cel_user optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=user', T_('User'), 'sort_wanted_user'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>

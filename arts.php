@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
         // If we got something back insert it
         if ($image_data) {
             $art = new Art($object_id, $object_type);
-            $art->insert($image_data,$_FILES['file']['type']);
+            $art->insert($image_data, $_FILES['file']['type']);
             show_confirmation(T_('Art Inserted'), '', $burl);
         }
         // Else it failed
@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
             $image_data     = Art::get_from_source($upload, $object_type);
 
             if ($image_data) {
-                $art->insert($image_data,$upload['0']['mime']);
+                $art->insert($image_data, $upload['0']['mime']);
                 show_confirmation(T_('Art Inserted'), '', $burl);
                 break;
             } // if image data

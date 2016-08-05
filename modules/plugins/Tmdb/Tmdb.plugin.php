@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ class AmpacheTmdb
             return false;
         }
 
-        Preference::insert('tmdb_api_key','Tmdb api key','','75','string','plugins',$this->name);
+        Preference::insert('tmdb_api_key', 'Tmdb api key', '', '75', 'string', 'plugins', $this->name);
         
         return true;
     } // install
@@ -82,7 +82,7 @@ class AmpacheTmdb
         if (strlen(trim($data['tmdb_api_key']))) {
             $this->api_key = trim($data['tmdb_api_key']);
         } else {
-            debug_event($this->name,'No Tmdb api key, metadata plugin skipped','3');
+            debug_event($this->name, 'No Tmdb api key, metadata plugin skipped', '3');
             return false;
         }
         
@@ -210,4 +210,4 @@ class AmpacheTmdb
         return $genres;
     }
 } // end AmpacheTmdb
-?>
+;

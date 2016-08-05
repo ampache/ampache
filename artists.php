@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -94,8 +94,8 @@ switch ($_REQUEST['action']) {
         }
         /* Enclose this in the purty box! */
         require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
-        show_alphabet_list('artists','artists.php',$match);
-        show_alphabet_form($chr, T_('Show Artists starting with'),"artists.php?action=match");
+        show_alphabet_list('artists', 'artists.php', $match);
+        show_alphabet_form($chr, T_('Show Artists starting with'), "artists.php?action=match");
         require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
 
         if ($match === "Browse") {

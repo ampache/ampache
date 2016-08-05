@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'create_playlist':
         /* Check rights */
-        if (!Access::check('interface','25')) {
+        if (!Access::check('interface', '25')) {
             UI::access_denied();
             break;
         }

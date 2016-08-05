@@ -10,7 +10,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,9 +38,9 @@
  * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
  * @return    void
  */
-function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation',$visible=true)
+function show_confirmation($title, $text, $next_url, $cancel=0, $form_name='confirmation', $visible=true)
 {
-    if (substr_count($next_url,AmpConfig::get('web_path'))) {
+    if (substr_count($next_url, AmpConfig::get('web_path'))) {
         $path = $next_url;
     } else {
         $path = AmpConfig::get('web_path') . "/$next_url";
@@ -83,10 +83,10 @@ function return_referer()
     } else {
         $file = basename($referer);
         /* Strip off the filename */
-        $referer = substr($referer,0,strlen($referer)-strlen($file));
+        $referer = substr($referer, 0, strlen($referer)-strlen($file));
     }
 
-    if (substr($referer,strlen($referer)-6,6) == 'admin/') {
+    if (substr($referer, strlen($referer)-6, 6) == 'admin/') {
         $file = 'admin/' . $file;
     }
 
@@ -116,7 +116,7 @@ function get_location()
 
     /* Sanatize the $_SERVER['PHP_SELF'] variable */
     $source           = str_replace(AmpConfig::get('raw_web_path'), "", $source);
-    $location['page'] = preg_replace("/^\/(.+\.php)\/?.*/","$1",$source);
+    $location['page'] = preg_replace("/^\/(.+\.php)\/?.*/", "$1", $source);
 
     switch ($location['page']) {
         case 'index.php':
@@ -432,7 +432,7 @@ function show_catalog_select($name='catalog', $catalog_id=0, $style='', $allow_n
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_license_select($name='license',$license_id=0,$song_id=0)
+function show_license_select($name='license', $license_id=0, $song_id=0)
 {
     static $license_id_cnt = 0;
 
@@ -474,7 +474,7 @@ function show_license_select($name='license',$license_id=0,$song_id=0)
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_user_select($name,$selected='',$style='')
+function show_user_select($name, $selected='', $style='')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('All') . "</option>\n";
@@ -500,7 +500,7 @@ function show_user_select($name,$selected='',$style='')
  * show_playlist_select
  * This one is for playlists!
  */
-function show_playlist_select($name,$selected='',$style='')
+function show_playlist_select($name, $selected='', $style='')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('None') . "</option>\n";

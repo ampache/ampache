@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -302,7 +302,7 @@ class Tmp_Playlist extends database_object
      * This adds the object of $this->object_type to this tmp playlist
      * it takes an optional type, default is song
      */
-    public function add_object($object_id,$object_type)
+    public function add_object($object_id, $object_type)
     {
         $sql = "INSERT INTO `tmp_playlist_data` " .
             "(`object_id`,`tmp_playlist`,`object_type`) " .

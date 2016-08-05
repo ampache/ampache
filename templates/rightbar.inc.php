@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 ?>
 <ul id="rb_action">
     <li>
-        <?php echo Ajax::button('?page=stream&action=basket','all', T_('Play'), 'rightbar_play'); ?>
+        <?php echo Ajax::button('?page=stream&action=basket', 'all', T_('Play'), 'rightbar_play'); ?>
     </li>
     <?php if (Access::check('interface', '25')) {
     ?>
@@ -65,7 +65,7 @@
 <?php 
 } ?>
     <li>
-    <?php echo Ajax::button('?action=basket&type=clear_all','delete', T_('Clear Playlist'),'rb_clear_playlist'); ?>
+    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
     </li>
     <li id="rb_add">
       <?php echo UI::get_icon('add', T_('Add Dynamic Items')); ?>
@@ -74,13 +74,13 @@
                 <?php echo Ajax::text('?page=random&action=song', T_('Random Song'), 'rb_add_random_song'); ?>
             </li>
             <li>
-                <?php echo Ajax::text('?page=random&action=artist', T_('Random Artist'),'rb_add_random_artist'); ?>
+                <?php echo Ajax::text('?page=random&action=artist', T_('Random Artist'), 'rb_add_random_artist'); ?>
             </li>
             <li>
                 <?php echo Ajax::text('?page=random&action=album', T_('Random Album'), 'rb_add_random_album'); ?>
             </li>
             <li>
-                <?php echo Ajax::text('?page=random&action=playlist', T_('Random Playlist'),'rb_add_random_playlist'); ?>
+                <?php echo Ajax::text('?page=random&action=playlist', T_('Random Playlist'), 'rb_add_random_playlist'); ?>
             </li>
         </ul>
     </li>
@@ -128,7 +128,7 @@
     foreach ($objects as $object_data) {
         $uid  = $object_data['track_id'];
         $type = array_shift($object_data);
-        if (in_array($type,$normal_array)) {
+        if (in_array($type, $normal_array)) {
             $object = new $type(array_shift($object_data));
             $object->format();
         }
@@ -137,7 +137,7 @@
         ?>" >
       <?php echo $object->f_link;
         ?>
-        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem');
+        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem');
         ?>
     </li>
 <?php 

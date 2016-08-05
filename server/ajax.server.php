@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@
  */
 
 // Set that this is an ajax include
-define('AJAX_INCLUDE','1');
+define('AJAX_INCLUDE', '1');
 require_once '../lib/init.php';
 
 xoutput_headers();
@@ -122,7 +122,7 @@ switch ($_REQUEST['action']) {
                     }
                 break;
                 case 'album_random':
-                    $data = explode('_',$_REQUEST['type']);
+                    $data = explode('_', $_REQUEST['type']);
                     $type = $data['0'];
                     foreach ($_REQUEST['id'] as $i) {
                         $object = new $type($i);
@@ -134,12 +134,12 @@ switch ($_REQUEST['action']) {
                 break;
                 case 'artist_random':
                 case 'tag_random':
-                    $data   = explode('_',$_REQUEST['type']);
+                    $data   = explode('_', $_REQUEST['type']);
                     $type   = $data['0'];
                     $object = new $type($_REQUEST['id']);
                     $songs  = $object->get_random_songs();
                     foreach ($songs as $song_id) {
-                        $GLOBALS['user']->playlist->add_object($song_id,'song');
+                        $GLOBALS['user']->playlist->add_object($song_id, 'song');
                     }
                 break;
                 case 'playlist_random':

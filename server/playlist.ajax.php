@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,7 +43,7 @@ switch ($_REQUEST['action']) {
         ob_start();
         $browse = new Browse();
         $browse->set_type('playlist_media');
-        $browse->add_supplemental_object('playlist',$playlist->id);
+        $browse->add_supplemental_object('playlist', $playlist->id);
         $browse->save_objects($object_ids);
         $browse->show_objects($object_ids);
         $browse->store();
@@ -56,14 +56,14 @@ switch ($_REQUEST['action']) {
         debug_event('playlist', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', '5');
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
-            if (!Access::check('interface','25')) {
-                debug_event('DENIED','Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist','1');
+            if (!Access::check('interface', '25')) {
+                debug_event('DENIED', 'Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist', '1');
                 break;
             }
 
             $name        = $_REQUEST['name'];
             if (empty($name)) {
-                $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
+                $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s", time());
             }
             $playlist_id = Playlist::create($name, 'private');
             if (!$playlist_id) {
