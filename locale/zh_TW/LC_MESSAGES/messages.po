@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-07-20 17:13+0200\n"
-"PO-Revision-Date: 2016-07-12 17:35+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"POT-Creation-Date: 2016-08-07 01:40+0200\n"
+"PO-Revision-Date: 2016-07-25 09:41+0000\n"
+"Last-Translator: Afterster\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
 "language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -45,7 +45,7 @@ msgstr "已新增"
 msgid "Your new Access Control List(s) have been created"
 msgstr "您的新存取控制清單已被建立"
 
-#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1505
+#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1502
 #: ../../lib/class/search.class.php:353 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
@@ -90,7 +90,7 @@ msgstr "確認刪除請求"
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] ""
+msgstr[0] "歌曲已啟用"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
@@ -99,7 +99,7 @@ msgstr "沒有已停用的歌曲被選擇"
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] ""
+msgstr[0] "停用歌曲已處理"
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
@@ -182,58 +182,48 @@ msgid "Your E-mail was not sent."
 msgstr "您的電子郵件沒有寄送。"
 
 #: ../../admin/modules.php:38
-#, fuzzy
 msgid "Failed to enable the module, Controller Error"
-msgstr "安裝失敗，控制器錯誤"
+msgstr "模組啟用失敗，控制器錯誤"
 
 #: ../../admin/modules.php:53
-#, fuzzy
 msgid "localplay enabled"
-msgstr "本地播放已停用"
+msgstr "本地播放已啟用"
 
 #: ../../admin/modules.php:61
-#, fuzzy
 msgid "Failed to enable the module, Catalog Error"
-msgstr "安裝失敗，目錄錯誤"
+msgstr "模組啟用失敗，目錄錯誤"
 
 #: ../../admin/modules.php:70
-#, fuzzy
 msgid "Module enabled"
-msgstr "使用者已啟用"
+msgstr "模組已啟用"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
-#, fuzzy
 msgid "Are you sure you want to disable this module?"
-msgstr "您確定要刪除此播客嗎？"
+msgstr "您確定要停用此模組嗎？"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
-#, fuzzy
 msgid "Module disabled"
-msgstr "PHP 安全模式停用中"
+msgstr "模組已停用"
 
 #: ../../admin/modules.php:105
-#, fuzzy
 msgid "Failed to disable module, Catalog Error"
-msgstr "安裝失敗，目錄錯誤"
+msgstr "模組停用失敗，目錄錯誤"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
 msgstr "無法安裝套件"
 
 #: ../../admin/modules.php:139
-#, fuzzy
 msgid "Plugin enabled"
-msgstr "套件已安裝"
+msgstr "套件已啟用"
 
 #: ../../admin/modules.php:146
-#, fuzzy
 msgid "Are you sure you want to disable this plugin?"
-msgstr "您確定要移除這個套件嗎？"
+msgstr "您確定要停用此套件嗎？"
 
 #: ../../admin/modules.php:165
-#, fuzzy
 msgid "Plugin disabled"
-msgstr "套件已安裝"
+msgstr "套件已停用"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
@@ -700,8 +690,8 @@ msgid "Deleting: %s"
 msgstr "刪除中：%s"
 
 #: ../../bin/fix_filenames.inc:42
-msgid "ERROR: Iconv required for this functionality, quiting"
-msgstr "錯誤：此功能需要 Iconv，正在結束"
+msgid "ERROR: Iconv required for this functionality, quitting"
+msgstr ""
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
@@ -1491,10 +1481,10 @@ msgstr "編輯"
 #: ../../templates/show_label_row.inc.php:49
 #: ../../templates/show_license_row.inc.php:31
 #: ../../templates/show_live_stream_row.inc.php:53
-#: ../../templates/show_localplay_instances.inc.php:52
+#: ../../templates/show_localplay_instances.inc.php:61
 #: ../../templates/show_localplay_playlist.inc.php:59
 #: ../../templates/show_manage_democratic.inc.php:60
-#: ../../templates/show_playlist.inc.php:159
+#: ../../templates/show_playlist.inc.php:167
 #: ../../templates/show_playlist_media_row.inc.php:92
 #: ../../templates/show_playlist_row.inc.php:110
 #: ../../templates/show_podcast_episode.inc.php:167
@@ -1711,51 +1701,51 @@ msgstr "單集播客"
 msgid "More"
 msgstr "更多"
 
-#: ../../lib/class/catalog.class.php:513 ../../lib/class/catalog.class.php:516
-#: ../../lib/class/catalog.class.php:519 ../../lib/class/user.class.php:1006
+#: ../../lib/class/catalog.class.php:510 ../../lib/class/catalog.class.php:513
+#: ../../lib/class/catalog.class.php:516 ../../lib/class/user.class.php:1006
 #: ../../lib/preferences.php:344 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:81
 msgid "Never"
 msgstr "不曾"
 
-#: ../../lib/class/catalog.class.php:599
+#: ../../lib/class/catalog.class.php:596
 msgid "day"
 msgid_plural "days"
-msgstr[0] ""
+msgstr[0] "天"
 
-#: ../../lib/class/catalog.class.php:601
+#: ../../lib/class/catalog.class.php:598
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
+msgstr[0] "小時"
 
-#: ../../lib/class/catalog.class.php:646
+#: ../../lib/class/catalog.class.php:643
 msgid "Catalog Insert Failed check debug logs"
 msgstr "目錄插入失敗，請檢查偵錯日誌"
 
-#: ../../lib/class/catalog.class.php:1512
+#: ../../lib/class/catalog.class.php:1509
 msgid "No Update Needed"
 msgstr "不需更新"
 
-#: ../../lib/class/catalog.class.php:1808
+#: ../../lib/class/catalog.class.php:1805
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 
-#: ../../lib/class/catalog.class.php:1833
+#: ../../lib/class/catalog.class.php:1830
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "目錄驗證完成。 %d 中的 %d 個檔案已更新。"
 
-#: ../../lib/class/catalog.class.php:2017
+#: ../../lib/class/catalog.class.php:2014
 msgid "Failed to create playlist."
 msgstr "建立播放清單失敗。"
 
-#: ../../lib/class/catalog.class.php:2034
+#: ../../lib/class/catalog.class.php:2031
 msgid "No valid songs found in playlist file."
 msgstr "播放清單檔案內找不到合法的歌曲。"
 
-#: ../../lib/class/catalog.class.php:2389
+#: ../../lib/class/catalog.class.php:2386
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -4506,11 +4496,10 @@ msgid "Ampache"
 msgstr "Ampache"
 
 #: ../../templates/error_page.inc.php:51
-#, fuzzy
 msgid ""
 "The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
-msgstr "已發生以下錯誤，10 秒後您會被自動導向。"
+msgstr ""
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
@@ -4684,8 +4673,8 @@ msgstr "新增到新的播放清單"
 
 #: ../../templates/rightbar.inc.php:61
 #: ../../templates/show_album_row.inc.php:125
-#: ../../templates/show_playlist.inc.php:100
-#: ../../templates/show_playlist.inc.php:102
+#: ../../templates/show_playlist.inc.php:104
+#: ../../templates/show_playlist.inc.php:106
 #: ../../templates/show_playlist_row.inc.php:94
 #: ../../templates/show_search.inc.php:37
 #: ../../templates/show_search.inc.php:39
@@ -4796,7 +4785,7 @@ msgstr "種類"
 #: ../../templates/show_live_streams.inc.php:85
 #: ../../templates/show_localplay_controllers.inc.php:32
 #: ../../templates/show_localplay_controllers.inc.php:81
-#: ../../templates/show_localplay_instances.inc.php:32
+#: ../../templates/show_localplay_instances.inc.php:33
 #: ../../templates/show_localplay_playlist.inc.php:35
 #: ../../templates/show_localplay_playlist.inc.php:78
 #: ../../templates/show_manage_democratic.inc.php:32
@@ -5214,13 +5203,13 @@ msgstr "寄送"
 
 #: ../../templates/show_adds_catalog.inc.php:23
 msgid "Starting New Media Search"
-msgstr ""
+msgstr "開始搜尋新媒體"
 
 #. HINT: Catalog Name
 #: ../../templates/show_adds_catalog.inc.php:25
 #, php-format
 msgid "Starting New Media Search on %s catalog"
-msgstr ""
+msgstr "開始搜尋新媒體於 %s 目錄"
 
 #: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_run_add_catalog.inc.php:25
@@ -5334,7 +5323,7 @@ msgstr "在 Google 搜尋…"
 #: ../../templates/show_artist.inc.php:48
 #: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:218
 msgid "Search on DuckDuckGo ..."
-msgstr ""
+msgstr "在 DuckDuckGo 搜尋…"
 
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:52
@@ -5417,8 +5406,8 @@ msgstr "下載"
 #: ../../templates/show_album_group_disks.inc.php:180
 #: ../../templates/show_album.inc.php:222
 #: ../../templates/show_album.inc.php:224
-#: ../../templates/show_playlist.inc.php:70
-#: ../../templates/show_playlist.inc.php:72
+#: ../../templates/show_playlist.inc.php:73
+#: ../../templates/show_playlist.inc.php:75
 msgid "Save Tracks Order"
 msgstr "儲存音軌順序"
 
@@ -5572,8 +5561,8 @@ msgstr "顯示專輯"
 
 #: ../../templates/show_artist.inc.php:151
 #: ../../templates/show_artist.inc.php:153
-#: ../../templates/show_playlist.inc.php:111
-#: ../../templates/show_playlist.inc.php:113
+#: ../../templates/show_playlist.inc.php:116
+#: ../../templates/show_playlist.inc.php:118
 #: ../../templates/show_podcast.inc.php:73
 #: ../../templates/show_podcast.inc.php:75
 #: ../../templates/show_tvshow.inc.php:75
@@ -5585,8 +5574,8 @@ msgstr "全部播放"
 
 #: ../../templates/show_artist.inc.php:159
 #: ../../templates/show_artist.inc.php:161
-#: ../../templates/show_playlist.inc.php:121
-#: ../../templates/show_playlist.inc.php:123
+#: ../../templates/show_playlist.inc.php:127
+#: ../../templates/show_playlist.inc.php:129
 #: ../../templates/show_podcast.inc.php:83
 #: ../../templates/show_podcast.inc.php:85
 #: ../../templates/show_tvshow.inc.php:85
@@ -5599,16 +5588,16 @@ msgstr "最後全部播放"
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:173
 #: ../../templates/show_artist.inc.php:175
-#: ../../templates/show_playlist.inc.php:129
-#: ../../templates/show_playlist.inc.php:130
+#: ../../templates/show_playlist.inc.php:136
+#: ../../templates/show_playlist.inc.php:137
 msgid "Add all to temporary playlist"
 msgstr ""
 
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:180
 #: ../../templates/show_artist.inc.php:182
-#: ../../templates/show_playlist.inc.php:133
-#: ../../templates/show_playlist.inc.php:134
+#: ../../templates/show_playlist.inc.php:140
+#: ../../templates/show_playlist.inc.php:141
 msgid "Random all to temporary playlist"
 msgstr ""
 
@@ -6943,7 +6932,7 @@ msgstr "找不到即時串流"
 msgid "Add Localplay Instance"
 msgstr "新增本地播放器實體"
 
-#: ../../templates/show_localplay_add_instance.inc.php:38
+#: ../../templates/show_localplay_add_instance.inc.php:40
 #: ../../templates/sidebar_localplay.inc.php:50
 msgid "Add Instance"
 msgstr "新增實體"
@@ -6964,7 +6953,7 @@ msgstr "暫停"
 msgid "Edit Localplay Instance"
 msgstr "編輯本地播放器實體"
 
-#: ../../templates/show_localplay_edit_instance.inc.php:39
+#: ../../templates/show_localplay_edit_instance.inc.php:41
 msgid "Update Instance"
 msgstr "更新實體"
 
@@ -6972,7 +6961,7 @@ msgstr "更新實體"
 msgid "Show Localplay Instances"
 msgstr "顯示本地播放器實體"
 
-#: ../../templates/show_localplay_instances.inc.php:50
+#: ../../templates/show_localplay_instances.inc.php:59
 msgid "Edit Instance"
 msgstr "編輯實體"
 
@@ -7186,21 +7175,21 @@ msgstr "一季電視節目"
 msgid "Episode Number"
 msgstr "單集編號"
 
-#: ../../templates/show_playlist.inc.php:79
-#: ../../templates/show_playlist.inc.php:81
+#: ../../templates/show_playlist.inc.php:82
+#: ../../templates/show_playlist.inc.php:84
 msgid "Sort Tracks by Artist, Album, Song"
 msgstr "依照作者、專輯、歌曲排序音軌"
 
-#: ../../templates/show_playlist.inc.php:87
-#: ../../templates/show_playlist.inc.php:89
+#: ../../templates/show_playlist.inc.php:90
+#: ../../templates/show_playlist.inc.php:92
 msgid "Remove duplicates"
 msgstr "移除重複"
 
-#: ../../templates/show_playlist.inc.php:144
+#: ../../templates/show_playlist.inc.php:151
 msgid "Create channel"
 msgstr "建立頻道"
 
-#: ../../templates/show_playlist.inc.php:155
+#: ../../templates/show_playlist.inc.php:163
 #: ../../templates/show_playlist_row.inc.php:110
 msgid "Do you really want to delete the playlist?"
 msgstr "您確定要刪除此播放清單嗎？"
@@ -7374,7 +7363,7 @@ msgstr "重新載入"
 
 #: ../../templates/show_random.inc.php:23
 msgid "Play Random Selection"
-msgstr ""
+msgstr "播放隨選歌曲"
 
 #: ../../templates/show_random.inc.php:53
 msgid "Item count"
@@ -7390,13 +7379,13 @@ msgstr "無限制"
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] ""
+msgstr[0] "%d 分"
 
 #: ../../templates/show_random.inc.php:88
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] ""
+msgstr[0] "%d 小時"
 
 #: ../../templates/show_random.inc.php:97
 msgid "Size Limit"
@@ -7420,49 +7409,49 @@ msgstr "客戶端"
 #, php-format
 msgid "%d second ago"
 msgid_plural "%d seconds ago"
-msgstr[0] ""
+msgstr[0] "%d 秒前"
 
 #: ../../templates/show_recently_played.inc.php:76
 #, php-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] ""
+msgstr[0] "%d 分前"
 
 #: ../../templates/show_recently_played.inc.php:79
 #, php-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
-msgstr[0] ""
+msgstr[0] "%d 小時前"
 
 #: ../../templates/show_recently_played.inc.php:82
 #, php-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
-msgstr[0] ""
+msgstr[0] "%d 天前"
 
 #: ../../templates/show_recently_played.inc.php:85
 #, php-format
 msgid "%d week ago"
 msgid_plural "%d weeks ago"
-msgstr[0] ""
+msgstr[0] "%d 週前"
 
 #: ../../templates/show_recently_played.inc.php:88
 #, php-format
 msgid "%d month ago"
 msgid_plural "%d months ago"
-msgstr[0] ""
+msgstr[0] "%d 個月前"
 
 #: ../../templates/show_recently_played.inc.php:91
 #, php-format
 msgid "%d year ago"
 msgid_plural "%d years ago"
-msgstr[0] ""
+msgstr[0] "%d 年前"
 
 #: ../../templates/show_recently_played.inc.php:94
 #, php-format
 msgid "%d decade ago"
 msgid_plural "%d decades ago"
-msgstr[0] ""
+msgstr[0] "%d0 年前"
 
 #: ../../templates/show_recently_played.inc.php:172
 msgid "No recently item found"
@@ -7489,7 +7478,7 @@ msgstr "您的帳號已被建立。"
 
 #: ../../templates/show_registration_confirmation.inc.php:49
 msgid "Please wait for an administrator to activate your account."
-msgstr ""
+msgstr "請等待管理員啟用您的帳號。"
 
 #: ../../templates/show_registration_confirmation.inc.php:51
 msgid ""
@@ -7545,7 +7534,7 @@ msgstr "新增智慧播放清單"
 #: ../../templates/show_searches.inc.php:49
 #: ../../templates/show_searches.inc.php:85
 msgid "Item Limit"
-msgstr ""
+msgstr "項目上限"
 
 #: ../../templates/show_searches.inc.php:72
 msgid "No smart playlist found"
@@ -7557,7 +7546,7 @@ msgstr "搜尋 Ampache"
 
 #: ../../templates/show_search_form.inc.php:61
 msgid "Maximum Results"
-msgstr ""
+msgstr "最大結果量"
 
 #: ../../templates/show_search_form.inc.php:88
 msgid "Save as Smart Playlist"
@@ -8428,7 +8417,7 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.07.2016 18:53:07 CEST
+# Last Update: 22.07.2016 15:49:07 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8839,30 +8828,21 @@ msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr "預設使用首字母瀏覽於以下資料庫項目 (專輯、作者…等等)"
 
-#: Database preference table id 160
-#, fuzzy
-msgid "HTTPQ Active Instance"
-msgstr "使用的實體"
-
-#: Database preference table id 161
-msgid "MPD Active Instance"
-msgstr ""
-
 #: Database preference table id 164
 msgid "Amazon base url"
-msgstr ""
+msgstr "Amazon 網址"
 
 #: Database preference table id 165
 msgid "Amazon max results pages"
-msgstr ""
+msgstr "Amazon 回傳結果的最大頁面量"
 
 #: Database preference table id 166
 msgid "Amazon Access Key ID"
-msgstr ""
+msgstr "Amazon 存取金鑰 ID"
 
 #: Database preference table id 167
 msgid "Amazon Secret Access Key"
-msgstr ""
+msgstr "Amazon 存取金鑰密文"
 
 #: Database preference table id 168
 msgid "Amazon associate tag"

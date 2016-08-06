@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-07-20 17:13+0200\n"
-"PO-Revision-Date: 2016-07-12 17:35+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"POT-Creation-Date: 2016-08-07 01:40+0200\n"
+"PO-Revision-Date: 2016-07-25 09:41+0000\n"
+"Last-Translator: Afterster\n"
 "Language-Team: Catalan (Spain) (http://www.transifex.com/ampache/ampache/"
 "language/ca_ES/)\n"
 "Language: ca_ES\n"
@@ -44,7 +44,7 @@ msgstr "Afegit"
 msgid "Your new Access Control List(s) have been created"
 msgstr "La teva nova llista d'accés ha estat creada"
 
-#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1505
+#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1502
 #: ../../lib/class/search.class.php:353 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
@@ -183,33 +183,28 @@ msgid "Your E-mail was not sent."
 msgstr ""
 
 #: ../../admin/modules.php:38
-#, fuzzy
 msgid "Failed to enable the module, Controller Error"
-msgstr "Instal.lació fallada, error de controlador"
+msgstr ""
 
 #: ../../admin/modules.php:53
-#, fuzzy
 msgid "localplay enabled"
-msgstr "Reproducció local desactivada"
+msgstr ""
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
 msgstr ""
 
 #: ../../admin/modules.php:70
-#, fuzzy
 msgid "Module enabled"
-msgstr "Usuari permès"
+msgstr ""
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
-#, fuzzy
 msgid "Are you sure you want to disable this module?"
-msgstr "Estàs segur que vols esborrar aquest plugin?"
+msgstr ""
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
-#, fuzzy
 msgid "Module disabled"
-msgstr "Usuari desactivat"
+msgstr ""
 
 #: ../../admin/modules.php:105
 msgid "Failed to disable module, Catalog Error"
@@ -220,19 +215,16 @@ msgid "Unable to Install Plugin"
 msgstr "Impossible instal.lar el Plugin"
 
 #: ../../admin/modules.php:139
-#, fuzzy
 msgid "Plugin enabled"
-msgstr "Plugin desactivat"
+msgstr ""
 
 #: ../../admin/modules.php:146
-#, fuzzy
 msgid "Are you sure you want to disable this plugin?"
-msgstr "Estàs segur que vols esborrar aquest plugin?"
+msgstr ""
 
 #: ../../admin/modules.php:165
-#, fuzzy
 msgid "Plugin disabled"
-msgstr "Plugin activat"
+msgstr ""
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
@@ -697,7 +689,7 @@ msgid "Deleting: %s"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:42
-msgid "ERROR: Iconv required for this functionality, quiting"
+msgid "ERROR: Iconv required for this functionality, quitting"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:51
@@ -1488,10 +1480,10 @@ msgstr "Editar"
 #: ../../templates/show_label_row.inc.php:49
 #: ../../templates/show_license_row.inc.php:31
 #: ../../templates/show_live_stream_row.inc.php:53
-#: ../../templates/show_localplay_instances.inc.php:52
+#: ../../templates/show_localplay_instances.inc.php:61
 #: ../../templates/show_localplay_playlist.inc.php:59
 #: ../../templates/show_manage_democratic.inc.php:60
-#: ../../templates/show_playlist.inc.php:159
+#: ../../templates/show_playlist.inc.php:167
 #: ../../templates/show_playlist_media_row.inc.php:92
 #: ../../templates/show_playlist_row.inc.php:110
 #: ../../templates/show_podcast_episode.inc.php:167
@@ -1708,54 +1700,54 @@ msgstr ""
 msgid "More"
 msgstr "Més"
 
-#: ../../lib/class/catalog.class.php:513 ../../lib/class/catalog.class.php:516
-#: ../../lib/class/catalog.class.php:519 ../../lib/class/user.class.php:1006
+#: ../../lib/class/catalog.class.php:510 ../../lib/class/catalog.class.php:513
+#: ../../lib/class/catalog.class.php:516 ../../lib/class/user.class.php:1006
 #: ../../lib/preferences.php:344 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:81
 msgid "Never"
 msgstr "Mai"
 
-#: ../../lib/class/catalog.class.php:599
+#: ../../lib/class/catalog.class.php:596
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:601
+#: ../../lib/class/catalog.class.php:598
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:646
+#: ../../lib/class/catalog.class.php:643
 msgid "Catalog Insert Failed check debug logs"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1512
+#: ../../lib/class/catalog.class.php:1509
 msgid "No Update Needed"
 msgstr "No es necessita cap actualització "
 
-#: ../../lib/class/catalog.class.php:1808
+#: ../../lib/class/catalog.class.php:1805
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:1833
+#: ../../lib/class/catalog.class.php:1830
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2017
+#: ../../lib/class/catalog.class.php:2014
 msgid "Failed to create playlist."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2034
+#: ../../lib/class/catalog.class.php:2031
 msgid "No valid songs found in playlist file."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2389
+#: ../../lib/class/catalog.class.php:2386
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -4636,8 +4628,8 @@ msgstr "Afegeix a la nova llista"
 
 #: ../../templates/rightbar.inc.php:61
 #: ../../templates/show_album_row.inc.php:125
-#: ../../templates/show_playlist.inc.php:100
-#: ../../templates/show_playlist.inc.php:102
+#: ../../templates/show_playlist.inc.php:104
+#: ../../templates/show_playlist.inc.php:106
 #: ../../templates/show_playlist_row.inc.php:94
 #: ../../templates/show_search.inc.php:37
 #: ../../templates/show_search.inc.php:39
@@ -4748,7 +4740,7 @@ msgstr "Tipus"
 #: ../../templates/show_live_streams.inc.php:85
 #: ../../templates/show_localplay_controllers.inc.php:32
 #: ../../templates/show_localplay_controllers.inc.php:81
-#: ../../templates/show_localplay_instances.inc.php:32
+#: ../../templates/show_localplay_instances.inc.php:33
 #: ../../templates/show_localplay_playlist.inc.php:35
 #: ../../templates/show_localplay_playlist.inc.php:78
 #: ../../templates/show_manage_democratic.inc.php:32
@@ -5369,8 +5361,8 @@ msgstr "Baixar"
 #: ../../templates/show_album_group_disks.inc.php:180
 #: ../../templates/show_album.inc.php:222
 #: ../../templates/show_album.inc.php:224
-#: ../../templates/show_playlist.inc.php:70
-#: ../../templates/show_playlist.inc.php:72
+#: ../../templates/show_playlist.inc.php:73
+#: ../../templates/show_playlist.inc.php:75
 msgid "Save Tracks Order"
 msgstr ""
 
@@ -5524,8 +5516,8 @@ msgstr ""
 
 #: ../../templates/show_artist.inc.php:151
 #: ../../templates/show_artist.inc.php:153
-#: ../../templates/show_playlist.inc.php:111
-#: ../../templates/show_playlist.inc.php:113
+#: ../../templates/show_playlist.inc.php:116
+#: ../../templates/show_playlist.inc.php:118
 #: ../../templates/show_podcast.inc.php:73
 #: ../../templates/show_podcast.inc.php:75
 #: ../../templates/show_tvshow.inc.php:75
@@ -5537,8 +5529,8 @@ msgstr ""
 
 #: ../../templates/show_artist.inc.php:159
 #: ../../templates/show_artist.inc.php:161
-#: ../../templates/show_playlist.inc.php:121
-#: ../../templates/show_playlist.inc.php:123
+#: ../../templates/show_playlist.inc.php:127
+#: ../../templates/show_playlist.inc.php:129
 #: ../../templates/show_podcast.inc.php:83
 #: ../../templates/show_podcast.inc.php:85
 #: ../../templates/show_tvshow.inc.php:85
@@ -5551,16 +5543,16 @@ msgstr ""
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:173
 #: ../../templates/show_artist.inc.php:175
-#: ../../templates/show_playlist.inc.php:129
-#: ../../templates/show_playlist.inc.php:130
+#: ../../templates/show_playlist.inc.php:136
+#: ../../templates/show_playlist.inc.php:137
 msgid "Add all to temporary playlist"
 msgstr ""
 
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:180
 #: ../../templates/show_artist.inc.php:182
-#: ../../templates/show_playlist.inc.php:133
-#: ../../templates/show_playlist.inc.php:134
+#: ../../templates/show_playlist.inc.php:140
+#: ../../templates/show_playlist.inc.php:141
 msgid "Random all to temporary playlist"
 msgstr ""
 
@@ -6877,7 +6869,7 @@ msgstr ""
 msgid "Add Localplay Instance"
 msgstr "Afegir instància de reproducció local"
 
-#: ../../templates/show_localplay_add_instance.inc.php:38
+#: ../../templates/show_localplay_add_instance.inc.php:40
 #: ../../templates/sidebar_localplay.inc.php:50
 msgid "Add Instance"
 msgstr "Afegeix una instància"
@@ -6898,7 +6890,7 @@ msgstr "Pausa"
 msgid "Edit Localplay Instance"
 msgstr "Edita la instància de reprodució local"
 
-#: ../../templates/show_localplay_edit_instance.inc.php:39
+#: ../../templates/show_localplay_edit_instance.inc.php:41
 msgid "Update Instance"
 msgstr "Actualitza la instància"
 
@@ -6906,7 +6898,7 @@ msgstr "Actualitza la instància"
 msgid "Show Localplay Instances"
 msgstr "Mostra instàncies de reproducció local"
 
-#: ../../templates/show_localplay_instances.inc.php:50
+#: ../../templates/show_localplay_instances.inc.php:59
 msgid "Edit Instance"
 msgstr "Edita la instància"
 
@@ -7120,21 +7112,21 @@ msgstr ""
 msgid "Episode Number"
 msgstr ""
 
-#: ../../templates/show_playlist.inc.php:79
-#: ../../templates/show_playlist.inc.php:81
+#: ../../templates/show_playlist.inc.php:82
+#: ../../templates/show_playlist.inc.php:84
 msgid "Sort Tracks by Artist, Album, Song"
 msgstr ""
 
-#: ../../templates/show_playlist.inc.php:87
-#: ../../templates/show_playlist.inc.php:89
+#: ../../templates/show_playlist.inc.php:90
+#: ../../templates/show_playlist.inc.php:92
 msgid "Remove duplicates"
 msgstr ""
 
-#: ../../templates/show_playlist.inc.php:144
+#: ../../templates/show_playlist.inc.php:151
 msgid "Create channel"
 msgstr ""
 
-#: ../../templates/show_playlist.inc.php:155
+#: ../../templates/show_playlist.inc.php:163
 #: ../../templates/show_playlist_row.inc.php:110
 msgid "Do you really want to delete the playlist?"
 msgstr ""
@@ -8348,7 +8340,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.07.2016 18:53:07 CEST
+# Last Update: 22.07.2016 15:49:07 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8757,15 +8749,6 @@ msgstr ""
 #: Database preference table id 157
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-
-#: Database preference table id 160
-#, fuzzy
-msgid "HTTPQ Active Instance"
-msgstr "Instància activa"
-
-#: Database preference table id 161
-msgid "MPD Active Instance"
 msgstr ""
 
 #: Database preference table id 164
