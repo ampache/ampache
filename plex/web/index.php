@@ -172,8 +172,7 @@ switch ($plexact) {
             <input type="hidden" name="plexact" value="auth_myplex" />
             <div class="field">
                 <label for="myplex_username">myPlex Username:</label>
-                <input type="text" id="myplex_username" class="field_value" name="myplex_username" value="<?php echo $myplex_username;
-    ?>" />
+                <input type="text" id="myplex_username" class="field_value" name="myplex_username" value="<?php echo $myplex_username; ?>" />
             </div>
             <div class="field">
                 <label for="myplex_password">myPlex Password:</label>
@@ -181,19 +180,16 @@ switch ($plexact) {
             </div>
             <div class="field">
                 <label for="plex_public_port">Public Server Port (optional):</label>
-                <input type="text" id="plex_public_port" class="field_value" name="plex_public_port" value="<?php echo $plex_public_port;
-    ?>" />
+                <input type="text" id="plex_public_port" class="field_value" name="plex_public_port" value="<?php echo $plex_public_port; ?>" />
             </div>
             <?php if ($plex_local_port != 32400) {
     ?>
             <div style="color: orange;">
-                Plex servers should locally listen on port 32400. Current local listing port for your Plex backend is <?php echo $plex_local_port;
-    ?>. Ampache applies a small URI `hack` to work with custom port
+                Plex servers should locally listen on port 32400. Current local listing port for your Plex backend is <?php echo $plex_local_port; ?>. Ampache applies a small URI `hack` to work with custom port
                 as Plex server, but be aware that this will not work with all clients.
             </div>
             <?php 
-}
-    ?>
+} ?>
             <div class="formbuttons">
                 <input type="submit" value="Auth/Publish" />
             </div>
@@ -205,11 +201,8 @@ switch ($plexact) {
     <div class="configform">
         <h3>myPlex authentication / server publish</h3>
         <form action="" method="POST" enctype="multipart/form-data">
-            <label>myPlex user: <b><?php echo $myplex_username;
-    ?></b></label><br />
-            <label>Public server address: <b><?php echo $plex_public_address;
-    ?>:<?php echo $plex_public_port;
-    ?></b></label>
+            <label>myPlex user: <b><?php echo $myplex_username; ?></b></label><br />
+            <label>Public server address: <b><?php echo $plex_public_address; ?>:<?php echo $plex_public_port; ?></b></label>
             <input type="hidden" name="plexact" value="unauth_myplex" />
             <div class="formbuttons">
                 <input type="submit" value="Unregister" />

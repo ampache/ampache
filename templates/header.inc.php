@@ -37,26 +37,15 @@ $_SESSION['login'] = false;
         <link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
         <?php if (AmpConfig::get('use_rss')) {
     ?>
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing');
-    ?>" href="<?php echo $web_path;
-    ?>/rss.php" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played');
-    ?>" href="<?php echo $web_path;
-    ?>/rss.php?type=recently_played" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums');
-    ?>" href="<?php echo $web_path;
-    ?>/rss.php?type=latest_album" />
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists');
-    ?>" href="<?php echo $web_path;
-    ?>/rss.php?type=latest_artist" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_artist" />
         <?php if (AmpConfig::get('sociable')) {
     ?>
-        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts');
-    ?>" href="<?php echo $web_path;
-    ?>/rss.php?type=latest_shout" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
         <?php 
-}
-    ?>
+} ?>
         <?php 
 } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
@@ -111,13 +100,10 @@ $_SESSION['login'] = false;
 
         <?php
         if (AmpConfig::get('ajax_load')) {
-            $iframed = true;
-            ?>
-            <script src="<?php echo $web_path;
-            ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
+            $iframed = true; ?>
+            <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
         <?php
-            require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php');
-            ?>
+            require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php'); ?>
         <script type="text/javascript">
             function NavigateTo(url)
             {
@@ -310,8 +296,7 @@ $_SESSION['login'] = false;
     ?>
         <script type="text/javascript" language="javascript">
         noty({text: '<?php printf(json_encode(nl2br(/* HINT: Translator, "%s" is replaced by "cookie settings" */T_("We have placed cookies on your computer to help make this website better. You can change your %s at any time.\nOtherwise, we will assume you are OK to continue.\n\nClick on this message to not display it again."))),
-                    "<a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_('cookie settings') . "</a>");
-    ?>',
+                    "<a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_('cookie settings') . "</a>"); ?>',
                 type: 'warning',
                 layout: 'bottom',
                 timeout: false,
@@ -370,41 +355,26 @@ $_SESSION['login'] = false;
                     <?php require_once AmpConfig::get('prefix') . UI::find_template('show_search_bar.inc.php'); ?>
                     <?php if (User::is_registered()) {
     ?>
-                        <?php require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php');
-    ?>
+                        <?php require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path;
-    ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id;
-    ?>"><?php echo $GLOBALS['user']->fullname;
-    ?></a>
+                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id; ?>"><?php echo $GLOBALS['user']->fullname; ?></a>
                             <?php if (AmpConfig::get('sociable')) {
     ?>
-                            <a href="<?php echo $web_path;
-    ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages');
-    ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true));
-    ?>)</a>
+                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true)); ?>)</a>
                             <?php 
-}
-    ?>
-                            <a rel="nohtml" href="<?php echo $web_path;
-    ?>/logout.php">[<?php echo T_('Log out');
-    ?>]</a>
+} ?>
+                            <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
                         </span>
                     <?php 
 } else {
     ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path;
-    ?>/login.php" rel="nohtml"><?php echo T_('Login');
-    ?></a>
+                            <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
                             <?php if (AmpConfig::get('allow_public_registration')) {
     ?>
-                                / <a href="<?php echo $web_path;
-    ?>/register.php" rel="nohtml"><?php echo T_('Register');
-    ?></a>
+                                / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
                             <?php 
-}
-    ?>
+} ?>
                         </span>
                     <?php 
 } ?>
@@ -415,8 +385,7 @@ $_SESSION['login'] = false;
 
         <?php if (AmpConfig::get('topmenu')) {
     ?>
-            <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float';
-    ?>">
+            <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="topmenu_item">
                     <a href="<?php echo $web_path ?>/index.php">
                         <img src="<?php echo $web_path ?>/images/topmenu-home.png" />
@@ -450,8 +419,7 @@ $_SESSION['login'] = false;
                     </a>
                 </div>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) {
     ?>
                 <div id="topmenu_item">
@@ -461,8 +429,7 @@ $_SESSION['login'] = false;
                     </a>
                 </div>
                 <?php 
-}
-    ?>
+} ?>
             </div>
         <?php 
 } ?>
@@ -533,15 +500,10 @@ $_SESSION['login'] = false;
                         if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version')) {
                             ?>
                             <div class="fatalerror">
-                                <?php echo T_('Error: Your config file is out of date!');
-                            ?>
+                                <?php echo T_('Error: Your config file is out of date!'); ?>
                                 <br />
-                                <a rel="nohtml" href="<?php echo $web_path;
-                            ?>/admin/system.php?action=generate_config"><?php echo T_('Generate and download new config file');
-                            ?></a> |
-                                <a rel="nohtml" href="<?php echo $web_path;
-                            ?>/admin/system.php?action=write_config"><?php echo T_('Write new config file to disk');
-                            ?></a>
+                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate and download new config file'); ?></a> |
+                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write new config file to disk'); ?></a>
                             </div>
                 <?php
 

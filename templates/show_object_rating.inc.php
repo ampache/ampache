@@ -54,8 +54,7 @@ if (!$rate) {
     for ($i = 1; $i < 6; $i++) {
         ?>
       <li>
-          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i);
-        ?>
+          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i); ?>
       </li>
     <?php
 

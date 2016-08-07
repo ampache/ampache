@@ -48,11 +48,9 @@
                 <td>
                     <?php
                         if (Access::check('interface', 50)) {
-                            show_artist_select('album_artist', $libitem->album_artist, true, $libitem->id, true);
-                            ?>
+                            show_artist_select('album_artist', $libitem->album_artist, true, $libitem->id, true); ?>
                     <div id="album_artist_select_album_<?php echo $libitem->id ?>">
-                        <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')');
-                            ?>
+                        <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')'); ?>
                     </div>
                     <?php
 
@@ -75,8 +73,7 @@
                 <td>
                     <?php if (Access::check('interface', 50)) {
     ?>
-                        <input type="text" name="mbid" value="<?php echo $libitem->mbid;
-    ?>" />
+                        <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php
 
 } else {
@@ -90,8 +87,7 @@
                 <td>
                 <?php if (Access::check('interface', 50)) {
     ?>
-                    <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group;
-    ?>" />
+                    <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
                 <?php
 
 } else {

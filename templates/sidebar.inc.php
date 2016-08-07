@@ -38,39 +38,31 @@ if (User::is_registered()) {
     $sidebar_items[] = array('id'=>'modules','title' => T_('Modules'),'icon'=>'plugin','access'=>100);
     $sidebar_items[] = array('id'=>'admin', 'title' => T_('Admin'), 'icon'=>'admin', 'access'=>100);
 
-    $web_path = AmpConfig::get('web_path');
-    ?>
+    $web_path = AmpConfig::get('web_path'); ?>
     <?php
     foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
-            $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'";
-            ?>
-        <li <?php echo $li_params;
-            ?>>
+            $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'"; ?>
+        <li <?php echo $li_params; ?>>
     <?php
             echo Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']);
             if ($item['id']==$_SESSION['state']['sidebar_tab']) {
                 ?>
             <div id="sidebar-page" class="sidebar-page-float">
-                <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php');
-                ?>
+                <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
             </div>
     <?php
 
-            }
-            ?>
+            } ?>
         </li>
     <?php
 
         }
-    }
-    ?>
+    } ?>
         <li id="sb_tab_logout" class="sb1">
-            <a target="_top" href="<?php echo $web_path;
-    ?>/logout.php" id="sidebar_logout" rel="nohtml" >
-            <?php echo UI::get_icon('logout', T_('Logout'));
-    ?>
+            <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" rel="nohtml" >
+            <?php echo UI::get_icon('logout', T_('Logout')); ?>
             </a>
         </li>
 <?php
@@ -80,8 +72,7 @@ if (User::is_registered()) {
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
             <?php
-                require_once AmpConfig::get('prefix') . UI::find_template('sidebar_home.inc.php');
-    ?>
+                require_once AmpConfig::get('prefix') . UI::find_template('sidebar_home.inc.php'); ?>
             </div>
         </li>
 <?Php
