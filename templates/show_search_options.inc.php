@@ -30,13 +30,8 @@
     <?php if (Access::check_function('batch_download') && check_can_zip($_REQUEST['type'])) {
     ?>
 <li>
-    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path');
-    ?>/batch.php?action=browse&amp;type=<?php echo scrub_out($_REQUEST['type']);
-    ?>&amp;browse_id=<?php echo $browse->id;
-    ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download'));
-    ?></a>
-    <?php echo T_('Batch Download');
-    ?>
+    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out($_REQUEST['type']); ?>&amp;browse_id=<?php echo $browse->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+    <?php echo T_('Batch Download'); ?>
 </li>
     <?php 
 } ?>

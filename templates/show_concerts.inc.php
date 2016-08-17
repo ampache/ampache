@@ -33,21 +33,15 @@
         <?php
         foreach ($coming_concerts as $libitem) {
             ?>
-        <tr id="concert_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_concert_row.inc.php');
-            ?>
+        <tr id="concert_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_concert_row.inc.php'); ?>
         </tr>
         <?php 
         } ?>
         <?php if (!$coming_concerts || !count($coming_concerts)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No coming events found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No coming events found'); ?></span></td>
         </tr>
         <?php 
 } ?>
@@ -67,21 +61,15 @@
         <?php
         foreach ($concerts as $libitem) {
             ?>
-        <tr id="concert_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_concert_row.inc.php');
-            ?>
+        <tr id="concert_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_concert_row.inc.php'); ?>
         </tr>
         <?php 
         } ?>
         <?php if (!$concerts || !count($concerts)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No past events found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No past events found'); ?></span></td>
         </tr>
         <?php 
 } ?>

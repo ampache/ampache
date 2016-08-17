@@ -26,11 +26,8 @@
 <?php foreach ($fields as $key=>$field) {
     ?>
 <tr>
-    <td><?php echo $field['description'];
-    ?></td>
-    <td><input type="<?php echo $field["type"];
-    ?>" name="<?php echo $key;
-    ?>" /></td>
+    <td><?php echo $field['description']; ?></td>
+    <td><input type="<?php echo $field["type"]; ?>" name="<?php echo $key; ?>" /></td>
 </tr>
 <?php
 

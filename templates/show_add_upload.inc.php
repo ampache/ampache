@@ -166,8 +166,7 @@ $(function () {
 // Display a max file size client side if we know it
 if ($upload_max > 0) {
     ?>
-    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max;
-    ?>" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
 <?php
 
 }
@@ -178,11 +177,9 @@ if ($upload_max > 0) {
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
     <td>
-        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $GLOBALS['user']->id);
-    ?>
+        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $GLOBALS['user']->id); ?>
         <div id="artist_select_album_1">
-            <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)');
-    ?>
+            <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
         </div>
     </td>
 </tr>
@@ -202,11 +199,9 @@ if ($upload_max > 0) {
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td>
-        <?php show_license_select('license', '', '0');
-    ?>
+        <?php show_license_select('license', '', '0'); ?>
         <div id="album_select_license_<?php echo $song->license ?>">
-            <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")');
-    ?>
+            <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")'); ?>
         </div>
     </td>
 </tr>

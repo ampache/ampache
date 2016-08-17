@@ -26,12 +26,8 @@
 <?php foreach ($fields as $key=>$field) {
     ?>
 <tr>
-    <td><?php echo $field['description'];
-    ?></td>
-    <td><input type="<?php echo $field['type'];
-    ?>" name="<?php echo $key;
-    ?>" value="<?php echo scrub_out($instance[$key]);
-    ?>" /></td>
+    <td><?php echo $field['description']; ?></td>
+    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" /></td>
 </tr>
 <?php
 

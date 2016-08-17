@@ -44,20 +44,13 @@
 <table cellspacing="1" cellpadding="3" class="tabledata">
 <thead>
     <tr class="th-top">
-        <th><?php echo T_('Name');
-    ?></th>
-        <th><?php echo T_('Start Address');
-    ?></th>
-        <th><?php echo T_('End Address');
-    ?></th>
-        <th><?php echo T_('Level');
-    ?></th>
-        <th><?php echo T_('User');
-    ?></th>
-        <th><?php echo T_('Type');
-    ?></th>
-        <th><?php echo T_('Action');
-    ?></th>
+        <th><?php echo T_('Name'); ?></th>
+        <th><?php echo T_('Start Address'); ?></th>
+        <th><?php echo T_('End Address'); ?></th>
+        <th><?php echo T_('Level'); ?></th>
+        <th><?php echo T_('User'); ?></th>
+        <th><?php echo T_('Type'); ?></th>
+        <th><?php echo T_('Action'); ?></th>
     </tr>
 </thead>
 <tbody>
@@ -65,31 +58,17 @@
     /* Start foreach List Item */
     foreach ($list as $access_id) {
         $access = new Access($access_id);
-        $access->format();
-        ?>
-<tr class="<?php echo UI::flip_class();
-        ?>">
-    <td><?php echo scrub_out($access->name);
-        ?></td>
-    <td><?php echo $access->f_start;
-        ?></td>
-    <td><?php echo $access->f_end;
-        ?></td>
-    <td><?php echo $access->f_level;
-        ?></td>
-    <td><?php echo $access->f_user;
-        ?></td>
-    <td><?php echo $access->f_type;
-        ?></td>
+        $access->format(); ?>
+<tr class="<?php echo UI::flip_class(); ?>">
+    <td><?php echo scrub_out($access->name); ?></td>
+    <td><?php echo $access->f_start; ?></td>
+    <td><?php echo $access->f_end; ?></td>
+    <td><?php echo $access->f_level; ?></td>
+    <td><?php echo $access->f_user; ?></td>
+    <td><?php echo $access->f_type; ?></td>
     <td>
-        <a href="<?php echo AmpConfig::get('web_path');
-        ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo scrub_out($access->id);
-        ?>"><?php echo UI::get_icon('edit', T_('Edit'));
-        ?></a>
-        <a href="<?php echo AmpConfig::get('web_path');
-        ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo scrub_out($access->id);
-        ?>"><?php echo UI::get_icon('delete', T_('Delete'));
-        ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
     </td>
 </tr>
     <?php 

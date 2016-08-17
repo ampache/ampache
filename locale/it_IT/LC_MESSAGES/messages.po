@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Morgan <mfouillat+github@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-07-20 17:13+0200\n"
-"PO-Revision-Date: 2016-07-12 17:35+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"POT-Creation-Date: 2016-08-07 01:40+0200\n"
+"PO-Revision-Date: 2016-07-25 09:41+0000\n"
+"Last-Translator: Afterster\n"
 "Language-Team: Italian (Italy) (http://www.transifex.com/ampache/ampache/"
 "language/it_IT/)\n"
 "Language: it_IT\n"
@@ -24,15 +25,15 @@ msgstr "Cancellato"
 
 #: ../../admin/access.php:40
 msgid "Your Access List Entry has been removed"
-msgstr ""
+msgstr "La Sua Access List Entry è stata rimossa"
 
 #: ../../admin/access.php:47 ../../admin/users.php:222
 msgid "Deletion Request"
-msgstr ""
+msgstr "Richiesta di cancellazione"
 
 #: ../../admin/access.php:47
 msgid "Are you sure you want to permanently delete"
-msgstr ""
+msgstr "È sicuro di volere eliminare definitivamente"
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:346
 #: ../../templates/show_song.inc.php:239
@@ -42,9 +43,9 @@ msgstr "Aggiunti"
 
 #: ../../admin/access.php:74
 msgid "Your new Access Control List(s) have been created"
-msgstr ""
+msgstr "Il nuovo Access Control List è stato creato"
 
-#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1505
+#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1502
 #: ../../lib/class/search.class.php:353 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
@@ -52,21 +53,21 @@ msgstr "Aggiornato"
 
 #: ../../admin/access.php:88
 msgid "Access List Entry updated"
-msgstr ""
+msgstr "Access List Entry aggiornato"
 
 #: ../../admin/catalog.php:54 ../../admin/catalog.php:62
 #: ../../admin/catalog.php:66 ../../admin/catalog.php:74
 #: ../../admin/catalog.php:83
 msgid "Catalog Update started..."
-msgstr ""
+msgstr "Aggiornamento del catalogo iniziato..."
 
 #: ../../admin/catalog.php:105
 msgid "Catalog Deleted"
-msgstr ""
+msgstr "Catalogo Cancellato"
 
 #: ../../admin/catalog.php:105
 msgid "The Catalog and all associated records have been deleted"
-msgstr ""
+msgstr "Il Catalogo e tutti i record associati sono stati cancellati"
 
 #: ../../admin/catalog.php:107 ../../admin/users.php:192
 #: ../../preferences.php:166 ../../templates/error_page.inc.php:50
@@ -75,60 +76,60 @@ msgstr "Errore"
 
 #: ../../admin/catalog.php:107
 msgid "Cannot delete the catalog"
-msgstr ""
+msgstr "Non è possibile cancellare il catalogo"
 
 #: ../../admin/catalog.php:112
 msgid "Catalog Delete"
-msgstr ""
+msgstr "Catalogo Cancellato"
 
 #: ../../admin/catalog.php:112 ../../admin/users.php:230
 #: ../../broadcast.php:38 ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
-msgstr ""
+msgstr "Confirma la Richiesta di Cancellazione"
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Canzona Abilitata"
+msgstr[1] "Canzone Abilitate"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
-msgstr ""
+msgstr "Nessuna canzona disattivata selezionata"
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Canzona disattivata trattata"
+msgstr[1] "Canzone disattivate trattate"
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
-msgstr ""
+msgstr "Pulizia del Catalogo iniziata..."
 
 #: ../../admin/catalog.php:151
 msgid "Catalog Updated"
-msgstr ""
+msgstr "Catalogo Aggiornato"
 
 #: ../../admin/catalog.php:161
 msgid "Subdirectory update started..."
-msgstr ""
+msgstr "Aggiornamento del sottodirectory iniziato..."
 
 #: ../../admin/catalog.php:172
 msgid "Error: Please select a catalog type"
-msgstr ""
+msgstr "Errore: Seleziona un tipo di catalogo per favore"
 
 #: ../../admin/catalog.php:176
 msgid "Error: Name not specified"
-msgstr ""
+msgstr "Errore: Nome non specificato"
 
 #: ../../admin/catalog.php:195
 msgid "Catalog Creation started..."
-msgstr ""
+msgstr "Creazione del Catalogo iniziata..."
 
 #: ../../admin/catalog.php:207
 msgid "Catalog statistics cleared"
-msgstr ""
+msgstr "Statistiche del catalogo cancellate"
 
 #: ../../admin/catalog.php:220
 msgid "Now Playing Cleared"
@@ -140,11 +141,11 @@ msgstr "Tutti gli 'In esecuzione ora' sono stati cancellati"
 
 #: ../../admin/catalog.php:232
 msgid "No Disabled songs found"
-msgstr ""
+msgstr "Nessuna canzona disattivata trovata"
 
 #: ../../admin/catalog.php:244
 msgid "Delete Catalog"
-msgstr ""
+msgstr "Cancellare Catalogo"
 
 #: ../../admin/catalog.php:244
 msgid "Do you really want to delete this catalog?"
@@ -152,123 +153,123 @@ msgstr "Vuoi veramente cancellare questo catalogo?"
 
 #: ../../admin/catalog.php:253
 msgid "Media Art Search started..."
-msgstr ""
+msgstr "Ricerca di Media Art iniziata..."
 
 #: ../../admin/license.php:39
 msgid "License Updated"
-msgstr ""
+msgstr "Licenza Aggiornata"
 
 #: ../../admin/license.php:42
 msgid "License Created"
-msgstr ""
+msgstr "Licenza Creata"
 
 #: ../../admin/license.php:53
 msgid "License Deleted"
-msgstr ""
+msgstr "Licenza Cancellata"
 
 #: ../../admin/mail.php:63
 msgid "E-mail Sent"
-msgstr ""
+msgstr "E-mail Inviata"
 
 #: ../../admin/mail.php:64
 msgid "Your E-mail was successfully sent."
-msgstr ""
+msgstr "L'E-mail è stata inviata con successo."
 
 #: ../../admin/mail.php:66
 msgid "E-mail Not Sent"
-msgstr ""
+msgstr "E-mail non inviata."
 
 #: ../../admin/mail.php:67
 msgid "Your E-mail was not sent."
-msgstr ""
+msgstr "L'E-mail non è stata inviata."
 
 #: ../../admin/modules.php:38
 msgid "Failed to enable the module, Controller Error"
-msgstr ""
+msgstr "Attivazione del modulo fallita, Errore nel Controller"
 
 #: ../../admin/modules.php:53
 msgid "localplay enabled"
-msgstr ""
+msgstr "localplay attivato"
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
-msgstr ""
+msgstr "Attivazione del modulo fallita, Errore di Catalogo"
 
 #: ../../admin/modules.php:70
 msgid "Module enabled"
-msgstr ""
+msgstr "Modulo attivato"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
-#, fuzzy
 msgid "Are you sure you want to disable this module?"
-msgstr "Vuoi veramente cancellare questo catalogo?"
+msgstr "È sicuro di volere disattivare questo modulo?"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
 msgid "Module disabled"
-msgstr ""
+msgstr "Modulo disattivato"
 
 #: ../../admin/modules.php:105
 msgid "Failed to disable module, Catalog Error"
-msgstr ""
+msgstr "Disattivazione del modulo fallita, Errore di Catalogo"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
-msgstr ""
+msgstr "Installazione del Plugin Impossibile"
 
 #: ../../admin/modules.php:139
 msgid "Plugin enabled"
-msgstr ""
+msgstr "Plugin attivato"
 
 #: ../../admin/modules.php:146
-#, fuzzy
 msgid "Are you sure you want to disable this plugin?"
-msgstr "Vuoi veramente cancellare questo catalogo?"
+msgstr "È sicuro di volere disattivare questo plugin?"
 
 #: ../../admin/modules.php:165
 msgid "Plugin disabled"
-msgstr ""
+msgstr "Plugin disattivato"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
-msgstr ""
+msgstr "Plugin Aggiornato"
 
 #: ../../admin/modules.php:186
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 #: ../../admin/modules.php:192
 msgid "Localplay Controllers"
-msgstr ""
+msgstr "Localplay Controllers"
 
 #: ../../admin/modules.php:198
 msgid "Catalog Types"
-msgstr ""
+msgstr "Catalog Types"
 
 #: ../../admin/shout.php:39
 msgid "Shoutbox Post Updated"
-msgstr ""
+msgstr "Shoutbox Post Aggiornato"
 
 #: ../../admin/shout.php:51
 msgid "Shoutbox Post Deleted"
-msgstr ""
+msgstr "Shoutbox Post Cancellato"
 
 #: ../../admin/system.php:51
 msgid "Database Charset Updated"
-msgstr ""
+msgstr "Database Charset Aggiornato"
 
 #: ../../admin/system.php:51
 msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
 msgstr ""
+"Database e associate tabelle sono state aggiornate per accordarsi con il "
+"charset attualmente configurato"
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
-msgstr ""
+msgstr "Cache cancellato"
 
 #: ../../admin/system.php:66
 msgid "Your cache has been cleared successfully."
-msgstr ""
+msgstr "Il cache è stato cancellato con successo."
 
 #: ../../admin/users.php:62 ../../admin/users.php:141
 #: ../../lib/class/user.class.php:593
@@ -286,15 +287,15 @@ msgstr "Errore password non corrispondente"
 
 #: ../../admin/users.php:76 ../../admin/users.php:151 ../../register.php:95
 msgid "Invalid email address"
-msgstr ""
+msgstr "Indirizza email non valida"
 
 #: ../../admin/users.php:114
 msgid "User Updated"
-msgstr ""
+msgstr "Utente Aggiornato"
 
 #: ../../admin/users.php:114
 msgid "updated"
-msgstr ""
+msgstr "aggiornato"
 
 #: ../../admin/users.php:163 ../../register.php:150
 msgid "Error: Insert Failed"
@@ -307,7 +308,7 @@ msgstr "Errore: inserimento fallito"
 #: ../../templates/show_preference_admin.inc.php:49
 #: ../../templates/show_preference_box.inc.php:90
 msgid "Guest"
-msgstr ""
+msgstr "Ospite"
 
 #: ../../admin/users.php:171 ../../lib/class/democratic.class.php:161
 #: ../../lib/preferences.php:300
@@ -346,24 +347,24 @@ msgstr "Amministrazione"
 #. HINT: %1 Username, %2 Access num
 #: ../../admin/users.php:177
 msgid "New User Added"
-msgstr ""
+msgstr "Nuovo Utente Aggiunto"
 
 #: ../../admin/users.php:177
 #, php-format
 msgid "%1$s has been created with an access level of %2$s"
-msgstr ""
+msgstr "%1$s è stato creato con un livello di accesso di %2$s"
 
 #: ../../admin/users.php:185
 msgid "User Enabled"
-msgstr ""
+msgstr "Utente Attivato"
 
 #: ../../admin/users.php:190
 msgid "User Disabled"
-msgstr ""
+msgstr "Utente Disattivato"
 
 #: ../../admin/users.php:192
 msgid "Unable to Disabled last Administrator"
-msgstr ""
+msgstr "Impossibile Disattivare l'ultimo Amministratore"
 
 #: ../../admin/users.php:212
 msgid "User Deleted"
@@ -372,7 +373,7 @@ msgstr "Utente cancellato"
 #: ../../admin/users.php:212
 #, php-format
 msgid "%s has been Deleted"
-msgstr ""
+msgstr "%s è stato cancellato"
 
 #: ../../admin/users.php:214
 msgid "Delete Error"
@@ -385,68 +386,68 @@ msgstr "Impossibile cancellare l' ultimo utente amministratore"
 #: ../../admin/users.php:223
 #, php-format
 msgid "Are you sure you want to permanently delete %s?"
-msgstr ""
+msgstr "È sicuro di volere cancellare definitivamente %s?"
 
 #: ../../admin/users.php:230
 msgid "User Avatar Delete"
-msgstr ""
+msgstr "Cancellazione dell'Avatar dell'Utente"
 
 #: ../../admin/users.php:246
 msgid "User Avatar Deleted"
-msgstr ""
+msgstr "Avatar dell'Utente Cancellato"
 
 #: ../../admin/users.php:246
 msgid "User Avatar has been deleted"
-msgstr ""
+msgstr "L'Avatar dell'Utente è stato cancellato"
 
 #: ../../admin/users.php:252 ../../templates/show_account.inc.php:110
 #: ../../templates/show_edit_user.inc.php:133
 msgid "Generate new API Key"
-msgstr ""
+msgstr "Generare una nuova Chiave API"
 
 #: ../../admin/users.php:252
 msgid "Confirm API Key Generation"
-msgstr ""
+msgstr "Confirmare la Generazione della Chiave API"
 
 #: ../../admin/users.php:268
 msgid "API Key Generated"
-msgstr ""
+msgstr "Chiave API Generata"
 
 #: ../../admin/users.php:268
 msgid "New user API Key has been generated."
-msgstr ""
+msgstr "Una nuova Chiave API utente è stata generata."
 
 #: ../../albums.php:36 ../../albums.php:56 ../../albums.php:58
 msgid "Album Deletion"
-msgstr ""
+msgstr "Cancellazione dell'Album"
 
 #: ../../albums.php:37
 msgid "Are you sure you want to permanently delete this album?"
-msgstr ""
+msgstr "È sicuro di volere cancellare definitivamente questo album?"
 
 #: ../../albums.php:56
 msgid "Album has been deleted."
-msgstr ""
+msgstr "L'album è stato cancellato."
 
 #: ../../albums.php:58
 msgid "Cannot delete this album."
-msgstr ""
+msgstr "Non è possibile cancellare questo album."
 
 #: ../../artists.php:38 ../../artists.php:58 ../../artists.php:60
 msgid "Artist Deletion"
-msgstr ""
+msgstr "Cancellazione dell'Artista"
 
 #: ../../artists.php:39
 msgid "Are you sure you want to permanently delete this artist?"
-msgstr ""
+msgstr "È sicuro di volere cancellare definitivamente questo artista?"
 
 #: ../../artists.php:58
 msgid "Artist has been deleted."
-msgstr ""
+msgstr "L'artista è stato cancellato."
 
 #: ../../artists.php:60
 msgid "Cannot delete this artist."
-msgstr ""
+msgstr "Non è possibile cancellare questo artista."
 
 #: ../../artists.php:98
 msgid "Show Artists starting with"
@@ -454,132 +455,136 @@ msgstr "Mostra artisti che iniziano per"
 
 #: ../../arts.php:50
 msgid "Art Cleared"
-msgstr ""
+msgstr "Copertina Cancellata"
 
 #: ../../arts.php:50
 msgid "Art information has been removed from the database"
-msgstr ""
+msgstr "Le informazione della copertina sono state rimosse dalla database"
 
 #: ../../arts.php:56 ../../arts.php:72 ../../arts.php:139
 msgid "Art Not Located"
-msgstr ""
+msgstr "Copertina Non Colloacata"
 
 #: ../../arts.php:56 ../../arts.php:72 ../../arts.php:139
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
 msgstr ""
+"La copertina non può essere collocata per il momento. Può essere dovuto ad "
+"errore di accesso in scrittura, o il file non è ricevuto in modo corretto."
 
 #: ../../arts.php:68 ../../arts.php:94
 msgid "Art Inserted"
-msgstr ""
+msgstr "Copertina Inserita"
 
 #: ../../bin/broadcast.inc:32
 msgid "Starting broadcasts..."
-msgstr ""
+msgstr "Iniziando trasmissioni..."
 
 #: ../../bin/broadcast.inc:35
 msgid "UPnP broadcast... "
-msgstr ""
+msgstr "Trasmissione UPnP..."
 
 #: ../../bin/broadcast.inc:37
 msgid "Done."
-msgstr ""
+msgstr "Fatto."
 
 #: ../../bin/broadcast.inc:39
 msgid "UPnP backend disabled. Broadcast skipped."
-msgstr ""
+msgstr "UPnP backend disattivato. Trasmissione saltata."
 
 #: ../../bin/catalog_update.inc:41
 msgid "Doing all catalog operations"
-msgstr ""
+msgstr "Sta facendo tutte le operazioni sul catalogo"
 
 #: ../../bin/catalog_update.inc:48
 msgid "Temporary deactivate PHP memory limit"
-msgstr ""
+msgstr "Disattivare in modo temporaneo il limite di memoria PHP"
 
 #: ../../bin/catalog_update.inc:52
 msgid "Cleaning catalog/s"
-msgstr ""
+msgstr "Pulitura del/i catalogo/ghi"
 
 #: ../../bin/catalog_update.inc:56
 msgid "Verifying catalog/s"
-msgstr ""
+msgstr "Verifica del/i catalogo/ghi"
 
 #: ../../bin/catalog_update.inc:60
 msgid "Adding new media to catalog/s"
-msgstr ""
+msgstr "Aggiunta dei nuovi media nel/i catalogo/ghi"
 
 #: ../../bin/catalog_update.inc:64
 msgid "Gathering new media art"
-msgstr ""
+msgstr "Raccolta di nuove copertine"
 
 #: ../../bin/catalog_update.inc:68
 msgid "Importing playlist/s"
-msgstr ""
+msgstr "Importazione della/e playlist/s"
 
 #: ../../bin/catalog_update.inc:72
 msgid "Database table optimization"
-msgstr ""
+msgstr "Ottimizzazione della tabella di database"
 
 #: ../../bin/catalog_update.inc:95
 msgid "Starting catalog operations..."
-msgstr ""
+msgstr "Iniziando operazioni sul catalogo..."
 
 #: ../../bin/catalog_update.inc:101
 msgid "Deactivated PHP memory limit"
-msgstr ""
+msgstr "Limite di memoria PHP disattivato"
 
 #: ../../bin/catalog_update.inc:108
 msgid "Gathering art"
-msgstr ""
+msgstr "Raccolta di copertina"
 
 #: ../../bin/catalog_update.inc:114
 msgid "Parsing playlists"
-msgstr ""
+msgstr "Analisi delle playlists"
 
 #: ../../bin/catalog_update.inc:131
 #, php-format
 msgid "Reading catalog: %s"
-msgstr ""
+msgstr "Lettura del catalogo: %s"
 
 #: ../../bin/catalog_update.inc:137
 msgid "Start cleaning orphaned media entries"
-msgstr ""
+msgstr "Iniziare la cancellazione delle voci media orfane"
 
 #: ../../bin/catalog_update.inc:144
 msgid "Start verifying media related to catalog entries"
-msgstr ""
+msgstr "Iniziare la verifica dei media correlati a delle voci del catalogo"
 
 #: ../../bin/catalog_update.inc:151
 msgid "Start adding new media"
-msgstr ""
+msgstr "Iniziare l'aggiunta di nuovi media"
 
 #: ../../bin/catalog_update.inc:158
 msgid "Start searching new media art"
-msgstr ""
+msgstr "Iniziare la ricerca di nuove copertine"
 
 #: ../../bin/catalog_update.inc:166
 msgid "Optimizing database tables"
-msgstr ""
+msgstr "Ottimizzazione delle tabelle di database"
 
 #: ../../bin/catalog_update.inc:191
 msgid "- Catalog Update Help -"
-msgstr ""
+msgstr "-Aiuto per l'Aggiornamento del Catalogo-"
 
 #: ../../bin/catalog_update.inc:193
 msgid "Usage: catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
-msgstr ""
+msgstr "Uso: catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
 
 #: ../../bin/catalog_update.inc:197
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
 msgstr ""
+"Il comportamento predefinito è fare tutto tranne disattivare temporaneamente "
+"il limite di memoria php"
 
 #: ../../bin/catalog_update.inc:201
 msgid "Temporarily deactivates PHP memory limit."
-msgstr ""
+msgstr "Disattiva in modo temporaneo il limite di memoria PHP."
 
 #: ../../bin/catalog_update.inc:203
 msgid "Cleans catalogs from orphaned entries."
@@ -601,7 +606,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:211
 msgid "Imports playlists."
-msgstr ""
+msgstr "Importa playlists."
 
 #: ../../bin/catalog_update.inc:213
 msgid "Optimizes Database Tables."
@@ -628,7 +633,7 @@ msgstr ""
 
 #: ../../bin/channel_run.inc:46
 msgid "- Channel "
-msgstr ""
+msgstr "-Canale"
 
 #: ../../bin/channel_run.inc:49 ../../bin/websocket_run.inc:42
 msgid "- Verbose"
@@ -640,11 +645,11 @@ msgstr ""
 
 #: ../../bin/channel_run.inc:71
 msgid "Starting Channel..."
-msgstr ""
+msgstr "Iniziando Canale..."
 
 #: ../../bin/channel_run.inc:75
 msgid "Unknown channel."
-msgstr ""
+msgstr "Canale sconosciuto."
 
 #: ../../bin/channel_run.inc:90
 msgid "Found available port "
@@ -652,7 +657,7 @@ msgstr ""
 
 #: ../../bin/channel_run.inc:107
 msgid "Listening on "
-msgstr ""
+msgstr "Ascoltando"
 
 #: ../../bin/channel_run.inc:306
 msgid "- Channel Listening -"
@@ -676,44 +681,46 @@ msgstr ""
 
 #: ../../bin/delete_disabled.inc:37
 msgid "DEBUG ENABLED WILL NOT DELETE FILES!"
-msgstr ""
+msgstr "DEBUG ATTIVATO NON CANCELLERA I FILES!"
 
 #: ../../bin/delete_disabled.inc:45
 #, php-format
 msgid "Would Delete: %s"
-msgstr ""
+msgstr "Cancellerebbe: %s"
 
 #: ../../bin/delete_disabled.inc:49
 #, php-format
 msgid "Deleting: %s"
-msgstr ""
+msgstr "Cancellazione: %s"
 
 #: ../../bin/fix_filenames.inc:42
-msgid "ERROR: Iconv required for this functionality, quiting"
+msgid "ERROR: Iconv required for this functionality, quitting"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
 msgid "%s For the Love of Music"
-msgstr ""
+msgstr "%s For the Love of Music"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
 msgstr ""
+"Prova con due traduzioni di base, le due stringhe sotto dovrebbero sembrare "
+"le stesse"
 
 #: ../../bin/fix_filenames.inc:54
 msgid "Original: For the Love of Music"
-msgstr ""
+msgstr "Originale: For the Love of Music"
 
 #: ../../bin/fix_filenames.inc:56
 #, php-format
 msgid "Translated: %s"
-msgstr ""
+msgstr "Tradotto: %s"
 
 #: ../../bin/fix_filenames.inc:59
 #, php-format
 msgid "Input Charset (%s):"
-msgstr ""
+msgstr "Inserire Charset (%s):"
 
 #: ../../bin/fix_filenames.inc:63
 #, php-format
@@ -732,35 +739,35 @@ msgstr ""
 #: ../../bin/fix_filenames.inc:104
 #, php-format
 msgid "ERROR: Unable to open %s"
-msgstr ""
+msgstr "ERRORE: Impossibile di aprire %s"
 
 #: ../../bin/fix_filenames.inc:110
 #, php-format
 msgid "ERROR: Unable to chdir to %s"
-msgstr ""
+msgstr "ERRORE: Impossibile di chdir in %s"
 
 #: ../../bin/fix_filenames.inc:133
 msgid "Translation failure, stripping non-valid characters"
-msgstr ""
+msgstr "Fallimento della traduzione, rimozione dei caratteri non validi"
 
 #: ../../bin/fix_filenames.inc:138
 #, php-format
 msgid "Attempting to Transcode to %s"
-msgstr ""
+msgstr "Tentativo di Transcodifica di %s"
 
 #: ../../bin/fix_filenames.inc:141
 #, php-format
 msgid "OLD: %s has invalid chars"
-msgstr ""
+msgstr "VECCHIO: %s ha caratteri non validi"
 
 #: ../../bin/fix_filenames.inc:143
 #, php-format
 msgid "NEW: %s"
-msgstr ""
+msgstr "NUOVO: %s"
 
 #: ../../bin/fix_filenames.inc:147
 msgid "Rename File (Y/N):"
-msgstr ""
+msgstr "Rinomina il File (S/N):"
 
 #: ../../bin/fix_filenames.inc:150
 msgid "Not Renaming..."
@@ -769,11 +776,11 @@ msgstr ""
 #: ../../bin/fix_filenames.inc:182
 #, php-format
 msgid "Error: Unable to create %s move failed, stopping"
-msgstr ""
+msgstr "ERRORE: Impossibile creare %s muovimento fallito, ferma"
 
 #: ../../bin/fix_filenames.inc:194
 msgid "Error: Copy Failed, not deleting old file"
-msgstr ""
+msgstr "ERRORE: Copia fallita, il vecchio file non è cancellato"
 
 #: ../../bin/fix_filenames.inc:203 ../../bin/sort_files.inc:288
 #, php-format
@@ -783,7 +790,7 @@ msgstr ""
 #: ../../bin/fix_filenames.inc:210 ../../bin/sort_files.inc:295
 #, php-format
 msgid "Error: Unable to delete %s"
-msgstr ""
+msgstr "ERRORE: Impossibile cancellare %s"
 
 #: ../../bin/fix_filenames.inc:212
 msgid "File Moved..."
@@ -796,7 +803,7 @@ msgstr ""
 
 #: ../../bin/install/add_user.inc:54
 msgid "User creation failed"
-msgstr ""
+msgstr "Creazione dell'utente fallita"
 
 #: ../../bin/install/install_db.inc:68
 msgid "Existing Ampache installation found."
@@ -808,7 +815,7 @@ msgstr ""
 
 #: ../../bin/install/install_db.inc:73
 msgid "Exiting."
-msgstr ""
+msgstr "Uscendo."
 
 #: ../../bin/install/install_db.inc:89
 msgid "Database creation failed"
@@ -840,17 +847,17 @@ msgstr ""
 
 #: ../../bin/print_tags.inc:37
 msgid "File not found."
-msgstr ""
+msgstr "File non trovato."
 
 #: ../../bin/print_tags.inc:43
 #, php-format
 msgid "Reading: %s"
-msgstr ""
+msgstr "Leggendo: %s"
 
 #: ../../bin/print_tags.inc:58
 #, php-format
 msgid "Using: %s AND %s for file pattern matching"
-msgstr ""
+msgstr "Usando: %s E %s per corrispondenza modello file"
 
 #: ../../bin/print_tags.inc:67
 msgid "Raw results:"
@@ -1480,10 +1487,10 @@ msgstr "Modifica"
 #: ../../templates/show_label_row.inc.php:49
 #: ../../templates/show_license_row.inc.php:31
 #: ../../templates/show_live_stream_row.inc.php:53
-#: ../../templates/show_localplay_instances.inc.php:52
+#: ../../templates/show_localplay_instances.inc.php:61
 #: ../../templates/show_localplay_playlist.inc.php:59
 #: ../../templates/show_manage_democratic.inc.php:60
-#: ../../templates/show_playlist.inc.php:159
+#: ../../templates/show_playlist.inc.php:167
 #: ../../templates/show_playlist_media_row.inc.php:92
 #: ../../templates/show_playlist_row.inc.php:110
 #: ../../templates/show_podcast_episode.inc.php:167
@@ -1700,54 +1707,54 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:513 ../../lib/class/catalog.class.php:516
-#: ../../lib/class/catalog.class.php:519 ../../lib/class/user.class.php:1006
+#: ../../lib/class/catalog.class.php:510 ../../lib/class/catalog.class.php:513
+#: ../../lib/class/catalog.class.php:516 ../../lib/class/user.class.php:1006
 #: ../../lib/preferences.php:344 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:81
 msgid "Never"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:599
+#: ../../lib/class/catalog.class.php:596
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:601
+#: ../../lib/class/catalog.class.php:598
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:646
+#: ../../lib/class/catalog.class.php:643
 msgid "Catalog Insert Failed check debug logs"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1512
+#: ../../lib/class/catalog.class.php:1509
 msgid "No Update Needed"
 msgstr "Non è necessario aggiornare"
 
-#: ../../lib/class/catalog.class.php:1808
+#: ../../lib/class/catalog.class.php:1805
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:1833
+#: ../../lib/class/catalog.class.php:1830
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2017
+#: ../../lib/class/catalog.class.php:2014
 msgid "Failed to create playlist."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2034
+#: ../../lib/class/catalog.class.php:2031
 msgid "No valid songs found in playlist file."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2389
+#: ../../lib/class/catalog.class.php:2386
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -3332,7 +3339,7 @@ msgstr ""
 
 #: ../../lib/login.php:100
 msgid "User Disabled please contact Admin"
-msgstr ""
+msgstr "Utente disattivato. Si prega di contattare un Admin"
 
 #: ../../lib/login.php:108
 msgid "User Already Logged in"
@@ -3425,7 +3432,7 @@ msgstr ""
 
 #: ../../lib/preferences.php:299
 msgid "Disabled"
-msgstr ""
+msgstr "Disattivato"
 
 #: ../../lib/preferences.php:301
 msgid "Manager"
@@ -4625,8 +4632,8 @@ msgstr ""
 
 #: ../../templates/rightbar.inc.php:61
 #: ../../templates/show_album_row.inc.php:125
-#: ../../templates/show_playlist.inc.php:100
-#: ../../templates/show_playlist.inc.php:102
+#: ../../templates/show_playlist.inc.php:104
+#: ../../templates/show_playlist.inc.php:106
 #: ../../templates/show_playlist_row.inc.php:94
 #: ../../templates/show_search.inc.php:37
 #: ../../templates/show_search.inc.php:39
@@ -4737,7 +4744,7 @@ msgstr ""
 #: ../../templates/show_live_streams.inc.php:85
 #: ../../templates/show_localplay_controllers.inc.php:32
 #: ../../templates/show_localplay_controllers.inc.php:81
-#: ../../templates/show_localplay_instances.inc.php:32
+#: ../../templates/show_localplay_instances.inc.php:33
 #: ../../templates/show_localplay_playlist.inc.php:35
 #: ../../templates/show_localplay_playlist.inc.php:78
 #: ../../templates/show_manage_democratic.inc.php:32
@@ -5359,8 +5366,8 @@ msgstr "Scarica"
 #: ../../templates/show_album_group_disks.inc.php:180
 #: ../../templates/show_album.inc.php:222
 #: ../../templates/show_album.inc.php:224
-#: ../../templates/show_playlist.inc.php:70
-#: ../../templates/show_playlist.inc.php:72
+#: ../../templates/show_playlist.inc.php:73
+#: ../../templates/show_playlist.inc.php:75
 msgid "Save Tracks Order"
 msgstr ""
 
@@ -5514,8 +5521,8 @@ msgstr ""
 
 #: ../../templates/show_artist.inc.php:151
 #: ../../templates/show_artist.inc.php:153
-#: ../../templates/show_playlist.inc.php:111
-#: ../../templates/show_playlist.inc.php:113
+#: ../../templates/show_playlist.inc.php:116
+#: ../../templates/show_playlist.inc.php:118
 #: ../../templates/show_podcast.inc.php:73
 #: ../../templates/show_podcast.inc.php:75
 #: ../../templates/show_tvshow.inc.php:75
@@ -5527,8 +5534,8 @@ msgstr ""
 
 #: ../../templates/show_artist.inc.php:159
 #: ../../templates/show_artist.inc.php:161
-#: ../../templates/show_playlist.inc.php:121
-#: ../../templates/show_playlist.inc.php:123
+#: ../../templates/show_playlist.inc.php:127
+#: ../../templates/show_playlist.inc.php:129
 #: ../../templates/show_podcast.inc.php:83
 #: ../../templates/show_podcast.inc.php:85
 #: ../../templates/show_tvshow.inc.php:85
@@ -5541,16 +5548,16 @@ msgstr ""
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:173
 #: ../../templates/show_artist.inc.php:175
-#: ../../templates/show_playlist.inc.php:129
-#: ../../templates/show_playlist.inc.php:130
+#: ../../templates/show_playlist.inc.php:136
+#: ../../templates/show_playlist.inc.php:137
 msgid "Add all to temporary playlist"
 msgstr ""
 
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:180
 #: ../../templates/show_artist.inc.php:182
-#: ../../templates/show_playlist.inc.php:133
-#: ../../templates/show_playlist.inc.php:134
+#: ../../templates/show_playlist.inc.php:140
+#: ../../templates/show_playlist.inc.php:141
 msgid "Random all to temporary playlist"
 msgstr ""
 
@@ -5621,7 +5628,7 @@ msgstr "Seleziona"
 
 #: ../../templates/show_big_art.inc.php:31
 msgid "Album Art"
-msgstr "Copertine"
+msgstr "Copertina"
 
 #: ../../templates/show_big_art.inc.php:35
 msgid "Click to close window"
@@ -6009,6 +6016,8 @@ msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
 msgstr ""
+"È stato rediretto su questa pagina perchè ha provato di accedere a una "
+"funzione disattivata nella demo."
 
 #: ../../templates/show_disabled_songs.inc.php:33
 #: ../../templates/show_disabled_songs.inc.php:72
@@ -6334,7 +6343,7 @@ msgstr ""
 
 #: ../../templates/show_get_art.inc.php:70
 msgid "Get Art"
-msgstr "Preleva copertina"
+msgstr "Ottenere Copertina"
 
 #: ../../templates/show_graphs.inc.php:23
 msgid "Statistical Graphs"
@@ -6865,7 +6874,7 @@ msgstr ""
 msgid "Add Localplay Instance"
 msgstr ""
 
-#: ../../templates/show_localplay_add_instance.inc.php:38
+#: ../../templates/show_localplay_add_instance.inc.php:40
 #: ../../templates/sidebar_localplay.inc.php:50
 msgid "Add Instance"
 msgstr ""
@@ -6886,7 +6895,7 @@ msgstr ""
 msgid "Edit Localplay Instance"
 msgstr ""
 
-#: ../../templates/show_localplay_edit_instance.inc.php:39
+#: ../../templates/show_localplay_edit_instance.inc.php:41
 msgid "Update Instance"
 msgstr ""
 
@@ -6894,7 +6903,7 @@ msgstr ""
 msgid "Show Localplay Instances"
 msgstr ""
 
-#: ../../templates/show_localplay_instances.inc.php:50
+#: ../../templates/show_localplay_instances.inc.php:59
 msgid "Edit Instance"
 msgstr ""
 
@@ -6981,7 +6990,7 @@ msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:30
 msgid "Show disabled songs"
-msgstr ""
+msgstr "Mostrare le canzone disattivate"
 
 #: ../../templates/show_manage_catalogs.inc.php:33
 msgid "Add to All"
@@ -7108,21 +7117,21 @@ msgstr ""
 msgid "Episode Number"
 msgstr ""
 
-#: ../../templates/show_playlist.inc.php:79
-#: ../../templates/show_playlist.inc.php:81
+#: ../../templates/show_playlist.inc.php:82
+#: ../../templates/show_playlist.inc.php:84
 msgid "Sort Tracks by Artist, Album, Song"
 msgstr ""
 
-#: ../../templates/show_playlist.inc.php:87
-#: ../../templates/show_playlist.inc.php:89
+#: ../../templates/show_playlist.inc.php:90
+#: ../../templates/show_playlist.inc.php:92
 msgid "Remove duplicates"
 msgstr ""
 
-#: ../../templates/show_playlist.inc.php:144
+#: ../../templates/show_playlist.inc.php:151
 msgid "Create channel"
 msgstr ""
 
-#: ../../templates/show_playlist.inc.php:155
+#: ../../templates/show_playlist.inc.php:163
 #: ../../templates/show_playlist_row.inc.php:110
 msgid "Do you really want to delete the playlist?"
 msgstr ""
@@ -7781,7 +7790,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:148
 msgid "PHP safe mode disabled"
-msgstr ""
+msgstr "PHP safe mode disattivato"
 
 #: ../../templates/show_test_table.inc.php:153
 msgid ""
@@ -8225,7 +8234,7 @@ msgstr ""
 #: ../../templates/sidebar_localplay.inc.php:99
 #: ../../templates/sidebar_localplay.inc.php:100
 msgid "Localplay Disabled"
-msgstr ""
+msgstr "Localplay disattivato"
 
 #: ../../templates/sidebar_localplay.inc.php:108
 msgid "Allow Localplay set to False"
@@ -8333,7 +8342,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.07.2016 18:53:07 CEST
+# Last Update: 22.07.2016 15:49:07 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8742,14 +8751,6 @@ msgstr ""
 #: Database preference table id 157
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-
-#: Database preference table id 160
-msgid "HTTPQ Active Instance"
-msgstr ""
-
-#: Database preference table id 161
-msgid "MPD Active Instance"
 msgstr ""
 
 #: Database preference table id 164

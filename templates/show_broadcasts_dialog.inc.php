@@ -26,15 +26,10 @@
     $broadcasts = Broadcast::get_broadcasts($GLOBALS['user']->id);
     foreach ($broadcasts as $broadcast_id) {
         $broadcast = new Broadcast($broadcast_id);
-        $broadcast->format();
-        ?>
+        $broadcast->format(); ?>
     <li>
-        <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id;
-        ?>" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url') . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id;
-        ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id;
-        ?>');">
-            <?php echo $broadcast->f_name;
-        ?>
+        <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url') . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
+            <?php echo $broadcast->f_name; ?>
         </a>
     </li>
 <?php 
