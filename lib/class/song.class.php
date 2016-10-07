@@ -2038,6 +2038,7 @@ class Song extends database_object implements media, library_item
         $meta['time']                  = $this->time;
         $meta['mime']                  = $this->mime;
         $meta['title']                 = $this->title;
+        $meta['comment']               = $this->comment;
         $meta['album']                 = $this->f_album_full;
         $meta['artist']                = $this->f_artist_full;
         $meta['band']                  = $meta['albumartist']                  = $this->f_albumartist_full;
