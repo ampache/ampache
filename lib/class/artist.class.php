@@ -274,13 +274,13 @@ class Artist extends database_object implements library_item
         $sort_type = AmpConfig::get('album_sort');
         $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         if ($sort_type == 'year_asc') {
-            $sql_sort = '`album`.`year` ASC';
+            $sql_sort = '`album`.`year` ASC,`album`.`disk`';
         } elseif ($sort_type == 'year_desc') {
-            $sql_sort = '`album`.`year` DESC';
+            $sql_sort = '`album`.`year` DESC,`album`.`disk`';
         } elseif ($sort_type == 'name_asc') {
-            $sql_sort = '`album`.`name` ASC';
+            $sql_sort = '`album`.`name` ASC,`album`.`disk`';
         } elseif ($sort_type == 'name_desc') {
-            $sql_sort = '`album`.`name` DESC';
+            $sql_sort = '`album`.`name` DESC,`album`.`disk`';
         }
 
         if (!$ignoreAlbumGroups) {
