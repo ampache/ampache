@@ -671,9 +671,8 @@ class Artist extends database_object implements library_item
         $trimmed = Catalog::trim_featuring($name);
         $name    = $trimmed[0];
 
-        if ($mbid == '') {
-            $mbid = null;
-        }
+        // If Ampache support multiple artists per song one day, we should also handle other artists here
+        $mbid = Catalog::trim_slashed_list($mbid);
 
         if (!$name) {
             $name   = T_('Unknown (Orphaned)');

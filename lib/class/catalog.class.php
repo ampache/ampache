@@ -1900,6 +1900,24 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * trim_slashed_list
+     * Return only the first item from / separated list
+     * @param string $string
+     * @return string
+     */
+    public static function trim_slashed_list($string)
+    {
+        if ($string) {
+            $items = explode('/', $string);
+            $first = trim($items[0]);
+        }
+        if ($first == '') {
+            $first = null;
+        }
+        return $first;
+    } // trim_slashed_list
+
+    /**
      * trim_featuring
      * Splits artists featuring from the string
      * @param string $string

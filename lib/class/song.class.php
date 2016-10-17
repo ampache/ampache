@@ -384,10 +384,7 @@ class Song extends database_object implements media, library_item
         if (!isset($results['albumartist_id'])) {
             if ($albumartist) {
                 // Multiple artist per songs not supported for now
-                if ($albumartist_mbid) {
-                    $mbids            = explode('/', $albumartist_mbid);
-                    $albumartist_mbid = trim($mbids[0]);
-                }
+                $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
                 $albumartist_id = Artist::check($albumartist, $albumartist_mbid);
             }
         } else {
@@ -396,10 +393,7 @@ class Song extends database_object implements media, library_item
         $artist_id = null;
         if (!isset($results['artist_id'])) {
             // Multiple artist per songs not supported for now
-            if ($artist_mbid) {
-                $mbids       = explode('/', $artist_mbid);
-                $artist_mbid = trim($mbids[0]);
-            }
+            $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
             $artist_id = Artist::check($artist, $artist_mbid);
         } else {
             $artist_id = intval($results['artist_id']);
