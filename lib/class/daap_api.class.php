@@ -140,23 +140,36 @@ class Daap_Api
     }
 
     /**
-     * server_info
+     * server_info (Based on the server_info part of the forkedd-daapd project)
      */
     public static function server_info($input)
     {
         $o = self::tlv('dmap.status', 200);
+		$o .= self::tlv('dmap.protocolversion', '0.2.0.0');
+		$o .= self::tlv('dmap.itemname', 'Ampache');
         $o .= self::tlv('daap.protocolversion', '0.3.0.0');
-        $o .= self::tlv('dmap.authenticationmethod', 2);
-        $o .= self::tlv('dmap.supportsindex', 0);
-        $o .= self::tlv('dmap.supportsextensions', 0);
-        $o .= self::tlv('dmap.timeoutinterval', 1800);
-        if (AmpConfig::get('daap_pass')) {
+        $o .= self::tlv('daap.supportsextradata', 0);//daap.supportsextradata
+		$o .= self::tlv('daap.supportsgroups', 0); 
+		$o .= self::tlv('daap.aeMQ', 1);//unknown - used by iTunes
+		$o .= self::tlv('daap.aeTr', 1);//unknown - used by iTunes
+		$o .= self::tlv('daap.aeSL', 1);//unknown - used by iTunes
+		$o .= self::tlv('daap.aeSR', 1);//unknown - used by iTunes
+		$o .= self::tlv('dmap.supportsedit', 0);
+		
+		if (AmpConfig::get('daap_pass')) {
             $o .= self::tlv('dmap.loginrequired', 1);
         }
-        $o .= self::tlv('dmap.supportsquery', 0);
-        $o .= self::tlv('dmap.itemname', 'Ampache');
-        $o .= self::tlv('dmap.supportsbrowse', 0);
-        $o .= self::tlv('dmap.protocolversion', '0.2.0.0');
+		else { $o .= self::tlv('dmap.loginrequired', 0);}
+		$o .= self::tlv('dmap.timeoutinterval', 1800); 
+		$o .= self::tlv('dmap.supportsautologout', 1);
+		                 
+		$o .= self::tlv('dmap.authenticationmethod', 2);//im not shre about this value "2"?
+		$o .= self::tlv('dmap.supportsupdate', 1);
+		$o .= self::tlv('dmap.supportspersistentids', 1);//im not shuure if ampache supports it
+		$o .= self::tlv('dmap.supportsextensions', 0);
+		$o .= self::tlv('dmap.supportsbrowse', 0);
+		$o .= self::tlv('dmap.supportsquery', 0);
+        $o .= self::tlv('dmap.supportsindex', 0);
         $o .= self::tlv('dmap.databasescount', 1);
         
         $o = self::tlv('dmap.serverinforesponse', $o);
@@ -658,7 +671,7 @@ class Daap_Api
         self::add_dict('mslr', 'byte', 'dmap.loginrequired');
         self::add_dict('mpro', 'version', 'dmap.protocolversion');
         self::add_dict('apro', 'version', 'daap.protocolversion');
-        self::add_dict('msal', 'byte', 'dmap.supportsuatologout');
+        self::add_dict('msal', 'byte', 'dmap.supportsautologout');
         self::add_dict('msup', 'byte', 'dmap.supportsupdate');
         self::add_dict('mspi', 'byte', 'dmap.supportspersistentids');
         self::add_dict('msex', 'byte', 'dmap.supportsextensions');
@@ -718,6 +731,13 @@ class Daap_Api
         self::add_dict('apso', 'list', 'daap.playlistsongs'); // response to a /databases/id/containers/id/items
         self::add_dict('prsv', 'list', 'daap.resolve');
         self::add_dict('arif', 'list', 'daap.resolveinfo');
+        self::add_dict('ated', 'short', 'daap.supportsextradata');
+		self::add_dict('asgr', 'short', 'daap.supportsgroups');
+		self::add_dict('aeMQ', 'byte', 'daap.aeMQ');
+		self::add_dict('aeTr', 'byte', 'daap.aeTr');
+		self::add_dict('aeSL', 'byte', 'daap.aeSL');
+		self::add_dict('aeSR', 'byte', 'daap.aeSR');
+		self::add_dict('msed', 'byte', 'dmap.supportsedit');
         self::add_dict('aeNV', 'int', 'com.apple.itunes.norm-volume');
         self::add_dict('aeSP', 'byte', 'com.apple.itunes.smart-playlist');
     }
