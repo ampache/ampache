@@ -176,17 +176,16 @@ require_localnet_session = "true"
 ; DEFAULT: id3v2 id3v1 vorbiscomment quicktime matroska ape asf avi mpeg riff
 getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpeg,riff"
 
-; Determines whether we try to autodetect the encoding for id3v2 tags.
+; This determines whether we try to autodetect the encoding for id3v2 tags.
 ; May break valid tags.
 ; DEFAULT: false
 ;getid3_detect_id3v2_encoding = "false"
 
-; This determines if file metadata should be write back to files
-; as id3 metadata when updated.
+; This determines if we write the changes to files (as id3 tags) when modifying metadata, or only keep them in Ampache (the default).
 ; DEFAULT: false
 ;write_id3 = "false"
 
-; This determines if album art should be write back to files
+; This determines if we write the changes to files (as id3 tags) when modifying album art, or only keep them in Ampache (the default)
 ; as id3 metadata when updated.
 ; DEFAULT: false
 ;write_id3_art = "false"
