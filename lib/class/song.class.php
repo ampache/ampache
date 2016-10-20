@@ -379,25 +379,42 @@ class Song extends database_object implements media, library_item
         $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
+        
+        $artist_id = null;
+        // Multiple artist per songs not supported for now
+        $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
+        if (!isset($results['artist_id'])) {
+            //if artists tag is provided, use first artist in the list
+            //one of the steps on the way to multiple artist support
+            if (isset($results['artists']) && $results['artists'] != '') {
+                $artist = Catalog::trim_slashed_list($results['artists']);
+            }
+            $artist_id = Artist::check($artist, $artist_mbid);
+        } else {
+            $artist_id = intval($results['artist_id']);
+        }
 
         $albumartist_id = null;
         if (!isset($results['albumartist_id'])) {
             if ($albumartist) {
                 // Multiple artist per songs not supported for now
                 $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
+                
+                //if first MB release artist ID is the same as first MB artist ID
+                if ($artist_mbid === $albumartist_mbid) {
+                    //if artists tag is provided, use first artist in the list
+                    //one of the steps on the way to multiple artist support
+                    if (isset($results['artists']) && $results['artists'] != '') {
+                        $albumartist = Catalog::trim_slashed_list($results['artists']);
+                    }
+                }
+
                 $albumartist_id = Artist::check($albumartist, $albumartist_mbid);
             }
         } else {
             $albumartist_id = intval($results['albumartist_id']);
         }
-        $artist_id = null;
-        if (!isset($results['artist_id'])) {
-            // Multiple artist per songs not supported for now
-            $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id = Artist::check($artist, $artist_mbid);
-        } else {
-            $artist_id = intval($results['artist_id']);
-        }
+
         $album_id = null;
         if (!isset($results['album_id'])) {
             $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type);
