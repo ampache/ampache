@@ -885,25 +885,27 @@ class vainfo
             if (!empty($id3v2['TXXX'])) {
                 // Find the MBIDs for the album and artist
                 // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
+                // not a bug those strings are UTF-16 encoded
+                // getID3 has copies of text properly converted to utf-8 encoding in comments/text
                 foreach ($id3v2['TXXX'] as $txxx) {
                     switch (strtolower($this->trimAscii($txxx['description']))) {
                         case 'musicbrainz album id':
-                            $parsed['mb_albumid'] = $this->trimAscii($txxx['data']);
+                            $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'musicbrainz release group id':
-                            $parsed['mb_albumid_group'] = $this->trimAscii($txxx['data']);
+                            $parsed['mb_albumid_group'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'musicbrainz artist id':
-                            $parsed['mb_artistid'] = $this->trimAscii($txxx['data']);
+                            $parsed['mb_artistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'musicbrainz album artist id':
-                            $parsed['mb_albumartistid'] = $this->trimAscii($txxx['data']);
+                            $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'musicbrainz album type':
-                            $parsed['release_type'] = $this->trimAscii($txxx['data']);
+                            $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'catalognumber':
-                            $parsed['catalog_number'] = $this->trimAscii($txxx['data']);
+                            $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'replaygain_track_gain':
                             $parsed['replaygain_track_gain'] = floatval($txxx['data']);
