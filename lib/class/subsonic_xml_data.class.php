@@ -36,6 +36,7 @@ class Subsonic_XML_Data
     const SSERROR_APIVERSION_CLIENT = 20;
     const SSERROR_APIVERSION_SERVER = 30;
     const SSERROR_BADAUTH           = 40;
+    const SSERROR_TOKENAUTHNOTSUPPORTED = 41;
     const SSERROR_UNAUTHORIZED      = 50;
     const SSERROR_TRIAL             = 60;
     const SSERROR_DATA_NOTFOUND     = 70;
@@ -237,6 +238,7 @@ class Subsonic_XML_Data
                 case Subsonic_XML_Data::SSERROR_APIVERSION_CLIENT:  $message = "Incompatible Subsonic REST protocol version. Client must upgrade."; break;
                 case Subsonic_XML_Data::SSERROR_APIVERSION_SERVER:  $message = "Incompatible Subsonic REST protocol version. Server must upgrade."; break;
                 case Subsonic_XML_Data::SSERROR_BADAUTH:            $message = "Wrong username or password."; break;
+                case Subsonic_XML_Data::SSERROR_TOKENAUTHNOTSUPPORTED: $message = "Token authentication not supported."; break;
                 case Subsonic_XML_Data::SSERROR_UNAUTHORIZED:       $message = "User is not authorized for the given operation."; break;
                 case Subsonic_XML_Data::SSERROR_TRIAL:              $message = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details."; break;
                 case Subsonic_XML_Data::SSERROR_DATA_NOTFOUND:      $message = "The requested data was not found."; break;
