@@ -20,8 +20,22 @@
  *
  */
 ?>
+
+
+<?php
+//echo '<pre>';
+//print_r($libitem);
+
+//exit;
+
+$path = str_replace('/mnt/', '', $libitem->file);
+
+?>
+
+
+
 <div>
-    <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content" data-path="<?php echo $path; ?>">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>

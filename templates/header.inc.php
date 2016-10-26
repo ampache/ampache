@@ -44,9 +44,9 @@ $_SESSION['login'] = false;
         <?php if (AmpConfig::get('sociable')) {
     ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
-        <?php 
+        <?php
 } ?>
-        <?php 
+        <?php
 } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
@@ -60,6 +60,22 @@ $_SESSION['login'] = false;
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
+
+        <style>
+
+          .search-results a {
+            color: #ff9d00;
+          }
+
+          .search-results .format {
+            background: #fff;
+            color: #000;
+            padding: 2px;
+          }
+
+
+        </style>
+
         <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
@@ -86,7 +102,7 @@ $_SESSION['login'] = false;
                 <?php if (AmpConfig::get('geolocation')) {
     ?>
                     geolocate_user();
-                <?php 
+                <?php
 } ?>
             });
 
@@ -139,7 +155,7 @@ $_SESSION['login'] = false;
                 return btoa(window.location.href);
             }
         </script>
-        <?php 
+        <?php
         } ?>
         <script type="text/javascript">
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
@@ -291,7 +307,7 @@ $_SESSION['login'] = false;
                 }
             });
         </script>
-        
+
         <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
     ?>
         <script type="text/javascript" language="javascript">
@@ -307,9 +323,9 @@ $_SESSION['login'] = false;
                 },
             });
         </script>
-        <?php 
+        <?php
 } ?>
-        
+
         <?php if (AmpConfig::get('libitem_contextmenu')) {
     ?>
         <script type="text/javascript" language="javascript">
@@ -318,14 +334,14 @@ $_SESSION['login'] = false;
                 var iinfo = item.attr('id').split('_', 2);
                 var object_type = iinfo[0];
                 var object_id = iinfo[1];
-                
+
                 if (action !== undefined && action !== '') {
                     ajaxPut(jsAjaxUrl + action + '&object_type=' + object_type + '&object_id=' + object_id);
                 } else {
                     showPlaylistDialog(this, object_type, object_id);
                 }
             }
-            
+
             $.contextMenu({
                 selector: ".libitem_menu",
                 items: {
@@ -337,9 +353,146 @@ $_SESSION['login'] = false;
                 }
             });
         </script>
-        <?php 
+
+        <script type="text/javascript" src="http://utils.gradio.local/js/mustache.min.js" ></script>
+
+<script type="mustache/x-tmpl" id="checkUploadResult">
+  {{#error}}
+    <tr class="seperator" data-id="{{check.id}}"><td colspan="7"></td></tr>
+    <tr class="danger tune">
+      <td colspan="3">
+        Error: {{message}}
+      </td>
+      <td>{{file.name}}</td>
+      <td>-</td>
+      <td>-</td>
+      <td>{{file.size}}</td>
+    </tr>
+  {{/error}}
+  {{#check.status.onlyRelated}}
+    <tr class="seperator" data-id="{{check.id}}"><td colspan="7"></td></tr>
+    <tr class="warning tune" data-id="{{check.id}}">
+      <td>
+        <input type="hidden" name="delete[]" value="{{check.id}}">
+        <div class="checkbox-inline">
+          <label>
+            <input type="checkbox" name="save[]" value="{{check.id}}" checked> S?
+          </label>
+        </div>
+        Only related found:
+        <button
+          class="btn btn-default btn-xs show-related-details"
+          data-id="{{check.id}}"
+          data-parentid="{{check.id}}">
+          Related <span class="badge related-count">{{check.status.related}}</span>
+        </button>
+      </td>
+      <td>-</td>
+      <td>-</td>
+      <td>{{id3.tune}} <span class="badge pull-right format">{{id3.extension}}</span></td>
+      <td>{{id3.duration}}</td>
+      <td>{{id3.bitrate}}</td>
+      <td>{{id3.size}}</td>
+      <td><button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button"><span class="ui-button-text merge-tune">Merge</span></button></td>
+    </tr>
+  {{/check.status.onlyRelated}}
+  {{#check.results}}
+    {{#match}}
+    <tr class="seperator" data-id="{{check.id}}"><td colspan="7"></td></tr>
+    <tr class="danger tune" data-id="{{check.id}}">
+      <td>
+        Already in DB:
+    {{/match}}
+
+    {{^match}}
+       {{^related}}
+         <tr class="seperator" data-id="{{check.id}}"><td colspan="7"></td></tr>
+         <tr class="success tune" data-id="{{check.id}}">
+           <td>
+             You can add:
+       {{/related}}
+    {{/match}}
+
+    {{#related}}
+     <tr
+      class="warning related-found"
+      data-path="{{path}}"
+      data-id="{{check.id}}"
+      data-parentid="{{check.id}}"
+      style="display: none;">
+      <td>
+        Related found:
+    {{/related}}
+        <button
+          class="btn btn-default btn-xs show-check-details"
+          data-id="{{ID}}"
+          data-parentid="{{check.id}}">
+          Info
+        </button>
+    {{^related}}
+        <button
+          class="btn btn-default btn-xs show-related-details"
+          data-id="{{check.id}}"
+          data-parentid="{{check.id}}">
+          Related <span class="badge related-count">{{check.status.related}}</span>
+        </button>
+    {{/related}}
+      </td>
+      <td>{{relevance}}</td>
+      <td><a href="http://gradio.lv/tune/{{ID}}/" target="_blank" class="current-radiodj-id" data-id="{{ID}}">{{ID}}</a></td>
+      <td>{{tune}} <span class="badge pull-right format">{{extension}}</span></td>
+      <td>{{duration}}</td>
+      <td>{{id3.bitrate}}</td>
+      <td>{{id3.size}}</td>
+      <td><button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button"><span class="ui-button-text merge-tune">Merge</span></button></td>
+    </tr>
+    <tr class="check-details-info" data-id="{{ID}}" data-parentid="{{check.id}}" style="display: none;">
+      <td colspan="4">
+        <div class="alert alert-info">
+          <ul class="check-details-info-list" data-id="{{ID}}" data-parentid="{{check.id}}">
+          </ul>
+        </div>
+      </td>
+    </tr>
+  {{/check.results}}
+</script>
+
+<script>
+$(document).on("click", ".show-check-details", function () {
+  //console.debug($(this));
+  $('.check-details-info[data-id="' + $(this).data('id') + '"][data-parentid="' + $(this).data('parentid') + '"]').fadeToggle();
+  return false;
+});
+
+$(document).on("click", ".show-related-details", function () {
+  $('.related-found[data-id="' + $(this).data('id') + '"][data-parentid="' + $(this).data('parentid') + '"]').fadeToggle();
+  return false;
+});
+
+
+$(document).on("click", ".check-all", function () {
+  if ($(".check-all").is(':checked')) {
+    $(".search-results tbody input[type=checkbox]:not([disabled])").each(function () {
+      $(this).prop("checked", true);
+    });
+
+  } else {
+    $(".search-results tbody input[type=checkbox]:not([disabled])").each(function () {
+      $(this).prop("checked", false);
+    });
+  }
+});
+
+$(document).on("click", ".merge-tune", function () {
+  mergeDBS(currentEditId, $(this).parent().parent().parent().find('.current-radiodj-id').data('id'))
+  return false;
+});
+
+</script>
+
+        <?php
 } ?>
-        
+
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
         <div id="notification" class="notification-out"><img src="<?php echo $web_path; ?>/images/icon_info.png" /><span id="notification-content"></span></div>
@@ -361,11 +514,11 @@ $_SESSION['login'] = false;
                             <?php if (AmpConfig::get('sociable')) {
     ?>
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true)); ?>)</a>
-                            <?php 
+                            <?php
 } ?>
                             <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
                         </span>
-                    <?php 
+                    <?php
 } else {
     ?>
                         <span id="loginInfo">
@@ -373,10 +526,10 @@ $_SESSION['login'] = false;
                             <?php if (AmpConfig::get('allow_public_registration')) {
     ?>
                                 / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
-                            <?php 
+                            <?php
 } ?>
                         </span>
-                    <?php 
+                    <?php
 } ?>
 
                     <?php UI::show_box_bottom(); ?>
@@ -418,7 +571,7 @@ $_SESSION['login'] = false;
                         <span><?php echo T_('Favorites') ?></span>
                     </a>
                 </div>
-                <?php 
+                <?php
 } ?>
                 <?php if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) {
     ?>
@@ -428,10 +581,10 @@ $_SESSION['login'] = false;
                         <span><?php echo T_('Upload') ?></span>
                     </a>
                 </div>
-                <?php 
+                <?php
 } ?>
             </div>
-        <?php 
+        <?php
 } ?>
             <?php $isCollapsed = ((AmpConfig::get('sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed"); ?>
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
@@ -485,7 +638,7 @@ $_SESSION['login'] = false;
             <div id="ajax-loading">Loading . . .</div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
-            
+
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php
@@ -496,7 +649,7 @@ $_SESSION['login'] = false;
                             echo '<br />';
                         }
                         $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
-                        
+
                         if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version')) {
                             ?>
                             <div class="fatalerror">
