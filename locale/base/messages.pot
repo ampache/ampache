@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-09-23 20:25+0200\n"
+"POT-Creation-Date: 2016-11-04 15:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -929,32 +929,32 @@ msgstr ""
 msgid "Listening port, default 8100"
 msgstr ""
 
-#: ../../bin/write_playlists.inc:40
+#: ../../bin/write_playlists.inc:43
 #, php-format
 msgid "Error: Directory %s is not writable"
 msgstr ""
 
-#: ../../bin/write_playlists.inc:93
+#: ../../bin/write_playlists.inc:96
 msgid "This will dump a collection of playlists files based on type"
 msgstr ""
 
-#: ../../bin/write_playlists.inc:94
+#: ../../bin/write_playlists.inc:97
 msgid "Types:"
 msgstr ""
 
-#: ../../bin/write_playlists.inc:95
+#: ../../bin/write_playlists.inc:98
 msgid "Dumps all of your Playlists"
 msgstr ""
 
-#: ../../bin/write_playlists.inc:96
+#: ../../bin/write_playlists.inc:99
 msgid "Dumps all Albums as individual playlists"
 msgstr ""
 
-#: ../../bin/write_playlists.inc:97
+#: ../../bin/write_playlists.inc:100
 msgid "Dumps all Artists as individual playlists"
 msgstr ""
 
-#: ../../bin/write_playlists.inc:98
+#: ../../bin/write_playlists.inc:101
 msgid "Extensions: m3u (default), xspf, pls"
 msgstr ""
 
@@ -1111,7 +1111,7 @@ msgstr ""
 msgid "Stream Access"
 msgstr ""
 
-#: ../../lib/class/album.class.php:407 ../../lib/class/artist.class.php:679
+#: ../../lib/class/album.class.php:407 ../../lib/class/artist.class.php:678
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
@@ -1160,7 +1160,7 @@ msgstr ""
 
 #: ../../lib/class/album.class.php:680 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:223
-#: ../../lib/class/search.class.php:442 ../../lib/class/song.class.php:1498
+#: ../../lib/class/search.class.php:442 ../../lib/class/song.class.php:1492
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_upload.inc.php:178
 #: ../../templates/show_albums.inc.php:40
@@ -1729,15 +1729,15 @@ msgstr[1] ""
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2014
+#: ../../lib/class/catalog.class.php:2032
 msgid "Failed to create playlist."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2031
+#: ../../lib/class/catalog.class.php:2049
 msgid "No valid songs found in playlist file."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2386
+#: ../../lib/class/catalog.class.php:2404
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -1791,7 +1791,7 @@ msgid "Catalog Manager"
 msgstr ""
 
 #: ../../lib/class/label.class.php:152 ../../lib/class/search.class.php:244
-#: ../../templates/show_edit_song_row.inc.php:77
+#: ../../templates/show_edit_song_row.inc.php:81
 #: ../../templates/show_labels.inc.php:45
 #: ../../templates/show_labels.inc.php:77
 #: ../../templates/show_search_bar.inc.php:38
@@ -1876,7 +1876,7 @@ msgstr ""
 
 #: ../../lib/class/podcast_episode.class.php:156
 #: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:435
-#: ../../lib/class/song.class.php:1501 ../../lib/class/video.class.php:302
+#: ../../lib/class/song.class.php:1495 ../../lib/class/video.class.php:302
 #: ../../templates/show_democratic_playlist.inc.php:61
 #: ../../templates/show_democratic_playlist.inc.php:116
 #: ../../templates/show_disabled_songs.inc.php:29
@@ -2060,6 +2060,7 @@ msgid "Composer"
 msgstr ""
 
 #: ../../lib/class/search.class.php:237
+#: ../../templates/show_edit_song_row.inc.php:77
 #: ../../templates/show_manage_shoutbox.inc.php:31
 #: ../../templates/show_manage_shoutbox.inc.php:62
 #: ../../templates/show_song.inc.php:173
@@ -2091,7 +2092,7 @@ msgstr ""
 #: ../../lib/class/search.class.php:524 ../../templates/show_albums.inc.php:42
 #: ../../templates/show_albums.inc.php:116
 #: ../../templates/show_edit_album_row.inc.php:64
-#: ../../templates/show_edit_song_row.inc.php:81
+#: ../../templates/show_edit_song_row.inc.php:85
 #: ../../templates/show_edit_tvshow_row.inc.php:35
 #: ../../templates/show_graphs.inc.php:66
 #: ../../templates/show_missing_albums.inc.php:29
@@ -2198,7 +2199,7 @@ msgstr ""
 
 #: ../../lib/class/search.class.php:425
 #: ../../templates/show_add_upload.inc.php:200
-#: ../../templates/show_edit_song_row.inc.php:94
+#: ../../templates/show_edit_song_row.inc.php:98
 msgid "Music License"
 msgstr ""
 
@@ -2354,12 +2355,12 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: ../../lib/class/song.class.php:1469
+#: ../../lib/class/song.class.php:1463
 #: ../../templates/show_html5_player.inc.php:159
 msgid "Show Lyrics"
 msgstr ""
 
-#: ../../lib/class/song.class.php:1495
+#: ../../lib/class/song.class.php:1489
 msgid "Track MusicBrainzID"
 msgstr ""
 
@@ -5424,7 +5425,7 @@ msgstr ""
 #: ../../templates/show_artists.inc.php:124
 #: ../../templates/show_edit_album_row.inc.php:103
 #: ../../templates/show_edit_artist_row.inc.php:55
-#: ../../templates/show_edit_song_row.inc.php:85
+#: ../../templates/show_edit_song_row.inc.php:89
 #: ../../templates/show_edit_tvshow_row.inc.php:39
 #: ../../templates/show_edit_video_row.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:54
@@ -6211,7 +6212,7 @@ msgstr ""
 msgid "Track"
 msgstr ""
 
-#: ../../templates/show_edit_song_row.inc.php:107
+#: ../../templates/show_edit_song_row.inc.php:111
 msgid "More Metadata"
 msgstr ""
 
@@ -8305,7 +8306,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 23.09.2016 20:25:57 CEST 
+ # Last Update: 04.11.2016 15:44:08 CET 
 
  #######################################################################
 
