@@ -1908,8 +1908,18 @@ abstract class Catalog extends database_object
     public static function trim_slashed_list($string)
     {
         if ($string) {
-            $items = explode('/', $string);
+            $items = explode("\x00", $string);
             $first = trim($items[0]);
+            //if first is the same as string, nothing was exploded, try other delimiters
+            if ($first === $string) {
+                //try splitting with ; and then /
+                $items = explode(";", $string);
+                $first = trim($items[0]);
+                if ($first === $string) {
+                    $items = explode("/", $string);
+                    $first = trim($items[0]);
+                }
+            }
         }
         if ($first == '') {
             $first = null;
