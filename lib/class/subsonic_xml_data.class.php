@@ -266,9 +266,19 @@ class Subsonic_XML_Data
         }
     }
 
+    private static function addIgnoredArticles($xml)
+    {
+        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern');
+        if (!empty($ignoredArticles)) {
+            $ignoredArticles = str_replace("|", " ", $ignoredArticles);
+            $xml->addAttribute('ignoredArticles', $ignoredArticles);
+        }
+    }
+
     public static function addArtistsIndexes($xml, $artists, $lastModified)
     {
         $xindexes = $xml->addChild('indexes');
+        self::addIgnoredArticles($xindexes);
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
         self::addArtists($xindexes, $artists);
     }
@@ -276,11 +286,7 @@ class Subsonic_XML_Data
     public static function addArtistsRoot($xml, $artists, $albumsSet = false)
     {
         $xartists        = $xml->addChild('artists');
-        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern');
-        if (!empty($ignoredArticles)) {
-            $ignoredArticles = str_replace("|", ",", $ignoredArticles);
-            $xartists->addAttribute('ignoredArticles', $ignoredArticles);
-        }
+        self::addIgnoredArticles($xartists);
         self::addArtists($xartists, $artists, true, $albumsSet);
     }
 
@@ -326,9 +332,10 @@ class Subsonic_XML_Data
 
     public static function addArtist($xml, $artist, $extra=false, $albums=false, $albumsSet = false)
     {
+        $artist->format();
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', self::getArtistId($artist->id));
-        $xartist->addAttribute('name', self::checkName($artist->name));
+        $xartist->addAttribute('name', self::checkName($artist->f_full_name));
 
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
@@ -364,9 +371,9 @@ class Subsonic_XML_Data
     {
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', self::getAlbumId($album->id));
-        $xalbum->addAttribute('album', self::checkName($album->name));
+        $xalbum->addAttribute('album', self::checkName($album->full_name));
         $xalbum->addAttribute('title', self::formatAlbum($album, $elementName === "album"));
-        $xalbum->addAttribute('name', self::checkName($album->name));
+        $xalbum->addAttribute('name', self::checkName($album->full_name));
         $xalbum->addAttribute('isDir', 'true');
         $album->format();
         if ($album->has_art) {
@@ -376,7 +383,7 @@ class Subsonic_XML_Data
         $xalbum->addAttribute('duration', $album->total_duration);
         $xalbum->addAttribute('artistId', self::getArtistId($album->artist_id));
         $xalbum->addAttribute('parent', self::getArtistId($album->artist_id));
-        $xalbum->addAttribute('artist', self::checkName($album->artist_name));
+        $xalbum->addAttribute('artist', self::checkName($album->f_album_artist_name));
         if ($album->year > 0) {
             $xalbum->addAttribute('year', $album->year);
         }
@@ -429,10 +436,11 @@ class Subsonic_XML_Data
         $xsong->addAttribute('type', 'music');
         $album = new Album($song->album);
         $xsong->addAttribute('albumId', self::getAlbumId($album->id));
-        $xsong->addAttribute('album', self::checkName($album->name));
+        $xsong->addAttribute('album', self::checkName($album->full_name));
         $artist = new Artist($song->artist);
+        $artist->format();
         $xsong->addAttribute('artistId', self::getArtistId($song->artist));
-        $xsong->addAttribute('artist', self::checkName($artist->name));
+        $xsong->addAttribute('artist', self::checkName($artist->f_full_name));
         $xsong->addAttribute('coverArt', self::getAlbumId($album->id));
         $xsong->addAttribute('duration', $song->time);
         $xsong->addAttribute('bitRate', intval($song->bitrate / 1000));
@@ -486,7 +494,7 @@ class Subsonic_XML_Data
 
     private static function formatAlbum($album, $checkDisk = true)
     {
-        $name = $album->name;
+        $name = $album->full_name;
         if ($album->year > 0) {
             $name .= " [" . $album->year . "]";
         }
@@ -515,9 +523,10 @@ class Subsonic_XML_Data
 
     public static function addArtistDirectory($xml, $artist)
     {
+        $artist->format();
         $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', self::getArtistId($artist->id));
-        $xdir->addAttribute('name', $artist->name);
+        $xdir->addAttribute('name', $artist->f_full_name);
 
         $allalbums = $artist->get_albums();
         foreach ($allalbums as $id) {
