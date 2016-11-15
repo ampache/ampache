@@ -1,21 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Shen-Ta Hsiea(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-08-07 01:40+0200\n"
+"POT-Creation-Date: 2016-11-04 15:44+0100\n"
 "PO-Revision-Date: 2016-07-25 09:41+0000\n"
 "Last-Translator: Afterster\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/language/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
+"language/zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../admin/access.php:40
@@ -35,8 +36,8 @@ msgid "Are you sure you want to permanently delete"
 msgstr "您確定要永久刪除"
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:346
-#: ../../templates/show_song.inc.php:239
-#: ../../templates/show_video.inc.php:200
+#: ../../templates/show_song.inc.php:191
+#: ../../templates/show_video.inc.php:161
 msgid "Added"
 msgstr "已新增"
 
@@ -300,8 +301,8 @@ msgstr "錯誤：插入失敗"
 #: ../../lib/class/shoutbox.class.php:328
 #: ../../templates/show_add_user.inc.php:85
 #: ../../templates/show_edit_user.inc.php:109
-#: ../../templates/show_preference_admin.inc.php:49
-#: ../../templates/show_preference_box.inc.php:90
+#: ../../templates/show_preference_admin.inc.php:43
+#: ../../templates/show_preference_box.inc.php:80
 msgid "Guest"
 msgstr "訪客"
 
@@ -309,7 +310,7 @@ msgstr "訪客"
 #: ../../lib/preferences.php:300
 #: ../../modules/plugins/Flattr/Flattr.plugin.php:91
 #: ../../modules/plugins/Paypal/Paypal.plugin.php:94
-#: ../../templates/show_access_list.inc.php:55
+#: ../../templates/show_access_list.inc.php:51
 #: ../../templates/show_add_access.inc.php:44
 #: ../../templates/show_add_user.inc.php:86
 #: ../../templates/show_create_democratic.inc.php:44
@@ -317,10 +318,10 @@ msgstr "訪客"
 #: ../../templates/show_edit_user.inc.php:110
 #: ../../templates/show_mail_users.inc.php:32
 #: ../../templates/show_manage_shoutbox.inc.php:29
-#: ../../templates/show_manage_shoutbox.inc.php:63
+#: ../../templates/show_manage_shoutbox.inc.php:60
 #: ../../templates/show_missing_albums.inc.php:30
-#: ../../templates/show_preference_admin.inc.php:52
-#: ../../templates/show_preference_box.inc.php:93
+#: ../../templates/show_preference_admin.inc.php:44
+#: ../../templates/show_preference_box.inc.php:81
 #: ../../templates/show_shared_objects.inc.php:28
 #: ../../templates/show_wanted_albums.inc.php:29
 msgid "User"
@@ -329,12 +330,12 @@ msgstr "使用者"
 #: ../../admin/users.php:173 ../../lib/class/democratic.class.php:170
 #: ../../lib/preferences.php:302 ../../templates/show_add_user.inc.php:89
 #: ../../templates/show_create_democratic.inc.php:53
-#: ../../templates/show_democratic_playlist.inc.php:75
-#: ../../templates/show_democratic_playlist.inc.php:150
+#: ../../templates/show_democratic_playlist.inc.php:67
+#: ../../templates/show_democratic_playlist.inc.php:122
 #: ../../templates/show_edit_user.inc.php:113
 #: ../../templates/show_mail_users.inc.php:33
-#: ../../templates/show_preference_admin.inc.php:55
-#: ../../templates/show_preference_box.inc.php:102
+#: ../../templates/show_preference_admin.inc.php:45
+#: ../../templates/show_preference_box.inc.php:84
 #: ../../templates/sidebar.inc.php:39
 msgid "Admin"
 msgstr "管理員"
@@ -395,7 +396,7 @@ msgstr "使用者頭像已刪除"
 msgid "User Avatar has been deleted"
 msgstr "使用者頭像已被刪除"
 
-#: ../../admin/users.php:252 ../../templates/show_account.inc.php:110
+#: ../../admin/users.php:252 ../../templates/show_account.inc.php:102
 #: ../../templates/show_edit_user.inc.php:133
 msgid "Generate new API Key"
 msgstr "產生新 API 金鑰"
@@ -607,19 +608,23 @@ msgstr "最佳化資料庫表格。"
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr "使用此選項時請自行承擔風險！您的系統可能當機，或因為使用過多記憶體而變得沒有反應！"
+msgstr ""
+"使用此選項時請自行承擔風險！您的系統可能當機，或因為使用過多記憶體而變得沒有"
+"反應！"
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
-"Depending on your systems performance, this option could need a long time to"
-" finish and extremely slow down other database processes if you have big "
+"Depending on your systems performance, this option could need a long time to "
+"finish and extremely slow down other database processes if you have big "
 "catalogs!"
-msgstr "依據您系統的效能，此選項可能需要很長時間。如果目錄過大，可能會嚴重拖慢其他資料庫操作！"
+msgstr ""
+"依據您系統的效能，此選項可能需要很長時間。如果目錄過大，可能會嚴重拖慢其他資"
+"料庫操作！"
 
 #: ../../bin/catalog_update.inc:218
 msgid ""
-"The switches [-m|-i|-o] can only be used, if one of the other switches "
-"[-c|-v|-a|-g] is used."
+"The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
+"v|-a|-g] is used."
 msgstr "只有使用了 [-c|-v|-a|-g] 選項時，[-m|-i|-o] 選項才能使用。"
 
 #: ../../bin/channel_run.inc:46
@@ -927,32 +932,32 @@ msgstr "用法：websocket_run.inc [-p {連接埠}|-v]"
 msgid "Listening port, default 8100"
 msgstr "要聆聽的連接埠，預設為8100"
 
-#: ../../bin/write_playlists.inc:40
+#: ../../bin/write_playlists.inc:43
 #, php-format
 msgid "Error: Directory %s is not writable"
 msgstr "錯誤：無法寫入資料夾 %s"
 
-#: ../../bin/write_playlists.inc:93
+#: ../../bin/write_playlists.inc:96
 msgid "This will dump a collection of playlists files based on type"
 msgstr ""
 
-#: ../../bin/write_playlists.inc:94
+#: ../../bin/write_playlists.inc:97
 msgid "Types:"
 msgstr "種類："
 
-#: ../../bin/write_playlists.inc:95
+#: ../../bin/write_playlists.inc:98
 msgid "Dumps all of your Playlists"
 msgstr "傾印您的所有播放清單"
 
-#: ../../bin/write_playlists.inc:96
+#: ../../bin/write_playlists.inc:99
 msgid "Dumps all Albums as individual playlists"
 msgstr "傾印所有歌曲，依照專輯分類為個別的播放清單"
 
-#: ../../bin/write_playlists.inc:97
+#: ../../bin/write_playlists.inc:100
 msgid "Dumps all Artists as individual playlists"
 msgstr "傾印所有歌曲，依照作者分類為個別的播放清單"
 
-#: ../../bin/write_playlists.inc:98
+#: ../../bin/write_playlists.inc:101
 msgid "Extensions: m3u (default), xspf, pls"
 msgstr "副檔名：m3u (預設)、xspf、pls"
 
@@ -969,8 +974,8 @@ msgid "The Broadcast has been deleted"
 msgstr "該廣播已被刪除"
 
 #: ../../browse.php:94 ../../lib/class/browse.class.php:262
-#: ../../templates/header.inc.php:441 ../../templates/sidebar_home.inc.php:40
-#: ../../templates/sidebar_home.inc.php:82
+#: ../../templates/header.inc.php:410 ../../templates/sidebar_home.inc.php:40
+#: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/sidebar.light.inc.php:30
 msgid "Tag Cloud"
 msgstr "標籤雲"
@@ -1044,23 +1049,23 @@ msgid "Duplicate ACL defined"
 msgstr ""
 
 #: ../../lib/class/access.class.php:459 ../../lib/class/access.class.php:481
-#: ../../lib/ui.lib.php:480 ../../templates/browse_filters.inc.php:110
-#: ../../templates/list_header.inc.php:137
+#: ../../lib/ui.lib.php:480 ../../templates/browse_filters.inc.php:89
+#: ../../templates/list_header.inc.php:124
 #: ../../templates/show_add_access.inc.php:40
-#: ../../templates/show_add_access.inc.php:60
-#: ../../templates/show_add_access.inc.php:72
+#: ../../templates/show_add_access.inc.php:58
+#: ../../templates/show_add_access.inc.php:67
 #: ../../templates/show_edit_access.inc.php:72
 #: ../../templates/show_export.inc.php:35
 #: ../../templates/show_mail_users.inc.php:31
-#: ../../templates/show_random.inc.php:66
+#: ../../templates/show_random.inc.php:60
 msgid "All"
 msgstr "全部"
 
 #: ../../lib/class/access.class.php:462
-#: ../../templates/list_header.inc.php:146
+#: ../../templates/list_header.inc.php:132
 #: ../../templates/show_add_access.inc.php:37
 #: ../../templates/show_edit_access.inc.php:69
-#: ../../templates/show_graphs.inc.php:89
+#: ../../templates/show_graphs.inc.php:84
 #: ../../templates/show_tagcloud.inc.php:33
 msgid "View"
 msgstr "檢視"
@@ -1079,37 +1084,37 @@ msgstr "讀取/寫入"
 
 #: ../../lib/class/access.class.php:498
 #: ../../templates/show_add_access.inc.php:56
+#: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:58
-#: ../../templates/show_add_access.inc.php:60
-#: ../../templates/show_add_access.inc.php:84
+#: ../../templates/show_add_access.inc.php:75
 #: ../../templates/show_edit_access.inc.php:38
 msgid "API/RPC"
 msgstr "API/RPC"
 
 #: ../../lib/class/access.class.php:500
-#: ../../templates/show_add_access.inc.php:68
-#: ../../templates/show_add_access.inc.php:70
-#: ../../templates/show_add_access.inc.php:72
-#: ../../templates/show_add_access.inc.php:82
+#: ../../templates/show_add_access.inc.php:65
+#: ../../templates/show_add_access.inc.php:66
+#: ../../templates/show_add_access.inc.php:67
+#: ../../templates/show_add_access.inc.php:74
 #: ../../templates/show_edit_access.inc.php:37
 msgid "Local Network Definition"
 msgstr "區域網路定義"
 
 #: ../../lib/class/access.class.php:502
-#: ../../templates/show_add_access.inc.php:80
+#: ../../templates/show_add_access.inc.php:73
 #: ../../templates/show_edit_access.inc.php:36
 msgid "Web Interface"
 msgstr "網頁界面"
 
 #: ../../lib/class/access.class.php:505
-#: ../../templates/show_add_access.inc.php:58
-#: ../../templates/show_add_access.inc.php:70
-#: ../../templates/show_add_access.inc.php:78
+#: ../../templates/show_add_access.inc.php:57
+#: ../../templates/show_add_access.inc.php:66
+#: ../../templates/show_add_access.inc.php:72
 #: ../../templates/show_edit_access.inc.php:35
 msgid "Stream Access"
 msgstr "串流存取"
 
-#: ../../lib/class/album.class.php:407 ../../lib/class/artist.class.php:679
+#: ../../lib/class/album.class.php:407 ../../lib/class/artist.class.php:678
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
@@ -1118,26 +1123,26 @@ msgstr "未知 (遺孤)"
 #: ../../lib/class/album.class.php:642
 #: ../../lib/class/subsonic_xml_data.class.php:495
 #: ../../server/search.ajax.php:87
-#: ../../templates/show_album_group_disks.inc.php:124
+#: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
-#: ../../templates/show_edit_album_row.inc.php:70
+#: ../../templates/show_edit_album_row.inc.php:68
 #: ../../templates/show_song_previews.inc.php:40
 msgid "Disk"
 msgstr "片"
 
 #: ../../lib/class/album.class.php:654 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:329 ../../lib/ui.lib.php:180
-#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:429
-#: ../../templates/show_label.inc.php:120
-#: ../../templates/show_labels.inc.php:52
-#: ../../templates/show_labels.inc.php:92
-#: ../../templates/show_random.inc.php:43
-#: ../../templates/show_random.inc.php:46
-#: ../../templates/show_search_form.inc.php:44
-#: ../../templates/show_search_form.inc.php:47
-#: ../../templates/show_stats.inc.php:34 ../../templates/show_user.inc.php:142
+#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:398
+#: ../../templates/show_label.inc.php:103
+#: ../../templates/show_labels.inc.php:47
+#: ../../templates/show_labels.inc.php:79
+#: ../../templates/show_random.inc.php:38
+#: ../../templates/show_random.inc.php:40
+#: ../../templates/show_search_form.inc.php:39
+#: ../../templates/show_search_form.inc.php:41
+#: ../../templates/show_stats.inc.php:34 ../../templates/show_user.inc.php:118
 #: ../../templates/sidebar_home.inc.php:34
-#: ../../templates/sidebar_home.inc.php:210
+#: ../../templates/sidebar_home.inc.php:188
 #: ../../templates/sidebar.light.inc.php:27
 msgid "Artists"
 msgstr "作者"
@@ -1158,19 +1163,19 @@ msgstr "成品組的 MusicBrainz 識別碼"
 
 #: ../../lib/class/album.class.php:680 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:223
-#: ../../lib/class/search.class.php:442 ../../lib/class/song.class.php:1498
-#: ../../templates/browse_filters.inc.php:97
-#: ../../templates/show_add_upload.inc.php:179
-#: ../../templates/show_albums.inc.php:42
-#: ../../templates/show_albums.inc.php:129
-#: ../../templates/show_artists.inc.php:42
-#: ../../templates/show_artists.inc.php:129
-#: ../../templates/show_democratic_playlist.inc.php:69
-#: ../../templates/show_democratic_playlist.inc.php:144
+#: ../../lib/class/search.class.php:442 ../../lib/class/song.class.php:1492
+#: ../../templates/browse_filters.inc.php:79
+#: ../../templates/show_add_upload.inc.php:178
+#: ../../templates/show_albums.inc.php:40
+#: ../../templates/show_albums.inc.php:114
+#: ../../templates/show_artists.inc.php:40
+#: ../../templates/show_artists.inc.php:114
+#: ../../templates/show_democratic_playlist.inc.php:63
+#: ../../templates/show_democratic_playlist.inc.php:118
 #: ../../templates/show_disabled_songs.inc.php:31
-#: ../../templates/show_disabled_songs.inc.php:70
+#: ../../templates/show_disabled_songs.inc.php:61
 #: ../../templates/show_duplicates.inc.php:29
-#: ../../templates/show_duplicates.inc.php:80
+#: ../../templates/show_duplicates.inc.php:68
 #: ../../templates/show_edit_album_row.inc.php:31
 #: ../../templates/show_edit_song_row.inc.php:34
 #: ../../templates/show_lyrics.inc.php:53
@@ -1181,69 +1186,67 @@ msgstr "成品組的 MusicBrainz 識別碼"
 #: ../../templates/show_partial_clips.inc.php:23
 #: ../../templates/show_partial_edit_clip_row.inc.php:24
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:184
-#: ../../templates/show_recommended_artists.inc.php:38
-#: ../../templates/show_recommended_artists.inc.php:122
+#: ../../templates/show_recently_played.inc.php:163
+#: ../../templates/show_recommended_artists.inc.php:36
+#: ../../templates/show_recommended_artists.inc.php:101
 #: ../../templates/show_search_bar.inc.php:33
-#: ../../templates/show_song.inc.php:209
+#: ../../templates/show_song.inc.php:161
 #: ../../templates/show_song_previews.inc.php:37
-#: ../../templates/show_songs.inc.php:35
-#: ../../templates/show_songs.inc.php:114
+#: ../../templates/show_songs.inc.php:35 ../../templates/show_songs.inc.php:98
 #: ../../templates/show_tagcloud.inc.php:24
 #: ../../templates/show_wanted_albums.inc.php:27
-#: ../../templates/sidebar_home.inc.php:198
+#: ../../templates/sidebar_home.inc.php:176
 msgid "Artist"
 msgstr "作者"
 
 #: ../../lib/class/album.class.php:683 ../../lib/class/search.class.php:216
-#: ../../templates/show_add_upload.inc.php:192
-#: ../../templates/show_albums.inc.php:40
-#: ../../templates/show_albums.inc.php:127
-#: ../../templates/show_democratic_playlist.inc.php:67
-#: ../../templates/show_democratic_playlist.inc.php:142
+#: ../../templates/show_add_upload.inc.php:189
+#: ../../templates/show_albums.inc.php:38
+#: ../../templates/show_albums.inc.php:112
+#: ../../templates/show_democratic_playlist.inc.php:62
+#: ../../templates/show_democratic_playlist.inc.php:117
 #: ../../templates/show_disabled_songs.inc.php:30
-#: ../../templates/show_disabled_songs.inc.php:69
+#: ../../templates/show_disabled_songs.inc.php:60
 #: ../../templates/show_duplicates.inc.php:30
-#: ../../templates/show_duplicates.inc.php:81
-#: ../../templates/show_edit_song_row.inc.php:45
+#: ../../templates/show_duplicates.inc.php:69
+#: ../../templates/show_edit_song_row.inc.php:43
 #: ../../templates/show_lyrics.inc.php:46
 #: ../../templates/show_missing_albums.inc.php:27
 #: ../../templates/show_now_playing_row.inc.php:43
 #: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:183
+#: ../../templates/show_recently_played.inc.php:162
 #: ../../templates/show_search_bar.inc.php:32
-#: ../../templates/show_song.inc.php:213
+#: ../../templates/show_song.inc.php:165
 #: ../../templates/show_song_previews.inc.php:38
-#: ../../templates/show_songs.inc.php:36
-#: ../../templates/show_songs.inc.php:115
+#: ../../templates/show_songs.inc.php:36 ../../templates/show_songs.inc.php:99
 #: ../../templates/show_tagcloud.inc.php:25
 #: ../../templates/show_wanted_albums.inc.php:26
-#: ../../templates/sidebar_home.inc.php:197
+#: ../../templates/sidebar_home.inc.php:175
 msgid "Album"
 msgstr "專輯"
 
 #: ../../lib/class/ampache_rss.class.php:91
 #: ../../lib/class/localplay.class.php:607 ../../templates/header.inc.php:40
 #: ../../templates/show_localplay_status.inc.php:31
-#: ../../templates/show_now_playing.inc.php:33
+#: ../../templates/show_now_playing.inc.php:32
 msgid "Now Playing"
 msgstr "正在播放"
 
-#: ../../lib/class/ampache_rss.class.php:92 ../../templates/header.inc.php:43
+#: ../../lib/class/ampache_rss.class.php:92 ../../templates/header.inc.php:41
 #: ../../templates/show_recently_played.inc.php:24
-#: ../../templates/show_user.inc.php:139
+#: ../../templates/show_user.inc.php:115
 msgid "Recently Played"
 msgstr "最近播放"
 
-#: ../../lib/class/ampache_rss.class.php:93 ../../templates/header.inc.php:46
+#: ../../lib/class/ampache_rss.class.php:93 ../../templates/header.inc.php:42
 msgid "Newest Albums"
 msgstr "最新專輯"
 
-#: ../../lib/class/ampache_rss.class.php:94 ../../templates/header.inc.php:49
+#: ../../lib/class/ampache_rss.class.php:94 ../../templates/header.inc.php:43
 msgid "Newest Artists"
 msgstr "最新作者"
 
-#: ../../lib/class/ampache_rss.class.php:95 ../../templates/header.inc.php:54
+#: ../../lib/class/ampache_rss.class.php:95 ../../templates/header.inc.php:46
 msgid "Newest Shouts"
 msgstr "最新留言"
 
@@ -1308,25 +1311,25 @@ msgstr "無效的握手協議 -"
 msgid "Invalid Username/Password"
 msgstr "無效的使用者名稱/密碼"
 
-#: ../../lib/class/api.class.php:658 ../../lib/class/api.class.php:676
-#: ../../lib/class/api.class.php:694
+#: ../../lib/class/api.class.php:656 ../../lib/class/api.class.php:674
+#: ../../lib/class/api.class.php:692
 msgid "Access denied to this playlist."
 msgstr "已被拒絕存取該播放清單"
 
-#: ../../lib/class/api.class.php:812 ../../lib/class/api.class.php:873
+#: ../../lib/class/api.class.php:810 ../../lib/class/api.class.php:871
 #: ../../server/xml.server.php:102
 msgid "Invalid Request"
 msgstr "非法的請求"
 
-#: ../../lib/class/api.class.php:833 ../../lib/class/api.class.php:851
+#: ../../lib/class/api.class.php:831 ../../lib/class/api.class.php:849
 msgid "Media Object Invalid or Not Specified"
 msgstr "非法的媒體物件，或是未指定"
 
-#: ../../lib/class/api.class.php:1066
+#: ../../lib/class/api.class.php:1064
 msgid "Wrong library item type."
 msgstr "錯誤的資料庫物品類型"
 
-#: ../../lib/class/api.class.php:1070
+#: ../../lib/class/api.class.php:1068
 msgid "Library item not found."
 msgstr "找不到資料庫項目。"
 
@@ -1336,36 +1339,36 @@ msgstr "錯誤：無法開啟"
 
 #: ../../lib/class/art.class.php:1779 ../../lib/class/shoutbox.class.php:309
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:120
-#: ../../templates/header.inc.php:347 ../../templates/rightbar.inc.php:25
+#: ../../templates/header.inc.php:332 ../../templates/rightbar.inc.php:25
 #: ../../templates/show_album_group_disks.inc.php:64
-#: ../../templates/show_album_group_disks.inc.php:66
-#: ../../templates/show_album_group_disks.inc.php:139
-#: ../../templates/show_album.inc.php:116
-#: ../../templates/show_album.inc.php:118
+#: ../../templates/show_album_group_disks.inc.php:65
+#: ../../templates/show_album_group_disks.inc.php:122
+#: ../../templates/show_album.inc.php:106
+#: ../../templates/show_album.inc.php:107
 #: ../../templates/show_album_row.inc.php:28
 #: ../../templates/show_artist_row.inc.php:28
 #: ../../templates/show_broadcast_row.inc.php:27
 #: ../../templates/show_channel_row.inc.php:27
-#: ../../templates/show_democratic.inc.php:50
+#: ../../templates/show_democratic.inc.php:45
 #: ../../templates/show_live_stream.inc.php:38
 #: ../../templates/show_localplay_control.inc.php:27
-#: ../../templates/show_manage_democratic.inc.php:56
+#: ../../templates/show_manage_democratic.inc.php:48
 #: ../../templates/show_playlist_media_row.inc.php:31
-#: ../../templates/show_playlist_medias.inc.php:86
+#: ../../templates/show_playlist_medias.inc.php:79
 #: ../../templates/show_playlist_row.inc.php:28
-#: ../../templates/show_podcast_episode.inc.php:75
+#: ../../templates/show_podcast_episode.inc.php:61
 #: ../../templates/show_podcast_episode_row.inc.php:28
 #: ../../templates/show_podcast_row.inc.php:28
-#: ../../templates/show_random_albums.inc.php:60
-#: ../../templates/show_random_videos.inc.php:50
-#: ../../templates/show_recently_played.inc.php:106
+#: ../../templates/show_random_albums.inc.php:56
+#: ../../templates/show_random_videos.inc.php:47
+#: ../../templates/show_recently_played.inc.php:103
 #: ../../templates/show_search_row.inc.php:28
-#: ../../templates/show_song.inc.php:95
+#: ../../templates/show_song.inc.php:74
 #: ../../templates/show_song_preview_row.inc.php:28
-#: ../../templates/show_song_row.inc.php:37
+#: ../../templates/show_song_row.inc.php:36
 #: ../../templates/show_tvshow_row.inc.php:28
 #: ../../templates/show_tvshow_season_row.inc.php:28
-#: ../../templates/show_video.inc.php:104
+#: ../../templates/show_video.inc.php:87
 #: ../../templates/show_video_row.inc.php:33
 msgid "Play"
 msgstr "播放"
@@ -1425,85 +1428,79 @@ msgstr "廣播編輯"
 
 #: ../../lib/class/broadcast.class.php:358
 #: ../../lib/class/channel.class.php:186 ../../lib/class/share.class.php:206
-#: ../../templates/show_access_list.inc.php:87
-#: ../../templates/show_album_group_disks.inc.php:188
-#: ../../templates/show_album.inc.php:257
-#: ../../templates/show_album_row.inc.php:133
-#: ../../templates/show_artist.inc.php:265
-#: ../../templates/show_artist_row.inc.php:111
-#: ../../templates/show_label.inc.php:91
+#: ../../templates/show_access_list.inc.php:70
+#: ../../templates/show_album_group_disks.inc.php:160
+#: ../../templates/show_album.inc.php:205
+#: ../../templates/show_album_row.inc.php:119
+#: ../../templates/show_artist.inc.php:198
+#: ../../templates/show_artist_row.inc.php:99
+#: ../../templates/show_label.inc.php:80
 #: ../../templates/show_license_row.inc.php:28
 #: ../../templates/show_live_stream_row.inc.php:47
-#: ../../templates/show_playlist_row.inc.php:107
-#: ../../templates/show_podcast_episode.inc.php:155
-#: ../../templates/show_podcast_episode.inc.php:156
-#: ../../templates/show_podcast_episode_row.inc.php:101
-#: ../../templates/show_podcast.inc.php:118
-#: ../../templates/show_podcast_row.inc.php:73
-#: ../../templates/show_search_row.inc.php:64
+#: ../../templates/show_playlist_row.inc.php:97
+#: ../../templates/show_podcast_episode.inc.php:119
+#: ../../templates/show_podcast_episode.inc.php:120
+#: ../../templates/show_podcast_episode_row.inc.php:91
+#: ../../templates/show_podcast.inc.php:98
+#: ../../templates/show_podcast_row.inc.php:68
+#: ../../templates/show_search_row.inc.php:61
 #: ../../templates/show_shout_row.inc.php:31
-#: ../../templates/show_song.inc.php:178 ../../templates/show_song.inc.php:179
-#: ../../templates/show_song_row.inc.php:124
-#: ../../templates/show_tagcloud.inc.php:64
-#: ../../templates/show_tvshow.inc.php:96
-#: ../../templates/show_tvshow_row.inc.php:73
-#: ../../templates/show_tvshow_season.inc.php:88
-#: ../../templates/show_tvshow_season_row.inc.php:74
-#: ../../templates/show_user.inc.php:75 ../../templates/show_user.inc.php:85
-#: ../../templates/show_user_row.inc.php:86
-#: ../../templates/show_video.inc.php:163
-#: ../../templates/show_video.inc.php:164
-#: ../../templates/show_video_row.inc.php:133
+#: ../../templates/show_song.inc.php:136 ../../templates/show_song.inc.php:137
+#: ../../templates/show_song_row.inc.php:116
+#: ../../templates/show_tagcloud.inc.php:61
+#: ../../templates/show_tvshow.inc.php:85
+#: ../../templates/show_tvshow_row.inc.php:68
+#: ../../templates/show_tvshow_season.inc.php:78
+#: ../../templates/show_tvshow_season_row.inc.php:69
+#: ../../templates/show_user.inc.php:67 ../../templates/show_user.inc.php:72
+#: ../../templates/show_user_row.inc.php:76
+#: ../../templates/show_video.inc.php:128
+#: ../../templates/show_video.inc.php:129
+#: ../../templates/show_video_row.inc.php:127
 msgid "Edit"
 msgstr "編輯"
 
 #: ../../lib/class/broadcast.class.php:359
 #: ../../lib/class/channel.class.php:187 ../../lib/class/share.class.php:207
-#: ../../templates/rightbar.inc.php:140
-#: ../../templates/show_access_list.inc.php:91
-#: ../../templates/show_account.inc.php:103
-#: ../../templates/show_album.inc.php:287
-#: ../../templates/show_album.inc.php:288
-#: ../../templates/show_album_row.inc.php:141
-#: ../../templates/show_artist.inc.php:281
-#: ../../templates/show_artist.inc.php:282
-#: ../../templates/show_artist_row.inc.php:121
-#: ../../templates/show_catalog_row.inc.php:58
-#: ../../templates/show_democratic_playlist.inc.php:122
+#: ../../templates/rightbar.inc.php:129
+#: ../../templates/show_access_list.inc.php:71
+#: ../../templates/show_account.inc.php:95
+#: ../../templates/show_album.inc.php:225
+#: ../../templates/show_album_row.inc.php:126
+#: ../../templates/show_artist.inc.php:210
+#: ../../templates/show_artist_row.inc.php:106
+#: ../../templates/show_catalog_row.inc.php:50
+#: ../../templates/show_democratic_playlist.inc.php:102
 #: ../../templates/show_edit_user.inc.php:123
-#: ../../templates/show_label.inc.php:107
-#: ../../templates/show_label.inc.php:108
-#: ../../templates/show_label_row.inc.php:49
+#: ../../templates/show_label.inc.php:92
+#: ../../templates/show_label_row.inc.php:47
 #: ../../templates/show_license_row.inc.php:31
-#: ../../templates/show_live_stream_row.inc.php:53
-#: ../../templates/show_localplay_instances.inc.php:61
-#: ../../templates/show_localplay_playlist.inc.php:59
-#: ../../templates/show_manage_democratic.inc.php:60
-#: ../../templates/show_playlist.inc.php:167
-#: ../../templates/show_playlist_media_row.inc.php:92
-#: ../../templates/show_playlist_row.inc.php:110
-#: ../../templates/show_podcast_episode.inc.php:167
-#: ../../templates/show_podcast_episode_row.inc.php:111
-#: ../../templates/show_podcast.inc.php:140
-#: ../../templates/show_podcast.inc.php:141
-#: ../../templates/show_podcast_row.inc.php:88
+#: ../../templates/show_live_stream_row.inc.php:52
+#: ../../templates/show_localplay_instances.inc.php:52
+#: ../../templates/show_localplay_playlist.inc.php:53
+#: ../../templates/show_manage_democratic.inc.php:49
+#: ../../templates/show_playlist.inc.php:132
+#: ../../templates/show_playlist_media_row.inc.php:87
+#: ../../templates/show_playlist_row.inc.php:99
+#: ../../templates/show_podcast_episode.inc.php:128
+#: ../../templates/show_podcast_episode_row.inc.php:98
+#: ../../templates/show_podcast.inc.php:114
+#: ../../templates/show_podcast_row.inc.php:78
 #: ../../templates/show_pvmsg_row.inc.php:34
 #: ../../templates/show_pvmsgs.inc.php:40
-#: ../../templates/show_search.inc.php:57
-#: ../../templates/show_search_row.inc.php:68
+#: ../../templates/show_search.inc.php:50
+#: ../../templates/show_search_row.inc.php:64
 #: ../../templates/show_shout_row.inc.php:34
-#: ../../templates/show_song.inc.php:200
-#: ../../templates/show_song_row.inc.php:145
-#: ../../templates/show_tagcloud.inc.php:71
-#: ../../templates/show_tvshow.inc.php:112
-#: ../../templates/show_tvshow.inc.php:113
-#: ../../templates/show_tvshow_row.inc.php:84
-#: ../../templates/show_tvshow_season.inc.php:104
-#: ../../templates/show_tvshow_season.inc.php:105
-#: ../../templates/show_tvshow_season_row.inc.php:84
-#: ../../templates/show_user_row.inc.php:106
-#: ../../templates/show_video.inc.php:174
-#: ../../templates/show_video_row.inc.php:141
+#: ../../templates/show_song.inc.php:153
+#: ../../templates/show_song_row.inc.php:131
+#: ../../templates/show_tagcloud.inc.php:65
+#: ../../templates/show_tvshow.inc.php:97
+#: ../../templates/show_tvshow_row.inc.php:76
+#: ../../templates/show_tvshow_season.inc.php:90
+#: ../../templates/show_tvshow_season_row.inc.php:76
+#: ../../templates/show_user_row.inc.php:89
+#: ../../templates/show_video.inc.php:136
+#: ../../templates/show_video_row.inc.php:134
 msgid "Delete"
 msgstr "刪除"
 
@@ -1517,39 +1514,39 @@ msgstr "停止廣播"
 
 #: ../../lib/class/browse.class.php:204 ../../lib/class/browse.class.php:284
 #: ../../lib/class/upnp_api.class.php:377 ../../server/index.ajax.php:324
-#: ../../server/search.ajax.php:119 ../../templates/show_albums.inc.php:43
-#: ../../templates/show_albums.inc.php:130
-#: ../../templates/show_artists.inc.php:44
-#: ../../templates/show_artists.inc.php:131
-#: ../../templates/show_label.inc.php:121
-#: ../../templates/show_label.inc.php:136
+#: ../../server/search.ajax.php:119 ../../templates/show_albums.inc.php:41
+#: ../../templates/show_albums.inc.php:115
+#: ../../templates/show_artists.inc.php:42
+#: ../../templates/show_artists.inc.php:116
+#: ../../templates/show_label.inc.php:104
+#: ../../templates/show_label.inc.php:119
 #: ../../templates/show_manage_democratic.inc.php:31
-#: ../../templates/show_random.inc.php:29
-#: ../../templates/show_random.inc.php:32
-#: ../../templates/show_recommended_artists.inc.php:40
-#: ../../templates/show_recommended_artists.inc.php:124
-#: ../../templates/show_search_form.inc.php:30
-#: ../../templates/show_search_form.inc.php:33
+#: ../../templates/show_random.inc.php:28
+#: ../../templates/show_random.inc.php:30
+#: ../../templates/show_recommended_artists.inc.php:38
+#: ../../templates/show_recommended_artists.inc.php:103
+#: ../../templates/show_search_form.inc.php:29
+#: ../../templates/show_search_form.inc.php:31
 #: ../../templates/show_stats.inc.php:35 ../../templates/show_stats.inc.php:75
-#: ../../templates/sidebar_home.inc.php:208
+#: ../../templates/sidebar_home.inc.php:186
 msgid "Songs"
 msgstr "歌曲"
 
 #: ../../lib/class/browse.class.php:210 ../../lib/class/upnp_api.class.php:353
 #: ../../lib/ui.lib.php:176 ../../server/search.ajax.php:90
-#: ../../templates/browse_filters.inc.php:92
-#: ../../templates/show_artist.inc.php:294
-#: ../../templates/show_artists.inc.php:45
-#: ../../templates/show_artists.inc.php:132
-#: ../../templates/show_random.inc.php:36
-#: ../../templates/show_random.inc.php:39
-#: ../../templates/show_recommended_artists.inc.php:41
-#: ../../templates/show_recommended_artists.inc.php:125
-#: ../../templates/show_search_form.inc.php:37
-#: ../../templates/show_search_form.inc.php:40
+#: ../../templates/browse_filters.inc.php:76
+#: ../../templates/show_artist.inc.php:221
+#: ../../templates/show_artists.inc.php:43
+#: ../../templates/show_artists.inc.php:117
+#: ../../templates/show_random.inc.php:33
+#: ../../templates/show_random.inc.php:35
+#: ../../templates/show_recommended_artists.inc.php:39
+#: ../../templates/show_recommended_artists.inc.php:104
+#: ../../templates/show_search_form.inc.php:34
+#: ../../templates/show_search_form.inc.php:36
 #: ../../templates/show_stats.inc.php:33
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:209
+#: ../../templates/sidebar_home.inc.php:187
 #: ../../templates/sidebar.light.inc.php:28
 msgid "Albums"
 msgstr "專輯"
@@ -1565,10 +1562,10 @@ msgid "Radio Stations"
 msgstr "廣播站"
 
 #: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:401
-#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:435
-#: ../../templates/show_user.inc.php:146
+#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:404
+#: ../../templates/show_user.inc.php:121
 #: ../../templates/sidebar_home.inc.php:41
-#: ../../templates/sidebar_home.inc.php:211
+#: ../../templates/sidebar_home.inc.php:189
 #: ../../templates/sidebar.light.inc.php:29
 msgid "Playlists"
 msgstr "播放清單"
@@ -1596,10 +1593,10 @@ msgid "Shoutbox Records"
 msgstr "留言板紀錄"
 
 #: ../../lib/class/browse.class.php:268
-#: ../../templates/show_search_form.inc.php:51
-#: ../../templates/show_search_form.inc.php:54
+#: ../../templates/show_search_form.inc.php:44
+#: ../../templates/show_search_form.inc.php:46
 #: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:76
-#: ../../templates/sidebar_home.inc.php:214
+#: ../../templates/sidebar_home.inc.php:192
 msgid "Videos"
 msgstr "視訊"
 
@@ -1613,12 +1610,12 @@ msgid "Wanted Albums"
 msgstr "專輯願望清單"
 
 #: ../../lib/class/browse.class.php:280
-#: ../../templates/sidebar_home.inc.php:171
+#: ../../templates/sidebar_home.inc.php:152
 msgid "Shared Objects"
 msgstr "已共享的物件"
 
-#: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:226
-#: ../../templates/show_video.inc.php:193
+#: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:178
+#: ../../templates/show_video.inc.php:154
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Channels"
 msgstr "頻道"
@@ -1633,31 +1630,31 @@ msgid "Media Licenses"
 msgstr "音樂授權"
 
 #: ../../lib/class/browse.class.php:300 ../../lib/class/upnp_api.class.php:739
-#: ../../templates/sidebar_home.inc.php:79
+#: ../../templates/sidebar_home.inc.php:75
 msgid "TV Shows"
 msgstr "電視節目"
 
 #: ../../lib/class/browse.class.php:304
-#: ../../templates/show_tvshow.inc.php:125
-#: ../../templates/show_tvshows.inc.php:44
-#: ../../templates/show_tvshows.inc.php:114
+#: ../../templates/show_tvshow.inc.php:108
+#: ../../templates/show_tvshows.inc.php:42
+#: ../../templates/show_tvshows.inc.php:98
 msgid "Seasons"
 msgstr "單季"
 
 #: ../../lib/class/browse.class.php:308
-#: ../../templates/show_podcast.inc.php:153
-#: ../../templates/show_podcasts.inc.php:53
-#: ../../templates/show_podcasts.inc.php:119
-#: ../../templates/show_tvshow_season.inc.php:117
-#: ../../templates/show_tvshow_seasons.inc.php:42
-#: ../../templates/show_tvshow_seasons.inc.php:109
-#: ../../templates/show_tvshows.inc.php:43
-#: ../../templates/show_tvshows.inc.php:113
+#: ../../templates/show_podcast.inc.php:125
+#: ../../templates/show_podcasts.inc.php:48
+#: ../../templates/show_podcasts.inc.php:100
+#: ../../templates/show_tvshow_season.inc.php:101
+#: ../../templates/show_tvshow_seasons.inc.php:40
+#: ../../templates/show_tvshow_seasons.inc.php:93
+#: ../../templates/show_tvshows.inc.php:41
+#: ../../templates/show_tvshows.inc.php:97
 msgid "Episodes"
 msgstr "單集"
 
 #: ../../lib/class/browse.class.php:313 ../../lib/class/upnp_api.class.php:803
-#: ../../templates/sidebar_home.inc.php:80
+#: ../../templates/sidebar_home.inc.php:76
 msgid "Movies"
 msgstr "電影"
 
@@ -1666,14 +1663,14 @@ msgid "Clips"
 msgstr "影片"
 
 #: ../../lib/class/browse.class.php:323 ../../lib/class/upnp_api.class.php:827
-#: ../../templates/sidebar_home.inc.php:81
+#: ../../templates/sidebar_home.inc.php:77
 msgid "Personal Videos"
 msgstr "私人視訊"
 
 #: ../../lib/class/browse.class.php:328 ../../server/search.ajax.php:178
-#: ../../templates/show_artist.inc.php:315
-#: ../../templates/show_artist.inc.php:384
-#: ../../templates/show_edit_artist_row.inc.php:62
+#: ../../templates/show_artist.inc.php:239
+#: ../../templates/show_artist.inc.php:300
+#: ../../templates/show_edit_artist_row.inc.php:61
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Labels"
 msgstr "標籤"
@@ -1691,15 +1688,15 @@ msgstr "播客"
 msgid "Podcast Episodes"
 msgstr "單集播客"
 
-#: ../../lib/class/browse.class.php:381 ../../templates/rightbar.inc.php:154
-#: ../../templates/show_recently_played.inc.php:203
+#: ../../lib/class/browse.class.php:381 ../../templates/rightbar.inc.php:140
+#: ../../templates/show_recently_played.inc.php:181
 msgid "More"
 msgstr "更多"
 
 #: ../../lib/class/catalog.class.php:510 ../../lib/class/catalog.class.php:513
 #: ../../lib/class/catalog.class.php:516 ../../lib/class/user.class.php:1006
 #: ../../lib/preferences.php:344 ../../templates/show_user.inc.php:23
-#: ../../templates/show_users.inc.php:81
+#: ../../templates/show_users.inc.php:76
 msgid "Never"
 msgstr "不曾"
 
@@ -1732,15 +1729,15 @@ msgstr[0] ""
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "目錄驗證完成。 %d 中的 %d 個檔案已更新。"
 
-#: ../../lib/class/catalog.class.php:2014
+#: ../../lib/class/catalog.class.php:2032
 msgid "Failed to create playlist."
 msgstr "建立播放清單失敗。"
 
-#: ../../lib/class/catalog.class.php:2031
+#: ../../lib/class/catalog.class.php:2049
 msgid "No valid songs found in playlist file."
 msgstr "播放清單檔案內找不到合法的歌曲。"
 
-#: ../../lib/class/catalog.class.php:2386
+#: ../../lib/class/catalog.class.php:2404
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -1781,7 +1778,7 @@ msgstr "主要"
 #: ../../templates/show_add_user.inc.php:87
 #: ../../templates/show_create_democratic.inc.php:47
 #: ../../templates/show_edit_user.inc.php:111
-#: ../../templates/show_preference_box.inc.php:96
+#: ../../templates/show_preference_box.inc.php:82
 msgid "Content Manager"
 msgstr "內容管理"
 
@@ -1789,16 +1786,16 @@ msgstr "內容管理"
 #: ../../templates/show_add_user.inc.php:88
 #: ../../templates/show_create_democratic.inc.php:50
 #: ../../templates/show_edit_user.inc.php:112
-#: ../../templates/show_preference_box.inc.php:99
+#: ../../templates/show_preference_box.inc.php:83
 msgid "Catalog Manager"
 msgstr "目錄管理"
 
 #: ../../lib/class/label.class.php:152 ../../lib/class/search.class.php:244
-#: ../../templates/show_edit_song_row.inc.php:82
-#: ../../templates/show_labels.inc.php:50
-#: ../../templates/show_labels.inc.php:90
+#: ../../templates/show_edit_song_row.inc.php:81
+#: ../../templates/show_labels.inc.php:45
+#: ../../templates/show_labels.inc.php:77
 #: ../../templates/show_search_bar.inc.php:38
-#: ../../templates/show_song.inc.php:222
+#: ../../templates/show_song.inc.php:174
 msgid "Label"
 msgstr "標籤"
 
@@ -1836,7 +1833,7 @@ msgstr "暫停"
 #: ../../lib/class/tvshow_episode.class.php:71
 #: ../../lib/class/user.class.php:1013 ../../lib/class/video.class.php:770
 #: ../../modules/localplay/mpd/mpd.controller.php:491
-#: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:82
+#: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:77
 msgid "Unknown"
 msgstr "未知"
 
@@ -1848,12 +1845,12 @@ msgstr "私有"
 
 #: ../../lib/class/podcast.class.php:173
 #: ../../lib/class/podcast_episode.class.php:153
-#: ../../templates/show_add_catalog.inc.php:88
-#: ../../templates/show_album.inc.php:163
-#: ../../templates/show_artist.inc.php:190
+#: ../../templates/show_add_catalog.inc.php:84
+#: ../../templates/show_album.inc.php:143
+#: ../../templates/show_artist.inc.php:149
 #: ../../templates/show_podcast_episodes.inc.php:33
-#: ../../templates/show_podcast_episodes.inc.php:103
-#: ../../templates/show_podcast.inc.php:110
+#: ../../templates/show_podcast_episodes.inc.php:89
+#: ../../templates/show_podcast.inc.php:92
 msgid "Podcast"
 msgstr "播客"
 
@@ -1879,28 +1876,28 @@ msgstr "無法讀取消息來源。"
 
 #: ../../lib/class/podcast_episode.class.php:156
 #: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:435
-#: ../../lib/class/song.class.php:1501 ../../lib/class/video.class.php:302
-#: ../../templates/show_democratic_playlist.inc.php:65
-#: ../../templates/show_democratic_playlist.inc.php:140
+#: ../../lib/class/song.class.php:1495 ../../lib/class/video.class.php:302
+#: ../../templates/show_democratic_playlist.inc.php:61
+#: ../../templates/show_democratic_playlist.inc.php:116
 #: ../../templates/show_disabled_songs.inc.php:29
-#: ../../templates/show_disabled_songs.inc.php:68
+#: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicate.inc.php:29
 #: ../../templates/show_edit_podcast_episode_row.inc.php:27
 #: ../../templates/show_edit_podcast_row.inc.php:31
 #: ../../templates/show_edit_song_row.inc.php:27
 #: ../../templates/show_edit_video_row.inc.php:31
 #: ../../templates/show_playlist_medias.inc.php:38
-#: ../../templates/show_playlist_medias.inc.php:92
-#: ../../templates/show_podcast_episode.inc.php:175
+#: ../../templates/show_playlist_medias.inc.php:85
+#: ../../templates/show_podcast_episode.inc.php:135
 #: ../../templates/show_podcast_episodes.inc.php:31
-#: ../../templates/show_podcast_episodes.inc.php:101
-#: ../../templates/show_podcasts.inc.php:52
-#: ../../templates/show_podcasts.inc.php:118
+#: ../../templates/show_podcast_episodes.inc.php:87
+#: ../../templates/show_podcasts.inc.php:47
+#: ../../templates/show_podcasts.inc.php:99
 #: ../../templates/show_search_bar.inc.php:31
-#: ../../templates/show_song.inc.php:208
-#: ../../templates/show_video.inc.php:181
-#: ../../templates/show_videos.inc.php:38
-#: ../../templates/show_videos.inc.php:115
+#: ../../templates/show_song.inc.php:160
+#: ../../templates/show_video.inc.php:142
+#: ../../templates/show_videos.inc.php:37
+#: ../../templates/show_videos.inc.php:102
 msgid "Title"
 msgstr "標題"
 
@@ -1928,7 +1925,16 @@ msgid ""
 "\n"
 "        %s\n"
 "        "
-msgstr "您剛收到一筆來自 %s 的新私人訊息。\n\n\n        ----------------------\n        %s\n        ----------------------\n\n        %s\n        "
+msgstr ""
+"您剛收到一筆來自 %s 的新私人訊息。\n"
+"\n"
+"\n"
+"        ----------------------\n"
+"        %s\n"
+"        ----------------------\n"
+"\n"
+"        %s\n"
+"        "
 
 #: ../../lib/class/query.class.php:99
 msgid "Browse not found or expired, try reloading the page"
@@ -1945,17 +1951,32 @@ msgid ""
 "Thank you for registering\n"
 "\n"
 "\n"
-"Please keep this e-mail for your records. Your account information is as follows:\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
 "----------------------\n"
 "Username: %s\n"
 "----------------------\n"
 "\n"
-"Your account is currently inactive. You cannot use it until you've visited the following link:\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
 "\n"
 "%s\n"
 "\n"
 "Thank you for registering\n"
-msgstr "感謝您註冊\n\n\n請保留這封電子郵件作為紀錄。您的帳號資訊如下：\n----------------------\n使用者名稱：%s\n----------------------\n\n您的帳號目前停用中。在您檢視以下網頁之前，您將無法使用該帳號：\n\n%s\n\n感謝您註冊\n"
+msgstr ""
+"感謝您註冊\n"
+"\n"
+"\n"
+"請保留這封電子郵件作為紀錄。您的帳號資訊如下：\n"
+"----------------------\n"
+"使用者名稱：%s\n"
+"----------------------\n"
+"\n"
+"您的帳號目前停用中。在您檢視以下網頁之前，您將無法使用該帳號：\n"
+"\n"
+"%s\n"
+"\n"
+"感謝您註冊\n"
 
 #: ../../lib/class/registration.class.php:77
 #, php-format
@@ -1968,7 +1989,15 @@ msgid ""
 "E-mail: %s\n"
 "Website: %s\n"
 "\n"
-msgstr "已有新使用者註冊\n他輸入了以下資訊。\n\n使用者名稱：%s\n全名：%s\n電子郵件：%s\n網站：%s\n\n"
+msgstr ""
+"已有新使用者註冊\n"
+"他輸入了以下資訊。\n"
+"\n"
+"使用者名稱：%s\n"
+"全名：%s\n"
+"電子郵件：%s\n"
+"網站：%s\n"
+"\n"
 
 #: ../../lib/class/registration.class.php:104
 #, php-format
@@ -1982,7 +2011,11 @@ msgid ""
 "\n"
 "\n"
 "            Please logon using %s"
-msgstr "您的帳號 %s 已被啟用\n\n\n            請使用 %s 登入"
+msgstr ""
+"您的帳號 %s 已被啟用\n"
+"\n"
+"\n"
+"            請使用 %s 登入"
 
 #: ../../lib/class/search.class.php:62
 msgid "is greater than or equal to"
@@ -2055,15 +2088,16 @@ msgid "Any searchable text"
 msgstr "所有可搜尋的文字"
 
 #: ../../lib/class/search.class.php:230
-#: ../../templates/show_edit_song_row.inc.php:78
-#: ../../templates/show_song.inc.php:214
+#: ../../templates/show_edit_song_row.inc.php:73
+#: ../../templates/show_song.inc.php:166
 msgid "Composer"
 msgstr "作曲者"
 
 #: ../../lib/class/search.class.php:237
+#: ../../templates/show_edit_song_row.inc.php:77
 #: ../../templates/show_manage_shoutbox.inc.php:31
-#: ../../templates/show_manage_shoutbox.inc.php:65
-#: ../../templates/show_song.inc.php:221
+#: ../../templates/show_manage_shoutbox.inc.php:62
+#: ../../templates/show_song.inc.php:173
 msgid "Comment"
 msgstr "註解"
 
@@ -2079,27 +2113,27 @@ msgstr "專輯標籤"
 
 #: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:510
 #: ../../templates/show_disabled_songs.inc.php:32
-#: ../../templates/show_disabled_songs.inc.php:71
+#: ../../templates/show_disabled_songs.inc.php:62
 #: ../../templates/show_duplicates.inc.php:34
-#: ../../templates/show_duplicates.inc.php:85
+#: ../../templates/show_duplicates.inc.php:73
 #: ../../templates/show_import_playlist.inc.php:28
-#: ../../templates/show_song.inc.php:234
-#: ../../templates/show_video.inc.php:195
+#: ../../templates/show_song.inc.php:186
+#: ../../templates/show_video.inc.php:156
 msgid "Filename"
 msgstr "檔名"
 
 #: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:449
-#: ../../lib/class/search.class.php:524 ../../templates/show_albums.inc.php:44
-#: ../../templates/show_albums.inc.php:131
-#: ../../templates/show_edit_album_row.inc.php:66
-#: ../../templates/show_edit_song_row.inc.php:86
+#: ../../lib/class/search.class.php:524 ../../templates/show_albums.inc.php:42
+#: ../../templates/show_albums.inc.php:116
+#: ../../templates/show_edit_album_row.inc.php:64
+#: ../../templates/show_edit_song_row.inc.php:85
 #: ../../templates/show_edit_tvshow_row.inc.php:35
-#: ../../templates/show_graphs.inc.php:71
+#: ../../templates/show_graphs.inc.php:66
 #: ../../templates/show_missing_albums.inc.php:29
 #: ../../templates/show_partial_edit_movie_row.inc.php:32
 #: ../../templates/show_partial_movie.inc.php:23
 #: ../../templates/show_partial_movies.inc.php:24
-#: ../../templates/show_song.inc.php:216
+#: ../../templates/show_song.inc.php:168
 #: ../../templates/show_wanted_albums.inc.php:28
 msgid "Year"
 msgstr "年"
@@ -2109,44 +2143,44 @@ msgid "Length (in minutes)"
 msgstr "長度(分鐘)"
 
 #: ../../lib/class/search.class.php:288 ../../lib/class/search.class.php:471
-#: ../../templates/show_albums.inc.php:57
-#: ../../templates/show_albums.inc.php:143
-#: ../../templates/show_artists.inc.php:59
-#: ../../templates/show_artists.inc.php:145
-#: ../../templates/show_now_playing_row.inc.php:118
-#: ../../templates/show_now_playing_video_row.inc.php:66
-#: ../../templates/show_playlist_medias.inc.php:46
-#: ../../templates/show_playlist_medias.inc.php:99
+#: ../../templates/show_albums.inc.php:53
+#: ../../templates/show_albums.inc.php:127
+#: ../../templates/show_artists.inc.php:55
+#: ../../templates/show_artists.inc.php:129
+#: ../../templates/show_now_playing_row.inc.php:109
+#: ../../templates/show_now_playing_video_row.inc.php:65
+#: ../../templates/show_playlist_medias.inc.php:45
+#: ../../templates/show_playlist_medias.inc.php:92
 #: ../../templates/show_playlists.inc.php:45
-#: ../../templates/show_playlists.inc.php:109
-#: ../../templates/show_podcast_episode.inc.php:33
-#: ../../templates/show_podcast_episodes.inc.php:42
-#: ../../templates/show_podcast_episodes.inc.php:111
-#: ../../templates/show_podcasts.inc.php:59
-#: ../../templates/show_podcasts.inc.php:124
-#: ../../templates/show_recommended_artists.inc.php:47
-#: ../../templates/show_recommended_artists.inc.php:130
-#: ../../templates/show_song.inc.php:36 ../../templates/show_songs.inc.php:57
-#: ../../templates/show_songs.inc.php:134
-#: ../../templates/show_tvshow_seasons.inc.php:48
-#: ../../templates/show_tvshow_seasons.inc.php:114
-#: ../../templates/show_tvshows.inc.php:51
-#: ../../templates/show_tvshows.inc.php:120
-#: ../../templates/show_video.inc.php:67
-#: ../../templates/show_videos.inc.php:60
-#: ../../templates/show_videos.inc.php:137
+#: ../../templates/show_playlists.inc.php:100
+#: ../../templates/show_podcast_episode.inc.php:31
+#: ../../templates/show_podcast_episodes.inc.php:41
+#: ../../templates/show_podcast_episodes.inc.php:97
+#: ../../templates/show_podcasts.inc.php:53
+#: ../../templates/show_podcasts.inc.php:105
+#: ../../templates/show_recommended_artists.inc.php:44
+#: ../../templates/show_recommended_artists.inc.php:109
+#: ../../templates/show_song.inc.php:34 ../../templates/show_songs.inc.php:54
+#: ../../templates/show_songs.inc.php:116
+#: ../../templates/show_tvshow_seasons.inc.php:45
+#: ../../templates/show_tvshow_seasons.inc.php:98
+#: ../../templates/show_tvshows.inc.php:48
+#: ../../templates/show_tvshows.inc.php:104
+#: ../../templates/show_video.inc.php:62
+#: ../../templates/show_videos.inc.php:58
+#: ../../templates/show_videos.inc.php:123
 msgid "Rating"
 msgstr "評比"
 
-#: ../../lib/class/search.class.php:306 ../../templates/show_albums.inc.php:47
-#: ../../templates/show_albums.inc.php:134
-#: ../../templates/show_artists.inc.php:49
-#: ../../templates/show_artists.inc.php:136
-#: ../../templates/show_song.inc.php:241 ../../templates/show_songs.inc.php:47
-#: ../../templates/show_songs.inc.php:126
-#: ../../templates/show_video.inc.php:202
-#: ../../templates/show_videos.inc.php:51
-#: ../../templates/show_videos.inc.php:128
+#: ../../lib/class/search.class.php:306 ../../templates/show_albums.inc.php:45
+#: ../../templates/show_albums.inc.php:119
+#: ../../templates/show_artists.inc.php:47
+#: ../../templates/show_artists.inc.php:121
+#: ../../templates/show_song.inc.php:193 ../../templates/show_songs.inc.php:46
+#: ../../templates/show_songs.inc.php:109
+#: ../../templates/show_video.inc.php:163
+#: ../../templates/show_videos.inc.php:50
+#: ../../templates/show_videos.inc.php:115
 msgid "# Played"
 msgstr "# 已播放"
 
@@ -2154,19 +2188,19 @@ msgstr "# 已播放"
 #: ../../templates/show_add_channel.inc.php:102
 #: ../../templates/show_channels.inc.php:39
 #: ../../templates/show_duplicates.inc.php:32
-#: ../../templates/show_duplicates.inc.php:83
+#: ../../templates/show_duplicates.inc.php:71
 #: ../../templates/show_edit_channel_row.inc.php:84
-#: ../../templates/show_song.inc.php:225
+#: ../../templates/show_song.inc.php:177
 msgid "Bitrate"
 msgstr "位元率"
 
-#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:89
-#: ../../templates/show_artist.inc.php:94
+#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:83
+#: ../../templates/show_artist.inc.php:78
 msgid "Played"
 msgstr "已播放"
 
 #: ../../lib/class/search.class.php:366 ../../lib/class/search.class.php:494
-#: ../../templates/browse_filters.inc.php:107
+#: ../../templates/browse_filters.inc.php:87
 #: ../../templates/show_add_live_stream.inc.php:55
 #: ../../templates/show_add_podcast.inc.php:34
 #: ../../templates/show_export.inc.php:32
@@ -2176,17 +2210,16 @@ msgstr "目錄"
 #: ../../lib/class/search.class.php:379 ../../lib/ui.lib.php:135
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_search_bar.inc.php:34
-#: ../../templates/sidebar_home.inc.php:96
-#: ../../templates/sidebar_home.inc.php:97
-#: ../../templates/sidebar_home.inc.php:199
+#: ../../templates/sidebar_home.inc.php:92
+#: ../../templates/sidebar_home.inc.php:177
 msgid "Playlist"
 msgstr "播放清單"
 
 #: ../../lib/class/search.class.php:386
 #: ../../templates/show_playlists.inc.php:35
-#: ../../templates/show_playlists.inc.php:99
-#: ../../templates/show_searches.inc.php:45
-#: ../../templates/show_searches.inc.php:81
+#: ../../templates/show_playlists.inc.php:90
+#: ../../templates/show_searches.inc.php:42
+#: ../../templates/show_searches.inc.php:72
 msgid "Playlist Name"
 msgstr "播放清單名稱"
 
@@ -2199,8 +2232,8 @@ msgid "Metadata"
 msgstr "後設資料"
 
 #: ../../lib/class/search.class.php:425
-#: ../../templates/show_add_upload.inc.php:203
-#: ../../templates/show_edit_song_row.inc.php:99
+#: ../../templates/show_add_upload.inc.php:200
+#: ../../templates/show_edit_song_row.inc.php:98
 msgid "Music License"
 msgstr "音樂授權"
 
@@ -2223,7 +2256,7 @@ msgstr "圖片高度"
 #: ../../templates/show_add_playlist.inc.php:27
 #: ../../templates/show_broadcasts.inc.php:31
 #: ../../templates/show_catalogs.inc.php:29
-#: ../../templates/show_catalogs.inc.php:64
+#: ../../templates/show_catalogs.inc.php:59
 #: ../../templates/show_channels.inc.php:32
 #: ../../templates/show_create_democratic.inc.php:27
 #: ../../templates/show_edit_access.inc.php:27
@@ -2233,30 +2266,30 @@ msgstr "圖片高度"
 #: ../../templates/show_edit_catalog.inc.php:28
 #: ../../templates/show_edit_channel_row.inc.php:44
 #: ../../templates/show_edit_label_row.inc.php:27
-#: ../../templates/show_edit_license.inc.php:33
+#: ../../templates/show_edit_license.inc.php:32
 #: ../../templates/show_edit_live_stream_row.inc.php:27
 #: ../../templates/show_edit_playlist_row.inc.php:27
 #: ../../templates/show_edit_search_row.inc.php:27
 #: ../../templates/show_edit_tag_row.inc.php:27
 #: ../../templates/show_edit_tvshow_row.inc.php:27
-#: ../../templates/show_live_stream.inc.php:52
-#: ../../templates/show_live_streams.inc.php:49
-#: ../../templates/show_live_streams.inc.php:82
+#: ../../templates/show_live_stream.inc.php:49
+#: ../../templates/show_live_streams.inc.php:44
+#: ../../templates/show_live_streams.inc.php:72
 #: ../../templates/show_localplay_controllers.inc.php:29
-#: ../../templates/show_localplay_controllers.inc.php:78
+#: ../../templates/show_localplay_controllers.inc.php:67
 #: ../../templates/show_localplay_playlist.inc.php:34
-#: ../../templates/show_localplay_playlist.inc.php:77
+#: ../../templates/show_localplay_playlist.inc.php:68
 #: ../../templates/show_manage_license.inc.php:35
-#: ../../templates/show_manage_license.inc.php:61
+#: ../../templates/show_manage_license.inc.php:58
 #: ../../templates/show_plugins.inc.php:29
-#: ../../templates/show_plugins.inc.php:80
+#: ../../templates/show_plugins.inc.php:71
 #: ../../templates/show_stats.inc.php:70
 msgid "Name"
 msgstr "名稱"
 
 #: ../../lib/class/search.class.php:530
 #: ../../templates/show_concerts.inc.php:28
-#: ../../templates/show_concerts.inc.php:62
+#: ../../templates/show_concerts.inc.php:56
 msgid "Place"
 msgstr "地點"
 
@@ -2264,9 +2297,9 @@ msgstr "地點"
 #: ../../templates/show_add_label.inc.php:34
 #: ../../templates/show_edit_label_row.inc.php:31
 #: ../../templates/show_edit_podcast_episode_row.inc.php:43
-#: ../../templates/show_labels.inc.php:51
-#: ../../templates/show_labels.inc.php:91
-#: ../../templates/show_podcast_episode.inc.php:177
+#: ../../templates/show_labels.inc.php:46
+#: ../../templates/show_labels.inc.php:78
+#: ../../templates/show_podcast_episode.inc.php:137
 msgid "Category"
 msgstr "目錄"
 
@@ -2281,9 +2314,9 @@ msgstr "目錄"
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_now_playing_video_row.inc.php:27
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:185
-#: ../../templates/show_user_registration.inc.php:85
-#: ../../templates/show_users.inc.php:50 ../../templates/show_users.inc.php:95
+#: ../../templates/show_recently_played.inc.php:164
+#: ../../templates/show_user_registration.inc.php:81
+#: ../../templates/show_users.inc.php:49 ../../templates/show_users.inc.php:86
 msgid "Username"
 msgstr "使用者名稱"
 
@@ -2320,35 +2353,44 @@ msgid ""
 "\n"
 "    %s\n"
 "    "
-msgstr "您剛收到一筆來自 %s 對您提供的內容「%s」的新留言。\n\n\n    ----------------------\n    %s\n    ----------------------\n\n    %s\n    "
+msgstr ""
+"您剛收到一筆來自 %s 對您提供的內容「%s」的新留言。\n"
+"\n"
+"\n"
+"    ----------------------\n"
+"    %s\n"
+"    ----------------------\n"
+"\n"
+"    %s\n"
+"    "
 
 #: ../../lib/class/shoutbox.class.php:310
 #: ../../templates/show_add_label.inc.php:80
 #: ../../templates/show_add_live_stream.inc.php:63
-#: ../../templates/show_catalog_row.inc.php:46
+#: ../../templates/show_catalog_row.inc.php:43
 #: ../../templates/show_labels.inc.php:29
-#: ../../templates/show_live_streams.inc.php:31
-#: ../../templates/show_podcasts.inc.php:30
-#: ../../templates/show_searches.inc.php:30
+#: ../../templates/show_live_streams.inc.php:29
+#: ../../templates/show_podcasts.inc.php:29
+#: ../../templates/show_searches.inc.php:29
 msgid "Add"
 msgstr "新增"
 
 #: ../../lib/class/shoutbox.class.php:313
-#: ../../templates/show_album_group_disks.inc.php:153
-#: ../../templates/show_album.inc.php:174
-#: ../../templates/show_album.inc.php:178
-#: ../../templates/show_album_row.inc.php:112
-#: ../../templates/show_artist.inc.php:201
-#: ../../templates/show_artist.inc.php:205
-#: ../../templates/show_artist_row.inc.php:103
-#: ../../templates/show_html5_player.inc.php:164
-#: ../../templates/show_label.inc.php:63 ../../templates/show_label.inc.php:67
-#: ../../templates/show_label_row.inc.php:42
-#: ../../templates/show_podcast_episode.inc.php:108
-#: ../../templates/show_song.inc.php:126
-#: ../../templates/show_song_row.inc.php:107
-#: ../../templates/show_video.inc.php:122
-#: ../../templates/show_video_row.inc.php:113
+#: ../../templates/show_album_group_disks.inc.php:135
+#: ../../templates/show_album.inc.php:151
+#: ../../templates/show_album.inc.php:152
+#: ../../templates/show_album_row.inc.php:100
+#: ../../templates/show_artist.inc.php:157
+#: ../../templates/show_artist.inc.php:158
+#: ../../templates/show_artist_row.inc.php:92
+#: ../../templates/show_html5_player.inc.php:162
+#: ../../templates/show_label.inc.php:61 ../../templates/show_label.inc.php:62
+#: ../../templates/show_label_row.inc.php:40
+#: ../../templates/show_podcast_episode.inc.php:85
+#: ../../templates/show_song.inc.php:97
+#: ../../templates/show_song_row.inc.php:99
+#: ../../templates/show_video.inc.php:100
+#: ../../templates/show_video_row.inc.php:110
 msgid "Post Shout"
 msgstr "發表留言"
 
@@ -2356,12 +2398,12 @@ msgstr "發表留言"
 msgid "by"
 msgstr "作者"
 
-#: ../../lib/class/song.class.php:1469
-#: ../../templates/show_html5_player.inc.php:161
+#: ../../lib/class/song.class.php:1463
+#: ../../templates/show_html5_player.inc.php:159
 msgid "Show Lyrics"
 msgstr "顯示歌詞"
 
-#: ../../lib/class/song.class.php:1495
+#: ../../lib/class/song.class.php:1489
 msgid "Track MusicBrainzID"
 msgstr "音軌的 MusicBrainz 識別碼"
 
@@ -2372,14 +2414,14 @@ msgstr "投票已新增"
 #: ../../lib/class/tvshow.class.php:194
 #: ../../lib/class/tvshow_episode.class.php:176
 #: ../../lib/class/tvshow_season.class.php:154
-#: ../../templates/show_add_catalog.inc.php:77
+#: ../../templates/show_add_catalog.inc.php:76
 #: ../../templates/show_edit_tvshow_season_row.inc.php:31
 #: ../../templates/show_partial_tvshow_episode.inc.php:23
 #: ../../templates/show_partial_tvshow_episodes.inc.php:25
-#: ../../templates/show_tvshow_seasons.inc.php:41
-#: ../../templates/show_tvshow_seasons.inc.php:108
-#: ../../templates/show_tvshows.inc.php:42
-#: ../../templates/show_tvshows.inc.php:112
+#: ../../templates/show_tvshow_seasons.inc.php:39
+#: ../../templates/show_tvshow_seasons.inc.php:92
+#: ../../templates/show_tvshows.inc.php:40
+#: ../../templates/show_tvshows.inc.php:96
 msgid "TV Show"
 msgstr "電視節目"
 
@@ -2389,8 +2431,8 @@ msgstr "電視節目"
 #: ../../templates/show_edit_tvshow_season_row.inc.php:27
 #: ../../templates/show_partial_tvshow_episode.inc.php:24
 #: ../../templates/show_partial_tvshow_episodes.inc.php:24
-#: ../../templates/show_tvshow_seasons.inc.php:40
-#: ../../templates/show_tvshow_seasons.inc.php:107
+#: ../../templates/show_tvshow_seasons.inc.php:38
+#: ../../templates/show_tvshow_seasons.inc.php:91
 msgid "Season"
 msgstr "單季"
 
@@ -2456,7 +2498,7 @@ msgid "did something on"
 msgstr "已執行某動作於"
 
 #: ../../lib/class/user.class.php:1042
-#: ../../templates/show_tagcloud.inc.php:98
+#: ../../templates/show_tagcloud.inc.php:88
 msgid "Not Enough Data"
 msgstr "資訊不足"
 
@@ -3334,18 +3376,18 @@ msgid "Unable to create local account"
 msgstr "無法建立本機帳號"
 
 #: ../../lib/preferences.php:215 ../../lib/preferences.php:358
-#: ../../templates/show_disabled_songs.inc.php:77
+#: ../../templates/show_disabled_songs.inc.php:68
 #: ../../templates/show_localplay_controllers.inc.php:48
-#: ../../templates/show_user_row.inc.php:98
+#: ../../templates/show_user_row.inc.php:84
 msgid "Enable"
 msgstr "啟用"
 
 #: ../../lib/preferences.php:216 ../../lib/preferences.php:359
 #: ../../templates/show_catalog_types.inc.php:45
 #: ../../templates/show_duplicates.inc.php:27
-#: ../../templates/show_duplicates.inc.php:78
+#: ../../templates/show_duplicates.inc.php:66
 #: ../../templates/show_localplay_controllers.inc.php:45
-#: ../../templates/show_user_row.inc.php:100
+#: ../../templates/show_user_row.inc.php:86
 msgid "Disable"
 msgstr "停用"
 
@@ -3355,14 +3397,14 @@ msgstr "停用"
 #: ../../templates/show_gather_art.inc.php:25
 #: ../../templates/show_install_config.inc.php:142
 #: ../../templates/show_search_row.inc.php:47
-#: ../../templates/show_video.inc.php:42
-#: ../../templates/sidebar_localplay.inc.php:75
+#: ../../templates/show_video.inc.php:41
+#: ../../templates/sidebar_localplay.inc.php:53
 msgid "None"
 msgstr "無"
 
 #: ../../lib/preferences.php:239 ../../templates/show_edit_user.inc.php:147
-#: ../../templates/show_live_stream.inc.php:54
-#: ../../templates/show_playtype_switch.inc.php:37
+#: ../../templates/show_live_stream.inc.php:51
+#: ../../templates/show_playtype_switch.inc.php:36
 msgid "Stream"
 msgstr "串流"
 
@@ -3371,22 +3413,21 @@ msgstr "串流"
 #: ../../modules/localplay/mpd/mpd.controller.php:457
 #: ../../modules/localplay/vlc/vlc.controller.php:480
 #: ../../templates/show_edit_user.inc.php:144
-#: ../../templates/show_playtype_switch.inc.php:55
-#: ../../templates/sidebar_home.inc.php:114
+#: ../../templates/show_playtype_switch.inc.php:50
+#: ../../templates/sidebar_home.inc.php:103
 #: ../../templates/sidebar_modules.inc.php:40
 msgid "Democratic"
 msgstr "民主"
 
 #: ../../lib/preferences.php:245 ../../templates/show_edit_user.inc.php:145
-#: ../../templates/show_playtype_switch.inc.php:46
-#: ../../templates/sidebar_home.inc.php:126 ../../templates/sidebar.inc.php:35
-#: ../../templates/sidebar_localplay.inc.php:39
-#: ../../templates/sidebar_localplay.inc.php:40
+#: ../../templates/show_playtype_switch.inc.php:43
+#: ../../templates/sidebar_home.inc.php:113 ../../templates/sidebar.inc.php:35
+#: ../../templates/sidebar_localplay.inc.php:38
 msgid "Localplay"
 msgstr "本地播放"
 
 #: ../../lib/preferences.php:247
-#: ../../templates/show_playtype_switch.inc.php:63
+#: ../../templates/show_playtype_switch.inc.php:55
 msgid "Web Player"
 msgstr "網頁播放器"
 
@@ -3494,17 +3535,17 @@ msgstr "有病"
 msgid "Off the Charts!"
 msgstr "破表啦！"
 
-#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:423
+#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:392
 #: ../../templates/sidebar.inc.php:33
 msgid "Home"
 msgstr "首頁"
 
-#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:460
+#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:428
 #: ../../templates/show_add_upload.inc.php:26
-#: ../../templates/show_album.inc.php:246
-#: ../../templates/show_album.inc.php:248
-#: ../../templates/show_artist.inc.php:254
-#: ../../templates/show_artist.inc.php:256
+#: ../../templates/show_album.inc.php:197
+#: ../../templates/show_album.inc.php:198
+#: ../../templates/show_artist.inc.php:190
+#: ../../templates/show_artist.inc.php:191
 #: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/sidebar.light.inc.php:43
 msgid "Upload"
@@ -3519,13 +3560,13 @@ msgid "Random Play"
 msgstr "隨機播放"
 
 #: ../../lib/ui.lib.php:138 ../../templates/show_search_bar.inc.php:47
-#: ../../templates/show_search_form.inc.php:85
-#: ../../templates/sidebar_home.inc.php:204
+#: ../../templates/show_search_form.inc.php:77
+#: ../../templates/sidebar_home.inc.php:182
 msgid "Search"
 msgstr "搜尋"
 
-#: ../../lib/ui.lib.php:141 ../../templates/show_user.inc.php:79
-#: ../../templates/show_user_row.inc.php:92 ../../templates/sidebar.inc.php:37
+#: ../../lib/ui.lib.php:141 ../../templates/show_user.inc.php:68
+#: ../../templates/show_user_row.inc.php:79 ../../templates/sidebar.inc.php:37
 #: ../../templates/sidebar_preferences.inc.php:30
 msgid "Preferences"
 msgstr "偏好設定"
@@ -3559,7 +3600,7 @@ msgid "Browse Music"
 msgstr "瀏覽音樂"
 
 #: ../../lib/ui.lib.php:184 ../../templates/show_stats.inc.php:26
-#: ../../templates/sidebar_home.inc.php:183
+#: ../../templates/sidebar_home.inc.php:162
 msgid "Statistics"
 msgstr "統計"
 
@@ -3660,7 +3701,9 @@ msgstr "選擇 'No' 於 'Can your app be limited to its own, private folder?'"
 msgid ""
 "Select 'Specific file types' at 'What type of files does your app need "
 "access to?'"
-msgstr "選擇 'Specific file types' 於 'What type of files does your app need access to?'"
+msgstr ""
+"選擇 'Specific file types' 於 'What type of files does your app need access "
+"to?'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Check Videos and Audio files"
@@ -3681,7 +3724,7 @@ msgid ""
 msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:114
-#: ../../templates/show_account.inc.php:109
+#: ../../templates/show_account.inc.php:101
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
 msgstr "API 金鑰"
@@ -3822,7 +3865,7 @@ msgstr "網址"
 #: ../../templates/show_edit_user.inc.php:87
 #: ../../templates/show_install_account.inc.php:57
 #: ../../templates/show_login_form.inc.php:64
-#: ../../templates/show_user_registration.inc.php:158
+#: ../../templates/show_user_registration.inc.php:138
 msgid "Password"
 msgstr "密碼"
 
@@ -3953,9 +3996,9 @@ msgstr "連接埠"
 #: ../../templates/show_edit_channel_row.inc.php:69
 #: ../../templates/show_edit_search_row.inc.php:42
 #: ../../templates/show_localplay_status.inc.php:48
-#: ../../templates/show_searches.inc.php:48
-#: ../../templates/show_searches.inc.php:84
-#: ../../templates/sidebar_home.inc.php:192
+#: ../../templates/show_searches.inc.php:45
+#: ../../templates/show_searches.inc.php:75
+#: ../../templates/sidebar_home.inc.php:170
 msgid "Random"
 msgstr "隨機"
 
@@ -3970,56 +4013,56 @@ msgid "Highlight"
 msgstr "強調"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:122
-#: ../../templates/header.inc.php:349
-#: ../../templates/show_album_group_disks.inc.php:72
-#: ../../templates/show_album_group_disks.inc.php:74
-#: ../../templates/show_album_group_disks.inc.php:141
-#: ../../templates/show_album.inc.php:124
-#: ../../templates/show_album.inc.php:126
+#: ../../templates/header.inc.php:334
+#: ../../templates/show_album_group_disks.inc.php:70
+#: ../../templates/show_album_group_disks.inc.php:71
+#: ../../templates/show_album_group_disks.inc.php:124
+#: ../../templates/show_album.inc.php:112
+#: ../../templates/show_album.inc.php:113
 #: ../../templates/show_album_row.inc.php:30
 #: ../../templates/show_artist_row.inc.php:30
-#: ../../templates/show_live_stream.inc.php:42
+#: ../../templates/show_live_stream.inc.php:41
 #: ../../templates/show_playlist_media_row.inc.php:33
 #: ../../templates/show_playlist_row.inc.php:32
-#: ../../templates/show_podcast_episode.inc.php:79
+#: ../../templates/show_podcast_episode.inc.php:64
 #: ../../templates/show_podcast_episode_row.inc.php:32
 #: ../../templates/show_podcast_row.inc.php:30
-#: ../../templates/show_random_albums.inc.php:64
-#: ../../templates/show_random_videos.inc.php:54
-#: ../../templates/show_recently_played.inc.php:110
+#: ../../templates/show_random_albums.inc.php:59
+#: ../../templates/show_random_videos.inc.php:50
+#: ../../templates/show_recently_played.inc.php:106
 #: ../../templates/show_search_row.inc.php:30
-#: ../../templates/show_song.inc.php:99
+#: ../../templates/show_song.inc.php:77
 #: ../../templates/show_song_preview_row.inc.php:30
-#: ../../templates/show_song_row.inc.php:41
+#: ../../templates/show_song_row.inc.php:40
 #: ../../templates/show_tvshow_row.inc.php:30
 #: ../../templates/show_tvshow_season_row.inc.php:30
-#: ../../templates/show_video.inc.php:108
+#: ../../templates/show_video.inc.php:90
 #: ../../templates/show_video_row.inc.php:37
 msgid "Play last"
 msgstr "最後播放"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:125
-#: ../../templates/header.inc.php:350
-#: ../../templates/show_album_group_disks.inc.php:85
-#: ../../templates/show_album_group_disks.inc.php:87
-#: ../../templates/show_album_group_disks.inc.php:145
-#: ../../templates/show_album.inc.php:138
-#: ../../templates/show_album.inc.php:140
-#: ../../templates/show_album_row.inc.php:56
-#: ../../templates/show_artist_row.inc.php:56
-#: ../../templates/show_live_stream.inc.php:49
-#: ../../templates/show_playlist_media_row.inc.php:53
-#: ../../templates/show_playlist_row.inc.php:52
-#: ../../templates/show_podcast_episode.inc.php:97
+#: ../../templates/header.inc.php:335
+#: ../../templates/show_album_group_disks.inc.php:80
+#: ../../templates/show_album_group_disks.inc.php:81
+#: ../../templates/show_album_group_disks.inc.php:128
+#: ../../templates/show_album.inc.php:123
+#: ../../templates/show_album.inc.php:124
+#: ../../templates/show_album_row.inc.php:54
+#: ../../templates/show_artist_row.inc.php:54
+#: ../../templates/show_live_stream.inc.php:46
+#: ../../templates/show_playlist_media_row.inc.php:50
+#: ../../templates/show_playlist_row.inc.php:51
+#: ../../templates/show_podcast_episode.inc.php:77
 #: ../../templates/show_podcast_episode_row.inc.php:43
-#: ../../templates/show_random_albums.inc.php:72
-#: ../../templates/show_recently_played.inc.php:131
+#: ../../templates/show_random_albums.inc.php:64
+#: ../../templates/show_recently_played.inc.php:121
 #: ../../templates/show_search_row.inc.php:39
-#: ../../templates/show_song.inc.php:118
-#: ../../templates/show_song_preview_row.inc.php:44
-#: ../../templates/show_song_row.inc.php:52
-#: ../../templates/show_video.inc.php:115
-#: ../../templates/show_video_row.inc.php:65
+#: ../../templates/show_song.inc.php:91
+#: ../../templates/show_song_preview_row.inc.php:43
+#: ../../templates/show_song_row.inc.php:50
+#: ../../templates/show_video.inc.php:95
+#: ../../templates/show_video_row.inc.php:64
 msgid "Add to temporary playlist"
 msgstr "新增到暫存播放清單"
 
@@ -4248,12 +4291,12 @@ msgstr "您的搜尋已被儲存為智慧播放清單，名為 %s"
 #: ../../server/index.ajax.php:44
 #, php-format
 msgid ""
-"No catalog configured yet. To start streaming your media, you now need to %s"
-" add a catalog %s"
+"No catalog configured yet. To start streaming your media, you now need to %s "
+"add a catalog %s"
 msgstr "目前沒有設定任何目錄。開始串流您的媒體之前，您必須要 %s 新增目錄 %s"
 
 #: ../../server/player.ajax.php:43
-#: ../../templates/show_html5_player.inc.php:489
+#: ../../templates/show_html5_player.inc.php:484
 msgid "My Broadcast"
 msgstr "我的廣播"
 
@@ -4340,30 +4383,29 @@ msgstr "過濾器"
 msgid "Starts With"
 msgstr "始於"
 
-#: ../../templates/browse_filters.inc.php:47
+#: ../../templates/browse_filters.inc.php:44
 msgid "Minimum Count"
 msgstr "最小數量"
 
-#: ../../templates/browse_filters.inc.php:56
+#: ../../templates/browse_filters.inc.php:51
 msgid "Rated"
 msgstr "評比"
 
-#: ../../templates/browse_filters.inc.php:66
+#: ../../templates/browse_filters.inc.php:58
 msgid "Unplayed"
 msgstr "未播放"
 
-#: ../../templates/browse_filters.inc.php:74
+#: ../../templates/browse_filters.inc.php:64
 msgid "All Playlists"
 msgstr "所有播放清單"
 
-#: ../../templates/browse_filters.inc.php:87
+#: ../../templates/browse_filters.inc.php:73
 #: ../../templates/show_song_previews.inc.php:31
-#: ../../templates/show_songs.inc.php:33
-#: ../../templates/show_songs.inc.php:112
+#: ../../templates/show_songs.inc.php:33 ../../templates/show_songs.inc.php:96
 msgid "Song Title"
 msgstr "歌曲標題"
 
-#: ../../templates/browse_filters.inc.php:136
+#: ../../templates/browse_filters.inc.php:112
 msgid "Toggle Artwork"
 msgstr "開關封面圖片"
 
@@ -4374,10 +4416,12 @@ msgstr "Ampache 使用的 cookie"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work"
-" more efficiently, as well as to provide information to the owners of the "
+"that you visit. They are widely used in order to make websites work, or work "
+"more efficiently, as well as to provide information to the owners of the "
 "site."
-msgstr "Cookie 是由您瀏覽的網站設置所放置的許多小型純文字檔案。普遍使用於網站的基本運作，或是用來提昇網站運作效能，例如提供資訊給網站的所有者。"
+msgstr ""
+"Cookie 是由您瀏覽的網站設置所放置的許多小型純文字檔案。普遍使用於網站的基本運"
+"作，或是用來提昇網站運作效能，例如提供資訊給網站的所有者。"
 
 #: ../../templates/cookie_disclaimer.inc.php:5
 msgid "The table below explains the cookies we use and why."
@@ -4443,8 +4487,8 @@ msgstr "Ampache"
 
 #: ../../templates/error_page.inc.php:51
 msgid ""
-"The following error has occured, you will automaticly be redirected after 10"
-" seconds."
+"The following error has occured, you will automaticly be redirected after 10 "
+"seconds."
 msgstr ""
 
 #: ../../templates/error_page.inc.php:53
@@ -4455,105 +4499,110 @@ msgstr "錯誤訊息"
 msgid "Donate"
 msgstr "捐獻"
 
-#: ../../templates/footer.inc.php:56
+#: ../../templates/footer.inc.php:54
 #: ../../templates/show_lostpassword_form.inc.php:72
 msgid "Queries:"
 msgstr "查詢："
 
-#: ../../templates/footer.inc.php:58
+#: ../../templates/footer.inc.php:54
 #: ../../templates/show_lostpassword_form.inc.php:73
 msgid "Cache Hits:"
 msgstr "快取命中："
 
-#: ../../templates/footer.inc.php:65
+#: ../../templates/footer.inc.php:58
 msgid "Load time:"
 msgstr "載入時間："
 
-#: ../../templates/header.inc.php:108
+#: ../../templates/header.inc.php:97
 msgid "Save"
 msgstr "儲存"
 
-#: ../../templates/header.inc.php:109
-#: ../../templates/show_confirmation.inc.php:36
-#: ../../templates/show_get_art.inc.php:69
+#: ../../templates/header.inc.php:98
+#: ../../templates/show_confirmation.inc.php:35
+#: ../../templates/show_get_art.inc.php:65
 msgid "Cancel"
 msgstr "取消"
 
 #. HINT: Translator, "%s" is replaced by "cookie settings"
-#: ../../templates/header.inc.php:312
+#: ../../templates/header.inc.php:298
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. "
+"You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
-msgstr "我們已在您的電腦內放置 cookie 來讓改善網站。您可以隨時更改您的 %s。\n否則，我們將會認為您同意並繼續。\n\n按下此訊息可使其不再顯示。"
+msgstr ""
+"我們已在您的電腦內放置 cookie 來讓改善網站。您可以隨時更改您的 %s。\n"
+"否則，我們將會認為您同意並繼續。\n"
+"\n"
+"按下此訊息可使其不再顯示。"
 
-#: ../../templates/header.inc.php:313
+#: ../../templates/header.inc.php:299
 msgid "cookie settings"
 msgstr "cookie 設定"
 
-#: ../../templates/header.inc.php:348
+#: ../../templates/header.inc.php:333
 #: ../../templates/show_album_row.inc.php:32
 #: ../../templates/show_artist_row.inc.php:32
 #: ../../templates/show_playlist_row.inc.php:30
-#: ../../templates/show_podcast_episode.inc.php:87
+#: ../../templates/show_podcast_episode.inc.php:70
 #: ../../templates/show_podcast_episode_row.inc.php:30
-#: ../../templates/show_recently_played.inc.php:117
-#: ../../templates/show_song.inc.php:107
-#: ../../templates/show_song_row.inc.php:39
+#: ../../templates/show_recently_played.inc.php:111
+#: ../../templates/show_song.inc.php:83
+#: ../../templates/show_song_row.inc.php:38
 #: ../../templates/show_video_row.inc.php:35
 msgid "Play next"
 msgstr "下一首播放"
 
-#: ../../templates/header.inc.php:351 ../../templates/show_album.inc.php:151
-#: ../../templates/show_album.inc.php:155
-#: ../../templates/show_album_row.inc.php:65
-#: ../../templates/show_artist_row.inc.php:60
-#: ../../templates/show_html5_player.inc.php:512
-#: ../../templates/show_playlist_media_row.inc.php:57
-#: ../../templates/show_playlist_row.inc.php:57
+#: ../../templates/header.inc.php:336 ../../templates/show_album.inc.php:132
+#: ../../templates/show_album.inc.php:135
+#: ../../templates/show_album_row.inc.php:61
+#: ../../templates/show_artist_row.inc.php:57
+#: ../../templates/show_html5_player.inc.php:505
+#: ../../templates/show_playlist_media_row.inc.php:54
+#: ../../templates/show_playlist_row.inc.php:55
 #: ../../templates/show_podcast_episode_row.inc.php:47
-#: ../../templates/show_recently_played.inc.php:134
+#: ../../templates/show_recently_played.inc.php:123
 #: ../../templates/show_search_row.inc.php:41
-#: ../../templates/show_song_preview_row.inc.php:48
-#: ../../templates/show_song_row.inc.php:56
-#: ../../templates/show_video_row.inc.php:69
+#: ../../templates/show_song_preview_row.inc.php:47
+#: ../../templates/show_song_row.inc.php:54
+#: ../../templates/show_video_row.inc.php:68
 msgid "Add to existing playlist"
 msgstr "新增到現存的播放清單"
 
-#: ../../templates/header.inc.php:383
+#: ../../templates/header.inc.php:363
 msgid "New messages"
 msgstr "新訊息"
 
-#: ../../templates/header.inc.php:390
+#: ../../templates/header.inc.php:366
 msgid "Log out"
 msgstr "登出"
 
-#: ../../templates/header.inc.php:398
+#: ../../templates/header.inc.php:372
 #: ../../templates/show_login_form.inc.php:75
 msgid "Login"
 msgstr "登入"
 
-#: ../../templates/header.inc.php:403
-#: ../../templates/show_login_form.inc.php:82
+#: ../../templates/header.inc.php:375
+#: ../../templates/show_login_form.inc.php:81
 msgid "Register"
 msgstr "註冊"
 
-#: ../../templates/header.inc.php:449 ../../templates/sidebar_home.inc.php:159
+#: ../../templates/header.inc.php:418 ../../templates/sidebar_home.inc.php:142
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
 msgstr "我的最愛"
 
-#: ../../templates/header.inc.php:536
+#: ../../templates/header.inc.php:503
 msgid "Error: Your config file is out of date!"
 msgstr "錯誤：您的設定檔已過時！"
 
-#: ../../templates/header.inc.php:540
+#: ../../templates/header.inc.php:505
 msgid "Generate and download new config file"
 msgstr "產生並下載新的設定檔"
 
-#: ../../templates/header.inc.php:543
+#: ../../templates/header.inc.php:506
 msgid "Write new config file to disk"
 msgstr "寫入新設定檔到磁碟"
 
@@ -4562,44 +4611,44 @@ msgstr "寫入新設定檔到磁碟"
 msgid "Ampache Installation"
 msgstr "Ampache 安裝"
 
-#: ../../templates/list_header.inc.php:119
+#: ../../templates/list_header.inc.php:116
 msgid "Prev"
 msgstr "上一頁"
 
-#: ../../templates/list_header.inc.php:122
+#: ../../templates/list_header.inc.php:118
 msgid "Page"
 msgstr "頁"
 
-#: ../../templates/list_header.inc.php:131
+#: ../../templates/list_header.inc.php:120
 msgid "of"
 msgstr "之"
 
-#: ../../templates/list_header.inc.php:134
+#: ../../templates/list_header.inc.php:122
 #: ../../templates/show_localplay_control.inc.php:28
 msgid "Next"
 msgstr "下一頁"
 
-#: ../../templates/list_header.inc.php:148
+#: ../../templates/list_header.inc.php:134
 msgid "Pages"
 msgstr "頁"
 
-#: ../../templates/list_header.inc.php:149
+#: ../../templates/list_header.inc.php:135
 msgid "Infinite Scroll"
 msgstr "無限捲動"
 
-#: ../../templates/list_header.inc.php:150
+#: ../../templates/list_header.inc.php:136
 msgid "Grid View"
 msgstr "表格式檢視"
 
-#: ../../templates/list_header.inc.php:157
+#: ../../templates/list_header.inc.php:139
 msgid "Alphabet"
 msgstr "頭字母"
 
-#: ../../templates/list_header.inc.php:170
+#: ../../templates/list_header.inc.php:147
 msgid "Limit"
 msgstr "限制"
 
-#: ../../templates/list_header.inc.php:186
+#: ../../templates/list_header.inc.php:156
 msgid "Item Count"
 msgstr "項目數量"
 
@@ -4607,52 +4656,52 @@ msgstr "項目數量"
 msgid "Add to Playlist"
 msgstr "新增到播放清單"
 
-#: ../../templates/rightbar.inc.php:34
+#: ../../templates/rightbar.inc.php:33
 #: ../../templates/show_playlists_dialog.inc.php:27
 msgid "Add to New Playlist"
 msgstr "新增到新的播放清單"
 
-#: ../../templates/rightbar.inc.php:61
-#: ../../templates/show_album_row.inc.php:125
-#: ../../templates/show_playlist.inc.php:104
-#: ../../templates/show_playlist.inc.php:106
-#: ../../templates/show_playlist_row.inc.php:94
-#: ../../templates/show_search.inc.php:37
-#: ../../templates/show_search.inc.php:39
-#: ../../templates/show_search_options.inc.php:36
-#: ../../templates/show_search_options.inc.php:38
-#: ../../templates/show_search_row.inc.php:56
+#: ../../templates/rightbar.inc.php:54
+#: ../../templates/show_album_row.inc.php:112
+#: ../../templates/show_playlist.inc.php:83
+#: ../../templates/show_playlist.inc.php:84
+#: ../../templates/show_playlist_row.inc.php:85
+#: ../../templates/show_search.inc.php:35
+#: ../../templates/show_search.inc.php:36
+#: ../../templates/show_search_options.inc.php:33
+#: ../../templates/show_search_options.inc.php:34
+#: ../../templates/show_search_row.inc.php:54
 msgid "Batch Download"
 msgstr "批次下載"
 
-#: ../../templates/rightbar.inc.php:68
-#: ../../templates/show_democratic.inc.php:56
-#: ../../templates/show_democratic.inc.php:58
+#: ../../templates/rightbar.inc.php:60
+#: ../../templates/show_democratic.inc.php:49
+#: ../../templates/show_democratic.inc.php:50
 #: ../../templates/show_localplay_status.inc.php:51
 msgid "Clear Playlist"
 msgstr "清除播放清單"
 
-#: ../../templates/rightbar.inc.php:71
+#: ../../templates/rightbar.inc.php:63
 msgid "Add Dynamic Items"
 msgstr "新增動態項目"
 
-#: ../../templates/rightbar.inc.php:74
+#: ../../templates/rightbar.inc.php:66
 msgid "Random Song"
 msgstr "隨機歌曲"
 
-#: ../../templates/rightbar.inc.php:77
+#: ../../templates/rightbar.inc.php:69
 msgid "Random Artist"
 msgstr "隨機作者"
 
-#: ../../templates/rightbar.inc.php:80
+#: ../../templates/rightbar.inc.php:72
 msgid "Random Album"
 msgstr "隨機專輯"
 
-#: ../../templates/rightbar.inc.php:83
+#: ../../templates/rightbar.inc.php:75
 msgid "Random Playlist"
 msgstr "隨機播放清單"
 
-#: ../../templates/rightbar.inc.php:146
+#: ../../templates/rightbar.inc.php:134
 msgid "No items"
 msgstr "無項目"
 
@@ -4681,147 +4730,147 @@ msgstr "進階新增"
 msgid "Access Control Entries"
 msgstr "存取控制項目"
 
-#: ../../templates/show_access_list.inc.php:49
+#: ../../templates/show_access_list.inc.php:48
 msgid "Start Address"
 msgstr "開始位址"
 
-#: ../../templates/show_access_list.inc.php:51
+#: ../../templates/show_access_list.inc.php:49
 msgid "End Address"
 msgstr "結束位址"
 
-#: ../../templates/show_access_list.inc.php:53
+#: ../../templates/show_access_list.inc.php:50
 #: ../../templates/show_add_access.inc.php:35
 #: ../../templates/show_create_democratic.inc.php:39
 #: ../../templates/show_edit_access.inc.php:66
 #: ../../templates/show_manage_democratic.inc.php:29
 #: ../../templates/show_preference_admin.inc.php:33
-#: ../../templates/show_preference_admin.inc.php:64
+#: ../../templates/show_preference_admin.inc.php:53
 msgid "Level"
 msgstr "等級"
 
-#: ../../templates/show_access_list.inc.php:57
+#: ../../templates/show_access_list.inc.php:52
 #: ../../templates/show_add_playlist.inc.php:31
 #: ../../templates/show_catalog_types.inc.php:29
-#: ../../templates/show_catalog_types.inc.php:78
+#: ../../templates/show_catalog_types.inc.php:67
 #: ../../templates/show_edit_playlist_row.inc.php:31
 #: ../../templates/show_edit_search_row.inc.php:31
 #: ../../templates/show_playlists.inc.php:38
-#: ../../templates/show_playlists.inc.php:102
-#: ../../templates/show_searches.inc.php:47
-#: ../../templates/show_searches.inc.php:83
+#: ../../templates/show_playlists.inc.php:93
+#: ../../templates/show_searches.inc.php:44
+#: ../../templates/show_searches.inc.php:74
 msgid "Type"
 msgstr "種類"
 
-#: ../../templates/show_access_list.inc.php:59
-#: ../../templates/show_artists.inc.php:74
-#: ../../templates/show_artists.inc.php:159
+#: ../../templates/show_access_list.inc.php:53
+#: ../../templates/show_artists.inc.php:65
+#: ../../templates/show_artists.inc.php:139
 #: ../../templates/show_catalog_types.inc.php:32
-#: ../../templates/show_catalog_types.inc.php:81
-#: ../../templates/show_democratic_playlist.inc.php:61
-#: ../../templates/show_democratic_playlist.inc.php:136
-#: ../../templates/show_labels.inc.php:53
-#: ../../templates/show_labels.inc.php:93
+#: ../../templates/show_catalog_types.inc.php:70
+#: ../../templates/show_democratic_playlist.inc.php:59
+#: ../../templates/show_democratic_playlist.inc.php:114
+#: ../../templates/show_labels.inc.php:48
+#: ../../templates/show_labels.inc.php:80
 #: ../../templates/show_live_stream.inc.php:34
-#: ../../templates/show_live_streams.inc.php:52
-#: ../../templates/show_live_streams.inc.php:85
+#: ../../templates/show_live_streams.inc.php:47
+#: ../../templates/show_live_streams.inc.php:75
 #: ../../templates/show_localplay_controllers.inc.php:32
-#: ../../templates/show_localplay_controllers.inc.php:81
-#: ../../templates/show_localplay_instances.inc.php:33
+#: ../../templates/show_localplay_controllers.inc.php:70
+#: ../../templates/show_localplay_instances.inc.php:32
 #: ../../templates/show_localplay_playlist.inc.php:35
-#: ../../templates/show_localplay_playlist.inc.php:78
+#: ../../templates/show_localplay_playlist.inc.php:69
 #: ../../templates/show_manage_democratic.inc.php:32
 #: ../../templates/show_manage_license.inc.php:37
-#: ../../templates/show_manage_license.inc.php:63
+#: ../../templates/show_manage_license.inc.php:60
 #: ../../templates/show_manage_shoutbox.inc.php:33
-#: ../../templates/show_manage_shoutbox.inc.php:67
-#: ../../templates/show_playlist_medias.inc.php:60
-#: ../../templates/show_playlist_medias.inc.php:113
+#: ../../templates/show_manage_shoutbox.inc.php:64
+#: ../../templates/show_playlist_medias.inc.php:55
+#: ../../templates/show_playlist_medias.inc.php:102
 #: ../../templates/show_plugins.inc.php:33
-#: ../../templates/show_plugins.inc.php:84
-#: ../../templates/show_podcast_episode.inc.php:69
+#: ../../templates/show_plugins.inc.php:75
+#: ../../templates/show_podcast_episode.inc.php:55
 #: ../../templates/show_pvmsgs.inc.php:54
-#: ../../templates/show_pvmsgs.inc.php:90
-#: ../../templates/show_recommended_artists.inc.php:58
-#: ../../templates/show_recommended_artists.inc.php:140
-#: ../../templates/show_song.inc.php:91 ../../templates/show_songs.inc.php:74
-#: ../../templates/show_tvshows.inc.php:66
-#: ../../templates/show_tvshows.inc.php:134
-#: ../../templates/show_users.inc.php:72
-#: ../../templates/show_users.inc.php:117
-#: ../../templates/show_video.inc.php:100
-#: ../../templates/show_videos.inc.php:74
-#: ../../templates/show_videos.inc.php:151
+#: ../../templates/show_pvmsgs.inc.php:83
+#: ../../templates/show_recommended_artists.inc.php:52
+#: ../../templates/show_recommended_artists.inc.php:117
+#: ../../templates/show_song.inc.php:70 ../../templates/show_songs.inc.php:66
+#: ../../templates/show_tvshows.inc.php:58
+#: ../../templates/show_tvshows.inc.php:114
+#: ../../templates/show_users.inc.php:67
+#: ../../templates/show_users.inc.php:104
+#: ../../templates/show_video.inc.php:83
+#: ../../templates/show_videos.inc.php:68
+#: ../../templates/show_videos.inc.php:133
 msgid "Action"
 msgstr "動作"
 
 #: ../../templates/show_account.inc.php:33
 #: ../../templates/show_add_user.inc.php:37
 #: ../../templates/show_edit_user.inc.php:40
-#: ../../templates/show_user_registration.inc.php:96
+#: ../../templates/show_user_registration.inc.php:91
 msgid "Full Name"
 msgstr "全名"
 
-#: ../../templates/show_account.inc.php:43
+#: ../../templates/show_account.inc.php:41
 #: ../../templates/show_add_user.inc.php:45
 #: ../../templates/show_edit_user.inc.php:51
-#: ../../templates/show_user_registration.inc.php:107
+#: ../../templates/show_user_registration.inc.php:99
 msgid "E-mail"
 msgstr "電子郵件"
 
-#: ../../templates/show_account.inc.php:51
+#: ../../templates/show_account.inc.php:49
 #: ../../templates/show_add_label.inc.php:71
 #: ../../templates/show_add_user.inc.php:54
 #: ../../templates/show_edit_label_row.inc.php:59
 #: ../../templates/show_edit_podcast_episode_row.inc.php:47
 #: ../../templates/show_edit_podcast_row.inc.php:47
 #: ../../templates/show_edit_user.inc.php:60
-#: ../../templates/show_live_stream.inc.php:53
-#: ../../templates/show_podcast_episode.inc.php:181
-#: ../../templates/show_user_registration.inc.php:117
+#: ../../templates/show_live_stream.inc.php:50
+#: ../../templates/show_podcast_episode.inc.php:141
+#: ../../templates/show_user_registration.inc.php:108
 msgid "Website"
 msgstr "網站"
 
-#: ../../templates/show_account.inc.php:63
+#: ../../templates/show_account.inc.php:59
 #: ../../templates/show_channels.inc.php:43
 #: ../../templates/show_edit_user.inc.php:69
-#: ../../templates/show_podcast_episode.inc.php:180
+#: ../../templates/show_podcast_episode.inc.php:140
 #: ../../templates/show_podcast_episodes.inc.php:36
-#: ../../templates/show_podcast_episodes.inc.php:106
-#: ../../templates/show_user_registration.inc.php:132
+#: ../../templates/show_podcast_episodes.inc.php:92
+#: ../../templates/show_user_registration.inc.php:119
 msgid "State"
 msgstr "州/縣"
 
-#: ../../templates/show_account.inc.php:75
+#: ../../templates/show_account.inc.php:69
 #: ../../templates/show_edit_user.inc.php:78
-#: ../../templates/show_user_registration.inc.php:147
+#: ../../templates/show_user_registration.inc.php:130
 msgid "City"
 msgstr "市"
 
-#: ../../templates/show_account.inc.php:85
+#: ../../templates/show_account.inc.php:77
 msgid "New Password"
 msgstr "新密碼"
 
-#: ../../templates/show_account.inc.php:92
+#: ../../templates/show_account.inc.php:84
 #: ../../templates/show_add_user.inc.php:72
 #: ../../templates/show_edit_user.inc.php:96
 #: ../../templates/show_install_account.inc.php:63
-#: ../../templates/show_user_registration.inc.php:164
+#: ../../templates/show_user_registration.inc.php:144
 msgid "Confirm Password"
 msgstr "確認密碼"
 
-#: ../../templates/show_account.inc.php:99
+#: ../../templates/show_account.inc.php:91
 #: ../../templates/show_add_user.inc.php:95
 #: ../../templates/show_edit_user.inc.php:119
 msgid "Avatar"
 msgstr "頭像"
 
-#: ../../templates/show_account.inc.php:141
+#: ../../templates/show_account.inc.php:129
 #: ../../templates/show_edit_user.inc.php:158
 #: ../../templates/show_manage_catalogs.inc.php:45
 msgid "Clear Stats"
 msgstr "清除統計"
 
-#: ../../templates/show_account.inc.php:151
+#: ../../templates/show_account.inc.php:139
 msgid "Update Account"
 msgstr "更新帳號"
 
@@ -4834,30 +4883,30 @@ msgstr "新增存取控制清單"
 msgid "ACL Type"
 msgstr "存取控制清單種類"
 
+#: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:58
-#: ../../templates/show_add_access.inc.php:60
-#: ../../templates/show_add_access.inc.php:70
-#: ../../templates/show_add_access.inc.php:72
+#: ../../templates/show_add_access.inc.php:66
+#: ../../templates/show_add_access.inc.php:67
 #, php-format
 msgid "%s + %s"
 msgstr "%s + %s"
 
-#: ../../templates/show_add_access.inc.php:96
+#: ../../templates/show_add_access.inc.php:86
 #: ../../templates/show_edit_access.inc.php:43
 msgid "IPv4 or IPv6 Addresses"
 msgstr "IPv4 或 IPv6 位址"
 
-#: ../../templates/show_add_access.inc.php:102
+#: ../../templates/show_add_access.inc.php:92
 #: ../../templates/show_edit_access.inc.php:48
 msgid "Start"
 msgstr "開始"
 
-#: ../../templates/show_add_access.inc.php:112
+#: ../../templates/show_add_access.inc.php:102
 #: ../../templates/show_edit_access.inc.php:53
 msgid "End"
 msgstr "結束"
 
-#: ../../templates/show_add_access.inc.php:125
+#: ../../templates/show_add_access.inc.php:115
 msgid "Create ACL"
 msgstr "建立存取控制清單"
 
@@ -4868,9 +4917,11 @@ msgstr "新增目錄"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to"
-" a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr "在以下表單可以輸入本機路徑 (如：/data/music)，或是遠端 Ampache 的網址 (如：http://theotherampache.com)"
+"In the form below enter either a local path (i.e. /data/music) or the URL to "
+"a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+"在以下表單可以輸入本機路徑 (如：/data/music)，或是遠端 Ampache 的網址 (如："
+"http://theotherampache.com)"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
@@ -4936,7 +4987,7 @@ msgid "(no leading or ending '/')"
 msgstr "(不始於或終於'/')"
 
 #: ../../templates/show_add_catalog.inc.php:60
-#: ../../templates/show_catalog_row.inc.php:54
+#: ../../templates/show_catalog_row.inc.php:47
 msgid "Gather Art"
 msgstr "蒐集封面圖片"
 
@@ -4952,15 +5003,15 @@ msgstr "蒐集媒體類型"
 msgid "Music Clip"
 msgstr "音樂錄影帶"
 
-#: ../../templates/show_add_catalog.inc.php:79
+#: ../../templates/show_add_catalog.inc.php:77
 msgid "Movie"
 msgstr "電影"
 
-#: ../../templates/show_add_catalog.inc.php:81
+#: ../../templates/show_add_catalog.inc.php:78
 msgid "Personal Video"
 msgstr "私人視訊"
 
-#: ../../templates/show_add_catalog.inc.php:103
+#: ../../templates/show_add_catalog.inc.php:98
 msgid "Add Catalog"
 msgstr "新增目錄"
 
@@ -4976,18 +5027,18 @@ msgstr "串流來源"
 
 #: ../../templates/show_add_channel.inc.php:42
 #: ../../templates/show_catalog_types.inc.php:30
-#: ../../templates/show_catalog_types.inc.php:79
+#: ../../templates/show_catalog_types.inc.php:68
 #: ../../templates/show_edit_broadcast_row.inc.php:31
 #: ../../templates/show_edit_channel_row.inc.php:48
 #: ../../templates/show_edit_podcast_episode_row.inc.php:31
 #: ../../templates/show_edit_podcast_row.inc.php:35
 #: ../../templates/show_localplay_controllers.inc.php:30
-#: ../../templates/show_localplay_controllers.inc.php:79
+#: ../../templates/show_localplay_controllers.inc.php:68
 #: ../../templates/show_manage_license.inc.php:36
-#: ../../templates/show_manage_license.inc.php:62
+#: ../../templates/show_manage_license.inc.php:59
 #: ../../templates/show_plugins.inc.php:30
-#: ../../templates/show_plugins.inc.php:81
-#: ../../templates/show_podcast_episode.inc.php:176
+#: ../../templates/show_plugins.inc.php:72
+#: ../../templates/show_podcast_episode.inc.php:136
 msgid "Description"
 msgstr "描述"
 
@@ -5023,8 +5074,8 @@ msgstr "串流類型"
 
 #: ../../templates/show_add_channel.inc.php:111
 #: ../../templates/show_add_playlist.inc.php:41
-#: ../../templates/show_add_share.inc.php:75
-#: ../../templates/show_add_shout.inc.php:65
+#: ../../templates/show_add_share.inc.php:73
+#: ../../templates/show_add_shout.inc.php:56
 msgid "Create"
 msgstr "建立"
 
@@ -5048,7 +5099,7 @@ msgid "Company"
 msgstr "公司"
 
 #: ../../templates/show_add_label.inc.php:50
-#: ../../templates/show_edit_artist_row.inc.php:44
+#: ../../templates/show_edit_artist_row.inc.php:43
 #: ../../templates/show_edit_label_row.inc.php:47
 #: ../../templates/show_partial_edit_movie_row.inc.php:28
 #: ../../templates/show_partial_edit_personal_video_row.inc.php:28
@@ -5071,7 +5122,7 @@ msgid "Email"
 msgstr "電子郵件"
 
 #: ../../templates/show_add_live_stream.inc.php:23
-#: ../../templates/show_live_streams.inc.php:32
+#: ../../templates/show_live_streams.inc.php:29
 msgid "Add Radio Station"
 msgstr "新增廣播站"
 
@@ -5082,19 +5133,19 @@ msgstr "首頁"
 
 #: ../../templates/show_add_live_stream.inc.php:41
 #: ../../templates/show_edit_live_stream_row.inc.php:31
-#: ../../templates/show_live_streams.inc.php:50
-#: ../../templates/show_live_streams.inc.php:83
+#: ../../templates/show_live_streams.inc.php:45
+#: ../../templates/show_live_streams.inc.php:73
 msgid "Stream URL"
 msgstr "串流網址"
 
 #: ../../templates/show_add_live_stream.inc.php:48
 #: ../../templates/show_edit_live_stream_row.inc.php:39
-#: ../../templates/show_live_stream.inc.php:55
-#: ../../templates/show_live_streams.inc.php:51
-#: ../../templates/show_live_streams.inc.php:84
-#: ../../templates/show_video.inc.php:187
-#: ../../templates/show_videos.inc.php:46
-#: ../../templates/show_videos.inc.php:123
+#: ../../templates/show_live_stream.inc.php:52
+#: ../../templates/show_live_streams.inc.php:46
+#: ../../templates/show_live_streams.inc.php:74
+#: ../../templates/show_video.inc.php:148
+#: ../../templates/show_videos.inc.php:45
+#: ../../templates/show_videos.inc.php:110
 msgid "Codec"
 msgstr "編解碼"
 
@@ -5120,14 +5171,14 @@ msgstr "撰寫訊息"
 
 #: ../../templates/show_add_pvmsg.inc.php:28
 #: ../../templates/show_pvmsgs.inc.php:52
-#: ../../templates/show_pvmsgs.inc.php:88
+#: ../../templates/show_pvmsgs.inc.php:81
 msgid "Recipient"
 msgstr "收件人"
 
 #: ../../templates/show_add_pvmsg.inc.php:35
 #: ../../templates/show_mail_users.inc.php:48
 #: ../../templates/show_pvmsgs.inc.php:50
-#: ../../templates/show_pvmsgs.inc.php:86
+#: ../../templates/show_pvmsgs.inc.php:79
 msgid "Subject"
 msgstr "主旨"
 
@@ -5191,7 +5242,7 @@ msgid "Allow Stream"
 msgstr "允許串流"
 
 #: ../../templates/show_add_share.inc.php:63
-#: ../../templates/show_edit_share_row.inc.php:48
+#: ../../templates/show_edit_share_row.inc.php:47
 #: ../../templates/show_shared_objects.inc.php:34
 msgid "Allow Download"
 msgstr "允許下載"
@@ -5200,17 +5251,17 @@ msgstr "允許下載"
 msgid "Post to Shoutbox"
 msgstr "發表到留言版"
 
-#: ../../templates/show_add_shout.inc.php:40
+#: ../../templates/show_add_shout.inc.php:38
 #: ../../templates/show_edit_shout.inc.php:31
 msgid "Comment:"
 msgstr "註解："
 
-#: ../../templates/show_add_shout.inc.php:49
+#: ../../templates/show_add_shout.inc.php:46
 #: ../../templates/show_edit_shout.inc.php:39
 msgid "Stick this comment"
 msgstr "將此註解置頂"
 
-#: ../../templates/show_add_shout.inc.php:78
+#: ../../templates/show_add_shout.inc.php:67
 #: ../../templates/show_shoutbox.inc.php:23
 msgid "Shoutbox"
 msgstr "留言板"
@@ -5220,19 +5271,19 @@ msgstr "留言板"
 msgid "Target folder"
 msgstr "目的資料夾"
 
-#: ../../templates/show_add_upload.inc.php:217
+#: ../../templates/show_add_upload.inc.php:212
 msgid "Files"
 msgstr "檔案"
 
-#: ../../templates/show_add_upload.inc.php:224
+#: ../../templates/show_add_upload.inc.php:219
 msgid "Allowed file type"
 msgstr "允許的檔案類型"
 
-#: ../../templates/show_add_upload.inc.php:229
+#: ../../templates/show_add_upload.inc.php:224
 msgid "Drop File Here"
 msgstr "拖曳檔案到這裡"
 
-#: ../../templates/show_add_upload.inc.php:230
+#: ../../templates/show_add_upload.inc.php:225
 msgid "Browse"
 msgstr "瀏覽"
 
@@ -5252,341 +5303,340 @@ msgstr "新增使用者"
 
 #: ../../templates/show_album_group_disks.inc.php:45
 #: ../../templates/show_album.inc.php:50
-#: ../../templates/show_artist.inc.php:45
-#: ../../templates/show_label.inc.php:35 ../../templates/show_song.inc.php:217
+#: ../../templates/show_artist.inc.php:43
+#: ../../templates/show_label.inc.php:35 ../../templates/show_song.inc.php:169
 msgid "Search on Google ..."
 msgstr "在 Google 搜尋…"
 
 #: ../../templates/show_album_group_disks.inc.php:46
 #: ../../templates/show_album.inc.php:51
-#: ../../templates/show_artist.inc.php:48
-#: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:218
+#: ../../templates/show_artist.inc.php:44
+#: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:170
 msgid "Search on DuckDuckGo ..."
 msgstr "在 DuckDuckGo 搜尋…"
 
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:52
-#: ../../templates/show_artist.inc.php:51
+#: ../../templates/show_artist.inc.php:45
 #: ../../templates/show_label.inc.php:37
 msgid "Search on Wikipedia ..."
 msgstr "在 Wikipedia 搜尋…"
 
 #: ../../templates/show_album_group_disks.inc.php:48
 #: ../../templates/show_album.inc.php:53
-#: ../../templates/show_artist.inc.php:54
-#: ../../templates/show_label.inc.php:38 ../../templates/show_song.inc.php:219
+#: ../../templates/show_artist.inc.php:46
+#: ../../templates/show_label.inc.php:38 ../../templates/show_song.inc.php:171
 msgid "Search on Last.fm ..."
 msgstr "在 Last.fm 搜尋…"
 
 #: ../../templates/show_album_group_disks.inc.php:59
-#: ../../templates/show_album.inc.php:111
-#: ../../templates/show_albums.inc.php:72
-#: ../../templates/show_albums.inc.php:157
-#: ../../templates/show_artist.inc.php:116
+#: ../../templates/show_album.inc.php:101
+#: ../../templates/show_albums.inc.php:63
+#: ../../templates/show_albums.inc.php:137
+#: ../../templates/show_artist.inc.php:96
 #: ../../templates/show_broadcasts.inc.php:35
 #: ../../templates/show_catalogs.inc.php:34
-#: ../../templates/show_catalogs.inc.php:69
+#: ../../templates/show_catalogs.inc.php:64
 #: ../../templates/show_channels.inc.php:44
 #: ../../templates/show_label.inc.php:54
 #: ../../templates/show_missing_album.inc.php:51
 #: ../../templates/show_missing_albums.inc.php:31
-#: ../../templates/show_playlists.inc.php:59
-#: ../../templates/show_playlists.inc.php:123
-#: ../../templates/show_podcast_episodes.inc.php:57
-#: ../../templates/show_podcast_episodes.inc.php:125
-#: ../../templates/show_podcast.inc.php:68
-#: ../../templates/show_podcasts.inc.php:74
-#: ../../templates/show_podcasts.inc.php:138
+#: ../../templates/show_playlists.inc.php:55
+#: ../../templates/show_playlists.inc.php:110
+#: ../../templates/show_podcast_episodes.inc.php:51
+#: ../../templates/show_podcast_episodes.inc.php:107
+#: ../../templates/show_podcast.inc.php:61
+#: ../../templates/show_podcasts.inc.php:63
+#: ../../templates/show_podcasts.inc.php:115
 #: ../../templates/show_pvmsg.inc.php:29
-#: ../../templates/show_searches.inc.php:51
-#: ../../templates/show_searches.inc.php:87
+#: ../../templates/show_searches.inc.php:48
+#: ../../templates/show_searches.inc.php:78
 #: ../../templates/show_shared_objects.inc.php:37
-#: ../../templates/show_tvshow.inc.php:70
-#: ../../templates/show_tvshow_season.inc.php:62
-#: ../../templates/show_tvshow_seasons.inc.php:63
-#: ../../templates/show_tvshow_seasons.inc.php:128
+#: ../../templates/show_tvshow.inc.php:63
+#: ../../templates/show_tvshow_season.inc.php:56
+#: ../../templates/show_tvshow_seasons.inc.php:55
+#: ../../templates/show_tvshow_seasons.inc.php:108
 #: ../../templates/show_wanted_albums.inc.php:30
 msgid "Actions"
 msgstr "動作"
 
-#: ../../templates/show_album_group_disks.inc.php:91
-#: ../../templates/show_album_group_disks.inc.php:93
-#: ../../templates/show_album_group_disks.inc.php:146
-#: ../../templates/show_album.inc.php:144
-#: ../../templates/show_album.inc.php:146
-#: ../../templates/show_album_row.inc.php:57
-#: ../../templates/show_artist_row.inc.php:57
-#: ../../templates/show_playlist_row.inc.php:54
+#: ../../templates/show_album_group_disks.inc.php:84
+#: ../../templates/show_album_group_disks.inc.php:85
+#: ../../templates/show_album_group_disks.inc.php:129
+#: ../../templates/show_album.inc.php:127
+#: ../../templates/show_album.inc.php:128
+#: ../../templates/show_album_row.inc.php:55
+#: ../../templates/show_artist_row.inc.php:55
+#: ../../templates/show_playlist_row.inc.php:53
 msgid "Random to temporary playlist"
 msgstr ""
 
-#: ../../templates/show_album_group_disks.inc.php:103
-#: ../../templates/show_album_group_disks.inc.php:107
-#: ../../templates/show_album_group_disks.inc.php:171
-#: ../../templates/show_album.inc.php:272
-#: ../../templates/show_album.inc.php:276
-#: ../../templates/show_artist.inc.php:217
-#: ../../templates/show_artist.inc.php:221
-#: ../../templates/show_install_config.inc.php:223
-#: ../../templates/show_install_config.inc.php:248
-#: ../../templates/show_install_config.inc.php:273
-#: ../../templates/show_install_config.inc.php:299
-#: ../../templates/show_playlist_media_row.inc.php:82
-#: ../../templates/show_podcast_episode.inc.php:138
-#: ../../templates/show_podcast_episode_row.inc.php:87
+#: ../../templates/show_album_group_disks.inc.php:92
+#: ../../templates/show_album_group_disks.inc.php:93
+#: ../../templates/show_album_group_disks.inc.php:147
+#: ../../templates/show_album.inc.php:216
+#: ../../templates/show_album.inc.php:217
+#: ../../templates/show_artist.inc.php:166
+#: ../../templates/show_artist.inc.php:167
+#: ../../templates/show_install_config.inc.php:218
+#: ../../templates/show_install_config.inc.php:235
+#: ../../templates/show_install_config.inc.php:252
+#: ../../templates/show_install_config.inc.php:271
+#: ../../templates/show_playlist_media_row.inc.php:77
+#: ../../templates/show_podcast_episode.inc.php:107
+#: ../../templates/show_podcast_episode_row.inc.php:80
 #: ../../templates/show_share.inc.php:33 ../../templates/show_share.inc.php:34
-#: ../../templates/show_song.inc.php:156
-#: ../../templates/show_song_row.inc.php:118
-#: ../../templates/show_video.inc.php:148
-#: ../../templates/show_video_row.inc.php:126
+#: ../../templates/show_song.inc.php:119
+#: ../../templates/show_song_row.inc.php:110
+#: ../../templates/show_video.inc.php:118
+#: ../../templates/show_video_row.inc.php:121
 msgid "Download"
 msgstr "下載"
 
-#: ../../templates/show_album_group_disks.inc.php:180
-#: ../../templates/show_album.inc.php:222
-#: ../../templates/show_album.inc.php:224
-#: ../../templates/show_playlist.inc.php:73
-#: ../../templates/show_playlist.inc.php:75
+#: ../../templates/show_album_group_disks.inc.php:154
+#: ../../templates/show_album.inc.php:182
+#: ../../templates/show_album.inc.php:183
+#: ../../templates/show_playlist.inc.php:64
+#: ../../templates/show_playlist.inc.php:65
 msgid "Save Tracks Order"
 msgstr "儲存音軌順序"
 
-#: ../../templates/show_album_group_disks.inc.php:183
-#: ../../templates/show_album.inc.php:231
+#: ../../templates/show_album_group_disks.inc.php:156
+#: ../../templates/show_album.inc.php:187
 msgid "Do you really want to update from tags?"
 msgstr "您確定要從標籤更新嗎？"
 
-#: ../../templates/show_album_group_disks.inc.php:184
-#: ../../templates/show_album.inc.php:232
-#: ../../templates/show_album.inc.php:233
+#: ../../templates/show_album_group_disks.inc.php:157
+#: ../../templates/show_album.inc.php:187
 msgid "Update from tags"
 msgstr "從標籤更新"
 
-#: ../../templates/show_album_group_disks.inc.php:187
-#: ../../templates/show_album.inc.php:256
-#: ../../templates/show_album.inc.php:260
-#: ../../templates/show_album_row.inc.php:132
+#: ../../templates/show_album_group_disks.inc.php:159
+#: ../../templates/show_album.inc.php:204
+#: ../../templates/show_album.inc.php:207
+#: ../../templates/show_album_row.inc.php:118
 msgid "Album edit"
 msgstr "專輯編輯"
 
-#: ../../templates/show_album.inc.php:89
-#: ../../templates/show_artist.inc.php:94
+#: ../../templates/show_album.inc.php:83
+#: ../../templates/show_artist.inc.php:78
 msgid "times"
 msgstr "次"
 
-#: ../../templates/show_album.inc.php:103
-#: ../../templates/show_artist.inc.php:108
-#: ../../templates/show_song.inc.php:256
+#: ../../templates/show_album.inc.php:95
+#: ../../templates/show_artist.inc.php:90
+#: ../../templates/show_song.inc.php:208
 msgid "Uploaded by"
 msgstr "上傳者"
 
-#: ../../templates/show_album.inc.php:206
-#: ../../templates/show_album.inc.php:210
-#: ../../templates/show_artist.inc.php:234
-#: ../../templates/show_artist.inc.php:238
-#: ../../templates/show_podcast_episode.inc.php:149
-#: ../../templates/show_podcast.inc.php:97
-#: ../../templates/show_podcast.inc.php:101
-#: ../../templates/show_song.inc.php:167 ../../templates/show_user.inc.php:110
-#: ../../templates/show_video.inc.php:158
+#: ../../templates/show_album.inc.php:174
+#: ../../templates/show_album.inc.php:175
+#: ../../templates/show_artist.inc.php:177
+#: ../../templates/show_artist.inc.php:178
+#: ../../templates/show_podcast_episode.inc.php:115
+#: ../../templates/show_podcast.inc.php:84
+#: ../../templates/show_podcast.inc.php:85
+#: ../../templates/show_song.inc.php:127 ../../templates/show_user.inc.php:90
+#: ../../templates/show_video.inc.php:125
 msgid "Graphs"
 msgstr "圖表"
 
-#: ../../templates/show_album.inc.php:261
+#: ../../templates/show_album.inc.php:208
 msgid "Edit Album"
 msgstr "編輯專輯"
 
-#: ../../templates/show_albums.inc.php:36
-#: ../../templates/show_albums.inc.php:123
-#: ../../templates/show_artists.inc.php:38
-#: ../../templates/show_artists.inc.php:125
-#: ../../templates/show_arts.inc.php:46 ../../templates/show_labels.inc.php:46
-#: ../../templates/show_labels.inc.php:86
-#: ../../templates/show_live_streams.inc.php:48
-#: ../../templates/show_live_streams.inc.php:81
+#: ../../templates/show_albums.inc.php:35
+#: ../../templates/show_albums.inc.php:109
+#: ../../templates/show_artists.inc.php:37
+#: ../../templates/show_artists.inc.php:111
+#: ../../templates/show_arts.inc.php:43 ../../templates/show_labels.inc.php:42
+#: ../../templates/show_labels.inc.php:74
+#: ../../templates/show_live_streams.inc.php:43
+#: ../../templates/show_live_streams.inc.php:71
 #: ../../templates/show_playlist_medias.inc.php:35
-#: ../../templates/show_playlist_medias.inc.php:89
+#: ../../templates/show_playlist_medias.inc.php:82
 #: ../../templates/show_playlists.inc.php:32
-#: ../../templates/show_playlists.inc.php:96
-#: ../../templates/show_podcast_episodes.inc.php:97
-#: ../../templates/show_podcasts.inc.php:48
-#: ../../templates/show_podcasts.inc.php:114
-#: ../../templates/show_recommended_artists.inc.php:33
-#: ../../templates/show_recommended_artists.inc.php:118
-#: ../../templates/show_tvshow_seasons.inc.php:36
-#: ../../templates/show_tvshow_seasons.inc.php:103
-#: ../../templates/show_tvshows.inc.php:38
-#: ../../templates/show_tvshows.inc.php:108
+#: ../../templates/show_playlists.inc.php:87
+#: ../../templates/show_podcast_episodes.inc.php:84
+#: ../../templates/show_podcasts.inc.php:44
+#: ../../templates/show_podcasts.inc.php:96
+#: ../../templates/show_recommended_artists.inc.php:32
+#: ../../templates/show_recommended_artists.inc.php:98
+#: ../../templates/show_tvshow_seasons.inc.php:35
+#: ../../templates/show_tvshow_seasons.inc.php:88
+#: ../../templates/show_tvshows.inc.php:37
+#: ../../templates/show_tvshows.inc.php:93
 #: ../../templates/show_videos.inc.php:34
-#: ../../templates/show_videos.inc.php:111
+#: ../../templates/show_videos.inc.php:99
 msgid "Art"
 msgstr "封面圖片"
 
-#: ../../templates/show_albums.inc.php:51
-#: ../../templates/show_albums.inc.php:138
-#: ../../templates/show_artists.inc.php:53
-#: ../../templates/show_artists.inc.php:140
-#: ../../templates/show_edit_album_row.inc.php:107
-#: ../../templates/show_edit_artist_row.inc.php:56
-#: ../../templates/show_edit_song_row.inc.php:90
+#: ../../templates/show_albums.inc.php:48
+#: ../../templates/show_albums.inc.php:122
+#: ../../templates/show_artists.inc.php:50
+#: ../../templates/show_artists.inc.php:124
+#: ../../templates/show_edit_album_row.inc.php:103
+#: ../../templates/show_edit_artist_row.inc.php:55
+#: ../../templates/show_edit_song_row.inc.php:89
 #: ../../templates/show_edit_tvshow_row.inc.php:39
 #: ../../templates/show_edit_video_row.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:54
-#: ../../templates/show_recommended_artists.inc.php:43
-#: ../../templates/show_recommended_artists.inc.php:127
+#: ../../templates/show_recommended_artists.inc.php:41
+#: ../../templates/show_recommended_artists.inc.php:106
 #: ../../templates/show_songs.inc.php:37
-#: ../../templates/show_songs.inc.php:116
+#: ../../templates/show_songs.inc.php:100
 #: ../../templates/show_stats.inc.php:37
-#: ../../templates/show_tvshows.inc.php:45
-#: ../../templates/show_tvshows.inc.php:115
-#: ../../templates/show_videos.inc.php:55
-#: ../../templates/show_videos.inc.php:132
+#: ../../templates/show_tvshows.inc.php:43
+#: ../../templates/show_tvshows.inc.php:99
+#: ../../templates/show_videos.inc.php:53
+#: ../../templates/show_videos.inc.php:118
 msgid "Tags"
 msgstr "標籤"
 
-#: ../../templates/show_albums.inc.php:65
-#: ../../templates/show_albums.inc.php:150
-#: ../../templates/show_artists.inc.php:67
-#: ../../templates/show_artists.inc.php:152
-#: ../../templates/show_now_playing_row.inc.php:131
-#: ../../templates/show_now_playing_video_row.inc.php:75
-#: ../../templates/show_playlist_medias.inc.php:56
-#: ../../templates/show_playlist_medias.inc.php:106
-#: ../../templates/show_playlists.inc.php:52
-#: ../../templates/show_playlists.inc.php:116
-#: ../../templates/show_podcast_episode.inc.php:52
-#: ../../templates/show_podcast_episodes.inc.php:50
-#: ../../templates/show_podcast_episodes.inc.php:118
-#: ../../templates/show_podcasts.inc.php:67
-#: ../../templates/show_podcasts.inc.php:131
-#: ../../templates/show_recommended_artists.inc.php:54
-#: ../../templates/show_recommended_artists.inc.php:136
-#: ../../templates/show_song.inc.php:55 ../../templates/show_songs.inc.php:66
-#: ../../templates/show_tvshow_seasons.inc.php:56
-#: ../../templates/show_tvshow_seasons.inc.php:121
-#: ../../templates/show_tvshows.inc.php:59
-#: ../../templates/show_tvshows.inc.php:127
-#: ../../templates/show_video.inc.php:85
-#: ../../templates/show_videos.inc.php:67
-#: ../../templates/show_videos.inc.php:144
+#: ../../templates/show_albums.inc.php:58
+#: ../../templates/show_albums.inc.php:132
+#: ../../templates/show_artists.inc.php:60
+#: ../../templates/show_artists.inc.php:134
+#: ../../templates/show_now_playing_row.inc.php:119
+#: ../../templates/show_now_playing_video_row.inc.php:71
+#: ../../templates/show_playlist_medias.inc.php:52
+#: ../../templates/show_playlist_medias.inc.php:97
+#: ../../templates/show_playlists.inc.php:50
+#: ../../templates/show_playlists.inc.php:105
+#: ../../templates/show_podcast_episode.inc.php:43
+#: ../../templates/show_podcast_episodes.inc.php:46
+#: ../../templates/show_podcast_episodes.inc.php:102
+#: ../../templates/show_podcasts.inc.php:58
+#: ../../templates/show_podcasts.inc.php:110
+#: ../../templates/show_recommended_artists.inc.php:49
+#: ../../templates/show_recommended_artists.inc.php:114
+#: ../../templates/show_song.inc.php:46 ../../templates/show_songs.inc.php:60
+#: ../../templates/show_tvshow_seasons.inc.php:50
+#: ../../templates/show_tvshow_seasons.inc.php:103
+#: ../../templates/show_tvshows.inc.php:53
+#: ../../templates/show_tvshows.inc.php:109
+#: ../../templates/show_video.inc.php:73
+#: ../../templates/show_videos.inc.php:63
+#: ../../templates/show_videos.inc.php:128
 msgid "Fav."
 msgstr "最愛"
 
-#: ../../templates/show_albums.inc.php:112
+#: ../../templates/show_albums.inc.php:99
 msgid "No album found"
 msgstr "找不到專輯"
 
-#: ../../templates/show_artist.inc.php:58
-#: ../../templates/show_artist.inc.php:349
-#: ../../templates/show_artist.inc.php:361
-#: ../../templates/show_artist.inc.php:373
-#: ../../templates/show_artist.inc.php:385
-#: ../../templates/show_index.inc.php:53 ../../templates/show_index.inc.php:65
-#: ../../templates/show_label.inc.php:136
-#: ../../templates/show_missing_artist.inc.php:33
-#: ../../templates/show_now_playing_row.inc.php:88
-#: ../../templates/show_now_playing_row.inc.php:96
+#: ../../templates/show_artist.inc.php:49
+#: ../../templates/show_artist.inc.php:271
+#: ../../templates/show_artist.inc.php:281
+#: ../../templates/show_artist.inc.php:291
+#: ../../templates/show_artist.inc.php:301
+#: ../../templates/show_index.inc.php:51 ../../templates/show_index.inc.php:61
+#: ../../templates/show_label.inc.php:119
+#: ../../templates/show_missing_artist.inc.php:32
+#: ../../templates/show_now_playing_row.inc.php:83
+#: ../../templates/show_now_playing_row.inc.php:89
 msgid "Loading..."
 msgstr "載入中…"
 
-#: ../../templates/show_artist.inc.php:124
-#: ../../templates/show_artist.inc.php:129
+#: ../../templates/show_artist.inc.php:102
+#: ../../templates/show_artist.inc.php:104
 msgid "Show all"
 msgstr "顯示全部"
 
-#: ../../templates/show_artist.inc.php:138
-#: ../../templates/show_artist.inc.php:143
+#: ../../templates/show_artist.inc.php:110
+#: ../../templates/show_artist.inc.php:112
 msgid "Show albums"
 msgstr "顯示專輯"
 
-#: ../../templates/show_artist.inc.php:151
-#: ../../templates/show_artist.inc.php:153
-#: ../../templates/show_playlist.inc.php:116
-#: ../../templates/show_playlist.inc.php:118
-#: ../../templates/show_podcast.inc.php:73
-#: ../../templates/show_podcast.inc.php:75
-#: ../../templates/show_tvshow.inc.php:75
-#: ../../templates/show_tvshow.inc.php:77
-#: ../../templates/show_tvshow_season.inc.php:67
-#: ../../templates/show_tvshow_season.inc.php:69
+#: ../../templates/show_artist.inc.php:119
+#: ../../templates/show_artist.inc.php:120
+#: ../../templates/show_playlist.inc.php:93
+#: ../../templates/show_playlist.inc.php:94
+#: ../../templates/show_podcast.inc.php:66
+#: ../../templates/show_podcast.inc.php:67
+#: ../../templates/show_tvshow.inc.php:68
+#: ../../templates/show_tvshow.inc.php:69
+#: ../../templates/show_tvshow_season.inc.php:61
+#: ../../templates/show_tvshow_season.inc.php:62
 msgid "Play all"
 msgstr "全部播放"
 
-#: ../../templates/show_artist.inc.php:159
-#: ../../templates/show_artist.inc.php:161
-#: ../../templates/show_playlist.inc.php:127
-#: ../../templates/show_playlist.inc.php:129
-#: ../../templates/show_podcast.inc.php:83
-#: ../../templates/show_podcast.inc.php:85
-#: ../../templates/show_tvshow.inc.php:85
-#: ../../templates/show_tvshow.inc.php:87
-#: ../../templates/show_tvshow_season.inc.php:77
-#: ../../templates/show_tvshow_season.inc.php:79
+#: ../../templates/show_artist.inc.php:125
+#: ../../templates/show_artist.inc.php:126
+#: ../../templates/show_playlist.inc.php:102
+#: ../../templates/show_playlist.inc.php:103
+#: ../../templates/show_podcast.inc.php:74
+#: ../../templates/show_podcast.inc.php:75
+#: ../../templates/show_tvshow.inc.php:76
+#: ../../templates/show_tvshow.inc.php:77
+#: ../../templates/show_tvshow_season.inc.php:69
+#: ../../templates/show_tvshow_season.inc.php:70
 msgid "Play all last"
 msgstr "最後全部播放"
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:173
-#: ../../templates/show_artist.inc.php:175
-#: ../../templates/show_playlist.inc.php:136
-#: ../../templates/show_playlist.inc.php:137
+#: ../../templates/show_artist.inc.php:136
+#: ../../templates/show_artist.inc.php:137
+#: ../../templates/show_playlist.inc.php:109
+#: ../../templates/show_playlist.inc.php:110
 msgid "Add all to temporary playlist"
 msgstr ""
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:180
-#: ../../templates/show_artist.inc.php:182
-#: ../../templates/show_playlist.inc.php:140
-#: ../../templates/show_playlist.inc.php:141
+#: ../../templates/show_artist.inc.php:141
+#: ../../templates/show_artist.inc.php:142
+#: ../../templates/show_playlist.inc.php:113
+#: ../../templates/show_playlist.inc.php:114
 msgid "Random all to temporary playlist"
 msgstr ""
 
-#: ../../templates/show_artist.inc.php:264
-#: ../../templates/show_artist.inc.php:268
-#: ../../templates/show_artist_row.inc.php:110
+#: ../../templates/show_artist.inc.php:197
+#: ../../templates/show_artist.inc.php:200
+#: ../../templates/show_artist_row.inc.php:98
 msgid "Artist edit"
 msgstr "作者編輯"
 
-#: ../../templates/show_artist.inc.php:269
+#: ../../templates/show_artist.inc.php:201
 msgid "Edit Artist"
 msgstr "編輯作者"
 
-#: ../../templates/show_artist.inc.php:297
-#: ../../templates/show_artist.inc.php:348
+#: ../../templates/show_artist.inc.php:224
+#: ../../templates/show_artist.inc.php:270
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
 msgstr "缺少專輯"
 
-#: ../../templates/show_artist.inc.php:303
-#: ../../templates/show_artist.inc.php:360
-#: ../../templates/show_now_playing_row.inc.php:86
+#: ../../templates/show_artist.inc.php:229
+#: ../../templates/show_artist.inc.php:280
+#: ../../templates/show_now_playing_row.inc.php:82
 #: ../../templates/show_now_playing_similar.inc.php:28
 #: ../../templates/show_recommended_artists.inc.php:25
 msgid "Similar Artists"
 msgstr "相似的作者"
 
-#: ../../templates/show_artist.inc.php:309
-#: ../../templates/show_artist.inc.php:372
+#: ../../templates/show_artist.inc.php:234
+#: ../../templates/show_artist.inc.php:290
 msgid "Events"
 msgstr "事件"
 
-#: ../../templates/show_artists.inc.php:46
-#: ../../templates/show_artists.inc.php:133
-#: ../../templates/show_democratic_playlist.inc.php:71
-#: ../../templates/show_democratic_playlist.inc.php:146
+#: ../../templates/show_artists.inc.php:44
+#: ../../templates/show_artists.inc.php:118
+#: ../../templates/show_democratic_playlist.inc.php:64
+#: ../../templates/show_democratic_playlist.inc.php:119
 #: ../../templates/show_playlist_medias.inc.php:40
-#: ../../templates/show_playlist_medias.inc.php:94
+#: ../../templates/show_playlist_medias.inc.php:87
 #: ../../templates/show_podcast_episodes.inc.php:34
-#: ../../templates/show_podcast_episodes.inc.php:104
-#: ../../templates/show_recommended_artists.inc.php:42
-#: ../../templates/show_recommended_artists.inc.php:126
+#: ../../templates/show_podcast_episodes.inc.php:90
+#: ../../templates/show_recommended_artists.inc.php:40
+#: ../../templates/show_recommended_artists.inc.php:105
 #: ../../templates/show_songs.inc.php:38
-#: ../../templates/show_songs.inc.php:117
-#: ../../templates/show_videos.inc.php:48
-#: ../../templates/show_videos.inc.php:125
+#: ../../templates/show_songs.inc.php:101
+#: ../../templates/show_videos.inc.php:47
+#: ../../templates/show_videos.inc.php:112
 msgid "Time"
 msgstr "時間"
 
-#: ../../templates/show_artists.inc.php:114
+#: ../../templates/show_artists.inc.php:101
 msgid "No artist found"
 msgstr "找不到作者"
 
@@ -5594,13 +5644,13 @@ msgstr "找不到作者"
 msgid "Select New Art"
 msgstr "選擇新封面圖片"
 
-#: ../../templates/show_arts.inc.php:58
+#: ../../templates/show_arts.inc.php:52
 msgid "Invalid"
 msgstr "無效"
 
-#: ../../templates/show_arts.inc.php:68
+#: ../../templates/show_arts.inc.php:55
 #: ../../templates/show_disabled_songs.inc.php:28
-#: ../../templates/show_disabled_songs.inc.php:67
+#: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_pvmsg_row.inc.php:24
 msgid "Select"
 msgstr "選擇"
@@ -5627,14 +5677,14 @@ msgstr "是"
 msgid "No"
 msgstr "否"
 
-#: ../../templates/show_broadcasts_dialog.inc.php:44
+#: ../../templates/show_broadcasts_dialog.inc.php:39
 msgid "New broadcast"
 msgstr "新廣播"
 
 #: ../../templates/show_broadcasts.inc.php:32
 #: ../../templates/show_edit_broadcast_row.inc.php:39
 #: ../../templates/show_edit_channel_row.inc.php:88
-#: ../../templates/show_song.inc.php:215
+#: ../../templates/show_song.inc.php:167
 msgid "Genre"
 msgstr "曲風"
 
@@ -5647,69 +5697,69 @@ msgstr "已開始"
 msgid "Listeners"
 msgstr "收聽者"
 
-#: ../../templates/show_broadcasts.inc.php:56
+#: ../../templates/show_broadcasts.inc.php:51
 msgid "No broadcast found"
 msgstr "找不到廣播"
 
-#: ../../templates/show_catalog_row.inc.php:38
+#: ../../templates/show_catalog_row.inc.php:36
 msgid "Make it ready ..."
 msgstr ""
 
-#: ../../templates/show_catalog_row.inc.php:48
+#: ../../templates/show_catalog_row.inc.php:44
 msgid "Verify"
 msgstr "驗證"
 
-#: ../../templates/show_catalog_row.inc.php:50
+#: ../../templates/show_catalog_row.inc.php:45
 #: ../../templates/show_shares.inc.php:27
 msgid "Clean"
 msgstr "清理"
 
-#: ../../templates/show_catalog_row.inc.php:52
+#: ../../templates/show_catalog_row.inc.php:46
 #: ../../templates/show_create_democratic.inc.php:70
 #: ../../templates/show_edit_access.inc.php:78
 #: ../../templates/show_edit_shout.inc.php:43
 #: ../../templates/show_manage_catalogs.inc.php:59
-#: ../../templates/show_preference_admin.inc.php:69
+#: ../../templates/show_preference_admin.inc.php:58
 msgid "Update"
 msgstr "更新"
 
-#: ../../templates/show_catalog_row.inc.php:60
+#: ../../templates/show_catalog_row.inc.php:52
 msgid "Go"
 msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:30
-#: ../../templates/show_catalogs.inc.php:65
+#: ../../templates/show_catalogs.inc.php:60
 msgid "Info"
 msgstr "資訊"
 
 #: ../../templates/show_catalogs.inc.php:31
-#: ../../templates/show_catalogs.inc.php:66
+#: ../../templates/show_catalogs.inc.php:61
 #: ../../templates/show_stats.inc.php:72
 msgid "Last Verify"
 msgstr "上次驗證"
 
 #: ../../templates/show_catalogs.inc.php:32
-#: ../../templates/show_catalogs.inc.php:67
+#: ../../templates/show_catalogs.inc.php:62
 #: ../../templates/show_stats.inc.php:73
 msgid "Last Add"
 msgstr "上次新增"
 
 #: ../../templates/show_catalogs.inc.php:33
-#: ../../templates/show_catalogs.inc.php:68
+#: ../../templates/show_catalogs.inc.php:63
 #: ../../templates/show_stats.inc.php:74
 msgid "Last Clean"
 msgstr "上次清理"
 
-#: ../../templates/show_catalogs.inc.php:55
+#: ../../templates/show_catalogs.inc.php:51
 msgid "No catalog found"
 msgstr "找不到目錄"
 
 #: ../../templates/show_catalog_types.inc.php:31
-#: ../../templates/show_catalog_types.inc.php:80
+#: ../../templates/show_catalog_types.inc.php:69
 #: ../../templates/show_localplay_controllers.inc.php:31
-#: ../../templates/show_localplay_controllers.inc.php:80
+#: ../../templates/show_localplay_controllers.inc.php:69
 #: ../../templates/show_plugins.inc.php:31
-#: ../../templates/show_plugins.inc.php:82
+#: ../../templates/show_plugins.inc.php:73
 msgid "Version"
 msgstr "版本"
 
@@ -5718,12 +5768,12 @@ msgstr "版本"
 msgid "Activate"
 msgstr "啟用"
 
-#: ../../templates/show_catalog_types.inc.php:70
-#: ../../templates/show_disabled_songs.inc.php:59
-#: ../../templates/show_localplay_controllers.inc.php:70
-#: ../../templates/show_localplay_playlist.inc.php:68
-#: ../../templates/show_manage_shoutbox.inc.php:54
-#: ../../templates/show_plugins.inc.php:72
+#: ../../templates/show_catalog_types.inc.php:60
+#: ../../templates/show_disabled_songs.inc.php:51
+#: ../../templates/show_localplay_controllers.inc.php:60
+#: ../../templates/show_localplay_playlist.inc.php:60
+#: ../../templates/show_manage_shoutbox.inc.php:52
+#: ../../templates/show_plugins.inc.php:64
 msgid "No Records Found"
 msgstr "找不到紀錄"
 
@@ -5732,7 +5782,7 @@ msgid "#"
 msgstr ""
 
 #: ../../templates/show_channels.inc.php:40
-#: ../../templates/show_graphs.inc.php:60
+#: ../../templates/show_graphs.inc.php:55
 msgid "Start Date"
 msgstr "開始日期"
 
@@ -5740,7 +5790,7 @@ msgstr "開始日期"
 msgid "Stream Url"
 msgstr "串流網址"
 
-#: ../../templates/show_channels.inc.php:65
+#: ../../templates/show_channels.inc.php:60
 msgid "No channel found"
 msgstr "找不到頻道"
 
@@ -5763,31 +5813,31 @@ msgid "Coming Events"
 msgstr "近期事件"
 
 #: ../../templates/show_concerts.inc.php:27
-#: ../../templates/show_concerts.inc.php:61
-#: ../../templates/show_ip_history.inc.php:53
-#: ../../templates/show_ip_history.inc.php:72
+#: ../../templates/show_concerts.inc.php:55
+#: ../../templates/show_ip_history.inc.php:49
+#: ../../templates/show_ip_history.inc.php:65
 #: ../../templates/show_pvmsgs.inc.php:53
-#: ../../templates/show_pvmsgs.inc.php:89
+#: ../../templates/show_pvmsgs.inc.php:82
 msgid "Date"
 msgstr "日期"
 
 #: ../../templates/show_concerts.inc.php:29
-#: ../../templates/show_concerts.inc.php:63
+#: ../../templates/show_concerts.inc.php:57
 #: ../../templates/show_partial_edit_personal_video_row.inc.php:24
 #: ../../templates/show_partial_personal_video.inc.php:23
 #: ../../templates/show_partial_personal_videos.inc.php:23
 msgid "Location"
 msgstr "地區"
 
-#: ../../templates/show_concerts.inc.php:49
+#: ../../templates/show_concerts.inc.php:44
 msgid "No coming events found"
 msgstr "找不到近期事件"
 
-#: ../../templates/show_concerts.inc.php:57
+#: ../../templates/show_concerts.inc.php:51
 msgid "Past Events"
 msgstr "過往事件"
 
-#: ../../templates/show_concerts.inc.php:83
+#: ../../templates/show_concerts.inc.php:72
 msgid "No past events found"
 msgstr "找不到過往事件"
 
@@ -5798,8 +5848,8 @@ msgid "Continue"
 msgstr "繼續"
 
 #: ../../templates/show_create_democratic.inc.php:23
-#: ../../templates/show_democratic.inc.php:41
-#: ../../templates/show_democratic.inc.php:44
+#: ../../templates/show_democratic.inc.php:38
+#: ../../templates/show_democratic.inc.php:40
 msgid "Configure Democratic Playlist"
 msgstr "設定民主播放清單"
 
@@ -5876,7 +5926,7 @@ msgstr "設定"
 #: ../../templates/show_debug.inc.php:121
 #: ../../templates/show_dynamic.inc.php:28
 #: ../../templates/show_preference_box.inc.php:45
-#: ../../templates/show_preference_box.inc.php:118
+#: ../../templates/show_preference_box.inc.php:97
 #: ../../templates/show_user_preferences.inc.php:38
 msgid "Value"
 msgstr "值"
@@ -5927,9 +5977,9 @@ msgstr "目前設定"
 
 #: ../../templates/show_debug.inc.php:120
 #: ../../templates/show_preference_admin.inc.php:32
-#: ../../templates/show_preference_admin.inc.php:63
+#: ../../templates/show_preference_admin.inc.php:52
 #: ../../templates/show_preference_box.inc.php:44
-#: ../../templates/show_preference_box.inc.php:117
+#: ../../templates/show_preference_box.inc.php:96
 #: ../../templates/show_user_preferences.inc.php:37
 msgid "Preference"
 msgstr "偏好設定"
@@ -5944,60 +5994,60 @@ msgstr "%s 播放清單"
 msgid "Cooldown"
 msgstr "冷卻"
 
-#: ../../templates/show_democratic.inc.php:52
+#: ../../templates/show_democratic.inc.php:46
 msgid "Play Democratic Playlist"
 msgstr "播放民主播放清單"
 
-#: ../../templates/show_democratic.inc.php:92
+#: ../../templates/show_democratic.inc.php:82
 msgid "Reload this page automatically"
 msgstr "自動重新載入目前網頁"
 
-#: ../../templates/show_democratic_playlist.inc.php:48
+#: ../../templates/show_democratic_playlist.inc.php:47
 msgid "Playing from base Playlist"
 msgstr "從基礎播放清單播放"
 
-#: ../../templates/show_democratic_playlist.inc.php:63
-#: ../../templates/show_democratic_playlist.inc.php:138
+#: ../../templates/show_democratic_playlist.inc.php:60
+#: ../../templates/show_democratic_playlist.inc.php:115
 msgid "Votes"
 msgstr "投票"
 
-#: ../../templates/show_democratic_playlist.inc.php:98
+#: ../../templates/show_democratic_playlist.inc.php:86
 msgid "Remove Vote"
 msgstr "移除投票"
 
-#: ../../templates/show_democratic_playlist.inc.php:103
+#: ../../templates/show_democratic_playlist.inc.php:90
 msgid "Add Vote"
 msgstr "新增投票"
 
 #: ../../templates/show_denied.inc.php:52
-#: ../../templates/sidebar_localplay.inc.php:118
+#: ../../templates/sidebar_localplay.inc.php:82
 msgid "Access Denied"
 msgstr "存取被拒"
 
 #: ../../templates/show_denied.inc.php:53
-#: ../../templates/show_denied.inc.php:62
+#: ../../templates/show_denied.inc.php:60
 msgid "This event has been logged."
 msgstr "這個事件已被紀錄到日誌。"
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this"
-" function."
+"You have been redirected to this page because you do not have access to this "
+"function."
 msgstr "您已被重新導向到此網頁，因為沒有權限存取此功能。"
 
-#: ../../templates/show_denied.inc.php:60
+#: ../../templates/show_denied.inc.php:59
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
 msgstr "如果您認為有問題，請聯絡 Ampache 的管理員。"
 
-#: ../../templates/show_denied.inc.php:67
+#: ../../templates/show_denied.inc.php:64
 msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
 msgstr "您已被重新導向到此網頁，因為您嘗試使用展示模式中停用的功能。"
 
 #: ../../templates/show_disabled_songs.inc.php:33
-#: ../../templates/show_disabled_songs.inc.php:72
+#: ../../templates/show_disabled_songs.inc.php:63
 msgid "Addition Time"
 msgstr ""
 
@@ -6024,29 +6074,29 @@ msgid "Duplicate Songs"
 msgstr "重複的歌曲"
 
 #: ../../templates/show_duplicates.inc.php:28
-#: ../../templates/show_duplicates.inc.php:79
+#: ../../templates/show_duplicates.inc.php:67
 #: ../../templates/show_lyrics.inc.php:39
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_partial_clip.inc.php:24
 #: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:181
+#: ../../templates/show_recently_played.inc.php:160
 #: ../../templates/show_tagcloud.inc.php:26
-#: ../../templates/sidebar_home.inc.php:196
+#: ../../templates/sidebar_home.inc.php:174
 msgid "Song"
 msgstr "歌曲"
 
 #: ../../templates/show_duplicates.inc.php:31
-#: ../../templates/show_duplicates.inc.php:82
-#: ../../templates/show_podcast_episode.inc.php:183
-#: ../../templates/show_random.inc.php:72
-#: ../../templates/show_song.inc.php:220
-#: ../../templates/show_video.inc.php:182
+#: ../../templates/show_duplicates.inc.php:70
+#: ../../templates/show_podcast_episode.inc.php:143
+#: ../../templates/show_random.inc.php:66
+#: ../../templates/show_song.inc.php:172
+#: ../../templates/show_video.inc.php:143
 msgid "Length"
 msgstr "長度"
 
 #: ../../templates/show_duplicates.inc.php:33
-#: ../../templates/show_duplicates.inc.php:84
-#: ../../templates/show_podcast_episode.inc.php:188
+#: ../../templates/show_duplicates.inc.php:72
+#: ../../templates/show_podcast_episode.inc.php:148
 msgid "Size"
 msgstr "大小"
 
@@ -6066,27 +6116,27 @@ msgstr "運算子"
 msgid "Method"
 msgstr "行為"
 
-#: ../../templates/show_dynamic.inc.php:54
+#: ../../templates/show_dynamic.inc.php:51
 msgid "Like"
 msgstr "類似"
 
-#: ../../templates/show_dynamic.inc.php:62
+#: ../../templates/show_dynamic.inc.php:59
 msgid "OR"
 msgstr "或"
 
-#: ../../templates/show_dynamic.inc.php:63
+#: ../../templates/show_dynamic.inc.php:60
 msgid "AND"
 msgstr "且"
 
-#: ../../templates/show_dynamic.inc.php:69
+#: ../../templates/show_dynamic.inc.php:66
 msgid "Add Rule"
 msgstr "新增規則"
 
-#: ../../templates/show_dynamic.inc.php:72
+#: ../../templates/show_dynamic.inc.php:69
 msgid "Save Rules As"
 msgstr "另存規則為"
 
-#: ../../templates/show_dynamic.inc.php:75
+#: ../../templates/show_dynamic.inc.php:72
 msgid "Load Saved Rules"
 msgstr "載入舊規則"
 
@@ -6095,45 +6145,45 @@ msgid "Edit Access Control List"
 msgstr "編輯存取控制清單"
 
 #: ../../templates/show_edit_album_row.inc.php:47
-#: ../../templates/show_song.inc.php:211
+#: ../../templates/show_song.inc.php:163
 msgid "Album Artist"
 msgstr "專輯作者"
 
-#: ../../templates/show_edit_album_row.inc.php:74
+#: ../../templates/show_edit_album_row.inc.php:72
 #: ../../templates/show_edit_artist_row.inc.php:31
-#: ../../templates/show_edit_song_row.inc.php:63
+#: ../../templates/show_edit_song_row.inc.php:59
 msgid "MusicBrainz ID"
 msgstr "MusicBrainz 識別碼"
 
-#: ../../templates/show_edit_album_row.inc.php:89
+#: ../../templates/show_edit_album_row.inc.php:86
 msgid "MusicBrainz Release Group ID"
 msgstr "MusicBrainz 成品組識別碼"
 
-#: ../../templates/show_edit_album_row.inc.php:103
+#: ../../templates/show_edit_album_row.inc.php:99
 msgid "Release Type"
 msgstr "成品類型"
 
-#: ../../templates/show_edit_album_row.inc.php:114
+#: ../../templates/show_edit_album_row.inc.php:110
 msgid "Overwrite tags of sub songs"
 msgstr "覆蓋內含歌曲中的現存標籤"
 
-#: ../../templates/show_edit_album_row.inc.php:118
+#: ../../templates/show_edit_album_row.inc.php:114
 msgid "Add tags to sub songs"
 msgstr "新增標籤到內含歌曲"
 
-#: ../../templates/show_edit_artist_row.inc.php:48
+#: ../../templates/show_edit_artist_row.inc.php:47
 msgid "Place Formed"
 msgstr ""
 
-#: ../../templates/show_edit_artist_row.inc.php:52
+#: ../../templates/show_edit_artist_row.inc.php:51
 msgid "Year Formed"
 msgstr ""
 
-#: ../../templates/show_edit_artist_row.inc.php:70
+#: ../../templates/show_edit_artist_row.inc.php:68
 msgid "Overwrite tags of sub albums and sub songs"
 msgstr "覆蓋內含專輯與內含歌曲中的現存標籤"
 
-#: ../../templates/show_edit_artist_row.inc.php:74
+#: ../../templates/show_edit_artist_row.inc.php:72
 msgid "Add tags to sub albums and sub songs"
 msgstr "新增標籤到內含專輯與內含歌曲"
 
@@ -6154,15 +6204,15 @@ msgstr "儲存目錄設定"
 msgid "Configure License"
 msgstr "設定授權"
 
-#: ../../templates/show_edit_license.inc.php:39
+#: ../../templates/show_edit_license.inc.php:38
 msgid "Description:"
 msgstr "描述："
 
-#: ../../templates/show_edit_license.inc.php:45
+#: ../../templates/show_edit_license.inc.php:44
 msgid "External Link"
 msgstr "外部鍊結"
 
-#: ../../templates/show_edit_license.inc.php:52
+#: ../../templates/show_edit_license.inc.php:51
 msgid "Confirm"
 msgstr "確認"
 
@@ -6177,7 +6227,7 @@ msgid "GUID"
 msgstr "GUID"
 
 #: ../../templates/show_edit_podcast_episode_row.inc.php:39
-#: ../../templates/show_podcast_episode.inc.php:178
+#: ../../templates/show_podcast_episode.inc.php:138
 msgid "Author"
 msgstr "作者"
 
@@ -6207,14 +6257,14 @@ msgstr "編輯現存的留言板文章"
 msgid "Created by: %s for %s"
 msgstr "由：%s 給 %s 建立"
 
-#: ../../templates/show_edit_song_row.inc.php:59
+#: ../../templates/show_edit_song_row.inc.php:55
 #: ../../templates/show_localplay_playlist.inc.php:33
-#: ../../templates/show_localplay_playlist.inc.php:76
+#: ../../templates/show_localplay_playlist.inc.php:67
 #: ../../templates/show_song_previews.inc.php:39
 msgid "Track"
 msgstr "音軌"
 
-#: ../../templates/show_edit_song_row.inc.php:114
+#: ../../templates/show_edit_song_row.inc.php:111
 msgid "More Metadata"
 msgstr "更多後設資料"
 
@@ -6275,9 +6325,9 @@ msgid "Update User"
 msgstr "更新使用者"
 
 #: ../../templates/show_edit_video_row.inc.php:35
-#: ../../templates/show_video.inc.php:186
-#: ../../templates/show_videos.inc.php:45
-#: ../../templates/show_videos.inc.php:122
+#: ../../templates/show_video.inc.php:147
+#: ../../templates/show_videos.inc.php:44
+#: ../../templates/show_videos.inc.php:109
 msgid "Release Date"
 msgstr "發售日期"
 
@@ -6286,11 +6336,11 @@ msgstr "發售日期"
 msgid "Export Catalog"
 msgstr "匯出目錄"
 
-#: ../../templates/show_export.inc.php:55
+#: ../../templates/show_export.inc.php:50
 msgid "Format"
 msgstr "格式"
 
-#: ../../templates/show_export.inc.php:65
+#: ../../templates/show_export.inc.php:60
 msgid "Export"
 msgstr "匯出"
 
@@ -6310,15 +6360,15 @@ msgstr "已搜尋"
 msgid "Customize Search"
 msgstr "自訂搜尋"
 
-#: ../../templates/show_get_art.inc.php:49
+#: ../../templates/show_get_art.inc.php:45
 msgid "Direct URL to Image"
 msgstr "圖片直連網址"
 
-#: ../../templates/show_get_art.inc.php:57
+#: ../../templates/show_get_art.inc.php:53
 msgid "Local Image"
 msgstr "本地圖片"
 
-#: ../../templates/show_get_art.inc.php:70
+#: ../../templates/show_get_art.inc.php:66
 msgid "Get Art"
 msgstr "取得封面圖片"
 
@@ -6326,27 +6376,27 @@ msgstr "取得封面圖片"
 msgid "Statistical Graphs"
 msgstr "統計圖表"
 
-#: ../../templates/show_graphs.inc.php:35
+#: ../../templates/show_graphs.inc.php:33
 msgid "Show large"
 msgstr "放大顯示"
 
-#: ../../templates/show_graphs.inc.php:63
+#: ../../templates/show_graphs.inc.php:58
 msgid "End Date"
 msgstr "結束日期"
 
-#: ../../templates/show_graphs.inc.php:66
+#: ../../templates/show_graphs.inc.php:61
 msgid "Zoom"
 msgstr "縮放"
 
-#: ../../templates/show_graphs.inc.php:72
+#: ../../templates/show_graphs.inc.php:67
 msgid "Month"
 msgstr "月"
 
-#: ../../templates/show_graphs.inc.php:73
+#: ../../templates/show_graphs.inc.php:68
 msgid "Day"
 msgstr "天"
 
-#: ../../templates/show_graphs.inc.php:74
+#: ../../templates/show_graphs.inc.php:69
 msgid "Hour"
 msgstr "小時"
 
@@ -6354,43 +6404,43 @@ msgstr "小時"
 #: ../../templates/show_newest.inc.php:23
 #: ../../templates/show_popular.inc.php:23
 #: ../../templates/show_recent.inc.php:23
-#: ../../templates/sidebar_home.inc.php:144
+#: ../../templates/sidebar_home.inc.php:128
 msgid "Information"
 msgstr "資訊"
 
-#: ../../templates/show_html5_player_headers.inc.php:237
+#: ../../templates/show_html5_player_headers.inc.php:225
 msgid "Your browser doesn't support this feature."
 msgstr "您的瀏覽器不支援此功能。"
 
-#: ../../templates/show_html5_player_headers.inc.php:535
+#: ../../templates/show_html5_player_headers.inc.php:522
 msgid "Media is currently playing. Are you sure you want to close"
 msgstr "正在播放媒體，您確定要關閉嗎？"
 
-#: ../../templates/show_html5_player.inc.php:170
+#: ../../templates/show_html5_player.inc.php:168
 msgid "Double click to post a new shout"
 msgstr "連按兩下來發表新留言"
 
-#: ../../templates/show_html5_player.inc.php:520
+#: ../../templates/show_html5_player.inc.php:512
 msgid "Slideshow"
 msgstr "幻燈片展示"
 
-#: ../../templates/show_html5_player.inc.php:523
+#: ../../templates/show_html5_player.inc.php:515
 msgid "Expand/Collapse Playlist"
 msgstr "展開/收合播放清單"
 
-#: ../../templates/show_html5_player.inc.php:528
+#: ../../templates/show_html5_player.inc.php:520
 msgid "Visualizer"
 msgstr "視覺效果"
 
-#: ../../templates/show_html5_player.inc.php:531
+#: ../../templates/show_html5_player.inc.php:523
 msgid "Visualizer Full-Screen"
 msgstr "全螢幕顯示視覺效果"
 
-#: ../../templates/show_html5_player.inc.php:534
+#: ../../templates/show_html5_player.inc.php:526
 msgid "ReplayGain"
 msgstr "回放增益"
 
-#: ../../templates/show_html5_player.inc.php:537
+#: ../../templates/show_html5_player.inc.php:529
 msgid "Equalizer"
 msgstr "等化器"
 
@@ -6402,12 +6452,12 @@ msgstr "從檔案匯入播放清單"
 msgid "Import Playlist"
 msgstr "匯入播放清單"
 
-#: ../../templates/show_index.inc.php:52
+#: ../../templates/show_index.inc.php:50
 #: ../../templates/show_random_albums.inc.php:26
 msgid "Albums of the Moment"
 msgstr "熱門專輯"
 
-#: ../../templates/show_index.inc.php:64
+#: ../../templates/show_index.inc.php:60
 #: ../../templates/show_random_videos.inc.php:26
 msgid "Videos of the Moment"
 msgstr "熱門視訊"
@@ -6440,7 +6490,9 @@ msgstr "第三步 - 設定第一個帳號"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr "這個步驟將建立您的第一個 Ampache 管理員帳號。當您的管理員帳號建立後，您將會被重新導向到登入頁面。"
+msgstr ""
+"這個步驟將建立您的第一個 Ampache 管理員帳號。當您的管理員帳號建立後，您將會被"
+"重新導向到登入頁面。"
 
 #: ../../templates/show_install_account.inc.php:47
 msgid "Create Admin Account"
@@ -6459,7 +6511,9 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr "這個頁面處理 Ampache 資料庫的安裝，與 ampache.cfg.php 檔案的建立。在繼續之前請確認您有以下的必要條件："
+msgstr ""
+"這個頁面處理 Ampache 資料庫的安裝，與 ampache.cfg.php 檔案的建立。在繼續之前"
+"請確認您有以下的必要條件："
 
 #: ../../templates/show_install_check.inc.php:35
 msgid ""
@@ -6476,22 +6530,24 @@ msgstr "您的網頁伺服器有 %s 與 %s 檔案的讀取權限"
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later"
-" date simply edit %s"
-msgstr "當您確認上面的需求都滿足以後，請在下方填入資訊。您將只會被詢問必備的設定值。如果您之後想要修改您的 Ampache 安裝，只要編輯 %s"
+"values. If you would like to make changes to your Ampache install at a later "
+"date simply edit %s"
+msgstr ""
+"當您確認上面的需求都滿足以後，請在下方填入資訊。您將只會被詢問必備的設定值。"
+"如果您之後想要修改您的 Ampache 安裝，只要編輯 %s"
 
 #: ../../templates/show_install_check.inc.php:44
-#: ../../templates/show_test.inc.php:60
+#: ../../templates/show_test.inc.php:59
 msgid "CHECK"
 msgstr "檢查"
 
 #: ../../templates/show_install_check.inc.php:45
-#: ../../templates/show_test.inc.php:61
+#: ../../templates/show_test.inc.php:60
 msgid "STATUS"
 msgstr "狀態"
 
 #: ../../templates/show_install_check.inc.php:46
-#: ../../templates/show_test.inc.php:62
+#: ../../templates/show_test.inc.php:61
 msgid "DESCRIPTION"
 msgstr "描述"
 
@@ -6517,19 +6573,23 @@ msgstr "ampache.cfg.php 可寫入"
 
 #: ../../templates/show_install_check.inc.php:62
 msgid ""
-"This tests whether PHP can write to config/. This is not strictly necessary,"
-" but will help streamline the installation process."
-msgstr "這測試 PHP 是否有寫入 config/ 的權限。這並非必要，但是可以使安裝流程更順暢。"
+"This tests whether PHP can write to config/. This is not strictly necessary, "
+"but will help streamline the installation process."
+msgstr ""
+"這測試 PHP 是否有寫入 config/ 的權限。這並非必要，但是可以使安裝流程更順暢。"
 
 #: ../../templates/show_install_config.inc.php:55
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache"
-" write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache "
+"write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s"
-msgstr "這個步驟將要求一些基本的設定值，並產生設定檔。如果您的 config/ 資料夾可寫入，您可以選擇「寫入」來讓 Ampache 直接在正確位置寫入設定檔。如果您選取「下載」，將會使您下載設定檔，然後您可以自行將設定檔放於 %s 內"
+msgstr ""
+"這個步驟將要求一些基本的設定值，並產生設定檔。如果您的 config/ 資料夾可寫入，"
+"您可以選擇「寫入」來讓 Ampache 直接在正確位置寫入設定檔。如果您選取「下載」，"
+"將會使您下載設定檔，然後您可以自行將設定檔放於 %s 內"
 
 #: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
@@ -6540,7 +6600,7 @@ msgid "Web Path"
 msgstr "網頁路徑"
 
 #: ../../templates/show_install_config.inc.php:71
-#: ../../templates/show_test_table.inc.php:234
+#: ../../templates/show_test_table.inc.php:227
 msgid "Database connection"
 msgstr "資料庫連線"
 
@@ -6611,17 +6671,22 @@ msgid ""
 "advantage of existing binary applications such as ffmpeg. In order for "
 "transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr "轉碼使您能轉換檔案類型。Ampache 支援即時轉碼到所有檔案類型，根據使用者、播放器、IP 位址或可用頻寬。Ampache 會依靠現存的應用程式如 ffmpeg 來實現轉碼功能。為了讓轉碼功能運作，您必須確認該程式可以被網頁伺服器執行。"
+msgstr ""
+"轉碼使您能轉換檔案類型。Ampache 支援即時轉碼到所有檔案類型，根據使用者、播放"
+"器、IP 位址或可用頻寬。Ampache 會依靠現存的應用程式如 ffmpeg 來實現轉碼功能。"
+"為了讓轉碼功能運作，您必須確認該程式可以被網頁伺服器執行。"
 
 #: ../../templates/show_install_config.inc.php:135
 msgid ""
 "This section apply default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once this "
 "setup ended"
-msgstr "這些設定已經根據您的使用模式，套用了預設轉碼設定。您可以在安裝結束時調整這些設定。"
+msgstr ""
+"這些設定已經根據您的使用模式，套用了預設轉碼設定。您可以在安裝結束時調整這些"
+"設定。"
 
 #: ../../templates/show_install_config.inc.php:135
-#: ../../templates/show_install_config.inc.php:169
+#: ../../templates/show_install_config.inc.php:165
 msgid "See wiki page"
 msgstr "前往維基頁面"
 
@@ -6629,107 +6694,112 @@ msgstr "前往維基頁面"
 msgid "Template Configuration"
 msgstr "樣板設定"
 
-#: ../../templates/show_install_config.inc.php:159
+#: ../../templates/show_install_config.inc.php:156
 msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
-msgstr "找不到預設轉碼程式。您可能需要安裝這些常見的轉碼程式(ffmpeg、avconv…)之一，或是在安裝結束後自行調整轉碼設定。"
+msgstr ""
+"找不到預設轉碼程式。您可能需要安裝這些常見的轉碼程式(ffmpeg、avconv…)之一，或"
+"是在安裝結束後自行調整轉碼設定。"
 
-#: ../../templates/show_install_config.inc.php:167
+#: ../../templates/show_install_config.inc.php:163
 msgid "Players"
 msgstr "播放器"
 
-#: ../../templates/show_install_config.inc.php:168
+#: ../../templates/show_install_config.inc.php:164
 msgid ""
 "Ampache is more than only a web interface. Several backends are implemented "
 "to ensure you can stream your media from anywhere."
-msgstr "Ampache 不只有網頁界面。有許多後端已實做來保證您可以在任何地方串流您的媒體。"
+msgstr ""
+"Ampache 不只有網頁界面。有許多後端已實做來保證您可以在任何地方串流您的媒體。"
 
-#: ../../templates/show_install_config.inc.php:169
+#: ../../templates/show_install_config.inc.php:165
 msgid ""
 "Select backends to enable. Depending the backend, you may need to perform "
 "additional configuration."
 msgstr "選擇要啟用的後端。根據不同的後端，您可能需要進行更多設定。"
 
-#: ../../templates/show_install_config.inc.php:209
+#: ../../templates/show_install_config.inc.php:205
 msgid "File Insight"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:219
+#: ../../templates/show_install_config.inc.php:215
 msgid "channel/.htaccess action"
 msgstr "channel/.htaccess 動作"
 
-#: ../../templates/show_install_config.inc.php:229
-#: ../../templates/show_install_config.inc.php:254
-#: ../../templates/show_install_config.inc.php:279
-#: ../../templates/show_install_config.inc.php:303
+#: ../../templates/show_install_config.inc.php:222
+#: ../../templates/show_install_config.inc.php:239
+#: ../../templates/show_install_config.inc.php:256
+#: ../../templates/show_install_config.inc.php:275
 msgid "Write"
 msgstr "寫入"
 
-#: ../../templates/show_install_config.inc.php:233
+#: ../../templates/show_install_config.inc.php:225
 msgid "channel/.htaccess exists?"
 msgstr "channel/.htaccess 已存在？"
 
-#: ../../templates/show_install_config.inc.php:237
+#: ../../templates/show_install_config.inc.php:227
 msgid "channel/.htaccess configured?"
 msgstr "channel/.htaccess 已設定？"
 
-#: ../../templates/show_install_config.inc.php:244
+#: ../../templates/show_install_config.inc.php:232
 msgid "rest/.htaccess action"
 msgstr "rest/.htaccess 動作"
 
-#: ../../templates/show_install_config.inc.php:258
+#: ../../templates/show_install_config.inc.php:242
 msgid "rest/.htaccess exists?"
 msgstr "rest/.htaccess 已存在？"
 
-#: ../../templates/show_install_config.inc.php:262
+#: ../../templates/show_install_config.inc.php:244
 msgid "rest/.htaccess configured?"
 msgstr "rest/.htaccess 已設定？"
 
-#: ../../templates/show_install_config.inc.php:269
+#: ../../templates/show_install_config.inc.php:249
 msgid "play/.htaccess action"
 msgstr "play/.htaccess 動作"
 
-#: ../../templates/show_install_config.inc.php:283
+#: ../../templates/show_install_config.inc.php:259
 msgid "play/.htaccess exists?"
 msgstr "play/.htaccess 已存在？"
 
-#: ../../templates/show_install_config.inc.php:287
+#: ../../templates/show_install_config.inc.php:261
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess 已設定？"
 
-#: ../../templates/show_install_config.inc.php:296
+#: ../../templates/show_install_config.inc.php:268
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php 動作"
 
-#: ../../templates/show_install_config.inc.php:306
+#: ../../templates/show_install_config.inc.php:278
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php 已存在？"
 
-#: ../../templates/show_install_config.inc.php:308
+#: ../../templates/show_install_config.inc.php:280
 msgid "config/ampache.cfg.php configured?"
 msgstr "config/ampache.cfg.php 已設定？"
 
-#: ../../templates/show_install_config.inc.php:315
+#: ../../templates/show_install_config.inc.php:287
 msgid "Recheck Config"
 msgstr "重新檢查設定"
 
-#: ../../templates/show_install_config.inc.php:323
+#: ../../templates/show_install_config.inc.php:295
 #: ../../templates/show_install.inc.php:130
 msgid "Skip"
 msgstr "略過"
 
-#: ../../templates/show_install_config.inc.php:326
+#: ../../templates/show_install_config.inc.php:298
 msgid "Create config"
 msgstr "建立設定"
 
 #: ../../templates/show_install.inc.php:39
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
-"MySQL account with database creation rights. This step may take some time on"
-" slower computers."
-msgstr "這個步驟會建立 Ampache 資料庫並插入資料，所以請提供擁有建立資料庫權限的 MySQL 帳號。在低階電腦上，此步驟可能會需要一些時間。"
+"MySQL account with database creation rights. This step may take some time on "
+"slower computers."
+msgstr ""
+"這個步驟會建立 Ampache 資料庫並插入資料，所以請提供擁有建立資料庫權限的 "
+"MySQL 帳號。在低階電腦上，此步驟可能會需要一些時間。"
 
 #: ../../templates/show_install.inc.php:47
 msgid "Insert Ampache Database"
@@ -6793,36 +6863,36 @@ msgstr "開始設定"
 msgid "%s IP History"
 msgstr "%s IP 歷史"
 
-#: ../../templates/show_ip_history.inc.php:31
+#: ../../templates/show_ip_history.inc.php:30
 msgid "Show Unique"
 msgstr ""
 
-#: ../../templates/show_ip_history.inc.php:38
+#: ../../templates/show_ip_history.inc.php:35
 msgid "Show All"
 msgstr "顯示全部"
 
-#: ../../templates/show_ip_history.inc.php:54
-#: ../../templates/show_ip_history.inc.php:73
+#: ../../templates/show_ip_history.inc.php:50
+#: ../../templates/show_ip_history.inc.php:66
 msgid "IP Address"
 msgstr "IP 位址"
 
-#: ../../templates/show_label.inc.php:79 ../../templates/show_label.inc.php:82
+#: ../../templates/show_label.inc.php:71 ../../templates/show_label.inc.php:72
 msgid "Send e-mail"
 msgstr "寄送電子郵件"
 
-#: ../../templates/show_label.inc.php:90 ../../templates/show_label.inc.php:94
+#: ../../templates/show_label.inc.php:79 ../../templates/show_label.inc.php:82
 msgid "Label edit"
 msgstr "標籤編輯"
 
-#: ../../templates/show_label.inc.php:95
+#: ../../templates/show_label.inc.php:83
 msgid "Edit Label"
 msgstr "編輯標籤"
 
-#: ../../templates/show_labels.inc.php:31
+#: ../../templates/show_labels.inc.php:29
 msgid "Create a new label"
 msgstr "建立新的標籤"
 
-#: ../../templates/show_labels.inc.php:76
+#: ../../templates/show_labels.inc.php:65
 msgid "No label found"
 msgstr "找不到標籤"
 
@@ -6843,7 +6913,7 @@ msgstr "即時串流編輯"
 msgid "Manage Radio Stations"
 msgstr "管理廣播站"
 
-#: ../../templates/show_live_streams.inc.php:72
+#: ../../templates/show_live_streams.inc.php:63
 msgid "No live stream found"
 msgstr "找不到即時串流"
 
@@ -6851,8 +6921,8 @@ msgstr "找不到即時串流"
 msgid "Add Localplay Instance"
 msgstr "新增本地播放器實體"
 
-#: ../../templates/show_localplay_add_instance.inc.php:40
-#: ../../templates/sidebar_localplay.inc.php:50
+#: ../../templates/show_localplay_add_instance.inc.php:37
+#: ../../templates/sidebar_localplay.inc.php:42
 msgid "Add Instance"
 msgstr "新增實體"
 
@@ -6872,7 +6942,7 @@ msgstr "暫停"
 msgid "Edit Localplay Instance"
 msgstr "編輯本地播放器實體"
 
-#: ../../templates/show_localplay_edit_instance.inc.php:41
+#: ../../templates/show_localplay_edit_instance.inc.php:37
 msgid "Update Instance"
 msgstr "更新實體"
 
@@ -6880,7 +6950,7 @@ msgstr "更新實體"
 msgid "Show Localplay Instances"
 msgstr "顯示本地播放器實體"
 
-#: ../../templates/show_localplay_instances.inc.php:59
+#: ../../templates/show_localplay_instances.inc.php:51
 msgid "Edit Instance"
 msgstr "編輯實體"
 
@@ -6916,7 +6986,7 @@ msgstr "記住我"
 msgid "Lost password"
 msgstr "忘記密碼"
 
-#: ../../templates/show_login_form.inc.php:94
+#: ../../templates/show_login_form.inc.php:92
 msgid "Message of the Day"
 msgstr "今日訊息"
 
@@ -6928,7 +6998,7 @@ msgstr "提交"
 msgid "No lyrics found."
 msgstr "找不到歌詞。"
 
-#: ../../templates/show_lyrics.inc.php:65
+#: ../../templates/show_lyrics.inc.php:64
 msgid "Show more"
 msgstr "顯示更多"
 
@@ -7001,11 +7071,11 @@ msgstr "從 [%s] 更新"
 msgid "Manage Democratic Playlists"
 msgstr "管理民主播放清單"
 
-#: ../../templates/show_manage_democratic.inc.php:68
+#: ../../templates/show_manage_democratic.inc.php:56
 msgid "No democratic found"
 msgstr "找不到民主播放清單"
 
-#: ../../templates/show_manage_democratic.inc.php:76
+#: ../../templates/show_manage_democratic.inc.php:63
 msgid "Create New Playlist"
 msgstr "建立新的播放清單"
 
@@ -7013,23 +7083,23 @@ msgstr "建立新的播放清單"
 msgid "Create new license"
 msgstr "建立新的授權"
 
-#: ../../templates/show_manage_license.inc.php:53
+#: ../../templates/show_manage_license.inc.php:51
 msgid "No Licenses Found"
 msgstr "找不到授權"
 
 #: ../../templates/show_manage_shoutbox.inc.php:28
-#: ../../templates/show_manage_shoutbox.inc.php:62
+#: ../../templates/show_manage_shoutbox.inc.php:59
 #: ../../templates/show_shared_objects.inc.php:26
 msgid "Object"
 msgstr "物件"
 
 #: ../../templates/show_manage_shoutbox.inc.php:30
-#: ../../templates/show_manage_shoutbox.inc.php:64
+#: ../../templates/show_manage_shoutbox.inc.php:61
 msgid "Sticky"
 msgstr "置頂"
 
 #: ../../templates/show_manage_shoutbox.inc.php:32
-#: ../../templates/show_manage_shoutbox.inc.php:66
+#: ../../templates/show_manage_shoutbox.inc.php:63
 msgid "Date Added"
 msgstr "新增日期"
 
@@ -7042,12 +7112,12 @@ msgid "Trending"
 msgstr "趨勢"
 
 #: ../../templates/show_mashup.inc.php:41
-#: ../../templates/sidebar_home.inc.php:147
+#: ../../templates/sidebar_home.inc.php:131
 msgid "Newest"
 msgstr "最新"
 
 #: ../../templates/show_mashup.inc.php:51
-#: ../../templates/sidebar_home.inc.php:148
+#: ../../templates/sidebar_home.inc.php:132
 msgid "Popular"
 msgstr "熱門"
 
@@ -7055,16 +7125,16 @@ msgstr "熱門"
 msgid "Wanted actions"
 msgstr ""
 
-#: ../../templates/show_missing_albums.inc.php:55
+#: ../../templates/show_missing_albums.inc.php:50
 msgid "No missing albums found"
 msgstr "找不到缺少的專輯"
 
-#: ../../templates/show_missing_artists.inc.php:55
+#: ../../templates/show_missing_artists.inc.php:48
 msgid "No missing artists found"
 msgstr "找不到缺少的作者"
 
-#: ../../templates/show_now_playing_row.inc.php:94
-#: ../../templates/show_now_playing_similar.inc.php:59
+#: ../../templates/show_now_playing_row.inc.php:88
+#: ../../templates/show_now_playing_similar.inc.php:56
 msgid "Similar Songs"
 msgstr "相似的歌曲"
 
@@ -7094,31 +7164,31 @@ msgstr "一季電視節目"
 msgid "Episode Number"
 msgstr "單集編號"
 
-#: ../../templates/show_playlist.inc.php:82
-#: ../../templates/show_playlist.inc.php:84
+#: ../../templates/show_playlist.inc.php:69
+#: ../../templates/show_playlist.inc.php:70
 msgid "Sort Tracks by Artist, Album, Song"
 msgstr "依照作者、專輯、歌曲排序音軌"
 
-#: ../../templates/show_playlist.inc.php:90
-#: ../../templates/show_playlist.inc.php:92
+#: ../../templates/show_playlist.inc.php:73
+#: ../../templates/show_playlist.inc.php:74
 msgid "Remove duplicates"
 msgstr "移除重複"
 
-#: ../../templates/show_playlist.inc.php:151
+#: ../../templates/show_playlist.inc.php:121
 msgid "Create channel"
 msgstr "建立頻道"
 
-#: ../../templates/show_playlist.inc.php:163
-#: ../../templates/show_playlist_row.inc.php:110
+#: ../../templates/show_playlist.inc.php:130
+#: ../../templates/show_playlist_row.inc.php:99
 msgid "Do you really want to delete the playlist?"
 msgstr "您確定要刪除此播放清單嗎？"
 
-#: ../../templates/show_playlist_media_row.inc.php:99
-#: ../../templates/show_song_row.inc.php:156
+#: ../../templates/show_playlist_media_row.inc.php:93
+#: ../../templates/show_song_row.inc.php:140
 msgid "Reorder"
 msgstr "調整順序"
 
-#: ../../templates/show_playlist_row.inc.php:106
+#: ../../templates/show_playlist_row.inc.php:96
 msgid "Playlist edit"
 msgstr "播放清單編輯"
 
@@ -7127,23 +7197,23 @@ msgid "Playlist name"
 msgstr "播放清單名稱"
 
 #: ../../templates/show_playlists.inc.php:37
-#: ../../templates/show_playlists.inc.php:101
+#: ../../templates/show_playlists.inc.php:92
 msgid "Last Update"
 msgstr "最後更新"
 
 #: ../../templates/show_playlists.inc.php:39
-#: ../../templates/show_playlists.inc.php:103
+#: ../../templates/show_playlists.inc.php:94
 msgid "# Medias"
 msgstr "# 媒體"
 
 #: ../../templates/show_playlists.inc.php:40
-#: ../../templates/show_playlists.inc.php:104
-#: ../../templates/show_searches.inc.php:50
-#: ../../templates/show_searches.inc.php:86
+#: ../../templates/show_playlists.inc.php:95
+#: ../../templates/show_searches.inc.php:47
+#: ../../templates/show_searches.inc.php:77
 msgid "Owner"
 msgstr "擁有者"
 
-#: ../../templates/show_playlists.inc.php:85
+#: ../../templates/show_playlists.inc.php:77
 msgid "No playlist found"
 msgstr "找不到播放清單"
 
@@ -7153,7 +7223,7 @@ msgid "%s %s (Playlist)"
 msgstr "%s %s (播放清單)"
 
 #: ../../templates/show_plugins.inc.php:32
-#: ../../templates/show_plugins.inc.php:83
+#: ../../templates/show_plugins.inc.php:74
 msgid "Installed Version"
 msgstr "已安裝版本"
 
@@ -7165,52 +7235,52 @@ msgstr "停用"
 msgid "Upgrade"
 msgstr "升級"
 
-#: ../../templates/show_podcast_episode.inc.php:134
-#: ../../templates/show_song.inc.php:152
-#: ../../templates/show_video.inc.php:144
+#: ../../templates/show_podcast_episode.inc.php:106
+#: ../../templates/show_song.inc.php:118
+#: ../../templates/show_video.inc.php:117
 msgid "Link"
 msgstr "鍊結"
 
-#: ../../templates/show_podcast_episode.inc.php:179
+#: ../../templates/show_podcast_episode.inc.php:139
 #: ../../templates/show_podcast_episodes.inc.php:35
-#: ../../templates/show_podcast_episodes.inc.php:105
+#: ../../templates/show_podcast_episodes.inc.php:91
 msgid "Publication Date"
 msgstr "公開日期"
 
-#: ../../templates/show_podcast_episode.inc.php:187
+#: ../../templates/show_podcast_episode.inc.php:147
 msgid "File"
 msgstr "檔案"
 
-#: ../../templates/show_podcast_episode_row.inc.php:97
-#: ../../templates/show_podcast.inc.php:127
-#: ../../templates/show_podcast.inc.php:129
-#: ../../templates/show_podcast_row.inc.php:78
+#: ../../templates/show_podcast_episode_row.inc.php:88
+#: ../../templates/show_podcast.inc.php:105
+#: ../../templates/show_podcast.inc.php:106
+#: ../../templates/show_podcast_row.inc.php:71
 msgid "Sync"
 msgstr "同步"
 
-#: ../../templates/show_podcast_episode_row.inc.php:100
+#: ../../templates/show_podcast_episode_row.inc.php:90
 msgid "Podcast Episode edit"
 msgstr "單集播客編輯"
 
-#: ../../templates/show_podcast_episodes.inc.php:86
+#: ../../templates/show_podcast_episodes.inc.php:74
 msgid "No podcast episode found"
 msgstr "找不到單集播客"
 
-#: ../../templates/show_podcast.inc.php:117
-#: ../../templates/show_podcast.inc.php:121
-#: ../../templates/show_podcast_row.inc.php:72
+#: ../../templates/show_podcast.inc.php:97
+#: ../../templates/show_podcast.inc.php:100
+#: ../../templates/show_podcast_row.inc.php:67
 msgid "Podcast edit"
 msgstr "播客編輯"
 
-#: ../../templates/show_podcast.inc.php:122
+#: ../../templates/show_podcast.inc.php:101
 msgid "Edit Podcast"
 msgstr "編輯播客"
 
-#: ../../templates/show_podcasts.inc.php:31
+#: ../../templates/show_podcasts.inc.php:29
 msgid "Subscribe Podcast"
 msgstr "訂閱播客"
 
-#: ../../templates/show_podcasts.inc.php:103
+#: ../../templates/show_podcasts.inc.php:86
 msgid "No podcast found"
 msgstr "找不到播客"
 
@@ -7219,12 +7289,12 @@ msgid "Preference Administration"
 msgstr "偏好設定管理"
 
 #: ../../templates/show_preference_box.inc.php:48
-#: ../../templates/show_preference_box.inc.php:121
+#: ../../templates/show_preference_box.inc.php:100
 msgid "Apply to All"
 msgstr "套用到全部"
 
-#: ../../templates/show_preference_box.inc.php:50
-#: ../../templates/show_preference_box.inc.php:123
+#: ../../templates/show_preference_box.inc.php:49
+#: ../../templates/show_preference_box.inc.php:101
 msgid "Access Level"
 msgstr "存取等級"
 
@@ -7236,8 +7306,8 @@ msgstr "存取等級"
 msgid "Editing %s preferences"
 msgstr "編輯 %s 的偏好設定"
 
-#: ../../templates/show_preferences.inc.php:38
-#: ../../templates/show_user_preferences.inc.php:56
+#: ../../templates/show_preferences.inc.php:36
+#: ../../templates/show_user_preferences.inc.php:53
 msgid "Update Preferences"
 msgstr "更新偏好設定"
 
@@ -7267,11 +7337,11 @@ msgid "Set as unread"
 msgstr "設為未讀"
 
 #: ../../templates/show_pvmsgs.inc.php:51
-#: ../../templates/show_pvmsgs.inc.php:87
+#: ../../templates/show_pvmsgs.inc.php:80
 msgid "Sender"
 msgstr "寄信人"
 
-#: ../../templates/show_pvmsgs.inc.php:77
+#: ../../templates/show_pvmsgs.inc.php:71
 msgid "No message found"
 msgstr "找不到訊息"
 
@@ -7284,99 +7354,99 @@ msgstr "重新載入"
 msgid "Play Random Selection"
 msgstr "播放隨選歌曲"
 
-#: ../../templates/show_random.inc.php:53
+#: ../../templates/show_random.inc.php:47
 msgid "Item count"
 msgstr "項目數量"
 
-#: ../../templates/show_random.inc.php:80
-#: ../../templates/show_random.inc.php:104
-#: ../../templates/show_search_form.inc.php:64
+#: ../../templates/show_random.inc.php:74
+#: ../../templates/show_random.inc.php:98
+#: ../../templates/show_search_form.inc.php:56
 msgid "Unlimited"
 msgstr "無限制"
 
-#: ../../templates/show_random.inc.php:86
+#: ../../templates/show_random.inc.php:80
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d 分"
 
-#: ../../templates/show_random.inc.php:88
+#: ../../templates/show_random.inc.php:82
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d 小時"
 
-#: ../../templates/show_random.inc.php:97
+#: ../../templates/show_random.inc.php:91
 msgid "Size Limit"
 msgstr "大小限制"
 
-#: ../../templates/show_random.inc.php:120
+#: ../../templates/show_random.inc.php:114
 msgid "Enqueue"
 msgstr "加入佇列"
 
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:186
+#: ../../templates/show_recently_played.inc.php:165
 msgid "Last Played"
 msgstr "上次播放"
 
 #: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:189
+#: ../../templates/show_recently_played.inc.php:168
 msgid "Agent"
 msgstr "客戶端"
 
-#: ../../templates/show_recently_played.inc.php:73
+#: ../../templates/show_recently_played.inc.php:72
 #, php-format
 msgid "%d second ago"
 msgid_plural "%d seconds ago"
 msgstr[0] "%d 秒前"
 
-#: ../../templates/show_recently_played.inc.php:76
+#: ../../templates/show_recently_played.inc.php:75
 #, php-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "%d 分前"
 
-#: ../../templates/show_recently_played.inc.php:79
+#: ../../templates/show_recently_played.inc.php:78
 #, php-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] "%d 小時前"
 
-#: ../../templates/show_recently_played.inc.php:82
+#: ../../templates/show_recently_played.inc.php:81
 #, php-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d 天前"
 
-#: ../../templates/show_recently_played.inc.php:85
+#: ../../templates/show_recently_played.inc.php:84
 #, php-format
 msgid "%d week ago"
 msgid_plural "%d weeks ago"
 msgstr[0] "%d 週前"
 
-#: ../../templates/show_recently_played.inc.php:88
+#: ../../templates/show_recently_played.inc.php:87
 #, php-format
 msgid "%d month ago"
 msgid_plural "%d months ago"
 msgstr[0] "%d 個月前"
 
-#: ../../templates/show_recently_played.inc.php:91
+#: ../../templates/show_recently_played.inc.php:90
 #, php-format
 msgid "%d year ago"
 msgid_plural "%d years ago"
 msgstr[0] "%d 年前"
 
-#: ../../templates/show_recently_played.inc.php:94
+#: ../../templates/show_recently_played.inc.php:93
 #, php-format
 msgid "%d decade ago"
 msgid_plural "%d decades ago"
 msgstr[0] "%d0 年前"
 
-#: ../../templates/show_recently_played.inc.php:172
+#: ../../templates/show_recently_played.inc.php:152
 msgid "No recently item found"
 msgstr "找不到最近的項目"
 
-#: ../../templates/show_recommended_artists.inc.php:107
+#: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
 msgstr "找不到相似的作者"
 
@@ -7403,7 +7473,8 @@ msgstr "請等待管理員啟用您的帳號。"
 msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
 "check your e-mail for further information."
-msgstr "啟動金鑰已被寄送到您提供的電子郵件位址。請檢查您的電子郵件來獲得更多資訊。"
+msgstr ""
+"啟動金鑰已被寄送到您提供的電子郵件位址。請檢查您的電子郵件來獲得更多資訊。"
 
 #: ../../templates/show_registration_confirmation.inc.php:55
 msgid "Return to Login Page"
@@ -7445,16 +7516,16 @@ msgstr "缺少作者"
 msgid "Advanced Search"
 msgstr "進階搜尋"
 
-#: ../../templates/show_searches.inc.php:31
+#: ../../templates/show_searches.inc.php:29
 msgid "Add Smart Playlist"
 msgstr "新增智慧播放清單"
 
-#: ../../templates/show_searches.inc.php:49
-#: ../../templates/show_searches.inc.php:85
+#: ../../templates/show_searches.inc.php:46
+#: ../../templates/show_searches.inc.php:76
 msgid "Item Limit"
 msgstr "項目上限"
 
-#: ../../templates/show_searches.inc.php:72
+#: ../../templates/show_searches.inc.php:64
 msgid "No smart playlist found"
 msgstr "找不到智慧播放清單"
 
@@ -7462,20 +7533,20 @@ msgstr "找不到智慧播放清單"
 msgid "Search Ampache"
 msgstr "搜尋 Ampache"
 
-#: ../../templates/show_search_form.inc.php:61
+#: ../../templates/show_search_form.inc.php:53
 msgid "Maximum Results"
 msgstr "最大結果量"
 
-#: ../../templates/show_search_form.inc.php:88
+#: ../../templates/show_search_form.inc.php:80
 msgid "Save as Smart Playlist"
 msgstr "儲存為智慧播放清單"
 
-#: ../../templates/show_search.inc.php:45
-#: ../../templates/show_search.inc.php:46
+#: ../../templates/show_search.inc.php:41
+#: ../../templates/show_search.inc.php:42
 msgid "Add All"
 msgstr "新增全部"
 
-#: ../../templates/show_search.inc.php:68
+#: ../../templates/show_search.inc.php:60
 msgid "Save Changes"
 msgstr "儲存修改"
 
@@ -7488,7 +7559,7 @@ msgstr "選項"
 msgid "Add Search Results"
 msgstr "新增搜尋規則"
 
-#: ../../templates/show_search_row.inc.php:63
+#: ../../templates/show_search_row.inc.php:60
 msgid "Smart Playlist edit"
 msgstr "智慧播放清單編輯"
 
@@ -7525,58 +7596,58 @@ msgstr "共享者"
 msgid "Clean expired shared objects"
 msgstr "清理逾期的共享物件"
 
-#: ../../templates/show_song.inc.php:76
+#: ../../templates/show_song.inc.php:60
 msgid "Waveform"
 msgstr "波形"
 
-#: ../../templates/show_song.inc.php:217 ../../templates/show_song.inc.php:218
-#: ../../templates/show_song.inc.php:219
+#: ../../templates/show_song.inc.php:169 ../../templates/show_song.inc.php:170
+#: ../../templates/show_song.inc.php:171
 msgid "Links"
 msgstr "鍊結"
 
-#: ../../templates/show_song.inc.php:223
+#: ../../templates/show_song.inc.php:175
 msgid "Song Language"
 msgstr "歌曲語言"
 
-#: ../../templates/show_song.inc.php:224
+#: ../../templates/show_song.inc.php:176
 msgid "Catalog Number"
 msgstr "目錄編號"
 
-#: ../../templates/show_song.inc.php:228
+#: ../../templates/show_song.inc.php:180
 msgid "ReplayGain Track Gain"
 msgstr "音軌回放增益"
 
-#: ../../templates/show_song.inc.php:231
+#: ../../templates/show_song.inc.php:183
 msgid "ReplayGain Album Gain"
 msgstr "專輯回放增益"
 
-#: ../../templates/show_song.inc.php:237
-#: ../../templates/show_video.inc.php:198
+#: ../../templates/show_song.inc.php:189
+#: ../../templates/show_video.inc.php:159
 msgid "Last Updated"
 msgstr "最後更新"
 
-#: ../../templates/show_song.inc.php:245
+#: ../../templates/show_song.inc.php:197
 msgid "Lyrics"
 msgstr "歌詞"
 
-#: ../../templates/show_song.inc.php:249
+#: ../../templates/show_song.inc.php:201
 msgid "Licensing"
 msgstr "正在收聽"
 
-#: ../../templates/show_song_row.inc.php:103
+#: ../../templates/show_song_row.inc.php:95
 msgid "Song Information"
 msgstr "歌曲資訊"
 
-#: ../../templates/show_song_row.inc.php:123
+#: ../../templates/show_song_row.inc.php:115
 msgid "Song edit"
 msgstr "歌曲編輯"
 
 #: ../../templates/show_songs.inc.php:41
-#: ../../templates/show_songs.inc.php:120
+#: ../../templates/show_songs.inc.php:104
 msgid "License"
 msgstr "授權"
 
-#: ../../templates/show_songs.inc.php:103
+#: ../../templates/show_songs.inc.php:88
 msgid "No song found"
 msgstr "找不到歌曲"
 
@@ -7596,11 +7667,11 @@ msgstr "目錄大小"
 msgid "Catalog Time"
 msgstr "目錄時間"
 
-#: ../../templates/show_tagcloud.inc.php:63
+#: ../../templates/show_tagcloud.inc.php:60
 msgid "Tag edit"
 msgstr "標籤編輯"
 
-#: ../../templates/show_tagcloud.inc.php:70
+#: ../../templates/show_tagcloud.inc.php:65
 msgid "Do you really want to delete the tag?"
 msgstr "您確定要刪除此標籤嗎？"
 
@@ -7640,257 +7711,281 @@ msgstr "這是測試 Ampache 依賴的程式是否有安裝。"
 
 #: ../../templates/show_test_table.inc.php:42
 msgid ""
-"Please download and install Composer from http://getcomposer.org and install"
-" it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
+"Please download and install Composer from http://getcomposer.org and install "
+"it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer "
 "install --prefer-source --no-interaction` on Ampache directory."
-msgstr "請從 http://getcomposer.org 下載並安裝 Composer (如： mv composer.phar /usr/local/bin/composer)，然後在 Ampache 的資料夾內執行 `composer install --prefer-source --no-interaction`"
+msgstr ""
+"請從 http://getcomposer.org 下載並安裝 Composer (如： mv composer.phar /usr/"
+"local/bin/composer)，然後在 Ampache 的資料夾內執行 `composer install --"
+"prefer-source --no-interaction`"
 
-#: ../../templates/show_test_table.inc.php:49
+#: ../../templates/show_test_table.inc.php:48
 msgid "PHP hash extension"
 msgstr "PHP hash 擴展"
 
-#: ../../templates/show_test_table.inc.php:54
+#: ../../templates/show_test_table.inc.php:53
 msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
 msgstr "這是測試您是否啟用了 hash 擴展。Ampache 需要該擴展。"
 
-#: ../../templates/show_test_table.inc.php:58
+#: ../../templates/show_test_table.inc.php:57
 msgid "SHA256"
 msgstr "SHA256"
 
-#: ../../templates/show_test_table.inc.php:63
+#: ../../templates/show_test_table.inc.php:62
 msgid ""
 "This tests whether the hash extension supports SHA256. This algorithm is "
 "required by Ampache."
 msgstr "這是測試 hash 擴展是否支援 SHA256。Ampache 需要此演算法。"
 
-#: ../../templates/show_test_table.inc.php:67
+#: ../../templates/show_test_table.inc.php:66
 msgid "PHP PDO extension"
 msgstr "PHP PDO 擴展"
 
-#: ../../templates/show_test_table.inc.php:72
+#: ../../templates/show_test_table.inc.php:71
 msgid ""
 "This tests whether you have the PDO extension enabled. This extension is "
 "required by Ampache."
 msgstr "這是測試您是否啟用了 PDO 擴展。Ampache 需要該擴展。"
 
-#: ../../templates/show_test_table.inc.php:76
+#: ../../templates/show_test_table.inc.php:75
 msgid "MySQL"
 msgstr "MySQL"
 
-#: ../../templates/show_test_table.inc.php:81
+#: ../../templates/show_test_table.inc.php:80
 msgid ""
 "This tests whether the MySQL driver for PDO is enabled. This driver is "
 "required by Ampache."
 msgstr "這是測試 PDO 擴展是否支援 MySQL 引擎。Ampache 需要該引擎。"
 
-#: ../../templates/show_test_table.inc.php:85
+#: ../../templates/show_test_table.inc.php:84
 msgid "PHP session extension"
 msgstr "PHP session 擴展"
 
-#: ../../templates/show_test_table.inc.php:90
+#: ../../templates/show_test_table.inc.php:89
 msgid ""
-"This tests whether you have the session extension enabled. This extension is"
-" required by Ampache."
+"This tests whether you have the session extension enabled. This extension is "
+"required by Ampache."
 msgstr "這是測試您是否啟用了 session 擴展。Ampache 需要該擴展。"
 
-#: ../../templates/show_test_table.inc.php:94
+#: ../../templates/show_test_table.inc.php:93
 msgid "PHP iconv extension"
 msgstr "PHP iconv 擴展"
 
-#: ../../templates/show_test_table.inc.php:99
+#: ../../templates/show_test_table.inc.php:98
 msgid ""
 "This tests whether you have the iconv extension enabled. This extension is "
 "required by Ampache."
 msgstr "這是測試您是否啟用了 iconv 擴展。Ampache 需要該擴展。"
 
-#: ../../templates/show_test_table.inc.php:103
+#: ../../templates/show_test_table.inc.php:102
 msgid "PHP JSON extension"
 msgstr "PHP JSON 擴展"
 
-#: ../../templates/show_test_table.inc.php:108
+#: ../../templates/show_test_table.inc.php:107
 msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
 msgstr "這是測試您是否啟用了 JSON 擴展。Ampache 需要該擴展。"
 
-#: ../../templates/show_test_table.inc.php:112
+#: ../../templates/show_test_table.inc.php:111
 msgid "PHP curl extension"
 msgstr "PHP curl 擴展"
 
-#: ../../templates/show_test_table.inc.php:117
+#: ../../templates/show_test_table.inc.php:116
 msgid ""
-"This tests whether you have the curl extension enabled. This is not strictly"
-" necessary, but may result in a better experience."
+"This tests whether you have the curl extension enabled. This is not strictly "
+"necessary, but may result in a better experience."
 msgstr "這會測試您是否有啟用 curl 擴展。雖然非必要，但是這可以提昇服務品質。"
 
-#: ../../templates/show_test_table.inc.php:121
+#: ../../templates/show_test_table.inc.php:120
 msgid "PHP zlib extension"
 msgstr "PHP zlib 擴展"
 
-#: ../../templates/show_test_table.inc.php:126
+#: ../../templates/show_test_table.inc.php:125
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly"
-" necessary, but may result in a better experience (zip download)."
-msgstr "這會測試您是否有啟用 zlib 擴展。雖然非必要，但是這可以提昇服務品質 (壓縮下載內容)。"
+"This tests whether you have the zlib extension enabled. This is not strictly "
+"necessary, but may result in a better experience (zip download)."
+msgstr ""
+"這會測試您是否有啟用 zlib 擴展。雖然非必要，但是這可以提昇服務品質 (壓縮下載"
+"內容)。"
 
-#: ../../templates/show_test_table.inc.php:130
+#: ../../templates/show_test_table.inc.php:129
 msgid "PHP simplexml extension"
 msgstr "PHP simplexml 擴展"
 
-#: ../../templates/show_test_table.inc.php:135
+#: ../../templates/show_test_table.inc.php:134
 msgid ""
 "This tests whether you have the simplexml extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "這會測試您是否有啟用 simplexml 擴展。雖然非必要，但是這可以提昇服務品質。"
+msgstr ""
+"這會測試您是否有啟用 simplexml 擴展。雖然非必要，但是這可以提昇服務品質。"
 
-#: ../../templates/show_test_table.inc.php:139
+#: ../../templates/show_test_table.inc.php:138
 msgid "PHP GD extension"
 msgstr "PHP GD 擴展"
 
-#: ../../templates/show_test_table.inc.php:144
+#: ../../templates/show_test_table.inc.php:143
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
 msgstr "這會測試您是否有啟用 GD 擴展。雖然非必要，但是這可以提昇服務品質。"
 
-#: ../../templates/show_test_table.inc.php:148
+#: ../../templates/show_test_table.inc.php:147
 msgid "PHP safe mode disabled"
 msgstr "PHP 安全模式停用中"
 
-#: ../../templates/show_test_table.inc.php:153
+#: ../../templates/show_test_table.inc.php:152
 msgid ""
 "This test makes sure that PHP is not running in safe mode. Some features of "
 "Ampache will not work correctly in safe mode."
-msgstr "這會測試您是否在安全模式下執行 PHP。有些 Ampache 的功能無法正常在安全模式下執行。"
+msgstr ""
+"這會測試您是否在安全模式下執行 PHP。有些 Ampache 的功能無法正常在安全模式下執"
+"行。"
 
-#: ../../templates/show_test_table.inc.php:157
+#: ../../templates/show_test_table.inc.php:156
 msgid "PHP memory limit override"
 msgstr "PHP 覆蓋記憶體限制設定"
 
-#: ../../templates/show_test_table.inc.php:162
+#: ../../templates/show_test_table.inc.php:161
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "這會測試 Ampache 是否可以覆蓋記憶體限制設定。雖然非必要，但是這可以提昇服務品質。"
+msgstr ""
+"這會測試 Ampache 是否可以覆蓋記憶體限制設定。雖然非必要，但是這可以提昇服務品"
+"質。"
 
-#: ../../templates/show_test_table.inc.php:166
+#: ../../templates/show_test_table.inc.php:165
 msgid "PHP execution time override"
 msgstr "PHP 覆蓋最大執行時間"
 
-#: ../../templates/show_test_table.inc.php:171
+#: ../../templates/show_test_table.inc.php:170
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time."
-" This is not strictly necessary, but may result in a better experience."
-msgstr "這會測試 Ampache 是否可以覆蓋最大執行時間設定。雖然非必要，但是這可以提昇服務品質。"
+"This tests whether Ampache can override the limit on maximum execution time. "
+"This is not strictly necessary, but may result in a better experience."
+msgstr ""
+"這會測試 Ampache 是否可以覆蓋最大執行時間設定。雖然非必要，但是這可以提昇服務"
+"品質。"
 
-#: ../../templates/show_test_table.inc.php:175
+#: ../../templates/show_test_table.inc.php:174
 msgid "PHP max upload size"
 msgstr "PHP 最大上傳大小"
 
-#: ../../templates/show_test_table.inc.php:180
+#: ../../templates/show_test_table.inc.php:179
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "這會測試 Ampache 是否可以上傳中等大小檔案 (>= 20M)。雖然非必要，但是這可以提昇服務品質。"
+msgstr ""
+"這會測試 Ampache 是否可以上傳中等大小檔案 (>= 20M)。雖然非必要，但是這可以提"
+"昇服務品質。"
 
-#: ../../templates/show_test_table.inc.php:184
+#: ../../templates/show_test_table.inc.php:183
 msgid "PHP Integer Size"
 msgstr "PHP 整數大小"
 
-#: ../../templates/show_test_table.inc.php:189
+#: ../../templates/show_test_table.inc.php:188
 msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
 "requires 64-bit operating system."
-msgstr "這會測試 Ampache 是否可以上傳大型大小檔案 (> 2GB)。雖然非必要，但是這可以提昇服務品質。這通常需要 64 位元的作業系統。"
+msgstr ""
+"這會測試 Ampache 是否可以上傳大型大小檔案 (> 2GB)。雖然非必要，但是這可以提昇"
+"服務品質。這通常需要 64 位元的作業系統。"
 
-#: ../../templates/show_test_table.inc.php:193
+#: ../../templates/show_test_table.inc.php:192
 msgid "PHP mbstring.func_overload"
 msgstr "PHP mbstring.func_overload"
 
-#: ../../templates/show_test_table.inc.php:198
+#: ../../templates/show_test_table.inc.php:197
 #, php-format
 msgid ""
 "This tests whether PHP %s is set as it may break the ID3 tag support. This "
 "is not stricly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr "這會測試 PHP 已設定 %s，因為可能會毀損 ID3 標籤支援功能。雖然非必要，但是可以使 Ampache 提供 ID3 標籤寫入支援 (預設為停用) ，因為 mbstring.func_overload 可能會導致您的音樂檔案遭受無法復原的毀損。"
+msgstr ""
+"這會測試 PHP 已設定 %s，因為可能會毀損 ID3 標籤支援功能。雖然非必要，但是可以"
+"使 Ampache 提供 ID3 標籤寫入支援 (預設為停用) ，因為 mbstring.func_overload "
+"可能會導致您的音樂檔案遭受無法復原的毀損。"
 
-#: ../../templates/show_test_table.inc.php:205
+#: ../../templates/show_test_table.inc.php:204
 msgid "Configuration file readability"
 msgstr "設定檔可讀"
 
-#: ../../templates/show_test_table.inc.php:212
+#: ../../templates/show_test_table.inc.php:209
 msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file "
 "either is not in the correct location or is not currently readable."
-msgstr "這會測試讀取 config/ampache.cfg.php。如果失敗，該檔案可能沒有放在正確位置，或是目前無法讀取。"
+msgstr ""
+"這會測試讀取 config/ampache.cfg.php。如果失敗，該檔案可能沒有放在正確位置，或"
+"是目前無法讀取。"
 
-#: ../../templates/show_test_table.inc.php:218
+#: ../../templates/show_test_table.inc.php:214
 msgid "Configuration file validity"
 msgstr "設定檔有效"
 
-#: ../../templates/show_test_table.inc.php:229
+#: ../../templates/show_test_table.inc.php:223
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to completely parse your config file."
 msgstr "這會測試您是否有提供所有必要的設定值，而且我們可以完整剖析您的設定檔。"
 
-#: ../../templates/show_test_table.inc.php:241
+#: ../../templates/show_test_table.inc.php:232
 msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
 msgstr "這會嘗試使用設定檔內的設定值來連接您的資料庫。"
 
-#: ../../templates/show_test_table.inc.php:246
+#: ../../templates/show_test_table.inc.php:236
 msgid "Database tables"
 msgstr "資料庫表格"
 
-#: ../../templates/show_test_table.inc.php:253
+#: ../../templates/show_test_table.inc.php:241
 msgid ""
 "This checks a few key tables to make sure that you have successfully "
 "inserted the Ampache database and that the user has access to the database"
-msgstr "這會檢查一些關鍵表格來確認您成功建立 Ampache 資料庫，且該使用者能存取資料庫"
+msgstr ""
+"這會檢查一些關鍵表格來確認您成功建立 Ampache 資料庫，且該使用者能存取資料庫"
 
-#: ../../templates/show_test_table.inc.php:259
+#: ../../templates/show_test_table.inc.php:246
 msgid "Web path"
 msgstr "網頁路徑"
 
-#: ../../templates/show_test_table.inc.php:272
+#: ../../templates/show_test_table.inc.php:256
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
-msgstr "這會測試您提供正確的 web_path 設定值，而且我們可以拿到首頁。如果您沒有看到已檢查標記，則您的 web_path 沒有正確設定。"
+msgstr ""
+"這會測試您提供正確的 web_path 設定值，而且我們可以拿到首頁。如果您沒有看到已"
+"檢查標記，則您的 web_path 沒有正確設定。"
 
-#: ../../templates/show_tvshow.inc.php:95
-#: ../../templates/show_tvshow.inc.php:99
-#: ../../templates/show_tvshow_row.inc.php:72
+#: ../../templates/show_tvshow.inc.php:84
+#: ../../templates/show_tvshow.inc.php:87
+#: ../../templates/show_tvshow_row.inc.php:67
 msgid "TV Show edit"
 msgstr "電視節目編輯"
 
-#: ../../templates/show_tvshow.inc.php:100
+#: ../../templates/show_tvshow.inc.php:88
 msgid "Edit TV Show"
 msgstr "編輯電視節目"
 
-#: ../../templates/show_tvshow_season.inc.php:87
-#: ../../templates/show_tvshow_season.inc.php:91
-#: ../../templates/show_tvshow_season_row.inc.php:73
+#: ../../templates/show_tvshow_season.inc.php:77
+#: ../../templates/show_tvshow_season.inc.php:80
+#: ../../templates/show_tvshow_season_row.inc.php:68
 msgid "Season edit"
 msgstr "單季編輯"
 
-#: ../../templates/show_tvshow_season.inc.php:92
+#: ../../templates/show_tvshow_season.inc.php:81
 msgid "Edit Season"
 msgstr "編輯單季"
 
-#: ../../templates/show_tvshow_seasons.inc.php:92
+#: ../../templates/show_tvshow_seasons.inc.php:78
 msgid "No season found"
 msgstr "找不到單季"
 
-#: ../../templates/show_tvshows.inc.php:97
+#: ../../templates/show_tvshows.inc.php:83
 msgid "No tv show found"
 msgstr "找不到電視節目"
 
@@ -7903,7 +7998,7 @@ msgid "Update from Tags Complete"
 msgstr "從標籤更新已完成"
 
 #: ../../templates/show_uploads.inc.php:23
-#: ../../templates/sidebar_home.inc.php:177
+#: ../../templates/sidebar_home.inc.php:157
 msgid "Uploads"
 msgstr "上傳"
 
@@ -7911,21 +8006,21 @@ msgstr "上傳"
 msgid "Registration Validation"
 msgstr "驗證註冊"
 
-#: ../../templates/show_user_activate.inc.php:48
+#: ../../templates/show_user_activate.inc.php:47
 msgid "User Activated"
 msgstr "使用者已啟用"
 
 #. HINT: Start A tag, End A tag
-#: ../../templates/show_user_activate.inc.php:53
+#: ../../templates/show_user_activate.inc.php:51
 #, php-format
 msgid "This User ID is activated and can be used %sLogin%s"
 msgstr "此使用者已啟用，且可%s登入%s"
 
-#: ../../templates/show_user_activate.inc.php:59
+#: ../../templates/show_user_activate.inc.php:56
 msgid "Validation Failed"
 msgstr "驗證失敗"
 
-#: ../../templates/show_user_activate.inc.php:61
+#: ../../templates/show_user_activate.inc.php:57
 msgid "The validation key used isn't correct"
 msgstr "使用的驗證金鑰不正確"
 
@@ -7933,55 +8028,55 @@ msgstr "使用的驗證金鑰不正確"
 msgid "User Favorites"
 msgstr "使用者的最愛"
 
-#: ../../templates/show_user.inc.php:58
+#: ../../templates/show_user.inc.php:55
 msgid "Display Name"
 msgstr "顯示名稱"
 
-#: ../../templates/show_user.inc.php:66
-#: ../../templates/show_user_row.inc.php:73
+#: ../../templates/show_user.inc.php:61
+#: ../../templates/show_user_row.inc.php:66
 msgid "Send private message"
 msgstr "寄送私人訊息"
 
-#: ../../templates/show_user.inc.php:91
+#: ../../templates/show_user.inc.php:77
 msgid "Member Since"
 msgstr "加入日期"
 
-#: ../../templates/show_user.inc.php:94 ../../templates/show_users.inc.php:51
-#: ../../templates/show_users.inc.php:96
+#: ../../templates/show_user.inc.php:80 ../../templates/show_users.inc.php:50
+#: ../../templates/show_users.inc.php:87
 msgid "Last Seen"
 msgstr "上次上線"
 
-#: ../../templates/show_user.inc.php:100 ../../templates/show_users.inc.php:55
-#: ../../templates/show_users.inc.php:100
+#: ../../templates/show_user.inc.php:85 ../../templates/show_users.inc.php:54
+#: ../../templates/show_users.inc.php:91
 msgid "Activity"
 msgstr "活動"
 
-#: ../../templates/show_user.inc.php:119
+#: ../../templates/show_user.inc.php:97
 msgid "Status"
 msgstr "狀態"
 
-#: ../../templates/show_user.inc.php:123
+#: ../../templates/show_user.inc.php:101
 msgid "User is Online Now"
 msgstr "使用者正在線上"
 
-#: ../../templates/show_user.inc.php:128
+#: ../../templates/show_user.inc.php:105
 msgid "User is Offline Now"
 msgstr "使用者不在線上"
 
-#: ../../templates/show_user.inc.php:149 ../../templates/show_users.inc.php:68
-#: ../../templates/show_users.inc.php:113
+#: ../../templates/show_user.inc.php:124 ../../templates/show_users.inc.php:64
+#: ../../templates/show_users.inc.php:101
 msgid "Following"
 msgstr "正在追蹤"
 
-#: ../../templates/show_user.inc.php:151
+#: ../../templates/show_user.inc.php:125
 msgid "Followers"
 msgstr "追蹤者"
 
-#: ../../templates/show_user.inc.php:153
+#: ../../templates/show_user.inc.php:126
 msgid "Timeline"
 msgstr "時間軸"
 
-#: ../../templates/show_user.inc.php:165
+#: ../../templates/show_user.inc.php:137
 msgid "Active Playlist"
 msgstr "使用的播放清單"
 
@@ -7989,37 +8084,36 @@ msgstr "使用的播放清單"
 msgid "User Agreement"
 msgstr "使用協議"
 
-#: ../../templates/show_user_registration.inc.php:75
+#: ../../templates/show_user_registration.inc.php:73
 msgid "I Accept"
 msgstr "我接受"
 
-#: ../../templates/show_user_registration.inc.php:83
+#: ../../templates/show_user_registration.inc.php:79
 msgid "User Information"
 msgstr "使用者資訊"
 
-#: ../../templates/show_user_registration.inc.php:170
+#: ../../templates/show_user_registration.inc.php:150
 msgid "* Required fields"
 msgstr "* 必塡欄位"
 
-#: ../../templates/show_user_registration.inc.php:182
+#: ../../templates/show_user_registration.inc.php:162
 msgid "Register User"
 msgstr "註冊使用者"
 
-#: ../../templates/show_users.inc.php:50 ../../templates/show_users.inc.php:95
+#: ../../templates/show_users.inc.php:49 ../../templates/show_users.inc.php:86
 msgid "Fullname"
 msgstr "全名"
 
-#: ../../templates/show_users.inc.php:52 ../../templates/show_users.inc.php:97
+#: ../../templates/show_users.inc.php:51 ../../templates/show_users.inc.php:88
 msgid "Registration Date"
 msgstr "註冊日期"
 
-#: ../../templates/show_users.inc.php:59
-#: ../../templates/show_users.inc.php:104
+#: ../../templates/show_users.inc.php:57 ../../templates/show_users.inc.php:94
 msgid "Last Ip"
 msgstr "上次 IP"
 
-#: ../../templates/show_users.inc.php:73
-#: ../../templates/show_users.inc.php:118
+#: ../../templates/show_users.inc.php:68
+#: ../../templates/show_users.inc.php:105
 msgid "On-line"
 msgstr "上線"
 
@@ -8041,42 +8135,42 @@ msgstr "已驗證"
 msgid "Subtitle"
 msgstr "字幕"
 
-#: ../../templates/show_video.inc.php:188
-#: ../../templates/show_videos.inc.php:47
-#: ../../templates/show_videos.inc.php:124
+#: ../../templates/show_video.inc.php:149
+#: ../../templates/show_videos.inc.php:46
+#: ../../templates/show_videos.inc.php:111
 msgid "Resolution"
 msgstr "解析度"
 
-#: ../../templates/show_video.inc.php:189
+#: ../../templates/show_video.inc.php:150
 msgid "Display"
 msgstr "顯示"
 
-#: ../../templates/show_video.inc.php:190
+#: ../../templates/show_video.inc.php:151
 msgid "Audio Bitrate"
 msgstr "音訊位元率"
 
-#: ../../templates/show_video.inc.php:191
+#: ../../templates/show_video.inc.php:152
 msgid "Video Bitrate"
 msgstr "視訊位元率"
 
-#: ../../templates/show_video.inc.php:192
+#: ../../templates/show_video.inc.php:153
 msgid "Frame Rate"
 msgstr "每秒禎數"
 
-#: ../../templates/show_video_row.inc.php:109
+#: ../../templates/show_video_row.inc.php:106
 msgid "Video Information"
 msgstr "視訊資訊"
 
-#: ../../templates/show_video_row.inc.php:132
+#: ../../templates/show_video_row.inc.php:126
 msgid "Video edit"
 msgstr "編輯視訊"
 
-#: ../../templates/show_videos.inc.php:100
+#: ../../templates/show_videos.inc.php:89
 msgid "No video found"
 msgstr "找不到視訊"
 
 #: ../../templates/show_wanted.inc.php:23
-#: ../../templates/sidebar_home.inc.php:165
+#: ../../templates/sidebar_home.inc.php:147
 msgid "Wanted List"
 msgstr "願望清單"
 
@@ -8084,22 +8178,16 @@ msgstr "願望清單"
 #: ../../templates/sidebar_admin.inc.php:31
 #: ../../templates/sidebar_admin.inc.php:37
 #: ../../templates/sidebar_admin.inc.php:45
-#: ../../templates/sidebar_admin.inc.php:72
-#: ../../templates/sidebar_admin.inc.php:73
+#: ../../templates/sidebar_admin.inc.php:64
 #: ../../templates/sidebar_home.inc.php:24
-#: ../../templates/sidebar_home.inc.php:74
-#: ../../templates/sidebar_home.inc.php:75
-#: ../../templates/sidebar_home.inc.php:100
-#: ../../templates/sidebar_home.inc.php:101
-#: ../../templates/sidebar_home.inc.php:144
-#: ../../templates/sidebar_home.inc.php:192
-#: ../../templates/sidebar_home.inc.php:204
-#: ../../templates/sidebar_localplay.inc.php:43
-#: ../../templates/sidebar_localplay.inc.php:44
-#: ../../templates/sidebar_localplay.inc.php:70
+#: ../../templates/sidebar_home.inc.php:72
+#: ../../templates/sidebar_home.inc.php:92
+#: ../../templates/sidebar_home.inc.php:128
+#: ../../templates/sidebar_home.inc.php:170
+#: ../../templates/sidebar_home.inc.php:182
+#: ../../templates/sidebar_localplay.inc.php:38
+#: ../../templates/sidebar_localplay.inc.php:51
 #: ../../templates/sidebar_localplay.inc.php:71
-#: ../../templates/sidebar_localplay.inc.php:103
-#: ../../templates/sidebar_localplay.inc.php:104
 #: ../../templates/sidebar_modules.inc.php:24
 #: ../../templates/sidebar_modules.inc.php:31
 #: ../../templates/sidebar_preferences.inc.php:30
@@ -8131,16 +8219,15 @@ msgstr "其他工具"
 msgid "Clear Now Playing"
 msgstr "清除正在播放資訊"
 
-#: ../../templates/sidebar_admin.inc.php:53
+#: ../../templates/sidebar_admin.inc.php:52
 msgid "Manage Shoutbox"
 msgstr "管理留言板"
 
-#: ../../templates/sidebar_admin.inc.php:60
+#: ../../templates/sidebar_admin.inc.php:57
 msgid "Manage Licenses"
 msgstr "管理授權"
 
-#: ../../templates/sidebar_admin.inc.php:68
-#: ../../templates/sidebar_admin.inc.php:69
+#: ../../templates/sidebar_admin.inc.php:64
 msgid "Server Config"
 msgstr "伺服機設定"
 
@@ -8148,27 +8235,27 @@ msgstr "伺服機設定"
 msgid "Song Titles"
 msgstr "歌曲標題"
 
-#: ../../templates/sidebar_home.inc.php:78
+#: ../../templates/sidebar_home.inc.php:74
 msgid "Music Clips"
 msgstr "音樂錄影帶"
 
-#: ../../templates/sidebar_home.inc.php:108
+#: ../../templates/sidebar_home.inc.php:98
 msgid "Currently Playing"
 msgstr "正在播放"
 
-#: ../../templates/sidebar_home.inc.php:132
+#: ../../templates/sidebar_home.inc.php:118
 msgid "Import"
 msgstr "匯入"
 
-#: ../../templates/sidebar_home.inc.php:146
+#: ../../templates/sidebar_home.inc.php:130
 msgid "Recent"
 msgstr "最近"
 
-#: ../../templates/sidebar_home.inc.php:153
+#: ../../templates/sidebar_home.inc.php:137
 msgid "Top Rated"
 msgstr "最高評比"
 
-#: ../../templates/sidebar_home.inc.php:200
+#: ../../templates/sidebar_home.inc.php:178
 msgid "Advanced"
 msgstr "進階"
 
@@ -8177,7 +8264,7 @@ msgstr "進階"
 msgid "Modules"
 msgstr "模組"
 
-#: ../../templates/sidebar.inc.php:72
+#: ../../templates/sidebar.inc.php:65
 msgid "Logout"
 msgstr "登出"
 
@@ -8185,29 +8272,27 @@ msgstr "登出"
 msgid "Radio"
 msgstr "廣播"
 
-#: ../../templates/sidebar_localplay.inc.php:53
+#: ../../templates/sidebar_localplay.inc.php:43
 msgid "Show instances"
 msgstr "顯示實體"
 
-#: ../../templates/sidebar_localplay.inc.php:59
+#: ../../templates/sidebar_localplay.inc.php:46
 msgid "Show Playlist"
 msgstr "顯示播放清單"
 
-#: ../../templates/sidebar_localplay.inc.php:66
-#: ../../templates/sidebar_localplay.inc.php:67
+#: ../../templates/sidebar_localplay.inc.php:51
 msgid "Active Instance"
 msgstr "使用的實體"
 
-#: ../../templates/sidebar_localplay.inc.php:99
-#: ../../templates/sidebar_localplay.inc.php:100
+#: ../../templates/sidebar_localplay.inc.php:71
 msgid "Localplay Disabled"
 msgstr "本地播放已停用"
 
-#: ../../templates/sidebar_localplay.inc.php:108
+#: ../../templates/sidebar_localplay.inc.php:74
 msgid "Allow Localplay set to False"
 msgstr "允許停用本地播放"
 
-#: ../../templates/sidebar_localplay.inc.php:113
+#: ../../templates/sidebar_localplay.inc.php:78
 msgid "Localplay Controller Not Defined"
 msgstr "沒有定義本地播放控制器"
 
@@ -8227,11 +8312,11 @@ msgstr "可用套件"
 msgid "Mail Users"
 msgstr "寄信給使用者"
 
-#: ../../templates/sidebar_modules.inc.php:44
+#: ../../templates/sidebar_modules.inc.php:42
 msgid "Manage Playlist"
 msgstr "管理播放清單"
 
-#: ../../templates/sidebar_preferences.inc.php:46
+#: ../../templates/sidebar_preferences.inc.php:41
 msgid "Account"
 msgstr "帳號"
 
@@ -8278,9 +8363,11 @@ msgid ""
 "This page handles all database updates to Ampache starting with "
 "<strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with "
 "database version <strong>%s</strong>."
-msgstr "這個頁面管理所有從 Ampache <strong>3.3.3.5</strong> 開始的資料庫更新。您目前的版本為 <strong>%s</strong>，資料庫版本為 <strong>%s</strong>。"
+msgstr ""
+"這個頁面管理所有從 Ampache <strong>3.3.3.5</strong> 開始的資料庫更新。您目前"
+"的版本為 <strong>%s</strong>，資料庫版本為 <strong>%s</strong>。"
 
-#: ../../update.php:92
+#: ../../update.php:91
 msgid "Update Now!"
 msgstr "立即更新！"
 
@@ -8309,8 +8396,8 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 07.08.2016 01:40:23 CEST
-# 
+# Last Update: 23.09.2016 20:25:57 CEST
+#
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "允許下載"
@@ -8343,7 +8430,7 @@ msgstr "播放方式"
 # but to avoid confusion, it's added and commented
 # msgid "Language"
 # msgstr ""
-#: Database preference table id 31 Database preference table id 32
+#: Database preference table id 31 32
 msgid "Playlist Type"
 msgstr "播放清單類型"
 
@@ -8395,8 +8482,7 @@ msgstr "播放清單行為"
 # but to avoid confusion, it's added and commented
 # msgid "Show Lyrics"
 # msgstr ""
-#: Database preference table id 55 Database preference table id 69 Database
-#: preference table id 72
+#: Database preference table id 55 69 72
 msgid "Shoutcast Active Instance"
 msgstr ""
 
