@@ -908,12 +908,14 @@ registration_mandatory_fields = "fullname"
 ; DEFAULT: none
 ;encode_video_target = webm
 
-; Override the default output format on a per-type basis
+; Override the default output format on a per-type basis, for example,
+; to stream lossless encoded files in lossy formats.
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
 ;encode_target_flac = opus
 
-; Override the default TYPE transcoding behavior on a per-player basis
+; Override the default TYPE transcoding behavior on a per-player basis, for example,
+; to stream lossless using the api and lossy using the web interface.
 ; transcode_player_PLAYER_TYPE = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
@@ -934,7 +936,8 @@ transcode_player_customize = "true"
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename
-; %BITRATE% => target bit rate
+; %BITRATE% => target bit rate (as chosen by the admin or users in the
+; preferences, if transcode_player_customize = "true")
 ; You can do fancy things like VBR, but consider whether the consequences are
 ; acceptable in your environment.
 
