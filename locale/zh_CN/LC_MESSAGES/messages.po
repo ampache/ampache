@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-11-04 15:44+0100\n"
+"POT-Creation-Date: 2016-12-24 06:19+0100\n"
 "PO-Revision-Date: 2016-09-06 05:14+0000\n"
 "Last-Translator: fengjiongmax <fengjiongmax@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/"
@@ -1124,7 +1124,7 @@ msgid "Unknown (Orphaned)"
 msgstr "未知（或被孤立）"
 
 #: ../../lib/class/album.class.php:642
-#: ../../lib/class/subsonic_xml_data.class.php:495
+#: ../../lib/class/subsonic_xml_data.class.php:505
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -1732,15 +1732,15 @@ msgstr[0] "目录清理完成。已删除 %d 个文件"
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "目录校验完成。%d 中 %d 文件被更新。"
 
-#: ../../lib/class/catalog.class.php:2032
+#: ../../lib/class/catalog.class.php:2042
 msgid "Failed to create playlist."
 msgstr "创建播放列表失败。"
 
-#: ../../lib/class/catalog.class.php:2049
+#: ../../lib/class/catalog.class.php:2059
 msgid "No valid songs found in playlist file."
 msgstr "未找到有效的播放列表文件。"
 
-#: ../../lib/class/catalog.class.php:2404
+#: ../../lib/class/catalog.class.php:2414
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -8334,6 +8334,11 @@ msgstr "管理播放列表"
 msgid "Account"
 msgstr "账户"
 
+#: ../../themes/reborn/templates/upnp/control-reply.php:46
+#: ../../upnp/control-reply.php:46
+msgid "root"
+msgstr "根"
+
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
 msgid "TVShow Season Deletion"
@@ -8386,10 +8391,6 @@ msgstr ""
 msgid "Update Now!"
 msgstr "马上更新！"
 
-#: ../../upnp/control-reply.php:46
-msgid "root"
-msgstr "根"
-
 #: ../../video.php:35 ../../video.php:55 ../../video.php:57
 msgid "Video Deletion"
 msgstr "删除视频"
@@ -8411,7 +8412,7 @@ msgstr "无法删除此视频。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.09.2016 20:25:57 CEST
+# Last Update: 04.11.2016 15:44:08 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
