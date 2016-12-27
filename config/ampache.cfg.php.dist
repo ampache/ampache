@@ -911,7 +911,7 @@ registration_mandatory_fields = "fullname"
 ; Override the default output format on a per-type basis
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
-;encode_target_flac = ogg
+;encode_target_flac = opus
 
 ; Override the default TYPE transcoding behavior on a per-player basis
 ; transcode_player_PLAYER_TYPE = TYPE
