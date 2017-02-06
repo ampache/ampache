@@ -25,7 +25,7 @@
 			"ext-mbstring": "1.0",
 			"ext-xmlwriter": "1.0",
 			"ext-xmlreader": "1.0",
-			"lib-libxml": "2.6.20"
+			"lib-libxml": "2.7.0"
 		}
     },
     "require": {
@@ -33,24 +33,24 @@
         "symfony/process": "~2.1",
 		"wikimedia/composer-merge-plugin": "1.*",
 		
-        "doctrine/cache": "1.5.4",
-		"gettext/gettext": "3.5.*",
+        "doctrine/cache": "1.*.*",
+		"gettext/gettext": "4.*.*",
         "james-heinrich/getid3": "dev-master",
 		"mikealmond/musicbrainz": "dev-master",
 		"phpmailer/phpmailer": "5.2.*",
-		"rmccue/requests": "1.6.*",
+		"rmccue/requests": "1.7.*",
 		"react/react": "0.4.*",
 		"cboden/ratchet": "0.3.*",
 		"symfony/event-dispatcher": "2.7.*",
 		"symfony/routing": "2.7.*",
 		"symfony/http-foundation": "2.7.*",
-		"szymach/c-pchart": "1.*",
+		"szymach/c-pchart": "2.*",
 		"evenement/evenement": "2.*",
 		"happyworm/jplayer": "2.*",
 		"needim/noty": "2.3.*",
 		"openid/php-openid": "2.*",
-		"sabre/dav": "3.0.5",
-		"maennchen/zipstream-php": "0.*",
+		"sabre/dav": "3.*.*",
+		"maennchen/zipstream-php": "0.4.*",
 		
 		"Afterster/php-echonest-api": "dev-master",
 		
@@ -63,7 +63,7 @@
 		"jeromeetienne/jquery-qrcode": "dev-master",
 		"carhartl/jquery-cookie": "1.*",
 		"xdan/datetimepicker": "2.*",
-		"blueimp/jQuery-File-Upload": "9.*",
+		"blueimp/jQuery-File-Upload": "9.14.*",
 		"aterrien/jQuery-Knob": "1.2.*",
 		"pklauzinski/jscroll": "2.*",
 		"kumailht/responsive-elements": "dev-master",
