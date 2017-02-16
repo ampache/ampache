@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Shen-Ta Hsiea(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
+# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
+# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-11-04 15:44+0100\n"
-"PO-Revision-Date: 2016-07-25 09:41+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2016-12-24 06:19+0100\n"
+"PO-Revision-Date: 2016-12-19 07:12+0000\n"
+"Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
 "language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -1121,7 +1122,7 @@ msgid "Unknown (Orphaned)"
 msgstr "未知 (遺孤)"
 
 #: ../../lib/class/album.class.php:642
-#: ../../lib/class/subsonic_xml_data.class.php:495
+#: ../../lib/class/subsonic_xml_data.class.php:505
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -1729,15 +1730,15 @@ msgstr[0] ""
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "目錄驗證完成。 %d 中的 %d 個檔案已更新。"
 
-#: ../../lib/class/catalog.class.php:2032
+#: ../../lib/class/catalog.class.php:2042
 msgid "Failed to create playlist."
 msgstr "建立播放清單失敗。"
 
-#: ../../lib/class/catalog.class.php:2049
+#: ../../lib/class/catalog.class.php:2059
 msgid "No valid songs found in playlist file."
 msgstr "播放清單檔案內找不到合法的歌曲。"
 
-#: ../../lib/class/catalog.class.php:2404
+#: ../../lib/class/catalog.class.php:2414
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -3282,7 +3283,7 @@ msgstr "警告"
 #: ../../lib/general.lib.php:211
 #, php-format
 msgid "Unknown %s"
-msgstr ""
+msgstr "未知的 %s"
 
 #: ../../lib/install.lib.php:83
 msgid "Unable to connect to database, check your ampache config"
@@ -4099,7 +4100,7 @@ msgstr "已匯入播放清單"
 #, php-format
 msgid "Successfully imported playlist with %d song."
 msgid_plural "Successfully imported playlist with %d songs."
-msgstr[0] ""
+msgstr[0] "已成功匯入含有 %d 首歌曲的播放清單。"
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -5369,7 +5370,7 @@ msgstr "動作"
 #: ../../templates/show_artist_row.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:53
 msgid "Random to temporary playlist"
-msgstr ""
+msgstr "隨機新增到暫存撥放清單"
 
 #: ../../templates/show_album_group_disks.inc.php:92
 #: ../../templates/show_album_group_disks.inc.php:93
@@ -5580,7 +5581,7 @@ msgstr "最後全部播放"
 #: ../../templates/show_playlist.inc.php:109
 #: ../../templates/show_playlist.inc.php:110
 msgid "Add all to temporary playlist"
-msgstr ""
+msgstr "全部新增到暫存播放清單"
 
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:141
@@ -5588,7 +5589,7 @@ msgstr ""
 #: ../../templates/show_playlist.inc.php:113
 #: ../../templates/show_playlist.inc.php:114
 msgid "Random all to temporary playlist"
-msgstr ""
+msgstr "全部隨機新增到暫存播放清單"
 
 #: ../../templates/show_artist.inc.php:197
 #: ../../templates/show_artist.inc.php:200
@@ -5779,7 +5780,7 @@ msgstr "找不到紀錄"
 
 #: ../../templates/show_channels.inc.php:31
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #: ../../templates/show_channels.inc.php:40
 #: ../../templates/show_graphs.inc.php:55
@@ -8320,6 +8321,11 @@ msgstr "管理播放清單"
 msgid "Account"
 msgstr "帳號"
 
+#: ../../themes/reborn/templates/upnp/control-reply.php:46
+#: ../../upnp/control-reply.php:46
+msgid "root"
+msgstr ""
+
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
 msgid "TVShow Season Deletion"
@@ -8371,10 +8377,6 @@ msgstr ""
 msgid "Update Now!"
 msgstr "立即更新！"
 
-#: ../../upnp/control-reply.php:46
-msgid "root"
-msgstr ""
-
 #: ../../video.php:35 ../../video.php:55 ../../video.php:57
 msgid "Video Deletion"
 msgstr "刪除視訊"
@@ -8396,7 +8398,7 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.09.2016 20:25:57 CEST
+# Last Update: 04.11.2016 15:44:08 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8776,7 +8778,7 @@ msgstr ""
 
 #: Database preference table id 150
 msgid "Library item context menu"
-msgstr ""
+msgstr "資料庫項目快顯選單"
 
 #: Database preference table id 151
 msgid "Rename uploaded file according to catalog pattern"
@@ -8825,4 +8827,4 @@ msgstr "Amazon 存取金鑰密文"
 
 #: Database preference table id 168
 msgid "Amazon associate tag"
-msgstr ""
+msgstr "Amazon 關聯標記"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-11-04 15:44+0100\n"
+"POT-Creation-Date: 2016-12-24 06:19+0100\n"
 "PO-Revision-Date: 2016-08-01 16:04+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/"
@@ -1150,7 +1150,7 @@ msgid "Unknown (Orphaned)"
 msgstr "Unbekannt (Verwaist)"
 
 #: ../../lib/class/album.class.php:642
-#: ../../lib/class/subsonic_xml_data.class.php:495
+#: ../../lib/class/subsonic_xml_data.class.php:505
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -1765,15 +1765,15 @@ msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 "Katalog wurde erfolgreich überprüft. %d von %d Dateien wurden aktualisiert."
 
-#: ../../lib/class/catalog.class.php:2032
+#: ../../lib/class/catalog.class.php:2042
 msgid "Failed to create playlist."
 msgstr "Beim erstellen der Playlist ist ein Fehler aufgetreten."
 
-#: ../../lib/class/catalog.class.php:2049
+#: ../../lib/class/catalog.class.php:2059
 msgid "No valid songs found in playlist file."
 msgstr "Keine gültigen Songs in der Playlist gefunden."
 
-#: ../../lib/class/catalog.class.php:2404
+#: ../../lib/class/catalog.class.php:2414
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -8536,6 +8536,11 @@ msgstr "Verwalte Playlist"
 msgid "Account"
 msgstr "Konto"
 
+#: ../../themes/reborn/templates/upnp/control-reply.php:46
+#: ../../upnp/control-reply.php:46
+msgid "root"
+msgstr "root"
+
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
 msgid "TVShow Season Deletion"
@@ -8589,10 +8594,6 @@ msgstr ""
 msgid "Update Now!"
 msgstr "Jetzt aktualisieren!"
 
-#: ../../upnp/control-reply.php:46
-msgid "root"
-msgstr "root"
-
 #: ../../video.php:35 ../../video.php:55 ../../video.php:57
 msgid "Video Deletion"
 msgstr "Video löschen"
@@ -8614,7 +8615,7 @@ msgstr "Ich kann dieses Video nicht löschen."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.09.2016 20:25:57 CEST
+# Last Update: 04.11.2016 15:44:08 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

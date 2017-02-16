@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2016-11-04 15:44+0100\n"
-"PO-Revision-Date: 2016-07-25 09:41+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2016-12-24 06:19+0100\n"
+"PO-Revision-Date: 2016-12-13 23:51+0000\n"
+"Last-Translator: Ione Souza Junior <junior@ionixjunior.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/ampache/ampache/"
 "language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -92,8 +92,8 @@ msgstr "Confirmar solicitação de exclusão"
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Música habilitada"
+msgstr[1] "Músicas habilitadas"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
@@ -191,27 +191,27 @@ msgstr ""
 
 #: ../../admin/modules.php:53
 msgid "localplay enabled"
-msgstr ""
+msgstr "Player local habilitado"
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
-msgstr ""
+msgstr "Falha na habilitação do módulo, erro no catálogo"
 
 #: ../../admin/modules.php:70
 msgid "Module enabled"
-msgstr ""
+msgstr "Módulo habilitado"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
 msgid "Are you sure you want to disable this module?"
-msgstr ""
+msgstr "Tem certeza que deseja desabilitar este módulo?"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
 msgid "Module disabled"
-msgstr ""
+msgstr "Módulo desabilitado"
 
 #: ../../admin/modules.php:105
 msgid "Failed to disable module, Catalog Error"
-msgstr ""
+msgstr "Falha ao desabilitar o módulo, erro no catálogo"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
@@ -219,15 +219,15 @@ msgstr "Não é possível instalar plugin"
 
 #: ../../admin/modules.php:139
 msgid "Plugin enabled"
-msgstr ""
+msgstr "Plugin habilitado"
 
 #: ../../admin/modules.php:146
 msgid "Are you sure you want to disable this plugin?"
-msgstr ""
+msgstr "Tem certeza que deseja desabilitar este plugin?"
 
 #: ../../admin/modules.php:165
 msgid "Plugin disabled"
-msgstr ""
+msgstr "Plugin desabilitado"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
@@ -1139,7 +1139,7 @@ msgid "Unknown (Orphaned)"
 msgstr "Desconhecido (órfão)"
 
 #: ../../lib/class/album.class.php:642
-#: ../../lib/class/subsonic_xml_data.class.php:495
+#: ../../lib/class/subsonic_xml_data.class.php:505
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -1700,7 +1700,7 @@ msgstr "Mensagens privadas"
 #: ../../lib/class/browse.class.php:336 ../../lib/class/upnp_api.class.php:473
 #: ../../templates/sidebar_home.inc.php:60
 msgid "Podcasts"
-msgstr ""
+msgstr "Podcasts"
 
 #: ../../lib/class/browse.class.php:340
 msgid "Podcast Episodes"
@@ -1721,14 +1721,14 @@ msgstr "Nunca"
 #: ../../lib/class/catalog.class.php:596
 msgid "day"
 msgid_plural "days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "dia"
+msgstr[1] "dias"
 
 #: ../../lib/class/catalog.class.php:598
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "hora"
+msgstr[1] "horas"
 
 #: ../../lib/class/catalog.class.php:643
 msgid "Catalog Insert Failed check debug logs"
@@ -1742,24 +1742,24 @@ msgstr "Nenhuma atualização é necessária"
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Limpeza de catálogo concluída. %d arquivo removido."
+msgstr[1] "Limpeza de catálogo concluída. %d arquivos removidos."
 
 #: ../../lib/class/catalog.class.php:1830
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "Verificação de catálogo terminada. %d de %d arquivos atualizados."
 
-#: ../../lib/class/catalog.class.php:2032
+#: ../../lib/class/catalog.class.php:2042
 msgid "Failed to create playlist."
 msgstr "Falha ao criar lista de reprodução."
 
-#: ../../lib/class/catalog.class.php:2049
+#: ../../lib/class/catalog.class.php:2059
 msgid "No valid songs found in playlist file."
 msgstr ""
 "Nenhuma música válida foi encontrada no arquivo da lista de reprodução."
 
-#: ../../lib/class/catalog.class.php:2404
+#: ../../lib/class/catalog.class.php:2414
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -1840,7 +1840,7 @@ msgstr "URL inválida, deve ser http:// ou https://"
 
 #: ../../lib/class/live_stream.class.php:231
 msgid "Codec (eg. MP3, OGG...) Required"
-msgstr ""
+msgstr "Codec (ex. MP3, OGG...) Necessário"
 
 #: ../../lib/class/live_stream.class.php:252
 msgid "Invalid Catalog"
@@ -1884,11 +1884,11 @@ msgstr ""
 
 #: ../../lib/class/podcast.class.php:277
 msgid "Target catalog required"
-msgstr ""
+msgstr "Catálogo de destino necessário"
 
 #: ../../lib/class/podcast.class.php:281
 msgid "Wrong target catalog type"
-msgstr ""
+msgstr "Tipo de catálogo de destino errado"
 
 #: ../../lib/class/podcast.class.php:301
 msgid "Cannot access the feed."
@@ -3452,7 +3452,7 @@ msgstr "Democrático"
 #: ../../templates/sidebar_home.inc.php:113 ../../templates/sidebar.inc.php:35
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Localplay"
-msgstr ""
+msgstr "Player local"
 
 #: ../../lib/preferences.php:247
 #: ../../templates/show_playtype_switch.inc.php:55
@@ -3533,7 +3533,7 @@ msgstr "Nome descendente"
 #: ../../lib/preferences.php:406
 #, php-format
 msgid "Click to grant %s access to Ampache"
-msgstr ""
+msgstr "Clique para conceder %s acesso para o Ampache"
 
 #: ../../lib/rating.lib.php:42
 msgid "Don't Play"
@@ -3638,7 +3638,7 @@ msgstr "Adicionar novo"
 
 #: ../../lib/ui.lib.php:469
 msgid "View License"
-msgstr ""
+msgstr "Ver Licença"
 
 #: ../../lib/ui.lib.php:728
 msgid "On"
@@ -4049,7 +4049,7 @@ msgstr "URL"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:101
 msgid "Highlight"
-msgstr ""
+msgstr "Destaque"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:122
 #: ../../templates/header.inc.php:334
@@ -4138,8 +4138,8 @@ msgstr "Lista de reprodução importada"
 #, php-format
 msgid "Successfully imported playlist with %d song."
 msgid_plural "Successfully imported playlist with %d songs."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Lista de reprodução importada com sucesso com %d música."
+msgstr[1] "Lista de reprodução importada com sucesso com %d músicas."
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -4183,35 +4183,35 @@ msgstr ""
 
 #: ../../podcast_episode.php:36
 msgid "Are you sure you want to permanently delete this episode?"
-msgstr ""
+msgstr "Tem certeza que deseja excluir permanentemente este episódio?"
 
 #: ../../podcast_episode.php:55
 msgid "Episode has been deleted."
-msgstr ""
+msgstr "O episódio foi excluído."
 
 #: ../../podcast_episode.php:57
 msgid "Cannot delete this episode."
-msgstr ""
+msgstr "Não é possível excluir este episódio."
 
 #: ../../podcast.php:60
 msgid "Subscribed to Podcast"
-msgstr ""
+msgstr "Inscrito no Podcast"
 
 #: ../../podcast.php:73 ../../podcast.php:88 ../../podcast.php:90
 msgid "Podcast Deletion"
-msgstr ""
+msgstr "Excluir Podcast"
 
 #: ../../podcast.php:74
 msgid "Are you sure you want to delete this podcast?"
-msgstr ""
+msgstr "Tem certeza que deseja excluir este podcast?"
 
 #: ../../podcast.php:88
 msgid "Podcast has been deleted."
-msgstr ""
+msgstr "O podcast foi excluído."
 
 #: ../../podcast.php:90
 msgid "Cannot delete this podcast."
-msgstr ""
+msgstr "Não é possível excluir este podcast."
 
 #: ../../preferences.php:48 ../../preferences.php:93
 msgid "Server"
@@ -4375,6 +4375,8 @@ msgid ""
 "You can also embed this share as a web player into your website, with the "
 "following html code:"
 msgstr ""
+"Você também pode incorporar esse compartilhamento como um player da web em "
+"seu site, com o seguinte código html:"
 
 #: ../../share.php:84
 msgid "Object Shared"
@@ -4484,7 +4486,7 @@ msgstr "Propósito"
 
 #: ../../templates/cookie_disclaimer.inc.php:27
 msgid "Hide the cookie disclaimer message."
-msgstr ""
+msgstr "Ocultar a mensagem de isenção de responsabilidade do cookie."
 
 #: ../../templates/cookie_disclaimer.inc.php:32
 msgid "Ampache session."
@@ -4500,7 +4502,7 @@ msgstr "Autenticar usuários automaticamente."
 
 #: ../../templates/cookie_disclaimer.inc.php:47
 msgid "Keep latest web player volume."
-msgstr ""
+msgstr "Manter o último volume do player da web."
 
 #: ../../templates/cookie_disclaimer.inc.php:52
 msgid "Show/Hide column [column_index] when browsing [object_type] objects."
@@ -4520,7 +4522,7 @@ msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:72
 msgid "Collapse/Expand Sidebar."
-msgstr ""
+msgstr "Recolher/Expandir barra lateral."
 
 #: ../../templates/error_page.inc.php:32
 msgid "Ampache error page"
@@ -4537,6 +4539,8 @@ msgid ""
 "The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
 msgstr ""
+"Ocorreu o seguinte erro, você será automaticamente redirecionado após 10 "
+"segundos."
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
@@ -4644,15 +4648,15 @@ msgstr "Favoritos"
 
 #: ../../templates/header.inc.php:503
 msgid "Error: Your config file is out of date!"
-msgstr ""
+msgstr "Erro: Seu arquivo de configuração está desatualizado!"
 
 #: ../../templates/header.inc.php:505
 msgid "Generate and download new config file"
-msgstr ""
+msgstr "Gerar e baixar um novo arquivo de configuração"
 
 #: ../../templates/header.inc.php:506
 msgid "Write new config file to disk"
-msgstr ""
+msgstr "Escrever novo arquivo de configuração no disco"
 
 #: ../../templates/install_header.inc.php:52
 #: ../../templates/show_install_lang.inc.php:27
@@ -4686,7 +4690,7 @@ msgstr "Rolagem infinita"
 
 #: ../../templates/list_header.inc.php:136
 msgid "Grid View"
-msgstr ""
+msgstr "Vista de grade"
 
 #: ../../templates/list_header.inc.php:139
 msgid "Alphabet"
@@ -4772,11 +4776,11 @@ msgstr "Adicionar definição da rede local"
 
 #: ../../templates/show_access_list.inc.php:35
 msgid "Advanced Add"
-msgstr ""
+msgstr "Adição avançada"
 
 #: ../../templates/show_access_list.inc.php:40
 msgid "Access Control Entries"
-msgstr ""
+msgstr "Entradas de Controle de Acesso"
 
 #: ../../templates/show_access_list.inc.php:48
 msgid "Start Address"
@@ -4916,7 +4920,7 @@ msgstr "Avatar"
 #: ../../templates/show_edit_user.inc.php:158
 #: ../../templates/show_manage_catalogs.inc.php:45
 msgid "Clear Stats"
-msgstr ""
+msgstr "Limpar estatísticas"
 
 #: ../../templates/show_account.inc.php:139
 msgid "Update Account"
@@ -4924,7 +4928,7 @@ msgstr "Atualização de conta"
 
 #: ../../templates/show_add_access.inc.php:24
 msgid "Add Access Control List"
-msgstr ""
+msgstr "Adicionar Lista de Controle de Acesso"
 
 #: ../../templates/show_add_access.inc.php:50
 #: ../../templates/show_edit_access.inc.php:31
@@ -5037,7 +5041,7 @@ msgstr ""
 #: ../../templates/show_add_catalog.inc.php:60
 #: ../../templates/show_catalog_row.inc.php:47
 msgid "Gather Art"
-msgstr ""
+msgstr "Coletar arte"
 
 #: ../../templates/show_add_catalog.inc.php:64
 msgid "Build Playlists from playlist Files"
@@ -5211,7 +5215,7 @@ msgstr ""
 
 #: ../../templates/show_add_podcast.inc.php:43
 msgid "Subscribe"
-msgstr ""
+msgstr "Se inscrever"
 
 #: ../../templates/show_add_pvmsg.inc.php:24
 msgid "Compose Message"
@@ -5275,7 +5279,7 @@ msgstr "Compartilhar objeto"
 #: ../../templates/show_edit_share_row.inc.php:31
 #: ../../templates/show_shared_objects.inc.php:32
 msgid "Max Counter"
-msgstr ""
+msgstr "Contador máximo"
 
 #: ../../templates/show_add_share.inc.php:49
 #: ../../templates/show_edit_share_row.inc.php:35
@@ -5287,13 +5291,13 @@ msgstr "Dias de validade"
 #: ../../templates/show_edit_share_row.inc.php:40
 #: ../../templates/show_shared_objects.inc.php:33
 msgid "Allow Stream"
-msgstr ""
+msgstr "Permitir transmissão"
 
 #: ../../templates/show_add_share.inc.php:63
 #: ../../templates/show_edit_share_row.inc.php:47
 #: ../../templates/show_shared_objects.inc.php:34
 msgid "Allow Download"
-msgstr ""
+msgstr "Permitir baixar"
 
 #: ../../templates/show_add_shout.inc.php:30
 msgid "Post to Shoutbox"
@@ -8409,6 +8413,11 @@ msgstr "Gerenciar lista de reprodução"
 msgid "Account"
 msgstr "Conta"
 
+#: ../../themes/reborn/templates/upnp/control-reply.php:46
+#: ../../upnp/control-reply.php:46
+msgid "root"
+msgstr ""
+
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
 msgid "TVShow Season Deletion"
@@ -8461,10 +8470,6 @@ msgstr ""
 msgid "Update Now!"
 msgstr "Atualizar agora!"
 
-#: ../../upnp/control-reply.php:46
-msgid "root"
-msgstr ""
-
 #: ../../video.php:35 ../../video.php:55 ../../video.php:57
 msgid "Video Deletion"
 msgstr "Excluir vídeo"
@@ -8486,7 +8491,7 @@ msgstr "Não é possível excluir este vídeo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.09.2016 20:25:57 CEST
+# Last Update: 04.11.2016 15:44:08 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

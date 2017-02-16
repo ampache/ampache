@@ -85,7 +85,7 @@ for more instructions.
 
 Translation progress so far:
 
-[![Transifex](https://www.transifex.com/projects/p/ampache/resource/messagespot/chart/image_png)](https://www.transifex.com/projects/p/ampache/)
+[![](https://www.transifex.com/_/charts/redirects/ampache/ampache/image_png/messagespot/)](https://www.transifex.com/projects/p/ampache/)
 
 Credits
 -------

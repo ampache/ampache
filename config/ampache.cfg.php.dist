@@ -908,12 +908,14 @@ registration_mandatory_fields = "fullname"
 ; DEFAULT: none
 ;encode_video_target = webm
 
-; Override the default output format on a per-type basis
+; Override the default output format on a per-type basis, for example,
+; to stream lossless encoded files in lossy formats.
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
-;encode_target_flac = ogg
+;encode_target_flac = opus
 
-; Override the default TYPE transcoding behavior on a per-player basis
+; Override the default TYPE transcoding behavior on a per-player basis, for example,
+; to stream lossless using the api and lossy using the web interface.
 ; transcode_player_PLAYER_TYPE = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
@@ -934,7 +936,8 @@ transcode_player_customize = "true"
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename
-; %BITRATE% => target bit rate
+; %BITRATE% => target bit rate (as chosen by the admin or users in the
+; preferences, if transcode_player_customize = "true")
 ; You can do fancy things like VBR, but consider whether the consequences are
 ; acceptable in your environment.
 
@@ -965,6 +968,7 @@ transcode_input = "-i %FILE%"
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
 encode_args_mp3 = "-vn -b:a %BITRATE%K -c:a libmp3lame -f mp3 pipe:1"
 encode_args_ogg = "-vn -b:a %BITRATE%K -c:a libvorbis -f ogg pipe:1"
+encode_args_opus = "-vn -b:a %BITRATE%K -c:a libopus -compression_level 10 -vsync 2 -f ogg pipe:1"
 encode_args_m4a = "-vn -b:a %BITRATE%K -c:a libfdk_aac -f adts pipe:1"
 encode_args_wav = "-vn -b:a %BITRATE%K -c:a pcm_s16le -f wav pipe:1"
 encode_args_flv = "-b:a %BITRATE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"

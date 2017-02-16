@@ -149,7 +149,7 @@ foreach ($data as $row) {
 <?php if (!count($data)) {
     ?>
     <tr>
-        <td colspan="8"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
+        <td colspan="8"><span class="nodata"><?php echo T_('No recently played items found'); ?></span></td>
     </tr>
 <?php 
 } ?>
