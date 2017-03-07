@@ -425,7 +425,7 @@ class Song extends database_object implements media, library_item
         $song_id = Dba::insert_id();
         
         if ($user_upload) {
-            Useractivity::post_activity($this->id, 'upload', 'song', $song_id);
+            Useractivity::post_activity(intval($user_upload), 'upload', 'song', $song_id);
         }
 
         if (is_array($tags)) {
