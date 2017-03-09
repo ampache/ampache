@@ -278,4 +278,3 @@ class scrobbler
         }
     } // love
 } // end audioscrobbler class
-

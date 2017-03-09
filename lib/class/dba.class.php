@@ -131,7 +131,12 @@ class Dba
      */
     public static function escape($var)
     {
-        $var = self::dbh()->quote($var);
+        $dbh = self::dbh();
+        if (!$dbh) {
+            debug_event('Dba', 'Wrong dbh.', 1);
+            exit;
+        }
+        $var = $dbh->quote($var);
         // This is slightly less ugly than it was, but still ugly
         return substr($var, 1, -1);
     }

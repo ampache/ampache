@@ -104,17 +104,23 @@ if (!$typeManaged) {
     }
 
     if (!$art->raw_mime) {
-        $defaultimg = AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/';
+        $rootimg = AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/';
         switch ($type) {
             case 'video':
             case 'tvshow':
             case 'tvshow_season':
-                $mime = 'image/png';
-                $defaultimg .= "blankmovie.png";
+                $mime       = 'image/png';
+                $defaultimg = AmpConfig::get('custom_blankmovie');
+                if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
+                    $defaultimg = $rootimg . "blankmovie.png";
+                }
                 break;
             default:
-                $mime = 'image/png';
-                $defaultimg .= "blankalbum.png";
+                $mime       = 'image/png';
+                $defaultimg = AmpConfig::get('custom_blankalbum');
+                if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
+                    $defaultimg = $rootimg . "blankalbum.png";
+                }
             break;
         }
         $image = file_get_contents($defaultimg);

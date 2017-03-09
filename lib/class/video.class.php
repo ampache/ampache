@@ -393,9 +393,9 @@ class Video extends database_object implements media, library_item
         return '';
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'video')) {
+        if (Art::has_db($this->id, 'video') || $force) {
             Art::display('video', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
@@ -1069,4 +1069,3 @@ class Video extends database_object implements media, library_item
         return true;
     } // _update_item
 } // end Video class
-

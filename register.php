@@ -168,4 +168,3 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
     break;
 } // end switch on action
-

@@ -485,7 +485,7 @@ class Stream
         }
 
         $http_port = AmpConfig::get('http_port');
-        if (!empty($http_port) && $http_port != '80') {
+        if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
             if (preg_match("/:(\d+)/",$web_path,$matches)) {
                 $web_path = str_replace(':' . $matches['1'], ':' . $http_port, $web_path);
             } else {
@@ -498,4 +498,3 @@ class Stream
         return $url;
     } // get_base_url
 } //end of stream class
-

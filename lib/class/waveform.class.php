@@ -85,7 +85,7 @@ class Waveform
                     $valid_types   = $song->get_stream_types();
 
                     if ($song->type != $transcode_to) {
-                        $basedir = AmpConfig::get('tmp_dir_path');
+                        $basedir = Core::get_tmp_dir();
                         if ($basedir) {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
                                 $tmpfile = tempnam($basedir, $transcode_to);
@@ -224,6 +224,10 @@ class Waveform
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
         $img = imagecreatetruecolor($data_size / $detail, $height);
+        if ($img === false) {
+            debug_event('waveform', 'Cannot create image.', 1);
+            return null;
+        }
 
         // fill background of image
         if ($background == "") {
@@ -331,4 +335,3 @@ class Waveform
         return Dba::write($sql, array($waveform, $song_id));
     }
 } // Waveform class
-

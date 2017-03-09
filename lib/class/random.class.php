@@ -312,7 +312,6 @@ class Random
 
                 if ($fuzzy_time > 100) {
                     break;
-                    ;
                 }
 
                 // If the new one would go over skip!
@@ -357,4 +356,3 @@ class Random
         }
     } // advanced
 } //end of random class
-

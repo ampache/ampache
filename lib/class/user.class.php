@@ -866,6 +866,7 @@ class User extends database_object
 
     public static function save_mediaplay($user, $media)
     {
+        debug_event('user.class.php', 'save_mediaplay...', 5);
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
@@ -873,7 +874,7 @@ class User extends database_object
                     $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $e) {
-                debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
+                debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), 1);
             }
         }
     }
@@ -894,12 +895,13 @@ class User extends database_object
         }
         
         // Remove port information if any
-        if (strstr($sip, ':') !== false) {
-            $sipar = explode(':', $sip);
-            $sip   = $sipar[0];
+        if (!empty($sip)) {
+            // Use parse_url to support easily ipv6
+            $sipar = parse_url("http://" . $sip);
+            $sip   = $sipar['host'];
         }
 
-        $ip    = Dba::escape(inet_pton($sip));
+        $ip    = (!empty($sip)) ? Dba::escape(inet_pton($sip)) : '';
         $date  = time();
         $user  = $this->id;
         $agent = Dba::escape($_SERVER['HTTP_USER_AGENT']);
@@ -1032,7 +1034,10 @@ class User extends database_object
 
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
-                $this->ip_history = inet_ntop($data['0']['ip']);
+                $ip = $data['0']['ip'];
+                if (!empty($ip)) {
+                    $this->ip_history = inet_ntop($ip);
+                }
             } else {
                 $this->ip_history = T_('Not Enough Data');
             }
@@ -1349,6 +1354,12 @@ class User extends database_object
         return $avatar;
     } // get_avatar
 
+    public function update_avatar ($data, $mime = '')
+    {
+        $art = new Art($this->id, 'user');
+        $art->insert($data, $mime);
+    }
+    
     public function upload_avatar()
     {
         $upload = array();
@@ -1359,8 +1370,7 @@ class User extends database_object
             $image_data     = Art::get_from_source($upload, 'user');
 
             if ($image_data) {
-                $art = new Art($this->id, 'user');
-                $art->insert($image_data, $upload['0']['mime']);
+                $this->update_avatar($image_data, $upload['0']['mime']);
             }
         }
     }
@@ -1592,4 +1602,3 @@ class User extends database_object
         return true;
     }
 } //end user class
-

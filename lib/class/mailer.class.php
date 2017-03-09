@@ -208,4 +208,3 @@ class Mailer
         return $this->send($mail);
     }
 } // Mailer class
-

@@ -322,4 +322,3 @@ class Plugin
         return true;
     } // remove_plugin_version
 } //end plugin class
-

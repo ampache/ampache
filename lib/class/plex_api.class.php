@@ -1065,7 +1065,6 @@ class Plex_Api
 
     protected static function stream_url($url)
     {
-        // header("Location: " . $url);
         set_time_limit(0);
         ob_end_clean();
 
@@ -1074,6 +1073,10 @@ class Plex_Api
         if (isset($headers['Range'])) {
             $reqheaders[] = "Range: " . $headers['Range'];
         }
+
+        // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+        debug_event('plex-api', 'Stream proxy: ' . $url, 5);
+        // header("Location: " . $url);
 
         $ch = curl_init($url);
         curl_setopt_array($ch, array(

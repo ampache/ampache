@@ -134,4 +134,3 @@ class Clip extends Video
         return null;
     }
 } // Clip class
-

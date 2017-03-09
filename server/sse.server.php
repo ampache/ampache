@@ -36,7 +36,7 @@ set_time_limit(0);
 
 if (!$_REQUEST['html']) {
     define('SSE_OUTPUT', true);
-    header('Content-Type: text/event-stream');
+    header('Content-Type: text/event-stream; charset=utf-8');
     header('Cache-Control: no-cache');
 }
 

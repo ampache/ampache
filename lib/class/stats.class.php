@@ -462,4 +462,3 @@ class Stats
         return $items;
     } // get_newest
 } // Stats class
-

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -77,23 +77,6 @@ class XML_Data
     } // set_limit
 
     /**
-     * set_type
-     *
-     * This sets the type of XML_Data we are working on
-     *
-     * @param    string    $type    XML_Data type
-     * @return    void
-     */
-    public static function set_type($type)
-    {
-        if (!in_array($type,array('rss','xspf','itunes'))) {
-            return false;
-        }
-
-        self::$type = $type;
-    } // set_type
-
-    /**
      * error
      *
      * This generates a standard XML Error message
@@ -105,8 +88,8 @@ class XML_Data
      */
     public static function error($code,$string)
     {
-        $string = self::_header() . "\t<error code=\"$code\"><![CDATA[$string]]></error>" . self::_footer();
-        return $string;
+        $string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
+        return self::output_xml($string);
     } // error
 
     /**
@@ -195,15 +178,15 @@ class XML_Data
      * This returns the formatted 'playlistTrack' string for an xml document
      *
      */
-    private static function playlist_song_tracks_string($song,$playlist_data)
+    private static function playlist_song_tracks_string($song, $playlist_data)
     {
-        if ($playlist_data == "") {
+        if (empty($playlist_data)) {
             return "";
         }
         $playlist_track = "";
-        foreach ($playlist as $playlist_data) {
-            if ($playlist_data["object_id"] == $song->id) {
-                return "\t<playlisttrack>" . $playlist_data["track"] . "</playlisttrack>\n";
+        foreach ($playlist_data as $playlist) {
+            if ($playlist["object_id"] == $song->id) {
+                return "\t<playlisttrack>" . $playlist["track"] . "</playlisttrack>\n";
             }
         }
         return "";
@@ -221,18 +204,18 @@ class XML_Data
     public static function keyed_array($array,$callback='')
     {
         $string = '';
-
         // Foreach it
         foreach ($array as $key=>$value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) and isset($value['<attributes>'])) {
-                $attribute = ' ' . $value['<attributes>'];
+            if (is_array($value) and isset($value['attributes'])) {
+                $attribute = ' ' . $value['attributes'];
                 $key       = $value['value'];
             }
 
             // If it's an array, run again
             if (is_array($value)) {
+
                 $value = self::keyed_array($value,1);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
@@ -241,7 +224,7 @@ class XML_Data
         } // end foreach
 
         if (!$callback) {
-            $string = self::_header() . $string . self::_footer();
+            $string = self::output_xml($string);
         }
 
         return $string;
@@ -277,9 +260,7 @@ class XML_Data
                     "</tag>\n";
         } // end foreach
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // tags
 
     /**
@@ -323,9 +304,7 @@ class XML_Data
                     "</artist>\n";
         } // end foreach artists
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // artists
 
     /**
@@ -376,9 +355,7 @@ class XML_Data
                     "</album>\n";
         } // end foreach
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // albums
 
     /**
@@ -412,10 +389,7 @@ class XML_Data
                 "</playlist>\n";
         } // end foreach
 
-        // Build the final and then send her off
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // playlists
 
     /**
@@ -424,7 +398,7 @@ class XML_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs,$playlist_data='')
+    public static function songs($songs, $playlist_data='')
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -438,8 +412,8 @@ class XML_Data
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
 
-            // If the song id is invalid/null or disabled
-            if (!$song->id || !$song->enabled) {
+            // If the song id is invalid/null
+            if (!$song->id) {
                 continue;
             }
 
@@ -481,7 +455,7 @@ class XML_Data
                 "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
                 "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
                 "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
-                "\t<composer>" . $song->composer . "</composer>\n" .
+                "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                 "\t<channels>" . $song->channels . "</channels>\n" .
                 "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
 
@@ -498,7 +472,7 @@ class XML_Data
             $string .= "</song>\n";
         } // end foreach
 
-        return self::_header() . $string . self::_footer();
+        return self::output_xml($string);
     } // songs
 
     /**
@@ -530,9 +504,7 @@ class XML_Data
                     "</video>\n";
         } // end foreach
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // videos
 
     /**
@@ -588,9 +560,7 @@ class XML_Data
                     "</song>\n";
         } // end foreach
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // democratic
 
     /**
@@ -617,9 +587,7 @@ class XML_Data
         }
         $string .= "</user>\n";
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // user
 
     /**
@@ -639,9 +607,7 @@ class XML_Data
         }
         $string .= "</users>\n";
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // users
 
     /**
@@ -669,10 +635,13 @@ class XML_Data
         }
         $string .= "</shouts>\n";
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::output_xml($string);
     } // shouts
+
+    public static function output_xml($string)
+    {
+        return self::_header() . UI::clean_utf8($string) . self::_footer();
+    }
 
     /**
      * timeline
@@ -687,13 +656,12 @@ class XML_Data
         $string = "<timeline>\n";
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
-            $shout->format();
             $user = new User($activity->user);
             $string .= "\t<activity id=\"" . $aid . "\">\n" .
                     "\t\t<date>" . $activity->activity_date . "</date>\n" .
                     "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" .
                     "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .
-                    "\t\t<action><![CDATA[" . $shout->text . "]]></action>\n";
+                    "\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
@@ -719,17 +687,17 @@ class XML_Data
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function rss_feed($data,$title,$description,$date)
+    public static function rss_feed($data, $title, $description, $date = null)
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if ($date != null) {
-            $string .= "<pubDate>" . date("r",$date) . "</pubDate>\n";
+            $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
         }
 
         // Pass it to the keyed array xml function
         foreach ($data as $item) {
             // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item'=>$item),1);
+            $string .= self::keyed_array(array('item'=>$item), 1);
         }
 
         $final = self::_header() . $string . self::_footer();
@@ -881,4 +849,3 @@ class XML_Data
         }
     }
 } // XML_Data
-

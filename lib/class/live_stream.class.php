@@ -57,6 +57,11 @@ class Live_Stream extends database_object implements media, library_item
     public $catalog;
 
     /**
+     *  @var string $f_name
+     */
+    public $f_name;
+    
+    /**
      *  @var string $f_link
      */
     public $f_link;
@@ -95,8 +100,10 @@ class Live_Stream extends database_object implements media, library_item
     public function format($details = true)
     {
         // Default link used on the rightbar
-        $this->f_link         = "<a href=\"" . $this->url . "\">" . $this->name . "</a>";
-        $this->f_name_link    = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->name . "</a>";
+        $this->f_name         = scrub_out($this->name);
+        $this->link           = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
+        $this->f_link         = "<a href=\"" . $this->link . "\">" . $this->f_name . "</a>";
+        $this->f_name_link    = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
         $this->f_url_link     = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
 
         return true;
@@ -165,9 +172,9 @@ class Live_Stream extends database_object implements media, library_item
         return null;
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'live_stream')) {
+        if (Art::has_db($this->id, 'live_stream') || $force) {
             Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
@@ -216,9 +223,12 @@ class Live_Stream extends database_object implements media, library_item
      */
     public static function create(array $data)
     {
-        // Make sure we've got a name
+        // Make sure we've got a name and codec
         if (!strlen($data['name'])) {
             AmpError::add('name', T_('Name Required'));
+        }
+        if (!strlen($data['codec'])) {
+            AmpError::add('codec', T_('Codec (eg. MP3, OGG...) Required'));
         }
 
         $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp','rtmp');
@@ -334,4 +344,3 @@ class Live_Stream extends database_object implements media, library_item
         // Do nothing
     }
 } //end of radio class
-

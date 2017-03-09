@@ -36,6 +36,17 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     ?>
     </div>
 </td>
+<?php if (Art::is_enabled()) {
+    ?>
+<td class="cel_cover">
+    <?php
+    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 5;
+    $libitem->display_art($thumb);
+    ?>
+</td>
+<?php 
+}
+    ?>
 <td class="cel_title"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">

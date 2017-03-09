@@ -384,4 +384,3 @@ class Share extends database_object
         echo "</ul>";
     }
 } // end of recommendation class
-

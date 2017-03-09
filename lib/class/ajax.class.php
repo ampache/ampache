@@ -249,4 +249,3 @@ class Ajax
         self::$include_override = false;
     } // end_container
 } // end Ajax class
-

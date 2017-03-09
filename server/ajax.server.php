@@ -100,8 +100,8 @@ switch ($_REQUEST['action']) {
     break;
     // Handle the users basketcases...
     case 'basket':
-        $object_type = $_REQUEST['type'];
-        $object_id   = $_REQUEST['id'];
+        $object_type = $_REQUEST['type'] ?: $_REQUEST['object_type'];
+        $object_id   = $_REQUEST['id'] ?: $_REQUEST['object_id'];
 
         if (Core::is_playable_item($object_type)) {
             if (!is_array($object_id)) {

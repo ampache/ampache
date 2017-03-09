@@ -543,4 +543,3 @@ class Wanted extends database_object
         return $results;
     }
 } // end of recommendation class
-

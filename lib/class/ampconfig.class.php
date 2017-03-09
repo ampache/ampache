@@ -51,13 +51,13 @@ class AmpConfig
      * This returns a config value.
      * @param string $name
      */
-    public static function get($name)
+    public static function get($name, $default=null)
     {
         if (isset(self::$_global[$name])) {
             return self::$_global[$name];
         }
 
-        return null;
+        return $default;
     }
 
     /**

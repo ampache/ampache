@@ -143,4 +143,3 @@ class AmpError
         }
     } // auto_init
 } // Error
-

@@ -151,4 +151,3 @@ function debug_event($type, $message, $level, $file = '', $username = '')
         log_event($username, $type, $line, $file);
     }
 } // debug_event
-

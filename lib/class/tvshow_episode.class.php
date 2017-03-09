@@ -213,7 +213,7 @@ class TVShow_Episode extends Video
         return $season->get_description();
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
@@ -227,7 +227,7 @@ class TVShow_Episode extends Video
                 $type = 'tvshow_season';
             } else {
                 $season = new TVShow_Season($this->season);
-                if (Art::has_db($season->tvshow, 'tvshow')) {
+                if (Art::has_db($season->tvshow, 'tvshow') || $force) {
                     $id   = $season->tvshow;
                     $type = 'tvshow';
                 }

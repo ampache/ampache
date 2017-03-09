@@ -636,4 +636,3 @@ class Localplay
         return $track_name;
     } // get_user_playing
 } // end localplay class
-

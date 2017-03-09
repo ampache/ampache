@@ -1218,21 +1218,22 @@ abstract class Catalog extends database_object
         }
 
         $art     = new Art($id, $type);
-        $results = $art->gather($options, 1);
+        $results = $art->gather($options);
 
-        if (count($results)) {
+        foreach ($results as $result) {
             // Pull the string representation from the source
-            $image = Art::get_from_source($results[0], $type);
+            $image = Art::get_from_source($result, $type);
             if (strlen($image) > '5') {
-                $art->insert($image, $results[0]['mime']);
+                $inserted = $art->insert($image, $result['mime']);
                 // If they've enabled resizing of images generate a thumbnail
                 if (AmpConfig::get('resize_images')) {
                     $size  = array('width' => 275, 'height' => 275);
-                    $thumb = $art->generate_thumb($image,$size ,$results[0]['mime']);
+                    $thumb = $art->generate_thumb($image,$size ,$result['mime']);
                     if (is_array($thumb)) {
                         $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
                     }
                 }
+                if ($inserted) break;
             } else {
                 debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
             }
@@ -1511,8 +1512,6 @@ abstract class Catalog extends database_object
                 flush();
             }
         } // foreach songs
-
-        self::gc();
     } // update_single_item
 
     /**
@@ -1800,9 +1799,6 @@ abstract class Catalog extends database_object
         $dead_total = $this->clean_catalog_proc();
 
         debug_event('clean', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
-
-        // Remove any orphaned artists/albums/etc.
-        self::gc();
 
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
@@ -2171,8 +2167,6 @@ abstract class Catalog extends database_object
         $sql = "DELETE FROM `catalog` WHERE `id` = ?";
         Dba::write($sql, array($catalog_id));
 
-        // Run the cleaners...
-        self::gc();
         return true;
     } // delete
 
@@ -2409,8 +2403,10 @@ abstract class Catalog extends database_object
                 }
                 break;
         }
+        
+        // Remove any orphaned artists/albums/etc.
+        self::gc();
     }
 }
 
 // end of catalog class
-

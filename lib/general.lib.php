@@ -249,6 +249,7 @@ function translate_pattern_code($code)
             '%T'=>'track',
             '%t'=>'title',
             '%y'=>'year',
+            '%d'=>'disk',
             '%o'=>'zz_other');
 
     if (isset($code_array[$code])) {

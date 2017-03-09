@@ -199,6 +199,11 @@ function create_preference_input($name,$value)
         case 'upload_allow_remove':
         case 'webdav_backend':
         case 'notify_email':
+        case 'libitem_contextmenu':
+        case 'upload_catalog_pattern':
+        case 'catalogfav_gridview':
+        case 'browse_filter':
+        case 'sidebar_light':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {
@@ -398,7 +403,7 @@ function create_preference_input($name,$value)
             $url         = $plugin->_plugin->url;
             $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
             $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
-            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', T_("Click for grant Ampache to ") . $plugin_name) . '</a>';
+            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
         break;
         default:
             if (preg_match('/_pass$/', $name)) {
@@ -410,4 +415,3 @@ function create_preference_input($name,$value)
 
     }
 } // create_preference_input
-

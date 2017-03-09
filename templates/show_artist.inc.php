@@ -328,6 +328,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         $title  = (!empty($key)) ? ucwords($key) : '';
         $browse = new Browse();
         $browse->set_type($object_type);
+        $browse->set_use_alpha(false, false);
         if (!empty($key)) {
             $browse->set_content_div_ak($key);
         }

@@ -68,6 +68,12 @@ if ($libitem->enabled || Access::check('interface','50')) {
 <td class="cel_album"><?php echo $libitem->f_album_link ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags ?></td>
 <td class="cel_time"><?php echo $libitem->f_time ?></td>
+<?php if (AmpConfig::get('licensing')) {
+    ?>
+<td class="cel_license"><?php echo $libitem->f_license ?></td>
+<?php 
+}
+    ?>
 
 <?php if (AmpConfig::get('show_played_times')) {
     ?>

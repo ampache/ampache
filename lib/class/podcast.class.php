@@ -89,7 +89,7 @@ class Podcast extends database_object implements library_item
     
     /**
      * get_episodes
-     * gets all episodes for this tv show
+     * gets all episodes for this podcast
      */
     public function get_episodes($state_filter = '')
     {
@@ -226,9 +226,9 @@ class Podcast extends database_object implements library_item
         return $this->f_description;
     }
     
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'podcast')) {
+        if (Art::has_db($this->id, 'podcast') || $force) {
             Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
@@ -415,7 +415,7 @@ class Podcast extends database_object implements library_item
         }
         
         if ($pubdate <= 0) {
-            debug_log('podcast', 'Invalid episode publication date, skipped', 3);
+            debug_event('podcast', 'Invalid episode publication date, skipped', 3);
             return false;
         }
         
@@ -424,7 +424,7 @@ class Podcast extends database_object implements library_item
                     "VALUES (?, ?, ?, 'skipped', ?, ?, ?, ?, ?, ?, ?, ?)";
             return Dba::write($sql, array($title, $guid, $this->id, $source, $website, $description, $author, $category, $time, $pubdate, time()));
         } else {
-            debug_log('podcast', 'Episode published before ' . $afterdate . ', skipped', 5);
+            debug_event('podcast', 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 5);
             return true;
         }
     }
@@ -450,7 +450,7 @@ class Podcast extends database_object implements library_item
             return false;
         }
 
-        $this->add_episodes($xml->item, $this->lastsync, $gather);
+        $this->add_episodes($xml->channel->item, $this->lastsync, $gather);
         
         return true;
     }

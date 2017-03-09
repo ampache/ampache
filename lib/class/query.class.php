@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -154,7 +154,8 @@ class Query
                 'tag',
                 'catalog',
                 'catalog_enabled',
-                'composer'
+                'composer',
+                'enabled'
             ),
             'live_stream' => array(
                 'alpha_match',
@@ -277,7 +278,8 @@ class Query
             ),
             'playlist' => array(
                 'name',
-                'user'
+                'user',
+                'last_update'
             ),
             'smartplaylist' => array(
                 'name',
@@ -491,6 +493,7 @@ class Query
             case 'season_eq':
             case 'user':
             case 'to_user':
+            case 'enabled':
                 $this->_state['filter'][$key] = intval($value);
             break;
             case 'exact_match':
@@ -1261,7 +1264,7 @@ class Query
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if ( $this->get_type() == 'artist' && !$this->_state['custom'] ) {
+        if ( ($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom'] ) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
@@ -1378,6 +1381,9 @@ class Query
                 case 'catalog_enabled':
                     $this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
                     $filter_sql = " `catalog`.`enabled` = '1' AND ";
+                    break;
+                case 'enabled':
+                    $filter_sql = " `song`.`enabled`= '$value' AND ";
                     break;
                 default:
                     // Rien a faire
@@ -1964,6 +1970,9 @@ class Query
                     case 'user':
                         $sql = "`playlist`.`user`";
                     break;
+                    case 'last_update':
+                        $sql = "`playlist`.`last_update`";
+                    break;
                 } // end switch
             break;
             case 'smartplaylist':
@@ -2429,4 +2438,3 @@ class Query
         $this->_state['ak'] = $ak;
     }
 } // query
-

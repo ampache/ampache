@@ -79,4 +79,3 @@ interface playable_item
      */
     public function get_catalogs();
 } // end interface
-

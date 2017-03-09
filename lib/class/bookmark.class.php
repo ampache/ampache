@@ -153,4 +153,3 @@ class Bookmark extends database_object
         $f_user = $user->username;
     }
 } //end bookmark class
-

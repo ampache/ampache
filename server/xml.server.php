@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -91,6 +91,7 @@ foreach ($methods as $method) {
     // If the method is the same as the action being called
     // Then let's call this function!
     if ($_GET['action'] == $method) {
+        $_GET['format'] = 'xml';
         call_user_func(array('api',$method),$_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;

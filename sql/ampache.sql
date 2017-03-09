@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `license` (
 --
 
 INSERT INTO `license` (`id`, `name`, `description`, `external_link`) VALUES
-(1, '_default', NULL, ''),
+(1, '0 - default', NULL, ''),
 (2, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/3.0/'),
 (3, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/3.0/'),
 (4, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/3.0/'),
@@ -477,10 +477,10 @@ CREATE TABLE IF NOT EXISTS `now_playing` (
 DROP TABLE IF EXISTS `object_count`;
 CREATE TABLE IF NOT EXISTS `object_count` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video') CHARACTER SET utf8 DEFAULT NULL,
+  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET utf8 DEFAULT NULL,
   `object_id` int(11) unsigned NOT NULL DEFAULT '0',
   `date` int(11) unsigned NOT NULL DEFAULT '0',
-  `user` int(11) unsigned NOT NULL,
+  `user` int(11) NOT NULL,
   `agent` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `geo_latitude` decimal(10,6) DEFAULT NULL,
   `geo_longitude` decimal(10,6) DEFAULT NULL,
@@ -885,6 +885,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   `file` varchar(4096) CHARACTER SET utf8 DEFAULT NULL,
   `catalog` int(11) unsigned NOT NULL DEFAULT '0',
   `album` int(11) unsigned NOT NULL DEFAULT '0',
+  `disk` smallint(5) unsigned NOT NULL DEFAULT '0',
   `year` mediumint(4) unsigned NOT NULL DEFAULT '0',
   `artist` int(11) unsigned NOT NULL DEFAULT '0',
   `title` varchar(255) CHARACTER SET utf8 DEFAULT NULL,

@@ -206,7 +206,7 @@ class Podcast_Episode extends database_object implements media, library_item
         return $this->f_description;
     }
     
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
@@ -215,7 +215,7 @@ class Podcast_Episode extends database_object implements media, library_item
             $id   = $this->id;
             $type = 'podcast_episode';
         } else {
-            if (Art::has_db($this->podcast, 'podcast')) {
+            if (Art::has_db($this->podcast, 'podcast') || $force) {
                 $id   = $this->podcast;
                 $type = 'podcast';
             }
@@ -386,7 +386,7 @@ class Podcast_Episode extends database_object implements media, library_item
             $file    = $podcast->get_root_path();
             if (!empty($file)) {
                 $pinfo = pathinfo($this->source);
-                $file .= DIRECTORY_SEPARATOR . $this->id . '-' . $pinfo['basename'];
+                $file .= DIRECTORY_SEPARATOR . $this->id . '-' . strtok($pinfo['basename'], '?');
                 debug_event('podcast_episode', 'Downloading ' . $this->source . ' to ' . $file . ' ...', 5);
                 if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
                     debug_event('podcast_episode', 'Download completed.', 5);
@@ -411,5 +411,17 @@ class Podcast_Episode extends database_object implements media, library_item
         } else {
             debug_event('podcast_episode', 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
         }
+    }
+    
+    /**
+     * type_to_mime
+     *
+     * Returns the mime type for the specified file extension/type
+     * @param string $type
+     * @return string
+     */
+    public static function type_to_mime($type)
+    {
+        return Song::type_to_mime($type);
     }
 }

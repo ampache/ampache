@@ -237,7 +237,7 @@ class Daap_Api
             $auth    = $headers['Authorization'];
             if (strpos(strtolower($auth), 'basic') === 0) {
                 $decauth  = base64_decode(substr($auth, 6));
-                $userpass = split(':', $decauth);
+                $userpass = explode(':', $decauth);
                 if (count($userpass) == 2) {
                     if ($userpass[1] == $pass) {
                         $authenticated = true;

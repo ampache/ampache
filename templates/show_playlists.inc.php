@@ -27,8 +27,14 @@
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
+            <?php if (AmpConfig::get('playlist_art')) {
+    ?>
+            <th class="cel_cover optional"><?php echo T_('Art') ?></th>
+            <?php 
+} ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
+            <th class="cel_last_update optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'),'playlist_sort_last_update'); ?></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_medias optional"><?php echo T_('# Medias'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner'); ?></th>
@@ -58,14 +64,19 @@
         foreach ($object_ids as $playlist_id) {
             $libitem = new Playlist($playlist_id);
             $libitem->format();
-            ?>
+            
+            // Don't show empty playlist if not admin or the owner
+            if (Access::check('interface','100') || $libitem->get_user_owner() == $GLOBALS['user']->id || $libitem->get_media_count() > 0) {
+                ?>
         <tr class="<?php echo UI::flip_class();
-            ?>" id="playlist_row_<?php echo $libitem->id;
-            ?>">
+                ?>" id="playlist_row_<?php echo $libitem->id;
+                ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php');
-            ?>
+                ?>
         </tr>
-        <?php 
+        <?php
+
+            }
         } // end foreach ($playlists as $playlist) ?>
         <?php if (!count($object_ids)) {
     ?>
@@ -80,8 +91,14 @@
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
+            <?php if (AmpConfig::get('playlist_art')) {
+    ?>
+            <th class="cel_cover"><?php echo T_('Art') ?></th>
+            <?php 
+} ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
+            <th class="cel_last_update"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'),'playlist_sort_last_update_bottom'); ?></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_medias optional"><?php echo T_('# Medias'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner_bottom'); ?></th>
