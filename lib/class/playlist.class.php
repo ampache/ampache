@@ -403,7 +403,11 @@ class Playlist extends playlist_object
 
             // Based on the ordered prop we use track + base or just $i++
             if (!$ordered && $data['object_type'] == 'song') {
-                $track    = $media->track + $base_track;
+                $mediaTrack = $media->track;
+                if($mediaTrack == 0) {
+                    $mediaTrack = 1;
+                }
+                $track    = $mediaTrack + $base_track;
             } else {
                 $i++;
                 $track = $base_track + $i;
