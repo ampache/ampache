@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-02-17 18:45+0100\n"
-"PO-Revision-Date: 2016-12-19 07:12+0000\n"
-"Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>\n"
+"POT-Creation-Date: 2017-05-09 18:57+0200\n"
+"PO-Revision-Date: 2017-05-05 16:01+0000\n"
+"Last-Translator: Afterster\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
 "language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -7418,9 +7418,8 @@ msgid_plural "%d decades ago"
 msgstr[0] "%d0 年前"
 
 #: ../../templates/show_recently_played.inc.php:152
-#, fuzzy
 msgid "No recently played items found"
-msgstr "找不到最近的項目"
+msgstr ""
 
 #: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
@@ -8370,7 +8369,7 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 24.12.2016 06:19:59 CET
+# Last Update: 17.02.2017 18:45:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

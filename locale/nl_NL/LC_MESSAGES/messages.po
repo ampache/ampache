@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-02-17 18:45+0100\n"
-"PO-Revision-Date: 2016-10-31 20:48+0000\n"
-"Last-Translator: Guido Janssen <guido@guidoo.nl>\n"
+"POT-Creation-Date: 2017-05-09 18:57+0200\n"
+"PO-Revision-Date: 2017-05-05 16:01+0000\n"
+"Last-Translator: Afterster\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/ampache/ampache/"
 "language/nl_NL/)\n"
 "Language: nl_NL\n"
@@ -7397,9 +7397,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:152
-#, fuzzy
 msgid "No recently played items found"
-msgstr "Geen afspeellijst gevonden"
+msgstr ""
 
 #: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
@@ -8324,7 +8323,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 24.12.2016 06:19:59 CET
+# Last Update: 17.02.2017 18:45:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
