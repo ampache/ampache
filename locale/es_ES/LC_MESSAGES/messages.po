@@ -6,16 +6,18 @@
 # Alejandro Suarez <alejandroscf@gmail.com>, 2016
 # Auka Raiken, 2016
 # Fede Ubal <fefudito@hotmail.com>, 2016
-# Ivan Gonzalez Martin, 2015-2016
-# Ivan Gonzalez Martin, 2016
+# Ivan, 2015-2016
+# Ivan, 2016
+# Josu Lazkano <josu.lazkano@gmail.com>, 2017
 # Ladee Io, 2016
 # Pablo Ganuza <pablerkas@gmail.com>, 2016
+# Raul Fernandez Garcia <raulfg3@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-02-17 18:45+0100\n"
-"PO-Revision-Date: 2016-07-25 09:41+0000\n"
+"POT-Creation-Date: 2017-05-09 18:57+0200\n"
+"PO-Revision-Date: 2017-05-05 16:01+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/ampache/ampache/"
 "language/es_ES/)\n"
@@ -190,31 +192,31 @@ msgstr "Su correo no ha sido enviado."
 
 #: ../../admin/modules.php:38
 msgid "Failed to enable the module, Controller Error"
-msgstr ""
+msgstr "Fallo al habilitar el módulo, error de controlador"
 
 #: ../../admin/modules.php:53
 msgid "localplay enabled"
-msgstr ""
+msgstr "Localplay habilitado"
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
-msgstr ""
+msgstr "Fallo al habilitar el módulo, error de catalogo"
 
 #: ../../admin/modules.php:70
 msgid "Module enabled"
-msgstr ""
+msgstr "Módulo habilitado"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
 msgid "Are you sure you want to disable this module?"
-msgstr ""
+msgstr "¿Estás seguro de querer deshabilitar este módulo?"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
 msgid "Module disabled"
-msgstr ""
+msgstr "Módulo deshabilitado"
 
 #: ../../admin/modules.php:105
 msgid "Failed to disable module, Catalog Error"
-msgstr ""
+msgstr "Fallo al deshabilitar el módulo, error de catalogo"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
@@ -222,15 +224,15 @@ msgstr "Imposible instalar complemento"
 
 #: ../../admin/modules.php:139
 msgid "Plugin enabled"
-msgstr ""
+msgstr "Complemento habilitado"
 
 #: ../../admin/modules.php:146
 msgid "Are you sure you want to disable this plugin?"
-msgstr ""
+msgstr "¿Estás seguro de querer deshabilitar este complemento?"
 
 #: ../../admin/modules.php:165
 msgid "Plugin disabled"
-msgstr ""
+msgstr "Complemento deshabilitado"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
@@ -710,7 +712,7 @@ msgstr "Borrando: %s"
 
 #: ../../bin/fix_filenames.inc:42
 msgid "ERROR: Iconv required for this functionality, quitting"
-msgstr ""
+msgstr "ERROR: Para esta funcionalidad se requiere Iconv, saliendo"
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
@@ -912,7 +914,7 @@ msgstr "Origen: %s"
 #: ../../bin/sort_files.inc:79
 #, php-format
 msgid "Dest: %s"
-msgstr ""
+msgstr "Dest: %s"
 
 #: ../../bin/sort_files.inc:229
 #, php-format
@@ -1180,7 +1182,7 @@ msgstr "Album MusicBrainzID"
 
 #: ../../lib/class/album.class.php:677
 msgid "Release Group MusicBrainzID"
-msgstr ""
+msgstr "Release Group MusicBrainzID"
 
 #: ../../lib/class/album.class.php:680 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:223
@@ -1531,7 +1533,7 @@ msgstr "Transmisión"
 
 #: ../../lib/class/broadcast.class.php:384
 msgid "Unbroadcast"
-msgstr ""
+msgstr "Unbroadcast"
 
 #: ../../lib/class/browse.class.php:204 ../../lib/class/browse.class.php:284
 #: ../../lib/class/upnp_api.class.php:377 ../../server/index.ajax.php:324
@@ -1593,7 +1595,7 @@ msgstr "Listas de reproducción"
 
 #: ../../lib/class/browse.class.php:240
 msgid "Playlist Medias"
-msgstr ""
+msgstr "Listas de reproducción"
 
 #: ../../lib/class/browse.class.php:244
 msgid "Current Playlist"
@@ -1611,7 +1613,7 @@ msgstr "Catálogos"
 
 #: ../../lib/class/browse.class.php:257
 msgid "Shoutbox Records"
-msgstr ""
+msgstr "Grabaciones Shoutbox"
 
 #: ../../lib/class/browse.class.php:268
 #: ../../templates/show_search_form.inc.php:44
@@ -1880,11 +1882,11 @@ msgstr "Podcast"
 
 #: ../../lib/class/podcast.class.php:272
 msgid "Wrong feed url"
-msgstr ""
+msgstr "Error en la URL"
 
 #: ../../lib/class/podcast.class.php:277
 msgid "Target catalog required"
-msgstr ""
+msgstr "Se requiere un catalogo de destino"
 
 #: ../../lib/class/podcast.class.php:281
 msgid "Wrong target catalog type"
@@ -2069,7 +2071,7 @@ msgstr "es menor que"
 
 #: ../../lib/class/search.class.php:99
 msgid "is true"
-msgstr ""
+msgstr "es verdad"
 
 #: ../../lib/class/search.class.php:104
 msgid "is false"
@@ -2133,7 +2135,7 @@ msgstr "Etiqueta"
 
 #: ../../lib/class/search.class.php:259
 msgid "Album tag"
-msgstr ""
+msgstr "Etiqueta de album"
 
 #: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:510
 #: ../../templates/show_disabled_songs.inc.php:32
@@ -2484,7 +2486,7 @@ msgstr "Música"
 #: ../../templates/show_tagcloud.inc.php:27
 #: ../../templates/sidebar_home.inc.php:72
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: ../../lib/class/useractivity.class.php:207
 msgid "commented on"
@@ -2528,7 +2530,7 @@ msgstr "Seguir"
 
 #: ../../lib/class/video.class.php:795
 msgid "Afar"
-msgstr ""
+msgstr "Afar"
 
 #: ../../lib/class/video.class.php:796
 msgid "Abkhazian"
@@ -2536,7 +2538,7 @@ msgstr "Abjasio"
 
 #: ../../lib/class/video.class.php:797
 msgid "Avestan"
-msgstr ""
+msgstr "Avestan"
 
 #: ../../lib/class/video.class.php:798
 msgid "Afrikaans"
@@ -2544,11 +2546,11 @@ msgstr "Africano"
 
 #: ../../lib/class/video.class.php:799
 msgid "Akan"
-msgstr ""
+msgstr "Akan"
 
 #: ../../lib/class/video.class.php:800
 msgid "Amharic"
-msgstr ""
+msgstr "Amharic"
 
 #: ../../lib/class/video.class.php:801
 msgid "Aragonese"
@@ -2560,23 +2562,23 @@ msgstr "Árabe"
 
 #: ../../lib/class/video.class.php:803
 msgid "Assamese"
-msgstr ""
+msgstr "Assamese"
 
 #: ../../lib/class/video.class.php:804
 msgid "Avaric"
-msgstr ""
+msgstr "Avaric"
 
 #: ../../lib/class/video.class.php:805
 msgid "Aymara"
-msgstr ""
+msgstr "Aymara"
 
 #: ../../lib/class/video.class.php:806
 msgid "Azerbaijani"
-msgstr ""
+msgstr "Azerbaijani"
 
 #: ../../lib/class/video.class.php:807
 msgid "Bashkir"
-msgstr ""
+msgstr "Bashkir"
 
 #: ../../lib/class/video.class.php:808
 msgid "Belarusian"
@@ -2588,15 +2590,15 @@ msgstr "Búlgaro"
 
 #: ../../lib/class/video.class.php:810
 msgid "Bihari"
-msgstr ""
+msgstr "Bihari"
 
 #: ../../lib/class/video.class.php:811
 msgid "Bislama"
-msgstr ""
+msgstr "Bislama"
 
 #: ../../lib/class/video.class.php:812
 msgid "Bambara"
-msgstr ""
+msgstr "Bambara"
 
 #: ../../lib/class/video.class.php:813
 msgid "Bengali"
@@ -2620,19 +2622,19 @@ msgstr "Catalán"
 
 #: ../../lib/class/video.class.php:818
 msgid "Chechen"
-msgstr ""
+msgstr "Chechen"
 
 #: ../../lib/class/video.class.php:819
 msgid "Chamorro"
-msgstr ""
+msgstr "Chamorro"
 
 #: ../../lib/class/video.class.php:820
 msgid "Corsican"
-msgstr ""
+msgstr "Corsican"
 
 #: ../../lib/class/video.class.php:821
 msgid "Cree"
-msgstr ""
+msgstr "Cree"
 
 #: ../../lib/class/video.class.php:822
 msgid "Czech"
@@ -2640,11 +2642,11 @@ msgstr "Checo"
 
 #: ../../lib/class/video.class.php:823
 msgid "Church Slavic"
-msgstr ""
+msgstr "Church Slavic"
 
 #: ../../lib/class/video.class.php:824
 msgid "Chuvash"
-msgstr ""
+msgstr "Chuvash"
 
 #: ../../lib/class/video.class.php:825
 msgid "Welsh"
@@ -2660,15 +2662,15 @@ msgstr "Alemán"
 
 #: ../../lib/class/video.class.php:828
 msgid "Divehi"
-msgstr ""
+msgstr "Divehi"
 
 #: ../../lib/class/video.class.php:829
 msgid "Dzongkha"
-msgstr ""
+msgstr "Dzongkha"
 
 #: ../../lib/class/video.class.php:830
 msgid "Ewe"
-msgstr ""
+msgstr "Ewe"
 
 #: ../../lib/class/video.class.php:831
 msgid "Greek"
@@ -2700,7 +2702,7 @@ msgstr "Persa"
 
 #: ../../lib/class/video.class.php:838
 msgid "Fulah"
-msgstr ""
+msgstr "Fulah"
 
 #: ../../lib/class/video.class.php:839
 msgid "Finnish"
@@ -2708,11 +2710,11 @@ msgstr "Finlandés"
 
 #: ../../lib/class/video.class.php:840
 msgid "Fijian"
-msgstr ""
+msgstr "Fijian"
 
 #: ../../lib/class/video.class.php:841
 msgid "Faroese"
-msgstr ""
+msgstr "Faroese"
 
 #: ../../lib/class/video.class.php:842
 msgid "French"
@@ -2740,15 +2742,15 @@ msgstr "Guaraní"
 
 #: ../../lib/class/video.class.php:848
 msgid "Gujarati"
-msgstr ""
+msgstr "Gujarati"
 
 #: ../../lib/class/video.class.php:849
 msgid "Manx"
-msgstr ""
+msgstr "Manx"
 
 #: ../../lib/class/video.class.php:850
 msgid "Hausa"
-msgstr ""
+msgstr "Hausa"
 
 #: ../../lib/class/video.class.php:851
 msgid "Hebrew"
@@ -2760,7 +2762,7 @@ msgstr "Hindú"
 
 #: ../../lib/class/video.class.php:853
 msgid "Hiri Motu"
-msgstr ""
+msgstr "Hiri Motu"
 
 #: ../../lib/class/video.class.php:854
 msgid "Croatian"
@@ -2780,7 +2782,7 @@ msgstr "Armenio"
 
 #: ../../lib/class/video.class.php:858
 msgid "Herero"
-msgstr ""
+msgstr "Herero"
 
 #: ../../lib/class/video.class.php:859
 msgid "Interlingua (International Auxiliary Language Association)"
@@ -2796,19 +2798,19 @@ msgstr "Interlingua"
 
 #: ../../lib/class/video.class.php:862
 msgid "Igbo"
-msgstr ""
+msgstr "Igbo"
 
 #: ../../lib/class/video.class.php:863
 msgid "Sichuan Yi"
-msgstr ""
+msgstr "Sichuan Yi"
 
 #: ../../lib/class/video.class.php:864
 msgid "Inupiaq"
-msgstr ""
+msgstr "Inupiaq"
 
 #: ../../lib/class/video.class.php:865
 msgid "Ido"
-msgstr ""
+msgstr "Ido"
 
 #: ../../lib/class/video.class.php:866
 msgid "Icelandic"
@@ -2820,7 +2822,7 @@ msgstr "Italiano"
 
 #: ../../lib/class/video.class.php:868
 msgid "Inuktitut"
-msgstr ""
+msgstr "Inuktitut"
 
 #: ../../lib/class/video.class.php:869
 msgid "Japanese"
@@ -2840,27 +2842,27 @@ msgstr "Congoleño"
 
 #: ../../lib/class/video.class.php:873
 msgid "Kikuyu"
-msgstr ""
+msgstr "Kikuyu"
 
 #: ../../lib/class/video.class.php:874
 msgid "Kwanyama"
-msgstr ""
+msgstr "Kwanyama"
 
 #: ../../lib/class/video.class.php:875
 msgid "Kazakh"
-msgstr ""
+msgstr "Kazakh"
 
 #: ../../lib/class/video.class.php:876
 msgid "Kalaallisut"
-msgstr ""
+msgstr "Kalaallisut"
 
 #: ../../lib/class/video.class.php:877
 msgid "Khmer"
-msgstr ""
+msgstr "Khmer"
 
 #: ../../lib/class/video.class.php:878
 msgid "Kannada"
-msgstr ""
+msgstr "Kannada"
 
 #: ../../lib/class/video.class.php:879
 msgid "Korean"
@@ -2868,11 +2870,11 @@ msgstr "Coreano"
 
 #: ../../lib/class/video.class.php:880
 msgid "Kanuri"
-msgstr ""
+msgstr "Kanuri"
 
 #: ../../lib/class/video.class.php:881
 msgid "Kashmiri"
-msgstr ""
+msgstr "Kashmiri"
 
 #: ../../lib/class/video.class.php:882
 msgid "Kurdish"
@@ -2880,15 +2882,15 @@ msgstr "Kurdo"
 
 #: ../../lib/class/video.class.php:883
 msgid "Komi"
-msgstr ""
+msgstr "Komi"
 
 #: ../../lib/class/video.class.php:884
 msgid "Cornish"
-msgstr ""
+msgstr "Cornish"
 
 #: ../../lib/class/video.class.php:885
 msgid "Kirghiz"
-msgstr ""
+msgstr "Kirghiz"
 
 #: ../../lib/class/video.class.php:886
 msgid "Latin"
@@ -2900,19 +2902,19 @@ msgstr "Luxemburgués"
 
 #: ../../lib/class/video.class.php:888
 msgid "Ganda"
-msgstr ""
+msgstr "Ganda"
 
 #: ../../lib/class/video.class.php:889
 msgid "Limburgish"
-msgstr ""
+msgstr "Limburgish"
 
 #: ../../lib/class/video.class.php:890
 msgid "Lingala"
-msgstr ""
+msgstr "Lingala"
 
 #: ../../lib/class/video.class.php:891
 msgid "Lao"
-msgstr ""
+msgstr "Lao"
 
 #: ../../lib/class/video.class.php:892
 msgid "Lithuanian"
@@ -2920,7 +2922,7 @@ msgstr "Lituano"
 
 #: ../../lib/class/video.class.php:893
 msgid "Luba-Katanga"
-msgstr ""
+msgstr "Luba-Katanga"
 
 #: ../../lib/class/video.class.php:894
 msgid "Latvian"
@@ -2928,11 +2930,11 @@ msgstr "Letón"
 
 #: ../../lib/class/video.class.php:895
 msgid "Malagasy"
-msgstr ""
+msgstr "Malagasy"
 
 #: ../../lib/class/video.class.php:896
 msgid "Marshallese"
-msgstr ""
+msgstr "Marshallese"
 
 #: ../../lib/class/video.class.php:897
 msgid "Maori"
@@ -2944,7 +2946,7 @@ msgstr "Macedonio"
 
 #: ../../lib/class/video.class.php:899
 msgid "Malayalam"
-msgstr ""
+msgstr "Malayalam"
 
 #: ../../lib/class/video.class.php:900
 msgid "Mongolian"
@@ -2952,31 +2954,31 @@ msgstr "Mongol"
 
 #: ../../lib/class/video.class.php:901
 msgid "Marathi"
-msgstr ""
+msgstr "Marathi"
 
 #: ../../lib/class/video.class.php:902
 msgid "Malay"
-msgstr ""
+msgstr "Malay"
 
 #: ../../lib/class/video.class.php:903
 msgid "Maltese"
-msgstr ""
+msgstr "Maltese"
 
 #: ../../lib/class/video.class.php:904
 msgid "Burmese"
-msgstr ""
+msgstr "Burmese"
 
 #: ../../lib/class/video.class.php:905
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #: ../../lib/class/video.class.php:906
 msgid "Norwegian Bokmal"
-msgstr ""
+msgstr "Norwegian Bokmal"
 
 #: ../../lib/class/video.class.php:907
 msgid "North Ndebele"
-msgstr ""
+msgstr "North Ndebele"
 
 #: ../../lib/class/video.class.php:908
 msgid "Nepali"
@@ -2984,7 +2986,7 @@ msgstr "Nepalí"
 
 #: ../../lib/class/video.class.php:909
 msgid "Ndonga"
-msgstr ""
+msgstr "Ndonga"
 
 #: ../../lib/class/video.class.php:910
 msgid "Dutch"
@@ -3008,7 +3010,7 @@ msgstr "Navajo"
 
 #: ../../lib/class/video.class.php:915
 msgid "Chichewa"
-msgstr ""
+msgstr "Chichewa"
 
 #: ../../lib/class/video.class.php:916
 msgid "Occitan"
@@ -3016,27 +3018,27 @@ msgstr "Occitano"
 
 #: ../../lib/class/video.class.php:917
 msgid "Ojibwa"
-msgstr ""
+msgstr "Ojibwa"
 
 #: ../../lib/class/video.class.php:918
 msgid "Oromo"
-msgstr ""
+msgstr "Oromo"
 
 #: ../../lib/class/video.class.php:919
 msgid "Oriya"
-msgstr ""
+msgstr "Oriya"
 
 #: ../../lib/class/video.class.php:920
 msgid "Ossetian"
-msgstr ""
+msgstr "Ossetian"
 
 #: ../../lib/class/video.class.php:921
 msgid "Panjabi"
-msgstr ""
+msgstr "Panjabi"
 
 #: ../../lib/class/video.class.php:922
 msgid "Pali"
-msgstr ""
+msgstr "Pali"
 
 #: ../../lib/class/video.class.php:923
 msgid "Polish"
@@ -3044,7 +3046,7 @@ msgstr "Polaco"
 
 #: ../../lib/class/video.class.php:924
 msgid "Pashto"
-msgstr ""
+msgstr "Pashto"
 
 #: ../../lib/class/video.class.php:925
 msgid "Portuguese"
@@ -3056,11 +3058,11 @@ msgstr "Quechua"
 
 #: ../../lib/class/video.class.php:927
 msgid "Raeto-Romance"
-msgstr ""
+msgstr "Raeto-Romance"
 
 #: ../../lib/class/video.class.php:928
 msgid "Kirundi"
-msgstr ""
+msgstr "Kirundi"
 
 #: ../../lib/class/video.class.php:929
 msgid "Romanian"
@@ -3072,19 +3074,19 @@ msgstr "Ruso"
 
 #: ../../lib/class/video.class.php:931
 msgid "Kinyarwanda"
-msgstr ""
+msgstr "Kinyarwanda"
 
 #: ../../lib/class/video.class.php:932
 msgid "Sanskrit"
-msgstr ""
+msgstr "Sanskrit"
 
 #: ../../lib/class/video.class.php:933
 msgid "Sardinian"
-msgstr ""
+msgstr "Sardinian"
 
 #: ../../lib/class/video.class.php:934
 msgid "Sindhi"
-msgstr ""
+msgstr "Sindhi"
 
 #: ../../lib/class/video.class.php:935
 msgid "Northern Sami"
@@ -3092,11 +3094,11 @@ msgstr "Samí Norteño"
 
 #: ../../lib/class/video.class.php:936
 msgid "Sango"
-msgstr ""
+msgstr "Sango"
 
 #: ../../lib/class/video.class.php:937
 msgid "Sinhala"
-msgstr ""
+msgstr "Sinhala"
 
 #: ../../lib/class/video.class.php:938
 msgid "Slovak"
@@ -3112,7 +3114,7 @@ msgstr "Samoano"
 
 #: ../../lib/class/video.class.php:941
 msgid "Shona"
-msgstr ""
+msgstr "Shona"
 
 #: ../../lib/class/video.class.php:942
 msgid "Somali"
@@ -3128,7 +3130,7 @@ msgstr "Serbio"
 
 #: ../../lib/class/video.class.php:945
 msgid "Swati"
-msgstr ""
+msgstr "Swati"
 
 #: ../../lib/class/video.class.php:946
 msgid "Southern Sotho"
@@ -3136,7 +3138,7 @@ msgstr "Sotho Sureño"
 
 #: ../../lib/class/video.class.php:947
 msgid "Sundanese"
-msgstr ""
+msgstr "Sundanese"
 
 #: ../../lib/class/video.class.php:948
 msgid "Swedish"
@@ -3148,15 +3150,15 @@ msgstr "Swahili"
 
 #: ../../lib/class/video.class.php:950
 msgid "Tamil"
-msgstr ""
+msgstr "Tamil"
 
 #: ../../lib/class/video.class.php:951
 msgid "Telugu"
-msgstr ""
+msgstr "Telugu"
 
 #: ../../lib/class/video.class.php:952
 msgid "Tajik"
-msgstr ""
+msgstr "Tajik"
 
 #: ../../lib/class/video.class.php:953
 msgid "Thai"
@@ -3164,7 +3166,7 @@ msgstr "Tailandés"
 
 #: ../../lib/class/video.class.php:954
 msgid "Tigrinya"
-msgstr ""
+msgstr "Tigrinya"
 
 #: ../../lib/class/video.class.php:955
 msgid "Turkmen"
@@ -3176,11 +3178,11 @@ msgstr "Tagalo"
 
 #: ../../lib/class/video.class.php:957
 msgid "Tswana"
-msgstr ""
+msgstr "Tswana"
 
 #: ../../lib/class/video.class.php:958
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #: ../../lib/class/video.class.php:959
 msgid "Turkish"
@@ -3188,23 +3190,23 @@ msgstr "Turco"
 
 #: ../../lib/class/video.class.php:960
 msgid "Tsonga"
-msgstr ""
+msgstr "Tsonga"
 
 #: ../../lib/class/video.class.php:961
 msgid "Tatar"
-msgstr ""
+msgstr "Tatar"
 
 #: ../../lib/class/video.class.php:962
 msgid "Twi"
-msgstr ""
+msgstr "Twi"
 
 #: ../../lib/class/video.class.php:963
 msgid "Tahitian"
-msgstr ""
+msgstr "Tahitian"
 
 #: ../../lib/class/video.class.php:964
 msgid "Uighur"
-msgstr ""
+msgstr "Uighur"
 
 #: ../../lib/class/video.class.php:965
 msgid "Ukrainian"
@@ -3212,15 +3214,15 @@ msgstr "Ucraniano"
 
 #: ../../lib/class/video.class.php:966
 msgid "Urdu"
-msgstr ""
+msgstr "Urdu"
 
 #: ../../lib/class/video.class.php:967
 msgid "Uzbek"
-msgstr ""
+msgstr "Uzbek"
 
 #: ../../lib/class/video.class.php:968
 msgid "Venda"
-msgstr ""
+msgstr "Venda"
 
 #: ../../lib/class/video.class.php:969
 msgid "Vietnamese"
@@ -3228,31 +3230,31 @@ msgstr "Vietnamita"
 
 #: ../../lib/class/video.class.php:970
 msgid "Volapuk"
-msgstr ""
+msgstr "Volapuk"
 
 #: ../../lib/class/video.class.php:971
 msgid "Walloon"
-msgstr ""
+msgstr "Walloon"
 
 #: ../../lib/class/video.class.php:972
 msgid "Wolof"
-msgstr ""
+msgstr "Wolof"
 
 #: ../../lib/class/video.class.php:973
 msgid "Xhosa"
-msgstr ""
+msgstr "Xhosa"
 
 #: ../../lib/class/video.class.php:974
 msgid "Yiddish"
-msgstr ""
+msgstr "Yiddish"
 
 #: ../../lib/class/video.class.php:975
 msgid "Yoruba"
-msgstr ""
+msgstr "Yoruba"
 
 #: ../../lib/class/video.class.php:976
 msgid "Zhuang"
-msgstr ""
+msgstr "Zhuang"
 
 #: ../../lib/class/video.class.php:977
 msgid "Chinese"
@@ -3743,7 +3745,7 @@ msgstr ""
 #: ../../templates/show_account.inc.php:101
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
-msgstr ""
+msgstr "API Key"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:115
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:107
@@ -3763,7 +3765,7 @@ msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:176
 msgid "Error: API Key and Secret Required for Dropbox Catalogs"
-msgstr ""
+msgstr "Error: Se necesita la API KEY y el secreto para el catalogo Dropbox"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:182
 msgid "Invalid <dropbox-path>: "
@@ -3840,7 +3842,7 @@ msgstr "%s no coincide con el juego de caracteres"
 
 #: ../../modules/catalog/local/local.catalog.php:474
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: ../../modules/catalog/local/local.catalog.php:480
 #, php-format
@@ -3871,7 +3873,7 @@ msgstr "Error Fichero No Encontrado o 0 Bytes: %s"
 
 #: ../../modules/catalog/remote/remote.catalog.php:102
 msgid "Uri"
-msgstr ""
+msgstr "Uri"
 
 #: ../../modules/catalog/remote/remote.catalog.php:104
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:104
@@ -3996,7 +3998,7 @@ msgstr "Nombre de instancia"
 #: ../../modules/localplay/vlc/vlc.controller.php:181
 #: ../../modules/localplay/xbmc/xbmc.controller.php:188
 msgid "Hostname"
-msgstr ""
+msgstr "Nmbre de Host"
 
 #: ../../modules/localplay/httpq/httpq.controller.php:198
 #: ../../modules/localplay/mpd/mpd.controller.php:227
@@ -4140,7 +4142,7 @@ msgstr ""
 
 #: ../../plex/web/index.php:84
 msgid "myPlex authentication completed."
-msgstr ""
+msgstr "Autentificación en myPlex completada"
 
 #: ../../plex/web/index.php:98
 msgid "Server registration completed."
@@ -4344,7 +4346,7 @@ msgstr "Sesión caducada"
 
 #: ../../server/xml.server.php:67
 msgid "Unauthorized access attempt to API - ACL Error"
-msgstr ""
+msgstr "Intento de acceso no autorizado a la API, o error ACL"
 
 #: ../../share.php:75
 msgid "Share created."
@@ -4416,7 +4418,7 @@ msgstr "Comienza por"
 
 #: ../../templates/browse_filters.inc.php:44
 msgid "Minimum Count"
-msgstr ""
+msgstr "Cuenta mínima"
 
 #: ../../templates/browse_filters.inc.php:51
 msgid "Rated"
@@ -4524,7 +4526,7 @@ msgstr "Ampache"
 msgid ""
 "The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
-msgstr ""
+msgstr "El siguiente error ha ocurrido, será redirigido pasados 10 segundos"
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
@@ -4568,6 +4570,11 @@ msgid ""
 "\n"
 "Click on this message to not display it again."
 msgstr ""
+"Se han salvado coockies en su PC para ayudarnos a hacer mejor esta Web. "
+"Puede cambiar su %s en cualquier momento.\n"
+"De lo contrario asumiremos su consentimiento para continuar.\n"
+"\n"
+"Al hacer Click, ya no se volverá a mostrar este mensaje."
 
 #: ../../templates/header.inc.php:299
 msgid "cookie settings"
@@ -4742,11 +4749,11 @@ msgstr "Control de acceso"
 
 #: ../../templates/show_access_list.inc.php:27
 msgid "Add Current Host"
-msgstr ""
+msgstr "Añadir Host actual"
 
 #: ../../templates/show_access_list.inc.php:30
 msgid "Add API / RPC Host"
-msgstr ""
+msgstr "Añadir Host API/RPC"
 
 #: ../../templates/show_access_list.inc.php:33
 msgid "Add Local Network Definition"
@@ -5092,7 +5099,7 @@ msgstr "Repetir"
 #: ../../templates/show_add_channel.inc.php:88
 #: ../../templates/show_edit_channel_row.inc.php:76
 msgid "Max Listeners"
-msgstr ""
+msgstr "nº max. de escuchas"
 
 #: ../../templates/show_add_channel.inc.php:95
 #: ../../templates/show_channels.inc.php:38
@@ -5255,13 +5262,13 @@ msgstr "Objeto Compartido"
 #: ../../templates/show_edit_share_row.inc.php:31
 #: ../../templates/show_shared_objects.inc.php:32
 msgid "Max Counter"
-msgstr ""
+msgstr "Contador maximo"
 
 #: ../../templates/show_add_share.inc.php:49
 #: ../../templates/show_edit_share_row.inc.php:35
 #: ../../templates/show_shared_objects.inc.php:35
 msgid "Expiry Days"
-msgstr ""
+msgstr "Dias hasta expirar"
 
 #: ../../templates/show_add_share.inc.php:55
 #: ../../templates/show_edit_share_row.inc.php:40
@@ -5287,7 +5294,7 @@ msgstr "Comentario:"
 #: ../../templates/show_add_shout.inc.php:46
 #: ../../templates/show_edit_shout.inc.php:39
 msgid "Stick this comment"
-msgstr ""
+msgstr "Hacer \"fijo\" este comentario"
 
 #: ../../templates/show_add_shout.inc.php:67
 #: ../../templates/show_shoutbox.inc.php:23
@@ -5714,7 +5721,7 @@ msgstr "Iniciado"
 #: ../../templates/show_broadcasts.inc.php:34
 #: ../../templates/show_channels.inc.php:41
 msgid "Listeners"
-msgstr ""
+msgstr "Escuchas (Listeners)"
 
 #: ../../templates/show_broadcasts.inc.php:51
 msgid "No broadcast found"
@@ -5722,7 +5729,7 @@ msgstr "Ninguna retransmisión encontrada"
 
 #: ../../templates/show_catalog_row.inc.php:36
 msgid "Make it ready ..."
-msgstr ""
+msgstr "Dejarlo preparado ..."
 
 #: ../../templates/show_catalog_row.inc.php:44
 msgid "Verify"
@@ -5875,7 +5882,7 @@ msgstr "Configurar lista de reproducción democrática"
 #: ../../templates/show_create_democratic.inc.php:31
 #: ../../templates/show_manage_democratic.inc.php:27
 msgid "Base Playlist"
-msgstr ""
+msgstr "Listado Base"
 
 #: ../../templates/show_create_democratic.inc.php:35
 msgid "Cooldown Time"
@@ -6179,7 +6186,7 @@ msgstr "MusicBrainz ID"
 
 #: ../../templates/show_edit_album_row.inc.php:86
 msgid "MusicBrainz Release Group ID"
-msgstr ""
+msgstr "MusicBrainz Release Group ID"
 
 #: ../../templates/show_edit_album_row.inc.php:99
 msgid "Release Type"
@@ -6246,7 +6253,7 @@ msgstr "Público"
 
 #: ../../templates/show_edit_podcast_episode_row.inc.php:35
 msgid "GUID"
-msgstr ""
+msgstr "GUID"
 
 #: ../../templates/show_edit_podcast_episode_row.inc.php:39
 #: ../../templates/show_podcast_episode.inc.php:138
@@ -6263,7 +6270,7 @@ msgstr "Idioma"
 
 #: ../../templates/show_edit_podcast_row.inc.php:43
 msgid "Copyright"
-msgstr ""
+msgstr "Copyright"
 
 #: ../../templates/show_edit_search_row.inc.php:48
 msgid "Item Limit (0 = unlimited)"
@@ -6460,7 +6467,7 @@ msgstr "Visualizador a pantalla completa"
 
 #: ../../templates/show_html5_player.inc.php:526
 msgid "ReplayGain"
-msgstr ""
+msgstr "Volver a reproducir"
 
 #: ../../templates/show_html5_player.inc.php:529
 msgid "Equalizer"
@@ -6685,6 +6692,8 @@ msgid ""
 "only essential features are enabled to stream simply your music from a web "
 "interface."
 msgstr ""
+"Solo las opciones minimas se habilitan en la interfaz WEB para realizar "
+"stream."
 
 #: ../../templates/show_install_config.inc.php:126
 msgid "Community"
@@ -6695,10 +6704,12 @@ msgid ""
 "use recommended settings when using Ampache as a frontend for a music "
 "community."
 msgstr ""
+"Usar las opciones recomendadas cuando se usa Ampache como frontend para una "
+"comunidad de música."
 
 #: ../../templates/show_install_config.inc.php:131
 msgid "Transcoding"
-msgstr ""
+msgstr "Transcodificación."
 
 #: ../../templates/show_install_config.inc.php:133
 msgid ""
@@ -7285,7 +7296,7 @@ msgstr "Archivo"
 #: ../../templates/show_podcast.inc.php:106
 #: ../../templates/show_podcast_row.inc.php:71
 msgid "Sync"
-msgstr ""
+msgstr "Sync"
 
 #: ../../templates/show_podcast_episode_row.inc.php:90
 msgid "Podcast Episode edit"
@@ -7482,9 +7493,8 @@ msgstr[0] "hace %d década"
 msgstr[1] "hace %d décadas"
 
 #: ../../templates/show_recently_played.inc.php:152
-#, fuzzy
 msgid "No recently played items found"
-msgstr "Ningún elemento reciente encontrado"
+msgstr ""
 
 #: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
@@ -7576,7 +7586,7 @@ msgstr "Buscar Ampache"
 
 #: ../../templates/show_search_form.inc.php:53
 msgid "Maximum Results"
-msgstr ""
+msgstr "Resultados maximos"
 
 #: ../../templates/show_search_form.inc.php:80
 msgid "Save as Smart Playlist"
@@ -8167,19 +8177,19 @@ msgstr ""
 
 #: ../../templates/show_video.inc.php:151
 msgid "Audio Bitrate"
-msgstr ""
+msgstr "itRate de Audio"
 
 #: ../../templates/show_video.inc.php:152
 msgid "Video Bitrate"
-msgstr ""
+msgstr "BitRate de Video"
 
 #: ../../templates/show_video.inc.php:153
 msgid "Frame Rate"
-msgstr ""
+msgstr "FPS"
 
 #: ../../templates/show_video_row.inc.php:106
 msgid "Video Information"
-msgstr ""
+msgstr "Información de video"
 
 #: ../../templates/show_video_row.inc.php:126
 msgid "Video edit"
@@ -8418,7 +8428,7 @@ msgstr "No se puede eliminar este vídeo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 24.12.2016 06:19:59 CET
+# Last Update: 17.02.2017 18:45:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

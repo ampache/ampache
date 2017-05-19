@@ -4,14 +4,15 @@
 #
 # Translators:
 # andreaz <azagli@libero.it>, 2016
+# Luigi Mantellini <luigi.mantellini@gmail.com>, 2017
 # Morgan <mfouillat+github@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-02-17 18:45+0100\n"
-"PO-Revision-Date: 2016-11-12 16:33+0000\n"
-"Last-Translator: andreaz <azagli@libero.it>\n"
+"POT-Creation-Date: 2017-05-09 18:57+0200\n"
+"PO-Revision-Date: 2017-05-05 16:01+0000\n"
+"Last-Translator: Afterster\n"
 "Language-Team: Italian (Italy) (http://www.transifex.com/ampache/ampache/"
 "language/it_IT/)\n"
 "Language: it_IT\n"
@@ -588,21 +589,23 @@ msgstr "Disattiva in modo temporaneo il limite di memoria PHP."
 
 #: ../../bin/catalog_update.inc:203
 msgid "Cleans catalogs from orphaned entries."
-msgstr ""
+msgstr "Ripulisci il catalogo dalle voci orfane"
 
 #: ../../bin/catalog_update.inc:205
 msgid ""
 "Verifies catalog entries and updates them if related files have new "
 "information."
 msgstr ""
+"Verifica le voci del catalogo ed aggiornale se i file relativi hanno nuove "
+"informazioni."
 
 #: ../../bin/catalog_update.inc:207
 msgid "Adds new media to catalogs."
-msgstr ""
+msgstr "Aggiungi un  nuovo media ai cataloghi."
 
 #: ../../bin/catalog_update.inc:209
 msgid "Gathers media Art."
-msgstr ""
+msgstr "Recupera le copertine."
 
 #: ../../bin/catalog_update.inc:211
 msgid "Imports playlists."
@@ -610,13 +613,15 @@ msgstr "Importa playlists."
 
 #: ../../bin/catalog_update.inc:213
 msgid "Optimizes Database Tables."
-msgstr ""
+msgstr "Ottimizza le tabelle del database."
 
 #: ../../bin/catalog_update.inc:216
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
 msgstr ""
+"Usa questa opzione a tuo rischio! Il tuo sistema potrebbe andare in crash o "
+"bloccarsi per l'alto uso di memoria."
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
@@ -637,11 +642,11 @@ msgstr "-Canale"
 
 #: ../../bin/channel_run.inc:49 ../../bin/websocket_run.inc:42
 msgid "- Verbose"
-msgstr ""
+msgstr "- Verboso"
 
 #: ../../bin/channel_run.inc:54 ../../bin/websocket_run.inc:47
 msgid "- Port "
-msgstr ""
+msgstr "- Porta"
 
 #: ../../bin/channel_run.inc:71
 msgid "Starting Channel..."
@@ -661,7 +666,7 @@ msgstr "Ascoltando"
 
 #: ../../bin/channel_run.inc:306
 msgid "- Channel Listening -"
-msgstr ""
+msgstr "- Canali in ascolto -"
 
 #: ../../bin/channel_run.inc:308
 msgid "Usage: channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]"
@@ -794,7 +799,7 @@ msgstr "ERRORE: Impossibile cancellare %s"
 
 #: ../../bin/fix_filenames.inc:212
 msgid "File Moved..."
-msgstr ""
+msgstr "File spostato..."
 
 #: ../../bin/install/add_user.inc:50
 #, php-format
@@ -819,11 +824,11 @@ msgstr "Uscendo."
 
 #: ../../bin/install/install_db.inc:89
 msgid "Database creation failed"
-msgstr ""
+msgstr "Creazione del database fallita"
 
 #: ../../bin/install/install_db.inc:101
 msgid "Config file creation failed"
-msgstr ""
+msgstr "Creazione del file di configurazione fallita."
 
 #: ../../bin/install/update_db.inc:44 ../../update.php:82
 msgid "The following updates need to be performed:"
@@ -8294,7 +8299,7 @@ msgstr "Impossibile eliminare questo video."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 24.12.2016 06:19:59 CET
+# Last Update: 17.02.2017 18:45:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

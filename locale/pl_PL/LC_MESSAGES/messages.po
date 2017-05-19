@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# K.S. <adrespubliczny+transifex@gmail.com>, 2015-2016
+# K.S. <adrespubliczny+transifex@gmail.com>, 2015-2017
 # Artur Mazurek <artur_studio@yahoo.de>, 2015
 # . <mail@mantral.pl>, 2009
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-02-17 18:45+0100\n"
-"PO-Revision-Date: 2016-08-23 18:03+0000\n"
+"POT-Creation-Date: 2017-05-09 18:57+0200\n"
+"PO-Revision-Date: 2017-05-09 14:11+0000\n"
 "Last-Translator: K.S. <adrespubliczny+transifex@gmail.com>\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/ampache/ampache/"
 "language/pl_PL/)\n"
@@ -1314,7 +1314,7 @@ msgstr "na"
 #: ../../lib/class/ampconfig.class.php:85
 #, php-format
 msgid "Trying to clobber '%s' without setting clobber"
-msgstr ""
+msgstr "Próba nadpisania '%s', ale nadpisywanie jest niedozwolone."
 
 #: ../../lib/class/api.class.php:152
 msgid "Login Failed: version too old"
@@ -7545,9 +7545,8 @@ msgstr[2] "%d dekad temu"
 msgstr[3] "%d dekad temu"
 
 #: ../../templates/show_recently_played.inc.php:152
-#, fuzzy
 msgid "No recently played items found"
-msgstr "Nie znaleziono \"Ostatnio granych\""
+msgstr "Brak niedawno odtwarzanych utworów"
 
 #: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
@@ -8531,7 +8530,7 @@ msgstr "Nie można usunąć tego wideo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 24.12.2016 06:19:59 CET
+# Last Update: 17.02.2017 18:45:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

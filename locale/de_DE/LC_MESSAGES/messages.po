@@ -3,16 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Manuel <psyvirusx@gmail.com>, 2015-2016
-# Ott <ottnorml@gmail.com>, 2016
+# Manuel <psyvirusx@gmail.com>, 2015-2017
+# Ottnorml <ottnorml@gmail.com>, 2016
 # Sven, 2016
 # Sven, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-02-17 18:45+0100\n"
-"PO-Revision-Date: 2016-08-01 16:04+0000\n"
+"POT-Creation-Date: 2017-05-09 18:57+0200\n"
+"PO-Revision-Date: 2017-05-07 12:11+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/"
 "language/de_DE/)\n"
@@ -7592,9 +7592,8 @@ msgstr[0] "%d Dekade"
 msgstr[1] "%d Dekaden"
 
 #: ../../templates/show_recently_played.inc.php:152
-#, fuzzy
 msgid "No recently played items found"
-msgstr "Kein passendes Objekt gefunden"
+msgstr "Keine kürzlich gespielten Medien gefunden"
 
 #: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
@@ -8587,7 +8586,7 @@ msgstr "Ich kann dieses Video nicht löschen."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 24.12.2016 06:19:59 CET
+# Last Update: 17.02.2017 18:45:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

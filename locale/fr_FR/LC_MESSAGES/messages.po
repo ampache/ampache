@@ -6,7 +6,7 @@
 # Afterster, 2015-2016
 # Aisyk <aisyko@gmail.com>, 2015-2016
 # Arnaud Bey <arnaud.bey@gmail.com>, 2015
-# UncleBone <arnothebig@yahoo.fr>, 2016
+# UncleBone <arnothebig@yahoo.fr>, 2016-2017
 # Morgan <mfouillat+github@gmail.com>, 2016
 # Nicolas Chartoire <nicolas.chartoire@gmail.com>, 2015
 # Nicolas Jeannerod <niols@niols.fr>, 2016
@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-02-17 18:45+0100\n"
-"PO-Revision-Date: 2016-07-25 10:05+0000\n"
+"POT-Creation-Date: 2017-05-09 18:57+0200\n"
+"PO-Revision-Date: 2017-05-07 14:37+0000\n"
 "Last-Translator: UncleBone <arnothebig@yahoo.fr>\n"
 "Language-Team: French (France) (http://www.transifex.com/ampache/ampache/"
 "language/fr_FR/)\n"
@@ -7551,9 +7551,8 @@ msgstr[0] "il y a %d décennie"
 msgstr[1] "il y a %d décennies"
 
 #: ../../templates/show_recently_played.inc.php:152
-#, fuzzy
 msgid "No recently played items found"
-msgstr "Aucun élément récent trouvé"
+msgstr "Aucun objet joué récemment n'a été trouvé"
 
 #: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
@@ -8547,7 +8546,7 @@ msgstr "Vous ne pouvez pas supprimer cette vidéo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 24.12.2016 06:19:59 CET
+# Last Update: 17.02.2017 18:45:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
