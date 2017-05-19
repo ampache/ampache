@@ -166,6 +166,7 @@ class Upload
                         }
 
                         if (!$catalog->add_file($targetfile, $options)) {
+                            debug_event('upload', 'Failed adding uploaded file to catalog.', '1');
                             return self::rerror($targetfile);
                         }
 
