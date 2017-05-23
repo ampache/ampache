@@ -20,9 +20,9 @@
  *
  */
 
-namespace Lib;
+namespace lib;
 
-use Lib\Interfaces\Model;
+use lib\Interfaces\Model;
 
 /**
  * Description of Repository

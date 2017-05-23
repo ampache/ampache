@@ -20,14 +20,14 @@
  *
  */
 
-namespace Lib\Metadata\Model;
+namespace lib\Metadata\Model;
 
 /**
  * Description of metadata
  *
  * @author raziel
  */
-class Metadata extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
+class Metadata extends \lib\DatabaseObject implements \lib\Interfaces\Model
 {
     /**
      * Database ID
@@ -65,7 +65,7 @@ class Metadata extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
      * can initialize objects the right way
      */
     protected $fieldClassRelations = array(
-        'field' => '\Lib\Metadata\Repository\MetadataField'
+        'field' => '\lib\Metadata\Repository\MetadataField'
     );
 
     /**
