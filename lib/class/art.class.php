@@ -736,7 +736,7 @@ class Art extends database_object
         } // resized
 
         if (!isset($mime_type)) {
-            debug_event('Art', 'Eror: No mime type found.', 1);
+            debug_event('Art', 'Error: No mime type found.', 1);
             return false;
         }
 

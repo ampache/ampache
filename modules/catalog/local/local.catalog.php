@@ -378,6 +378,7 @@ class Catalog_local extends Catalog
                         $this->insert_local_song($full_file, $options);
                     } else {
                         debug_event('read', $full_file . " ignored, bad media type for this music catalog.", 5);
+                        return false;
                     }
                 } else {
                     if (count($this->get_gather_types('video')) > 0) {
@@ -385,6 +386,7 @@ class Catalog_local extends Catalog
                             $this->insert_local_video($full_file, $options);
                         } else {
                             debug_event('read', $full_file . " ignored, bad media type for this video catalog.", 5);
+                            return false;
                         }
                     }
                 }
@@ -396,9 +398,11 @@ class Catalog_local extends Catalog
                     UI::update_text('add_dir_' . $this->id, scrub_out($file));
                 } // update our current state
             } // if it's not an m3u
+            return true;
         } //if it matches the pattern
         else {
             debug_event('read', "$full_file ignored, non-audio file or 0 bytes", 5);
+            return false;
         } // else not an audio file
     }
 

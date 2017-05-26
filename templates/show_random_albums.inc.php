@@ -42,7 +42,7 @@ if ($albums) {
                 $album->display_art($thumb, true);
             } else {
                 ?>
-            <a href="<?php $album->link; ?>">
+            <a href="<?php echo $album->link; ?>">
                 <?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>
             </a>
             <?php 

@@ -263,7 +263,7 @@ class Artist extends database_object implements library_item
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         if ($catalog) {
-            $catalog_where .= " AND `catalog`.`id` = '" . $catalog . "'";
+            $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= " AND `catalog`.`enabled` = '1'";
