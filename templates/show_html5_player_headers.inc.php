@@ -328,7 +328,7 @@ function ApplyReplayGain()
                 if (track_peak !== 'null') {
                     peakamplitude = parseFloat(track_peak);
                 }
-                gainlevel = (1 + Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude)));
+                gainlevel = (Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude)));
             }
         }
 
