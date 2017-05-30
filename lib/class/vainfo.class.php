@@ -644,18 +644,14 @@ class vainfo
         $parsed['frame_rate']    = $tags['video']['frame_rate'];
         $parsed['video_bitrate'] = $tags['video']['bitrate'];
 
-        if (isset($tags['ape'])) {
-            if (isset($tags['ape']['items'])) {
-                foreach ($tags['ape']['items'] as $key => $tag) {
-                    switch (strtolower($key)) {
-                        case 'replaygain_track_gain':
-                        case 'replaygain_track_peak':
-                        case 'replaygain_album_gain':
-                        case 'replaygain_album_peak':
-                            $parsed[$key] = floatval($tag['data'][0]);
-                            break;
-                    }
-                }
+        if (isset($tags['replay_gain'])) {
+            if (isset($tags['replay_gain']['track'])) {
+                $parsed['replaygain_track_gain'] = $tags['replay_gain']['track']['adjustment'];
+                $parsed['replaygain_track_peak'] = $tags['replay_gain']['track']['peak'];
+            }
+            if (isset($tags['replay_gain']['album'])) {
+                $parsed['replaygain_album_gain'] = $tags['replay_gain']['album']['adjustment'];
+                $parsed['replaygain_album_peak'] = $tags['replay_gain']['album']['peak'];
             }
         }
 
