@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,9 +24,9 @@ class Graph
 {
     public function __construct()
     {
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Classes/pData.php';
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Classes/pDraw.php';
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Classes/pImage.php';
+        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Data.php';
+        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Draw.php';
+        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Image.php';
         return true;
     }
     
@@ -131,7 +131,7 @@ class Graph
         return $values;
     }
 
-    protected function get_all_pts($fct, CpChart\Classes\pData $MyData, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
+    protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
         $values = $this->get_all_type_pts($fct, $id, $object_type, $object_id, $start_date, $end_date, $zoom);
         foreach ($values as $date => $value) {
@@ -143,7 +143,7 @@ class Graph
         return $values;
     }
 
-    protected function get_user_all_pts($fct, CpChart\Classes\pData $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_user_all_pts($fct, CpChart\Chart\Data $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $values = $this->get_all_pts($fct, $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
 
@@ -166,7 +166,7 @@ class Graph
         }
     }
 
-    protected function get_catalog_all_pts($fct, CpChart\Classes\pData $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_catalog_all_pts($fct, CpChart\Chart\Data $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $values = $this->get_all_pts($fct, $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
@@ -288,7 +288,7 @@ class Graph
         return $pts;
     }
 
-    protected function render_graph($title, CpChart\Classes\pData $MyData, $zoom, $width = 0, $height = 0)
+    protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
         $width = intval($width);
@@ -300,51 +300,51 @@ class Graph
             $height = 260;
         }
 
-        $MyData->setSerieDescription("TimeStamp","time");
+        $MyData->setSerieDescription("TimeStamp", "time");
         $MyData->setAbscissa("TimeStamp");
         switch ($zoom) {
             case 'hour':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_TIME,"H:00");
+                $MyData->setXAxisDisplay(AXIS_FORMAT_TIME, "H:00");
                 break;
             case 'year':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE,"Y");
+                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y");
                 break;
             case 'month':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE,"Y-m");
+                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y-m");
                 break;
             case 'day':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE,"Y-m-d");
+                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y-m-d");
                 break;
         }
 
         /* Create the pChart object */
-        $myPicture = new CpChart\Classes\pImage($width,$height,$MyData);
+        $myPicture = new CpChart\Chart\Image($width, $height, $MyData);
 
         /* Turn of Antialiasing */
         $myPicture->Antialias = false;
 
         /* Draw a background */
         $Settings = array("R"=>90, "G"=>90, "B"=>90, "Dash"=>1, "DashR"=>120, "DashG"=>120, "DashB"=>120);
-        $myPicture->drawFilledRectangle(0,0,$width,$height,$Settings);
+        $myPicture->drawFilledRectangle(0, 0, $width, $height, $Settings);
 
         /* Overlay with a gradient */
         $Settings = array("StartR"=>200, "StartG"=>200, "StartB"=>200, "EndR"=>50, "EndG"=>50, "EndB"=>50, "Alpha"=>50);
-        $myPicture->drawGradientArea(0,0,$width,$height,DIRECTION_VERTICAL,$Settings);
-        $myPicture->drawGradientArea(0,0,$width,$height,DIRECTION_HORIZONTAL,$Settings);
+        $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_VERTICAL, $Settings);
+        $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_HORIZONTAL, $Settings);
 
         /* Add a border to the picture */
-        $myPicture->drawRectangle(0,0,$width-1,$height-1,array("R"=>0,"G"=>0,"B"=>0));
+        $myPicture->drawRectangle(0, 0, $width-1, $height-1, array("R"=>0, "G"=>0, "B"=>0));
 
         $font_path = AmpConfig::get('prefix') . "/lib/vendor/szymach/c-pchart/src/Resources/fonts";
         /* Write the chart title */
-        $myPicture->setFontProperties(array("FontName"=>$font_path . "/Forgotte.ttf","FontSize"=>11));
-        $myPicture->drawText(150,35,$title,array("FontSize"=>20,"Align"=>TEXT_ALIGN_BOTTOMMIDDLE));
+        $myPicture->setFontProperties(array("FontName"=>$font_path . "/Forgotte.ttf", "FontSize"=>11));
+        $myPicture->drawText(150, 35, $title, array("FontSize"=>20, "Align"=>TEXT_ALIGN_BOTTOMMIDDLE));
 
         /* Set the default font */
-        $myPicture->setFontProperties(array("FontName"=>$font_path . "/pf_arma_five.ttf","FontSize"=>6));
+        $myPicture->setFontProperties(array("FontName"=>$font_path . "/pf_arma_five.ttf", "FontSize"=>6));
 
         /* Define the chart area */
-        $myPicture->setGraphArea(60,40,$width-20,$height-50);
+        $myPicture->setGraphArea(60, 40, $width-20, $height-50);
 
         /* Draw the scale */
         $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"Floating"=>true,"GridR"=>200,"GridG"=>200,"GridB"=>200,"RemoveSkippedAxis"=>true,"DrawSubTicks"=>false,"Mode"=>SCALE_MODE_START0,"LabelRotation"=>45,"LabelingMethod"=>LABELING_DIFFERENT);
@@ -354,14 +354,14 @@ class Graph
         $myPicture->Antialias = true;
 
         /* Draw the line chart */
-        $myPicture->setShadow(true,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
+        $myPicture->setShadow(true, array("X"=>1, "Y"=>1, "R"=>0, "G"=>0, "B"=>0, "Alpha"=>10));
         $myPicture->drawLineChart();
 
         /* Write a label over the chart */
-        $myPicture->writeLabel("Inbound",720);
+        $myPicture->writeLabel("Inbound", 720);
 
         /* Write the chart legend */
-        $myPicture->drawLegend(280,20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+        $myPicture->drawLegend(280, 20, array("Style"=>LEGEND_NOBORDER, "Mode"=>LEGEND_HORIZONTAL));
 
         header("Content-Disposition: filename=\"ampache-graph.png\"");
         /* Render the picture (choose the best way) */
@@ -370,7 +370,7 @@ class Graph
 
     public function render_user_hits($user = 0, $object_type, $object_id, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
-        $MyData = new CpChart\Classes\pData();
+        $MyData = new CpChart\Chart\Data();
         $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Hits");
@@ -381,7 +381,7 @@ class Graph
 
     public function render_user_bandwidth($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
-        $MyData = new CpChart\Classes\pData();
+        $MyData = new CpChart\Chart\Data();
         $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Bandwidth");
@@ -425,7 +425,7 @@ class Graph
 
     public function render_catalog_files($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
-        $MyData = new CpChart\Classes\pData();
+        $MyData = new CpChart\Chart\Data();
         $this->get_catalog_all_pts('get_catalog_files_pts', $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Files");
@@ -436,7 +436,7 @@ class Graph
 
     public function render_catalog_size($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
-        $MyData = new CpChart\Classes\pData();
+        $MyData = new CpChart\Chart\Data();
         $this->get_catalog_all_pts('get_catalog_size_pts', $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Size");
@@ -474,7 +474,7 @@ class Graph
             }
         }
         
-        if (($owner_id <= 0 || $owner_id != $GLOBALS['user']->id) && !Access::check('interface','50')) {
+        if (($owner_id <= 0 || $owner_id != $GLOBALS['user']->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
             $user_id      = $_REQUEST['user_id'];

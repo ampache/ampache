@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -574,6 +574,14 @@ a.option-list:hover {
 
 .editdialogstyle.ui-dialog {
     background-image: url("../../../images/background.light.png") !important;
+}
+
+#tabs li a {
+  color: #1990db;
+}
+
+#tabs li a:hover {
+  color: #52aae4;
 }
 
 #tabs li.tab_active a {

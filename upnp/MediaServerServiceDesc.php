@@ -1,5 +1,5 @@
 <?php
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
@@ -7,7 +7,7 @@ if (!AmpConfig::get('upnp_backend')) {
     exit;
 }
 
-header ("Content-Type:text/xml");
+header("Content-Type:text/xml");
 $web_path = AmpConfig::get('local_web_path');
 
 echo '<?xml version="1.0" encoding="UTF-8"?>';

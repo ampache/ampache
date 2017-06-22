@@ -7,21 +7,17 @@ elif hash php-cs-fixer
 then
     PHPCSFIXER="php-cs-fixer"
 else
-    echo -e "\e[1;31mPlease install or download php-cs-fixer\e[00m";
+    echo -e "\e[1;31mPlease install or download latest stable php-cs-fixer\e[00m";
     echo -e "\e[1;31mhttp://cs.sensiolabs.org/\e[00m";
     exit 1
 fi
 
-PHPCSFIXERARGS="fix -v --fixers="
-# Mandatory fix
-FIXERS1="indentation,linefeed,trailing_spaces,short_tag,braces,controls_spaces,eof_ending,visibility,align_equals,concat_with_spaces,elseif,line_after_namespace,lowercase_constants"
-# Optionnal fix & false positive
-#FIXERS2="visibility"
+PHPCSFIXERARGS="fix -v --config-file=.php_cs"
 
 EXIT=0
 
 echo -e "\e[1;34mChecking mandatory formatting/coding standards\e[00m"
-$PHPCSFIXER $PHPCSFIXERARGS$FIXERS1 --dry-run .
+$PHPCSFIXER $PHPCSFIXERARGS --dry-run --diff .
 rc=$?
 if [[ $rc == 0 ]]
 then

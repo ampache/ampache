@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -300,10 +300,9 @@ class Plex_XML_Data
     public static function getKeyFromFullUri($uri)
     {
         $key  = '';
-        $puri = parse_url($uri);
-        if ($puri['scheme'] == 'library') {
-            // We ignore library uuid (= $puri['host'])
-            $ppath = explode('/', $puri['path']);
+        if (strpos($uri, "library://") === 0) {
+            // We ignore library uuid
+            $ppath = explode('/', substr($uri, 10));
             if (count($ppath) == 3) {
                 if ($ppath['1'] == 'item') {
                     $key = rawurldecode($ppath[2]);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,9 +31,12 @@ class Playlist extends playlist_object
     /* Variables from the database */
     public $genre;
     public $date;
+    public $last_update;
 
     public $link;
     public $f_link;
+    public $f_date;
+    public $f_last_update;
 
     /* Generated Elements */
     public $items = array();
@@ -75,13 +78,13 @@ class Playlist extends playlist_object
             return false;
         }
 
-        $idlist = '(' . implode(',',$ids) . ')';
+        $idlist = '(' . implode(',', $ids) . ')';
 
         $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('playlist',$row['id'],$row);
+            parent::add_to_cache('playlist', $row['id'], $row);
         }
     } // build_cache
 
@@ -131,6 +134,9 @@ class Playlist extends playlist_object
         parent::format($details);
         $this->link   = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
+        
+        $this->f_date        = $this->date ? date('d/m/Y h:i', $this->date) : T_('Unknown');
+        $this->f_last_update = $this->last_update ? date('d/m/Y h:i', $this->last_update) : T_('Unknown');
     } // format
 
     /**
@@ -294,7 +300,7 @@ class Playlist extends playlist_object
      */
     private function update_type($new_type)
     {
-        if ($this->_update_item('type',$new_type,50)) {
+        if ($this->_update_item('type', $new_type, 50)) {
             $this->type = $new_type;
         }
     } // update_type
@@ -305,18 +311,30 @@ class Playlist extends playlist_object
      */
     private function update_name($new_name)
     {
-        if ($this->_update_item('name',$new_name,50)) {
+        if ($this->_update_item('name', $new_name, 50)) {
             $this->name = $new_name;
         }
     } // update_name
 
     /**
+     * update_last_update
+     * This updates the playlist last update, it calls the generic update_item function
+     */
+    private function update_last_update()
+    {
+        $last_update = time();
+        if ($this->_update_item('last_update', $last_update, 50)) {
+            $this->last_update = $last_update;
+        }
+    } // update_last_update
+
+    /**
      * _update_item
      * This is the generic update function, it does the escaping and error checking
      */
-    private function _update_item($field,$value,$level)
+    private function _update_item($field, $value, $level)
     {
-        if ($GLOBALS['user']->id != $this->user and !Access::check('interface',$level)) {
+        if ($GLOBALS['user']->id != $this->user && !Access::check('interface', $level)) {
             return false;
         }
 
@@ -347,6 +365,8 @@ class Playlist extends playlist_object
             $this->update_track_number($item['track_id'], $index);
             $index++;
         }
+        
+        $this->update_last_update();
     }
 
     /**
@@ -396,6 +416,8 @@ class Playlist extends playlist_object
                 Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
             } // if valid id
         } // end foreach medias
+
+        $this->update_last_update();
     }
 
     /**
@@ -411,8 +433,8 @@ class Playlist extends playlist_object
             $date = time();
         }
 
-        $sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`) VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($name, $user_id, $type, $date));
+        $sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`,`last_update`) VALUES (?, ?, ?, ?, ?)";
+        Dba::write($sql, array($name, $user_id, $type, $date, $date));
 
         $insert_id = Dba::insert_id();
         return $insert_id;
@@ -435,6 +457,8 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $id));
+        
+        $this->update_last_update();
 
         return true;
     } // delete_track
@@ -447,6 +471,8 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $track));
+        
+        $this->update_last_update();
 
         return true;
     } // delete_track_number
@@ -504,7 +530,8 @@ class Playlist extends playlist_object
             Dba::write($sql, array($data['track'], $data['id']));
         } // foreach re-ordered results
 
-    return true;
+        $this->update_last_update();
+
+        return true;
     } // sort_tracks
 } // class Playlist
-

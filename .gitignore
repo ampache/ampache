@@ -22,3 +22,7 @@ web.config
 /config/registration_agreement.php
 /.maintenance
 /modules/plugins/ampache-*
+robots.txt
+php-cs-fixer.phar
+.php_cs.cache
+cs_fixer_tmp_*

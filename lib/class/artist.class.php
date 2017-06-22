@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -140,7 +140,7 @@ class Artist extends database_object implements library_item
      * @param int|null $id
      * @param int $catalog_init
      */
-    public function __construct($id=null,$catalog_init=0)
+    public function __construct($id=null, $catalog_init=0)
     {
         /* If they failed to pass in an id, just run for it */
         if (!$id) {
@@ -210,7 +210,7 @@ class Artist extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('artist',$row['id'],$row);
+            parent::add_to_cache('artist', $row['id'], $row);
         }
 
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
@@ -224,7 +224,7 @@ class Artist extends database_object implements library_item
                 if (AmpConfig::get('show_played_times')) {
                     $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
                 }
-                parent::add_to_cache('artist_extra',$row['artist'],$row);
+                parent::add_to_cache('artist_extra', $row['artist'], $row);
             }
         } // end if extra
 
@@ -263,7 +263,7 @@ class Artist extends database_object implements library_item
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         if ($catalog) {
-            $catalog_where .= " AND `catalog`.`id` = '" . $catalog . "'";
+            $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= " AND `catalog`.`enabled` = '1'";
@@ -274,13 +274,13 @@ class Artist extends database_object implements library_item
         $sort_type = AmpConfig::get('album_sort');
         $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         if ($sort_type == 'year_asc') {
-            $sql_sort = '`album`.`year` ASC';
+            $sql_sort = '`album`.`year` ASC,`album`.`disk`';
         } elseif ($sort_type == 'year_desc') {
-            $sql_sort = '`album`.`year` DESC';
+            $sql_sort = '`album`.`year` DESC,`album`.`disk`';
         } elseif ($sort_type == 'name_asc') {
-            $sql_sort = '`album`.`name` ASC';
+            $sql_sort = '`album`.`name` ASC,`album`.`disk`';
         } elseif ($sort_type == 'name_desc') {
-            $sql_sort = '`album`.`name` DESC';
+            $sql_sort = '`album`.`name` DESC,`album`.`disk`';
         }
 
         if (!$ignoreAlbumGroups) {
@@ -391,8 +391,8 @@ class Artist extends database_object implements library_item
     private function _get_extra_info($catalog=0, $limit_threshold ='')
     {
         // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('artist_extra',$this->id) ) {
-            $row = parent::get_from_cache('artist_extra',$this->id);
+        if (parent::is_cached('artist_extra', $this->id)) {
+            $row = parent::get_from_cache('artist_extra', $this->id);
         } else {
             $params = array($this->id);
             // Calculation
@@ -421,7 +421,7 @@ class Artist extends database_object implements library_item
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
             }
-            parent::add_to_cache('artist_extra',$row['artist'],$row);
+            parent::add_to_cache('artist_extra', $row['artist'], $row);
         }
 
         /* Set Object Vars */
@@ -466,12 +466,12 @@ class Artist extends database_object implements library_item
             $extra_info = $this->_get_extra_info($this->catalog_id, $limit_threshold);
 
             //Format the new time thingy that we just got
-            $min = sprintf("%02d",(floor($extra_info['time']/60)%60));
+            $min = sprintf("%02d", (floor($extra_info['time']/60)%60));
 
-            $sec   = sprintf("%02d",($extra_info['time']%60));
+            $sec   = sprintf("%02d", ($extra_info['time']%60));
             $hours = floor($extra_info['time']/3600);
 
-            $this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
+            $this->f_time = ltrim($hours . ':' . $min . ':' . $sec, '0:');
 
             $this->tags   = Tag::get_top_tags('artist', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'artist');
@@ -619,12 +619,12 @@ class Artist extends database_object implements library_item
         return $this->summary;
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
 
-        if (Art::has_db($this->id, 'artist')) {
+        if (Art::has_db($this->id, 'artist') || $force) {
             $id   = $this->id;
             $type = 'artist';
         }
@@ -671,9 +671,8 @@ class Artist extends database_object implements library_item
         $trimmed = Catalog::trim_featuring($name);
         $name    = $trimmed[0];
 
-        if ($mbid == '') {
-            $mbid = null;
-        }
+        // If Ampache support multiple artists per song one day, we should also handle other artists here
+        $mbid = Catalog::trim_slashed_list($mbid);
 
         if (!$name) {
             $name   = T_('Unknown (Orphaned)');
@@ -775,7 +774,7 @@ class Artist extends database_object implements library_item
             if ($artist_id != null && $artist_id != $this->id) {
                 $songs = $this->get_songs();
                 foreach ($songs as $song_id) {
-                    Song::update_artist($artist_id,$song_id);
+                    Song::update_artist($artist_id, $song_id);
                 }
                 $updated    = true;
                 $current_id = $artist_id;
@@ -917,4 +916,3 @@ class Artist extends database_object implements library_item
         return $deleted;
     }
 } // end of artist class
-

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,27 +35,9 @@ class Openid
     public static function get_store()
     {
         $store      = null;
-        $store_path = AmpConfig::get('tmp_dir_path');
-        if (empty($store_path)) {
-            if (function_exists('sys_get_temp_dir')) {
-                $store_path = sys_get_temp_dir();
-            } else {
-                if (strpos(PHP_OS, 'WIN') === 0) {
-                    $store_path = $_ENV['TMP'];
-                    if (!isset($store_path)) {
-                        $store_path = 'C:\Windows\Temp';
-                    }
-                } else {
-                    $store_path = @$_ENV['TMPDIR'];
-                    if (!isset($store_path)) {
-                        $store_path = '/tmp';
-                    }
-                }
-            }
-            $store_path .= DIRECTORY_SEPARATOR . '_openid';
-        }
+        $store_path = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . '_openid';
 
-        if (empty($store_path) || (!file_exists($store_path) && !mkdir($store_path))) {
+        if (!file_exists($store_path) && !mkdir($store_path)) {
             debug_event('openid', 'Could not access/create the FileStore directory ' . $store_path . '. Please check the effective permissions.', '5');
         } else {
             $store = new Auth_OpenID_FileStore($store_path);
@@ -94,4 +76,3 @@ class Openid
         return $policies;
     }
 } // end of Openid class
-

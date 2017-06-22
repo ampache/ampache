@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -101,6 +101,7 @@ class Session
         // Destroy our cookie!
         setcookie($session_name, null, -1, $cookie_path, $cookie_domain, $cookie_secure);
         setcookie($session_name . '_user', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_lang', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
 
         return true;
     }
@@ -457,6 +458,8 @@ class Session
      *
      * This function just creates the user cookie wich contains current username.
      * It must be used for information only.
+     *
+     * It also creates a cookie to store used language.
      */
     public static function create_user_cookie($username)
     {
@@ -467,6 +470,7 @@ class Session
         $cookie_secure = AmpConfig::get('cookie_secure');
 
         setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
     }
 
     /**
@@ -508,7 +512,7 @@ class Session
         $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';
         if (isset($_COOKIE[$cname])) {
-            list ($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
+            list($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));

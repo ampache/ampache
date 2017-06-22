@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -101,7 +101,7 @@ class AmpacheXbmc extends localplay_controller
         $db_results = Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('xbmc_active','XBMC Active Instance','0','25','integer','internal','xbmc');
+        Preference::insert('xbmc_active', 'XBMC Active Instance', '0', '25', 'integer', 'internal', 'xbmc');
 
         return true;
     } // install
@@ -169,7 +169,7 @@ class AmpacheXbmc extends localplay_controller
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      */
-    public function update_instance($uid,$data)
+    public function update_instance($uid, $data)
     {
         $sql        = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
         $db_results = Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid));
@@ -184,11 +184,11 @@ class AmpacheXbmc extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name']         = array('description' => T_('Instance Name'),'type'=>'textbox');
-        $fields['host']         = array('description' => T_('Hostname'),'type'=>'textbox');
-        $fields['port']         = array('description' => T_('Port'),'type'=>'textbox');
-        $fields['user']         = array('description' => T_('Username'),'type'=>'textbox');
-        $fields['pass']         = array('description' => T_('Password'),'type'=>'textbox');
+        $fields['name']         = array('description' => T_('Instance Name'),'type'=>'text');
+        $fields['host']         = array('description' => T_('Hostname'),'type'=>'text');
+        $fields['port']         = array('description' => T_('Port'),'type'=>'number');
+        $fields['user']         = array('description' => T_('Username'),'type'=>'text');
+        $fields['pass']         = array('description' => T_('Password'),'type'=>'password');
 
         return $fields;
     } // instance_fields
@@ -213,7 +213,7 @@ class AmpacheXbmc extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      */
-    public function set_active_instance($uid,$user_id='')
+    public function set_active_instance($uid, $user_id='')
     {
         // Not an admin? bubkiss!
         if (!$GLOBALS['user']->has_access('100')) {
@@ -665,4 +665,3 @@ class AmpacheXbmc extends localplay_controller
         }
     } // connect
 } //end of AmpacheXbmc
-

@@ -7,12 +7,13 @@ php:
  - 7.0
 
 before_install:
- - wget http://get.sensiolabs.org/php-cs-fixer.phar
+ - export PATH="$PATH:$HOME/.composer/vendor/bin"
+ - composer global require friendsofphp/php-cs-fixer:1.*
 
 before_script:
  - chmod +x scripts/tests/syntax.sh
  - chmod +x scripts/tests/codestyle.sh
- 
+
 script:
  - scripts/tests/syntax.sh
  - scripts/tests/codestyle.sh

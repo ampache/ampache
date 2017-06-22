@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -236,8 +236,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
                   Rightbar
 ***********************************************/
 #rightbar {
-    //background-color: rgba(0,0,0,0.15);
-	background-color: #222;
+    /* background-color: rgba(0,0,0,0.15); */
+    background-color: #222;
     border-color: gba(0,0,0,0.15);
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -588,6 +588,14 @@ span.item-count {
 
 a.option-list:hover {
 	border-color: #1d1d1d;
+}
+
+#tabs li a {
+  color: #ff9d00;
+}
+
+#tabs li a:hover {
+  color: #ffc466;
 }
 
 #tabs li.tab_active a {

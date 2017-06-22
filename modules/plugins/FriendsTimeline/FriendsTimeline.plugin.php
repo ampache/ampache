@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,7 @@ class AmpacheFriendsTimeline
             return false;
         }
 
-        Preference::insert('ftl_max_items','Friends timeline max items','5','25','integer','plugins',$this->name);
+        Preference::insert('ftl_max_items', 'Friends timeline max items', '5', '25', 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -90,6 +90,7 @@ class AmpacheFriendsTimeline
         if (AmpConfig::get('sociable')) {
             $user_id = $GLOBALS['user']->id;
             if ($user_id) {
+                echo '<div class="home_plugin">';
                 $activities = Useractivity::get_friends_activities($user_id, $this->maxitems);
                 if (count($activities) > 0) {
                     UI::show_box_top(T_('Friends Timeline'));
@@ -100,6 +101,7 @@ class AmpacheFriendsTimeline
                     }
                     UI::show_box_bottom();
                 }
+                echo '</div>';
             }
         }
     }

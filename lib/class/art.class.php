@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -211,7 +211,7 @@ class Art extends database_object
         if (function_exists('ImageCreateFromString')) {
             $image = @ImageCreateFromString($source);
             if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
-                debug_event('Art', 'Image failed PHP-GD test',1);
+                debug_event('Art', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
             @imagedestroy($image);
@@ -291,7 +291,7 @@ class Art extends database_object
                 $this->thumb      = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
             } else {
-                debug_event('Art','Unable to retrieve or generate thumbnail for ' . $this->type . '::' . $this->id,1);
+                debug_event('Art', 'Unable to retrieve or generate thumbnail for ' . $this->type . '::' . $this->id, 1);
             }
         } // if no thumb, but art and we want to resize
 
@@ -360,7 +360,7 @@ class Art extends database_object
 
         // Check to make sure we like this image
         if (!self::test_image($source)) {
-            debug_event('Art', 'Not inserting image, invalid data passed', 1);
+            debug_event('Art', 'Not inserting image for ' . $this->type . ' ' . $this->uid . ', invalid data passed', 1);
             return false;
         }
 
@@ -371,7 +371,7 @@ class Art extends database_object
 
         if (AmpConfig::get('write_id3_art')) {
             if ($this->type == 'album') {
-                $album = new Album($this->uid );
+                $album = new Album($this->uid);
                 debug_event('Art', 'Inserting image Album ' . $album->name . ' on songs.', 5);
                 $songs = $album->get_songs();
                 foreach ($songs as $song_id) {
@@ -428,14 +428,37 @@ class Art extends database_object
             $maxw = AmpConfig::get('album_art_max_width');
             $minh = AmpConfig::get('album_art_min_height');
             $maxh = AmpConfig::get('album_art_max_height');
-
-            if ($minw > 0 && ($w < $minw || $w > $maxw)) {
-                debug_event('Art', 'Image width not in range.', 1);
-                return false;
+            
+            // setup 'defaults' if config was not set
+            if (empty($minw)) {
+                $minw = 0;
+            }
+            if (empty($maxw)) {
+                $maxw = 0;
+            }
+            if (empty($minh)) {
+                $minh = 0;
+            }
+            if (empty($maxh)) {
+                $maxh = 0;
             }
 
-            if ($minh > 0 && ($h < $minh || $h > $maxh)) {
-                debug_event('Art', 'Image height not in range.', 1);
+            // minimum width is set and current width is too low
+            if ($minw > 0 && $w < $minw) {
+                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$w).", 1);
+                return false;
+            }
+            // max width is set and current width is too high
+            if ($maxw > 0 && $w > $maxw) {
+                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$w).", 1);
+                return false;
+            }
+            if ($minh > 0 && $h < $minh) {
+                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$h).", 1);
+                return false;
+            }
+            if ($maxh > 0 && $h > $maxh) {
+                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$h).", 1);
                 return false;
             }
         }
@@ -491,7 +514,7 @@ class Art extends database_object
         }
         $fp = fopen($path, "wb");
         fwrite($fp, $source);
-        fclose ($fp);
+        fclose($fp);
 
         return true;
     }
@@ -639,7 +662,7 @@ class Art extends database_object
      */
     public function generate_thumb($image, $size, $mime)
     {
-        $data = explode("/",$mime);
+        $data = explode("/", $mime);
         $type = strtolower($data['1']);
 
         if (!self::test_image($image)) {
@@ -648,32 +671,32 @@ class Art extends database_object
         }
 
         if (!function_exists('gd_info')) {
-            debug_event('Art','PHP-GD Not found - unable to resize art',1);
+            debug_event('Art', 'PHP-GD Not found - unable to resize art', 1);
             return false;
         }
 
         // Check and make sure we can resize what you've asked us to
         if (($type == 'jpg' or $type == 'jpeg') and !(imagetypes() & IMG_JPG)) {
-            debug_event('Art','PHP-GD Does not support JPGs - unable to resize',1);
+            debug_event('Art', 'PHP-GD Does not support JPGs - unable to resize', 1);
             return false;
         }
         if ($type == 'png' and !imagetypes() & IMG_PNG) {
-            debug_event('Art','PHP-GD Does not support PNGs - unable to resize',1);
+            debug_event('Art', 'PHP-GD Does not support PNGs - unable to resize', 1);
             return false;
         }
         if ($type == 'gif' and !imagetypes() & IMG_GIF) {
-            debug_event('Art','PHP-GD Does not support GIFs - unable to resize',1);
+            debug_event('Art', 'PHP-GD Does not support GIFs - unable to resize', 1);
             return false;
         }
         if ($type == 'bmp' and !imagetypes() & IMG_WBMP) {
-            debug_event('Art','PHP-GD Does not support BMPs - unable to resize',1);
+            debug_event('Art', 'PHP-GD Does not support BMPs - unable to resize', 1);
             return false;
         }
 
         $source = imagecreatefromstring($image);
 
         if (!$source) {
-            debug_event('Art','Failed to create Image from string - Source Image is damaged / malformed',1);
+            debug_event('Art', 'Failed to create Image from string - Source Image is damaged / malformed', 1);
             return false;
         }
 
@@ -683,7 +706,7 @@ class Art extends database_object
         $thumbnail = imagecreatetruecolor($size['width'], $size['height']);
 
         if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'], $source_size['height'])) {
-            debug_event('Art','Unable to create resized image',1);
+            debug_event('Art', 'Unable to create resized image', 1);
             imagedestroy($source);
             imagedestroy($thumbnail);
             return false;
@@ -713,7 +736,7 @@ class Art extends database_object
         } // resized
 
         if (!isset($mime_type)) {
-            debug_event('Art', 'Eror: No mime type found.', 1);
+            debug_event('Art', 'Error: No mime type found.', 1);
             return false;
         }
 
@@ -773,8 +796,8 @@ class Art extends database_object
 
         // Check to see if it's a FILE
         if (isset($data['file'])) {
-            $handle     = fopen($data['file'],'rb');
-            $image_data = fread($handle,Core::get_filesize($data['file']));
+            $handle     = fopen($data['file'], 'rb');
+            $image_data = fread($handle, Core::get_filesize($data['file']));
             fclose($handle);
             return $image_data;
         }
@@ -807,7 +830,7 @@ class Art extends database_object
      * @param int|null $thumb
      * @return string
      */
-    public static function url($uid,$type,$sid=null,$thumb=null)
+    public static function url($uid, $type, $sid=null, $thumb=null)
     {
         if (!self::is_valid_type($type)) {
             return null;
@@ -880,7 +903,7 @@ class Art extends database_object
      */
     public static function gc($object_type = null, $object_id = null)
     {
-        $types = array('album', 'artist','tvshow','tvshow_season','video','user');
+        $types = array('album', 'artist','tvshow','tvshow_season','video','user','live_stream');
 
         if ($object_type != null) {
             if (in_array($object_type, $types)) {
@@ -983,7 +1006,7 @@ class Art extends database_object
             $config = array($config);
         }
 
-        debug_event('Art','Searching using:' . json_encode($config), 3);
+        debug_event('Art', 'Searching using:' . json_encode($config), 3);
 
         $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($config as $method) {
@@ -1020,6 +1043,8 @@ class Art extends database_object
 
             // Add the results we got to the current set
             $results = array_merge($results, (array) $data);
+        
+            debug_event('Art', 'results:' . json_encode($results), 3);
 
             if ($limit && count($results) >= $limit) {
                 return array_slice($results, 0, $limit);
@@ -1175,7 +1200,7 @@ class Art extends database_object
         );
         foreach ($release->relations as $ar) {
             $arurl = $ar->url->resource;
-            debug_event('mbz-gatherart', "Found URL AR: " . $arurl , '5');
+            debug_event('mbz-gatherart', "Found URL AR: " . $arurl, '5');
             foreach ($coverartsites as $casite) {
                 if (strpos($arurl, $casite['domain']) !== false) {
                     debug_event('mbz-gatherart', "Matched coverart site: " . $casite['name'], '5');
@@ -1238,12 +1263,12 @@ class Art extends database_object
             $songs = $media->get_songs();
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
-                $dirs[] = Core::conv_lc_file( dirname($song->file) );
+                $dirs[] = Core::conv_lc_file(dirname($song->file));
             }
         } else {
             if ($this->type == 'video') {
                 $media  = new Video($this->uid);
-                $dirs[] = Core::conv_lc_file( dirname($media->file) );
+                $dirs[] = Core::conv_lc_file(dirname($media->file));
             }
         }
 
@@ -1457,18 +1482,19 @@ class Art extends database_object
         $search = rawurlencode($data['keyword']);
         $size   = '&imgsz=m'; // Medium
 
-        $url = "http://images.google.com/images?source=hp&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
+        $url = "http://www.google.com/search?source=hp&tbm=isch&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
         debug_event('Art', 'Search url: ' . $url, '5');
 
         try {
             // Need this to not be considered as a bot (are we? ^^)
             $headers = array(
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11',
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0',
             );
+
             $query = Requests::get($url, $headers, Core::requests_options());
             $html  = $query->body;
 
-            if (preg_match_all("|imgres\?imgurl\=(http.+?)&|", $html, $matches, PREG_PATTERN_ORDER)) {
+            if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)) {
                 foreach ($matches[1] as $match) {
                     $match = rawurldecode($match);
                     debug_event('Art', 'Found image at: ' . $match, '5');
@@ -1775,4 +1801,3 @@ class Art extends database_object
         return true;
     }
 } // Art
-

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,14 +22,11 @@
 
 $thcount = 6;
 ?>
-<?php if (Access::check('interface','50') || AmpConfig::get('upload_allow_edit')) {
+<?php if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
     ?>
 <div id="information_actions">
     <ul>
-        <li><?php echo UI::get_icon('add', T_('Add'));
-    ?> <a href="<?php echo AmpConfig::get('web_path');
-    ?>/labels.php?action=show_add_label"><?php echo T_('Create a new label');
-    ?></a></li>
+        <li><?php echo UI::get_icon('add', T_('Add')); ?> <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label"><?php echo T_('Create a new label'); ?></a></li>
     </ul>
 </div>
 <?php 
@@ -41,14 +38,12 @@ $thcount = 6;
     <thead>
         <tr class="th-top">
             <?php if (Art::is_enabled()) {
-    ++$thcount;
-    ?>
-                <th class="cel_cover optional"><?php echo T_('Art');
-    ?></th>
+    ++$thcount; ?>
+                <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
             <?php 
 } ?>
-            <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'),'label_sort_name'); ?></th>
-            <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'),'label_sort_category'); ?></th>
+            <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
+            <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'), 'label_sort_category'); ?></th>
             <th class="cel_artists optional"><?php echo T_('Artists');  ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
@@ -58,23 +53,16 @@ $thcount = 6;
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $label_id) {
             $libitem = new Label($label_id);
-            $libitem->format();
-            ?>
-        <tr id="label_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_label_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_label_row.inc.php'); ?>
         </tr>
         <?php 
         } ?>
         <?php if (!count($object_ids)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No label found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No label found'); ?></span></td>
         </tr>
         <?php 
 } ?>
@@ -83,12 +71,11 @@ $thcount = 6;
         <tr class="th-bottom">
             <?php if (Art::is_enabled()) {
     ?>
-                <th class="cel_cover"><?php echo T_('Art');
-    ?></th>
+                <th class="cel_cover"><?php echo T_('Art'); ?></th>
             <?php 
 } ?>
-            <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'),'label_sort_name'); ?></th>
-            <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'),'label_sort_category'); ?></th>
+            <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
+            <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'), 'label_sort_category'); ?></th>
             <th class="cel_artists optional"><?php echo T_('Artists');  ?></th>
             <th class="cel_action essential"> <?php echo T_('Action'); ?> </th>
         </tr>

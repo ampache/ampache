@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,10 +51,8 @@
         if (!empty($media->f_tags)) {
             ?>
             <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
-                <label><?php echo T_('Tags');
-            ?></label>
-                <?php echo $media->f_tags;
-            ?>
+                <label><?php echo T_('Tags'); ?></label>
+                <?php echo $media->f_tags; ?>
             </div>
         <?php 
         }
@@ -64,9 +62,13 @@
 <?php if (Art::is_enabled()) {
     ?>
 <div class="np_group" id="np_group_3">
-  <div class="np_cell cel_albumart">
-      <?php Art::display('album', $media->album, $media->get_fullname(), 1, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $media->album);
-    ?>
+  <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
+      <?php
+      $album = new Album($media->album);
+    if ($album->id) {
+        $album->format();
+        $album->display_art(1);
+    } ?>
   </div>
 </div>
 <?php 
@@ -74,29 +76,23 @@
 
 <?php if (AmpConfig::get('show_similar')) {
     ?>
-<div class="np_group similars" id="similar_items_<?php echo $media->id;
-    ?>">
+<div class="np_group similars" id="similar_items_<?php echo $media->id; ?>">
     <div class="np_group similars">
         <div class="np_cell cel_similar">
-            <label><?php echo T_('Similar Artists');
-    ?></label>
-            <p><?php echo T_('Loading...');
-    ?></p>
+            <label><?php echo T_('Similar Artists'); ?></label>
+            <p><?php echo T_('Loading...'); ?></p>
         </div>
     </div>
     <div class="np_group similars">
         <div class="np_cell cel_similar">
-            <label><?php echo T_('Similar Songs');
-    ?></label>
-            <p><?php echo T_('Loading...');
-    ?></p>
+            <label><?php echo T_('Similar Songs'); ?></label>
+            <p><?php echo T_('Loading...'); ?></p>
         </div>
     </div>
 </div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){
-    <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id=' . $media->id . '&media_artist=' . $media->artist, 'similar_now_playing');
-    ?>
+    <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id=' . $media->id . '&media_artist=' . $media->artist, 'similar_now_playing'); ?>
 });
 </script>
 <?php 
@@ -110,12 +106,9 @@ $(document).ready(function(){
         if (AmpConfig::get('ratings')) {
             ?>
             <div class="np_cell cel_rating">
-                <label><?php echo T_('Rating');
-            ?></label>
-                <div id="rating_<?php echo $media->id;
-            ?>_song">
-                    <?php Rating::show($media->id,'song');
-            ?>
+                <label><?php echo T_('Rating'); ?></label>
+                <div id="rating_<?php echo $media->id; ?>_song">
+                    <?php Rating::show($media->id, 'song'); ?>
                 </div>
             </div>
         <?php 
@@ -123,17 +116,13 @@ $(document).ready(function(){
         if (AmpConfig::get('userflags')) {
             ?>
             <div class="np_cell cel_userflag">
-                <label><?php echo T_('Fav.');
-            ?></label>
-                <div id="userflag_<?php echo $media->id;
-            ?>_song">
-                    <?php Userflag::show($media->id,'song');
-            ?>
+                <label><?php echo T_('Fav.'); ?></label>
+                <div id="userflag_<?php echo $media->id; ?>_song">
+                    <?php Userflag::show($media->id, 'song'); ?>
                 </div>
             </div>
         <?php 
-        }
-        ?>
+        } ?>
         </div>
     <?php 
     }

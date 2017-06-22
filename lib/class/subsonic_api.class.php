@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,7 +71,7 @@ class Subsonic_Api
             $hex    = substr($password, 4);
             $decpwd = '';
             for ($i=0; $i<strlen($hex); $i+=2) {
-                $decpwd .= chr(hexdec(substr($hex,$i,2)));
+                $decpwd .= chr(hexdec(substr($hex, $i, 2)));
             }
             $password = $decpwd;
         }
@@ -97,7 +97,7 @@ class Subsonic_Api
         } else {
             if (substr($header, 0, 5) === "HTTP/") {
                 // if $header starts with HTTP/ assume it's the status line
-                http_response_code(curl_getinfo($ch,CURLINFO_HTTP_CODE));
+                http_response_code(curl_getinfo($ch, CURLINFO_HTTP_CODE));
             }
         }
         return strlen($header);
@@ -110,6 +110,11 @@ class Subsonic_Api
 
         header("Access-Control-Allow-Origin: *");
         if (function_exists('curl_version')) {
+            // Here, we use curl from the ampache server to download data from
+            // the ampache server, which can be a bit counter-intuitive.
+            // We use the curl `writefunction` and `headerfunction` callbacks
+            // to write the fetched data back to the open stream from the
+            // client.
             $headers      = apache_request_headers();
             $reqheaders   = array();
             $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
@@ -121,6 +126,7 @@ class Subsonic_Api
 
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
+                CURLOPT_FAILONERROR => true,
                 CURLOPT_HTTPHEADER => $reqheaders,
                 CURLOPT_HEADER => false,
                 CURLOPT_RETURNTRANSFER => false,
@@ -133,7 +139,9 @@ class Subsonic_Api
                 CURLOPT_SSL_VERIFYHOST => false,
                 CURLOPT_TIMEOUT => 0
             ));
-            curl_exec($ch);
+            if (curl_exec($ch) === false) {
+                debug_event('subsonic', 'Stream error: ' . curl_error($ch), 1);
+            }
             curl_close($ch);
         } else {
             // Stream media using http redirect if no curl support
@@ -1173,7 +1181,7 @@ class Subsonic_Api
         self::check_version($input, "1.7.0");
 
         $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist',null,99999), Userflag::get_latest('album',null,99999), Userflag::get_latest('song',null,99999), $elementName);
+        Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist', null, 99999), Userflag::get_latest('album', null, 99999), Userflag::get_latest('song', null, 99999), $elementName);
         self::apiOutput($input, $r);
     }
 
@@ -1722,31 +1730,36 @@ class Subsonic_Api
     {
         self::check_version($input, "1.5.0");
 
-        $id = self::check_parameter($input, 'id');
+        $id         = self::check_parameter($input, 'id');
+        $submission = $input['submission'];
         //$time = $input['time'];
-        //$submission = $input['submission'];
 
-        if (!is_array($id)) {
-            $rid   = array();
-            $rid[] = $id;
-            $id    = $rid;
-        }
-
-        foreach ($id as $i) {
-            $aid = Subsonic_XML_Data::getAmpacheId($i);
-            if (Subsonic_XML_Data::isVideo($i)) {
-                $type = 'video';
-            } else {
-                $type = 'song';
+        if ($submission === 'false' || $submission === '0') {
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            self::apiOutput($input, $r);
+        } else {
+            if (!is_array($id)) {
+                $rid   = array();
+                $rid[] = $id;
+                $id    = $rid;
             }
 
-            $media = new $type($aid);
-            $media->format();
-            $GLOBALS['user']->save_mediaplay($GLOBALS['user'], $media);
-        }
+            foreach ($id as $i) {
+                $aid = Subsonic_XML_Data::getAmpacheId($i);
+                if (Subsonic_XML_Data::isVideo($i)) {
+                    $type = 'video';
+                } else {
+                    $type = 'song';
+                }
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        self::apiOutput($input, $r);
+                $media = new $type($aid);
+                $media->format();
+                User::save_mediaplay($GLOBALS['user'], $media);
+            }
+
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            self::apiOutput($input, $r);
+        }
     }
 
     /**

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,7 +74,7 @@ class Api
      * @param int|string|boolean|null $value
      * @return boolean
      */
-    public static function set_filter($filter,$value)
+    public static function set_filter($filter, $value)
     {
         if (!strlen($value)) {
             return false;
@@ -83,29 +83,32 @@ class Api
         switch ($filter) {
             case 'add':
                 // Check for a range, if no range default to gt
-                if (strpos($value,'/')) {
-                    $elements = explode('/',$value);
-                    self::$browse->set_filter('add_lt',strtotime($elements['1']));
-                    self::$browse->set_filter('add_gt',strtotime($elements['0']));
+                if (strpos($value, '/')) {
+                    $elements = explode('/', $value);
+                    self::$browse->set_filter('add_lt', strtotime($elements['1']));
+                    self::$browse->set_filter('add_gt', strtotime($elements['0']));
                 } else {
-                    self::$browse->set_filter('add_gt',strtotime($value));
+                    self::$browse->set_filter('add_gt', strtotime($value));
                 }
             break;
             case 'update':
                 // Check for a range, if no range default to gt
-                if (strpos($value,'/')) {
-                    $elements = explode('/',$value);
-                    self::$browse->set_filter('update_lt',strtotime($elements['1']));
-                    self::$browse->set_filter('update_gt',strtotime($elements['0']));
+                if (strpos($value, '/')) {
+                    $elements = explode('/', $value);
+                    self::$browse->set_filter('update_lt', strtotime($elements['1']));
+                    self::$browse->set_filter('update_gt', strtotime($elements['0']));
                 } else {
-                    self::$browse->set_filter('update_gt',strtotime($value));
+                    self::$browse->set_filter('update_gt', strtotime($value));
                 }
             break;
             case 'alpha_match':
-                self::$browse->set_filter('alpha_match',$value);
+                self::$browse->set_filter('alpha_match', $value);
             break;
             case 'exact_match':
-                self::$browse->set_filter('exact_match',$value);
+                self::$browse->set_filter('exact_match', $value);
+            break;
+            case 'enabled':
+                self::$browse->set_filter('enabled', $value);
             break;
             default:
                 // Rien a faire
@@ -132,7 +135,13 @@ class Api
         }
         $username = trim($input['user']);
         $ip       = $_SERVER['REMOTE_ADDR'];
-        $version  = $input['version'];
+        if (isset($input['version'])) {
+            // If version is provided, use it
+            $version = $input['version'];
+        } else {
+            // Else, just use the latest version available
+            $version = self::$version;
+        }
 
         // Log the attempt
         debug_event('API', "Handshake Attempt, IP:$ip User:$username Version:$version", 5);
@@ -223,12 +232,17 @@ class Api
                 $row        = Dba::fetch_assoc($db_results);
 
                 // Now we need to quickly get the song totals
-                $sql = 'SELECT COUNT(`id`) AS `song`, ' .
-                    'COUNT(DISTINCT(`album`)) AS `album`, ' .
-                    'COUNT(DISTINCT(`artist`)) AS `artist` ' .
-                    'FROM `song`';
+                $sql        = "SELECT COUNT(`id`) AS `song` FROM `song` WHERE `song`.`enabled`='1'";
                 $db_results = Dba::read($sql);
-                $counts     = Dba::fetch_assoc($db_results);
+                $song       = Dba::fetch_assoc($db_results);
+
+                $sql        = "SELECT COUNT(`id`) AS `album` FROM `album`";
+                $db_results = Dba::read($sql);
+                $album      = Dba::fetch_assoc($db_results);
+
+                $sql        = "SELECT COUNT(`id`) AS `artist` FROM `artist`";
+                $db_results = Dba::read($sql);
+                $artist     = Dba::fetch_assoc($db_results);
 
                 // Next the video counts
                 $sql        = "SELECT COUNT(`id`) AS `video` FROM `video`";
@@ -245,13 +259,13 @@ class Api
 
                 echo XML_Data::keyed_array(array('auth'=>$token,
                     'api'=>self::$version,
-                    'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
-                    'update'=>date("c",$row['update']),
-                    'add'=>date("c",$row['add']),
-                    'clean'=>date("c",$row['clean']),
-                    'songs'=>$counts['song'],
-                    'albums'=>$counts['album'],
-                    'artists'=>$counts['artist'],
+                    'session_expire'=>date("c", time()+AmpConfig::get('session_length')-60),
+                    'update'=>date("c", $row['update']),
+                    'add'=>date("c", $row['add']),
+                    'clean'=>date("c", $row['clean']),
+                    'songs'=>$song['song'],
+                    'albums'=>$album['album'],
+                    'artists'=>$artist['artist'],
                     'playlists'=>$playlist['playlist'],
                     'videos'=>$vcounts['video'],
                     'catalogs'=>$catalog['catalog']));
@@ -259,7 +273,7 @@ class Api
             } // match
         } // end while
 
-        debug_event('API','Login Failed, unable to match passphrase','1');
+        debug_event('API', 'Login Failed, unable to match passphrase', '1');
         echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
@@ -278,10 +292,10 @@ class Api
         // Check and see if we should extend the api sessions (done if valid sess is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire'=>date("c",time()+AmpConfig::get('session_length')-60)),$xmldata);
+            $xmldata = array_merge(array('session_expire'=>date("c", time()+AmpConfig::get('session_length')-60)), $xmldata);
         }
 
-        debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'],'5');
+        debug_event('API', 'Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'], '5');
 
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);
@@ -291,19 +305,18 @@ class Api
      * artists
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
-     * //DEPRECATED
      * @param array $input
      */
     public static function artists($input)
     {
         self::$browse->reset_filters();
         self::$browse->set_type('artist');
-        self::$browse->set_sort('name','ASC');
+        self::$browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
-        Api::set_filter('add',$input['add']);
-        Api::set_filter('update',$input['update']);
+        Api::set_filter($method, $input['filter']);
+        Api::set_filter('add', $input['add']);
+        Api::set_filter('update', $input['update']);
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
@@ -312,19 +325,18 @@ class Api
         $artists = self::$browse->get_objects();
         // echo out the resulting xml document
         ob_end_clean();
-        echo XML_Data::artists($artists);
+        echo XML_Data::artists($artists, $input['include']);
     } // artists
 
     /**
      * artist
      * This returns a single artist based on the UID of said artist
-     * //DEPRECATED
      * @param array $input
      */
     public static function artist($input)
     {
         $uid = scrub_in($input['filter']);
-        echo XML_Data::artists(array($uid));
+        echo XML_Data::artists(array($uid), $input['include']);
     } // artist
 
     /**
@@ -371,11 +383,11 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('album');
-        self::$browse->set_sort('name','ASC');
+        self::$browse->set_sort('name', 'ASC');
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
-        Api::set_filter('add',$input['add']);
-        Api::set_filter('update',$input['update']);
+        Api::set_filter($method, $input['filter']);
+        Api::set_filter('add', $input['add']);
+        Api::set_filter('update', $input['update']);
 
         $albums = self::$browse->get_objects();
 
@@ -383,7 +395,7 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::albums($albums);
+        echo XML_Data::albums($albums, $input['include']);
     } // albums
 
     /**
@@ -394,7 +406,7 @@ class Api
     public static function album($input)
     {
         $uid = scrub_in($input['filter']);
-        echo XML_Data::albums(array($uid));
+        echo XML_Data::albums(array($uid), $input['include']);
     } // album
 
     /**
@@ -424,10 +436,10 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('tag');
-        self::$browse->set_sort('name','ASC');
+        self::$browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
+        Api::set_filter($method, $input['filter']);
         $tags = self::$browse->get_objects();
 
         // Set the offset
@@ -457,7 +469,7 @@ class Api
      */
     public static function tag_artists($input)
     {
-        $artists = Tag::get_tag_objects('artist',$input['filter']);
+        $artists = Tag::get_tag_objects('artist', $input['filter']);
         if ($artists) {
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
@@ -474,7 +486,7 @@ class Api
      */
     public static function tag_albums($input)
     {
-        $albums = Tag::get_tag_objects('album',$input['filter']);
+        $albums = Tag::get_tag_objects('album', $input['filter']);
         if ($albums) {
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
@@ -491,7 +503,7 @@ class Api
      */
     public static function tag_songs($input)
     {
-        $songs = Tag::get_tag_objects('song',$input['filter']);
+        $songs = Tag::get_tag_objects('song', $input['filter']);
 
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
@@ -509,12 +521,14 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('song');
-        self::$browse->set_sort('title','ASC');
+        self::$browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
-        Api::set_filter('add',$input['add']);
-        Api::set_filter('update',$input['update']);
+        Api::set_filter($method, $input['filter']);
+        Api::set_filter('add', $input['add']);
+        Api::set_filter('update', $input['update']);
+        // Filter out disabled songs
+        Api::set_filter('enabled', '1');
 
         $songs = self::$browse->get_objects();
 
@@ -562,10 +576,10 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('playlist');
-        self::$browse->set_sort('name','ASC');
+        self::$browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
+        Api::set_filter($method, $input['filter']);
         self::$browse->set_filter('playlist_type', '1');
 
         $playlist_ids = self::$browse->get_objects();
@@ -609,7 +623,7 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::songs($songs,$items);
+        echo XML_Data::songs($songs, $items);
     } // playlist_songs
 
     /**
@@ -723,7 +737,7 @@ class Api
         if (isset($input['type'])) {
             $type = $input['type'];
         }
-        
+
         switch ($type) {
             case 'artist':
                 echo XML_Data::artists($results);
@@ -746,10 +760,10 @@ class Api
     {
         self::$browse->reset_filters();
         self::$browse->set_type('video');
-        self::$browse->set_sort('title','ASC');
+        self::$browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
+        Api::set_filter($method, $input['filter']);
 
         $video_ids = self::$browse->get_objects();
 
@@ -835,7 +849,7 @@ class Api
                     echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
                 }
 
-                $uid = $democratic->get_uid_from_object_id($media->id,$type);
+                $uid = $democratic->get_uid_from_object_id($media->id, $type);
                 $democratic->remove_vote($uid);
 
                 // Everything was ok
@@ -1045,7 +1059,7 @@ class Api
         $type   = $input['type'];
         $id     = $input['id'];
         $rating = $input['rating'];
-        
+
         if (!Core::is_library_item($type) || !$id) {
             echo XML_Data::error('401', T_('Wrong library item type.'));
         } else {
@@ -1071,7 +1085,7 @@ class Api
             $username = $input['username'];
             $limit    = intval($input['limit']);
             $since    = intval($input['since']);
-            
+
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
@@ -1099,7 +1113,7 @@ class Api
         if (AmpConfig::get('sociable')) {
             $limit = intval($input['limit']);
             $since = intval($input['since']);
-            
+
             if ($GLOBALS['user']->id > 0) {
                 $activities = Useractivity::get_friends_activities($GLOBALS['user']->id, $limit, $since);
                 ob_end_clean();
@@ -1110,4 +1124,3 @@ class Api
         }
     } // friends_timeline
 } // API class
-

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -72,21 +72,16 @@ $default_sort   = "%a/%A";
                     <option value="music"><?php echo T_('Music'); ?></option>
             <?php if (AmpConfig::get('allow_video')) {
     ?>
-                    <option value="clip"><?php echo T_('Music Clip');
-    ?></option>
-                    <option value="tvshow"><?php echo T_('TV Show');
-    ?></option>
-                    <option value="movie"><?php echo T_('Movie');
-    ?></option>
-                    <option value="personal_video"><?php echo T_('Personal Video');
-    ?></option>
+                    <option value="clip"><?php echo T_('Music Clip'); ?></option>
+                    <option value="tvshow"><?php echo T_('TV Show'); ?></option>
+                    <option value="movie"><?php echo T_('Movie'); ?></option>
+                    <option value="personal_video"><?php echo T_('Personal Video'); ?></option>
             <?php
 
 }
             if (AmpConfig::get('podcast')) {
                 ?>
-                    <option value="podcast"><?php echo T_('Podcast');
-                ?></option>
+                    <option value="podcast"><?php echo T_('Podcast'); ?></option>
             <?php
 
             }

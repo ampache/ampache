@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,8 +103,8 @@ class Catalog_soundcloud extends Catalog
 
     public function catalog_fields()
     {
-        $fields['userid']      = array('description' => T_('User ID'),'type'=>'textbox');
-        $fields['secret']      = array('description' => T_('Secret'),'type'=>'textbox');
+        $fields['userid']      = array('description' => T_('User ID'),'type'=>'text');
+        $fields['secret']      = array('description' => T_('Secret'),'type'=>'password');
 
         return $fields;
     }
@@ -452,4 +452,3 @@ class Catalog_soundcloud extends Catalog
         return null;
     }
 } // end of catalog class
-

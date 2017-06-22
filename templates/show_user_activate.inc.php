@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@
  *
  */
 
-$htmllang = str_replace("_","-",AmpConfig::get('lang'));
+$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
@@ -43,23 +43,18 @@ $web_path = AmpConfig::get('web_path');
             <div>
 <?php
     if ($validation == User::get_validation($username) and strlen($validation)) {
-        User::activate_user($username);
-        ?>
-<h3><?php echo T_('User Activated');
-        ?></h3>
+        User::activate_user($username); ?>
+<h3><?php echo T_('User Activated'); ?></h3>
 <p>
     <?php
     /* HINT: Start A tag, End A tag */
-     printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . AmpConfig::get('web_path') . '/login.php">', '</a>');
-        ?>
+     printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . AmpConfig::get('web_path') . '/login.php">', '</a>'); ?>
 </p>
 <?php 
     } else {
         ?>
-<h3><?php echo T_('Validation Failed');
-        ?></h3>
-<p><?php echo T_("The validation key used isn't correct");
-        ?></p>
+<h3><?php echo T_('Validation Failed'); ?></h3>
+<p><?php echo T_("The validation key used isn't correct"); ?></p>
 <?php 
     } ?>
             </div>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,56 +21,47 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$button   = Ajax::button('?page=index&action=random_videos','random', T_('Refresh'),'random_video_refresh');
+$button   = Ajax::button('?page=index&action=random_videos', 'random', T_('Refresh'), 'random_video_refresh');
 ?>
 <?php UI::show_box_top(T_('Videos of the Moment') . ' ' . $button, 'box box_random_videos'); ?>
 <?php
 if ($videos) {
     foreach ($videos as $video_id) {
         $video = Video::create_from_id($video_id);
-        $video->format();
-        ?>
+        $video->format(); ?>
     <div class="random_video">
-        <div class="art_album">
+        <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
             <?php if (Art::is_enabled()) {
     $release_art = $video->get_release_item_art();
     $thumb       = UI::is_grid_view('video') ? 6 : 7;
     Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
 } else {
     ?>
-                <?php echo $video->get_fullname();
-    ?>
+                <?php echo $video->get_fullname(); ?>
             <?php 
-}
-        ?>
+} ?>
         </div>
         <div class="play_video">
         <?php if (AmpConfig::get('directplay')) {
     ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id,'play', T_('Play'),'play_album_' . $video->id);
-    ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_album_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
     ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id);
-    ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
             <?php 
-}
-    ?>
+} ?>
         <?php 
-}
-        ?>
+} ?>
         </div>
         <?php
         if (AmpConfig::get('ratings') && Access::check('interface', '25')) {
             echo "<div id=\"rating_" . $video->id . "_video\">";
             show_rating($video->id, 'video');
             echo "</div>";
-        }
-        ?>
+        } ?>
     </div>
     <?php 
-    }
-    ?>
+    } ?>
 <?php 
 } ?>
 

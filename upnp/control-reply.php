@@ -1,5 +1,5 @@
 <?php
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
@@ -9,7 +9,7 @@ if (!AmpConfig::get('upnp_backend')) {
 
 set_time_limit(600);
 
-header ("Content-Type: text/html; charset=UTF-8");
+header("Content-Type: text/html; charset=UTF-8");
 $rootMediaItems   = array();
 $rootMediaItems[] = Upnp_Api::_musicMetadata('');
 $rootMediaItems[] = Upnp_Api::_videoMetadata('');
@@ -101,4 +101,3 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
 
     echo $soapXML;
     //!!debug_event('upnp', 'Response: ' . $soapXML, '5');
-?>

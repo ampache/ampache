@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -270,4 +270,3 @@ class Userflag extends database_object
         require AmpConfig::get('prefix') . UI::find_template('show_object_userflag.inc.php');
     } // show
 } //end rating class
-

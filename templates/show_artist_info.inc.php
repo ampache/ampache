@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,13 +30,9 @@
         <div class="item_art">
             <?php if ($biography && is_array($biography)) {
     ?>
-                <a href="<?php echo $biography['megaphoto'];
-    ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto'];
-    ?>" alt="<?php echo $artist->f_name;
-    ?>" width="128"></a>
+                <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
             <?php 
-}
-    ?>
+} ?>
         </div>
     <?php 
 } ?>
@@ -60,8 +56,7 @@
 <div id="item_summary">
     <?php if ($biography && is_array($biography)) {
     ?>
-        <?php echo $biography['summary'];
-    ?>
+        <?php echo $biography['summary']; ?>
     <?php 
 }?>
 </div>

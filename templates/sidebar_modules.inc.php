@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,12 +37,9 @@
 <!--
 <?php if (AmpConfig::get('allow_democratic_playback')) {
     ?>
-  <li><h4><?php echo T_('Democratic');
-    ?></h4>
+  <li><h4><?php echo T_('Democratic'); ?></h4>
     <ul class="sb3" id="sb_home_democratic">
-      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path;
-    ?>/democratic.php?action=manage_playlists"><?php echo T_('Manage Playlist');
-    ?></a></li>
+      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=manage_playlists"><?php echo T_('Manage Playlist'); ?></a></li>
     </ul>
   </li>
 <?php 

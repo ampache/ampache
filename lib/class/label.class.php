@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -97,9 +97,9 @@ class Label extends database_object implements library_item
         return true;
     }
 
-    public function display_art($thumb)
+    public function display_art($thumb, $force = false)
     {
-        if (Art::has_db($this->id, 'label')) {
+        if (Art::has_db($this->id, 'label') || $force) {
             Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }

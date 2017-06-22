@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,13 +38,9 @@
         <?php
             foreach ($object_ids as $catalog_id) {
                 $libitem = Catalog::create_from_id($catalog_id);
-                $libitem->format();
-                ?>
-        <tr class="<?php echo UI::flip_class();
-                ?>" id="catalog_<?php echo $libitem->id;
-                ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_catalog_row.inc.php');
-                ?>
+                $libitem->format(); ?>
+        <tr class="<?php echo UI::flip_class(); ?>" id="catalog_<?php echo $libitem->id; ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_catalog_row.inc.php'); ?>
         </tr>
         <?php 
             } ?>
@@ -52,8 +48,7 @@
             <td colspan="6">
             <?php if (!count($object_ids)) {
     ?>
-                <span class="nodata"><?php echo T_('No catalog found');
-    ?></span>
+                <span class="nodata"><?php echo T_('No catalog found'); ?></span>
             <?php 
 } ?>
             </td>

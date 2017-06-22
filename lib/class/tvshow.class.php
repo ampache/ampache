@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -141,7 +141,7 @@ class TVShow extends database_object implements library_item
     private function _get_extra_info()
     {
         // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('tvshow_extra', $this->id) ) {
+        if (parent::is_cached('tvshow_extra', $this->id)) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
             $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " .
@@ -157,7 +157,7 @@ class TVShow extends database_object implements library_item
             $row2                = Dba::fetch_assoc($db_results);
             $row['season_count'] = $row2['season_count'];
 
-            parent::add_to_cache('tvshow_extra',$this->id,$row);
+            parent::add_to_cache('tvshow_extra', $this->id, $row);
         }
 
         /* Set Object Vars */
@@ -262,9 +262,9 @@ class TVShow extends database_object implements library_item
         return $this->summary;
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'tvshow')) {
+        if (Art::has_db($this->id, 'tvshow') || $force) {
             Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
@@ -431,4 +431,3 @@ class TVShow extends database_object implements library_item
         return $deleted;
     }
 } // end of tvshow class
-

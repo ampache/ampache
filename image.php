@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,13 +29,13 @@
 
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 require_once 'lib/init.php';
 
 if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
     // Check to see if they've got an interface session or a valid API session, if not GTFO
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
-        debug_event('image','Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
+        debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
         exit;
     }
 }
@@ -104,17 +104,23 @@ if (!$typeManaged) {
     }
 
     if (!$art->raw_mime) {
-        $defaultimg = AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/';
+        $rootimg = AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/';
         switch ($type) {
             case 'video':
             case 'tvshow':
             case 'tvshow_season':
-                $mime = 'image/png';
-                $defaultimg .= "blankmovie.png";
+                $mime       = 'image/png';
+                $defaultimg = AmpConfig::get('custom_blankmovie');
+                if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
+                    $defaultimg = $rootimg . "blankmovie.png";
+                }
                 break;
             default:
-                $mime = 'image/png';
-                $defaultimg .= "blankalbum.png";
+                $mime       = 'image/png';
+                $defaultimg = AmpConfig::get('custom_blankalbum');
+                if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
+                    $defaultimg = $rootimg . "blankalbum.png";
+                }
             break;
         }
         $image = file_get_contents($defaultimg);

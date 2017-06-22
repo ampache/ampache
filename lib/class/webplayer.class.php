@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -102,7 +102,7 @@ class WebPlayer
 
                     // Transcode is not forced, transcode only if required
                     if (!$transcode) {
-                        if (!in_array('native', $valid_types)) {
+                        if ($transcode_cfg == 'always' || !in_array('native', $valid_types)) {
                             $transcode_settings = $media->get_transcode_settings(null, 'webplayer');
                             if ($transcode_settings) {
                                 $types['real'] = $transcode_settings['format'];
@@ -117,7 +117,7 @@ class WebPlayer
                 $types['real'] = $ftype;
             }
 
-            if ($urlinfo['type'] == 'song') {
+            if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
                 if ($types['real'] == "ogg" || $types['real'] == "opus") {
                     $types['player'] = "oga";
                 } else {
@@ -291,7 +291,7 @@ class WebPlayer
 
         $js['filetype'] = $types['player'];
         $js['url']      = $url;
-        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
+        if ($item->image_url) {
             $js['poster'] = $item->image_url;
         }
 

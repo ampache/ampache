@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,15 +32,10 @@
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);
-        $playlist->format();
-        ?>
+        $playlist->format(); ?>
     <li>
-        <a href="javascript:void(0);" id="rb_append_dplaylist_<?php echo $playlist->id;
-        ?>" onclick="handlePlaylistAction('<?php echo AmpConfig::get('ajax_url') . '?page=playlist&action=append_item&playlist_id=' . $playlist->id . '&item_type=' . $object_type . '&item_id=' . $object_id;
-        ?>', 'rb_append_dplaylist_<?php echo $playlist->id;
-        ?>');">
-            <?php echo $playlist->f_name;
-        ?>
+        <a href="javascript:void(0);" id="rb_append_dplaylist_<?php echo $playlist->id; ?>" onclick="handlePlaylistAction('<?php echo AmpConfig::get('ajax_url') . '?page=playlist&action=append_item&playlist_id=' . $playlist->id . '&item_type=' . $object_type . '&item_id=' . $object_id; ?>', 'rb_append_dplaylist_<?php echo $playlist->id; ?>');">
+            <?php echo $playlist->f_name; ?>
         </a>
     </li>
 <?php 

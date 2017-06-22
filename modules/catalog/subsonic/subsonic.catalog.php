@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -99,8 +99,8 @@ class Catalog_subsonic extends Catalog
 
     public function catalog_fields()
     {
-        $fields['uri']           = array('description' => T_('URI'),'type'=>'textbox');
-        $fields['username']      = array('description' => T_('Username'),'type'=>'textbox');
+        $fields['uri']           = array('description' => T_('URI'),'type'=>'url');
+        $fields['username']      = array('description' => T_('Username'),'type'=>'text');
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
         return $fields;
@@ -142,7 +142,7 @@ class Catalog_subsonic extends Catalog
         $username = $data['username'];
         $password = $data['password'];
 
-        if (substr($uri,0,7) != 'http://' && substr($uri,0,8) != 'https://') {
+        if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Error: Subsonic selected, but path is not a URL'));
             return false;
         }
@@ -202,7 +202,7 @@ class Catalog_subsonic extends Catalog
     public function update_remote_catalog()
     {
         debug_event('subsonic_catalog', 'Updating remote catalog...', 5);
-        
+
         $subsonic = $this->createClient();
 
         $songsadded = 0;
@@ -270,7 +270,7 @@ class Catalog_subsonic extends Catalog
         }
 
         debug_event('subsonic_catalog', 'Catalog updated.', 5);
-        
+
         return true;
     }
 
@@ -339,9 +339,8 @@ class Catalog_subsonic extends Catalog
 
     public function get_rel_path($file_path)
     {
-        $info         = $this->_get_info();
-        $catalog_path = rtrim($info->uri, "/");
-        return( str_replace( $catalog_path . "/", "", $file_path ) );
+        $catalog_path = rtrim($this->uri, "/");
+        return(str_replace($catalog_path . "/", "", $file_path));
     }
 
     public function url_to_songid($url)
@@ -377,4 +376,3 @@ class Catalog_subsonic extends Catalog
         return null;
     }
 } // end of catalog class
-

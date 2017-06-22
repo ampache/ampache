@@ -244,7 +244,7 @@ class mpd
         /* We want blocking, cause otherwise it doesn't
          * timeout, and feof just keeps on spinning
          */
-        stream_set_blocking($this->_mpd_sock,true);
+        stream_set_blocking($this->_mpd_sock, true);
         $status = socket_get_status($this->_mpd_sock);
 
         if (!$this->_mpd_sock) {
@@ -252,7 +252,7 @@ class mpd
             return false;
         } else {
             while (!feof($this->_mpd_sock) && !$status['timed_out']) {
-                $response =  fgets($this->_mpd_sock,1024);
+                $response =  fgets($this->_mpd_sock, 1024);
                 if (function_exists('socket_get_status')) {
                     $status = socket_get_status($this->_mpd_sock);
                 }
@@ -261,7 +261,7 @@ class mpd
                     return $response;
                     break;
                 }
-                if (strncmp(self::RESPONSE_ERR,$response,strlen(self::RESPONSE_ERR)) == 0) {
+                if (strncmp(self::RESPONSE_ERR, $response, strlen(self::RESPONSE_ERR)) == 0) {
                     $this->_error('Connect', "Server responded with: $response");
                     return false;
                 }
@@ -281,14 +281,14 @@ class mpd
     public function SendCommand($command, $arguments = null, $refresh_info = true)
     {
         $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
-        if ( ! $this->connected ) {
+        if (! $this->connected) {
             $this->_error('SendCommand', 'Not connected', 1);
             return false;
         } else {
             $response_string = '';
 
             // Check the command compatibility:
-            if ( ! self::_checkCompatibility($command, $this->mpd_version) ) {
+            if (! self::_checkCompatibility($command, $this->mpd_version)) {
                 return false;
             }
 
@@ -302,7 +302,7 @@ class mpd
                 }
             }
 
-            fputs($this->_mpd_sock,"$command\n");
+            fputs($this->_mpd_sock, "$command\n");
             while (!feof($this->_mpd_sock)) {
                 $response = fgets($this->_mpd_sock, 1024);
 
@@ -320,7 +320,7 @@ class mpd
                 // Build the response string
                 $response_string .= $response;
             }
-            $this->_debug('SendCommand', "response: $response_string" , 5);
+            $this->_debug('SendCommand', "response: $response_string", 5);
         }
 
         if ($refresh_info) {
@@ -340,7 +340,7 @@ class mpd
     public function QueueCommand($command, $arguments = '')
     {
         $this->_debug('QueueCommand', "start; cmd: $command args: " . json_encode($arguments), 5);
-        if ( ! $this->connected ) {
+        if (! $this->connected) {
             $this->_error('QueueCommand', 'Not connected');
             return false;
         }
@@ -372,7 +372,7 @@ class mpd
     public function SendCommandQueue()
     {
         $this->_debug('SendCommandQueue', 'start', 5);
-        if ( ! $this->connected ) {
+        if (! $this->connected) {
             _error('SendCommandQueue', 'Not connected');
             return false;
         }
@@ -424,7 +424,7 @@ class mpd
     public function AdjustVolume($value)
     {
         $this->_debug('AdjustVolume', 'start', 5);
-        if ( ! is_numeric($value) ) {
+        if (! is_numeric($value)) {
             $this->_error('AdjustVolume', "argument must be numeric: $value");
             return false;
         }
@@ -498,7 +498,7 @@ class mpd
     {
         $this->_debug('PLAddBulk', 'start', 5);
         $num_files = count($trackArray);
-        for ( $i = 0; $i < $num_files; $i++ ) {
+        for ($i = 0; $i < $num_files; $i++) {
             $this->QueueCommand(self::COMMAND_ADD, $trackArray[$i]);
         }
         $response = $this->SendCommandQueue();
@@ -602,7 +602,7 @@ class mpd
      */
     public function PLRemove($id)
     {
-        if ( ! is_numeric($id) ) {
+        if (! is_numeric($id)) {
             $this->_error('PLRemove', "id must be numeric: $id");
             return false;
         }
@@ -716,7 +716,7 @@ class mpd
     public function SkipTo($idx)
     {
         $this->_debug('SkipTo', 'start', 5);
-        if ( ! is_numeric($idx) ) {
+        if (! is_numeric($idx)) {
             $this->_error('SkipTo', "argument must be numeric: $idx");
             return false;
         }
@@ -736,15 +736,15 @@ class mpd
     public function SeekTo($pos, $track = -1)
     {
         $this->_debug('SeekTo', 'start', 5);
-        if ( ! is_numeric($pos) ) {
+        if (! is_numeric($pos)) {
             $this->_error('SeekTo', "pos must be numeric: $pos");
             return false;
         }
-        if ( ! is_numeric($track) ) {
+        if (! is_numeric($track)) {
             $this->_error('SeekTo', "track must be numeric: $track");
             return false;
         }
-        if ( $track == -1 ) {
+        if ($track == -1) {
             $track = $this->current_track_id;
         }
 
@@ -787,13 +787,13 @@ class mpd
      * The search <string> is a case-insensitive locator string. Anything
      * that contains <string> will be returned in the results.
      */
-    public function Search($type,$string)
+    public function Search($type, $string)
     {
         $this->_debug('Search', 'start', 5);
 
-        if ( $type != self::SEARCH_ARTIST &&
+        if ($type != self::SEARCH_ARTIST &&
             $type != self::SEARCH_ALBUM &&
-            $type != self::SEARCH_TITLE ) {
+            $type != self::SEARCH_TITLE) {
             $this->_error('Search', 'invalid search type');
             return false;
         }
@@ -820,9 +820,9 @@ class mpd
     public function Find($type, $string)
     {
         $this->_debug('Find', 'start', 5);
-        if ( $type != self::SEARCH_ARTIST &&
+        if ($type != self::SEARCH_ARTIST &&
             $type != self::SEARCH_ALBUM &&
-            $type != self::SEARCH_TITLE ) {
+            $type != self::SEARCH_TITLE) {
             $this->_error('Find', 'invalid find type');
             return false;
         }
@@ -1025,5 +1025,4 @@ class mpd
         }
     }
 }   // end class mpd
-
-?>
+;

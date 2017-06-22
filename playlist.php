@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
         Otherwise the playlist name will have the $_FILES['filename']['tmp_name'] which doesn't look right... */
         $dir      = dirname($_FILES['filename']['tmp_name']) . "/";
         $filename = $dir . basename($_FILES['filename']['name']);
-        move_uploaded_file($_FILES['filename']['tmp_name'], $filename );
+        move_uploaded_file($_FILES['filename']['tmp_name'], $filename);
 
         $result = Catalog::import_playlist($filename);
 
@@ -80,7 +80,7 @@ switch ($_REQUEST['action']) {
             $title = T_('Playlist Imported');
             $body  = basename($_FILES['filename']['name']);
             $body .= '<br />' .
-                sprintf(ngettext('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
+                sprintf(nT_('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
         } else {
             $url   = 'show_import_playlist';
             $title = T_('Playlist Not Imported');
@@ -134,7 +134,7 @@ switch ($_REQUEST['action']) {
         $url   = AmpConfig::get('web_path') . '/playlist.php';
         $title = T_('Empty Playlists Deleted');
         $body  = '';
-        show_confirmation($title,$body,$url);
+        show_confirmation($title, $body, $url);
     break;
     case 'remove_duplicates':
         debug_event('playlist', 'Remove duplicates called.', '5');

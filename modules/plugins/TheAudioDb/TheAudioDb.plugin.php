@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,7 @@ class AmpacheTheaudiodb
     public $categories     = 'metadata';
     public $description    = 'TheAudioDb metadata integration';
     public $url            = 'http://www.theaudiodb.com';
-    public $version        = '000001';
+    public $version        = '000002';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
     
@@ -54,7 +54,7 @@ class AmpacheTheaudiodb
         }
 
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key','TheAudioDb api key','41214789306c4690752dfb','75','string','plugins',$this->name);
+        Preference::insert('tadb_api_key', 'TheAudioDb api key', '41214789306c4690752dfb', '75', 'string', 'plugins', $this->name);
         
         return true;
     } // install
@@ -83,7 +83,7 @@ class AmpacheTheaudiodb
         if (strlen(trim($data['tadb_api_key']))) {
             $this->api_key = trim($data['tadb_api_key']);
         } else {
-            debug_event($this->name,'No TheAudioDb api key, metadata plugin skipped','3');
+            debug_event($this->name, 'No TheAudioDb api key, metadata plugin skipped', '3');
             return false;
         }
         
@@ -128,15 +128,14 @@ class AmpacheTheaudiodb
                 if ($media_info['mb_artistid']) {
                     $artist = $this->get_artist($media_info['mb_artistid']);
                     if ($artist) {
-                        $release = $artist->artist[0];
+                        $release = $artist->artists[0];
                     }
                 } else {
                     $artists = $this->search_artists($media_info['title']);
                     if ($artists) {
-                        $release = $artists->artist[0];
+                        $release = $artists->artists[0];
                     }
                 }
-                
                 if ($release) {
                     $results['art']        = $release->strArtistThumb;
                     $results['title']      = $release->strArtist;
@@ -172,6 +171,7 @@ class AmpacheTheaudiodb
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
         debug_event('tadb', 'API call: ' . $url, 5);
         $request = Requests::get($url, array(), Core::requests_options());
+
         if ($request->status_code != 200) {
             return null;
         }
@@ -209,4 +209,4 @@ class AmpacheTheaudiodb
         return $this->api_call('track-mb.php?i=' . $mbid);
     }
 } // end AmpacheTheaudiodb
-?>
+;

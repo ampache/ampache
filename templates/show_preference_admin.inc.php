@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,27 +33,16 @@ UI::show_box_top(T_('Preference Administration'));
     <th class="cel_level"><?php echo T_('Level'); ?></th>
 </tr>
 <?php foreach ($preferences as $preference) {
-    unset($is_25,$is_5,$is_100);
-    ?>
-<tr class="<?php echo UI::flip_class();
-    ?>">
-    <td class="cel_preference"><?php echo scrub_out(T_($preference['description']));
-    ?></td>
+    unset($is_25, $is_5, $is_100); ?>
+<tr class="<?php echo UI::flip_class(); ?>">
+    <td class="cel_preference"><?php echo scrub_out(T_($preference['description'])); ?></td>
     <td class="cel_level">
         <?php $level_name = "is_" . $preference['level'];
-    ${$level_name}        = 'selected="selected"';
-    ?>
-        <select name="prefs[<?php echo scrub_out($preference['name']);
-    ?>]">
-            <option value="5" <?php echo $is_5;
-    ?>><?php echo T_('Guest');
-    ?></option>
-            <option value="25" <?php echo $is_25;
-    ?>><?php echo T_('User');
-    ?></option>
-            <option value="100" <?php echo $is_100;
-    ?>><?php echo T_('Admin');
-    ?></option>
+    ${$level_name}        = 'selected="selected"'; ?>
+        <select name="prefs[<?php echo scrub_out($preference['name']); ?>]">
+            <option value="5" <?php echo $is_5; ?>><?php echo T_('Guest'); ?></option>
+            <option value="25" <?php echo $is_25; ?>><?php echo T_('User'); ?></option>
+            <option value="100" <?php echo $is_100; ?>><?php echo T_('Admin'); ?></option>
         </select>
     </td>
 </tr>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -119,7 +119,7 @@ class Plex_Api
             // Need to get a match between Plex and Ampache users
             if ($match_users) {
                 if (!AmpConfig::get('access_control')) {
-                    debug_event('Access Control', 'Error Attempted to use Plex with Access Control turned off and plex/ampache link enabled.','3');
+                    debug_event('Access Control', 'Error Attempted to use Plex with Access Control turned off and plex/ampache link enabled.', '3');
                     self::createError(401);
                 }
 
@@ -333,7 +333,7 @@ class Plex_Api
 
     public static function registerMyPlex($authtoken)
     {
-        $headers = array (
+        $headers = array(
             'Content-Type: text/xml'
         );
         $action = 'servers.xml?auth_token=' . $authtoken;
@@ -352,7 +352,7 @@ class Plex_Api
 
     public static function publishDeviceConnection($authtoken)
     {
-        $headers  = array ();
+        $headers  = array();
         $action   = 'devices/' . Plex_XML_Data::getMachineIdentifier() . '?Connection[][uri]=' . Plex_XML_Data::getServerUri() . '&X-Plex-Token=' . $authtoken;
         $curlopts = array(
             CURLOPT_CUSTOMREQUEST => "PUT"
@@ -363,7 +363,7 @@ class Plex_Api
 
     public static function unregisterMyPlex($authtoken)
     {
-        $headers = array (
+        $headers = array(
             'Content-Type: text/xml'
         );
         $action   = 'servers/' . Plex_XML_Data::getMachineIdentifier() . '.xml?auth_token=' . $authtoken;
@@ -1065,7 +1065,6 @@ class Plex_Api
 
     protected static function stream_url($url)
     {
-        // header("Location: " . $url);
         set_time_limit(0);
         ob_end_clean();
 
@@ -1074,6 +1073,10 @@ class Plex_Api
         if (isset($headers['Range'])) {
             $reqheaders[] = "Range: " . $headers['Range'];
         }
+
+        // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+        debug_event('plex-api', 'Stream proxy: ' . $url, 5);
+        // header("Location: " . $url);
 
         $ch = curl_init($url);
         curl_setopt_array($ch, array(
@@ -1089,7 +1092,7 @@ class Plex_Api
             CURLOPT_TIMEOUT => 0
         ));
         if (curl_exec($ch) === false) {
-            debug_event('plex-api', 'Curl error: ' . curl_error($ch),1);
+            debug_event('plex-api', 'Curl error: ' . curl_error($ch), 1);
         }
         curl_close($ch);
     }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -109,21 +109,23 @@ if (!empty($username) && isset($auth)) {
             debug_event('Login', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, '1');
         } // if logged in multiple times
     } // if prevent multiple logins
-    elseif (AmpConfig::get('auto_create') && $auth['success'] &&
-        ! $user->username) {
+    elseif (AmpConfig::get('auto_create') && $auth['success'] && ! $user->username) {
         /* This is run if we want to autocreate users who don't
         exist (useful for non-mysql auth) */
-        $access    = AmpConfig::get('auto_user')
-            ? User::access_name_to_level(AmpConfig::get('auto_user'))
-            : '5';
-        $name       = $auth['name'];
-        $email      = $auth['email'];
-        $website    = $auth['website'];
+        $access     = User::access_name_to_level(AmpConfig::get('auto_user', 'guest'));
+        $fullname   = array_key_exists('name',    $auth) ? $auth['name']    : '';
+        $email      = array_key_exists('email',   $auth) ? $auth['email']   : '';
+        $website    = array_key_exists('website', $auth) ? $auth['website'] : '';
+        $state      = array_key_exists('state',   $auth) ? $auth['state']   : '';
+        $city       = array_key_exists('city',    $auth) ? $auth['city']    : '';
 
         /* Attempt to create the user */
-        if (User::create($username, $name, $email, $website,
-            hash('sha256', mt_rand()), $access)) {
+        if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city)) {
             $user = User::get_from_username($username);
+
+            if (array_key_exists('avatar', $auth)) {
+                $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
+            }
         } else {
             $auth['success'] = false;
             AmpError::add('general', T_('Unable to create local account'));
@@ -147,6 +149,10 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     //   but naming this 'user' didn't work at all
     $_SESSION['userdata'] = $auth;
 
+    // You really don't want to store the avatar
+    //   in the SESSION.
+    unset($_SESSION['userdata']['avatar']);
+    
     // Record the IP of this person!
     if (AmpConfig::get('track_user_ip')) {
         $user->insert_ip_history();
@@ -159,20 +165,31 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         }
     }
 
-    // Update data from this auth if ours are empty
-    if (empty($user->fullname) && !empty($auth['name'])) {
+    // Update data from this auth if ours are empty or if config asks us to
+    $external_auto_update = AmpConfig::get('external_auto_update', false);
+
+    if (($external_auto_update || empty($user->fullname)) && !empty($auth['name'])) {
         $user->update_fullname($auth['name']);
     }
-    if (empty($user->email) && !empty($auth['email'])) {
+    if (($external_auto_update || empty($user->email))    && !empty($auth['email'])) {
         $user->update_email($auth['email']);
     }
-    if (empty($user->website) && !empty($auth['website'])) {
+    if (($external_auto_update || empty($user->website))  && !empty($auth['website'])) {
         $user->update_website($auth['website']);
+    }
+    if (($external_auto_update || empty($user->state))    && !empty($auth['state'])) {
+        $user->update_state($auth['state']);
+    }
+    if (($external_auto_update || empty($user->city))     && !empty($auth['city'])) {
+        $user->update_city($auth['city']);
+    }
+    if (($external_auto_update || empty($user->f_avatar)) && !empty($auth['avatar'])) {
+        $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
     }
 
     $GLOBALS['user'] = $user;
     // If an admin, check for update
-    if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
+    if (AmpConfig::get('autoupdate') && Access::check('interface', '100')) {
         AutoUpdate::is_update_available(true);
     }
 
@@ -186,11 +203,10 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         strpos($_POST['referrer'], 'logout.php')    === false &&
         strpos($_POST['referrer'], 'update.php')    === false &&
         strpos($_POST['referrer'], 'activate.php')    === false &&
-        strpos($_POST['referrer'], 'admin')        === false ) {
+        strpos($_POST['referrer'], 'admin')        === false) {
         header('Location: ' . $_POST['referrer']);
         exit();
     } // if we've got a referrer
     header('Location: ' . AmpConfig::get('web_path') . '/index.php');
     exit();
 } // auth success
-

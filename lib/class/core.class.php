@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -201,6 +201,32 @@ class Core
     } // form_verify
 
     /**
+     * gen_secure_token
+     *
+     * This generates a cryptographically secure token.
+     * Returns a token of the required bytes length, as a string. Returns false
+     * if it could not generate a cryptographically secure token.
+     */
+    public static function gen_secure_token($length)
+    {
+        $buffer = '';
+        if (function_exists('random_bytes')) {
+            $buffer = random_bytes($length);
+        } elseif (function_exists('mcrypt_create_iv')) {
+            $buffer = mcrypt_create_iv($length, MCRYPT_DEV_RANDOM);
+        } elseif (phpversion() > "5.6.12" && function_exists('openssl_random_pseudo_bytes')) {
+            // PHP version check for https://bugs.php.net/bug.php?id=70014
+            $buffer = openssl_random_pseudo_bytes($length);
+        } elseif (file_exists('/dev/random') && is_readable('/dev/random')) {
+            $buffer = file_get_contents('/dev/random', false, null, -1, $length);
+        } else {
+            return false;
+        }
+
+        return bin2hex($buffer);
+    }
+
+    /**
      * image_dimensions
     * This returns the dimensions of the passed song of the passed type
     * returns an empty array if PHP-GD is not currently installed, returns
@@ -209,6 +235,11 @@ class Core
     public static function image_dimensions($image_data)
     {
         if (!function_exists('ImageCreateFromString')) {
+            return false;
+        }
+
+        if (empty($image_data)) {
+            debug_event('Core', "Cannot create image from empty data", 2);
             return false;
         }
 
@@ -307,8 +338,8 @@ class Core
      */
     public static function is_session_started()
     {
-        if (php_sapi_name() !== 'cli' ) {
-            if (version_compare(phpversion(), '5.4.0', '>=') ) {
+        if (php_sapi_name() !== 'cli') {
+            if (version_compare(phpversion(), '5.4.0', '>=')) {
                 return session_status() === PHP_SESSION_ACTIVE ? true : false;
             } else {
                 return session_id() === '' ? false : true;
@@ -367,5 +398,28 @@ class Core
 
         return $options;
     }
+    
+    public static function get_tmp_dir()
+    {
+        $tmp_dir = AmpConfig::get('tmp_dir_path');
+        if (empty($store_path)) {
+            if (function_exists('sys_get_temp_dir')) {
+                $tmp_dir = sys_get_temp_dir();
+            } else {
+                if (strpos(PHP_OS, 'WIN') === 0) {
+                    $tmp_dir = $_ENV['TMP'];
+                    if (!isset($tmp_dir)) {
+                        $tmp_dir = 'C:\Windows\Temp';
+                    }
+                } else {
+                    $tmp_dir = @$_ENV['TMPDIR'];
+                    if (!isset($tmp_dir)) {
+                        $tmp_dir = '/tmp';
+                    }
+                }
+            }
+        }
+        
+        return $tmp_dir;
+    }
 } // Core
-

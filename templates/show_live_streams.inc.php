@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,19 @@
  *
  */
 ?>
+<?php if (Access::check('interface', '50')) {
+    ?>
+<?php UI::show_box_top(T_('Manage Radio Stations'), 'info-box'); ?>
+<div id="information_actions">
+<ul>
+<li>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Radio Station'); ?></a>
+</li>
+</ul>
+</div>
+<?php UI::show_box_bottom(); ?>
+<?php 
+} ?>
 <?php if ($browse->get_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -27,9 +40,10 @@
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <th class="cel_streamname essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+            <th class="cel_cover optional"><?php echo T_('Art') ?></th>
+            <th class="cel_streamname essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'), 'live_stream_sort_name'); ?></th>
             <th class="cel_streamurl optional"><?php echo T_('Stream URL'); ?></th>
-            <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec');  ?></th>
+            <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'), 'live_stream_codec');  ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -37,21 +51,16 @@
         <?php
         foreach ($object_ids as $radio_id) {
             $libitem = new Live_Stream($radio_id);
-            $libitem->format();
-            ?>
-        <tr id="live_stream_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php 
         } //end foreach ($artists as $artist) ?>
         <?php if (!count($object_ids)) {
     ?>
         <tr>
-            <td colspan="6"><span class="nodata"><?php echo T_('No live stream found');
-    ?></span></td>
+            <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
         </tr>
         <?php 
 } ?>
@@ -59,9 +68,10 @@
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-            <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+            <th class="cel_cover"><?php echo T_('Art') ?></th>
+            <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'), 'live_stream_sort_name'); ?></th>
             <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
-            <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec_bottom');  ?></th>
+            <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'), 'live_stream_codec_bottom');  ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>

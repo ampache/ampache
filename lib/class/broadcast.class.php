@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -286,9 +286,9 @@ class Broadcast extends database_object implements library_item
         return null;
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'broadcast')) {
+        if (Art::has_db($this->id, 'broadcast') || $force) {
             Art::display('broadcast', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
@@ -423,4 +423,3 @@ class Broadcast extends database_object implements library_item
         return $oid;
     }
 } // end of broadcast class
-

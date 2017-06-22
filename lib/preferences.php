@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,11 +74,11 @@ function update_preferences($pref_id=0)
 
         /* Run the update for this preference only if it's set */
         if (isset($_REQUEST[$name])) {
-            Preference::update($id,$pref_id,$value,$_REQUEST[$apply_to_all]);
+            Preference::update($id, $pref_id, $value, $_REQUEST[$apply_to_all]);
         }
 
-        if (Access::check('interface','100') && $_REQUEST[$new_level]) {
-            Preference::update_level($id,$_REQUEST[$new_level]);
+        if (Access::check('interface', '100') && $_REQUEST[$new_level]) {
+            Preference::update_level($id, $_REQUEST[$new_level]);
         }
     } // end foreach preferences
 
@@ -90,20 +90,20 @@ function update_preferences($pref_id=0)
  * update_preference
  * This function updates a single preference and is called by the update_preferences function
  */
-function update_preference($user_id,$name,$pref_id,$value)
+function update_preference($user_id, $name, $pref_id, $value)
 {
     $apply_check = "check_" . $name;
     $level_check = "level_" . $name;
 
     /* First see if they are an administrator and we are applying this to everything */
     if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$apply_check])) {
-        Preference::update_all($pref_id,$value);
+        Preference::update_all($pref_id, $value);
         return true;
     }
 
     /* Check and see if they are an admin and the level def is set */
     if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$level_check])) {
-        Preference::update_level($pref_id,$_REQUEST[$level_check]);
+        Preference::update_level($pref_id, $_REQUEST[$level_check]);
     }
 
     /* Else make sure that the current users has the right to do this */
@@ -120,7 +120,7 @@ function update_preference($user_id,$name,$pref_id,$value)
  * create_preference_input
  * takes the key and then creates the correct type of input for updating it
  */
-function create_preference_input($name,$value)
+function create_preference_input($name, $value)
 {
     if (!Preference::has_access($name)) {
         if ($value == '1') {
@@ -199,6 +199,11 @@ function create_preference_input($name,$value)
         case 'upload_allow_remove':
         case 'webdav_backend':
         case 'notify_email':
+        case 'libitem_contextmenu':
+        case 'upload_catalog_pattern':
+        case 'catalogfav_gridview':
+        case 'browse_filter':
+        case 'sidebar_light':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {
@@ -239,7 +244,7 @@ function create_preference_input($name,$value)
             if (AmpConfig::get('allow_localplay_playback')) {
                 echo "\t<option value=\"localplay\" $is_localplay>" . T_('Localplay') . "</option>\n";
             }
-            echo "\t<option value=\"web_player\" $is_web_player>" . _('Web Player') . "</option>\n";
+            echo "\t<option value=\"web_player\" $is_web_player>" . T_('Web Player') . "</option>\n";
             echo "</select>\n";
         break;
         case 'playlist_type':
@@ -398,7 +403,7 @@ function create_preference_input($name,$value)
             $url         = $plugin->_plugin->url;
             $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
             $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
-            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', T_("Click for grant Ampache to ") . $plugin_name) . '</a>';
+            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
         break;
         default:
             if (preg_match('/_pass$/', $name)) {
@@ -410,4 +415,3 @@ function create_preference_input($name,$value)
 
     }
 } // create_preference_input
-

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
         $version = Update::get_version();
     }
 }
-$htmllang = str_replace("_","-",AmpConfig::get('lang'));
+$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -87,10 +87,8 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
         </div>
         <?php if (Update::need_update()) {
     ?>
-            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path');
-    ?>/update.php?action=update">
-                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!');
-    ?></button>
+            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
+                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!'); ?></button>
             </form>
         <?php 
 } ?>

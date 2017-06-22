@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,15 +61,16 @@ require $prefix . '/templates/install_header.inc.php';
             <?php AmpError::display('general'); ?>
 
             <h2><?php echo T_('Generate Config File'); ?></h2>
-            <h3><?php echo T_('Database connection'); ?></h3>
-            <?php AmpError::display('config'); ?>
-<form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
+            <h3><?php echo T_('Various'); ?></h3>
 <div class="form-group">
     <label for="web_path" class="col-sm-4 control-label"><?php echo T_('Web Path'); ?></label>
     <div class="col-sm-8">
         <input type="text" class="form-control" id="web_path" name="web_path" value="<?php echo scrub_out($web_path_guess); ?>">
     </div>
 </div>
+            <h3><?php echo T_('Database connection'); ?></h3>
+            <?php AmpError::display('config'); ?>
+<form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
 <div class="form-group">
     <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Database Name'); ?></label>
     <div class="col-sm-8">
@@ -143,20 +144,16 @@ require $prefix . '/templates/install_header.inc.php';
             $modes = install_get_transcode_modes();
             foreach ($modes as $mode) {
                 ?>
-            <option value="<?php echo $mode;
-                ?>" <?php if ($_REQUEST['transcode_template'] == $mode) {
+            <option value="<?php echo $mode; ?>" <?php if ($_REQUEST['transcode_template'] == $mode) {
     echo 'selected';
-}
-                ?>><?php echo $mode;
-                ?></option>
+} ?>><?php echo $mode; ?></option>
         <?php 
             } ?>
         </select>
         <?php
         if (count($modes) == 0) {
             ?>
-        <label><?php echo T_('No default transcoding application found. You may need to install a popular application (ffmpeg, avconv ...) or customize transcoding settings manually after installation.');
-            ?></label>
+        <label><?php echo T_('No default transcoding application found. You may need to install a popular application (ffmpeg, avconv ...) or customize transcoding settings manually after installation.'); ?></label>
         <?php 
         } ?>
     </div>
@@ -215,78 +212,54 @@ require $prefix . '/templates/install_header.inc.php';
     ?>
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
-                        <?php echo T_('channel/.htaccess action');
-    ?>
+                        <?php echo T_('channel/.htaccess action'); ?>
                     </div>
                     <div class="col-sm-8">
-                        <button type="submit" class="btn btn-warning" name="download_htaccess_channel"><?php echo T_('Download');
-    ?></button>
+                        <button type="submit" class="btn btn-warning" name="download_htaccess_channel"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_channel" <?php if (!check_htaccess_channel_writable()) {
     echo "disabled ";
-}
-    ?>>
-                            <?php echo T_('Write');
-    ?>
+} ?>>
+                            <?php echo T_('Write'); ?>
                         </button>
                     </div>
-                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess exists?');
-    ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_channel_file));
-    ?></div>
-                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess configured?');
-    ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_channel_file, $web_path_guess));
-    ?></div>
+                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess exists?'); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_channel_file)); ?></div>
+                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess configured?'); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_channel_file, $web_path_guess)); ?></div>
 
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
-                        <?php echo T_('rest/.htaccess action');
-    ?>
+                        <?php echo T_('rest/.htaccess action'); ?>
                     </div>
                     <div class="col-sm-8">
-                        <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download');
-    ?></button>
+                        <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) {
     echo "disabled ";
-}
-    ?>>
-                            <?php echo T_('Write');
-    ?>
+} ?>>
+                            <?php echo T_('Write'); ?>
                         </button>
                     </div>
-                    <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess exists?');
-    ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_rest_file));
-    ?></div>
-                    <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess configured?');
-    ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_rest_file, $web_path_guess));
-    ?></div>
+                    <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess exists?'); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_rest_file)); ?></div>
+                    <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess configured?'); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
 
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
-                        <?php echo T_('play/.htaccess action');
-    ?>
+                        <?php echo T_('play/.htaccess action'); ?>
                     </div>
                     <div class="col-sm-8">
-                        <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download');
-    ?></button>
+                        <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) {
     echo "disabled ";
-}
-    ?>>
-                            <?php echo T_('Write');
-    ?>
+} ?>>
+                            <?php echo T_('Write'); ?>
                         </button>
                     </div>
-                    <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess exists?');
-    ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_play_file));
-    ?></div>
-                    <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess configured?');
-    ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_play_file, $web_path_guess));
-    ?></div>
+                    <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess exists?'); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
+                    <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess configured?'); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
                 <?php 
 } ?>
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,15 +44,15 @@ function changeUniqid()
 function init_db()
 {
     if (!Preference::exists('myplex_username')) {
-        Preference::insert('myplex_username','myPlex Username','','25','string','internal');
-        Preference::insert('myplex_authtoken','myPlex Auth Token','','25','string','internal');
-        Preference::insert('myplex_published','Plex Server is published to myPlex','0','25','boolean','internal');
-        Preference::insert('plex_uniqid','Plex Server Unique Id', uniqid(),'25','string','internal');
-        Preference::insert('plex_servername','Plex Server Name','Ampache','25','string','internal');
-        Preference::insert('plex_public_address','Plex Public Address','','25','string','internal');
-        Preference::insert('plex_public_port','Plex Public Port','32400','25','string','internal');
-        Preference::insert('plex_local_auth','myPlex authentication required on local network','0','25','boolean','internal');
-        Preference::insert('plex_match_email','Link myPlex users to Ampache based on e-mail address','1','25','boolean','internal');
+        Preference::insert('myplex_username', 'myPlex Username', '', '25', 'string', 'internal');
+        Preference::insert('myplex_authtoken', 'myPlex Auth Token', '', '25', 'string', 'internal');
+        Preference::insert('myplex_published', 'Plex Server is published to myPlex', '0', '25', 'boolean', 'internal');
+        Preference::insert('plex_uniqid', 'Plex Server Unique Id', uniqid(), '25', 'string', 'internal');
+        Preference::insert('plex_servername', 'Plex Server Name', 'Ampache', '25', 'string', 'internal');
+        Preference::insert('plex_public_address', 'Plex Public Address', '', '25', 'string', 'internal');
+        Preference::insert('plex_public_port', 'Plex Public Port', '32400', '25', 'string', 'internal');
+        Preference::insert('plex_local_auth', 'myPlex authentication required on local network', '0', '25', 'boolean', 'internal');
+        Preference::insert('plex_match_email', 'Link myPlex users to Ampache based on e-mail address', '1', '25', 'boolean', 'internal');
 
         User::rebuild_all_preferences();
     }
@@ -131,7 +131,7 @@ switch ($plexact) {
     break;
 
     case 'change_uniqid':
-        Preference::update('plex_uniqid', -1,uniqid(), true, true);
+        Preference::update('plex_uniqid', -1, uniqid(), true, true);
         echo T_('Server UUID changed.') . "<br />\r\n";
     break;
 }
@@ -172,8 +172,7 @@ switch ($plexact) {
             <input type="hidden" name="plexact" value="auth_myplex" />
             <div class="field">
                 <label for="myplex_username">myPlex Username:</label>
-                <input type="text" id="myplex_username" class="field_value" name="myplex_username" value="<?php echo $myplex_username;
-    ?>" />
+                <input type="text" id="myplex_username" class="field_value" name="myplex_username" value="<?php echo $myplex_username; ?>" />
             </div>
             <div class="field">
                 <label for="myplex_password">myPlex Password:</label>
@@ -181,19 +180,16 @@ switch ($plexact) {
             </div>
             <div class="field">
                 <label for="plex_public_port">Public Server Port (optional):</label>
-                <input type="text" id="plex_public_port" class="field_value" name="plex_public_port" value="<?php echo $plex_public_port;
-    ?>" />
+                <input type="text" id="plex_public_port" class="field_value" name="plex_public_port" value="<?php echo $plex_public_port; ?>" />
             </div>
             <?php if ($plex_local_port != 32400) {
     ?>
             <div style="color: orange;">
-                Plex servers should locally listen on port 32400. Current local listing port for your Plex backend is <?php echo $plex_local_port;
-    ?>. Ampache applies a small URI `hack` to work with custom port
+                Plex servers should locally listen on port 32400. Current local listing port for your Plex backend is <?php echo $plex_local_port; ?>. Ampache applies a small URI `hack` to work with custom port
                 as Plex server, but be aware that this will not work with all clients.
             </div>
             <?php 
-}
-    ?>
+} ?>
             <div class="formbuttons">
                 <input type="submit" value="Auth/Publish" />
             </div>
@@ -205,11 +201,8 @@ switch ($plexact) {
     <div class="configform">
         <h3>myPlex authentication / server publish</h3>
         <form action="" method="POST" enctype="multipart/form-data">
-            <label>myPlex user: <b><?php echo $myplex_username;
-    ?></b></label><br />
-            <label>Public server address: <b><?php echo $plex_public_address;
-    ?>:<?php echo $plex_public_port;
-    ?></b></label>
+            <label>myPlex user: <b><?php echo $myplex_username; ?></b></label><br />
+            <label>Public server address: <b><?php echo $plex_public_address; ?>:<?php echo $plex_public_port; ?></b></label>
             <input type="hidden" name="plexact" value="unauth_myplex" />
             <div class="formbuttons">
                 <input type="submit" value="Unregister" />

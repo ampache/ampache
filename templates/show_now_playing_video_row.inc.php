@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,8 +50,7 @@ $media->format();
             <div class="np_cell cel_albumart">
                 <?php
                     $release_art = $media->get_release_item_art();
-        Art::display($release_art['object_type'], $release_art['object_id'], $media->get_fullname(), 6, $media->link);
-        ?>
+        Art::display($release_art['object_type'], $release_art['object_id'], $media->get_fullname(), 6, $media->link); ?>
             </div>
         </div>
     <?php 
@@ -63,21 +62,15 @@ $media->format();
     if (AmpConfig::get('ratings')) {
         ?>
         <div class="np_cell cel_rating">
-            <label><?php echo T_('Rating');
-        ?></label>
-            <div id="rating_<?php echo $media->id;
-        ?>_video">
-                <?php Rating::show($media->id, 'video');
-        ?>
+            <label><?php echo T_('Rating'); ?></label>
+            <div id="rating_<?php echo $media->id; ?>_video">
+                <?php Rating::show($media->id, 'video'); ?>
             </div>
         </div>
         <div class="np_cell cel_userflag">
-            <label><?php echo T_('Fav.');
-        ?></label>
-            <div id="userflag_<?php echo $media->id;
-        ?>_video">
-                <?php Userflag::show($media->id,'video');
-        ?>
+            <label><?php echo T_('Fav.'); ?></label>
+            <div id="userflag_<?php echo $media->id; ?>_video">
+                <?php Userflag::show($media->id, 'video'); ?>
             </div>
         </div>
     <?php 

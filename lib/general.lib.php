@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@ function set_memory_limit($new_limit)
     $new_limit     = UI::unformat_bytes($new_limit);
 
     if ($current_limit < $new_limit) {
-        ini_set (memory_limit, $new_limit);
+        ini_set(memory_limit, $new_limit);
     }
 } // set_memory_limit
 
@@ -54,10 +54,10 @@ function generate_password($length)
 
     for ($i = 0; $i < $length; $i++) {
         if ($alt == 1) {
-            $password .= $consonants[(rand(0,strlen($consonants)-1))];
+            $password .= $consonants[(rand(0, strlen($consonants)-1))];
             $alt = 0;
         } else {
-            $password .= $vowels[(rand(0,strlen($vowels)-1))];
+            $password .= $vowels[(rand(0, strlen($vowels)-1))];
             $alt = 1;
         }
     }
@@ -123,7 +123,7 @@ function scrub_arg($arg)
  */
 function make_bool($string)
 {
-    if (strcasecmp($string,'false') == 0 || $string == '0') {
+    if (strcasecmp($string, 'false') == 0 || $string == '0') {
         return false;
     }
 
@@ -152,7 +152,7 @@ function get_languages()
     $handle    = @opendir(AmpConfig::get('prefix') . '/locale');
 
     if (!is_resource($handle)) {
-        debug_event('language','Error unable to open locale directory','1');
+        debug_event('language', 'Error unable to open locale directory', '1');
     }
 
     $results = array();
@@ -161,7 +161,7 @@ function get_languages()
         $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
 
         /* Check to see if it's a directory */
-        if (is_dir($full_file) and substr($file,0,1) != '.' and $file != 'base') {
+        if (is_dir($full_file) and substr($file, 0, 1) != '.' and $file != 'base') {
             switch ($file) {
                 case 'af_ZA'; $name = 'Afrikaans'; break; /* Afrikaans */
                 case 'bg_BG'; $name = '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;'; break; /* Bulgarian */
@@ -202,13 +202,13 @@ function get_languages()
                 case 'tr_TR'; $name = 'T&#252;rk&#231;e'; break; /* Turkish */
                 case 'uk_UA'; $name = 'Українська'; break; /* Ukrainian */
                 case 'vi_VN'; $name = 'Ti&#7871;ng Vi&#7879;t'; break; /* Vietnamese */
-                case 'zh_CN'; $name = '&#31616;&#20307;&#20013;&#25991;'; break; /* Chinese */
-                case 'zn_TW'; $name = '&#32321;&#39636;&#20013;&#25991;'; break; /* Chinese */
+                case 'zh_CN'; $name = '&#31616;&#20307;&#20013;&#25991;'; break; /* Chinese (simplified)*/
+                case 'zh_TW'; $name = '&#32321;&#39636;&#20013;&#25991;'; break; /* Chinese (traditional)*/
                 /* These languages are right to left. */
                 case 'ar_SA'; $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'; break; /* Arabic */
                 case 'he_IL'; $name = '&#1506;&#1489;&#1512;&#1497;&#1514;'; break; /* Hebrew */
                 case 'fa_IR'; $name = '&#1601;&#1575;&#1585;&#1587;&#1610;'; break; /* Farsi */
-                default: $name      = T_('Unknown'); break;
+                default: $name      = sprintf(T_('Unknown %s'), ' (' . $file . ')'); break;
             } // end switch
 
 
@@ -249,6 +249,7 @@ function translate_pattern_code($code)
             '%T'=>'track',
             '%t'=>'title',
             '%y'=>'year',
+            '%d'=>'disk',
             '%o'=>'zz_other');
 
     if (isset($code_array[$code])) {
@@ -268,23 +269,29 @@ function generate_config($current)
 {
     // Start building the new config file
     $distfile = AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist';
-    $handle   = fopen($distfile,'r');
-    $dist     = fread($handle,filesize($distfile));
+    $handle   = fopen($distfile, 'r');
+    $dist     = fread($handle, filesize($distfile));
     fclose($handle);
 
-    $data = explode("\n",$dist);
+    $data = explode("\n", $dist);
 
     $final = "";
     foreach ($data as $line) {
-        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
+        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
-            || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
+            || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)) {
             $key    = $matches[1];
             $value  = $matches[2];
 
             // Put in the current value
             if ($key == 'config_version') {
                 $line = $key . ' = ' . escape_ini($value);
+            } elseif ($key == 'secret_key' && !isset($current[$key])) {
+                $secret_key = Core::gen_secure_token(31);
+                if ($secret_key !== false) {
+                    $line = $key . ' = "' . escape_ini($secret_key) . '"';
+                }
+                // Else, unable to generate a cryptographically secure token, use the default one
             } elseif (isset($current[$key])) {
                 $line = $key . ' = "' . escape_ini($current[$key]) . '"';
                 unset($current[$key]);

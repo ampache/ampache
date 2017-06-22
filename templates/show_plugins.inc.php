@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,28 +49,19 @@ $web_path = AmpConfig::get('web_path');
                     '/admin/modules.php?action=upgrade_plugin&amp;plugin=' .
                     scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }
-            }
-            ?>
-        <tr class="<?php echo UI::flip_class();
-            ?>">
-            <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name);
-            ?></td>
-            <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description);
-            ?></td>
-            <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version);
-            ?></td>
-            <td class="cel_iversion"><?php echo scrub_out($installed_version);
-            ?></td>
-            <td class="cel_action"><?php echo $action;
-            ?></td>
+            } ?>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
+            <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
+            <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
+            <td class="cel_iversion"><?php echo scrub_out($installed_version); ?></td>
+            <td class="cel_action"><?php echo $action; ?></td>
         </tr>
         <?php 
         } if (!count($plugins)) {
             ?>
-        <tr class="<?php echo UI::flip_class();
-            ?>">
-            <td colspan="5"><span class="error"><?php echo T_('No Records Found');
-            ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="5"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
         </tr>
         <?php 
         } ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,10 +37,9 @@ interface library_item extends playable_item
 
     public function get_description();
 
-    public function display_art($thumb);
+    public function display_art($thumb, $force = false);
 
     public function update(array $data);
 
     public static function gc();
 } // end interface
-

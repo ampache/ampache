@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,27 +28,23 @@
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <?php
-                if (Access::check('interface','75')) {
+                if (Access::check('interface', '75')) {
                     ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
                     <td>
-                        <?php show_artist_select('artist', $libitem->artist, true, $libitem->id);
-                    ?>
+                        <?php show_artist_select('artist', $libitem->artist, true, $libitem->id); ?>
                         <div id="artist_select_song_<?php echo $libitem->id ?>">
-                            <?php echo Ajax::observe('artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("artist", ' . $libitem->id . ')');
-                    ?>
+                            <?php echo Ajax::observe('artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("artist", ' . $libitem->id . ')'); ?>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
                     <td>
-                        <?php show_album_select('album', $libitem->album, true, $libitem->id);
-                    ?>
+                        <?php show_album_select('album', $libitem->album, true, $libitem->id); ?>
                         <div id="album_select_song_<?php echo $libitem->id ?>">
-                            <?php echo Ajax::observe('album_select_' . $libitem->id, 'change', 'check_inline_song_edit("album", ' . $libitem->id . ')');
-                    ?>
+                            <?php echo Ajax::observe('album_select_' . $libitem->id, 'change', 'check_inline_song_edit("album", ' . $libitem->id . ')'); ?>
                         </div>
                     </td>
                 </tr>
@@ -65,8 +61,7 @@
                     <?php
                         if (Access::check('interface', 50)) {
                             ?>
-                            <input type="text" name="mbid" value="<?php echo $libitem->mbid;
-                            ?>" />
+                            <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                         <?php 
                         } else {
                             echo $libitem->mbid;
@@ -77,6 +72,10 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Composer') ?></td>
                 <td><input type="text" name="composer" value="<?php echo scrub_out($libitem->composer); ?>" /></td>
+          </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Comment') ?></td>
+                <td><input type="text" name="comment" value="<?php echo scrub_out($libitem->comment); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Label') ?></td>
@@ -98,11 +97,9 @@
                     <tr>
                         <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
                         <td>
-                            <?php show_license_select('license', $libitem->license, $libitem->id);
-                    ?>
+                            <?php show_license_select('license', $libitem->license, $libitem->id); ?>
                             <div id="album_select_license_<?php echo $libitem->license ?>">
-                                <?php echo Ajax::observe('license_select_' . $libitem->license, 'change', 'check_inline_song_edit("license", ' . $libitem->id . ')');
-                    ?>
+                                <?php echo Ajax::observe('license_select_' . $libitem->license, 'change', 'check_inline_song_edit("license", ' . $libitem->id . ')'); ?>
                             </div>
                         </td>
                     </tr>

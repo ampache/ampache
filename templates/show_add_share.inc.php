@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,11 +60,9 @@
 <?php if ((($_REQUEST['type'] == 'song' || $_REQUEST['type'] == 'video') && Access::check_function('download')) || Access::check_function('batch_download')) {
     ?>
 <tr>
-    <td><?php echo T_('Allow Download');
-    ?></td>
+    <td><?php echo T_('Allow Download'); ?></td>
     <td>
-        <input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : '';
-    ?> />
+        <input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
 <?php 

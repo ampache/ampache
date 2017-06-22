@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,14 +20,15 @@
  *
  */
 
-/**
- * Completely variable row does have UID for Ajax ($object->uid)
- * build TD's from $headers $key=>$header
- */
+require_once 'lib/init.php';
 
-?>
-<?php
-    foreach ($headers as $key=>$header) {
-        echo '<td>' . $object->$key . '</td>';
-    }
-?>
+session_start();
+
+$object_type = $_REQUEST['action'];
+if (!Core::is_library_item($object_type)) {
+    return UI::access_denied();
+}
+
+UI::show_header();
+require_once AmpConfig::get('prefix') . UI::find_template('show_mashup.inc.php');
+UI::show_footer();

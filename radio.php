@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        if (!Core::form_verify('add_radio','post')) {
+        if (!Core::form_verify('add_radio', 'post')) {
             UI::access_denied();
             exit;
         }
@@ -59,8 +59,14 @@ switch ($_REQUEST['action']) {
         } else {
             $body  = T_('Radio Station Added');
             $title = '';
-            show_confirmation($title,$body,AmpConfig::get('web_path') . '/browse.php?action=live_stream');
+            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=live_stream');
         }
+    break;
+    case 'show':
+    default:
+        $radio = new Live_Stream($_REQUEST['radio']);
+        $radio->format();
+        require AmpConfig::get('prefix') . UI::find_template('show_live_stream.inc.php');
     break;
 } // end data collection
 

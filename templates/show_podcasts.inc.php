@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,10 +26,7 @@ $thcount  = 5;
         <?php if (Access::check('interface', 75)) {
     ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path');
-    ?>/podcast.php?action=show_create"><?php echo UI::get_icon('add', T_('Add'));
-    ?> <?php echo T_('Subscribe Podcast');
-    ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Subscribe Podcast'); ?></a>
         </li>
         <?php 
 } ?>
@@ -43,32 +40,24 @@ $thcount  = 5;
         <tr class="th-top">
             <th class="cel_play essential"></th>
         <?php if (Art::is_enabled()) {
-    ++$thcount;
-    ?>
-            <th class="cel_cover"><?php echo T_('Art');
-    ?></th>
+    ++$thcount; ?>
+            <th class="cel_cover"><?php echo T_('Art'); ?></th>
         <?php 
 } ?>
-            <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_sort_title'); ?></th>
+            <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
             <?php if (User::is_registered()) {
     ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ++$thcount;
-    ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating');
-    ?></th>
+    ++$thcount; ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('userflags')) {
-    ++$thcount;
-    ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.');
-    ?></th>
+    ++$thcount; ?>
+                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
             <?php 
 } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
@@ -77,31 +66,24 @@ $thcount  = 5;
     <tbody>
         <?php
         if (AmpConfig::get('ratings')) {
-            Rating::build_cache('podcast',$object_ids);
+            Rating::build_cache('podcast', $object_ids);
         }
         if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('podcast',$object_ids);
+            Userflag::build_cache('podcast', $object_ids);
         }
 
         foreach ($object_ids as $podcast_id) {
             $libitem = new Podcast($podcast_id);
-            $libitem->format();
-            ?>
-        <tr id="podcast_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_podcast_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr id="podcast_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_podcast_row.inc.php'); ?>
         </tr>
         <?php 
         } ?>
         <?php if (!count($object_ids)) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No podcast found');
-    ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast found'); ?></span></td>
         </tr>
         <?php 
 } ?>
@@ -111,28 +93,23 @@ $thcount  = 5;
             <th class="cel_play"></th>
         <?php if (Art::is_enabled()) {
     ?>
-            <th class="cel_cover"><?php echo T_('Art');
-    ?></th>
+            <th class="cel_cover"><?php echo T_('Art'); ?></th>
         <?php 
 } ?>
-            <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'),'podcast_sort_title_bottom'); ?></th>
+            <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title_bottom'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
             <?php if (User::is_registered()) {
     ?>
                 <?php if (AmpConfig::get('ratings')) {
     ?>
-                    <th class="cel_rating"><?php echo T_('Rating');
-    ?></th>
+                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
                 <?php if (AmpConfig::get('userflags')) {
     ?>
-                    <th class="cel_userflag"><?php echo T_('Fav.');
-    ?></th>
+                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
                 <?php 
-}
-    ?>
+} ?>
             <?php 
 } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -81,25 +81,16 @@ $catalogs = Catalog::get_catalogs();
 <?php foreach ($catalogs as $catalog_id) {
     $catalog = Catalog::create_from_id($catalog_id);
     $catalog->format();
-    $stats = Catalog::get_stats($catalog_id);
-    ?>
+    $stats = Catalog::get_stats($catalog_id); ?>
     <tr>
-        <td class="cel_catalog"><?php echo $catalog->name;
-    ?></td>
-        <td class="cel_path"><?php echo scrub_out($catalog->f_path);
-    ?></td>
-        <td class="cel_lastverify"><?php echo scrub_out($catalog->f_update);
-    ?></td>
-        <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add);
-    ?></td>
-        <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean);
-    ?></td>
-        <td class="cel_songs"><?php echo scrub_out($stats['songs']);
-    ?></td>
-        <td class="cel_video"><?php echo scrub_out($stats['videos']);
-    ?></td>
-        <td class="cel_total"><?php echo scrub_out($stats['formatted_size']);
-    ?></td>
+        <td class="cel_catalog"><?php echo $catalog->name; ?></td>
+        <td class="cel_path"><?php echo scrub_out($catalog->f_path); ?></td>
+        <td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
+        <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
+        <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
+        <td class="cel_songs"><?php echo scrub_out($stats['songs']); ?></td>
+        <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
+        <td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
     </tr>
 <?php 
 } ?>

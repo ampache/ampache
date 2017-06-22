@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -475,7 +475,7 @@ class Album extends database_object implements library_item
      * @param string $artist
      * @return int[]
      */
-    public function get_songs($limit = 0,$artist='')
+    public function get_songs($limit = 0, $artist='')
     {
         $results = array();
 
@@ -808,7 +808,7 @@ class Album extends database_object implements library_item
         return $artist->get_description();
     }
 
-    public function display_art($thumb = 2)
+    public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
         $type = null;
@@ -817,14 +817,15 @@ class Album extends database_object implements library_item
             $id   = $this->id;
             $type = 'album';
         } else {
-            if (Art::has_db($this->artist_id, 'artist')) {
+            if (Art::has_db($this->artist_id, 'artist') || $force) {
                 $id   = $this->artist_id;
                 $type = 'artist';
             }
         }
 
         if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+            $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->f_name;
+            Art::display($type, $id, $title, $thumb, $this->link);
         }
     }
 
@@ -880,7 +881,7 @@ class Album extends database_object implements library_item
             // Update every song
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
-                Song::update_artist($artist,$song_id);
+                Song::update_artist($artist, $song_id);
             }
             $updated = true;
             Artist::gc();
@@ -897,8 +898,8 @@ class Album extends database_object implements library_item
                 $songs = $this->get_songs();
             }
             foreach ($songs as $song_id) {
-                Song::update_album($album_id,$song_id);
-                Song::update_year($year,$song_id);
+                Song::update_album($album_id, $song_id);
+                Song::update_year($year, $song_id);
                 Song::write_id3_for_song($song_id);
             }
             $current_id = $album_id;
@@ -1084,4 +1085,3 @@ class Album extends database_object implements library_item
         return $results;
     }
 } //end of album class
-

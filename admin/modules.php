@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
     case 'install_localplay':
         $localplay = new Localplay($_REQUEST['type']);
         if (!$localplay->player_loaded()) {
-            AmpError::add('general', T_('Install Failed, Controller Error'));
+            AmpError::add('general', T_('Failed to enable the module, Controller Error'));
             AmpError::display('general');
             break;
         }
@@ -44,21 +44,21 @@ switch ($_REQUEST['action']) {
 
         // Go ahead and enable Localplay (Admin->System) as we assume they want to do that
         // if they are enabling this
-        Preference::update('allow_localplay_playback','-1','1');
-        Preference::update('localplay_level',$GLOBALS['user']->id,'100');
-        Preference::update('localplay_controller',$GLOBALS['user']->id,$localplay->type);
+        Preference::update('allow_localplay_playback', '-1', '1');
+        Preference::update('localplay_level', $GLOBALS['user']->id, '100');
+        Preference::update('localplay_controller', $GLOBALS['user']->id, $localplay->type);
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = T_('Localplay Installed');
+        $title  = T_('localplay enabled');
         $body   = '';
-        show_confirmation($title ,$body, $url);
+        show_confirmation($title, $body, $url);
     break;
     case 'install_catalog_type':
         $type    = (string) scrub_in($_REQUEST['type']);
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Install Failed, Catalog Error'));
+            AmpError::add('general', T_('Failed to enable the module, Catalog Error'));
             AmpError::display('general');
             break;
         }
@@ -67,23 +67,23 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
-        $title  = T_('Plugin Installed');
+        $title  = T_('Module enabled');
         $body   = '';
-        show_confirmation($title ,$body, $url);
+        show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_localplay':
         $type  = (string) scrub_in($_REQUEST['type']);
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
-        $title = T_('Are you sure you want to remove this plugin?');
+        $title = T_('Are you sure you want to disable this module?');
         $body  = '';
-        show_confirmation($title,$body,$url,1);
+        show_confirmation($title, $body, $url, 1);
     break;
     case 'confirm_uninstall_catalog_type':
         $type  = (string) scrub_in($_REQUEST['type']);
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
-        $title = T_('Are you sure you want to remove this plugin?');
+        $title = T_('Are you sure you want to disable this module?');
         $body  = '';
-        show_confirmation($title,$body,$url,1);
+        show_confirmation($title, $body, $url, 1);
     break;
     case 'uninstall_localplay':
         $type = (string) scrub_in($_REQUEST['type']);
@@ -93,16 +93,16 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = T_('Plugin Deactivated');
+        $title  = T_('Module disabled');
         $body   = '';
-        show_confirmation($title,$body,$url);
+        show_confirmation($title, $body, $url);
     break;
     case 'uninstall_catalog_type':
         $type = (string) scrub_in($_REQUEST['type']);
 
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Uninstall Failed, Catalog Error'));
+            AmpError::add('general', T_('Failed to disable module, Catalog Error'));
             AmpError::display('general');
             break;
         }
@@ -110,24 +110,24 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
-        $title  = T_('Plugin Deactivated');
+        $title  = T_('Module disabled');
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
     case 'install_plugin':
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
-        if (!array_key_exists($_REQUEST['plugin'],$plugins)) {
-            debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1');
+        if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
+            debug_event('plugins', 'Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected', '1');
             break;
         }
         $plugin = new Plugin($_REQUEST['plugin']);
         if (!$plugin->install()) {
-            debug_event('plugins','Error: Plugin Install Failed, ' . $_REQUEST['plugin'],'1');
+            debug_event('plugins', 'Error: Plugin Install Failed, ' . $_REQUEST['plugin'], '1');
             $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
             $title  = T_('Unable to Install Plugin');
             $body   = '';
-            show_confirmation($title,$body,$url);
+            show_confirmation($title, $body, $url);
             break;
         }
 
@@ -136,22 +136,22 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title    = T_('Plugin Activated');
+        $title    = T_('Plugin enabled');
         $body     = '';
-        show_confirmation($title,$body,$url);
+        show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_plugin':
         $plugin   = scrub_in($_REQUEST['plugin']);
         $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
-        $title    = T_('Are you sure you want to remove this plugin?');
+        $title    = T_('Are you sure you want to disable this plugin?');
         $body     = '';
-        show_confirmation($title,$body,$url,1);
+        show_confirmation($title, $body, $url, 1);
     break;
     case 'uninstall_plugin':
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
-        if (!array_key_exists($_REQUEST['plugin'],$plugins)) {
-            debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1');
+        if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
+            debug_event('plugins', 'Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected', '1');
             break;
         }
         $plugin = new Plugin($_REQUEST['plugin']);
@@ -162,15 +162,15 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title  = T_('Plugin Deactivated');
+        $title  = T_('Plugin disabled');
         $body   = '';
-        show_confirmation($title,$body,$url);
+        show_confirmation($title, $body, $url);
     break;
     case 'upgrade_plugin':
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
-        if (!array_key_exists($_REQUEST['plugin'],$plugins)) {
-            debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1');
+        if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
+            debug_event('plugins', 'Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected', '1');
             break;
         }
         $plugin = new Plugin($_REQUEST['plugin']);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,7 +85,7 @@ class Waveform
                     $valid_types   = $song->get_stream_types();
 
                     if ($song->type != $transcode_to) {
-                        $basedir = AmpConfig::get('tmp_dir_path');
+                        $basedir = Core::get_tmp_dir();
                         if ($basedir) {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
                                 $tmpfile = tempnam($basedir, $transcode_to);
@@ -154,7 +154,7 @@ class Waveform
      */
     protected static function html2rgb($input)
     {
-        $input=($input[0]=="#")?substr($input, 1,6):substr($input, 0,6);
+        $input=($input[0]=="#")?substr($input, 1, 6):substr($input, 0, 6);
         return array(
             hexdec(substr($input, 0, 2)),
             hexdec(substr($input, 2, 2)),
@@ -224,6 +224,10 @@ class Waveform
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
         $img = imagecreatetruecolor($data_size / $detail, $height);
+        if ($img === false) {
+            debug_event('waveform', 'Cannot create image.', 1);
+            return null;
+        }
 
         // fill background of image
         if ($background == "") {
@@ -315,7 +319,7 @@ class Waveform
         imagedestroy($img);
 
         $imgdata = ob_get_contents();
-        ob_clean ();
+        ob_clean();
         return $imgdata;
     }
 
@@ -331,4 +335,3 @@ class Waveform
         return Dba::write($sql, array($waveform, $song_id));
     }
 } // Waveform class
-

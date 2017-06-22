@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,13 +26,11 @@
 <?php foreach ($fields as $key=>$field) {
     ?>
 <tr>
-    <td><?php echo $field['description'];
-    ?></td>
-    <td><input type="text" name="<?php echo $key;
-    ?>" value="<?php echo scrub_out($instance[$key]);
-    ?>" /></td>
+    <td><?php echo $field['description']; ?></td>
+    <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" /></td>
 </tr>
-<?php 
+<?php
+
 } ?>
 </table>
     <div class="formValidation">

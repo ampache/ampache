@@ -40,7 +40,7 @@ var currentAudioElement = undefined;
                 shuffleTime: 'slow'
             },
             swfPath: "<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/jplayer",
-            preload: 'none',
+            preload: 'auto',
             audioFullScreen: true,
             smoothPlayBar: true,
             keyEnabled: true,
@@ -84,8 +84,7 @@ if ($isVideo) {
                 height: "108px",
 <?php
 
-    }
-    ?>
+    } ?>
                 cssClass: "jp-video-360p"
 <?php
 
@@ -105,8 +104,7 @@ if ($isVideo) {
 <?php
 
     }
-}
-    ?>
+} ?>
             }
 <?php 
 } ?>
@@ -160,13 +158,13 @@ if (!$isVideo && !$isRadio && !$is_share) {
         echo "var artistobj = (currenti.attr('data-artist_id') !== 'undefined') ?'<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
         echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
         echo "var actionsobj = '|';";
-        if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface','25'))) {
+        if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', '25'))) {
             echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
         }
         echo "actionsobj += '<div id=\'action_buttons\'></div>';";
         if (AmpConfig::get('waveform') && !$is_share) {
             echo "var waveformobj = '';";
-            if (AmpConfig::get('sociable') && Access::check('interface','25')) {
+            if (AmpConfig::get('sociable') && Access::check('interface', '25')) {
                 echo "waveformobj += '<a href=\"#\" title=\"" . T_('Double click to post a new shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
             }
             echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
@@ -178,8 +176,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
     } else {
         echo "var titleobj = obj.title;";
         echo "var artistobj = obj.artist;";
-    }
-    ?>
+    } ?>
                 $('.playing_title').html(titleobj);
                 $('.playing_artist').html(artistobj);
 <?php
@@ -295,7 +292,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
 if (AmpConfig::get('webplayer_aurora')) {
     $atypes = array();
     foreach ($supplied as $stype) {
-        if ($stype == 'ogg') {
+        if ($stype == 'ogg' || $stype == 'oga') {
             // Ogg could requires vorbis/opus codecs
             if (!in_array('ogg', $atypes)) {
                 $atypes[] = 'ogg';
@@ -353,7 +350,7 @@ if ($is_share && $isVideo) {
 if ($iframed && !$is_share) {
     ?>
   <div class="jp-close">
-    <a href="javascript:ExitPlayer();" title="Close Player"><img src="images/close.png" border="0" /></a>
+    <a href="javascript:ExitPlayer();" title="Close Player"><img src="<?php echo AmpConfig::get('web_path') ?>/images/close.png" border="0" /></a><br />
   </div>
 <?php
 
@@ -370,8 +367,7 @@ if ($embed) {
 
 if (!$isVideo) {
     $containerClass = "jp-audio";
-    $playerClass    = "jp-jplayer-audio";
-    ?>
+    $playerClass    = "jp-jplayer-audio"; ?>
 <div class="playing_info">
     <div class="playing_artist"></div>
     <div class="playing_title"></div>
@@ -470,8 +466,7 @@ if ($isVideo) {
     ?>
             <div class="waveform"></div>
 <?php 
-}
-    ?>
+} ?>
 <?php 
 } ?>
         </div>
@@ -497,54 +492,46 @@ if ($isVideo) {
             echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script type="text/javascript">startBroadcast(\'' . $key . '\');</script>';
         } else {
             echo Broadcast::get_broadcast_link();
-        }
-    ?>
+        } ?>
         </div>
 <?php 
-}
-    ?>
+} ?>
 <?php if ($iframed) {
     ?>
         <?php if (Access::check('interface', '25')) {
     ?>
             <div class="action_button">
                 <a onclick="javascript:SaveToExistingPlaylist(event);">
-                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist'));
-    ?>
+                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')) ?>
                 </a>
             </div>
 
         <?php 
-}
-    ?>
+} ?>
         <div id="slideshow" class="slideshow action_button">
-            <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow'));
-    ?></a>
+            <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')) ?></a>
+        </div>
+        <div id="expandplaylistbtn" class="action_button">
+            <a href="javascript:TogglePlaylistExpand();"><?php echo UI::get_icon('multilines', T_('Expand/Collapse Playlist')) ?></a>
         </div>
 <?php if (AmpConfig::get('webplayer_html5')) {
     ?>
-        <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
-            <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer'));
-    ?></a>
+        <div class="action_button">
+            <a href="javascript:ShowVisualizer();"><?php echo UI::get_icon('visualizer', T_('Visualizer')) ?></a>
         </div>
         <div class="action_button">
-            <a href="javascript:ShowVisualizer();"><?php echo UI::get_icon('visualizer', T_('Visualizer'));
-    ?></a>
-        </div>
-        <div class="action_button">
-            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer Full-Screen'));
-    ?></a>
+            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer Full-Screen')) ?></a>
         </div>
         <div id="replaygainbtn" class="action_button">
-            <a href="javascript:ToggleReplayGain();"><?php echo UI::get_icon('replaygain', T_('ReplayGain'));
-    ?></a>
+            <a href="javascript:ToggleReplayGain();"><?php echo UI::get_icon('replaygain', T_('ReplayGain')) ?></a>
+        </div>
+        <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
+            <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')) ?></a>
         </div>
 <?php 
-}
-    ?>
+} ?>
 <?php 
-}
-    ?>
+} ?>
       </div>
 <?php 
 } ?>

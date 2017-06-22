@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,7 +76,9 @@ class vainfo
         }
         $this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']);
 
-        if ($this->islocal) {
+        $enabled_sources = (array) $this->get_metadata_order();
+
+        if (in_array('getID3', $enabled_sources) && $this->islocal) {
             // Initialize getID3 engine
             $this->_getID3 = new getID3();
 
@@ -206,7 +208,9 @@ class vainfo
             return true;
         }
 
-        if ($this->islocal) {
+        $enabled_sources = (array) $this->get_metadata_order();
+
+        if (in_array('getID3', $enabled_sources) && $this->islocal) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
             } catch (Exception $error) {
@@ -216,8 +220,6 @@ class vainfo
 
         /* Figure out what type of file we are dealing with */
         $this->type = $this->_get_type();
-
-        $enabled_sources = (array) $this->get_metadata_order();
 
         if (in_array('filename', $enabled_sources)) {
             $this->tags['filename'] = $this->_parse_filename($this->filename);
@@ -267,10 +269,10 @@ class vainfo
 
             if ($tagWriter->WriteTags()) {
                 if (!empty($tagWriter->warnings)) {
-                    debug_event('vainfo' , 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
+                    debug_event('vainfo', 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
                 }
             } else {
-                debug_event('vainfo' , 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
+                debug_event('vainfo', 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
             }
         }
     } // write_id3
@@ -689,7 +691,7 @@ class vainfo
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
-                debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
+                debug_event('vainfo', 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, '5');
 
                 return $type;
         }
@@ -883,25 +885,27 @@ class vainfo
             if (!empty($id3v2['TXXX'])) {
                 // Find the MBIDs for the album and artist
                 // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
+                // not a bug those strings are UTF-16 encoded
+                // getID3 has copies of text properly converted to utf-8 encoding in comments/text
                 foreach ($id3v2['TXXX'] as $txxx) {
                     switch (strtolower($this->trimAscii($txxx['description']))) {
                         case 'musicbrainz album id':
-                            $parsed['mb_albumid'] = $this->trimAscii($txxx['data']);
+                            $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'musicbrainz release group id':
-                            $parsed['mb_albumid_group'] = $this->trimAscii($txxx['data']);
+                            $parsed['mb_albumid_group'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'musicbrainz artist id':
-                            $parsed['mb_artistid'] = $this->trimAscii($txxx['data']);
+                            $parsed['mb_artistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'musicbrainz album artist id':
-                            $parsed['mb_albumartistid'] = $this->trimAscii($txxx['data']);
+                            $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'musicbrainz album type':
-                            $parsed['release_type'] = $this->trimAscii($txxx['data']);
+                            $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'catalognumber':
-                            $parsed['catalog_number'] = $this->trimAscii($txxx['data']);
+                            $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'replaygain_track_gain':
                             $parsed['replaygain_track_gain'] = floatval($txxx['data']);
@@ -1040,43 +1044,36 @@ class vainfo
     {
         $origin  = $filepath;
         $results = array();
-        if (strpos($filepath, '/') !== false) {
-            $slash_type      = '/';
-            $slash_type_preg = $slash_type;
-        } else {
-            $slash_type      = "\\";
-            $slash_type_preg = $slash_type . $slash_type;
-        }
-        $file = pathinfo($filepath,PATHINFO_FILENAME);
+        $file    = pathinfo($filepath, PATHINFO_FILENAME);
         
         if (in_array('tvshow', $this->gather_types)) {
             $season  = array();
             $episode = array();
             $tvyear  = array();
             $temp    = array();
-            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath,$tvyear);
+            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath, $tvyear);
             $results['year'] = !empty($tvyear) ? intval($tvyear[0]) : null;
         
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
-                $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~",$file,2);
+                $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~", $file, 2);
                 preg_match("~(?<=[Ss])\d+~", $file, $season);
                 preg_match("~(?<=[Ee])\d+~", $file, $episode);
             } else {
                 if (preg_match("~[\_\-\.\s](\d{1,2})[xX](\d{1,2})~", $file, $seasonEpisode)) {
-                    $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~",$file);
+                    $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~", $file);
                     preg_match("~\d+(?=[Xx])~", $file, $season);
                     preg_match("~(?<=[Xx])\d+~", $file, $episode);
                 } else {
                     if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
-                        $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",$file,3);
+                        $temp = preg_split("~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~", $file, 3);
                         preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
                         preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
                     } else {
                         if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
-                            $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                            $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
                             $season[0]  = $seasonEpisode[1];
                             if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
-                                $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~",$file);
+                                $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
                                 $season[0]  = $seasonEpisode[1];
                                 $episode[0] = $seasonEpisode[2];
                             }
@@ -1092,7 +1089,7 @@ class vainfo
 
             // Try to identify the show information from parent folder
             if (!$results['tvshow']) {
-                $folders = preg_split("~" . $slash_type . "~", $filepath, -1, PREG_SPLIT_NO_EMPTY);
+                $folders = preg_split("~" . DIRECTORY_SEPARATOR . "~", $filepath, -1, PREG_SPLIT_NO_EMPTY);
                 if ($results['tvshow_season'] && $results['tvshow_episode']) {
                     // We have season and episode, we assume parent folder is the tvshow name
                     $filetitle         = end($folders);
@@ -1129,67 +1126,79 @@ class vainfo
         }
         
         if (in_array('music', $this->gather_types) || in_array('clip', $this->gather_types)) {
-            // Combine the patterns
-            $pattern = preg_quote($this->_dir_pattern) . $slash_type_preg . preg_quote($this->_file_pattern);
-            
-            // Remove first left directories from filename to match pattern
-            $cntslash = substr_count($pattern, preg_quote($slash_type)) + 1;
-            $filepart = explode($slash_type, $filepath);
-            if (count($filepart) > $cntslash) {
-                $filepath = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
+            $patres  = vainfo::parse_pattern($filepath, $this->_dir_pattern, $this->_file_pattern);
+            $results = array_merge($results, $patres);
+            if ($this->islocal) {
+                $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
             }
-            
-            // Pull out the pattern codes into an array
-            preg_match_all('/\%\w/', $pattern, $elements);
-            
-            // Mangle the pattern by turning the codes into regex captures
-            $pattern = preg_replace('/\%[Ty]/', '([0-9]+?)', $pattern);
-            $pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
-            $pattern = str_replace('/', '\/', $pattern);
-            $pattern = str_replace(' ', '\s', $pattern);
-            $pattern = '/' . $pattern . '\..+$/';
-            
-            // Pull out our actual matches
-            preg_match($pattern, $filepath, $matches);
-            if ($matches != null) {
-                // The first element is the full match text
-                $matched = array_shift($matches);
-                debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filepath, 5);
-            
-                // Iterate over what we found
-                foreach ($matches as $key => $value) {
-                    $new_key = translate_pattern_code($elements['0'][$key]);
-                    if ($new_key) {
-                        $results[$new_key] = $value;
-                    }
-                }
+        }
+        return $results;
+    }
+    
+    public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
+    {
+        $results         = array();
+        $slash_type_preg = DIRECTORY_SEPARATOR;
+        if ($slash_type_preg == '\\') {
+            $slash_type_preg .= DIRECTORY_SEPARATOR;
+        }
+        // Combine the patterns
+        $pattern = preg_quote($dir_pattern) . $slash_type_preg . preg_quote($file_pattern);
 
-                $results['title'] = $results['title'] ?: basename($filepath);
-                if ($this->islocal) {
-                    $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
+        // Remove first left directories from filename to match pattern
+        $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
+        $filepart = explode(DIRECTORY_SEPARATOR, $filepath);
+        if (count($filepart) > $cntslash) {
+            $filepath = implode(DIRECTORY_SEPARATOR, array_slice($filepart, count($filepart) - $cntslash));
+        }
+
+        // Pull out the pattern codes into an array
+        preg_match_all('/\%\w/', $pattern, $elements);
+
+        // Mangle the pattern by turning the codes into regex captures
+        $pattern = preg_replace('/\%[Ty]/', '([0-9]+?)', $pattern);
+        $pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
+        $pattern = str_replace('/', '\/', $pattern);
+        $pattern = str_replace(' ', '\s', $pattern);
+        $pattern = '/' . $pattern . '\..+$/';
+
+        // Pull out our actual matches
+        preg_match($pattern, $filepath, $matches);
+        if ($matches != null) {
+            // The first element is the full match text
+            $matched = array_shift($matches);
+            debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filepath, 5);
+
+            // Iterate over what we found
+            foreach ($matches as $key => $value) {
+                $new_key = translate_pattern_code($elements['0'][$key]);
+                if ($new_key) {
+                    $results[$new_key] = $value;
                 }
             }
+
+            $results['title'] = $results['title'] ?: basename($filepath);
         }
         return $results;
     }
     
     private function removeCommonAbbreviations($name)
     {
-        $abbr         = explode(",",AmpConfig::get('common_abbr'));
-        $commonabbr   = preg_replace("~\n~", '',$abbr);
+        $abbr         = explode(",", AmpConfig::get('common_abbr'));
+        $commonabbr   = preg_replace("~\n~", '', $abbr);
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
 
        //scan for brackets, braces, etc and ignore case.
        for ($i=0; $i< count($commonabbr);$i++) {
            $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
        }
-        $string = preg_replace($commonabbr,'',$name);
+        $string = preg_replace($commonabbr, '', $name);
         return $string;
     }
     
     private function formatVideoName($name)
     {
-        return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.','_','-'], ' ', $name), "\s\t\n\r\0\x0B\.\_\-")));
+        return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name), "\s\t\n\r\0\x0B\.\_\-")));
     }
 
 
@@ -1243,4 +1252,3 @@ class vainfo
         return $data;
     }
 } // end class vainfo
-

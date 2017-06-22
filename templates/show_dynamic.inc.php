@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,11 +34,8 @@
             <?php
                 $fields = Song::get_fields();
                 foreach ($fields as $key=>$value) {
-                    $name = ucfirst(str_replace('_',' ',$key));
-                    ?>
-                <option value="<?php echo scrub_out($key);
-                    ?>"><?php echo scrub_out($name);
-                    ?></option>
+                    $name = ucfirst(str_replace('_', ' ', $key)); ?>
+                <option value="<?php echo scrub_out($key); ?>"><?php echo scrub_out($name); ?></option>
             <?php 
                 } ?>
             </select>
@@ -66,13 +63,13 @@
     </tr>
     <tr>
         <td>
-            <?php echo Ajax::button('?page=random&action=add_rule','add', T_('Add Rule'),'add_random_rule'); ?><?php echo T_('Add Rule'); ?>
+            <?php echo Ajax::button('?page=random&action=add_rule', 'add', T_('Add Rule'), 'add_random_rule'); ?><?php echo T_('Add Rule'); ?>
         </td>
         <td>
-            <?php echo Ajax::button('?page=random&action=save_rules','download', T_('Save Rules As'),'save_random_rules'); ?><?php echo T_('Save Rules As'); ?>
+            <?php echo Ajax::button('?page=random&action=save_rules', 'download', T_('Save Rules As'), 'save_random_rules'); ?><?php echo T_('Save Rules As'); ?>
         </td>
         <td colspan="2">
-            <?php echo Ajax::button('?page=random&action=load_rules','cog', T_('Load Saved Rules'),'load_random_rules'); ?><?php echo T_('Load Saved Rules'); ?>
+            <?php echo Ajax::button('?page=random&action=load_rules', 'cog', T_('Load Saved Rules'), 'load_random_rules'); ?><?php echo T_('Load Saved Rules'); ?>
         </td>
     </tr>
     <tr>

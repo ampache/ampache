@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,30 +45,19 @@ $web_path = AmpConfig::get('web_path');
                 $action_txt    = T_('Disable');
             } else {
                 $action        = 'install_localplay';
-                $action_txt    = T_('Activate');
-            }
-            ?>
-        <tr class="<?php echo UI::flip_class();
-            ?>">
-            <td class="cel_name"><?php echo scrub_out($localplay->f_name);
-            ?></td>
-            <td class="cel_description"><?php echo scrub_out($localplay->f_description);
-            ?></td>
-            <td class="cel_version"><?php echo scrub_out($localplay->f_version);
-            ?></td>
-            <td class="cel_action"><a href="<?php echo $web_path;
-            ?>/admin/modules.php?action=<?php echo $action;
-            ?>&amp;type=<?php echo urlencode($controller);
-            ?>"><?php echo $action_txt;
-            ?></a></td>
+                $action_txt    = T_('Enable');
+            } ?>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td class="cel_name"><?php echo scrub_out($localplay->f_name); ?></td>
+            <td class="cel_description"><?php echo scrub_out($localplay->f_description); ?></td>
+            <td class="cel_version"><?php echo scrub_out($localplay->f_version); ?></td>
+            <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type=<?php echo urlencode($controller); ?>"><?php echo $action_txt; ?></a></td>
         </tr>
         <?php 
         } if (!count($controllers)) {
             ?>
-        <tr class="<?php echo UI::flip_class();
-            ?>">
-            <td colspan="4"><span class="error"><?php echo T_('No Records Found');
-            ?></span></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="4"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
         </tr>
         <?php 
         } ?>
