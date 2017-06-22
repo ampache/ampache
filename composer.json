@@ -67,7 +67,8 @@
 		"pklauzinski/jscroll": "2.*",
 		"kumailht/responsive-elements": "dev-master",
 		"swisnl/jQuery-contextMenu": "2.1.*",
-		"blueimp/jQuery-File-Upload": "^9.18"
+		"blueimp/jQuery-File-Upload": "^9.18",
+		"krixon/xbmc-php-rpc": "dev-master"
     },
 	
 	"repositories":
@@ -79,6 +80,18 @@
 				"version": "dev-master",
 				"source": {
 					"url": "https://github.com/Afterster/php-echonest-api.git",
+					"type": "git",
+					"reference": "master"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "krixon/xbmc-php-rpc",
+				"version": "dev-master",
+				"source": {
+					"url": "https://github.com/krixon/xbmc-php-rpc.git",
 					"type": "git",
 					"reference": "master"
 				}
