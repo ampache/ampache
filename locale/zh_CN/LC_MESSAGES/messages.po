@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-05-09 18:57+0200\n"
+"POT-Creation-Date: 2017-06-23 17:50+0200\n"
 "PO-Revision-Date: 2017-05-05 16:01+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/"
@@ -976,7 +976,7 @@ msgid "The Broadcast has been deleted"
 msgstr "广播已删除"
 
 #: ../../browse.php:94 ../../lib/class/browse.class.php:262
-#: ../../templates/header.inc.php:410 ../../templates/sidebar_home.inc.php:40
+#: ../../templates/header.inc.php:414 ../../templates/sidebar_home.inc.php:40
 #: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/sidebar.light.inc.php:30
 msgid "Tag Cloud"
@@ -1133,7 +1133,7 @@ msgstr "磁盘"
 
 #: ../../lib/class/album.class.php:654 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:329 ../../lib/ui.lib.php:180
-#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:398
+#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:400
 #: ../../templates/show_label.inc.php:103
 #: ../../templates/show_labels.inc.php:47
 #: ../../templates/show_labels.inc.php:79
@@ -1563,7 +1563,7 @@ msgid "Radio Stations"
 msgstr "广播站"
 
 #: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:401
-#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:404
+#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:407
 #: ../../templates/show_user.inc.php:121
 #: ../../templates/sidebar_home.inc.php:41
 #: ../../templates/sidebar_home.inc.php:189
@@ -3268,7 +3268,7 @@ msgstr "错误"
 msgid "WARNING"
 msgstr "警告"
 
-#: ../../lib/general.lib.php:211
+#: ../../lib/general.lib.php:212
 #, php-format
 msgid "Unknown %s"
 msgstr "未知的 %s"
@@ -3524,12 +3524,12 @@ msgstr "如痴如醉"
 msgid "Off the Charts!"
 msgstr "我爱死它了！"
 
-#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:392
+#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:393
 #: ../../templates/sidebar.inc.php:33
 msgid "Home"
 msgstr "主页"
 
-#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:428
+#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:434
 #: ../../templates/show_add_upload.inc.php:26
 #: ../../templates/show_album.inc.php:197
 #: ../../templates/show_album.inc.php:198
@@ -3812,31 +3812,31 @@ msgstr "ampache 无法读取 %s"
 msgid "%s does not match site charset"
 msgstr "%s 不符合站点的字符集设置"
 
-#: ../../modules/catalog/local/local.catalog.php:474
+#: ../../modules/catalog/local/local.catalog.php:478
 msgid "N/A"
 msgstr "N/A"
 
-#: ../../modules/catalog/local/local.catalog.php:480
+#: ../../modules/catalog/local/local.catalog.php:484
 #, php-format
 msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
 "Second: [%s]"
 msgstr "目录更新完毕。总共用时：[%s]，媒体总数：[%s]，每秒处理媒体数：[%s]"
 
-#: ../../modules/catalog/local/local.catalog.php:558
+#: ../../modules/catalog/local/local.catalog.php:562
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr "%s 不存在或不可读"
 
-#: ../../modules/catalog/local/local.catalog.php:586
+#: ../../modules/catalog/local/local.catalog.php:590
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "目录的根不可读，正在停止清理"
 
-#: ../../modules/catalog/local/local.catalog.php:610
+#: ../../modules/catalog/local/local.catalog.php:614
 msgid "All files would be removed. Doing nothing"
 msgstr "所有文件会被清除。无事可做"
 
-#: ../../modules/catalog/local/local.catalog.php:652
+#: ../../modules/catalog/local/local.catalog.php:656
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
 msgstr "错误，文件未找到或大小为0：%s"
@@ -4579,20 +4579,20 @@ msgstr "登录"
 msgid "Register"
 msgstr "注册"
 
-#: ../../templates/header.inc.php:418 ../../templates/sidebar_home.inc.php:142
+#: ../../templates/header.inc.php:423 ../../templates/sidebar_home.inc.php:142
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
 msgstr "最喜爱"
 
-#: ../../templates/header.inc.php:503
+#: ../../templates/header.inc.php:509
 msgid "Error: Your config file is out of date!"
 msgstr "错误：你的配置文件已经过期！"
 
-#: ../../templates/header.inc.php:505
+#: ../../templates/header.inc.php:511
 msgid "Generate and download new config file"
 msgstr "生成和下载新的配置文件"
 
-#: ../../templates/header.inc.php:506
+#: ../../templates/header.inc.php:512
 msgid "Write new config file to disk"
 msgstr "向磁盘写入新的配置文件"
 
@@ -8383,7 +8383,7 @@ msgstr "无法删除此视频。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 17.02.2017 18:45:09 CET
+# Last Update: 09.05.2017 18:57:31 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

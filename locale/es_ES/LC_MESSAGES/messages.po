@@ -3,8 +3,8 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Alejandro Suarez <alejandroscf@gmail.com>, 2016
-# Auka Raiken, 2016
+# Alejandro Suarez <alejandroscf@gmail.com>, 2016-2017
+# Auka Raiken, 2016-2017
 # Fede Ubal <fefudito@hotmail.com>, 2016
 # Ivan, 2015-2016
 # Ivan, 2016
@@ -16,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-05-09 18:57+0200\n"
-"PO-Revision-Date: 2017-05-05 16:01+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2017-06-23 17:50+0200\n"
+"PO-Revision-Date: 2017-06-20 17:38+0000\n"
+"Last-Translator: Auka Raiken\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/ampache/ampache/"
 "language/es_ES/)\n"
 "Language: es_ES\n"
@@ -998,7 +998,7 @@ msgid "The Broadcast has been deleted"
 msgstr "La transmisión ha sido borrada"
 
 #: ../../browse.php:94 ../../lib/class/browse.class.php:262
-#: ../../templates/header.inc.php:410 ../../templates/sidebar_home.inc.php:40
+#: ../../templates/header.inc.php:414 ../../templates/sidebar_home.inc.php:40
 #: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/sidebar.light.inc.php:30
 msgid "Tag Cloud"
@@ -1155,7 +1155,7 @@ msgstr "Disco"
 
 #: ../../lib/class/album.class.php:654 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:329 ../../lib/ui.lib.php:180
-#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:398
+#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:400
 #: ../../templates/show_label.inc.php:103
 #: ../../templates/show_labels.inc.php:47
 #: ../../templates/show_labels.inc.php:79
@@ -1585,7 +1585,7 @@ msgid "Radio Stations"
 msgstr "Radios"
 
 #: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:401
-#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:404
+#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:407
 #: ../../templates/show_user.inc.php:121
 #: ../../templates/sidebar_home.inc.php:41
 #: ../../templates/sidebar_home.inc.php:189
@@ -1894,11 +1894,11 @@ msgstr "Tipo del catálogo objetivo incorrecto."
 
 #: ../../lib/class/podcast.class.php:301
 msgid "Cannot access the feed."
-msgstr ""
+msgstr "No puedo acceder al feed"
 
 #: ../../lib/class/podcast.class.php:305
 msgid "Cannot read the feed."
-msgstr ""
+msgstr "No puedo leer el feed."
 
 #: ../../lib/class/podcast_episode.class.php:156
 #: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:435
@@ -2363,7 +2363,7 @@ msgstr "Enlace directo temporal"
 
 #: ../../lib/class/shoutbox.class.php:232
 msgid "New shout on your content"
-msgstr ""
+msgstr "Nuevo shout en su contenido"
 
 #: ../../lib/class/shoutbox.class.php:233
 #, php-format
@@ -2378,6 +2378,15 @@ msgid ""
 "    %s\n"
 "    "
 msgstr ""
+"Ha recibido un shout de%s en su contenido  `%s`.\n"
+"\n"
+"\n"
+"    ----------------------\n"
+"    %s\n"
+"    ----------------------\n"
+"\n"
+"    %s\n"
+"    "
 
 #: ../../lib/class/shoutbox.class.php:310
 #: ../../templates/show_add_label.inc.php:80
@@ -3292,7 +3301,7 @@ msgstr "ERROR"
 msgid "WARNING"
 msgstr "AVISO"
 
-#: ../../lib/general.lib.php:211
+#: ../../lib/general.lib.php:212
 #, php-format
 msgid "Unknown %s"
 msgstr "Desconocido %s"
@@ -3554,12 +3563,12 @@ msgstr "¡Es una locura!"
 msgid "Off the Charts!"
 msgstr "¡Fuera de serie!"
 
-#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:392
+#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:393
 #: ../../templates/sidebar.inc.php:33
 msgid "Home"
 msgstr "Inicio"
 
-#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:428
+#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:434
 #: ../../templates/show_add_upload.inc.php:26
 #: ../../templates/show_album.inc.php:197
 #: ../../templates/show_album.inc.php:198
@@ -3675,11 +3684,13 @@ msgstr "Incapaz de Insertar Canción - %s"
 
 #: ../../modules/catalog/beets/beets.catalog.php:85
 msgid "Beets Database File"
-msgstr ""
+msgstr "Archivo DDBB Beets"
 
 #: ../../modules/catalog/beets/beets.catalog.php:102
 msgid "Error: Beets selected, but no Beets DB File provided"
 msgstr ""
+"Error: Se ha seleccionado Beets, pero no se ha proporcionado un archivo de "
+"BBDD Beets"
 
 #: ../../modules/catalog/beets/beets.catalog.php:112
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:113
@@ -3694,11 +3705,11 @@ msgstr "Error: Catálogo con %s ya existe"
 
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:86
 msgid "Beets Server URI"
-msgstr ""
+msgstr "URI del servidor Beets"
 
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:103
 msgid "Error: Beets selected, but path is not a URL"
-msgstr ""
+msgstr "Error: Se ha seleccionado Beets, pero no la ruta URI apropiada"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:68
 msgid "Go to https://www.dropbox.com/developers/apps/create"
@@ -3722,6 +3733,8 @@ msgid ""
 "Select 'Specific file types' at 'What type of files does your app need "
 "access to?'"
 msgstr ""
+"Seleccione 'Tipos de archivos especificos' en '¿Que tipo de archivos "
+"necesita acceso su app?'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Check Videos and Audio files"
@@ -3840,11 +3853,11 @@ msgstr "%s no es legible por ampache"
 msgid "%s does not match site charset"
 msgstr "%s no coincide con el juego de caracteres"
 
-#: ../../modules/catalog/local/local.catalog.php:474
+#: ../../modules/catalog/local/local.catalog.php:478
 msgid "N/A"
 msgstr "N/A"
 
-#: ../../modules/catalog/local/local.catalog.php:480
+#: ../../modules/catalog/local/local.catalog.php:484
 #, php-format
 msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
@@ -3853,20 +3866,20 @@ msgstr ""
 "Finalizada Actualización de Catálogo: Tiempo Total: [%s] Medios Totales: "
 "[%s] Media por Segundo: [%s]"
 
-#: ../../modules/catalog/local/local.catalog.php:558
+#: ../../modules/catalog/local/local.catalog.php:562
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr "%s no existe o no es legible"
 
-#: ../../modules/catalog/local/local.catalog.php:586
+#: ../../modules/catalog/local/local.catalog.php:590
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Raiz del Catálogo ilegible, deteniendo limpieza"
 
-#: ../../modules/catalog/local/local.catalog.php:610
+#: ../../modules/catalog/local/local.catalog.php:614
 msgid "All files would be removed. Doing nothing"
 msgstr "Se suprimirían todos los ficheros. No haciendo nada"
 
-#: ../../modules/catalog/local/local.catalog.php:652
+#: ../../modules/catalog/local/local.catalog.php:656
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
 msgstr "Error Fichero No Encontrado o 0 Bytes: %s"
@@ -4626,20 +4639,20 @@ msgstr "Iniciar sesión"
 msgid "Register"
 msgstr "Registrar"
 
-#: ../../templates/header.inc.php:418 ../../templates/sidebar_home.inc.php:142
+#: ../../templates/header.inc.php:423 ../../templates/sidebar_home.inc.php:142
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
 msgstr "Favoritos"
 
-#: ../../templates/header.inc.php:503
+#: ../../templates/header.inc.php:509
 msgid "Error: Your config file is out of date!"
 msgstr "Error: Su fichero de configuración esta desfasado"
 
-#: ../../templates/header.inc.php:505
+#: ../../templates/header.inc.php:511
 msgid "Generate and download new config file"
 msgstr "Generar y descargar el nuevo fichero de configuración"
 
-#: ../../templates/header.inc.php:506
+#: ../../templates/header.inc.php:512
 msgid "Write new config file to disk"
 msgstr "Escribir en disco el nuevo fichero de configuración"
 
@@ -5194,7 +5207,7 @@ msgstr "Suscribir al podcast"
 
 #: ../../templates/show_add_podcast.inc.php:27
 msgid "Podcast feed url"
-msgstr ""
+msgstr "URL del feed de podcast"
 
 #: ../../templates/show_add_podcast.inc.php:43
 msgid "Subscribe"
@@ -6262,7 +6275,7 @@ msgstr "Autor"
 
 #: ../../templates/show_edit_podcast_row.inc.php:27
 msgid "Feed"
-msgstr ""
+msgstr "Feed"
 
 #: ../../templates/show_edit_podcast_row.inc.php:39
 msgid "Language"
@@ -7150,7 +7163,7 @@ msgstr "Navegar por la Biblioteca"
 
 #: ../../templates/show_mashup.inc.php:31
 msgid "Trending"
-msgstr ""
+msgstr "Popular"
 
 #: ../../templates/show_mashup.inc.php:41
 #: ../../templates/sidebar_home.inc.php:131
@@ -7164,7 +7177,7 @@ msgstr "Populares"
 
 #: ../../templates/show_missing_album.inc.php:54
 msgid "Wanted actions"
-msgstr ""
+msgstr "Acciones requeridas"
 
 #: ../../templates/show_missing_albums.inc.php:50
 msgid "No missing albums found"
@@ -7645,7 +7658,7 @@ msgstr "Compartido por"
 
 #: ../../templates/show_shares.inc.php:27
 msgid "Clean expired shared objects"
-msgstr ""
+msgstr "Eliminar objetos compartidos expirados"
 
 #: ../../templates/show_song.inc.php:60
 msgid "Waveform"
@@ -7666,11 +7679,11 @@ msgstr "Número de catálogo"
 
 #: ../../templates/show_song.inc.php:180
 msgid "ReplayGain Track Gain"
-msgstr ""
+msgstr "ReplayGain Ganancia de Pista"
 
 #: ../../templates/show_song.inc.php:183
 msgid "ReplayGain Album Gain"
-msgstr ""
+msgstr "ReplayGain Ganancia de Album"
 
 #: ../../templates/show_song.inc.php:189 ../../templates/show_video.inc.php:159
 msgid "Last Updated"
@@ -7770,13 +7783,15 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:48
 msgid "PHP hash extension"
-msgstr ""
+msgstr "Extensión hash para PHP"
 
 #: ../../templates/show_test_table.inc.php:53
 msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
+"Este test comprueba si la extensión hash está activada. Esta extensión es "
+"necesaria para Ampache."
 
 #: ../../templates/show_test_table.inc.php:57
 msgid "SHA256"
@@ -7787,16 +7802,20 @@ msgid ""
 "This tests whether the hash extension supports SHA256. This algorithm is "
 "required by Ampache."
 msgstr ""
+"Este test comprueba si la extensión hash soporta SHA256. Este algoritmo es "
+"necesario para Ampache."
 
 #: ../../templates/show_test_table.inc.php:66
 msgid "PHP PDO extension"
-msgstr ""
+msgstr "Extensión PDO para PHP"
 
 #: ../../templates/show_test_table.inc.php:71
 msgid ""
 "This tests whether you have the PDO extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
+"Este test comprueba si la extensión PDO está activada. Esta extensión es "
+"necesaria para Ampache."
 
 #: ../../templates/show_test_table.inc.php:75
 msgid "MySQL"
@@ -7810,73 +7829,88 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:84
 msgid "PHP session extension"
-msgstr ""
+msgstr "Extensión session para PHP"
 
 #: ../../templates/show_test_table.inc.php:89
 msgid ""
 "This tests whether you have the session extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
+"Este test comprueba si la extensión session está activada. Esta extensión es "
+"necesaria para Ampache."
 
 #: ../../templates/show_test_table.inc.php:93
 msgid "PHP iconv extension"
-msgstr ""
+msgstr "Extensión iconv para PHP"
 
 #: ../../templates/show_test_table.inc.php:98
 msgid ""
 "This tests whether you have the iconv extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
+"Este test comprueba si la extensión iconv está activada. Esta extensión es "
+"necesaria para Ampache."
 
 #: ../../templates/show_test_table.inc.php:102
 msgid "PHP JSON extension"
-msgstr ""
+msgstr "Extensión de PHP JSON"
 
 #: ../../templates/show_test_table.inc.php:107
 msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
+"Este test comprueba si la extensión JSON está activada. Esta extensión es "
+"necesaria para Ampache."
 
 #: ../../templates/show_test_table.inc.php:111
 msgid "PHP curl extension"
-msgstr ""
+msgstr "Extensión curl para PHP"
 
 #: ../../templates/show_test_table.inc.php:116
 msgid ""
 "This tests whether you have the curl extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
 msgstr ""
+"Este test comprueba si la extensión curl está activada. Esta extensión no es "
+"estrictamente necesaria, pero puede ofrecerle una mejor experiencia."
 
 #: ../../templates/show_test_table.inc.php:120
 msgid "PHP zlib extension"
-msgstr ""
+msgstr "Extensión zlib para PHP"
 
 #: ../../templates/show_test_table.inc.php:125
 msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly "
 "necessary, but may result in a better experience (zip download)."
 msgstr ""
+"Este test comprueba si la extensión zlib está activada. Esta extensión no es "
+"estrictamente necesaria, pero puede ofrecerle una mejor experiencia "
+"(descarga en zip)."
 
 #: ../../templates/show_test_table.inc.php:129
 msgid "PHP simplexml extension"
-msgstr ""
+msgstr "Extensión simplexml para PHP"
 
 #: ../../templates/show_test_table.inc.php:134
 msgid ""
 "This tests whether you have the simplexml extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
 msgstr ""
+"Este test comprueba si la extensión simplexml está activada. Esta extensión "
+"no es estrictamente necesaria, pero puede ofrecerle una mejor experiencia."
 
 #: ../../templates/show_test_table.inc.php:138
 msgid "PHP GD extension"
-msgstr ""
+msgstr "Extensión GD para PHP"
 
 #: ../../templates/show_test_table.inc.php:143
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
 msgstr ""
+"Este test comprueba si la extensión GD está activada. Esta extensión no es "
+"estrictamente necesaria, pero puede ofrecerle una mejor experiencia."
 
 #: ../../templates/show_test_table.inc.php:147
 msgid "PHP safe mode disabled"
@@ -8428,7 +8462,7 @@ msgstr "No se puede eliminar este vídeo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 17.02.2017 18:45:09 CET
+# Last Update: 09.05.2017 18:57:31 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8472,11 +8506,11 @@ msgstr "Tema"
 
 #: Database preference table id 40
 msgid "Localplay Access"
-msgstr ""
+msgstr "Reproducción Local Acceso"
 
 #: Database preference table id 41
 msgid "Localplay Type"
-msgstr ""
+msgstr "Reproducción Local Tipo"
 
 #: Database preference table id 44
 msgid "Allow Streaming"
@@ -8488,7 +8522,7 @@ msgstr "Permitir reproducción democrática"
 
 #: Database preference table id 46
 msgid "Allow Localplay Play"
-msgstr ""
+msgstr "Permitir "
 
 #: Database preference table id 47
 msgid "Statistics Day Threshold"
@@ -8648,11 +8682,11 @@ msgstr ""
 
 #: Database preference table id 106
 msgid "Limit number of future events"
-msgstr ""
+msgstr "Limitar el número de eventos futuros"
 
 #: Database preference table id 107
 msgid "Limit number of past events"
-msgstr ""
+msgstr "Limitar el número de eventos pasados"
 
 #: Database preference table id 108
 msgid "Album - Group multiple disks"
@@ -8680,33 +8714,35 @@ msgstr "Permitir a usuarios subir medios"
 
 #: Database preference table id 114
 msgid "Upload: create a subdirectory per user (recommended)"
-msgstr ""
+msgstr "Subir: crear un subdirectorio por usuario (recomendado)"
 
 #: Database preference table id 115
 msgid "Upload: consider the user sender as the track's artist"
-msgstr ""
+msgstr "Subir: considerar al usuario que envía como artista de la pista"
 
 #: Database preference table id 116
 msgid ""
 "Upload: run the following script after upload (current directory = upload "
 "target directory)"
 msgstr ""
+"Subir: ejecutar el siguiente script despues de la carga (directorio actual = "
+"directorio objetivo de la carga)"
 
 #: Database preference table id 117
 msgid "Upload: allow users to edit uploaded songs"
-msgstr ""
+msgstr "Subir: permitir a los usuarios editar las canciones subidas."
 
 #: Database preference table id 118
 msgid "Use DAAP backend"
-msgstr ""
+msgstr "Usar DAAP backend"
 
 #: Database preference table id 119
 msgid "DAAP backend password"
-msgstr ""
+msgstr "Contraseña de DAAP backend"
 
 #: Database preference table id 120
 msgid "Use UPnP backend"
-msgstr ""
+msgstr "Usar UPnP backend"
 
 #: Database preference table id 121
 msgid "Allow video features"
