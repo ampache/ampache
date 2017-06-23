@@ -181,6 +181,7 @@ function get_languages()
                 case 'fr_FR'; $name = 'Fran&#231;ais'; break; /* French */
                 case 'ga_IE'; $name = 'Gaeilge'; break; /* Irish */
                 case 'hu_HU'; $name = 'Magyar'; break; /* Hungarian */
+                case 'id_ID'; $name = 'Indonesia'; break; /* Indonesian */
                 case 'is_IS'; $name = 'Icelandic'; break; /* Icelandic */
                 case 'it_IT'; $name = 'Italiano'; break; /* Italian */
                 case 'ja_JP'; $name = '&#x65e5;&#x672c;&#x8a9e;'; break; /* Japanese */
