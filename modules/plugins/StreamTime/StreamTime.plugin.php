@@ -55,6 +55,7 @@ class AmpacheStreamTime
         }
         Preference::insert('stream_control_time_max', 'Stream control maximal time (Minutes)', '-1', '50', 'integer', 'plugins', $this->name);
         Preference::insert('stream_control_time_days', 'Stream control time history (days)', '30', '50', 'integer', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -67,6 +68,7 @@ class AmpacheStreamTime
     {
         Preference::delete('stream_control_time_max');
         Preference::delete('stream_control_time_days');
+
         return true;
     } // uninstall
 
@@ -112,7 +114,7 @@ class AmpacheStreamTime
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)

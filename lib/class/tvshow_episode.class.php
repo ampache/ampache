@@ -43,7 +43,7 @@ class TVShow_Episode extends Video
         parent::__construct($id);
 
         $info = $this->get_info($id);
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -97,6 +97,7 @@ class TVShow_Episode extends Video
         // Replace relation name with db ids
         $sdata['tvshow']        = $tvshow;
         $sdata['tvshow_season'] = $tvshow_season;
+
         return self::create($sdata);
     }
 
@@ -210,6 +211,7 @@ class TVShow_Episode extends Video
         }
 
         $season = new TVShow_Season($this->season);
+
         return $season->get_description();
     }
 

@@ -245,6 +245,7 @@ class Session
 
         if (!$db_results) {
             debug_event('session', 'Session creation failed', '1');
+
             return false;
         }
 
@@ -359,6 +360,7 @@ class Session
     public static function update_username($sid, $username)
     {
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
+
         return Dba::write($sql, array($username, $sid));
     }
 
@@ -504,6 +506,7 @@ class Session
     public static function storeTokenForUser($username, $token, $remember_length)
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
+
         return Dba::write($sql, array($username, $token, time() + $remember_length));
     }
 

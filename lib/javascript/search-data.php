@@ -37,6 +37,7 @@ function arrayToJSON($array)
         $json .= ' , ';
     }
     $json = rtrim($json, ', ');
+
     return $json . ' }';
 }
 

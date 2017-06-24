@@ -79,6 +79,7 @@ class Podcast_Episode extends database_object implements media, library_item
             }
         } else {
             $this->id = null;
+
             return false;
         }
 
@@ -121,11 +122,11 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_state       = ucfirst($this->state);
         
         // Format the Time
-        $min            = floor($this->time/60);
-        $sec            = sprintf("%02d", ($this->time%60));
+        $min            = floor($this->time / 60);
+        $sec            = sprintf("%02d", ($this->time % 60));
         $this->f_time   = $min . ":" . $sec;
-        $hour           = sprintf("%02d", floor($min/60));
-        $min_h          = sprintf("%02d", ($min%60));
+        $hour           = sprintf("%02d", floor($min / 60));
+        $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
         // Format the Size
         $this->f_size = UI::format_bytes($this->size);
@@ -188,6 +189,7 @@ class Podcast_Episode extends database_object implements media, library_item
                 'object_id' => $this->id
             );
         }
+
         return $medias;
     }
     
@@ -370,12 +372,14 @@ class Podcast_Episode extends database_object implements media, library_item
         }
         
         $sql = "DELETE FROM `podcast_episode` WHERE `id` = ?";
+
         return Dba::write($sql, array($this->id));
     }
     
     public function change_state($state)
     {
         $sql = "UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($state, $this->id));
     }
     

@@ -47,6 +47,7 @@ class AmpacheLastfm
     public function __construct()
     {
         $this->url = $this->scheme . '://' . $this->host;
+
         return true;
     } // constructor
 
@@ -98,6 +99,7 @@ class AmpacheLastfm
             Preference::delete('lastfm_port');
             Preference::insert('lastfm_grant_link', 'Last.FM Grant URL', '', '25', 'string', 'plugins');
         }
+
         return true;
     } // upgrade
 
@@ -114,6 +116,7 @@ class AmpacheLastfm
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
             debug_event($this->name, 'Session key missing', '5');
+
             return false;
         }
 
@@ -125,11 +128,13 @@ class AmpacheLastfm
         // Make sure it wasn't within the last min
         if ($diff < 60) {
             debug_event($this->name, 'Last song played within ' . $diff . ' seconds, not recording stats', '3');
+
             return false;
         }
 
         if ($song->time < 30) {
             debug_event($this->name, 'Song less then 30 seconds not queueing', '3');
+
             return false;
         }
 
@@ -144,6 +149,7 @@ class AmpacheLastfm
         // Go ahead and submit it now
         if (!$scrobbler->submit_tracks()) {
             debug_event($this->name, 'Error Submit Failed: ' . $scrobbler->error_msg, '3');
+
             return false;
         }
 
@@ -161,15 +167,18 @@ class AmpacheLastfm
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
             debug_event($this->name, 'Session key missing', '5');
+
             return false;
         }
         // Create our scrobbler and then queue it
         $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
         if (!$scrobbler->love($flagged, 'song', $song->f_artist_full, $song->title, $song->f_album_full)) {
             debug_event($this->name, 'Error Love Failed: ' . $scrobbler->error_msg, '3');
+
             return false;
         }
         debug_event($this->name, 'Sent Love Successfully', '5');
+
         return true;
     } // set_flag
 
@@ -184,6 +193,7 @@ class AmpacheLastfm
         $session_key = $scrobbler->get_session_key($token);
         if (!$session_key) {
             debug_event($this->name, 'getSession Failed: ' . $scrobbler->error_msg, '3');
+
             return false;
         }
         $this->challenge = $session_key;
@@ -212,6 +222,7 @@ class AmpacheLastfm
             $this->challenge= trim($data['lastfm_challenge']);
         } else {
             debug_event($this->name, 'No session key, not scrobbling (need to grant Ampache to last.fm)', '5');
+
             return false;
         }
 

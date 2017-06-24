@@ -84,6 +84,7 @@ abstract class Catalog extends \Catalog
     public function prepare_media($media)
     {
         debug_event('play', 'Started remote stream - ' . $media->file, 5);
+
         return $media;
     }
 
@@ -200,6 +201,7 @@ abstract class Catalog extends \Catalog
             AmpError::display('general');
         }
         flush();
+
         return $inserted;
     }
 
@@ -218,6 +220,7 @@ abstract class Catalog extends \Catalog
         $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));
         $this->updateUi('verify', $this->verifiedSongs, null, true);
         $this->update_last_update();
+
         return array('updated' => $this->verifiedSongs, 'total' => $this->verifiedSongs);
     }
 
@@ -257,6 +260,7 @@ abstract class Catalog extends \Catalog
             \Lib\Metadata\Repository\MetadataField::gc();
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
+
         return $count;
     }
 
@@ -296,6 +300,7 @@ abstract class Catalog extends \Catalog
         $db_results = Dba::read($sql, array($path));
 
         $row = Dba::fetch_row($db_results);
+
         return isset($row) ? $row[0] : false;
     }
 
@@ -312,6 +317,7 @@ abstract class Catalog extends \Catalog
         while ($row = Dba::fetch_row($db_results)) {
             $files[$row[0]] = $row[1];
         }
+
         return $files;
     }
 

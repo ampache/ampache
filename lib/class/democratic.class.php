@@ -58,7 +58,7 @@ class Democratic extends Tmp_Playlist
 
         $info = $this->get_info($id);
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
     } // constructor
@@ -294,11 +294,13 @@ class Democratic extends Tmp_Playlist
         if ($this->base_playlist) {
             $base_playlist = new Playlist($this->base_playlist);
             $data          = $base_playlist->get_random_items(1);
+
             return $data[0]['object_id'];
         } else {
             $sql        = "SELECT `id` FROM `song` WHERE `enabled`='1' ORDER BY RAND() LIMIT 1";
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_assoc($db_results);
+
             return $results['id'];
         }
     } // get_next_object
@@ -542,8 +544,8 @@ class Democratic extends Tmp_Playlist
         if ($db_results) {
             $insert_id = Dba::insert_id();
             parent::create(array(
-                'session_id'  => $insert_id,
-                'type'        => 'vote',
+                'session_id' => $insert_id,
+                'type' => 'vote',
                 'object_type' => 'song'
             ));
         }
@@ -624,6 +626,7 @@ class Democratic extends Tmp_Playlist
 
         $results = Dba::fetch_assoc($db_results);
         parent::add_to_cache('democratic_vote', $id, $results['count']);
+
         return $results['count'];
     } // get_vote
 
@@ -646,6 +649,7 @@ class Democratic extends Tmp_Playlist
             $voters[] = $results['user'];
         }
         parent::add_to_cache('democratic_vote', $object_id, $voters);
+
         return $voters;
     } // get_voters
 } // Democratic class

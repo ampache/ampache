@@ -37,13 +37,13 @@
     </div>
 </td>
 <?php if (AmpConfig::get('playlist_art')) {
-    ?>
+        ?>
 <td class="cel_cover">
     <?php
     $libitem->display_art(3); ?>
 </td>
-<?php 
-} ?>
+<?php
+    } ?>
 <td class="cel_playlist"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
@@ -54,7 +54,7 @@
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'playlist', '<?php echo $libitem->id ?>')">
                 <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
             </a>
-        <?php 
+        <?php
             }
         ?>
     </span>
@@ -68,12 +68,12 @@
         if (AmpConfig::get('ratings')) {
             ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_playlist"><?php Rating::show($libitem->id, 'playlist'); ?></td>
-    <?php 
+    <?php
         }
         if (AmpConfig::get('userflags')) {
             ?>
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_playlist"><?php Userflag::show($libitem->id, 'playlist'); ?></td>
-    <?php 
+    <?php
         }
     }
 ?>
@@ -84,7 +84,7 @@
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
-<?php 
+<?php
     }
     if (Access::check('interface', '25')) {
         if (AmpConfig::get('share')) {

@@ -37,16 +37,16 @@ $thcount  = 7;
             <?php if (User::is_registered()) {
     ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ++$thcount; ?>
+        ++$thcount; ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php 
-} ?>
+                <?php
+    } ?>
                 <?php if (AmpConfig::get('userflags')) {
-    ++$thcount; ?>
+        ++$thcount; ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-                <?php 
-} ?>
-            <?php 
+                <?php
+    } ?>
+            <?php
 } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
@@ -66,24 +66,24 @@ $thcount  = 7;
         <tr id="podcast_episode_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_podcast_episode_row.inc.php'); ?>
         </tr>
-        <?php 
+        <?php
         } ?>
         <?php if (!count($object_ids)) {
-    ?>
+            ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast episode found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
         <?php if (Art::is_enabled()) {
-    ?>
+            ?>
             <th class="cel_cover"><?php echo T_('Art'); ?></th>
-        <?php 
-} ?>
+        <?php
+        } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_episode_sort_title_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>
@@ -91,24 +91,24 @@ $thcount  = 7;
             <th class="cel_pubdate"><?php echo T_('Publication Date'); ?></th>
             <th class="cel_state"><?php echo T_('State'); ?></th>
             <?php if (User::is_registered()) {
-    ?>
+            ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ?>
+                ?>
                     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                <?php 
-} ?>
+                <?php
+            } ?>
                 <?php if (AmpConfig::get('userflags')) {
-    ?>
+                ?>
                     <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-                <?php 
-} ?>
-            <?php 
-} ?>
+                <?php
+            } ?>
+            <?php
+        } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>
         </tr>
     <tfoot>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

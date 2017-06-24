@@ -41,6 +41,7 @@ class Openid
             debug_event('openid', 'Could not access/create the FileStore directory ' . $store_path . '. Please check the effective permissions.', '5');
         } else {
             $store = new Auth_OpenID_FileStore($store_path);
+
             return $store;
         }
 
@@ -54,6 +55,7 @@ class Openid
         if ($store) {
             $consumer = new Auth_OpenID_Consumer($store);
         }
+
         return $consumer;
     }
 

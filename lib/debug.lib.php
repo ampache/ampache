@@ -43,6 +43,7 @@ function check_php_version()
     if (floatval(phpversion()) < 5.3) {
         return false;
     }
+
     return true;
 }
 
@@ -86,6 +87,7 @@ function check_mbstring_func_overload()
     if (ini_get('mbstring.func_overload') > 0) {
         return false;
     }
+
     return true;
 }
 
@@ -138,7 +140,7 @@ function check_config_values($conf)
 function check_php_memory()
 {
     $current_memory = ini_get('memory_limit');
-    $current_memory = substr($current_memory, 0, strlen($current_memory)-1);
+    $current_memory = substr($current_memory, 0, strlen($current_memory) - 1);
 
     if (intval($current_memory) < 48) {
         return false;
@@ -155,6 +157,7 @@ function check_php_memory()
 function check_php_timelimit()
 {
     $current = intval(ini_get('max_execution_time'));
+
     return ($current >= 60 || $current == 0);
 } // check_php_timelimit
 
@@ -167,6 +170,7 @@ function check_php_safemode()
     if (ini_get('safe_mode')) {
         return false;
     }
+
     return true;
 }
 
@@ -178,8 +182,8 @@ function check_override_memory()
 {
     /* Check memory */
     $current_memory = ini_get('memory_limit');
-    $current_memory = substr($current_memory, 0, strlen($current_memory)-1);
-    $new_limit      = ($current_memory+16) . "M";
+    $current_memory = substr($current_memory, 0, strlen($current_memory) - 1);
+    $new_limit      = ($current_memory + 16) . "M";
 
     /* Bump it by 16 megs (for getid3)*/
     if (!ini_set('memory_limit', $new_limit)) {
@@ -203,7 +207,7 @@ function check_override_memory()
 function check_override_exec_time()
 {
     $current = ini_get('max_execution_time');
-    set_time_limit($current+60);
+    set_time_limit($current + 60);
 
     if ($current == ini_get('max_execution_time')) {
         return false;
@@ -248,7 +252,7 @@ function check_php_gd()
 function return_bytes($val)
 {
     $val  = trim($val);
-    $last = strtolower($val[strlen($val)-1]);
+    $last = strtolower($val[strlen($val) - 1]);
     switch ($last) {
         // The 'G' modifier is available since PHP 5.1.0
         case 'g':

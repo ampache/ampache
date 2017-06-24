@@ -40,7 +40,7 @@ class Movie extends Video
         parent::__construct($id);
 
         $info = $this->get_info($id);
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 

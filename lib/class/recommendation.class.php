@@ -324,6 +324,7 @@ class Recommendation
                 $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
                 $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto']   = $results['largephoto'];
+
                 return $results;
             }
         }

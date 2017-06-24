@@ -68,5 +68,6 @@ function send_newpassword($email, $current_ip)
 
         return $mailer->send();
     }
+
     return false;
 }

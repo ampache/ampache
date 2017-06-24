@@ -44,7 +44,7 @@ class Tag extends database_object implements library_item
 
         $info = $this->get_info($id);
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         } // end foreach
     } // constructor
@@ -110,8 +110,8 @@ class Tag extends database_object implements library_item
         $tags    = array();
         $tag_map = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $tags[$row['object_id']][$row['tag_id']] = array('user'=>$row['user'], 'id'=>$row['tag_id'], 'name'=>$row['name']);
-            $tag_map[$row['object_id']]              = array('id'=>$row['id'],'tag_id'=>$row['tag_id'],'user'=>$row['user'],'object_type'=>$type,'object_id'=>$row['object_id']);
+            $tags[$row['object_id']][$row['tag_id']] = array('user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']);
+            $tag_map[$row['object_id']]              = array('id' => $row['id'],'tag_id' => $row['tag_id'],'user' => $row['user'],'object_type' => $type,'object_id' => $row['object_id']);
         }
 
         // Run through our original ids as we also want to cache NULL
@@ -164,6 +164,7 @@ class Tag extends database_object implements library_item
 
         if (!$tag_id) {
             debug_event('Error', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', '1');
+
             return false;
         }
 
@@ -229,6 +230,7 @@ class Tag extends database_object implements library_item
                 }
             }
         }
+
         return $this->id;
     } // add_tag
 
@@ -275,7 +277,7 @@ class Tag extends database_object implements library_item
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = array('id'=>$row['id'], 'name'=>$row['name']);
+            $results[$row['id']] = array('id' => $row['id'], 'name' => $row['name']);
         }
 
         return $results;
@@ -298,6 +300,7 @@ class Tag extends database_object implements library_item
         $tag_id = intval($tag_id);
         if (!Core::is_library_item($type)) {
             debug_event('tag.class', $type . " is not a library item.", 3);
+
             return false;
         }
         $id = intval($object_id);
@@ -319,7 +322,7 @@ class Tag extends database_object implements library_item
         }
         $insert_id = Dba::insert_id();
 
-        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id'=>$tag_id, 'user'=>$uid, 'object_type'=>$type, 'object_id'=>$id));
+        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $id));
 
         return $insert_id;
     } // add_tag_map
@@ -415,6 +418,7 @@ class Tag extends database_object implements library_item
     {
         if (!Core::is_library_item($type)) {
             debug_event('tag', 'Requested type is not a library item.', 3);
+
             return false;
         }
 
@@ -450,7 +454,7 @@ class Tag extends database_object implements library_item
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = array('user'=>$row['user'], 'id'=>$row['tag_id'], 'name'=>$row['name']);
+            $results[$row['id']] = array('user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']);
         }
 
         return $results;
@@ -551,10 +555,11 @@ class Tag extends database_object implements library_item
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['tag_id']] = array('id'=>$row['tag_id'], 'name'=>$row['name'], 'is_hidden'=>$row['is_hidden'], 'count'=>$row['count']);
+            $results[$row['tag_id']] = array('id' => $row['tag_id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']);
         }
 
         parent::add_to_cache('tags_list', 'no_name', $results);
+
         return $results;
     } // get_tags
 
@@ -574,7 +579,7 @@ class Tag extends database_object implements library_item
         $results = '';
 
         // Iterate through the tags, format them according to type and element id
-        foreach ($tags as $tag_id=>$value) {
+        foreach ($tags as $tag_id => $value) {
             /*debug_event('tag.class.php', $tag_id, '5');
             foreach ($value as $vid=>$v) {
                 debug_event('tag.class.php', $vid.' = {'.$v.'}', '5');
@@ -689,7 +694,7 @@ class Tag extends database_object implements library_item
 
         $results = array();
 
-        $sql        = "SELECT DISTINCT(`object_type`), COUNT(`object_id`) AS `count` FROM `tag_map` WHERE `tag_id` = ?" .  $filter_sql . " GROUP BY `object_type`";
+        $sql        = "SELECT DISTINCT(`object_type`), COUNT(`object_id`) AS `count` FROM `tag_map` WHERE `tag_id` = ?" . $filter_sql . " GROUP BY `object_type`";
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -771,6 +776,7 @@ class Tag extends database_object implements library_item
                 }
             }
         }
+
         return $medias;
     }
 
@@ -828,6 +834,7 @@ class Tag extends database_object implements library_item
         if (Core::is_library_item($object_type)) {
             $libitem = new $object_type($object_id);
             $owner   = $libitem->get_user_owner();
+
             return ($owner !== null && $owner == $uid);
         }
         

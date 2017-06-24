@@ -26,7 +26,7 @@ if (Art::is_enabled()) {
     <td class="cel_cover">
         <?php Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
     </td>
-    <?php 
+    <?php
 }
 ?>
 <td class="cel_label"><?php echo $libitem->f_link; ?></td>
@@ -39,14 +39,14 @@ if (Art::is_enabled()) {
     <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=label&amp;id=<?php echo $libitem->id ?>">
         <?php echo UI::get_icon('comment', T_('Post Shout')) ?>
     </a>
-    <?php 
+    <?php
     }
     if (Catalog::can_remove($libitem)) {
         ?>
         <a id="<?php echo 'delete_label_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/labels.php?action=delete&label_id=<?php echo $libitem->id ?>">
             <?php echo UI::get_icon('delete', T_('Delete')) ?>
         </a>
-    <?php 
+    <?php
     }
 }
 ?>

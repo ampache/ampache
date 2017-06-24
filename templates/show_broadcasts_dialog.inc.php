@@ -32,7 +32,7 @@
             <?php echo $broadcast->f_name; ?>
         </a>
     </li>
-<?php 
+<?php
     } ?>
 </ul><br />
 <a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url') . '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">

@@ -55,7 +55,7 @@ class Tmp_Playlist extends database_object
         $this->id     = intval($playlist_id);
         $info         = $this->_get_info();
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -93,8 +93,8 @@ class Tmp_Playlist extends database_object
 
         if (!$results['0']) {
             $results['0'] = Tmp_Playlist::create(array(
-                'session_id'  => $session_id,
-                'type'        => 'user',
+                'session_id' => $session_id,
+                'type' => 'user',
                 'object_type' => 'song'
             ));
         }

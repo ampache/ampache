@@ -59,7 +59,7 @@ class Shoutbox
 
         $data = Dba::fetch_assoc($db_results);
 
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $this->$key = $value;
         }
 
@@ -101,6 +101,7 @@ class Shoutbox
         // If we've already got too many stop here
         if (count($shouts) > $limit) {
             $shouts = array_slice($shouts, 0, $limit);
+
             return $shouts;
         }
 
@@ -268,6 +269,7 @@ class Shoutbox
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
         $this->f_date = date("m\/d\/Y - H:i", $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
+
         return true;
     } //format
 

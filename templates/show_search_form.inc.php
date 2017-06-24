@@ -26,25 +26,25 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 <table class="tabledata" cellpadding="3" cellspacing="0">
     <tr id="search_location">
         <td><?php if ($_REQUEST['type'] != 'song') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php 
+    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php
 } else {
-    echo T_('Songs');
-} ?></td>
+        echo T_('Songs');
+    } ?></td>
         <td><?php if ($_REQUEST['type'] != 'album') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php 
-} else {
-    echo T_('Albums');
-} ?></td>
+        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php
+    } else {
+        echo T_('Albums');
+    } ?></td>
         <td><?php if ($_REQUEST['type'] != 'artist') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php 
-} else {
-    echo T_('Artists');
-} ?></td>
+        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php
+    } else {
+        echo T_('Artists');
+    } ?></td>
         <td><?php if ($_REQUEST['type'] != 'video') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php 
-} else {
-    echo T_('Videos');
-} ?></td>
+        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php
+    } else {
+        echo T_('Videos');
+    } ?></td>
     </tr>
     <tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>
@@ -54,18 +54,18 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
         <td>
                 <select name="limit">
                         <option value="0"><?php echo T_('Unlimited'); ?></option>
-                        <option value="25" <?php if ($_REQUEST['limit']=="25") {
-    echo "selected=\"selected\"";
-}?>>25</option>
-                        <option value="50" <?php if ($_REQUEST['limit']=="50") {
-    echo "selected=\"selected\"";
-}?>>50</option>
-                        <option value="100" <?php if ($_REQUEST['limit']=="100") {
-    echo "selected=\"selected\"";
-}?>>100</option>
-                        <option value="500" <?php if ($_REQUEST['limit']=="500") {
-    echo "selected=\"selected\"";
-}?>>500</option>
+                        <option value="25" <?php if ($_REQUEST['limit'] == "25") {
+        echo "selected=\"selected\"";
+    }?>>25</option>
+                        <option value="50" <?php if ($_REQUEST['limit'] == "50") {
+        echo "selected=\"selected\"";
+    }?>>50</option>
+                        <option value="100" <?php if ($_REQUEST['limit'] == "100") {
+        echo "selected=\"selected\"";
+    }?>>100</option>
+                        <option value="500" <?php if ($_REQUEST['limit'] == "500") {
+        echo "selected=\"selected\"";
+    }?>>500</option>
                 </select>
         </td>
     </tr>
@@ -76,10 +76,10 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 <div class="formValidation">
             <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
 <?php if (($_REQUEST['type'] == 'song' || ! $_REQUEST['type']) && Access::check('interface', 25)) {
-    ?>
+        ?>
         <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
-<?php 
-} ?>
+<?php
+    } ?>
             <input type="hidden" id="hiddenaction" name="action" value="search" />
 </div>
 </form>

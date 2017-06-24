@@ -57,6 +57,7 @@ class Ampache_RSS
                     $libitem = new $object_type($object_id);
                     if ($libitem->id) {
                         $libitem->format();
+
                         return XML_Data::podcast($libitem);
                     }
                 }
@@ -233,26 +234,26 @@ class Ampache_RSS
             $song   = new Song($item['object_id']);
             if ($song->enabled) {
                 $song->format();
-                $amount     = intval(time() - $item['date']+2);
+                $amount     = intval(time() - $item['date'] + 2);
                 $final      = '0';
                 $time_place = '0';
                 while ($amount >= 1) {
                     $final = $amount;
                     $time_place++;
                     if ($time_place <= 2) {
-                        $amount = floor($amount/60);
+                        $amount = floor($amount / 60);
                     }
                     if ($time_place == '3') {
-                        $amount = floor($amount/24);
+                        $amount = floor($amount / 24);
                     }
                     if ($time_place == '4') {
-                        $amount = floor($amount/7);
+                        $amount = floor($amount / 7);
                     }
                     if ($time_place == '5') {
-                        $amount = floor($amount/4);
+                        $amount = floor($amount / 4);
                     }
                     if ($time_place == '6') {
-                        $amount = floor($amount/12);
+                        $amount = floor($amount / 12);
                     }
                     if ($time_place > '6') {
                         $final = $amount . '+';
@@ -262,11 +263,11 @@ class Ampache_RSS
 
                 $time_string = $final . ' ' . $time_unit[$time_place];
 
-                $xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-                            'link'=>str_replace('&amp;', '&', $song->link),
-                            'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
-                            'comments'=>$client->username,
-                            'pubDate'=>date("r", $item['date']));
+                $xml_array = array('title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
+                            'link' => str_replace('&amp;', '&', $song->link),
+                            'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
+                            'comments' => $client->username,
+                            'pubDate' => date("r", $item['date']));
                 $results[] = $xml_array;
             }
         } // end foreach

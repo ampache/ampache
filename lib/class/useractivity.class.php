@@ -50,7 +50,7 @@ class Useractivity extends database_object
         /* Get the information from the db */
         $info = $this->get_info($id, 'user_activity');
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         } // foreach info
 
@@ -115,6 +115,7 @@ class Useractivity extends database_object
         }
         
         $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
+
         return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
     }
     
@@ -143,6 +144,7 @@ class Useractivity extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
+
         return $results;
     }
     
@@ -173,6 +175,7 @@ class Useractivity extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
+
         return $results;
     }
 

@@ -27,6 +27,7 @@ class Graph
         require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Data.php';
         require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Draw.php';
         require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Image.php';
+
         return true;
     }
     
@@ -77,6 +78,7 @@ class Graph
                 $sql .= " AND `object_count`.`object_id` = '" . $object_id . "'";
             }
         }
+
         return $sql;
     }
 
@@ -103,6 +105,7 @@ class Graph
         if ($object_id) {
             $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
         }
+
         return $sql;
     }
 
@@ -128,6 +131,7 @@ class Graph
             }
         }
         ksort($values, SORT_NUMERIC);
+
         return $values;
     }
 
@@ -140,6 +144,7 @@ class Graph
             }
             $MyData->addPoints($date, "TimeStamp");
         }
+
         return $values;
     }
 
@@ -202,6 +207,7 @@ class Graph
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['hits'];
         }
+
         return $values;
     }
 
@@ -218,6 +224,7 @@ class Graph
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['total'];
         }
+
         return $values;
     }
 
@@ -244,6 +251,7 @@ class Graph
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['files'];
         }
+
         return $values;
     }
 
@@ -260,6 +268,7 @@ class Graph
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['storage'];
         }
+
         return $values;
     }
 
@@ -324,44 +333,44 @@ class Graph
         $myPicture->Antialias = false;
 
         /* Draw a background */
-        $Settings = array("R"=>90, "G"=>90, "B"=>90, "Dash"=>1, "DashR"=>120, "DashG"=>120, "DashB"=>120);
+        $Settings = array("R" => 90, "G" => 90, "B" => 90, "Dash" => 1, "DashR" => 120, "DashG" => 120, "DashB" => 120);
         $myPicture->drawFilledRectangle(0, 0, $width, $height, $Settings);
 
         /* Overlay with a gradient */
-        $Settings = array("StartR"=>200, "StartG"=>200, "StartB"=>200, "EndR"=>50, "EndG"=>50, "EndB"=>50, "Alpha"=>50);
+        $Settings = array("StartR" => 200, "StartG" => 200, "StartB" => 200, "EndR" => 50, "EndG" => 50, "EndB" => 50, "Alpha" => 50);
         $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_VERTICAL, $Settings);
         $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_HORIZONTAL, $Settings);
 
         /* Add a border to the picture */
-        $myPicture->drawRectangle(0, 0, $width-1, $height-1, array("R"=>0, "G"=>0, "B"=>0));
+        $myPicture->drawRectangle(0, 0, $width - 1, $height - 1, array("R" => 0, "G" => 0, "B" => 0));
 
         $font_path = AmpConfig::get('prefix') . "/lib/vendor/szymach/c-pchart/src/Resources/fonts";
         /* Write the chart title */
-        $myPicture->setFontProperties(array("FontName"=>$font_path . "/Forgotte.ttf", "FontSize"=>11));
-        $myPicture->drawText(150, 35, $title, array("FontSize"=>20, "Align"=>TEXT_ALIGN_BOTTOMMIDDLE));
+        $myPicture->setFontProperties(array("FontName" => $font_path . "/Forgotte.ttf", "FontSize" => 11));
+        $myPicture->drawText(150, 35, $title, array("FontSize" => 20, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
 
         /* Set the default font */
-        $myPicture->setFontProperties(array("FontName"=>$font_path . "/pf_arma_five.ttf", "FontSize"=>6));
+        $myPicture->setFontProperties(array("FontName" => $font_path . "/pf_arma_five.ttf", "FontSize" => 6));
 
         /* Define the chart area */
-        $myPicture->setGraphArea(60, 40, $width-20, $height-50);
+        $myPicture->setGraphArea(60, 40, $width - 20, $height - 50);
 
         /* Draw the scale */
-        $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"Floating"=>true,"GridR"=>200,"GridG"=>200,"GridB"=>200,"RemoveSkippedAxis"=>true,"DrawSubTicks"=>false,"Mode"=>SCALE_MODE_START0,"LabelRotation"=>45,"LabelingMethod"=>LABELING_DIFFERENT);
+        $scaleSettings = array("XMargin" => 10,"YMargin" => 10,"Floating" => true,"GridR" => 200,"GridG" => 200,"GridB" => 200,"RemoveSkippedAxis" => true,"DrawSubTicks" => false,"Mode" => SCALE_MODE_START0,"LabelRotation" => 45,"LabelingMethod" => LABELING_DIFFERENT);
         $myPicture->drawScale($scaleSettings);
 
         /* Turn on Antialiasing */
         $myPicture->Antialias = true;
 
         /* Draw the line chart */
-        $myPicture->setShadow(true, array("X"=>1, "Y"=>1, "R"=>0, "G"=>0, "B"=>0, "Alpha"=>10));
+        $myPicture->setShadow(true, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
         $myPicture->drawLineChart();
 
         /* Write a label over the chart */
         $myPicture->writeLabel("Inbound", 720);
 
         /* Write the chart legend */
-        $myPicture->drawLegend(280, 20, array("Style"=>LEGEND_NOBORDER, "Mode"=>LEGEND_HORIZONTAL));
+        $myPicture->drawLegend(280, 20, array("Style" => LEGEND_NOBORDER, "Mode" => LEGEND_HORIZONTAL));
 
         header("Content-Disposition: filename=\"ampache-graph.png\"");
         /* Render the picture (choose the best way) */

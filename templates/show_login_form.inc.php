@@ -79,8 +79,8 @@ define('TABLE_RENDERED', 1);
                         <?php if (AmpConfig::get('allow_public_registration')) {
     ?>
                             <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
-                        <?php 
-} // end if allow_public_registration ?>
+                        <?php
+} // end if allow_public_registration?>
                     </div>
                 </form>
         <?php

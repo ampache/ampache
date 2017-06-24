@@ -44,14 +44,14 @@
                     <td class="cel_filename"><?php echo $song->file; ?></td>
                     <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y", $song->addition_time); ?></td>
                 </tr>
-            <?php 
+            <?php
 } if (!count($songs)) {
-    ?>
+        ?>
                 <tr class="<?php echo UI::flip_class(); ?>">
                     <td colspan="6"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
                 </tr>
-            <?php 
-} ?>
+            <?php
+    } ?>
         </tbody>
         <tfoot>
             <tr class="th-bottom">

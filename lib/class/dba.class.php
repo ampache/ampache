@@ -38,7 +38,7 @@ if (!defined('INIT_LOADED') || INIT_LOADED != '1') {
  */
 class Dba
 {
-    public static $stats = array('query'=>0);
+    public static $stats = array('query' => 0);
 
     private static $_sql;
     private static $_error;
@@ -75,6 +75,7 @@ class Dba
         $dbh = self::dbh();
         if (!$dbh) {
             debug_event('Dba', 'Error: failed to get database handle', 1);
+
             return false;
         }
 
@@ -100,6 +101,7 @@ class Dba
                 debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
                 self::finish($stmt);
                 self::disconnect();
+
                 return false;
             }
         }
@@ -161,6 +163,7 @@ class Dba
             if ($finish) {
                 self::finish($resource);
             }
+
             return array();
         }
 
@@ -187,6 +190,7 @@ class Dba
             if ($finish) {
                 self::finish($resource);
             }
+
             return array();
         }
 
@@ -205,6 +209,7 @@ class Dba
             if ($finish) {
                 self::finish($resource);
             }
+
             return array();
         }
 
@@ -287,6 +292,7 @@ class Dba
         } catch (PDOException $e) {
             self::$_error = $e->getMessage();
             debug_event('Dba', 'Connection failed: ' . $e->getMessage(), 1);
+
             return null;
         }
 
@@ -330,6 +336,7 @@ class Dba
             if ($dbh) {
                 self::$_error = json_encode($dbh->errorInfo());
             }
+
             return false;
         }
 
@@ -396,6 +403,7 @@ class Dba
             $dbh = self::_connect();
             self::_setup_dbh($dbh, $database);
             AmpConfig::set($handle, $dbh, true);
+
             return $dbh;
         } else {
             return AmpConfig::get($handle);
@@ -431,6 +439,7 @@ class Dba
         if ($dbh) {
             return $dbh->lastInsertId();
         }
+
         return null;
     }
 

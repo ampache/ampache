@@ -35,11 +35,11 @@ $web_path = AmpConfig::get('web_path');
     ?>
   <col id="col_activity" />
 <?php if (AmpConfig::get('track_user_ip')) {
-    ?>
+        ?>
   <col id="col_lastip" />
-<?php 
-} ?>
-<?php 
+<?php
+    } ?>
+<?php
 } ?>
   <col id="col_action" />
   <col id="col_online" />
@@ -50,20 +50,20 @@ $web_path = AmpConfig::get('web_path');
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate'); ?></th>
       <?php if (Access::check('interface', 50)) {
-    ?>
+        ?>
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
       <?php if (AmpConfig::get('track_user_ip')) {
-    ?>
+            ?>
       <th class="cel_lastip"><?php echo T_('Last Ip'); ?></th>
-      <?php 
-} ?>
-      <?php 
-} ?>
+      <?php
+        } ?>
+      <?php
+    } ?>
       <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
-    ?>
+        ?>
       <th class="cel_follow essential"><?php echo T_('Following'); ?></th>
-      <?php 
-} ?>
+      <?php
+    } ?>
       <th class="cel_action essential"><?php echo T_('Action'); ?></th>
       <th class="cel_online"><?php echo T_('On-line'); ?></th>
     </tr>
@@ -71,15 +71,15 @@ $web_path = AmpConfig::get('web_path');
 <tbody>
 <?php
 foreach ($object_ids as $user_id) {
-    $libitem = new User($user_id);
-    $libitem->format();
-    $last_seen      = $libitem->last_seen ? date("m\/d\/Y - H:i", $libitem->last_seen) : T_('Never');
-    $create_date    = $libitem->create_date ? date("m\/d\/Y - H:i", $libitem->create_date) : T_('Unknown'); ?>
+        $libitem = new User($user_id);
+        $libitem->format();
+        $last_seen      = $libitem->last_seen ? date("m\/d\/Y - H:i", $libitem->last_seen) : T_('Never');
+        $create_date    = $libitem->create_date ? date("m\/d\/Y - H:i", $libitem->create_date) : T_('Unknown'); ?>
 <tr class="<?php echo UI::flip_class(); ?>" id="admin_user_<?php echo $libitem->id; ?>">
     <?php require AmpConfig::get('prefix') . UI::find_template('show_user_row.inc.php'); ?>
 </tr>
-<?php 
-} //end foreach users ?>
+<?php
+    } //end foreach users?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">
@@ -87,20 +87,20 @@ foreach ($object_ids as $user_id) {
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen1'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate1'); ?></th>
       <?php if (Access::check('interface', 50)) {
-    ?>
+        ?>
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
       <?php if (AmpConfig::get('track_user_ip')) {
-    ?>
+            ?>
       <th class="cel_lastip"><?php echo T_('Last Ip'); ?></th>
-      <?php 
-} ?>
-      <?php 
-} ?>
+      <?php
+        } ?>
+      <?php
+    } ?>
       <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
-    ?>
+        ?>
       <th class="cel_follow"><?php echo T_('Following'); ?></th>
-      <?php 
-} ?>
+      <?php
+    } ?>
       <th class="cel_action"><?php echo T_('Action'); ?></th>
       <th class="cel_online"><?php echo T_('On-line'); ?></th>
     </tr>
@@ -108,5 +108,5 @@ foreach ($object_ids as $user_id) {
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    } ?>

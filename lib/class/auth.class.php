@@ -192,6 +192,7 @@ class Auth
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
             $results['error']      = 'The PAM PHP module is not installed';
+
             return $results;
         }
 
@@ -299,6 +300,7 @@ class Auth
             $results['success'] = false;
             $results['error']   = 'HTTP auth login attempt failed';
         }
+
         return $results;
     } // http_auth
 

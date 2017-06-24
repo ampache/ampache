@@ -38,6 +38,6 @@
             <?php echo $playlist->f_name; ?>
         </a>
     </li>
-<?php 
+<?php
     } ?>
 </ul>

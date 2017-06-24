@@ -584,6 +584,7 @@ class Browse extends Query
         if (!$this->_state['grid_view']) {
             $css = 'disablegv';
         }
+
         return $css;
     }
 } // browse

@@ -52,6 +52,7 @@ class AmpacheGoogleMaps
             return false;
         }
         Preference::insert('gmaps_api_key', 'GoogleMaps api key', '', '75', 'string', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -63,6 +64,7 @@ class AmpacheGoogleMaps
     public function uninstall()
     {
         Preference::delete('gmaps_api_key');
+
         return true;
     } // uninstall
 
@@ -97,6 +99,7 @@ class AmpacheGoogleMaps
     {
         if (!$this->api_key) {
             debug_event('gmaps', 'Missing api key, display map plugin skipped.', 3);
+
             return false;
         }
         
@@ -144,7 +147,7 @@ class AmpacheGoogleMaps
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)

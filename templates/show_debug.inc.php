@@ -122,20 +122,20 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($configuration as $key=>$value) {
-    if ($key == 'database_password' || $key == 'mysql_password') {
-        $value = '*********';
-    }
-    if (is_array($value)) {
-        $string = '';
-        foreach ($value as $setting) {
-            $string .= $setting . '<br />';
-        }
-        $value = $string;
-    }
-    if (Preference::is_boolean($key)) {
-        $value = print_bool($value);
-    }
+            <?php foreach ($configuration as $key => $value) {
+            if ($key == 'database_password' || $key == 'mysql_password') {
+                $value = '*********';
+            }
+            if (is_array($value)) {
+                $string = '';
+                foreach ($value as $setting) {
+                    $string .= $setting . '<br />';
+                }
+                $value = $string;
+            }
+            if (Preference::is_boolean($key)) {
+                $value = print_bool($value);
+            }
     
     // Be sure to print only scalar values
     if ($value === null || is_scalar($value)) {
@@ -145,9 +145,8 @@
                 <td><?php echo $value; ?></td>
             </tr>
 <?php
-
     }
-}
+        }
 ?>
             </tbody>
         </table>

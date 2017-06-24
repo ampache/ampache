@@ -43,6 +43,7 @@ class Repository
     protected function findBy($fields, $values)
     {
         $table = $this->getTableName();
+
         return $this->getRecords($table, $fields, $values);
     }
 
@@ -53,6 +54,7 @@ class Repository
     public function findAll()
     {
         $table = $this->getTableName();
+
         return $this->getRecords($table);
     }
 
@@ -64,6 +66,7 @@ class Repository
     public function findById($id)
     {
         $rows = $this->findBy(array('id'), array($id));
+
         return count($rows) ? reset($rows) : null;
     }
 
@@ -76,6 +79,7 @@ class Repository
         while ($object = \Dba::fetch_object($statement, $this->modelClassName)) {
             $data[$object->getId()] = $object;
         }
+
         return $data;
     }
 
@@ -89,6 +93,7 @@ class Repository
     {
         if (preg_match('/^findBy(.*)$/', $name, $matches)) {
             $parts = explode('And', $matches[1]);
+
             return $this->findBy(
                     $parts,
                     $this->resolveObjects($arguments)
@@ -105,6 +110,7 @@ class Repository
                 function ($m) {
                     return '_' . strtolower($m[0]);
                 }, end($nameParts));
+
         return lcfirst($tableName);
     }
 
@@ -141,6 +147,7 @@ class Repository
                 $sql,
                 array_values($this->resolveObjects($properties))
         );
+
         return \Dba::insert_id();
     }
 
@@ -169,6 +176,7 @@ class Repository
         foreach ($properties as $property => $value) {
             $pairs[] = $property . '= ?';
         }
+
         return $pairs;
     }
 
@@ -199,6 +207,7 @@ class Repository
                 $properties[$property] = $value->getId();
             }
         }
+
         return $properties;
     }
 

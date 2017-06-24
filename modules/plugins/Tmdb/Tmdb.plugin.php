@@ -71,7 +71,7 @@ class AmpacheTmdb
 
     /**
      * load
-     * This is a required plugin function; here it populates the prefs we 
+     * This is a required plugin function; here it populates the prefs we
      * need for this object.
      */
     public function load($user)
@@ -83,6 +83,7 @@ class AmpacheTmdb
             $this->api_key = trim($data['tmdb_api_key']);
         } else {
             debug_event($this->name, 'No Tmdb api key, metadata plugin skipped', '3');
+
             return false;
         }
         
@@ -100,6 +101,7 @@ class AmpacheTmdb
         // TVShow / Movie metadata only
         if (!in_array('tvshow', $gather_types) && !in_array('movie', $gather_types)) {
             debug_event('tmdb', 'Not a valid media type, skipped.', '5');
+
             return null;
         }
         
@@ -194,6 +196,7 @@ class AmpacheTmdb
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('Tmdb', 'gather_arts for type `' . $type . '`', 5);
+
         return Art::gather_metadata_plugin($this, $type, $options);
     }
     
@@ -207,6 +210,7 @@ class AmpacheTmdb
                 }
             }
         }
+
         return $genres;
     }
 } // end AmpacheTmdb

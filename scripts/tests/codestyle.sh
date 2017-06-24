@@ -12,7 +12,7 @@ else
     exit 1
 fi
 
-PHPCSFIXERARGS="fix -v --config-file=.php_cs"
+PHPCSFIXERARGS="fix -v"
 
 EXIT=0
 

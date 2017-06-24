@@ -49,7 +49,7 @@
                 <?php if (!is_readable($configfile)) {
     ?>
                 | <a href="install.php"><?php echo T_('Web Installation'); ?></a>
-                <?php 
+                <?php
 } ?>
             </p>
         </div>

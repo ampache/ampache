@@ -59,9 +59,9 @@ switch ($_REQUEST['action']) {
     break;
     case 'clear_cache':
         switch ($_REQUEST['type']) {
-            case 'song' : Song::clear_cache(); break;
-            case 'artist' : Artist::clear_cache(); break;
-            case 'album' : Album::clear_cache(); break;
+            case 'song': Song::clear_cache(); break;
+            case 'artist': Artist::clear_cache(); break;
+            case 'album': Album::clear_cache(); break;
         }
         show_confirmation(T_('Cache cleared'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;

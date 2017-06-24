@@ -33,6 +33,7 @@ function get_themes()
 
     if (!is_resource($handle)) {
         debug_event('theme', 'Failed to open /themes directory', 2);
+
         return array();
     }
 

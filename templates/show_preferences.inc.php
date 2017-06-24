@@ -28,7 +28,7 @@
 ?>
 <?php /* HINT: Username */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $fullname), 'box box_preferences'); ?>
 <?php  if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') {
-     ?>
+    ?>
 
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php show_preference_box($preferences[$_REQUEST['tab']]); ?>
@@ -38,14 +38,13 @@
     <input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
     <input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']); ?>" />
     <?php if (Access::check('interface', '100')) {
-    ?>
+        ?>
         <input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
-    <?php 
-} ?>
+    <?php
+    } ?>
 </div>
 <?php
-
- }  // end if not account
+}  // end if not account
 if ($_REQUEST['tab'] == 'account') {
     $client = $GLOBALS['user'];
     require AmpConfig::get('prefix') . UI::find_template('show_account.inc.php');

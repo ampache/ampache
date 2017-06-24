@@ -32,26 +32,26 @@ if ($videos) {
     <div class="random_video">
         <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
             <?php if (Art::is_enabled()) {
-    $release_art = $video->get_release_item_art();
-    $thumb       = UI::is_grid_view('video') ? 6 : 7;
-    Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
-} else {
-    ?>
+            $release_art = $video->get_release_item_art();
+            $thumb       = UI::is_grid_view('video') ? 6 : 7;
+            Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
+        } else {
+            ?>
                 <?php echo $video->get_fullname(); ?>
-            <?php 
-} ?>
+            <?php
+        } ?>
         </div>
         <div class="play_video">
         <?php if (AmpConfig::get('directplay')) {
-    ?>
+            ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_album_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
+                ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
-            <?php 
-} ?>
-        <?php 
-} ?>
+            <?php
+            } ?>
+        <?php
+        } ?>
         </div>
         <?php
         if (AmpConfig::get('ratings') && Access::check('interface', '25')) {
@@ -60,9 +60,9 @@ if ($videos) {
             echo "</div>";
         } ?>
     </div>
-    <?php 
+    <?php
     } ?>
-<?php 
+<?php
 } ?>
 
 <?php UI::show_box_bottom(); ?>

@@ -42,5 +42,4 @@ if (!empty($embed)) {
 </body>
 </html>
 <?php
-
 }

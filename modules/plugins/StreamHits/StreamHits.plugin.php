@@ -55,6 +55,7 @@ class AmpacheStreamHits
         }
         Preference::insert('stream_control_hits_max', 'Stream control maximal hits', '-1', '50', 'integer', 'plugins', $this->name);
         Preference::insert('stream_control_hits_days', 'Stream control hits history (days)', '30', '50', 'integer', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -67,6 +68,7 @@ class AmpacheStreamHits
     {
         Preference::delete('stream_control_hits_max');
         Preference::delete('stream_control_hits_days');
+
         return true;
     } // uninstall
 
@@ -106,7 +108,7 @@ class AmpacheStreamHits
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)

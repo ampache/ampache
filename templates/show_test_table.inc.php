@@ -40,7 +40,7 @@
     ?>
         <br />
         <b><?php echo T_('Please download and install Composer from http://getcomposer.org and install it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer install --prefer-source --no-interaction` on Ampache directory.'); ?></b>
-    <?php 
+    <?php
 } ?>
     </td>
 </tr>
@@ -199,7 +199,7 @@
 </tr>
 <?php
 if (!defined('INSTALL')) {
-    ?>
+        ?>
 <tr>
     <td valign="top"><?php echo T_('Configuration file readability'); ?></td>
     <td valign="top">
@@ -216,8 +216,8 @@ if (!defined('INSTALL')) {
     <td valign="top">
     <?php
         $results = @parse_ini_file($configfile);
-    AmpConfig::set_by_array($results);
-    echo debug_result(check_config_values($results)); ?>
+        AmpConfig::set_by_array($results);
+        echo debug_result(check_config_values($results)); ?>
     </td>
     <td>
     <?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file."); ?>
@@ -257,6 +257,5 @@ if (!defined('INSTALL')) {
     </td>
 </tr>
 <?php
-
-}
+    }
 ?>

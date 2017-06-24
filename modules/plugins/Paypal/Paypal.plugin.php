@@ -124,6 +124,7 @@ class AmpachePaypal
         $this->business = trim($data['paypal_business']);
         if (!strlen($this->business)) {
             debug_event($this->name, 'No Paypal ID, user field plugin skipped', '3');
+
             return false;
         }
 

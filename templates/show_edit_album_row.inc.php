@@ -53,7 +53,6 @@
                         <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')'); ?>
                     </div>
                     <?php
-
                         } else {
                             echo $libitem->f_album_artist_name;
                         }
@@ -72,13 +71,12 @@
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
                 <td>
                     <?php if (Access::check('interface', 50)) {
-    ?>
+                        ?>
                         <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php
-
-} else {
-    echo $libitem->mbid;
-}
+                    } else {
+                        echo $libitem->mbid;
+                    }
                     ?>
                 </td>
             </tr>
@@ -86,13 +84,12 @@
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID') ?></td>
                 <td>
                 <?php if (Access::check('interface', 50)) {
-    ?>
+                        ?>
                     <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
                 <?php
-
-} else {
-    echo $libitem->mbid_group;
-} ?>
+                    } else {
+                        echo $libitem->mbid_group;
+                    } ?>
                 </td>
             </tr>
             <tr>

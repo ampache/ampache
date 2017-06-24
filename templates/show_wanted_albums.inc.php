@@ -38,7 +38,7 @@
         <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
-        <?php 
+        <?php
         } ?>
     </tbody>
 </table>

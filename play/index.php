@@ -405,8 +405,8 @@ if ($_GET['action'] == 'download' and AmpConfig::get('download')) {
     // Check to see if we should be throttling because we can get away with it
     if (AmpConfig::get('rate_limit') > 0) {
         while (!feof($fp)) {
-            echo fread($fp, round(AmpConfig::get('rate_limit')*1024));
-            $bytesStreamed += round(AmpConfig::get('rate_limit')*1024);
+            echo fread($fp, round(AmpConfig::get('rate_limit') * 1024));
+            $bytesStreamed += round(AmpConfig::get('rate_limit') * 1024);
             flush();
             sleep(1);
         }

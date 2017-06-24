@@ -69,6 +69,7 @@ class Song_Preview extends database_object implements media, playable_item
             $this->mime = Song::type_to_mime($this->type);
         } else {
             $this->id = null;
+
             return false;
         }
 
@@ -99,6 +100,7 @@ class Song_Preview extends database_object implements media, playable_item
 
         if (!$db_results) {
             debug_event('song_preview', 'Unable to insert ' . $results[''], 2);
+
             return false;
         }
 
@@ -169,6 +171,7 @@ class Song_Preview extends database_object implements media, playable_item
                 }
             }
             parent::add_to_cache('song_preview', $id, $results);
+
             return $results;
         }
 
@@ -255,6 +258,7 @@ class Song_Preview extends database_object implements media, playable_item
                 'object_id' => $this->id
             );
         }
+
         return $medias;
     }
 
@@ -348,6 +352,7 @@ class Song_Preview extends database_object implements media, playable_item
         $sql = 'DELETE FROM `song_preview` USING `song_preview` ' .
             'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' .
             'WHERE `session`.`id` IS NULL';
+
         return Dba::write($sql);
     }
 } // end of song_preview class

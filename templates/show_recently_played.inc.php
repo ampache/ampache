@@ -36,7 +36,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <?php if (Access::check('interface', 50)) {
     ?>
             <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-            <?php 
+            <?php
 } ?>
         </tr>
     </thead>
@@ -99,20 +99,20 @@ foreach ($data as $row) {
             <span class="cel_play_content">&nbsp;</span>
             <div class="cel_play_hover">
             <?php if (AmpConfig::get('directplay')) {
-    ?>
+        ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $nb . '_' . $song->id); ?>
                 <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
+            ?>
                     <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $nb . '_' . $song->id); ?>
-                <?php 
-} ?>
+                <?php
+        } ?>
                 <?php if (Stream_Playlist::check_autoplay_next()) {
-    ?>
+            ?>
                     <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $nb . '_' . $song->id); ?>
-                <?php 
-} ?>
-        <?php 
-} ?>
+                <?php
+        } ?>
+        <?php
+    } ?>
             </div>
         </td>
         <td class="cel_song"><?php echo $song->f_link; ?></td>
@@ -133,14 +133,14 @@ foreach ($data as $row) {
         </td>
         <td class="cel_lastplayed"><?php echo $time_string; ?></td>
         <?php if (Access::check('interface', 50)) {
-    ?>
+        ?>
         <td class="cel_agent">
             <?php if (!empty($agent)) {
-    echo UI::get_icon('info', $agent);
-} ?>
+            echo UI::get_icon('info', $agent);
+        } ?>
         </td>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </tr>
 <?php
     ++$nb;
@@ -151,7 +151,7 @@ foreach ($data as $row) {
     <tr>
         <td colspan="8"><span class="nodata"><?php echo T_('No recently played items found'); ?></span></td>
     </tr>
-<?php 
+<?php
 } ?>
     </tbody>
     <tfoot>
@@ -164,10 +164,10 @@ foreach ($data as $row) {
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
             <?php if (Access::check('interface', 50)) {
-    ?>
+        ?>
             <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-            <?php 
-} ?>
+            <?php
+    } ?>
         </tr>
     </tfoot>
 </table>

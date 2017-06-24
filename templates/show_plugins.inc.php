@@ -57,13 +57,13 @@ $web_path = AmpConfig::get('web_path');
             <td class="cel_iversion"><?php echo scrub_out($installed_version); ?></td>
             <td class="cel_action"><?php echo $action; ?></td>
         </tr>
-        <?php 
+        <?php
         } if (!count($plugins)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="5"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
         </tr>
-        <?php 
+        <?php
         } ?>
     </tbody>
     <tfoot>

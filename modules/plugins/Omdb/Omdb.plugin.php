@@ -59,7 +59,7 @@ class AmpacheOmdb
 
     /**
      * load
-     * This is a required plugin function; here it populates the prefs we 
+     * This is a required plugin function; here it populates the prefs we
      * need for this object.
      */
     public function load($user)
@@ -74,6 +74,7 @@ class AmpacheOmdb
             $url .= '&y=' . rawurlencode($year);
         }
         $request = Requests::get($url, array(), Core::requests_options());
+
         return json_decode($request->body);
     }
     
@@ -86,6 +87,7 @@ class AmpacheOmdb
                 $time = intval($r[0]) * 60;
             }
         }
+
         return $time;
     }
 
@@ -100,6 +102,7 @@ class AmpacheOmdb
         // TVShow and Movie metadata only
         if (!in_array('tvshow', $gather_types) && !in_array('movie', $gather_types)) {
             debug_event('omdb', 'Not a valid media type, skipped.', '5');
+
             return null;
         }
         

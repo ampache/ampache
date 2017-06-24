@@ -36,13 +36,13 @@
             <?php if (AmpConfig::get('label')) {
     ?>
                 <option value="label"><?php echo T_('Label')?></option>
-            <?php 
+            <?php
 } ?>
             <?php if (AmpConfig::get('wanted')) {
-    ?>
+        ?>
                 <option value="missing_artist"><?php echo T_('Missing Artist')?></option>
-            <?php 
-} ?>
+            <?php
+    } ?>
         </select>
         <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
         <a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>

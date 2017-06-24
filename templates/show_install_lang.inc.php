@@ -39,7 +39,7 @@ require $prefix . '/templates/install_header.inc.php';
 
             echo "<select class=\"form-control\" name=\"htmllang\">\n";
 
-            foreach ($languages as $lang=>$name) {
+            foreach ($languages as $lang => $name) {
                 $var_name = $lang . "_lang";
 
                 echo "\t<option value=\"$lang\" " . ${$var_name} . ">$name</option>\n";

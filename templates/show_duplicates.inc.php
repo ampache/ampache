@@ -58,7 +58,6 @@
             <td class="cel_filename"><?php echo scrub_out($song->file); ?></td>
         </tr>
         <?php
-
                 }
             }
         ?>

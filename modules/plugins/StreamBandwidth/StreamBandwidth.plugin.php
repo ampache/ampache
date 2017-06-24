@@ -55,6 +55,7 @@ class AmpacheStreamBandwidth
         }
         Preference::insert('stream_control_bandwidth_max', 'Stream control maximal bandwidth (Mo)', '1024', '50', 'integer', 'plugins', $this->name);
         Preference::insert('stream_control_bandwidth_days', 'Stream control bandwidth history (days)', '30', '50', 'integer', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -67,6 +68,7 @@ class AmpacheStreamBandwidth
     {
         Preference::delete('stream_control_bandwidth_max');
         Preference::delete('stream_control_bandwidth_days');
+
         return true;
     } // uninstall
 
@@ -112,7 +114,7 @@ class AmpacheStreamBandwidth
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)

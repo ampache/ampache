@@ -77,13 +77,11 @@ $default_sort   = "%a/%A";
                     <option value="movie"><?php echo T_('Movie'); ?></option>
                     <option value="personal_video"><?php echo T_('Personal Video'); ?></option>
             <?php
-
 }
             if (AmpConfig::get('podcast')) {
                 ?>
                     <option value="podcast"><?php echo T_('Podcast'); ?></option>
             <?php
-
             }
             ?>
                 </select>

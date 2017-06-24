@@ -86,6 +86,7 @@ class Stats
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         $sql = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 
@@ -158,7 +159,7 @@ class Stats
     {
         $date = '';
         if ($threshold) {
-            $date = time() - (86400*$threshold);
+            $date = time() - (86400 * $threshold);
         }
 
         $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
@@ -181,6 +182,7 @@ class Stats
         if ($results = Dba::fetch_assoc($db_results)) {
             $name = $results['geo_name'];
         }
+
         return $name;
     }
 
@@ -253,7 +255,7 @@ class Stats
         if (!$threshold) {
             $threshold = AmpConfig::get('stats_threshold');
         }
-        $date = time() - (86400*$threshold);
+        $date = time() - (86400 * $threshold);
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
@@ -263,6 +265,7 @@ class Stats
         }
         $sql .= " AND `count_type` = '" . $count_type . "'";
         $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
+
         return $sql;
     }
 
@@ -293,6 +296,7 @@ class Stats
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
+
         return $results;
     } // get_top
 
@@ -363,7 +367,7 @@ class Stats
         if ($full) {
             $date = '0';
         } else {
-            $date = time() - (86400*AmpConfig::get('stats_threshold'));
+            $date = time() - (86400 * AmpConfig::get('stats_threshold'));
         }
 
         /* Select Objects based on user */

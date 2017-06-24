@@ -98,6 +98,7 @@ abstract class database_object
         // Check if the object is set
         if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {
             self::$cache_hit++;
+
             return self::$object_cache[$index][$id];
         }
 

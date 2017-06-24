@@ -41,21 +41,21 @@
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->f_name, 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
-            <?php 
+            <?php
     } ?>
             </ul>
         </li>
-    <?php 
+    <?php
 } ?>
 <?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) {
-    ?>
+        ?>
     <li>
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     </li>
-<?php 
-} ?>
+<?php
+    } ?>
     <li>
     <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
     </li>
@@ -99,14 +99,14 @@
             $("#footer").removeClass("footer-wild", 500);
             $("#rightbar").removeClass("hidden");
             $("#rightbar").show("slow");
-        <?php 
+        <?php
 } else {
-    ?>
+        ?>
             $("#content").addClass("content-right-wild", 500);
             $("#footer").addClass("footer-wild", 500);
             $("#rightbar").hide("slow");
-        <?php 
-} ?>
+        <?php
+    } ?>
     </script>
 <?php
     // Limit the number of objects we show here
@@ -128,19 +128,19 @@
       <?php echo $object->f_link; ?>
         <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
-<?php 
+<?php
     } if (!count($objects)) {
         ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
-<?php 
+<?php
     } ?>
 <?php if (isset($truncated)) {
-    ?>
+        ?>
     <li class="<?php echo UI::flip_class(); ?>">
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>
-<?php 
-} ?>
+<?php
+    } ?>
 </ul>
 <?php
 // We do a little magic here to force a reload depending on preference

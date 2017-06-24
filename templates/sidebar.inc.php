@@ -30,13 +30,13 @@ if (User::is_registered()) {
     $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
     // List of buttons ( id, title, icon, access level)
-    $sidebar_items[] = array('id'=>'home', 'title' => T_('Home'), 'icon'=>'home', 'access'=>5);
+    $sidebar_items[] = array('id' => 'home', 'title' => T_('Home'), 'icon' => 'home', 'access' => 5);
     if (AmpConfig::get('allow_localplay_playback')) {
-        $sidebar_items[] = array('id'=>'localplay', 'title' => T_('Localplay'), 'icon'=>'volumeup', 'access'=>5);
+        $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
     }
-    $sidebar_items[] = array('id'=>'preferences', 'title' => T_('Preferences'), 'icon'=>'edit', 'access'=>5);
-    $sidebar_items[] = array('id'=>'modules','title' => T_('Modules'),'icon'=>'plugin','access'=>100);
-    $sidebar_items[] = array('id'=>'admin', 'title' => T_('Admin'), 'icon'=>'admin', 'access'=>100);
+    $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
+    $sidebar_items[] = array('id' => 'modules','title' => T_('Modules'),'icon' => 'plugin','access' => 100);
+    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 100);
 
     $web_path = AmpConfig::get('web_path'); ?>
     <?php
@@ -47,17 +47,15 @@ if (User::is_registered()) {
         <li <?php echo $li_params; ?>>
     <?php
             echo Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']);
-            if ($item['id']==$_SESSION['state']['sidebar_tab']) {
+            if ($item['id'] == $_SESSION['state']['sidebar_tab']) {
                 ?>
             <div id="sidebar-page" class="sidebar-page-float">
                 <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
             </div>
     <?php
-
             } ?>
         </li>
     <?php
-
         }
     } ?>
         <li id="sb_tab_logout" class="sb1">
@@ -66,18 +64,16 @@ if (User::is_registered()) {
             </a>
         </li>
 <?php
-
 } else {
-    ?>
+        ?>
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
             <?php
                 require_once AmpConfig::get('prefix') . UI::find_template('sidebar_home.inc.php'); ?>
             </div>
         </li>
-<?Php
-
-}
+<?php
+    }
 ?>
 </ul>
 

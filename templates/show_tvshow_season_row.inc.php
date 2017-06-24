@@ -34,12 +34,12 @@
     </div>
 </td>
 <?php if (Art::is_enabled()) {
-    ?>
+        ?>
 <td class="cel_cover">
     <?php Art::display('tvshow_season', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
 </td>
-<?php 
-} ?>
+<?php
+    } ?>
 <td class="cel_season"><?php echo $libitem->f_link; ?></td>
 <td class="cel_tvshow"><?php echo $libitem->f_tvshow_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
@@ -50,14 +50,14 @@
     <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow_season">
         <?php Rating::show($libitem->id, 'tvshow_season'); ?>
     </td>
-    <?php 
+    <?php
         }
         if (AmpConfig::get('userflags')) {
             ?>
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
         <?php Userflag::show($libitem->id, 'tvshow_season'); ?>
     </td>
-    <?php 
+    <?php
         }
     }
 ?>
@@ -68,14 +68,14 @@
     <a id="<?php echo 'edit_tvshow_season_' . $libitem->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_season_' . $libitem->id ?>', '<?php echo T_('Season edit') ?>', 'tvshow_season_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
-    <?php 
+    <?php
     }
     if (Catalog::can_remove($libitem)) {
         ?>
     <a id="<?php echo 'delete_tvshow_season_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $libitem->id; ?>">
         <?php echo UI::get_icon('delete', T_('Delete')); ?>
     </a>
-    <?php 
+    <?php
     }
 ?>
 </td>

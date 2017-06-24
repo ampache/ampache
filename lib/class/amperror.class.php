@@ -47,7 +47,7 @@ class AmpError
      */
     public function __destruct()
     {
-        foreach (self::$errors as $key=>$error) {
+        foreach (self::$errors as $key => $error) {
             $_SESSION['errors'][$key] = $error;
         }
     } // __destruct
@@ -75,7 +75,7 @@ class AmpError
         else {
             AmpError::$state = true;
             AmpError::$errors[$name] .= "<br />\n" . $message;
-            $_SESSION['errors'][$name] .=  "<br />\n" . $message;
+            $_SESSION['errors'][$name] .= "<br />\n" . $message;
         }
 
         // If on SSE worker, output the error directly.
@@ -138,7 +138,7 @@ class AmpError
         }
 
         // Re-insert them
-        foreach ($_SESSION['errors'] as $key=>$error) {
+        foreach ($_SESSION['errors'] as $key => $error) {
             self::add($key, $error);
         }
     } // auto_init

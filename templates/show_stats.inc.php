@@ -92,7 +92,7 @@ $catalogs = Catalog::get_catalogs();
         <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
         <td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
     </tr>
-<?php 
+<?php
 } ?>
     </tbody>
 </table>
@@ -100,6 +100,6 @@ $catalogs = Catalog::get_catalogs();
 
 <?php
 if (AmpConfig::get('statistical_graphs')) {
-    Graph::display_from_request();
-}
+        Graph::display_from_request();
+    }
 ?>

@@ -71,7 +71,7 @@ class License
 
         $data = Dba::fetch_assoc($db_results);
 
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $this->$key = $value;
         }
 

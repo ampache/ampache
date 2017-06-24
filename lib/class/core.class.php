@@ -179,6 +179,7 @@ class Core
 
         if (!isset($_SESSION['forms'][$sid])) {
             debug_event('Core', "Form $sid not found in session, rejecting request", 2);
+
             return false;
         }
 
@@ -189,6 +190,7 @@ class Core
             debug_event('Core', "Verified SID $sid for $type form $name", 5);
             if ($form['expire'] < time()) {
                 debug_event('Core', "Form $sid is expired, rejecting request", 2);
+
                 return false;
             }
 
@@ -197,6 +199,7 @@ class Core
 
         // OMG HAX0RZ
         debug_event('Core', "$type form $sid failed consistency check, rejecting request", 2);
+
         return false;
     } // form_verify
 
@@ -240,6 +243,7 @@ class Core
 
         if (empty($image_data)) {
             debug_event('Core', "Cannot create image from empty data", 2);
+
             return false;
         }
 
@@ -256,7 +260,7 @@ class Core
             return false;
         }
 
-        return array('width'=>$width,'height'=>$height);
+        return array('width' => $width,'height' => $height);
     } // image_dimensions
 
     /*
@@ -273,6 +277,7 @@ class Core
                 return false;
             }
             closedir($handle);
+
             return true;
         }
 
@@ -281,6 +286,7 @@ class Core
             return false;
         }
         fclose($handle);
+
         return true;
     }
 
@@ -309,6 +315,7 @@ class Core
             // Handle overflowed integer...
             $size = sprintf("%u", $size);
         }
+
         return $size;
     }
 
@@ -345,6 +352,7 @@ class Core
                 return session_id() === '' ? false : true;
             }
         }
+
         return false;
     }
 

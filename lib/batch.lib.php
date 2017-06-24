@@ -47,7 +47,7 @@ function get_media_files($media_ids)
         }
         if ($media->enabled) {
             $media->format();
-            $total_size += sprintf("%.2f", ($media->size/1048576));
+            $total_size += sprintf("%.2f", ($media->size / 1048576));
             $dirname = '';
             $parent  = $media->get_parent();
             if ($parent != null) {
@@ -83,7 +83,7 @@ function send_zip($name, $media_files)
     
     $arc     = new ZipStream\ZipStream($name . ".zip");
     $options = array(
-        'comment'       => AmpConfig::get('file_zip_comment'),
+        'comment' => AmpConfig::get('file_zip_comment'),
     );
 
     foreach ($media_files as $dir => $files) {
