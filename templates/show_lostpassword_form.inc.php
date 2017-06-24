@@ -39,14 +39,8 @@ $web_path = AmpConfig::get('web_path');
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
         <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
-        <script type="text/javascript" language="javascript">
-            function focus()
-            {
-                document.login.email.focus();
-            }
-        </script>
     </head>
-    <body id="loginPage" onload="focus();">
+    <body id="loginPage">
         <div id="maincontainer">
             <div id="header"><!-- This is the header -->
                 <h1 id="headerlogo">
@@ -61,7 +55,7 @@ $web_path = AmpConfig::get('web_path');
                     <div class="loginfield" id="emailfield">
                         <label for="email"><?php echo  T_('Email'); ?>:</label>
                         <input type="hidden" id="action" name="action" value="send" />
-                        <input class="text_input" type="text" id="email" name="email" />
+                        <input class="text_input" type="text" id="email" name="email" autofocus />
                     </div>
                     <input class="button" id="lostpasswordbutton" type="submit" value="<?php echo T_('Submit'); ?>" />
                 </form>
