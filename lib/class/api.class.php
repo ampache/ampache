@@ -636,7 +636,7 @@ class Api
 	
 	public static function playlist_edit($input)
 	{
-		$filter = $input['filter']
+		$filter = $input['filter'];
 		$name = $input['name'];
         $type = $input['type'];
 		ob_end_clean();
