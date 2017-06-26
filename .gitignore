@@ -26,3 +26,14 @@ robots.txt
 php-cs-fixer.phar
 .php_cs.cache
 cs_fixer_tmp_*
+.buildpath
+.env
+.project
+.settings/
+components/
+node_modules/
+vendor/
+<<<<<<< HEAD
+
+=======
+>>>>>>> 52c2c20... Cleaned up user-agent and header messages.
