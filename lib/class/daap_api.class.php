@@ -86,7 +86,7 @@ class Daap_Api
         if (function_exists('curl_version')) {
             $headers      = apache_request_headers();
             $reqheaders   = array();
-            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            $reqheaders[] = "User-Agent: " . urlencode(preg_replace('/[\s\/]+/', '_', $headers['User-Agent']));
             if (isset($headers['Range'])) {
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
@@ -394,6 +394,7 @@ class Daap_Api
                     $headers = apache_request_headers();
                     $client  = $headers['User-Agent'];
                     if (! empty($client)) {
+                        $client = urlencode(preg_replace('/[\s\/]/', '_', $client));
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
