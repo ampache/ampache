@@ -373,7 +373,7 @@ class Playlist extends playlist_object
      * add_songs
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids=array(), $ordered=false)
+    public function add_songs($song_ids=array(), $ordered=true)
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
