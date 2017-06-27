@@ -303,6 +303,7 @@ class Session
         // Switch on the type they pass
         switch ($type) {
             case 'api':
+                return true;
             case 'stream':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
                     "AND `type` IN ('api', 'stream')";
