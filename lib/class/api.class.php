@@ -211,6 +211,7 @@ class Api
                 $data             = array();
                 $data['username'] = $client->username;
                 $data['type']     = 'api';
+                $data['apikey']   = $client->apikey;
                 $data['value']    = $timestamp;
                 if (isset($input['client'])) {
                     $data['agent'] = $input['client'];

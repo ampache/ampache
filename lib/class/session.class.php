@@ -188,6 +188,10 @@ class Session
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
+                $key = isset($data['apikey'])
+                    ? $data['apikey']
+                    : md5(uniqid(rand(), true));
+                break;
             case 'stream':
                 $key = isset($data['sid'])
                     ? $data['sid']
