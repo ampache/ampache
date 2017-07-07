@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,30 +32,29 @@ if (count($results)) {
 <?php UI::show_box_top(T_('Now Playing') . $link); ?>
 <?php
 foreach ($results as $item) {
-    $media   = $item['media'];
-    $np_user = $item['client'];
-    $np_user->format();
-    $agent = $item['agent'];
+        $media   = $item['media'];
+        $np_user = $item['client'];
+        $np_user->format();
+        $agent = $item['agent'];
 
     /* If we've gotten a non-song object just skip this row */
     if (!is_object($media)) {
         continue;
     }
-    if (!$np_user->fullname) {
-        $np_user->fullname = "Ampache User";
-    } ?>
+        if (!$np_user->fullname) {
+            $np_user->fullname = "Ampache User";
+        } ?>
 <div class="np_row">
 <?php
 if (strtolower(get_class($media)) == 'song') {
-    require AmpConfig::get('prefix') . UI::find_template('show_now_playing_row.inc.php');
-} else {
-    require AmpConfig::get('prefix') . UI::find_template('show_now_playing_video_row.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('show_now_playing_row.inc.php');
+        } else {
+            require AmpConfig::get('prefix') . UI::find_template('show_now_playing_video_row.inc.php');
+        } ?>
 </div>
 <?php
-
-} // end foreach
+    } // end foreach
 ?>
 <?php UI::show_box_bottom(); ?>
-<?php 
-} // end if count results ?>
+<?php
+} // end if count results?>

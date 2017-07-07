@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -328,6 +328,7 @@ class Song extends database_object implements media, library_item
             $this->mime = self::type_to_mime($this->type);
         } else {
             $this->id = null;
+
             return false;
         }
 
@@ -385,7 +386,7 @@ class Song extends database_object implements media, library_item
             if ($albumartist) {
                 // Multiple artist per songs not supported for now
                 $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
-                $albumartist_id = Artist::check($albumartist, $albumartist_mbid);
+                $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
             }
         } else {
             $albumartist_id = intval($results['albumartist_id']);
@@ -394,7 +395,7 @@ class Song extends database_object implements media, library_item
         if (!isset($results['artist_id'])) {
             // Multiple artist per songs not supported for now
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id = Artist::check($artist, $artist_mbid);
+            $artist_id   = Artist::check($artist, $artist_mbid);
         } else {
             $artist_id = intval($results['artist_id']);
         }
@@ -419,6 +420,7 @@ class Song extends database_object implements media, library_item
 
         if (!$db_results) {
             debug_event('song', 'Unable to insert ' . $file, 2);
+
             return false;
         }
 
@@ -571,6 +573,7 @@ class Song extends database_object implements media, library_item
             }
 
             parent::add_to_cache('song', $id, $results);
+
             return $results;
         }
 
@@ -609,7 +612,7 @@ class Song extends database_object implements media, library_item
     {
         $info = $this->_get_ext_info();
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             if ($key != 'song_id') {
                 $this->$key = $value;
             }
@@ -643,7 +646,7 @@ class Song extends database_object implements media, library_item
             case 'rm':
             case 'ra':
                 return 'audio/x-realaudio';
-            case 'flac';
+            case 'flac':
                 return 'audio/x-flac';
             case 'wv':
                 return 'audio/x-wavpack';
@@ -911,7 +914,7 @@ class Song extends database_object implements media, library_item
         $fields = get_object_vars($media);
 
         // Foreach them
-        foreach ($fields as $key=>$value) {
+        foreach ($fields as $key => $value) {
             $key = trim($key);
             if (empty($key) || in_array($key, $skip_array)) {
                 continue;
@@ -987,7 +990,7 @@ class Song extends database_object implements media, library_item
      */
     public function update(array $data)
     {
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             debug_event('song.class.php', $key . '=' . $value, '5');
 
             switch ($key) {
@@ -1371,6 +1374,7 @@ class Song extends database_object implements media, library_item
         }
 
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($value, $song_id));
     } // _update_item
 
@@ -1400,6 +1404,7 @@ class Song extends database_object implements media, library_item
         }
 
         $sql = "UPDATE `song_data` SET `$field` = ? WHERE `song_id` = ?";
+
         return Dba::write($sql, array($value, $song_id));
     } // _update_ext_item
 
@@ -1444,14 +1449,14 @@ class Song extends database_object implements media, library_item
         }
 
         // Format the Bitrate
-        $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
+        $this->f_bitrate = intval($this->bitrate / 1000) . "-" . strtoupper($this->mode);
 
         // Format the Time
-        $min            = floor($this->time/60);
-        $sec            = sprintf("%02d", ($this->time%60));
+        $min            = floor($this->time / 60);
+        $sec            = sprintf("%02d", ($this->time % 60));
         $this->f_time   = $min . ":" . $sec;
-        $hour           = sprintf("%02d", floor($min/60));
-        $min_h          = sprintf("%02d", ($min%60));
+        $hour           = sprintf("%02d", floor($min / 60));
+        $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
 
         // Format the track (there isn't really anything to do here)
@@ -1549,6 +1554,7 @@ class Song extends database_object implements media, library_item
                 'object_id' => $this->id
             );
         }
+
         return $medias;
     }
 
@@ -1593,6 +1599,7 @@ class Song extends database_object implements media, library_item
 
         $album = new Album($this->album);
         $album->format();
+
         return $album->get_description();
     }
 
@@ -1687,6 +1694,7 @@ class Song extends database_object implements media, library_item
             $catalog_id = $info['catalog'];
         }
         $catalog = Catalog::create_from_id($catalog_id);
+
         return $catalog->get_rel_path($file_path);
     } // get_rel_path
 
@@ -1823,7 +1831,7 @@ class Song extends database_object implements media, library_item
         $types     = array();
         $transcode = AmpConfig::get('transcode_' . $type);
         if ($player) {
-            $player_transcode = AmpConfig::get('transcode_player_' . $player .  '_' . $type);
+            $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
             if ($player_transcode) {
                 $transcode = $player_transcode;
             }
@@ -1900,11 +1908,13 @@ class Song extends database_object implements media, library_item
         $argst = AmpConfig::get('encode_args_' . $target);
         if (!$args) {
             debug_event('media', 'Target format ' . $target . ' is not properly configured', 2);
+
             return false;
         }
         $args .= ' ' . $argst;
 
         debug_event('media', 'Command: ' . $cmd . ' Arguments:' . $args, 5);
+
         return array('format' => $target, 'command' => $cmd . $args);
     }
 

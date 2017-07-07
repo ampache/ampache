@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -99,9 +99,9 @@ class Catalog_subsonic extends Catalog
 
     public function catalog_fields()
     {
-        $fields['uri']           = array('description' => T_('URI'),'type'=>'url');
-        $fields['username']      = array('description' => T_('Username'),'type'=>'text');
-        $fields['password']      = array('description' => T_('Password'),'type'=>'password');
+        $fields['uri']           = array('description' => T_('URI'),'type' => 'url');
+        $fields['username']      = array('description' => T_('Username'),'type' => 'text');
+        $fields['password']      = array('description' => T_('Password'),'type' => 'password');
 
         return $fields;
     }
@@ -121,7 +121,7 @@ class Catalog_subsonic extends Catalog
             $this->id = intval($catalog_id);
             $info     = $this->get_info($catalog_id);
 
-            foreach ($info as $key=>$value) {
+            foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
         }
@@ -144,11 +144,13 @@ class Catalog_subsonic extends Catalog
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Error: Subsonic selected, but path is not a URL'));
+
             return false;
         }
 
         if (!strlen($username) or !strlen($password)) {
             AmpError::add('general', T_('Error: Username and Password Required for Subsonic Catalogs'));
+
             return false;
         }
 
@@ -159,11 +161,13 @@ class Catalog_subsonic extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_subsonic` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
         Dba::write($sql, array($uri, $username, $password, $catalog_id));
+
         return true;
     }
 
@@ -340,6 +344,7 @@ class Catalog_subsonic extends Catalog
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->uri, "/");
+
         return(str_replace($catalog_path . "/", "", $file_path));
     }
 
@@ -350,6 +355,7 @@ class Catalog_subsonic extends Catalog
         if (count($matches)) {
             $id = $matches[1];
         }
+
         return $id;
     }
 

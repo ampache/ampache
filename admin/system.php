@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,9 +59,9 @@ switch ($_REQUEST['action']) {
     break;
     case 'clear_cache':
         switch ($_REQUEST['type']) {
-            case 'song' : Song::clear_cache(); break;
-            case 'artist' : Artist::clear_cache(); break;
-            case 'album' : Album::clear_cache(); break;
+            case 'song': Song::clear_cache(); break;
+            case 'artist': Artist::clear_cache(); break;
+            case 'album': Album::clear_cache(); break;
         }
         show_confirmation(T_('Cache cleared'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;

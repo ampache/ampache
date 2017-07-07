@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -320,6 +320,7 @@ class Plex_Api
 
         $res = self::myPlexRequest($action, $options, $headers);
         ;
+
         return $res['xml']['authenticationToken'];
     }
 
@@ -328,6 +329,7 @@ class Plex_Api
         $action = 'pms/:/ip';
 
         $res = self::myPlexRequest($action);
+
         return trim($res['raw']);
     }
 
@@ -379,6 +381,7 @@ class Plex_Api
         $action = 'servers/' . Plex_XML_Data::getMachineIdentifier() . '/access_tokens.xml?auth_token=' . Plex_XML_Data::getMyPlexAuthToken();
 
         $res = self::myPlexRequest($action);
+
         return $res['xml'];
     }
 
@@ -387,6 +390,7 @@ class Plex_Api
         $action = 'pms/friends/all?auth_token=' . Plex_XML_Data::getMyPlexAuthToken();
 
         $res = self::myPlexRequest($action);
+
         return $res['xml'];
     }
 
@@ -431,6 +435,7 @@ class Plex_Api
     public static function request_output_header($ch, $header)
     {
         self::$request_headers[] = $header;
+
         return strlen($header);
     }
 
@@ -443,6 +448,7 @@ class Plex_Api
                 header($rheader);
             }
         }
+
         return strlen($header);
     }
 
@@ -506,6 +512,7 @@ class Plex_Api
         } catch (Exception $e) {
             // If exception, wrong data returned (Plex API changes?)
         }
+
         return $res;
     }
 
@@ -1367,6 +1374,7 @@ class Plex_Api
 
         $action = 'users/account?auth_token=' . $authtoken;
         $res    = self::myPlexRequest($action);
+
         return $res['xml'];
     }
 
@@ -1526,7 +1534,7 @@ class Plex_Api
     {
         $data = array();
 
-        foreach ($dmap as $key=>$value) {
+        foreach ($dmap as $key => $value) {
             if (isset($_GET[$key])) {
                 if ($value == null) {
                     $value = $key;

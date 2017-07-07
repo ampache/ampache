@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,7 +39,7 @@ require $prefix . '/templates/install_header.inc.php';
 
             echo "<select class=\"form-control\" name=\"htmllang\">\n";
 
-            foreach ($languages as $lang=>$name) {
+            foreach ($languages as $lang => $name) {
                 $var_name = $lang . "_lang";
 
                 echo "\t<option value=\"$lang\" " . ${$var_name} . ">$name</option>\n";

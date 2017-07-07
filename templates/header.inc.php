@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,11 +42,11 @@ $_SESSION['login'] = false;
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_artist" />
         <?php if (AmpConfig::get('sociable')) {
-    ?>
+        ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
-        <?php 
-} ?>
-        <?php 
+        <?php
+    } ?>
+        <?php
 } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
@@ -84,10 +84,10 @@ $_SESSION['login'] = false;
             $(document).ready(function(){
                 $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
                 <?php if (AmpConfig::get('geolocation')) {
-    ?>
+        ?>
                     geolocate_user();
-                <?php 
-} ?>
+                <?php
+    } ?>
             });
 
             // Using the following workaround to set global variable available from any javascript script.
@@ -125,7 +125,6 @@ $_SESSION['login'] = false;
             }
         </script>
         <?php
-
         } else {
             ?>
         <script type="text/javascript">
@@ -139,7 +138,7 @@ $_SESSION['login'] = false;
                 return btoa(window.location.href);
             }
         </script>
-        <?php 
+        <?php
         } ?>
         <script type="text/javascript">
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
@@ -293,7 +292,7 @@ $_SESSION['login'] = false;
         </script>
         
         <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
-    ?>
+            ?>
         <script type="text/javascript" language="javascript">
         noty({text: '<?php printf(json_encode(nl2br(/* HINT: Translator, "%s" is replaced by "cookie settings" */T_("We have placed cookies on your computer to help make this website better. You can change your %s at any time.\nOtherwise, we will assume you are OK to continue.\n\nClick on this message to not display it again."))),
                     "<a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_('cookie settings') . "</a>"); ?>',
@@ -307,11 +306,11 @@ $_SESSION['login'] = false;
                 },
             });
         </script>
-        <?php 
-} ?>
+        <?php
+        } ?>
         
         <?php if (AmpConfig::get('libitem_contextmenu')) {
-    ?>
+            ?>
         <script type="text/javascript" language="javascript">
             function libitem_action(item, action)
             {
@@ -337,8 +336,8 @@ $_SESSION['login'] = false;
                 }
             });
         </script>
-        <?php 
-} ?>
+        <?php
+        } ?>
         
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
@@ -354,37 +353,37 @@ $_SESSION['login'] = false;
                     <?php UI::show_box_top('', 'box box_headerbox'); ?>
                     <?php require_once AmpConfig::get('prefix') . UI::find_template('show_search_bar.inc.php'); ?>
                     <?php if (User::is_registered()) {
-    ?>
+            ?>
                         <?php require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id; ?>"><?php echo $GLOBALS['user']->fullname; ?></a>
                             <?php if (AmpConfig::get('sociable')) {
-    ?>
+                ?>
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true)); ?>)</a>
-                            <?php 
-} ?>
+                            <?php
+            } ?>
                             <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
                         </span>
-                    <?php 
-} else {
-    ?>
+                    <?php
+        } else {
+            ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
                             <?php if (AmpConfig::get('allow_public_registration')) {
-    ?>
+                ?>
                                 / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
-                            <?php 
-} ?>
+                            <?php
+            } ?>
                         </span>
-                    <?php 
-} ?>
+                    <?php
+        } ?>
 
                     <?php UI::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
 
         <?php if (AmpConfig::get('topmenu')) {
-    ?>
+            ?>
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="topmenu_item">
                     <a href="<?php echo $web_path ?>/index.php">
@@ -411,28 +410,28 @@ $_SESSION['login'] = false;
                     </a>
                 </div>
                 <?php if (AmpConfig::get('userflags') && Access::check('interface', '25')) {
-    ?>
+                ?>
                 <div id="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
                         <img src="<?php echo $web_path ?>/images/topmenu-favorite.png" />
                         <span><?php echo T_('Favorites') ?></span>
                     </a>
                 </div>
-                <?php 
-} ?>
+                <?php
+            } ?>
                 <?php if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) {
-    ?>
+                ?>
                 <div id="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
                         <img src="<?php echo $web_path ?>/images/topmenu-upload.png" />
                         <span><?php echo T_('Upload') ?></span>
                     </a>
                 </div>
-                <?php 
-} ?>
+                <?php
+            } ?>
             </div>
-        <?php 
-} ?>
+        <?php
+        } ?>
             <?php $isCollapsed = ((AmpConfig::get('sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed"); ?>
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" ><span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span></div>
@@ -506,7 +505,6 @@ $_SESSION['login'] = false;
                                 <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write new config file to disk'); ?></a>
                             </div>
                 <?php
-
                         }
                         echo '</div>';
                     }

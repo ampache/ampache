@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -168,7 +168,6 @@ if ($upload_max > 0) {
     ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
 <?php
-
 }
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -183,7 +182,7 @@ if ($upload_max > 0) {
         </div>
     </td>
 </tr>
-<?php 
+<?php
 } ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
@@ -195,7 +194,7 @@ if ($upload_max > 0) {
     </td>
 </tr>
 <?php if (AmpConfig::get('licensing')) {
-    ?>
+        ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td>
@@ -205,8 +204,8 @@ if ($upload_max > 0) {
         </div>
     </td>
 </tr>
-<?php 
-} ?>
+<?php
+    } ?>
 <tr>
     <td>
         <?php echo T_('Files'); ?>

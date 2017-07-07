@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,8 +74,8 @@ $_SESSION['login'] = true;
                             <?php AmpError::display('user_agreement'); ?>
                         </div>
                     </div>
-                    <?php 
-                    } // end if user_agreement ?>
+                    <?php
+                    } // end if user_agreement?>
                     <h3><?php echo T_('User Information'); ?></h3>
                     <div class="registerfield require">
                         <label for="username"><?php echo T_('Username'); ?>:</label>
@@ -84,16 +84,16 @@ $_SESSION['login'] = true;
                         <?php AmpError::display('duplicate_user'); ?>
                     </div>
                     <?php if (in_array('fullname', $display_fields)) {
-    ?>
+                        ?>
                         <div class="registerfield <?php if (in_array('fullname', $mandatory_fields)) {
-    echo 'require';
-} ?>">
+                            echo 'require';
+                        } ?>">
                             <label for="fullname"><?php echo T_('Full Name'); ?>:</label>
                             <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
                             <?php AmpError::display('fullname'); ?>
                         </div>
-                    <?php 
-} ?>
+                    <?php
+                    } ?>
 
                     <div class="registerfield require">
                         <label for="email"><?php echo T_('E-mail'); ?>:</label>
@@ -101,38 +101,38 @@ $_SESSION['login'] = true;
                         <?php AmpError::display('email'); ?>
                     </div>
                     <?php if (in_array('website', $display_fields)) {
-    ?>
+                        ?>
                         <div class="registerfield <?php if (in_array('website', $mandatory_fields)) {
-    echo 'require';
-} ?>">
+                            echo 'require';
+                        } ?>">
                             <label for="website"><?php echo T_('Website'); ?>:</label>
                             <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
                             <?php AmpError::display('website'); ?>
                         </div>
-                    <?php 
-} ?>
+                    <?php
+                    } ?>
                     <?php if (in_array('state', $display_fields)) {
-    ?>
+                        ?>
                         <div class="registerfield <?php if (in_array('state', $mandatory_fields)) {
-    echo 'require';
-} ?>">
+                            echo 'require';
+                        } ?>">
                             <label for="state"><?php echo T_('State'); ?>:</label>
                             <input type='text' name='state' id='state' value='<?php echo scrub_out($state); ?>' />
                             <?php AmpError::display('state'); ?>
                         </div>
-                    <?php 
-} ?>
+                    <?php
+                    } ?>
                     <?php if (in_array('city', $display_fields)) {
-    ?>
+                        ?>
                         <div class="registerfield <?php if (in_array('city', $mandatory_fields)) {
-    echo 'require';
-} ?>">
+                            echo 'require';
+                        } ?>">
                             <label for="city"><?php echo T_('City'); ?>:</label>
                             <input type='text' name='city' id='city' value='<?php echo scrub_out($city); ?>' />
                             <?php AmpError::display('city'); ?>
                         </div>
-                    <?php 
-} ?>
+                    <?php
+                    } ?>
 
                     <div class="registerfield require">
                         <label for="password"><?php echo T_('Password'); ?>:</label>

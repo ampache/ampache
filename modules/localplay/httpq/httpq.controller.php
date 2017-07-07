@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -193,10 +193,10 @@ class AmpacheHttpq extends localplay_controller
          */
         public function instance_fields()
         {
-            $fields['name']         = array('description' => T_('Instance Name'),'type'=>'text');
-            $fields['host']         = array('description' => T_('Hostname'),'type'=>'text');
-            $fields['port']         = array('description' => T_('Port'),'type'=>'number');
-            $fields['password']     = array('description' => T_('Password'),'type'=>'password');
+            $fields['name']         = array('description' => T_('Instance Name'),'type' => 'text');
+            $fields['host']         = array('description' => T_('Hostname'),'type' => 'text');
+            $fields['port']         = array('description' => T_('Port'),'type' => 'number');
+            $fields['password']     = array('description' => T_('Password'),'type' => 'password');
 
             return $fields;
         } // instance_fields
@@ -254,6 +254,7 @@ class AmpacheHttpq extends localplay_controller
     {
         if (is_null($this->_httpq->add($url->title, $url->url))) {
             debug_event('httpq', 'add_url failed to add ' . $url, 1);
+
             return false;
         }
 
@@ -269,6 +270,7 @@ class AmpacheHttpq extends localplay_controller
     {
         if (is_null($this->_httpq->delete_pos($object_id))) {
             debug_event('httpq', 'Unable to delete ' . $object_id . ' from httpQ', 1);
+
             return false;
         }
 
@@ -306,6 +308,7 @@ class AmpacheHttpq extends localplay_controller
         if (is_null($this->_httpq->play())) {
             return false;
         }
+
         return true;
     } // play
 
@@ -319,6 +322,7 @@ class AmpacheHttpq extends localplay_controller
         if (is_null($this->_httpq->stop())) {
             return false;
         }
+
         return true;
     } // stop
 
@@ -331,6 +335,7 @@ class AmpacheHttpq extends localplay_controller
         if (is_null($this->_httpq->skip($song))) {
             return false;
         }
+
         return true;
     } // skip
 
@@ -342,6 +347,7 @@ class AmpacheHttpq extends localplay_controller
         if (is_null($this->_httpq->volume_up())) {
             return false;
         }
+
         return true;
     } // volume_up
 
@@ -353,6 +359,7 @@ class AmpacheHttpq extends localplay_controller
         if (is_null($this->_httpq->volume_down())) {
             return false;
         }
+
         return true;
     } // volume_down
 
@@ -391,6 +398,7 @@ class AmpacheHttpq extends localplay_controller
         if (is_null($this->_httpq->pause())) {
             return false;
         }
+
         return true;
     } // pause
 
@@ -404,6 +412,7 @@ class AmpacheHttpq extends localplay_controller
            if (is_null($this->_httpq->set_volume($volume))) {
                return false;
            }
+
            return true;
        } // volume
 
@@ -417,6 +426,7 @@ class AmpacheHttpq extends localplay_controller
            if (is_null($this->_httpq->repeat($state))) {
                return false;
            }
+
            return true;
        } // repeat
 
@@ -430,6 +440,7 @@ class AmpacheHttpq extends localplay_controller
            if (is_null($this->_httpq->random($onoff))) {
                return false;
            }
+
            return true;
        } // random
 
@@ -450,7 +461,7 @@ class AmpacheHttpq extends localplay_controller
 
         $songs = explode("::", $list);
 
-        foreach ($songs as $key=>$entry) {
+        foreach ($songs as $key => $entry) {
             $data = array();
 
             /* Required Elements */
@@ -507,7 +518,7 @@ class AmpacheHttpq extends localplay_controller
                                 break;
                         } // end switch on primary key type
 
-            $data['track']    = $key+1;
+            $data['track']    = $key + 1;
 
             $results[] = $data;
         } // foreach playlist items

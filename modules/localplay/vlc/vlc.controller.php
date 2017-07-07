@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -177,10 +177,10 @@ class AmpacheVlc extends localplay_controller
          */
         public function instance_fields()
         {
-            $fields['name']         = array('description' => T_('Instance Name'),'type'=>'text');
-            $fields['host']         = array('description' => T_('Hostname'),'type'=>'text');
-            $fields['port']         = array('description' => T_('Port'),'type'=>'number');
-            $fields['password']     = array('description' => T_('Password'),'type'=>'password');
+            $fields['name']         = array('description' => T_('Instance Name'),'type' => 'text');
+            $fields['host']         = array('description' => T_('Hostname'),'type' => 'text');
+            $fields['port']         = array('description' => T_('Port'),'type' => 'number');
+            $fields['password']     = array('description' => T_('Password'),'type' => 'password');
 
             return $fields;
         } // instance_fields
@@ -233,6 +233,7 @@ class AmpacheVlc extends localplay_controller
     {
         if ($this->_vlc->add($url->title, $url->url) === null) {
             debug_event('vlc', 'add_url failed to add: ' . json_encode($url), 1);
+
             return false;
         }
 
@@ -248,6 +249,7 @@ class AmpacheVlc extends localplay_controller
     {
         if ($this->_vlc->delete_pos($object_id) === null) {
             debug_event('vlc_del', 'ERROR Unable to delete ' . $object_id . ' from Vlc', '1');
+
             return false;
         }
 
@@ -287,6 +289,7 @@ class AmpacheVlc extends localplay_controller
         if ($this->_vlc->play() === null) {
             return false;
         }
+
         return true;
     } // play
 
@@ -300,6 +303,7 @@ class AmpacheVlc extends localplay_controller
         if ($this->_vlc->stop() === null) {
             return false;
         }
+
         return true;
     } // stop
 
@@ -312,6 +316,7 @@ class AmpacheVlc extends localplay_controller
         if ($this->_vlc->skip($song) === null) {
             return false;
         }
+
         return true;
     } // skip
 
@@ -323,6 +328,7 @@ class AmpacheVlc extends localplay_controller
         if ($this->_vlc->volume_up() === null) {
             return false;
         }
+
         return true;
     } // volume_up
 
@@ -334,6 +340,7 @@ class AmpacheVlc extends localplay_controller
         if ($this->_vlc->volume_down() === null) {
             return false;
         }
+
         return true;
     } // volume_down
 
@@ -373,6 +380,7 @@ class AmpacheVlc extends localplay_controller
         if ($this->_vlc->pause() === null) {
             return false;
         }
+
         return true;
     } // pause
 
@@ -386,6 +394,7 @@ class AmpacheVlc extends localplay_controller
            if ($this->_vlc->set_volume($volume) === null) {
                return false;
            }
+
            return true;
        } // volume
 
@@ -398,6 +407,7 @@ class AmpacheVlc extends localplay_controller
            if ($this->_vlc->repeat($state) === null) {
                return false;
            }
+
            return true;
        } // repeat
 
@@ -410,6 +420,7 @@ class AmpacheVlc extends localplay_controller
            if ($this->_vlc->random($onoff) === null) {
                return false;
            }
+
            return true;
        } // random
 
@@ -459,7 +470,7 @@ class AmpacheVlc extends localplay_controller
 
         $counterforarray = 0;
 
-        foreach ($songs as $key=>$entry) {
+        foreach ($songs as $key => $entry) {
             $data = array();
 
             /* Required Elements */
@@ -495,7 +506,7 @@ class AmpacheVlc extends localplay_controller
                                            $data['name'] = htmlspecialchars(substr($row['name'], 0, 50));
                                         }
                                             //if it's a http stream not in ampacha's database just show the url'
-                                          elseif (strncmp($entry, 'http', 4)== 0) {
+                                          elseif (strncmp($entry, 'http', 4) == 0) {
                                               $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
                                           }
                                           //if it's a file get the last output after  and show that, hard to take every output possible in account
@@ -507,7 +518,7 @@ class AmpacheVlc extends localplay_controller
                                 break;
                         } // end switch on primary key type
 
-            $data['track']    = $key+1;
+            $data['track']    = $key + 1;
             $counterforarray++;
             $results[] = $data;
         } // foreach playlist items
@@ -538,7 +549,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         $array['state']     = $state;
-        $array['volume']    = intval((intval($arrayholder['root']['volume']['value'])/2.6));
+        $array['volume']    = intval((intval($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat']    = $arrayholder['root']['repeat']['value'];
         $array['random']    = $arrayholder['root']['random']['value'];
         $array['track']     =   htmlspecialchars_decode($arrayholder['root']['information']['meta-information']['title']['value'], ENT_NOQUOTES);
@@ -555,6 +566,7 @@ class AmpacheVlc extends localplay_controller
             $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
             $array['track_artist'] =  htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
         }
+
         return $array;
     } // status
 

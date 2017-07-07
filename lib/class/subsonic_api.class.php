@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -70,11 +70,12 @@ class Subsonic_Api
         if ($encpwd !== false) {
             $hex    = substr($password, 4);
             $decpwd = '';
-            for ($i=0; $i<strlen($hex); $i+=2) {
+            for ($i=0; $i < strlen($hex); $i += 2) {
                 $decpwd .= chr(hexdec(substr($hex, $i, 2)));
             }
             $password = $decpwd;
         }
+
         return $password;
     }
 
@@ -100,6 +101,7 @@ class Subsonic_Api
                 http_response_code(curl_getinfo($ch, CURLINFO_HTTP_CODE));
             }
         }
+
         return strlen($header);
     }
 
@@ -1124,6 +1126,7 @@ class Subsonic_Api
                     header('Content-type: ' . $thumb['thumb_mime']);
                     header('Content-Length: ' . strlen($thumb['thumb']));
                     echo $thumb['thumb'];
+
                     return;
                 }
             }
@@ -2097,7 +2100,7 @@ class Subsonic_Api
                 $bookmark->update($position);
             } else {
                 Bookmark::create(array(
-                    'object_id' =>  Subsonic_XML_Data::getAmpacheId($id),
+                    'object_id' => Subsonic_XML_Data::getAmpacheId($id),
                     'object_type' => $type,
                     'comment' => $comment,
                     'position' => $position

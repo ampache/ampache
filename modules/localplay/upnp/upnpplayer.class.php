@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,6 +47,7 @@ class UPnPPlayer
         if ($this->_device === null) {
             $this->_device = new UPnPDevice($this->_description_url);
         }
+
         return $this->_device;
     }
 
@@ -59,6 +60,7 @@ class UPnPPlayer
         if ($this->_playlist === null) {
             $this->_playlist = new UPnPPlaylist($this->_description_url);
         }
+
         return $this->_playlist;
     }
 
@@ -87,6 +89,7 @@ class UPnPPlayer
     public function PlayListAdd($name, $link)
     {
         $this->Playlist()->Add($name, $link);
+
         return true;
     }
 
@@ -97,12 +100,14 @@ class UPnPPlayer
     public function PlaylistRemove($track)
     {
         $this->Playlist()->RemoveTrack($track);
+
         return true;
     }
 
     public function PlaylistClear()
     {
         $this->Playlist()->Clear();
+
         return true;
     }
 
@@ -144,8 +149,10 @@ class UPnPPlayer
         }
         if (($forcePlay || ($this->_intState == 1)) && ($this->Playlist()->Next())) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -157,8 +164,10 @@ class UPnPPlayer
     {
         if ($this->Playlist()->Prev()) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -170,8 +179,10 @@ class UPnPPlayer
     {
         if ($this->Playlist()->Skip($pos)) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -310,6 +321,7 @@ class UPnPPlayer
     public function VolumeUp()
     {
         $volume = $this->GetVolume() + 2;
+
         return $this->SetVolume($volume);
     }
 
@@ -320,6 +332,7 @@ class UPnPPlayer
     public function VolumeDown()
     {
         $volume = $this->GetVolume() - 2;
+
         return $this->SetVolume($volume);
     }
 

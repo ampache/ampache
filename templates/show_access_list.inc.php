@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,11 +71,11 @@
         <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
     </td>
 </tr>
-    <?php 
-    } // end foreach ?>
+    <?php
+    } // end foreach?>
 </tbody>
 </table>
-<?php 
-} // end if count ?>
+<?php
+} // end if count?>
 <?php Ajax::end_container(); ?>
 <?php UI::show_box_bottom(); ?>

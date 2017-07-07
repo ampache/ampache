@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,6 +53,7 @@ class WebDAV_Directory extends DAV\Collection
                 $children[] = WebDAV_Directory::getChildFromArray($child);
             }
         }
+
         return $children;
     }
 
@@ -94,6 +95,7 @@ class WebDAV_Directory extends DAV\Collection
     public function childExists($name)
     {
         $matches = $this->libitem->search_childrens($name);
+
         return (count($matches) > 0);
     }
 

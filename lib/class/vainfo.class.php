@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -252,7 +252,7 @@ class vainfo
             $TagData                      = $this->_raw['tags']['id3v2'];
 
             // Foreach what we've got
-            foreach ($data as $key=>$value) {
+            foreach ($data as $key => $value) {
                 if ($key != 'APIC') {
                     $TagData[$key][0] = $value;
                 }
@@ -1132,6 +1132,7 @@ class vainfo
                 $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
             }
         }
+
         return $results;
     }
     
@@ -1179,6 +1180,7 @@ class vainfo
 
             $results['title'] = $results['title'] ?: basename($filepath);
         }
+
         return $results;
     }
     
@@ -1189,10 +1191,11 @@ class vainfo
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
 
        //scan for brackets, braces, etc and ignore case.
-       for ($i=0; $i< count($commonabbr);$i++) {
+       for ($i=0; $i < count($commonabbr);$i++) {
            $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
        }
         $string = preg_replace($commonabbr, '', $name);
+
         return $string;
     }
     

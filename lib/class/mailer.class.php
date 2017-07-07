@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -112,7 +112,7 @@ class Mailer
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('id'=>$row['id'],'fullname'=>$row['fullname'],'email'=>$row['email']);
+            $results[] = array('id' => $row['id'],'fullname' => $row['fullname'],'email' => $row['email']);
         }
 
         return $results;

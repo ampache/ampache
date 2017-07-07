@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -192,6 +192,7 @@ class Auth
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
             $results['error']      = 'The PAM PHP module is not installed';
+
             return $results;
         }
 
@@ -299,6 +300,7 @@ class Auth
             $results['success'] = false;
             $results['error']   = 'HTTP auth login attempt failed';
         }
+
         return $results;
     } // http_auth
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -149,6 +149,7 @@ class Rating extends database_object
          }
 
          parent::add_to_cache($key, $this->id, $rating);
+
          return $rating;
      } // get_user_rating
 
@@ -170,6 +171,7 @@ class Rating extends database_object
         $results = Dba::fetch_assoc($db_results);
 
         parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results['rating']);
+
         return $results['rating'];
     } // get_average_rating
 
@@ -186,6 +188,7 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= " GROUP BY object_id ORDER BY `rating` DESC ";
+
         return $sql;
     }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -405,8 +405,8 @@ if ($_GET['action'] == 'download' and AmpConfig::get('download')) {
     // Check to see if we should be throttling because we can get away with it
     if (AmpConfig::get('rate_limit') > 0) {
         while (!feof($fp)) {
-            echo fread($fp, round(AmpConfig::get('rate_limit')*1024));
-            $bytesStreamed += round(AmpConfig::get('rate_limit')*1024);
+            echo fread($fp, round(AmpConfig::get('rate_limit') * 1024));
+            $bytesStreamed += round(AmpConfig::get('rate_limit') * 1024);
             flush();
             sleep(1);
         }

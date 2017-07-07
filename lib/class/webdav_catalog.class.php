@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,6 +71,7 @@ class WebDAV_Catalog extends DAV\Collection
     public function childExists($name)
     {
         $matches = Catalog::search_childrens($name, $this->catalog_id);
+
         return (count($matches) > 0);
     }
 
@@ -78,6 +79,7 @@ class WebDAV_Catalog extends DAV\Collection
     {
         if ($this->catalog_id > 0) {
             $catalog = Catalog::create_from_id($this->catalog_id);
+
             return $catalog->name;
         }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -145,16 +145,16 @@ require $prefix . '/templates/install_header.inc.php';
             foreach ($modes as $mode) {
                 ?>
             <option value="<?php echo $mode; ?>" <?php if ($_REQUEST['transcode_template'] == $mode) {
-    echo 'selected';
-} ?>><?php echo $mode; ?></option>
-        <?php 
+                    echo 'selected';
+                } ?>><?php echo $mode; ?></option>
+        <?php
             } ?>
         </select>
         <?php
         if (count($modes) == 0) {
             ?>
         <label><?php echo T_('No default transcoding application found. You may need to install a popular application (ffmpeg, avconv ...) or customize transcoding settings manually after installation.'); ?></label>
-        <?php 
+        <?php
         } ?>
     </div>
 </div>
@@ -173,28 +173,28 @@ require $prefix . '/templates/install_header.inc.php';
     </div>
     <div class="checkbox-inline">
         <label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!isset($_REQUEST['backends']) || in_array('subsonic', $_REQUEST['backends'])) {
-    echo 'checked';
-} ?>>Subsonic</label>
+            echo 'checked';
+        } ?>>Subsonic</label>
     </div>
     <div class="checkbox-inline">
         <label><input type="checkbox" name="backends[]" value="plex" <?php if (isset($_REQUEST['backends']) && in_array('plex', $_REQUEST['backends'])) {
-    echo 'checked';
-} ?>>Plex</label>
+            echo 'checked';
+        } ?>>Plex</label>
     </div>
     <div class="checkbox-inline">
         <label><input type="checkbox" name="backends[]" value="upnp" <?php if (isset($_REQUEST['backends']) && in_array('upnp', $_REQUEST['backends'])) {
-    echo 'checked';
-} ?>>UPnP</label>
+            echo 'checked';
+        } ?>>UPnP</label>
     </div>
     <div class="checkbox-inline">
         <label><input type="checkbox" name="backends[]" value="daap" <?php if (isset($_REQUEST['backends']) && in_array('daap', $_REQUEST['backends'])) {
-    echo 'checked';
-} ?>>DAAP (iTunes)</label>
+            echo 'checked';
+        } ?>>DAAP (iTunes)</label>
     </div>
     <div class="checkbox-inline">
         <label><input type="checkbox" name="backends[]" value="webdav" <?php if (isset($_REQUEST['backends']) && in_array('webdav', $_REQUEST['backends'])) {
-    echo 'checked';
-} ?>>WebDAV</label>
+            echo 'checked';
+        } ?>>WebDAV</label>
     </div>
 </div>
 
@@ -205,11 +205,11 @@ require $prefix . '/templates/install_header.inc.php';
             <h3 class="panel-title"><a data-toggle="collapse" data-target="#collapseConfigFiles" href="#collapseConfigFiles"><?php echo T_('File Insight'); ?></a></h3>
         </div>
         <div id="collapseConfigFiles" class="panel-collapse collapse <?php if (isset($created_config) && !$created_config) {
-    echo "in";
-} ?>">
+            echo "in";
+        } ?>">
             <div class="panel-body">
                 <?php if (install_check_server_apache()) {
-    ?>
+            ?>
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
                         <?php echo T_('channel/.htaccess action'); ?>
@@ -217,8 +217,8 @@ require $prefix . '/templates/install_header.inc.php';
                     <div class="col-sm-8">
                         <button type="submit" class="btn btn-warning" name="download_htaccess_channel"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_channel" <?php if (!check_htaccess_channel_writable()) {
-    echo "disabled ";
-} ?>>
+                echo "disabled ";
+            } ?>>
                             <?php echo T_('Write'); ?>
                         </button>
                     </div>
@@ -234,8 +234,8 @@ require $prefix . '/templates/install_header.inc.php';
                     <div class="col-sm-8">
                         <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) {
-    echo "disabled ";
-} ?>>
+                echo "disabled ";
+            } ?>>
                             <?php echo T_('Write'); ?>
                         </button>
                     </div>
@@ -251,8 +251,8 @@ require $prefix . '/templates/install_header.inc.php';
                     <div class="col-sm-8">
                         <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) {
-    echo "disabled ";
-} ?>>
+                echo "disabled ";
+            } ?>>
                             <?php echo T_('Write'); ?>
                         </button>
                     </div>
@@ -260,8 +260,8 @@ require $prefix . '/templates/install_header.inc.php';
                     <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
                     <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess configured?'); ?></div>
                     <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
-                <?php 
-} ?>
+                <?php
+        } ?>
 
                 <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                 <div class="col-sm-4">
@@ -270,8 +270,8 @@ require $prefix . '/templates/install_header.inc.php';
                 <div class="col-sm-8">
                     <button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
                     <button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) {
-    echo "disabled ";
-} ?>>
+            echo "disabled ";
+        } ?>>
                         <?php echo T_('Write'); ?>
                     </button>
                 </div>

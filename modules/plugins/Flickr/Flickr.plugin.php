@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,6 +52,7 @@ class Ampacheflickr
             return false;
         }
         Preference::insert('flickr_api_key', 'Flickr api key', '', '75', 'string', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -63,6 +64,7 @@ class Ampacheflickr
     public function uninstall()
     {
         Preference::delete('flickr_api_key');
+
         return true;
     } // uninstall
 
@@ -125,7 +127,7 @@ class Ampacheflickr
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -137,8 +139,10 @@ class Ampacheflickr
             $this->api_key = trim($data['flickr_api_key']);
         } else {
             debug_event($this->name, 'No Flickr api key, photo plugin skipped', '3');
+
             return false;
         }
+
         return true;
     } // load
 } // end Ampacheflickr

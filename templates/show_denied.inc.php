@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,12 +58,12 @@ $web_path = AmpConfig::get('web_path');
                 <p><?php echo T_('You have been redirected to this page because you do not have access to this function.'); ?></p>
                 <p><?php echo T_('If you believe this is an error please contact an Ampache administrator.'); ?></p>
                 <p><?php echo T_('This event has been logged.'); ?></p>
-                <?php 
+                <?php
 } else {
-    ?>
+        ?>
                 <p><?php echo T_("You have been redirected to this page because you attempted to access a function that is disabled in the demo."); ?></p>
-                <?php 
-} ?>
+                <?php
+    } ?>
             </div>
         </div>
     </body>

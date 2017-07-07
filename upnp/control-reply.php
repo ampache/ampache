@@ -40,11 +40,11 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
                 // Root items
                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
                     $items[] = array(
-                        'id'            => '0',
-                        'parentID'      => '-1',
-                        'childCount'    => '2',
-                        'dc:title'      => T_('root'),
-                        'upnp:class'    => 'object.container',
+                        'id' => '0',
+                        'parentID' => '-1',
+                        'childCount' => '2',
+                        'dc:title' => T_('root'),
+                        'upnp:class' => 'object.container',
                     );
                 } else {
                     $items = $rootMediaItems;

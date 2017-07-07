@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,14 +48,12 @@
                     </a>
                 </td>
                 <?php
-
             }
         }
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
             ?>
             <td class="cel_follow"><?php echo $libitem->get_display_follow(); ?></td>
             <?php
-
         }
     ?>
     <td class="cel_action">
@@ -66,7 +64,6 @@
                 <?php echo UI::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php
-
         }
     ?>
     <?php
@@ -89,7 +86,6 @@
             <?php echo UI::get_icon('delete', T_('Delete')); ?>
         </a>
         <?php
-
         }
     ?>
     </td>

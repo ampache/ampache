@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -113,54 +113,63 @@ class Plex_XML_Data
         foreach ($ids as $id) {
             $ampids[] = self::getAmpacheId($id);
         }
+
         return $ampids;
     }
 
     public static function isArtist($id)
     {
         $id = self::clearItemId($id);
+
         return ($id >= Plex_XML_Data::AMPACHEID_ARTIST && $id < Plex_XML_Data::AMPACHEID_ALBUM);
     }
 
     public static function isAlbum($id)
     {
         $id = self::clearItemId($id);
+
         return ($id >= Plex_XML_Data::AMPACHEID_ALBUM && $id < Plex_XML_Data::AMPACHEID_TRACK);
     }
 
     public static function isTrack($id)
     {
         $id = self::clearItemId($id);
-        return ($id >= Plex_XML_Data::AMPACHEID_TRACK  && $id < Plex_XML_Data::AMPACHEID_SONG);
+
+        return ($id >= Plex_XML_Data::AMPACHEID_TRACK && $id < Plex_XML_Data::AMPACHEID_SONG);
     }
 
     public static function isSong($id)
     {
         $id = self::clearItemId($id);
-        return ($id >= Plex_XML_Data::AMPACHEID_SONG  && $id < Plex_XML_Data::AMPACHEID_TVSHOW);
+
+        return ($id >= Plex_XML_Data::AMPACHEID_SONG && $id < Plex_XML_Data::AMPACHEID_TVSHOW);
     }
 
     public static function isTVShow($id)
     {
         $id = self::clearItemId($id);
-        return ($id >= Plex_XML_Data::AMPACHEID_TVSHOW  && $id < Plex_XML_Data::AMPACHEID_TVSHOW_SEASON);
+
+        return ($id >= Plex_XML_Data::AMPACHEID_TVSHOW && $id < Plex_XML_Data::AMPACHEID_TVSHOW_SEASON);
     }
 
     public static function isTVShowSeason($id)
     {
         $id = self::clearItemId($id);
-        return ($id >= Plex_XML_Data::AMPACHEID_TVSHOW_SEASON  && $id < Plex_XML_Data::AMPACHEID_VIDEO);
+
+        return ($id >= Plex_XML_Data::AMPACHEID_TVSHOW_SEASON && $id < Plex_XML_Data::AMPACHEID_VIDEO);
     }
 
     public static function isVideo($id)
     {
         $id = self::clearItemId($id);
+
         return ($id >= Plex_XML_Data::AMPACHEID_VIDEO && $id < Plex_XML_Data::AMPACHEID_PLAYLIST);
     }
 
     public static function isPlaylist($id)
     {
         $id = self::clearItemId($id);
+
         return ($id >= Plex_XML_Data::AMPACHEID_PLAYLIST);
     }
 
@@ -187,6 +196,7 @@ class Plex_XML_Data
     public static function getServerPort()
     {
         $port = $_SERVER['SERVER_PORT'];
+
         return $port?:'32400';
     }
 
@@ -196,6 +206,7 @@ class Plex_XML_Data
         if (!$address) {
             $address = self::getServerAddress();
         }
+
         return $address;
     }
 
@@ -205,6 +216,7 @@ class Plex_XML_Data
         if (!$port) {
             $port = self::getServerPort();
         }
+
         return $port;
     }
 
@@ -236,6 +248,7 @@ class Plex_XML_Data
     public static function createContainer()
     {
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><MediaContainer/>');
+
         return $response;
     }
 
@@ -245,6 +258,7 @@ class Plex_XML_Data
         $response->addAttribute('identifier', 'com.plexapp.plugins.library');
         $response->addAttribute('mediaTagPrefix', '/system/bundle/media/flags/');
         $response->addAttribute('mediaTagVersion', '1382796976');
+
         return $response;
     }
 
@@ -252,6 +266,7 @@ class Plex_XML_Data
     {
         $response = self::createContainer();
         $response->addAttribute('content', 'plugins');
+
         return $response;
     }
 
@@ -261,6 +276,7 @@ class Plex_XML_Data
         $response->addAttribute('noHistory', '0');
         $response->addAttribute('replaceParent', '0');
         $response->addAttribute('identifier', 'com.plexapp.system');
+
         return $response;
     }
 
@@ -268,6 +284,7 @@ class Plex_XML_Data
     {
         $response = self::createContainer();
         $response->addAttribute('identifier', 'com.plexapp.system.accounts');
+
         return $response;
     }
 
@@ -294,6 +311,7 @@ class Plex_XML_Data
     public static function getKeyFromMetadataUri($uri)
     {
         $up = '/library/metadata/';
+
         return substr($uri, strlen($up));
     }
 
@@ -309,6 +327,7 @@ class Plex_XML_Data
                 }
             }
         }
+
         return $key;
     }
 
@@ -338,6 +357,7 @@ class Plex_XML_Data
         if (!$uniqid) {
             $uniqid = self::getServerAddress();
         }
+
         return self::uuidFromKey($uniqid);
     }
 
@@ -877,7 +897,7 @@ class Plex_XML_Data
 
         $tags = Tag::get_top_tags('album', $album->id);
         if (is_array($tags)) {
-            foreach ($tags as $tag_id=>$tag) {
+            foreach ($tags as $tag_id => $tag) {
                 $xgenre = $xdir->addChild('Genre');
                 $xgenre->addAttribute('tag', $tag['name']);
             }
@@ -949,7 +969,7 @@ class Plex_XML_Data
     {
         $tags = Tag::get_top_tags($object_type, $object_id);
         if (is_array($tags) && count($tags) > 0) {
-            foreach ($tags as $tag_id=>$tag) {
+            foreach ($tags as $tag_id => $tag) {
                 $xgenre = $xml->addChild('Genre');
                 $xgenre->addAttribute('tag', $tag['name']);
             }
@@ -964,7 +984,7 @@ class Plex_XML_Data
         if (!empty($object_type)) {
             $tags = Tag::get_tags($object_type);
             if (is_array($tags) && count($tags) > 0) {
-                foreach ($tags as $tag_id=>$tag) {
+                foreach ($tags as $tag_id => $tag) {
                     $xdir = $xml->addChild('Directory');
                     $xdir->addAttribute('key', $tag['id']);
                     $xdir->addAttribute('title', $tag['name']);
@@ -1172,6 +1192,7 @@ class Plex_XML_Data
                 $xvid->addAttribute('year', $movie->year);
             }
         }
+
         return $xvid;
     }
 
@@ -1184,6 +1205,7 @@ class Plex_XML_Data
         $xvid->addAttribute('type', 'episode');
         $xvid->addAttribute('summary', $episode->summary);
         $xvid->addAttribute('index', $episode->episode_number);
+
         return $xvid;
     }
 
@@ -1258,7 +1280,7 @@ class Plex_XML_Data
 
        $tags = Tag::get_top_tags('video', $video->id);
         if (is_array($tags)) {
-            foreach ($tags as $tag_id=>$tag) {
+            foreach ($tags as $tag_id => $tag) {
                 $xgenre = $xvid->addChild('Genre');
                 $xgenre->addAttribute('id', $tag['id']);
                 $xgenre->addAttribute('tag', $tag['name']);
@@ -1505,6 +1527,7 @@ class Plex_XML_Data
         if (!empty($langs)) {
             self::addLanguages($agent, $langs);
         }
+
         return $agent;
     }
 
@@ -1786,7 +1809,7 @@ class Plex_XML_Data
         }
         if (empty($title)) {
             $pp    = explode($delim, $path);
-            $title = $pp[count($pp)-1];
+            $title = $pp[count($pp) - 1];
             if (empty($title)) {
                 $title = $path;
             }
