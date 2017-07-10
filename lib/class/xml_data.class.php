@@ -398,8 +398,8 @@ class XML_Data
                     "\t<name><![CDATA[" . $album->name . "]]></name>\n";
 
             // Do a little check for artist stuff
-            if ($album->artist_count != 1) {
-                $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
+            if ($album->album_artist_name != "") {
+                $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->album_artist_name]]></artist>\n";
             } else {
                 $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n";
             }
