@@ -328,94 +328,94 @@ class Subsonic_Api
      * Get all configured top-level music folders (= ampache catalogs).
      * Takes no parameter.
      */
-     public static function getmusicfolders($input)
-     {
-         self::check_version($input);
+    public static function getmusicfolders($input)
+    {
+        self::check_version($input);
 
-         $r = Subsonic_XML_Data::createSuccessResponse();
-         Subsonic_XML_Data::addMusicFolders($r, Catalog::get_catalogs());
-         self::apiOutput($input, $r);
-     }
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addMusicFolders($r, Catalog::get_catalogs());
+        self::apiOutput($input, $r);
+    }
 
     /**
      * getIndexes
      * Get an indexed structure of all artists.
      * Takes optional musicFolderId and optional ifModifiedSince in parameters.
      */
-     public static function getindexes($input)
-     {
-         self::check_version($input);
-         set_time_limit(300);
+    public static function getindexes($input)
+    {
+        self::check_version($input);
+        set_time_limit(300);
 
-         $musicFolderId   = $input['musicFolderId'];
-         $ifModifiedSince = $input['ifModifiedSince'];
+        $musicFolderId   = $input['musicFolderId'];
+        $ifModifiedSince = $input['ifModifiedSince'];
 
-         $catalogs = array();
-         if (!empty($musicFolderId) && $musicFolderId != '-1') {
-             $catalogs[] = $musicFolderId;
-         } else {
-             $catalogs = Catalog::get_catalogs();
-         }
+        $catalogs = array();
+        if (!empty($musicFolderId) && $musicFolderId != '-1') {
+            $catalogs[] = $musicFolderId;
+        } else {
+            $catalogs = Catalog::get_catalogs();
+        }
 
-         $lastmodified = 0;
-         $fcatalogs    = array();
+        $lastmodified = 0;
+        $fcatalogs    = array();
 
-         foreach ($catalogs as $id) {
-             $clastmodified = 0;
-             $catalog       = Catalog::create_from_id($id);
+        foreach ($catalogs as $id) {
+            $clastmodified = 0;
+            $catalog       = Catalog::create_from_id($id);
 
-             if ($catalog->last_update > $clastmodified) {
-                 $clastmodified = $catalog->last_update;
-             }
-             if ($catalog->last_add > $clastmodified) {
-                 $clastmodified = $catalog->last_add;
-             }
-             if ($catalog->last_clean > $clastmodified) {
-                 $clastmodified = $catalog->last_clean;
-             }
+            if ($catalog->last_update > $clastmodified) {
+                $clastmodified = $catalog->last_update;
+            }
+            if ($catalog->last_add > $clastmodified) {
+                $clastmodified = $catalog->last_add;
+            }
+            if ($catalog->last_clean > $clastmodified) {
+                $clastmodified = $catalog->last_clean;
+            }
 
-             if ($clastmodified > $lastmodified) {
-                 $lastmodified = $clastmodified;
-             }
-             if (!empty($ifModifiedSince) && $clastmodified > ($ifModifiedSince / 1000)) {
-                 $fcatalogs[] = $id;
-             }
-         }
-         if (empty($ifModifiedSince)) {
-             $fcatalogs = $catalogs;
-         }
+            if ($clastmodified > $lastmodified) {
+                $lastmodified = $clastmodified;
+            }
+            if (!empty($ifModifiedSince) && $clastmodified > ($ifModifiedSince / 1000)) {
+                $fcatalogs[] = $id;
+            }
+        }
+        if (empty($ifModifiedSince)) {
+            $fcatalogs = $catalogs;
+        }
 
-         $r = Subsonic_XML_Data::createSuccessResponse();
-         if (count($fcatalogs) > 0) {
-             $artists = Catalog::get_artists($fcatalogs);
-             Subsonic_XML_Data::addArtistsIndexes($r, $artists, $lastmodified);
-         }
-         self::apiOutput($input, $r);
-     }
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        if (count($fcatalogs) > 0) {
+            $artists = Catalog::get_artists($fcatalogs);
+            Subsonic_XML_Data::addArtistsIndexes($r, $artists, $lastmodified);
+        }
+        self::apiOutput($input, $r);
+    }
 
     /**
      * getMusicDirectory
      * Get a list of all files in a music directory.
      * Takes the directory id in parameters.
      */
-     public static function getmusicdirectory($input)
-     {
-         self::check_version($input);
+    public static function getmusicdirectory($input)
+    {
+        self::check_version($input);
 
-         $id = self::check_parameter($input, 'id');
+        $id = self::check_parameter($input, 'id');
 
-         $r = Subsonic_XML_Data::createSuccessResponse();
-         if (Subsonic_XML_Data::isArtist($id)) {
-             $artist = new Artist(Subsonic_XML_Data::getAmpacheId($id));
-             Subsonic_XML_Data::addArtistDirectory($r, $artist);
-         } else {
-             if (Subsonic_XML_Data::isAlbum($id)) {
-                 $album = new Album(Subsonic_XML_Data::getAmpacheId($id));
-                 Subsonic_XML_Data::addAlbumDirectory($r, $album);
-             }
-         }
-         self::apiOutput($input, $r);
-     }
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        if (Subsonic_XML_Data::isArtist($id)) {
+            $artist = new Artist(Subsonic_XML_Data::getAmpacheId($id));
+            Subsonic_XML_Data::addArtistDirectory($r, $artist);
+        } else {
+            if (Subsonic_XML_Data::isAlbum($id)) {
+                $album = new Album(Subsonic_XML_Data::getAmpacheId($id));
+                Subsonic_XML_Data::addAlbumDirectory($r, $album);
+            }
+        }
+        self::apiOutput($input, $r);
+    }
 
     /**
      * getGenres

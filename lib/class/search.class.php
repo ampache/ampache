@@ -391,7 +391,7 @@ class Search extends playlist_object
             $playlists = array();
             foreach (Search::get_searches() as $playlistid) {
                 // Slightly different from the above so we don't instigate
-            // a vicious loop.
+                // a vicious loop.
                 $playlists[$playlistid] = Search::get_name_byid($playlistid);
             }
             $this->types[] = array(

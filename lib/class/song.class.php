@@ -1643,9 +1643,9 @@ class Song extends database_object implements media, library_item
         // Some additional fields
         $fields['tag']     = true;
         $fields['catalog'] = true;
-//FIXME: These are here to keep the ideas, don't want to have to worry about them for now
-//        $fields['rating'] = true;
-//        $fields['recently Played'] = true;
+        //FIXME: These are here to keep the ideas, don't want to have to worry about them for now
+        //        $fields['rating'] = true;
+        //        $fields['recently Played'] = true;
 
         return $fields;
     } // get_fields
@@ -1789,7 +1789,7 @@ class Song extends database_object implements media, library_item
         } else {
             if (!Access::check('interface', '100')) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
-            $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
+                $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
                 if ($personal_info_id) {
                     $current_user = $GLOBALS['user']->id;
                     $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";

@@ -115,8 +115,8 @@ class AmpacheTvdb
                 if (count($releases) == 0) {
                     throw new Exception("TV Show not found");
                 }
-                    // Get first match
-                    $release               = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
+                // Get first match
+                $release                   = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId ;
                 $results['tvshow_summary'] = substr($release->overview, 0, 255);   //Summary column in db is only 256 characters.

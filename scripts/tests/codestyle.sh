@@ -17,7 +17,7 @@ PHPCSFIXERARGS="fix -v"
 EXIT=0
 
 echo -e "\e[1;34mChecking mandatory formatting/coding standards\e[00m"
-$PHPCSFIXER $PHPCSFIXERARGS --dry-run --diff .
+$PHPCSFIXER $PHPCSFIXERARGS --dry-run --diff
 rc=$?
 if [[ $rc == 0 ]]
 then

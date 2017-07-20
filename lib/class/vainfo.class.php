@@ -435,7 +435,7 @@ class vainfo
             unset($info['totaldisks']);
         }
 
-    // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
+        // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
         if (isset($results['general']['size'])) {
             $size = $results['general']['size'];
         } else {
@@ -1190,10 +1190,10 @@ class vainfo
         $commonabbr   = preg_replace("~\n~", '', $abbr);
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
 
-       //scan for brackets, braces, etc and ignore case.
-       for ($i=0; $i < count($commonabbr);$i++) {
-           $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
-       }
+        //scan for brackets, braces, etc and ignore case.
+        for ($i=0; $i < count($commonabbr);$i++) {
+            $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
+        }
         $string = preg_replace($commonabbr, '', $name);
 
         return $string;

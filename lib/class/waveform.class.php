@@ -166,11 +166,11 @@ class Waveform
         );
     }
 
-      /**
-       * Create waveform from song file.
-       * @param string $filename
-       * @return binary|string|null
-       */
+    /**
+     * Create waveform from song file.
+     * @param string $filename
+     * @return binary|string|null
+     */
     protected static function create_waveform($filename)
     {
         if (!file_exists($filename)) {
@@ -239,7 +239,7 @@ class Waveform
         // fill background of image
         if ($background == "") {
             // transparent background specified
-          imagesavealpha($img, true);
+            imagesavealpha($img, true);
             $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
             imagefill($img, 0, 0, $transparentColor);
         } else {
@@ -250,10 +250,10 @@ class Waveform
             if ($data_point++ % $detail == 0) {
                 $bytes = array();
 
-              // get number of bytes depending on bitrate
-              for ($i = 0; $i < $byte; $i++) {
-                  $bytes[$i] = fgetc($handle);
-              }
+                // get number of bytes depending on bitrate
+                for ($i = 0; $i < $byte; $i++) {
+                    $bytes[$i] = fgetc($handle);
+                }
 
                 switch ($byte) {
                 // get value for 8-bit wav
@@ -275,18 +275,18 @@ class Waveform
                 break;
               }
 
-              // skip bytes for memory optimization
-              fseek($handle, $ratio, SEEK_CUR);
+                // skip bytes for memory optimization
+                fseek($handle, $ratio, SEEK_CUR);
 
-              // draw this data point
-              // relative value based on height of image being generated
-              // data values can range between 0 and 255
-              $v = (int) ($data / 255 * $height);
+                // draw this data point
+                // relative value based on height of image being generated
+                // data values can range between 0 and 255
+                $v = (int) ($data / 255 * $height);
 
-              // don't print flat values on the canvas if not necessary
-              if (!($v / $height == 0.5 && !$draw_flat)) {
-                  // draw the line on the image using the $v value and centering it vertically on the canvas
-                imageline(
+                // don't print flat values on the canvas if not necessary
+                if (!($v / $height == 0.5 && !$draw_flat)) {
+                    // draw the line on the image using the $v value and centering it vertically on the canvas
+                    imageline(
                   $img,
                   // x1
                   (int) ($data_point / $detail),
@@ -298,10 +298,10 @@ class Waveform
                   $height - ($height - $v),
                   imagecolorallocate($img, $r, $g, $b)
                 );
-              }
+                }
             } else {
                 // skip this one due to lack of detail
-              fseek($handle, $ratio + $byte, SEEK_CUR);
+                fseek($handle, $ratio + $byte, SEEK_CUR);
             }
         }
 
