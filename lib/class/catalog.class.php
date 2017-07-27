@@ -2275,7 +2275,7 @@ abstract class Catalog extends database_object
                         date("Y-m-d\TH:i:s\Z", $song->addition_time) . '","' .
                         $song->f_bitrate . '","' .
                         $song->played . '","' .
-                        $song->file . "\n";
+                        $song->file . '"' . "\n";
                 }
                 break;
         } // end switch
