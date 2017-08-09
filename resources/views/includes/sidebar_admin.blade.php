@@ -15,12 +15,12 @@
             <img src="{!! url_icon('all') !!}" class="header-img {{ isset($_COOKIE['sb_user_tools']) ? $_COOKIE['sb_user_tools'] : 'expanded' }}" id="user_tools" alt="{{ T_('Expand/Collapse') }}" title="{{ T_('Expand/Collapse') }}" />
         </h4>
         <ul class="sb3" id="sb_admin_ut">
-            <li id="sb_admin_ut_AddUser"><a href="{!! url('user/create') !!}">{{ T_('Add User') }}</a></li>
-            <li id="sb_admin_ut_BrowseUsers"><a href="{!! url('user') !!}">{{ T_('Browse Users') }}</a></li>
+            <li id="sb_admin_ut_AddUser"><a href="{!! route('add') !!}" rel="nohtml">{{ T_('Add User') }}</a></li>
+            <li id="sb_admin_ut_BrowseUsers"><a href="{!! route('index') !!}">{{ T_('Browse Users') }}</a></li>
         </ul>
     </li>
-    {!! Ajax::start_container('browse_filters') !!}
-    {!! Ajax::end_container() !!}
+    {!! \App\Support\Ajax::start_container('browse_filters') !!}
+    {!! \App\Support\Ajax::end_container() !!}
     <li>
         <h4 class="header">
             <span class="sidebar-header-title" title="{{ T_('Other Tools') }}">{{ T_('Other Tools') }}</span>

@@ -51,6 +51,7 @@ class Catalog_beetsremote extends Beets\Catalog
                 "<li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li>" .
                 "<li>Start Beets web server</li>" .
                 "<li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
+
         return $help;
     }
 
@@ -101,6 +102,7 @@ class Catalog_beetsremote extends Beets\Catalog
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Error: Beets selected, but path is not a URL'));
+
             return false;
         }
 
@@ -111,11 +113,13 @@ class Catalog_beetsremote extends Beets\Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+
             return false;
         }
 
         $insertSql = 'INSERT INTO `catalog_beetsremote` (`uri`, `catalog_id`) VALUES (?, ?)';
         Dba::write($insertSql, array($uri, $catalog_id));
+
         return true;
     }
 
@@ -133,6 +137,7 @@ class Catalog_beetsremote extends Beets\Catalog
     {
         if ($song['added'] < $this->last_add) {
             debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', '3');
+
             return true;
         }
 

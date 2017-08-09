@@ -37,7 +37,7 @@ class CreateLabelMapsTable extends Migration
      */
     public function down()
     {
-        Schema::table('label_maps', function(Blueprint $table) {
+        Schema::table('label_maps', function (Blueprint $table) {
             $table->dropForeign('label_maps_label_id_foreign');
             $table->dropForeign('label_maps_artist_id_foreign');
         });

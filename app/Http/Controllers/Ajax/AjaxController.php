@@ -28,7 +28,7 @@ class AjaxController extends Controller
         $string = '<?xml version="1.0" encoding="utf-8" ?>' .
             "\n<root>\n" . $string . "</root>\n";
 
-        return \UI::clean_utf8($string);
+        return \App\Support\UI::clean_utf8($string);
     }
     
     protected function returnError()

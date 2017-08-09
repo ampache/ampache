@@ -58,7 +58,7 @@ class CreateMediasTable extends Migration
      */
     public function down()
     {
-        Schema::table('medias', function(Blueprint $table) {
+        Schema::table('medias', function (Blueprint $table) {
             $table->dropForeign('medias_catalog_id_foreign');
             $table->dropForeign('medias_license_id_foreign');
             $table->dropForeign('medias_user_upload_id_foreign');

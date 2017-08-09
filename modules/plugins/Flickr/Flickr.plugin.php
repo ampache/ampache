@@ -51,7 +51,8 @@ class Ampacheflickr
         if (Preference::exists('flickr_api_key')) {
             return false;
         }
-        Preference::insert('flickr_api_key','Flickr api key','','75','string','plugins',$this->name);
+        Preference::insert('flickr_api_key', 'Flickr api key', '', '75', 'string', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -63,6 +64,7 @@ class Ampacheflickr
     public function uninstall()
     {
         Preference::delete('flickr_api_key');
+
         return true;
     } // uninstall
 
@@ -125,7 +127,7 @@ class Ampacheflickr
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -136,10 +138,11 @@ class Ampacheflickr
         if (strlen(trim($data['flickr_api_key']))) {
             $this->api_key = trim($data['flickr_api_key']);
         } else {
-            debug_event($this->name,'No Flickr api key, photo plugin skipped','3');
+            debug_event($this->name, 'No Flickr api key, photo plugin skipped', '3');
+
             return false;
         }
+
         return true;
     } // load
 } // end Ampacheflickr
-?>

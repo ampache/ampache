@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html
+<html>
 <head>
     <!-- Propulsed by Ampache | ampache.org -->
     <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />

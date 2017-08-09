@@ -45,7 +45,7 @@ class CreateBroadcastsTable extends Migration
      */
     public function down()
     {
-        Schema::table('broadcasts', function(Blueprint $table) {
+        Schema::table('broadcasts', function (Blueprint $table) {
             $table->dropForeign('broadcasts_user_id_foreign');
         });
         Schema::drop('broadcasts');

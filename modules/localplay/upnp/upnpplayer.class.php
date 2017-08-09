@@ -47,6 +47,7 @@ class UPnPPlayer
         if ($this->_device === null) {
             $this->_device = new UPnPDevice($this->_description_url);
         }
+
         return $this->_device;
     }
 
@@ -59,6 +60,7 @@ class UPnPPlayer
         if ($this->_playlist === null) {
             $this->_playlist = new UPnPPlaylist($this->_description_url);
         }
+
         return $this->_playlist;
     }
 
@@ -87,6 +89,7 @@ class UPnPPlayer
     public function PlayListAdd($name, $link)
     {
         $this->Playlist()->Add($name, $link);
+
         return true;
     }
 
@@ -97,12 +100,14 @@ class UPnPPlayer
     public function PlaylistRemove($track)
     {
         $this->Playlist()->RemoveTrack($track);
+
         return true;
     }
 
     public function PlaylistClear()
     {
         $this->Playlist()->Clear();
+
         return true;
     }
 
@@ -144,8 +149,10 @@ class UPnPPlayer
         }
         if (($forcePlay || ($this->_intState == 1)) && ($this->Playlist()->Next())) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -157,8 +164,10 @@ class UPnPPlayer
     {
         if ($this->Playlist()->Prev()) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -170,8 +179,10 @@ class UPnPPlayer
     {
         if ($this->Playlist()->Skip($pos)) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -200,11 +211,11 @@ class UPnPPlayer
     private function CallAsyncURL($url)
     {
         $ch = curl_init();
-        curl_setopt( $ch, CURLOPT_URL, $url );
-        curl_setopt( $ch, CURLOPT_FRESH_CONNECT, true );
-        curl_setopt( $ch, CURLOPT_HEADER, false );
-        curl_exec( $ch );
-        curl_close( $ch );
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_exec($ch);
+        curl_close($ch);
     }
 
     /**
@@ -310,6 +321,7 @@ class UPnPPlayer
     public function VolumeUp()
     {
         $volume = $this->GetVolume() + 2;
+
         return $this->SetVolume($volume);
     }
 
@@ -320,6 +332,7 @@ class UPnPPlayer
     public function VolumeDown()
     {
         $volume = $this->GetVolume() - 2;
+
         return $this->SetVolume($volume);
     }
 
@@ -332,7 +345,7 @@ class UPnPPlayer
         $instanceId    = 0;
         $channel       = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice( 'SetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('SetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel,
             'DesiredVolume' => $desiredVolume
@@ -349,7 +362,7 @@ class UPnPPlayer
         $instanceId = 0;
         $channel    = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice( 'GetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('GetVolume', array(
             'InstanceID' => $instanceId,
             'Channel' => $channel
         ));
@@ -385,4 +398,3 @@ class UPnPPlayer
         debug_event('upnpPlayer', 'ReadIndState:' . $this->_intState, 5);
     }
 } // End UPnPPlayer Class
-?>

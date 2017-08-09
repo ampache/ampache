@@ -21,7 +21,8 @@ class IndexController extends AjaxController
      */
     public function sidebar($category)
     {
-        \Session::set('sidebar_tab', $category);
+        session(['sidebar_tab' => $category]);
+
         return $this->xml_from_array(['sidebar' => view('includes.sidebar')]);
     }
 }

@@ -1,55 +1,51 @@
 {
-    "name": "ampache/ampache",
-	"description": "A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.",
-	"homepage": "http://ampache.org",
-	"keywords": ["php", "music", "video", "player", "stream"],
-	"type": "project",
-	"license": "AGPL-3.0",
+    "name": "laravel/laravel",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "type": "project",
     "require": {
-        "php": ">=5.5.9",
-        "laravel/framework": "5.2.*",
-        "laravelcollective/html": "5.2.*",
-        "xinax/laravel-gettext": "3.1.x",
-        "mews/captcha": "~2.0",
-        
-        "gettext/gettext": "3.5.*",
-        "james-heinrich/getid3": "dev-master",
-        "mikealmond/musicbrainz": "dev-master",
-        "phpmailer/phpmailer": "5.2.*",
-        "rmccue/requests": "1.6.*",
-        "react/react": "0.4.*",
-        "cboden/ratchet": "0.3.*",
-        "szymach/c-pchart": "1.*",
-        "evenement/evenement": "2.*",
-        "happyworm/jplayer": "2.*",
-        "needim/noty": "2.3.*",
-        "openid/php-openid": "2.*",
-        "sabre/dav": "3.0.5",
-        "maennchen/zipstream-php": "0.*",
-
+        "php": ">=5.6.4",
         "Afterster/php-echonest-api": "dev-master",
-
-        "components/jquery": "2.0.*",
-        "components/jqueryui": "1.*",
-        "vakata/jstree": "3.*",
-        "components/bootstrap": "3.*",
-        "aehlke/tag-it": "2.*",
-        "scaron/prettyphoto": "3.*",
+        "aehlke/tag-it": "^2.0",
+        "anlutro/l4-settings": "^0.5.0",
+        "aterrien/jQuery-Knob": "^1.2",
+        "barryvdh/laravel-debugbar": "^2.3",
+        "Belphemur/laravel-gettext": "5.x",
+        "blueimp/jQuery-File-Upload": "^9.18",
+        "carhartl/jquery-cookie": "^1.4",
+        "components/bootstrap": "^3.3",
+        "components/jquery": "^3.2",
+        "components/jqueryui": "^1.12",
+        "evenement/evenement": "^2.0",
+        "gettext/gettext": "^4.4",
+        "happyworm/jplayer": "^2.9",
+        "james-heinrich/getid3": "^1.9",
         "jeromeetienne/jquery-qrcode": "dev-master",
-        "carhartl/jquery-cookie": "1.*",
-        "xdan/datetimepicker": "2.*",
-        "blueimp/jQuery-File-Upload": "9.*",
-        "aterrien/jQuery-Knob": "1.2.*",
-        "pklauzinski/jscroll": "2.*",
         "kumailht/responsive-elements": "dev-master",
-        "swisnl/jQuery-contextMenu": "2.1.*",
-        "barryvdh/laravel-debugbar": "^2.2",
-        "anlutro/l4-settings": "^0.4.8"
-    },
+        "laravel/framework": "5.4.*",
+        "laravel/tinker": "~1.0",
+        "laravelcollective/html": "^5.4",
+        "maennchen/zipstream-php": "^0.4.1",
+        "mews/captcha": "^2.1",
+        "mikealmond/musicbrainz": "^0.2.2",
+        "needim/noty": "2.3.*",
+        "openid/php-openid": "^2.3",
+        "phpmailer/phpmailer": "^5.2",
+        "pklauzinski/jscroll": "^2.3",
+        "react/react": "^0.4.2",
+        "rmccue/requests": "^1.7",
+        "sabre/dav": "^3.2",
+        "scaron/prettyphoto": "^3.1",
+        "swisnl/jQuery-contextMenu": "^2.1",
+        "szymach/c-pchart": "^2.0",
+        "vakata/jstree": "^3.3",
+        "xdan/datetimepicker": "^2.4"
+     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
+        "phpunit/phpunit": "~5.7",
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*"
     },
@@ -322,43 +318,44 @@
                     }
             }
 	],
+
     "autoload": {
         "classmap": [
             "database",
-            "app/Support"
+            "app/Support/helpers.php"
         ],
         "psr-4": {
             "App\\": "app/"
         },
-        "files": [
-            "app/Support/helpers.php"
-        ]
+       "files": [
+            "app/Support/helpers.php",
+			"app/Support/Ajax.class.php",
+ 			"app/Support/UI.class.php"
+       ]
     },
     "autoload-dev": {
-        "classmap": [
-            "tests/TestCase.php"
-        ]
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "scripts": {
         "post-root-package-install": [
-            "php -r \"copy('.env.example', '.env');\""
+            "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "php artisan clear-compiled",
+            "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "php artisan optimize"
-        ],
-        "pre-update-cmd": [
-            "php artisan clear-compiled"
         ],
         "post-update-cmd": [
-            "php artisan vendor:publish --tag=public --force",
-            "php artisan optimize"
-        ]
+           "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+         ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
     }
 }

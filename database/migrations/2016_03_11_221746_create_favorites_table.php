@@ -35,7 +35,7 @@ class CreateFavoritesTable extends Migration
      */
     public function down()
     {
-        Schema::table('favorites', function(Blueprint $table) {
+        Schema::table('favorites', function (Blueprint $table) {
             $table->dropForeign('favorites_user_id_foreign');
         });
         Schema::drop('favorites');

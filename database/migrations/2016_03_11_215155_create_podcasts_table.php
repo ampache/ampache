@@ -47,7 +47,7 @@ class CreatePodcastsTable extends Migration
      */
     public function down()
     {
-        Schema::table('podcasts', function(Blueprint $table) {
+        Schema::table('podcasts', function (Blueprint $table) {
             $table->dropForeign('podcasts_catalog_id_foreign');
         });
         Schema::drop('podcasts');

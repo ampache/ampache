@@ -85,6 +85,7 @@ class SubsonicClient
     public function parameterize($url, $o = array())
     {
         $params = array_merge($this->_creds, $o);
+
         return $url . http_build_query($params);
     }
 
@@ -155,7 +156,8 @@ class SubsonicClient
     protected function error($error, $data=null)
     {
         error_log($error . "\n" . print_r($data, true));
-        return (object) array("success"=>false, "error"=>$error, "data"=>$data);
+
+        return (object) array("success" => false, "error" => $error, "data" => $data);
     }
 
     protected function parseResponse($response)
@@ -164,7 +166,8 @@ class SubsonicClient
         if ($arr['subsonic-response']) {
             $response = (array)$arr['subsonic-response'];
             $data     = $response;
-            return array("success"=>($response['status'] == "ok"), "data"=>$data);
+
+            return array("success" => ($response['status'] == "ok"), "data" => $data);
         } else {
             return $this->error("Invalid response from server!", $object);
         }
@@ -178,8 +181,7 @@ class SubsonicClient
     public function __call($action, $arguments)
     {
         $o = count($arguments) ? (array) $arguments[0] : array();
+
         return $this->_querySubsonic($action, $o);
     }
 }
-
-?>

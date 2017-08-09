@@ -38,7 +38,7 @@ class CreateMoviesTable extends Migration
      */
     public function down()
     {
-        Schema::table('movies', function(Blueprint $table) {
+        Schema::table('movies', function (Blueprint $table) {
             $table->dropForeign('movies_id_foreign');
         });
         Schema::drop('movies');

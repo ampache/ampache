@@ -101,7 +101,7 @@ class Catalog_local extends Catalog
 
     public function catalog_fields()
     {
-        $fields['path']      = array('description' => T_('Path'),'type'=>'textbox');
+        $fields['path']      = array('description' => T_('Path'),'type' => 'textbox');
 
         return $fields;
     }
@@ -119,7 +119,7 @@ class Catalog_local extends Catalog
             $this->id = intval($catalog_id);
             $info     = $this->get_info($catalog_id);
 
-            foreach ($info as $key=>$value) {
+            foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
         }
@@ -154,7 +154,7 @@ class Catalog_local extends Catalog
             // Keep going until the path stops changing
             $old_path       = $component_path;
             $component_path = realpath($component_path . '/../');
-        } while (strcmp($component_path,$old_path) != 0);
+        } while (strcmp($component_path, $old_path) != 0);
 
         return false;
     }
@@ -169,16 +169,18 @@ class Catalog_local extends Catalog
     public static function create_type($catalog_id, $data)
     {
         // Clean up the path just in case
-        $path = rtrim(rtrim(trim($data['path']),'/'),'\\');
+        $path = rtrim(rtrim(trim($data['path']), '/'), '\\');
 
         if (!strlen($path)) {
             AmpError::add('general', T_('Error: Path not specified'));
+
             return false;
         }
 
         // Make sure that there isn't a catalog with a directory above this one
         if (self::get_from_path($path)) {
             AmpError::add('general', T_('Error: Defined Path is inside an existing catalog'));
+
             return false;
         }
 
@@ -186,6 +188,7 @@ class Catalog_local extends Catalog
         if (!Core::is_readable($path)) {
             debug_event('catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
             AmpError::add('general', sprintf(T_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
+
             return false;
         }
 
@@ -196,11 +199,13 @@ class Catalog_local extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $path));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?)';
         Dba::write($sql, array($path, $catalog_id));
+
         return true;
     }
 
@@ -235,6 +240,7 @@ class Catalog_local extends Catalog
         if (!is_resource($handle)) {
             debug_event('read', "Unable to open $path", 5);
             AmpError::add('catalog_add', sprintf(T_('Error: Unable to open %s'), $path));
+
             return false;
         }
 
@@ -242,15 +248,16 @@ class Catalog_local extends Catalog
         if (!chdir($path)) {
             debug_event('read', "Unable to chdir to $path", 2);
             AmpError::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
+
             return false;
         }
 
         debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
 
         /* Recurse through this dir and create the files array */
-        while ( false !== ( $file = readdir($handle) ) ) {
+        while (false !== ($file = readdir($handle))) {
             /* Skip to next if we've got . or .. */
-            if (substr($file,0,1) == '.') {
+            if (substr($file, 0, 1) == '.') {
                 continue;
             }
 
@@ -292,13 +299,14 @@ class Catalog_local extends Catalog
         if (AmpConfig::get('no_symlinks')) {
             if (is_link($full_file)) {
                 debug_event('read', "Skipping symbolic link $full_file", 5);
+
                 return false;
             }
         }
 
         /* If it's a dir run this function again! */
         if (is_dir($full_file)) {
-            $this->add_files($full_file,$options);
+            $this->add_files($full_file, $options);
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
@@ -335,6 +343,7 @@ class Catalog_local extends Catalog
                 debug_event('read', "$full_file is not readable by ampache", 2);
                 /* HINT: FullFile */
                 AmpError::add('catalog_add', sprintf(T_('%s is not readable by ampache'), $full_file));
+
                 return false;
             }
 
@@ -357,6 +366,7 @@ class Catalog_local extends Catalog
                     debug_event('read', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, '1');
                     /* HINT: FullFile */
                     AmpError::add('catalog_add', sprintf(T_('%s does not match site charset'), $full_file));
+
                     return false;
                 }
                 $full_file = $enc_full_file;
@@ -429,8 +439,8 @@ class Catalog_local extends Catalog
         $start_time = time();
 
         // Make sure the path doesn't end in a / or \
-        $this->path = rtrim($this->path,'/');
-        $this->path = rtrim($this->path,'\\');
+        $this->path = rtrim($this->path, '/');
+        $this->path = rtrim($this->path, '\\');
 
         // Prevent the script from timing out and flush what we've got
         set_time_limit(0);
@@ -561,7 +571,7 @@ class Catalog_local extends Catalog
             }
 
             $media = new $media_type($row['id']);
-            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern,$this->rename_pattern);
+            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
             if ($info['change']) {
                 $changed++;
             }
@@ -569,6 +579,7 @@ class Catalog_local extends Catalog
         }
 
         UI::update_text('verify_count_' . $this->id, $count);
+
         return $changed;
     } // _verify_chunk
 
@@ -585,6 +596,7 @@ class Catalog_local extends Catalog
             debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             AmpError::add('general', T_('Catalog Root unreadable, stopping clean'));
             AmpError::display('general');
+
             return 0;
         }
 
@@ -613,13 +625,14 @@ class Catalog_local extends Catalog
             if ($dead_count) {
                 $dead_total += $dead_count;
                 $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
-                    '(' . implode(',',$dead) . ')';
+                    '(' . implode(',', $dead) . ')';
                 $db_results = Dba::write($sql);
             }
         }
 
         \Lib\Metadata\Repository\Metadata::gc();
         \Lib\Metadata\Repository\MetadataField::gc();
+
         return $dead_total;
     }
 
@@ -661,6 +674,7 @@ class Catalog_local extends Catalog
                 }
             }
         }
+
         return $dead;
     } //_clean_chunk
 
@@ -708,6 +722,7 @@ class Catalog_local extends Catalog
             if (AmpConfig::get('catalog_check_duplicate')) {
                 if (Song::find($results)) {
                     debug_event('catalog', 'Song already found, skipped to avoid duplicate', 5);
+
                     return false;
                 }
             }
@@ -784,11 +799,11 @@ class Catalog_local extends Catalog
     {
         /* Create the vainfo object and get info */
         $gtypes     = $this->get_gather_types('video');
-        $vainfo     = new vainfo($file, $gtypes,'','','',$this->sort_pattern,$this->rename_pattern);
+        $vainfo     = new vainfo($file, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
 
         $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
-        $results            = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file);
+        $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $file);
         $results['catalog'] = $this->id;
 
         $id = Video::insert($results, $gtypes, $options);
@@ -830,7 +845,8 @@ class Catalog_local extends Catalog
     {
         $file_date = filemtime($full_file);
         if ($file_date < $this->last_add) {
-            debug_event('Check','Skipping ' . $full_file . ' File modify time before last add run','3');
+            debug_event('Check', 'Skipping ' . $full_file . ' File modify time before last add run', '3');
+
             return true;
         }
 
@@ -849,7 +865,8 @@ class Catalog_local extends Catalog
     {
         $info         = $this->_get_info();
         $catalog_path = rtrim($info->path, "/");
-        return( str_replace( $catalog_path . "/", "", $file_path ) );
+
+        return(str_replace($catalog_path . "/", "", $file_path));
     }
 
     /**
@@ -870,4 +887,3 @@ class Catalog_local extends Catalog
         return $media;
     }
 } // end of local catalog class
-

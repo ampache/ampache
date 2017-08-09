@@ -38,7 +38,7 @@ class CreateShoutsTable extends Migration
      */
     public function down()
     {
-        Schema::table('shouts', function(Blueprint $table) {
+        Schema::table('shouts', function (Blueprint $table) {
             $table->dropForeign('shouts_user_id_foreign');
         });
         Schema::drop('shouts');

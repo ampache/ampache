@@ -34,7 +34,7 @@ class CreateSessionPlaylistsTable extends Migration
      */
     public function down()
     {
-        Schema::table('session_playlists', function(Blueprint $table) {
+        Schema::table('session_playlists', function (Blueprint $table) {
             $table->dropForeign('session_playlists_id_foreign');
         });
         Schema::drop('session_playlists');

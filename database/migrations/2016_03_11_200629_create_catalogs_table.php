@@ -23,6 +23,8 @@ class CreateCatalogsTable extends Migration
             $table->string('rename_pattern');
             $table->string('sort_pattern');
             $table->string('gather_types');
+            $table->boolean('public')->default(true);
+            $table->integer('owner');
         });
     }
 

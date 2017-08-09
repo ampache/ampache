@@ -41,7 +41,7 @@ class CreatePrivateMsgsTable extends Migration
      */
     public function down()
     {
-        Schema::table('private_msgs', function(Blueprint $table) {
+        Schema::table('private_msgs', function (Blueprint $table) {
             $table->dropForeign('private_msgs_from_user_id_foreign');
             $table->dropForeign('private_msgs_to_user_id_foreign');
         });

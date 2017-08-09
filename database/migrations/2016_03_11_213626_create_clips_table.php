@@ -44,7 +44,7 @@ class CreateClipsTable extends Migration
      */
     public function down()
     {
-        Schema::table('clips', function(Blueprint $table) {
+        Schema::table('clips', function (Blueprint $table) {
             $table->dropForeign('clips_id_foreign');
             $table->dropForeign('clips_artist_id_foreign');
             $table->dropForeign('clips_song_id_foreign');

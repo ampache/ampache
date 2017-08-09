@@ -53,7 +53,7 @@ class CreatePodcastEpisodesTable extends Migration
      */
     public function down()
     {
-        Schema::table('podcast_episodes', function(Blueprint $table) {
+        Schema::table('podcast_episodes', function (Blueprint $table) {
             $table->dropForeign('podcast_episodes_id_foreign');
             $table->dropForeign('podcast_episodes_podcast_id_foreign');
         });

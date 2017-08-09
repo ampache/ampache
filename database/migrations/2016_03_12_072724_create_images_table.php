@@ -14,18 +14,18 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('libitem_type', 32);
-            $table->integer('libitem_id')
-                  ->unsigned();
             $table->binary('image')
+                  ->nullable();
+            $table->string('size', 64)
                   ->nullable();
             $table->mediumInteger('width')
                   ->default(0);
             $table->mediumInteger('height')
                   ->default(0);
+            $table->string('image_type', 32);
+            $table->integer('image_id')
+                  ->unsigned();
             $table->string('mime', 64)
-                  ->nullable();
-            $table->string('size', 64)
                   ->nullable();
             $table->string('kind', 32)
                   ->nullable();

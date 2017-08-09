@@ -12,6 +12,6 @@
             @endif
             <option value="web_player" {{ (Setting::get('play_type', 'web_player') === 'web_player') ? 'selected' : '' }}>{{ T_('Web Player') }}</option>
         </select>
-        {!! Ajax::observe('play_type_select','change',Ajax::action('?page=stream&action=set_play_type','play_type_select','play_type_form')) !!}
+        {!! App\Support\Ajax::observe('play_type_select','change',App\Support\Ajax::action('?page=stream&action=set_play_type','play_type_select','play_type_form')) !!}
     </form>
 </div>

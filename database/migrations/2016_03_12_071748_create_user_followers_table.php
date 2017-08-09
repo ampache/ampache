@@ -37,7 +37,7 @@ class CreateUserFollowersTable extends Migration
      */
     public function down()
     {
-        Schema::table('user_followers', function(Blueprint $table) {
+        Schema::table('user_followers', function (Blueprint $table) {
             $table->dropForeign('user_followers_user_id_foreign');
             $table->dropForeign('user_followers_follow_user_id_foreign');
         });

@@ -88,7 +88,7 @@ class AmpacheGravatar
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -96,4 +96,3 @@ class AmpacheGravatar
         return true;
     } // load
 } // end AmpacheGravatar
-?>

@@ -55,11 +55,11 @@ class AmpacheAmazon
             return false;
         }
 
-        Preference::insert('amazon_base_url', 'Amazon base url', 'http://webservices.amazon.com', '75', 'string', 'plugins',$this->name);
-        Preference::insert('amazon_max_results_pages', 'Amazon max results pages', '1', '75', 'integer', 'plugins',$this->name);
-        Preference::insert('amazon_developer_public_key', 'Amazon Access Key ID', '', '75', 'string', 'plugins',$this->name);
-        Preference::insert('amazon_developer_private_api_key', 'Amazon Secret Access Key', '', '75', 'string', 'plugins',$this->name);
-        Preference::insert('amazon_developer_associate_tag', 'Amazon associate tag', '', '75', 'string', 'plugins',$this->name);
+        Preference::insert('amazon_base_url', 'Amazon base url', 'http://webservices.amazon.com', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_max_results_pages', 'Amazon max results pages', '1', '75', 'integer', 'plugins', $this->name);
+        Preference::insert('amazon_developer_public_key', 'Amazon Access Key ID', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_private_api_key', 'Amazon Secret Access Key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_associate_tag', 'Amazon associate tag', '', '75', 'string', 'plugins', $this->name);
         
         return true;
     } // install
@@ -81,7 +81,7 @@ class AmpacheAmazon
 
     /**
      * load
-     * This is a required plugin function; here it populates the prefs we 
+     * This is a required plugin function; here it populates the prefs we
      * need for this object.
      */
     public function load($user)
@@ -92,21 +92,24 @@ class AmpacheAmazon
         if (strlen(trim($data['amazon_base_url']))) {
             $this->amazon_base_url = trim($data['amazon_base_url']);
         } else {
-            debug_event($this->name,'No amazon base url, plugin skipped','3');
+            debug_event($this->name, 'No amazon base url, plugin skipped', '3');
+
             return false;
         }
         
         if (strlen(trim($data['amazon_developer_public_key']))) {
             $this->amazon_developer_public_key = trim($data['amazon_developer_public_key']);
         } else {
-            debug_event($this->name,'No amazon developer public key, plugin skipped','3');
+            debug_event($this->name, 'No amazon developer public key, plugin skipped', '3');
+
             return false;
         }
         
         if (strlen(trim($data['amazon_developer_private_api_key']))) {
             $this->amazon_developer_private_api_key = trim($data['amazon_developer_private_api_key']);
         } else {
-            debug_event($this->name,'No amazon developer private key, plugin skipped','3');
+            debug_event($this->name, 'No amazon developer private key, plugin skipped', '3');
+
             return false;
         }
         
@@ -161,7 +164,7 @@ class AmpacheAmazon
         $max_pages_to_search = max($this->amazon_max_results_pages, $amazon->_default_results_pages);
         // while we have pages to search
         do {
-            $raw_results = $amazon->search(array('artist'=>'', 'album'=>'', 'keywords'=>$options['keyword']), $mediaType);
+            $raw_results = $amazon->search(array('artist' => '', 'album' => '', 'keywords' => $options['keyword']), $mediaType);
             $total       = count($raw_results) + count($search_results);
 
             // If we've gotten more then we wanted
@@ -170,13 +173,13 @@ class AmpacheAmazon
 
                 debug_event('amazon-xml', "Found $total, limit $limit; reducing and breaking from loop", 5);
                 // Merge the results and BREAK!
-                $search_results = array_merge($search_results,$raw_results);
+                $search_results = array_merge($search_results, $raw_results);
                 break;
             } // if limit defined
 
-            $search_results  = array_merge($search_results,$raw_results);
+            $search_results  = array_merge($search_results, $raw_results);
             $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-            debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
+            debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage + 1) . "/" . $pages_to_search, '5');
             $amazon->_currentPage++;
         } while ($amazon->_currentPage < $pages_to_search);
 
@@ -187,7 +190,7 @@ class AmpacheAmazon
         }
 
         /* Log this if we're doin debug */
-        debug_event('amazon-xml',"Searched using " . $options['keyword'] . ", results: " . count($final_results), 5);
+        debug_event('amazon-xml', "Searched using " . $options['keyword'] . ", results: " . count($final_results), 5);
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {
@@ -231,4 +234,3 @@ class AmpacheAmazon
         return $images;
     } // gather_arts
 } // end AmpacheAmazon
-?>

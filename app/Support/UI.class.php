@@ -5,6 +5,8 @@
  * IT SHOULD BE REMOVED SOON to have a better code design
  */
 
+namespace App\Support;
+
 class UI
 {
     private static $_classes;
@@ -140,11 +142,7 @@ class UI
     
     public static function get_current_sidebar_tab()
     {
-        $sidebar_tab = Session::get('sidebar_tab');
-        if (empty($sidebar_tab)) {
-            $sidebar_tab = 'home';
-        }
-        
+        $sidebar_tab = session('sidebar_tab', 'home');        
         return $sidebar_tab;
     }
     

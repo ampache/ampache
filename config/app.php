@@ -108,7 +108,7 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    'log' => env('APP_LOG', 'errorlog'),
 
     /*
     |--------------------------------------------------------------------------
@@ -155,11 +155,11 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\PlaylistServiceProvider::class,
-        App\Providers\RegistrationServiceProvider::class,
-        App\Providers\CatalogServiceProvider::class,
+ //       App\Providers\PlaylistServiceProvider::class,
+ //       App\Providers\RegistrationServiceProvider::class,
+ //       App\Providers\CatalogServiceProvider::class,
         
-        Barryvdh\Debugbar\ServiceProvider::class,
+ //       Barryvdh\Debugbar\ServiceProvider::class,
         Xinax\LaravelGettext\LaravelGettextServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,

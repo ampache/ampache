@@ -43,7 +43,7 @@ class CreateSharesTable extends Migration
      */
     public function down()
     {
-        Schema::table('shares', function(Blueprint $table) {
+        Schema::table('shares', function (Blueprint $table) {
             $table->dropForeign('shares_user_id_foreign');
         });
         Schema::drop('shares');

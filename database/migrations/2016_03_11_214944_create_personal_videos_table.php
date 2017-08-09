@@ -34,7 +34,7 @@ class CreatePersonalVideosTable extends Migration
      */
     public function down()
     {
-        Schema::table('personal_videos', function(Blueprint $table) {
+        Schema::table('personal_videos', function (Blueprint $table) {
             $table->dropForeign('personal_videos_id_foreign');
         });
         Schema::drop('personal_videos');

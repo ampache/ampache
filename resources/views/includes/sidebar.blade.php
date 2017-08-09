@@ -1,19 +1,20 @@
 <div id="sidebar-header"></div>
 <div id="sidebar-content" >
+
     <ul id="sidebar-tabs">
         @if (Auth::check())
             <li id='sb_tab_home' class='sb1'>
-                {!! Ajax::button('index/sidebar/home', 'home', T_('Home'), 'sidebar_home') !!}
-                @if (UI::get_current_sidebar_tab() === 'home')
+                {!! App\Support\Ajax::button('index/sidebar/home', 'home', T_('Home'), 'sidebar_home') !!}
+                @if (App\Support\UI::get_current_sidebar_tab() === 'home')
                     <div id="sidebar-page" class="sidebar-page-float">
                         @include('includes.sidebar_home')
                     </div>
                 @endif
             </li>
-            @if (Config::get('feature.allow_localplay_playback'))
+            @if (config('feature.allow_localplay_playback'))
                 <li id='sb_tab_localplay' class='sb1'>
-                    {!! Ajax::button('index/sidebar/localplay', 'volumeup', T_('Localplay'), 'sidebar_localplay') !!}
-                    @if (UI::get_current_sidebar_tab() === 'localplay')
+                    {!! App\Support\Ajax::button('index/sidebar/localplay', 'volumeup', T_('Localplay'), 'sidebar_localplay') !!}
+                    @if (App\Support\UI::get_current_sidebar_tab() === 'localplay')
                         <div id="sidebar-page" class="sidebar-page-float">
                             @include('includes.sidebar_localplay')
                         </div>
@@ -21,8 +22,8 @@
                 </li>
             @endif
             <li id='sb_tab_preferences' class='sb1'>
-                {!! Ajax::button('index/sidebar/preferences', 'preferences', T_('Preferences'), 'sidebar_preferences') !!}
-                @if (UI::get_current_sidebar_tab() === 'preferences')
+                {!! App\Support\Ajax::button('index/sidebar/preferences', 'preferences', T_('Preferences'), 'sidebar_preferences') !!}
+                @if (App\Support\UI::get_current_sidebar_tab() === 'preferences')
                     <div id="sidebar-page" class="sidebar-page-float">
                         @include('includes.sidebar_preferences')
                     </div>
@@ -30,16 +31,16 @@
             </li>
             @if (Auth::user()->isAdmin())
                 <li id='sb_tab_modules' class='sb1'>
-                    {!! Ajax::button('index/sidebar/modules', 'plugin', T_('Modules'), 'sidebar_modules') !!}
-                    @if (UI::get_current_sidebar_tab() === 'modules')
+                    {!! App\Support\Ajax::button('index/sidebar/modules', 'plugin', T_('Modules'), 'sidebar_modules') !!}
+                    @if (App\Support\UI::get_current_sidebar_tab() === 'modules')
                         <div id="sidebar-page" class="sidebar-page-float">
                             @include('includes.sidebar_modules')
                         </div>
                     @endif
                 </li>
                 <li id='sb_tab_admin' class='sb1'>
-                    {!! Ajax::button('index/sidebar/admin', 'admin', T_('Admin'), 'sidebar_admin') !!}
-                    @if (UI::get_current_sidebar_tab() === 'admin')
+                    {!! App\Support\Ajax::button('index/sidebar/admin', 'admin', T_('Admin'), 'sidebar_admin') !!}
+                    @if (App\Support\UI::get_current_sidebar_tab() === 'admin')
                         <div id="sidebar-page" class="sidebar-page-float">
                             @include('includes.sidebar_admin')
                         </div>
@@ -107,4 +108,5 @@
         }
     });
     </script>
+
 </div>

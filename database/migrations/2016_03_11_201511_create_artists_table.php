@@ -43,7 +43,7 @@ class CreateArtistsTable extends Migration
      */
     public function down()
     {
-        Schema::table('artists', function(Blueprint $table) {
+        Schema::table('artists', function (Blueprint $table) {
             $table->dropForeign('artists_user_id_foreign');
         });
         Schema::drop('artists');

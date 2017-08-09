@@ -50,7 +50,10 @@ class CreateSongsTable extends Migration
                   ->nullable();
             $table->decimal('replaygain_album_peak', 10, 6)
                   ->nullable();
-            
+            $table->decimal('size')
+                  ->unsigned()
+                  ->nullable();
+           
             $table->integer('album_id')
                   ->unsigned();
             $table->foreign('album_id')
@@ -73,7 +76,7 @@ class CreateSongsTable extends Migration
      */
     public function down()
     {
-        Schema::table('songs', function(Blueprint $table) {
+        Schema::table('songs', function (Blueprint $table) {
             $table->dropForeign('songs_id_foreign');
             $table->dropForeign('songs_album_id_foreign');
             $table->dropForeign('songs_artist_id_foreign');

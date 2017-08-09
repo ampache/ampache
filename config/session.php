@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'connection' => null,
+    'connection' => 'mysql',
 
     /*
     |--------------------------------------------------------------------------
@@ -84,6 +84,19 @@ return [
     */
 
     'table' => 'sessions',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Cache Store
+    |--------------------------------------------------------------------------
+    |
+    | When using the "apc" or "memcached" session drivers, you may specify a
+    | cache store that should be used for these sessions. This value must
+    | correspond with one of the application's configured cache stores.
+    |
+    */
+
+    'store' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +122,19 @@ return [
     |
     */
 
-    'cookie' => 'laravel_session',
+    'cookie' => 'ampache_session',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Name
+    |--------------------------------------------------------------------------
+    |
+    | Here you may change the name of the cookie used to identify a session
+    | instance by ID. The name specified here will get used every time a
+    | new session cookie is created by the framework for every driver.
+    |
+    */
+    'session_name' => 'ampache',
 
     /*
     |--------------------------------------------------------------------------
@@ -135,7 +160,7 @@ return [
     |
     */
 
-    'domain' => null,
+    'domain' => env('SESSION_DOMAIN', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -148,6 +173,36 @@ return [
     |
     */
 
-    'secure' => false,
+    'secure' => env('SESSION_SECURE_COOKIE', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | HTTP Access Only
+    |--------------------------------------------------------------------------
+    |
+    | Setting this value to true will prevent JavaScript from accessing the
+    | value of the cookie and the cookie will only be accessible through
+    | the HTTP protocol. You are free to modify this option if needed.
+    |
+    */
+
+    'http_only' => true,
+
+    /*
+    | Length that a session will last expressed in minutes. Default is
+    | one hour.
+    | DEFAULT: 60
+    */
+     'session_length' => 60,
+
+    /*
+    | Length that the session for a single streaming instance will last
+    | the default is two hours. With some clients, and long songs this can
+    | cause playback to stop, increase this value if you experience that
+    | DEFAULT: 120
+    */
+    'stream_length' => 120
+
+
 
 ];

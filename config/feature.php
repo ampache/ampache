@@ -39,4 +39,8 @@ return [
     'share' => true,
     
     'allow_zip_download' => true,
+
+	'userflags' => true,
+
+	'sidebar_light' => true
 ];

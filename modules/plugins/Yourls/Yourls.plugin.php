@@ -58,9 +58,9 @@ class AmpacheYourls
             return false;
         }
 
-        Preference::insert('yourls_domain','YOURLS domain name','','75','string','plugins',$this->name);
-        Preference::insert('yourls_use_idn','YOURLS use IDN','0','75','boolean','plugins',$this->name);
-        Preference::insert('yourls_api_key','YOURLS api key','','75','string','plugins',$this->name);
+        Preference::insert('yourls_domain', 'YOURLS domain name', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('yourls_use_idn', 'YOURLS use IDN', '0', '75', 'boolean', 'plugins', $this->name);
+        Preference::insert('yourls_api_key', 'YOURLS api key', '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -90,6 +90,7 @@ class AmpacheYourls
     {
         if (empty($this->yourls_domain) || empty($this->yourls_api_key)) {
             debug_event($this->name, 'YOURLS domain or api key missing', '3');
+
             return false;
         }
         
@@ -109,6 +110,7 @@ class AmpacheYourls
             }
         } catch (Exception $e) {
             debug_event($this->name, 'YOURLS api http exception: ' . $e->getMessage(), '1');
+
             return false;
         }
         
@@ -117,7 +119,7 @@ class AmpacheYourls
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -128,13 +130,15 @@ class AmpacheYourls
         if (strlen(trim($data['yourls_domain']))) {
             $this->yourls_domain = trim($data['yourls_domain']);
         } else {
-            debug_event($this->name,'No YOURLS domain, shortener skipped','3');
+            debug_event($this->name, 'No YOURLS domain, shortener skipped', '3');
+
             return false;
         }
         if (strlen(trim($data['yourls_api_key']))) {
             $this->yourls_api_key = trim($data['yourls_api_key']);
         } else {
-            debug_event($this->name,'No YOURLS api key, shortener skipped','3');
+            debug_event($this->name, 'No YOURLS api key, shortener skipped', '3');
+
             return false;
         }
         
@@ -143,4 +147,3 @@ class AmpacheYourls
         return true;
     } // load
 } // end AmpacheYourls
-?>

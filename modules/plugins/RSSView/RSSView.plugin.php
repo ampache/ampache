@@ -56,8 +56,8 @@ class AmpacheRSSView
             return false;
         }
 
-        Preference::insert('rssview_feed_url','RSS Feed url','','25','string','plugins',$this->name);
-        Preference::insert('rssview_max_items','RSS Feed max items','5','25','integer','plugins',$this->name);
+        Preference::insert('rssview_feed_url', 'RSS Feed url', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('rssview_max_items', 'RSS Feed max items', '5', '25', 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -122,7 +122,7 @@ class AmpacheRSSView
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -133,7 +133,8 @@ class AmpacheRSSView
         if (strlen(trim($data['rssview_feed_url']))) {
             $this->feed_url = trim($data['rssview_feed_url']);
         } else {
-            debug_event($this->name,'No rss feed url, home plugin skipped','3');
+            debug_event($this->name, 'No rss feed url, home plugin skipped', '3');
+
             return false;
         }
         $this->maxitems = intval($data['rssview_max_items']);

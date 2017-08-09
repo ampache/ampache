@@ -35,7 +35,7 @@ class CreateUserActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::table('user_activities', function(Blueprint $table) {
+        Schema::table('user_activities', function (Blueprint $table) {
             $table->dropForeign('user_activities_user_id_foreign');
         });
         Schema::drop('user_activities');

@@ -48,7 +48,7 @@ class CreateWantedsTable extends Migration
      */
     public function down()
     {
-        Schema::table('wanteds', function(Blueprint $table) {
+        Schema::table('wanteds', function (Blueprint $table) {
             $table->dropForeign('wanteds_user_id_foreign');
             $table->dropForeign('wanteds_artist_id_foreign');
         });

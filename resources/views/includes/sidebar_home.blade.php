@@ -47,8 +47,8 @@
     @endif
     <?php
     if (Config::get('theme.browse_filter')) {
-        Ajax::start_container('browse_filters');
-        Ajax::end_container();
+        App\Support\Ajax::start_container('browse_filters');
+        App\Support\Ajax::end_container();
     }
     ?>
     @if (Auth::check())
@@ -108,10 +108,10 @@
             <img src="{{ url_icon('all') }}" class="header-img {{ isset($_COOKIE['sb_random']) ? $_COOKIE['sb_random'] : 'collapsed' }}" id="random" alt="{{ T_('Expand/Collapse') }}" title="{{ T_('Expand/Collapse') }}" />
         </h4>
         <ul class="sb3" id="sb_home_random" style="{{ !isset($_COOKIE['sb_random']) ? 'display: none;' : '' }}">
-            <li id="sb_home_random_album">{!! Ajax::text('?page=random&action=song', T_('Song'),'home_random_song') !!}</li>
-            <li id="sb_home_random_album">{!! Ajax::text('?page=random&action=album', T_('Album'),'home_random_album') !!}</li>
-            <li id="sb_home_random_artist">{!! Ajax::text('?page=random&action=artist', T_('Artist'),'home_random_artist') !!}</li>
-            <li id="sb_home_random_playlist">{!! Ajax::text('?page=random&action=playlist', T_('Playlist'),'home_random_playlist') !!}</li>
+            <li id="sb_home_random_album">{!! App\Support\Ajax::text('?page=random&action=song', T_('Song'),'home_random_song') !!}</li>
+            <li id="sb_home_random_album">{!! App\Support\Ajax::text('?page=random&action=album', T_('Album'),'home_random_album') !!}</li>
+            <li id="sb_home_random_artist">{!! App\Support\Ajax::text('?page=random&action=artist', T_('Artist'),'home_random_artist') !!}</li>
+            <li id="sb_home_random_playlist">{!! App\Support\Ajax::text('?page=random&action=playlist', T_('Playlist'),'home_random_playlist') !!}</li>
             <li id="sb_home_random_advanced"><a href="{{ url('/random/song/?action=advanced') }}">{{ T_('Advanced') }}</a></li>
         </ul>
     </li>

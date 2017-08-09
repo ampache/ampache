@@ -5,6 +5,8 @@
  * IT SHOULD BE REMOVED SOON to have a better code design
  */
 
+namespace App\Support;
+
 class Ajax {
     private static $include_override;
     private static $counter = 0;
@@ -40,7 +42,7 @@ class Ajax {
 
         $observe   = "<script type=\"text/javascript\">";
         $methodact = (($method == 'click') ? "update_action();" : "");
-        if (Config::get('theme.ajax_load') && $method == 'load') {
+        if (config('theme.ajax_load') && $method == 'load') {
             $source_txt = "$( document ).ready(";
         } else {
             $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";

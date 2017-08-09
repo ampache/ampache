@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
-class CatalogTableSeeder extends Seeder {
-
+class CatalogTableSeeder extends Seeder
+{
     public function run()
     {
         DB::table('catalogs')->delete();

@@ -1,37 +1,36 @@
 <?php
+
 namespace App\Events;
 
-use App\Models\Media;
 use App\Models\User;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UserRegistered extends Event
+class UserRegistered
 {
-    use SerializesModels;
-    
-    /**
-     * The user who carries the action.
-     * 
-     * @var User
-     */
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
     public $user;
-    
+
     /**
      * Create a new event instance.
      *
-     * @param User  $user
-     *
      * @return void
      */
-    public function __construct(User $user = null)
+    public function __construct()
     {
-        $this->user = $user ?: auth()->user();
+         $this->user = $user ?: auth()->user();
     }
-    
+
     /**
-     * Get the channels the event should be broadcast on.
+     * Get the channels the event should broadcast on.
      *
-     * @return array
+     * @return Channel|array
      */
     public function broadcastOn()
     {

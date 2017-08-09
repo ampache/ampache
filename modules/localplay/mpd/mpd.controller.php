@@ -97,7 +97,7 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active','MPD Active Instance','0','25','integer','internal','mpd');
+        Preference::insert('mpd_active', 'MPD Active Instance', '0', '25', 'integer', 'internal', 'mpd');
 
         return true;
     } // install
@@ -122,7 +122,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_instance($data)
     {
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             switch ($key) {
                 case 'name':
                 case 'host':
@@ -201,7 +201,7 @@ class AmpacheMpd extends localplay_controller
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
      */
-    public function update_instance($uid,$data)
+    public function update_instance($uid, $data)
     {
         $uid     = Dba::escape($uid);
         $host    = $data['host'] ? Dba::escape($data['host']) : '127.0.0.1';
@@ -222,10 +222,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name']        = array('description' => T_('Instance Name'),'type'=>'textbox');
-        $fields['host']        = array('description' => T_('Hostname'),'type'=>'textbox');
-        $fields['port']        = array('description' => T_('Port'),'type'=>'textbox');
-        $fields['password']    = array('description' => T_('Password'),'type'=>'textbox');
+        $fields['name']        = array('description' => T_('Instance Name'),'type' => 'textbox');
+        $fields['host']        = array('description' => T_('Hostname'),'type' => 'textbox');
+        $fields['port']        = array('description' => T_('Port'),'type' => 'textbox');
+        $fields['password']    = array('description' => T_('Password'),'type' => 'textbox');
 
         return $fields;
     } // instance_fields
@@ -234,7 +234,7 @@ class AmpacheMpd extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      */
-    public function set_active_instance($uid,$user_id='')
+    public function set_active_instance($uid, $user_id='')
     {
         // Not an admin? bubkiss!
         if (!$GLOBALS['user']->has_access('100')) {
@@ -243,7 +243,7 @@ class AmpacheMpd extends localplay_controller
 
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
-        Preference::update('mpd_active',$user_id,intval($uid));
+        Preference::update('mpd_active', $user_id, intval($uid));
         AmpConfig::set('mpd_active', intval($uid), true);
 
         return true;
@@ -275,10 +275,12 @@ class AmpacheMpd extends localplay_controller
 
         if (!$this->_mpd->PlAdd($url->url)) {
             debug_event('mpd', 'add_url failed to add: ' . json_encode($url), 1);
+
             return false;
         }
 
         $this->_add_count++;
+
         return true;
     }
 
@@ -334,6 +336,7 @@ class AmpacheMpd extends localplay_controller
         $this->stop();
         sleep(2);
         $this->play();
+
         return true;
     } // skip
 
@@ -496,7 +499,7 @@ class AmpacheMpd extends localplay_controller
             } // end switch on primary key type
 
             /* Optional Elements */
-            $data['track']    = $entry['Pos']+1;
+            $data['track']    = $entry['Pos'] + 1;
 
             $results[] = $data;
         } // foreach playlist items
@@ -565,4 +568,3 @@ class AmpacheMpd extends localplay_controller
         return false;
     } // connect
 } //end of AmpacheMpd
-

@@ -41,7 +41,7 @@ class CreateTvshowEpisodesTable extends Migration
      */
     public function down()
     {
-        Schema::table('tvshow_episodes', function(Blueprint $table) {
+        Schema::table('tvshow_episodes', function (Blueprint $table) {
             $table->dropForeign('tvshow_episodes_id_foreign');
             $table->dropForeign('tvshow_episodes_season_id_foreign');
         });

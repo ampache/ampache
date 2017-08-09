@@ -34,7 +34,7 @@ class CreatePlaylistsTable extends Migration
      */
     public function down()
     {
-        Schema::table('playlists', function(Blueprint $table) {
+        Schema::table('playlists', function (Blueprint $table) {
             $table->dropForeign('playlists_user_id_foreign');
         });
         Schema::drop('playlists');

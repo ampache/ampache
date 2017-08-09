@@ -54,7 +54,7 @@ class AmpacheTheaudiodb
         }
 
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key','TheAudioDb api key','41214789306c4690752dfb','75','string','plugins',$this->name);
+        Preference::insert('tadb_api_key', 'TheAudioDb api key', '41214789306c4690752dfb', '75', 'string', 'plugins', $this->name);
         
         return true;
     } // install
@@ -72,7 +72,7 @@ class AmpacheTheaudiodb
 
     /**
      * load
-     * This is a required plugin function; here it populates the prefs we 
+     * This is a required plugin function; here it populates the prefs we
      * need for this object.
      */
     public function load($user)
@@ -83,7 +83,8 @@ class AmpacheTheaudiodb
         if (strlen(trim($data['tadb_api_key']))) {
             $this->api_key = trim($data['tadb_api_key']);
         } else {
-            debug_event($this->name,'No TheAudioDb api key, metadata plugin skipped','3');
+            debug_event($this->name, 'No TheAudioDb api key, metadata plugin skipped', '3');
+
             return false;
         }
         
@@ -101,6 +102,7 @@ class AmpacheTheaudiodb
         // Music metadata only
         if (!in_array('music', $gather_types)) {
             debug_event('tadb', 'Not a valid media type, skipped.', '5');
+
             return null;
         }
 
@@ -164,6 +166,7 @@ class AmpacheTheaudiodb
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('tadb', 'gather_arts for type `' . $type . '`', 5);
+
         return Art::gather_metadata_plugin($this, $type, $options);
     }
     
@@ -209,4 +212,3 @@ class AmpacheTheaudiodb
         return $this->api_call('track-mb.php?i=' . $mbid);
     }
 } // end AmpacheTheaudiodb
-?>

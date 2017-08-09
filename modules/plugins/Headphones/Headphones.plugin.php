@@ -57,8 +57,8 @@ class AmpacheHeadphones
             return false;
         }
 
-        Preference::insert('headphones_api_url','Headphones url','','25','string','plugins',$this->name);
-        Preference::insert('headphones_api_key','Headphones api key','','25','string','plugins',$this->name);
+        Preference::insert('headphones_api_url', 'Headphones url', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_key', 'Headphones api key', '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -96,6 +96,7 @@ class AmpacheHeadphones
         $artist     = new Artist($wanted->artist);
         if (empty($artist->mbid)) {
             debug_event($this->name, 'Artist `' . $artist->name . '` doesn\'t have MusicBrainz Id. Skipped.', 3);
+
             return false;
         }
         
@@ -119,6 +120,7 @@ class AmpacheHeadphones
     {
         if (empty($this->api_url) || empty($this->api_key)) {
             debug_event($this->name, 'Headphones url or api key missing', '3');
+
             return false;
         }
     
@@ -135,6 +137,7 @@ class AmpacheHeadphones
             ));
         } catch (Exception $e) {
             debug_event($this->name, 'Headphones api http exception: ' . $e->getMessage(), '1');
+
             return false;
         }
         
@@ -143,7 +146,7 @@ class AmpacheHeadphones
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -154,17 +157,18 @@ class AmpacheHeadphones
         if (strlen(trim($data['headphones_api_url']))) {
             $this->api_url = trim($data['headphones_api_url']);
         } else {
-            debug_event($this->name,'No Headphones url, auto download skipped','3');
+            debug_event($this->name, 'No Headphones url, auto download skipped', '3');
+
             return false;
         }
         if (strlen(trim($data['headphones_api_key']))) {
             $this->api_key = trim($data['headphones_api_key']);
         } else {
-            debug_event($this->name,'No Headphones api key, auto download skipped','3');
+            debug_event($this->name, 'No Headphones api key, auto download skipped', '3');
+
             return false;
         }
 
         return true;
     } // load
 } // end AmpacheHeadphones
-?>

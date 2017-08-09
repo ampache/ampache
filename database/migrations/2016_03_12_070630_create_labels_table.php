@@ -44,7 +44,7 @@ class CreateLabelsTable extends Migration
      */
     public function down()
     {
-        Schema::table('labels', function(Blueprint $table) {
+        Schema::table('labels', function (Blueprint $table) {
             $table->dropForeign('labels_user_id_foreign');
         });
         Schema::drop('labels');

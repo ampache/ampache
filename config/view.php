@@ -1,13 +1,6 @@
 <?php
 
 return [
-    
-    'show_donate' => true,
-    
-    'show_footer_statistics' => true,
-    
-    'custom_text_footer' => '',
-    
 
     /*
     |--------------------------------------------------------------------------
@@ -21,7 +14,7 @@ return [
     */
 
     'paths' => [
-        realpath(base_path('resources/views')),
+        resource_path('views'),
     ],
 
     /*

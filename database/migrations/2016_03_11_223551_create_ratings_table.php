@@ -34,7 +34,7 @@ class CreateRatingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('ratings', function(Blueprint $table) {
+        Schema::table('ratings', function (Blueprint $table) {
             $table->dropForeign('ratings_user_id_foreign');
         });
         Schema::drop('ratings');
