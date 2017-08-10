@@ -24,7 +24,7 @@ class UserRegistered
      */
     public function __construct()
     {
-         $this->user = $user ?: auth()->user();
+         $this->user = Auth()->user();
     }
 
     /**

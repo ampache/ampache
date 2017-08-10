@@ -14,17 +14,17 @@
     @if (Auth::check())
         <span id="loginInfo">
             <a href="{{ url('user/' . Auth::user()->id) }}">{{ Auth::user()->name ?: Auth::user()->username }}</a>
-            @if (Config::get('feature.sociable'))
-            <a href="{!! url('message') !!}" title="{{ T_('New Messages') }}">({{ count(PrivateMsg::get_private_msgs(Auth::user()->id, true)) }})</a>
+           @if (Config::get('feature.sociable'))
+            <a href="{!! url('message') !!}" title="{{ T_('New Messages') }}">({{ 
+            App\Models\PrivateMsg::where([['id','=', Auth::user()->id],['is_read',"=",false]])->count() }} messages)</a>
             @endif
-
              <a rel="nohtml" href="{!! url('logout') !!}">[{{ T_('Logout') }}]</a>
         </span>
     @else
         <span id="loginInfo">
             <a href="{!! url('/login') !!}" rel="nohtml">{{ T_('Login') }}</a>
             @if (Config::get('user.allow_public_registration'))
-                / <a href="{!! url('/register') !!}" rel="nohtml">{{ T_('Register') }}</a>
+                / <a href="{!! url('register') !!}" rel="nohtml">{{ T_('Register') }}</a>
             @endif
         </span>
     @endif

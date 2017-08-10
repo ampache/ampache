@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-use App\Models\User;
 
 Route::get('/', function () {
     return view('pages.index');

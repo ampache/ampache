@@ -15,8 +15,8 @@
           <img src="{!! url_icon('all') !!}" class="header-img {{ isset($_COOKIE['sb_md_other_tools']) ? $_COOKIE['sb_md_other_tools'] : 'expanded' }}" id="md_other_tools" alt="{{ T_('Expand/Collapse') }}" title="{{ T_('Expand/Collapse') }}" />
       </h4>
     <ul class="sb3" id="sb_admin_ot">
-      <li id="sb_admin_ot_Duplicates"><a href="{!! url('duplicates') }}">{{ T_('Find Duplicates') }}</a></li>
-      <li id="sb_admin_ot_Mail"><a href="{!! url('mail/all') !}}">{{ T_('Mail Users') }}</a></li>
+      <li id="sb_admin_ot_Duplicates"><a href="{!! url('duplicates') !!}">{{ T_('Find Duplicates') }}</a></li>
+      <li id="sb_admin_ot_Mail"><a href="{!! url('mail/all') !!}">{{ T_('Mail Users') }}</a></li>
     </ul>
   </li>
 <!--

@@ -12,7 +12,7 @@ return [
     
     'allow_stream_playback' => false,
     
-    'sociable' => false,
+    'sociable' => true,
     
     'licensing' => true,
     
