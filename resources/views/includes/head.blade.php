@@ -11,7 +11,7 @@
 @endif
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset={{ Config::get('system.site_charset') }}" />
 <title>{{ Config::get('theme.title') }}</title>
-
+<link rel="shortcut icon" href="{{ url('favicon.png') }}" type="image/icon">
 <link rel="stylesheet" href="{{ url(elixir('css/app.css')) }}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{{ url(elixir('css/vendors.css')) }}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{{ url(elixir('css/main.css')) }}" type="text/css" media="screen" />

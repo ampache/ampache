@@ -19,7 +19,7 @@ Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name=('logout');
 Route::get('server/ajax/index/sidebar/{category}', 'Ajax\IndexController@sidebar');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::post('/user/store', 'UserController@store');
+Route::post('update/{id}', 'UserController@update')->name('update');
 
 Route::get('index', 'UserController@index')->name('index');
 Route::get('show/{id}', 'UserController@show')->name('show');

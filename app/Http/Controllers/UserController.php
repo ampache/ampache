@@ -59,12 +59,22 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $rules = [
             'username' => 'required|max:255|unique:users',
             'email' => 'required|email|max:225|unique:users',
             'password' => 'required|confirmed|min:4',
-        ]);
-  
+        ];
+        foreach (config('user.registration_mandatory_fields') as $field) {
+            if (!in_array($field, $rules)) {
+                $rules[$field] = 'required|max:225';
+            }
+        }
+        if (config('user.captcha_public_reg')) {
+            $rules['captcha'] = 'required|captcha';
+        }
+
+        return Validator::make($data, $rules);
+        
         if (($request->hasFile('image')) && ($request->file('image')->isValid())) {
             $params   = "|dimensions:min_width=config('system.avatar_min_width'),min_height=config('system.avatar_min_height')";
             $messages = [
@@ -105,7 +115,6 @@ class UserController extends Controller
     public function show($id)
     {
         $user = $this->user->findOrFail($id);
-        UI::flip_class(['odd','even']);
 
         return view('user.details', compact('user'));
     }
@@ -118,10 +127,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $users   = $this->user->findOrFail($id);
+        $user   = $this->user->findOrFail($id);
         $maxsize = \App\Support\UI::format_bytes(config('system.avatar_max_size'));
 
-        return view('user.edit', compact('users', 'maxsize'));
+        return view('user.edit', compact('user', 'maxsize'));
     }
 
     /**
@@ -130,11 +139,30 @@ class UserController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update(UserUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
+        $rules = array();
+        if (!is_null($request->input('email'))) {
+            $rules['email'] = 'email|max:255|unique:users' ;
+        }
+        
+        if (!is_null($request->input('password'))) {
+            $rules['password'] = 'confirmed|min:4';
+        }
+        
+        
+        foreach (config('user.registration_mandatory_fields') as $field) {
+            if (!in_array($field, $rules)) {
+                  if ($request->has($field)) {
+                    $rules[$field] = 'required|max:225';
+                  }
+            }
+        }
+
+        $validated = Validator::make($request->all(), $rules);
         $this->user->findOrFail($id)->fill($request->all())->save();
         
-        return redirect('user')->withOk('User updated.');
+        return redirect('/')->withOk('User updated.');
     }
 
     /**
