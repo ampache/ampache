@@ -87,7 +87,7 @@ noty({text: '<?php printf(json_encode(nl2br(/* HINT: Translator, "%s" is replace
     
     <!-- Tiny little div, used to cheat the system -->
     <div id="ajax-loading">Loading . . .</div>
-    <div id="util_div" style="display:none;"></div>
+    <div id="util_div" style="display:block;"></div>
     <iframe name="util_iframe" id="util_iframe" style="display:none;" src="{{ url('util.php') }}"></iframe>
     <div id="content">
         <div id="guts">

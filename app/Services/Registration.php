@@ -10,7 +10,6 @@ class Registration
      */
     public function __construct()
     {
-        
     }
     
     public function isFieldVisible($fieldname)

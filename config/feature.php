@@ -40,7 +40,7 @@ return [
     
     'allow_zip_download' => true,
 
-	'userflags' => true,
+    'userflags' => true,
 
-	'sidebar_light' => true
+    'sidebar_light' => true
 ];

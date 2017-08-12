@@ -30,6 +30,5 @@ class SendMailRegisteredUser
      */
     public function handle(UserRegistered $event)
     {
-        
     }
 }

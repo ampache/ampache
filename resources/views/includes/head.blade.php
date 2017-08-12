@@ -12,14 +12,16 @@
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset={{ Config::get('system.site_charset') }}" />
 <title>{{ Config::get('theme.title') }}</title>
 <link rel="shortcut icon" href="{{ url('favicon.png') }}" type="image/icon">
-<link rel="stylesheet" href="{{ url(elixir('css/app.css')) }}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{{ url(elixir('css/vendors.css')) }}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{{ url(elixir('css/main.css')) }}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{{ url('themes/' . Config::get('theme.theme') . '/css/default.css') }}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{{ url('themes/' . Config::get('theme.theme') . '/css/' . Config::get('theme.color') . '.css') }}" type="text/css" media="screen" />
-<script src="{{ url(elixir('js/vendors.js')) }}" language="javascript" type="text/javascript"></script>
-<script src="{{ url(elixir('js/main.js')) }}" language="javascript" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="{{ url('js/ajax.js') }}" type="text/javascript"></script>
+<script src="{{ url('js/slideshow.js') }}" type="text/javascript"></script>
+<script src="{{ url('js/jquery.prettyPhoto.js') }}" type="text/javascript"></script>
 
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="{{ url('themes/' . Config::get('theme.theme') . '/css/default.css') }}" type="text/css" media="screen">
+<link rel="stylesheet" href="{{ url('css/base.css') }}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{{ url('themes/' . Config::get('theme.theme') . '/css/' . Config::get('theme.color') . '.css') }}" type="text/css" media="screen" />
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function(){
         $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});

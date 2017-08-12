@@ -26,7 +26,7 @@ class CatalogController extends Controller
     public function index(Request $request)
     {
         $catalogs = $this->model->paginate(\Config::get('theme.threshold'));
-        $links = $catalogs->setPath('')->render();
+        $links    = $catalogs->setPath('')->render();
         
         return view('catalog.index', compact('catalogs', 'links'));
     }
@@ -64,7 +64,7 @@ class CatalogController extends Controller
     {
         $catalog = $this->model->findOrFail($id);
 
-        return view('catalog.show',  compact('catalog'));
+        return view('catalog.show', compact('catalog'));
     }
 
     /**
@@ -77,7 +77,7 @@ class CatalogController extends Controller
     {
         $catalog = $this->model->findOrFail($id);
 
-        return view('catalog.edit',  compact('catalog'));
+        return view('catalog.edit', compact('catalog'));
     }
 
     /**
@@ -105,5 +105,4 @@ class CatalogController extends Controller
 
         return redirect()->back();
     }
-    
 }

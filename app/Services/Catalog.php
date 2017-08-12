@@ -13,14 +13,13 @@ class Catalog
      */
     public function __construct()
     {
-        
     }
     
     public function getCatalogModules()
     {
         $basedir = base_path('modules/catalog');
         $results = array();
-        $files = File::directories($basedir);
+        $files   = File::directories($basedir);
         foreach ($files as $file) {
             /* Make sure it is a dir */
             if (!File::isDirectory($file)) {

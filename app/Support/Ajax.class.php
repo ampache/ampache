@@ -1,13 +1,14 @@
 <?php
 
-/* 
+/*
  * This class is an helper to quickly migrate from Ampache legacy to Lavarel
  * IT SHOULD BE REMOVED SOON to have a better code design
  */
 
 namespace App\Support;
 
-class Ajax {
+class Ajax
+{
     private static $include_override;
     private static $counter = 0;
 
@@ -34,7 +35,7 @@ class Ajax {
     {
         $non_quoted = array('document', 'window');
 
-        if (in_array($source,$non_quoted)) {
+        if (in_array($source, $non_quoted)) {
             $source_txt = $source;
         } else {
             $source_txt = "'#$source'";
@@ -83,7 +84,7 @@ class Ajax {
 
         $non_quoted = array('document','window');
 
-        if (in_array($source,$non_quoted)) {
+        if (in_array($source, $non_quoted)) {
             $source_txt = $source;
         } else {
             $source_txt = "'$source'";

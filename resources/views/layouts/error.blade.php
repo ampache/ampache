@@ -3,7 +3,7 @@
 <head>
     <!-- Propulsed by Ampache | ampache.org -->
     <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
-    <title><?php echo( T_("Ampache error page"));?></title>
+    <title><?php echo(T_("Ampache error page"));?></title>
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
@@ -20,7 +20,7 @@
     <div class="container" role="main">
         <div class="jumbotron">
             <h1>{{ lang('error') }}</h1>
-            <p>{{ lang('error_redirect') }}<?php echo (T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?></p>
+            <p>{{ lang('error_redirect') }}<?php echo(T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.")); ?></p>
         </div>
         <h2>{{ lang('error_messages') }}:</h2>
         @yield('content')

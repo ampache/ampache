@@ -61,15 +61,15 @@
 							    <table>
 							    	<tr>
                         	  			<td>
-                                			<a href="{!! route('edit', [$user->id]) !!}"><img src="{!! url_icon('edit') !!}" title="{{ T_('Edit') }}" /></a>
+											<img id="say_it" src="{{ url_icon('edit') }}" title="{{ T_('Edit') }}"/>
  		                         			@if (Auth::check() && config('feature.sociable'))
                         		 			@endif
-    						  			</td>	                          
+    						  			</td>
                            				<td>
 											<form id="{{ $user->id }}" action="{{ url('/user/destroy/'.$user->id) }}" method="POST">
    														{{ method_field('DELETE') }}
    														{{ csrf_field() }}
-   														<a href="javascript:deleteUser({{ $user->id }})"><img src="{{ url_icon('delete') }}" title="{{ T_('Delete') }}" /></a>
+   														<a href="javascript:deleteUser('{{ $user->username }}', {{ $user->id }})"><img src="{{ url_icon('delete') }}" title="{{ T_('Delete') }}" /></a>
                                 			</form>
                             			</td>
                         				<td>
@@ -95,15 +95,20 @@
                     @endforeach
                 </tbody>
             </table>
-            
+    <div id="hello" title="Hello  World!"><p><font face="Georgia" size="4">
+Hey, world, I just said "Hello!"</font></p></div>           
             {!! $links !!}
         </div>
-    </div>
     <script>
-		function deleteUser(id) {
-			if (confirm("Are you sure you want to permanently delete %id?")) {
+		function deleteUser(username, id) {
+			if (confirm("Are you sure you want to permanently delete user '" + username + "'?")) {
 				document.getElementById(id).submit();
 			}
-		}
-	</script>
+		};
+		$( "#hello" ).dialog({ autoOpen: false });
+		$( "#say_it" ).click(function() {
+		$( "#hello" ).dialog( "open" );
+		});
+ 	</script>
+ 
 @stop

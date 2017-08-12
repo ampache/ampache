@@ -82,15 +82,15 @@ return [
      */
     /*
     'source-paths' => [
-		'frontend' => [
-			'controllers',
-			'views/frontend',
-		],
-		'backend' => [
-			'views/backend',
-		],
-		'storage/views',
-	],
+        'frontend' => [
+            'controllers',
+            'views/frontend',
+        ],
+        'backend' => [
+            'views/backend',
+        ],
+        'storage/views',
+    ],
     */
 
     /**

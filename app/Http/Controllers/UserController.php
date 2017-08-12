@@ -127,7 +127,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user   = $this->user->findOrFail($id);
+        $user    = $this->user->findOrFail($id);
         $maxsize = \App\Support\UI::format_bytes(config('system.avatar_max_size'));
 
         return view('user.edit', compact('user', 'maxsize'));
@@ -153,9 +153,9 @@ class UserController extends Controller
         
         foreach (config('user.registration_mandatory_fields') as $field) {
             if (!in_array($field, $rules)) {
-                  if ($request->has($field)) {
+                if ($request->has($field)) {
                     $rules[$field] = 'required|max:225';
-                  }
+                }
             }
         }
 

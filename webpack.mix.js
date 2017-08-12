@@ -40,6 +40,7 @@ mix.scripts([
             'components/jQuery-File-Upload/js/jquery.iframe-transport.js',
             'components/jQuery-File-Upload/js/jquery.fileupload.js',
             'components/jQuery-contextMenu/dist/jquery.contextMenu.js',
+            'components/jquery-ui/jquery-ui.js',
             'resources/assets/js/**/*.js'
  ], 'public/js/vendors.js');
 

@@ -10,7 +10,6 @@ class Playlist
      */
     public function __construct()
     {
-        
     }
     
     public function hasItems($playlist_id)
@@ -21,11 +20,12 @@ class Playlist
                 return true;
             }
         }
+
         return false;
     }
     
     public function getTracks($playlist_id)
     {
-        return array();        
+        return array();
     }
 }

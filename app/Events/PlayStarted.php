@@ -11,14 +11,14 @@ class SongLikeToggled extends Event
     
     /**
      * The target media for the action.
-     * 
+     *
      * @var Media
      */
     public $media;
     
     /**
      * The user who carries the action.
-     * 
+     *
      * @var User
      */
     public $user;
@@ -34,7 +34,7 @@ class SongLikeToggled extends Event
     public function __construct(Media $media, User $user = null)
     {
         $this->media = $media;
-        $this->user = $user ?: auth()->user();
+        $this->user  = $user ?: auth()->user();
     }
     
     /**

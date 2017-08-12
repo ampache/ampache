@@ -31,7 +31,7 @@
     <li><img src="{{ url('images/topmenu-radio.png') }}" title="{{ T_('Radio Stations') }}" /><br />{{ T_('Radio') }}</li>
     <?php
 } ?>
-    <?php if (Config::get('feature.userflags')/* && (Auth::user()->isRegisteredUser()) */)  {
+    <?php if (Config::get('feature.userflags')/* && (Auth::user()->isRegisteredUser()) */) {
         ?>
     <li><img src="{{ url('/images/topmenu-favorite.png') }}" title="{{ T_('Favorites') }}" /><br />{{ T_('Favorites') }}</li>
     <?php

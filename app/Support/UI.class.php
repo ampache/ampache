@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * This class is an helper to quickly migrate from Ampache legacy to Lavarel
  * IT SHOULD BE REMOVED SOON to have a better code design
  */
@@ -22,6 +22,7 @@ class UI
     {
         if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
             self::$_ticker = time();
+
             return true;
         }
 
@@ -41,6 +42,7 @@ class UI
         } else {
             self::$_classes = array_reverse(self::$_classes);
         }
+
         return self::$_classes[0];
     }
 
@@ -109,6 +111,7 @@ class UI
     {
         if (defined('CLI')) {
             echo $value . "\n";
+
             return;
         }
 
@@ -137,12 +140,14 @@ class UI
         if (isset($_COOKIE[$cn])) {
             $isgv = ($_COOKIE[$cn] == 'true');
         }
+
         return $isgv;
     }
     
     public static function get_current_sidebar_tab()
     {
-        $sidebar_tab = session('sidebar_tab', 'home');        
+        $sidebar_tab = session('sidebar_tab', 'home');
+
         return $sidebar_tab;
     }
     
