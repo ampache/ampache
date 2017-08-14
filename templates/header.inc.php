@@ -79,6 +79,7 @@ $_SESSION['login'] = false;
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/tools-extend.js" language="javascript" type="text/javascript"></script>
 
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function(){
