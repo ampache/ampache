@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Support\UI;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserCreateRequest;
+use App\Events\userUpdatedEvent;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -143,7 +144,7 @@ class UserController extends Controller
     {
         $rules = array();
         if (!is_null($request->input('email'))) {
-            $rules['email'] = 'email|max:255|unique:users' ;
+            $rules['email'] = 'required|email|max:255|unique:users' ;
         }
         
         if (!is_null($request->input('password'))) {
@@ -160,9 +161,13 @@ class UserController extends Controller
         }
 
         $validated = Validator::make($request->all(), $rules);
+
         $this->user->findOrFail($id)->fill($request->all())->save();
-        
-        return redirect('/')->withOk('User updated.');
+        return response()->json(
+          [  "status" =>"User Info updated" ]
+        );
+ 
+ //       return back();
     }
 
     /**

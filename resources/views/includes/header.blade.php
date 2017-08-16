@@ -15,10 +15,10 @@
         <span id="loginInfo">
             <a href="{{ url('user/' . Auth::user()->id) }}">{{ Auth::user()->name ?: Auth::user()->username }}</a>
            @if (Config::get('feature.sociable'))
-            <a href="{!! url('message') !!}" title="{{ T_('New Messages') }}">({{ 
-            App\Models\PrivateMsg::where([['id','=', Auth::user()->id],['is_read',"=",false]])->count() }} messages)</a>
+               <a href="{{ url('/messages/index', [Auth::user()->id]) }}">({{ 
+            App\Models\PrivateMsg::where([['to_user_id','=', Auth::user()->id],['is_read',"=",false]])->count() }} messages)</a>
             @endif
-             <a rel="nohtml" href="{!! url('logout') !!}">[{{ T_('Logout') }}]</a>
+             <a href="{!! url('logout') !!}">[{{ T_('Logout') }}]</a>
         </span>
     @else
         <span id="loginInfo">
@@ -29,3 +29,11 @@
         </span>
     @endif
 </div>
+<script>
+function showMessages( id) {
+	var url = "{{ url('/messages/index') }}";
+//	$("#guts").html("");
+	$('#guts').text('');
+	$("#guts").load(url);
+	}
+</script>

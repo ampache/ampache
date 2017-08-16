@@ -61,12 +61,18 @@
 							    <table>
 							    	<tr>
                         	  			<td>
-											<img id="say_it" src="{{ url_icon('edit') }}" title="{{ T_('Edit') }}"/>
  		                         			@if (Auth::check() && config('feature.sociable'))
-                        		 			@endif
+                                				<a href="{!! url('/messages/index') !!}"><img src="{!! url_icon('mail') !!}" title="{{ T_('Send private message') }}"></a>
+                         		 			@endif
+     						  			</td>
+                           				<td>                        		 			
+											<form id="edit{{ $user->id }}" action="{{ url('/user/destroy/'.$user->id) }}" method="POST">
+   														{{ csrf_field() }}
+											   <a href="javascript:editUser('{{ $user->username }}', {{ $user->id }})"><img id="say_it" src="{{ url_icon('edit') }}" title="{{ T_('Edit') }}"/></a>
+                                			</form>
     						  			</td>
                            				<td>
-											<form id="{{ $user->id }}" action="{{ url('/user/destroy/'.$user->id) }}" method="POST">
+											<form id="delete{{ $user->id }}" action="{{ url('/user/destroy/'.$user->id) }}" method="POST">
    														{{ method_field('DELETE') }}
    														{{ csrf_field() }}
    														<a href="javascript:deleteUser('{{ $user->username }}', {{ $user->id }})"><img src="{{ url_icon('delete') }}" title="{{ T_('Delete') }}" /></a>
@@ -105,10 +111,50 @@ Hey, world, I just said "Hello!"</font></p></div>
 				document.getElementById(id).submit();
 			}
 		};
-		$( "#hello" ).dialog({ autoOpen: false });
-		$( "#say_it" ).click(function() {
-		$( "#hello" ).dialog( "open" );
+		$( "#hello" ).dialog({
+			 autoOpen: false,
+				width: 400,
+				height: 500,
+				modal: true,
+				
+		        buttons: {
+		            'Save': function() {
+			            var email = $("#email").val();
+		            	if ((email.indexOf('@') == -1) && (email.length > 0)) {
+				            alert("please enter a valid email address");
+				            return false;
+				        }
+			            var id = $(this).data("id");
+						var url = "{{ url("update") }}" + "/" + id;
+		                $.post(url,
+		                	    {
+	                	            username: $("#user").val(),
+		                	        email: $("#email").val(),
+		                	        _token: $("[name~='_token']").val(),
+		                	        password: $("#password").val(),
+		                	        fullname: $("#fullname").val()
+		                	    },
+		                	    function(data, status){
+		                	        alert(data.status);
+		                	});
+		                $(this).dialog('close');
+                	    },
+		            'Cancel': function() {
+			            $(this).dialog('close');
+		          },
+			 
+			  }
 		});
+		
+		function editUser(username, id) {
+			var url = "{{ url("edit") }}";
+			$("#hello").html("");
+			$("#hello").css('overflow', 'hidden');
+			$("#hello").data("id", id).dialog("option", "title", "Loading...").dialog("open");
+			$("#hello").load(url + "/" + id.toString() + " #useredit");
+			$("#hello").dialog("option", "title","Updating: " + username);
+			$("#hello").dialog("option", id);
+			}
  	</script>
  
 @stop

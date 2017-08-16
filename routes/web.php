@@ -31,4 +31,7 @@ Route::get('user/enable/{id}', 'UserController@enable');
 Route::delete('user/destroy/{id}', 'UserController@destroy')->name('destroy');
 Route::get('art/show/{id}/{type}', 'ArtController@show');
 
-Route::get('msg/reply/(id}', 'PrivateMsg@create');
+Route::get('/messages/index/{id}', function() {
+    return view('privatemsg.index');
+});
+//Route::get('/messages/index/{id}', 'PrivateMsgController@index');
