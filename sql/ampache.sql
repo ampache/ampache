@@ -885,6 +885,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   `file` varchar(4096) CHARACTER SET utf8 DEFAULT NULL,
   `catalog` int(11) unsigned NOT NULL DEFAULT '0',
   `album` int(11) unsigned NOT NULL DEFAULT '0',
+  `disk` smallint(5) unsigned NOT NULL DEFAULT '0',
   `year` mediumint(4) unsigned NOT NULL DEFAULT '0',
   `artist` int(11) unsigned NOT NULL DEFAULT '0',
   `title` varchar(255) CHARACTER SET utf8 DEFAULT NULL,

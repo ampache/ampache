@@ -414,8 +414,8 @@ class Album extends database_object implements library_item
             return self::$_mapcache[$name][$disk][$mbid][$album_artist];
         }
 
-        $sql    = 'SELECT `album`.`id` FROM `album` WHERE `album`.`name` = ? AND `album`.`disk` = ? ';
-        $params = array($name, $disk);
+        $sql    = 'SELECT `album`.`id` FROM `album` WHERE `album`.`name` = ?';
+        $params = array($name);
 
         if ($mbid) {
             $sql .= 'AND `album`.`mbid` = ? ';

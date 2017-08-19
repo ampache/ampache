@@ -3987,4 +3987,20 @@ class Update
 
         return $retval;
     }
+
+    /**
+     * update_380012
+     *
+     * Fixes multiple Disks from being treated as seperate albums
+     */
+    public static function update_380012()
+    {
+        $retval = true;
+        
+        $sql = "ALTER TABLE `song` ADD `disk` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER `album`;";
+        $retval &= Dba::write($sql);
+        
+
+        return $retval;
+    }
 }
