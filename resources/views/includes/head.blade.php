@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="{{ url('themes/' . Config::get('theme.theme') . '/css/default.css') }}" type="text/css" media="screen">
 <link rel="stylesheet" href="{{ url('css/base.css') }}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{{ url('css/bootstrap.css') }}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{{ url('themes/' . Config::get('theme.theme') . '/css/' . Config::get('theme.color') . '.css') }}" type="text/css" media="screen" />
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function(){

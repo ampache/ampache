@@ -20,7 +20,8 @@ class CreatePrivateMsgsTable extends Migration
                   ->nullable();
             $table->boolean('is_read')
                   ->default(false);
-            $table->timestamps();
+            $table->timestamp(App\Models\BaseModel::CREATED_AT);
+            $table->timestamp(App\Models\BaseModel::UPDATED_AT);
             $table->integer('from_user_id')->unsigned();
             $table->foreign('from_user_id')
                   ->references('id')

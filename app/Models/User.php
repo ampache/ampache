@@ -9,11 +9,15 @@ use App\Models\Art;
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Support\UI;
+use App\Models\User;
 
 class User extends Authenticatable
 {
     use Notifiable;
 
+    const CREATED_AT = 'creation_date';
+    const UPDATED_AT = 'last_update';
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -136,7 +140,7 @@ class User extends Authenticatable
     }
     
     /**
-     * Checks if User has access to $permissions.
+     * Checks if User has access to $permissions.php php-cs-fixer
      */
     public function hasAccess(array $permissions) : bool
     {

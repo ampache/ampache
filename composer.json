@@ -7,13 +7,14 @@
     "require": {
         "php": ">=5.6.4",
         "Afterster/php-echonest-api": "dev-master",
+        "Belphemur/laravel-gettext": "5.x",
         "aehlke/tag-it": "^2.0",
         "anlutro/l4-settings": "^0.5.0",
         "aterrien/jQuery-Knob": "^1.2",
         "barryvdh/laravel-debugbar": "^2.3",
-        "Belphemur/laravel-gettext": "5.x",
         "blueimp/jQuery-File-Upload": "^9.18",
         "carhartl/jquery-cookie": "^1.4",
+        "codacy/coverage": "^1.2",
         "components/bootstrap": "^3.3",
         "components/jquery": "^3.2",
         "components/jqueryui": "^1.12",
@@ -41,7 +42,7 @@
         "szymach/c-pchart": "^2.0",
         "vakata/jstree": "^3.3",
         "xdan/datetimepicker": "^2.4"
-     },
+    },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",

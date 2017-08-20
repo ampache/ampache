@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Models\BaseMedel;
 
 class CreateUsersTable extends Migration
 {
@@ -46,7 +47,8 @@ class CreateUsersTable extends Migration
             $table->binary('avatar')
                   ->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamp(App\Models\BaseModel::CREATED_AT);
+            $table->timestamp(App\Models\BaseModel::UPDATED_AT);
         });
     }
 

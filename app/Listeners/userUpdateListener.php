@@ -29,7 +29,7 @@ class userUpdatedListener
     public function handle(userUpdatedEvent $event)
     {
         $this->name = $event->username;
-        return $event->msg.'<h4>Message from Event-Listener:</h4>New name: '.$this->userame.'<br>Using Method: '.$event->method;
-        
+
+        return $event->msg . '<h4>Message from Event-Listener:</h4>New name: ' . $this->userame . '<br>Using Method: ' . $event->method;
     }
 }

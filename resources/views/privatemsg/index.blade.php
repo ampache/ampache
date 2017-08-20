@@ -4,31 +4,37 @@
     <div class="container">
         <div id="browse_content_pvmsg" class="browse_content">
           <h3>Private Messages</h3>
-           <div class="table-responsive">          
-              <table id="pvtmsgtable" class="table tabledata">
+          <br>
+             Total: {{ $messages->count() }} 
+     <div class="table-responsive">          
+   <table id="pvtmsgtable" class="table tabledata">
     <thead>
         <tr class="th-top">
-            <th style="color:#ff9d00;" class="cel_select essential persist" onclick="sortTable(0)">{{ T_('Subject') }}</th>
-            <th style="color:#ff9d00;" class="cel_subject essential persist" onclick="sortTable(1)">{{ T_('Sender') }}</th>
-            <th style="color:#ff9d00;" class="cel_from_user essential" onclick="sortTable(2)">{{ T_('Recipient') }}</th>
-            <th style="color:#ff9d00;" class="cel_to_user essential" onclick="sortTable(3)">{{ T_('Date') }}</th>
-            <th style="color:#ff9d00;" class="cel_creation_date essential" onclick="sortTable(4)">{{ T_('Action') }}</th>
+            <th style="color:#ff9d00;" class="cel_select essential persist">{{ T_('Select') }}</th>
+            <th style="color:#ff9d00; cursor: pointer;" class="cel_subject essential persist" onclick="sortTable(0)">{{ T_('Subject') }}</th>
+            <th style="color:#ff9d00; cursor: pointer;" class="cel_sender essential persist" onclick="sortTable(1)">{{ T_('Sender') }}</th>
+            <th style="color:#ff9d00; cursor: pointer;" class="cel_from_user essential" onclick="sortTable(2)">{{ T_('Recipient') }}</th>
+            <th style="color:#ff9d00; cursor: pointer;" class="cel_date essential" onclick="sortTable(3)">{{ T_('Date') }}</th>
             <th style="color:#ff9d00;" class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Anna</td>
-              <td>Pitt</td>
-              <td>35</td>
-             <td>New York</td>
-             <td>USA</td>
-           </tr>
+                    @foreach ($messages as $msg)
+                    <tr class="<?php echo App\Support\UI::flip_class(); ?>">
+						<td class="cel_select"><input type="checkbox" name="pvmsg_select[]" value="{{ $msg->id }}" title="{{ T_('Select') }}"/></td>
+						<td class="cel_subject">{{ $msg->subject }}</td>
+						<td class="cel_sender">{{ $privateMsg->senderName($msg->from_user_id)  }}</td>
+						<td class="cel_recipient">{{ $privateMsg->recipientName($msg->to_user_id)  }}</td>
+						<td class="cel_message_date">{{ $privateMsg->messageDate($msg->id)  }}</td>
+					@endforeach
           </tbody>
          </table>
         </div>
+	<div class="row" style="padding-top:50px">
+          {{ $messages->links() }}
+</div>
       </div>
+      
     </div>
     <script>
 function sortTable(n) {

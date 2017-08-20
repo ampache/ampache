@@ -23,10 +23,11 @@ class userUpdatedEvent
      *
      * @return void
      */
-    public function __construct($request, $msg){
+    public function __construct($request, $msg)
+    {
         $this->username = $request->username;
-        $this->method = $request->method();
-        $this->msg = $msg;
+        $this->method   = $request->method();
+        $this->msg      = $msg;
     }
     
     /**

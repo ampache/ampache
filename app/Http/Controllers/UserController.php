@@ -163,8 +163,9 @@ class UserController extends Controller
         $validated = Validator::make($request->all(), $rules);
 
         $this->user->findOrFail($id)->fill($request->all())->save();
+
         return response()->json(
-          [  "status" =>"User Info updated" ]
+          [  "status" => "User Info updated" ]
         );
  
  //       return back();
