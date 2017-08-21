@@ -87,9 +87,10 @@ class PrivateMsgController extends Controller
     {
         UI::flip_class(['odd','even']);
         $messages   = Private_Msg::select('*')->where('is_read', '=', 0)->paginate();
+        $count = Private_Msg::select('*')->where('is_read', '=', 0)->count();
         $privateMsg = new Private_Msg();
 
-        return view('privatemsg.index', compact('messages', 'privateMsg'));
+        return view('privatemsg.index', compact('messages', 'privateMsg', 'count'));
     }
 
     /**
@@ -124,6 +125,11 @@ class PrivateMsgController extends Controller
         //
     }
 
+    public function reply($id)
+    {
+        //
+    }
+    
     /**
      * Show the form for editing the specified resource.
      *

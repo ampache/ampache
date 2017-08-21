@@ -32,4 +32,5 @@ Route::delete('user/destroy/{id}', 'UserController@destroy')->name('destroy');
 Route::get('art/show/{id}/{type}', 'ArtController@show');
 
 Route::get('/messages/index/{id}', 'PrivateMsgController@index');
-//Route::get('/messages/index/{id}', 'PrivateMsgController@index');
+Route::delete('messages/destroy/{id}', 'PrivateMsgController@destroy')->name('destroy');
+Route::get('messages/reply/{id}', 'PrivateMsgController@reply')->name('reply');

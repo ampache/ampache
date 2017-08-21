@@ -26,6 +26,24 @@
 						<td class="cel_sender">{{ $privateMsg->senderName($msg->from_user_id)  }}</td>
 						<td class="cel_recipient">{{ $privateMsg->recipientName($msg->to_user_id)  }}</td>
 						<td class="cel_message_date">{{ $privateMsg->messageDate($msg->id)  }}</td>
+                            <td class="cel_action" headers="MediaTable-0-mediaTableCol-5">
+					    <table>
+    				    	<tr>
+                                <td>                        		 			
+			        			    <form id="reply{{ $msg->id }}" action="{{ url('/messages/reply/'.$msg->id) }}" method="POST">
+   					    				{{ csrf_field() }}
+						        	    <a href="javascript:replyMessage('{{ $msg->id }})"><img id="reply_to" src="{{ url_icon('reply') }}" title="{{ T_('Reply tp') }}"/></a>
+                                    </form>
+    					        </td>
+                                <td>
+						            <form id="delete{{ $msg->id }}" action="{{ url('/messages/destroy/'.$msg->id) }}" method="POST">
+   								    {{ method_field('DELETE') }}
+   								    {{ csrf_field() }}
+   							            <a href="javascript:deleteMessage({{ $msg->id }})"><img src="{{ url_icon('delete') }}" title="{{ T_('Delete') }}" /></a>
+                                     </form>
+                                </td>
+                            </tr>
+                        </table>
 					@endforeach
           </tbody>
          </table>
@@ -34,9 +52,16 @@
           {{ $messages->links() }}
 </div>
       </div>
+          <div id="reply"><p><font face="Georgia" size="4"></font></p></div>           
       
     </div>
     <script>
+	function deleteMessage(id) {
+		if (confirm("Are you sure you want to permanently delete message?")) {
+			document.getElementById(id).submit();
+		}
+	};
+
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("pvtmsgtable");
@@ -91,5 +116,16 @@ function sortTable(n) {
     }
   }
 }
+
+function replyMessage(username, id) {
+	var url = "{{ url("messages/reply") }}";
+	$("#reply").html("");
+	$("#reply").css('overflow', 'hidden');
+	$("#reply").data("id", id).dialog("option", "title", "Loading...").dialog("open");
+	$("#reply").load(url + "/" + id.toString() + " #useredit");
+	$("#reply").dialog("option", "title","Reply: " + username);
+	$("#reply").dialog("option", id);
+	}
+
 </script>
 @stop

@@ -15,7 +15,7 @@
         <span id="loginInfo">
             <a href="{{ url('user/' . Auth::user()->id) }}">{{ Auth::user()->name ?: Auth::user()->username }}</a>
            @if (Config::get('feature.sociable'))
-               <a href="{{ url('/messages/index', [Auth::user()->id]) }}">(13 messages)</a>
+               <a href="{{ url('/messages/index', [Auth::user()->id]) }}">({{ $count }} messages)</a>
             @endif
              <a href="{!! url('logout') !!}">[{{ T_('Logout') }}]</a>
         </span>

@@ -101,8 +101,7 @@
                     @endforeach
                 </tbody>
             </table>
-    <div id="hello" title="Hello  World!"><p><font face="Georgia" size="4">
-Hey, world, I just said "Hello!"</font></p></div>           
+    <div id="hello"><p><font face="Georgia" size="4"></font></p></div>           
             {!! $links !!}
         </div>
     <script>
