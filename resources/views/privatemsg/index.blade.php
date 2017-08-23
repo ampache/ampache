@@ -22,7 +22,9 @@
                     @foreach ($messages as $msg)
                     <tr class="<?php echo App\Support\UI::flip_class(); ?>">
 						<td class="cel_select"><input type="checkbox" name="pvmsg_select[]" value="{{ $msg->id }}" title="{{ T_('Select') }}"/></td>
-						<td class="cel_subject">{{ $msg->subject }}</td>
+						<td class="cel_subject">
+						<a href="{{ url('messages/show', $msg->id) }}">{{ $msg->subject }}</a>
+						</td>
 						<td class="cel_sender">{{ $privateMsg->senderName($msg->from_user_id)  }}</td>
 						<td class="cel_recipient">{{ $privateMsg->recipientName($msg->to_user_id)  }}</td>
 						<td class="cel_message_date">{{ $privateMsg->messageDate($msg->id)  }}</td>

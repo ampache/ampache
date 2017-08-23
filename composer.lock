@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "821964224f10da3effdb12b7fc6e7226",
+    "content-hash": "82d04126164c51f104efe2b7953da61b",
     "packages": [
         {
             "name": "Afterster/php-echonest-api",
@@ -4542,16 +4542,16 @@
         },
         {
             "name": "szymach/c-pchart",
-            "version": "v2.0.9",
+            "version": "v2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/szymach/c-pchart.git",
-                "reference": "aba6cdaa4a54199e2cd1ecd4848c4177f50df926"
+                "reference": "12cd5ab0f24a277c4d2596eaa3bff89f4a7827cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/szymach/c-pchart/zipball/aba6cdaa4a54199e2cd1ecd4848c4177f50df926",
-                "reference": "aba6cdaa4a54199e2cd1ecd4848c4177f50df926",
+                "url": "https://api.github.com/repos/szymach/c-pchart/zipball/12cd5ab0f24a277c4d2596eaa3bff89f4a7827cc",
+                "reference": "12cd5ab0f24a277c4d2596eaa3bff89f4a7827cc",
                 "shasum": ""
             },
             "require": {
@@ -4602,7 +4602,7 @@
                 "pchart",
                 "statistics"
             ],
-            "time": "2017-07-15T22:27:47+00:00"
+            "time": "2017-08-21T20:29:42+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

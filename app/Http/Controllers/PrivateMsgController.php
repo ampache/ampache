@@ -120,9 +120,10 @@ class PrivateMsgController extends Controller
      * @param  \App\Models\PrivateMsg  $privateMsg
      * @return \Illuminate\Http\Response
      */
-    public function show(PrivateMsg $privateMsg)
+    public function show($id)
     {
-        //
+        $pvtMsg = Private_Msg::where('id', '=', $id)->get();
+        return view('show');
     }
 
     public function reply($id)

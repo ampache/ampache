@@ -16,10 +16,10 @@ class Private_Msg extends Model
         'subject', 'message', 'from_user_id', 'to_user_id', 'is_read',
     ];
     
-    public function newMessageCount($id)
+    public static function newMessageCount($id)
     {
-        $count = $this::where([['to_user_id', '=', $id], ['is_read', '=', 0]])-count();
-        return count;
+        $count = self::where([['to_user_id', '=', $id], ['is_read', '=', 0]])->count();
+        return $count;
     }
     public function senderName($id)
     {

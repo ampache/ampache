@@ -41,6 +41,7 @@
         "swisnl/jQuery-contextMenu": "^2.1",
         "szymach/c-pchart": "^2.0",
         "vakata/jstree": "^3.3",
+        "vlucas/phpdotenv": "^2.4",
         "xdan/datetimepicker": "^2.4"
     },
     "require-dev": {
@@ -323,7 +324,8 @@
     "autoload": {
         "classmap": [
             "database",
-            "app/Support/helpers.php"
+            "app/Support/helpers.php",
+            "app/Http/Controllers"
         ],
         "psr-4": {
             "App\\": "app/"

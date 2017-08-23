@@ -2,6 +2,21 @@
 
 return [
 
+
+    /*
+     |--------------------------------------------------------------------------
+     | Application INstallation Status
+     |--------------------------------------------------------------------------
+     |
+     | This value determines if the application has been installed.
+     |
+     */
+    
+    'installed' => false,
+    
+    
+    
+    
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -147,7 +162,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        Laravel\Tinker\TinkerServiceProvider::class,
         /*
          * Application Service Providers...
          */

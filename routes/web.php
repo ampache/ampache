@@ -11,9 +11,11 @@
 |
 */
 
+use App\Http\Middleware;
+
 Route::get('/', function () {
     return view('pages.index');
-});
+})->middleware('install');
 
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name=('logout');
@@ -29,8 +31,11 @@ Route::get('add', 'UserController@create')->name('add');
 Route::get('user/disable/{id}', 'UserController@disable');
 Route::get('user/enable/{id}', 'UserController@enable');
 Route::delete('user/destroy/{id}', 'UserController@destroy')->name('destroy');
+
 Route::get('art/show/{id}/{type}', 'ArtController@show');
 
 Route::get('/messages/index/{id}', 'PrivateMsgController@index');
 Route::delete('messages/destroy/{id}', 'PrivateMsgController@destroy')->name('destroy');
 Route::get('messages/reply/{id}', 'PrivateMsgController@reply')->name('reply');
+Route::get('messages/show/{id}', 'PrivateMsgController@show')->name('show');
+Route::get('install.language', 'InstallController@setLanguage')->name('language');
