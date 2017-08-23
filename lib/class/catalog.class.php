@@ -1536,21 +1536,11 @@ abstract class Catalog extends database_object
      */
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern='', $rename_pattern='')
     {
-        // Check for patterns
-        if (!$sort_pattern or !$rename_pattern) {
-            $catalog        = Catalog::create_from_id($media->catalog);
-            $sort_pattern   = $catalog->sort_pattern;
-            $rename_pattern = $catalog->rename_pattern;
-        }
-
         debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
 
-        $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
-        $vainfo->get_info();
+        $catalog        = Catalog::create_from_id($media->catalog);
 
-        $key = vainfo::get_tag_type($vainfo->tags);
-
-        $results = vainfo::clean_tag_info($vainfo->tags, $key, $media->file);
+        $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
 
         // Figure out what type of object this is and call the right
         // function, giving it the stuff we've figured out above
@@ -1764,6 +1754,25 @@ abstract class Catalog extends database_object
             $field = $libraryItem->getField($tag);
             $libraryItem->addMetadata($field, $value);
         }
+    }
+
+
+    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
+    {
+        // Check for patterns
+        if (!$sort_pattern or !$rename_pattern) {
+            $sort_pattern   = $this->sort_pattern;
+            $rename_pattern = $this->rename_pattern;
+        }
+
+        $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
+        $vainfo->get_info();
+
+        $key = vainfo::get_tag_type($vainfo->tags);
+
+        $results = vainfo::clean_tag_info($vainfo->tags, $key, $media->file);
+
+        return $results;
     }
 
     /**
