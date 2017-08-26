@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "82d04126164c51f104efe2b7953da61b",
+    "content-hash": "f2fa20297547653b192bcc6a32ad4aa9",
     "packages": [
         {
             "name": "Afterster/php-echonest-api",
@@ -1333,16 +1333,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.4.33",
+            "version": "v5.4.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "e53a81a2bf406f501cdf818ad949f8d6c8dabfc0"
+                "reference": "54aa18a4e8495c4b6902d9665ec9fa4d3a1f3d2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/e53a81a2bf406f501cdf818ad949f8d6c8dabfc0",
-                "reference": "e53a81a2bf406f501cdf818ad949f8d6c8dabfc0",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/54aa18a4e8495c4b6902d9665ec9fa4d3a1f3d2e",
+                "reference": "54aa18a4e8495c4b6902d9665ec9fa4d3a1f3d2e",
                 "shasum": ""
             },
             "require": {
@@ -1458,7 +1458,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-08-14T20:17:41+00:00"
+            "time": "2017-08-24T12:30:18+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -6325,5 +6325,28 @@
     "platform": {
         "php": ">=5.6.4"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "ext-curl": "1.0",
+        "ext-gd": "1.0",
+        "ext-gmp": "1.0",
+        "ext-dom": "1.0",
+        "ext-pcre": "1.0",
+        "ext-spl": "1.0",
+        "ext-simplexml": "1.0",
+        "ext-ctype": "1.0",
+        "ext-date": "1.0",
+        "ext-iconv": "1.0",
+        "ext-libxml": "1.0",
+        "ext-mbstring": "1.0",
+        "ext-xmlwriter": "1.0",
+        "ext-xmlreader": "1.0",
+        "lib-libxml": "2.7.0",
+        "ext-hash": "1.1",
+        "ext-PDO": "1.0",
+        "ext-pdo_mysql": "1.0",
+        "ext-session": "1.0",
+        "ext-json": "1.0",
+        "ext-zlib": "1.0"
+    }
 }

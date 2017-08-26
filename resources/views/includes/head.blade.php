@@ -12,7 +12,7 @@
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset={{ Config::get('system.site_charset') }}" />
 <title>{{ Config::get('theme.title') }}</title>
 <link rel="shortcut icon" href="{{ url('favicon.png?') }}" type="image/icon">
-<script src="{{ url('js/jquery-3.2.1.js') }}"></script>
+<script src="{{ url('js/jquery.js') }}"></script>
 <script src="{{ url('js/jquery-ui.js') }}"></script>
 <script src="{{ url('js/ajax.js') }}" type="text/javascript"></script>
 <script src="{{ url('js/slideshow.js') }}" type="text/javascript"></script>

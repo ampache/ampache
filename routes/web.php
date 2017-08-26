@@ -37,5 +37,10 @@ Route::get('art/show/{id}/{type}', 'ArtController@show');
 Route::get('/messages/index/{id}', 'PrivateMsgController@index');
 Route::delete('messages/destroy/{id}', 'PrivateMsgController@destroy')->name('destroy');
 Route::get('messages/reply/{id}', 'PrivateMsgController@reply')->name('reply');
-Route::get('messages/show/{id}', 'PrivateMsgController@show')->name('show');
-Route::get('install.language', 'InstallController@setLanguage')->name('language');
+Route::get('messages/show/{idselected}', 'PrivateMsgController@show')->name('show');
+Route::get('install.language', 'InstallController@selectLanguage')->name('language');
+Route::post('/install/setlanguage/{language}', 'InstallController@setLanguage')->name('setLanguage');
+Route::get('/install/system_check', function() {
+    return view('install.system_check');
+});
+

@@ -1,9 +1,39 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "name": "ampache/laravel",
+    "description": "Ampache built on The Laravel Framework.",
+    "keywords": ["ampache", "laravel"],
+ 	"license": "AGPL-3.0",
     "type": "project",
+	"config":
+	{
+		"platform": {
+			"ext-curl": "1.0",
+			"ext-gd": "1.0",
+			"ext-gmp": "1.0",
+			"ext-dom": "1.0",
+			"ext-pcre": "1.0",
+			"ext-spl": "1.0",
+			"ext-simplexml": "1.0",
+			"ext-ctype": "1.0",
+			"ext-date": "1.0",
+			"ext-iconv": "1.0",
+			"ext-libxml": "1.0",
+			"ext-mbstring": "1.0",
+			"ext-xmlwriter": "1.0",
+			"ext-xmlreader": "1.0",
+			"lib-libxml": "2.7.0",
+			"ext-hash": "1.1",
+			"ext-PDO": "1.0",
+			"ext-pdo_mysql": "1.0",
+			"ext-session": "1.0",
+			"ext-json": "1.0",
+			"ext-zlib": "1.0"
+		},
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+
     "require": {
         "php": ">=5.6.4",
         "Afterster/php-echonest-api": "dev-master",
@@ -355,10 +385,5 @@
         "post-update-cmd": [
            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
          ]
-    },
-    "config": {
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "optimize-autoloader": true
     }
 }
