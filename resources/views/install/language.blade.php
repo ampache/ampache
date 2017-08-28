@@ -23,11 +23,11 @@
 	                	_token: $("[name~='_token']").val()
 	                	    },
 	                	    function(data, status){
-	                	        alert(data.status);
-	                	        $("#dialog").innerHTML = data;
+
+	                	    	location.assign('{{ url("/install/system_check") }}');
 	          
 	                	});
-//	                $(this).dialog('close');
+	                $(this).dialog('close');
             	    }
             }
         });

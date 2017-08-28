@@ -1,27 +1,49 @@
-@extends('layouts.installer')
-
-@section('container')
-
-        <div class="page-header requirements">
-            <h1><?php echo T_('Requirements'); ?></h1>
-        </div>
-        <div class="well">
-            <p>
-                <?php echo T_("The following pages handle the installation of the Ampache database and validates some required dependencies." . 
-                    "  Before you continue please make sure that you have the following prerequisites:"); ?>
-            </p>
-            <ul>
-                <li>A MySQL server with a username and password that can create/modify databases</li>
-            </ul>
-        </div>
-<table class="table" cellspacing="0" cellpadding="0">
-    <tr>
-        <th><?php echo T_('CHECK'); ?></th>
-        <th><?php echo T_('STATUS'); ?></th>
-        <th><?php echo T_('DESCRIPTION'); ?></th>
-    </tr>
-            <?php // require resource_path('views/includes/test_table.blade.php'); ?>
-    
+<?php
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+/**
+ *
+* LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+* Copyright 2001 - 2017 Ampache.org
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+*/
+?>
+<tr>
+    <td valign="top"><?php echo T_('PHP version'); ?></td>
+    <td valign="top">
+    <?php echo debug_result(check_php_version()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether you are running at least the minimum version of PHP required by Ampache.'); ?>
+    </td>
+</tr>
+<tr>
+    <td valign="top"><?php echo T_('Dependencies'); ?></td>
+    <td valign="top">
+    <?php echo debug_result(check_dependencies_folder()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether Ampache dependencies are installed.'); ?>
+    <?php if (!check_dependencies_folder()) {
+    ?>
+        <br />
+        <b><?php echo T_('Please download and install Composer from http://getcomposer.org and install it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer install --prefer-source --no-interaction` on Ampache directory.'); ?></b>
+    <?php
+} ?>
+    </td>
+</tr>
 <tr>
     <td valign="top"><?php echo T_('PHP hash extension'); ?></td>
     <td valign="top">
@@ -175,6 +197,3 @@
     <?php printf(T_('This tests whether PHP %s is set as it may break the ID3 tag support. This is not stricly necessary, but enabling Ampache ID3 tag write support (disabled by default) along with mbstring.func_overload may result in irreversible corruption of your music files.'), '<a href="http://php.net/manual/en/mbstring.overload.php">mbstring.func_overload</a>'); ?>
     </td>
 </tr>
-</table>
-    <a href="{{ url('/install/show_db') }} " class="btn btn-md btn-warning">Continue</a>
-@endsection

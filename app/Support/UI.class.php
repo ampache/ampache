@@ -152,6 +152,20 @@ class UI
     }
     
     /**
+     * check_iconv
+     *
+     * Checks to see whether iconv is available;
+     */
+    public static function check_iconv()
+    {
+        if (function_exists('iconv') && function_exists('iconv_substr')) {
+            return true;
+        }
+    
+        return false;
+    }
+    
+    /**
      * clean_utf8
      *
      * Removes characters that aren't valid in XML (which is a subset of valid

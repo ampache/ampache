@@ -12,6 +12,7 @@
 */
 
 use App\Http\Middleware;
+use App\Http\Controllers\InstallController;
 
 Route::get('/', function () {
     return view('pages.index');
@@ -44,3 +45,7 @@ Route::get('/install/system_check', function() {
     return view('install.system_check');
 });
 
+Route::post('/install/create_db', 'InstallController@create_db');
+Route::get('/install/show_db', function() {
+    return view('install.database');
+});
