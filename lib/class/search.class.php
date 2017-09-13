@@ -295,8 +295,26 @@ class Search extends playlist_object
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name' => 'rating',
-                    'label' => T_('Rating'),
+                    'name'   => 'rating',
+                    'label'  => T_('Rating (Average)'),
+                    'type'   => 'numeric',
+                    'widget' => array(
+                        'select',
+                        array(
+                            '1 Star',
+                            '2 Stars',
+                            '3 Stars',
+                            '4 Stars',
+                            '5 Stars'
+                        )
+                    )
+                );
+            }
+
+            if (AmpConfig::get('ratings')) {
+                $this->types[] = array(
+                    'name'   => 'myratings',
+                    'label'  => T_('Rating (Mine)'),
                     'type' => 'numeric',
                     'widget' => array(
                         'select',
