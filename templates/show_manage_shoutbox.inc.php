@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,13 +45,13 @@ $web_path = AmpConfig::get('web_path');
             $client->format();
 
             require AmpConfig::get('prefix') . UI::find_template('show_shout_row.inc.php'); ?>
-        <?php 
+        <?php
         } if (!count($object_ids)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6" class="error"><?php echo T_('No Records Found'); ?></td>
         </tr>
-        <?php 
+        <?php
         } ?>
     </tbody>
     <tfoot>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -172,10 +172,10 @@ class Browse extends Query
             $match = ' (' . $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('starts_with')) {
             $match = ' (' . $filter_value . ')';
-        /*} elseif ($filter_value = $this->get_filter('regex_match')) {
-            $match = ' (' . $filter_value . ')';
-        } elseif ($filter_value = $this->get_filter('regex_not_match')) {
-            $match = ' (' . $filter_value . ')';*/
+            /*} elseif ($filter_value = $this->get_filter('regex_match')) {
+                $match = ' (' . $filter_value . ')';
+            } elseif ($filter_value = $this->get_filter('regex_not_match')) {
+                $match = ' (' . $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
             $catalog = Catalog::create_from_id(intval($filter_value));
@@ -584,6 +584,7 @@ class Browse extends Query
         if (!$this->_state['grid_view']) {
             $css = 'disablegv';
         }
+
         return $css;
     }
 } // browse

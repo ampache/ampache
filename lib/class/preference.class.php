@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -272,7 +272,7 @@ class Preference extends database_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('name'=>$row['name'],'level'=>$row['level'],'description'=>$row['description'],'value'=>$row['value'],'subcategory'=>$row['subcatagory']);
+            $results[] = array('name' => $row['name'],'level' => $row['level'],'description' => $row['description'],'value' => $row['value'],'subcategory' => $row['subcatagory']);
         }
 
         return $results;
@@ -372,7 +372,7 @@ class Preference extends database_object
                 : array();
         }
 
-        foreach ($results as $key=>$data) {
+        foreach ($results as $key => $data) {
             if (!is_array($data)) {
                 if (strcasecmp($data, "true") == "0") {
                     $results[$key] = 1;
@@ -394,6 +394,7 @@ class Preference extends database_object
     {
         if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) and $_SESSION['userdata']['uid'] == $uid) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
+
             return true;
         }
 

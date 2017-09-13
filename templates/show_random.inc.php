@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,20 +25,20 @@
 <table class="tabledata" cellpadding="3" cellspacing="0">
 <tr id="search_location">
     <td><?php if ($_REQUEST['type'] != 'song') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php 
+    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php
 } else {
-    echo T_('Songs');
-} ?></td>
+        echo T_('Songs');
+    } ?></td>
     <td><?php if ($_REQUEST['type'] != 'album') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo T_('Albums'); ?></a><?php 
-} else {
-    echo T_('Albums');
-} ?></td>
+        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo T_('Albums'); ?></a><?php
+    } else {
+        echo T_('Albums');
+    } ?></td>
     <td><?php if ($_REQUEST['type'] != 'artist') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists'); ?></a><?php 
-} else {
-    echo T_('Artists');
-} ?></td>
+        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists'); ?></a><?php
+    } else {
+        echo T_('Artists');
+    } ?></td>
 </tr>
 <tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>

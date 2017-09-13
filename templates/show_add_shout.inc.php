@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,12 +41,12 @@ $boxtitle = T_('Post to Shoutbox');
     <td><textarea rows="5" cols="35" maxlength="140" name="comment"></textarea></td>
 </tr>
 <?php if (Access::check('interface', '50')) {
-    ?>
+        ?>
 <tr>
     <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
-<?php 
-} ?>
+<?php
+    } ?>
 <tr>
     <td>
         <?php echo Core::form_register('add_shout'); ?>
@@ -60,7 +60,7 @@ $boxtitle = T_('Post to Shoutbox');
 </form>
 <?php UI::show_box_bottom(); ?>
 </div>
-<?php 
+<?php
 } ?>
 <div style="display: inline;">
 <?php

@@ -66,48 +66,43 @@ $supplied = WebPlayer::get_supplied_types($playlist);
 <?php if (AmpConfig::get('webplayer_aurora')) {
     ?>
             auroraFormats: 'flac, m4a, mp3, oga, wav',
-<?php 
+<?php
 } ?>
 <?php if (!$is_share) {
-    ?>
+        ?>
             size: {
 <?php
 if ($isVideo) {
-    if ($iframed) {
-        ?>
+            if ($iframed) {
+                ?>
                 width: "640px",
 <?php
-
-    } else {
-        ?>
+            } else {
+                ?>
                 width: "192px",
                 height: "108px",
 <?php
-
-    } ?>
+            } ?>
                 cssClass: "jp-video-360p"
 <?php
-
-} elseif ($isRadio) {
-    // No size
-} else {
-    if ($iframed) {
-        ?>
+        } elseif ($isRadio) {
+            // No size
+        } else {
+            if ($iframed) {
+                ?>
                 width: "80px",
                 height: "80px",
 <?php
-
-    } else {
-        ?>
+            } else {
+                ?>
                 width: "200px",
                 height: "auto",
 <?php
-
-    }
-} ?>
             }
-<?php 
-} ?>
+        } ?>
+            }
+<?php
+    } ?>
         });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
@@ -116,10 +111,10 @@ if ($isVideo) {
         var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
         $(".jp-playlist").scrollTop(pos);
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose')) {
-    ?>
+        ?>
         localStorage.setItem('ampache-current-webplayer', jpuqid);
-<?php 
-} ?>
+<?php
+    } ?>
 
         var currenti = $(".jp-playlist li").eq(current);
         $.each(playlist, function (index, obj) {
@@ -131,17 +126,17 @@ if ($isVideo) {
                     }
                     currentjpitem = currenti;
 <?php if ($iframed) {
-    ?>
+        ?>
                     if (previousartist != currentjpitem.attr("data-artist_id")) {
                         NotifyOfNewArtist();
                     }
-<?php 
-} ?>
+<?php
+    } ?>
 <?php if (AmpConfig::get('browser_notify')) {
-    ?>
+        ?>
                     NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
-<?php 
-} ?>
+<?php
+    } ?>
                     ApplyReplayGain();
                 }
                 if (brkey != '') {
@@ -149,34 +144,34 @@ if ($isVideo) {
                 }
 <?php
 if (!$isVideo && !$isRadio && !$is_share) {
-    if ($iframed) {
-        if (AmpConfig::get('sociable')) {
-            echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-media_id'),'shouts_data');";
-        }
-        echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-media_id'));";
-        echo "var titleobj = (currenti.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
-        echo "var artistobj = (currenti.attr('data-artist_id') !== 'undefined') ?'<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
-        echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
-        echo "var actionsobj = '|';";
-        if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', '25'))) {
-            echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
-        }
-        echo "actionsobj += '<div id=\'action_buttons\'></div>';";
-        if (AmpConfig::get('waveform') && !$is_share) {
-            echo "var waveformobj = '';";
-            if (AmpConfig::get('sociable') && Access::check('interface', '25')) {
-                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Double click to post a new shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
+        if ($iframed) {
+            if (AmpConfig::get('sociable')) {
+                echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-media_id'),'shouts_data');";
             }
-            echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
-            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + currenti.attr('data-media_id') + '\" onLoad=\"ShowWaveform();\">';";
-            if (AmpConfig::get('waveform')) {
-                echo "waveformobj += '</a>';";
+            echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-media_id'));";
+            echo "var titleobj = (currenti.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
+            echo "var artistobj = (currenti.attr('data-artist_id') !== 'undefined') ?'<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
+            echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
+            echo "var actionsobj = '|';";
+            if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', '25'))) {
+                echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
             }
-        }
-    } else {
-        echo "var titleobj = obj.title;";
-        echo "var artistobj = obj.artist;";
-    } ?>
+            echo "actionsobj += '<div id=\'action_buttons\'></div>';";
+            if (AmpConfig::get('waveform') && !$is_share) {
+                echo "var waveformobj = '';";
+                if (AmpConfig::get('sociable') && Access::check('interface', '25')) {
+                    echo "waveformobj += '<a href=\"#\" title=\"" . T_('Double click to post a new shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
+                }
+                echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
+                echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + currenti.attr('data-media_id') + '\" onLoad=\"ShowWaveform();\">';";
+                if (AmpConfig::get('waveform')) {
+                    echo "waveformobj += '</a>';";
+                }
+            }
+        } else {
+            echo "var titleobj = obj.title;";
+            echo "var artistobj = obj.artist;";
+        } ?>
                 $('.playing_title').html(titleobj);
                 $('.playing_artist').html(artistobj);
 <?php
@@ -188,16 +183,14 @@ if (!$isVideo && !$isRadio && !$is_share) {
             ?>
                 $('.playing_lyrics').html(lyricsobj);
 <?php
-
         }
         if (AmpConfig::get('waveform') && !$is_share) {
             ?>
                 $('.waveform').html(waveformobj);
 <?php
-
         }
     }
-}
+    }
 if (AmpConfig::get('song_page_title') && !$is_share) {
     echo "var mediaTitle = obj.title;\n";
     echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
@@ -210,7 +203,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
     if (AmpConfig::get('waveform') && !$is_share) {
         ?>
         HideWaveform();
-<?php 
+<?php
     } ?>
 
         if (brkey != '') {
@@ -242,7 +235,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
             var leftpos = 400 * (event.jPlayer.status.currentTime / event.jPlayer.status.duration);
             $(".waveform-time").css({left: leftpos});
         }
-<?php 
+<?php
     } ?>
     });
 
@@ -306,17 +299,17 @@ if (AmpConfig::get('webplayer_aurora')) {
         } else {
             if ($stype == 'm4a') {
                 // m4a could requires aac / alac codecs
-            if (!in_array('aac', $atypes)) {
-                $atypes[] = 'aac';
-            }
+                if (!in_array('aac', $atypes)) {
+                    $atypes[] = 'aac';
+                }
                 if (!in_array('alac', $atypes)) {
                     $atypes[] = 'alac';
                 }
             } else {
                 // We support that other filetypes requires a codec name matching the filetype
-            if (!in_array($stype, $atypes)) {
-                $atypes[] = $stype;
-            }
+                if (!in_array($stype, $atypes)) {
+                    $atypes[] = $stype;
+                }
             }
         }
     }
@@ -341,7 +334,6 @@ if ($is_share && $isVideo) {
     }
 </style>
 <?php
-
 }
 ?>
 </head>
@@ -353,7 +345,6 @@ if ($iframed && !$is_share) {
     <a href="javascript:ExitPlayer();" title="Close Player"><img src="<?php echo AmpConfig::get('web_path') ?>/images/close.png" border="0" /></a><br />
   </div>
 <?php
-
 }
 ?>
 <?php
@@ -377,12 +368,11 @@ if (!$isVideo) {
     </div>
 </div>
 <?php
-
 } else {
-    $areaClass .= " jp-area-video";
-    $containerClass = "jp-video jp-video-float jp-video-360p";
-    $playerClass    = "jp-jplayer-video";
-} ?>
+        $areaClass .= " jp-area-video";
+        $containerClass = "jp-video jp-video-float jp-video-360p";
+        $playerClass    = "jp-jplayer-video";
+    } ?>
 <div id="shouts_data"></div>
 <div class="jp-area<?php echo $areaClass; ?>">
   <div id="jp_container_1" class="<?php echo $containerClass; ?>">
@@ -391,16 +381,16 @@ if (!$isVideo) {
       <div class="jp-gui">
 <?php
 if ($isVideo) {
-    ?>
+        ?>
         <div class="jp-video-play">
             <a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a>
         </div>
-<?php 
-} ?>
+<?php
+    } ?>
         <div class="jp-interface">
 <?php
 if ($isVideo) {
-    ?>
+        ?>
             <div class="jp-progress">
                 <div class="jp-seek-bar">
                     <div class="jp-play-bar"></div>
@@ -433,9 +423,9 @@ if ($isVideo) {
                     <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
                 </ul>
             </div>
-<?php 
-} else {
-    ?>
+<?php
+    } else {
+        ?>
             <ul class="jp-controls">
               <li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
               <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
@@ -463,19 +453,19 @@ if ($isVideo) {
                 <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
             </ul>
 <?php if (AmpConfig::get('waveform') && !$is_share) {
-    ?>
+            ?>
             <div class="waveform"></div>
-<?php 
-} ?>
-<?php 
-} ?>
+<?php
+        } ?>
+<?php
+    } ?>
         </div>
       </div>
 <?php if (!$is_share) {
-    ?>
+        ?>
       <div class="player_actions">
 <?php if (AmpConfig::get('broadcast') && Access::check('interface', '25')) {
-    ?>
+            ?>
         <div id="broadcast" class="broadcast action_button">
 <?php
         if (AmpConfig::get('broadcast_by_default')) {
@@ -494,20 +484,20 @@ if ($isVideo) {
             echo Broadcast::get_broadcast_link();
         } ?>
         </div>
-<?php 
-} ?>
+<?php
+        } ?>
 <?php if ($iframed) {
-    ?>
+            ?>
         <?php if (Access::check('interface', '25')) {
-    ?>
+                ?>
             <div class="action_button">
                 <a onclick="javascript:SaveToExistingPlaylist(event);">
                     <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')) ?>
                 </a>
             </div>
 
-        <?php 
-} ?>
+        <?php
+            } ?>
         <div id="slideshow" class="slideshow action_button">
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')) ?></a>
         </div>
@@ -515,7 +505,7 @@ if ($isVideo) {
             <a href="javascript:TogglePlaylistExpand();"><?php echo UI::get_icon('multilines', T_('Expand/Collapse Playlist')) ?></a>
         </div>
 <?php if (AmpConfig::get('webplayer_html5')) {
-    ?>
+                ?>
         <div class="action_button">
             <a href="javascript:ShowVisualizer();"><?php echo UI::get_icon('visualizer', T_('Visualizer')) ?></a>
         </div>
@@ -528,13 +518,13 @@ if ($isVideo) {
         <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
             <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')) ?></a>
         </div>
-<?php 
-} ?>
-<?php 
-} ?>
+<?php
+            } ?>
+<?php
+        } ?>
       </div>
-<?php 
-} ?>
+<?php
+    } ?>
       <div class="jp-playlist">
           <ul>
               <li></li>
@@ -549,12 +539,12 @@ if ($isVideo) {
 </div>
 <?php
 if (!$iframed || $is_share) {
-    require_once AmpConfig::get('prefix') . UI::find_template('uberviz.inc.php');
-}
+        require_once AmpConfig::get('prefix') . UI::find_template('uberviz.inc.php');
+    }
 ?>
 <?php if (!$is_share) {
     ?>
 </body>
 </html>
-<?php 
+<?php
 } ?>

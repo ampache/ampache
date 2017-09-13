@@ -1,6 +1,42 @@
 CHANGELOG
 =========
 
+3.8.3
+----------
+- Fixed upload problem
+- Fixed charting problem
+- Updated composer dependencies
+- Fixed ipv6 issue
+- Improved Opus transcoding
+- Fixed localization chart
+- Improved Subsonic API
+- Improved ID3v2.3 and v2.4 to better handle multivalued lists
+- Added sort by disc numbers
+- Song comments are now editable
+- Fixed composer column in iTunes
+- Many typos fixed
+- Fixed field types in modules and localplay
+- Fixed timeline function
+- Activated jplayer "preload" option
+- Fixed missing submit button on options page
+- Increased info on DSub failing via Subsonic API
+- Fixed Group actions in private message page causing JavaScript error
+- Fixed some info lievel issues in Codacy
+- Apply trim on dropbox parameters
+- Added Prompt for user to change secret_key during install
+- Enabled use of cache in PHPCs
+- All fies now use UTF8 without BOM
+- Now require Exact catalog name match on catalog update
+- Port 443 removed from play url
+- Now test all images found to select the one with the good dimensions
+- Rewrote LDAP class
+- Song count in handshake now matches the number returned from songs
+- Blocking of webplayer when transcoding fixed
+- Cover art is added to live stream
+- Added browse filter and light sidebar options
+- Updated gettext, zipstream, react and sabre dependencies
+- Fixed Subsonic scrobble submission check 
+
 3.8.2
 ----------
 - Fixed potential security vulnerability on smartplaylist search rule and catalog management actions (thanks Roman Ammann)

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,7 +46,7 @@
         <a id="<?php echo 'edit_live_stream_' . $libitem->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_' . $libitem->id ?>', '<?php echo T_('Live Stream edit') ?>',  'live_stream_')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
-        <?php 
+        <?php
         }
         if (Access::check('interface', '75')) {
             echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_live_stream_' . $libitem->id);

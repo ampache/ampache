@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,26 +56,26 @@
                     <option value="rpc"><?php echo T_('API/RPC'); ?></option>
                     <option selected="selected" value="stream"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('Stream Access')); ?></option>
                     <option value="all"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('All')); ?></option>
-        <?php 
+        <?php
 } else {
-    if ($action == 'show_add_local') {
-        ?>
+        if ($action == 'show_add_local') {
+            ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
                     <option value="network"><?php echo T_('Local Network Definition'); ?></option>
                     <option value="stream"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('Stream Access')); ?></option>
                     <option selected="selected" value="all"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('All')); ?></option>
-        <?php 
-    } else {
-        ?>
+        <?php
+        } else {
+            ?>
                 <select name="type">
                     <option selected="selected" value="stream"><?php echo T_('Stream Access'); ?></option>
                     <option value="interface"><?php echo T_('Web Interface'); ?></option>
                     <option value="network"><?php echo T_('Local Network Definition'); ?></option>
                     <option value="rpc"><?php echo T_('API/RPC'); ?></option>
-        <?php 
-    }
-} ?>
+        <?php
+        }
+    } ?>
                 </select>
             </td>
         </tr>

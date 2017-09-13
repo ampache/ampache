@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,12 +50,12 @@ $web_path = AmpConfig::get('web_path');
     /* HINT: Start A tag, End A tag */
      printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . AmpConfig::get('web_path') . '/login.php">', '</a>'); ?>
 </p>
-<?php 
+<?php
     } else {
         ?>
 <h3><?php echo T_('Validation Failed'); ?></h3>
 <p><?php echo T_("The validation key used isn't correct"); ?></p>
-<?php 
+<?php
     } ?>
             </div>
         </div>

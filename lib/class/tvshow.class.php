@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@ class TVShow extends database_object implements library_item
         /* Get the information from the db */
         $info = $this->get_info($id);
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         } // foreach info
 
@@ -87,6 +87,7 @@ class TVShow extends database_object implements library_item
         $row = Dba::fetch_assoc($db_results);
 
         $object = new TVShow($row['id']);
+
         return $object;
     } // get_from_name
 
@@ -233,6 +234,7 @@ class TVShow extends database_object implements library_item
                 );
             }
         }
+
         return $medias;
     }
 
@@ -306,6 +308,7 @@ class TVShow extends database_object implements library_item
 
         if ($exists) {
             self::$_mapcache[$name]['null'] = $id;
+
             return $id;
         }
 
@@ -321,6 +324,7 @@ class TVShow extends database_object implements library_item
         $id = Dba::insert_id();
 
         self::$_mapcache[$name]['null'] = $id;
+
         return $id;
     }
 

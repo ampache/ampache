@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,21 +32,20 @@ if ($blink) {
         $graph_link = AmpConfig::get('web_path') . "/graph.php?type=" . $gtype . "&start_date=" . $start_date . "&end_date=" . $end_date . "&zoom=" . $zoom . "&user_id=" . $user_id . "&object_type=" . $object_type . "&object_id=" . $object_id; ?>
     <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank" title="<?php echo T_('Show large'); ?>"><img src="<?php echo $graph_link; ?>" /></a>
         <br /><br />
-    <?php 
+    <?php
     } ?>
 </div>
 
 <?php
 if (AmpConfig::get('geolocation')) {
-    ?>
+        ?>
     <div class="stats_graph">
     <?php
         $graph = new Graph();
-    $graph->display_map($user_id, $object_type, $object_id, $start_date, $end_date, $zoom); ?>
+        $graph->display_map($user_id, $object_type, $object_id, $start_date, $end_date, $zoom); ?>
     </div>
 <?php
-
-}
+    }
 ?>
 
 <form action='<?php echo get_current_path(); ?>' method='post' enctype='multipart/form-data'>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,6 +51,7 @@ class Stream_Playlist
 
             if (!Session::exists('stream', $this->id)) {
                 debug_event('stream_playlist', 'Session::exists failed', 2);
+
                 return false;
             }
 
@@ -99,6 +100,7 @@ class Stream_Playlist
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
             'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' .
             'WHERE `session`.`id` IS NULL';
+
         return Dba::write($sql);
     }
 
@@ -244,6 +246,7 @@ class Stream_Playlist
     {
         if (!count($this->urls)) {
             debug_event('stream_playlist', 'Error: Empty URL array for ' . $this->id, 2);
+
             return false;
         }
 
@@ -363,6 +366,7 @@ class Stream_Playlist
             $ret .= $url->url . "\n";
             $i++;
         }
+
         return $ret;
     } // get_m3u_string
 
@@ -388,6 +392,7 @@ class Stream_Playlist
         }
 
         $ret .= "Version=2\n";
+
         return $ret;
     } // get_pls_string
 
@@ -420,6 +425,7 @@ class Stream_Playlist
         }
 
         $ret .= "</ASX>\n";
+
         return $ret;
     } // get_asx_string
 
@@ -471,6 +477,7 @@ class Stream_Playlist
         $ret = XML_Data::header($this->title);
         $ret .= $result;
         $ret .= XML_Data::footer();
+
         return $ret;
     } // get_xspf_string
 
@@ -519,6 +526,7 @@ class Stream_Playlist
         }
 
         $ret .= "#EXT-X-ENDLIST\n\n";
+
         return $ret;
     }
     

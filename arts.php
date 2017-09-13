@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,7 +58,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Pull the image information
-        $data       = array('file'=>$_FILES['file']['tmp_name']);
+        $data       = array('file' => $_FILES['file']['tmp_name']);
         $image_data = Art::get_from_source($data, $object_type);
 
         // If we got something back insert it
@@ -125,7 +125,7 @@ switch ($_REQUEST['action']) {
         // If we've found anything then go for it!
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array
-            foreach ($images as $index=>$image) {
+            foreach ($images as $index => $image) {
                 if ($image['raw']) {
                     unset($images[$index]['raw']);
                 }

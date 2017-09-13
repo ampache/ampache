@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -120,6 +120,7 @@ class JsonHandler extends Handler
     public function itemIsComlete($item)
     {
         $item = $this->removeUnwantedStrings($item);
+
         return $this->compareBraces($item);
     }
 
@@ -135,6 +136,7 @@ class JsonHandler extends Handler
             '{"results":[',
             ']}'
         );
+
         return str_replace($toRemove, '', $item);
     }
 
@@ -146,7 +148,8 @@ class JsonHandler extends Handler
     public function compareBraces($item)
     {
         $start = $this->countChar('{', $item);
-        $end = $this->countChar('}', $item);
+        $end   = $this->countChar('}', $item);
+
         return $start !== 0 && $start === $end;
     }
 
@@ -168,9 +171,10 @@ class JsonHandler extends Handler
      */
     public function parse($item)
     {
-        $item = $this->removeUnwantedStrings($item);
-        $song = json_decode($item, true);
+        $item         = $this->removeUnwantedStrings($item);
+        $song         = json_decode($item, true);
         $song['file'] = $this->createFileUrl($song);
+
         return $this->mapFields($song);
     }
 
@@ -188,7 +192,7 @@ class JsonHandler extends Handler
             $song['id'],
             'file' . '#.' . strtolower($song['format'])
         );
+
         return implode('/', $parts);
     }
-
 }

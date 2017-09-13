@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -83,6 +83,7 @@ class AmpConfig
         if (isset(self::$_global[$name]) && !$clobber) {
             debug_event('Config', "Tried to overwrite existing key $name without setting clobber", 5);
             AmpError::add('Config Global', sprintf(T_('Trying to clobber \'%s\' without setting clobber'), $name));
+
             return false;
         }
 
