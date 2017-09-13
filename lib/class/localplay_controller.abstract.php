@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -99,6 +99,7 @@ abstract class localplay_controller
             foreach ($primary_array as $pkey) {
                 if ($data[$pkey]) {
                     $data['primary_key'] = $pkey;
+
                     return $data;
                 }
             } // end foreach

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -123,6 +123,7 @@ trait Metadata
             $field->hide();
         }
         $this->metadataFieldRepository->add($field);
+
         return $field;
     }
 
@@ -140,6 +141,7 @@ trait Metadata
         } else {
             $field = $this->createField($propertie, $public);
         }
+
         return $field;
     }
 
@@ -171,6 +173,7 @@ trait Metadata
                     $fields, explode(',', \AmpConfig::get('disabled_custom_metadata_fields_input'))
             );
         }
+
         return $this->disabledMetadataFields;
     }
 }

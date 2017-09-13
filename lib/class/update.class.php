@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -180,85 +180,85 @@ class Update
                 '- Moved Localplay* preferences to options.<br />' .
                 '- Tweaked Default Playlist Method.<br />' .
                 '- Change wording on Localplay preferences.<br />';
-        $version[] = array('version' => '340010','description'=>$update_string);
+        $version[] = array('version' => '340010','description' => $update_string);
 
         $update_string = '- Added Democratic Table for new democratic play features.<br />' .
                 '- Added Add Path to Catalog to improve add speeds on large catalogs.<br />';
-        $version[] = array('version' => '340012','description'=>$update_string);
+        $version[] = array('version' => '340012','description' => $update_string);
 
         $update_string = '- Removed Unused Preferences.<br />' .
                 '- Changed Localplay Config to Localplay Access.<br />' .
                 '- Changed all XML-RPC acls to RPC to reflect inclusion of new API.<br />';
-        $version[] = array('version' => '340013','description'=>$update_string);
+        $version[] = array('version' => '340013','description' => $update_string);
 
         $update_string = '- Removed API Session table, been a nice run....<br />' .
                 '- Alterted Session table to handle API sessions correctly.<br />';
-        $version[] = array('version' => '340014','description'=>$update_string);
+        $version[] = array('version' => '340014','description' => $update_string);
 
         $update_string = '- Alter Playlist Date Field to fix issues with some MySQL configurations.<br />' .
                 '- Alter Rating type to correct AVG issue on searching.<br />';
-        $version[] = array('version' => '340015','description'=>$update_string);
+        $version[] = array('version' => '340015','description' => $update_string);
 
         $update_string = '- Alter the Democratic Playlist table, adding base_playlist.<br />' .
                 '- Alter tmp_playlist to account for Democratic changes.<br />' .
                 '- Cleared Existing Democratic playlists due to changes.<br />';
-        $version[] = array('version' => '340016','description'=>$update_string);
+        $version[] = array('version' => '340016','description' => $update_string);
 
         $update_string = '- Fix Tables for new Democratic Play methodology.<br />';
-        $version[]     = array('version' => '340017','description'=>$update_string);
+        $version[]     = array('version' => '340017','description' => $update_string);
 
         $update_string = '- Modify the Tag tables so that they actually work.<br />' .
                 '- Alter the Prefix fields to allow for more prefixs.<br />';
-        $version[] = array('version' => '350001','description'=>$update_string);
+        $version[] = array('version' => '350001','description' => $update_string);
 
         $update_string = '- Remove Genre Field from song table.<br />' .
                 '- Add user_catalog table for tracking user<-->catalog mappings.<br />' .
                 '- Add tmp_browse to handle caching rather then session table.<br />';
-        $version[] = array('version' => '350002','description'=>$update_string);
+        $version[] = array('version' => '350002','description' => $update_string);
 
         $update_string = '- Modify Tag tables.<br />' .
                 '- Remove useless config preferences.<br />';
-        $version[] = array('version'=> '350003','description'=>$update_string);
+        $version[] = array('version' => '350003','description' => $update_string);
 
         $update_string = '- Modify ACL table to enable IPv6 ACL support<br />' .
                 '- Modify Session Tables to store IPv6 addresses if provided<br />' .
                 '- Modify IP History table to store IPv6 addresses and User Agent<br />';
-        $version[] = array('version'=>'350004','description'=>$update_string);
+        $version[] = array('version' => '350004','description' => $update_string);
 
         $update_string = "- Add table for Video files<br />";
-        $version[]     = array('version'=>'350005','description'=>$update_string);
+        $version[]     = array('version' => '350005','description' => $update_string);
 
         $update_string = "- Add data for Lyrics<br />";
-        $version[]     = array('version'=>'350006','description'=>$update_string);
+        $version[]     = array('version' => '350006','description' => $update_string);
 
         $update_string = '- Remove unused fields from catalog, playlist, playlist_data<br />' .
                 '- Add tables for dynamic playlists<br />' .
                 '- Add last_clean to catalog table<br />' .
                 '- Add track to tmp_playlist_data<br />' .
                 '- Increase Thumbnail blob size<br />';
-        $version[] = array('version'=>'350007','description'=>$update_string);
+        $version[] = array('version' => '350007','description' => $update_string);
 
         $update_string = '- Modify Now Playing table to handle Videos<br />' .
                 '- Modify tmp_browse to make it easier to prune<br />' .
                 '- Add missing indexes to the _data tables<br />' .
                 '- Drop unused song.hash<br />' .
                 '- Add addition_time and update_time to video table<br />';
-        $version[] = array('version'=>'350008','description'=>$update_string);
+        $version[] = array('version' => '350008','description' => $update_string);
 
         $update_string = '- Add MBID (MusicBrainz ID) fields<br />' .
                 '- Remove useless preferences<br />';
-        $version[] = array('version'=>'360001','description'=>$update_string);
+        $version[] = array('version' => '360001','description' => $update_string);
 
         $update_string = '- Add Bandwidth and Feature preferences to simplify how interface is presented<br />' .
                 '- Change Tables to FULLTEXT() for improved searching<br />' .
                 '- Increase Filename lengths to 4096<br />' .
                 '- Remove useless "KEY" reference from ACL and Catalog tables<br />' .
                 '- Add new Remote User / Remote Password fields to Catalog<br />';
-        $version[] = array('version'=>'360002','description'=>$update_string);
+        $version[] = array('version' => '360002','description' => $update_string);
 
         $update_string = '- Add image table to store images.<br />' .
                 '- Drop album_data and artist_data.<br />';
-        $version[] = array('version'=>'360003','description'=>$update_string);
+        $version[] = array('version' => '360003','description' => $update_string);
 
         $update_string = '- Add uniqueness constraint to ratings.<br />';
         $version[]     = array('version' => '360004','description' => $update_string);
@@ -631,6 +631,7 @@ class Update
         // won't work.
         if ($current_version < '340002') {
             echo "<p align=\"center\">Database version too old, please upgrade to <a href=\"http://ampache.org/downloads/ampache-3.3.3.5.tar.gz\">Ampache-3.3.3.5</a> first</p>";
+
             return false;
         }
 
@@ -654,6 +655,7 @@ class Update
                         self::set_version('db_version', $version['version']);
                     } else {
                         AmpError::display('update');
+
                         return false;
                     }
                 }
@@ -868,6 +870,7 @@ class Update
     {
         // No matter what remove that random method preference
         Dba::write("DELETE FROM `preference` WHERE `name`='random_method'");
+
         return true;
     }
 
@@ -1115,6 +1118,7 @@ class Update
     public static function update_340016()
     {
         $sql = "ALTER TABLE `democratic` ADD `base_playlist` INT ( 11 ) UNSIGNED NOT NULL AFTER `name`";
+
         return Dba::write($sql);
     }
 
@@ -1616,6 +1620,7 @@ class Update
     public static function update_360004()
     {
         $sql = "CREATE UNIQUE INDEX `unique_rating` ON `rating` (`user`, `object_type`, `object_id`)";
+
         return Dba::write($sql);
     }
 
@@ -1659,6 +1664,7 @@ class Update
         `logic_operator` varchar(3) CHARACTER SET utf8 DEFAULT NULL,
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8";
+
         return Dba::write($sql);
     }
 
@@ -1708,6 +1714,7 @@ class Update
     public static function update_360009()
     {
         $sql = "ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(64)";
+
         return Dba::write($sql);
     }
 
@@ -1720,6 +1727,7 @@ class Update
     public static function update_360010()
     {
         $sql = 'ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(1369)';
+
         return Dba::write($sql);
     }
 
@@ -1743,6 +1751,7 @@ class Update
             '`type` varchar(255) DEFAULT NULL,' .
             '`time` smallint(5) DEFAULT NULL,' .
             'PRIMARY KEY (`id`), KEY `sid` (`sid`))';
+
         return Dba::write($sql);
     }
 
@@ -1840,6 +1849,7 @@ class Update
             "PRIMARY KEY (`id`)," .
             "UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`)," .
             "KEY `object_id` (`object_id`)) ENGINE = MYISAM";
+
         return Dba::write($sql);
     }
 
@@ -2010,6 +2020,7 @@ class Update
     public static function update_360024()
     {
         $sql = "DROP TABLE IF EXISTS `flagged`";
+
         return Dba::write($sql);
     }
 
@@ -2051,6 +2062,7 @@ class Update
     public static function update_360026()
     {
         $sql = "ALTER TABLE `object_count` ADD `agent` VARCHAR(255) NULL AFTER `user`";
+
         return Dba::write($sql);
     }
 
@@ -2369,6 +2381,7 @@ class Update
     public static function update_360039()
     {
         $sql = "ALTER TABLE `user` ADD `website` varchar(255) CHARACTER SET utf8 NULL AFTER `email`";
+
         return Dba::write($sql);
     }
 
@@ -2406,6 +2419,7 @@ class Update
             "`bitrate` int(11) unsigned NOT NULL DEFAULT '128'," .
             "`pid` int(11) unsigned NOT NULL DEFAULT '0'," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+
         return Dba::write($sql);
     }
 
@@ -2508,6 +2522,7 @@ class Update
     public static function update_360045()
     {
         $sql = "ALTER TABLE `playlist` MODIFY `user` int(11) NULL";
+
         return Dba::write($sql);
     }
 
@@ -2538,6 +2553,7 @@ class Update
     public static function update_360047()
     {
         $sql = "ALTER TABLE `user` ADD `apikey` varchar(255) CHARACTER SET utf8 NULL AFTER `website`";
+
         return Dba::write($sql);
     }
 
@@ -2616,6 +2632,7 @@ class Update
 
         if (!install_check_server_apache()) {
             debug_event('update', 'Not using Apache, update 360051 skipped.', '5');
+
             return true;
         }
 
@@ -2710,6 +2727,7 @@ class Update
     public static function update_370002()
     {
         $sql = "ALTER TABLE `tag` ADD `merged_to` int(11) NULL AFTER `name`";
+
         return Dba::write($sql);
     }
 
@@ -2838,6 +2856,7 @@ class Update
     public static function update_370005()
     {
         $sql = "ALTER TABLE `song` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `artist`";
+
         return Dba::write($sql);
     }
 
@@ -2850,6 +2869,7 @@ class Update
     public static function update_370006()
     {
         $sql = "ALTER TABLE `search` ADD `random` tinyint(1) unsigned NOT NULL DEFAULT '0' AFTER `logic_operator`, ADD `limit` int(11) unsigned NOT NULL DEFAULT '0' AFTER `random`";
+
         return Dba::write($sql);
     }
 
@@ -2985,6 +3005,7 @@ class Update
     public static function update_370010()
     {
         $sql = "ALTER TABLE `album` ADD `mbid_group` varchar(36) CHARACTER SET utf8 NULL";
+
         return Dba::write($sql);
     }
 
@@ -3066,6 +3087,7 @@ class Update
         $retval = true;
         $sql    ="ALTER TABLE `video` CHANGE COLUMN `release_date` `release_date` INT NULL DEFAULT NULL" ;
         $retval &= Dba::write($sql);
+
         return $retval;
     }
 
@@ -3083,6 +3105,7 @@ class Update
             "`expire` int(11) NULL," .
             "PRIMARY KEY (`username`, `token`)) ENGINE = MYISAM";
         $retval &= Dba::write($sql);
+
         return $retval;
     }
 

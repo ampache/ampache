@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -75,6 +75,7 @@ class Catalog_dropbox extends Catalog
             //"<li>Add the following OAuth redirect URIs: <i>" . AmpConfig::get('web_path') . "/admin/catalog.php</i></li>" .
             "<li>" . T_("Copy your App key and App secret in the following fields.") . "</li>" .
             "<li>&rArr;&nbsp;" . T_("After preparing the catalog with pressing the 'Add catalog' button,<br /> you have to 'Make it ready' on the catalog table.") . "</li></ul>";
+
         return $help;
     } // get_create_help
 
@@ -111,10 +112,10 @@ class Catalog_dropbox extends Catalog
 
     public function catalog_fields()
     {
-        $fields['apikey']        = array('description' => T_('API Key'), 'type'=>'text');
-        $fields['secret']        = array('description' => T_('Secret'), 'type'=>'password');
-        $fields['path']          = array('description' => T_('Path'), 'type'=>'text', 'value' => '/');
-        $fields['getchunk']      = array('description' => T_('Get chunked files on analyze'), 'type'=>'checkbox', 'value' => true);
+        $fields['apikey']        = array('description' => T_('API Key'), 'type' => 'text');
+        $fields['secret']        = array('description' => T_('Secret'), 'type' => 'password');
+        $fields['path']          = array('description' => T_('Path'), 'type' => 'text', 'value' => '/');
+        $fields['getchunk']      = array('description' => T_('Get chunked files on analyze'), 'type' => 'checkbox', 'value' => true);
 
         return $fields;
     }
@@ -152,7 +153,7 @@ class Catalog_dropbox extends Catalog
             $this->id = intval($catalog_id);
             $info     = $this->get_info($catalog_id);
 
-            foreach ($info as $key=>$value) {
+            foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
         }
@@ -174,12 +175,14 @@ class Catalog_dropbox extends Catalog
 
         if (!strlen($apikey) or !strlen($secret)) {
             AmpError::add('general', T_('Error: API Key and Secret Required for Dropbox Catalogs'));
+
             return false;
         }
 
         $pathError = Dropbox\Path::findError($path);
         if ($pathError !== null) {
             AmpError::add('general', T_('Invalid <dropbox-path>: ' . $pathError));
+
             return false;
         }
 
@@ -190,11 +193,13 @@ class Catalog_dropbox extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate key ' . $apikey, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $apikey));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_dropbox` (`apikey`, `secret`, `path`, `getchunk`, `catalog_id`) VALUES (?, ?, ?, ?, ?)';
         Dba::write($sql, array($apikey, $secret, $path, ($getchunk ? 1 : 0), $catalog_id));
+
         return true;
     }
 
@@ -266,6 +271,7 @@ class Catalog_dropbox extends Catalog
         }
         if (!$this->authtoken) {
             $this->showAuthToken();
+
             return null;
         }
 
@@ -274,6 +280,7 @@ class Catalog_dropbox extends Catalog
         } catch (Dropbox\Exception $e) {
             debug_event('dropbox_catalog', 'Dropbox authentication error: ' . $ex->getMessage(), 1);
             $this->showAuthToken();
+
             return null;
         }
     }
@@ -398,6 +405,7 @@ class Catalog_dropbox extends Catalog
                 $results['file'] = $this->get_virtual_path($results['file']);
 
                 $this->count++;
+
                 return Song::insert($results);
             } else {
                 debug_event('results', $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.", 5);
@@ -473,6 +481,7 @@ class Catalog_dropbox extends Catalog
         if ($p !== false) {
             $p++;
         }
+
         return substr($file_path, $p);
     }
 

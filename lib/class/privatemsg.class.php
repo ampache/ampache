@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -98,7 +98,7 @@ class PrivateMsg extends database_object
         }
 
         $info = $this->get_info($id, 'user_pvmsg');
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -123,12 +123,14 @@ class PrivateMsg extends database_object
     public function set_is_read($read)
     {
         $sql = "UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($read ? 1 : 0, $this->id));
     }
 
     public function delete()
     {
         $sql = "DELETE FROM `user_pvmsg` WHERE `id` = ?";
+
         return Dba::write($sql, array($this->id));
     }
 
@@ -208,6 +210,7 @@ class PrivateMsg extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
+
         return $results;
     }
 }

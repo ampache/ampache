@@ -7,7 +7,7 @@
    # origin because abandonned by its original authors.                #
    #                                                                   #
    #####################################################################
-   
+
  * This provides capability information for the current web client.
  *
  * Browser identification is performed by examining the HTTP_USER_AGENT
@@ -220,12 +220,12 @@ class Horde_Browser
      * @var array
      */
     protected $_features = array(
-        'frames'     => true,
-        'html'       => true,
-        'images'     => true,
-        'java'       => true,
+        'frames' => true,
+        'html' => true,
+        'images' => true,
+        'java' => true,
         'javascript' => true,
-        'tables'     => true
+        'tables' => true
     );
 
     /**
@@ -294,7 +294,7 @@ class Horde_Browser
         $this->_setPlatform();
 
         // Use local scope for frequently accessed variables.
-        $agent = $this->_agent;
+        $agent      = $this->_agent;
         $lowerAgent = $this->_lowerAgent;
 
         if (strpos($lowerAgent, 'iemobile') !== false ||
@@ -534,7 +534,7 @@ class Horde_Browser
                 // numbers until Version 3.
                 if (preg_match('|Version/([0-9.]+)|', $agent, $version_string)) {
                     list($this->_majorVersion, $this->_minorVersion) = explode('.', $version_string[1], 2);
-                    $this->_minorVersion = intval($this->_minorVersion);
+                    $this->_minorVersion                             = intval($this->_minorVersion);
                     $this->setFeature('ajax');
                     $this->setFeature('rte');
                 } elseif ($this->_majorVersion >= 412) {
@@ -1138,17 +1138,17 @@ class Horde_Browser
         if ($index) {
             /* Index present, fetch the error var to check. */
             $keys_path = array_merge(array($base, 'error'), $keys);
-            $error = Horde_Array::getElement($_FILES, $keys_path);
+            $error     = Horde_Array::getElement($_FILES, $keys_path);
 
             /* Index present, fetch the tmp_name var to check. */
             $keys_path = array_merge(array($base, 'tmp_name'), $keys);
-            $tmp_name = Horde_Array::getElement($_FILES, $keys_path);
+            $tmp_name  = Horde_Array::getElement($_FILES, $keys_path);
         } else {
             /* No index, simple set up of vars to check. */
             if (!isset($_FILES[$field])) {
                 throw new Horde_Browser_Exception(Horde_Browser_Translation::t("No file uploaded"), UPLOAD_ERR_NO_FILE);
             }
-            $error = $_FILES[$field]['error'];
+            $error    = $_FILES[$field]['error'];
             $tmp_name = $_FILES[$field]['tmp_name'];
         }
 
@@ -1247,7 +1247,7 @@ class Horde_Browser
      */
     public function isViewable($mimetype)
     {
-        $mimetype = strtolower($mimetype);
+        $mimetype             = strtolower($mimetype);
         list($type, $subtype) = explode('/', $mimetype);
 
         if (!empty($this->_accept)) {
@@ -1284,5 +1284,4 @@ class Horde_Browser
 
         return in_array($subtype, $this->_images);
     }
-
 }

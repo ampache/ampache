@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -87,7 +87,7 @@ class Live_Stream extends database_object implements media, library_item
         $info = $this->get_info($id, 'live_stream');
 
         // Set the vars
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
     } // constructor
@@ -143,6 +143,7 @@ class Live_Stream extends database_object implements media, library_item
                 'object_id' => $this->id
             );
         }
+
         return $medias;
     }
 

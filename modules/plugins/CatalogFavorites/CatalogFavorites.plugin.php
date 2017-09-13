@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,6 +85,7 @@ class AmpacheCatalogFavorites
         if ($from_version < 2) {
             Preference::insert('catalogfav_gridview', 'Catalog favorites grid view display', '1', '25', 'boolean', 'plugins');
         }
+
         return true;
     }
 

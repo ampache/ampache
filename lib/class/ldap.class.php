@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,6 +34,7 @@ function array_filter_key($array, $callback)
             unset($array[$key]);
         }
     }
+
     return $array;
 }
 // function array_filter_key ($array, $callback)
@@ -299,11 +300,11 @@ class LDAP
             $email       = $user_entry[strtolower($email_field)][0];
 
             $return_value = [
-                'success'  => true,
-                'type'     => 'ldap',
+                'success' => true,
+                'type' => 'ldap',
                 'username' => $username,
-                'name'     => $name,
-                'email'    => $email
+                'name' => $name,
+                'email' => $email
             ];
             
             if (($state_field = AmpConfig::get('ldap_state_field')) !== null) {
@@ -327,7 +328,7 @@ class LDAP
 
             $return_value = [
                 'success' => false,
-                'error'   => $message
+                'error' => $message
             ];
         }
 

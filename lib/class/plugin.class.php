@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,6 +62,7 @@ class Plugin
             /* Require the file we want */
             if (!@include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
                 debug_event('plugin', 'Cannot include plugin `' . $cname . '`.', 1);
+
                 return false;
             }
 
@@ -73,6 +74,7 @@ class Plugin
             }
         } catch (Exception $ex) {
             debug_event('plugin', 'Error when initializing plugin `' . $cname . '`: ' . $ex->getMessage(), 1);
+
             return false;
         }
 
@@ -258,6 +260,7 @@ class Plugin
     public function load($user)
     {
         $user->set_preferences();
+
         return $this->_plugin->load($user);
     }
 

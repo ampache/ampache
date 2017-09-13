@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,15 +31,15 @@ class Subsonic_XML_Data
 {
     const API_VERSION = "1.11.0";
 
-    const SSERROR_GENERIC           = 0;
-    const SSERROR_MISSINGPARAM      = 10;
-    const SSERROR_APIVERSION_CLIENT = 20;
-    const SSERROR_APIVERSION_SERVER = 30;
-    const SSERROR_BADAUTH           = 40;
+    const SSERROR_GENERIC               = 0;
+    const SSERROR_MISSINGPARAM          = 10;
+    const SSERROR_APIVERSION_CLIENT     = 20;
+    const SSERROR_APIVERSION_SERVER     = 30;
+    const SSERROR_BADAUTH               = 40;
     const SSERROR_TOKENAUTHNOTSUPPORTED = 41;
-    const SSERROR_UNAUTHORIZED      = 50;
-    const SSERROR_TRIAL             = 60;
-    const SSERROR_DATA_NOTFOUND     = 70;
+    const SSERROR_UNAUTHORIZED          = 50;
+    const SSERROR_TRIAL                 = 60;
+    const SSERROR_DATA_NOTFOUND         = 70;
 
     // Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
     const AMPACHEID_ARTIST    = 100000000;
@@ -103,6 +103,7 @@ class Subsonic_XML_Data
         if ($tpos !== false) {
             $id = intval(substr($id, $tpos + 1));
         }
+
         return $id;
     }
 
@@ -117,48 +118,56 @@ class Subsonic_XML_Data
         foreach ($ids as $id) {
             $ampids[] = self::getAmpacheId($id);
         }
+
         return $ampids;
     }
 
     public static function isArtist($id)
     {
         $id = self::cleanId($id);
+
         return ($id >= Subsonic_XML_Data::AMPACHEID_ARTIST && $id < Subsonic_XML_Data::AMPACHEID_ALBUM);
     }
 
     public static function isAlbum($id)
     {
         $id = self::cleanId($id);
+
         return ($id >= Subsonic_XML_Data::AMPACHEID_ALBUM && $id < Subsonic_XML_Data::AMPACHEID_SONG);
     }
 
     public static function isSong($id)
     {
         $id = self::cleanId($id);
+
         return ($id >= Subsonic_XML_Data::AMPACHEID_SONG && $id < Subsonic_XML_Data::AMPACHEID_SMARTPL);
     }
 
     public static function isSmartPlaylist($id)
     {
         $id = self::cleanId($id);
+
         return ($id >= Subsonic_XML_Data::AMPACHEID_SMARTPL && $id < Subsonic_XML_Data::AMPACHEID_VIDEO);
     }
 
     public static function isVideo($id)
     {
         $id = self::cleanId($id);
+
         return ($id >= Subsonic_XML_Data::AMPACHEID_VIDEO && $id < Subsonic_XML_Data::AMPACHEID_PODCAST);
     }
     
     public static function isPodcast($id)
     {
         $id = self::cleanId($id);
+
         return ($id >= Subsonic_XML_Data::AMPACHEID_PODCAST && $id < Subsonic_XML_Data::AMPACHEID_PODCASTEP);
     }
     
     public static function isPodcastEp($id)
     {
         $id = self::cleanId($id);
+
         return ($id >= Subsonic_XML_Data::AMPACHEID_PODCASTEP);
     }
     
@@ -187,6 +196,7 @@ class Subsonic_XML_Data
     {
         $response = self::createResponse($version);
         $response->addAttribute('status', 'failed');
+
         return $response;
     }
 
@@ -194,6 +204,7 @@ class Subsonic_XML_Data
     {
         $response = self::createResponse($version);
         $response->addAttribute('status', 'ok');
+
         return $response;
     }
 
@@ -206,6 +217,7 @@ class Subsonic_XML_Data
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         $response->addAttribute('type', 'ampache');
         $response->addAttribute('version', $version);
+
         return $response;
     }
 
@@ -216,6 +228,7 @@ class Subsonic_XML_Data
         }
         $response = self::createFailedResponse($version);
         self::setError($response, $code, $message);
+
         return $response;
     }
 
@@ -233,15 +246,15 @@ class Subsonic_XML_Data
 
         if (empty($message)) {
             switch ($code) {
-                case Subsonic_XML_Data::SSERROR_GENERIC:            $message = "A generic error."; break;
-                case Subsonic_XML_Data::SSERROR_MISSINGPARAM:       $message = "Required parameter is missing."; break;
-                case Subsonic_XML_Data::SSERROR_APIVERSION_CLIENT:  $message = "Incompatible Subsonic REST protocol version. Client must upgrade."; break;
-                case Subsonic_XML_Data::SSERROR_APIVERSION_SERVER:  $message = "Incompatible Subsonic REST protocol version. Server must upgrade."; break;
-                case Subsonic_XML_Data::SSERROR_BADAUTH:            $message = "Wrong username or password."; break;
+                case Subsonic_XML_Data::SSERROR_GENERIC:            $message    = "A generic error."; break;
+                case Subsonic_XML_Data::SSERROR_MISSINGPARAM:       $message    = "Required parameter is missing."; break;
+                case Subsonic_XML_Data::SSERROR_APIVERSION_CLIENT:  $message    = "Incompatible Subsonic REST protocol version. Client must upgrade."; break;
+                case Subsonic_XML_Data::SSERROR_APIVERSION_SERVER:  $message    = "Incompatible Subsonic REST protocol version. Server must upgrade."; break;
+                case Subsonic_XML_Data::SSERROR_BADAUTH:            $message    = "Wrong username or password."; break;
                 case Subsonic_XML_Data::SSERROR_TOKENAUTHNOTSUPPORTED: $message = "Token authentication not supported."; break;
-                case Subsonic_XML_Data::SSERROR_UNAUTHORIZED:       $message = "User is not authorized for the given operation."; break;
-                case Subsonic_XML_Data::SSERROR_TRIAL:              $message = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details."; break;
-                case Subsonic_XML_Data::SSERROR_DATA_NOTFOUND:      $message = "The requested data was not found."; break;
+                case Subsonic_XML_Data::SSERROR_UNAUTHORIZED:       $message    = "User is not authorized for the given operation."; break;
+                case Subsonic_XML_Data::SSERROR_TRIAL:              $message    = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details."; break;
+                case Subsonic_XML_Data::SSERROR_DATA_NOTFOUND:      $message    = "The requested data was not found."; break;
             }
         }
 
@@ -520,6 +533,7 @@ class Subsonic_XML_Data
                 $name = $name .= " ";
             }
         }
+
         return $name;
     }
 

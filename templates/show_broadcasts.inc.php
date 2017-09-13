@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,18 +43,18 @@
         <tr class="<?php echo UI::flip_class(); ?>" id="broadcast_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_broadcast_row.inc.php'); ?>
         </tr>
-        <?php 
+        <?php
         } ?>
         <?php if (!count($object_ids)) {
-    ?>
+            ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6"><span class="nodata"><?php echo T_('No broadcast found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

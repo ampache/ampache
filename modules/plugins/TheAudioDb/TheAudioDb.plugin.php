@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -72,7 +72,7 @@ class AmpacheTheaudiodb
 
     /**
      * load
-     * This is a required plugin function; here it populates the prefs we 
+     * This is a required plugin function; here it populates the prefs we
      * need for this object.
      */
     public function load($user)
@@ -84,6 +84,7 @@ class AmpacheTheaudiodb
             $this->api_key = trim($data['tadb_api_key']);
         } else {
             debug_event($this->name, 'No TheAudioDb api key, metadata plugin skipped', '3');
+
             return false;
         }
         
@@ -101,6 +102,7 @@ class AmpacheTheaudiodb
         // Music metadata only
         if (!in_array('music', $gather_types)) {
             debug_event('tadb', 'Not a valid media type, skipped.', '5');
+
             return null;
         }
 
@@ -163,6 +165,7 @@ class AmpacheTheaudiodb
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('tadb', 'gather_arts for type `' . $type . '`', 5);
+
         return Art::gather_metadata_plugin($this, $type, $options);
     }
     
