@@ -93,6 +93,7 @@ class Search extends playlist_object
             'sql' => '<'
         );
 
+        
         $this->basetypes['boolean'][] = array(
             'name' => 'true',
             'description' => T_('is true'),
