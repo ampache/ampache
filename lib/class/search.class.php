@@ -93,15 +93,16 @@ class Search extends playlist_object
             'sql' => '<'
         );
 
-
         $this->basetypes['boolean'][] = array(
             'name' => 'true',
-            'description' => T_('is true')
+            'description' => T_('is true'),
+            'sql' => '1'
         );
 
         $this->basetypes['boolean'][] = array(
             'name' => 'false',
-            'description' => T_('is false')
+            'description' => T_('is false'),
+            'sql' => '0'
         );
 
 
@@ -179,18 +180,6 @@ class Search extends playlist_object
             'name' => 'ne',
             'description' => T_('is not'),
             'sql' => 'NOT'
-        );
-
-        $this->basetypes['true_false'][] = array(
-            'name' => 'equal',
-            'description' => T_('is True'),
-            'sql' => '1'
-        );
-
-        $this->basetypes['true_false'][] = array(
-            'name' => 'ne',
-            'description' => T_('is False'),
-            'sql' => '0'
         );
 
         $this->basetypes['date'][] = array(
@@ -366,8 +355,8 @@ class Search extends playlist_object
             $this->types[] = array(
                 'name' => 'played',
                 'label' => T_('Played'),
-                'type' => 'true_false',
-                'widget' => array('select')
+                'type' => 'boolean',
+                'widget' => array('input', 'hidden')
             );
 
             $this->types[] = array(
