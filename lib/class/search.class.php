@@ -1287,12 +1287,7 @@ class Search extends playlist_object
                 break;
                 case 'myratings':
                     $userid = $GLOBALS['user']->id;
-                    if ($this->type != "public") {
-                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND `rating`.`user`='$userid'";
-                    } else {
-                        $group[]  = "`song`.`id`";
-                        $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
-                    }
+                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND `rating`.`user`='$userid'";
                     $join['myratings'] = true;
                 break;
                 case 'played_times':
