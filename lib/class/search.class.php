@@ -183,6 +183,7 @@ class Search extends playlist_object
             'sql' => 'NOT'
         );
 
+
         $this->basetypes['date'][] = array(
             'name' => 'lt',
             'description' => T_('before'),
