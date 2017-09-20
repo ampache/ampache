@@ -487,8 +487,26 @@ class Search extends playlist_object
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name' => 'rating',
-                    'label' => T_('Rating'),
+                    'name'   => 'rating',
+                    'label'  => T_('Rating (Average)'),
+                    'type'   => 'numeric',
+                    'widget' => array(
+                        'select',
+                        array(
+                            '1 Star',
+                            '2 Stars',
+                            '3 Stars',
+                            '4 Stars',
+                            '5 Stars'
+                        )
+                    )
+                );
+            }
+
+            if (AmpConfig::get('ratings')) {
+                $this->types[] = array(
+                    'name'   => 'myratings',
+                    'label'  => T_('Rating (Mine)'),
                     'type' => 'numeric',
                     'widget' => array(
                         'select',
@@ -557,6 +575,41 @@ class Search extends playlist_object
                 'type' => 'text',
                 'widget' => array('input', 'text')
             );
+            if (AmpConfig::get('ratings')) {
+                $this->types[] = array(
+                    'name'   => 'rating',
+                    'label'  => T_('Rating (Average)'),
+                    'type'   => 'numeric',
+                    'widget' => array(
+                        'select',
+                        array(
+                            '1 Star',
+                            '2 Stars',
+                            '3 Stars',
+                            '4 Stars',
+                            '5 Stars'
+                        )
+                    )
+                );
+            }
+
+            if (AmpConfig::get('ratings')) {
+                $this->types[] = array(
+                    'name'   => 'myratings',
+                    'label'  => T_('Rating (Mine)'),
+                    'type' => 'numeric',
+                    'widget' => array(
+                        'select',
+                        array(
+                            '1 Star',
+                            '2 Stars',
+                            '3 Stars',
+                            '4 Stars',
+                            '5 Stars'
+                        )
+                    )
+                );
+            }
         break;
         case 'playlist':
             $this->types[] = array(
@@ -1020,6 +1073,11 @@ class Search extends playlist_object
                     }
                     $join['rating'] = true;
                 break;
+                case 'myratings':
+                    $userid = $GLOBALS['user']->id;
+                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND `rating`.`user`='$userid'";
+                    $join['myratings'] = true;
+                break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
                     $join['song'] = true;
@@ -1075,12 +1133,18 @@ class Search extends playlist_object
             }
         }
         if ($join['rating']) {
-            $userid          = intval($GLOBALS['user']->id);
-            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' ";
-            if ($this->type != 'public') {
-                $table['rating'] .= "AND `rating`.`user`='$userid' ";
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
+            if ($this->type != "public") {
+                $table['rating'] .= "`rating`.`user`='$userid' AND ";
             }
-            $table['rating'] .= "AND `rating`.`object_id`=`album`.`id`";
+            $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
+        }
+        if ($join['myratings']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
+            $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
             $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
@@ -1146,6 +1210,20 @@ class Search extends playlist_object
                     $where[]           = "`realtag_$key`.`match` > 0";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
                 break;
+                case 'rating':
+                    if ($this->type != "public") {
+                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    } else {
+                        $group[]  = "`artist`.`id`";
+                        $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
+                    }
+                    $join['rating'] = true;
+                break;
+                case 'myratings':
+                    $userid = $GLOBALS['user']->id;
+                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND `rating`.`user`='$userid'";
+                    $join['myratings'] = true;
+                break;
                 default:
                     // Nihil
                 break;
@@ -1177,7 +1255,20 @@ class Search extends playlist_object
                 $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             }
         }
-
+        if ($join['rating']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
+            if ($this->type != "public") {
+                $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            }
+            $table['rating'] .= "`rating`.`object_id`=`artist`.`id`";
+        }
+        if ($join['myratings']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
+            $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            $table['rating'] .= "`rating`.`object_id`=`artist`.`id`";
+        }
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(', ', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
