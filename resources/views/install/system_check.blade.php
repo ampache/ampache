@@ -7,7 +7,7 @@
         </div>
         <div class="well">
             <p>
-                <?php echo T_("The following pages handle the installation of the Ampache database and validates some required dependencies." . 
+                <?php echo T_("The following pages handle the installation of the Ampache database and validates some required dependencies." .
                     "  Before you continue please make sure that you have the following prerequisites:"); ?>
             </p>
             <ul>
@@ -20,7 +20,7 @@
         <th><?php echo T_('STATUS'); ?></th>
         <th><?php echo T_('DESCRIPTION'); ?></th>
     </tr>
-            <?php // require resource_path('views/includes/test_table.blade.php'); ?>
+            <?php // require resource_path('views/includes/test_table.blade.php');?>
     
 <tr>
     <td valign="top"><?php echo T_('PHP hash extension'); ?></td>

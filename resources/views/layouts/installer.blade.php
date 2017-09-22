@@ -36,19 +36,19 @@
     <meta http-equiv="pragma" content="no-cache" />
 
     <title>Ampache :: For the love of Music - Install</title>
-<link rel="stylesheet" href="{{ url('css/jquery-ui.css') }}">
-<link rel="stylesheet" href="{{ url('themes/' . Config::get('theme.theme') . '/css/default.css') }}" type="text/css" media="screen">
-<link rel="stylesheet" href="{{ url('css/base.css') }}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{{ url('css/bootstrap.css') }}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{{ url('themes/reborn/css/light.css') }}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{{ url('css/install-doped.css') }}" type="text/css" media="screen" />
+	<link rel="stylesheet" href="{{ url('css/jquery-ui.css') }}">
+	<link rel="stylesheet" href="{{ url('themes/' . Config::get('theme.theme') . '/css/default.css') }}" type="text/css" media="screen">
+	<link rel="stylesheet" href="{{ url('css/base.css') }}" type="text/css" media="screen" />
+	<link rel="stylesheet" href="{{ url('css/bootstrap.css') }}" type="text/css" media="screen" />
+	<link rel="stylesheet" href="{{ url('themes/reborn/css/light.css') }}" type="text/css" media="screen" />
+	<link rel="stylesheet" href="{{ url('css/install-doped.css') }}" type="text/css" media="screen" />
     <script src="{{ url('js/jquery.js') }}" language="javascript" type="text/javascript"></script>
     <script src="{{ url('js/require.js') }}" language="javascript" type="text/javascript"></script>
     <script src="{{ url('js/bootstrap.js') }}" language="javascript" type="text/javascript"></script>
    <script src="{{ url('js/base.js') }}" language="javascript" type="text/javascript"></script>
     
-</head>
-<body>
+	</head>
+	<body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -57,6 +57,7 @@
             </a>
         </div>
     </div>
+    
      <div class="container">
         <div id="guts">
             @yield('container')
@@ -64,8 +65,10 @@
             <div style="clear:both;">
             </div>
     </div>
-    @if (session('status'))
-    <div class="alert alert-success">
-        {{ session('status') }}
-    </div>
-   @endif
+        @if (session('status'))
+        <div class="alert alert-success">
+           {{ session('status') }}
+        </div>
+ 	    @endif
+	</body>
+</html>    

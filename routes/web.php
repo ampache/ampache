@@ -41,11 +41,15 @@ Route::get('messages/reply/{id}', 'PrivateMsgController@reply')->name('reply');
 Route::get('messages/show/{idselected}', 'PrivateMsgController@show')->name('show');
 Route::get('install.language', 'InstallController@selectLanguage')->name('language');
 Route::post('/install/setlanguage/{language}', 'InstallController@setLanguage')->name('setLanguage');
-Route::get('/install/system_check', function() {
+Route::post('/install/create_config', 'InstallController@create_config')->name('create_config');
+Route::get('/install/system_check', function () {
     return view('install.system_check');
 });
-
+//Route::get('/install/configure', function () {
+//    return view('install.configure');
+//});
+    
 Route::post('/install/create_db', 'InstallController@create_db');
-Route::get('/install/show_db', function() {
+Route::get('/install/show_db', function () {
     return view('install.database');
 });

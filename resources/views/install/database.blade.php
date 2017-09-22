@@ -38,15 +38,15 @@
     </div>
     <p><strong><?php echo T_('Step 1 - Create the Ampache database'); ?></strong></p>
     <dl>
-        <dd><?php echo T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This step may take some time on slower computers.'); ?></dd>
+        <dd>{{ T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This step may take some time on slower computers.') }}</dd>
     </dl>
     <ul class="list-unstyled">
-        <li><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></li>
+        <li><?php echo T_('Step 2 - Create configuration files'); ?></li>
         <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
     </ul>
 </div>
 <h2><?php echo T_('Insert Ampache Database'); ?></h2>
-<form role="form" class="form-horizontal" method="post" action="{{ url('/install/create_db') }}" enctype="multipart/form-data" autocomplete="off">
+<form role="form" class="form-horizontal" method="post" action="{{ url('/install/create_db') }}" autocomplete="off">
                         {{ csrf_field() }}
     <div class="form-group" {{ $errors->has('local_db') ? ' has-error' : '' }}">
         <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Desired Database Name'); ?></label>
@@ -73,7 +73,7 @@
     <div class="form-group" {{ $errors->has('local_port') ? ' has-error' : '' }}">
         <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL port (optional)'); ?></label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="local_port" name="local_port"/>
+            <input type="text" class="form-control" id="local_port" name="local_port" placeholder="3306 (Default)">
                @if ($errors->has('local_port'))
                  <span class="help-block">
                  <strong>{{ $errors->first('local_port') }}</strong>
@@ -83,7 +83,7 @@
    </div>
     <div class="form-group" {{ $errors->has('local_username') ? ' has-error' : '' }}">
         <label for="local_username" class="col-sm-4 control-label"><?php echo T_('MySQL Administrative Username'); ?></label>
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             <input type="text" class="form-control" id="local_username" name="local_username" value="root" required>
                @if ($errors->has('local_username'))
                  <span class="help-block">
@@ -94,8 +94,8 @@
     </div>
     <div class="form-group" {{ $errors->has('local_pass') ? ' has-error' : '' }}">
         <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Administrative Password'); ?></label>
-        <div class="col-sm-6">
-            <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password" required>
+        <div class="col-sm-5">
+            <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password (Required)" required>
                @if ($errors->has('local_pass'))
                  <span class="help-block">
                  <strong>{{ $errors->first('local_pass') }}</strong>
@@ -105,7 +105,7 @@
     </div>
     <div class="form-group">
         <label for="create_db" class="col-sm-4 control-label"><?php echo T_('Create Database'); ?></label>
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             <input
                 type="checkbox" value="1" checked
                 id="create_db" name="create_db"
@@ -115,7 +115,7 @@
     </div>
     <div class="form-group" id="overwrite_db_div" >
         <label for="overwrite_db" class="col-sm-4 control-label"><?php echo T_('Overwrite if database already exists'); ?></label>
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             <input
                 type="checkbox" value="1"
                 id="overwrite_db" name="overwrite_db"
@@ -124,7 +124,7 @@
     </div>
     <div class="form-group">
         <label for="create_tables" class="col-sm-4 control-label"><?php echo T_('Create Tables'); ?> (<a href="sql/ampache.sql">ampache.sql</a>)</label>
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             <input
                 type="checkbox" value="1" checked
                 id="create_tables" name="create_tables"
@@ -133,17 +133,17 @@
     </div>
     <div class="form-group">
         <label for="db_user" class="col-sm-4 control-label"><?php echo T_('Create Database User'); ?></label>
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             <input
                 type="checkbox" value="create_db_user" name="db_user"
                 id="db_user"
-                onclick='$("#specificuser").toggle();$("#specificpass").toggle();'
+                onclick='enableDbUser();'
             />
         </div>
     </div>
     <div class="form-group" style="display: none;" id="specificuser" {{ $errors->has('db_username') ? ' has-error' : '' }}">
         <label for="db_username" class="col-sm-4 control-label"><?php echo T_('Ampache Database Username'); ?></label>
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             <input type="text" class="form-control" id="db_username" name="db_username" value="ampache">
                 @if ($errors->has('db_username'))
                  <span class="help-block">
@@ -154,7 +154,7 @@
     </div>
     <div class="form-group" style="display: none;" id="specificpass" {{ $errors->has('db_password') ? ' has-error' : '' }}">
         <label for="db_password" class="col-sm-4 control-label"><?php echo T_('Ampache Database User Password'); ?></label>
-        <div class="col-sm-7">
+        <div class="col-sm-5">
             <input type="password" class="form-control" id="db_password" name="db_password" placeholder="Password (Required)">
                @if ($errors->has('db_password'))
                  <span class="help-block">
@@ -170,4 +170,24 @@
         <button type="submit" class="btn btn-warning"><?php echo T_('Insert Database'); ?></button>
     </div>
 </form>
+
+<script>
+
+function enableDbUser() {
+	var t = $("#specificuser").css("display");
+	console.log(t);
+	$("#specificuser").toggle();$("#specificpass").toggle();
+	if (t == "none") {; 
+		$("#db_username").attr("required", "");
+		$("#db_password").attr("required", "");
+	}
+	else
+	{
+		$("#db_username").removeAttr("required");
+		$("#db_password").removeAttr("required");
+		
+	}
+};
+
+</script>
 @endsection

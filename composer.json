@@ -61,6 +61,7 @@
         "mews/captcha": "^2.1",
         "mikealmond/musicbrainz": "^0.2.2",
         "needim/noty": "2.3.*",
+        "novius/laravel-artisan-commands": "^0.1.0",
         "openid/php-openid": "^2.3",
         "phpmailer/phpmailer": "^5.2",
         "pklauzinski/jscroll": "^2.3",
