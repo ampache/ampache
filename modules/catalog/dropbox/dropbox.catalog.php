@@ -26,6 +26,11 @@
  * This class handles all actual work in regards to remote Dropbox catalogs.
  *
  */
+
+use Kunnu\Dropbox\DropboxApp;
+use Kunnu\Dropbox\Dropbox;
+use Kunnu\Dropbox\Exceptions;
+
 class Catalog_dropbox extends Catalog
 {
     private $version        = '000001';
@@ -178,14 +183,17 @@ class Catalog_dropbox extends Catalog
 
             return false;
         }
-
-        $pathError = Dropbox\Path::findError($path);
-        if ($pathError !== null) {
-            AmpError::add('general', T_('Invalid <dropbox-path>: ' . $pathError));
-
+        $app = new DropboxApp("2ueasfeca24nkep", "w5votteel0fi8mo", 'jY__WZ2lu5AAAAAAAAAAE3I8GLN1lk6uEbJtylQ8rwnwhWtO0jYlxaDiyeS9ovl9');
+        $dropbox = new Dropbox($app);
+        try {
+            $folders = $dropbox->listFolder($path);
+        }
+        catch (Kunnu\Dropbox\Exceptions\DropboxClientException $e)
+        {
+            AmpError::add('general', T_('Invalid <dropbox-path>: ' . $e->getMessage()));
             return false;
         }
-
+        
         // Make sure this app isn't already in use by an existing catalog
         $sql        = 'SELECT `id` FROM `catalog_dropbox` WHERE `apikey` = ?';
         $db_results = Dba::read($sql, array($apikey));

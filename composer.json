@@ -69,7 +69,8 @@
 		"swisnl/jQuery-contextMenu": "2.1.*",
 		"blueimp/jQuery-File-Upload": "^9.18",
 		"krixon/xbmc-php-rpc": "dev-master",
-		"friendsofphp/php-cs-fixer": "~2.4.0"
+		"friendsofphp/php-cs-fixer": "~2.4.0",
+		"kunalvarma05/dropbox-php-sdk": "^0.2.1"
     },
 	
 	"repositories":
