@@ -195,6 +195,20 @@ class Search extends playlist_object
             'description' => T_('after'),
             'sql' => '>'
         );
+
+
+        $this->basetypes['days'][] = array(
+            'name' => 'lt',
+            'description' => T_('before (x) days ago'),
+            'sql' => '<'
+        );
+
+        $this->basetypes['days'][] = array(
+            'name' => 'gt',
+            'description' => T_('after (x) days ago'),
+            'sql' => '>'
+        );
+
         $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
 
         switch ($searchtype) {
@@ -352,6 +366,13 @@ class Search extends playlist_object
                         '320'
                     )
                 )
+            );
+
+            $this->types[] = array(
+                'name' => 'last_play',
+                'label' => T_('My Last Play'),
+                'type' => 'days',
+                'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
@@ -521,6 +542,13 @@ class Search extends playlist_object
                 );
             }
 
+            $this->types[] = array(
+                'name' => 'last_play',
+                'label' => T_('My Last Play'),
+                'type' => 'days',
+                'widget' => array('input', 'text')
+            );
+
             $catalogs = array();
             foreach (Catalog::get_catalogs() as $catid) {
                 $catalog = Catalog::create_from_id($catid);
@@ -592,6 +620,13 @@ class Search extends playlist_object
                     )
                 );
             }
+
+            $this->types[] = array(
+                'name' => 'last_play',
+                'label' => T_('My Last Play'),
+                'type' => 'days',
+                'widget' => array('input', 'text')
+            );
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
@@ -1078,6 +1113,11 @@ class Search extends playlist_object
                     $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['ratings'] = true;
                 break;
+                case 'last_play':
+                    $userid = $GLOBALS['user']->id;
+                    $where[] = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['object_count'] = true;
+                    break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
                     $join['song'] = true;
@@ -1145,6 +1185,12 @@ class Search extends playlist_object
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
             $table['rating'] .= "`rating`.`user`='$userid' AND ";
             $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
+        }
+        if ($join['object_count']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='album' AND ";
+            $table['rating'] .= "`object_count`.`user`='$userid' AND ";
+            $table['rating'] .= "`object_count`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
             $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
@@ -1224,6 +1270,11 @@ class Search extends playlist_object
                     $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myratings'] = true;
                 break;
+                case 'last_play':
+                    $userid = $GLOBALS['user']->id;
+                    $where[] = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['object_count'] = true;
+                    break;
                 default:
                     // Nihil
                 break;
@@ -1268,6 +1319,12 @@ class Search extends playlist_object
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
             $table['rating'] .= "`rating`.`user`='$userid' AND ";
             $table['rating'] .= "`rating`.`object_id`=`artist`.`id`";
+        }
+        if ($join['object_count']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='artist' AND ";
+            $table['rating'] .= "`object_count`.`user`='$userid' AND ";
+            $table['rating'] .= "`object_count`.`object_id`=`artist`.`id`";
         }
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(', ', $group);
@@ -1383,6 +1440,11 @@ class Search extends playlist_object
                     $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myratings'] = true;
                 break;
+                case 'last_play':
+                    $userid = $GLOBALS['user']->id;
+                    $where[] = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['object_count'] = true;
+                    break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
@@ -1490,6 +1552,12 @@ class Search extends playlist_object
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
             $table['rating'] .= "`rating`.`user`='$userid' AND ";
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
+        }
+        if ($join['object_count']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='song' AND ";
+            $table['rating'] .= "`object_count`.`user`='$userid' AND ";
+            $table['rating'] .= "`object_count`.`object_id`=`song`.`id`";
         }
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
