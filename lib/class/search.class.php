@@ -1075,8 +1075,8 @@ class Search extends playlist_object
                 break;
                 case 'myratings':
                     $userid = $GLOBALS['user']->id;
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND `rating`.`user`='$userid'";
-                    $join['myratings'] = true;
+                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    $join['ratings'] = true;
                 break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
@@ -1221,7 +1221,7 @@ class Search extends playlist_object
                 break;
                 case 'myratings':
                     $userid = $GLOBALS['user']->id;
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND `rating`.`user`='$userid'";
+                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myratings'] = true;
                 break;
                 default:
@@ -1380,7 +1380,7 @@ class Search extends playlist_object
                 break;
                 case 'myratings':
                     $userid = $GLOBALS['user']->id;
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND `rating`.`user`='$userid'";
+                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myratings'] = true;
                 break;
                 case 'played_times':
