@@ -326,6 +326,16 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: #FF0000
 ;waveform_color = "#FF0000"
 
+; Waveform height
+; The waveform height.
+; DEFAULT: 32
+;waveform_height = 32
+
+; Waveform width
+; The waveform width.
+; DEFAULT: 400
+;waveform_width = 400
+
 ; Temporary Directory Path
 ; If Waveform is enabled this must be set to tell
 ; Ampache which directory to save the temporary file to. Do not put a
