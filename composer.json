@@ -70,7 +70,8 @@
 		"blueimp/jQuery-File-Upload": "^9.18",
 		"krixon/xbmc-php-rpc": "dev-master",
 		"friendsofphp/php-cs-fixer": "~2.4.0",
-		"kunalvarma05/dropbox-php-sdk": "^0.2.1"
+		"kunalvarma05/dropbox-php-sdk": "^0.2.1",
+		"tightenco/collect": "5.2.*"
     },
 	
 	"repositories":
