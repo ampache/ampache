@@ -5,6 +5,7 @@
 # Translators:
 # Alejandro Suarez <alejandroscf@gmail.com>, 2016-2017
 # Auka Raiken, 2016-2017
+# David Girón <contacto@duhowpi.net>, 2017
 # Fede Ubal <fefudito@hotmail.com>, 2016
 # Ivan, 2015-2016
 # Ivan, 2016
@@ -16,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-08-09 19:58+0200\n"
-"PO-Revision-Date: 2017-08-03 10:33+0000\n"
-"Last-Translator: Auka Raiken\n"
+"POT-Creation-Date: 2017-10-12 06:13+0200\n"
+"PO-Revision-Date: 2017-09-25 09:43+0000\n"
+"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/ampache/ampache/"
 "language/es_ES/)\n"
 "Language: es_ES\n"
@@ -1741,29 +1742,29 @@ msgstr "Inserción de Catálogo Fallida, comprueba el registro de debug"
 msgid "No Update Needed"
 msgstr "No necesita actualizar"
 
-#: ../../lib/class/catalog.class.php:1818
+#: ../../lib/class/catalog.class.php:1846
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "Limpieza de catálogo hecha. %d archivo eliminado."
 msgstr[1] "Limpieza de catálogo hecha. %d archivos eliminados."
 
-#: ../../lib/class/catalog.class.php:1843
+#: ../../lib/class/catalog.class.php:1871
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "Verificación de catálogo hecha. %d de %d archivos actualizados."
 
-#: ../../lib/class/catalog.class.php:2057
+#: ../../lib/class/catalog.class.php:2085
 msgid "Failed to create playlist."
 msgstr "Fallo al crear lista de reproducción."
 
-#: ../../lib/class/catalog.class.php:2074
+#: ../../lib/class/catalog.class.php:2102
 msgid "No valid songs found in playlist file."
 msgstr ""
 "No se han encontrado canciones validas en el archivo de la lista de "
 "reproducción"
 
-#: ../../lib/class/catalog.class.php:2430
+#: ../../lib/class/catalog.class.php:2458
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -3694,7 +3695,7 @@ msgstr ""
 
 #: ../../modules/catalog/beets/beets.catalog.php:114
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:115
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:195
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:208
 #: ../../modules/catalog/local/local.catalog.php:201
 #: ../../modules/catalog/remote/remote.catalog.php:162
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:183
@@ -3711,105 +3712,111 @@ msgstr "URI del servidor Beets"
 msgid "Error: Beets selected, but path is not a URL"
 msgstr "Error: Se ha seleccionado Beets, pero no la ruta URI apropiada"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:68
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Go to https://www.dropbox.com/developers/apps/create"
 msgstr "Ve a https://www.dropbox.com/developers/apps/create"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:69
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:74
 msgid "Select 'Dropbox API app'"
 msgstr "Selecciona 'Dropbox API app'"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:70
-msgid "Select 'Files and datastores'"
-msgstr "Selecciona 'Files and datastores'"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:75
+#, fuzzy
+msgid "Select 'Full Dropbox'"
+msgstr "Selecciona 'Dropbox API app'"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:71
-msgid "Select 'No' at 'Can your app be limited to its own, private folder?'"
-msgstr ""
-"Selecciona 'No' en 'Can your app be limited to its own, private folder?'"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:72
-msgid ""
-"Select 'Specific file types' at 'What type of files does your app need "
-"access to?'"
-msgstr ""
-"Seleccione 'Tipos de archivos especificos' en '¿Que tipo de archivos "
-"necesita acceso su app?'"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:73
-msgid "Check Videos and Audio files"
-msgstr "Comprobar archivos de Video y Audio"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:74
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Give a name to your application and create it"
 msgstr "Dale un nombre a tu aplicación y creala"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:76
-msgid "Copy your App key and App secret in the following fields."
-msgstr "Copia tu App key y App secret en los siguientes campos"
-
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
-msgid ""
-"After preparing the catalog with pressing the 'Add catalog' button,<br /> "
-"you have to 'Make it ready' on the catalog table."
+msgid "Click the 'Generate' button to create an Access Token"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:115
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:78
+#, fuzzy
+msgid ""
+"Copy your App key and App secret and Access Token into the following fields."
+msgstr "Copia tu App key y App secret en los siguientes campos"
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
 msgstr "API Key"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:116
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:118
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:108
 #: ../../templates/show_add_share.inc.php:35
 msgid "Secret"
 msgstr "Secreto"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:117
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:119
+#, fuzzy
+msgid "Access Token"
+msgstr "Acceso denegado"
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
 #: ../../templates/show_stats.inc.php:71
 msgid "Path"
 msgstr "Ruta"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:118
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:121
 msgid "Get chunked files on analyze"
-msgstr ""
+msgstr "Obtener archivos fragmentados al analizar"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:177
-msgid "Error: API Key and Secret Required for Dropbox Catalogs"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:181
+#, fuzzy
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr "Error: Se necesita la API KEY y el secreto para el catalogo Dropbox"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:184
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:188
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:497
+msgid "Invalid <api key, secret, or access token>: "
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:197
 msgid "Invalid <dropbox-path>: "
 msgstr "<dropbox-path> inválida: "
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:218
-#, php-format
-msgid "Go to %s to generate the authorization code, then enter it bellow."
-msgstr "Ve a %s para generar el código de autorización, entonces ponlo debajo."
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:257
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:235
 msgid "Running Dropbox Remote Update"
 msgstr "Ejecutando Actualización Remota de Dropbox"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:301
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:258
+#: ../../modules/catalog/seafile/seafile.catalog.php:268
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr "Finalizada Actualización de Catálogo. Medios Totales: [%s]"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:303
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:260
+#: ../../modules/catalog/seafile/seafile.catalog.php:271
 msgid "No media updated, do you respect the patterns?"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:306
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:449
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:483
+#: ../../modules/catalog/seafile/seafile.catalog.php:379
+#, fuzzy, php-format
+msgid "Updated song \"%s\""
+msgstr "Actualizar desde [%s]"
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:486
+#: ../../modules/catalog/seafile/seafile.catalog.php:382
+#, php-format
+msgid "Song up to date: \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:490
+#: ../../modules/catalog/seafile/seafile.catalog.php:386
+#: ../../modules/catalog/seafile/seafile.catalog.php:444
+#, php-format
+msgid "Removing song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:534
 msgid "API Error: cannot connect to Dropbox."
 msgstr "API Error: no se puede conectar a Dropbox."
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:338
-msgid "API Error: Cannot access file/folder at "
-msgstr "API Error: No se puede acceder al fichero/carpeta en"
 
 #: ../../modules/catalog/local/local.catalog.php:175
 msgid "Error: Path not specified"
@@ -3926,6 +3933,133 @@ msgstr "%u catálogo(s) remoto(s) encontrado(s) (%u canciones)"
 #: ../../modules/catalog/remote/remote.catalog.php:281
 msgid "Completed updating remote catalog(s)."
 msgstr "Actualización de catalogo(s) remoto(s) finalizada."
+
+#: ../../modules/catalog/seafile/SeafileAdapter.php:45
+#, fuzzy
+msgid "Could not authenticate with Seafile"
+msgstr "No se pudo autenticar en myPlex."
+
+#: ../../modules/catalog/seafile/SeafileAdapter.php:124
+#, php-format
+msgid "No media updated: could not find Seafile library called \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:75
+msgid ""
+"Install a Seafile server per its documentation (https://www.seafile.com/)"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:76
+msgid ""
+"Enter url to server (e.g. &ldquo;https://seafile.example.com&rdquo;) and "
+"library name (e.g. &ldquo;Music&rdquo;)."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:77
+msgid ""
+"'API Call Delay' is a delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accomodate Seafile's Rate "
+"Limiting. "
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:78
+msgid ""
+"<br/>The default is tuned towards Seafile's default rate limit settings; see "
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:79
+#, fuzzy
+msgid "this forum post"
+msgstr "Configuracion para %s"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:80
+#, fuzzy
+msgid " for more information."
+msgstr "Información de la canción"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:81
+msgid ""
+"After creating the catalog, you must 'Make it ready' on the catalog table."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:123
+#, fuzzy
+msgid "Server URI"
+msgstr "URI del servidor Beets"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:124
+#, fuzzy
+msgid "Library Name"
+msgstr "Mostrar nombre"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:125
+msgid "API Call Delay"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:126
+msgid "Seafile Username/Email"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:127
+#, fuzzy
+msgid "Seafile Password"
+msgstr "Nueva contraseña"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:156
+msgid "Error: Seafile Server URL is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:162
+msgid "Error: Seafile Server Library Name is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:168
+#, fuzzy
+msgid "Error: Seafile Username is required."
+msgstr "Error: se requiere usuario"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:174
+msgid "Error: Seafile Password is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:180
+msgid "Error: API Call Delay must have a numeric value."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:190
+#, php-format
+msgid "Error while authenticating against Seafile API: %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:237
+#, fuzzy
+msgid "Running Seafile Remote Update"
+msgstr "Ejecutando Actualización Remota"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:295
+#, fuzzy, php-format
+msgid "Skipping existing song \"%s\""
+msgstr "Editando usuario existente"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:300
+#, php-format
+msgid "Adding song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:310
+#, php-format
+msgid "Could not add song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:434
+#, php-format
+msgid "Error checking song \"%s\": %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:442
+#, php-format
+msgid "Keeping song \"%s\""
+msgstr ""
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:107
 msgid "User ID"
@@ -5979,7 +6113,7 @@ msgstr "Máximo tiempo de ejecución"
 
 #: ../../templates/show_debug.inc.php:81
 msgid "Override Execution Time"
-msgstr ""
+msgstr "Anular límite de tiempo de ejecución"
 
 #: ../../templates/show_debug.inc.php:82
 msgid "Failed"
@@ -6203,7 +6337,7 @@ msgstr "MusicBrainz Release Group ID"
 
 #: ../../templates/show_edit_album_row.inc.php:96
 msgid "Release Type"
-msgstr ""
+msgstr "Tipo de release"
 
 #: ../../templates/show_edit_album_row.inc.php:107
 msgid "Overwrite tags of sub songs"
@@ -6215,11 +6349,11 @@ msgstr "Añadir etiquetas a las subcanciones"
 
 #: ../../templates/show_edit_artist_row.inc.php:47
 msgid "Place Formed"
-msgstr ""
+msgstr "Lugar formado"
 
 #: ../../templates/show_edit_artist_row.inc.php:51
 msgid "Year Formed"
-msgstr ""
+msgstr "Año formado"
 
 #: ../../templates/show_edit_artist_row.inc.php:68
 msgid "Overwrite tags of sub albums and sub songs"
@@ -6460,7 +6594,7 @@ msgstr "Hay medios reproduciéndose. Estas seguro de querer cerrar"
 
 #: ../../templates/show_html5_player.inc.php:163
 msgid "Double click to post a new shout"
-msgstr ""
+msgstr "Doble click para añadir un nuevo shout"
 
 #: ../../templates/show_html5_player.inc.php:502
 msgid "Slideshow"
@@ -7127,7 +7261,7 @@ msgstr "Gestionar listas de reproducción democráticas"
 
 #: ../../templates/show_manage_democratic.inc.php:56
 msgid "No democratic found"
-msgstr ""
+msgstr "Ningún demócrata encontrado"
 
 #: ../../templates/show_manage_democratic.inc.php:63
 msgid "Create New Playlist"
@@ -7194,7 +7328,7 @@ msgstr "Canciones similares"
 
 #: ../../templates/show_object_rating.inc.php:47
 msgid "Current rating: "
-msgstr ""
+msgstr "Puntuación actual:"
 
 #: ../../templates/show_object_rating.inc.php:49
 msgid "not rated yet"
@@ -7339,7 +7473,7 @@ msgstr "Ningún podcast encontrado"
 
 #: ../../templates/show_preference_admin.inc.php:23
 msgid "Preference Administration"
-msgstr ""
+msgstr "Administración preferida"
 
 #: ../../templates/show_preference_box.inc.php:48
 #: ../../templates/show_preference_box.inc.php:99
@@ -7507,7 +7641,7 @@ msgstr[1] "hace %d décadas"
 
 #: ../../templates/show_recently_played.inc.php:152
 msgid "No recently played items found"
-msgstr ""
+msgstr "No se han encontrado elementos recientes"
 
 #: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
@@ -7914,7 +8048,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:147
 msgid "PHP safe mode disabled"
-msgstr ""
+msgstr "Modo seguro PHP deshabilitado"
 
 #: ../../templates/show_test_table.inc.php:152
 msgid ""
@@ -7924,7 +8058,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:156
 msgid "PHP memory limit override"
-msgstr ""
+msgstr "Anular límite de memoria PHP"
 
 #: ../../templates/show_test_table.inc.php:161
 msgid ""
@@ -7934,7 +8068,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:165
 msgid "PHP execution time override"
-msgstr ""
+msgstr "Anular tiempo de ejecución PHP"
 
 #: ../../templates/show_test_table.inc.php:170
 msgid ""
@@ -7944,7 +8078,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:174
 msgid "PHP max upload size"
-msgstr ""
+msgstr "Tamaño máximo de subida PHP"
 
 #: ../../templates/show_test_table.inc.php:179
 msgid ""
@@ -7954,7 +8088,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:183
 msgid "PHP Integer Size"
-msgstr ""
+msgstr "Tamaño de un integer PHP"
 
 #: ../../templates/show_test_table.inc.php:188
 msgid ""
@@ -8004,7 +8138,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:236
 msgid "Database tables"
-msgstr ""
+msgstr "Tablas de la base de datos"
 
 #: ../../templates/show_test_table.inc.php:241
 msgid ""
@@ -8069,7 +8203,7 @@ msgstr "Subidas"
 
 #: ../../templates/show_user_activate.inc.php:38
 msgid "Registration Validation"
-msgstr ""
+msgstr "Validación del registro"
 
 #: ../../templates/show_user_activate.inc.php:47
 msgid "User Activated"
@@ -8207,7 +8341,7 @@ msgstr "Resolución"
 
 #: ../../templates/show_video.inc.php:150
 msgid "Display"
-msgstr ""
+msgstr "Mostrar"
 
 #: ../../templates/show_video.inc.php:151
 msgid "Audio Bitrate"
@@ -8227,7 +8361,7 @@ msgstr "Información de video"
 
 #: ../../templates/show_video_row.inc.php:125
 msgid "Video edit"
-msgstr ""
+msgstr "Video edit"
 
 #: ../../templates/show_videos.inc.php:89
 msgid "No video found"
@@ -8289,7 +8423,7 @@ msgstr "Gestionar Shoutbox"
 
 #: ../../templates/sidebar_admin.inc.php:57
 msgid "Manage Licenses"
-msgstr ""
+msgstr "Gestionar licencias"
 
 #: ../../templates/sidebar_admin.inc.php:64
 msgid "Server Config"
@@ -8334,7 +8468,7 @@ msgstr "Salir"
 
 #: ../../templates/sidebar.light.inc.php:33
 msgid "Radio"
-msgstr ""
+msgstr "Radio"
 
 #: ../../templates/sidebar_localplay.inc.php:43
 msgid "Show instances"
@@ -8362,11 +8496,11 @@ msgstr "Controlador Localplay no esta definido"
 
 #: ../../templates/sidebar_modules.inc.php:26
 msgid "Localplay Modules"
-msgstr ""
+msgstr "Módulos de reproducción local"
 
 #: ../../templates/sidebar_modules.inc.php:27
 msgid "Catalog Modules"
-msgstr ""
+msgstr "Módulo de catálogo"
 
 #: ../../templates/sidebar_modules.inc.php:28
 msgid "Available Plugins"
@@ -8392,23 +8526,23 @@ msgstr "root"
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
 msgid "TVShow Season Deletion"
-msgstr ""
+msgstr "Borrado de temporada TVShow"
 
 #: ../../tvshow_seasons.php:39
 msgid "Are you sure you want to permanently delete this tvshow season?"
-msgstr ""
+msgstr "¿Estás seguro de querer borrar permanentemente esta temporada TVShow?"
 
 #: ../../tvshow_seasons.php:58
 msgid "TVShow Season has been deleted."
-msgstr ""
+msgstr "La temporada TVShow se ha borrado."
 
 #: ../../tvshow_seasons.php:60
 msgid "Cannot delete this tvshow season."
-msgstr ""
+msgstr "No se puede borrar esta temporada TVShow."
 
 #: ../../tvshows.php:38 ../../tvshows.php:58 ../../tvshows.php:60
 msgid "TVShow Deletion"
-msgstr ""
+msgstr "Borrar TVShow"
 
 #: ../../tvshows.php:39
 msgid "Are you sure you want to permanently delete this tvshow?"
@@ -8416,11 +8550,11 @@ msgstr ""
 
 #: ../../tvshows.php:58
 msgid "TVShow has been deleted."
-msgstr ""
+msgstr "TVShow ha sido borrado."
 
 #: ../../tvshows.php:60
 msgid "Cannot delete this tvshow."
-msgstr ""
+msgstr "No puedo borrar este TVShow"
 
 #: ../../tvshows.php:81
 msgid "Show TV Shows starting with"
@@ -8462,7 +8596,7 @@ msgstr "No se puede eliminar este vídeo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.06.2017 17:50:14 CEST
+# Last Update: 09.08.2017 19:58:43 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8474,7 +8608,7 @@ msgstr ""
 
 #: Database preference table id 19
 msgid "Transcode Bitrate"
-msgstr ""
+msgstr "Tasa de bits de transcodificación"
 
 #: Database preference table id 22
 msgid "Website Title"
@@ -8482,15 +8616,15 @@ msgstr "Título de Página Web"
 
 #: Database preference table id 23
 msgid "Lock Songs"
-msgstr ""
+msgstr "Bloquear Canciones"
 
 #: Database preference table id 24
 msgid "Forces Http play regardless of port"
-msgstr ""
+msgstr "Fuerza reproducción HTTP sin importar el puerto."
 
 #: Database preference table id 29
 msgid "Type of Playback"
-msgstr ""
+msgstr "Tipo de reproducción"
 
 # is already in the source code
 # but to avoid confusion, it's added and commented
@@ -8538,7 +8672,7 @@ msgstr ""
 
 #: Database preference table id 53
 msgid "Playlist Method"
-msgstr ""
+msgstr "Método de lista de reproducción"
 
 # is already in the source code
 # but to avoid confusion, it's added and commented
@@ -8554,27 +8688,27 @@ msgstr ""
 
 #: Database preference table id 73
 msgid "Last.FM Username"
-msgstr ""
+msgstr "Usuario Last.FM"
 
 #: Database preference table id 74
 msgid "Last.FM Password"
-msgstr ""
+msgstr "Contraseña Last.FM"
 
 #: Database preference table id 75
 msgid "Last.FM Submit Port"
-msgstr ""
+msgstr "Puerto de envío Last.FM"
 
 #: Database preference table id 76
 msgid "Last.FM Submit Host"
-msgstr ""
+msgstr "Host de envío Last.FM"
 
 #: Database preference table id 77
 msgid "Last.FM Submit URL"
-msgstr ""
+msgstr "URL de envío Last.FM"
 
 #: Database preference table id 78
 msgid "Last.FM Submit Challenge"
-msgstr ""
+msgstr "Reto de envío Last.FM"
 
 #: Database preference table id 82
 msgid "Now playing filtered per user"
@@ -8586,7 +8720,7 @@ msgstr ""
 
 #: Database preference table id 84
 msgid "Show # played"
-msgstr ""
+msgstr "Mostrar # reproducidos"
 
 #: Database preference table id 85
 msgid "Show current song in Web player page title"
@@ -8594,11 +8728,11 @@ msgstr "Mostrar la canción actual en el título del reproductor Web"
 
 #: Database preference table id 86
 msgid "Use SubSonic backend"
-msgstr ""
+msgstr "Usar backend SubSonic"
 
 #: Database preference table id 87
 msgid "Use Plex backend"
-msgstr ""
+msgstr "Usar backend Plex"
 
 #: Database preference table id 88
 msgid "Authorize Flash Web Player(s)"
@@ -8670,7 +8804,7 @@ msgstr "Permitir Compartir"
 
 #: Database preference table id 103
 msgid "Share links default expiration days (0=never)"
-msgstr ""
+msgstr "Dias por defecto de compartición de enlaces.  (0=nunca)"
 
 #: Database preference table id 104
 msgid "Artist slideshow inactivity time"
@@ -8678,7 +8812,7 @@ msgstr ""
 
 #: Database preference table id 105
 msgid "Broadcast web player by default"
-msgstr ""
+msgstr "Emitir reproductor web por defecto"
 
 #: Database preference table id 106
 msgid "Limit number of future events"
@@ -8694,7 +8828,7 @@ msgstr "Álbum - Grupo múltiples discos"
 
 #: Database preference table id 109
 msgid "Top menu"
-msgstr ""
+msgstr "Menú superior"
 
 #: Database preference table id 110
 msgid "Clear democratic votes of expired user sessions"
@@ -8746,7 +8880,7 @@ msgstr "Usar UPnP backend"
 
 #: Database preference table id 121
 msgid "Allow video features"
-msgstr ""
+msgstr "Permitir mejoras de video"
 
 #: Database preference table id 122
 msgid "Album - Group per release type"
@@ -8778,7 +8912,7 @@ msgstr ""
 
 #: Database preference table id 129
 msgid "Custom logo url"
-msgstr ""
+msgstr "URL de logo personalizada"
 
 #: Database preference table id 130
 msgid "Album - Group per release type Sort"
@@ -8811,15 +8945,15 @@ msgstr ""
 
 #: Database preference table id 141
 msgid "Custom favicon url"
-msgstr ""
+msgstr "URL de icono personalizado"
 
 #: Database preference table id 142
 msgid "Custom text footer"
-msgstr ""
+msgstr "Pie de página personalizado"
 
 #: Database preference table id 143
 msgid "Use WebDAV backend"
-msgstr ""
+msgstr "Usar backend WebDAV"
 
 #: Database preference table id 144
 msgid "Receive notifications by email (shouts, private messages, ...)"
@@ -8841,11 +8975,11 @@ msgstr ""
 
 #: Database preference table id 148
 msgid "Podcast: # latest episodes to keep"
-msgstr ""
+msgstr "Podcast: mantener los últimos #"
 
 #: Database preference table id 149
 msgid "Podcast: # episodes to download when new episodes are available"
-msgstr ""
+msgstr "Podcast: descargar # nuevos episodios cuando estén disponibles"
 
 #: Database preference table id 150
 msgid "Library item context menu"
@@ -8882,20 +9016,20 @@ msgstr ""
 
 #: Database preference table id 164
 msgid "Amazon base url"
-msgstr ""
+msgstr "URL base de Amazon"
 
 #: Database preference table id 165
 msgid "Amazon max results pages"
-msgstr ""
+msgstr "Max. resultados por pagina de amazon"
 
 #: Database preference table id 166
 msgid "Amazon Access Key ID"
-msgstr ""
+msgstr "Key ID de Amazon"
 
 #: Database preference table id 167
 msgid "Amazon Secret Access Key"
-msgstr ""
+msgstr "Contraseña de Amazon"
 
 #: Database preference table id 168
 msgid "Amazon associate tag"
-msgstr ""
+msgstr "Tag asociado a Amazon"

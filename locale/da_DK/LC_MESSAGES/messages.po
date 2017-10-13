@@ -3,20 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Francois Duprez <francoisduprez@gmail.com>, 2016
-# Guido Janssen <guido@guidoo.nl>, 2016
-# Martijn van der Zande <martijnvanderzande@outlook.com>, 2016
-# Wesley Klop <wesley19097@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2017-10-12 06:13+0200\n"
-"PO-Revision-Date: 2017-09-22 07:39+0000\n"
-"Last-Translator: Afterster\n"
-"Language-Team: Dutch (Netherlands) (http://www.transifex.com/ampache/ampache/"
-"language/nl_NL/)\n"
-"Language: nl_NL\n"
+"PO-Revision-Date: 2015-05-12 16:07+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Danish (Denmark) (http://www.transifex.com/ampache/ampache/"
+"language/da_DK/)\n"
+"Language: da_DK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,70 +20,70 @@ msgstr ""
 
 #: ../../admin/access.php:40
 msgid "Deleted"
-msgstr "Verwijderd"
+msgstr ""
 
 #: ../../admin/access.php:40
 msgid "Your Access List Entry has been removed"
-msgstr "Uw toegangs regel is verwijderd"
+msgstr ""
 
 #: ../../admin/access.php:47 ../../admin/users.php:222
 msgid "Deletion Request"
-msgstr "Verwijder verzoek"
+msgstr ""
 
 #: ../../admin/access.php:47
 msgid "Are you sure you want to permanently delete"
-msgstr "Weet je zeker dat je dit permanent wilt verwijderem"
+msgstr ""
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:346
 #: ../../templates/show_song.inc.php:175 ../../templates/show_video.inc.php:161
 msgid "Added"
-msgstr "Toegevoegd"
+msgstr ""
 
 #: ../../admin/access.php:74
 msgid "Your new Access Control List(s) have been created"
-msgstr "Uw nieuwe toegangs regel is aangemaakt"
+msgstr ""
 
 #: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1514
 #: ../../lib/class/search.class.php:353 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
-msgstr "Bijgewerkt"
+msgstr ""
 
 #: ../../admin/access.php:88
 msgid "Access List Entry updated"
-msgstr "Uw toegangs regel is bijgewerkt"
+msgstr ""
 
 #: ../../admin/catalog.php:54 ../../admin/catalog.php:62
 #: ../../admin/catalog.php:66 ../../admin/catalog.php:74
 #: ../../admin/catalog.php:83
 msgid "Catalog Update started..."
-msgstr "Catalogus bijwerken gestart..."
+msgstr ""
 
 #: ../../admin/catalog.php:105
 msgid "Catalog Deleted"
-msgstr "Catalogus verwijderd"
+msgstr ""
 
 #: ../../admin/catalog.php:105
 msgid "The Catalog and all associated records have been deleted"
-msgstr "De catalogus en alle bijbehorende regels zijn verwijderd"
+msgstr ""
 
 #: ../../admin/catalog.php:107 ../../admin/users.php:192
 #: ../../preferences.php:166 ../../templates/error_page.inc.php:50
 msgid "Error"
-msgstr "Fout"
+msgstr ""
 
 #: ../../admin/catalog.php:107
 msgid "Cannot delete the catalog"
-msgstr "Kan de catalogus niet verwijderen"
+msgstr ""
 
 #: ../../admin/catalog.php:112
 msgid "Catalog Delete"
-msgstr "Catalogus verwijderen"
+msgstr ""
 
 #: ../../admin/catalog.php:112 ../../admin/users.php:230 ../../broadcast.php:38
 #: ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
-msgstr "Bevestig verwijder verzoek"
+msgstr ""
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
@@ -97,7 +93,7 @@ msgstr[1] ""
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
-msgstr "Geen uitgeschakelde nummers geselecteerd"
+msgstr ""
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
@@ -107,83 +103,83 @@ msgstr[1] ""
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
-msgstr "Catalogus opruimen gestart..."
+msgstr ""
 
 #: ../../admin/catalog.php:151
 msgid "Catalog Updated"
-msgstr "Bijwerken catalogus gereed"
+msgstr ""
 
 #: ../../admin/catalog.php:161
 msgid "Subdirectory update started..."
-msgstr "Submap bijwerken gestart..."
+msgstr ""
 
 #: ../../admin/catalog.php:172
 msgid "Error: Please select a catalog type"
-msgstr "Error: Selecteer een catalogus type"
+msgstr ""
 
 #: ../../admin/catalog.php:176
 msgid "Error: Name not specified"
-msgstr "Error: Naam niet gespecificeerd"
+msgstr ""
 
 #: ../../admin/catalog.php:195
 msgid "Catalog Creation started..."
-msgstr "Catalogus aanmaken gestart..."
+msgstr ""
 
 #: ../../admin/catalog.php:207
 msgid "Catalog statistics cleared"
-msgstr "Catalogus statistieken opgeschoond"
+msgstr ""
 
 #: ../../admin/catalog.php:220
 msgid "Now Playing Cleared"
-msgstr "Nu speelt opgeschoond"
+msgstr ""
 
 #: ../../admin/catalog.php:220
 msgid "All now playing data has been cleared"
-msgstr "Alle nu speelt data opgeschoond"
+msgstr ""
 
 #: ../../admin/catalog.php:232
 msgid "No Disabled songs found"
-msgstr "Geen uitgeschakelde nummers gevonden"
+msgstr ""
 
 #: ../../admin/catalog.php:244
 msgid "Delete Catalog"
-msgstr "Verwijder catalogus"
+msgstr ""
 
 #: ../../admin/catalog.php:244
 msgid "Do you really want to delete this catalog?"
-msgstr "Weet je zeker dat je deze catalogus wilt verwijderen?"
+msgstr ""
 
 #: ../../admin/catalog.php:253
 msgid "Media Art Search started..."
-msgstr "Zoeken media afbeeldingen gestart..."
+msgstr ""
 
 #: ../../admin/license.php:39
 msgid "License Updated"
-msgstr "Licentie bijgewerkt"
+msgstr ""
 
 #: ../../admin/license.php:42
 msgid "License Created"
-msgstr "Licentie gemaakt"
+msgstr ""
 
 #: ../../admin/license.php:53
 msgid "License Deleted"
-msgstr "Licentie verwijderd"
+msgstr ""
 
 #: ../../admin/mail.php:63
 msgid "E-mail Sent"
-msgstr "e-Mail Verzonden"
+msgstr ""
 
 #: ../../admin/mail.php:64
 msgid "Your E-mail was successfully sent."
-msgstr "Uw e-Mail is succesvol verzonden."
+msgstr ""
 
 #: ../../admin/mail.php:66
 msgid "E-mail Not Sent"
-msgstr "Email niet verzonden"
+msgstr ""
 
 #: ../../admin/mail.php:67
 msgid "Your E-mail was not sent."
-msgstr "Uw email is niet  verzonden."
+msgstr ""
 
 #: ../../admin/modules.php:38
 msgid "Failed to enable the module, Controller Error"
@@ -199,27 +195,27 @@ msgstr ""
 
 #: ../../admin/modules.php:70
 msgid "Module enabled"
-msgstr "Module geactiveerd"
+msgstr ""
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
 msgid "Are you sure you want to disable this module?"
-msgstr "Weet je zeker dat je deze module wilt deactiveren?"
+msgstr ""
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
 msgid "Module disabled"
-msgstr "Module gedeactiveerd"
+msgstr ""
 
 #: ../../admin/modules.php:105
 msgid "Failed to disable module, Catalog Error"
-msgstr "Deactivatie van module mislukt, fout in catalogus"
+msgstr ""
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
-msgstr "Niet mogelijk om de plug-in te installeren"
+msgstr ""
 
 #: ../../admin/modules.php:139
 msgid "Plugin enabled"
-msgstr "Plug-in geactiveerd"
+msgstr ""
 
 #: ../../admin/modules.php:146
 msgid "Are you sure you want to disable this plugin?"
@@ -227,80 +223,79 @@ msgstr ""
 
 #: ../../admin/modules.php:165
 msgid "Plugin disabled"
-msgstr "Plug-in gedeactiveerd"
+msgstr ""
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
-msgstr "Plugin geupdated"
+msgstr ""
 
 #: ../../admin/modules.php:186
 msgid "Plugins"
-msgstr "Plugins"
+msgstr ""
 
 #: ../../admin/modules.php:192
 msgid "Localplay Controllers"
-msgstr "Lokaal afspeel controllers"
+msgstr ""
 
 #: ../../admin/modules.php:198
 msgid "Catalog Types"
-msgstr "Catalogus types"
+msgstr ""
 
 #: ../../admin/shout.php:39
 msgid "Shoutbox Post Updated"
-msgstr "Shoutbox inzending bijgewerkt"
+msgstr ""
 
 #: ../../admin/shout.php:51
 msgid "Shoutbox Post Deleted"
-msgstr "Shoutbox inzending verwijderd"
+msgstr ""
 
 #: ../../admin/system.php:51
 msgid "Database Charset Updated"
-msgstr "Database karakterset bijgewerkt"
+msgstr ""
 
 #: ../../admin/system.php:51
 msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
 msgstr ""
-"Uw Database en tabellen zijn bijgewerkt naar de aangegeven karakterset."
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
-msgstr "Cache verwijderd"
+msgstr ""
 
 #: ../../admin/system.php:66
 msgid "Your cache has been cleared successfully."
-msgstr "Uw cache is succesvol verwijderd."
+msgstr ""
 
 #: ../../admin/users.php:62 ../../admin/users.php:141
 #: ../../lib/class/user.class.php:597
 msgid "Error Username Required"
-msgstr "Fout gebruikersnaam verplicht"
+msgstr ""
 
 #: ../../admin/users.php:66 ../../admin/users.php:146 ../../register.php:121
 msgid "Error Username already exists"
-msgstr "Fout gebruikersnaam bestaat al"
+msgstr ""
 
 #: ../../admin/users.php:71 ../../admin/users.php:137
 #: ../../lib/class/user.class.php:601
 msgid "Error Passwords don't match"
-msgstr "fout wachtwoorden zijn niet gelijk"
+msgstr ""
 
 #: ../../admin/users.php:76 ../../admin/users.php:151 ../../register.php:95
 msgid "Invalid email address"
-msgstr "Ongeldig email adres "
+msgstr ""
 
 #: ../../admin/users.php:114
 msgid "User Updated"
-msgstr "Gebruiker bijgewerkt"
+msgstr ""
 
 #: ../../admin/users.php:114
 msgid "updated"
-msgstr "bijgewerkt"
+msgstr ""
 
 #: ../../admin/users.php:163 ../../register.php:150
 msgid "Error: Insert Failed"
-msgstr "Fout: Gebruiker kon niet worden aangemaakt"
+msgstr ""
 
 #: ../../admin/users.php:169 ../../lib/class/democratic.class.php:158
 #: ../../lib/class/shoutbox.class.php:330
@@ -309,7 +304,7 @@ msgstr "Fout: Gebruiker kon niet worden aangemaakt"
 #: ../../templates/show_preference_admin.inc.php:43
 #: ../../templates/show_preference_box.inc.php:79
 msgid "Guest"
-msgstr "Gast"
+msgstr ""
 
 #: ../../admin/users.php:171 ../../lib/class/democratic.class.php:161
 #: ../../lib/preferences.php:303
@@ -330,7 +325,7 @@ msgstr "Gast"
 #: ../../templates/show_shared_objects.inc.php:28
 #: ../../templates/show_wanted_albums.inc.php:29
 msgid "User"
-msgstr "Gebruiker"
+msgstr ""
 
 #: ../../admin/users.php:173 ../../lib/class/democratic.class.php:170
 #: ../../lib/preferences.php:305 ../../templates/show_add_user.inc.php:89
@@ -343,12 +338,12 @@ msgstr "Gebruiker"
 #: ../../templates/show_preference_box.inc.php:83
 #: ../../templates/sidebar.inc.php:39
 msgid "Admin"
-msgstr "Beheer"
+msgstr ""
 
 #. HINT: %1 Username, %2 Access num
 #: ../../admin/users.php:177
 msgid "New User Added"
-msgstr "Nieuwer gebruiker toegevoegd"
+msgstr ""
 
 #: ../../admin/users.php:177
 #, php-format
@@ -357,102 +352,102 @@ msgstr ""
 
 #: ../../admin/users.php:185
 msgid "User Enabled"
-msgstr "Gebruiker geactiveerd"
+msgstr ""
 
 #: ../../admin/users.php:190
 msgid "User Disabled"
-msgstr "Gebruiker gedeactiveerd"
+msgstr ""
 
 #: ../../admin/users.php:192
 msgid "Unable to Disabled last Administrator"
-msgstr "Onmogelijk om de laatste administrator te deactiveren"
+msgstr ""
 
 #: ../../admin/users.php:212
 msgid "User Deleted"
-msgstr "Gebruiker verwijderd"
+msgstr ""
 
 #: ../../admin/users.php:212
 #, php-format
 msgid "%s has been Deleted"
-msgstr "%s is verwijderd"
+msgstr ""
 
 #: ../../admin/users.php:214
 msgid "Delete Error"
-msgstr "Verwijder fout"
+msgstr ""
 
 #: ../../admin/users.php:214
 msgid "Unable to delete last Admin User"
-msgstr "Kan de laatste admin gebruiker niet verwijderen"
+msgstr ""
 
 #: ../../admin/users.php:223
 #, php-format
 msgid "Are you sure you want to permanently delete %s?"
-msgstr "Weet je zeker dat je %s permanent wilt verwijderen?"
+msgstr ""
 
 #: ../../admin/users.php:230
 msgid "User Avatar Delete"
-msgstr "Gebruikers avatar verwijderen"
+msgstr ""
 
 #: ../../admin/users.php:246
 msgid "User Avatar Deleted"
-msgstr "Gebruikers avatar verwijerd"
+msgstr ""
 
 #: ../../admin/users.php:246
 msgid "User Avatar has been deleted"
-msgstr "Gebruikers avatar is verwijderd"
+msgstr ""
 
 #: ../../admin/users.php:252 ../../templates/show_account.inc.php:102
 #: ../../templates/show_edit_user.inc.php:133
 msgid "Generate new API Key"
-msgstr "Genereer een nieuwe API sleutel"
+msgstr ""
 
 #: ../../admin/users.php:252
 msgid "Confirm API Key Generation"
-msgstr "Bevestig API code generatie"
+msgstr ""
 
 #: ../../admin/users.php:268
 msgid "API Key Generated"
-msgstr "API sleutel gegenereerd"
+msgstr ""
 
 #: ../../admin/users.php:268
 msgid "New user API Key has been generated."
-msgstr "Nieuwe gebruikers API code is gegenereerd"
+msgstr ""
 
 #: ../../albums.php:36 ../../albums.php:56 ../../albums.php:58
 msgid "Album Deletion"
-msgstr "Album verwijderen"
+msgstr ""
 
 #: ../../albums.php:37
 msgid "Are you sure you want to permanently delete this album?"
-msgstr "Weet u zeker dat u dit album permanent wilt verwijderen?"
+msgstr ""
 
 #: ../../albums.php:56
 msgid "Album has been deleted."
-msgstr "Album is verwijderd."
+msgstr ""
 
 #: ../../albums.php:58
 msgid "Cannot delete this album."
-msgstr "Kan dit album niet verwijderen"
+msgstr ""
 
 #: ../../artists.php:38 ../../artists.php:58 ../../artists.php:60
 msgid "Artist Deletion"
-msgstr "Artiest verwijderen"
+msgstr ""
 
 #: ../../artists.php:39
 msgid "Are you sure you want to permanently delete this artist?"
-msgstr "Weet je zeker dat je deze artiest permanent wilt verwijderen?"
+msgstr ""
 
 #: ../../artists.php:58
 msgid "Artist has been deleted."
-msgstr "Artiest is verwijderd."
+msgstr ""
 
 #: ../../artists.php:60
 msgid "Cannot delete this artist."
-msgstr "Kan deze artiest niet verwijderen."
+msgstr ""
 
 #: ../../artists.php:98
 msgid "Show Artists starting with"
-msgstr "Artiesten die beginnen met"
+msgstr ""
 
 #: ../../arts.php:50
 msgid "Art Cleared"
@@ -478,15 +473,15 @@ msgstr ""
 
 #: ../../bin/broadcast.inc:32
 msgid "Starting broadcasts..."
-msgstr "Uitzendingen starten..."
+msgstr ""
 
 #: ../../bin/broadcast.inc:35
 msgid "UPnP broadcast... "
-msgstr "UPnP uitzending..."
+msgstr ""
 
 #: ../../bin/broadcast.inc:37
 msgid "Done."
-msgstr "Klaar."
+msgstr ""
 
 #: ../../bin/broadcast.inc:39
 msgid "UPnP backend disabled. Broadcast skipped."
@@ -498,7 +493,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:48
 msgid "Temporary deactivate PHP memory limit"
-msgstr "PHP geheugen limiet tijdelijk uitschakelen"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:52
 msgid "Cleaning catalog/s"
@@ -506,7 +501,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:56
 msgid "Verifying catalog/s"
-msgstr "Verifieer catalogus(sen)"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:60
 msgid "Adding new media to catalog/s"
@@ -518,11 +513,11 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:68
 msgid "Importing playlist/s"
-msgstr "Afspeellijst(en) importeren"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:72
 msgid "Database table optimization"
-msgstr "Database tabel optimalisatie "
+msgstr ""
 
 #: ../../bin/catalog_update.inc:95
 msgid "Starting catalog operations..."
@@ -530,7 +525,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:101
 msgid "Deactivated PHP memory limit"
-msgstr "PHP geheugen limiet uitgeschakeld"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:108
 msgid "Gathering art"
@@ -603,7 +598,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:211
 msgid "Imports playlists."
-msgstr "Importeert afspeellijsten."
+msgstr ""
 
 #: ../../bin/catalog_update.inc:213
 msgid "Optimizes Database Tables."
@@ -614,8 +609,6 @@ msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
 msgstr ""
-"Gebruik deze optie op eigen risico! Uw systeem kan vastlopen of crashen door "
-"een gigantisch geheugen gebruik!"
 
 #: ../../bin/catalog_update.inc:217
 msgid ""
@@ -632,27 +625,27 @@ msgstr ""
 
 #: ../../bin/channel_run.inc:46
 msgid "- Channel "
-msgstr "- Kanaal"
+msgstr ""
 
 #: ../../bin/channel_run.inc:49 ../../bin/websocket_run.inc:42
 msgid "- Verbose"
-msgstr "- Verbose"
+msgstr ""
 
 #: ../../bin/channel_run.inc:54 ../../bin/websocket_run.inc:47
 msgid "- Port "
-msgstr "- Poort"
+msgstr ""
 
 #: ../../bin/channel_run.inc:71
 msgid "Starting Channel..."
-msgstr "Kanaal starten..."
+msgstr ""
 
 #: ../../bin/channel_run.inc:75
 msgid "Unknown channel."
-msgstr "Onbekend kanaal."
+msgstr ""
 
 #: ../../bin/channel_run.inc:90
 msgid "Found available port "
-msgstr "Beschikbare poort gevonden"
+msgstr ""
 
 #: ../../bin/channel_run.inc:107
 msgid "Listening on "
@@ -712,7 +705,7 @@ msgstr ""
 #: ../../bin/fix_filenames.inc:56
 #, php-format
 msgid "Translated: %s"
-msgstr "Vertaald: %s"
+msgstr ""
 
 #: ../../bin/fix_filenames.inc:59
 #, php-format
@@ -981,7 +974,7 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/sidebar.light.inc.php:30
 msgid "Tag Cloud"
-msgstr "Tag wolk"
+msgstr ""
 
 #: ../../channel/index.php:75 ../../plex/web/init.php:38
 msgid "Unauthorized."
@@ -989,63 +982,63 @@ msgstr ""
 
 #: ../../channel.php:61
 msgid "Channel Created"
-msgstr "Kanaal aangemaakt"
+msgstr ""
 
 #: ../../channel.php:70
 msgid "Channel Delete"
-msgstr "Verwijder kanaal"
+msgstr ""
 
 #: ../../channel.php:83
 msgid "Channel Deleted"
-msgstr "Kanaal verwijderd"
+msgstr ""
 
 #: ../../channel.php:83
 msgid "The Channel has been deleted"
-msgstr "Het kanaal is verwijderd"
+msgstr ""
 
 #: ../../democratic.php:57
 msgid "The Requested Playlist has been deleted."
-msgstr "De gezochte afspeellijst is verwijderd."
+msgstr ""
 
 #: ../../install.php:122
 msgid "Error: Ampache SQL Username or Password missing"
-msgstr "Fout: Ampache SQL gebruikersnaam of wachtwoord mist"
+msgstr ""
 
 #: ../../install.php:176
 msgid "Error: Config files not found or unreadable"
-msgstr "Fout: Configuratie bestanden niet gevonden of onleesbaar"
+msgstr ""
 
 #: ../../labels.php:36 ../../labels.php:56 ../../labels.php:58
 msgid "Label Deletion"
-msgstr "Label verwijderen"
+msgstr ""
 
 #: ../../labels.php:37
 msgid "Are you sure you want to permanently delete this label?"
-msgstr "Weet je zeker dat je dit label permanent wilt verwijderen?"
+msgstr ""
 
 #: ../../labels.php:56
 msgid "Label has been deleted."
-msgstr "Het label is verwijderd."
+msgstr ""
 
 #: ../../labels.php:58
 msgid "Cannot delete this label."
-msgstr "Kan dit label niet verwijderen"
+msgstr ""
 
 #: ../../labels.php:85
 msgid "Label Added"
-msgstr "Label toegevoegd"
+msgstr ""
 
 #: ../../labels.php:110
 msgid "Label cannot be found."
-msgstr "Label is niet gevonden."
+msgstr ""
 
 #: ../../lib/class/access.class.php:157 ../../lib/class/access.class.php:162
 msgid "Invalid IPv4 / IPv6 Address Entered"
-msgstr "Ongeldig IPv4 / IPv6 adres ingegeven"
+msgstr ""
 
 #: ../../lib/class/access.class.php:166 ../../lib/class/access.class.php:167
 msgid "IP Address Version Mismatch"
-msgstr "IP adres versie onjuist"
+msgstr ""
 
 #: ../../lib/class/access.class.php:222
 msgid "Duplicate ACL defined"
@@ -1062,7 +1055,7 @@ msgstr ""
 #: ../../templates/show_mail_users.inc.php:31
 #: ../../templates/show_random.inc.php:60
 msgid "All"
-msgstr "Alles"
+msgstr ""
 
 #: ../../lib/class/access.class.php:466 ../../templates/list_header.inc.php:131
 #: ../../templates/show_add_access.inc.php:37
@@ -1070,19 +1063,19 @@ msgstr "Alles"
 #: ../../templates/show_graphs.inc.php:83
 #: ../../templates/show_tagcloud.inc.php:33
 msgid "View"
-msgstr "Bekijk"
+msgstr ""
 
 #: ../../lib/class/access.class.php:469
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_edit_access.inc.php:70
 msgid "Read"
-msgstr "Lees"
+msgstr ""
 
 #: ../../lib/class/access.class.php:472
 #: ../../templates/show_add_access.inc.php:39
 #: ../../templates/show_edit_access.inc.php:71
 msgid "Read/Write"
-msgstr "Lezen/Schrijven"
+msgstr ""
 
 #: ../../lib/class/access.class.php:503
 #: ../../templates/show_add_access.inc.php:56
@@ -1091,7 +1084,7 @@ msgstr "Lezen/Schrijven"
 #: ../../templates/show_add_access.inc.php:75
 #: ../../templates/show_edit_access.inc.php:38
 msgid "API/RPC"
-msgstr "API/RPC"
+msgstr ""
 
 #: ../../lib/class/access.class.php:505
 #: ../../templates/show_add_access.inc.php:65
@@ -1100,13 +1093,13 @@ msgstr "API/RPC"
 #: ../../templates/show_add_access.inc.php:74
 #: ../../templates/show_edit_access.inc.php:37
 msgid "Local Network Definition"
-msgstr "Lokale netwerk defenitie"
+msgstr ""
 
 #: ../../lib/class/access.class.php:507
 #: ../../templates/show_add_access.inc.php:73
 #: ../../templates/show_edit_access.inc.php:36
 msgid "Web Interface"
-msgstr "Web Interface"
+msgstr ""
 
 #: ../../lib/class/access.class.php:510
 #: ../../templates/show_add_access.inc.php:57
@@ -1114,13 +1107,13 @@ msgstr "Web Interface"
 #: ../../templates/show_add_access.inc.php:72
 #: ../../templates/show_edit_access.inc.php:35
 msgid "Stream Access"
-msgstr "Stream toegang"
+msgstr ""
 
 #: ../../lib/class/album.class.php:408 ../../lib/class/artist.class.php:681
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
-msgstr "Onbekend (Orphaned)"
+msgstr ""
 
 #: ../../lib/class/album.class.php:645
 #: ../../lib/class/subsonic_xml_data.class.php:518
@@ -1130,7 +1123,7 @@ msgstr "Onbekend (Orphaned)"
 #: ../../templates/show_edit_album_row.inc.php:67
 #: ../../templates/show_song_previews.inc.php:40
 msgid "Disk"
-msgstr "Schijf"
+msgstr ""
 
 #: ../../lib/class/album.class.php:657 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:331 ../../lib/ui.lib.php:180
@@ -1147,17 +1140,17 @@ msgstr "Schijf"
 #: ../../templates/sidebar_home.inc.php:188
 #: ../../templates/sidebar.light.inc.php:27
 msgid "Artists"
-msgstr "Artiesten"
+msgstr ""
 
 #: ../../lib/class/album.class.php:657 ../../lib/class/album.class.php:658
 #: ../../templates/show_edit_album_row.inc.php:38
 #: ../../templates/show_install_config.inc.php:64
 msgid "Various"
-msgstr "Diverse"
+msgstr ""
 
 #: ../../lib/class/album.class.php:677
 msgid "Album MusicBrainzID"
-msgstr "Albums MusicBrainzID"
+msgstr ""
 
 #: ../../lib/class/album.class.php:680
 msgid "Release Group MusicBrainzID"
@@ -1199,7 +1192,7 @@ msgstr ""
 #: ../../templates/show_wanted_albums.inc.php:27
 #: ../../templates/sidebar_home.inc.php:176
 msgid "Artist"
-msgstr "Artiest"
+msgstr ""
 
 #: ../../lib/class/album.class.php:686 ../../lib/class/search.class.php:216
 #: ../../templates/show_add_upload.inc.php:188
@@ -1225,28 +1218,28 @@ msgstr "Artiest"
 #: ../../templates/show_wanted_albums.inc.php:26
 #: ../../templates/sidebar_home.inc.php:175
 msgid "Album"
-msgstr "Album"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:92
 #: ../../lib/class/localplay.class.php:628 ../../templates/header.inc.php:40
 #: ../../templates/show_localplay_status.inc.php:31
 #: ../../templates/show_now_playing.inc.php:32
 msgid "Now Playing"
-msgstr "Nu speelt"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:93 ../../templates/header.inc.php:41
 #: ../../templates/show_recently_played.inc.php:24
 #: ../../templates/show_user.inc.php:114
 msgid "Recently Played"
-msgstr "Recentelijk gespeeld"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:94 ../../templates/header.inc.php:42
 msgid "Newest Albums"
-msgstr "Nieuwste albums"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:95 ../../templates/header.inc.php:43
 msgid "Newest Artists"
-msgstr "Nieuwste artiesten"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:96 ../../templates/header.inc.php:46
 msgid "Newest Shouts"
@@ -1254,41 +1247,41 @@ msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:150
 msgid "RSS Feed"
-msgstr "RSS Feed"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "seconds ago"
-msgstr "seconden geleden"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "minutes ago"
-msgstr "minuten geleden"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "hours ago"
-msgstr "uren geleden"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "days ago"
-msgstr "dagen geleden"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "weeks ago"
-msgstr "weken geleden"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "months ago"
-msgstr "maanden geleden"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "years ago"
-msgstr "jaren geleden"
+msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:354
 #: ../../modules/plugins/Flattr/Flattr.plugin.php:91
 #: ../../modules/plugins/Paypal/Paypal.plugin.php:94
 msgid "on"
-msgstr "aan"
+msgstr ""
 
 #: ../../lib/class/ampconfig.class.php:85
 #, php-format
@@ -1297,7 +1290,7 @@ msgstr ""
 
 #: ../../lib/class/api.class.php:152
 msgid "Login Failed: version too old"
-msgstr "Login fout: versie is te oud"
+msgstr ""
 
 #: ../../lib/class/api.class.php:181 ../../lib/class/api.class.php:182
 msgid "Login Failed: timestamp out of range"
@@ -1306,38 +1299,38 @@ msgstr ""
 #: ../../lib/class/api.class.php:182 ../../lib/class/api.class.php:195
 #: ../../lib/class/api.class.php:282
 msgid "Error Invalid Handshake - "
-msgstr "Fout: Ongeldige handshake - "
+msgstr ""
 
 #: ../../lib/class/api.class.php:194 ../../lib/class/api.class.php:195
 #: ../../lib/class/api.class.php:282
 msgid "Invalid Username/Password"
-msgstr "Ongeldige gebruikersnaam/wachtwoord"
+msgstr ""
 
 #: ../../lib/class/api.class.php:661 ../../lib/class/api.class.php:679
 #: ../../lib/class/api.class.php:697
 msgid "Access denied to this playlist."
-msgstr "Toegang tot afspeellijst geblokkeerd"
+msgstr ""
 
 #: ../../lib/class/api.class.php:815 ../../lib/class/api.class.php:876
 #: ../../server/xml.server.php:102
 msgid "Invalid Request"
-msgstr "Ongeldig verzoek"
+msgstr ""
 
 #: ../../lib/class/api.class.php:836 ../../lib/class/api.class.php:854
 msgid "Media Object Invalid or Not Specified"
-msgstr "Media object is ongeldig of niet gespecificeerd"
+msgstr ""
 
 #: ../../lib/class/api.class.php:1069
 msgid "Wrong library item type."
-msgstr "Fout bibliotheek object type"
+msgstr ""
 
 #: ../../lib/class/api.class.php:1073
 msgid "Library item not found."
-msgstr "Bibliotheek object niet gevonden"
+msgstr ""
 
 #: ../../lib/class/art.class.php:1313
 msgid "Error: Unable to open"
-msgstr "Fout: Kan niet openen"
+msgstr ""
 
 #: ../../lib/class/art.class.php:1808 ../../lib/class/shoutbox.class.php:311
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:121
@@ -1373,7 +1366,7 @@ msgstr "Fout: Kan niet openen"
 #: ../../templates/show_video.inc.php:87
 #: ../../templates/show_video_row.inc.php:33
 msgid "Play"
-msgstr "Afspelen"
+msgstr ""
 
 #: ../../lib/class/art.class.php:1817
 msgid "Edit/Find Art"
@@ -1389,40 +1382,40 @@ msgstr ""
 
 #: ../../lib/class/artist.class.php:498
 msgid "Artist MusicBrainzID"
-msgstr "Artiest MusicBrainzID"
+msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:233
 msgid "Update available"
-msgstr "Update beschikbaar"
+msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:236
 msgid "See"
-msgstr "Zie"
+msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:236
 msgid "changes"
-msgstr "veranderingen"
+msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:237
 msgid "or"
-msgstr "of"
+msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:237
 msgid "download"
-msgstr "download"
+msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:250
 msgid "Updating Ampache sources with `"
-msgstr "Update Ampache bronnen met"
+msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:254
 #: ../../lib/class/autoupdate.class.php:269
 msgid "Done"
-msgstr "Klaar"
+msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:265
 msgid "Updating dependencies with `"
-msgstr "Update benodigdheden met"
+msgstr ""
 
 #: ../../lib/class/broadcast.class.php:361
 msgid "Broadcast edit"
@@ -1460,7 +1453,7 @@ msgstr ""
 #: ../../templates/show_video.inc.php:129
 #: ../../templates/show_video_row.inc.php:126
 msgid "Edit"
-msgstr "Bewerken"
+msgstr ""
 
 #: ../../lib/class/broadcast.class.php:362
 #: ../../lib/class/channel.class.php:189 ../../lib/class/share.class.php:207
@@ -1504,7 +1497,7 @@ msgstr "Bewerken"
 #: ../../templates/show_video.inc.php:136
 #: ../../templates/show_video_row.inc.php:133
 msgid "Delete"
-msgstr "Verwijder"
+msgstr ""
 
 #: ../../lib/class/broadcast.class.php:374
 msgid "Broadcast"
@@ -1532,7 +1525,7 @@ msgstr ""
 #: ../../templates/show_stats.inc.php:35 ../../templates/show_stats.inc.php:75
 #: ../../templates/sidebar_home.inc.php:186
 msgid "Songs"
-msgstr "Liedjes"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:210 ../../lib/class/upnp_api.class.php:355
 #: ../../lib/ui.lib.php:176 ../../server/search.ajax.php:90
@@ -1551,17 +1544,17 @@ msgstr "Liedjes"
 #: ../../templates/sidebar_home.inc.php:187
 #: ../../templates/sidebar.light.inc.php:28
 msgid "Albums"
-msgstr "Albums"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:222 ../../server/search.ajax.php:229
 msgid "Users"
-msgstr "Gebruikers"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:231 ../../lib/class/upnp_api.class.php:451
 #: ../../templates/sidebar_home.inc.php:55
 #: ../../templates/sidebar.light.inc.php:33
 msgid "Radio Stations"
-msgstr "Radio stations"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:403
 #: ../../server/search.ajax.php:148 ../../templates/header.inc.php:403
@@ -1570,29 +1563,29 @@ msgstr "Radio stations"
 #: ../../templates/sidebar_home.inc.php:189
 #: ../../templates/sidebar.light.inc.php:29
 msgid "Playlists"
-msgstr "Afspeellijsten"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:240
 msgid "Playlist Medias"
-msgstr "Afspeellijst media"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:244
 msgid "Current Playlist"
-msgstr "Huidige afspeellijst"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:249 ../../lib/class/upnp_api.class.php:427
 #: ../../templates/sidebar_home.inc.php:42
 msgid "Smart Playlists"
-msgstr "Slimme afspeellijst"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:253 ../../templates/show_stats.inc.php:27
 #: ../../templates/sidebar_admin.inc.php:24
 msgid "Catalogs"
-msgstr "Catalogussen"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:257
 msgid "Shoutbox Records"
-msgstr "Shoutbox Records"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:268
 #: ../../templates/show_search_form.inc.php:44
@@ -1600,27 +1593,27 @@ msgstr "Shoutbox Records"
 #: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:76
 #: ../../templates/sidebar_home.inc.php:192
 msgid "Videos"
-msgstr "Videos"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:272
 #: ../../templates/show_democratic.inc.php:23
 msgid "Democratic Playlist"
-msgstr "Democratische afspeellijst"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:276
 msgid "Wanted Albums"
-msgstr "Gewilde albums"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:280
 #: ../../templates/sidebar_home.inc.php:152
 msgid "Shared Objects"
-msgstr "Gedeelte objecten"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:288 ../../templates/show_song.inc.php:162
 #: ../../templates/show_video.inc.php:154
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Channels"
-msgstr "Kanalen"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:292 ../../templates/sidebar_home.inc.php:50
 msgid "Broadcasts"
@@ -1628,18 +1621,18 @@ msgstr ""
 
 #: ../../lib/class/browse.class.php:296
 msgid "Media Licenses"
-msgstr "Media licenties"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:300 ../../lib/class/upnp_api.class.php:743
 #: ../../templates/sidebar_home.inc.php:75
 msgid "TV Shows"
-msgstr "TV shows"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:304 ../../templates/show_tvshow.inc.php:108
 #: ../../templates/show_tvshows.inc.php:42
 #: ../../templates/show_tvshows.inc.php:98
 msgid "Seasons"
-msgstr "Seizoenen"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:308
 #: ../../templates/show_podcast.inc.php:125
@@ -1651,21 +1644,21 @@ msgstr "Seizoenen"
 #: ../../templates/show_tvshows.inc.php:41
 #: ../../templates/show_tvshows.inc.php:97
 msgid "Episodes"
-msgstr "Afleveringen"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:313 ../../lib/class/upnp_api.class.php:807
 #: ../../templates/sidebar_home.inc.php:76
 msgid "Movies"
-msgstr "Films"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:318 ../../lib/class/upnp_api.class.php:783
 msgid "Clips"
-msgstr "Clips"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:323 ../../lib/class/upnp_api.class.php:831
 #: ../../templates/sidebar_home.inc.php:77
 msgid "Personal Videos"
-msgstr "Persoonlijke video's"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:328 ../../server/search.ajax.php:178
 #: ../../templates/show_artist.inc.php:237
@@ -1673,44 +1666,44 @@ msgstr "Persoonlijke video's"
 #: ../../templates/show_edit_artist_row.inc.php:61
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Labels"
-msgstr "Labels"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:332
 msgid "Private Messages"
-msgstr "Privé berichten"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:336 ../../lib/class/upnp_api.class.php:475
 #: ../../templates/sidebar_home.inc.php:60
 msgid "Podcasts"
-msgstr "Podcasts"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:340
 msgid "Podcast Episodes"
-msgstr "Podcast afleveringen"
+msgstr ""
 
 #: ../../lib/class/browse.class.php:381 ../../templates/rightbar.inc.php:140
 #: ../../templates/show_recently_played.inc.php:181
 msgid "More"
-msgstr "Meer"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:518 ../../lib/class/catalog.class.php:521
 #: ../../lib/class/catalog.class.php:524 ../../lib/class/user.class.php:1014
 #: ../../lib/preferences.php:347 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:76
 msgid "Never"
-msgstr "Nooit"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:604
 msgid "day"
 msgid_plural "days"
-msgstr[0] "dag"
-msgstr[1] "dagen"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:606
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] "uur"
-msgstr[1] "uren"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:651
 msgid "Catalog Insert Failed check debug logs"
@@ -1718,7 +1711,7 @@ msgstr ""
 
 #: ../../lib/class/catalog.class.php:1521
 msgid "No Update Needed"
-msgstr "Geen update nodig"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1846
 #, php-format
@@ -1734,49 +1727,47 @@ msgstr ""
 
 #: ../../lib/class/catalog.class.php:2085
 msgid "Failed to create playlist."
-msgstr "Afspeellijst creatie mislukt"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:2102
 msgid "No valid songs found in playlist file."
-msgstr "Geen geldige nummers gevonden in playlist bestand"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:2458
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
 msgstr ""
-"Deze submap hoort niet bij een bestaande catalogus. Update kan niet worden "
-"voltooid."
 
 #: ../../lib/class/channel.class.php:186
 msgid "Start Channel"
-msgstr "Start kanaal"
+msgstr ""
 
 #: ../../lib/class/channel.class.php:187
 msgid "Stop Channel"
-msgstr "Stop kanaal"
+msgstr ""
 
 #: ../../lib/class/channel.class.php:188
 msgid "Channel edit"
-msgstr "Bewerk kanaal"
+msgstr ""
 
 #: ../../lib/class/channel.class.php:341
 msgid "Running"
-msgstr "Bezig"
+msgstr ""
 
 #: ../../lib/class/channel.class.php:343
 #: ../../lib/class/localplay.class.php:630
 msgid "Stopped"
-msgstr "Gestopt"
+msgstr ""
 
 #: ../../lib/class/democratic.class.php:153 ../../lib/class/video.class.php:288
 #: ../../templates/show_create_democratic.inc.php:36
 msgid "minutes"
-msgstr "minuten"
+msgstr ""
 
 #: ../../lib/class/democratic.class.php:154
 msgid "Primary"
-msgstr "Primair"
+msgstr ""
 
 #: ../../lib/class/democratic.class.php:164
 #: ../../templates/show_add_user.inc.php:87
@@ -1784,7 +1775,7 @@ msgstr "Primair"
 #: ../../templates/show_edit_user.inc.php:111
 #: ../../templates/show_preference_box.inc.php:81
 msgid "Content Manager"
-msgstr "Inhoud beheerder"
+msgstr ""
 
 #: ../../lib/class/democratic.class.php:167
 #: ../../templates/show_add_user.inc.php:88
@@ -1792,7 +1783,7 @@ msgstr "Inhoud beheerder"
 #: ../../templates/show_edit_user.inc.php:112
 #: ../../templates/show_preference_box.inc.php:82
 msgid "Catalog Manager"
-msgstr "Catalogus beheerder"
+msgstr ""
 
 #: ../../lib/class/label.class.php:153 ../../lib/class/search.class.php:244
 #: ../../templates/show_edit_song_row.inc.php:81
@@ -1801,34 +1792,34 @@ msgstr "Catalogus beheerder"
 #: ../../templates/show_search_bar.inc.php:38
 #: ../../templates/show_song.inc.php:158
 msgid "Label"
-msgstr "Label"
+msgstr ""
 
 #: ../../lib/class/live_stream.class.php:192
 #: ../../lib/class/live_stream.class.php:229
 msgid "Name Required"
-msgstr "Naam vereist"
+msgstr ""
 
 #: ../../lib/class/live_stream.class.php:200
 msgid "Invalid URL must be mms:// , https:// or http://"
-msgstr "Ongeldige URL, dit moet mms://, https:// of http:// zijn"
+msgstr ""
 
 #: ../../lib/class/live_stream.class.php:206
 #: ../../lib/class/live_stream.class.php:240
 #: ../../lib/class/live_stream.class.php:246
 msgid "Invalid URL must be http:// or https://"
-msgstr "Ongeldige URL, dit moet https:// of http:// zijn"
+msgstr ""
 
 #: ../../lib/class/live_stream.class.php:232
 msgid "Codec (eg. MP3, OGG...) Required"
-msgstr "Codec (bijv. MP3, OGG...) benodigd"
+msgstr ""
 
 #: ../../lib/class/live_stream.class.php:253
 msgid "Invalid Catalog"
-msgstr "Ongeldige catalogus"
+msgstr ""
 
 #: ../../lib/class/localplay.class.php:632
 msgid "Paused"
-msgstr "Gepauzeerd"
+msgstr ""
 
 #: ../../lib/class/localplay.class.php:634
 #: ../../lib/class/playlist.class.php:138
@@ -1838,13 +1829,13 @@ msgstr "Gepauzeerd"
 #: ../../modules/localplay/mpd/mpd.controller.php:494
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:77
 msgid "Unknown"
-msgstr "Onbekend"
+msgstr ""
 
 #: ../../lib/class/playlist_object.abstract.php:70
 #: ../../templates/show_edit_playlist_row.inc.php:37
 #: ../../templates/show_edit_search_row.inc.php:37
 msgid "Private"
-msgstr "Prive"
+msgstr ""
 
 #: ../../lib/class/podcast.class.php:173
 #: ../../lib/class/podcast_episode.class.php:154
@@ -1855,27 +1846,27 @@ msgstr "Prive"
 #: ../../templates/show_podcast_episodes.inc.php:89
 #: ../../templates/show_podcast.inc.php:92
 msgid "Podcast"
-msgstr "Podcast"
+msgstr ""
 
 #: ../../lib/class/podcast.class.php:274
 msgid "Wrong feed url"
-msgstr "Verkeerde feed url"
+msgstr ""
 
 #: ../../lib/class/podcast.class.php:279
 msgid "Target catalog required"
-msgstr "Doel catalogus benodigd"
+msgstr ""
 
 #: ../../lib/class/podcast.class.php:283
 msgid "Wrong target catalog type"
-msgstr "Verkeerd doel catalogus type"
+msgstr ""
 
 #: ../../lib/class/podcast.class.php:303
 msgid "Cannot access the feed."
-msgstr "Kan de feed niet bereiken."
+msgstr ""
 
 #: ../../lib/class/podcast.class.php:307
 msgid "Cannot read the feed."
-msgstr "Kan de feed niet lezen."
+msgstr ""
 
 #: ../../lib/class/podcast_episode.class.php:157
 #: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:435
@@ -1901,19 +1892,19 @@ msgstr "Kan de feed niet lezen."
 #: ../../templates/show_videos.inc.php:37
 #: ../../templates/show_videos.inc.php:102
 msgid "Title"
-msgstr "Titel"
+msgstr ""
 
 #: ../../lib/class/privatemsg.class.php:143
 msgid "Error: Subject Required"
-msgstr "Fout: Onderwerp verplicht"
+msgstr ""
 
 #: ../../lib/class/privatemsg.class.php:148
 msgid "Error: Unknown user"
-msgstr "Fout: Onbekende gebruiker"
+msgstr ""
 
 #: ../../lib/class/privatemsg.class.php:168
 msgid "Private Message"
-msgstr "Privé bericht"
+msgstr ""
 
 #: ../../lib/class/privatemsg.class.php:169
 #, php-format
@@ -1928,14 +1919,6 @@ msgid ""
 "        %s\n"
 "        "
 msgstr ""
-"Je hebt een nieuw privé bericht ontvangen van %s.\n"
-"\n"
-"\n"
-"----------------------\n"
-"%s\n"
-"----------------------\n"
-"\n"
-"%s"
 
 #: ../../lib/class/query.class.php:100
 msgid "Browse not found or expired, try reloading the page"
@@ -1944,7 +1927,7 @@ msgstr ""
 #: ../../lib/class/registration.class.php:53
 #, php-format
 msgid "New User Registration at %s"
-msgstr "Nieuwe gebruikers registratie op %s"
+msgstr ""
 
 #: ../../lib/class/registration.class.php:55
 #, php-format
@@ -1978,18 +1961,11 @@ msgid ""
 "Website: %s\n"
 "\n"
 msgstr ""
-"Een nieuwe gebruiker is geregistreerd\n"
-"De volgende waardes waren ingevoerd.\n"
-"\n"
-"Gebruikersnaam: %s\n"
-"Volledige naam: %s\n"
-"Email: %s\n"
-"Website: %s\n"
 
 #: ../../lib/class/registration.class.php:104
 #, php-format
 msgid "Account enabled at %s"
-msgstr "Account geactiveerd op %s"
+msgstr ""
 
 #: ../../lib/class/registration.class.php:105
 #, php-format
@@ -1999,80 +1975,76 @@ msgid ""
 "\n"
 "            Please logon using %s"
 msgstr ""
-"Je account %s is geactiveerd\n"
-"\n"
-"\n"
-"Login via %s"
 
 #: ../../lib/class/search.class.php:62
 msgid "is greater than or equal to"
-msgstr "is groter dan of gelijk aan"
+msgstr ""
 
 #: ../../lib/class/search.class.php:68
 msgid "is less than or equal to"
-msgstr "is minder dan of gelijk aan"
+msgstr ""
 
 #: ../../lib/class/search.class.php:74 ../../lib/class/search.class.php:142
 #: ../../lib/class/search.class.php:161 ../../lib/class/search.class.php:174
 msgid "is"
-msgstr "is"
+msgstr ""
 
 #: ../../lib/class/search.class.php:80 ../../lib/class/search.class.php:167
 #: ../../lib/class/search.class.php:180
 msgid "is not"
-msgstr "is niet"
+msgstr ""
 
 #: ../../lib/class/search.class.php:86
 msgid "is greater than"
-msgstr "is groter dan"
+msgstr ""
 
 #: ../../lib/class/search.class.php:92
 msgid "is less than"
-msgstr "is minder dan"
+msgstr ""
 
 #: ../../lib/class/search.class.php:99
 msgid "is true"
-msgstr "is waar"
+msgstr ""
 
 #: ../../lib/class/search.class.php:104
 msgid "is false"
-msgstr "is niet waar"
+msgstr ""
 
 #: ../../lib/class/search.class.php:110
 msgid "contains"
-msgstr "bevat"
+msgstr ""
 
 #: ../../lib/class/search.class.php:118
 msgid "does not contain"
-msgstr "bevat niet"
+msgstr ""
 
 #: ../../lib/class/search.class.php:126
 msgid "starts with"
-msgstr "begint met"
+msgstr ""
 
 #: ../../lib/class/search.class.php:134
 msgid "ends with"
-msgstr "eindigd met"
+msgstr ""
 
 #: ../../lib/class/search.class.php:148
 msgid "sounds like"
-msgstr "klinkt als"
+msgstr ""
 
 #: ../../lib/class/search.class.php:154
 msgid "does not sound like"
-msgstr "klinkt niet als"
+msgstr ""
 
 #: ../../lib/class/search.class.php:187
 msgid "before"
-msgstr "voor"
+msgstr ""
 
 #: ../../lib/class/search.class.php:193
 msgid "after"
-msgstr "na"
+msgstr ""
 
 #: ../../lib/class/search.class.php:202
 msgid "Any searchable text"
-msgstr "Elke doorzoekbare tekst"
+msgstr ""
 
 #: ../../lib/class/search.class.php:230
 #: ../../templates/show_edit_song_row.inc.php:73
@@ -2086,17 +2058,17 @@ msgstr ""
 #: ../../templates/show_manage_shoutbox.inc.php:62
 #: ../../templates/show_song.inc.php:157
 msgid "Comment"
-msgstr "Commentaar"
+msgstr ""
 
 #: ../../lib/class/search.class.php:252 ../../lib/class/search.class.php:502
 #: ../../lib/class/search.class.php:536 ../../lib/class/tag.class.php:739
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
-msgstr "Opnieuw Taggen"
+msgstr ""
 
 #: ../../lib/class/search.class.php:259
 msgid "Album tag"
-msgstr "Album tag"
+msgstr ""
 
 #: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:510
 #: ../../templates/show_disabled_songs.inc.php:32
@@ -2106,7 +2078,7 @@ msgstr "Album tag"
 #: ../../templates/show_import_playlist.inc.php:28
 #: ../../templates/show_song.inc.php:170 ../../templates/show_video.inc.php:156
 msgid "Filename"
-msgstr "Bestandsnaam"
+msgstr ""
 
 #: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:449
 #: ../../lib/class/search.class.php:524 ../../templates/show_albums.inc.php:42
@@ -2122,11 +2094,11 @@ msgstr "Bestandsnaam"
 #: ../../templates/show_song.inc.php:152
 #: ../../templates/show_wanted_albums.inc.php:28
 msgid "Year"
-msgstr "Jaar"
+msgstr ""
 
 #: ../../lib/class/search.class.php:280
 msgid "Length (in minutes)"
-msgstr "Lengte (in minuten)"
+msgstr ""
 
 #: ../../lib/class/search.class.php:288 ../../lib/class/search.class.php:471
 #: ../../templates/show_albums.inc.php:53
@@ -2155,7 +2127,7 @@ msgstr "Lengte (in minuten)"
 #: ../../templates/show_video.inc.php:62 ../../templates/show_videos.inc.php:58
 #: ../../templates/show_videos.inc.php:123
 msgid "Rating"
-msgstr "Waardering"
+msgstr ""
 
 #: ../../lib/class/search.class.php:306 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2167,7 +2139,7 @@ msgstr "Waardering"
 #: ../../templates/show_videos.inc.php:50
 #: ../../templates/show_videos.inc.php:115
 msgid "# Played"
-msgstr "# afgespeeld"
+msgstr ""
 
 #: ../../lib/class/search.class.php:314
 #: ../../templates/show_add_channel.inc.php:102
@@ -2177,12 +2149,12 @@ msgstr "# afgespeeld"
 #: ../../templates/show_edit_channel_row.inc.php:84
 #: ../../templates/show_song.inc.php:161
 msgid "Bitrate"
-msgstr "Bitrate"
+msgstr ""
 
 #: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
 msgid "Played"
-msgstr "Gespeeld"
+msgstr ""
 
 #: ../../lib/class/search.class.php:366 ../../lib/class/search.class.php:494
 #: ../../templates/browse_filters.inc.php:87
@@ -2190,7 +2162,7 @@ msgstr "Gespeeld"
 #: ../../templates/show_add_podcast.inc.php:34
 #: ../../templates/show_export.inc.php:32
 msgid "Catalog"
-msgstr "Catalogus"
+msgstr ""
 
 #: ../../lib/class/search.class.php:379 ../../lib/ui.lib.php:135
 #: ../../templates/show_manage_democratic.inc.php:26
@@ -2198,7 +2170,7 @@ msgstr "Catalogus"
 #: ../../templates/sidebar_home.inc.php:92
 #: ../../templates/sidebar_home.inc.php:177
 msgid "Playlist"
-msgstr "Afspeellijst"
+msgstr ""
 
 #: ../../lib/class/search.class.php:386
 #: ../../templates/show_playlists.inc.php:35
@@ -2206,29 +2178,29 @@ msgstr "Afspeellijst"
 #: ../../templates/show_searches.inc.php:42
 #: ../../templates/show_searches.inc.php:72
 msgid "Playlist Name"
-msgstr "Naam afspeellijst"
+msgstr ""
 
 #: ../../lib/class/search.class.php:399
 msgid "Smart Playlist"
-msgstr "Slimme afspeellijst"
+msgstr ""
 
 #: ../../lib/class/search.class.php:411
 msgid "Metadata"
-msgstr "Metadata"
+msgstr ""
 
 #: ../../lib/class/search.class.php:425
 #: ../../templates/show_add_upload.inc.php:199
 #: ../../templates/show_edit_song_row.inc.php:98
 msgid "Music License"
-msgstr "Muziek licentie"
+msgstr ""
 
 #: ../../lib/class/search.class.php:456
 msgid "Image Width"
-msgstr "Afbeeldings breedte"
+msgstr ""
 
 #: ../../lib/class/search.class.php:463
 msgid "Image Height"
-msgstr "Afbeeldings hoogte"
+msgstr ""
 
 #: ../../lib/class/search.class.php:518 ../../lib/class/search.class.php:544
 #: ../../lib/class/search.class.php:552
@@ -2270,13 +2242,13 @@ msgstr "Afbeeldings hoogte"
 #: ../../templates/show_plugins.inc.php:71
 #: ../../templates/show_stats.inc.php:70
 msgid "Name"
-msgstr "Naam"
+msgstr ""
 
 #: ../../lib/class/search.class.php:530
 #: ../../templates/show_concerts.inc.php:28
 #: ../../templates/show_concerts.inc.php:56
 msgid "Place"
-msgstr "Plaats"
+msgstr ""
 
 #: ../../lib/class/search.class.php:558
 #: ../../templates/show_add_label.inc.php:34
@@ -2286,7 +2258,7 @@ msgstr "Plaats"
 #: ../../templates/show_labels.inc.php:78
 #: ../../templates/show_podcast_episode.inc.php:124
 msgid "Category"
-msgstr "Categorie"
+msgstr ""
 
 #: ../../lib/class/search.class.php:566
 #: ../../modules/catalog/remote/remote.catalog.php:103
@@ -2303,7 +2275,7 @@ msgstr "Categorie"
 #: ../../templates/show_user_registration.inc.php:81
 #: ../../templates/show_users.inc.php:49 ../../templates/show_users.inc.php:86
 msgid "Username"
-msgstr "Gebruikersnaam"
+msgstr ""
 
 #: ../../lib/class/share.class.php:206
 msgid "Share edit"
@@ -2312,15 +2284,15 @@ msgstr ""
 #: ../../lib/class/share.class.php:359 ../../lib/class/share.class.php:361
 #: ../../templates/show_shares.inc.php:23
 msgid "Share"
-msgstr "Dele"
+msgstr ""
 
 #: ../../lib/class/share.class.php:369
 msgid "Advanced Share"
-msgstr "Geavanceerd delen"
+msgstr ""
 
 #: ../../lib/class/share.class.php:384
 msgid "Temporary direct link"
-msgstr "Tijdelijke directe link"
+msgstr ""
 
 #: ../../lib/class/shoutbox.class.php:233
 msgid "New shout on your content"
@@ -2349,7 +2321,7 @@ msgstr ""
 #: ../../templates/show_podcasts.inc.php:29
 #: ../../templates/show_searches.inc.php:29
 msgid "Add"
-msgstr "Toevoegen"
+msgstr ""
 
 #: ../../lib/class/shoutbox.class.php:315
 #: ../../templates/show_album_group_disks.inc.php:135
@@ -2368,24 +2340,24 @@ msgstr "Toevoegen"
 #: ../../templates/show_video.inc.php:100
 #: ../../templates/show_video_row.inc.php:109
 msgid "Post Shout"
-msgstr "Shout verzenden"
+msgstr ""
 
 #: ../../lib/class/shoutbox.class.php:319
 msgid "by"
-msgstr "door"
+msgstr ""
 
 #: ../../lib/class/song.class.php:1468
 #: ../../templates/show_html5_player.inc.php:154
 msgid "Show Lyrics"
-msgstr "Liedteksten weergeven"
+msgstr ""
 
 #: ../../lib/class/song.class.php:1494
 msgid "Track MusicBrainzID"
-msgstr "Nummer MusicBrainzID"
+msgstr ""
 
 #: ../../lib/class/stream_playlist.class.php:600
 msgid "Vote added"
-msgstr "Stem uitgebracht"
+msgstr ""
 
 #: ../../lib/class/tvshow.class.php:195
 #: ../../lib/class/tvshow_episode.class.php:177
@@ -2399,7 +2371,7 @@ msgstr "Stem uitgebracht"
 #: ../../templates/show_tvshows.inc.php:40
 #: ../../templates/show_tvshows.inc.php:96
 msgid "TV Show"
-msgstr "TV show"
+msgstr ""
 
 #: ../../lib/class/tvshow_episode.class.php:180
 #: ../../lib/class/tvshow_season.class.php:133
@@ -2410,56 +2382,56 @@ msgstr "TV show"
 #: ../../templates/show_tvshow_seasons.inc.php:38
 #: ../../templates/show_tvshow_seasons.inc.php:91
 msgid "Season"
-msgstr "Seizoen"
+msgstr ""
 
 #: ../../lib/class/tvshow_episode.class.php:184
 #: ../../templates/show_partial_tvshow_episode.inc.php:25
 #: ../../templates/show_partial_tvshow_episodes.inc.php:23
 msgid "Episode"
-msgstr "Aflevering"
+msgstr ""
 
 #: ../../lib/class/update.class.php:603
 msgid "No updates needed."
-msgstr "Geen updates nodig."
+msgstr ""
 
 #: ../../lib/class/update.class.php:605
 msgid "Return to main page"
-msgstr "Terug naar de begin pagina"
+msgstr ""
 
 #: ../../lib/class/update.class.php:2648 ../../lib/class/update.class.php:2664
 #: ../../lib/class/update.class.php:2680
 msgid "File copy error."
-msgstr "Bestands kopieer fout"
+msgstr ""
 
 #: ../../lib/class/update.class.php:2655 ../../lib/class/update.class.php:2671
 #: ../../lib/class/update.class.php:2687
 msgid "Cannot copy default .htaccess file."
-msgstr "Kan het standaard .htaccess bestand niet kopieren "
+msgstr ""
 
 #: ../../lib/class/upnp_api.class.php:504
 #: ../../templates/show_add_catalog.inc.php:72
 #: ../../templates/sidebar_home.inc.php:24
 msgid "Music"
-msgstr "Muzie"
+msgstr ""
 
 #: ../../lib/class/upnp_api.class.php:852
 #: ../../templates/show_now_playing_video_row.inc.php:41
 #: ../../templates/show_tagcloud.inc.php:27
 #: ../../templates/sidebar_home.inc.php:72
 msgid "Video"
-msgstr "Video"
+msgstr ""
 
 #: ../../lib/class/useractivity.class.php:210
 msgid "commented on"
-msgstr "gereageerd op"
+msgstr ""
 
 #: ../../lib/class/useractivity.class.php:213
 msgid "uploaded"
-msgstr "Geupload"
+msgstr ""
 
 #: ../../lib/class/useractivity.class.php:216
 msgid "played"
-msgstr "Afgespeeld"
+msgstr ""
 
 #: ../../lib/class/useractivity.class.php:219
 msgid "favorited"
@@ -2467,27 +2439,27 @@ msgstr ""
 
 #: ../../lib/class/useractivity.class.php:222
 msgid "started to follow"
-msgstr "Gestart met volgen"
+msgstr ""
 
 #: ../../lib/class/useractivity.class.php:225
 msgid "did something on"
-msgstr "Deed iets op"
+msgstr ""
 
 #: ../../lib/class/user.class.php:1050 ../../templates/show_tagcloud.inc.php:88
 msgid "Not Enough Data"
-msgstr "Niet voldoende gegevens"
+msgstr ""
 
 #: ../../lib/class/user.class.php:1338
 msgid "User avatar"
-msgstr "Gebruikers avatar"
+msgstr ""
 
 #: ../../lib/class/user.class.php:1543
 msgid "Unfollow"
-msgstr "ontvolgen"
+msgstr ""
 
 #: ../../lib/class/user.class.php:1543
 msgid "Follow"
-msgstr "volgen"
+msgstr ""
 
 #: ../../lib/class/video.class.php:798
 msgid "Afar"
@@ -2503,7 +2475,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:801
 msgid "Afrikaans"
-msgstr "Afrikaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:802
 msgid "Akan"
@@ -2519,7 +2491,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:805
 msgid "Arabic"
-msgstr "Arabisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:806
 msgid "Assamese"
@@ -2547,7 +2519,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:812
 msgid "Bulgarian"
-msgstr "Bulgaars"
+msgstr ""
 
 #: ../../lib/class/video.class.php:813
 msgid "Bihari"
@@ -2563,23 +2535,23 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:816
 msgid "Bengali"
-msgstr "Bengaals"
+msgstr ""
 
 #: ../../lib/class/video.class.php:817
 msgid "Tibetan"
-msgstr "Tibetaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:818
 msgid "Breton"
-msgstr "Bretons"
+msgstr ""
 
 #: ../../lib/class/video.class.php:819
 msgid "Bosnian"
-msgstr "Bosnisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:820
 msgid "Catalan"
-msgstr "Catalaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:821
 msgid "Chechen"
@@ -2599,7 +2571,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:825
 msgid "Czech"
-msgstr "Tsjechisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:826
 msgid "Church Slavic"
@@ -2615,11 +2587,11 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:829
 msgid "Danish"
-msgstr "Deens"
+msgstr ""
 
 #: ../../lib/class/video.class.php:830
 msgid "German"
-msgstr "Duits"
+msgstr ""
 
 #: ../../lib/class/video.class.php:831
 msgid "Divehi"
@@ -2635,11 +2607,11 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:834
 msgid "Greek"
-msgstr "Grieks"
+msgstr ""
 
 #: ../../lib/class/video.class.php:835
 msgid "English"
-msgstr "Amerikaans Engels"
+msgstr ""
 
 #: ../../lib/class/video.class.php:836
 msgid "Esperanto"
@@ -2647,11 +2619,11 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:837
 msgid "Spanish"
-msgstr "Spaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:838
 msgid "Estonian"
-msgstr "Estonisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:839
 msgid "Basque"
@@ -2659,7 +2631,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:840
 msgid "Persian"
-msgstr "Perzisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:841
 msgid "Fulah"
@@ -2667,7 +2639,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:842
 msgid "Finnish"
-msgstr "Fins"
+msgstr ""
 
 #: ../../lib/class/video.class.php:843
 msgid "Fijian"
@@ -2679,15 +2651,15 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:845
 msgid "French"
-msgstr "Frans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:846
 msgid "Western Frisian"
-msgstr "West Fries"
+msgstr ""
 
 #: ../../lib/class/video.class.php:847
 msgid "Irish"
-msgstr "Iers"
+msgstr ""
 
 #: ../../lib/class/video.class.php:848
 msgid "Scottish Gaelic"
@@ -2715,11 +2687,11 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:854
 msgid "Hebrew"
-msgstr "Hebreeuws"
+msgstr ""
 
 #: ../../lib/class/video.class.php:855
 msgid "Hindi"
-msgstr "Hindi"
+msgstr ""
 
 #: ../../lib/class/video.class.php:856
 msgid "Hiri Motu"
@@ -2727,19 +2699,19 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:857
 msgid "Croatian"
-msgstr "Kroatisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:858
 msgid "Haitian"
-msgstr "Haïtiaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:859
 msgid "Hungarian"
-msgstr "Hongaars"
+msgstr ""
 
 #: ../../lib/class/video.class.php:860
 msgid "Armenian"
-msgstr "Armeens"
+msgstr ""
 
 #: ../../lib/class/video.class.php:861
 msgid "Herero"
@@ -2751,7 +2723,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:863
 msgid "Indonesian"
-msgstr "Indonesisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:864
 msgid "Interlingue"
@@ -2775,11 +2747,11 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:869
 msgid "Icelandic"
-msgstr "IJslands"
+msgstr ""
 
 #: ../../lib/class/video.class.php:870
 msgid "Italian"
-msgstr "Italiaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:871
 msgid "Inuktitut"
@@ -2787,15 +2759,15 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:872
 msgid "Japanese"
-msgstr "Japans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:873
 msgid "Javanese"
-msgstr "Javaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:874
 msgid "Georgian"
-msgstr "Georgisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:875
 msgid "Kongo"
@@ -2827,7 +2799,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:882
 msgid "Korean"
-msgstr "Koreaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:883
 msgid "Kanuri"
@@ -2855,11 +2827,11 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:889
 msgid "Latin"
-msgstr "Latijns"
+msgstr ""
 
 #: ../../lib/class/video.class.php:890
 msgid "Luxembourgish"
-msgstr "Luxemburgs"
+msgstr ""
 
 #: ../../lib/class/video.class.php:891
 msgid "Ganda"
@@ -2867,7 +2839,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:892
 msgid "Limburgish"
-msgstr "Limburgs"
+msgstr ""
 
 #: ../../lib/class/video.class.php:893
 msgid "Lingala"
@@ -2879,7 +2851,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:895
 msgid "Lithuanian"
-msgstr "Lithuaans"
+msgstr ""
 
 #: ../../lib/class/video.class.php:896
 msgid "Luba-Katanga"
@@ -2903,7 +2875,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:901
 msgid "Macedonian"
-msgstr "Macedonisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:902
 msgid "Malayalam"
@@ -2927,7 +2899,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:907
 msgid "Burmese"
-msgstr "Birmees"
+msgstr ""
 
 #: ../../lib/class/video.class.php:908
 msgid "Nauru"
@@ -2943,7 +2915,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:911
 msgid "Nepali"
-msgstr "Nepalees"
+msgstr ""
 
 #: ../../lib/class/video.class.php:912
 msgid "Ndonga"
@@ -2951,7 +2923,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:913
 msgid "Dutch"
-msgstr "Nederlands"
+msgstr ""
 
 #: ../../lib/class/video.class.php:914
 msgid "Norwegian Nynorsk"
@@ -2959,7 +2931,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:915
 msgid "Norwegian"
-msgstr "Noors"
+msgstr ""
 
 #: ../../lib/class/video.class.php:916
 msgid "South Ndebele"
@@ -3003,7 +2975,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:926
 msgid "Polish"
-msgstr "Pools"
+msgstr ""
 
 #: ../../lib/class/video.class.php:927
 msgid "Pashto"
@@ -3011,7 +2983,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:928
 msgid "Portuguese"
-msgstr "Portugees"
+msgstr ""
 
 #: ../../lib/class/video.class.php:929
 msgid "Quechua"
@@ -3027,11 +2999,11 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:932
 msgid "Romanian"
-msgstr "Roemeens"
+msgstr ""
 
 #: ../../lib/class/video.class.php:933
 msgid "Russian"
-msgstr "Russisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:934
 msgid "Kinyarwanda"
@@ -3063,7 +3035,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:941
 msgid "Slovak"
-msgstr "Slovaaks"
+msgstr ""
 
 #: ../../lib/class/video.class.php:942
 msgid "Slovenian"
@@ -3087,7 +3059,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:947
 msgid "Serbian"
-msgstr "Servisch"
+msgstr ""
 
 #: ../../lib/class/video.class.php:948
 msgid "Swati"
@@ -3103,7 +3075,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:951
 msgid "Swedish"
-msgstr "Zweeds"
+msgstr ""
 
 #: ../../lib/class/video.class.php:952
 msgid "Swahili"
@@ -3147,7 +3119,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:962
 msgid "Turkish"
-msgstr "Turks"
+msgstr ""
 
 #: ../../lib/class/video.class.php:963
 msgid "Tsonga"
@@ -3187,7 +3159,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:972
 msgid "Vietnamese"
-msgstr "Vietnamees"
+msgstr ""
 
 #: ../../lib/class/video.class.php:973
 msgid "Volapuk"
@@ -3219,7 +3191,7 @@ msgstr ""
 
 #: ../../lib/class/video.class.php:980
 msgid "Chinese"
-msgstr "Chinees"
+msgstr ""
 
 #: ../../lib/class/video.class.php:981
 msgid "Zulu"
@@ -3227,31 +3199,31 @@ msgstr ""
 
 #: ../../lib/class/wanted.class.php:222
 msgid "Unknown Artist"
-msgstr "Onbekende artiest"
+msgstr ""
 
 #: ../../lib/class/wanted.class.php:412
 msgid "Accept"
-msgstr "Akkoord"
+msgstr ""
 
 #: ../../lib/class/wanted.class.php:416 ../../lib/javascript/search-data.php:52
 msgid "Remove"
-msgstr "Verwijderen"
+msgstr ""
 
 #: ../../lib/class/wanted.class.php:419
 msgid "Add to wanted list"
-msgstr "Voeg toe aan wenslijst"
+msgstr ""
 
 #: ../../lib/debug.lib.php:314 ../../lib/debug.lib.php:331
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: ../../lib/debug.lib.php:314
 msgid "ERROR"
-msgstr "FOUT"
+msgstr ""
 
 #: ../../lib/debug.lib.php:331
 msgid "WARNING"
-msgstr "WAARSCHUWING"
+msgstr ""
 
 #: ../../lib/general.lib.php:213
 #, php-format
@@ -3261,7 +3233,6 @@ msgstr ""
 #: ../../lib/install.lib.php:84
 msgid "Unable to connect to database, check your ampache config"
 msgstr ""
-"Kan geen verbinding maken met de database, controleer de Ampache configuratie"
 
 #: ../../lib/install.lib.php:93
 msgid "Unable to query database, check your ampache config"
@@ -3269,29 +3240,29 @@ msgstr ""
 
 #: ../../lib/install.lib.php:101
 msgid "Existing Database detected, unable to continue installation"
-msgstr "Bestaande database gevonden, onmogelijk om door te gaan."
+msgstr ""
 
 #: ../../lib/install.lib.php:157 ../../lib/install.lib.php:301
 msgid "Error writing config file"
-msgstr "Fout bij het schrijven van het configuratie bestand"
+msgstr ""
 
 #: ../../lib/install.lib.php:183
 msgid "Error: Invalid database name."
-msgstr "Fout: Ongeldige database naam."
+msgstr ""
 
 #: ../../lib/install.lib.php:189
 #, php-format
 msgid "Error: Unable to make database connection: %s"
-msgstr "Fout: Kan database verbinding niet maken: %s"
+msgstr ""
 
 #: ../../lib/install.lib.php:200
 msgid "Error: Database already exists and overwrite not checked"
-msgstr "Fout: Database bestaat al en overschrijving niet aangevinkt"
+msgstr ""
 
 #: ../../lib/install.lib.php:208
 #, php-format
 msgid "Error: Unable to create database: %s"
-msgstr "Fout: Kan database niet maken: %s"
+msgstr ""
 
 #: ../../lib/install.lib.php:226
 #, php-format
@@ -3301,63 +3272,61 @@ msgstr ""
 
 #: ../../lib/install.lib.php:278
 msgid "Invalid configuration settings"
-msgstr "Ongeldige configuratie instellingen"
+msgstr ""
 
 #: ../../lib/install.lib.php:285
 msgid "Database Connection Failed Check Hostname, Username and Password"
 msgstr ""
-"Database verbinding mislukt: controleer hostnaam, gebruikersnaam en "
-"wachtwoord"
 
 #: ../../lib/install.lib.php:295
 msgid "Config file is not writable"
-msgstr "Configuratie bestand is niet schrijfbaar"
+msgstr ""
 
 #: ../../lib/install.lib.php:323
 msgid "No Username/Password specified"
-msgstr "Geen gebruikersnaam/wachtwoord opgegeven"
+msgstr ""
 
 #: ../../lib/install.lib.php:329
 msgid "Passwords do not match"
-msgstr "Wachtwoorden komen niet overeen"
+msgstr ""
 
 #: ../../lib/install.lib.php:335
 #, php-format
 msgid "Database connection failed: %s"
-msgstr "Database connectie mislukt: %s"
+msgstr ""
 
 #: ../../lib/install.lib.php:341
 #, php-format
 msgid "Database select failed: %s"
-msgstr "Database select mislukt: %s"
+msgstr ""
 
 #: ../../lib/install.lib.php:352
 #, php-format
 msgid "Administrative user creation failed: %s"
-msgstr "Administratie gebruikers creatie mislukt: %s"
+msgstr ""
 
 #: ../../lib/login.php:80
 msgid "Error Username or Password incorrect, please try again"
-msgstr "Fout in gebruikersnaam of wachtwoord, probeer het nogmaals."
+msgstr ""
 
 #: ../../lib/login.php:100
 msgid "User Disabled please contact Admin"
-msgstr "Gebruiker gedeactiveerd neem contact op met beheerder"
+msgstr ""
 
 #: ../../lib/login.php:108
 msgid "User Already Logged in"
-msgstr "Gebruiker is al ingelogd"
+msgstr ""
 
 #: ../../lib/login.php:131
 msgid "Unable to create local account"
-msgstr "Kan lokale gebruiker niet maken"
+msgstr ""
 
 #: ../../lib/preferences.php:218 ../../lib/preferences.php:361
 #: ../../templates/show_disabled_songs.inc.php:68
 #: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_user_row.inc.php:81
 msgid "Enable"
-msgstr "Activeren"
+msgstr ""
 
 #: ../../lib/preferences.php:219 ../../lib/preferences.php:362
 #: ../../templates/show_catalog_types.inc.php:45
@@ -3366,7 +3335,7 @@ msgstr "Activeren"
 #: ../../templates/show_localplay_controllers.inc.php:45
 #: ../../templates/show_user_row.inc.php:83
 msgid "Disable"
-msgstr "Deactiveren"
+msgstr ""
 
 #: ../../lib/preferences.php:240 ../../lib/preferences.php:277
 #: ../../lib/ui.lib.php:415 ../../lib/ui.lib.php:506
@@ -3377,13 +3346,13 @@ msgstr "Deactiveren"
 #: ../../templates/show_video.inc.php:41
 #: ../../templates/sidebar_localplay.inc.php:53
 msgid "None"
-msgstr "Geen"
+msgstr ""
 
 #: ../../lib/preferences.php:242 ../../templates/show_edit_user.inc.php:147
 #: ../../templates/show_live_stream.inc.php:51
 #: ../../templates/show_playtype_switch.inc.php:36
 msgid "Stream"
-msgstr "Stream"
+msgstr ""
 
 #: ../../lib/preferences.php:245
 #: ../../modules/localplay/httpq/httpq.controller.php:482
@@ -3394,128 +3363,128 @@ msgstr "Stream"
 #: ../../templates/sidebar_home.inc.php:103
 #: ../../templates/sidebar_modules.inc.php:40
 msgid "Democratic"
-msgstr "Democratisch"
+msgstr ""
 
 #: ../../lib/preferences.php:248 ../../templates/show_edit_user.inc.php:145
 #: ../../templates/show_playtype_switch.inc.php:43
 #: ../../templates/sidebar_home.inc.php:113 ../../templates/sidebar.inc.php:35
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Localplay"
-msgstr "Lokaal afspelen"
+msgstr ""
 
 #: ../../lib/preferences.php:250
 #: ../../templates/show_playtype_switch.inc.php:55
 msgid "Web Player"
-msgstr "Web speler"
+msgstr ""
 
 #: ../../lib/preferences.php:257
 msgid "M3U"
-msgstr "M3U"
+msgstr ""
 
 #: ../../lib/preferences.php:258
 msgid "Simple M3U"
-msgstr "Eenvoudige M3U"
+msgstr ""
 
 #: ../../lib/preferences.php:259
 msgid "PLS"
-msgstr "PLS"
+msgstr ""
 
 #: ../../lib/preferences.php:260
 msgid "Asx"
-msgstr "Asx"
+msgstr ""
 
 #: ../../lib/preferences.php:261
 msgid "RAM"
-msgstr "RAM"
+msgstr ""
 
 #: ../../lib/preferences.php:262
 msgid "XSPF"
-msgstr "XSPF"
+msgstr ""
 
 #: ../../lib/preferences.php:302
 msgid "Disabled"
-msgstr "Gedeactiveerd"
+msgstr ""
 
 #: ../../lib/preferences.php:304
 msgid "Manager"
-msgstr "Beheerder"
+msgstr ""
 
 #: ../../lib/preferences.php:338
 msgid "Send on Add"
-msgstr "Verzenden bij toevoegen"
+msgstr ""
 
 #: ../../lib/preferences.php:339
 msgid "Send and Clear on Add"
-msgstr "Verzenden en opgeschonen bij toevoegen"
+msgstr ""
 
 #: ../../lib/preferences.php:340
 msgid "Clear on Send"
-msgstr "Opschonen bij verzenden"
+msgstr ""
 
 #: ../../lib/preferences.php:341 ../../lib/preferences.php:348
 #: ../../lib/preferences.php:384
 #: ../../templates/show_install_config.inc.php:115
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
-msgstr "Standaard"
+msgstr ""
 
 #: ../../lib/preferences.php:349
 msgid "Always"
-msgstr "Altijd"
+msgstr ""
 
 #: ../../lib/preferences.php:385
 msgid "Year ascending"
-msgstr "Jaartal oplopend"
+msgstr ""
 
 #: ../../lib/preferences.php:386
 msgid "Year descending"
-msgstr "Jaartal aflopend"
+msgstr ""
 
 #: ../../lib/preferences.php:387
 msgid "Name ascending"
-msgstr "Naam oplopend"
+msgstr ""
 
 #: ../../lib/preferences.php:388
 msgid "Name descending"
-msgstr "Naam aflopend"
+msgstr ""
 
 #: ../../lib/preferences.php:409
 #, php-format
 msgid "Click to grant %s access to Ampache"
-msgstr "Klik om %s toegang te geven tot Ampache"
+msgstr ""
 
 #: ../../lib/rating.lib.php:42
 msgid "Don't Play"
-msgstr "Niet afspelen"
+msgstr ""
 
 #: ../../lib/rating.lib.php:44
 msgid "It's Pretty Bad"
-msgstr "Het is vrij slecht"
+msgstr ""
 
 #: ../../lib/rating.lib.php:46
 msgid "It's Ok"
-msgstr "Het is goed"
+msgstr ""
 
 #: ../../lib/rating.lib.php:48
 msgid "It's Pretty Good"
-msgstr "Het is vrij Goed"
+msgstr ""
 
 #: ../../lib/rating.lib.php:50
 msgid "I Love It!"
-msgstr "Ik ben er dol op"
+msgstr ""
 
 #: ../../lib/rating.lib.php:52
 msgid "It's Insane"
-msgstr "Het is te gek"
+msgstr ""
 
 #: ../../lib/rating.lib.php:55
 msgid "Off the Charts!"
-msgstr "Niet te geloven"
+msgstr ""
 
 #: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:391
 #: ../../templates/sidebar.inc.php:33
 msgid "Home"
-msgstr "Begin"
+msgstr ""
 
 #: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:427
 #: ../../templates/show_add_upload.inc.php:26
@@ -3526,98 +3495,98 @@ msgstr "Begin"
 #: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/sidebar.light.inc.php:43
 msgid "Upload"
-msgstr "Upload"
+msgstr ""
 
 #: ../../lib/ui.lib.php:129
 msgid "Local Play"
-msgstr "Lokaal afspelen"
+msgstr ""
 
 #: ../../lib/ui.lib.php:132
 msgid "Random Play"
-msgstr "Willekeurig aspelen"
+msgstr ""
 
 #: ../../lib/ui.lib.php:138 ../../templates/show_search_bar.inc.php:47
 #: ../../templates/show_search_form.inc.php:77
 #: ../../templates/sidebar_home.inc.php:182
 msgid "Search"
-msgstr "Zoeken"
+msgstr ""
 
 #: ../../lib/ui.lib.php:141 ../../templates/show_user.inc.php:67
 #: ../../templates/show_user_row.inc.php:76 ../../templates/sidebar.inc.php:37
 #: ../../templates/sidebar_preferences.inc.php:30
 msgid "Preferences"
-msgstr "Voorkeuren"
+msgstr ""
 
 #: ../../lib/ui.lib.php:144 ../../lib/ui.lib.php:148
 msgid "Admin-Catalog"
-msgstr "Admin-Beheer catalogus"
+msgstr ""
 
 #: ../../lib/ui.lib.php:152
 msgid "Admin-User Management"
-msgstr "Admin-Beheer gebruikers"
+msgstr ""
 
 #: ../../lib/ui.lib.php:156
 msgid "Admin-Mail Users"
-msgstr "Admin-Mail gebruikers"
+msgstr ""
 
 #: ../../lib/ui.lib.php:160
 msgid "Admin-Manage Access Lists"
-msgstr "Admin-Beheer Toegangs Regels"
+msgstr ""
 
 #: ../../lib/ui.lib.php:164
 msgid "Admin-Site Preferences"
-msgstr "Admin-Site Instellingen"
+msgstr ""
 
 #: ../../lib/ui.lib.php:168
 msgid "Admin-Manage Modules"
-msgstr "Admin-Beheer Modules"
+msgstr ""
 
 #: ../../lib/ui.lib.php:172 ../../templates/sidebar_home.inc.php:24
 msgid "Browse Music"
-msgstr "Bladeren"
+msgstr ""
 
 #: ../../lib/ui.lib.php:184 ../../templates/show_stats.inc.php:26
 #: ../../templates/sidebar_home.inc.php:162
 msgid "Statistics"
-msgstr "Statistieken"
+msgstr ""
 
 #: ../../lib/ui.lib.php:251 ../../lib/ui.lib.php:304
 msgid "Add New"
-msgstr "Nieuwe toevoegen"
+msgstr ""
 
 #: ../../lib/ui.lib.php:469
 msgid "View License"
-msgstr "Bekijk licentie"
+msgstr ""
 
 #: ../../lib/ui.lib.php:734
 msgid "On"
-msgstr "Aan"
+msgstr ""
 
 #: ../../lib/ui.lib.php:736
 msgid "Off"
-msgstr "Uit"
+msgstr ""
 
 #: ../../lostpassword.php:39
 msgid "Password has been sent"
-msgstr "Wachtwoord verstuurd."
+msgstr ""
 
 #: ../../lostpassword.php:41
 msgid "Password has not been sent"
-msgstr "Wachtwoord is niet verzonden"
+msgstr ""
 
 #: ../../lostpassword.php:60
 msgid "Lost Password"
-msgstr "Wachtwoord vergeten"
+msgstr ""
 
 #: ../../lostpassword.php:64
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
-msgstr "Een gebruiker van %s heeft een wachtwoord reset aangevraagd voor '%s'."
+msgstr ""
 
 #: ../../lostpassword.php:66
 #, php-format
 msgid "The password has been set to: %s"
-msgstr "Het wachtwoord is ingesteld op: %s"
+msgstr ""
 
 #: ../../modules/Beets/Catalog.php:125
 msgid "Running Beets Update"
@@ -3696,15 +3665,14 @@ msgid "Secret"
 msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:119
-#, fuzzy
 msgid "Access Token"
-msgstr "Toegang verboden"
+msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
 #: ../../templates/show_stats.inc.php:71
 msgid "Path"
-msgstr "Directorie"
+msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:121
 msgid "Get chunked files on analyze"
@@ -3740,9 +3708,9 @@ msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:483
 #: ../../modules/catalog/seafile/seafile.catalog.php:379
-#, fuzzy, php-format
+#, php-format
 msgid "Updated song \"%s\""
-msgstr "Werk bij via tags"
+msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:486
 #: ../../modules/catalog/seafile/seafile.catalog.php:382
@@ -3767,7 +3735,7 @@ msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:182
 msgid "Error: Defined Path is inside an existing catalog"
-msgstr "Fout: Het opgegeven pad is binnen een bestaande catalogus"
+msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:190
 #, php-format
@@ -3789,19 +3757,19 @@ msgstr ""
 #: ../../modules/catalog/local/local.catalog.php:338
 #, php-format
 msgid "Error: Unable to get filesize for %s"
-msgstr "Fout: Kan bestands grootte niet opvragen voor %s"
+msgstr ""
 
 #. HINT: FullFile
 #: ../../modules/catalog/local/local.catalog.php:345
 #, php-format
 msgid "%s is not readable by ampache"
-msgstr "%s is niet leesbaar voor Ampache"
+msgstr ""
 
 #. HINT: FullFile
 #: ../../modules/catalog/local/local.catalog.php:368
 #, php-format
 msgid "%s does not match site charset"
-msgstr "%s komt niet overeen met de karakterset van de website"
+msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:491
 msgid "N/A"
@@ -3821,7 +3789,7 @@ msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:604
 msgid "Catalog Root unreadable, stopping clean"
-msgstr "Catalogus Root onleesbaar, stoppen met opschonen"
+msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:629
 msgid "All files would be removed. Doing nothing"
@@ -3848,7 +3816,7 @@ msgstr ""
 #: ../../templates/show_login_form.inc.php:61
 #: ../../templates/show_user_registration.inc.php:138
 msgid "Password"
-msgstr "Wachtwoord"
+msgstr ""
 
 #: ../../modules/catalog/remote/remote.catalog.php:144
 msgid "Error: Remote selected, but path is not a URL"
@@ -3860,7 +3828,7 @@ msgstr ""
 
 #: ../../modules/catalog/remote/remote.catalog.php:181
 msgid "Running Remote Update"
-msgstr "Bezig met bijwerken van remote catalogus"
+msgstr ""
 
 #: ../../modules/catalog/remote/remote.catalog.php:217
 msgid "Error connecting to remote server"
@@ -3908,14 +3876,12 @@ msgid ""
 msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:79
-#, fuzzy
 msgid "this forum post"
-msgstr "Instelling voor %s"
+msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:80
-#, fuzzy
 msgid " for more information."
-msgstr "Lied informatie"
+msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:81
 msgid ""
@@ -3923,9 +3889,8 @@ msgid ""
 msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:123
-#, fuzzy
 msgid "Server URI"
-msgstr "Server"
+msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:124
 msgid "Library Name"
@@ -3940,9 +3905,8 @@ msgid "Seafile Username/Email"
 msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:127
-#, fuzzy
 msgid "Seafile Password"
-msgstr "Nieuw wachtwoord"
+msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:156
 msgid "Error: Seafile Server URL is required."
@@ -3953,9 +3917,8 @@ msgid "Error: Seafile Server Library Name is required."
 msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:168
-#, fuzzy
 msgid "Error: Seafile Username is required."
-msgstr "Fout gebruikersnaam verplicht"
+msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:174
 msgid "Error: Seafile Password is required."
@@ -3971,14 +3934,13 @@ msgid "Error while authenticating against Seafile API: %s"
 msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:237
-#, fuzzy
 msgid "Running Seafile Remote Update"
-msgstr "Bezig met bijwerken van remote catalogus"
+msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:295
-#, fuzzy, php-format
+#, php-format
 msgid "Skipping existing song \"%s\""
-msgstr "Bewerk bestaande Gebruiker"
+msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:300
 #, php-format
@@ -4075,14 +4037,14 @@ msgstr ""
 #: ../../modules/localplay/vlc/vlc.controller.php:180
 #: ../../modules/localplay/xbmc/xbmc.controller.php:187
 msgid "Instance Name"
-msgstr "Instantie naam"
+msgstr ""
 
 #: ../../modules/localplay/httpq/httpq.controller.php:197
 #: ../../modules/localplay/mpd/mpd.controller.php:226
 #: ../../modules/localplay/vlc/vlc.controller.php:181
 #: ../../modules/localplay/xbmc/xbmc.controller.php:188
 msgid "Hostname"
-msgstr "Hostnaam"
+msgstr ""
 
 #: ../../modules/localplay/httpq/httpq.controller.php:198
 #: ../../modules/localplay/mpd/mpd.controller.php:227
@@ -4092,7 +4054,7 @@ msgstr "Hostnaam"
 #: ../../templates/show_channels.inc.php:34
 #: ../../templates/show_edit_channel_row.inc.php:60
 msgid "Port"
-msgstr "Poort"
+msgstr ""
 
 #: ../../modules/localplay/httpq/httpq.controller.php:486
 #: ../../modules/localplay/mpd/mpd.controller.php:464
@@ -4106,7 +4068,7 @@ msgstr "Poort"
 #: ../../templates/show_searches.inc.php:75
 #: ../../templates/sidebar_home.inc.php:170
 msgid "Random"
-msgstr "Willekeurig"
+msgstr ""
 
 #: ../../modules/localplay/upnp/upnp.controller.php:180
 #: ../../templates/show_add_channel.inc.php:49
@@ -4190,7 +4152,7 @@ msgstr ""
 
 #: ../../playlist.php:54
 msgid "Playlist Created"
-msgstr "Afspeellijst aangemaakt"
+msgstr ""
 
 #: ../../playlist.php:54
 #, php-format
@@ -4199,7 +4161,7 @@ msgstr ""
 
 #: ../../playlist.php:80
 msgid "Playlist Imported"
-msgstr "Importeren afspeellijst gelukt"
+msgstr ""
 
 #: ../../playlist.php:83
 #, php-format
@@ -4210,11 +4172,11 @@ msgstr[1] ""
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
-msgstr "Importeren afspeellijst mislukt"
+msgstr ""
 
 #: ../../playlist.php:135
 msgid "Empty Playlists Deleted"
-msgstr "Lege afspeellijst verwijderd"
+msgstr ""
 
 #: ../../plex/web/index.php:32
 msgid ""
@@ -4280,7 +4242,7 @@ msgstr ""
 
 #: ../../preferences.php:48 ../../preferences.php:93
 msgid "Server"
-msgstr "Server"
+msgstr ""
 
 #: ../../preferences.php:66
 msgid "Server preferences updated successfully"
@@ -4292,7 +4254,7 @@ msgstr ""
 
 #: ../../preferences.php:126 ../../register.php:100
 msgid "Please fill in your full name (Firstname Lastname)"
-msgstr "Vul uw voor- en achternaam in"
+msgstr ""
 
 #: ../../preferences.php:129 ../../register.php:103
 msgid "Please fill in your website"
@@ -4308,11 +4270,11 @@ msgstr ""
 
 #: ../../preferences.php:139
 msgid "Error Update Failed"
-msgstr "Fout bijwerken mislukt"
+msgstr ""
 
 #: ../../preferences.php:145 ../../preferences.php:163
 msgid "Your Account has been updated"
-msgstr "Uw account is bijgewerkt"
+msgstr ""
 
 #: ../../preferences.php:149
 msgid "User updated successfully"
@@ -4352,31 +4314,31 @@ msgstr ""
 
 #: ../../radio.php:60
 msgid "Radio Station Added"
-msgstr "Radio station toegevoegd"
+msgstr ""
 
 #: ../../register.php:72
 msgid "Error Captcha Required"
-msgstr "Fout: Verificatie verplicht"
+msgstr ""
 
 #: ../../register.php:78
 msgid "Error Captcha Failed"
-msgstr "Fout: Verificatie onjuist"
+msgstr ""
 
 #: ../../register.php:85
 msgid "You <U>must</U> accept the user agreement"
-msgstr "U <U>moet</U> de gebruikersovereenkomst accepteren"
+msgstr ""
 
 #: ../../register.php:90
 msgid "You did not enter a username"
-msgstr "U heeft geen gebruikersnaam opgegeven"
+msgstr ""
 
 #: ../../register.php:113
 msgid "You must enter a password"
-msgstr "U moet een wachtwoord opgeven"
+msgstr ""
 
 #: ../../register.php:117
 msgid "Your passwords do not match"
-msgstr "De opgegeven wachtwoorden komen niet overeen"
+msgstr ""
 
 #: ../../rest/index.php:47 ../../server/xml.server.php:43
 msgid "Access Control not Enabled"
@@ -4464,7 +4426,7 @@ msgstr ""
 
 #: ../../shout.php:63
 msgid "Invalid Object Selected"
-msgstr "Onjuist object geselecteerd"
+msgstr ""
 
 #: ../../song.php:36 ../../song.php:56 ../../song.php:58
 msgid "Song Deletion"
@@ -4484,33 +4446,33 @@ msgstr ""
 
 #: ../../templates/browse_filters.inc.php:30
 msgid "Filters"
-msgstr "Filters"
+msgstr ""
 
 #: ../../templates/browse_filters.inc.php:35
 msgid "Starts With"
-msgstr "Begint met"
+msgstr ""
 
 #: ../../templates/browse_filters.inc.php:44
 msgid "Minimum Count"
-msgstr "Minimum aantal"
+msgstr ""
 
 #: ../../templates/browse_filters.inc.php:51
 msgid "Rated"
-msgstr "Waardering"
+msgstr ""
 
 #: ../../templates/browse_filters.inc.php:58
 msgid "Unplayed"
-msgstr "Niet afgespeeld"
+msgstr ""
 
 #: ../../templates/browse_filters.inc.php:64
 msgid "All Playlists"
-msgstr "Alle afspeellijsten"
+msgstr ""
 
 #: ../../templates/browse_filters.inc.php:73
 #: ../../templates/show_song_previews.inc.php:31
 #: ../../templates/show_songs.inc.php:33 ../../templates/show_songs.inc.php:96
 msgid "Song Title"
-msgstr "Naam liedje"
+msgstr ""
 
 #: ../../templates/browse_filters.inc.php:112
 msgid "Toggle Artwork"
@@ -4518,7 +4480,7 @@ msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:1
 msgid "Use of cookies by Ampache"
-msgstr "Gebruik van cookies door Ampache"
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
@@ -4530,35 +4492,35 @@ msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:5
 msgid "The table below explains the cookies we use and why."
-msgstr "Onderstaande tabel legt uit welke cookies we gebruiken en waarom"
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:13
 msgid "Cookie"
-msgstr "Cookie"
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:19
 msgid "Purpose"
-msgstr "Doel"
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:27
 msgid "Hide the cookie disclaimer message."
-msgstr "Verberg de cookie disclaimer"
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:32
 msgid "Ampache session."
-msgstr "Ampache sessie."
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:37
 msgid "Ampache session username (if authenticated, information only)."
-msgstr "Ampache sessie gebruikersnaam (wanneer ingelogd, alleen ter info)."
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:42
 msgid "Automatically authenticate users."
-msgstr "Log gebruikers automatisch in."
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:47
 msgid "Keep latest web player volume."
-msgstr "Sla het laatste volume van de web speler op."
+msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:52
 msgid "Show/Hide column [column_index] when browsing [object_type] objects."
@@ -4578,57 +4540,55 @@ msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:72
 msgid "Collapse/Expand Sidebar."
-msgstr "Klap zij menu uit/in"
+msgstr ""
 
 #: ../../templates/error_page.inc.php:32
 msgid "Ampache error page"
-msgstr "Ampache fouten pagina"
+msgstr ""
 
 #: ../../templates/error_page.inc.php:44
 #: ../../templates/show_mail_users.inc.php:43
 #: ../../templates/show_test.inc.php:38 ../../update.php:72
 msgid "Ampache"
-msgstr "Ampache"
+msgstr ""
 
 #: ../../templates/error_page.inc.php:51
 msgid ""
 "The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
 msgstr ""
-"De volgende fout is opgetreden, u wordt automatisch doorgestuurd na 10 "
-"seconden."
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
-msgstr "Fouten"
+msgstr ""
 
 #: ../../templates/footer.inc.php:40
 msgid "Donate"
-msgstr "Doneer"
+msgstr ""
 
 #: ../../templates/footer.inc.php:54
 #: ../../templates/show_lostpassword_form.inc.php:66
 msgid "Queries:"
-msgstr "Aanvragen:"
+msgstr ""
 
 #: ../../templates/footer.inc.php:54
 #: ../../templates/show_lostpassword_form.inc.php:67
 msgid "Cache Hits:"
-msgstr "Uit cache:"
+msgstr ""
 
 #: ../../templates/footer.inc.php:58
 msgid "Load time:"
-msgstr "Laad tijd:"
+msgstr ""
 
 #: ../../templates/header.inc.php:97
 msgid "Save"
-msgstr "Opslaan"
+msgstr ""
 
 #: ../../templates/header.inc.php:98
 #: ../../templates/show_confirmation.inc.php:35
 #: ../../templates/show_get_art.inc.php:64
 msgid "Cancel"
-msgstr "Annuleer"
+msgstr ""
 
 #. HINT: Translator, "%s" is replaced by "cookie settings"
 #: ../../templates/header.inc.php:297
@@ -4643,7 +4603,7 @@ msgstr ""
 
 #: ../../templates/header.inc.php:298
 msgid "cookie settings"
-msgstr "cookie instellingen"
+msgstr ""
 
 #: ../../templates/header.inc.php:332 ../../templates/show_album_row.inc.php:32
 #: ../../templates/show_artist_row.inc.php:32
@@ -4655,7 +4615,7 @@ msgstr "cookie instellingen"
 #: ../../templates/show_song_row.inc.php:38
 #: ../../templates/show_video_row.inc.php:35
 msgid "Play next"
-msgstr "Speel volgende af"
+msgstr ""
 
 #: ../../templates/header.inc.php:335 ../../templates/show_album.inc.php:131
 #: ../../templates/show_album.inc.php:134
@@ -4671,97 +4631,97 @@ msgstr "Speel volgende af"
 #: ../../templates/show_song_row.inc.php:54
 #: ../../templates/show_video_row.inc.php:68
 msgid "Add to existing playlist"
-msgstr "Voeg toe aan bestaande afspeellijst"
+msgstr ""
 
 #: ../../templates/header.inc.php:362
 msgid "New messages"
-msgstr "Nieuwe berichten"
+msgstr ""
 
 #: ../../templates/header.inc.php:365
 msgid "Log out"
-msgstr "Uitloggen"
+msgstr ""
 
 #: ../../templates/header.inc.php:371
 #: ../../templates/show_login_form.inc.php:72
 msgid "Login"
-msgstr "Inloggen"
+msgstr ""
 
 #: ../../templates/header.inc.php:374
 #: ../../templates/show_login_form.inc.php:78
 msgid "Register"
-msgstr "Registreer"
+msgstr ""
 
 #: ../../templates/header.inc.php:417 ../../templates/sidebar_home.inc.php:142
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
-msgstr "Favorieten"
+msgstr ""
 
 #: ../../templates/header.inc.php:502
 msgid "Error: Your config file is out of date!"
-msgstr "Fout: het configuratie bestand is verouderd"
+msgstr ""
 
 #: ../../templates/header.inc.php:504
 msgid "Generate and download new config file"
-msgstr "Genereer en download nieuw configuratie bestand"
+msgstr ""
 
 #: ../../templates/header.inc.php:505
 msgid "Write new config file to disk"
-msgstr "Schrijf nieuw configuratiebestand "
+msgstr ""
 
 #: ../../templates/install_header.inc.php:52
 #: ../../templates/show_install_lang.inc.php:27
 msgid "Ampache Installation"
-msgstr "Ampache Installatie"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:116
 msgid "Prev"
-msgstr "Vorige"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:118
 msgid "Page"
-msgstr "Pagina"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:120
 msgid "of"
-msgstr "van"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:122
 #: ../../templates/show_localplay_control.inc.php:28
 msgid "Next"
-msgstr "Volgende"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:133
 msgid "Pages"
-msgstr "Pagina's"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:134
 msgid "Infinite Scroll"
-msgstr "Scroll ongelimiteerd"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:135
 msgid "Grid View"
-msgstr "Raster weergave"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:138
 msgid "Alphabet"
-msgstr "Alfabet"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:146
 msgid "Limit"
-msgstr "Begrens"
+msgstr ""
 
 #: ../../templates/list_header.inc.php:155
 msgid "Item Count"
-msgstr "Aantal items"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:30
 msgid "Add to Playlist"
-msgstr "Toevoegen aan afspeellijst"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:33
 #: ../../templates/show_playlists_dialog.inc.php:27
 msgid "Add to New Playlist"
-msgstr "Toevoegen aan nieuwe afspeellijst"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:54
 #: ../../templates/show_album_row.inc.php:111
@@ -4774,71 +4734,71 @@ msgstr "Toevoegen aan nieuwe afspeellijst"
 #: ../../templates/show_search_options.inc.php:34
 #: ../../templates/show_search_row.inc.php:54
 msgid "Batch Download"
-msgstr "Bulk download"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:60
 #: ../../templates/show_democratic.inc.php:49
 #: ../../templates/show_democratic.inc.php:50
 #: ../../templates/show_localplay_status.inc.php:51
 msgid "Clear Playlist"
-msgstr "Maak afspeellijst Leeg"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:63
 msgid "Add Dynamic Items"
-msgstr "Dynamische items toevoegen"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:66
 msgid "Random Song"
-msgstr "Willekeurig nummer"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:69
 msgid "Random Artist"
-msgstr "Willekeurige artiest"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:72
 msgid "Random Album"
-msgstr "Willekeurig album"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:75
 msgid "Random Playlist"
-msgstr "Willekeurige afspeellijst"
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:134
 msgid "No items"
-msgstr "Geen items"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:23
 #: ../../templates/sidebar_admin.inc.php:37
 msgid "Access Control"
-msgstr "Toegangs beheer"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:27
 msgid "Add Current Host"
-msgstr "Huidige Host toevoegen"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:30
 msgid "Add API / RPC Host"
-msgstr "API / RPC Host toevoegen"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:33
 msgid "Add Local Network Definition"
-msgstr "Lokale netwerk defenitie toevoegen"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:35
 msgid "Advanced Add"
-msgstr "Geavanceerde toevoegen"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:40
 msgid "Access Control Entries"
-msgstr "Toegans niveaus items"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:48
 msgid "Start Address"
-msgstr "Begin adres"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:49
 msgid "End Address"
-msgstr "Eind adres"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:50
 #: ../../templates/show_add_access.inc.php:35
@@ -4848,7 +4808,7 @@ msgstr "Eind adres"
 #: ../../templates/show_preference_admin.inc.php:33
 #: ../../templates/show_preference_admin.inc.php:53
 msgid "Level"
-msgstr "Niveau"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:52
 #: ../../templates/show_add_playlist.inc.php:31
@@ -4861,7 +4821,7 @@ msgstr "Niveau"
 #: ../../templates/show_searches.inc.php:44
 #: ../../templates/show_searches.inc.php:74
 msgid "Type"
-msgstr "Type"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:53
 #: ../../templates/show_artists.inc.php:65
@@ -4901,21 +4861,21 @@ msgstr "Type"
 #: ../../templates/show_video.inc.php:83 ../../templates/show_videos.inc.php:68
 #: ../../templates/show_videos.inc.php:133
 msgid "Action"
-msgstr "Actie"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:33
 #: ../../templates/show_add_user.inc.php:37
 #: ../../templates/show_edit_user.inc.php:40
 #: ../../templates/show_user_registration.inc.php:91
 msgid "Full Name"
-msgstr "Volledige Naam"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:41
 #: ../../templates/show_add_user.inc.php:45
 #: ../../templates/show_edit_user.inc.php:51
 #: ../../templates/show_user_registration.inc.php:99
 msgid "E-mail"
-msgstr "e-Mail"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:49
 #: ../../templates/show_add_label.inc.php:71
@@ -4928,7 +4888,7 @@ msgstr "e-Mail"
 #: ../../templates/show_podcast_episode.inc.php:128
 #: ../../templates/show_user_registration.inc.php:108
 msgid "Website"
-msgstr "Website"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:59
 #: ../../templates/show_channels.inc.php:43
@@ -4938,17 +4898,17 @@ msgstr "Website"
 #: ../../templates/show_podcast_episodes.inc.php:92
 #: ../../templates/show_user_registration.inc.php:119
 msgid "State"
-msgstr "Provincie"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:69
 #: ../../templates/show_edit_user.inc.php:78
 #: ../../templates/show_user_registration.inc.php:130
 msgid "City"
-msgstr "Stad"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:77
 msgid "New Password"
-msgstr "Nieuw wachtwoord"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:84
 #: ../../templates/show_add_user.inc.php:72
@@ -4956,32 +4916,32 @@ msgstr "Nieuw wachtwoord"
 #: ../../templates/show_install_account.inc.php:63
 #: ../../templates/show_user_registration.inc.php:144
 msgid "Confirm Password"
-msgstr "Herhaal uw wachtwoord"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:91
 #: ../../templates/show_add_user.inc.php:95
 #: ../../templates/show_edit_user.inc.php:119
 msgid "Avatar"
-msgstr "Avatar"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:129
 #: ../../templates/show_edit_user.inc.php:158
 #: ../../templates/show_manage_catalogs.inc.php:45
 msgid "Clear Stats"
-msgstr "Statistieken opschonen"
+msgstr ""
 
 #: ../../templates/show_account.inc.php:139
 msgid "Update Account"
-msgstr "Account wijzigen"
+msgstr ""
 
 #: ../../templates/show_add_access.inc.php:24
 msgid "Add Access Control List"
-msgstr "Voeg toegangscontrolelijst toe"
+msgstr ""
 
 #: ../../templates/show_add_access.inc.php:50
 #: ../../templates/show_edit_access.inc.php:31
 msgid "ACL Type"
-msgstr "Toegangs niveau"
+msgstr ""
 
 #: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:58
@@ -4994,137 +4954,134 @@ msgstr ""
 #: ../../templates/show_add_access.inc.php:86
 #: ../../templates/show_edit_access.inc.php:43
 msgid "IPv4 or IPv6 Addresses"
-msgstr "IPv4 of IPv6 adressen"
+msgstr ""
 
 #: ../../templates/show_add_access.inc.php:92
 #: ../../templates/show_edit_access.inc.php:48
 msgid "Start"
-msgstr "Begin"
+msgstr ""
 
 #: ../../templates/show_add_access.inc.php:102
 #: ../../templates/show_edit_access.inc.php:53
 msgid "End"
-msgstr "Einde"
+msgstr ""
 
 #: ../../templates/show_add_access.inc.php:115
 msgid "Create ACL"
-msgstr "Maak toegangs niveau aan"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:26
 #: ../../templates/sidebar_admin.inc.php:26
 msgid "Add a Catalog"
-msgstr "Catalogus toevoegen"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"In het formulier hieronder geef je een lokale directory (bijv. /data/music) "
-"of het adres naar een remote Ampache installatie (bijv. http://"
-"eenandervoorbeeld.com) op"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
-msgstr "Catalogus naam"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:37
 #: ../../templates/show_edit_catalog.inc.php:31
 msgid "Auto-inserted Fields"
-msgstr "Automatisch toegevoegde velden"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:38
 #: ../../templates/show_edit_catalog.inc.php:32
 msgid "album name"
-msgstr "album naam"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:39
 #: ../../templates/show_edit_catalog.inc.php:33
 msgid "artist name"
-msgstr "artiest naam"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:40
 #: ../../templates/show_edit_catalog.inc.php:34
 msgid "id3 comment"
-msgstr "id3 commentaar"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:41
 #: ../../templates/show_edit_catalog.inc.php:35
 msgid "track number (padded with leading 0)"
-msgstr "nummer van liedje (voorafgaand met een 0)"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:42
 #: ../../templates/show_edit_catalog.inc.php:36
 msgid "song title"
-msgstr "naam nummer"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:43
 #: ../../templates/show_edit_catalog.inc.php:37
 msgid "year"
-msgstr "jaar"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:44
 #: ../../templates/show_edit_catalog.inc.php:38
 msgid "other"
-msgstr "anders"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:48
 #: ../../templates/show_edit_catalog.inc.php:42
 msgid "Catalog Type"
-msgstr "Catalogus Type"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:52
 msgid "Filename Pattern"
-msgstr "Bestands patroon"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:56
 #: ../../templates/show_edit_catalog.inc.php:53
 msgid "Folder Pattern"
-msgstr "Map indeling"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:56
 #: ../../templates/show_edit_catalog.inc.php:53
 msgid "(no leading or ending '/')"
-msgstr "(niet beginnen of eindigen met een '/')"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:60
 #: ../../templates/show_catalog_row.inc.php:47
 msgid "Gather Art"
-msgstr "Afbeeldingen ophalen"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:64
 msgid "Build Playlists from playlist Files"
-msgstr "Maak afspeellijst van afspeellijst bestanden"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:68
 msgid "Gather media types"
-msgstr "Verzamel media types"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:75
 msgid "Music Clip"
-msgstr "Muziek clip"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:77
 msgid "Movie"
-msgstr "Film"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:78
 msgid "Personal Video"
-msgstr "Personal video"
+msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:96
 msgid "Add Catalog"
-msgstr "Catalogus toevoegen"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:23
 msgid "Create Channel"
-msgstr "Maak kanaal aan"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:29
 #: ../../templates/show_channels.inc.php:35
 #: ../../templates/show_edit_channel_row.inc.php:27
 msgid "Stream Source"
-msgstr "Stream bron"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:42
 #: ../../templates/show_catalog_types.inc.php:30
@@ -5141,53 +5098,53 @@ msgstr "Stream bron"
 #: ../../templates/show_plugins.inc.php:72
 #: ../../templates/show_podcast_episode.inc.php:123
 msgid "Description"
-msgstr "Omschrijving"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:56
 #: ../../templates/show_channels.inc.php:33
 #: ../../templates/show_edit_channel_row.inc.php:56
 msgid "Interface"
-msgstr "Interface"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:70
 #: ../../templates/show_channel_row.inc.php:45
 #: ../../templates/show_edit_broadcast_row.inc.php:36
 #: ../../templates/show_edit_channel_row.inc.php:65
 msgid "Authentication Required"
-msgstr "Authenticatie vereist"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:82
 #: ../../templates/show_channels.inc.php:37
 #: ../../templates/show_edit_channel_row.inc.php:73
 msgid "Loop"
-msgstr "Herhaal"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:88
 #: ../../templates/show_edit_channel_row.inc.php:76
 msgid "Max Listeners"
-msgstr "Maximaal aantal luisteraars"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:95
 #: ../../templates/show_channels.inc.php:38
 #: ../../templates/show_edit_channel_row.inc.php:80
 msgid "Stream Type"
-msgstr "Type stream"
+msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:111
 #: ../../templates/show_add_playlist.inc.php:41
 #: ../../templates/show_add_share.inc.php:73
 #: ../../templates/show_add_shout.inc.php:56
 msgid "Create"
-msgstr "Aanmaken"
+msgstr ""
 
 #: ../../templates/show_add_label.inc.php:23
 msgid "Add Label"
-msgstr "Voeg label toe"
+msgstr ""
 
 #: ../../templates/show_add_label.inc.php:39
 #: ../../templates/show_edit_label_row.inc.php:36
 msgid "Personal"
-msgstr "Persoonlijk"
+msgstr ""
 
 #: ../../templates/show_add_label.inc.php:42
 #: ../../templates/show_edit_label_row.inc.php:39
@@ -5197,7 +5154,7 @@ msgstr ""
 #: ../../templates/show_add_label.inc.php:45
 #: ../../templates/show_edit_label_row.inc.php:42
 msgid "Company"
-msgstr "Bedrijf"
+msgstr ""
 
 #: ../../templates/show_add_label.inc.php:50
 #: ../../templates/show_edit_artist_row.inc.php:43
@@ -5209,35 +5166,35 @@ msgstr "Bedrijf"
 #: ../../templates/show_partial_personal_video.inc.php:24
 #: ../../templates/show_partial_tvshow_episode.inc.php:26
 msgid "Summary"
-msgstr "Samenvatting"
+msgstr ""
 
 #: ../../templates/show_add_label.inc.php:57
 #: ../../templates/show_edit_label_row.inc.php:51
 msgid "Address"
-msgstr "Adres"
+msgstr ""
 
 #: ../../templates/show_add_label.inc.php:64
 #: ../../templates/show_edit_label_row.inc.php:55
 #: ../../templates/show_lostpassword_form.inc.php:56
 msgid "Email"
-msgstr "Email"
+msgstr ""
 
 #: ../../templates/show_add_live_stream.inc.php:23
 #: ../../templates/show_live_streams.inc.php:29
 msgid "Add Radio Station"
-msgstr "Radio station toevoegen"
+msgstr ""
 
 #: ../../templates/show_add_live_stream.inc.php:34
 #: ../../templates/show_edit_live_stream_row.inc.php:35
 msgid "Homepage"
-msgstr "Website"
+msgstr ""
 
 #: ../../templates/show_add_live_stream.inc.php:41
 #: ../../templates/show_edit_live_stream_row.inc.php:31
 #: ../../templates/show_live_streams.inc.php:45
 #: ../../templates/show_live_streams.inc.php:73
 msgid "Stream URL"
-msgstr "Stream URL"
+msgstr ""
 
 #: ../../templates/show_add_live_stream.inc.php:48
 #: ../../templates/show_edit_live_stream_row.inc.php:39
@@ -5248,49 +5205,49 @@ msgstr "Stream URL"
 #: ../../templates/show_videos.inc.php:45
 #: ../../templates/show_videos.inc.php:110
 msgid "Codec"
-msgstr "Codec"
+msgstr ""
 
 #: ../../templates/show_add_playlist.inc.php:23
 msgid "Create a new playlist"
-msgstr "Maak een nieuwe afspeellijst aan"
+msgstr ""
 
 #: ../../templates/show_add_podcast.inc.php:23
 msgid "Subscribe to Podcast"
-msgstr "Abonneer op Podcast"
+msgstr ""
 
 #: ../../templates/show_add_podcast.inc.php:27
 msgid "Podcast feed url"
-msgstr "Podcast feed url"
+msgstr ""
 
 #: ../../templates/show_add_podcast.inc.php:43
 msgid "Subscribe"
-msgstr "Abonneer"
+msgstr ""
 
 #: ../../templates/show_add_pvmsg.inc.php:24
 msgid "Compose Message"
-msgstr "Schrijf bericht"
+msgstr ""
 
 #: ../../templates/show_add_pvmsg.inc.php:28
 #: ../../templates/show_pvmsgs.inc.php:52
 #: ../../templates/show_pvmsgs.inc.php:81
 msgid "Recipient"
-msgstr "Geadresseerde"
+msgstr ""
 
 #: ../../templates/show_add_pvmsg.inc.php:35
 #: ../../templates/show_mail_users.inc.php:48
 #: ../../templates/show_pvmsgs.inc.php:50
 #: ../../templates/show_pvmsgs.inc.php:79
 msgid "Subject"
-msgstr "Onderwerp"
+msgstr ""
 
 #: ../../templates/show_add_pvmsg.inc.php:42
 #: ../../templates/show_mail_users.inc.php:54
 msgid "Message"
-msgstr "Bericht"
+msgstr ""
 
 #: ../../templates/show_add_pvmsg.inc.php:51
 msgid "Send"
-msgstr "Stuur"
+msgstr ""
 
 #: ../../templates/show_adds_catalog.inc.php:23
 msgid "Starting New Media Search"
@@ -5305,7 +5262,7 @@ msgstr ""
 #: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_run_add_catalog.inc.php:25
 msgid "Found"
-msgstr "Gevonden"
+msgstr ""
 
 #: ../../templates/show_adds_catalog.inc.php:28
 #: ../../templates/show_clean_catalog.inc.php:28
@@ -5313,16 +5270,16 @@ msgstr "Gevonden"
 #: ../../templates/show_run_add_catalog.inc.php:26
 #: ../../templates/show_verify_catalog.inc.php:28
 msgid "Reading"
-msgstr "Bezig met lezen"
+msgstr ""
 
 #: ../../templates/show_add_share.inc.php:23
 msgid "Create Share"
-msgstr "Maak share aan"
+msgstr ""
 
 #: ../../templates/show_add_share.inc.php:29
 #: ../../templates/show_edit_share_row.inc.php:27
 msgid "Shared Object"
-msgstr "Gedeeld object"
+msgstr ""
 
 #: ../../templates/show_add_share.inc.php:42
 #: ../../templates/show_edit_share_row.inc.php:31
@@ -5346,16 +5303,16 @@ msgstr ""
 #: ../../templates/show_edit_share_row.inc.php:47
 #: ../../templates/show_shared_objects.inc.php:34
 msgid "Allow Download"
-msgstr "Sta download toe"
+msgstr ""
 
 #: ../../templates/show_add_shout.inc.php:30
 msgid "Post to Shoutbox"
-msgstr "Verzend naar Shoutbox"
+msgstr ""
 
 #: ../../templates/show_add_shout.inc.php:38
 #: ../../templates/show_edit_shout.inc.php:31
 msgid "Comment:"
-msgstr "Commentaar:"
+msgstr ""
 
 #: ../../templates/show_add_shout.inc.php:46
 #: ../../templates/show_edit_shout.inc.php:39
@@ -5365,66 +5322,66 @@ msgstr ""
 #: ../../templates/show_add_shout.inc.php:67
 #: ../../templates/show_shoutbox.inc.php:23
 msgid "Shoutbox"
-msgstr "Shoutbox"
+msgstr ""
 
 #: ../../templates/show_add_upload.inc.php:38
 #: ../../templates/show_add_upload.inc.php:156
 msgid "Target folder"
-msgstr "Doel map"
+msgstr ""
 
 #: ../../templates/show_add_upload.inc.php:211
 msgid "Files"
-msgstr "Bestanden"
+msgstr ""
 
 #: ../../templates/show_add_upload.inc.php:218
 msgid "Allowed file type"
-msgstr "Toegestaan bestands-type"
+msgstr ""
 
 #: ../../templates/show_add_upload.inc.php:223
 msgid "Drop File Here"
-msgstr "Speel bestand hier"
+msgstr ""
 
 #: ../../templates/show_add_upload.inc.php:224
 msgid "Browse"
-msgstr "Bladeren"
+msgstr ""
 
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
-msgstr "Nieuwe gebruiker toevoegen"
+msgstr ""
 
 #: ../../templates/show_add_user.inc.php:80
 #: ../../templates/show_edit_user.inc.php:104
 msgid "User Access Level"
-msgstr "Gebruiker toegangsniveau"
+msgstr ""
 
 #: ../../templates/show_add_user.inc.php:105
 #: ../../templates/sidebar_admin.inc.php:33
 msgid "Add User"
-msgstr "Gebruiker toevoegen"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:45
 #: ../../templates/show_album.inc.php:50 ../../templates/show_artist.inc.php:43
 #: ../../templates/show_label.inc.php:35 ../../templates/show_song.inc.php:153
 msgid "Search on Google ..."
-msgstr "Zoek op Google ..."
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:46
 #: ../../templates/show_album.inc.php:51 ../../templates/show_artist.inc.php:44
 #: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:154
 msgid "Search on DuckDuckGo ..."
-msgstr "Zoek op DuckDuckGo ..."
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:52 ../../templates/show_artist.inc.php:45
 #: ../../templates/show_label.inc.php:37
 msgid "Search on Wikipedia ..."
-msgstr "Zoek op Wikipedia ..."
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:48
 #: ../../templates/show_album.inc.php:53 ../../templates/show_artist.inc.php:46
 #: ../../templates/show_label.inc.php:38 ../../templates/show_song.inc.php:155
 msgid "Search on Last.fm ..."
-msgstr "Zoek op Last.fm ..."
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:59
 #: ../../templates/show_album.inc.php:100
@@ -5455,7 +5412,7 @@ msgstr "Zoek op Last.fm ..."
 #: ../../templates/show_tvshow_seasons.inc.php:108
 #: ../../templates/show_wanted_albums.inc.php:30
 msgid "Actions"
-msgstr "Acties"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:84
 #: ../../templates/show_album_group_disks.inc.php:85
@@ -5466,7 +5423,7 @@ msgstr "Acties"
 #: ../../templates/show_artist_row.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:53
 msgid "Random to temporary playlist"
-msgstr "Willekeurige tijdelijke afspeellijst"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:92
 #: ../../templates/show_album_group_disks.inc.php:93
@@ -5488,7 +5445,7 @@ msgstr "Willekeurige tijdelijke afspeellijst"
 #: ../../templates/show_video.inc.php:118
 #: ../../templates/show_video_row.inc.php:120
 msgid "Download"
-msgstr "Download"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:154
 #: ../../templates/show_album.inc.php:181
@@ -5496,7 +5453,7 @@ msgstr "Download"
 #: ../../templates/show_playlist.inc.php:61
 #: ../../templates/show_playlist.inc.php:62
 msgid "Save Tracks Order"
-msgstr "Sla nummer volgorde op"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:156
 #: ../../templates/show_album.inc.php:186
@@ -5506,23 +5463,23 @@ msgstr ""
 #: ../../templates/show_album_group_disks.inc.php:157
 #: ../../templates/show_album.inc.php:186
 msgid "Update from tags"
-msgstr "Werk bij via tags"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:159
 #: ../../templates/show_album.inc.php:203
 #: ../../templates/show_album.inc.php:206
 #: ../../templates/show_album_row.inc.php:117
 msgid "Album edit"
-msgstr "Bewerk album"
+msgstr ""
 
 #: ../../templates/show_album.inc.php:83 ../../templates/show_artist.inc.php:78
 msgid "times"
-msgstr "keer"
+msgstr ""
 
 #: ../../templates/show_album.inc.php:94 ../../templates/show_artist.inc.php:89
 #: ../../templates/show_song.inc.php:192
 msgid "Uploaded by"
-msgstr "Geüpload door"
+msgstr ""
 
 #: ../../templates/show_album.inc.php:173
 #: ../../templates/show_album.inc.php:174
@@ -5534,11 +5491,11 @@ msgstr "Geüpload door"
 #: ../../templates/show_song.inc.php:116 ../../templates/show_user.inc.php:89
 #: ../../templates/show_video.inc.php:125
 msgid "Graphs"
-msgstr "Grafieken"
+msgstr ""
 
 #: ../../templates/show_album.inc.php:207
 msgid "Edit Album"
-msgstr "Bewerk album"
+msgstr ""
 
 #: ../../templates/show_albums.inc.php:35
 #: ../../templates/show_albums.inc.php:109
@@ -5585,7 +5542,7 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:53
 #: ../../templates/show_videos.inc.php:118
 msgid "Tags"
-msgstr "Tags"
+msgstr ""
 
 #: ../../templates/show_albums.inc.php:58
 #: ../../templates/show_albums.inc.php:132
@@ -5612,11 +5569,11 @@ msgstr "Tags"
 #: ../../templates/show_video.inc.php:73 ../../templates/show_videos.inc.php:63
 #: ../../templates/show_videos.inc.php:128
 msgid "Fav."
-msgstr "Favoriet"
+msgstr ""
 
 #: ../../templates/show_albums.inc.php:99
 msgid "No album found"
-msgstr "Geen album gevonden"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:49
 #: ../../templates/show_artist.inc.php:269
@@ -5629,17 +5586,17 @@ msgstr "Geen album gevonden"
 #: ../../templates/show_now_playing_row.inc.php:83
 #: ../../templates/show_now_playing_row.inc.php:89
 msgid "Loading..."
-msgstr "Laden..."
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:101
 #: ../../templates/show_artist.inc.php:103
 msgid "Show all"
-msgstr "Alles"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:109
 #: ../../templates/show_artist.inc.php:111
 msgid "Show albums"
-msgstr "Geef albums weer"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:118
 #: ../../templates/show_artist.inc.php:119
@@ -5652,7 +5609,7 @@ msgstr "Geef albums weer"
 #: ../../templates/show_tvshow_season.inc.php:61
 #: ../../templates/show_tvshow_season.inc.php:62
 msgid "Play all"
-msgstr "Speel alles af"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:124
 #: ../../templates/show_artist.inc.php:125
@@ -5691,13 +5648,13 @@ msgstr ""
 
 #: ../../templates/show_artist.inc.php:199
 msgid "Edit Artist"
-msgstr "Artiest bewerken"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:222
 #: ../../templates/show_artist.inc.php:268
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
-msgstr "Ontbrekende albums"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:227
 #: ../../templates/show_artist.inc.php:278
@@ -5705,12 +5662,12 @@ msgstr "Ontbrekende albums"
 #: ../../templates/show_now_playing_similar.inc.php:28
 #: ../../templates/show_recommended_artists.inc.php:25
 msgid "Similar Artists"
-msgstr "Dezelfde Artiesten"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:232
 #: ../../templates/show_artist.inc.php:288
 msgid "Events"
-msgstr "Gebeurtenissen"
+msgstr ""
 
 #: ../../templates/show_artists.inc.php:44
 #: ../../templates/show_artists.inc.php:118
@@ -5726,72 +5683,72 @@ msgstr "Gebeurtenissen"
 #: ../../templates/show_videos.inc.php:47
 #: ../../templates/show_videos.inc.php:112
 msgid "Time"
-msgstr "Tijd"
+msgstr ""
 
 #: ../../templates/show_artists.inc.php:101
 msgid "No artist found"
-msgstr "Geen artiest gevonden"
+msgstr ""
 
 #: ../../templates/show_arts.inc.php:28
 msgid "Select New Art"
-msgstr "Kies nieuwe art"
+msgstr ""
 
 #: ../../templates/show_arts.inc.php:52
 msgid "Invalid"
-msgstr "Onjuist"
+msgstr ""
 
 #: ../../templates/show_arts.inc.php:55
 #: ../../templates/show_disabled_songs.inc.php:28
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_pvmsg_row.inc.php:24
 msgid "Select"
-msgstr "Selecteer"
+msgstr ""
 
 #: ../../templates/show_big_art.inc.php:31
 msgid "Album Art"
-msgstr "Album afbeelding"
+msgstr ""
 
 #: ../../templates/show_big_art.inc.php:35
 msgid "Click to close window"
-msgstr "Klik om het venster te sluiten"
+msgstr ""
 
 #: ../../templates/show_broadcast_row.inc.php:33
 #: ../../templates/show_channel_row.inc.php:36
 #: ../../templates/show_channel_row.inc.php:37
 #: ../../templates/show_search_row.inc.php:46
 msgid "Yes"
-msgstr "Ja"
+msgstr ""
 
 #: ../../templates/show_broadcast_row.inc.php:33
 #: ../../templates/show_channel_row.inc.php:36
 #: ../../templates/show_channel_row.inc.php:37
 #: ../../templates/show_search_row.inc.php:46
 msgid "No"
-msgstr "Nee"
+msgstr ""
 
 #: ../../templates/show_broadcasts_dialog.inc.php:39
 msgid "New broadcast"
-msgstr "Nieuwe uitzending"
+msgstr ""
 
 #: ../../templates/show_broadcasts.inc.php:32
 #: ../../templates/show_edit_broadcast_row.inc.php:39
 #: ../../templates/show_edit_channel_row.inc.php:88
 #: ../../templates/show_song.inc.php:151
 msgid "Genre"
-msgstr "Genre"
+msgstr ""
 
 #: ../../templates/show_broadcasts.inc.php:33
 msgid "Started"
-msgstr "Begonnen"
+msgstr ""
 
 #: ../../templates/show_broadcasts.inc.php:34
 #: ../../templates/show_channels.inc.php:41
 msgid "Listeners"
-msgstr "Luisteraars"
+msgstr ""
 
 #: ../../templates/show_broadcasts.inc.php:51
 msgid "No broadcast found"
-msgstr "Geen uitzending gevonden"
+msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:36
 msgid "Make it ready ..."
@@ -5799,12 +5756,12 @@ msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:44
 msgid "Verify"
-msgstr "Verifieer"
+msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:45
 #: ../../templates/show_shares.inc.php:27
 msgid "Clean"
-msgstr "Opschonen"
+msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:46
 #: ../../templates/show_create_democratic.inc.php:70
@@ -5813,38 +5770,38 @@ msgstr "Opschonen"
 #: ../../templates/show_manage_catalogs.inc.php:59
 #: ../../templates/show_preference_admin.inc.php:58
 msgid "Update"
-msgstr "Bijwerken"
+msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:52
 msgid "Go"
-msgstr "Ga"
+msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:30
 #: ../../templates/show_catalogs.inc.php:60
 msgid "Info"
-msgstr "Info"
+msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:31
 #: ../../templates/show_catalogs.inc.php:61
 #: ../../templates/show_stats.inc.php:72
 msgid "Last Verify"
-msgstr "Laatst gecontroleerd"
+msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:32
 #: ../../templates/show_catalogs.inc.php:62
 #: ../../templates/show_stats.inc.php:73
 msgid "Last Add"
-msgstr "Laatsts toegevoegd"
+msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:33
 #: ../../templates/show_catalogs.inc.php:63
 #: ../../templates/show_stats.inc.php:74
 msgid "Last Clean"
-msgstr "Laatst opgeschoond."
+msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:51
 msgid "No catalog found"
-msgstr "Geen catalogus gevonden"
+msgstr ""
 
 #: ../../templates/show_catalog_types.inc.php:31
 #: ../../templates/show_catalog_types.inc.php:69
@@ -5853,12 +5810,12 @@ msgstr "Geen catalogus gevonden"
 #: ../../templates/show_plugins.inc.php:31
 #: ../../templates/show_plugins.inc.php:73
 msgid "Version"
-msgstr "Versie"
+msgstr ""
 
 #: ../../templates/show_catalog_types.inc.php:48
 #: ../../templates/show_plugins.inc.php:43
 msgid "Activate"
-msgstr "Activeren"
+msgstr ""
 
 #: ../../templates/show_catalog_types.inc.php:60
 #: ../../templates/show_disabled_songs.inc.php:51
@@ -5867,42 +5824,42 @@ msgstr "Activeren"
 #: ../../templates/show_manage_shoutbox.inc.php:52
 #: ../../templates/show_plugins.inc.php:64
 msgid "No Records Found"
-msgstr "Geen records gevonden"
+msgstr ""
 
 #: ../../templates/show_channels.inc.php:31
 msgid "#"
-msgstr "#"
+msgstr ""
 
 #: ../../templates/show_channels.inc.php:40
 #: ../../templates/show_graphs.inc.php:54
 msgid "Start Date"
-msgstr "Begin datum"
+msgstr ""
 
 #: ../../templates/show_channels.inc.php:42
 msgid "Stream Url"
-msgstr "Stream url"
+msgstr ""
 
 #: ../../templates/show_channels.inc.php:60
 msgid "No channel found"
-msgstr "Geen kanaal gevonden"
+msgstr ""
 
 #: ../../templates/show_clean_catalog.inc.php:23
 msgid "Clean Catalog"
-msgstr "Schoon catalogus op"
+msgstr ""
 
 #. HINT: Catalog Name
 #: ../../templates/show_clean_catalog.inc.php:25
 #, php-format
 msgid "Cleaning the %s Catalog"
-msgstr "Opschonen van %s Catalog"
+msgstr ""
 
 #: ../../templates/show_clean_catalog.inc.php:27
 msgid "Checking"
-msgstr "Bezig met controleren"
+msgstr ""
 
 #: ../../templates/show_concerts.inc.php:23
 msgid "Coming Events"
-msgstr "Opkomende gebeurtenissen"
+msgstr ""
 
 #: ../../templates/show_concerts.inc.php:27
 #: ../../templates/show_concerts.inc.php:55
@@ -5911,7 +5868,7 @@ msgstr "Opkomende gebeurtenissen"
 #: ../../templates/show_pvmsgs.inc.php:53
 #: ../../templates/show_pvmsgs.inc.php:82
 msgid "Date"
-msgstr "Datum"
+msgstr ""
 
 #: ../../templates/show_concerts.inc.php:29
 #: ../../templates/show_concerts.inc.php:57
@@ -5919,64 +5876,64 @@ msgstr "Datum"
 #: ../../templates/show_partial_personal_video.inc.php:23
 #: ../../templates/show_partial_personal_videos.inc.php:23
 msgid "Location"
-msgstr "Locatie"
+msgstr ""
 
 #: ../../templates/show_concerts.inc.php:44
 msgid "No coming events found"
-msgstr "Geen opkomende gebeurtenissen gevonden"
+msgstr ""
 
 #: ../../templates/show_concerts.inc.php:51
 msgid "Past Events"
-msgstr "Voorgaande gebeurtenissen"
+msgstr ""
 
 #: ../../templates/show_concerts.inc.php:72
 msgid "No past events found"
-msgstr "Geen gebeurtenissen uit het verleden gevonden"
+msgstr ""
 
 #: ../../templates/show_confirmation.inc.php:29
 #: ../../templates/show_install_check.inc.php:67
 #: ../../templates/show_update_items.inc.php:28
 msgid "Continue"
-msgstr "Doorgaan"
+msgstr ""
 
 #: ../../templates/show_create_democratic.inc.php:23
 #: ../../templates/show_democratic.inc.php:38
 #: ../../templates/show_democratic.inc.php:40
 msgid "Configure Democratic Playlist"
-msgstr "Configureer democratishe afspeellijst"
+msgstr ""
 
 #: ../../templates/show_create_democratic.inc.php:31
 #: ../../templates/show_manage_democratic.inc.php:27
 msgid "Base Playlist"
-msgstr "Basis afspeellijst"
+msgstr ""
 
 #: ../../templates/show_create_democratic.inc.php:35
 msgid "Cooldown Time"
-msgstr "Afkoel tijd"
+msgstr ""
 
 #: ../../templates/show_create_democratic.inc.php:57
 msgid "Make Default"
-msgstr "Standaard maken"
+msgstr ""
 
 #: ../../templates/show_create_democratic.inc.php:64
 msgid "Force Democratic Play"
-msgstr "Dwing democratische afspeellijst af"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:23
 msgid "Debug Tools"
-msgstr "Debug Tools"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:27
 msgid "Generate Configuration"
-msgstr "Genereer configuratie"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:30
 msgid "Write New Config"
-msgstr "Schrijf nieuw configuratie bestand"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:33
 msgid "Set Database Charset"
-msgstr "Stel de database characterset in"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:36
 msgid "Clear Songs Cache"
@@ -5992,27 +5949,27 @@ msgstr ""
 
 #: ../../templates/show_debug.inc.php:47 ../../update.php:78
 msgid "Ampache Update"
-msgstr "Ampache bijwerken"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:48
 msgid "Installed Ampache version"
-msgstr "Geïnstalleerde Ampache versie"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:49
 msgid "Latest Ampache version"
-msgstr "Nieuwst beschikbare Ampache versie"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:50
 msgid "Force check"
-msgstr "Forceer check"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:59
 msgid "PHP Settings"
-msgstr "PHP instellingen"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:67
 msgid "Setting"
-msgstr "Instelling"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:68 ../../templates/show_debug.inc.php:121
 #: ../../templates/show_dynamic.inc.php:28
@@ -6020,51 +5977,51 @@ msgstr "Instelling"
 #: ../../templates/show_preference_box.inc.php:96
 #: ../../templates/show_user_preferences.inc.php:38
 msgid "Value"
-msgstr "Waarde"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:73
 msgid "Memory Limit"
-msgstr "Geheugen limiet"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:77
 msgid "Maximum Execution Time"
-msgstr "Maximum executie tijd"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:81
 msgid "Override Execution Time"
-msgstr "Override executie tijd"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:82
 msgid "Failed"
-msgstr "Mislukt"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:82
 msgid "Succeeded"
-msgstr "Succesvol"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:85
 msgid "Safe Mode"
-msgstr "Safe Mode"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:93
 msgid "Zlib Support"
-msgstr "Zlib Support"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:97
 msgid "GD Support"
-msgstr "GD Support"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:101
 msgid "Iconv Support"
-msgstr "Iconv Support"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:105
 msgid "Gettext Support"
-msgstr "Gettext ondersteuning"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:112
 msgid "Current Configuration"
-msgstr "Huidige configuratie"
+msgstr ""
 
 #: ../../templates/show_debug.inc.php:120
 #: ../../templates/show_preference_admin.inc.php:32
@@ -6073,102 +6030,96 @@ msgstr "Huidige configuratie"
 #: ../../templates/show_preference_box.inc.php:95
 #: ../../templates/show_user_preferences.inc.php:37
 msgid "Preference"
-msgstr "Instelling"
+msgstr ""
 
 #: ../../templates/show_democratic.inc.php:23
 #, php-format
 msgid "%s Playlist"
-msgstr "%s afspeellijst"
+msgstr ""
 
 #: ../../templates/show_democratic.inc.php:31
 #: ../../templates/show_manage_democratic.inc.php:28
 msgid "Cooldown"
-msgstr "Afkoelen"
+msgstr ""
 
 #: ../../templates/show_democratic.inc.php:46
 msgid "Play Democratic Playlist"
-msgstr "Democratische afspeellijst afspelen"
+msgstr ""
 
 #: ../../templates/show_democratic.inc.php:82
 msgid "Reload this page automatically"
-msgstr "Vernieuw deze pagina automatisch"
+msgstr ""
 
 #: ../../templates/show_democratic_playlist.inc.php:47
 msgid "Playing from base Playlist"
-msgstr "Speel van basis afspeellijst"
+msgstr ""
 
 #: ../../templates/show_democratic_playlist.inc.php:59
 #: ../../templates/show_democratic_playlist.inc.php:112
 msgid "Votes"
-msgstr "Stemmen"
+msgstr ""
 
 #: ../../templates/show_democratic_playlist.inc.php:85
 msgid "Remove Vote"
-msgstr "Verwijder stem"
+msgstr ""
 
 #: ../../templates/show_democratic_playlist.inc.php:89
 msgid "Add Vote"
-msgstr "Stem toevoegen"
+msgstr ""
 
 #: ../../templates/show_denied.inc.php:52
 #: ../../templates/sidebar_localplay.inc.php:82
 msgid "Access Denied"
-msgstr "Toegang verboden"
+msgstr ""
 
 #: ../../templates/show_denied.inc.php:53
 #: ../../templates/show_denied.inc.php:60
 msgid "This event has been logged."
-msgstr "Deze gebeurtenis is gelogd"
+msgstr ""
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
 "You have been redirected to this page because you do not have access to this "
 "function."
 msgstr ""
-"U bent naar deze pagina doorgestuurd omdat u geen toegang heeft tot deze "
-"functie."
 
 #: ../../templates/show_denied.inc.php:59
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
 msgstr ""
-"Als u denkt dat dit een fout is, neem dan contact op met de Ampache "
-"beheerder."
 
 #: ../../templates/show_denied.inc.php:64
 msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
 msgstr ""
-"U bent naar deze pagina doorgestuurd omdat de pagina die u probeerde te "
-"bezoeken uitgeschakeld is in de demo."
 
 #: ../../templates/show_disabled_songs.inc.php:33
 #: ../../templates/show_disabled_songs.inc.php:63
 msgid "Addition Time"
-msgstr "Tijd van toevoegen"
+msgstr ""
 
 #: ../../templates/show_duplicate.inc.php:23
 #: ../../templates/show_duplicate.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:33
 msgid "Find Duplicates"
-msgstr "Zoek dubbele"
+msgstr ""
 
 #: ../../templates/show_duplicate.inc.php:27
 msgid "Search Type"
-msgstr "Zoek type"
+msgstr ""
 
 #: ../../templates/show_duplicate.inc.php:30
 msgid "Artist and Title"
-msgstr "Artiest en titel"
+msgstr ""
 
 #: ../../templates/show_duplicate.inc.php:31
 msgid "Artist, Album and Title"
-msgstr "Artiest, album en titel"
+msgstr ""
 
 #: ../../templates/show_duplicates.inc.php:23
 msgid "Duplicate Songs"
-msgstr "Dubbele nummers"
+msgstr ""
 
 #: ../../templates/show_duplicates.inc.php:28
 #: ../../templates/show_duplicates.inc.php:66
@@ -6180,7 +6131,7 @@ msgstr "Dubbele nummers"
 #: ../../templates/show_tagcloud.inc.php:26
 #: ../../templates/sidebar_home.inc.php:174
 msgid "Song"
-msgstr "Nummer"
+msgstr ""
 
 #: ../../templates/show_duplicates.inc.php:31
 #: ../../templates/show_duplicates.inc.php:69
@@ -6188,57 +6139,57 @@ msgstr "Nummer"
 #: ../../templates/show_random.inc.php:66 ../../templates/show_song.inc.php:156
 #: ../../templates/show_video.inc.php:143
 msgid "Length"
-msgstr "Lengte"
+msgstr ""
 
 #: ../../templates/show_duplicates.inc.php:33
 #: ../../templates/show_duplicates.inc.php:71
 #: ../../templates/show_podcast_episode.inc.php:135
 msgid "Size"
-msgstr "Grootte"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:23
 msgid "Advanced Random Rules"
-msgstr "Geavanceerde Willekeurige Regels"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:26
 msgid "Field"
-msgstr "Veld"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:27
 msgid "Operator"
-msgstr "Operator"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:29
 msgid "Method"
-msgstr "Methode"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:51
 msgid "Like"
-msgstr "Als"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:59
 msgid "OR"
-msgstr "OF"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:60
 msgid "AND"
-msgstr "EN"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:66
 msgid "Add Rule"
-msgstr "Regel toevoegen"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:69
 msgid "Save Rules As"
-msgstr "Regel opslaan als"
+msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:72
 msgid "Load Saved Rules"
-msgstr "Opgeslagen regels laden"
+msgstr ""
 
 #: ../../templates/show_edit_access.inc.php:23
 msgid "Edit Access Control List"
-msgstr "Bewerk toegangs niveaus"
+msgstr ""
 
 #: ../../templates/show_edit_album_row.inc.php:47
 #: ../../templates/show_song.inc.php:147
@@ -6273,7 +6224,7 @@ msgstr ""
 
 #: ../../templates/show_edit_artist_row.inc.php:51
 msgid "Year Formed"
-msgstr "Jaar van oprichting"
+msgstr ""
 
 #: ../../templates/show_edit_artist_row.inc.php:68
 msgid "Overwrite tags of sub albums and sub songs"
@@ -6286,37 +6237,37 @@ msgstr ""
 #: ../../templates/show_edit_catalog.inc.php:23
 #, php-format
 msgid "Settings for %s"
-msgstr "Instelling voor %s"
+msgstr ""
 
 #: ../../templates/show_edit_catalog.inc.php:46
 msgid "Filename pattern"
-msgstr "Bestandsnaam patroon"
+msgstr ""
 
 #: ../../templates/show_edit_catalog.inc.php:63
 msgid "Save Catalog Settings"
-msgstr "Catalogus instellingen opslaan"
+msgstr ""
 
 #: ../../templates/show_edit_license.inc.php:23
 msgid "Configure License"
-msgstr "Configureer licentie"
+msgstr ""
 
 #: ../../templates/show_edit_license.inc.php:38
 msgid "Description:"
-msgstr "Beschrijving:"
+msgstr ""
 
 #: ../../templates/show_edit_license.inc.php:44
 msgid "External Link"
-msgstr "Externe link"
+msgstr ""
 
 #: ../../templates/show_edit_license.inc.php:51
 msgid "Confirm"
-msgstr "Bevestig"
+msgstr ""
 
 #: ../../templates/show_edit_playlist_row.inc.php:36
 #: ../../templates/show_edit_search_row.inc.php:36
 #: ../../templates/show_edit_user.inc.php:45
 msgid "Public"
-msgstr "Publiek"
+msgstr ""
 
 #: ../../templates/show_edit_podcast_episode_row.inc.php:35
 msgid "GUID"
@@ -6325,7 +6276,7 @@ msgstr ""
 #: ../../templates/show_edit_podcast_episode_row.inc.php:39
 #: ../../templates/show_podcast_episode.inc.php:125
 msgid "Author"
-msgstr "Auteur"
+msgstr ""
 
 #: ../../templates/show_edit_podcast_row.inc.php:27
 msgid "Feed"
@@ -6333,11 +6284,11 @@ msgstr ""
 
 #: ../../templates/show_edit_podcast_row.inc.php:39
 msgid "Language"
-msgstr "Taal"
+msgstr ""
 
 #: ../../templates/show_edit_podcast_row.inc.php:43
 msgid "Copyright"
-msgstr "Copyright"
+msgstr ""
 
 #: ../../templates/show_edit_search_row.inc.php:48
 msgid "Item Limit (0 = unlimited)"
@@ -6345,20 +6296,20 @@ msgstr ""
 
 #: ../../templates/show_edit_shout.inc.php:23
 msgid "Edit existing Shoutbox Post"
-msgstr "Bewerk bestaande shoutbox inzending"
+msgstr ""
 
 #. HINT: Client link, Object link
 #: ../../templates/show_edit_shout.inc.php:28
 #, php-format
 msgid "Created by: %s for %s"
-msgstr "Aangemaakt door: %s voor %s"
+msgstr ""
 
 #: ../../templates/show_edit_song_row.inc.php:55
 #: ../../templates/show_localplay_playlist.inc.php:33
 #: ../../templates/show_localplay_playlist.inc.php:67
 #: ../../templates/show_song_previews.inc.php:39
 msgid "Track"
-msgstr "Nummer"
+msgstr ""
 
 #: ../../templates/show_edit_song_row.inc.php:111
 msgid "More Metadata"
@@ -6378,7 +6329,7 @@ msgstr ""
 
 #: ../../templates/show_edit_tvshow_row.inc.php:31
 msgid "summary"
-msgstr "samenvatting"
+msgstr ""
 
 #: ../../templates/show_edit_tvshow_row.inc.php:44
 msgid "Overwrite tags of sub episodes"
@@ -6390,15 +6341,15 @@ msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:23
 msgid "Editing existing User"
-msgstr "Bewerk bestaande Gebruiker"
+msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:28
 msgid "User Properties"
-msgstr "Gebruiker instellingen"
+msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:128
 msgid "Other Options"
-msgstr "Overige opties"
+msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:140
 msgid "Config Preset"
@@ -6406,19 +6357,19 @@ msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:146
 msgid "Flash"
-msgstr "Markeer"
+msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:152
 msgid "Prevent Preset Override"
-msgstr "Voorkom overschrijving van de standaard."
+msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:154
 msgid "This Affects all non-Admin accounts"
-msgstr "Dit heeft effect op alle niet-Admin accounts"
+msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:166
 msgid "Update User"
-msgstr "Bewerk gebruiker"
+msgstr ""
 
 #: ../../templates/show_edit_video_row.inc.php:35
 #: ../../templates/show_video.inc.php:147
@@ -6430,15 +6381,15 @@ msgstr ""
 #: ../../templates/show_export.inc.php:28
 #: ../../templates/sidebar_admin.inc.php:49
 msgid "Export Catalog"
-msgstr "Exporteer catalogus"
+msgstr ""
 
 #: ../../templates/show_export.inc.php:49
 msgid "Format"
-msgstr "Formaat"
+msgstr ""
 
 #: ../../templates/show_export.inc.php:59
 msgid "Export"
-msgstr "Exporteren"
+msgstr ""
 
 #: ../../templates/show_gather_art.inc.php:23
 msgid "Art Search"
@@ -6450,15 +6401,15 @@ msgstr ""
 
 #: ../../templates/show_gather_art.inc.php:25
 msgid "Searched"
-msgstr "Doorzocht"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:23
 msgid "Customize Search"
-msgstr "Pas zoekopdracht aan"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:44
 msgid "Direct URL to Image"
-msgstr "Directe URL naar afbeelding"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:52
 msgid "Local Image"
@@ -6466,7 +6417,7 @@ msgstr ""
 
 #: ../../templates/show_get_art.inc.php:65
 msgid "Get Art"
-msgstr "Haal afbeelding op"
+msgstr ""
 
 #: ../../templates/show_graphs.inc.php:23
 msgid "Statistical Graphs"
@@ -6486,15 +6437,15 @@ msgstr ""
 
 #: ../../templates/show_graphs.inc.php:66
 msgid "Month"
-msgstr "Maand"
+msgstr ""
 
 #: ../../templates/show_graphs.inc.php:67
 msgid "Day"
-msgstr "Dag"
+msgstr ""
 
 #: ../../templates/show_graphs.inc.php:68
 msgid "Hour"
-msgstr "Uur"
+msgstr ""
 
 #: ../../templates/show_highest.inc.php:23
 #: ../../templates/show_newest.inc.php:23
@@ -6502,7 +6453,7 @@ msgstr "Uur"
 #: ../../templates/show_recent.inc.php:23
 #: ../../templates/sidebar_home.inc.php:128
 msgid "Information"
-msgstr "Informatie"
+msgstr ""
 
 #: ../../templates/show_html5_player_headers.inc.php:222
 msgid "Your browser doesn't support this feature."
@@ -6518,7 +6469,7 @@ msgstr ""
 
 #: ../../templates/show_html5_player.inc.php:502
 msgid "Slideshow"
-msgstr "Diashow"
+msgstr ""
 
 #: ../../templates/show_html5_player.inc.php:505
 msgid "Expand/Collapse Playlist"
@@ -6542,16 +6493,16 @@ msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:23
 msgid "Importing a Playlist from a File"
-msgstr "Importeer afspeellijst vanuit een bestand"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:35
 msgid "Import Playlist"
-msgstr "Importeer speellijst"
+msgstr ""
 
 #: ../../templates/show_index.inc.php:50
 #: ../../templates/show_random_albums.inc.php:26
 msgid "Albums of the Moment"
-msgstr "Huidige albums"
+msgstr ""
 
 #: ../../templates/show_index.inc.php:59
 #: ../../templates/show_random_videos.inc.php:26
@@ -6590,15 +6541,15 @@ msgstr ""
 
 #: ../../templates/show_install_account.inc.php:47
 msgid "Create Admin Account"
-msgstr "Maak een Beheer Account aan"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:69
 msgid "Create Account"
-msgstr "Maak Account aan"
+msgstr ""
 
 #: ../../templates/show_install_check.inc.php:28
 msgid "Requirements"
-msgstr "Vereisten"
+msgstr ""
 
 #: ../../templates/show_install_check.inc.php:32
 msgid ""
@@ -6629,17 +6580,17 @@ msgstr ""
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:59
 msgid "CHECK"
-msgstr "CONTROLEER"
+msgstr ""
 
 #: ../../templates/show_install_check.inc.php:45
 #: ../../templates/show_test.inc.php:60
 msgid "STATUS"
-msgstr "STATUS"
+msgstr ""
 
 #: ../../templates/show_install_check.inc.php:46
 #: ../../templates/show_test.inc.php:61
 msgid "DESCRIPTION"
-msgstr "OMSCHRIJVING"
+msgstr ""
 
 #: ../../templates/show_install_check.inc.php:50
 #: ../../templates/show_install_check.inc.php:55
@@ -6679,11 +6630,11 @@ msgstr ""
 
 #: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
-msgstr "Genereer configuratie bestand"
+msgstr ""
 
 #: ../../templates/show_install_config.inc.php:66
 msgid "Web Path"
-msgstr "Web Directorie"
+msgstr ""
 
 #: ../../templates/show_install_config.inc.php:71
 #: ../../templates/show_test_table.inc.php:227
@@ -6697,7 +6648,7 @@ msgstr ""
 #: ../../templates/show_install_config.inc.php:80
 #: ../../templates/show_install.inc.php:56
 msgid "MySQL Hostname"
-msgstr "MySQL Hostnaam"
+msgstr ""
 
 #: ../../templates/show_install_config.inc.php:86
 msgid "MySQL Port (optional)"
@@ -6705,11 +6656,11 @@ msgstr ""
 
 #: ../../templates/show_install_config.inc.php:92
 msgid "MySQL Username"
-msgstr "MySQl Gebruikersnaam"
+msgstr ""
 
 #: ../../templates/show_install_config.inc.php:98
 msgid "MySQL Password"
-msgstr "MySQL Wachtwoord"
+msgstr ""
 
 #: ../../templates/show_install_config.inc.php:108
 msgid "Installation type"
@@ -6747,7 +6698,7 @@ msgstr ""
 
 #: ../../templates/show_install_config.inc.php:130
 msgid "Transcoding"
-msgstr "Transcoderen"
+msgstr ""
 
 #: ../../templates/show_install_config.inc.php:132
 msgid ""
@@ -6864,11 +6815,11 @@ msgstr ""
 #: ../../templates/show_install_config.inc.php:294
 #: ../../templates/show_install.inc.php:130
 msgid "Skip"
-msgstr "Sla over"
+msgstr ""
 
 #: ../../templates/show_install_config.inc.php:297
 msgid "Create config"
-msgstr "Configuratie maken"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:39
 msgid ""
@@ -6879,257 +6830,257 @@ msgstr ""
 
 #: ../../templates/show_install.inc.php:47
 msgid "Insert Ampache Database"
-msgstr "Ampache Database toevoegen"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:50
 msgid "Desired Database Name"
-msgstr "Gewenste database naam"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:62
 msgid "MySQL port (optional)"
-msgstr "MySQL poort (optioneel)"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:68
 msgid "MySQL Administrative Username"
-msgstr "MySQl Administratieve Gebruikersnaam"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Password"
-msgstr "MySQl Administratieve wachtwoord"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:80
 msgid "Create Database"
-msgstr "Database maken"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:90
 msgid "Overwrite if database already exists"
-msgstr "Database overschrijven als deze al bestaat"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:99
 msgid "Create Tables"
-msgstr "Tabellen aanmaken"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:108
 msgid "Create Database User"
-msgstr "Maak database gebruiker aan"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:118
 msgid "Ampache Database Username"
-msgstr "Ampache Database Gebruikersnaam"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:124
 msgid "Ampache Database User Password"
-msgstr "Ampache Database Gebruikers wachtwoord"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:133
 msgid "Insert Database"
-msgstr "Database aanmaken"
+msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:30
 msgid "Choose Installation Language"
-msgstr "Kies installatie taal"
+msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:50
 msgid "Start configuration"
-msgstr "Start configuratie"
+msgstr ""
 
 #. HINT: Username
 #: ../../templates/show_ip_history.inc.php:23
 #, php-format
 msgid "%s IP History"
-msgstr "%s IP Geschiedenis"
+msgstr ""
 
 #: ../../templates/show_ip_history.inc.php:30
 msgid "Show Unique"
-msgstr "Laat unieke zien"
+msgstr ""
 
 #: ../../templates/show_ip_history.inc.php:35
 msgid "Show All"
-msgstr "Alles weergeven"
+msgstr ""
 
 #: ../../templates/show_ip_history.inc.php:50
 #: ../../templates/show_ip_history.inc.php:66
 msgid "IP Address"
-msgstr "IP-Adres"
+msgstr ""
 
 #: ../../templates/show_label.inc.php:71 ../../templates/show_label.inc.php:72
 msgid "Send e-mail"
-msgstr "Verzend e-mail"
+msgstr ""
 
 #: ../../templates/show_label.inc.php:79 ../../templates/show_label.inc.php:82
 msgid "Label edit"
-msgstr "Beschrijving aanpassen"
+msgstr ""
 
 #: ../../templates/show_label.inc.php:83
 msgid "Edit Label"
-msgstr "Beschrijving aanpassen"
+msgstr ""
 
 #: ../../templates/show_labels.inc.php:29
 msgid "Create a new label"
-msgstr "Maak nieuwe beschrijving"
+msgstr ""
 
 #: ../../templates/show_labels.inc.php:65
 msgid "No label found"
-msgstr "Geen beschrijving gevonden"
+msgstr ""
 
 #: ../../templates/show_live_stream.inc.php:25
 #: ../../templates/show_song.inc.php:26 ../../templates/show_video.inc.php:24
 msgid "Details"
-msgstr "Details"
+msgstr ""
 
 #: ../../templates/show_live_stream_row.inc.php:28
 msgid "Play live stream"
-msgstr "Livestream afspelen"
+msgstr ""
 
 #: ../../templates/show_live_stream_row.inc.php:46
 msgid "Live Stream edit"
-msgstr "Livestream aanpassen"
+msgstr ""
 
 #: ../../templates/show_live_streams.inc.php:25
 msgid "Manage Radio Stations"
-msgstr "Beheer radio stations"
+msgstr ""
 
 #: ../../templates/show_live_streams.inc.php:63
 msgid "No live stream found"
-msgstr "Geen livestream gevonden"
+msgstr ""
 
 #: ../../templates/show_localplay_add_instance.inc.php:23
 msgid "Add Localplay Instance"
-msgstr "Lokaal afspelen instantie toevoegen"
+msgstr ""
 
 #: ../../templates/show_localplay_add_instance.inc.php:36
 #: ../../templates/sidebar_localplay.inc.php:42
 msgid "Add Instance"
-msgstr "Instantie toevoegen"
+msgstr ""
 
 #: ../../templates/show_localplay_control.inc.php:24
 msgid "Previous"
-msgstr "Vorige"
+msgstr ""
 
 #: ../../templates/show_localplay_control.inc.php:25
 msgid "Stop"
-msgstr "Stop"
+msgstr ""
 
 #: ../../templates/show_localplay_control.inc.php:26
 msgid "Pause"
-msgstr "Pause"
+msgstr ""
 
 #: ../../templates/show_localplay_edit_instance.inc.php:23
 msgid "Edit Localplay Instance"
-msgstr "Bewerk lokaal afspelen instantie"
+msgstr ""
 
 #: ../../templates/show_localplay_edit_instance.inc.php:36
 msgid "Update Instance"
-msgstr "Bewerk instantie"
+msgstr ""
 
 #: ../../templates/show_localplay_instances.inc.php:23
 msgid "Show Localplay Instances"
-msgstr "Lokaal afspeel instanties weergeven"
+msgstr ""
 
 #: ../../templates/show_localplay_instances.inc.php:49
 msgid "Edit Instance"
-msgstr "Bewerk instantie"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:30
 msgid "Localplay Control"
-msgstr "Lokaal afspelen Control"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:35
 msgid "Mute"
-msgstr "Mute"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:36
 msgid "Decrease Volume"
-msgstr "Verminder volume"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:37
 msgid "Increase Volume"
-msgstr "Verhoog volume"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:38
 msgid "Volume"
-msgstr "volume"
+msgstr ""
 
 #: ../../templates/show_localplay_status.inc.php:43
 msgid "Repeat"
-msgstr "Herhaal"
+msgstr ""
 
 #: ../../templates/show_login_form.inc.php:65
 msgid "Remember Me"
-msgstr "Onthoud mij"
+msgstr ""
 
 #: ../../templates/show_login_form.inc.php:71
 msgid "Lost password"
-msgstr "Wachtwoord vergeten"
+msgstr ""
 
 #: ../../templates/show_login_form.inc.php:89
 msgid "Message of the Day"
-msgstr "Bericht van de dag"
+msgstr ""
 
 #: ../../templates/show_lostpassword_form.inc.php:60
 msgid "Submit"
-msgstr "Verzend"
+msgstr ""
 
 #: ../../templates/show_lyrics.inc.php:61
 msgid "No lyrics found."
-msgstr "Geen songtekst gevonden."
+msgstr ""
 
 #: ../../templates/show_lyrics.inc.php:64
 msgid "Show more"
-msgstr "Meer"
+msgstr ""
 
 #: ../../templates/show_mail_users.inc.php:24
 msgid "Send E-mail to Users"
-msgstr "Verzend e-mail naar gebruikers"
+msgstr ""
 
 #: ../../templates/show_mail_users.inc.php:28
 msgid "Mail to"
-msgstr "Mail naar"
+msgstr ""
 
 #: ../../templates/show_mail_users.inc.php:34
 msgid "Inactive Users"
-msgstr "Inactieve gebruikers"
+msgstr ""
 
 #: ../../templates/show_mail_users.inc.php:39
 msgid "From"
-msgstr "van"
+msgstr ""
 
 #: ../../templates/show_mail_users.inc.php:42
 msgid "Yourself"
-msgstr "Uwzelf"
+msgstr ""
 
 #: ../../templates/show_mail_users.inc.php:61
 msgid "Send Mail"
-msgstr "e-Mail verzenden"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:23
 #: ../../templates/sidebar_admin.inc.php:27
 msgid "Show Catalogs"
-msgstr "Catalogussen bekijken"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:27
 msgid "Gather All Art"
-msgstr "Verzamel alle afbeeldingen"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:30
 msgid "Show disabled songs"
-msgstr "Laat uitgeschakelde nummers zien"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:33
 msgid "Add to All"
-msgstr "Voeg toe aan alle"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:36
 msgid "Verify All"
-msgstr "Verifieer alle"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:39
 msgid "Clean All"
-msgstr "Schoon alle"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:42
 msgid "Update All"
-msgstr "Werk alle bij"
+msgstr ""
 
 #. HINT: /data/myNewMusic
 #: ../../templates/show_manage_catalogs.inc.php:51
@@ -7145,7 +7096,7 @@ msgstr ""
 
 #: ../../templates/show_manage_democratic.inc.php:23
 msgid "Manage Democratic Playlists"
-msgstr "Beheer democratische afspeellijsten"
+msgstr ""
 
 #: ../../templates/show_manage_democratic.inc.php:56
 msgid "No democratic found"
@@ -7153,31 +7104,31 @@ msgstr ""
 
 #: ../../templates/show_manage_democratic.inc.php:63
 msgid "Create New Playlist"
-msgstr "Afspeellijst aanmaken"
+msgstr ""
 
 #: ../../templates/show_manage_license.inc.php:28
 msgid "Create new license"
-msgstr "Nieuwe licentie maken"
+msgstr ""
 
 #: ../../templates/show_manage_license.inc.php:51
 msgid "No Licenses Found"
-msgstr "Geen licenties gevonden"
+msgstr ""
 
 #: ../../templates/show_manage_shoutbox.inc.php:28
 #: ../../templates/show_manage_shoutbox.inc.php:59
 #: ../../templates/show_shared_objects.inc.php:26
 msgid "Object"
-msgstr "Object"
+msgstr ""
 
 #: ../../templates/show_manage_shoutbox.inc.php:30
 #: ../../templates/show_manage_shoutbox.inc.php:61
 msgid "Sticky"
-msgstr "Sticky"
+msgstr ""
 
 #: ../../templates/show_manage_shoutbox.inc.php:32
 #: ../../templates/show_manage_shoutbox.inc.php:63
 msgid "Date Added"
-msgstr "Datum toegevoegd"
+msgstr ""
 
 #: ../../templates/show_mashup.inc.php:27
 msgid "Browse Library"
@@ -7190,12 +7141,12 @@ msgstr ""
 #: ../../templates/show_mashup.inc.php:41
 #: ../../templates/sidebar_home.inc.php:131
 msgid "Newest"
-msgstr "Nieuwste"
+msgstr ""
 
 #: ../../templates/show_mashup.inc.php:51
 #: ../../templates/sidebar_home.inc.php:132
 msgid "Popular"
-msgstr "Populair"
+msgstr ""
 
 #: ../../templates/show_missing_album.inc.php:54
 msgid "Wanted actions"
@@ -7203,70 +7154,70 @@ msgstr ""
 
 #: ../../templates/show_missing_albums.inc.php:49
 msgid "No missing albums found"
-msgstr "Geen ontbrekende albums gevonden"
+msgstr ""
 
 #: ../../templates/show_missing_artists.inc.php:47
 msgid "No missing artists found"
-msgstr "Geen ontbrekende artiesten gevonden"
+msgstr ""
 
 #: ../../templates/show_now_playing_row.inc.php:88
 #: ../../templates/show_now_playing_similar.inc.php:56
 msgid "Similar Songs"
-msgstr "Vergelijkbare nummers"
+msgstr ""
 
 #: ../../templates/show_object_rating.inc.php:47
 msgid "Current rating: "
-msgstr "Huidige waardering: "
+msgstr ""
 
 #: ../../templates/show_object_rating.inc.php:49
 msgid "not rated yet"
-msgstr "nog geen waardering"
+msgstr ""
 
 #: ../../templates/show_object_rating.inc.php:51
 #, php-format
 msgid "%s of 5"
-msgstr "%s van 5"
+msgstr ""
 
 #: ../../templates/show_partial_edit_movie_row.inc.php:24
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:30
 msgid "Original Name"
-msgstr "Originele naam"
+msgstr ""
 
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:24
 msgid "TV Show Season"
-msgstr "TV show seizoen"
+msgstr ""
 
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:38
 msgid "Episode Number"
-msgstr "Aflevering nummer"
+msgstr ""
 
 #: ../../templates/show_playlist.inc.php:66
 #: ../../templates/show_playlist.inc.php:67
 msgid "Sort Tracks by Artist, Album, Song"
-msgstr "Sorteer nummers op Artiest, Album, Naam"
+msgstr ""
 
 #: ../../templates/show_playlist.inc.php:70
 #: ../../templates/show_playlist.inc.php:71
 msgid "Remove duplicates"
-msgstr "Verwijder duplicaten"
+msgstr ""
 
 #: ../../templates/show_playlist.inc.php:114
 msgid "Create channel"
-msgstr "Maak kanaal"
+msgstr ""
 
 #: ../../templates/show_playlist.inc.php:122
 #: ../../templates/show_playlist_row.inc.php:99
 msgid "Do you really want to delete the playlist?"
-msgstr "Wil je echt deze afspeellijst verwijderen?"
+msgstr ""
 
 #: ../../templates/show_playlist_media_row.inc.php:93
 #: ../../templates/show_song_row.inc.php:140
 msgid "Reorder"
-msgstr "Herorder"
+msgstr ""
 
 #: ../../templates/show_playlist_row.inc.php:96
 msgid "Playlist edit"
-msgstr "Afspeellijst bewerken"
+msgstr ""
 
 #: ../../templates/show_playlists_dialog.inc.php:26
 msgid "Playlist name"
@@ -7287,11 +7238,11 @@ msgstr ""
 #: ../../templates/show_searches.inc.php:47
 #: ../../templates/show_searches.inc.php:77
 msgid "Owner"
-msgstr "Eigenaar"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:76
 msgid "No playlist found"
-msgstr "Geen afspeellijst gevonden"
+msgstr ""
 
 #: ../../templates/show_playlist_title.inc.php:23
 #, php-format
@@ -7301,15 +7252,15 @@ msgstr ""
 #: ../../templates/show_plugins.inc.php:32
 #: ../../templates/show_plugins.inc.php:74
 msgid "Installed Version"
-msgstr "Geinstalleerde versie"
+msgstr ""
 
 #: ../../templates/show_plugins.inc.php:46
 msgid "Deactivate"
-msgstr "Deactiveren"
+msgstr ""
 
 #: ../../templates/show_plugins.inc.php:50
 msgid "Upgrade"
-msgstr "Upgrade"
+msgstr ""
 
 #: ../../templates/show_podcast_episode.inc.php:97
 #: ../../templates/show_song.inc.php:108 ../../templates/show_video.inc.php:117
@@ -7361,17 +7312,17 @@ msgstr ""
 
 #: ../../templates/show_preference_admin.inc.php:23
 msgid "Preference Administration"
-msgstr "Beheer standaarden"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:48
 #: ../../templates/show_preference_box.inc.php:99
 msgid "Apply to All"
-msgstr "Pas toe op alles"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:49
 #: ../../templates/show_preference_box.inc.php:100
 msgid "Access Level"
-msgstr "Toegangs niveau"
+msgstr ""
 
 #. HINT: Username
 #. HINT: Editing Username preferences
@@ -7379,21 +7330,21 @@ msgstr "Toegangs niveau"
 #: ../../templates/show_user_preferences.inc.php:29
 #, php-format
 msgid "Editing %s preferences"
-msgstr "Bewerken van %s instellingen"
+msgstr ""
 
 #: ../../templates/show_preferences.inc.php:36
 #: ../../templates/show_user_preferences.inc.php:53
 msgid "Update Preferences"
-msgstr "Instellingen aanpassen"
+msgstr ""
 
 #: ../../templates/show_pvmsg.inc.php:26
 msgid "Sent by"
-msgstr "Verzonden door"
+msgstr ""
 
 #: ../../templates/show_pvmsg.inc.php:34
 #: ../../templates/show_pvmsg_row.inc.php:31
 msgid "Reply"
-msgstr "Antwoord"
+msgstr ""
 
 #: ../../templates/show_pvmsgs.inc.php:37
 msgid "Compose"
@@ -7423,21 +7374,21 @@ msgstr ""
 #: ../../templates/show_random_albums.inc.php:24
 #: ../../templates/show_random_videos.inc.php:24
 msgid "Refresh"
-msgstr "Vernieuwen"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:23
 msgid "Play Random Selection"
-msgstr "Speel willekeurige selectie"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:47
 msgid "Item count"
-msgstr "Item aantal"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:74
 #: ../../templates/show_random.inc.php:98
 #: ../../templates/show_search_form.inc.php:56
 msgid "Unlimited"
-msgstr "Ongelimiteerd"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:80
 #, php-format
@@ -7455,16 +7406,16 @@ msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:91
 msgid "Size Limit"
-msgstr "Grootte Limiet"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:114
 msgid "Enqueue"
-msgstr "Plaats in wachtrij"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:35
 #: ../../templates/show_recently_played.inc.php:165
 msgid "Last Played"
-msgstr "Laatst gespeeld"
+msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:38
 #: ../../templates/show_recently_played.inc.php:168
@@ -7540,11 +7491,11 @@ msgstr ""
 #: ../../templates/show_user_registration.inc.php:37
 #: ../../templates/show_user_registration.inc.php:48
 msgid "Registration"
-msgstr "Registratie"
+msgstr ""
 
 #: ../../templates/show_registration_confirmation.inc.php:40
 msgid "Registration Complete"
-msgstr "Registratie Compleet"
+msgstr ""
 
 #: ../../templates/show_registration_confirmation.inc.php:46
 msgid "Your account has been created."
@@ -7562,11 +7513,11 @@ msgstr ""
 
 #: ../../templates/show_registration_confirmation.inc.php:55
 msgid "Return to Login Page"
-msgstr "Terug naar de login pagina"
+msgstr ""
 
 #: ../../templates/show_rules.inc.php:33
 msgid "Rules"
-msgstr "Regels"
+msgstr ""
 
 #: ../../templates/show_rules.inc.php:37
 msgid "Match"
@@ -7586,7 +7537,7 @@ msgstr ""
 
 #: ../../templates/show_search_bar.inc.php:25
 msgid "Search..."
-msgstr "Zoeken..."
+msgstr ""
 
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
@@ -7598,7 +7549,7 @@ msgstr ""
 
 #: ../../templates/show_search_bar.inc.php:48
 msgid "Advanced Search"
-msgstr "Geavenceerd zoeken"
+msgstr ""
 
 #: ../../templates/show_searches.inc.php:29
 msgid "Add Smart Playlist"
@@ -7615,11 +7566,11 @@ msgstr ""
 
 #: ../../templates/show_search_form.inc.php:23
 msgid "Search Ampache"
-msgstr "Doorzoek Ampache"
+msgstr ""
 
 #: ../../templates/show_search_form.inc.php:53
 msgid "Maximum Results"
-msgstr "Maximum resultaten"
+msgstr ""
 
 #: ../../templates/show_search_form.inc.php:80
 msgid "Save as Smart Playlist"
@@ -7628,20 +7579,20 @@ msgstr ""
 #: ../../templates/show_search.inc.php:41
 #: ../../templates/show_search.inc.php:42
 msgid "Add All"
-msgstr "Alles toevoegen"
+msgstr ""
 
 #: ../../templates/show_search.inc.php:60
 msgid "Save Changes"
-msgstr "Veranderingen opslaan"
+msgstr ""
 
 #: ../../templates/show_search_options.inc.php:23
 msgid "Options"
-msgstr "Opties"
+msgstr ""
 
 #: ../../templates/show_search_options.inc.php:27
 #: ../../templates/show_search_options.inc.php:28
 msgid "Add Search Results"
-msgstr "Zoek resultaat toevoegen"
+msgstr ""
 
 #: ../../templates/show_search_row.inc.php:60
 msgid "Smart Playlist edit"
@@ -7719,7 +7670,7 @@ msgstr ""
 
 #: ../../templates/show_song_row.inc.php:95
 msgid "Song Information"
-msgstr "Lied informatie"
+msgstr ""
 
 #: ../../templates/show_song_row.inc.php:115
 msgid "Song edit"
@@ -7735,19 +7686,19 @@ msgstr ""
 
 #: ../../templates/show_stats.inc.php:31
 msgid "Connected Users"
-msgstr "Actieve gebruikers"
+msgstr ""
 
 #: ../../templates/show_stats.inc.php:32
 msgid "Total Users"
-msgstr "Gebruikers totaal"
+msgstr ""
 
 #: ../../templates/show_stats.inc.php:38 ../../templates/show_stats.inc.php:77
 msgid "Catalog Size"
-msgstr "Catalogus Grootte"
+msgstr ""
 
 #: ../../templates/show_stats.inc.php:39
 msgid "Catalog Time"
-msgstr "Catalogus Tijd"
+msgstr ""
 
 #: ../../templates/show_tagcloud.inc.php:60
 msgid "Tag edit"
@@ -7761,7 +7712,7 @@ msgstr ""
 #: ../../templates/show_test.inc.php:44
 #: ../../templates/sidebar_admin.inc.php:47
 msgid "Ampache Debug"
-msgstr "Ampache Debug"
+msgstr ""
 
 #: ../../templates/show_test.inc.php:48
 msgid ""
@@ -8018,8 +7969,6 @@ msgid ""
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
 msgstr ""
-"Deze test controleert of de web_path instelling goed is ingesteld. Als je "
-"hier geen vinkje ziet staan, dan is de instelling niet goed. "
 
 #: ../../templates/show_tvshow.inc.php:84
 #: ../../templates/show_tvshow.inc.php:87
@@ -8051,11 +8000,11 @@ msgstr ""
 
 #: ../../templates/show_update_items.inc.php:23
 msgid "Starting Update from Tags"
-msgstr "Start met bijwerken vanuit Tags"
+msgstr ""
 
 #: ../../templates/show_update_items.inc.php:27
 msgid "Update from Tags Complete"
-msgstr "Bijwerken vanuit Tags voltooid"
+msgstr ""
 
 #: ../../templates/show_uploads.inc.php:23
 #: ../../templates/sidebar_home.inc.php:157
@@ -8068,21 +8017,21 @@ msgstr ""
 
 #: ../../templates/show_user_activate.inc.php:47
 msgid "User Activated"
-msgstr "Gebruiker geactiveerd"
+msgstr ""
 
 #. HINT: Start A tag, End A tag
 #: ../../templates/show_user_activate.inc.php:51
 #, php-format
 msgid "This User ID is activated and can be used %sLogin%s"
-msgstr "Dit gebruikers account is geactiveerd en kan gebruikt worden %sLogin%s"
+msgstr ""
 
 #: ../../templates/show_user_activate.inc.php:56
 msgid "Validation Failed"
-msgstr "Validatie mislukt"
+msgstr ""
 
 #: ../../templates/show_user_activate.inc.php:57
 msgid "The validation key used isn't correct"
-msgstr "De validatie sleutel is onjuist"
+msgstr ""
 
 #: ../../templates/show_userflag.inc.php:23
 msgid "User Favorites"
@@ -8104,24 +8053,24 @@ msgstr ""
 #: ../../templates/show_user.inc.php:79 ../../templates/show_users.inc.php:50
 #: ../../templates/show_users.inc.php:87
 msgid "Last Seen"
-msgstr "Laatst gezien"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:84 ../../templates/show_users.inc.php:54
 #: ../../templates/show_users.inc.php:91
 msgid "Activity"
-msgstr "Activiteit"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:96
 msgid "Status"
-msgstr "Status"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:100
 msgid "User is Online Now"
-msgstr "Gebruiker is online"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:104
 msgid "User is Offline Now"
-msgstr "Gebruiker is offline"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:123 ../../templates/show_users.inc.php:64
 #: ../../templates/show_users.inc.php:101
@@ -8138,19 +8087,19 @@ msgstr ""
 
 #: ../../templates/show_user.inc.php:136
 msgid "Active Playlist"
-msgstr "Huidige afspeellijst"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:66
 msgid "User Agreement"
-msgstr "Gebruikers overeenkomst"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:73
 msgid "I Accept"
-msgstr "Ik ga akkoord"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:79
 msgid "User Information"
-msgstr "Gebruikers informatie"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:150
 msgid "* Required fields"
@@ -8158,23 +8107,23 @@ msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:162
 msgid "Register User"
-msgstr "Registreer gebruiker"
+msgstr ""
 
 #: ../../templates/show_users.inc.php:49 ../../templates/show_users.inc.php:86
 msgid "Fullname"
-msgstr "Volledige naam"
+msgstr ""
 
 #: ../../templates/show_users.inc.php:51 ../../templates/show_users.inc.php:88
 msgid "Registration Date"
-msgstr "Registratie datum"
+msgstr ""
 
 #: ../../templates/show_users.inc.php:57 ../../templates/show_users.inc.php:94
 msgid "Last Ip"
-msgstr "Laatste IP-Adres"
+msgstr ""
 
 #: ../../templates/show_users.inc.php:68 ../../templates/show_users.inc.php:105
 msgid "On-line"
-msgstr "Online"
+msgstr ""
 
 #: ../../templates/show_verify_catalog.inc.php:23
 msgid "Verify Catalog"
@@ -8184,7 +8133,7 @@ msgstr ""
 #: ../../templates/show_verify_catalog.inc.php:25
 #, php-format
 msgid "Updating the %s catalog"
-msgstr "Bijwerken van catalogus %s"
+msgstr ""
 
 #: ../../templates/show_verify_catalog.inc.php:27
 msgid "Verified"
@@ -8198,7 +8147,7 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:46
 #: ../../templates/show_videos.inc.php:111
 msgid "Resolution"
-msgstr "Resolutie"
+msgstr ""
 
 #: ../../templates/show_video.inc.php:150
 msgid "Display"
@@ -8255,32 +8204,32 @@ msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:31
 msgid "User Tools"
-msgstr "Gebruiker Tools"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:34
 msgid "Browse Users"
-msgstr "Gebruikers bekijken"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:39
 msgid "Add ACL"
-msgstr "Toegangs niveau toevoegen"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:40
 msgid "Show ACL(s)"
-msgstr "Toegans niveaus bekijken"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:45
 #: ../../templates/sidebar_modules.inc.php:31
 msgid "Other Tools"
-msgstr "Overige Gereedschappen"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:48
 msgid "Clear Now Playing"
-msgstr "Leeg nu speelt"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:52
 msgid "Manage Shoutbox"
-msgstr "Beheer shoutbox"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:57
 msgid "Manage Licenses"
@@ -8288,7 +8237,7 @@ msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:64
 msgid "Server Config"
-msgstr "Server configuratie"
+msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:32
 msgid "Song Titles"
@@ -8300,11 +8249,11 @@ msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:98
 msgid "Currently Playing"
-msgstr "Nu aan het spelen"
+msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:118
 msgid "Import"
-msgstr "Importeren"
+msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:130
 msgid "Recent"
@@ -8316,16 +8265,16 @@ msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:178
 msgid "Advanced"
-msgstr "Geavanceerd"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:38
 #: ../../templates/sidebar_modules.inc.php:24
 msgid "Modules"
-msgstr "Modules"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:63
 msgid "Logout"
-msgstr "Uitloggen"
+msgstr ""
 
 #: ../../templates/sidebar.light.inc.php:33
 msgid "Radio"
@@ -8333,31 +8282,31 @@ msgstr ""
 
 #: ../../templates/sidebar_localplay.inc.php:43
 msgid "Show instances"
-msgstr "Instanties bekijken"
+msgstr ""
 
 #: ../../templates/sidebar_localplay.inc.php:46
 msgid "Show Playlist"
-msgstr "Afspeellijst bekijken"
+msgstr ""
 
 #: ../../templates/sidebar_localplay.inc.php:51
 msgid "Active Instance"
-msgstr "Actieve instanties"
+msgstr ""
 
 #: ../../templates/sidebar_localplay.inc.php:71
 msgid "Localplay Disabled"
-msgstr "Lokaal afspelen gedeactiveerd"
+msgstr ""
 
 #: ../../templates/sidebar_localplay.inc.php:74
 msgid "Allow Localplay set to False"
-msgstr "Lokaal afspelen is uitgeschakeld"
+msgstr ""
 
 #: ../../templates/sidebar_localplay.inc.php:78
 msgid "Localplay Controller Not Defined"
-msgstr "Lokaal afspelen niet ingesteld (Controller)"
+msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:26
 msgid "Localplay Modules"
-msgstr "Lokaal afspeel modules"
+msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:27
 msgid "Catalog Modules"
@@ -8365,19 +8314,19 @@ msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:28
 msgid "Available Plugins"
-msgstr "Aanwezige plugins"
+msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:34
 msgid "Mail Users"
-msgstr "Mail gebruikers"
+msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:42
 msgid "Manage Playlist"
-msgstr "Beheer afspeellijst"
+msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:41
 msgid "Account"
-msgstr "Account"
+msgstr ""
 
 #: ../../themes/reborn/templates/upnp/control-reply.php:46
 #: ../../upnp/control-reply.php:46
@@ -8431,7 +8380,7 @@ msgstr ""
 
 #: ../../update.php:91
 msgid "Update Now!"
-msgstr "Nu Bijwerken!"
+msgstr ""
 
 #: ../../video.php:35 ../../video.php:55 ../../video.php:57
 msgid "Video Deletion"
@@ -8458,15 +8407,15 @@ msgstr ""
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
-msgstr "Downloads toestaan"
+msgstr ""
 
 #: Database preference table id 4
 msgid "Popular Threshold"
-msgstr "Populair drempel"
+msgstr ""
 
 #: Database preference table id 19
 msgid "Transcode Bitrate"
-msgstr "Transcodeer Bitrate"
+msgstr ""
 
 #: Database preference table id 22
 msgid "Website Title"
@@ -8474,15 +8423,15 @@ msgstr ""
 
 #: Database preference table id 23
 msgid "Lock Songs"
-msgstr "Liedjes slot"
+msgstr ""
 
 #: Database preference table id 24
 msgid "Forces Http play regardless of port"
-msgstr "Forceer HTTP afspelen onafhankelijk van welke poort"
+msgstr ""
 
 #: Database preference table id 29
 msgid "Type of Playback"
-msgstr "Manier van afspelen"
+msgstr ""
 
 # is already in the source code
 # but to avoid confusion, it's added and commented
@@ -8490,47 +8439,47 @@ msgstr "Manier van afspelen"
 # msgstr ""
 #: Database preference table id 31 32
 msgid "Playlist Type"
-msgstr "Afspeellijst type"
+msgstr ""
 
 #: Database preference table id 33
 msgid "Theme"
-msgstr "Thema"
+msgstr ""
 
 #: Database preference table id 40
 msgid "Localplay Access"
-msgstr "Lokaal afspelen toestaan"
+msgstr ""
 
 #: Database preference table id 41
 msgid "Localplay Type"
-msgstr "Lokaal Afspelen Type"
+msgstr ""
 
 #: Database preference table id 44
 msgid "Allow Streaming"
-msgstr "Streaming toestaan"
+msgstr ""
 
 #: Database preference table id 45
 msgid "Allow Democratic Play"
-msgstr "Democratisch afspelen toestaan"
+msgstr ""
 
 #: Database preference table id 46
 msgid "Allow Localplay Play"
-msgstr "Lokaal afspelen toestaan"
+msgstr ""
 
 #: Database preference table id 47
 msgid "Statistics Day Threshold"
-msgstr "Statistieken per dag drempel"
+msgstr ""
 
 #: Database preference table id 51
 msgid "Offset Limit"
-msgstr "Offset limiet"
+msgstr ""
 
 #: Database preference table id 52
 msgid "Rate Limit"
-msgstr "Waardering limiet"
+msgstr ""
 
 #: Database preference table id 53
 msgid "Playlist Method"
-msgstr "Afspeellijst methode"
+msgstr ""
 
 # is already in the source code
 # but to avoid confusion, it's added and commented

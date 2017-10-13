@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-08-09 19:58+0200\n"
-"PO-Revision-Date: 2017-08-03 10:33+0000\n"
+"POT-Creation-Date: 2017-10-12 06:13+0200\n"
+"PO-Revision-Date: 2017-09-23 21:11+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/"
 "language/de_DE/)\n"
@@ -1746,7 +1746,7 @@ msgstr "Katalog konnte nicht hinzugefügt werden, überprüfe die Log-Dateien"
 msgid "No Update Needed"
 msgstr "Es wird keine Aktualisierung benötigt."
 
-#: ../../lib/class/catalog.class.php:1818
+#: ../../lib/class/catalog.class.php:1846
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
@@ -1755,21 +1755,21 @@ msgstr[0] ""
 msgstr[1] ""
 "Der Katalog wurde erfolgreich gesäubert. Es wurden %d Dateien entfernt."
 
-#: ../../lib/class/catalog.class.php:1843
+#: ../../lib/class/catalog.class.php:1871
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 "Katalog wurde erfolgreich überprüft. %d von %d Dateien wurden aktualisiert."
 
-#: ../../lib/class/catalog.class.php:2057
+#: ../../lib/class/catalog.class.php:2085
 msgid "Failed to create playlist."
 msgstr "Beim erstellen der Playlist ist ein Fehler aufgetreten."
 
-#: ../../lib/class/catalog.class.php:2074
+#: ../../lib/class/catalog.class.php:2102
 msgid "No valid songs found in playlist file."
 msgstr "Keine gültigen Songs in der Playlist gefunden."
 
-#: ../../lib/class/catalog.class.php:2430
+#: ../../lib/class/catalog.class.php:2458
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -3724,7 +3724,7 @@ msgstr ""
 
 #: ../../modules/catalog/beets/beets.catalog.php:114
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:115
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:195
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:208
 #: ../../modules/catalog/local/local.catalog.php:201
 #: ../../modules/catalog/remote/remote.catalog.php:162
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:183
@@ -3741,114 +3741,115 @@ msgstr "Beets Server-URI"
 msgid "Error: Beets selected, but path is not a URL"
 msgstr "Fehler: Beets wurde ausgewählt, jedoch ist der Pfad keine URL"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:68
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Go to https://www.dropbox.com/developers/apps/create"
 msgstr "Öffne https://www.dropbox.com/developers/apps/create"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:69
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:74
 msgid "Select 'Dropbox API app'"
 msgstr "Wähle 'Dropbox API app'"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:70
-msgid "Select 'Files and datastores'"
-msgstr "Wähle 'Files and datastores'"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:75
+#, fuzzy
+msgid "Select 'Full Dropbox'"
+msgstr "Wähle 'Dropbox API app'"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:71
-msgid "Select 'No' at 'Can your app be limited to its own, private folder?'"
-msgstr "Wähle 'No' at 'Can your app be limited to its own, private folder?'"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:72
-msgid ""
-"Select 'Specific file types' at 'What type of files does your app need "
-"access to?'"
-msgstr ""
-"Wähle 'Specific file types' at 'What type of files does your app need access "
-"to?'"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:73
-msgid "Check Videos and Audio files"
-msgstr "Hake 'Videos' und 'Audio files' an"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:74
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Give a name to your application and create it"
 msgstr "Gib deiner App einen Namen und erstelle sie"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:76
-msgid "Copy your App key and App secret in the following fields."
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:77
+msgid "Click the 'Generate' button to create an Access Token"
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:78
+#, fuzzy
+msgid ""
+"Copy your App key and App secret and Access Token into the following fields."
 msgstr ""
 "Kopiere deinen 'App key' und dein 'App secret' in die folgenden Felder."
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:77
-msgid ""
-"After preparing the catalog with pressing the 'Add catalog' button,<br /> "
-"you have to 'Make it ready' on the catalog table."
-msgstr ""
-"Nachdem Du den Katalog mit einem Klick auf 'Katalog hinzufügen' vorbereitet "
-"hast, <br /> musst Du ihn noch in der Katalogtabelle 'Bereit stellen'."
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:115
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:116
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:118
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:108
 #: ../../templates/show_add_share.inc.php:35
 msgid "Secret"
 msgstr "Geheime Phrase"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:117
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:119
+#, fuzzy
+msgid "Access Token"
+msgstr "Zugriff verweigert"
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
 #: ../../templates/show_stats.inc.php:71
 msgid "Path"
 msgstr "Pfad"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:118
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:121
 msgid "Get chunked files on analyze"
 msgstr "Fragmentierte Dateien bei Analyse entdeckt"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:177
-msgid "Error: API Key and Secret Required for Dropbox Catalogs"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:181
+#, fuzzy
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr ""
 "Fehler: Der API-Schlüssel und die geheime Phrase sind für Dropbox Kataloge "
 "erforderlich"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:184
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:188
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:497
+msgid "Invalid <api key, secret, or access token>: "
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:197
 msgid "Invalid <dropbox-path>: "
 msgstr "Ungültiger <Dropbox-Pfad>:"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:218
-#, php-format
-msgid "Go to %s to generate the authorization code, then enter it bellow."
-msgstr ""
-"Klicke auf %s um den Autorisierungscode zu generieren. Danach kannst Du ihn "
-"in folgendem Feld eingeben."
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:257
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:235
 msgid "Running Dropbox Remote Update"
 msgstr "Bearbeite entfernte Dropbox-Aktualisierung "
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:301
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:258
+#: ../../modules/catalog/seafile/seafile.catalog.php:268
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr ""
 "Die Katalogaktualisierung wurde mit %s bearbeiteten Medien abgeschlossen."
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:303
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:260
+#: ../../modules/catalog/seafile/seafile.catalog.php:271
 msgid "No media updated, do you respect the patterns?"
 msgstr "Es wurden keine Medien aktualisiert. Hast Du die Vorlagen beachtet?"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:306
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:449
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:483
+#: ../../modules/catalog/seafile/seafile.catalog.php:379
+#, fuzzy, php-format
+msgid "Updated song \"%s\""
+msgstr "Aktualisieren aus: [%s]"
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:486
+#: ../../modules/catalog/seafile/seafile.catalog.php:382
+#, php-format
+msgid "Song up to date: \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:490
+#: ../../modules/catalog/seafile/seafile.catalog.php:386
+#: ../../modules/catalog/seafile/seafile.catalog.php:444
+#, php-format
+msgid "Removing song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:534
 msgid "API Error: cannot connect to Dropbox."
 msgstr "API-Fehler: Die Verbindung zu Dropbox kann nicht aufgebaut werden."
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:338
-msgid "API Error: Cannot access file/folder at "
-msgstr ""
-"API-Fehler: Der Zugriff auf die Datei oder den Ordner in '%s' kann nicht "
-"zugegriffen werden."
 
 #: ../../modules/catalog/local/local.catalog.php:175
 msgid "Error: Path not specified"
@@ -3974,6 +3975,136 @@ msgstr "Es wurde(n) %u entfernte(r) Kataloge mit insgesamt %u Song(s) gefunden"
 #: ../../modules/catalog/remote/remote.catalog.php:281
 msgid "Completed updating remote catalog(s)."
 msgstr "Die Aktualisierung der/des entfernten Kataloge(s) ist abgeschlossen."
+
+#: ../../modules/catalog/seafile/SeafileAdapter.php:45
+#, fuzzy
+msgid "Could not authenticate with Seafile"
+msgstr "Die Authentifizierung bei myPlex ist fehlgeschlagen."
+
+#: ../../modules/catalog/seafile/SeafileAdapter.php:124
+#, php-format
+msgid "No media updated: could not find Seafile library called \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:75
+msgid ""
+"Install a Seafile server per its documentation (https://www.seafile.com/)"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:76
+msgid ""
+"Enter url to server (e.g. &ldquo;https://seafile.example.com&rdquo;) and "
+"library name (e.g. &ldquo;Music&rdquo;)."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:77
+msgid ""
+"'API Call Delay' is a delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accomodate Seafile's Rate "
+"Limiting. "
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:78
+msgid ""
+"<br/>The default is tuned towards Seafile's default rate limit settings; see "
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:79
+#, fuzzy
+msgid "this forum post"
+msgstr "Einstellungen für %s"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:80
+#, fuzzy
+msgid " for more information."
+msgstr "Liederinformation"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:81
+#, fuzzy
+msgid ""
+"After creating the catalog, you must 'Make it ready' on the catalog table."
+msgstr ""
+"Nachdem Du den Katalog mit einem Klick auf 'Katalog hinzufügen' vorbereitet "
+"hast, <br /> musst Du ihn noch in der Katalogtabelle 'Bereit stellen'."
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:123
+#, fuzzy
+msgid "Server URI"
+msgstr "Beets Server-URI"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:124
+#, fuzzy
+msgid "Library Name"
+msgstr "Namen anzeigen"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:125
+msgid "API Call Delay"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:126
+msgid "Seafile Username/Email"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:127
+#, fuzzy
+msgid "Seafile Password"
+msgstr "Neues Passwort"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:156
+msgid "Error: Seafile Server URL is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:162
+msgid "Error: Seafile Server Library Name is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:168
+#, fuzzy
+msgid "Error: Seafile Username is required."
+msgstr "Fehler: Ein Benutzername wird benötigt"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:174
+msgid "Error: Seafile Password is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:180
+msgid "Error: API Call Delay must have a numeric value."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:190
+#, php-format
+msgid "Error while authenticating against Seafile API: %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:237
+#, fuzzy
+msgid "Running Seafile Remote Update"
+msgstr "Bearbeite entfernte Aktualisierung"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:295
+#, fuzzy, php-format
+msgid "Skipping existing song \"%s\""
+msgstr "Existierenden Benutzer bearbeiten"
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:300
+#, php-format
+msgid "Adding song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:310
+#, php-format
+msgid "Could not add song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:434
+#, php-format
+msgid "Error checking song \"%s\": %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:442
+#, php-format
+msgid "Keeping song \"%s\""
+msgstr ""
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:107
 msgid "User ID"
@@ -8586,7 +8717,7 @@ msgstr "Ich kann dieses Video nicht löschen."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.06.2017 17:50:14 CEST
+# Last Update: 09.08.2017 19:58:43 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
