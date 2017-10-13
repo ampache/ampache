@@ -107,7 +107,7 @@ class Catalog_dropbox extends Catalog
             "`getchunk` TINYINT(1) NOT NULL, " .
             "`catalog_id` INT( 11 ) NOT NULL" .
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::query($sql);
+        Dba::query($sql);
 
         return true;
     } // install
@@ -195,11 +195,12 @@ class Catalog_dropbox extends Catalog
             $listFolderContents = $dropbox->listFolder($path);
         } catch (DropboxClientException $e) {
             AmpError::add('general', T_('Invalid <dropbox-path>: ' . $e->getMessage()));
+            $listFolderContents = null;
 
             return false;
         }
 
-        // Make sure this app isn't already in use by an existing catalog
+        // Make sure this catalog isn't already in use by an existing catalog
         $sql        = 'SELECT `id` FROM `catalog_dropbox` WHERE `apikey` = ?';
         $db_results = Dba::read($sql, array($apikey));
 
@@ -308,7 +309,7 @@ class Catalog_dropbox extends Catalog
             
             if ($is_audio_file) {
                 if (count($this->get_gather_types('music')) > 0) {
-                    $this->insert_song($dropbox, $path, $filesize);
+                    $this->insert_song($dropbox, $path);
                 } else {
                     debug_event('read', $path . " ignored, bad media type for this catalog.", 5);
                     
@@ -317,7 +318,7 @@ class Catalog_dropbox extends Catalog
             } else {
                 if (count($this->get_gather_types('video')) > 0) {
                     if ($is_video_file) {
-                        $this->insert_video($dropbox, $path, $filesize);
+                        $this->insert_video($dropbox, $path);
                     } else {
                         debug_event('read', $path . " ignored, bad media type for this video catalog.", 5);
                         
@@ -335,9 +336,9 @@ class Catalog_dropbox extends Catalog
      *
      * Insert a song that isn't already in the database.
      */
-    private function insert_song($dropbox, $path, $filesize)
+    private function insert_song($dropbox, $path)
     {
-        if ($this->check_remote_song($path)) {
+        if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
         } else {
             $islocal = true;
@@ -345,7 +346,7 @@ class Catalog_dropbox extends Catalog
             $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
             //Download File
             
-            $tmpMea = $this->download($dropbox, $path, 40960, $outfile);
+            $this->download($dropbox, $path, 40960, $outfile);
            
             $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
             $vainfo->forceSize(40960);
@@ -384,7 +385,7 @@ class Catalog_dropbox extends Catalog
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
      */
-    public function insert_video($dropbox, $path, $filesize)
+    public function insert_video($dropbox, $path)
     {
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
@@ -396,36 +397,39 @@ class Catalog_dropbox extends Catalog
             $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
             //Download File
             
-            $tmpMea = $this->download($dropbox, $path, 40960, $outfile);
+            $res = $this->download($dropbox, $path, 40960, $outfile);
             
-            $gtypes     = $this->get_gather_types('video');
-            $vainfo     = new vainfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
-            $vainfo->get_info();
+            if ($res) {
+                $gtypes      = $this->get_gather_types('video');
+                $vainfo     = new vainfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
+                $vainfo->get_info();
         
-            $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
-            $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
-            $results['catalog'] = $this->id;
+                $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
+                $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
+                $results['catalog'] = $this->id;
         
-            $results['file'] = $outfile;
-            $id              = Video::insert($results, $gtypes, []);
-            if ($results['art']) {
-                $art = new Art($id, 'video');
-                $art->insert_url($results['art']);
+                $results['file']      = $outfile;
+                $video_id              = Video::insert($results, $gtypes, []);
+                if ($results['art']) {
+                    $art = new Art($video_id, 'video');
+                    $art->insert_url($results['art']);
             
-                if (AmpConfig::get('generate_video_preview')) {
-                    Video::generate_preview($id);
+                    if (AmpConfig::get('generate_video_preview')) {
+                        Video::generate_preview($video_id);
+                    }
+                } else {
+                    $this->added_videos_to_gather[] = $video_id;
                 }
-            } else {
-                $this->added_videos_to_gather[] = $id;
-            }
-            $results['file'] = $path;
-            $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";
-            Dba::write($sql, array($results['file'], $id));
+                $results['file'] = $path;
+                $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";
+                Dba::write($sql, array($results['file'], $video_id));
             
-            return $id;
-        }
-    } // insert_video
-    
+                return $video_id;
+            } else {
+                debug_event('dropbox-download', 'failed to download file', 5, 'ampache-catalog');
+            }
+        } // insert_video
+    }
 
     public function download($dropbox, $path, $maxlen, $dropboxFile = null)
     {
@@ -439,12 +443,11 @@ class Catalog_dropbox extends Catalog
         
         //Download File
         $response = $dropbox->postToContent('/files/download', ['path' => $path], null, $dropboxFile);
-                
-        //File Contents
-        $contents = $dropboxFile ? $dropbox->makeDropboxFile($dropboxFile) : $response->getBody();
-        
-        //Make and return a File model
-        return true; //new File($metadata, $contents);
+        if ($response->getHttpStatusCode() == 200) {
+            return true;
+        }
+
+        return false;
     }
     
     public function verify_catalog_proc()
@@ -461,15 +464,17 @@ class Catalog_dropbox extends Catalog
             while ($row = Dba::fetch_assoc($db_results)) {
                 $updated['total']++;
                 debug_event('Dropbox-verify', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
-                $path    = $row['file'];
-                $islocal = true;
-                $meta    = $dropbox->getMetadata($path);
-                $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
-                try {
-                    $metadata = $this->download($dropbox, $path, 40960, $outfile);
+                $path     = $row['file'];
+                $islocal  = true;
+                $filesize = 40960;
+                $meta     = $dropbox->getMetadata($path);
+                $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+
+                $res = $this->download($dropbox, $path, $filesize, $outfile);
+                if ($res) {
                     debug_event('dropbox-verify', 'updating song', 5, 'ampache-catalog');
                     $song = new Song($row['id']);
-                    
+
                     $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
                     $vainfo->forceSize($filesize);
                     $vainfo->get_info();
@@ -485,7 +490,7 @@ class Catalog_dropbox extends Catalog
                     } else {
                         UI::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
-                } catch (DropboxClientException $e) {
+                } else {
                     debug_event('dropbox-verify', 'removing song', 5, 'ampache-catalog');
                     UI::update_text('', sprintf(T_('Removing song "%s"'), $row['title']));
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
@@ -549,7 +554,6 @@ class Catalog_dropbox extends Catalog
     public function check_remote_file($file)
     {
         $is_audio_file = Catalog::is_audio_file($file);
-        $is_video_file = Catalog::is_video_file($file);
         if ($is_audio_file) {
             $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         } else {
@@ -601,10 +605,10 @@ class Catalog_dropbox extends Catalog
             $outfile = sys_get_temp_dir() . "/" . $meta->getName();
             //Download File
             
-            $tmpMea      = $this->download($dropbox, $media->file, null, $outfile);
+            $this->download($dropbox, $media->file, null, $outfile);
             $media->file = $outfile;
             // Generate browser class for sending headers
-            fclose($output);
+            fclose($outfile);
         } catch (DropboxClientException $e) {
             debug_event('play', 'File not found on Dropbox: ' . $media->file, 5);
         }
@@ -652,15 +656,17 @@ class Catalog_dropbox extends Catalog
                     $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
                     //Download File
                     
-                    $tmpMea          = $this->download($dropbox, $song->file, 40960, $outfile);
-                    $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                    Dba::write($sql, array($outfile, $song->id));
-                    parent::gather_art([$song->id], null);
-                    $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                    Dba::write($sql, array($song->file, $song->id));
-                    $search_count++;
-                    if (UI::check_ticker()) {
-                        UI::update_text('count_art_' . $this->id, $search_count);
+                    $res          = $this->download($dropbox, $song->file, 40960, $outfile);
+                    if ($res) {
+                        $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
+                        Dba::write($sql, array($outfile, $song->id));
+                        parent::gather_art([$song->id], null);
+                        $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
+                        Dba::write($sql, array($song->file, $song->id));
+                        $search_count++;
+                        if (UI::check_ticker()) {
+                            UI::update_text('count_art_' . $this->id, $search_count);
+                        }
                     }
                 }
             }
