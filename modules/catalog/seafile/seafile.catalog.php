@@ -71,14 +71,13 @@ class Catalog_Seafile extends Catalog
      */
     public function get_create_help()
     {
-        return
-            "<ul><li>" . T_("Install a Seafile server per its documentation (https://www.seafile.com/)") . "</li>" .
-            "<li>" . T_("Enter url to server (e.g. &ldquo;https://seafile.example.com&rdquo;) and library name (e.g. &ldquo;Music&rdquo;).") . "</li>" .
-            "<li>" . T_("'API Call Delay' is a delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accomodate Seafile's Rate Limiting. ")
-                   . T_("<br/>The default is tuned towards Seafile's default rate limit settings; see ")
-                   . '<a href=\'https://forum.syncwerk.com/t/too-many-requests-when-using-web-api-status-code-429/2330\'>' . T_("this forum post") . '</a>'
-                   . T_(" for more information.") . "</li>" .
-            "<li>  " . T_("After creating the catalog, you must 'Make it ready' on the catalog table.") . "</li></ul>";
+        $help = "<ul><li>" . T_("Install a Seafile server as described in its documentation on %s") . "</li>" .
+                "<li>" . T_("Enter url to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li>" .
+                "<li>" . T_("'API Call Delay' is a delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accomodate Seafile's Rate Limiting. <br/>" .
+                "The default is tuned towards Seafile's default rate limit settings; see %sthis forum post%s for more information.") . "</li>" .
+                "<li>" . T_("After creating the catalog, you must 'Make it ready' on the catalog table.") . "</li></ul>";
+
+        return sprintf($help, "<a target='_blank' href='https://www.seafile.com/'>https://www.seafile.com/</a>", "<a href='https://forum.syncwerk.com/t/too-many-requests-when-using-web-api-status-code-429/2330'>", "</a>");
     } // get_create_help
 
     /**

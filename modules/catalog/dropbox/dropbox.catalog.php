@@ -185,7 +185,7 @@ class Catalog_dropbox extends Catalog
         try {
             $app = new DropboxApp($apikey, $secret, $authtoken);
         } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid <api key, secret, or access token>: ' . $e->getMessage()));
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
 
             return false;
         }
@@ -194,7 +194,7 @@ class Catalog_dropbox extends Catalog
         try {
             $listFolderContents = $dropbox->listFolder($path);
         } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid <dropbox-path>: ' . $e->getMessage()));
+            AmpError::add('general', T_('Invalid "dropbox-path": ' . $e->getMessage()));
             $listFolderContents = null;
 
             return false;
@@ -401,14 +401,14 @@ class Catalog_dropbox extends Catalog
             
             if ($res) {
                 $gtypes      = $this->get_gather_types('video');
-                $vainfo     = new vainfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
+                $vainfo      = new vainfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
                 $vainfo->get_info();
         
                 $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
                 $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
                 $results['catalog'] = $this->id;
         
-                $results['file']      = $outfile;
+                $results['file']       = $outfile;
                 $video_id              = Video::insert($results, $gtypes, []);
                 if ($results['art']) {
                     $art = new Art($video_id, 'video');
@@ -499,7 +499,7 @@ class Catalog_dropbox extends Catalog
             
             $this->update_last_update();
         } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid <api key, secret, or access token>: ' . $e->getMessage()));
+            AmpError::add('general', T_('Invalid Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
         }
         
         return $updated;
