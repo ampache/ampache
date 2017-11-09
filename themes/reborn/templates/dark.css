@@ -314,6 +314,10 @@ table.tabledata a {
     color: #eee;
 }
 
+#catalog_type_fields table.tabledata a{
+	color: #ff9d00
+}
+
 table.tabledata a:hover, table.tabledata a:focus {
     color: #ffc466;
 }
