@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-11-09 23:04+0100\n"
+"POT-Creation-Date: 2017-11-10 15:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3683,6 +3683,7 @@ msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:188
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:502
 msgid "Invalid \"API key\", \"secret\", or \"access token\": "
 msgstr ""
 
@@ -3722,10 +3723,6 @@ msgstr ""
 #: ../../modules/catalog/seafile/seafile.catalog.php:443
 #, php-format
 msgid "Removing song \"%s\""
-msgstr ""
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:502
-msgid "Invalid Invalid \"API key\", \"secret\", or \"access token\": "
 msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:539
@@ -8393,7 +8390,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 09.11.2017 23:04:04 CET 
+ # Last Update: 12.10.2017 06:14:49 CEST 
 
  #######################################################################
 

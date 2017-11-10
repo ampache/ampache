@@ -499,7 +499,7 @@ class Catalog_dropbox extends Catalog
             
             $this->update_last_update();
         } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
         }
         
         return $updated;
