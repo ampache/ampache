@@ -1,24 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div id="useredit" class="container">
-@isset($event)
-<div>
-{!!$event !!}
-</div>
-@endisset
+<div id="useradd" class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <form id="userUpdate" class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="{!! route('update', [$user->id]) !!}">
+                    <form id="userUpdate" class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" action="{!! route('add') !!}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">E-Mail Address:</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ $user->email }}">
+                                <input id="email" type="email" class="form-control" name="email">
                             </div>
                         </div>
                         <?php $fields = config('user.registration_mandatory_fields'); $count = count($fields);  ?>
@@ -28,7 +23,7 @@
 
                             <div class="col-md-6">
                              <?php $fld = old($fields[$i]); ?>
-                                <input id="{!! $fields[$i] !!}" type="text" height="100" class="form-control" name="{!! $fields[$i] !!}" value="{{ $user->fullname }}">
+                                <input id="{!! $fields[$i] !!}" type="text" height="100" class="form-control" name="{!! $fields[$i] !!}">
                             </div>
                         </div>
                         
@@ -57,12 +52,12 @@
                             <label for="level" class="col-md-4 control-label">User Level:</label>
 
                         	<div class="col-md-6">
-                    			<select id="level" value="{{ $user->access }}" form="form-group">
-  									<option value="5" {{ $user->access = 5 ? "selected" : "" }}>Guest</option>
-  									<option value="25" {{ $user->access = 25 ? "selected" : "" }}>User</option>
-  									<option value="50"{{ $user->access = 50 ? "selected" : "" }}>Content Manager</option>
-  									<option value="75" {{ $user->access = 75 ? "selected" : "" }}>Catalog Manager</option>
-  									<option value="100" {{ $user->access = 100 ? "selected" : "" }}>Administrator</option>
+                    			<select id="level" form="form-group">
+  									<option value="5">Guest</option>
+  									<option value="25">User</option>
+  									<option value="50">Content Manager</option>
+  									<option value="75">Catalog Manager</option>
+  									<option value="100">Administrator</option>
 								</select>
                             </div>
                         </div>
@@ -83,7 +78,7 @@
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Update User
+                                    Add User
                                 </button>
                             </div>
                         </div>

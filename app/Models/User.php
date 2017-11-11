@@ -4,19 +4,16 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Session;
-use App\Models\Art;
-use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Support\UI;
-use App\Models\User;
+use Illuminate\Auth\Passwords\CanResetPassword;
 
-class User extends Authenticatable
+class User extends Authenticatable implements \Illuminate\Contracts\Auth\CanResetPassword
 {
     use Notifiable;
 
-    const CREATED_AT = 'creation_date';
-    const UPDATED_AT = 'last_update';
+    const CREATED_AT = 'date_created';
+    const UPDATED_AT = 'last_updated';
     
     /**
      * The attributes that are mass assignable.
@@ -35,12 +32,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'access', 'apikey', 'disabled', 'validation',
     ];
-    
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = \Hash::make($password);
-    }
-    
+
     public function playlists()
     {
         return $this->hasMany('App\Models\Playlist');
@@ -138,11 +130,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'role_users');
     }
-    
     /**
      * Checks if User has access to $permissions.php php-cs-fixer
      */
-    public function hasAccess(array $permissions) : bool
+    public function hasAccess(array $permissions)
     {
         // check if the permission is available in any role
         foreach ($this->roles as $role) {
@@ -169,7 +160,7 @@ class User extends Authenticatable
         switch ($type) {
             case 'localplay':
                 // Check their localplay_level
-                return (AmpConfig::get('localplay_level') >= $level
+                return (Config('options.localplay_level') >= $level
                 || $this->attributes['access'] >= 100);
             case 'interface':
                 // Check their standard user level

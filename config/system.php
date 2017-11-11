@@ -69,5 +69,7 @@ return [
 *  DEFAULT: false
 */
     'statistical_graphs' => false,
+
+
     
 ];

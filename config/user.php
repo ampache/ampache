@@ -74,7 +74,7 @@ return [
     |
     */
     
-    'registration_display_fields' => ['fullname'],
+    'registration_display_fields' => [],
     
     /*
     |--------------------------------------------------------------------------
@@ -87,7 +87,7 @@ return [
     |
     */
     
-    'registration_mandatory_fields' => ['fullname'],
+    'registration_mandatory_fields' => [],
     
     /*
     |--------------------------------------------------------------------------

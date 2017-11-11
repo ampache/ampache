@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\File;
+
 function T_($msgid)
 {
     if (function_exists('__')) {
@@ -11,8 +13,8 @@ function T_($msgid)
 
 function url_theme($url)
 {
-    if (File::exists(base_path(Config::get('theme.theme') . DIRECTORY_SEPARATOR . $url))) {
-        return url('themes' . DIRECTORY_SEPARATOR . Config::get('theme.theme') . DIRECTORY_SEPARATOR . $url);
+    if (File::exists(base_path(config('theme.theme') . DIRECTORY_SEPARATOR . $url))) {
+        return url('themes' . DIRECTORY_SEPARATOR . config('theme.theme') . DIRECTORY_SEPARATOR . $url);
     }
     
     return url($url);

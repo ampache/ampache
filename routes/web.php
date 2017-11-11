@@ -11,8 +11,8 @@
 |
 */
 
-use App\Http\Middleware;
-use App\Http\Controllers\InstallController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('pages.index');
@@ -28,7 +28,7 @@ Route::get('index', 'UserController@index')->name('index');
 Route::get('show/{id}', 'UserController@show')->name('show');
 Route::get('edit/{id}', 'UserController@edit')->name('edit');
 Route::get('user.destroy', 'UserController@destroy')->name('user.destroy');
-Route::get('add', 'UserController@create')->name('add');
+Route::post('add', 'UserController@create')->name('add');
 Route::get('user/disable/{id}', 'UserController@disable');
 Route::get('user/enable/{id}', 'UserController@enable');
 Route::delete('user/destroy/{id}', 'UserController@destroy')->name('destroy');
@@ -41,14 +41,12 @@ Route::get('messages/reply/{id}', 'PrivateMsgController@reply')->name('reply');
 Route::get('messages/show/{idselected}', 'PrivateMsgController@show')->name('show');
 Route::get('install.language', 'InstallController@selectLanguage')->name('language');
 Route::post('/install/setlanguage/{language}', 'InstallController@setLanguage')->name('setLanguage');
-Route::post('/install/create_config', 'InstallController@create_config')->name('create_config');
+Route::post('/install/create_config', 'InstallController@create_config');
+Route::post('/install/create_account', 'InstallController@create_account');
+
 Route::get('/install/system_check', function () {
     return view('install.system_check');
-});
-//Route::get('/install/configure', function () {
-//    return view('install.configure');
-//});
-    
+});    
 Route::post('/install/create_db', 'InstallController@create_db');
 Route::get('/install/show_db', function () {
     return view('install.database');

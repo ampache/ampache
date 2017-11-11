@@ -55,40 +55,7 @@
         <input type="text" class="form-control" id="web_path" name="web_path" value="">
     </div>
 </div>
-            <h3>{{ T_('Database connection') }}</h3>
-
 <form method="post" action="{{ url('install/create_config') }}" enctype="multipart/form-data" autocomplete="off">
-<div class="form-group">
-    <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Database Name'); ?></label>
-    <div class="col-sm-8">
-        <input type="text" class="form-control" id="local_db" name="local_db" value="<?php echo scrub_out($_REQUEST['local_db']); ?>">
-    </div>
-</div>
-<div class="form-group">
-    <label for="local_host" class="col-sm-4 control-label"><?php echo T_('MySQL Hostname'); ?></label>
-    <div class="col-sm-8">
-        <input type="text" class="form-control" id="local_host" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>">
-    </div>
-</div>
-<div class="form-group">
-    <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL Port (optional)'); ?></label>
-    <div class="col-sm-8">
-        <input type="text" class="form-control" id="local_port" name="local_port" value="<?php echo scrub_out($_REQUEST['local_port']);?>"/>
-    </div>
-</div>
-<div class="form-group">
-    <label for="local_username" class="col-sm-4 control-label"><?php echo T_('MySQL Username'); ?></label>
-    <div class="col-sm-8">
-        <input type="text" class="form-control" id="local_username" name="local_username" value="{{ $admin_name }}"/>
-    </div>
-</div>
-<div class="form-group">
-    <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Password'); ?></label>
-    <div class="col-sm-8">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" value="{{ $admin_password }}" placeholder="Password (Required)">
-    </div>
-</div>
-
 <input type="hidden" name="htmllang" value="<?php echo $lang; ?>" />
 <input type="hidden" name="charset" value="<?php echo $charset; ?>" />
 

@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\BaseMedel;
+use Illuminate\Support\Facades\Schema;
+use App\Models\BaseModel;
 
 class CreateUsersTable extends Migration
 {

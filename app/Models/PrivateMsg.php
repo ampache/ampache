@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-class Private_Msg extends Model
+class PrivateMsg extends Model
 {
     const CREATED_AT = 'creation_date';
     const UPDATED_AT = 'last_update';

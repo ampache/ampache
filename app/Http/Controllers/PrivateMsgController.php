@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
-use App\Models\Private_Msg;
+use App\Models\PrivateMsg;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Support\UI;
@@ -86,9 +86,9 @@ class PrivateMsgController extends Controller
     public function index($id)
     {
         UI::flip_class(['odd','even']);
-        $messages   = Private_Msg::select('*')->where('is_read', '=', 0)->paginate();
-        $count      = Private_Msg::select('*')->where('is_read', '=', 0)->count();
-        $privateMsg = new Private_Msg();
+        $messages   = PrivateMsg::select('*')->where('is_read', '=', 0)->paginate();
+        $count      = PrivateMsg::select('*')->where('is_read', '=', 0)->count();
+        $privateMsg = new PrivateMsg();
 
         return view('privatemsg.index', compact('messages', 'privateMsg', 'count'));
     }
@@ -122,7 +122,7 @@ class PrivateMsgController extends Controller
      */
     public function show($id)
     {
-        $pvtMsg = Private_Msg::where('id', '=', $id)->get();
+        $pvtMsg = PrivateMsg::where('id', '=', $id)->get();
 
         return view('show');
     }

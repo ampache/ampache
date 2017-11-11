@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
-use SebastianBergmann\Environment\Runtime;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Preference;
+use App\Models\User;
 
 class InstallController extends Controller
 {
@@ -21,30 +22,24 @@ class InstallController extends Controller
     
     public function setLanguage($language)
     {
-        $oldStr  = "'locale' => '" . config('app.locale') . "'";
-        $newStr  = "'locale' => '" . $language . "'";
-        $appFile = config_path('app.php');
-        $appStr  = file_get_contents($appFile);
-        $str     = str_replace("$oldStr", "$newStr", $appStr);
-        config(['app.locale' => $language]);
-        file_put_contents($appFile, $str);
+         $this->writeConfig('locale', 'app',$language);
         //return redirect('install.check');
         return redirect('/install/system_check');
     }
     
     public function create_db(Request $request)
     {
-        $this->request = $request;
-        $new_user      = '';
-        $new_pass      = '';
-        $overwrite     = $request->input('overwrite_db', false);
-        $username   = e(trim($request->input('local_username', 'root')));
-        $password   = e($request->input('local_pass'));
-        $hostname   = e($request->input('local_host', 'localhost'));
-        $database   = e($request->input('local_db'));
-        $port       = $request->local_port != null ? : 3306;
-        $skip_admin = $request->input('skip_admin', false);
-        $create_db  = $request->input('create_db', true);
+        $this->request  = $request;
+        $new_user       = '';
+        $new_pass       = '';
+        $overwrite      = $request->input('overwrite_db', false);
+        $username       = e(trim($request->input('local_username', 'root')));
+        $password       = e($request->input('local_pass'));
+        $hostname       = e($request->input('local_host', 'localhost'));
+        $database       = e($request->input('local_db'));
+        $port           = $request->local_port != null ? : 3306;
+        $skip_admin     = isset($_POST['skip_admin']) ? True : False;
+        $create_db      = $request->input('create_db', true);
         $create_tables  = $request->input('create_tables', false);
         
         if (isset($_POST['db_user']) && ($_POST['db_user'] == 'create_db_user')) {
@@ -59,19 +54,26 @@ class InstallController extends Controller
         }
         //Tests connection with given database name and authorized username/password
         $conn;
-        $dsn = 'mysql:host=' . $hostname . ';' . 'dbname=' . $database;
+        $dsn = 'mysql:host=' . $hostname;
         try {
             $conn = new \PDO($dsn, $username, $password);
         } catch (\PDOException $e) {
             $this->getPDOMessage($e->getCode());
-
-            return false;
+            return back();
         }
             
         if (!$skip_admin) {
             if ($this->install_insert_db($conn, $database, $create_db, $overwrite, $create_tables) == false) {
                 return back();
             }
+            //Create the tables.
+            //Artisan needs to get info from configuration.
+            config(['database.connections.mysql.database' => $database]);
+            config(['database.connections.mysql.host' => $hostname]);
+            config(['database.connections.mysql.username' => $username]);
+            config(['database.connections.mysql.password' => $password]);
+            $exitCode = Artisan::call('migrate');
+            $exitCode = Artisan::call('db:seed');
         }
 
         // Check to see if we should create a user here
@@ -82,42 +84,72 @@ class InstallController extends Controller
                 $sql .= "@'localhost'";
             }
             $sql .= " IDENTIFIED BY '" . $new_pass . "' WITH GRANT OPTION";
-            
         
             $rows = $conn->exec($sql);
             $info = $conn->errorInfo();
             if (!is_null($info[2])) {
                 $this->request->session()->flash('status', T_("Unable to add database user"));
 
-                return false;
+                return back();
             }
-            $admin_name = $new_user;
+            $admin_name     = $new_user;
             $admin_password = $new_pass;
-        }
-        else {
-            $admin_name = $username;
+        } else {
+            $admin_name     = $username;
             $admin_password = $password;
         }
-            // end if we are creating a user
+        // end if we are creating a user
         //Write database info to environmental file ,env
-        $this->updateEnv($hostname, $port, $database, $admin_name, $admin_password);
-        //Create the tables.
-        //Artisan needs to get info from configuration.
-        config(['database.connections.mysql.database' => $database]);
-        config(['database.connections.mysql.host' => $hostname]);
-        config(['database.connections.mysql.username' => $username]);
-        config(['database.connections.mysql.password' => $password]);
-        $exitCode = Artisan::call('migrate');
-        $lang = config('app.locale');
-        $charset = config('database.connections.mysql.charset');
-        $modes = $this->install_get_transcode_modes();
-        $apache = $this->install_check_server_apache();
+        $env = array('hostname'=>$hostname, 'port' =>$port, 'database'=>$database, 'username'=>$admin_name, 'password'=>$admin_password);
+        $this->updateEnv($env);
+        
+        $lang     = config('app.locale');
+        $charset  = config('database.connections.mysql.charset');
+        $modes    = $this->install_get_transcode_modes();
+        $apache   = $this->install_check_server_apache();
         
         return view('install.configure', compact('admin_name', 'admin_password', 'hostname', 'database', 'port', 'lang', 'charset', 'modes', 'apache'));
     }
     
-    public function create_config()
+    public function create_config(Request $request)
+    { 
+        $backends = $request->input('backends');
+        $transcode_template = $request->input('transcode_temlate');
+        $preferences = new Preference();
+        if ($backends) {
+            foreach ($backends as $backend) {
+                $module = $backend . '_backend';
+                $preferences->$module = True;
+                $preferences->save();
+            }
+        }
+        $this->writeConfig('transcode_cmd', 'transcoding', $request->input('transcode_template'));
+        return view('install.account');
+        
+    }
+  
+    public function create_account(Request $request)
     {
+        $username = $request->input('local_username');
+        $password = $request->input('local_pass');
+        $password2 = $request->input('local_pass2');
+        if (strcmp($password, $password2) != 0) {
+            $request->session()->flash('Error', T_('Passwords don\'t match!'));
+            return view('install.account');
+        }
+        
+        $count = User::where('username', $username)->count();
+        if ($count > 0) {
+            $request->session()->flash('Error', T_('User name already exists!'));
+            return view('install.account');
+            
+        }
+        $user = User::create(['username' => $username,'password' => Hash::make($password)]);
+        
+        $user->access = 100;
+        $user->save();
+        $this->writeConfig('installed', 'app', True);
+        return view('pages.index');
     }
     
     
@@ -133,17 +165,16 @@ class InstallController extends Controller
         }
        
         //Test for existing database and create if not existing.
-        
         $sql = "CREATE DATABASE `$database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
         $conn->query($sql);
         $t = $conn->errorInfo();
             
         if (($t[1] == 1007) && ($overwrite == true)) {
+        
             $sql = "DROP DATABASE `" . $database . "`;";
             $conn->query($sql);
-        } else {
-            $this->getPDOMessage($t);
-
+        } elseif (intval($t[1]) > 0) {
+            $this->getPDOMessage($t[1]);
             return false;
         }
         $sql = "CREATE DATABASE `$database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
@@ -152,21 +183,37 @@ class InstallController extends Controller
         return true;
     }
     
-    private function updateEnv($db_host, $db_port, $db_database, $admin_name, $admin_password)
+    private function updateEnv($env_vars)
     {
-        $envFile = base_path('.env.example');
+        $envFile = base_path('.env');
         $envStr  =file_get_contents($envFile);
-        $success = preg_match("~(?m)^DB_DATABASE=([\_\-\w]+)$~", $envStr, $database);
-        $success = preg_match("~(?m)^DB_PORT=(\w+)$~", $envStr, $port);
-        $success = preg_match("~(?m)^DB_HOST=(\w+)$~", $envStr, $host);
-        $success = preg_match("~(?m)^DB_USERNAME=(\w+)$~", $envStr, $username);
-        $success = preg_match("~(?m)^DB_PASSWORD=(\w+)$~", $envStr, $password);
+        $keys = array_keys($env_vars);
         
-        $envStr=str_replace("DB_DATABASE=" . $database[1], "DB_DATABASE=" . $db_database, $envStr);
-        $envStr=str_replace("DB_PORT=" . $port[1], "DB_PORT=" . $db_port, $envStr);
-        $envStr=str_replace("DB_HOST=" . $host[1], "DB_HOST=" . $db_host, $envStr);
-        $envStr=str_replace("DB_USERNAME=" . $username[1], "DB_USERNAME=" . $admin_name, $envStr);
-        $envStr=str_replace("DB_PASSWORD=" . $password[1], "DB_PASSWORD=" . $admin_password, $envStr);
+        foreach ($keys as $key) {
+            switch ($key)  {
+                case 'database':
+                    $success = preg_match("~(?m)^DB_DATABASE=([\_\-\w]+)$~", $envStr,  $olddb);
+                    $envStr=str_replace("DB_DATABASE=" . $olddb[1], "DB_DATABASE=" .$env_vars['database'], $envStr);
+                    break;
+                case 'host':
+                    $success = preg_match("~(?m)^DB_HOST=(\w+)$~", $envStr, $oldhost );
+                    $envStr=str_replace("DB_HOST=" . $oldhost[1], ["DB_HOST=" . $env_vars['hostname']], $envStr);
+                    break;
+                case 'port':
+                    $success = preg_match("~(?m)^DB_PORT=(\w+)$~", $envStr, $oldport);
+                    $envStr=str_replace("DB_PORT=" . $oldport[1], "DB_PORT=" . $env_vars['port'], $envStr);
+                    break;
+                case 'username':
+                    $success = preg_match("~(?m)^DB_USERNAME=(\w+)$~", $envStr, $olduser);
+                    $envStr=str_replace("DB_USERNAME=" . $olduser[1], "DB_USERNAME=" . $env_vars['username'], $envStr);
+                    break;
+                case 'password':
+                    $success = preg_match("~(?m)^DB_PASSWORD=(\w+)$~", $envStr, $oldpassword);
+                    $envStr=str_replace("DB_PASSWORD=" . $oldpassword[1], "DB_PASSWORD=" . $env_vars['password'], $envStr);
+                    break;
+                default:                    
+            }
+        }
         file_put_contents(base_path('.env'), $envStr);
     }
 
@@ -177,6 +224,9 @@ class InstallController extends Controller
                 $message = "Can't create database '" . $this->database . "'; database exists and overwrite is not enabled.";
             case 1045:
                 $message = "Administrative username or password incorrect.";
+                break;
+            case 1049:
+                $message = "Unknown Database";
                 break;
             case 2002:
                 $message = "Hostname/IP incorrect.";
@@ -234,7 +284,7 @@ class InstallController extends Controller
         if ($this->command_exists('avconv')) {
             $modes[] = 'avconv';
         }
-    
+        
         return $modes;
     } // install_get_transcode_modes
     
@@ -243,4 +293,20 @@ class InstallController extends Controller
         return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
     }
     
+    private function writeConfig($paramName, $configName, $newValue) {
+        $configFile = config_path($configName . '.php');
+        $configStr  = file_get_contents($configFile);
+        switch ($configName)
+        {
+            case 'transcoding':
+                $success = preg_match("~(?<=\'" . $paramName . "\')\s*\=\>\s*[\'\"](\w*)[\'\"]~", $configStr,  $oldconfig);
+                $new_configStr = str_ireplace($oldconfig[1], $newValue, $configStr);
+                break;
+            default:
+                $success = preg_match("~(?<=\'" . $paramName . "\')\s*\=\>\s*\'*(\w*)\'*~", $configStr,  $oldconfig);
+                $new_configStr=preg_replace("~" . $oldconfig[1] . "~", $newValue , $configStr);
+        }
+        file_put_contents($configFile, $new_configStr);
+        
+    }
 }

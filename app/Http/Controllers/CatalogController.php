@@ -25,7 +25,7 @@ class CatalogController extends Controller
      */
     public function index(Request $request)
     {
-        $catalogs = $this->model->paginate(\Config::get('theme.threshold'));
+        $catalogs = $this->model->paginate(config('theme.threshold'));
         $links    = $catalogs->setPath('')->render();
         
         return view('catalog.index', compact('catalogs', 'links'));

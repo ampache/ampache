@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
-use Validator;
+use Illuminate\Contracts\Validation\Validator  ;
 use App\Http\Controllers\Controller;
 use App\Events\UserRegistered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use App\Support\Ajax;
 
 class AuthController extends Controller
 {
@@ -23,7 +25,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesUsers, ThrottlesLogins;
 
     /**
      * Where to redirect users after login / registration.
@@ -55,14 +57,15 @@ class AuthController extends Controller
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:4',
         ];
-        foreach (\Config::get('user.registration_mandatory_fields') as $field) {
+        foreach (config('user.registration_mandatory_fields') as $field) {
             if (!in_array($field, $rules)) {
                 $rules[$field] = 'required|max:255';
             }
         }
-        if (\Config::get('user.captcha_public_reg')) {
+        if (config('user.captcha_public_reg')) {
             $rules['captcha'] = 'required|captcha';
         }
+
         return Validator::make($data, $rules);
     }
 
@@ -78,7 +81,7 @@ class AuthController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => $data['password'],
-            'disabled' => \Config::get('user.admin_enable_required'),
+            'disabled' => config('user.admin_enable_required'),
         ]);
         
         event(new UserRegistered($user));
@@ -89,7 +92,7 @@ class AuthController extends Controller
     public function postLogin(Request $request)
     {
         $credentials = $request->only('username', 'password');
-        $validator = Validator::make(
+        $validator   = Validator::make(
             $credentials,
             ['username' => 'required', 'password' => 'required']
         );

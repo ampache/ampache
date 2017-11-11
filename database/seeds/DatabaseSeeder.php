@@ -39,10 +39,11 @@ class DatabaseSeeder extends Seeder
         $this->call('LabelMapTableSeeder');
         $this->call('WantedTableSeeder');
         $this->call('ShoutTableSeeder');
-        $this->call('PrivateMsgSeeder');
+//        $this->call('PrivateMsgSeeder');
         $this->call('UserActivityTableSeeder');
         $this->call('UserFollowerTableSeeder');
         $this->call('ImageTableSeeder');
-        $this->call('RolesSeeder');
+//        $this->call('RolesSeeder');
+        $this->call('PreferencesTableSeeder');
     }
 }

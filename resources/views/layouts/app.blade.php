@@ -98,7 +98,7 @@ noty({text: '<?php printf(json_encode(nl2br(/* HINT: Translator, "%s" is replace
     </div>
 
     <footer id="footer" class="row">
-        @include('includes.footer')
+  {{--      @include('includes.footer') --}}
     </footer>
         <!-- Handle collapsed visibility -->
     <script type="text/javascript">

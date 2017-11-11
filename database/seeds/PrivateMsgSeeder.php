@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 use Faker\Provider\DateTime;
 use App\Models\BaseModel;
@@ -16,7 +17,7 @@ class PrivateMsgSeeder extends Seeder
     {
         DB::table('private_msgs')->delete();
 
-        for ($i = 1; $i < 30; ++$i) {
+        for ($i = 1; $i < 5; ++$i) {
             $date = $this->getRandomTimestamps(rand());
             DB::table('private_msgs')->insert([
                 'subject' => 'Subject' . sprintf("%'.02d", $i),
@@ -29,7 +30,7 @@ class PrivateMsgSeeder extends Seeder
                 ]);
         }
         
-        for ($i = 1; $i < 9; ++$i) {
+        for ($i = 1; $i < 5; ++$i) {
             $date = $this->getRandomTimestamps(rand());
             DB::table('private_msgs')->insert([
                 'subject' => 'Subject' . sprintf("%'.02d", $i),

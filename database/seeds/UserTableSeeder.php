@@ -5,6 +5,7 @@ use Faker\Factory as Faker;
 use Faker\Provider\DateTime;
 use Illuminate\Support\Facades\Hash;
 use App\Models\BaseModel;
+use Illuminate\Support\Facades\DB;
 
 class UserTableSeeder extends Seeder
 {
@@ -14,7 +15,7 @@ class UserTableSeeder extends Seeder
         $date = $this->getRandomTimestamps();
         DB::table('users')->insert([
                 'fullname' => 'Ernie D',
-                'username' => 'admin',
+                'username' => 'user0',
                 'email' => 'wagnered@comcast.net',
                 'password' => Hash::make('excel1223'),
                 'access' => 100,
@@ -22,7 +23,7 @@ class UserTableSeeder extends Seeder
                  BaseModel::UPDATED_AT => $date['updated_at']
             ]);
 
-        for ($i = 1; $i < 60; ++$i) {
+        for ($i = 1; $i < 5; ++$i) {
             $date = $this->getRandomTimestamps();
             DB::table('users')->insert([
                 'fullname' => 'Nom' . sprintf("%'.02d", $i),

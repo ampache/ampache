@@ -67,7 +67,7 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => $data['password'],
-            'disabled' => \Config::get('user.admin_enable_required'),
+            'disabled' => config('user.admin_enable_required'),
         ]);
         
         event(new UserRegistered($user));
