@@ -100,7 +100,7 @@ class InstallController extends Controller
         }
         // end if we are creating a user
         //Write database info to environmental file ,env
-        $env = array('hostname'=>$hostname, 'port' =>$port, 'database'=>$database, 'username'=>$admin_name, 'password'=>$admin_password);
+        $env = array('DB_HOST'=>$hostname, 'DB_PORT' =>$port, 'DB_DATABASE'=>$database, 'DB_USERNAME'=>$admin_name, 'DB_PASSWORD'=>$admin_password);
         $this->updateEnv($env);
         
         $lang     = config('app.locale');
@@ -148,7 +148,7 @@ class InstallController extends Controller
         
         $user->access = 100;
         $user->save();
-        $this->writeConfig('installed', 'app', True);
+        $env = array('APP_INSTALLED'=>"True");
         return view('pages.index');
     }
     
@@ -191,25 +191,29 @@ class InstallController extends Controller
         
         foreach ($keys as $key) {
             switch ($key)  {
-                case 'database':
+                case 'DB_DATABASE':
                     $success = preg_match("~(?m)^DB_DATABASE=([\_\-\w]+)$~", $envStr,  $olddb);
-                    $envStr=str_replace("DB_DATABASE=" . $olddb[1], "DB_DATABASE=" .$env_vars['database'], $envStr);
+                    $envStr=str_replace("DB_DATABASE=" . $olddb[1], "DB_DATABASE=" .$env_vars['DB_DATABASE'], $envStr);
                     break;
-                case 'host':
+                case 'DB_HOST':
                     $success = preg_match("~(?m)^DB_HOST=(\w+)$~", $envStr, $oldhost );
-                    $envStr=str_replace("DB_HOST=" . $oldhost[1], ["DB_HOST=" . $env_vars['hostname']], $envStr);
+                    $envStr=str_replace("DB_HOST=" . $oldhost[1], "DB_HOST=" . $env_vars['DB_HOST'], $envStr);
                     break;
-                case 'port':
+                case 'DB_PORT':
                     $success = preg_match("~(?m)^DB_PORT=(\w+)$~", $envStr, $oldport);
-                    $envStr=str_replace("DB_PORT=" . $oldport[1], "DB_PORT=" . $env_vars['port'], $envStr);
+                    $envStr=str_replace("DB_PORT=" . $oldport[1], "DB_PORT=" . $env_vars['DB_PORT'], $envStr);
                     break;
-                case 'username':
+                case 'DB_USERNAME':
                     $success = preg_match("~(?m)^DB_USERNAME=(\w+)$~", $envStr, $olduser);
-                    $envStr=str_replace("DB_USERNAME=" . $olduser[1], "DB_USERNAME=" . $env_vars['username'], $envStr);
+                    $envStr=str_replace("DB_USERNAME=" . $olduser[1], "DB_USERNAME=" . $env_vars['DB_USERNAME'], $envStr);
                     break;
-                case 'password':
+                case 'DB_PASSWORD':
                     $success = preg_match("~(?m)^DB_PASSWORD=(\w+)$~", $envStr, $oldpassword);
-                    $envStr=str_replace("DB_PASSWORD=" . $oldpassword[1], "DB_PASSWORD=" . $env_vars['password'], $envStr);
+                    $envStr=str_replace("DB_PASSWORD=" . $oldpassword[1], "DB_PASSWORD=" . $env_vars['DB_PASSWORD'], $envStr);
+                    break;
+                case 'APP_INSTALLED':
+                    $success = preg_match("~(?m)^APP_INSTALLED=(\w+)$~", $envStr, $oldpassword);
+                    $envStr=str_replace("APP_INSTALLED=" . $oldpassword[1], "APP_INSTALLED=" . $env_vars['APP_INSTALLED'], $envStr);
                     break;
                 default:                    
             }

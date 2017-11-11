@@ -5,14 +5,14 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Application INstallation Status
+     | Application Installation Status
      |--------------------------------------------------------------------------
      |
      | This value determines if the application has been installed.
      |
      */
     
-    'installed' => True,
+    'installed' => env('APP_INSTALLED', false),
       
     /*
     |--------------------------------------------------------------------------
@@ -77,7 +77,7 @@ return [
     |
     */
 
-    'locale' => 'undefined',
+    'locale' => 'en_US',
 
     /*
     |--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'undefined',
+    'fallback_locale' => 'en_US',
 
     /*
     |--------------------------------------------------------------------------
