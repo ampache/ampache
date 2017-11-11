@@ -14,7 +14,7 @@ npm-debug.log
 .buildpath
 .project
 nbproject/
-public/
+public/build
 public/js/
 public/fonts/
 public/mix-manifest.json
@@ -25,3 +25,4 @@ public/images/
 public/themes/
 storage/
 .gitattributes
+modules/
