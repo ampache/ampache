@@ -15,7 +15,6 @@ class RedirectIfNotInstalled
      */
     public function handle($request, Closure $next)
     {
-        $installed = config('app.installed');
         if (!config('app.installed')) {
             return redirect('install.language');
         } else {
