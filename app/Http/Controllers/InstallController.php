@@ -149,6 +149,7 @@ class InstallController extends Controller
         $user->access = 100;
         $user->save();
         $env = array('APP_INSTALLED'=>"True");
+        $this->updateEnv($env);
         return view('pages.index');
     }
     
