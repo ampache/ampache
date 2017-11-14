@@ -3,111 +3,30 @@
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 
-Basics
+Requirements
 ------
 
-Ampache is a web based audio/video streaming application and file
-manager allowing you to access your music & videos from anywhere,
-using almost any internet enabled device.
+In addition to Composer:
 
-Ampache's usefulness is heavily dependent on being able to extract
-correct metadata from embedded tags in your files and/or the file name.
-Ampache is not a media organiser; it is meant to be a tool which
-presents an already organised collection in a useful way. It assumes
-that you know best how to manage your files and are capable of
-choosing a suitable method for doing so.
+1. nodejs: Found at https://nodejs.org/en/ or possible in your distribution's repository.
 
-Recommended Version
--------------------
+Nodejs includes npm.
 
-The recommended and most stable version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
-[![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
-
-You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
-[![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
-[![Codacy Badge](https://api.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
-[![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
 Installation
 ------------
 
-Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
+1. Run `php composer.phar install`
+2. Run `npm install`  to install required nodejs packages.
+3. Run `npm run dev` to process the contents of webpack.mix.js.
+4. Copy .env.example to .env
+5. Run `php artisan key:generate`.
 
-Requirements
-------------
+Artisan can be used as a development web server: Running `php artisan serve` in document root, defaults to 127.0.0.1 and port 8000.
+Also `php -S host:port` can be run  from the ./public folder.
 
-* A web server. All of the following have been used, though Apache
-receives the most testing:
-    * Apache
-    * lighttpd
-    * nginx
-    * IIS
+using `php artisan serve` seems to be running with a cache and causes problems with installation.  If this happens, just shutdown/restart it.
 
-* PHP 5.4 or greater.
+To get a list of commands: `php artisan list`.
 
-* PHP modules:
-    * PDO
-    * PDO_MYSQL
-    * hash
-    * session
-    * json
-    * simplexml (optional)
-    * curl (optional)
-
-* MySQL 5.x
-
-Upgrading
----------
-
-If you are upgrading from an older version of Ampache we recommend
-moving the old directory out of the way, extracting the new copy in
-its place and then copying the old /config/ampache.cfg.php, /rest/.htaccess,
-and /play/.htaccess files if any. All database updates will be handled by Ampache.
-
-License
--------
-
-Ampache is free software; you can redistribute it and/or
-modify it under the terms of the GNU Affero General Public License v3 (AGPLv3)
-as published by the Free Software Foundation.
-
-Ampache includes some [external modules](https://github.com/ampache/ampache/blob/develop/composer.lock) that carry their own licensing.
-
-Translations
-------------
-
-Ampache is currently translated (at least partially) into the
-following languages. If you are interested in updating an existing
-translation, simply visit us on [Transifex](https://www.transifex.com/ampache/ampache).
-If you prefer it old school or want to work offline, take a look at [/locale/base/TRANSLATIONS](https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md)
-for more instructions.
-
-Translation progress so far:
-
-[![Transifex](https://www.transifex.com/projects/p/ampache/resource/messagespot/chart/image_png)](https://www.transifex.com/projects/p/ampache/)
-
-Credits
--------
-
-Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS)
-
-
-Contact Us
-----------
-
-Hate it? Love it? Let us know! Dozens of people send ideas for amazing new features, report bugs and further develop Ampache actively. Be a part of Ampache with it's more than 10 years long history and get in touch with an awesome and friendly community!
-
-* For Live discussions, visit us on our IRC Channel at chat.freenode.net #ampache or alternative via a [web based chat client](https://webchat.freenode.net)
-* For harder cases or general discussion about Ampache take a look at our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
-* Found a bug or Ampache isn't working as expected? Head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
-
-Further Information and basic Help
-----------------------------------
-
-* Everything related to the Ampache Project can be found on our [Public Repository](https://github.com/ampache)
-* Want to know, how to get Apache to work or learn more about the functions? See our [Documentation](https://github.com/ampache/ampache/wiki)
-
-We hope to see you soon and that you have fun with this Project!
-
-[Team Ampache](docs/ACKNOWLEDGEMENTS)
+Accessing the document root from a web browser will automatically initiate installation. 
