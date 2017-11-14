@@ -23,7 +23,7 @@
 ?>
 @extends('layouts.installer')
 
-@section('container')
+@section('content')
 <div class="jumbotron">
     <h1><?php echo T_('Install progress'); ?></h1>
     <div class="progress">

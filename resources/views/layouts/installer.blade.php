@@ -60,7 +60,7 @@
     
      <div class="container">
         <div id="guts">
-            @yield('container')
+            @yield('content')
         </div>
             <div style="clear:both;">
             </div>

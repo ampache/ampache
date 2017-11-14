@@ -1,6 +1,6 @@
 @extends('layouts.installer')
 
-@section('container')
+@section('content')
 
         <div class="page-header requirements">
             <h1><?php echo T_('Requirements'); ?></h1>

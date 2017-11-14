@@ -14,6 +14,14 @@ const { mix } = require('laravel-mix');
     mix.copyDirectory('components/bootstrap/fonts', 'public/fonts');
     mix.copyDirectory('resources/themes/reborn/assets', 'public/themes/reborn');
 
+    mix.copy('components/jquery-ui/themes/ui-darkness/jquery-ui.css', 'public/css/jquery-ui.css')
+    mix.copy('components/bootstrap/css/bootstrap.css', 'public/css/bootstrap.css')
+    mix.copy('resources/assets/css/install-doped.css', 'public/css/install-doped.css')
+    mix.copy('resources/assets/css/base.css', 'public/css/base.css')
+    mix.copy('components/jquery-ui/jquery-ui.js', 'public/js/jquery-ui.js')
+    mix.copy('components/jquery/jquery.js', 'public/js/jquery.js')
+    mix.copy('resources/assets/js/ajax.js', 'public/js/ajax.js')
+
 mix.scripts([
    'resources/assets/js/Ajax.js',
    'resources/assets/js/base.js',

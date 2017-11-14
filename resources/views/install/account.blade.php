@@ -21,7 +21,7 @@
  */
 ?>
 @extends('layouts.installer')
-@section('container')
+@section('content')
 
 <div class="jumbotron">
     <h1><?php echo T_('Install progress'); ?></h1>
@@ -48,24 +48,24 @@
 	<form method="post" action="{{ url('install/create_account') }}" enctype="multipart/form-data" autocomplete="off">
 
 <div class="form-group">
-    <label for="local_username" class="col-sm-3 control-label"><?php echo T_('Username'); ?></label>
-    <div class="col-sm-9">
+    <label for="local_username" class="control-label"><?php echo T_('Username'); ?></label>
+    <div>
         <input type="text" class="form-control" id="local_username" name="local_username" value="admin">
     </div>
 </div>
 <div class="form-group">
-    <label for="local_pass" class="col-sm-3 control-label"><?php echo T_('Password'); ?></label>
-    <div class="col-sm-9">
+    <label for="local_pass" class="control-label"><?php echo T_('Password'); ?></label>
+    <div>
         <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password">
     </div>
 </div>
 <div class="form-group">
-    <label for="local_pass2" class="col-sm-3 control-label"><?php echo T_('Confirm Password'); ?></label>
-    <div class="col-sm-9">
+    <label for="local_pass2" class="control-label"><?php echo T_('Confirm Password'); ?></label>
+    <div>
         <input type="password" class="form-control" id="local_pass2" name="local_pass2" placeholder="Confirm Password">
     </div>
 </div>
-<div class="col-sm-9">
+<div>
     <button type="submit" class="btn btn-warning"><?php echo T_('Create Account'); ?></button>
 </div>
 </form>
