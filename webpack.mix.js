@@ -21,6 +21,8 @@ const { mix } = require('laravel-mix');
     mix.copy('components/jquery-ui/jquery-ui.js', 'public/js/jquery-ui.js')
     mix.copy('components/jquery/jquery.js', 'public/js/jquery.js')
     mix.copy('resources/assets/js/ajax.js', 'public/js/ajax.js')
+    mix.copy('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
+    mix.copy('components/prettyphoto/js/jquery.prettyPhoto.js', 'public/js/jquery.prettyPhoto.js')
 
 mix.scripts([
    'resources/assets/js/Ajax.js',
