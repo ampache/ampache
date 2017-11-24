@@ -276,7 +276,7 @@ class Catalog_dropbox extends Catalog
         
         if ($listFolderContents->hasMoreItems()) {
             do {
-                $cursor = $listFolderContents->getCursor();
+                $cursor             = $listFolderContents->getCursor();
                 $listFolderContinue = $dropbox->listFolderContinue($cursor);
                 $remainingItems     = $listFolderContinue->getItems();
                 foreach ($remainingItems as $item) {
@@ -285,7 +285,7 @@ class Catalog_dropbox extends Catalog
                         $this->add_file($dropbox, $subpath);
                     }
                 }
-            }while ($listFolderContinue->hasMoreItems() == true);
+            } while ($listFolderContinue->hasMoreItems() == true);
         }
     }
 
