@@ -272,21 +272,11 @@ class Catalog_dropbox extends Catalog
     public function add_files($dropbox, $path)
     {
         $listFolderContents = $dropbox->listFolder($path, ['recursive' => true]);
- 
-        $items = $listFolderContents->getItems();
-        foreach ($items as $item) {
-            if ($item->getDataProperty('.tag') == "file") {
-                $subpath = $item->getDataProperty('path_display');
-                $this->add_file($dropbox, $subpath);
-            }
-        }
+
         
-        while ($listFolderContents->hasMoreItems()) {
-            //Fetch Cusrsor for listFolderContinue()
-            $cursor = $listFolderContents->getCursor();
-            
-            //Paginate through the remaining items
+        if ($listFolderContents->hasMoreItems()) {
             do {
+                $cursor = $listFolderContents->getCursor();
                 $listFolderContinue = $dropbox->listFolderContinue($cursor);
                 $remainingItems     = $listFolderContinue->getItems();
                 foreach ($remainingItems as $item) {
@@ -295,7 +285,7 @@ class Catalog_dropbox extends Catalog
                         $this->add_file($dropbox, $subpath);
                     }
                 }
-            } while ($listFolderContinue->hasMoreItems() == true);
+            }while ($listFolderContinue->hasMoreItems() == true);
         }
     }
 
@@ -346,10 +336,9 @@ class Catalog_dropbox extends Catalog
             $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
             //Download File
             
-            $this->download($dropbox, $path, 40960, $outfile);
+            $this->download($dropbox, $path, -1, $outfile);
            
             $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
-            $vainfo->forceSize(40960);
             $vainfo->get_info();
             
             $key     = vainfo::get_tag_type($vainfo->tags);
@@ -625,7 +614,7 @@ class Catalog_dropbox extends Catalog
      * @param int[]|null $songs
      * @param int[]|null $videos
      */
-    public function gather_art()
+    public function gather_art($songs = null, $videos = null)
     {
         
         // Make sure they've actually got methods
