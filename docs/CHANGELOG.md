@@ -3,7 +3,12 @@ CHANGELOG
 
 3.8.4
 ----------
-- 
+- Updated api.class.php
+- fix for web_path auto configuration for subdirectory installation
+- Composer tag changes now written to database
+- Fixed catch null reference
+- Changes to make translation easier
+
 3.8.3
 ----------
 - Fixed upload problem
