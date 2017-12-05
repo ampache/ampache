@@ -3,6 +3,14 @@ CHANGELOG
 
 3.8.4
 ----------
+- Subsonic catalog now displays album art and artist bio.
+- Subsonic API now ignores case when determining methods.
+- Artist info now displays in Ampache's installed language.
+- Updated translations.
+- Composer tag changes now saved to database.
+- Seafile catalog module added.
+- Dropbox catalog updated to V2 API.
+- ip6 addresses now added to user history.
 - Updated api.class.php
 - fix for web_path auto configuration for subdirectory installation
 - Composer tag changes now written to database
