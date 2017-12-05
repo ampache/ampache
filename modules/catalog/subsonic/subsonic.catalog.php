@@ -215,6 +215,8 @@ class Catalog_subsonic extends Catalog
         if ($artists['success']) {
             foreach ($artists['data']['indexes']['index'] as $index) {
                 foreach ($index['artist'] as $artist) {
+                    $artistInfo = $subsonic->getArtistInfo(array('id' => $artist['id']));
+ 
                     // Get albums for artist
                     $albums = $subsonic->getMusicDirectory(array('id' => $artist['id']));
 
@@ -229,6 +231,8 @@ class Catalog_subsonic extends Catalog
                                             $data['artist']  = html_entity_decode($song['artist']);
                                             $data['album']   = html_entity_decode($song['album']);
                                             $data['title']   = html_entity_decode($song['title']);
+                                            $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
+                                            $data['year']    = $song['year'];
                                             $data['bitrate'] = $song['bitRate'] * 1000;
                                             $data['size']    = $song['size'];
                                             $data['time']    = $song['duration'];
@@ -242,12 +246,14 @@ class Catalog_subsonic extends Catalog
                                             } else {
                                                 $data['catalog'] = $this->id;
                                                 debug_event('subsonic_catalog', 'Adding song ' . $song['path'], 5, 'ampache-catalog');
-                                                if (!Song::insert($data)) {
+                                                $song_Id = Song::insert($data);
+                                                if (!$song_Id) {
                                                     debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
                                                     AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
                                                 } else {
-                                                    $songsadded++;
+                                                    parent::gather_art([$song_Id], null);
                                                 }
+                                                $songsadded++;
                                             }
                                         }
                                     }
@@ -277,7 +283,7 @@ class Catalog_subsonic extends Catalog
 
         return true;
     }
-
+    
     public function verify_catalog_proc()
     {
         return array('total' => 0, 'updated' => 0);
