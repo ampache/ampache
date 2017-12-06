@@ -159,7 +159,7 @@ foreach ($methods as $method) {
     // If the method is the same as the action being called
     // Then let's call this function!
     
-    if (strtolower($action) == "rest/" . $method) {
+    if ($action == $method) {
         call_user_func(array('subsonic_api', $method), $params);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit();
