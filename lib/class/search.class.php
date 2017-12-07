@@ -300,6 +300,22 @@ class Search extends playlist_object
                 );
             }
 
+            if (AmpConfig::get('userflags')) {
+                $this->types[] = array(
+                    'name' => 'favorite_artist',
+                    'label' => T_('Favorite Artists'),
+                    'type' => 'text',
+                    'widget' => array('input', 'text')
+                );
+         
+                $this->types[] = array(
+                    'name' => 'favorite_album',
+                    'label' => T_('Favorite Albums'),
+                    'type' => 'text',
+                    'widget' => array('input', 'text')
+                );
+            }
+            
             if (AmpConfig::get('show_played_times')) {
                 $this->types[] = array(
                     'name' => 'played_times',
@@ -450,7 +466,7 @@ class Search extends playlist_object
                 'type' => 'numeric',
                 'widget' => array('input', 'text')
             );
-
+            
             $this->types[] = array(
                 'name' => 'image width',
                 'label' => T_('Image Width'),
@@ -632,7 +648,7 @@ class Search extends playlist_object
     }
 
     /**
-     * get_searches
+     * get_searcheshttps://www.costco.com/Bose-SoundLink-On-Ear-Bluetooth-Headphones---Triple-Black.product.100382518.html
      *
      * Return the IDs of all saved searches accessible by the current user.
      */
@@ -1054,6 +1070,9 @@ class Search extends playlist_object
                 $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             }
         }
+        if ($join['user_flag']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `album`.`id`=`user_flag`.`object_id`";
+        }
         if ($join['rating']) {
             $userid          = intval($GLOBALS['user']->id);
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' ";
@@ -1267,6 +1286,18 @@ class Search extends playlist_object
                     }
                     $join['rating'] = true;
                 break;
+                case 'favorite_artist':
+                    $userid             = $GLOBALS['user']->id;
+                    $join['user_flag']  = true;
+                    $join['artist']     = true;
+                    $where[]            = "`artist`.`name` $sql_match_operator '$input'";
+                break;
+                case 'favorite_album':
+                    $userid             = $GLOBALS['user']->id;
+                    $join['user_flag']  = true;
+                    $join['album']     = true;
+                    $where[]            = "`album`.`name` $sql_match_operator '$input'";
+                break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
@@ -1369,6 +1400,11 @@ class Search extends playlist_object
             }
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
         }
+        
+        if ($join['user_flag']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`id`=`user_flag`.`object_id` ";
+        }
+
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
             if ($join['playlist']) {
