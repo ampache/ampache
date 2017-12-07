@@ -302,15 +302,8 @@ class Search extends playlist_object
 
             if (AmpConfig::get('userflags')) {
                 $this->types[] = array(
-                    'name' => 'favorite_artist',
-                    'label' => T_('Favorite Artists'),
-                    'type' => 'text',
-                    'widget' => array('input', 'text')
-                );
-         
-                $this->types[] = array(
-                    'name' => 'favorite_album',
-                    'label' => T_('Favorite Albums'),
+                    'name' => 'favorite',
+                    'label' => T_('Favorites'),
                     'type' => 'text',
                     'widget' => array('input', 'text')
                 );
@@ -1286,18 +1279,12 @@ class Search extends playlist_object
                     }
                     $join['rating'] = true;
                 break;
-                case 'favorite_artist':
+                case 'favorite':
                     $userid             = $GLOBALS['user']->id;
                     $join['user_flag']  = true;
-                    $join['artist']     = true;
-                    $where[]            = "`artist`.`name` $sql_match_operator '$input'";
-                break;
-                case 'favorite_album':
-                    $userid             = $GLOBALS['user']->id;
-                    $join['user_flag']  = true;
-                    $join['album']      = true;
-                    $where[]            = "`album`.`name` $sql_match_operator '$input'";
-                break;
+                    $where[]            = "`song`.`title` $sql_match_operator '$input' AND `user_flag`.`user` = $userid";
+                    $where[] .= "`user_flag`.`object_type` = 'song'";
+                    break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
@@ -1537,7 +1524,6 @@ class Search extends playlist_object
         $join['catalog']       = AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where);
-
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
         }
@@ -1545,7 +1531,6 @@ class Search extends playlist_object
         if ($join['song']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`id`=`playlist_data`.`object_id`";
             $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
-
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
                 $where_sql .= " AND `catalog_se`.`enabled` = '1'";
