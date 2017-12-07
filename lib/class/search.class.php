@@ -1295,7 +1295,7 @@ class Search extends playlist_object
                 case 'favorite_album':
                     $userid             = $GLOBALS['user']->id;
                     $join['user_flag']  = true;
-                    $join['album']     = true;
+                    $join['album']      = true;
                     $where[]            = "`album`.`name` $sql_match_operator '$input'";
                 break;
                 case 'played_times':
