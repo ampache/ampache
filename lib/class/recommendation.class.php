@@ -37,9 +37,11 @@ class Recommendation
      */
     public static function get_lastfm_results($method, $query)
     {
+        $lang     =  AmpConfig::get('lang');
+        $resp     = explode('_', $lang);
         $api_key  = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
-        $url      = $api_base . $method . '&api_key=' . $api_key . '&' . $query;
+        $url      = $api_base . $method . '&api_key=' . $api_key . '&' . $query . '&lang=' . $resp[0];
 
         return self::query_lastfm($url);
     }
@@ -312,7 +314,7 @@ class Recommendation
             $artist = new Artist($artist_id);
             $artist->format();
             $fullname = $artist->f_full_name;
-
+            
             // Data newer than 6 months, use it
             if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
                 $results                = array();
@@ -324,6 +326,7 @@ class Recommendation
                 $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
                 $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto']   = $results['largephoto'];
+            
                 return $results;
             }
         }

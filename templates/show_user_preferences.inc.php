@@ -45,8 +45,8 @@
                         <?php create_preference_input($pref['name'], $pref['value']); ?>
                 </td>
         </tr>
-<?php 
-} // End foreach ($preferences['prefs'] as $pref) ?>
+<?php
+} // End foreach ($preferences['prefs'] as $pref)?>
 <tr>
     <td>
     <div class="formValidation">

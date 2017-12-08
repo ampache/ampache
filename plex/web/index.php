@@ -183,21 +183,21 @@ switch ($plexact) {
                 <input type="text" id="plex_public_port" class="field_value" name="plex_public_port" value="<?php echo $plex_public_port; ?>" />
             </div>
             <?php if ($plex_local_port != 32400) {
-    ?>
+        ?>
             <div style="color: orange;">
                 Plex servers should locally listen on port 32400. Current local listing port for your Plex backend is <?php echo $plex_local_port; ?>. Ampache applies a small URI `hack` to work with custom port
                 as Plex server, but be aware that this will not work with all clients.
             </div>
-            <?php 
-} ?>
+            <?php
+    } ?>
             <div class="formbuttons">
                 <input type="submit" value="Auth/Publish" />
             </div>
         </form>
     </div><br />
-<?php 
+<?php
 } else {
-    ?>
+        ?>
     <div class="configform">
         <h3>myPlex authentication / server publish</h3>
         <form action="" method="POST" enctype="multipart/form-data">
@@ -209,8 +209,8 @@ switch ($plexact) {
             </div>
         </form>
     </div><br />
-<?php 
-} ?>
+<?php
+    } ?>
 
     <br />
     <div class="configform">

@@ -50,7 +50,7 @@ class Playlist extends playlist_object
     {
         $info = $this->get_info($id);
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
     } // Playlist
@@ -437,6 +437,7 @@ class Playlist extends playlist_object
         Dba::write($sql, array($name, $user_id, $type, $date, $date));
 
         $insert_id = Dba::insert_id();
+
         return $insert_id;
     } // create
 

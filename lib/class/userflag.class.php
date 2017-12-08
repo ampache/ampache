@@ -128,6 +128,7 @@ class Userflag extends database_object
         }
 
         parent::add_to_cache($key, $this->id, $flagged);
+
         return $flagged;
     }
 
@@ -218,6 +219,7 @@ class Userflag extends database_object
             }
         }
         $sql .= " ORDER BY `user_flag`.`date` DESC ";
+
         return $sql;
     }
     /**

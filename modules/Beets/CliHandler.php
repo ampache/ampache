@@ -137,6 +137,7 @@ class CliHandler extends Handler
         if ($this->useCustomFields && !$disableCostomFields) {
             $commandParts[] = ' -f ' . escapeshellarg($this->getFieldFormat());
         }
+
         return implode(' ', $commandParts);
     }
 
@@ -157,11 +158,12 @@ class CliHandler extends Handler
      */
     protected function parse($item)
     {
-        $item = str_replace($this->itemEnd, '', $item);
-        $values = explode($this->seperator, $item);
-        $song = array_combine($this->fields, $values);
-        $mappedSong = $this->mapFields($song);
+        $item               = str_replace($this->itemEnd, '', $item);
+        $values             = explode($this->seperator, $item);
+        $song               = array_combine($this->fields, $values);
+        $mappedSong         = $this->mapFields($song);
         $mappedSong['size'] = filesize($mappedSong['file']);
+
         return $mappedSong;
     }
 
@@ -172,9 +174,10 @@ class CliHandler extends Handler
     protected function getFieldFormat()
     {
         if (!isset($this->fieldFormat)) {
-            $this->fields = $this->getFields();
+            $this->fields      = $this->getFields();
             $this->fieldFormat = '$' . implode($this->seperator . '$', $this->fields) . $this->itemEnd;
         }
+
         return $this->fieldFormat;
     }
 
@@ -184,7 +187,7 @@ class CliHandler extends Handler
      */
     protected function getFields()
     {
-        $fields = null;
+        $fields          = null;
         $processedFields = array();
         exec($this->assembleCommand('fields', true), $fields);
         foreach ((array) $fields as $field) {
@@ -196,5 +199,4 @@ class CliHandler extends Handler
 
         return $processedFields;
     }
-
 }

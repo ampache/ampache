@@ -90,6 +90,7 @@ switch ($_REQUEST['action']) {
             foreach ($data as $key => $value) {
                 $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
             }
+
             return $data;
         };
         $entities($_POST);

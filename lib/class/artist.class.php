@@ -151,7 +151,7 @@ class Artist extends database_object implements library_item
         /* Get the information from the db */
         $info = $this->get_info($id);
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         } // foreach info
 
@@ -168,7 +168,7 @@ class Artist extends database_object implements library_item
     public static function construct_from_array($data)
     {
         $artist = new Artist(0);
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $artist->$key = $value;
         }
 
@@ -466,10 +466,10 @@ class Artist extends database_object implements library_item
             $extra_info = $this->_get_extra_info($this->catalog_id, $limit_threshold);
 
             //Format the new time thingy that we just got
-            $min = sprintf("%02d", (floor($extra_info['time']/60)%60));
+            $min = sprintf("%02d", (floor($extra_info['time'] / 60) % 60));
 
-            $sec   = sprintf("%02d", ($extra_info['time']%60));
-            $hours = floor($extra_info['time']/3600);
+            $sec   = sprintf("%02d", ($extra_info['time'] % 60));
+            $hours = floor($extra_info['time'] / 3600);
 
             $this->f_time = ltrim($hours . ':' . $min . ':' . $sec, '0:');
 
@@ -536,6 +536,7 @@ class Artist extends database_object implements library_item
                 'object_id' => $album_id
             );
         }
+
         return array('album' => $medias);
     }
 
@@ -562,6 +563,7 @@ class Artist extends database_object implements library_item
                 'object_id' => $album
             );
         }
+
         return $childrens;
     }
 
@@ -582,6 +584,7 @@ class Artist extends database_object implements library_item
                 );
             }
         }
+
         return $medias;
     }
 
@@ -726,6 +729,7 @@ class Artist extends database_object implements library_item
 
         if ($exists) {
             self::$_mapcache[$name][$mbid] = $id;
+
             return $id;
         }
 
@@ -743,6 +747,7 @@ class Artist extends database_object implements library_item
         $id = Dba::insert_id();
 
         self::$_mapcache[$name][$mbid] = $id;
+
         return $id;
     }
 
@@ -885,6 +890,7 @@ class Artist extends database_object implements library_item
     public function update_artist_user($user)
     {
         $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($user, $this->id));
     }
 

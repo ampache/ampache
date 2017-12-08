@@ -87,7 +87,7 @@ class Live_Stream extends database_object implements media, library_item
         $info = $this->get_info($id, 'live_stream');
 
         // Set the vars
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
     } // constructor
@@ -143,6 +143,7 @@ class Live_Stream extends database_object implements media, library_item
                 'object_id' => $this->id
             );
         }
+
         return $medias;
     }
 

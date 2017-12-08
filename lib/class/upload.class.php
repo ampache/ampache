@@ -49,6 +49,7 @@ class Upload
 
                     if (!in_array(strtolower($extension), $allowed)) {
                         debug_event('upload', 'File extension `' . $extension . '` not allowed.', '2');
+
                         return self::rerror();
                     }
 
@@ -65,6 +66,7 @@ class Upload
                     $targetdir = realpath($targetdir);
                     if (strpos($targetdir, $rootdir) === false) {
                         debug_event('upload', 'Something wrong with final upload path.', 1);
+
                         return self::rerror();
                     }
 
@@ -74,6 +76,7 @@ class Upload
                         $targetfile .= '_' . time();
                         if (Core::is_readable($targetfile)) {
                             debug_event('upload', 'File `' . $targetfile . '` already exists.', 1);
+
                             return self::rerror();
                         }
                     }
@@ -115,6 +118,7 @@ class Upload
                                 $artist_id = Artist::check($_REQUEST['artist_name'], null, true);
                                 if ($artist_id && !Access::check('interface', 50)) {
                                     debug_event('upload', 'An artist with the same name already exists, uploaded song skipped.', 3);
+
                                     return self::rerror($targetfile);
                                 } else {
                                     $artist_id = Artist::check($_REQUEST['artist_name']);
@@ -128,11 +132,13 @@ class Upload
                                 // If the user doesn't have privileges, check it is assigned to an artist he owns
                                 if (!$artist_id) {
                                     debug_event('upload', 'Artist information required, uploaded song skipped.', 3);
+
                                     return self::rerror($targetfile);
                                 }
                                 $artist = new Artist($artist_id);
                                 if ($artist->get_user_owner() != $GLOBALS['user']->id) {
                                     debug_event('upload', 'Artist owner doesn\'t match the current user.', 3);
+
                                     return self::rerror($targetfile);
                                 }
                             }
@@ -146,11 +152,13 @@ class Upload
                             // If the user doesn't have privileges, check it is assigned to an album he owns
                             if (!$album_id) {
                                 debug_event('upload', 'Album information required, uploaded song skipped.', 3);
+
                                 return self::rerror($targetfile);
                             }
                             $album = new Album($album_id);
                             if ($album->get_user_owner() != $GLOBALS['user']->id) {
                                 debug_event('upload', 'Album owner doesn\'t match the current user.', 3);
+
                                 return self::rerror($targetfile);
                             }
                         }
@@ -167,12 +175,14 @@ class Upload
 
                         if (!$catalog->add_file($targetfile, $options)) {
                             debug_event('upload', 'Failed adding uploaded file to catalog.', '1');
+
                             return self::rerror($targetfile);
                         }
 
                         ob_get_contents();
                         ob_end_clean();
                         echo '{"status":"success"}';
+
                         return true;
                     } else {
                         debug_event('upload', 'Cannot copy the file to target directory. Please check write access.', '1');
@@ -197,6 +207,7 @@ class Upload
         ob_get_contents();
         ob_end_clean();
         echo '{"status":"error"}';
+
         return false;
     }
 

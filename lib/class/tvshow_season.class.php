@@ -53,7 +53,7 @@ class TVShow_Season extends database_object implements library_item
         /* Get the information from the db */
         $info = $this->get_info($id);
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         } // foreach info
 
@@ -196,6 +196,7 @@ class TVShow_Season extends database_object implements library_item
                 );
             }
         }
+
         return $medias;
     }
 
@@ -224,6 +225,7 @@ class TVShow_Season extends database_object implements library_item
     {
         // No season description for now, always return tvshow description
         $tvshow = new TVShow($this->tvshow);
+
         return $tvshow->get_description();
     }
 
@@ -281,6 +283,7 @@ class TVShow_Season extends database_object implements library_item
 
         if ($exists) {
             self::$_mapcache[$name]['null'] = $id;
+
             return $id;
         }
 
@@ -298,6 +301,7 @@ class TVShow_Season extends database_object implements library_item
         $id = Dba::insert_id();
 
         self::$_mapcache[$name]['null'] = $id;
+
         return $id;
     }
 
@@ -344,6 +348,7 @@ class TVShow_Season extends database_object implements library_item
     public static function update_tvshow($tvshow_id, $season_id)
     {
         $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($tvshow_id, $season_id));
     }
 } // end of tvshow_season class

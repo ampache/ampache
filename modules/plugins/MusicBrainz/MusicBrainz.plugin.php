@@ -62,7 +62,7 @@ class AmpacheMusicBrainz
 
     /**
      * load
-     * This is a required plugin function; here it populates the prefs we 
+     * This is a required plugin function; here it populates the prefs we
      * need for this object.
      */
     public function load($user)
@@ -109,6 +109,7 @@ class AmpacheMusicBrainz
                 $results['album'] = $release->title;
             }
         }
+
         return $results;
     } // get_metadata
 } // end AmpacheMusicBrainz

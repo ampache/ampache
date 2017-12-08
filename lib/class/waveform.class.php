@@ -93,6 +93,7 @@ class Waveform
                                 $tfp = fopen($tmpfile, 'wb');
                                 if (!is_resource($tfp)) {
                                     debug_event('waveform', "Failed to open " . $tmpfile, 3);
+
                                     return null;
                                 }
 
@@ -100,6 +101,7 @@ class Waveform
                                 $fp         = $transcoder['handle'];
                                 if (!is_resource($fp)) {
                                     debug_event('waveform', "Failed to open " . $song->file . " for waveform.", 3);
+
                                     return null;
                                 }
 
@@ -143,7 +145,8 @@ class Waveform
     {
         $byte1 = hexdec(bin2hex($byte1));
         $byte2 = hexdec(bin2hex($byte2));
-        return ($byte1 + ($byte2*256));
+
+        return ($byte1 + ($byte2 * 256));
     }
 
     /**
@@ -154,7 +157,8 @@ class Waveform
      */
     protected static function html2rgb($input)
     {
-        $input=($input[0]=="#")?substr($input, 1, 6):substr($input, 0, 6);
+        $input=($input[0] == "#")?substr($input, 1, 6):substr($input, 0, 6);
+
         return array(
             hexdec(substr($input, 0, 2)),
             hexdec(substr($input, 2, 2)),
@@ -162,20 +166,22 @@ class Waveform
         );
     }
 
-      /**
-       * Create waveform from song file.
-       * @param string $filename
-       * @return binary|string|null
-       */
+    /**
+     * Create waveform from song file.
+     * @param string $filename
+     * @return binary|string|null
+     */
     protected static function create_waveform($filename)
     {
         if (!file_exists($filename)) {
             debug_event('waveform', 'File ' . $filename . ' doesn\'t exists', 1);
+
             return null;
         }
         
         if (!check_php_gd()) {
             debug_event('waveform', 'GD extension must be loaded', 1);
+
             return null;
         }
 
@@ -226,13 +232,14 @@ class Waveform
         $img = imagecreatetruecolor($data_size / $detail, $height);
         if ($img === false) {
             debug_event('waveform', 'Cannot create image.', 1);
+
             return null;
         }
 
         // fill background of image
         if ($background == "") {
             // transparent background specified
-          imagesavealpha($img, true);
+            imagesavealpha($img, true);
             $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
             imagefill($img, 0, 0, $transparentColor);
         } else {
@@ -243,10 +250,10 @@ class Waveform
             if ($data_point++ % $detail == 0) {
                 $bytes = array();
 
-              // get number of bytes depending on bitrate
-              for ($i = 0; $i < $byte; $i++) {
-                  $bytes[$i] = fgetc($handle);
-              }
+                // get number of bytes depending on bitrate
+                for ($i = 0; $i < $byte; $i++) {
+                    $bytes[$i] = fgetc($handle);
+                }
 
                 switch ($byte) {
                 // get value for 8-bit wav
@@ -268,18 +275,18 @@ class Waveform
                 break;
               }
 
-              // skip bytes for memory optimization
-              fseek($handle, $ratio, SEEK_CUR);
+                // skip bytes for memory optimization
+                fseek($handle, $ratio, SEEK_CUR);
 
-              // draw this data point
-              // relative value based on height of image being generated
-              // data values can range between 0 and 255
-              $v = (int) ($data / 255 * $height);
+                // draw this data point
+                // relative value based on height of image being generated
+                // data values can range between 0 and 255
+                $v = (int) ($data / 255 * $height);
 
-              // don't print flat values on the canvas if not necessary
-              if (!($v / $height == 0.5 && !$draw_flat)) {
-                  // draw the line on the image using the $v value and centering it vertically on the canvas
-                imageline(
+                // don't print flat values on the canvas if not necessary
+                if (!($v / $height == 0.5 && !$draw_flat)) {
+                    // draw the line on the image using the $v value and centering it vertically on the canvas
+                    imageline(
                   $img,
                   // x1
                   (int) ($data_point / $detail),
@@ -291,10 +298,10 @@ class Waveform
                   $height - ($height - $v),
                   imagecolorallocate($img, $r, $g, $b)
                 );
-              }
+                }
             } else {
                 // skip this one due to lack of detail
-              fseek($handle, $ratio + $byte, SEEK_CUR);
+                fseek($handle, $ratio + $byte, SEEK_CUR);
             }
         }
 
@@ -320,6 +327,7 @@ class Waveform
 
         $imgdata = ob_get_contents();
         ob_clean();
+
         return $imgdata;
     }
 
@@ -332,6 +340,7 @@ class Waveform
     protected static function save_to_db($song_id, $waveform)
     {
         $sql = "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
+
         return Dba::write($sql, array($waveform, $song_id));
     }
 } // Waveform class

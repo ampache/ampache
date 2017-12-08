@@ -123,6 +123,7 @@ trait Metadata
             $field->hide();
         }
         $this->metadataFieldRepository->add($field);
+
         return $field;
     }
 
@@ -140,6 +141,7 @@ trait Metadata
         } else {
             $field = $this->createField($propertie, $public);
         }
+
         return $field;
     }
 
@@ -171,6 +173,7 @@ trait Metadata
                     $fields, explode(',', \AmpConfig::get('disabled_custom_metadata_fields_input'))
             );
         }
+
         return $this->disabledMetadataFields;
     }
 }

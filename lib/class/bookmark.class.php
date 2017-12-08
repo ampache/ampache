@@ -69,7 +69,7 @@ class Bookmark extends database_object
         }
         
         // Foreach what we've got
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
             
@@ -122,6 +122,7 @@ class Bookmark extends database_object
         foreach ($ids as $id) {
             $bookmarks[] = new Bookmark($id);
         }
+
         return $bookmarks;
     }
     
@@ -132,18 +133,21 @@ class Bookmark extends database_object
         $comment  = scrub_in($data['comment']);
         
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), time()));
     }
     
     public function update($position)
     {
         $sql = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($position, time(), $this->id));
     }
     
     public function remove()
     {
         $sql = "DELETE FROM `bookmark` WHERE `id` = ?";
+
         return Dba::write($sql, array($this->id));
     }
 

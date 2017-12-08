@@ -71,7 +71,7 @@ class AmpacheTvdb
 
     /**
      * load
-     * This is a required plugin function; here it populates the prefs we 
+     * This is a required plugin function; here it populates the prefs we
      * need for this object.
      */
     public function load($user)
@@ -83,6 +83,7 @@ class AmpacheTvdb
             $this->api_key = trim($data['tvdb_api_key']);
         } else {
             debug_event($this->name, 'No Tvdb api key, metadata plugin skipped', '3');
+
             return false;
         }
         
@@ -100,6 +101,7 @@ class AmpacheTvdb
         // TVShow metadata only
         if (!in_array('tvshow', $gather_types)) {
             debug_event('tvdb', 'Not a valid media type, skipped.', '5');
+
             return null;
         }
         
@@ -113,8 +115,8 @@ class AmpacheTvdb
                 if (count($releases) == 0) {
                     throw new Exception("TV Show not found");
                 }
-                    // Get first match
-                    $release               = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
+                // Get first match
+                $release                   = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId ;
                 $results['tvshow_summary'] = substr($release->overview, 0, 255);   //Summary column in db is only 256 characters.
@@ -178,6 +180,7 @@ class AmpacheTvdb
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('Tvdb', 'gather_arts for type `' . $type . '`', 5);
+
         return Art::gather_metadata_plugin($this, $type, $options);
     }
     
@@ -199,6 +202,7 @@ class AmpacheTvdb
                 }
             }
         }
+
         return count($titles) > 0 ? $titles[0] : $results[0];
     }
 } // end AmpacheTvdb

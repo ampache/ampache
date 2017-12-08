@@ -101,7 +101,7 @@ class Catalog_local extends Catalog
 
     public function catalog_fields()
     {
-        $fields['path']      = array('description' => T_('Path'),'type'=>'text');
+        $fields['path']      = array('description' => T_('Path'),'type' => 'text');
 
         return $fields;
     }
@@ -119,7 +119,7 @@ class Catalog_local extends Catalog
             $this->id = intval($catalog_id);
             $info     = $this->get_info($catalog_id);
 
-            foreach ($info as $key=>$value) {
+            foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
         }
@@ -173,12 +173,14 @@ class Catalog_local extends Catalog
 
         if (!strlen($path)) {
             AmpError::add('general', T_('Error: Path not specified'));
+
             return false;
         }
 
         // Make sure that there isn't a catalog with a directory above this one
         if (self::get_from_path($path)) {
             AmpError::add('general', T_('Error: Defined Path is inside an existing catalog'));
+
             return false;
         }
 
@@ -186,6 +188,7 @@ class Catalog_local extends Catalog
         if (!Core::is_readable($path)) {
             debug_event('catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
             AmpError::add('general', sprintf(T_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
+
             return false;
         }
 
@@ -196,11 +199,13 @@ class Catalog_local extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $path));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?)';
         Dba::write($sql, array($path, $catalog_id));
+
         return true;
     }
 
@@ -235,6 +240,7 @@ class Catalog_local extends Catalog
         if (!is_resource($handle)) {
             debug_event('read', "Unable to open $path", 5);
             AmpError::add('catalog_add', sprintf(T_('Error: Unable to open %s'), $path));
+
             return false;
         }
 
@@ -242,6 +248,7 @@ class Catalog_local extends Catalog
         if (!chdir($path)) {
             debug_event('read', "Unable to chdir to $path", 2);
             AmpError::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
+
             return false;
         }
 
@@ -292,6 +299,7 @@ class Catalog_local extends Catalog
         if (AmpConfig::get('no_symlinks')) {
             if (is_link($full_file)) {
                 debug_event('read', "Skipping symbolic link $full_file", 5);
+
                 return false;
             }
         }
@@ -335,6 +343,7 @@ class Catalog_local extends Catalog
                 debug_event('read', "$full_file is not readable by ampache", 2);
                 /* HINT: FullFile */
                 AmpError::add('catalog_add', sprintf(T_('%s is not readable by ampache'), $full_file));
+
                 return false;
             }
 
@@ -357,6 +366,7 @@ class Catalog_local extends Catalog
                     debug_event('read', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, '1');
                     /* HINT: FullFile */
                     AmpError::add('catalog_add', sprintf(T_('%s does not match site charset'), $full_file));
+
                     return false;
                 }
                 $full_file = $enc_full_file;
@@ -378,6 +388,7 @@ class Catalog_local extends Catalog
                         $this->insert_local_song($full_file, $options);
                     } else {
                         debug_event('read', $full_file . " ignored, bad media type for this music catalog.", 5);
+
                         return false;
                     }
                 } else {
@@ -386,6 +397,7 @@ class Catalog_local extends Catalog
                             $this->insert_local_video($full_file, $options);
                         } else {
                             debug_event('read', $full_file . " ignored, bad media type for this video catalog.", 5);
+
                             return false;
                         }
                     }
@@ -402,6 +414,7 @@ class Catalog_local extends Catalog
         } //if it matches the pattern
         else {
             debug_event('read', "$full_file ignored, non-audio file or 0 bytes", 5);
+
             return false;
         } // else not an audio file
     }
@@ -573,6 +586,7 @@ class Catalog_local extends Catalog
         }
 
         UI::update_text('verify_count_' . $this->id, $count);
+
         return $changed;
     } // _verify_chunk
 
@@ -589,6 +603,7 @@ class Catalog_local extends Catalog
             debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             AmpError::add('general', T_('Catalog Root unreadable, stopping clean'));
             AmpError::display('general');
+
             return 0;
         }
 
@@ -624,6 +639,7 @@ class Catalog_local extends Catalog
 
         \Lib\Metadata\Repository\Metadata::gc();
         \Lib\Metadata\Repository\MetadataField::gc();
+
         return $dead_total;
     }
 
@@ -665,6 +681,7 @@ class Catalog_local extends Catalog
                 }
             }
         }
+
         return $dead;
     } //_clean_chunk
 
@@ -712,6 +729,7 @@ class Catalog_local extends Catalog
             if (AmpConfig::get('catalog_check_duplicate')) {
                 if (Song::find($results)) {
                     debug_event('catalog', 'Song already found, skipped to avoid duplicate', 5);
+
                     return false;
                 }
             }
@@ -835,6 +853,7 @@ class Catalog_local extends Catalog
         $file_date = filemtime($full_file);
         if ($file_date < $this->last_add) {
             debug_event('Check', 'Skipping ' . $full_file . ' File modify time before last add run', '3');
+
             return true;
         }
 
@@ -852,6 +871,7 @@ class Catalog_local extends Catalog
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->path, "/");
+
         return(str_replace($catalog_path . "/", "", $file_path));
     }
 

@@ -127,30 +127,31 @@ class Rating extends database_object
      * Get a user's rating.  If no userid is passed in, we use the currently
      * logged in user.
      */
-     public function get_user_rating($user_id = null)
-     {
-         if (is_null($user_id)) {
-             $user_id = $GLOBALS['user']->id;
-         }
+    public function get_user_rating($user_id = null)
+    {
+        if (is_null($user_id)) {
+            $user_id = $GLOBALS['user']->id;
+        }
 
-         $key = 'rating_' . $this->type . '_user' . $user_id;
-         if (parent::is_cached($key, $this->id)) {
-             return parent::get_from_cache($key, $this->id);
-         }
+        $key = 'rating_' . $this->type . '_user' . $user_id;
+        if (parent::is_cached($key, $this->id)) {
+            return parent::get_from_cache($key, $this->id);
+        }
 
-         $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? " .
+        $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
-         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
+        $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
-         $rating = 0;
+        $rating = 0;
 
-         if ($results = Dba::fetch_assoc($db_results)) {
-             $rating = $results['rating'];
-         }
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $rating = $results['rating'];
+        }
 
-         parent::add_to_cache($key, $this->id, $rating);
-         return $rating;
-     } // get_user_rating
+        parent::add_to_cache($key, $this->id, $rating);
+
+        return $rating;
+    } // get_user_rating
 
     /**
      * get_average_rating
@@ -170,6 +171,7 @@ class Rating extends database_object
         $results = Dba::fetch_assoc($db_results);
 
         parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results['rating']);
+
         return $results['rating'];
     } // get_average_rating
 
@@ -186,6 +188,7 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= " GROUP BY object_id ORDER BY `rating` DESC ";
+
         return $sql;
     }
 

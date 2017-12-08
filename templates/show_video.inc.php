@@ -50,93 +50,93 @@ $subtitles = $video->get_subtitles();
     } ?>
 </select>
 </div>
-<?php 
+<?php
 } ?>
 </div>
 <dl class="media_details">
 <?php if (User::is_registered()) {
-    ?>
+        ?>
     <?php if (AmpConfig::get('ratings')) {
-    ?>
+            ?>
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
             <div id="rating_<?php echo $video->id; ?>_video"><?php Rating::show($video->id, 'video'); ?>
             </div>
         </dd>
-    <?php 
-} ?>
+    <?php
+        } ?>
 
     <?php if (AmpConfig::get('userflags')) {
-    ?>
+            ?>
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
             <div id="userflag_<?php echo $video->id; ?>_video"><?php Userflag::show($video->id, 'video'); ?>
             </div>
         </dd>
-    <?php 
-} ?>
-<?php 
-} ?>
+    <?php
+        } ?>
+<?php
+    } ?>
 <?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) {
-    ?>
+        ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_video_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
+            ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
-            <?php 
-} ?>
-        <?php 
-} ?>
+            <?php
+        } ?>
+        <?php
+    } ?>
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to temporary playlist'), 'add_video_' . $video->id); ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('sociable')) {
-    ?>
+            ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
-            <?php 
-} ?>
-        <?php 
-}
+            <?php
+        } ?>
+        <?php
+    }
     ?>
     <?php if (Access::check('interface', '25')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('share')) {
-    ?>
+            ?>
                 <?php Share::display_ui('video', $video->id, false); ?>
-            <?php 
-} ?>
-        <?php 
-} ?>
+            <?php
+        } ?>
+        <?php
+    } ?>
         <?php if (Access::check_function('download')) {
-    ?>
+        ?>
             <a rel="nohtml" href="<?php echo Video::play_url($video->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
-        <?php 
-} ?>
+        <?php
+    } ?>
         <?php if (Access::check('interface', '50')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('statistical_graphs')) {
-    ?>
+            ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
-            <?php 
-} ?>
+            <?php
+        } ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-        <?php 
-} ?>
+        <?php
+    } ?>
         <?php if (Catalog::can_remove($video)) {
-    ?>
+        ?>
             <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?>
             </a>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </dd>
 <?php
   $videoprops[gettext_noop('Title')]   = scrub_out($video->f_title);

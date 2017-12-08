@@ -113,11 +113,11 @@ if (!empty($username) && isset($auth)) {
         /* This is run if we want to autocreate users who don't
         exist (useful for non-mysql auth) */
         $access     = User::access_name_to_level(AmpConfig::get('auto_user', 'guest'));
-        $fullname   = array_key_exists('name',    $auth) ? $auth['name']    : '';
-        $email      = array_key_exists('email',   $auth) ? $auth['email']   : '';
+        $fullname   = array_key_exists('name', $auth) ? $auth['name']    : '';
+        $email      = array_key_exists('email', $auth) ? $auth['email']   : '';
         $website    = array_key_exists('website', $auth) ? $auth['website'] : '';
-        $state      = array_key_exists('state',   $auth) ? $auth['state']   : '';
-        $city       = array_key_exists('city',    $auth) ? $auth['city']    : '';
+        $state      = array_key_exists('state', $auth) ? $auth['state']   : '';
+        $city       = array_key_exists('city', $auth) ? $auth['city']    : '';
 
         /* Attempt to create the user */
         if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city)) {
@@ -171,16 +171,16 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     if (($external_auto_update || empty($user->fullname)) && !empty($auth['name'])) {
         $user->update_fullname($auth['name']);
     }
-    if (($external_auto_update || empty($user->email))    && !empty($auth['email'])) {
+    if (($external_auto_update || empty($user->email)) && !empty($auth['email'])) {
         $user->update_email($auth['email']);
     }
-    if (($external_auto_update || empty($user->website))  && !empty($auth['website'])) {
+    if (($external_auto_update || empty($user->website)) && !empty($auth['website'])) {
         $user->update_website($auth['website']);
     }
-    if (($external_auto_update || empty($user->state))    && !empty($auth['state'])) {
+    if (($external_auto_update || empty($user->state)) && !empty($auth['state'])) {
         $user->update_state($auth['state']);
     }
-    if (($external_auto_update || empty($user->city))     && !empty($auth['city'])) {
+    if (($external_auto_update || empty($user->city)) && !empty($auth['city'])) {
         $user->update_city($auth['city']);
     }
     if (($external_auto_update || empty($user->f_avatar)) && !empty($auth['avatar'])) {
@@ -198,12 +198,12 @@ if (isset($auth) && $auth['success'] && isset($user)) {
      */
     $web_path = AmpConfig::get('web_path');
     if ((substr($_POST['referrer'], 0, strlen($web_path)) == $web_path) &&
-        strpos($_POST['referrer'], 'install.php')    === false &&
-        strpos($_POST['referrer'], 'login.php')        === false &&
-        strpos($_POST['referrer'], 'logout.php')    === false &&
-        strpos($_POST['referrer'], 'update.php')    === false &&
-        strpos($_POST['referrer'], 'activate.php')    === false &&
-        strpos($_POST['referrer'], 'admin')        === false) {
+        strpos($_POST['referrer'], 'install.php') === false &&
+        strpos($_POST['referrer'], 'login.php') === false &&
+        strpos($_POST['referrer'], 'logout.php') === false &&
+        strpos($_POST['referrer'], 'update.php') === false &&
+        strpos($_POST['referrer'], 'activate.php') === false &&
+        strpos($_POST['referrer'], 'admin') === false) {
         header('Location: ' . $_POST['referrer']);
         exit();
     } // if we've got a referrer

@@ -29,19 +29,19 @@ $thcount = 6;
         <li><?php echo UI::get_icon('add', T_('Add')); ?> <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label"><?php echo T_('Create a new label'); ?></a></li>
     </ul>
 </div>
-<?php 
+<?php
 } ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="label">
     <thead>
         <tr class="th-top">
             <?php if (Art::is_enabled()) {
-    ++$thcount; ?>
+        ++$thcount; ?>
                 <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
-            <?php 
-} ?>
+            <?php
+    } ?>
             <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
             <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'), 'label_sort_category'); ?></th>
             <th class="cel_artists optional"><?php echo T_('Artists');  ?></th>
@@ -57,23 +57,23 @@ $thcount = 6;
         <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_label_row.inc.php'); ?>
         </tr>
-        <?php 
+        <?php
         } ?>
         <?php if (!count($object_ids)) {
-    ?>
+            ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No label found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <?php if (Art::is_enabled()) {
-    ?>
+            ?>
                 <th class="cel_cover"><?php echo T_('Art'); ?></th>
-            <?php 
-} ?>
+            <?php
+        } ?>
             <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
             <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'), 'label_sort_category'); ?></th>
             <th class="cel_artists optional"><?php echo T_('Artists');  ?></th>
@@ -84,5 +84,5 @@ $thcount = 6;
 
 <?php show_table_render(); ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

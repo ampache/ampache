@@ -90,7 +90,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
             <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
                 <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!'); ?></button>
             </form>
-        <?php 
+        <?php
 } ?>
     </div>
 </body>

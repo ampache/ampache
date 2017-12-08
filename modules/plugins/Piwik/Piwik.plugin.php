@@ -126,12 +126,14 @@ class AmpachePiwik
         $this->site_id = trim($data['piwik_site_id']);
         if (!strlen($this->site_id)) {
             debug_event($this->name, 'No Piwik Site ID, user field plugin skipped', '3');
+
             return false;
         }
 
         $this->piwik_url = trim($data['piwik_url']);
         if (!strlen($this->piwik_url)) {
             debug_event($this->name, 'No Piwik URL, user field plugin skipped', '3');
+
             return false;
         }
 

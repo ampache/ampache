@@ -29,7 +29,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <?php if (User::is_registered()) {
     ?>
     <?php if (AmpConfig::get('ratings')) {
-    ?>
+        ?>
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
@@ -37,11 +37,10 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             </div>
         </dd>
     <?php
-
-} ?>
+    } ?>
 
     <?php if (AmpConfig::get('userflags')) {
-    ?>
+        ?>
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
@@ -49,13 +48,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             </div>
         </dd>
     <?php
-
-} ?>
+    } ?>
 <?php
-
 } ?>
 <?php if (AmpConfig::get('waveform')) {
-    ?>
+        ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Waveform'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
@@ -64,97 +61,84 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         </div>
     </dd>
 <?php
-
-} ?>
+    } ?>
 <?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) {
-    ?>
+        ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $song->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
+            ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $song->id); ?>
             <?php
-
-} ?>
+        } ?>
             <?php if (Stream_Playlist::check_autoplay_next()) {
-    ?>
+            ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $song->id); ?>
             <?php
-
-} ?>
+        } ?>
             <?php echo $song->show_custom_play_actions(); ?>
         <?php
-
-} ?>
+    } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to temporary playlist'), 'add_song_' . $song->id); ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('sociable')) {
-    ?>
+            ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $song->id; ?>">
                 <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
                 </a>
             <?php
-
-} ?>
-        <?php 
-}
+        } ?>
+        <?php
+    }
     ?>
         <?php if (Access::check('interface', '25')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('share')) {
-    ?>
+            ?>
                 <?php Share::display_ui('song', $song->id, false); ?>
             <?php
-
-} ?>
+        } ?>
         <?php
-
-} ?>
+    } ?>
         <?php if (Access::check_function('download')) {
-    ?>
+        ?>
             <a rel="nohtml" href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
-
-} ?>
+    } ?>
         <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', '50')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('statistical_graphs')) {
-    ?>
+            ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=song&object_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
-
-} ?>
+        } ?>
         <?php
-
-} ?>
+    } ?>
         <?php if (Access::check('interface', '50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
-    ?>
+        ?>
             <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_' . $song->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
-
-} ?>
+    } ?>
         <?php if (Access::check('interface', '75') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
-    ?>
+        ?>
             <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $icon, T_(ucfirst($icon)), 'flip_song_' . $song->id); ?>
             </span>
         <?php
-
-} ?>
+    } ?>
         <?php if (Catalog::can_remove($song)) {
-    ?>
+        ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/song.php?action=delete&song_id=<?php echo $song->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php
-
-} ?>
+    } ?>
     </dd>
 <?php
   $songprops[gettext_noop('Title')]   = scrub_out($song->title);

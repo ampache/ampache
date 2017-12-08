@@ -49,13 +49,13 @@ UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
         </td>
     </tr>
-    <?php 
+    <?php
         } if (!count($playlists)) {
             ?>
     <tr>
         <td colspan="7"><span class="nodata"><?php echo T_('No democratic found'); ?></span></td>
     </tr>
-<?php 
+<?php
         } ?>
 </table>
 <br />

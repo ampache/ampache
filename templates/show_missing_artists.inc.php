@@ -38,17 +38,16 @@
             </td>
         </tr>
         <?php
-
             }
         }
         ?>
         <?php if (!$wartists || !count($wartists)) {
-    ?>
+            ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
 </table>
 <?php UI::show_box_bottom(); ?>

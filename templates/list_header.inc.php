@@ -58,7 +58,7 @@ $('#browse_<?php echo $browse->id; ?>_scroll').jscroll({
     autoTriggerUntil: 5,
 });
 </script>
-<?php 
+<?php
 } ?>
 <?php
 
@@ -102,16 +102,16 @@ if ($limit > 0 && $total > $limit) {
         echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter . $argument_param, $value, 'browse_' . $uid . '_alpha_' . $key, '');
     } ?>
     </div>
-<?php 
+<?php
 } ?>
 <?php if ($pages > 1 && $start > -1) {
-    $current_page = 0;
-    if ($start > 0) {
-        $current_page = floor($start / $limit);
-    }
+        $current_page = 0;
+        if ($start > 0) {
+            $current_page = floor($start / $limit);
+        }
 
-    if ($browse->get_use_pages()) {
-        ?>
+        if ($browse->get_use_pages()) {
+            ?>
     <span class="list-header-navmenu-border">
     <span><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid . $argument_param, T_('Prev'), 'browse_' . $uid . 'prev', '', 'prev'); ?></span>
     &nbsp;
@@ -124,9 +124,8 @@ if ($limit > 0 && $total > $limit) {
     <span><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=-1&browse_uid=' . $uid . $argument_param, T_('All'), 'browse_' . $uid . 'all', '', 'all'); ?></span>
     </span>
 <?php
-
+        }
     }
-}
 ?>
     <span class="browse-options">
         <a href="#" onClick="showFilters(this);" class="browse-options-link"><?php echo T_("View"); ?></a>
@@ -137,10 +136,10 @@ if ($limit > 0 && $total > $limit) {
             <?php if (!$browse->is_static_content()) {
     ?>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo(($browse->get_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>"><?php echo T_('Alphabet'); ?></span>
-            <?php 
+            <?php
 } ?>
         <?php if ($browse->get_use_pages()) {
-    ?>
+        ?>
             <span>|</span>
             <span>
                 <form id="browse_<?php echo $browse->id; ?>_limit_form_<?php echo $is_header; ?>" method="post" action="javascript:void(0);">
@@ -148,15 +147,15 @@ if ($limit > 0 && $total > $limit) {
                     <input type="text" id="limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>" name="value" value="<?php echo $browse->get_offset(); ?>" onKeyUp="delayRun(this, '800', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=limit'); ?>', 'limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>');">
                 </form>
             </span>
-        <?php 
-} ?>
+        <?php
+    } ?>
         </span>
     </span>
 </div>
 <span class="item-count"><?php echo T_('Item Count') . ': ' . $total; ?></span>
 <?php if (!$browse->get_use_pages() && $is_header) {
-    ?>
+        ?>
 <div id="browse_<?php echo $browse->id; ?>_scroll">
 <p>
-<?php 
-} ?>
+<?php
+    } ?>

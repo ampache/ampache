@@ -34,54 +34,54 @@ if ($server_allow && $controller && $access_check) {
     $current_instance = $localplay->current_instance();
     $class            = $current_instance ? '' : ' class="active_instance"'; ?>
 <?php if (Access::check('localplay', '25')) {
-    ?>
+        ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay'); ?>"><?php echo T_('Localplay'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo isset($_COOKIE['sb_localplay']) ? $_COOKIE['sb_localplay'] : 'expanded'; ?>" id="localplay" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
     <ul class="sb3" id="sb_localplay_info">
 <?php if (Access::check('localplay', '75')) {
-    ?>
+            ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
     <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show instances'); ?></a></li>
-<?php 
-} ?>
+<?php
+        } ?>
     <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo T_('Show Playlist'); ?></a></li>
     </ul>
   </li>
-<?php 
-} ?>
+<?php
+    } ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Active Instance'); ?>"><?php echo T_('Active Instance'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo isset($_COOKIE['sb_active_instance']) ? $_COOKIE['sb_active_instance'] : 'expanded'; ?>" id="active_instance" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
     <ul class="sb3" id="sb_localplay_instances">
     <li id="sb_localplay_instances_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'), 'localplay_instance_none'); ?></li>
     <?php
         // Requires a little work.. :(
         $instances = $localplay->get_instances();
-    foreach ($instances as $uid=>$name) {
+    foreach ($instances as $uid => $name) {
         $name  = scrub_out($name);
         $class = '';
         if ($uid == $current_instance) {
             $class = ' class="active_instance"';
         } ?>
     <li id="sb_localplay_instances_<?php echo $uid; ?>"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid, $name, 'localplay_instance_' . $uid); ?></li>
-    <?php 
+    <?php
     } ?>
     </ul>
   </li>
-<?php 
+<?php
 } else {
-    ?>
+        ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay Disabled'); ?>"><?php echo T_('Localplay Disabled'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo isset($_COOKIE['sb_localplay_disabled']) ? $_COOKIE['sb_localplay_disabled'] : 'expanded'; ?>" id="localplay_disabled" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4></li>
   <?php if (!$server_allow) {
-    ?>
+            ?>
     <li><?php echo T_('Allow Localplay set to False'); ?></li>
-  <?php 
-} elseif (!$controller) {
-    ?>
+  <?php
+        } elseif (!$controller) {
+            ?>
     <li><?php echo T_('Localplay Controller Not Defined'); ?></li>
-  <?php 
-} elseif (!$access_check) {
-    ?>
+  <?php
+        } elseif (!$access_check) {
+            ?>
     <li><?php echo T_('Access Denied'); ?></li>
-  <?php 
-} ?>
-<?php 
-} ?>
+  <?php
+        } ?>
+<?php
+    } ?>
 </ul>

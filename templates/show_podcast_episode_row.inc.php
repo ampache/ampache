@@ -47,7 +47,6 @@
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     <?php
-
     }
     ?>
     </span>
@@ -63,14 +62,14 @@
     <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast_episode">
         <?php Rating::show($libitem->id, 'podcast_episode'); ?>
     </td>
-    <?php 
+    <?php
         }
         if (AmpConfig::get('userflags')) {
             ?>
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
         <?php Userflag::show($libitem->id, 'podcast_episode'); ?>
     </td>
-    <?php 
+    <?php
         }
     }
 ?>
@@ -79,7 +78,6 @@
     ?>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
-
 } ?>
 <?php
     if (Access::check('interface', '50')) {
@@ -90,14 +88,14 @@
     <a id="<?php echo 'edit_podcast_episode_' . $libitem->id ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id ?>', '<?php echo T_('Podcast Episode edit') ?>', 'podcast_episode_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
-    <?php 
+    <?php
     }
     if (Catalog::can_remove($libitem)) {
         ?>
     <a id="<?php echo 'delete_podcast_episode_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
         <?php echo UI::get_icon('delete', T_('Delete')); ?>
     </a>
-    <?php 
+    <?php
     }
 ?>
 </td>

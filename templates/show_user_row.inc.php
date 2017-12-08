@@ -48,14 +48,12 @@
                     </a>
                 </td>
                 <?php
-
             }
         }
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
             ?>
             <td class="cel_follow"><?php echo $libitem->get_display_follow(); ?></td>
             <?php
-
         }
     ?>
     <td class="cel_action">
@@ -66,7 +64,6 @@
                 <?php echo UI::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php
-
         }
     ?>
     <?php
@@ -89,7 +86,6 @@
             <?php echo UI::get_icon('delete', T_('Delete')); ?>
         </a>
         <?php
-
         }
     ?>
     </td>

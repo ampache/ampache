@@ -53,6 +53,7 @@ class WebDAV_Directory extends DAV\Collection
                 $children[] = WebDAV_Directory::getChildFromArray($child);
             }
         }
+
         return $children;
     }
 
@@ -94,6 +95,7 @@ class WebDAV_Directory extends DAV\Collection
     public function childExists($name)
     {
         $matches = $this->libitem->search_childrens($name);
+
         return (count($matches) > 0);
     }
 

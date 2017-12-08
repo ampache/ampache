@@ -48,7 +48,7 @@
                         </div>
                     </td>
                 </tr>
-                <?php 
+                <?php
                 }
             ?>
             <tr>
@@ -62,7 +62,7 @@
                         if (Access::check('interface', 50)) {
                             ?>
                             <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
-                        <?php 
+                        <?php
                         } else {
                             echo $libitem->mbid;
                         }
@@ -103,7 +103,7 @@
                             </div>
                         </td>
                     </tr>
-                    <?php 
+                    <?php
                 }
             ?>
         </table>

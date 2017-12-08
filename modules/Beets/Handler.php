@@ -40,7 +40,7 @@ abstract class Handler
 
     public function setHandler(Catalog $handler, $command)
     {
-        $this->handler = $handler;
+        $this->handler        = $handler;
         $this->handlerCommand = $command;
     }
 
@@ -63,7 +63,7 @@ abstract class Handler
     {
         foreach ($this->fieldMapping as $from => $to) {
             list($key, $format) = $to;
-            $song[$key] = sprintf($format, $song[$from]);
+            $song[$key]         = sprintf($format, $song[$from]);
         }
         $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', $song['genre']);
 
@@ -89,7 +89,7 @@ abstract class Handler
             // Add an empty part so we get a trailing slash if needed
             $commandParts[] = '';
         }
+
         return implode($this->commandSeperator, $commandParts);
     }
-
 }

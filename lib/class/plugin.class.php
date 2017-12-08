@@ -62,6 +62,7 @@ class Plugin
             /* Require the file we want */
             if (!@include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
                 debug_event('plugin', 'Cannot include plugin `' . $cname . '`.', 1);
+
                 return false;
             }
 
@@ -73,6 +74,7 @@ class Plugin
             }
         } catch (Exception $ex) {
             debug_event('plugin', 'Error when initializing plugin `' . $cname . '`: ' . $ex->getMessage(), 1);
+
             return false;
         }
 
@@ -258,6 +260,7 @@ class Plugin
     public function load($user)
     {
         $user->set_preferences();
+
         return $this->_plugin->load($user);
     }
 

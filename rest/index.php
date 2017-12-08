@@ -56,8 +56,8 @@ if (empty($user)) {
 $password = $_SERVER['PHP_AUTH_PW'];
 if (empty($password)) {
     $password = $_REQUEST['p'];
-    $token = $_REQUEST['t'];
-    $salt = $_REQUEST['s'];
+    $token    = $_REQUEST['t'];
+    $salt     = $_REQUEST['s'];
 }
 $version   = $_REQUEST['v'];
 $clientapp = $_REQUEST['c'];
@@ -74,21 +74,19 @@ if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || emp
 }
 
 if (isset($token) && isset($salt)) {
-    //We can't support token authentication. 
+    //We can't support token authentication.
     //No external authentication modules will support this since we can't extract password from salted hash
     //Can't support with mysql because password is stored as a hash (not salted and using different encryption)
     //so no comparisons are possible
 
     //tell client we don't support token authentication
-    //hopefully they will fall back to earlier authentication method 
+    //hopefully they will fall back to earlier authentication method
     //( pre api 1.13 using the p parameter with the password)
 
     debug_event('Access Denied', 'Token authentication not supported in Subsonic API for user [' . $user . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_TOKENAUTHNOTSUPPORTED), $callback);
     exit();
-
-    
 }
 
 $password = Subsonic_Api::decrypt_password($password);
@@ -160,6 +158,7 @@ foreach ($methods as $method) {
 
     // If the method is the same as the action being called
     // Then let's call this function!
+    
     if ($action == $method) {
         call_user_func(array('subsonic_api', $method), $params);
         // We only allow a single function to be called, and we assume it's cleaned up!

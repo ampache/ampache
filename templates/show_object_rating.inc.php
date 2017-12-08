@@ -57,7 +57,6 @@ if (!$rate) {
           <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i); ?>
       </li>
     <?php
-
     }
     ?>
   </ul>

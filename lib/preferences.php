@@ -98,6 +98,7 @@ function update_preference($user_id, $name, $pref_id, $value)
     /* First see if they are an administrator and we are applying this to everything */
     if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$apply_check])) {
         Preference::update_all($pref_id, $value);
+
         return true;
     }
 
@@ -110,6 +111,7 @@ function update_preference($user_id, $name, $pref_id, $value)
     if (Preference::has_access($name)) {
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? AND `user` = ?";
         Dba::write($sql, array($value, $pref_id, $user_id));
+
         return true;
     }
 
@@ -134,6 +136,7 @@ function create_preference_input($name, $value)
                 echo $value;
             }
         }
+
         return;
     } // if we don't have access to it
 
@@ -262,7 +265,7 @@ function create_preference_input($name, $value)
         case 'lang':
             $languages = get_languages();
             echo '<select name="' . $name . '">' . "\n";
-            foreach ($languages as $lang=>$name) {
+            foreach ($languages as $lang => $name) {
                 $selected = ($lang == $value) ? 'selected="selected"' : '';
                 echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
             } // end foreach

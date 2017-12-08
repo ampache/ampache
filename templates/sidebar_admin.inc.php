@@ -50,28 +50,28 @@
       <?php if (AmpConfig::get('sociable')) {
     ?>
       <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
-      <?php 
+      <?php
 } ?>
       <?php if (AmpConfig::get('licensing')) {
-    ?>
+        ?>
       <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
-      <?php 
-} ?>
+      <?php
+    } ?>
     </ul>
   </li>
 <?php if (Access::check('interface', '100')) {
-    ?>
+        ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config'); ?>"><?php echo T_('Server Config'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo isset($_COOKIE['sb_server_config']) ? $_COOKIE['sb_server_config'] : 'expanded'; ?>" id="server_config" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
     <ul class="sb3" id="sb_preferences_sc">
 <?php
     $catagories = Preference::get_catagories();
-    foreach ($catagories as $name) {
-        $f_name = ucfirst($name); ?>
+        foreach ($catagories as $name) {
+            $f_name = ucfirst($name); ?>
       <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
-<?php 
-    } ?>
+<?php
+        } ?>
     </ul>
   </li>
-<?php 
-} ?>
+<?php
+    } ?>
 </ul>

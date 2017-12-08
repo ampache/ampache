@@ -33,7 +33,7 @@ $thcount  = 8;
         <?php if (Art::is_enabled()) {
     ++$thcount; ?>
             <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
-        <?php 
+        <?php
 } ?>
             <th class="cel_album essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name'); ?></th>
             <th class="cel_add essential"></th>
@@ -41,25 +41,25 @@ $thcount  = 8;
             <th class="cel_songs optional"><?php echo T_('Songs'); ?></th>
             <th class="cel_year essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) {
-    ?>
+        ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
-            <?php 
-} ?>
+            <?php
+    } ?>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <?php if (User::is_registered()) {
-    ?>
+        ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ++$thcount; ?>
+            ++$thcount; ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php 
-} ?>
+                <?php
+        } ?>
                 <?php if (AmpConfig::get('userflags')) {
-    ++$thcount; ?>
+            ++$thcount; ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-                <?php 
-} ?>
-            <?php 
-} ?>
+                <?php
+        } ?>
+            <?php
+    } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -91,49 +91,49 @@ $thcount  = 8;
         <tr id="album_<?php echo $libitem->id ?>" class="<?php echo UI::flip_class() ?> libitem_menu">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_album_row.inc.php'); ?>
         </tr>
-        <?php 
+        <?php
         }?>
         <?php if (!count($object_ids)) {
-    ?>
+            ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No album found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <?php if (Art::is_enabled()) {
-    ?>
+            ?>
                 <th class="cel_cover"><?php echo T_('Art'); ?></th>
-            <?php 
-} ?>
+            <?php
+        } ?>
             <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Artist'), 'album_sort_artist_bottom'); ?></th>
             <th class="cel_songs"><?php echo T_('Songs'); ?></th>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year_bottom'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) {
-    ?>
+            ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
-            <?php 
-} ?>
+            <?php
+        } ?>
             <th class="cel_tags"><?php echo T_('Tags'); ?></th>
             <?php if (User::is_registered()) {
-    ?>
+            ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ?>
+                ?>
                     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                <?php 
-} ?>
+                <?php
+            } ?>
                 <?php if (AmpConfig::get('userflags')) {
-    ?>
+                ?>
                     <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-                <?php 
-} ?>
-            <?php 
-} ?>
+                <?php
+            } ?>
+            <?php
+        } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>
         </tr>
     <tfoot>
@@ -141,5 +141,5 @@ $thcount  = 8;
 
 <?php show_table_render(); ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

@@ -176,8 +176,8 @@ class AmpacheUPnP extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name'] = array('description' => T_('Instance Name'), 'type'=>'text');
-        $fields['url']  = array('description' => T_('URL'), 'type'=>'url');
+        $fields['name'] = array('description' => T_('Instance Name'), 'type' => 'text');
+        $fields['url']  = array('description' => T_('URL'), 'type' => 'url');
 
         return $fields;
     }
@@ -235,6 +235,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->PlaylistAdd($url->title, $url->url);
+
         return true;
     }
 
@@ -249,6 +250,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->PlaylistRemove($track);
+
         return true;
     }
 
@@ -263,6 +265,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->PlaylistClear();
+
         return true;
     }
 
@@ -318,6 +321,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->Skip($pos);
+
         return true;
     }
 
@@ -332,6 +336,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->Next();
+
         return true;
     }
 
@@ -346,6 +351,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->Prev();
+
         return true;
     }
 
@@ -360,6 +366,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->SetVolume($volume);
+
         return true;
     }
 
@@ -402,6 +409,7 @@ class AmpacheUPnP extends localplay_controller
         $this->_upnp->Repeat(array(
             'repeat' => ($state ? 'all' : 'off')
         ));
+
         return true;
     }
 
@@ -418,6 +426,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->PlayShuffle($onoff);
+
         return true;
     }
 
@@ -512,6 +521,7 @@ class AmpacheUPnP extends localplay_controller
         debug_event('upnp', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', '5');
         $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
         debug_event('upnp', 'Connected.', '5');
+
         return true;
     }
 }

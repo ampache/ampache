@@ -100,7 +100,7 @@ Hate it? Love it? Let us know! Dozens of people send ideas for amazing new featu
 
 * For Live discussions, visit us on our IRC Channel at chat.freenode.net #ampache or alternative via a [web based chat client](https://webchat.freenode.net)
 * For harder cases or general discussion about Ampache take a look at our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
-* Found a bug or Ampache isn't working as expected? Head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
+* Found a bug or Ampache isn't working as expected? Please refer to the [Issues Template](https://github.com/ampache/ampache/wiki/Issues) and head over to our [Issue Tracker](https://github.com/ampache/ampache/issues) 
 
 Further Information and basic Help
 ----------------------------------

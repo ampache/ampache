@@ -194,7 +194,7 @@ class Video extends database_object implements media, library_item
         
         // Load the data from the database
         $info = $this->get_info($id, 'video');
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -221,6 +221,7 @@ class Video extends database_object implements media, library_item
                 }
             }
         }
+
         return new Video($video_id);
     }
 
@@ -264,18 +265,18 @@ class Video extends database_object implements media, library_item
         }
 
         // Format the Bitrate
-        $this->f_bitrate       = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
-        $this->f_video_bitrate = (string) intval($this->video_bitrate/1000);
+        $this->f_bitrate       = intval($this->bitrate / 1000) . "-" . strtoupper($this->mode);
+        $this->f_video_bitrate = (string) intval($this->video_bitrate / 1000);
         if ($this->frame_rate) {
             $this->f_frame_rate = $this->frame_rate . ' fps';
         }
 
         // Format the Time
-        $min            = floor($this->time/60);
-        $sec            = sprintf("%02d", ($this->time%60));
+        $min            = floor($this->time / 60);
+        $sec            = sprintf("%02d", ($this->time % 60));
         $this->f_time   = $min . ":" . $sec;
-        $hour           = sprintf("%02d", floor($min/60));
-        $min_h          = sprintf("%02d", ($min%60));
+        $hour           = sprintf("%02d", floor($min / 60));
+        $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
 
         if ($details) {
@@ -284,7 +285,7 @@ class Video extends database_object implements media, library_item
             $this->f_tags = Tag::get_display($this->tags, true, 'video');
         }
 
-        $this->f_length = floor($this->time/60) . ' ' .  T_('minutes');
+        $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
         $this->f_file   = $this->f_title . '.' . $this->type;
         if ($this->release_date) {
             $this->f_release_date = date('Y-m-d', $this->release_date);
@@ -356,6 +357,7 @@ class Video extends database_object implements media, library_item
                 'object_id' => $this->id
             );
         }
+
         return $medias;
     }
 
@@ -576,6 +578,7 @@ class Video extends database_object implements media, library_item
         }
 
         $data['id'] = $vid;
+
         return self::insert_video_type($data, $gtypes, $options);
     }
 

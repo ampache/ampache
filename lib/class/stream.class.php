@@ -70,6 +70,7 @@ class Stream
 
             self::$session = Session::create($data);
         }
+
         return self::$session;
     }
 
@@ -144,6 +145,7 @@ class Stream
         // Bail out early if we're unutterably broken
         if ($transcode_settings === false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
+
             return false;
         }
 
@@ -171,7 +173,7 @@ class Stream
         $command = $transcode_settings['command'];
 
         $string_map = array(
-            '%FILE%'   => $song_file,
+            '%FILE%' => $song_file,
             '%SAMPLE%' => $bit_rate,   // Deprecated
             '%BITRATE%' => $bit_rate
         );
@@ -222,7 +224,7 @@ class Stream
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
             $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
-                '%FILE%'   => scrub_arg($media->file),
+                '%FILE%' => scrub_arg($media->file),
                 '%TIME%' => $frame
             );
             foreach ($string_map as $search => $replace) {
@@ -307,7 +309,7 @@ class Stream
     public static function validate_bitrate($bitrate)
     {
         /* Round to standard bitrates */
-        $bit_rate = 16*(floor($bitrate/16));
+        $bit_rate = 16 * (floor($bitrate / 16));
 
         return $bit_rate;
     }
@@ -344,12 +346,12 @@ class Stream
         Dba::write($sql, array($sid, $oid, $type, $uid, $time, time()));
     }
 
-     /**
-      * clear_now_playing
-      *
-      * There really isn't anywhere else for this function, shouldn't have
-      * deleted it in the first place.
-      */
+    /**
+     * clear_now_playing
+     *
+     * There really isn't anywhere else for this function, shouldn't have
+     * deleted it in the first place.
+     */
     public static function clear_now_playing()
     {
         $sql = 'TRUNCATE `now_playing`';
@@ -422,6 +424,7 @@ class Stream
 
         if (Dba::num_rows($db_results)) {
             debug_event('Stream', 'Unable to play media currently locked by another user', 3);
+
             return false;
         }
 

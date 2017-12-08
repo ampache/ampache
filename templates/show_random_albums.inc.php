@@ -45,26 +45,26 @@ if ($albums) {
             <a href="<?php echo $album->link; ?>">
                 <?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>
             </a>
-            <?php 
+            <?php
             } ?>
         </div>
         <?php if ($show_play) {
-    ?>
+                ?>
         <div class="play_album">
         <?php if (AmpConfig::get('directplay')) {
-    ?>
+                    ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'play_album_' . $album->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
+                        ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $album->id); ?>
-            <?php 
-} ?>
-        <?php 
-} ?>
+            <?php
+                    } ?>
+        <?php
+                } ?>
         <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $album->id); ?>
         </div>
-        <?php 
-} ?>
+        <?php
+            } ?>
         <?php
         if (AmpConfig::get('ratings') && Access::check('interface', '25')) {
             echo "<div id=\"rating_" . $album->id . "_album\">";
@@ -72,9 +72,9 @@ if ($albums) {
             echo "</div>";
         } ?>
     </div>
-    <?php 
+    <?php
     } ?>
-<?php 
+<?php
 } ?>
 
 <?php UI::show_box_bottom(); ?>

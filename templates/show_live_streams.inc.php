@@ -31,11 +31,11 @@
 </ul>
 </div>
 <?php UI::show_box_bottom(); ?>
-<?php 
+<?php
 } ?>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="live_stream">
     <thead>
         <tr class="th-top">
@@ -55,15 +55,15 @@
         <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
-        <?php 
-        } //end foreach ($artists as $artist) ?>
+        <?php
+        } //end foreach ($artists as $artist)?>
         <?php if (!count($object_ids)) {
-    ?>
+            ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -78,5 +78,5 @@
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

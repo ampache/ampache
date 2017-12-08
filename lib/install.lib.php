@@ -31,7 +31,7 @@ function split_sql($sql)
     $buffer    = array();
     $ret       = array();
     $in_string = false;
-    for ($i=0; $i<strlen($sql)-1; $i++) {
+    for ($i=0; $i < strlen($sql) - 1; $i++) {
         if ($sql[$i] == ";" && !$in_string) {
             $ret[] = substr($sql, 0, $i);
             $sql   = substr($sql, $i + 1);
@@ -50,6 +50,7 @@ function split_sql($sql)
     if (!empty($sql)) {
         $ret[] = $sql;
     }
+
     return($ret);
 } // split_sql
 
@@ -81,6 +82,7 @@ function install_check_status($configfile)
 
     if (!Dba::check_database()) {
         AmpError::add('general', T_('Unable to connect to database, check your ampache config'));
+
         return false;
     }
 
@@ -89,6 +91,7 @@ function install_check_status($configfile)
 
     if (!$db_results) {
         AmpError::add('general', T_('Unable to query database, check your ampache config'));
+
         return false;
     }
 
@@ -96,6 +99,7 @@ function install_check_status($configfile)
         return true;
     } else {
         AmpError::add('general', T_('Existing Database detected, unable to continue installation'));
+
         return false;
     }
 } // install_check_status
@@ -151,6 +155,7 @@ function install_rewrite_rules($file, $web_path, $download)
     if (!$download) {
         if (!file_put_contents($file, $final)) {
             AmpError::add('general', T_('Error writing config file'));
+
             return false;
         }
     } else {
@@ -176,11 +181,13 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
 
     if (count($matches)) {
         AmpError::add('general', T_('Error: Invalid database name.'));
+
         return false;
     }
 
     if (!Dba::check_database()) {
         AmpError::add('general', sprintf(T_('Error: Unable to make database connection: %s'), Dba::error()));
+
         return false;
     }
 
@@ -191,6 +198,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
             Dba::write('DROP DATABASE `' . $database . '`');
         } else {
             AmpError::add('general', T_('Error: Database already exists and overwrite not checked'));
+
             return false;
         }
     }
@@ -198,6 +206,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     if ($create_db) {
         if (!Dba::write('CREATE DATABASE `' . $database . '`')) {
             AmpError::add('general', sprintf(T_('Error: Unable to create database: %s'), Dba::error()));
+
             return false;
         }
     }
@@ -215,6 +224,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $sql .= "IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
         if (!Dba::write($sql)) {
             AmpError::add('general', sprintf(T_('Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
+
             return false;
         }
     } // end if we are creating a user
@@ -224,7 +234,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
         $pieces   = split_sql($query);
         $errors   = array();
-        for ($i=0; $i<count($pieces); $i++) {
+        for ($i=0; $i < count($pieces); $i++) {
             $pieces[$i] = trim($pieces[$i]);
             if (!empty($pieces[$i]) && $pieces[$i] != '#') {
                 if (!$result = Dba::write($pieces[$i])) {
@@ -266,12 +276,14 @@ function install_create_config($download = false)
     $params = AmpConfig::get_all();
     if (empty($params['database_username']) || (empty($params['database_password']) && strpos($params['database_hostname'], '/') !== 0)) {
         AmpError::add('general', T_("Invalid configuration settings"));
+
         return false;
     }
 
     // Connect to the DB
     if (!Dba::check_database()) {
         AmpError::add('general', T_("Database Connection Failed Check Hostname, Username and Password"));
+
         return false;
     }
 
@@ -281,11 +293,13 @@ function install_create_config($download = false)
     if (!$download) {
         if (!check_config_writable()) {
             AmpError::add('general', T_('Config file is not writable'));
+
             return false;
         } else {
             // Given that $final is > 0, we can ignore lazy comparison problems
             if (!file_put_contents($config_file, $final)) {
                 AmpError::add('general', T_('Error writing config file'));
+
                 return false;
             }
         }
@@ -307,21 +321,25 @@ function install_create_account($username, $password, $password2)
 {
     if (!strlen($username) or !strlen($password)) {
         AmpError::add('general', T_('No Username/Password specified'));
+
         return false;
     }
 
     if ($password !== $password2) {
         AmpError::add('general', T_('Passwords do not match'));
+
         return false;
     }
 
     if (!Dba::check_database()) {
         AmpError::add('general', sprintf(T_('Database connection failed: %s'), Dba::error()));
+
         return false;
     }
 
     if (!Dba::check_database_inserted()) {
         AmpError::add('general', sprintf(T_('Database select failed: %s'), Dba::error()));
+
         return false;
     }
 
@@ -332,6 +350,7 @@ function install_create_account($username, $password, $password2)
 
     if (!$insert_id) {
         AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
+
         return false;
     }
 

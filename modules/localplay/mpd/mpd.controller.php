@@ -122,7 +122,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_instance($data)
     {
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             switch ($key) {
                 case 'name':
                 case 'host':
@@ -222,10 +222,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name']        = array('description' => T_('Instance Name'),'type'=>'text');
-        $fields['host']        = array('description' => T_('Hostname'),'type'=>'text');
-        $fields['port']        = array('description' => T_('Port'),'type'=>'number');
-        $fields['password']    = array('description' => T_('Password'),'type'=>'password');
+        $fields['name']        = array('description' => T_('Instance Name'),'type' => 'text');
+        $fields['host']        = array('description' => T_('Hostname'),'type' => 'text');
+        $fields['port']        = array('description' => T_('Port'),'type' => 'number');
+        $fields['password']    = array('description' => T_('Password'),'type' => 'password');
 
         return $fields;
     } // instance_fields
@@ -275,10 +275,12 @@ class AmpacheMpd extends localplay_controller
 
         if (!$this->_mpd->PlAdd($url->url)) {
             debug_event('mpd', 'add_url failed to add: ' . json_encode($url), 1);
+
             return false;
         }
 
         $this->_add_count++;
+
         return true;
     }
 
@@ -334,6 +336,7 @@ class AmpacheMpd extends localplay_controller
         $this->stop();
         sleep(2);
         $this->play();
+
         return true;
     } // skip
 
@@ -381,43 +384,43 @@ class AmpacheMpd extends localplay_controller
     } // pause
 
 
-        /**
-        * volume
-        * This tells MPD to set the volume to the parameter
-        */
+    /**
+    * volume
+    * This tells MPD to set the volume to the parameter
+    */
     public function volume($volume)
     {
         return $this->_mpd->SetVolume($volume);
     } // volume
 
-       /**
-        * repeat
-        * This tells MPD to set the repeating the playlist (i.e. loop) to either
+    /**
+     * repeat
+     * This tells MPD to set the repeating the playlist (i.e. loop) to either
     * on or off.
-        */
+     */
     public function repeat($state)
     {
         return $this->_mpd->SetRepeat($state);
     } // repeat
 
-       /**
-        * random
-        * This tells MPD to turn on or off the playing of songs from the
+    /**
+     * random
+     * This tells MPD to turn on or off the playing of songs from the
     * playlist in random order.
-        */
-       public function random($onoff)
-       {
-           return $this->_mpd->SetRandom($onoff);
-       } // random
+     */
+    public function random($onoff)
+    {
+        return $this->_mpd->SetRandom($onoff);
+    } // random
 
-       /**
-        * move
-        * This tells MPD to move a song
-        */
-       public function move($source, $destination)
-       {
-           return $this->_mpd->PLMoveTrack($source, $destination);
-       } // move
+    /**
+     * move
+     * This tells MPD to move a song
+     */
+    public function move($source, $destination)
+    {
+        return $this->_mpd->PLMoveTrack($source, $destination);
+    } // move
 
     /**
      * get_songs
@@ -496,7 +499,7 @@ class AmpacheMpd extends localplay_controller
             } // end switch on primary key type
 
             /* Optional Elements */
-            $data['track']    = $entry['Pos']+1;
+            $data['track']    = $entry['Pos'] + 1;
 
             $results[] = $data;
         } // foreach playlist items

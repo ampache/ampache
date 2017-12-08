@@ -53,6 +53,7 @@ class AmpacheDiscogs
         }
         Preference::insert('discogs_api_key', 'Discogs consumer key', '', '75', 'string', 'plugins', $this->name);
         Preference::insert('discogs_secret_api_key', 'Discogs secret', '', '75', 'string', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -64,12 +65,13 @@ class AmpacheDiscogs
     {
         Preference::delete('discogs_api_key');
         Preference::delete('discogs_secret_api_key');
+
         return true;
     } // uninstall
 
     /**
      * load
-     * This is a required plugin function; here it populates the prefs we 
+     * This is a required plugin function; here it populates the prefs we
      * need for this object.
      */
     public function load($user)
@@ -81,12 +83,14 @@ class AmpacheDiscogs
             $this->api_key = trim($data['discogs_api_key']);
         } else {
             debug_event($this->name, 'No Discogs api key, metadata plugin skipped', '3');
+
             return false;
         }
         if (strlen(trim($data['discogs_secret_api_key']))) {
             $this->secret = trim($data['discogs_secret_api_key']);
         } else {
             debug_event($this->name, 'No Discogs secret, metadata plugin skipped', '3');
+
             return false;
         }
         
@@ -96,34 +100,39 @@ class AmpacheDiscogs
     protected function query_discogs($query)
     {
         $url     = 'https://api.discogs.com/' . $query;
-        $url    .= (strpos($query, '?') !== false) ? '&' : '?';
-        $url    .= 'key=' . $this->api_key . '&secret=' . $this->secret;
+        $url .= (strpos($query, '?') !== false) ? '&' : '?';
+        $url .= 'key=' . $this->api_key . '&secret=' . $this->secret;
         debug_event('discogs', 'Discogs request: ' . $url, 5);
         $request = Requests::get($url);
+
         return json_decode($request->body, true);
     }
     
     protected function search_artist($artist)
     {
         $query = "database/search?type=artist&title=" . rawurlencode($artist) . "&per_page=10";
+
         return $this->query_discogs($query);
     }
     
     protected function get_artist($id)
     {
         $query = "artists/" . $id;
+
         return $this->query_discogs($query);
     }
     
     protected function search_album($artist, $album)
     {
         $query = "database/search?type=master&release_title=" . rawurlencode($album) . "&artist=" . rawurlencode($artist) . "&per_page=10";
+
         return $this->query_discogs($query);
     }
     
     protected function get_album($id)
     {
         $query = "masters/" . $id;
+
         return $this->query_discogs($query);
     }
 
@@ -138,6 +147,7 @@ class AmpacheDiscogs
         // TVShow and Movie metadata only
         if (!in_array('music', $gather_types)) {
             debug_event('discogs', 'Not a valid media type, skipped.', '5');
+
             return null;
         }
         

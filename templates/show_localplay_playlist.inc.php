@@ -53,13 +53,13 @@ $status = $localplay->status();
             <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']), 'delete', T_('Delete'), 'localplay_delete_' . intval($object['id'])); ?>
             </td>
         </tr>
-        <?php 
+        <?php
         } if (!count($object_ids)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="3"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
         </tr>
-        <?php 
+        <?php
         } ?>
     </tbody>
     <tfoot>
@@ -71,5 +71,5 @@ $status = $localplay->status();
     </tfoot>
 </table>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

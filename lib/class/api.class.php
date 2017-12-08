@@ -150,6 +150,7 @@ class Api
         if (intval($version) < self::$auth_version) {
             debug_event('API', 'Login Failed: version too old', 1);
             AmpError::add('api', T_('Login Failed: version too old'));
+
             return false;
         }
 
@@ -179,6 +180,7 @@ class Api
                     debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
                     echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+
                     return false;
                 }
 
@@ -191,6 +193,7 @@ class Api
                     debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Invalid Username/Password'));
                     echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+
                     return false;
                 }
 
@@ -208,6 +211,7 @@ class Api
                 $data             = array();
                 $data['username'] = $client->username;
                 $data['type']     = 'api';
+                $data['apikey']   = $client->apikey;
                 $data['value']    = $timestamp;
                 if (isset($input['client'])) {
                     $data['agent'] = $input['client'];
@@ -257,18 +261,19 @@ class Api
                 $db_results = Dba::read($sql);
                 $catalog    = Dba::fetch_assoc($db_results);
 
-                echo XML_Data::keyed_array(array('auth'=>$token,
-                    'api'=>self::$version,
-                    'session_expire'=>date("c", time()+AmpConfig::get('session_length')-60),
-                    'update'=>date("c", $row['update']),
-                    'add'=>date("c", $row['add']),
-                    'clean'=>date("c", $row['clean']),
-                    'songs'=>$song['song'],
-                    'albums'=>$album['album'],
-                    'artists'=>$artist['artist'],
-                    'playlists'=>$playlist['playlist'],
-                    'videos'=>$vcounts['video'],
-                    'catalogs'=>$catalog['catalog']));
+                echo XML_Data::keyed_array(array('auth' => $token,
+                    'api' => self::$version,
+                    'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+                    'update' => date("c", $row['update']),
+                    'add' => date("c", $row['add']),
+                    'clean' => date("c", $row['clean']),
+                    'songs' => $song['song'],
+                    'albums' => $album['album'],
+                    'artists' => $artist['artist'],
+                    'playlists' => $playlist['playlist'],
+                    'videos' => $vcounts['video'],
+                    'catalogs' => $catalog['catalog']));
+
                 return true;
             } // match
         } // end while
@@ -287,12 +292,12 @@ class Api
      */
     public static function ping($input)
     {
-        $xmldata = array('server'=>AmpConfig::get('version'),'version'=>Api::$version,'compatible'=>'350001');
+        $xmldata = array('server' => AmpConfig::get('version'),'version' => Api::$version,'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid sess is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire'=>date("c", time()+AmpConfig::get('session_length')-60)), $xmldata);
+            $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
         debug_event('API', 'Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'], '5');
@@ -802,7 +807,7 @@ class Api
             case 'play':
             case 'stop':
                 $result_status = $localplay->$input['command']();
-                $xml_array     = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
+                $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
                 echo XML_Data::keyed_array($xml_array);
             break;
             default:
@@ -839,7 +844,7 @@ class Api
                 ));
 
                 // If everything was ok
-                $xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
+                $xml_array = array('action' => $input['action'],'method' => $input['method'],'result' => true);
                 echo XML_Data::keyed_array($xml_array);
             break;
             case 'devote':
@@ -853,7 +858,7 @@ class Api
                 $democratic->remove_vote($uid);
 
                 // Everything was ok
-                $xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
+                $xml_array = array('action' => $input['action'],'method' => $input['method'],'result' => true);
                 echo XML_Data::keyed_array($xml_array);
             break;
             case 'playlist':
@@ -864,7 +869,7 @@ class Api
             break;
             case 'play':
                 $url       = $democratic->play_url();
-                $xml_array = array('url'=>$url);
+                $xml_array = array('url' => $url);
                 echo XML_Data::keyed_array($xml_array);
             break;
             default:

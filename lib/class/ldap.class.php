@@ -34,6 +34,7 @@ function array_filter_key($array, $callback)
             unset($array[$key]);
         }
     }
+
     return $array;
 }
 // function array_filter_key ($array, $callback)
@@ -299,11 +300,11 @@ class LDAP
             $email       = $user_entry[strtolower($email_field)][0];
 
             $return_value = [
-                'success'  => true,
-                'type'     => 'ldap',
+                'success' => true,
+                'type' => 'ldap',
                 'username' => $username,
-                'name'     => $name,
-                'email'    => $email
+                'name' => $name,
+                'email' => $email
             ];
             
             if (($state_field = AmpConfig::get('ldap_state_field')) !== null) {
@@ -327,7 +328,7 @@ class LDAP
 
             $return_value = [
                 'success' => false,
-                'error'   => $message
+                'error' => $message
             ];
         }
 

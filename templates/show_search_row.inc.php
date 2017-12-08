@@ -53,7 +53,7 @@
                 <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
                     <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
                 </a>
-        <?php 
+        <?php
             }
             if ($libitem->has_access()) {
                 ?>

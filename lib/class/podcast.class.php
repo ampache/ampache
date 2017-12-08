@@ -60,7 +60,7 @@ class Podcast extends database_object implements library_item
         /* Get the information from the db */
         $info = $this->get_info($id);
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         } // foreach info
 
@@ -208,6 +208,7 @@ class Podcast extends database_object implements library_item
                 );
             }
         }
+
         return $medias;
     }
     
@@ -248,6 +249,7 @@ class Podcast extends database_object implements library_item
         
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             debug_event('podcast', 'Podcast update canceled, bad feed url.', 1);
+
             return $this->id;
         }
         
@@ -416,15 +418,18 @@ class Podcast extends database_object implements library_item
         
         if ($pubdate <= 0) {
             debug_event('podcast', 'Invalid episode publication date, skipped', 3);
+
             return false;
         }
         
         if ($pubdate > $afterdate) {
             $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`) " .
                     "VALUES (?, ?, ?, 'skipped', ?, ?, ?, ?, ?, ?, ?, ?)";
+
             return Dba::write($sql, array($title, $guid, $this->id, $source, $website, $description, $author, $category, $time, $pubdate, time()));
         } else {
             debug_event('podcast', 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 5);
+
             return true;
         }
     }
@@ -432,6 +437,7 @@ class Podcast extends database_object implements library_item
     private function update_lastsync($time)
     {
         $sql = "UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($time, $this->id));
     }
     
@@ -442,11 +448,13 @@ class Podcast extends database_object implements library_item
         $xmlstr = file_get_contents($this->feed);
         if ($xmlstr === false) {
             debug_event('podcast', 'Cannot access feed ' . $this->feed, 1);
+
             return false;
         }
         $xml = simplexml_load_string($xmlstr);
         if ($xml === false) {
             debug_event('podcast', 'Cannot read feed ' . $this->feed, 1);
+
             return false;
         }
 
@@ -464,6 +472,7 @@ class Podcast extends database_object implements library_item
         }
         
         $sql = "DELETE FROM `podcast` WHERE `id` = ?";
+
         return Dba::write($sql, array($this->id));
     }
     
@@ -472,10 +481,12 @@ class Podcast extends database_object implements library_item
         $catalog = Catalog::create_from_id($this->catalog);
         if (!$catalog->get_type() == 'local') {
             debug_event('podcast', 'Bad catalog type.', 1);
+
             return '';
         }
         
         $dirname = $this->title;
+
         return $catalog->path . DIRECTORY_SEPARATOR . $dirname;
     }
 }

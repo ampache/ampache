@@ -31,11 +31,11 @@
             }
         } ?>
 </td>
-<?php 
+<?php
 } ?>
 <td class="cel_song"><?php echo $libitem->title; ?></td>
 <?php if (AmpConfig::get('echonest_api_key')) {
-    ?>
+            ?>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php
@@ -46,13 +46,13 @@
                     <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song_preview', '<?php echo $libitem->id ?>')">
                     <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
                     </a>
-            <?php 
+            <?php
                 }
             } ?>
     </span>
 </td>
-<?php 
-} ?>
+<?php
+        } ?>
 <td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $libitem->f_album_link; ?></td>
 <td class="cel_track"><?php echo $libitem->track; ?></td>

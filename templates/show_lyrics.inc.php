@@ -62,7 +62,7 @@ if ($album != T_('Unknown (Orphaned)')) {
 <?php if ($lyrics['url']) {
     ?>
     <div id="lyrics_url"><a href="<?php echo $lyrics['url']; ?>" target="_blank"><?php echo T_('Show more'); ?></a></div>
-<?php 
+<?php
 } ?>
 </div>
 

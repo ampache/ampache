@@ -30,7 +30,7 @@
             <?php if (AmpConfig::get('playlist_art')) {
     ?>
             <th class="cel_cover optional"><?php echo T_('Art') ?></th>
-            <?php 
+            <?php
 } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
@@ -39,19 +39,19 @@
             <th class="cel_medias optional"><?php echo T_('# Medias'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'), 'playlist_sort_owner'); ?></th>
             <?php if (User::is_registered()) {
-    ?>
+        ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ?>
+            ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php 
-} ?>
+                <?php
+        } ?>
                 <?php if (AmpConfig::get('userflags')) {
-    ?>
+            ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-                <?php 
-} ?>
-            <?php 
-} ?>
+                <?php
+        } ?>
+            <?php
+    } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -68,25 +68,24 @@
             <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php'); ?>
         </tr>
         <?php
-
             }
-        } // end foreach ($playlists as $playlist) ?>
+        } // end foreach ($playlists as $playlist)?>
         <?php if (!count($object_ids)) {
-    ?>
+            ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="7"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
             <?php if (AmpConfig::get('playlist_art')) {
-    ?>
+            ?>
             <th class="cel_cover"><?php echo T_('Art') ?></th>
-            <?php 
-} ?>
+            <?php
+        } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_last_update"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update_bottom'); ?></th>
@@ -94,24 +93,24 @@
             <th class="cel_medias optional"><?php echo T_('# Medias'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'), 'playlist_sort_owner_bottom'); ?></th>
             <?php if (User::is_registered()) {
-    ?>
+            ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ?>
+                ?>
                     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                <?php 
-} ?>
+                <?php
+            } ?>
                 <?php if (AmpConfig::get('userflags')) {
-    ?>
+                ?>
                     <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-                <?php 
-} ?>
-            <?php 
-} ?>
+                <?php
+            } ?>
+            <?php
+        } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </tfoot>
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

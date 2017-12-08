@@ -22,7 +22,7 @@
 
 // Gotta do some math here!
 $total_images = count($images);
-$rows         = floor($total_images/4);
+$rows         = floor($total_images / 4);
 $i            = 0;
 ?>
 <?php UI::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
@@ -32,7 +32,7 @@ $i            = 0;
 while ($i <= $rows) {
     $j=0;
     while ($j < 4) {
-        $key        = $i*4+$j;
+        $key        = $i * 4 + $j;
         $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
         if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) {
@@ -44,19 +44,18 @@ while ($i <= $rows) {
                 <br />
                 <p align="center">
                 <?php if (is_array($dimensions)) {
-    ?>
+                ?>
                 [<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['height']); ?>]
-                <?php 
-} else {
-    ?>
+                <?php
+            } else {
+                ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
-                <?php 
-} ?>
+                <?php
+            } ?>
                 [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 </p>
             </td>
 <?php
-
         } // end else
         $j++;
     } // end while cells

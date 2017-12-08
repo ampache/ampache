@@ -27,8 +27,10 @@ class UPnPDevice
 
         if ($this->_settings['descriptionURL'] == $descriptionUrl) {
             debug_event('UPnPDevice', 'service Urls restored from session.', 5);
+
             return true;
         }
+
         return false;
     }
 
@@ -74,13 +76,13 @@ class UPnPDevice
     public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
     {
         $body  ='<?xml version="1.0" encoding="utf-8"?>';
-        $body .='<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>';
-        $body .='  <u:' . $method . ' xmlns:u="urn:schemas-upnp-org:service:' . $type . ':1">';
-        foreach ($arguments as $arg=>$value) {
-            $body .=' <' . $arg . '>' . $value . '</' . $arg . '>';
+        $body .= '<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>';
+        $body .= '  <u:' . $method . ' xmlns:u="urn:schemas-upnp-org:service:' . $type . ':1">';
+        foreach ($arguments as $arg => $value) {
+            $body .= ' <' . $arg . '>' . $value . '</' . $arg . '>';
         }
-        $body .='  </u:' . $method . '>';
-        $body .='</s:Body></s:Envelope>';
+        $body .= '  </u:' . $method . '>';
+        $body .= '</s:Body></s:Envelope>';
 
         $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != "/") ? "/" : "") . $this->_settings['controlURLs'][$type];
 
@@ -129,7 +131,7 @@ class UPnPDevice
         {
             debug_event('UPnPDevice', 'sendRequestToDevice HTTP-Code 500 - Create error response', 5);
         }
-        else 
+        else
         {
             debug_event('UPnPDevice', 'sendRequestToDevice HTTP-Code OK - Create response', 5);
         }
@@ -144,7 +146,7 @@ class UPnPDevice
     * @return mixed             Response code (int) or null if not found
     */
     /*
-    private function getResponseCode($headers) 
+    private function getResponseCode($headers)
     {
         $tmp = explode("\n", $headers);
         $firstLine = array_shift($tmp);

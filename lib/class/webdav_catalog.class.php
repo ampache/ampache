@@ -71,6 +71,7 @@ class WebDAV_Catalog extends DAV\Collection
     public function childExists($name)
     {
         $matches = Catalog::search_childrens($name, $this->catalog_id);
+
         return (count($matches) > 0);
     }
 
@@ -78,6 +79,7 @@ class WebDAV_Catalog extends DAV\Collection
     {
         if ($this->catalog_id > 0) {
             $catalog = Catalog::create_from_id($this->catalog_id);
+
             return $catalog->name;
         }
 

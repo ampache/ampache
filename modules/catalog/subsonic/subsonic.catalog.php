@@ -99,9 +99,9 @@ class Catalog_subsonic extends Catalog
 
     public function catalog_fields()
     {
-        $fields['uri']           = array('description' => T_('URI'),'type'=>'url');
-        $fields['username']      = array('description' => T_('Username'),'type'=>'text');
-        $fields['password']      = array('description' => T_('Password'),'type'=>'password');
+        $fields['uri']           = array('description' => T_('URI'),'type' => 'url');
+        $fields['username']      = array('description' => T_('Username'),'type' => 'text');
+        $fields['password']      = array('description' => T_('Password'),'type' => 'password');
 
         return $fields;
     }
@@ -121,7 +121,7 @@ class Catalog_subsonic extends Catalog
             $this->id = intval($catalog_id);
             $info     = $this->get_info($catalog_id);
 
-            foreach ($info as $key=>$value) {
+            foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
         }
@@ -144,11 +144,13 @@ class Catalog_subsonic extends Catalog
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
             AmpError::add('general', T_('Error: Subsonic selected, but path is not a URL'));
+
             return false;
         }
 
         if (!strlen($username) or !strlen($password)) {
             AmpError::add('general', T_('Error: Username and Password Required for Subsonic Catalogs'));
+
             return false;
         }
 
@@ -159,11 +161,13 @@ class Catalog_subsonic extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_subsonic` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
         Dba::write($sql, array($uri, $username, $password, $catalog_id));
+
         return true;
     }
 
@@ -211,6 +215,8 @@ class Catalog_subsonic extends Catalog
         if ($artists['success']) {
             foreach ($artists['data']['indexes']['index'] as $index) {
                 foreach ($index['artist'] as $artist) {
+                    $artistInfo = $subsonic->getArtistInfo(array('id' => $artist['id']));
+ 
                     // Get albums for artist
                     $albums = $subsonic->getMusicDirectory(array('id' => $artist['id']));
 
@@ -225,6 +231,8 @@ class Catalog_subsonic extends Catalog
                                             $data['artist']  = html_entity_decode($song['artist']);
                                             $data['album']   = html_entity_decode($song['album']);
                                             $data['title']   = html_entity_decode($song['title']);
+                                            $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
+                                            $data['year']    = $song['year'];
                                             $data['bitrate'] = $song['bitRate'] * 1000;
                                             $data['size']    = $song['size'];
                                             $data['time']    = $song['duration'];
@@ -238,12 +246,14 @@ class Catalog_subsonic extends Catalog
                                             } else {
                                                 $data['catalog'] = $this->id;
                                                 debug_event('subsonic_catalog', 'Adding song ' . $song['path'], 5, 'ampache-catalog');
-                                                if (!Song::insert($data)) {
+                                                $song_Id = Song::insert($data);
+                                                if (!$song_Id) {
                                                     debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
                                                     AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
                                                 } else {
-                                                    $songsadded++;
+                                                    parent::gather_art([$song_Id], null);
                                                 }
+                                                $songsadded++;
                                             }
                                         }
                                     }
@@ -273,7 +283,7 @@ class Catalog_subsonic extends Catalog
 
         return true;
     }
-
+    
     public function verify_catalog_proc()
     {
         return array('total' => 0, 'updated' => 0);
@@ -340,6 +350,7 @@ class Catalog_subsonic extends Catalog
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->uri, "/");
+
         return(str_replace($catalog_path . "/", "", $file_path));
     }
 
@@ -350,6 +361,7 @@ class Catalog_subsonic extends Catalog
         if (count($matches)) {
             $id = $matches[1];
         }
+
         return $id;
     }
 

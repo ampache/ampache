@@ -69,6 +69,7 @@ class Catalog_soundcloud extends Catalog
             "<li>Give a name to your application and click Register</li>" .
             "<li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li>" .
             "<li>Copy your Client ID and Secret here, and Save the app</li></ul>";
+
         return $help;
     } // get_create_help
 
@@ -103,8 +104,8 @@ class Catalog_soundcloud extends Catalog
 
     public function catalog_fields()
     {
-        $fields['userid']      = array('description' => T_('User ID'),'type'=>'text');
-        $fields['secret']      = array('description' => T_('Secret'),'type'=>'password');
+        $fields['userid']      = array('description' => T_('User ID'),'type' => 'text');
+        $fields['secret']      = array('description' => T_('Secret'),'type' => 'password');
 
         return $fields;
     }
@@ -140,7 +141,7 @@ class Catalog_soundcloud extends Catalog
             $this->id = intval($catalog_id);
             $info     = $this->get_info($catalog_id);
 
-            foreach ($info as $key=>$value) {
+            foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
         }
@@ -169,6 +170,7 @@ class Catalog_soundcloud extends Catalog
 
         if (!strlen($userid) or !strlen($secret)) {
             AmpError::add('general', T_('Error: UserID and Secret Required for SoundCloud Catalogs'));
+
             return false;
         }
 
@@ -179,11 +181,13 @@ class Catalog_soundcloud extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate user id ' . $userid, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $userid));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_soundcloud` (`userid`, `secret`, `catalog_id`) VALUES (?, ?, ?)';
         Dba::write($sql, array($userid, $secret, $catalog_id));
+
         return true;
     }
 
@@ -248,6 +252,7 @@ class Catalog_soundcloud extends Catalog
         }
         if (!$this->authtoken) {
             $this->showAuthToken();
+
             return null;
         }
 
@@ -384,6 +389,7 @@ class Catalog_soundcloud extends Catalog
         if (count($matches)) {
             $track = $matches[1];
         }
+
         return $track;
     }
 

@@ -343,6 +343,7 @@ class Random
                     $album = new Album($result);
                     $songs = array_merge($songs, $album->get_songs());
                 }
+
                 return $songs;
             case 'artist':
                 $songs = array();
@@ -350,6 +351,7 @@ class Random
                     $artist = new Artist($result);
                     $songs  = array_merge($songs, $artist->get_songs());
                 }
+
                 return $songs;
             default:
                 return false;

@@ -59,6 +59,7 @@ class scrobbler
         }
         $sig .= $this->secret;
         $sig = md5($sig);
+
         return $sig;
     } // get_api_sig
 
@@ -72,9 +73,9 @@ class scrobbler
         // Encode parameters per RFC1738
         $params=http_build_query($vars);
         $opts  = array(
-                'http'=>array(
-                        'method'=>$method,
-                        'header'=> array(
+                'http' => array(
+                        'method' => $method,
+                        'header' => array(
                                 'Host: ' . $this->host,
                                 'User-Agent: Ampache/' . AmpConfig::get('version')
                         ),
@@ -88,7 +89,7 @@ class scrobbler
             $params                   ='';
         }
         $context = stream_context_create($opts);
-        if ($params!='') {
+        if ($params != '') {
             // If there are paramters for GET request, adding the "?" caracter before
             $params='?' . $params;
         }
@@ -96,6 +97,7 @@ class scrobbler
         $fp     = @fopen($target, 'r', false, $context);
         if (!$fp) {
             debug_event('Scrobbler', 'Cannot access ' . $target, 1);
+
             return false;
         }
         ob_start();
@@ -103,6 +105,7 @@ class scrobbler
         $buffer = ob_get_contents();
         ob_end_clean();
         fclose($fp);
+
         return $buffer;
     } // call_url
 
@@ -132,8 +135,8 @@ class scrobbler
         if (!is_null($token)) {
             $vars = array(
             'method' => 'auth.getSession',
-            'api_key'=> $this->api_key,
-            'token'  => $token
+            'api_key' => $this->api_key,
+            'token' => $token
             );
             //sign the call
             $sig             = $this->get_api_sig($vars);
@@ -148,18 +151,22 @@ class scrobbler
                         return $xml->session->key;
                     } else {
                         $this->error_msg = 'Did not receive a valid response';
+
                         return false;
                     }
                 } else {
                     $this->error_msg = $xml->error;
+
                     return false;
                 }
             } else {
                 $this->error_msg = 'Did not receive a valid response';
+
                 return false;
             }
         }
         $this->error_msg = 'Need a token to call getSession';
+
         return false;
     } // get_session_key
 
@@ -173,6 +180,7 @@ class scrobbler
     {
         if ($length < 30) {
             debug_event('Scrobbler', "Not queuing track, too short", '5');
+
             return false;
         }
 
@@ -185,6 +193,7 @@ class scrobbler
         $newtrack['time']   = $timestamp;
 
         $this->queued_tracks[$timestamp] = $newtrack;
+
         return true;
     } // queue_track
 
@@ -198,6 +207,7 @@ class scrobbler
         // Check and make sure that we've got some queued tracks
         if (!count($this->queued_tracks)) {
             $this->error_msg = "No tracks to submit";
+
             return false;
         }
 
@@ -235,10 +245,12 @@ class scrobbler
                 return true;
             } else {
                 $this->error_msg = $xml->error;
+
                 return false;
             }
         } else {
             $this->error_msg = 'Did not receive a valid response';
+
             return false;
         }
     } // submit_tracks
@@ -270,10 +282,12 @@ class scrobbler
                 return true;
             } else {
                 $this->error_msg = $xml->error;
+
                 return false;
             }
         } else {
             $this->error_msg = 'Did not receive a valid response';
+
             return false;
         }
     } // love

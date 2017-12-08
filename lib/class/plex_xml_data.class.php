@@ -113,54 +113,63 @@ class Plex_XML_Data
         foreach ($ids as $id) {
             $ampids[] = self::getAmpacheId($id);
         }
+
         return $ampids;
     }
 
     public static function isArtist($id)
     {
         $id = self::clearItemId($id);
+
         return ($id >= Plex_XML_Data::AMPACHEID_ARTIST && $id < Plex_XML_Data::AMPACHEID_ALBUM);
     }
 
     public static function isAlbum($id)
     {
         $id = self::clearItemId($id);
+
         return ($id >= Plex_XML_Data::AMPACHEID_ALBUM && $id < Plex_XML_Data::AMPACHEID_TRACK);
     }
 
     public static function isTrack($id)
     {
         $id = self::clearItemId($id);
-        return ($id >= Plex_XML_Data::AMPACHEID_TRACK  && $id < Plex_XML_Data::AMPACHEID_SONG);
+
+        return ($id >= Plex_XML_Data::AMPACHEID_TRACK && $id < Plex_XML_Data::AMPACHEID_SONG);
     }
 
     public static function isSong($id)
     {
         $id = self::clearItemId($id);
-        return ($id >= Plex_XML_Data::AMPACHEID_SONG  && $id < Plex_XML_Data::AMPACHEID_TVSHOW);
+
+        return ($id >= Plex_XML_Data::AMPACHEID_SONG && $id < Plex_XML_Data::AMPACHEID_TVSHOW);
     }
 
     public static function isTVShow($id)
     {
         $id = self::clearItemId($id);
-        return ($id >= Plex_XML_Data::AMPACHEID_TVSHOW  && $id < Plex_XML_Data::AMPACHEID_TVSHOW_SEASON);
+
+        return ($id >= Plex_XML_Data::AMPACHEID_TVSHOW && $id < Plex_XML_Data::AMPACHEID_TVSHOW_SEASON);
     }
 
     public static function isTVShowSeason($id)
     {
         $id = self::clearItemId($id);
-        return ($id >= Plex_XML_Data::AMPACHEID_TVSHOW_SEASON  && $id < Plex_XML_Data::AMPACHEID_VIDEO);
+
+        return ($id >= Plex_XML_Data::AMPACHEID_TVSHOW_SEASON && $id < Plex_XML_Data::AMPACHEID_VIDEO);
     }
 
     public static function isVideo($id)
     {
         $id = self::clearItemId($id);
+
         return ($id >= Plex_XML_Data::AMPACHEID_VIDEO && $id < Plex_XML_Data::AMPACHEID_PLAYLIST);
     }
 
     public static function isPlaylist($id)
     {
         $id = self::clearItemId($id);
+
         return ($id >= Plex_XML_Data::AMPACHEID_PLAYLIST);
     }
 
@@ -187,6 +196,7 @@ class Plex_XML_Data
     public static function getServerPort()
     {
         $port = $_SERVER['SERVER_PORT'];
+
         return $port?:'32400';
     }
 
@@ -196,6 +206,7 @@ class Plex_XML_Data
         if (!$address) {
             $address = self::getServerAddress();
         }
+
         return $address;
     }
 
@@ -205,6 +216,7 @@ class Plex_XML_Data
         if (!$port) {
             $port = self::getServerPort();
         }
+
         return $port;
     }
 
@@ -236,6 +248,7 @@ class Plex_XML_Data
     public static function createContainer()
     {
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><MediaContainer/>');
+
         return $response;
     }
 
@@ -245,6 +258,7 @@ class Plex_XML_Data
         $response->addAttribute('identifier', 'com.plexapp.plugins.library');
         $response->addAttribute('mediaTagPrefix', '/system/bundle/media/flags/');
         $response->addAttribute('mediaTagVersion', '1382796976');
+
         return $response;
     }
 
@@ -252,6 +266,7 @@ class Plex_XML_Data
     {
         $response = self::createContainer();
         $response->addAttribute('content', 'plugins');
+
         return $response;
     }
 
@@ -261,6 +276,7 @@ class Plex_XML_Data
         $response->addAttribute('noHistory', '0');
         $response->addAttribute('replaceParent', '0');
         $response->addAttribute('identifier', 'com.plexapp.system');
+
         return $response;
     }
 
@@ -268,6 +284,7 @@ class Plex_XML_Data
     {
         $response = self::createContainer();
         $response->addAttribute('identifier', 'com.plexapp.system.accounts');
+
         return $response;
     }
 
@@ -294,6 +311,7 @@ class Plex_XML_Data
     public static function getKeyFromMetadataUri($uri)
     {
         $up = '/library/metadata/';
+
         return substr($uri, strlen($up));
     }
 
@@ -309,6 +327,7 @@ class Plex_XML_Data
                 }
             }
         }
+
         return $key;
     }
 
@@ -338,6 +357,7 @@ class Plex_XML_Data
         if (!$uniqid) {
             $uniqid = self::getServerAddress();
         }
+
         return self::uuidFromKey($uniqid);
     }
 
@@ -877,7 +897,7 @@ class Plex_XML_Data
 
         $tags = Tag::get_top_tags('album', $album->id);
         if (is_array($tags)) {
-            foreach ($tags as $tag_id=>$tag) {
+            foreach ($tags as $tag_id => $tag) {
                 $xgenre = $xdir->addChild('Genre');
                 $xgenre->addAttribute('tag', $tag['name']);
             }
@@ -949,7 +969,7 @@ class Plex_XML_Data
     {
         $tags = Tag::get_top_tags($object_type, $object_id);
         if (is_array($tags) && count($tags) > 0) {
-            foreach ($tags as $tag_id=>$tag) {
+            foreach ($tags as $tag_id => $tag) {
                 $xgenre = $xml->addChild('Genre');
                 $xgenre->addAttribute('tag', $tag['name']);
             }
@@ -964,7 +984,7 @@ class Plex_XML_Data
         if (!empty($object_type)) {
             $tags = Tag::get_tags($object_type);
             if (is_array($tags) && count($tags) > 0) {
-                foreach ($tags as $tag_id=>$tag) {
+                foreach ($tags as $tag_id => $tag) {
                     $xdir = $xml->addChild('Directory');
                     $xdir->addAttribute('key', $tag['id']);
                     $xdir->addAttribute('title', $tag['name']);
@@ -1116,7 +1136,7 @@ class Plex_XML_Data
         $xdir->addAttribute('grandparentThumb', self::getMetadataUri($artistid) . '/thumb/' . $artistid);
         $xdir->addAttribute('parentThumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid);
         $xdir->addAttribute('thumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid); // No song art, set album art
-       $xdir->addAttribute('index', $song->track);
+        $xdir->addAttribute('index', $song->track);
         $xdir->addAttribute('duration', $time);
         $xdir->addAttribute('type', 'track');
         $xdir->addAttribute('addedAt', '');
@@ -1134,8 +1154,8 @@ class Plex_XML_Data
         $xmedia->addAttribute('duration', $time);
         $xmedia->addAttribute('bitrate', intval($song->bitrate / 1000));
         $xmedia->addAttribute('audioChannels', $song->channels);
-       // Type != Codec != Container, but that's how Ampache works today...
-       $xmedia->addAttribute('audioCodec', $song->type);
+        // Type != Codec != Container, but that's how Ampache works today...
+        $xmedia->addAttribute('audioCodec', $song->type);
         $xmedia->addAttribute('container', $song->type);
 
         $xpart  = $xmedia->addChild('Part');
@@ -1172,6 +1192,7 @@ class Plex_XML_Data
                 $xvid->addAttribute('year', $movie->year);
             }
         }
+
         return $xvid;
     }
 
@@ -1184,6 +1205,7 @@ class Plex_XML_Data
         $xvid->addAttribute('type', 'episode');
         $xvid->addAttribute('summary', $episode->summary);
         $xvid->addAttribute('index', $episode->episode_number);
+
         return $xvid;
     }
 
@@ -1227,18 +1249,18 @@ class Plex_XML_Data
 
         $xmedia = $xvid->addChild('Media');
         $xmedia->addAttribute('id', $id); // Same ID that video => OK?
-       $xmedia->addAttribute('duration', $time);
+        $xmedia->addAttribute('duration', $time);
         $xmedia->addAttribute('bitrate', intval($video->bitrate / 1000));
         $xmedia->addAttribute('audioChannels', $video->channels);
-       // Type != Codec != Container, but that's how Ampache works today...
-       $xmedia->addAttribute('audioCodec', $video->audio_codec);
+        // Type != Codec != Container, but that's how Ampache works today...
+        $xmedia->addAttribute('audioCodec', $video->audio_codec);
         $xmedia->addAttribute('videoCodec', $video->video_codec);
         $xmedia->addAttribute('container', $video->type);
         $xmedia->addAttribute('width', $video->resolution_x);
         $xmedia->addAttribute('height', $video->resolution_y);
-       //$xmedia->addAttribute('videoResolution', 'sd'); // TODO
-       //$xmedia->addAttribute('aspectRatio', '1.78'); // TODO
-       $xmedia->addAttribute('videoFrameRate', intval(ceil($video->frame_rate)) . 'p');
+        //$xmedia->addAttribute('videoResolution', 'sd'); // TODO
+        //$xmedia->addAttribute('aspectRatio', '1.78'); // TODO
+        $xmedia->addAttribute('videoFrameRate', intval(ceil($video->frame_rate)) . 'p');
 
         $xpart  = $xmedia->addChild('Part');
         $partid = self::getPartId($id);
@@ -1249,16 +1271,16 @@ class Plex_XML_Data
         $xpart->addAttribute('size', $video->size);
         $xpart->addAttribute('container', $video->type);
 
-       // TODO: support Writer/Director tags here as part of Video/
-       /*
-        <Writer tag="Grant Scharbo" />
-        <Writer tag="Richard Hatem" />
-        <Director tag="Terry McDonough" />
-        */
+        // TODO: support Writer/Director tags here as part of Video/
+        /*
+         <Writer tag="Grant Scharbo" />
+         <Writer tag="Richard Hatem" />
+         <Director tag="Terry McDonough" />
+         */
 
-       $tags = Tag::get_top_tags('video', $video->id);
+        $tags = Tag::get_top_tags('video', $video->id);
         if (is_array($tags)) {
-            foreach ($tags as $tag_id=>$tag) {
+            foreach ($tags as $tag_id => $tag) {
                 $xgenre = $xvid->addChild('Genre');
                 $xgenre->addAttribute('id', $tag['id']);
                 $xgenre->addAttribute('tag', $tag['name']);
@@ -1267,7 +1289,7 @@ class Plex_XML_Data
 
         if ($details) {
             // Subtitles
-           $subtitles = $video->get_subtitles();
+            $subtitles = $video->get_subtitles();
             foreach ($subtitles as $subtitle) {
                 $streamid = hexdec(bin2hex($subtitle['lang_code'])) . $partid;
                 $xstream  = $xpart->addChild('Stream');
@@ -1280,7 +1302,7 @@ class Plex_XML_Data
                 $xstream->addAttribute('format', 'srt');
             }
 
-           // TODO: support real audio/video streams!
+            // TODO: support real audio/video streams!
            /*
             <Stream id="93" streamType="1" codec="mpeg4" index="0" bitrate="833" bitDepth="8" chromaSubsampling="4:2:0" colorSpace="yuv" duration="2989528" frameRate="23,976" gmc="0" height="352" level="5" profile="asp" qpel="0" scanType="progressive" width="624" />
             <Stream id="94" streamType="2" selected="1" codec="mp3" index="1" channels="2" bitrate="135" bitrateMode="vbr" duration="2989488" samplingRate="48000" />
@@ -1505,6 +1527,7 @@ class Plex_XML_Data
         if (!empty($langs)) {
             self::addLanguages($agent, $langs);
         }
+
         return $agent;
     }
 
@@ -1786,7 +1809,7 @@ class Plex_XML_Data
         }
         if (empty($title)) {
             $pp    = explode($delim, $path);
-            $title = $pp[count($pp)-1];
+            $title = $pp[count($pp) - 1];
             if (empty($title)) {
                 $title = $path;
             }

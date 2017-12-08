@@ -47,6 +47,7 @@ class fs
                 throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
             }
         }
+
         return $temp;
     }
     protected function path($id)
@@ -54,6 +55,7 @@ class fs
         $id = str_replace('/', DIRECTORY_SEPARATOR, $id);
         $id = trim($id, DIRECTORY_SEPARATOR);
         $id = $this->real($this->base . DIRECTORY_SEPARATOR . $id);
+
         return $id;
     }
     protected function id($path)
@@ -62,6 +64,7 @@ class fs
         $path = substr($path, strlen($this->base));
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         $path = trim($path, '/');
+
         return strlen($path) ? $path : '/';
     }
 
@@ -96,8 +99,9 @@ class fs
             }
         }
         if ($with_root && $this->id($dir) === '/') {
-            $res = array(array('text' => basename($this->base), 'children' => $res, 'id' => '/', 'icon'=>'folder', 'state' => array('opened' => true, 'disabled' => true)));
+            $res = array(array('text' => basename($this->base), 'children' => $res, 'id' => '/', 'icon' => 'folder', 'state' => array('opened' => true, 'disabled' => true)));
         }
+
         return $res;
     }
 
@@ -105,11 +109,12 @@ class fs
     {
         if (strpos($id, ":")) {
             $id = array_map(array($this, 'id'), explode(':', $id));
-            return array('type'=>'multiple', 'content'=> 'Multiple selected: ' . implode(' ', $id));
+
+            return array('type' => 'multiple', 'content' => 'Multiple selected: ' . implode(' ', $id));
         }
         $dir = $this->path($id);
         if (is_dir($dir)) {
-            return array('type'=>'folder', 'content'=> $id);
+            return array('type' => 'folder', 'content' => $id);
         }
         if (is_file($dir)) {
             $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
@@ -146,6 +151,7 @@ class fs
                     $dat['content'] = 'File not recognized: ' . $this->id($dir);
                     break;
             }
+
             return $dat;
         }
         throw new Exception('Not a valid selection: ' . $dir);
@@ -161,6 +167,7 @@ class fs
         } else {
             file_put_contents($dir . DIRECTORY_SEPARATOR . $name, '');
         }
+
         return array('id' => $this->id($dir . DIRECTORY_SEPARATOR . $name));
     }
     public function rename($id, $name)
@@ -180,6 +187,7 @@ class fs
             throw new Exception('Path already exists: ' . $new);
         }
         rename($dir, $new);
+
         return array('id' => $this->id($new));
     }
     public function remove($id)
@@ -197,6 +205,7 @@ class fs
         if (is_file($dir)) {
             unlink($dir);
         }
+
         return array('status' => 'OK');
     }
     public function move($id, $par)
@@ -207,6 +216,7 @@ class fs
         $new = array_pop($new);
         $new = $par . DIRECTORY_SEPARATOR . $new;
         rename($dir, $new);
+
         return array('id' => $this->id($new));
     }
     public function copy($id, $par)
@@ -229,6 +239,7 @@ class fs
         if (is_file($dir)) {
             copy($dir, $new);
         }
+
         return array('id' => $this->id($new));
     }
 }

@@ -53,7 +53,7 @@ $media->format();
         Art::display($release_art['object_type'], $release_art['object_id'], $media->get_fullname(), 6, $media->link); ?>
             </div>
         </div>
-    <?php 
+    <?php
     }
 ?>
 
@@ -73,7 +73,7 @@ $media->format();
                 <?php Userflag::show($media->id, 'video'); ?>
             </div>
         </div>
-    <?php 
+    <?php
     }
 ?>
 </div>

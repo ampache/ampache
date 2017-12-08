@@ -38,14 +38,14 @@
 </td>
 <?php
 if (Art::is_enabled()) {
-    $name = scrub_out($libitem->full_name); ?>
+        $name = scrub_out($libitem->full_name); ?>
 <td class="cel_cover">
     <?php
     $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
-    Art::display('artist', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $libitem->id); ?>
+        Art::display('artist', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
-<?php 
-} ?>
+<?php
+    } ?>
 <td class="cel_artist"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
@@ -57,7 +57,6 @@ if (Art::is_enabled()) {
                 <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
             </a>
         <?php
-
         } ?>
     </span>
 </td>
@@ -65,22 +64,22 @@ if (Art::is_enabled()) {
 <td class="cel_albums"><?php echo $libitem->albums; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) {
-    ?>
+            ?>
     <td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
-<?php 
-} ?>
+<?php
+        } ?>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) {
             ?>
             <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist"><?php Rating::show($libitem->id, 'artist'); ?></td>
-        <?php 
+        <?php
         }
         if (AmpConfig::get('userflags')) {
             ?>
             <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist"><?php Userflag::show($libitem->id, 'artist'); ?></td>
-        <?php 
+        <?php
         }
     }
 ?>
@@ -91,21 +90,21 @@ if (Art::is_enabled()) {
     <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
         <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
     </a>
-    <?php 
+    <?php
     }
     if ($libitem->can_edit()) {
         ?>
         <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo T_('Artist edit') ?>', 'artist_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
-    <?php 
+    <?php
     }
     if (Catalog::can_remove($libitem)) {
         ?>
         <a id="<?php echo 'delete_artist_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('delete', T_('Delete')); ?>
         </a>
-    <?php 
+    <?php
     }
 }
 ?>

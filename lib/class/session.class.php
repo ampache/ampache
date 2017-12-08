@@ -188,6 +188,10 @@ class Session
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
+                $key = isset($data['apikey'])
+                    ? $data['apikey']
+                    : md5(uniqid(rand(), true));
+                break;
             case 'stream':
                 $key = isset($data['sid'])
                     ? $data['sid']
@@ -245,6 +249,7 @@ class Session
 
         if (!$db_results) {
             debug_event('session', 'Session creation failed', '1');
+
             return false;
         }
 
@@ -298,6 +303,7 @@ class Session
         // Switch on the type they pass
         switch ($type) {
             case 'api':
+                return true;
             case 'stream':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
                     "AND `type` IN ('api', 'stream')";
@@ -359,6 +365,7 @@ class Session
     public static function update_username($sid, $username)
     {
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
+
         return Dba::write($sql, array($username, $sid));
     }
 
@@ -504,6 +511,7 @@ class Session
     public static function storeTokenForUser($username, $token, $remember_length)
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
+
         return Dba::write($sql, array($username, $token, time() + $remember_length));
     }
 

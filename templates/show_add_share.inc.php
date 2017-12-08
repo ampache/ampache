@@ -65,7 +65,7 @@
         <input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
-<?php 
+<?php
 } ?>
 </table>
 <div class="formValidation">

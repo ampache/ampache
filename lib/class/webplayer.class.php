@@ -159,6 +159,7 @@ class WebPlayer
         }
 
         debug_event("webplayer.class.php", "Types {" . json_encode($types) . "}", 5);
+
         return $types;
     }
 

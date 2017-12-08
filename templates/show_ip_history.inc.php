@@ -28,13 +28,13 @@
     ?>
     <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo UI::get_icon('disable'); ?></a>
     <?php echo T_('Show Unique'); ?>
-<?php 
+<?php
 } else {
-    ?>
+        ?>
     <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo UI::get_icon('add'); ?></a>
     <?php echo T_('Show All'); ?>
-<?php 
-}?>
+<?php
+    }?>
 </li>
 </ul>
 </div>
@@ -50,7 +50,7 @@
      <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) {
-    ?>
+        ?>
 <tr class="<?php echo UI::flip_class(); ?>">
     <td class="cel_date">
         <?php echo date("d/m/Y H\hi", $data['date']); ?>
@@ -59,8 +59,8 @@
         <?php echo inet_ntop($data['ip']); ?>
     </td>
 </tr>
-<?php 
-} ?>
+<?php
+    } ?>
 <tr class="th-bottom">
   <th class="cel_date"><?php echo T_('Date'); ?></th>
      <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>

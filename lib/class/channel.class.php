@@ -67,7 +67,7 @@ class Channel extends database_object implements media, library_item
         $info = $this->get_info($id);
 
         // Foreach what we've got
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -120,6 +120,7 @@ class Channel extends database_object implements media, library_item
     public function delete()
     {
         $sql = "DELETE FROM `channel` WHERE `id` = ?";
+
         return Dba::write($sql, array($this->id));
     }
 
@@ -142,7 +143,8 @@ class Channel extends database_object implements media, library_item
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $params = array($name, $description, $url, $object_type, $object_id, $interface, $port, (!empty($interface) && !empty($port)), $admin_password, !empty($private), $max_listeners, $random, $loop, $stream_type, $bitrate);
+            $params = array($name, $description, $url, $object_type, $object_id, $interface, $port, (!empty($interface) && !empty($port)), $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate);
+
             return Dba::write($sql, $params);
         }
 
@@ -231,6 +233,7 @@ class Channel extends database_object implements media, library_item
                     'object_id' => $this->id
                     );
         }
+
         return $medias;
     }
 
@@ -328,6 +331,7 @@ class Channel extends database_object implements media, library_item
                 fclose($connection);
             }
         }
+
         return $check;
     }
 
@@ -448,12 +452,12 @@ class Channel extends database_object implements media, library_item
                         // see bin/channel_run.inc for explanation what's happening here
                         while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753") {
                             $hex                = $this->strtohex(substr($clchunk, 0, 27));
-                            $ogg_nr_of_segments = hexdec(substr($hex, 26*2, 2));
+                            $ogg_nr_of_segments = hexdec(substr($hex, 26 * 2, 2));
                             if ((substr($clchunk, 27 + $ogg_nr_of_segments + 1, 6) == "vorbis") || (substr($clchunk, 27 + $ogg_nr_of_segments, 4) == "Opus")) {
                                 $hex .= $this->strtohex(substr($clchunk, 27, $ogg_nr_of_segments));
                                 $ogg_sum_segm_laces = 0;
                                 for ($segm = 0; $segm < $ogg_nr_of_segments; $segm++) {
-                                    $ogg_sum_segm_laces += hexdec(substr($hex, 27*2 + $segm*2, 2));
+                                    $ogg_sum_segm_laces += hexdec(substr($hex, 27 * 2 + $segm * 2, 2));
                                 }
                                 $this->header_chunk .= substr($clchunk, 0, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
                                 if (strlen($clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces)) {
@@ -510,6 +514,7 @@ class Channel extends database_object implements media, library_item
     public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         $channel = new Channel($oid);
+
         return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
     }
 
@@ -542,8 +547,9 @@ class Channel extends database_object implements media, library_item
     {
         $s='';
         foreach (str_split($x) as $c) {
-            $s.=sprintf("%02X", ord($c));
+            $s .= sprintf("%02X", ord($c));
         }
+
         return($s);
     }
 } // end of channel class

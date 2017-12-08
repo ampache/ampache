@@ -155,7 +155,7 @@ class User extends database_object
 
         $info = $this->_get_info();
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             // Let's not save the password in this object :S
             if ($key == 'password') {
                 continue;
@@ -190,6 +190,7 @@ class User extends database_object
         $db_results           = Dba::read($sql, array($time, $last_seen));
         $data                 = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];
+
         return $results;
     }
 
@@ -211,6 +212,7 @@ class User extends database_object
             $data['username'] = 'System';
             $data['fullname'] = 'Ampache User';
             $data['access']   = '25';
+
             return $data;
         }
 
@@ -322,6 +324,7 @@ class User extends database_object
         while ($results = Dba::fetch_assoc($db_results)) {
             $users[] = $results['id'];
         }
+
         return $users;
     } // get_from_website
 
@@ -387,8 +390,8 @@ class User extends database_object
             if ($type == 'system') {
                 $admin = true;
             }
-            $type_array[$type][$r['name']] = array('name'=>$r['name'],'level'=>$r['level'],'description'=>$r['description'],'value'=>$r['value'],'subcategory'=>$r['subcatagory']);
-            $results[$type]                = array('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
+            $type_array[$type][$r['name']] = array('name' => $r['name'],'level' => $r['level'],'description' => $r['description'],'value' => $r['value'],'subcategory' => $r['subcatagory']);
+            $results[$type]                = array('title' => ucwords($type),'admin' => $admin,'prefs' => $type_array[$type]);
         } // end while
 
         return $results;
@@ -498,7 +501,7 @@ class User extends database_object
         $recommendations = array();
         asort($users);
 
-        foreach ($users as $user_id=>$score) {
+        foreach ($users as $user_id => $score) {
 
             /* Find everything they've rated at 4+ */
             $sql = "SELECT object_id,user_rating FROM ratings " .
@@ -539,6 +542,7 @@ class User extends database_object
 
         if ($row = Dba::fetch_assoc($db_results)) {
             $ip = $row['ip'] ? $row['ip'] : null;
+
             return $ip;
         }
 
@@ -613,7 +617,7 @@ class User extends database_object
             }
 
             switch ($name) {
-                case 'password';
+                case 'password':
                 case 'access':
                 case 'email':
                 case 'username':
@@ -897,11 +901,11 @@ class User extends database_object
         // Remove port information if any
         if (!empty($sip)) {
             // Use parse_url to support easily ipv6
-        	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === true) {
-        		$sipar = parse_url("http://" . $sip);
-        	} else {
-        		$sipar = parse_url("http://[" . $sip."]");
-        	}
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === true) {
+                $sipar = parse_url("http://" . $sip);
+            } else {
+                $sipar = parse_url("http://[" . $sip . "]");
+            }
             $sip   = $sipar['host'];
         }
 
@@ -915,7 +919,7 @@ class User extends database_object
 
         /* Clean up old records... sometimes  */
         if (rand(1, 100) > 60) {
-            $date = time() - (86400*AmpConfig::get('user_ip_cardinality'));
+            $date = time() - (86400 * AmpConfig::get('user_ip_cardinality'));
             $sql  = "DELETE FROM `ip_history` WHERE `date` < $date";
             Dba::write($sql);
         }
@@ -1444,6 +1448,7 @@ class User extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['user'];
         }
+
         return $results;
     }
 
@@ -1460,6 +1465,7 @@ class User extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['follow_user'];
         }
+
         return $results;
     }
 
@@ -1473,6 +1479,7 @@ class User extends database_object
     {
         $sql        = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id));
+
         return (Dba::num_rows($db_results) > 0);
     }
 
@@ -1486,6 +1493,7 @@ class User extends database_object
     {
         $sql        = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
         $db_results = Dba::read($sql, array($this->id, $user_id));
+
         return (Dba::num_rows($db_results) > 0);
     }
 
@@ -1534,6 +1542,7 @@ class User extends database_object
         $html = "<span id='button_follow_" . $this->id . "' class='followbtn'>";
         $html .= Ajax::text('?page=user&action=flip_follow&user_id=' . $this->id, ($followed ? T_('Unfollow') : T_('Follow')) . ' (' . count($this->get_followers()) . ')', 'flip_follow_' . $this->id);
         $html .= "</span>";
+
         return $html;
     }
 

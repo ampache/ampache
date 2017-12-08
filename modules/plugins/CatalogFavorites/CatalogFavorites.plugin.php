@@ -85,6 +85,7 @@ class AmpacheCatalogFavorites
         if ($from_version < 2) {
             Preference::insert('catalogfav_gridview', 'Catalog favorites grid view display', '1', '25', 'boolean', 'plugins');
         }
+
         return true;
     }
 

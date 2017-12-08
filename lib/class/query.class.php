@@ -72,6 +72,7 @@ class Query
 
         if (!$cached) {
             $this->id = 'nocache';
+
             return true;
         }
 
@@ -97,6 +98,7 @@ class Query
         }
 
         AmpError::add('browse', T_('Browse not found or expired, try reloading the page'));
+
         return false;
     }
 
@@ -922,6 +924,7 @@ class Query
             $row = Dba::fetch_assoc($db_results);
 
             $this->_cache = (array) self::_unserialize($row['object_data']);
+
             return $this->_cache;
         } else {
             $objects = $this->get_objects();
@@ -1110,6 +1113,7 @@ class Query
     private function get_select()
     {
         $select_string = implode(", ", $this->_state['select']);
+
         return $select_string;
     } // get_select
 
@@ -1122,6 +1126,7 @@ class Query
     private function get_base_sql()
     {
         $sql = str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
+
         return $sql;
     } // get_base_sql
 
@@ -1576,7 +1581,7 @@ class Query
                     $user_id    = intval($GLOBALS['user']->id);
                     $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
                 break;
-                default;
+                default:
                     // Rien a faire
                 break;
             } // end filter
@@ -1894,7 +1899,7 @@ class Query
         switch ($this->get_type()) {
             case 'song':
                 switch ($field) {
-                    case 'title';
+                    case 'title':
                         $sql = "`song`.`title`";
                     break;
                     case 'year':
@@ -2426,6 +2431,7 @@ class Query
         if ($this->_state['ak']) {
             $key .= '_' . $this->_state['ak'];
         }
+
         return $key;
     }
 

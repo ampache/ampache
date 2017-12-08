@@ -90,7 +90,7 @@ class Label extends database_object implements library_item
         }
 
         $info = $this->get_info($id);
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -127,6 +127,7 @@ class Label extends database_object implements library_item
                 'object_id' => $album_id
             );
         }
+
         return array('artist' => $medias);
     }
 
@@ -151,6 +152,7 @@ class Label extends database_object implements library_item
         $keywords['label'] = array('important' => true,
             'label' => T_('Label'),
             'value' => $this->f_name);
+
         return $keywords;
     }
 
@@ -166,6 +168,7 @@ class Label extends database_object implements library_item
                 );
             }
         }
+
         return $medias;
     }
 
@@ -194,6 +197,7 @@ class Label extends database_object implements library_item
                 'object_id' => $artist
             );
         }
+
         return $childrens;
     }
 
@@ -262,6 +266,7 @@ class Label extends database_object implements library_item
         Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
 
         $id = Dba::insert_id();
+
         return $id;
     }
 
@@ -306,12 +311,14 @@ class Label extends database_object implements library_item
     public function add_artist_assoc($artist_id)
     {
         $sql = "INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)";
+
         return Dba::write($sql, array($this->id, $artist_id, time()));
     }
 
     public function remove_artist_assoc($artist_id)
     {
         $sql = "DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?";
+
         return Dba::write($sql, array($this->id, $artist_id));
     }
 
@@ -365,6 +372,7 @@ class Label extends database_object implements library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
+
         return $results;
     }
 
@@ -378,6 +386,7 @@ class Label extends database_object implements library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
+
         return $results;
     }
 
@@ -394,7 +403,7 @@ class Label extends database_object implements library_item
         $results = '';
 
         // Iterate through the labels, format them according to type and element id
-        foreach ($labels as $label_id=>$value) {
+        foreach ($labels as $label_id => $value) {
             if ($link) {
                 $results .= '<a href="' . AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
             }

@@ -29,7 +29,7 @@
 <div id="shout<?php echo $shout->id; ?>" class="shout <?php echo UI::flip_class(); ?>">
     <?php echo $shout->get_display(true, true); ?>
 </div>
-<?php 
+<?php
   } ?>
 </div>
 <?php UI::show_box_bottom(); ?>

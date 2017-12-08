@@ -22,7 +22,7 @@
 
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
-header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
+header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">

@@ -26,7 +26,7 @@
 <?php if (User::is_registered()) {
     ?>
     <?php if (AmpConfig::get('ratings')) {
-    ?>
+        ?>
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
@@ -34,11 +34,10 @@
             </div>
         </dd>
     <?php
-
-} ?>
+    } ?>
 
     <?php if (AmpConfig::get('userflags')) {
-    ?>
+        ?>
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
@@ -46,90 +45,78 @@
             </div>
         </dd>
     <?php
-
-} ?>
+    } ?>
 <?php
-
 } ?>
 <?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (!empty($episode->file)) {
-    ?>
+        ?>
         <?php if (AmpConfig::get('directplay')) {
-    ?>
+            ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id, 'play', T_('Play'), 'play_podcast_episode_' . $episode->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
+                ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&append=true', 'play_add', T_('Play last'), 'addplay_podcast_episode_' . $episode->id); ?>
             <?php
-
-} ?>
+            } ?>
             <?php if (Stream_Playlist::check_autoplay_next()) {
-    ?>
+                ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_podcast_episode_' . $episode->id); ?>
             <?php
-
-} ?>
+            } ?>
         <?php
-
-} ?>
+        } ?>
         <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to temporary playlist'), 'add_podcast_episode_' . $episode->id); ?>
-        <?php 
-} ?>
+        <?php
+    } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('sociable')) {
-    ?>
+            ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
                 <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
                 </a>
             <?php
-
-} ?>
-        <?php 
-}
+        } ?>
+        <?php
+    }
     ?>
         <?php if (Access::check('interface', '25')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('share')) {
-    ?>
+            ?>
                 <?php Share::display_ui('podcast_episode', $episode->id, false); ?>
             <?php
-
-} ?>
+        } ?>
         <?php
-
-} ?>
+    } ?>
         <?php if (Access::check_function('download') && !empty($episode->file)) {
-    ?>
+        ?>
             <a rel="nohtml" href="<?php echo Podcast_Episode::play_url($episode->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
-
-} ?>
+    } ?>
         <?php if (Access::check('interface', '50')) {
-    ?>
+        ?>
             <?php if (AmpConfig::get('statistical_graphs')) {
-    ?>
+            ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
-
-} ?>
+        } ?>
             <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
-
-} ?>
+    } ?>
         <?php if (Catalog::can_remove($episode)) {
-    ?>
+        ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $episode->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php
-
-} ?>
+    } ?>
     </dd>
 <?php
     $songprops[gettext_noop('Title')]                  = $episode->f_title;

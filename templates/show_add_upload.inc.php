@@ -168,7 +168,6 @@ if ($upload_max > 0) {
     ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
 <?php
-
 }
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -183,7 +182,7 @@ if ($upload_max > 0) {
         </div>
     </td>
 </tr>
-<?php 
+<?php
 } ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
@@ -195,7 +194,7 @@ if ($upload_max > 0) {
     </td>
 </tr>
 <?php if (AmpConfig::get('licensing')) {
-    ?>
+        ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td>
@@ -205,8 +204,8 @@ if ($upload_max > 0) {
         </div>
     </td>
 </tr>
-<?php 
-} ?>
+<?php
+    } ?>
 <tr>
     <td>
         <?php echo T_('Files'); ?>

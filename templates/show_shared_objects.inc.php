@@ -45,7 +45,7 @@
     <tr id="share_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
         <?php require AmpConfig::get('prefix') . UI::find_template('show_share_row.inc.php'); ?>
     </tr>
-    <?php 
+    <?php
     } ?>
     </tbody>
 </table>

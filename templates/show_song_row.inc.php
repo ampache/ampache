@@ -65,41 +65,41 @@ if ($libitem->enabled || Access::check('interface', '50')) {
 <td class="cel_tags"><?php echo $libitem->f_tags ?></td>
 <td class="cel_time"><?php echo $libitem->f_time ?></td>
 <?php if (AmpConfig::get('licensing')) {
-    ?>
+        ?>
 <td class="cel_license"><?php echo $libitem->f_license ?></td>
-<?php 
-} ?>
+<?php
+    } ?>
 
 <?php if (AmpConfig::get('show_played_times')) {
-    ?>
+        ?>
 <td class="cel_counter"><?php echo $libitem->object_cnt ?></td>
-<?php 
-}
+<?php
+    }
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) {
             ?>
             <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_song">
                 <?php Rating::show($libitem->id, 'song') ?>  
             </td>
-    <?php 
+    <?php
         }
         if (AmpConfig::get('userflags')) {
             ?>
             <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_song">
                 <?php Userflag::show($libitem->id, 'song') ?>
             </td>
-    <?php 
+    <?php
         }
     } ?>
 <td class="cel_action">
     <a href="<?php echo $libitem->link ?>"><?php echo UI::get_icon('preferences', T_('Song Information')) ?></a>
     <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-    if (AmpConfig::get('sociable')) {
-        ?>
+        if (AmpConfig::get('sociable')) {
+            ?>
             <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $libitem->id ?>"><?php echo UI::get_icon('comment', T_('Post Shout')) ?></a>
-        <?php 
+        <?php
+        }
     }
-}
     if (Access::check('interface', '25')) {
         if (AmpConfig::get('share')) {
             Share::display_ui('song', $libitem->id, false);
@@ -108,14 +108,14 @@ if ($libitem->enabled || Access::check('interface', '50')) {
     if (Access::check_function('download')) {
         ?>
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&song_id=<?php echo $libitem->id ?>"><?php echo UI::get_icon('download', T_('Download')) ?></a>
-<?php 
+<?php
     }
     if (Access::check('interface', '50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
         ?>
         <a id="<?php echo 'edit_song_' . $libitem->id ?>" onclick="showEditDialog('song_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_song_' . $libitem->id ?>', '<?php echo T_('Song edit') ?>', 'song_')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
-<?php 
+<?php
     }
     if (Access::check('interface', '75') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
         $icon                 = $libitem->enabled ? 'disable' : 'enable';
@@ -123,14 +123,14 @@ if ($libitem->enabled || Access::check('interface', '50')) {
         <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id, $icon, T_(ucfirst($icon)), 'flip_song_' . $libitem->id); ?>
         </span>
-<?php 
+<?php
     }
     if (Catalog::can_remove($libitem)) {
         ?>
         <a id="<?php echo 'delete_song_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/song.php?action=delete&song_id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('delete', T_('Delete')); ?>
         </a>
-<?php 
+<?php
     } ?>
 </td>
 <?php
@@ -140,7 +140,6 @@ if ($libitem->enabled || Access::check('interface', '50')) {
     <?php echo UI::get_icon('drag', T_('Reorder')); ?>
 </td>
 <?php
-
     }
 }
 ?>

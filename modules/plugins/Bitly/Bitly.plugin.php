@@ -87,6 +87,7 @@ class AmpacheBitly
     {
         if (empty($this->bitly_username) || empty($this->bitly_api_key)) {
             debug_event($this->name, 'Bit.ly username or api key missing', '3');
+
             return false;
         }
         
@@ -99,6 +100,7 @@ class AmpacheBitly
             $shorturl = json_decode($request->body)->data->url;
         } catch (Exception $e) {
             debug_event($this->name, 'Bit.ly api http exception: ' . $e->getMessage(), '1');
+
             return false;
         }
         
@@ -107,7 +109,7 @@ class AmpacheBitly
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -119,12 +121,14 @@ class AmpacheBitly
             $this->bitly_username = trim($data['bitly_username']);
         } else {
             debug_event($this->name, 'No Bit.ly username, shortener skipped', '3');
+
             return false;
         }
         if (strlen(trim($data['bitly_api_key']))) {
             $this->bitly_api_key = trim($data['bitly_api_key']);
         } else {
             debug_event($this->name, 'No Bit.ly api key, shortener skipped', '3');
+
             return false;
         }
 

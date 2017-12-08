@@ -46,7 +46,7 @@ UI::show_box_top(T_('Preference Administration'));
         </select>
     </td>
 </tr>
-<?php 
+<?php
 } ?>
 <tr class="th-bottom">
     <th class="cel_preference"><?php echo T_('Preference'); ?></th>

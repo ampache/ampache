@@ -30,6 +30,7 @@ cs_fixer_tmp_*
 .env
 .project
 .settings/
+<<<<<<< HEAD
 components/
 node_modules/
 vendor/
@@ -37,3 +38,12 @@ vendor/
 
 =======
 >>>>>>> 52c2c20... Cleaned up user-agent and header messages.
+=======
+bootstrap/
+components/
+node_modules/
+public/
+resources/
+storage/
+vendor/
+>>>>>>> develop

@@ -43,11 +43,10 @@ if ($client->f_avatar) {
             ?>
         <li><?php $plugin->_plugin->display_user_field(); ?> </li>
 <?php
-
         }
     } ?>
     </ul>
-<?php 
+<?php
 } ?>
 </div>
 <dl class="media_details">
@@ -56,22 +55,22 @@ if ($client->f_avatar) {
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_name; ?>
         <?php if (Access::check('interface', '25') && AmpConfig::get('sociable')) {
-    ?>
+        ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo UI::get_icon('mail', T_('Send private message')); ?>
             </a>
-        <?php 
-} ?>
+        <?php
+    } ?>
         <?php if (Access::check('interface', '100')) {
-    ?>
+        ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('preferences', T_('Preferences')); ?></a>
-        <?php 
-} elseif ($client->id == $GLOBALS['user']->id) {
-    ?>
+        <?php
+    } elseif ($client->id == $GLOBALS['user']->id) {
+        ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </dd>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Member Since'); ?></dt>
@@ -81,30 +80,30 @@ if ($client->f_avatar) {
     <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
     <?php $rowparity = UI::flip_class(); ?>
     <?php if (Access::check('interface', '50')) {
-    ?>
+        ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_useage; ?>
         <?php if (AmpConfig::get('statistical_graphs')) {
-    ?>
+            ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </dd>
-    <?php 
-} ?>
+    <?php
+    } ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Status'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
     <?php if ($client->is_logged_in() and $client->is_online()) {
-    ?>
+        ?>
         <i style="color:green;"><?php echo T_('User is Online Now'); ?></i>
-    <?php 
-} else {
-    ?>
+    <?php
+    } else {
+        ?>
         <i style="color:red;"><?php echo T_('User is Offline Now'); ?></i>
-    <?php 
-} ?>
+    <?php
+    } ?>
     </dd>
 </dl><br />
 <?php UI::show_box_bottom(); ?>
@@ -114,18 +113,18 @@ if ($client->f_avatar) {
         <ul id="tabs">
             <li class="tab_active"><a href="#recentlyplayed"><?php echo T_('Recently Played'); ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) {
-    ?>
+        ?>
             <li><a href="#artists"><?php echo T_('Artists'); ?></a></li>
-            <?php 
-} ?>
+            <?php
+    } ?>
             <li><a href="#playlists"><?php echo T_('Playlists'); ?></a></li>
             <?php if (AmpConfig::get('sociable')) {
-    ?>
+        ?>
             <li><a href="#following"><?php echo T_('Following'); ?></a></li>
             <li><a href="#followers"><?php echo T_('Followers'); ?></a></li>
             <li><a href="#timeline"><?php echo T_('Timeline'); ?></a></li>
-            <?php 
-} ?>
+            <?php
+    } ?>
         </ul>
     </div>
     <div id="tabs_content">
@@ -145,13 +144,13 @@ if ($client->f_avatar) {
                             $object->format();
                             echo $object->f_link; ?>
                         <br />
-                    <?php 
+                    <?php
                         } ?>
                 </td>
             </tr>
         </table><br />
         <?php UI::show_box_bottom(); ?>
-        <?php 
+        <?php
         } ?>
         <?php
             $data = Song::get_recently_played($client->id);
@@ -161,18 +160,18 @@ if ($client->f_avatar) {
         ?>
         </div>
         <?php if (AmpConfig::get('allow_upload')) {
-    ?>
+            ?>
         <div id="artists" class="tab_content">
         <?php
-            $sql = Catalog::get_uploads_sql('artist', $client->id);
-    $browse      = new Browse();
-    $browse->set_type('artist', $sql);
-    $browse->set_simple_browse(true);
-    $browse->show_objects();
-    $browse->store(); ?>
+            $sql         = Catalog::get_uploads_sql('artist', $client->id);
+            $browse      = new Browse();
+            $browse->set_type('artist', $sql);
+            $browse->set_simple_browse(true);
+            $browse->show_objects();
+            $browse->store(); ?>
         </div>
-        <?php 
-} ?>
+        <?php
+        } ?>
         <div id="playlists" class="tab_content">
         <?php
             $playlist_ids = Playlist::get_playlists(false, $client->id);
@@ -184,24 +183,24 @@ if ($client->f_avatar) {
         ?>
         </div>
         <?php if (AmpConfig::get('sociable')) {
-    ?>
+            ?>
         <div id="following" class="tab_content">
         <?php
-            $following_ids = $client->get_following();
-    $browse                = new Browse();
-    $browse->set_type('user');
-    $browse->set_simple_browse(false);
-    $browse->show_objects($following_ids);
-    $browse->store(); ?>
+            $following_ids         = $client->get_following();
+            $browse                = new Browse();
+            $browse->set_type('user');
+            $browse->set_simple_browse(false);
+            $browse->show_objects($following_ids);
+            $browse->store(); ?>
         </div>
         <div id="followers" class="tab_content">
         <?php
-            $follower_ids = $client->get_followers();
-    $browse               = new Browse();
-    $browse->set_type('user');
-    $browse->set_simple_browse(false);
-    $browse->show_objects($follower_ids);
-    $browse->store(); ?>
+            $follower_ids         = $client->get_followers();
+            $browse               = new Browse();
+            $browse->set_type('user');
+            $browse->set_simple_browse(false);
+            $browse->show_objects($follower_ids);
+            $browse->store(); ?>
         </div>
             <div id="timeline" class="tab_content">
                 <?php
@@ -214,7 +213,7 @@ if ($client->f_avatar) {
                     }
                 } ?>
             </div>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </div>
 </div>

@@ -105,6 +105,7 @@ abstract class playlist_object extends database_object implements library_item
             }
             $medias = $nmedias;
         }
+
         return $medias;
     }
 

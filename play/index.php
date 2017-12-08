@@ -164,7 +164,7 @@ if (!$share_id) {
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
-                $sid = $_COOKIE[AmpConfig::get('session_name')];
+                    $sid = $_COOKIE[AmpConfig::get('session_name')];
                     if (!Session::exists('interface', $sid)) {
                         debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
                         header('HTTP/1.1 403 Session Expired');
@@ -405,8 +405,8 @@ if ($_GET['action'] == 'download' and AmpConfig::get('download')) {
     // Check to see if we should be throttling because we can get away with it
     if (AmpConfig::get('rate_limit') > 0) {
         while (!feof($fp)) {
-            echo fread($fp, round(AmpConfig::get('rate_limit')*1024));
-            $bytesStreamed += round(AmpConfig::get('rate_limit')*1024);
+            echo fread($fp, round(AmpConfig::get('rate_limit') * 1024));
+            $bytesStreamed += round(AmpConfig::get('rate_limit') * 1024);
             flush();
             sleep(1);
         }

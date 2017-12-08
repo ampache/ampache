@@ -43,12 +43,9 @@ define('TABLE_RENDERED', 1);
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
         <title> <?php echo AmpConfig::get('site_title'); ?> </title>
-        <script type="text/javascript" language="javascript">
-            function focus(){ document.login.username.focus(); }
-        </script>
     </head>
 
-    <body id="loginPage" onload="focus();">
+    <body id="loginPage">
         <div id="maincontainer">
             <div id="header"><!-- This is the header -->
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
@@ -58,7 +55,7 @@ define('TABLE_RENDERED', 1);
                 <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
                     <div class="loginfield" id="usernamefield">
                         <label for="username"><?php echo  T_('Username'); ?>:</label>
-                        <input class="text_input" type="text" id="username" name="username" value="<?php echo scrub_out($_REQUEST['username']); ?>" />
+                        <input class="text_input" type="text" id="username" name="username" value="<?php echo scrub_out($_REQUEST['username']); ?>" autofocus />
                     </div>
                     <div class="loginfield" id="passwordfield">
                         <label for="password"><?php echo  T_('Password'); ?>:</label>
@@ -79,8 +76,8 @@ define('TABLE_RENDERED', 1);
                         <?php if (AmpConfig::get('allow_public_registration')) {
     ?>
                             <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
-                        <?php 
-} // end if allow_public_registration ?>
+                        <?php
+} // end if allow_public_registration?>
                     </div>
                 </form>
         <?php

@@ -23,8 +23,8 @@
 /**
  * VlcPlayer Class
  *
- * This player controls an instance of Vlc webinterface 
- * which in turn controls vlc. All functions 
+ * This player controls an instance of Vlc webinterface
+ * which in turn controls vlc. All functions
  * return null on failure.
  *
  */
@@ -59,7 +59,7 @@ class VlcPlayer
         $aurl .= "&";
         $aurl .= urlencode($name);
                    
-        $args    = array('command'=>'in_enqueue','&input'=>$aurl);
+        $args    = array('command' => 'in_enqueue','&input' => $aurl);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -70,7 +70,7 @@ class VlcPlayer
 
     /**
      * version
-     * No version returned in the standard xml file, just need to check for xml returned 
+     * No version returned in the standard xml file, just need to check for xml returned
      */
     public function version()
     {
@@ -90,7 +90,7 @@ class VlcPlayer
      */
     public function clear()
     {
-        $args    = array('command'=>'pl_empty');
+        $args    = array('command' => 'pl_empty');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -105,14 +105,14 @@ class VlcPlayer
      */
     public function next()
     {
-        $args    = array('command'=>'pl_next');
+        $args    = array('command' => 'pl_next');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
         }
 
         return true;
-    } // next        
+    } // next
 
     /**
      * prev
@@ -120,14 +120,14 @@ class VlcPlayer
      */
     public function prev()
     {
-        $args    = array('command'=>'pl_previous');
+        $args    = array('command' => 'pl_previous');
         $results = $this->sendCommand("status.xml?", $args);
         if ($results === null) {
             return null;
         }
     
         return true;
-    } // prev    
+    } // prev
 
     /**
      * skip
@@ -135,39 +135,39 @@ class VlcPlayer
      */
     public function skip($pos)
     {
-        $args    = array('command'=>'pl_play','&id'=>$pos);
+        $args    = array('command' => 'pl_play','&id' => $pos);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
         }
 
-        // Works but if user clicks next afterwards player goes to first song our last song played before 
+        // Works but if user clicks next afterwards player goes to first song our last song played before
 
         return true;
     } // skip
 
-    /** 
+    /**
      * play
      * play the current song
      */
     public function play()
     {
-        $args    = array('command'=>'pl_play');
+        $args    = array('command' => 'pl_play');
         $results = $this->sendCommand("status.xml?", $args);
         if ($results === null) {
             return null;
         }
 
         return true;
-    } // play    
+    } // play
 
-    /** 
+    /**
      * pause
      * toggle pause mode on current song
      */
     public function pause()
     {
-        $args    = array('command'=>'pl_pause');
+        $args    = array('command' => 'pl_pause');
         $results = $this->sendCommand("status.xml?", $args);
         if ($results === null) {
             return null;
@@ -176,28 +176,28 @@ class VlcPlayer
         return true;
     } // pause
 
-    /** 
+    /**
      * stop
      * stops the current song amazing!
      */
     public function stop()
     {
-        $args    = array('command'=>'pl_stop');
+        $args    = array('command' => 'pl_stop');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
         }
 
         return true;
-    } // stop            
+    } // stop
 
-    /** 
+    /**
       * repeat
      * This toggles the repeat state of Vlc
      */
     public function repeat($value)
     {
-        $args    = array('command'=>'pl_repeat');
+        $args    = array('command' => 'pl_repeat');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -206,13 +206,13 @@ class VlcPlayer
         return true;
     } // repeat
 
-    /** 
+    /**
      * random
      * this toggles the random state of Vlc
      */
     public function random($value)
     {
-        $args    = array('command'=>'pl_random');
+        $args    = array('command' => 'pl_random');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -227,7 +227,7 @@ class VlcPlayer
      */
     public function delete_pos($track)
     {
-        $args    = array('command'=>'pl_delete','&id'=>$track);
+        $args    = array('command' => 'pl_delete','&id' => $track);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -262,7 +262,7 @@ class VlcPlayer
 
     /**
      * extract the full state from the xml file and send to status in vlccontroller for further parsing.
-     *  
+     *
      */
     public function fullstate()
     {
@@ -272,6 +272,7 @@ class VlcPlayer
         if ($results === null) {
             return null;
         }
+
         return $results;
     }  //fullstate
 
@@ -282,7 +283,7 @@ class VlcPlayer
      */
     public function volume_up()
     {
-        $args    = array('command'=>'volume','&val'=>'%2B20');
+        $args    = array('command' => 'volume','&val' => '%2B20');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -297,7 +298,7 @@ class VlcPlayer
      */
     public function volume_down()
     {
-        $args    = array('command'=>'volume','&val'=>'-20');
+        $args    = array('command' => 'volume','&val' => '-20');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -314,8 +315,8 @@ class VlcPlayer
     {
 
         // Convert it to base 400
-        $value   = $value*4;
-        $args    = array('command'=>'volume','&val'=>$value);
+        $value   = $value * 4;
+        $args    = array('command' => 'volume','&val' => $value);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -330,7 +331,7 @@ class VlcPlayer
      */
     public function clear_playlist()
     {
-        $args    = array('command'=>'pl_empty');
+        $args    = array('command' => 'pl_empty');
         $results = $this->sendcommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -339,11 +340,11 @@ class VlcPlayer
         return true;
     } // clear_playlist
 
-     /**
-     * get_tracks
-     * This returns a delimiated string of all of the filenames
-     * current in your playlist, only url's at the moment,normal files put in the playlist with vlc wil not show'
-     */
+    /**
+    * get_tracks
+    * This returns a delimiated string of all of the filenames
+    * current in your playlist, only url's at the moment,normal files put in the playlist with vlc wil not show'
+    */
     public function get_tracks()
     {
 
@@ -358,10 +359,10 @@ class VlcPlayer
         return $results;
     } // get_tracks
 
-    /** 
+    /**
       * sendCommand
      * This is the core of this library it takes care of sending the HTTP
-     * request to the vlc server and getting the response 
+     * request to the vlc server and getting the response
      */
     private function sendCommand($cmd, $args)
     {
@@ -369,13 +370,14 @@ class VlcPlayer
 
         if (!$fp) {
             debug_event('vlc', "VlcPlayer: $errstr ($errno)", '1');
+
             return null;
         }
 
-        // Define the base message  
+        // Define the base message
         $msg = "GET /requests/$cmd";
 
-        // Foreach our arguments 
+        // Foreach our arguments
         foreach ($args as $key => $val) {
             $msg .= "$key=$val";
         }
@@ -413,45 +415,45 @@ class VlcPlayer
         return $result;
     } // sendCommand
 
-//this function parses the xml page into an array thx to bin-co
-//warning vlc returns it's complete media lib if asked for playlist
-   private function xmltoarray($contents, $get_attributes=1, $priority = 'attribute')
-   {
-       if (!$contents) {
-           return array();
-       }
+    //this function parses the xml page into an array thx to bin-co
+    //warning vlc returns it's complete media lib if asked for playlist
+    private function xmltoarray($contents, $get_attributes=1, $priority = 'attribute')
+    {
+        if (!$contents) {
+            return array();
+        }
 
-       if (!function_exists('xml_parser_create')) {
-           //print "'xml_parser_create()' function not found!";
-        return array();
-       }
+        if (!function_exists('xml_parser_create')) {
+            //print "'xml_parser_create()' function not found!";
+            return array();
+        }
 
-    //Get the XML parser of PHP - PHP must have this module for the parser to work
-    $parser = xml_parser_create('');
-       xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
-    xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-       xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-       xml_parse_into_struct($parser, trim($contents), $xml_values);
-       xml_parser_free($parser);
+        //Get the XML parser of PHP - PHP must have this module for the parser to work
+        $parser = xml_parser_create('');
+        xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
+        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
+        xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
+        xml_parse_into_struct($parser, trim($contents), $xml_values);
+        xml_parser_free($parser);
 
-       if (!$xml_values) {
-           return;
-       }//Hmm...
+        if (!$xml_values) {
+            return;
+        }//Hmm...
 
-    //Initializations
-    $bigxml_array   = array();
-       $parents     = array();
-       $opened_tags = array();
-       $arr         = array();
+        //Initializations
+        $bigxml_array   = array();
+        $parents        = array();
+        $opened_tags    = array();
+        $arr            = array();
 
-       $current = &$bigxml_array; //Refference
+        $current = &$bigxml_array; //Refference
 
-    //Go through the tags.
+        //Go through the tags.
     $repeated_tag_index = array();//Multiple tags with same name will be turned into an array
     foreach ($xml_values as $data) {
         unset($attributes, $value);//Remove existing values, or there will be trouble
 
-           //This command will extract these variables into the foreach scope
+        //This command will extract these variables into the foreach scope
            // tag(string), type(string), level(int), attributes(array).
            extract($data);//We could use the array by itself, but this cooler.
 
@@ -467,20 +469,20 @@ class VlcPlayer
         }
 
         //Set the attributes too.
-            if (isset($attributes) and $get_attributes) {
-                foreach ($attributes as $attr => $val) {
-                    if ($priority == 'tag') {
-                        $attributes_data[$attr] = $val;
-                    } else {
-                        $result['attr'][$attr] = $val;
-                    } //Set all the attributes in a array called 'attr'
-                }
+        if (isset($attributes) and $get_attributes) {
+            foreach ($attributes as $attr => $val) {
+                if ($priority == 'tag') {
+                    $attributes_data[$attr] = $val;
+                } else {
+                    $result['attr'][$attr] = $val;
+                } //Set all the attributes in a array called 'attr'
             }
+        }
 
         //See tag status and do the needed.
         if ($type == "open") {
             //The starting of the tag '<tag>'
-            $parent[$level-1] = &$current;
+            $parent[$level - 1] = &$current;
             if (!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
                 $current[$tag] = $result;
                 if ($attributes_data) {
@@ -505,7 +507,7 @@ class VlcPlayer
                         unset($current[$tag . '_attr']);
                     }
                 }
-                $last_item_index = $repeated_tag_index[$tag . '_' . $level]-1;
+                $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
                 $current         = &$current[$tag][$last_item_index];
             }
         } elseif ($type == "complete") { //Tags that ends in 1 line '<tag />'
@@ -545,11 +547,11 @@ class VlcPlayer
                 }
             }
         } elseif ($type == 'close') { //End of tag '</tag>'
-            $current = &$parent[$level-1];
+            $current = &$parent[$level - 1];
         }
     }
     
-       return($bigxml_array);
-   }   //end xml parser
+        return($bigxml_array);
+    }   //end xml parser
 } // End VlcPlayer Class
 ;

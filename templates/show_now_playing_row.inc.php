@@ -54,28 +54,28 @@
                 <label><?php echo T_('Tags'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
-        <?php 
+        <?php
         }
     ?>
 </div>
 
 <?php if (Art::is_enabled()) {
-    ?>
+        ?>
 <div class="np_group" id="np_group_3">
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
       <?php
       $album = new Album($media->album);
-    if ($album->id) {
-        $album->format();
-        $album->display_art(1);
-    } ?>
+        if ($album->id) {
+            $album->format();
+            $album->display_art(1);
+        } ?>
   </div>
 </div>
-<?php 
-} ?>
+<?php
+    } ?>
 
 <?php if (AmpConfig::get('show_similar')) {
-    ?>
+        ?>
 <div class="np_group similars" id="similar_items_<?php echo $media->id; ?>">
     <div class="np_group similars">
         <div class="np_cell cel_similar">
@@ -95,8 +95,8 @@ $(document).ready(function(){
     <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id=' . $media->id . '&media_artist=' . $media->artist, 'similar_now_playing'); ?>
 });
 </script>
-<?php 
-} ?>
+<?php
+    } ?>
 
 <?php
     if (Access::check('interface', '25')) {
@@ -111,7 +111,7 @@ $(document).ready(function(){
                     <?php Rating::show($media->id, 'song'); ?>
                 </div>
             </div>
-        <?php 
+        <?php
         }
         if (AmpConfig::get('userflags')) {
             ?>
@@ -121,9 +121,9 @@ $(document).ready(function(){
                     <?php Userflag::show($media->id, 'song'); ?>
                 </div>
             </div>
-        <?php 
+        <?php
         } ?>
         </div>
-    <?php 
+    <?php
     }
 ?>

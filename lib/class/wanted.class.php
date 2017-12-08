@@ -101,7 +101,7 @@ class Wanted extends database_object
         $info = $this->get_info($id);
 
         // Foreach what we've got
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -251,6 +251,7 @@ class Wanted extends database_object
                 'name' => $r->name,
             );
         }
+
         return $wartists;
     }
 

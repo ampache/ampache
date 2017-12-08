@@ -71,6 +71,7 @@ abstract class DatabaseObject
         $properties = get_object_vars($this);
         unset($properties['id']);
         unset($properties['fieldClassRelations']);
+
         return $this->fromCamelCase($properties);
     }
 
@@ -97,6 +98,7 @@ abstract class DatabaseObject
             $newPropertyKey        = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $propertie));
             $data[$newPropertyKey] = $value;
         }
+
         return $data;
     }
 

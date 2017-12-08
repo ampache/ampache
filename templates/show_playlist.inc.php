@@ -36,28 +36,25 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 <?php if (User::is_registered()) {
     ?>
     <?php if (AmpConfig::get('ratings')) {
-    ?>
+        ?>
     <div style="display:table-cell;" id="rating_<?php echo $playlist->id; ?>_playlist">
             <?php Rating::show($playlist->id, 'playlist'); ?>
     </div>
     <?php
-
-} ?>
+    } ?>
     <?php if (AmpConfig::get('userflags')) {
-    ?>
+        ?>
     <div style="display:table-cell;" id="userflag_<?php echo $playlist->id; ?>_playlist">
             <?php Userflag::show($playlist->id, 'playlist'); ?>
     </div>
     <?php
-
-} ?>
+    } ?>
 <?php
-
 } ?>
 <div id="information_actions">
     <ul>
     <?php if ($GLOBALS['user']->has_access('50')) {
-    ?>
+        ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', 'refresh_playlist_medias')">
@@ -74,10 +71,9 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             &nbsp;&nbsp;<?php echo T_('Remove duplicates'); ?></a>
         </li>
     <?php
-
-} ?>
+    } ?>
     <?php if (Access::check_function('batch_download') && check_can_zip('playlist')) {
-    ?>
+        ?>
         <li>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
@@ -85,26 +81,23 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
     <?php
-
-} ?>
+    } ?>
     <?php if (AmpConfig::get('directplay')) {
-    ?>
+        ?>
         <li>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play', T_('Play all'), 'directplay_full_' . $playlist->id); ?>
             <?php echo Ajax::text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, T_('Play all'), 'directplay_full_text_' . $playlist->id); ?>
         </li>
     <?php
-
-} ?>
+    } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
+        ?>
         <li>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_playlist_' . $playlist->id); ?>
             <?php echo Ajax::text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', T_('Play all last'), 'addplay_playlist_text_' . $playlist->id); ?>
         </li>
     <?php
-
-} ?>
+    } ?>
         <li>
             <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add all to temporary playlist'), 'play_playlist'); ?>
             <?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id, T_('Add all to temporary playlist'), 'play_playlist_text'); ?>
@@ -114,7 +107,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             <?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id, T_('Random all to temporary playlist'), 'play_playlist_random_text'); ?>
         </li>
     <?php if ($GLOBALS['user']->has_access('50') && AmpConfig::get('channel')) {
-    ?>
+        ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('flow'); ?>
@@ -122,10 +115,9 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
     <?php
-
-} ?>
+    } ?>
     <?php if ($playlist->has_access()) {
-    ?>
+        ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
                 <?php echo UI::get_icon('delete'); ?>
@@ -133,8 +125,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
     <?php
-
-} ?>
+    } ?>
     </ul>
 </div>
 <?php UI::show_box_bottom(); ?>

@@ -67,6 +67,7 @@ class UPnPPlaylist
     public function CurrentItem()
     {
         $item = $this->_songs[$this->_current];
+
         return $item;
     }
 
@@ -80,8 +81,10 @@ class UPnPPlaylist
         if ($this->_current < count($this->_songs) - 1) {
             $this->_current++;
             $this->PlayListSave();
+
             return true;
         }
+
         return false;
     }
 
@@ -89,8 +92,10 @@ class UPnPPlaylist
     {
         if ($this->_current < count($this->_songs) - 1) {
             $nxt = $this->_current + 1;
+
             return $this->_songs[$nxt];
         }
+
         return null;
     }
 
@@ -99,8 +104,10 @@ class UPnPPlaylist
         if ($this->_current > 0) {
             $this->_current--;
             $this->PlayListSave();
+
             return true;
         }
+
         return false;
     }
 
@@ -110,8 +117,10 @@ class UPnPPlaylist
         if (($pos >= 1) && ($pos <= count($this->_songs))) {
             $this->_current = $pos - 1;
             $this->PlayListSave();
+
             return true;
         }
+
         return false;
     }
 

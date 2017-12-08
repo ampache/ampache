@@ -36,12 +36,12 @@ $web_path = AmpConfig::get('web_path');
   <?php if (Access::check('interface', '100')) {
     ?>
   <col id="col_admin" />
-  <?php 
+  <?php
 } ?>
 </colgroup>
 <?php
 if (!count($object_ids)) {
-    $playlist = new Playlist($democratic->base_playlist); ?>
+        $playlist = new Playlist($democratic->base_playlist); ?>
 <tr>
 <td>
     <?php echo T_('Playing from base Playlist'); ?>.
@@ -49,8 +49,7 @@ if (!count($object_ids)) {
 </td>
 </tr>
 <?php
-
-} // if no songs
+    } // if no songs
 /* Else we have songs */
 else {
     ?>
@@ -63,10 +62,10 @@ else {
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (Access::check('interface', '100')) {
-    ?>
+        ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </tr>
 </thead>
 <tbody>
@@ -82,14 +81,14 @@ $democratic = Democratic::get_current_playlist();
 <tr class="<?php echo UI::flip_class(); ?>">
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) {
-    ?>
+            ?>
     <?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']); ?>
-    <?php 
-} else {
-    ?>
+    <?php
+        } else {
+            ?>
     <?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'remove_vote_' . $item['id']); ?>
-    <?php 
-} ?>
+    <?php
+        } ?>
     </td>
     <td class="cel_votes" ><?php echo scrub_out($democratic->get_vote($item['id'])); ?></td>
     <td class="cel_title"><?php echo $media->f_link; ?></td>
@@ -97,17 +96,15 @@ $democratic = Democratic::get_current_playlist();
     <td class="cel_artist"><?php echo $media->f_artist_link; ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
     <?php if (Access::check('interface', '100')) {
-    ?>
+            ?>
     <td class="cel_admin">
     <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
     </td>
-    <?php 
-} ?>
+    <?php
+        } ?>
 </tr>
 <?php
-
-    } // end foreach
-?>
+    } // end foreach?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">
@@ -118,14 +115,13 @@ $democratic = Democratic::get_current_playlist();
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (Access::check('interface', '100')) {
-    ?>
+        ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </tr>
 </tfoot>
 <?php
-
 } // end else
 ?>
 </table>

@@ -36,14 +36,14 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     </div>
 </td>
 <?php if (Art::is_enabled()) {
-    ?>
+        ?>
 <td class="cel_cover">
     <?php
     $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 5;
-    $libitem->display_art($thumb); ?>
+        $libitem->display_art($thumb); ?>
 </td>
-<?php 
-} ?>
+<?php
+    } ?>
 <td class="cel_title"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
@@ -53,31 +53,31 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, '<?php echo $object_type ?>', '<?php echo $libitem->id ?>')">
                 <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')) ?>
             </a>
-        <?php 
+        <?php
     } ?>
     </span>
 </td>
 <td class="cel_time"><?php echo $libitem->f_time ?></td>
 <?php if (User::is_registered()) {
-    if (AmpConfig::get('ratings')) {
-        ?>
+        if (AmpConfig::get('ratings')) {
+            ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php Rating::show($libitem->id, $object_type) ?></td>
-    <?php 
-    }
-    if (AmpConfig::get('userflags')) {
-        ?>
+    <?php
+        }
+        if (AmpConfig::get('userflags')) {
+            ?>
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php Userflag::show($libitem->id, $object_type) ?></td>
-    <?php 
-    }
-} ?>
+    <?php
+        }
+    } ?>
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) {
-    ?>
+        ?>
     <a rel="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&amp;<?php echo $object_type ?>_id=<?php echo $libitem->id ?>">
         <?php echo UI::get_icon('download', T_('Download')) ?>
     </a>
-    <?php 
-}
+    <?php
+    }
     if (Access::check('interface', '25')) {
         if (AmpConfig::get('share')) {
             Share::display_ui($object_type, $libitem->id, false);
@@ -88,11 +88,11 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     } ?>
 </td>
 <?php if (Access::check('interface', '50') && get_class($playlist) == "Playlist") {
-    ?>
+        ?>
 <td class="cel_drag">
     <?php echo UI::get_icon('drag', T_('Reorder')) ?>
         </td>
-    <?php 
-}
+    <?php
+    }
 }
 ?>

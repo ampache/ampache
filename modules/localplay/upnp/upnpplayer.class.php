@@ -47,6 +47,7 @@ class UPnPPlayer
         if ($this->_device === null) {
             $this->_device = new UPnPDevice($this->_description_url);
         }
+
         return $this->_device;
     }
 
@@ -59,6 +60,7 @@ class UPnPPlayer
         if ($this->_playlist === null) {
             $this->_playlist = new UPnPPlaylist($this->_description_url);
         }
+
         return $this->_playlist;
     }
 
@@ -87,6 +89,7 @@ class UPnPPlayer
     public function PlayListAdd($name, $link)
     {
         $this->Playlist()->Add($name, $link);
+
         return true;
     }
 
@@ -97,20 +100,22 @@ class UPnPPlayer
     public function PlaylistRemove($track)
     {
         $this->Playlist()->RemoveTrack($track);
+
         return true;
     }
 
     public function PlaylistClear()
     {
         $this->Playlist()->Clear();
+
         return true;
     }
 
-     /**
-     * GetPlayListItems
-     * This returns a delimited string of all of the filenames
-     * current in your playlist, only url's at the moment
-     */
+    /**
+    * GetPlayListItems
+    * This returns a delimited string of all of the filenames
+    * current in your playlist, only url's at the moment
+    */
     public function GetPlaylistItems()
     {
         return $this->Playlist()->AllItems();
@@ -144,8 +149,10 @@ class UPnPPlayer
         }
         if (($forcePlay || ($this->_intState == 1)) && ($this->Playlist()->Next())) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -157,8 +164,10 @@ class UPnPPlayer
     {
         if ($this->Playlist()->Prev()) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -170,8 +179,10 @@ class UPnPPlayer
     {
         if ($this->Playlist()->Skip($pos)) {
             $this->Play();
+
             return true;
         }
+
         return false;
     }
 
@@ -310,6 +321,7 @@ class UPnPPlayer
     public function VolumeUp()
     {
         $volume = $this->GetVolume() + 2;
+
         return $this->SetVolume($volume);
     }
 
@@ -320,6 +332,7 @@ class UPnPPlayer
     public function VolumeDown()
     {
         $volume = $this->GetVolume() - 2;
+
         return $this->SetVolume($volume);
     }
 

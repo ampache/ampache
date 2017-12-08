@@ -33,6 +33,7 @@ class WebDAV_Auth extends DAV\Auth\Backend\AbstractBasic
     protected function validateUserPass($username, $password)
     {
         $auth = Auth::login($username, $password, true);
+
         return $auth['success'];
     }
 }

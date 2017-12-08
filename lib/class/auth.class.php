@@ -192,6 +192,7 @@ class Auth
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
             $results['error']      = 'The PAM PHP module is not installed';
+
             return $results;
         }
 
@@ -299,6 +300,7 @@ class Auth
             $results['success'] = false;
             $results['error']   = 'HTTP auth login attempt failed';
         }
+
         return $results;
     } // http_auth
 
@@ -407,8 +409,8 @@ class Auth
                 } else {
                     if ($response->status == Auth_OpenID_SUCCESS) {
                         // Extract the identity URL and Simple Registration data (if it was returned).
-                $sreg_resp    = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
-                        $sreg = $sreg_resp->contents();
+                        $sreg_resp    = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
+                        $sreg         = $sreg_resp->contents();
 
                         $results['website'] = $response->getDisplayIdentifier();
                         if (@$sreg['email']) {
@@ -431,18 +433,18 @@ class Auth
                                 $results['username'] = $user->username;
                             } else {
                                 // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
-                        // Should we make website field unique?
-                        foreach ($users as $id) {
-                            $user = new User($id);
-                            if ($user->username == $results['username']) {
-                                $results['success']  = true;
-                                $results['username'] = $user->username;
-                            }
-                        }
+                                // Should we make website field unique?
+                                foreach ($users as $id) {
+                                    $user = new User($id);
+                                    if ($user->username == $results['username']) {
+                                        $results['success']  = true;
+                                        $results['username'] = $user->username;
+                                    }
+                                }
                             }
                         } else {
                             // Don't return success if an user already exists for this username but don't have this openid identity as website
-                    $user = User::get_from_username($results['username']);
+                            $user = User::get_from_username($results['username']);
                             if ($user->id) {
                                 $results['success'] = false;
                                 $results['error']   = 'No user associated to this OpenID and username already taken.';

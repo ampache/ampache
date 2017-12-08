@@ -28,13 +28,13 @@
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Smart Playlist'); ?></a>
         </li>
-        <?php 
+        <?php
 } ?>
     </ul>
 </div>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="smartplaylist">
     <thead>
         <tr class="th-top">
@@ -56,15 +56,15 @@
         <tr class="<?php echo UI::flip_class(); ?>" id="smartplaylist_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_search_row.inc.php'); ?>
         </tr>
-        <?php 
-        } // end foreach ($playlists as $playlist) ?>
+        <?php
+        } // end foreach ($playlists as $playlist)?>
         <?php if (!count($object_ids)) {
-    ?>
+            ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -81,5 +81,5 @@
 </table>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>
