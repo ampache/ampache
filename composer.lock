@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "13406322e85a7da9a7c95c906c306066",
+    "content-hash": "725103f1e18efbe4e4ea10054fbab892",
     "packages": [
         {
             "name": "Afterster/php-echonest-api",
