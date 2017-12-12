@@ -556,6 +556,9 @@ class Update
         $update_string = "- Fix username max size to be the same one across all tables.<br />";
         $version[]     = array('version' => '380011', 'description' => $update_string);
         
+        $update_string = "- Fix change in <a href='https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee'>this commit</a>, that left the userbase with an inconsistent database, if users updated or installed Ampache before 28 Apr 2015<br />";
+        $version[]     = array('version' => '380012', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -2263,13 +2266,18 @@ class Update
      * update_360035
      *
      * Add beautiful stream url setting
+     * Reverted https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee
+     * with adding update_380012.
+     * Because it was changed after many systems have already performed this update.
+     * Fix for this is update_380012 that actually readds the preference string.
+     * So all users have a consistent database.
      */
     public static function update_360035()
     {
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('stream_beautiful_url','0','Enable url rewriting',100,'boolean','streaming')";
+            "VALUES ('stream_beautiful_url','0','Use beautiful stream url',100,'boolean','streaming')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -3983,6 +3991,23 @@ class Update
         $retval &= Dba::write($sql);
         
         $sql = "ALTER TABLE user MODIFY fullname VARCHAR(255)";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_380012
+     *
+     * Fix change in https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee
+     * That left the userbase with an inconsistent database.
+     * For more information, please look at update_360035.
+     */
+    public static function update_380012()
+    {
+        $retval = true;
+
+        $sql = "UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url'";
         $retval &= Dba::write($sql);
 
         return $retval;
