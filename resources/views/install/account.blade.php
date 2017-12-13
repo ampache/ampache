@@ -23,9 +23,14 @@
 @extends('layouts.installer')
 @section('content')
 
-<div class="jumbotron">
-    <h1><?php echo T_('Install progress'); ?></h1>
-    <div class="progress">
+  <div class="container">
+        <div  class="page-header requirements">
+            <h3><?php echo T_('Creating Admin Account: This step creates your initial Ampache admin account. ' .  
+                'Once your admin account has been created you will be redirected to the login page.'); ?></h3>
+        </div>
+
+    <div id="install_progress" class="well">
+    <h2><?php echo T_('Install progress'); ?></h2>
         <div class="progress-bar progress-bar-warning"
             role="progressbar"
             aria-valuenow="60"
@@ -34,39 +39,90 @@
             style="width: 99%">
             99%
         </div>
+        <br><br>
     </div>
-    <ul class="list-unstyled">
-        <li><?php echo T_('Step 1 - Create the Ampache database'); ?></li>
-        <li><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></li>
-    </ul>
-    <p><strong><?php echo T_('Step 3 - Set up the initial account'); ?></strong></p>
-    <dl>
-        <dd><?php echo T_('This step creates your initial Ampache admin account. Once your admin account has been created you will be redirected to the login page.'); ?></dd>
-    </dl>
 </div>
-    <h2><?php echo T_('Create Admin Account'); ?></h2>
-	<form method="post" action="{{ url('install/create_account') }}" enctype="multipart/form-data" autocomplete="off">
+   
+   <script>
 
-<div class="form-group">
-    <label for="local_username" class="control-label"><?php echo T_('Username'); ?></label>
-    <div>
-        <input type="text" class="form-control" id="local_username" name="local_username" value="admin">
-    </div>
+   $(function () {
+       $("#dialog").dialog({
+       	closeOnEscape: false,
+        	autoOpen: false,
+   	    open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog | ui).hide()},
+       	position: { my: "top", at: "bottom", of:'#install_progress'},
+       	minWidth: 320,
+       	width: 378,
+			height: "auto",
+			modal: false,
+       
+           title: "Creating Administrative User:",
+           buttons: {
+	            'Continue': function() {
+    		        var validator = $( "#dialog_form" ).validate({
+    		     	   rules: {
+    		     		  local_pass: "required",
+    		     		  local_pass2: {
+    		     		       equalTo: "#local_pass"
+    		     		     }
+    		     		   }
+    		     		 });
+
+			        var t = validator.form();
+					var url = "{{  url('install/create_account') }}";
+			        if (t == true) {  
+			        	$.post(url,
+	                     {
+               	        	_token: $("[name~='_token']").val(),
+               	        	local_username: $("#local_username").val(),
+              	        	local_pass: $("#local_pass").val(),
+	                	 },
+	                	 function(data, status){
+		                	 if (data == "back") {
+	              	    		location.assign('{{ url("/install/show_account") }}');
+		                	 } else {
+		              	    		location.assign('{{ url("/") }}');
+			                 }
+	              	          
+	                	 });
+	                    $(this).dialog('close');
+			        }
+           	},
+          }
+       }).dialog("widget").draggable("option","containment","none");
+   });
+
+	$(document).ready(function(){
+	    $( 'a.ui-dialog-titlebar-close' ).remove();
+	    $("#dialog").parent().find('.ui-dialog-buttonset'      ).css({'width':'100%','text-align':'center'});
+	    
+	   	$("#dialog").dialog( "open" );
+	});
+</script>
+<div class="container">
+	<div id="dialog" style="display: none" width="auto">
+		<form id="dialog_form" role="form" class="form" method="post" action="{{ url('install/create_config') }}" autocomplete="off">
+				{{ csrf_field() }}
+			<div class="form-group">
+    			<label for="local_username" class="control-label"><?php echo T_('Username'); ?></label>
+    		<div>
+        		<input type="text" class="form-control" id="local_username" name="local_username" value="admin" required>
+   			</div>
+			</div>
+			<div class="form-group">
+    			<label for="local_pass" class="control-label"><?php echo T_('Password:'); ?></label>
+    			<div>
+       				 <input type="password" class="form-control" id="local_pass" name="local_pass" required>
+    			</div>
+			</div>
+			<div class="form-group">
+    			<label for="local_pass2" class="control-label"><?php echo T_('Confirm Password:'); ?></label>
+    		<div>
+        		<input type="password" class="form-control" id="local_pass2" name="local_pass2" required>
+    		</div>
+			</div>
+	
+		</form>
+	</div>
 </div>
-<div class="form-group">
-    <label for="local_pass" class="control-label"><?php echo T_('Password'); ?></label>
-    <div>
-        <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password">
-    </div>
-</div>
-<div class="form-group">
-    <label for="local_pass2" class="control-label"><?php echo T_('Confirm Password'); ?></label>
-    <div>
-        <input type="password" class="form-control" id="local_pass2" name="local_pass2" placeholder="Confirm Password">
-    </div>
-</div>
-<div>
-    <button type="submit" class="btn btn-warning"><?php echo T_('Create Account'); ?></button>
-</div>
-</form>
 @endsection

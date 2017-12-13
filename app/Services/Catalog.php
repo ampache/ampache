@@ -39,4 +39,45 @@ class Catalog
 
         return $results;
     }
+    
+    /**
+     * create_catalog_type
+     * This function attempts to create a catalog type
+     * all Catalog modules should be located in /modules/catalog/<name>/<name>.class.php
+     * @param string $type
+     * @param int $id
+     * @return Catalog|null
+     */
+    public function create_catalog_type($type, $id=0)
+    {
+        if (!$type) {
+            return false;
+        }
+        
+        $filename = base_path( '/modules/catalog/' . $type . '/' . $type . '.catalog.php');
+        $include  = require_once $filename;
+        
+        if (!$include) {
+            /* Throw Error Here */
+            Log::debug('catalog', 'Unable to load ' . $type . ' catalog type');
+            
+            return false;
+        } // include
+        else {
+            $class_name = "Catalog_" . $type;
+            if ($id > 0) {
+                $catalog = new $class_name($id);
+            } else {
+                $catalog = new $class_name();
+            }
+            if (!($catalog instanceof Catalog)) {
+                Log::debug('catalog', $type . ' not an instance of Catalog abstract, unable to load');
+                
+                return false;
+            }
+            
+            return $catalog;
+        }
+    } // create_catalog_type
+    
 }

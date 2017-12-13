@@ -32,6 +32,9 @@ class CreateTvshowEpisodesTable extends Migration
                   ->references('id')
                   ->on('tvshow_seasons')
                   ->onDelete('cascade');
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

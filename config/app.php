@@ -1,18 +1,6 @@
 <?php
 
 return [
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Application Installation Status
-     |--------------------------------------------------------------------------
-     |
-     | This value determines if the application has been installed.
-     |
-     */
-    
-    'installed' => env('APP_INSTALLED', false),
       
     /*
     |--------------------------------------------------------------------------
@@ -107,6 +95,18 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    
+     /*
+     |--------------------------------------------------------------------------
+     | Application Installation Status
+     |--------------------------------------------------------------------------
+     |
+     | This value determines if the application has been installed.
+     |
+     */
+    
+    'installed' => env('APP_INSTALLED'),
+
     /*
     |--------------------------------------------------------------------------
     | Logging Configuration
@@ -120,7 +120,7 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'errorlog'),
+    'log' => env('APP_LOG', 'single'),
     
     'log_level' => env('APP_LOG_LEVEL', 'error'),
 
@@ -171,7 +171,7 @@ return [
         App\Providers\RouteServiceProvider::class,
  //       App\Providers\PlaylistServiceProvider::class,
  //       App\Providers\RegistrationServiceProvider::class,
- //       App\Providers\CatalogServiceProvider::class,
+        App\Providers\CatalogServiceProvider::class,
         
  //       Barryvdh\Debugbar\ServiceProvider::class,
         Xinax\LaravelGettext\LaravelGettextServiceProvider::class,

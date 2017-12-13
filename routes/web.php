@@ -39,11 +39,13 @@ Route::get('/messages/index/{id}', 'PrivateMsgController@index');
 Route::delete('messages/destroy/{id}', 'PrivateMsgController@destroy')->name('destroy');
 Route::get('messages/reply/{id}', 'PrivateMsgController@reply')->name('reply');
 Route::get('messages/show/{idselected}', 'PrivateMsgController@show')->name('show');
+
 Route::get('install.language', 'InstallController@selectLanguage')->name('language');
 Route::post('/install/setlanguage/{language}', 'InstallController@setLanguage')->name('setLanguage');
 Route::post('/install/create_config', 'InstallController@create_config');
 Route::post('/install/create_account', 'InstallController@create_account');
-
+Route::get('/install/show_config', 'InstallController@show_config');
+Route::get('/install/show_account', 'InstallController@show_account');
 Route::get('/install/system_check', function () {
     return view('install.system_check');
 });    
@@ -51,3 +53,6 @@ Route::post('/install/create_db', 'InstallController@create_db');
 Route::get('/install/show_db', function () {
     return view('install.database');
 });
+Route::get('/modules/show_catalogs', 'ModuleController@show_catalog_modules');
+Route::get('/catalog_type/{type}/action/{action}', 'ModuleController@catalog_action')->name('action');
+Route::resource('catalog', 'CatalogController');

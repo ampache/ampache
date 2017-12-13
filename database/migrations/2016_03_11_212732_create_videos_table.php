@@ -39,6 +39,9 @@ class CreateVideosTable extends Migration
                   ->nullable();
             $table->mediumInteger('frame_rate')
                   ->nullable();
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

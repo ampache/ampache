@@ -18,6 +18,9 @@ class CreateTmpPlaylistTable extends Migration
             $table->string('session', 255);
             $table->string('type', 32);
             $table->string('object_type', 32);
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

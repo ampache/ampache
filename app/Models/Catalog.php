@@ -23,4 +23,10 @@ class Catalog extends Model
     protected $hidden = [
         
     ];
-}
+    
+    public function format()
+    {
+        
+    }
+    
+ }

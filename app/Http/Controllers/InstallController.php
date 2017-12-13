@@ -10,8 +10,7 @@ use App\Models\User;
 
 class InstallController extends Controller
 {
-    protected $request;
-    protected $database;
+    public $database;
     
     public function selectLanguage()
     {
@@ -29,86 +28,79 @@ class InstallController extends Controller
     
     public function create_db(Request $request)
     {
-        $this->request  = $request;
-        $new_user       = '';
-        $new_pass       = '';
+        $new_user       = $request->input('db_username', false);
+        $new_pass       = $request->input('db_pass', false);
         $overwrite      = $request->input('overwrite_db', false);
-        $username       = e(trim($request->input('local_username', 'root')));
-        $password       = e($request->input('local_pass'));
+        $admin_username = e(trim($request->input('admin_username', 'root')));
+        $admin_password = e($request->input('admin_pass'));
         $hostname       = e($request->input('local_host', 'localhost'));
-        $database       = e($request->input('local_db'));
+        $this->database = e($request->input('local_db'));
         $port           = $request->local_port != null ? : 3306;
-        $skip_admin     = isset($_POST['skip_admin']) ? True : False;
-        $create_db      = $request->input('create_db', true);
+        $skip_admin     = isset($_POST['skip_admin']) ? True : false;
+        $create_db      = $request->input('create_db', False);
         $create_tables  = $request->input('create_tables', false);
+        $create_db_user = $request->input('create_db_user', False);
         
-        if (isset($_POST['db_user']) && ($_POST['db_user'] == 'create_db_user')) {
-            $new_user = $_POST['db_username'];
-            $new_pass = $_POST['db_password'];
-            
-            if (!strlen($new_user) || !strlen($new_pass)) {
-                $request->session()->flash('status', T_('Error: Ampache SQL Username or Password missing'));
-
-                return back();
-            }
-        }
-        //Tests connection with given database name and authorized username/password
+        //First test connection with authorized username/password
         $conn;
         $dsn = 'mysql:host=' . $hostname;
         try {
-            $conn = new \PDO($dsn, $username, $password);
+            $conn = new \PDO($dsn, $admin_username,$admin_password);
         } catch (\PDOException $e) {
             $this->getPDOMessage($e->getCode());
             return back();
         }
-            
-        if (!$skip_admin) {
-            if ($this->install_insert_db($conn, $database, $create_db, $overwrite, $create_tables) == false) {
-                return back();
+        
+        //Check for existing schema
+        $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" . $this->database . "';";
+        $rows = $conn->query($sql);
+        if ($skip_admin == false) {
+            if ($create_db == "true") {
+                if (($rows) && ($overwrite == "false")) {
+                    $request->session()->flash('status', T_("Create database set without Overwrite"));
+                    return back();
+                }
+                else if ($rows){
+                    $sql = "DROP DATABASE `" . $this->database . "`;";
+                    $conn->exec($sql);
+                }
+                $sql = "CREATE DATABASE `$this->database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+                $conn->exec($sql);
             }
-            //Create the tables.
+        }
+        if ($create_tables == "true") {
             //Artisan needs to get info from configuration.
-            config(['database.connections.mysql.database' => $database]);
+            config(['database.connections.mysql.database' => $this->database]);
             config(['database.connections.mysql.host' => $hostname]);
-            config(['database.connections.mysql.username' => $username]);
-            config(['database.connections.mysql.password' => $password]);
+            config(['database.connections.mysql.username' => $admin_username]);
+            config(['database.connections.mysql.password' => $admin_password]);
             $exitCode = Artisan::call('migrate');
             $exitCode = Artisan::call('db:seed');
+            //Write database info to environmental file ,env
+            $env = array('DB_HOST'=>$hostname, 'DB_PORT' =>$port, 'DB_DATABASE'=>$this->database, 'DB_USERNAME'=>$admin_username,
+                'DB_PASSWORD'=>$admin_password);
+            $this->updateEnv($env);
         }
-
-        // Check to see if we should create a user here
-        if (strlen($new_user) && strlen($new_pass)) {
-            $sql     = 'GRANT ALL PRIVILEGES ON `' . $database . '`.* TO ' .
-                "'" . $new_user . "'";
-            if ($hostname == 'localhost' || strpos(hostname, '/') === 0) {
-                $sql .= "@'localhost'";
-            }
-            $sql .= " IDENTIFIED BY '" . $new_pass . "' WITH GRANT OPTION";
         
-            $rows = $conn->exec($sql);
+        // Check to see if we should create a user here
+        if ($create_db_user == "true") {
+            $sql = "CREATE USER `" . $new_user . "`@`" . $hostname . "` IDENTIFIED BY '" . $new_pass . "'";
+
+           $rows = $conn->exec($sql);
+            
             $info = $conn->errorInfo();
             if (!is_null($info[2])) {
                 $this->request->session()->flash('status', T_("Unable to add database user"));
-
-                return back();
+                return '/install/show_db';
             }
-            $admin_name     = $new_user;
-            $admin_password = $new_pass;
-        } else {
-            $admin_name     = $username;
-            $admin_password = $password;
-        }
-        // end if we are creating a user
-        //Write database info to environmental file ,env
-        $env = array('DB_HOST'=>$hostname, 'DB_PORT' =>$port, 'DB_DATABASE'=>$database, 'DB_USERNAME'=>$admin_name, 'DB_PASSWORD'=>$admin_password);
-        $this->updateEnv($env);
+            $sql = "GRANT ALL PRIVILEGES ON ampache.* TO '" . $new_user . "'@'" . $hostname . "' WITH GRANT OPTION";
+            $rows = $conn->exec($sql);
+            $env = array('DB_USERNAME'=>$new_user, 'DB_PASSWORD' => $new_pass);
+            $this->updateEnv($env);
+             
+        } // end if we are creating a user
         
-        $lang     = config('app.locale');
-        $charset  = config('database.connections.mysql.charset');
-        $modes    = $this->install_get_transcode_modes();
-        $apache   = $this->install_check_server_apache();
-        
-        return view('install.configure', compact('admin_name', 'admin_password', 'hostname', 'database', 'port', 'lang', 'charset', 'modes', 'apache'));
+        return '/install/show_config';        
     }
     
     public function create_config(Request $request)
@@ -124,66 +116,41 @@ class InstallController extends Controller
             }
         }
         $this->writeConfig('transcode_cmd', 'transcoding', $request->input('transcode_template'));
-        return view('install.account');
+        return '/install/show_account';
         
     }
   
+    public function show_config()
+    {
+        $lang     = config('app.locale');
+        $charset  = config('database.connections.mysql.charset');
+        $modes    = $this->install_get_transcode_modes();
+        $apache   = $this->install_check_server_apache();
+        return view('install.configure', compact( 'lang', 'charset', 'modes', 'apache'));
+    }
+    
     public function create_account(Request $request)
     {
         $username = $request->input('local_username');
         $password = $request->input('local_pass');
-        $password2 = $request->input('local_pass2');
-        if (strcmp($password, $password2) != 0) {
-            $request->session()->flash('Error', T_('Passwords don\'t match!'));
-            return view('install.account');
-        }
         
         $count = User::where('username', $username)->count();
         if ($count > 0) {
             $request->session()->flash('Error', T_('User name already exists!'));
-            return view('install.account');
+            return 'back';
             
         }
         $user = User::create(['username' => $username,'password' => Hash::make($password)]);
         
         $user->access = 100;
         $user->save();
-        $env = array('APP_INSTALLED'=>"True");
-        $this->updateEnv($env);
-        return view('pages.index');
+        return 'next';
     }
-    
-    
-    public function install_insert_db($conn, $database, $create_db = true, $overwrite = false, $create_tables = true)
+    public function show_account()
     {
-        // Make sure that the database name is valid
-      $t = preg_match('/([^\d\w\_\-[0-9])/', $database, $matches);
+        return view('install.account');
         
-        if (count($matches)) {
-            $this->request->session()->flash('status', T_('Error: Invalid database name.'));
-
-            return false;
-        }
-       
-        //Test for existing database and create if not existing.
-        $sql = "CREATE DATABASE `$database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-        $conn->query($sql);
-        $t = $conn->errorInfo();
-            
-        if (($t[1] == 1007) && ($overwrite == true)) {
-        
-            $sql = "DROP DATABASE `" . $database . "`;";
-            $conn->query($sql);
-        } elseif (intval($t[1]) > 0) {
-            $this->getPDOMessage($t[1]);
-            return false;
-        }
-        $sql = "CREATE DATABASE `$database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-        $conn->query($sql);
-
-        return true;
     }
-    
     private function updateEnv($env_vars)
     {
         $envFile = base_path('.env');

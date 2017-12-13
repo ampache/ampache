@@ -25,6 +25,9 @@ class CreateObjectCount extends Migration
             $table->decimal('geo_longitude', 10, 6)->nullable();
             $table->string('geo_name', 254)->nullable();
             $table->string('count_type', 16)->nullable();
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

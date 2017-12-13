@@ -36,45 +36,49 @@
 		"optimize-autoloader" : true
 	},
 	"require" : {
-		"php" : ">=5.6.4",
-		"Afterster/php-echonest-api" : "dev-master",
-		"Belphemur/laravel-gettext" : "5.x",
-		"aehlke/tag-it" : "^2.0",
-		"anlutro/l4-settings" : "^0.5.0",
-		"aterrien/jQuery-Knob" : "^1.2",
-		"barryvdh/laravel-debugbar" : "^2.3",
-		"blueimp/jQuery-File-Upload" : "^9.18",
-		"carhartl/jquery-cookie" : "^1.4",
-		"codacy/coverage" : "^1.2",
-		"components/bootstrap" : "^3.3",
-		"components/jquery" : "^3.2",
-		"components/jqueryui" : "^1.12",
-		"evenement/evenement" : "^2.0",
-		"gettext/gettext" : "^4.4",
-		"happyworm/jplayer" : "^2.9",
-		"james-heinrich/getid3" : "^1.9",
-		"jeromeetienne/jquery-qrcode" : "dev-master",
-		"kumailht/responsive-elements" : "dev-master",
-		"laravel/framework" : "5.4",
-		"laravel/tinker" : "~1.0",
-		"laravelcollective/html" : "^5.4",
-		"maennchen/zipstream-php" : "^0.4.1",
-		"mews/captcha" : "^2.1",
-		"mikealmond/musicbrainz" : "^0.2.2",
-		"needim/noty" : "2.3.*",
-		"novius/laravel-artisan-commands" : "^0.1.0",
-		"openid/php-openid" : "^2.3",
-		"phpmailer/phpmailer" : "^5.2",
-		"pklauzinski/jscroll" : "^2.3",
-		"react/react" : "^0.4.2",
-		"rmccue/requests" : "^1.7",
-		"sabre/dav" : "^3.2",
-		"scaron/prettyphoto" : "^3.1",
-		"swisnl/jQuery-contextMenu" : "^2.1",
-		"szymach/c-pchart" : "^2.0",
-		"vakata/jstree" : "^3.3",
-		"vlucas/phpdotenv" : "^2.4",
-		"xdan/datetimepicker" : "^2.4"
+		"php": ">=5.6.4",
+		"aehlke/tag-it": "^2.0",
+		"Afterster/php-echonest-api": "dev-master",
+		"anlutro/l4-settings": "^0.5.0",
+		"ampache/ampacheapi-php": "^1.0",
+		"aterrien/jQuery-Knob": "^1.2",
+		"barryvdh/laravel-debugbar": "^2.3",
+		"Belphemur/laravel-gettext": "5.x",
+		"blueimp/jQuery-File-Upload": "^9.18",
+		"carhartl/jquery-cookie": "^1.4",
+		"codacy/coverage": "^1.2",
+		"components/bootstrap": "^3.3",
+		"components/jquery": "^3.2",
+		"components/jqueryui": "^1.12",
+		"evenement/evenement": "^2.0",
+		"gettext/gettext": "^4.4",
+		"happyworm/jplayer": "^2.9",
+		"ise/php-soundcloud": "^3.0",
+		"james-heinrich/getid3": "dev-master",
+		"jeromeetienne/jquery-qrcode": "dev-master",
+		"kumailht/responsive-elements": "dev-master",
+		"kunalvarma05/dropbox-php-sdk": "^0.2.1",
+		"laravel/framework": "5.4",
+		"laravel/tinker": "~1.0",
+		"laravelcollective/html": "^5.4",
+		"maennchen/zipstream-php": "^0.4.1",
+		"mews/captcha": "^2.1",
+		"mikealmond/musicbrainz": "^0.2.2",
+		"needim/noty": "2.3.*",
+		"novius/laravel-artisan-commands": "^0.1.0",
+		"openid/php-openid": "^2.3",
+		"phpmailer/phpmailer": "^5.2",
+		"pklauzinski/jscroll": "^2.3",
+		"react/react": "^0.4.2",
+		"rmccue/requests": "^1.7",
+		"rsd/seafile-php-sdk": "^1.0",
+		"sabre/dav": "^3.2",
+		"scaron/prettyphoto": "^3.1",
+		"swisnl/jQuery-contextMenu": "^2.1",
+		"szymach/c-pchart": "^2.0",
+		"vakata/jstree": "^3.3",
+		"vlucas/phpdotenv": "^2.4",
+		"xdan/datetimepicker": "^2.4"
 	},
 	"require-dev" : {
 		"fzaninotto/faker" : "~1.4",
@@ -338,6 +342,17 @@
 					"robloach/component-installer" : "*"
 				}
 			}
+		}, {
+			"type" : "package",
+			"package" : {
+				"name" : "glenscott/soundcloud",
+				"version" : "dev-psr-4",
+				"source" : {
+					"url" : "https://github.com/mptre/php-soundcloud.git",
+					"type" : "git",
+					"reference" : "psr-4"
+				}
+			}
 		}
 	],
 	"autoload" : {
@@ -348,6 +363,18 @@
 			"app/Http/Controllers"
 		],
 		"psr-4" : {
+			"Modules\\" : [
+				"modules",
+				"modules/Catalogs",
+				"modules/Catalogs/Beets",
+				"modules/Catalogs/Beetsremote",
+				"modules/Catalogs/Dropbox",
+				"modules/Catalogs/Local",
+				"modules/Catalogs/Remote",
+				"modules/Catalogs/Soundcloud",
+				"modules/Catalogs/Subsonic",
+				"modules/Catalogs/Seafile"
+			],
 			"App\\" : [
 				"app",
 				"app/Console",
@@ -362,12 +389,13 @@
 				"app/Providers",
 				"app/Services",
 				"app/Support"
+			],
+			"Classes\\" : [
+				"app/Classes"
 			]
 		},
 		"files" : [
 			"app/Support/helpers.php",
-			"app/Support/Ajax.class.php",
-			"app/Support/UI.class.php",
 			"app/Support/debug.php"
 		]
 	},

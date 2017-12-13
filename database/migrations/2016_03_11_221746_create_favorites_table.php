@@ -26,6 +26,9 @@ class CreateFavoritesTable extends Migration
                   ->references('id')
                   ->on('users')
                   ->onDelete('cascade');
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

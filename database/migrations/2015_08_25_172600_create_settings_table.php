@@ -28,6 +28,9 @@ class CreateSettingsTable extends Migration
             $table->increments('id');
             $table->string('key')->index();
             $table->text('value');
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

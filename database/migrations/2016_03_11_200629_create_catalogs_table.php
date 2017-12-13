@@ -26,6 +26,9 @@ class CreateCatalogsTable extends Migration
             $table->string('gather_types');
             $table->boolean('public')->default(true);
             $table->integer('owner');
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

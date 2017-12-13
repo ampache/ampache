@@ -23,6 +23,8 @@ const { mix } = require('laravel-mix');
     mix.copy('resources/assets/js/ajax.js', 'public/js/ajax.js')
     mix.copy('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
     mix.copy('components/prettyphoto/js/jquery.prettyPhoto.js', 'public/js/jquery.prettyPhoto.js')
+    mix.copy('node_modules/jquery-validation/dist/jquery.validate.js', 'public/js/jquery.validate.js')
+    mix.copy('node_modules/jquery-validation/dist/additional-methods.js', 'public/js/additional-methods.js')
 
 mix.scripts([
    'resources/assets/js/Ajax.js',

@@ -19,6 +19,9 @@ class CreateLicensesTable extends Migration
             $table->text('description')->nullable();
             $table->text('external_link')->nullable();
             $table->timestamps();
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

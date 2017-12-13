@@ -24,6 +24,9 @@ class CreatePreferencesTable extends Migration
             $table->string('subcategory', 128)->nullable()->default(null);
             $table->index('category');
             $table->index('name');
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

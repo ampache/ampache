@@ -50,6 +50,9 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamp(App\Models\BaseModel::CREATED_AT);
             $table->timestamp(App\Models\BaseModel::UPDATED_AT);
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

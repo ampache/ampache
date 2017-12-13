@@ -31,6 +31,9 @@ class CreateImagesTable extends Migration
             $table->string('kind', 32)
                   ->nullable();
             $table->timestamps();
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

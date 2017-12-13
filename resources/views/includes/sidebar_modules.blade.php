@@ -6,7 +6,7 @@
     </h4>
     <ul class="sb3" id="sb_Modules">
         <li id="sb_preferences_mo_localplay"><a href="{!! url('modules/localplay') !!}">{{ T_('Localplay Modules') }}</a></li>
-        <li id="sb_preferences_mo_catalog_types"><a href="{!! url('modules/catalog') !!}">{{ T_('Catalog Modules') }}</a></li>
+        <li id="sb_preferences_mo_catalog_types"><a href="{!! url('modules/show_catalogs') !!}">{{ T_('Catalog Modules') }}</a></li>
         <li id="sb_preferences_mo_plugins"><a href="{!! url('modules/plugin') !!}">{{ T_('Available Plugins') }}</a></li>
     </ul>
 </li>

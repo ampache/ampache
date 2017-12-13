@@ -2,10 +2,11 @@
 
 @section('content')
 
-        <div class="page-header requirements">
+<div class="container">
+        <div  class="page-header requirements">
             <h1><?php echo T_('Requirements'); ?></h1>
         </div>
-        <div class="well">
+        <div id="install_header" class="well">
             <p>
                 <?php echo T_("The following pages handle the installation of the Ampache database and validates some required dependencies." .
                     "  Before you continue please make sure that you have the following prerequisites:"); ?>
@@ -14,7 +15,40 @@
                 <li>A MySQL server with a username and password that can create/modify databases</li>
             </ul>
         </div>
-<table class="table" cellspacing="0" cellpadding="0">
+
+    <script>
+     $(function () {
+        $("#dialog").dialog({
+        	closeOnEscape: false,
+         	autoOpen: false,
+        	 open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog | ui).hide()},
+        	position: { my: "top", at: "bottom", of: "#install_header"},
+        	width: "auto",
+			height: 600,
+			modal: false,
+		       overlay: { 
+		            opacity: 0.75, 
+		            background: '#fff' 
+		        }, 
+        
+            title: "Installing Ampache",
+            buttons: {
+	            'Continue': function() {
+				location.assign("{{ url('/install/show_db') }}")
+                    $( this ).dialog( "close" );
+           }
+            }
+        });
+    });
+	                $(document).ready(function(){
+	                	$( 'a.ui-dialog-titlebar-close' ).remove();
+	   	                $("#dialog").dialog( "open" );
+	                });
+	                
+</script>
+
+ <div id="dialog" style="display: none" width="311px">
+ <table class="table" cellspacing="0" cellpadding="0">
     <tr>
         <th><?php echo T_('CHECK'); ?></th>
         <th><?php echo T_('STATUS'); ?></th>
@@ -176,5 +210,7 @@
     </td>
 </tr>
 </table>
-    <a href="{{ url('/install/show_db') }} " class="btn btn-md btn-warning">Continue</a>
+ 
+ </div>
+</div>
 @endsection

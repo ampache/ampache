@@ -67,6 +67,9 @@ class CreateSongsTable extends Migration
                   ->references('id')
                   ->on('artists')
                   ->onDelete('cascade');
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

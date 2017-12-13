@@ -50,6 +50,9 @@ class CreateChannelsTable extends Migration
                   ->unsigned();
             $table->mediumInteger('rating');
             $table->timestamps();
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

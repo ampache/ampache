@@ -23,6 +23,9 @@ class CreateTvshowSeasonsTable extends Migration
                   ->on('tvshows')
                   ->onDelete('cascade');
             $table->timestamps();
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

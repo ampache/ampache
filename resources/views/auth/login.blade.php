@@ -12,7 +12,7 @@
         	position: { my: "middle", at: "middle", of:"body"},
         	width: 400,
 			height: 311,
-			modal: true,
+			modal: false,
             title: "Ampache Login",
             buttons: {
 	            'Continue': function() {

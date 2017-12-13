@@ -1,3 +1,6 @@
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
@@ -38,6 +41,9 @@ class CreatePodcastsTable extends Migration
                   ->references('id')
                   ->on('catalogs')
                   ->onDelete('cascade');
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

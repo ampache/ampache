@@ -27,6 +27,9 @@ class CreateSessionsTable extends Migration
             $table->decimal('geo_latitude', 10, 6)->nullable();
             $table->decimal('geo_longitude', 10, 6)->nullable();
             $table->text('geo_name')->nullable();
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 

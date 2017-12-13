@@ -43,28 +43,30 @@
 	<link rel="stylesheet" href="{{ url('themes/reborn/css/light.css') }}" type="text/css" media="screen" />
 	<link rel="stylesheet" href="{{ url('css/install-doped.css') }}" type="text/css" media="screen" />
     <script src="{{ url('js/jquery.js') }}" language="javascript" type="text/javascript"></script>
-    <script src="{{ url('js/require.js') }}" language="javascript" type="text/javascript"></script>
     <script src="{{ url('js/bootstrap.js') }}" language="javascript" type="text/javascript"></script>
    <script src="{{ url('js/base.js') }}" language="javascript" type="text/javascript"></script>
-    
+    <script src="{{ url('js/jquery-ui.js') }}"></script>
+    <script src="{{ url('js/ajax.js') }}" type="text/javascript"></script>
+    <script src="{{ url('js/slideshow.js') }}" type="text/javascript"></script>
+    <script src="{{ url('js/jquery.prettyPhoto.js') }}" type="text/javascript"></script>
+    <script src="{{ url('js/jquery.validate.js') }}" type="text/javascript"></script>
+    <script src="{{ url('js/additional-methods.js') }}" type="text/javascript"></script>
+
 	</head>
 	<body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
+
             <a class="navbar-brand" href="#">
                 <img src="{{ url('themes/reborn/images/ampache.png') }}" title="Ampache" alt="Ampache">
                 <?php echo T_('Ampache Installation'); ?> - For the love of Music
             </a>
-        </div>
     </div>
     
-     <div class="container">
         <div id="guts">
             @yield('content')
         </div>
             <div style="clear:both;">
             </div>
-    </div>
         @if (session('status'))
         <div class="alert alert-success">
            {{ session('status') }}

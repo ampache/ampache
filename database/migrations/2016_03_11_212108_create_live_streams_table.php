@@ -23,6 +23,9 @@ class CreateLiveStreamsTable extends Migration
             $table->string('codec', 32)
                   ->nullable();
             $table->timestamps();
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
         });
     }
 
