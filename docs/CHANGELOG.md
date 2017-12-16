@@ -4,7 +4,6 @@ CHANGELOG
 3.8.4
 ----------
 - Subsonic catalog now displays album art and artist bio.
-- Subsonic API now ignores case when determining methods.
 - Artist info now displays in Ampache's installed language.
 - Updated translations.
 - Composer tag changes now saved to database.
