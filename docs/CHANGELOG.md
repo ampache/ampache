@@ -16,6 +16,8 @@ CHANGELOG
 - Composer tag changes now written to database
 - Fixed catch null reference
 - Changes to make translation easier
+- Smart Playlist can now be edited/saved without 'random' set.
+
 
 3.8.3
 ----------
