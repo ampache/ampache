@@ -300,9 +300,9 @@ class Search extends playlist_object
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name'   => 'rating',
-                    'label'  => T_('Rating (Average)'),
-                    'type'   => 'numeric',
+                    'name' => 'rating',
+                    'label' => T_('Rating (Average)'),
+                    'type' => 'numeric',
                     'widget' => array(
                         'select',
                         array(
@@ -313,6 +313,15 @@ class Search extends playlist_object
                             '5 Stars'
                         )
                     )
+                );
+            }
+
+            if (AmpConfig::get('userflags')) {
+                $this->types[] = array(
+                    'name' => 'favorite',
+                    'label' => T_('Favorites'),
+                    'type' => 'text',
+                    'widget' => array('input', 'text')
                 );
             }
 
@@ -508,9 +517,9 @@ class Search extends playlist_object
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name'   => 'rating',
-                    'label'  => T_('Rating (Average)'),
-                    'type'   => 'numeric',
+                    'name' => 'rating',
+                    'label' => T_('Rating (Average)'),
+                    'type' => 'numeric',
                     'widget' => array(
                         'select',
                         array(
@@ -1018,7 +1027,7 @@ class Search extends playlist_object
         if ($data && is_array($data)) {
             $this->name   = $data['name'];
             $this->type   = $data['pl_type'];
-            $this->random = $data['random'];
+            $this->random = is_null($data['random']) ? 0 : 1;
             $this->limit  = $data['limit'];
         }
 
@@ -1172,8 +1181,11 @@ class Search extends playlist_object
                 $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             }
         }
+        if ($join['user_flag']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `album`.`id`=`user_flag`.`object_id`";
+        }
         if ($join['rating']) {
-            $userid          = $GLOBALS['user']->id;
+            $userid          = intval($GLOBALS['user']->id);
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
             if ($this->type != "public") {
                 $table['rating'] .= "`rating`.`user`='$userid' AND ";
@@ -1181,13 +1193,13 @@ class Search extends playlist_object
             $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
         }
         if ($join['myratings']) {
-            $userid          = $GLOBALS['user']->id;
+            $userid          = intval($GLOBALS['user']->id);
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
             $table['rating'] .= "`rating`.`user`='$userid' AND ";
             $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
         }
         if ($join['object_count']) {
-            $userid          = $GLOBALS['user']->id;
+            $userid          = intval($GLOBALS['user']->id);
             $table['rating'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='album' AND ";
             $table['rating'] .= "`object_count`.`user`='$userid' AND ";
             $table['rating'] .= "`object_count`.`object_id`=`album`.`id`";
@@ -1435,6 +1447,12 @@ class Search extends playlist_object
                     }
                     $join['rating'] = true;
                 break;
+                case 'favorite':
+                    $userid             = $GLOBALS['user']->id;
+                    $join['user_flag']  = true;
+                    $where[]            = "`song`.`title` $sql_match_operator '$input' AND `user_flag`.`user` = $userid";
+                    $where[] .= "`user_flag`.`object_type` = 'song'";
+                break;
                 case 'myratings':
                     $userid = $GLOBALS['user']->id;
                     $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
@@ -1547,6 +1565,11 @@ class Search extends playlist_object
             }
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
         }
+
+        if ($join['user_flag']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`id`=`user_flag`.`object_id` ";
+        }
+
         if ($join['myratings']) {
             $userid          = $GLOBALS['user']->id;
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";

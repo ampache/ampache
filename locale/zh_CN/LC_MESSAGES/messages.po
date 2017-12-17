@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-08-09 19:58+0200\n"
-"PO-Revision-Date: 2017-08-03 10:33+0000\n"
+"POT-Creation-Date: 2017-12-12 08:07+0100\n"
+"PO-Revision-Date: 2017-11-12 03:28+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/"
 "language/zh_CN/)\n"
@@ -36,7 +36,7 @@ msgstr "删除请求"
 msgid "Are you sure you want to permanently delete"
 msgstr "确定永久删除"
 
-#: ../../admin/access.php:74 ../../lib/class/search.class.php:346
+#: ../../admin/access.php:74 ../../lib/class/search.class.php:355
 #: ../../templates/show_song.inc.php:175 ../../templates/show_video.inc.php:161
 msgid "Added"
 msgstr "已添加"
@@ -46,7 +46,7 @@ msgid "Your new Access Control List(s) have been created"
 msgstr "新的(多个)访问控制列表已创建"
 
 #: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1514
-#: ../../lib/class/search.class.php:353 ../../preferences.php:144
+#: ../../lib/class/search.class.php:362 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
 msgstr "已更新"
@@ -1164,7 +1164,7 @@ msgstr "发行集团 MusicBrainzID"
 
 #: ../../lib/class/album.class.php:683 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:223
-#: ../../lib/class/search.class.php:442 ../../lib/class/song.class.php:1497
+#: ../../lib/class/search.class.php:451 ../../lib/class/song.class.php:1497
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_upload.inc.php:177
 #: ../../templates/show_albums.inc.php:40
@@ -1717,26 +1717,26 @@ msgstr "插入目录失败，请检查debug日志"
 msgid "No Update Needed"
 msgstr "无需更新"
 
-#: ../../lib/class/catalog.class.php:1818
+#: ../../lib/class/catalog.class.php:1846
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "目录清理完成。已删除 %d 个文件"
 
-#: ../../lib/class/catalog.class.php:1843
+#: ../../lib/class/catalog.class.php:1871
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "目录校验完成。%d 中 %d 文件被更新。"
 
-#: ../../lib/class/catalog.class.php:2057
+#: ../../lib/class/catalog.class.php:2085
 msgid "Failed to create playlist."
 msgstr "创建播放列表失败。"
 
-#: ../../lib/class/catalog.class.php:2074
+#: ../../lib/class/catalog.class.php:2102
 msgid "No valid songs found in playlist file."
 msgstr "未找到有效的播放列表文件。"
 
-#: ../../lib/class/catalog.class.php:2430
+#: ../../lib/class/catalog.class.php:2458
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -1872,7 +1872,7 @@ msgid "Cannot read the feed."
 msgstr "无法读取源"
 
 #: ../../lib/class/podcast_episode.class.php:157
-#: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:435
+#: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:444
 #: ../../lib/class/song.class.php:1500 ../../lib/class/video.class.php:303
 #: ../../templates/show_democratic_playlist.inc.php:60
 #: ../../templates/show_democratic_playlist.inc.php:113
@@ -2095,8 +2095,8 @@ msgstr "作曲家"
 msgid "Comment"
 msgstr "评论"
 
-#: ../../lib/class/search.class.php:252 ../../lib/class/search.class.php:502
-#: ../../lib/class/search.class.php:536 ../../lib/class/tag.class.php:739
+#: ../../lib/class/search.class.php:252 ../../lib/class/search.class.php:511
+#: ../../lib/class/search.class.php:545 ../../lib/class/tag.class.php:739
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
 msgstr "标签"
@@ -2105,7 +2105,7 @@ msgstr "标签"
 msgid "Album tag"
 msgstr "专辑标签"
 
-#: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:510
+#: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:519
 #: ../../templates/show_disabled_songs.inc.php:32
 #: ../../templates/show_disabled_songs.inc.php:62
 #: ../../templates/show_duplicates.inc.php:34
@@ -2115,8 +2115,8 @@ msgstr "专辑标签"
 msgid "Filename"
 msgstr "文件名"
 
-#: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:449
-#: ../../lib/class/search.class.php:524 ../../templates/show_albums.inc.php:42
+#: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:458
+#: ../../lib/class/search.class.php:533 ../../templates/show_albums.inc.php:42
 #: ../../templates/show_albums.inc.php:116
 #: ../../templates/show_edit_album_row.inc.php:63
 #: ../../templates/show_edit_song_row.inc.php:85
@@ -2135,7 +2135,7 @@ msgstr "年"
 msgid "Length (in minutes)"
 msgstr "长度（以分钟为单位）"
 
-#: ../../lib/class/search.class.php:288 ../../lib/class/search.class.php:471
+#: ../../lib/class/search.class.php:288 ../../lib/class/search.class.php:480
 #: ../../templates/show_albums.inc.php:53
 #: ../../templates/show_albums.inc.php:127
 #: ../../templates/show_artists.inc.php:55
@@ -2164,7 +2164,13 @@ msgstr "长度（以分钟为单位）"
 msgid "Rating"
 msgstr "评级"
 
-#: ../../lib/class/search.class.php:306 ../../templates/show_albums.inc.php:45
+#: ../../lib/class/search.class.php:306 ../../templates/header.inc.php:417
+#: ../../templates/sidebar_home.inc.php:142
+#: ../../templates/sidebar.light.inc.php:38
+msgid "Favorites"
+msgstr "最喜爱"
+
+#: ../../lib/class/search.class.php:315 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
 #: ../../templates/show_artists.inc.php:47
 #: ../../templates/show_artists.inc.php:121
@@ -2176,7 +2182,7 @@ msgstr "评级"
 msgid "# Played"
 msgstr "# 已播放"
 
-#: ../../lib/class/search.class.php:314
+#: ../../lib/class/search.class.php:323
 #: ../../templates/show_add_channel.inc.php:102
 #: ../../templates/show_channels.inc.php:39
 #: ../../templates/show_duplicates.inc.php:32
@@ -2186,12 +2192,12 @@ msgstr "# 已播放"
 msgid "Bitrate"
 msgstr "比特率"
 
-#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:83
+#: ../../lib/class/search.class.php:348 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
 msgid "Played"
 msgstr "已播放"
 
-#: ../../lib/class/search.class.php:366 ../../lib/class/search.class.php:494
+#: ../../lib/class/search.class.php:375 ../../lib/class/search.class.php:503
 #: ../../templates/browse_filters.inc.php:87
 #: ../../templates/show_add_live_stream.inc.php:55
 #: ../../templates/show_add_podcast.inc.php:34
@@ -2199,7 +2205,7 @@ msgstr "已播放"
 msgid "Catalog"
 msgstr "目录"
 
-#: ../../lib/class/search.class.php:379 ../../lib/ui.lib.php:135
+#: ../../lib/class/search.class.php:388 ../../lib/ui.lib.php:135
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_search_bar.inc.php:34
 #: ../../templates/sidebar_home.inc.php:92
@@ -2207,7 +2213,7 @@ msgstr "目录"
 msgid "Playlist"
 msgstr "播放列表"
 
-#: ../../lib/class/search.class.php:386
+#: ../../lib/class/search.class.php:395
 #: ../../templates/show_playlists.inc.php:35
 #: ../../templates/show_playlists.inc.php:89
 #: ../../templates/show_searches.inc.php:42
@@ -2215,30 +2221,30 @@ msgstr "播放列表"
 msgid "Playlist Name"
 msgstr "播放列表名称"
 
-#: ../../lib/class/search.class.php:399
+#: ../../lib/class/search.class.php:408
 msgid "Smart Playlist"
 msgstr "智能播放列表"
 
-#: ../../lib/class/search.class.php:411
+#: ../../lib/class/search.class.php:420
 msgid "Metadata"
 msgstr "元数据"
 
-#: ../../lib/class/search.class.php:425
+#: ../../lib/class/search.class.php:434
 #: ../../templates/show_add_upload.inc.php:199
 #: ../../templates/show_edit_song_row.inc.php:98
 msgid "Music License"
 msgstr "音乐授权"
 
-#: ../../lib/class/search.class.php:456
+#: ../../lib/class/search.class.php:465
 msgid "Image Width"
 msgstr "图像宽度"
 
-#: ../../lib/class/search.class.php:463
+#: ../../lib/class/search.class.php:472
 msgid "Image Height"
 msgstr "图像高度"
 
-#: ../../lib/class/search.class.php:518 ../../lib/class/search.class.php:544
-#: ../../lib/class/search.class.php:552
+#: ../../lib/class/search.class.php:527 ../../lib/class/search.class.php:553
+#: ../../lib/class/search.class.php:561
 #: ../../templates/cookie_disclaimer.inc.php:16
 #: ../../templates/show_access_list.inc.php:47
 #: ../../templates/show_add_access.inc.php:29
@@ -2279,13 +2285,13 @@ msgstr "图像高度"
 msgid "Name"
 msgstr "名称"
 
-#: ../../lib/class/search.class.php:530
+#: ../../lib/class/search.class.php:539
 #: ../../templates/show_concerts.inc.php:28
 #: ../../templates/show_concerts.inc.php:56
 msgid "Place"
 msgstr "位置"
 
-#: ../../lib/class/search.class.php:558
+#: ../../lib/class/search.class.php:567
 #: ../../templates/show_add_label.inc.php:34
 #: ../../templates/show_edit_label_row.inc.php:31
 #: ../../templates/show_edit_podcast_episode_row.inc.php:43
@@ -2295,7 +2301,7 @@ msgstr "位置"
 msgid "Category"
 msgstr "类别"
 
-#: ../../lib/class/search.class.php:566
+#: ../../lib/class/search.class.php:575
 #: ../../modules/catalog/remote/remote.catalog.php:103
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:103
 #: ../../modules/localplay/xbmc/xbmc.controller.php:190
@@ -2433,21 +2439,21 @@ msgstr "季"
 msgid "Episode"
 msgstr "集"
 
-#: ../../lib/class/update.class.php:603
+#: ../../lib/class/update.class.php:606
 msgid "No updates needed."
 msgstr "无需更新"
 
-#: ../../lib/class/update.class.php:605
+#: ../../lib/class/update.class.php:608
 msgid "Return to main page"
 msgstr "返回主页"
 
-#: ../../lib/class/update.class.php:2648 ../../lib/class/update.class.php:2664
-#: ../../lib/class/update.class.php:2680
+#: ../../lib/class/update.class.php:2656 ../../lib/class/update.class.php:2672
+#: ../../lib/class/update.class.php:2688
 msgid "File copy error."
 msgstr "复制文件出错"
 
-#: ../../lib/class/update.class.php:2655 ../../lib/class/update.class.php:2671
-#: ../../lib/class/update.class.php:2687
+#: ../../lib/class/update.class.php:2663 ../../lib/class/update.class.php:2679
+#: ../../lib/class/update.class.php:2695
 msgid "Cannot copy default .htaccess file."
 msgstr "无法复制的默认.htaccess文件。"
 
@@ -3638,7 +3644,7 @@ msgstr "正在更新Beets"
 #: ../../modules/Beets/Catalog.php:200
 #: ../../modules/catalog/remote/remote.catalog.php:273
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:300
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:247
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:252
 #, php-format
 msgid "Unable to Insert Song - %s"
 msgstr "无法插入歌曲 - %s"
@@ -3653,7 +3659,7 @@ msgstr "错误：Beets 已经选中，但未提供 Beets 数据库文件"
 
 #: ../../modules/catalog/beets/beets.catalog.php:114
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:115
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:195
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:209
 #: ../../modules/catalog/local/local.catalog.php:201
 #: ../../modules/catalog/remote/remote.catalog.php:162
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:183
@@ -3670,105 +3676,107 @@ msgstr "Beets 服务器 URI"
 msgid "Error: Beets selected, but path is not a URL"
 msgstr "错误：Beets 已选中，但路径不是一个 URL"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:68
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Go to https://www.dropbox.com/developers/apps/create"
 msgstr "请前往 https://www.dropbox.com/developers/apps/create"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:69
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:74
 msgid "Select 'Dropbox API app'"
 msgstr "选择 “Dropbos API app”"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:70
-msgid "Select 'Files and datastores'"
-msgstr "选择“Files and datastores”"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:71
-msgid "Select 'No' at 'Can your app be limited to its own, private folder?'"
-msgstr "在“Can your app be limitedd to its own,private folder?”对话中选择“No”"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:72
-msgid ""
-"Select 'Specific file types' at 'What type of files does your app need "
-"access to?'"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:75
+msgid "Select 'Full Dropbox'"
 msgstr ""
-"在“What type of files does your app need access to?”对话中选择“Specific file "
-"types”"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:73
-msgid "Check Videos and Audio files"
-msgstr "检查视频及音频文件"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:74
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Give a name to your application and create it"
 msgstr "给您的应用程序命名并创建应用程序"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:76
-msgid "Copy your App key and App secret in the following fields."
-msgstr "复制您的 App key 和 App secret 到下面的文本框中。"
-
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
-msgid ""
-"After preparing the catalog with pressing the 'Add catalog' button,<br /> "
-"you have to 'Make it ready' on the catalog table."
+msgid "Click the 'Generate' button to create an Access Token"
 msgstr ""
-"在准备完毕并点击“添加目录”按钮后，<br /> 您需要在目录表单中使其“准备完毕”"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:115
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:78
+msgid ""
+"Copy your App key and App secret and Access Token into the following fields."
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
 msgstr "API Key"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:116
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:118
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:108
 #: ../../templates/show_add_share.inc.php:35
 msgid "Secret"
 msgstr "Secret"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:117
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:119
+msgid "Access Token"
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
 #: ../../templates/show_stats.inc.php:71
 msgid "Path"
 msgstr "路径"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:118
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:121
 msgid "Get chunked files on analyze"
 msgstr "获取有关分析分块文件"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:177
-msgid "Error: API Key and Secret Required for Dropbox Catalogs"
-msgstr "错误：需要API Key 及 Secret 才能使用 Dropbox Catalogs"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:181
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
+msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:184
-msgid "Invalid <dropbox-path>: "
-msgstr "无效的 <dropbox-path>："
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:188
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:492
+msgid "Invalid \"API key\", \"secret\", or \"access token\": "
+msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:218
-#, php-format
-msgid "Go to %s to generate the authorization code, then enter it bellow."
-msgstr "前往 %s 并生成授权码，然后将其输入至下面文本框中。"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:197
+msgid "Invalid \"dropbox-path\": "
+msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:257
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:236
 msgid "Running Dropbox Remote Update"
 msgstr "正在 Dropbox 远程更新"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:301
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:259
+#: ../../modules/catalog/seafile/seafile.catalog.php:267
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr "目录已更新完毕。全部媒体：[%s]"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:303
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:261
+#: ../../modules/catalog/seafile/seafile.catalog.php:270
 msgid "No media updated, do you respect the patterns?"
 msgstr "没有媒体被更新，您确定选对模式了吗？"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:306
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:449
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:478
+#: ../../modules/catalog/seafile/seafile.catalog.php:378
+#, php-format
+msgid "Updated song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:481
+#: ../../modules/catalog/seafile/seafile.catalog.php:381
+#, php-format
+msgid "Song up to date: \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:485
+#: ../../modules/catalog/seafile/seafile.catalog.php:385
+#: ../../modules/catalog/seafile/seafile.catalog.php:443
+#, php-format
+msgid "Removing song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:529
 msgid "API Error: cannot connect to Dropbox."
 msgstr "API 错误：无法连接到 Dropbox 。"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:338
-msgid "API Error: Cannot access file/folder at "
-msgstr "API 错误：无法访问此位置的文件或文件夹："
 
 #: ../../modules/catalog/local/local.catalog.php:175
 msgid "Error: Path not specified"
@@ -3884,6 +3892,114 @@ msgstr "%u 的远程目录(多个)中发现(%u 的歌曲)"
 msgid "Completed updating remote catalog(s)."
 msgstr "已完成更新远程目录(多个)。"
 
+#: ../../modules/catalog/seafile/SeafileAdapter.php:45
+msgid "Could not authenticate with Seafile"
+msgstr ""
+
+#: ../../modules/catalog/seafile/SeafileAdapter.php:124
+#, php-format
+msgid "No media updated: could not find Seafile library called \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:74
+#, php-format
+msgid "Install a Seafile server as described in its documentation on %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:75
+msgid ""
+"Enter url to server (e.g. 'https://seafile.example.com') and library name (e."
+"g. 'Music')."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:76
+#, php-format
+msgid ""
+"'API Call Delay' is a delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accomodate Seafile's Rate "
+"Limiting. <br/>The default is tuned towards Seafile's default rate limit "
+"settings; see %sthis forum post%s for more information."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:78
+msgid ""
+"After creating the catalog, you must 'Make it ready' on the catalog table."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:122
+msgid "Server URI"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:123
+msgid "Library Name"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:124
+msgid "API Call Delay"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:125
+msgid "Seafile Username/Email"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:126
+msgid "Seafile Password"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:155
+msgid "Error: Seafile Server URL is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:161
+msgid "Error: Seafile Server Library Name is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:167
+msgid "Error: Seafile Username is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:173
+msgid "Error: Seafile Password is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:179
+msgid "Error: API Call Delay must have a numeric value."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:189
+#, php-format
+msgid "Error while authenticating against Seafile API: %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:236
+msgid "Running Seafile Remote Update"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:294
+#, php-format
+msgid "Skipping existing song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:299
+#, php-format
+msgid "Adding song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:309
+#, php-format
+msgid "Could not add song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:433
+#, php-format
+msgid "Error checking song \"%s\": %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:441
+#, php-format
+msgid "Keeping song \"%s\""
+msgstr ""
+
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:107
 msgid "User ID"
 msgstr "用户ID"
@@ -3901,7 +4017,7 @@ msgid "Completed updating SoundCloud catalog(s)."
 msgstr "远程更新 SoundCloud 目录(多个)完毕。"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:308
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:267
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:273
 msgid "Songs added."
 msgstr "歌曲已添加。"
 
@@ -3937,19 +4053,19 @@ msgstr "错误：需要用户名或密码以设置 Subsonic 目录"
 msgid "Running Subsonic Remote Update"
 msgstr "正在远程更新 Subsonic "
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:256
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:262
 msgid "Song Error."
 msgstr "歌曲出错。"
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:262
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:268
 msgid "Album Error."
 msgstr "专辑出错。"
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:267
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:273
 msgid "Completed updating Subsonic catalog(s)."
 msgstr "已完成 Subsonic 目录(多个)更新。"
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:273
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:279
 msgid "Artist Error."
 msgstr "艺术家出错。"
 
@@ -4578,11 +4694,6 @@ msgstr "登录"
 #: ../../templates/show_login_form.inc.php:78
 msgid "Register"
 msgstr "注册"
-
-#: ../../templates/header.inc.php:417 ../../templates/sidebar_home.inc.php:142
-#: ../../templates/sidebar.light.inc.php:38
-msgid "Favorites"
-msgstr "最喜爱"
 
 #: ../../templates/header.inc.php:502
 msgid "Error: Your config file is out of date!"
@@ -8305,11 +8416,6 @@ msgstr "管理播放列表"
 msgid "Account"
 msgstr "账户"
 
-#: ../../themes/reborn/templates/upnp/control-reply.php:46
-#: ../../upnp/control-reply.php:46
-msgid "root"
-msgstr "根"
-
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
 msgid "TVShow Season Deletion"
@@ -8362,6 +8468,10 @@ msgstr ""
 msgid "Update Now!"
 msgstr "马上更新！"
 
+#: ../../upnp/control-reply.php:46
+msgid "root"
+msgstr "根"
+
 #: ../../video.php:35 ../../video.php:55 ../../video.php:57
 msgid "Video Deletion"
 msgstr "删除视频"
@@ -8383,7 +8493,7 @@ msgstr "无法删除此视频。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.06.2017 17:50:14 CEST
+# Last Update: 12.10.2017 06:14:49 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8578,8 +8688,8 @@ msgid "Auto-pause betweens tabs"
 msgstr "在标签切换时自动暂停播放"
 
 #: Database preference table id 101
-msgid "Use beautiful stream url"
-msgstr "使用漂亮的流媒体网址"
+msgid "Enable url rewriting"
+msgstr ""
 
 #: Database preference table id 102
 msgid "Allow Share"

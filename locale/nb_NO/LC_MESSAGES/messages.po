@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-08-09 19:58+0200\n"
-"PO-Revision-Date: 2017-08-03 10:33+0000\n"
-"Last-Translator: solvemon\n"
+"POT-Creation-Date: 2017-12-12 08:07+0100\n"
+"PO-Revision-Date: 2017-11-12 03:28+0000\n"
+"Last-Translator: Afterster\n"
 "Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/ampache/"
 "ampache/language/nb_NO/)\n"
 "Language: nb_NO\n"
@@ -35,7 +35,7 @@ msgstr "Slettingsforespørsel"
 msgid "Are you sure you want to permanently delete"
 msgstr "Er du sikker på at du ønsker permanent sletting"
 
-#: ../../admin/access.php:74 ../../lib/class/search.class.php:346
+#: ../../admin/access.php:74 ../../lib/class/search.class.php:355
 #: ../../templates/show_song.inc.php:175 ../../templates/show_video.inc.php:161
 msgid "Added"
 msgstr "Lagt til"
@@ -45,7 +45,7 @@ msgid "Your new Access Control List(s) have been created"
 msgstr "Din nye oppføring i tilgangslistene har blitt lagret"
 
 #: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1514
-#: ../../lib/class/search.class.php:353 ../../preferences.php:144
+#: ../../lib/class/search.class.php:362 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
 msgstr "Oppdatert"
@@ -1161,7 +1161,7 @@ msgstr ""
 
 #: ../../lib/class/album.class.php:683 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:223
-#: ../../lib/class/search.class.php:442 ../../lib/class/song.class.php:1497
+#: ../../lib/class/search.class.php:451 ../../lib/class/song.class.php:1497
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_upload.inc.php:177
 #: ../../templates/show_albums.inc.php:40
@@ -1716,27 +1716,27 @@ msgstr ""
 msgid "No Update Needed"
 msgstr "Ingen oppdatering nødvendig"
 
-#: ../../lib/class/catalog.class.php:1818
+#: ../../lib/class/catalog.class.php:1846
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:1843
+#: ../../lib/class/catalog.class.php:1871
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2057
+#: ../../lib/class/catalog.class.php:2085
 msgid "Failed to create playlist."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2074
+#: ../../lib/class/catalog.class.php:2102
 msgid "No valid songs found in playlist file."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2430
+#: ../../lib/class/catalog.class.php:2458
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -1872,7 +1872,7 @@ msgid "Cannot read the feed."
 msgstr ""
 
 #: ../../lib/class/podcast_episode.class.php:157
-#: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:435
+#: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:444
 #: ../../lib/class/song.class.php:1500 ../../lib/class/video.class.php:303
 #: ../../templates/show_democratic_playlist.inc.php:60
 #: ../../templates/show_democratic_playlist.inc.php:113
@@ -2063,8 +2063,8 @@ msgstr ""
 msgid "Comment"
 msgstr "Kommentar"
 
-#: ../../lib/class/search.class.php:252 ../../lib/class/search.class.php:502
-#: ../../lib/class/search.class.php:536 ../../lib/class/tag.class.php:739
+#: ../../lib/class/search.class.php:252 ../../lib/class/search.class.php:511
+#: ../../lib/class/search.class.php:545 ../../lib/class/tag.class.php:739
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
 msgstr "Tag"
@@ -2073,7 +2073,7 @@ msgstr "Tag"
 msgid "Album tag"
 msgstr ""
 
-#: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:510
+#: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:519
 #: ../../templates/show_disabled_songs.inc.php:32
 #: ../../templates/show_disabled_songs.inc.php:62
 #: ../../templates/show_duplicates.inc.php:34
@@ -2083,8 +2083,8 @@ msgstr ""
 msgid "Filename"
 msgstr "Filnavn"
 
-#: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:449
-#: ../../lib/class/search.class.php:524 ../../templates/show_albums.inc.php:42
+#: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:458
+#: ../../lib/class/search.class.php:533 ../../templates/show_albums.inc.php:42
 #: ../../templates/show_albums.inc.php:116
 #: ../../templates/show_edit_album_row.inc.php:63
 #: ../../templates/show_edit_song_row.inc.php:85
@@ -2103,7 +2103,7 @@ msgstr "År"
 msgid "Length (in minutes)"
 msgstr ""
 
-#: ../../lib/class/search.class.php:288 ../../lib/class/search.class.php:471
+#: ../../lib/class/search.class.php:288 ../../lib/class/search.class.php:480
 #: ../../templates/show_albums.inc.php:53
 #: ../../templates/show_albums.inc.php:127
 #: ../../templates/show_artists.inc.php:55
@@ -2132,7 +2132,13 @@ msgstr ""
 msgid "Rating"
 msgstr "Kvalitet"
 
-#: ../../lib/class/search.class.php:306 ../../templates/show_albums.inc.php:45
+#: ../../lib/class/search.class.php:306 ../../templates/header.inc.php:417
+#: ../../templates/sidebar_home.inc.php:142
+#: ../../templates/sidebar.light.inc.php:38
+msgid "Favorites"
+msgstr ""
+
+#: ../../lib/class/search.class.php:315 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
 #: ../../templates/show_artists.inc.php:47
 #: ../../templates/show_artists.inc.php:121
@@ -2144,7 +2150,7 @@ msgstr "Kvalitet"
 msgid "# Played"
 msgstr ""
 
-#: ../../lib/class/search.class.php:314
+#: ../../lib/class/search.class.php:323
 #: ../../templates/show_add_channel.inc.php:102
 #: ../../templates/show_channels.inc.php:39
 #: ../../templates/show_duplicates.inc.php:32
@@ -2154,12 +2160,12 @@ msgstr ""
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: ../../lib/class/search.class.php:339 ../../templates/show_album.inc.php:83
+#: ../../lib/class/search.class.php:348 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
 msgid "Played"
 msgstr "Spilt"
 
-#: ../../lib/class/search.class.php:366 ../../lib/class/search.class.php:494
+#: ../../lib/class/search.class.php:375 ../../lib/class/search.class.php:503
 #: ../../templates/browse_filters.inc.php:87
 #: ../../templates/show_add_live_stream.inc.php:55
 #: ../../templates/show_add_podcast.inc.php:34
@@ -2167,7 +2173,7 @@ msgstr "Spilt"
 msgid "Catalog"
 msgstr "Katalog"
 
-#: ../../lib/class/search.class.php:379 ../../lib/ui.lib.php:135
+#: ../../lib/class/search.class.php:388 ../../lib/ui.lib.php:135
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_search_bar.inc.php:34
 #: ../../templates/sidebar_home.inc.php:92
@@ -2175,7 +2181,7 @@ msgstr "Katalog"
 msgid "Playlist"
 msgstr "Spilleliste"
 
-#: ../../lib/class/search.class.php:386
+#: ../../lib/class/search.class.php:395
 #: ../../templates/show_playlists.inc.php:35
 #: ../../templates/show_playlists.inc.php:89
 #: ../../templates/show_searches.inc.php:42
@@ -2183,30 +2189,30 @@ msgstr "Spilleliste"
 msgid "Playlist Name"
 msgstr "Navn på spilleliste"
 
-#: ../../lib/class/search.class.php:399
+#: ../../lib/class/search.class.php:408
 msgid "Smart Playlist"
 msgstr ""
 
-#: ../../lib/class/search.class.php:411
+#: ../../lib/class/search.class.php:420
 msgid "Metadata"
 msgstr ""
 
-#: ../../lib/class/search.class.php:425
+#: ../../lib/class/search.class.php:434
 #: ../../templates/show_add_upload.inc.php:199
 #: ../../templates/show_edit_song_row.inc.php:98
 msgid "Music License"
 msgstr ""
 
-#: ../../lib/class/search.class.php:456
+#: ../../lib/class/search.class.php:465
 msgid "Image Width"
 msgstr ""
 
-#: ../../lib/class/search.class.php:463
+#: ../../lib/class/search.class.php:472
 msgid "Image Height"
 msgstr ""
 
-#: ../../lib/class/search.class.php:518 ../../lib/class/search.class.php:544
-#: ../../lib/class/search.class.php:552
+#: ../../lib/class/search.class.php:527 ../../lib/class/search.class.php:553
+#: ../../lib/class/search.class.php:561
 #: ../../templates/cookie_disclaimer.inc.php:16
 #: ../../templates/show_access_list.inc.php:47
 #: ../../templates/show_add_access.inc.php:29
@@ -2247,13 +2253,13 @@ msgstr ""
 msgid "Name"
 msgstr "Navn"
 
-#: ../../lib/class/search.class.php:530
+#: ../../lib/class/search.class.php:539
 #: ../../templates/show_concerts.inc.php:28
 #: ../../templates/show_concerts.inc.php:56
 msgid "Place"
 msgstr ""
 
-#: ../../lib/class/search.class.php:558
+#: ../../lib/class/search.class.php:567
 #: ../../templates/show_add_label.inc.php:34
 #: ../../templates/show_edit_label_row.inc.php:31
 #: ../../templates/show_edit_podcast_episode_row.inc.php:43
@@ -2263,7 +2269,7 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: ../../lib/class/search.class.php:566
+#: ../../lib/class/search.class.php:575
 #: ../../modules/catalog/remote/remote.catalog.php:103
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:103
 #: ../../modules/localplay/xbmc/xbmc.controller.php:190
@@ -2393,21 +2399,21 @@ msgstr ""
 msgid "Episode"
 msgstr ""
 
-#: ../../lib/class/update.class.php:603
+#: ../../lib/class/update.class.php:606
 msgid "No updates needed."
 msgstr ""
 
-#: ../../lib/class/update.class.php:605
+#: ../../lib/class/update.class.php:608
 msgid "Return to main page"
 msgstr ""
 
-#: ../../lib/class/update.class.php:2648 ../../lib/class/update.class.php:2664
-#: ../../lib/class/update.class.php:2680
+#: ../../lib/class/update.class.php:2656 ../../lib/class/update.class.php:2672
+#: ../../lib/class/update.class.php:2688
 msgid "File copy error."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2655 ../../lib/class/update.class.php:2671
-#: ../../lib/class/update.class.php:2687
+#: ../../lib/class/update.class.php:2663 ../../lib/class/update.class.php:2679
+#: ../../lib/class/update.class.php:2695
 msgid "Cannot copy default .htaccess file."
 msgstr ""
 
@@ -3598,7 +3604,7 @@ msgstr ""
 #: ../../modules/Beets/Catalog.php:200
 #: ../../modules/catalog/remote/remote.catalog.php:273
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:300
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:247
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:252
 #, php-format
 msgid "Unable to Insert Song - %s"
 msgstr ""
@@ -3613,7 +3619,7 @@ msgstr ""
 
 #: ../../modules/catalog/beets/beets.catalog.php:114
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:115
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:195
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:209
 #: ../../modules/catalog/local/local.catalog.php:201
 #: ../../modules/catalog/remote/remote.catalog.php:162
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:183
@@ -3630,101 +3636,106 @@ msgstr ""
 msgid "Error: Beets selected, but path is not a URL"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:68
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:73
 msgid "Go to https://www.dropbox.com/developers/apps/create"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:69
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:74
 msgid "Select 'Dropbox API app'"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:70
-msgid "Select 'Files and datastores'"
-msgstr ""
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:71
-msgid "Select 'No' at 'Can your app be limited to its own, private folder?'"
-msgstr ""
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:72
-msgid ""
-"Select 'Specific file types' at 'What type of files does your app need "
-"access to?'"
-msgstr ""
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:73
-msgid "Check Videos and Audio files"
-msgstr ""
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:74
-msgid "Give a name to your application and create it"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:75
+msgid "Select 'Full Dropbox'"
 msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:76
-msgid "Copy your App key and App secret in the following fields."
+msgid "Give a name to your application and create it"
 msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
-msgid ""
-"After preparing the catalog with pressing the 'Add catalog' button,<br /> "
-"you have to 'Make it ready' on the catalog table."
+msgid "Click the 'Generate' button to create an Access Token"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:115
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:78
+msgid ""
+"Copy your App key and App secret and Access Token into the following fields."
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:116
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:118
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:108
 #: ../../templates/show_add_share.inc.php:35
 msgid "Secret"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:117
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:119
+msgid "Access Token"
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
 #: ../../templates/show_stats.inc.php:71
 msgid "Path"
 msgstr "Bane"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:118
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:121
 msgid "Get chunked files on analyze"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:177
-msgid "Error: API Key and Secret Required for Dropbox Catalogs"
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:181
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:184
-msgid "Invalid <dropbox-path>: "
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:188
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:492
+msgid "Invalid \"API key\", \"secret\", or \"access token\": "
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:218
-#, php-format
-msgid "Go to %s to generate the authorization code, then enter it bellow."
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:197
+msgid "Invalid \"dropbox-path\": "
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:257
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:236
 msgid "Running Dropbox Remote Update"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:301
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:259
+#: ../../modules/catalog/seafile/seafile.catalog.php:267
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:303
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:261
+#: ../../modules/catalog/seafile/seafile.catalog.php:270
 msgid "No media updated, do you respect the patterns?"
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:306
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:449
-msgid "API Error: cannot connect to Dropbox."
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:478
+#: ../../modules/catalog/seafile/seafile.catalog.php:378
+#, php-format
+msgid "Updated song \"%s\""
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:338
-msgid "API Error: Cannot access file/folder at "
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:481
+#: ../../modules/catalog/seafile/seafile.catalog.php:381
+#, php-format
+msgid "Song up to date: \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:485
+#: ../../modules/catalog/seafile/seafile.catalog.php:385
+#: ../../modules/catalog/seafile/seafile.catalog.php:443
+#, php-format
+msgid "Removing song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:529
+msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:175
@@ -3841,6 +3852,114 @@ msgstr ""
 msgid "Completed updating remote catalog(s)."
 msgstr ""
 
+#: ../../modules/catalog/seafile/SeafileAdapter.php:45
+msgid "Could not authenticate with Seafile"
+msgstr ""
+
+#: ../../modules/catalog/seafile/SeafileAdapter.php:124
+#, php-format
+msgid "No media updated: could not find Seafile library called \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:74
+#, php-format
+msgid "Install a Seafile server as described in its documentation on %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:75
+msgid ""
+"Enter url to server (e.g. 'https://seafile.example.com') and library name (e."
+"g. 'Music')."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:76
+#, php-format
+msgid ""
+"'API Call Delay' is a delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accomodate Seafile's Rate "
+"Limiting. <br/>The default is tuned towards Seafile's default rate limit "
+"settings; see %sthis forum post%s for more information."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:78
+msgid ""
+"After creating the catalog, you must 'Make it ready' on the catalog table."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:122
+msgid "Server URI"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:123
+msgid "Library Name"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:124
+msgid "API Call Delay"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:125
+msgid "Seafile Username/Email"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:126
+msgid "Seafile Password"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:155
+msgid "Error: Seafile Server URL is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:161
+msgid "Error: Seafile Server Library Name is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:167
+msgid "Error: Seafile Username is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:173
+msgid "Error: Seafile Password is required."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:179
+msgid "Error: API Call Delay must have a numeric value."
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:189
+#, php-format
+msgid "Error while authenticating against Seafile API: %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:236
+msgid "Running Seafile Remote Update"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:294
+#, php-format
+msgid "Skipping existing song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:299
+#, php-format
+msgid "Adding song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:309
+#, php-format
+msgid "Could not add song \"%s\""
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:433
+#, php-format
+msgid "Error checking song \"%s\": %s"
+msgstr ""
+
+#: ../../modules/catalog/seafile/seafile.catalog.php:441
+#, php-format
+msgid "Keeping song \"%s\""
+msgstr ""
+
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:107
 msgid "User ID"
 msgstr ""
@@ -3858,7 +3977,7 @@ msgid "Completed updating SoundCloud catalog(s)."
 msgstr ""
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:308
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:267
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:273
 msgid "Songs added."
 msgstr ""
 
@@ -3894,19 +4013,19 @@ msgstr ""
 msgid "Running Subsonic Remote Update"
 msgstr ""
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:256
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:262
 msgid "Song Error."
 msgstr ""
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:262
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:268
 msgid "Album Error."
 msgstr ""
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:267
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:273
 msgid "Completed updating Subsonic catalog(s)."
 msgstr ""
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:273
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:279
 msgid "Artist Error."
 msgstr ""
 
@@ -4529,11 +4648,6 @@ msgstr "Logg inn"
 #: ../../templates/show_login_form.inc.php:78
 msgid "Register"
 msgstr "Registrer"
-
-#: ../../templates/header.inc.php:417 ../../templates/sidebar_home.inc.php:142
-#: ../../templates/sidebar.light.inc.php:38
-msgid "Favorites"
-msgstr ""
 
 #: ../../templates/header.inc.php:502
 msgid "Error: Your config file is out of date!"
@@ -8209,11 +8323,6 @@ msgstr "Behandle spilleliste"
 msgid "Account"
 msgstr "Konto"
 
-#: ../../themes/reborn/templates/upnp/control-reply.php:46
-#: ../../upnp/control-reply.php:46
-msgid "root"
-msgstr ""
-
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
 msgid "TVShow Season Deletion"
@@ -8263,6 +8372,10 @@ msgstr ""
 msgid "Update Now!"
 msgstr "Oppdater nå!"
 
+#: ../../upnp/control-reply.php:46
+msgid "root"
+msgstr ""
+
 #: ../../video.php:35 ../../video.php:55 ../../video.php:57
 msgid "Video Deletion"
 msgstr ""
@@ -8284,7 +8397,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 23.06.2017 17:50:14 CEST
+# Last Update: 12.10.2017 06:14:49 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8479,7 +8592,7 @@ msgid "Auto-pause betweens tabs"
 msgstr ""
 
 #: Database preference table id 101
-msgid "Use beautiful stream url"
+msgid "Enable url rewriting"
 msgstr ""
 
 #: Database preference table id 102
