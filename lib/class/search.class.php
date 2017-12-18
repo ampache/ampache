@@ -343,6 +343,15 @@ class Search extends playlist_object
                 );
             }
 
+            if (AmpConfig::get('userflags')) {
+                $this->types[] = array(
+                    'name' => 'favorite',
+                    'label' => T_('Favorites'),
+                    'type' => 'text',
+                    'widget' => array('input', 'text')
+                );
+            }
+            
             if (AmpConfig::get('show_played_times')) {
                 $this->types[] = array(
                     'name' => 'played_times',
@@ -500,7 +509,7 @@ class Search extends playlist_object
                 'type' => 'numeric',
                 'widget' => array('input', 'text')
             );
-
+            
             $this->types[] = array(
                 'name' => 'image width',
                 'label' => T_('Image Width'),
@@ -749,7 +758,7 @@ class Search extends playlist_object
     }
 
     /**
-     * get_searches
+     * get_searcheshttps://www.costco.com/Bose-SoundLink-On-Ear-Bluetooth-Headphones---Triple-Black.product.100382518.html
      *
      * Return the IDs of all saved searches accessible by the current user.
      */
@@ -1462,7 +1471,7 @@ class Search extends playlist_object
                     $userid = $GLOBALS['user']->id;
                     $where[] = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
-                    break;
+                break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
@@ -1565,7 +1574,7 @@ class Search extends playlist_object
             }
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
         }
-
+      
         if ($join['user_flag']) {
             $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`id`=`user_flag`.`object_id` ";
         }
@@ -1714,7 +1723,6 @@ class Search extends playlist_object
         $join['catalog']       = AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where);
-
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
         }
@@ -1722,7 +1730,6 @@ class Search extends playlist_object
         if ($join['song']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`id`=`playlist_data`.`object_id`";
             $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
-
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
                 $where_sql .= " AND `catalog_se`.`enabled` = '1'";
