@@ -21,12 +21,11 @@ Installation
 3. Run `npm run dev` to process the contents of webpack.mix.js.
 4. Copy .env.example to .env
 5. Run `php artisan key:generate`.
+6. In the .env file replace the entries for
+6. Run `php artisan migrate:install` to install the tables
 
 Artisan can be used as a development web server: Running `php artisan serve` in document root, defaults to 127.0.0.1 and port 8000.
 Also `php -S host:port` can be run  from the ./public folder.
 
-using `php artisan serve` seems to be running with a cache and causes problems with installation.  If this happens, just shutdown/restart it.
-
 To get a list of commands: `php artisan list`.
 
-Accessing the document root from a web browser will automatically initiate installation. 
