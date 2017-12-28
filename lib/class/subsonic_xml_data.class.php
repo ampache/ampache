@@ -390,6 +390,8 @@ class Subsonic_XML_Data
         $xalbum->addAttribute('title', self::formatAlbum($album, $elementName === "album"));
         $xalbum->addAttribute('name', self::checkName($album->full_name));
         $xalbum->addAttribute('isDir', 'true');
+        $xalbum->addAttribute('discNumber', $album->disk);
+        
         $album->format();
         if ($album->has_art) {
             $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
@@ -510,10 +512,10 @@ class Subsonic_XML_Data
     private static function formatAlbum($album, $checkDisk = true)
     {
         $name = $album->full_name;
-        if ($album->year > 0) {
+/*        if ($album->year > 0) {
             $name .= " [" . $album->year . "]";
         }
-
+*/
         if (($checkDisk || !AmpConfig::get('album_group')) && $album->disk) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
