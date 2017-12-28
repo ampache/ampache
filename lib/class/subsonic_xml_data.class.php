@@ -512,10 +512,10 @@ class Subsonic_XML_Data
     private static function formatAlbum($album, $checkDisk = true)
     {
         $name = $album->full_name;
-/*        if ($album->year > 0) {
-            $name .= " [" . $album->year . "]";
-        }
-*/
+        /*        if ($album->year > 0) {
+                    $name .= " [" . $album->year . "]";
+                }
+        */
         if (($checkDisk || !AmpConfig::get('album_group')) && $album->disk) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
