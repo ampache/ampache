@@ -503,7 +503,7 @@ class Subsonic_Api
         $r      = Subsonic_XML_Data::createSuccessResponse();
         $videos = Catalog::get_videos();
         Subsonic_XML_Data::addVideos($r, $videos);
-        self::apiOutput($input, $r);        
+        self::apiOutput($input, $r);
     }
     
 
