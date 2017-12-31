@@ -203,9 +203,9 @@ class Subsonic_Api
     private static function xml2json($xml, $options = array())
     {
         $defaults = array(
-            'namespaceSeparator' => ':',//you may want this to be something other than a colon
+            'namespaceSeparator' => ' :',//you may want this to be something other than a colon
             'attributePrefix' => '',   //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array(),   //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist'),   //array of xml tag names which should always become arrays
             'autoArray' => true,        //only create arrays for tags which appear more than once
             'textContent' => 'value',       //key used for the text content of elements
             'autoText' => true,         //skip textContent key if node has no attributes or child nodes
@@ -503,8 +503,9 @@ class Subsonic_Api
         $r      = Subsonic_XML_Data::createSuccessResponse();
         $videos = Catalog::get_videos();
         Subsonic_XML_Data::addVideos($r, $videos);
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $r);        
     }
+    
 
     /**
      * getAlbumList
