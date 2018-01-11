@@ -203,9 +203,9 @@ class Subsonic_Api
     private static function xml2json($xml, $options = array())
     {
         $defaults = array(
-            'namespaceSeparator' => ':',//you may want this to be something other than a colon
+            'namespaceSeparator' => ' :',//you may want this to be something other than a colon
             'attributePrefix' => '',   //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array(),   //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist', 'song'),   //array of xml tag names which should always become arrays
             'autoArray' => true,        //only create arrays for tags which appear more than once
             'textContent' => 'value',       //key used for the text content of elements
             'autoText' => true,         //skip textContent key if node has no attributes or child nodes
@@ -259,10 +259,18 @@ class Subsonic_Api
 
                 if (!isset($tagsArray[$childTagName])) {
                     //only entry with this key
+                    
+                    if (count($childProperties) == 0) {
+                        $tagsArray[$childTagName] = (object) $childProperties;
+                    } elseif (self::has_Nested_Array($childProperties)) {
+                        $tagsArray[$childTagName] = (object) $childProperties;
+                    } else {
+                        
                     //test if tags of this type should always be arrays, no matter the element count
-                    $tagsArray[$childTagName] =
+                        $tagsArray[$childTagName] =
                             in_array($childTagName, $options['alwaysArray']) || !$options['autoArray']
                             ? array($childProperties) : $childProperties;
+                    }
                 } elseif (
                     is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName])
                     === range(0, count($tagsArray[$childTagName]) - 1)
@@ -296,6 +304,16 @@ class Subsonic_Api
         );
     }
 
+    private static function has_Nested_Array($properties)
+    {
+        foreach ($properties as $property) {
+            if (is_array($property)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * ping
@@ -505,6 +523,7 @@ class Subsonic_Api
         Subsonic_XML_Data::addVideos($r, $videos);
         self::apiOutput($input, $r);
     }
+    
 
     /**
      * getAlbumList

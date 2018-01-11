@@ -1082,8 +1082,9 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `song`.`album` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
-            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.`album` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
+        $sql = "SELECT `song`.`album`as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
+            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where " .
+        "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -1798,6 +1799,24 @@ abstract class Catalog extends database_object
 
         return $types;
     }
+    
+    public function clean_empty_albums()
+    {
+        $sql        = 'SELECT `id` FROM `album`';
+        $db_results = Dba::read($sql);
+        
+        while ($albumid = Dba::fetch_assoc($db_results)) {
+            $sql         = "SELECT id from ampache.song where album = ?";
+            $id          = $albumid['id'];
+            $db_results1 = Dba::read($sql, array($id));
+            $s           = Dba::fetch_assoc($db_results1);
+            if (count($s) == 0) {
+                $sql        = "DELETE FROM `album` WHERE `id` = ?";
+                $db_results = Dba::write($sql, array($id));
+            }
+        }
+    }
+    
 
     /**
      * clean_catalog
@@ -1818,7 +1837,8 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-
+        $this->clean_empty_albums();
+        
         debug_event('clean', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {

@@ -49,6 +49,7 @@ class SubsonicClient
                 'getIndexes',
                 'getSong',
                 'getMusicDirectory',
+                'getArtistInfo',
                 'search',
                 'search2',
                 'getPlaylists',

@@ -119,24 +119,24 @@ class captcha
 {
 
    #-- tests submitted CAPTCHA solution against tracking data
-   public static function solved()
-   {
-       $c = new easy_captcha();
+    public static function solved()
+    {
+        $c = new easy_captcha();
 
-       return $c->solved();
-   }
+        return $c->solved();
+    }
     public static function check()
     {
         return captcha::solved();
     }
 
-   #-- returns string with "<img> and <input>" fields for display in your <form>
-   public static function form($text="")
-   {
-       $c = new easy_captcha();
+    #-- returns string with "<img> and <input>" fields for display in your <form>
+    public static function form($text="")
+    {
+        $c = new easy_captcha();
 
-       return $c->form("$text");
-   }
+        return $c->form("$text");
+    }
 }
 
 
@@ -162,183 +162,183 @@ class easy_captcha
 
 
    #-- init data
-   public function __construct($id=null, $ignore_expiration=0)
-   {
+    public function __construct($id=null, $ignore_expiration=0)
+    {
 
       #-- load
-      if (($this->id = $id) or ($this->id = preg_replace("/[^-,.\w]+/", "", @$_REQUEST[CAPTCHA_PARAM_ID]))) {
-          $this->load();
-      }
+        if (($this->id = $id) or ($this->id = preg_replace("/[^-,.\w]+/", "", @$_REQUEST[CAPTCHA_PARAM_ID]))) {
+            $this->load();
+        }
 
-      #-- create new
-      if (empty($this->id) || !$ignore_expiration && !$this->is_valid() && $this->log("new()", "EXPIRED", "regenerating store")) {
-          $this->generate();
-      }
-   }
+        #-- create new
+        if (empty($this->id) || !$ignore_expiration && !$this->is_valid() && $this->log("new()", "EXPIRED", "regenerating store")) {
+            $this->generate();
+        }
+    }
 
 
-   #-- create solutions
-   public function generate()
-   {
+    #-- create solutions
+    public function generate()
+    {
 
       #-- init
-      srand(microtime() + time() / 2 - 21017);
-       if ($this->id) {
-           $this->prev[] = $this->id;
-       }
-       $this->id                      = $this->new_id();
+        srand(microtime() + time() / 2 - 21017);
+        if ($this->id) {
+            $this->prev[] = $this->id;
+        }
+        $this->id                      = $this->new_id();
       
-      #-- meta informations
-      $this->created       = time();
-       $this->{'created$'} = gmdate("r", $this->created);
-       $this->expires      = $this->created + CAPTCHA_TIMEOUT;
-      //$this->tries = 0;
-      $this->passed = 0;
+        #-- meta informations
+        $this->created       = time();
+        $this->{'created$'} = gmdate("r", $this->created);
+        $this->expires      = $this->created + CAPTCHA_TIMEOUT;
+        //$this->tries = 0;
+        $this->passed = 0;
 
-      #-- captcha processing info
-      $this->sent        = 0;
-       $this->tries      = CAPTCHA_TRIES;  // 5
+        #-- captcha processing info
+        $this->sent        = 0;
+        $this->tries      = CAPTCHA_TRIES;  // 5
       $this->ajax_tries  = CAPTCHA_AJAX_TRIES;  // 25
       $this->passed      = 0;
-       $this->maxpasses  = CAPTCHA_MAXPASSES;   // 2
-      $this->failures    = 0;
-       $this->shortcut   = array();
-       $this->grant      = 0;  // unchecked access
+        $this->maxpasses  = CAPTCHA_MAXPASSES;   // 2
+        $this->failures    = 0;
+        $this->shortcut   = array();
+        $this->grant      = 0;  // unchecked access
       
-      #-- mk IMAGE/GRAPHIC
-      $this->image = (CAPTCHA_IMAGE_TYPE <= 1)
+        #-- mk IMAGE/GRAPHIC
+        $this->image = (CAPTCHA_IMAGE_TYPE <= 1)
                    ? new easy_captcha_graphic_image_waved()
                    : new easy_captcha_graphic_image_disturbed();
-    //$this->image = new easy_captcha_graphic_cute_ponys();
+        //$this->image = new easy_captcha_graphic_cute_ponys();
       
-      #-- mk MATH/TEXT riddle
-      $this->text = (CAPTCHA_NOTEXT >= 1)
+        #-- mk MATH/TEXT riddle
+        $this->text = (CAPTCHA_NOTEXT >= 1)
                   ? new easy_captcha_text_disable()
                   : new easy_captcha_text_math_formula();
-    //$this->text = new easy_captcha_text_riddle();
+        //$this->text = new easy_captcha_text_riddle();
 
-      #-- process granting cookie
-      if (CAPTCHA_PERSISTENT) {
-          $this->shortcut[] = new easy_captcha_persistent_grant();
-      }
+        #-- process granting cookie
+        if (CAPTCHA_PERSISTENT) {
+            $this->shortcut[] = new easy_captcha_persistent_grant();
+        }
 
-      #-- spam-check: no URLs submitted
-      if (CAPTCHA_NEW_URLS) {
-          $this->shortcut[] = new easy_captcha_spamfree_no_new_urls();
-      }
+        #-- spam-check: no URLs submitted
+        if (CAPTCHA_NEW_URLS) {
+            $this->shortcut[] = new easy_captcha_spamfree_no_new_urls();
+        }
 
-      #-- store record
-      $this->save();
-   }
+        #-- store record
+        $this->save();
+    }
    
    
-   #-- examine if captcha data is fresh
-   public function is_valid()
-   {
-       return isset($this->id) && ($this->created)
+    #-- examine if captcha data is fresh
+    public function is_valid()
+    {
+        return isset($this->id) && ($this->created)
           && ($this->expires > time())
           && ($this->tries > 0)
           && ($this->failures < 500)
           && ($this->passed < $this->maxpasses)
           || $this->delete() || $this->log("is_valid", "EXPIRED", "and deleted") && false;
-   }
+    }
 
 
-   #-- new captcha tracking/storage id
-   public function new_id()
-   {
-       return "ec." . time() . "." . md5($_SERVER["SERVER_NAME"] . CAPTCHA_SALT . rand(0, 1 << 30));
-   }
+    #-- new captcha tracking/storage id
+    public function new_id()
+    {
+        return "ec." . time() . "." . md5($_SERVER["SERVER_NAME"] . CAPTCHA_SALT . rand(0, 1 << 30));
+    }
 
 
-   #-- check backends for correctness of solution
-   public function solved($in=null/*parameter only used in subclasses*/)
-   {
-       $ok = false;
+    #-- check backends for correctness of solution
+    public function solved($in=null/*parameter only used in subclasses*/)
+    {
+        $ok = false;
 
-      #-- failure
-      if ((0 >= $this->tries--) || !$this->is_valid()) {
-          // log, this is either a frustrated user or a bot knocking
-         $this->log("::solved", "INVALID", "tries exhausted ($this->tries) or expired(?) captcha");
-      }
+        #-- failure
+        if ((0 >= $this->tries--) || !$this->is_valid()) {
+            // log, this is either a frustrated user or a bot knocking
+            $this->log("::solved", "INVALID", "tries exhausted ($this->tries) or expired(?) captcha");
+        }
       
-      #-- test
-      elseif ($this->sent) {
-          $in = @$_REQUEST[CAPTCHA_PARAM_INPUT];  // might be empty string
+        #-- test
+        elseif ($this->sent) {
+            $in = @$_REQUEST[CAPTCHA_PARAM_INPUT];  // might be empty string
       
-         #-- check individual modules
-         $ok = $this->grant;
-          foreach ($this->shortcut as $test) {
-              $ok = $ok || $test->solved($in);    // cookie & nourls
-          }
-          $ok = $ok  // either letters or math formula submitted
+            #-- check individual modules
+            $ok = $this->grant;
+            foreach ($this->shortcut as $test) {
+                $ok = $ok || $test->solved($in);    // cookie & nourls
+            }
+            $ok = $ok  // either letters or math formula submitted
              || isset($this->image) && $this->image->solved($in)
              || isset($this->text) && $this->text->solved($in);
                
-         #-- update state
-         if ($ok) {
-             $this->passed++;
-             $this->log("::solved", "OKAY", "captcha passed ($in) for image({$this->image->solution}) and text({$this->text->solution})");
+            #-- update state
+            if ($ok) {
+                $this->passed++;
+                $this->log("::solved", "OKAY", "captcha passed ($in) for image({$this->image->solution}) and text({$this->text->solution})");
             
-            #-- set cookie on success
-            if (CAPTCHA_PERSISTENT) {
-                $this->shortcut[0/*FIXME*/]->grant();
-                $this->log("::solved", "PERSISTENT", "cookie granted");
+                #-- set cookie on success
+                if (CAPTCHA_PERSISTENT) {
+                    $this->shortcut[0/*FIXME*/]->grant();
+                    $this->log("::solved", "PERSISTENT", "cookie granted");
+                }
+            } else {
+                $this->failures++;
+                $this->log("::solved", "WRONG", "solution failure ($in) for image({$this->image->solution}) and text({$this->text->solution})");
             }
-         } else {
-             $this->failures++;
-             $this->log("::solved", "WRONG", "solution failure ($in) for image({$this->image->solution}) and text({$this->text->solution})");
-         }
-      }
+        }
 
-      #-- remove if done
-      if (!$this->is_valid() /*&& !$this->delete()*/) {
-          $this->generate(); // ensure object instance can be reused - for quirky form processing logic
-      }
-      #-- store state/result
-      else {
-          $this->save();
-      }
+        #-- remove if done
+        if (!$this->is_valid() /*&& !$this->delete()*/) {
+            $this->generate(); // ensure object instance can be reused - for quirky form processing logic
+        }
+        #-- store state/result
+        else {
+            $this->save();
+        }
 
-      #-- return result
-      return($ok);
-   }
+        #-- return result
+        return($ok);
+    }
    
    
-   #-- combines ->image and ->text data into form fields
-   public function form($add_text="&rarr;&nbsp;")
-   {
+    #-- combines ->image and ->text data into form fields
+    public function form($add_text="&rarr;&nbsp;")
+    {
 
       #-- store object data
-      $this->sent++;
-       $this->save();
+        $this->sent++;
+        $this->save();
       
-      #-- check for errors
-      $errors = array(
+        #-- check for errors
+        $errors = array(
           "invalid object created" => !$this->is_valid(),
           "captcha_id storage could not be saved" => !$this->saved,
           "no ->id present" => empty($this->id),
           "no ->created timestamp" => empty($this->created),
       );
-       if (array_sum($errors)) {
-           return '<div id="captcha" class="error">*' . implode("<br>*", array_keys(array_filter($errors))) . '</div>';
-       }
+        if (array_sum($errors)) {
+            return '<div id="captcha" class="error">*' . implode("<br>*", array_keys(array_filter($errors))) . '</div>';
+        }
       
-      #-- prepare output vars
-      $p_id        = CAPTCHA_PARAM_ID;
-       $p_input    = CAPTCHA_PARAM_INPUT;
-       $base_url   = CAPTCHA_BASE_URL . '?' . CAPTCHA_PARAM_ID . '=';
-       $id         = htmlentities($this->id);
-       $img_url    = $base_url . $id;
-       $alt_text   = htmlentities($this->text->question);
-       $new_urls   = CAPTCHA_NEW_URLS ? 0 : 1;
-       $onClick    = CAPTCHA_ONCLICK_HIRES ? 'onClick="this.src += this.src.match(/hires/) ? \'.\' : \'hires=1&\';"' : 'onClick="this.src += \'.\';"';
-       $onKeyDown  = CAPTCHA_AJAX ? 'onKeyUp="captcha_check_solution()"' : '';
-       $javascript = CAPTCHA_AJAX ? '<script src="' . $base_url . 'base.js&captcha_new_urls=' . $new_urls . '" type="text/javascript" language="JavaScript" id="captcha_ajax_1"></script>' : '';
-       $error      = function_exists('imagecreatetruecolor') ? '' : '<div class="error">PHP setup lacks GD. No image drawing possible</div>';
+        #-- prepare output vars
+        $p_id        = CAPTCHA_PARAM_ID;
+        $p_input    = CAPTCHA_PARAM_INPUT;
+        $base_url   = CAPTCHA_BASE_URL . '?' . CAPTCHA_PARAM_ID . '=';
+        $id         = htmlentities($this->id);
+        $img_url    = $base_url . $id;
+        $alt_text   = htmlentities($this->text->question);
+        $new_urls   = CAPTCHA_NEW_URLS ? 0 : 1;
+        $onClick    = CAPTCHA_ONCLICK_HIRES ? 'onClick="this.src += this.src.match(/hires/) ? \'.\' : \'hires=1&\';"' : 'onClick="this.src += \'.\';"';
+        $onKeyDown  = CAPTCHA_AJAX ? 'onKeyUp="captcha_check_solution()"' : '';
+        $javascript = CAPTCHA_AJAX ? '<script src="' . $base_url . 'base.js&captcha_new_urls=' . $new_urls . '" type="text/javascript" language="JavaScript" id="captcha_ajax_1"></script>' : '';
+        $error      = function_exists('imagecreatetruecolor') ? '' : '<div class="error">PHP setup lacks GD. No image drawing possible</div>';
 
-      #-- assemble
-      $HTML =
+        #-- assemble
+        $HTML =
          //'<script type="text/javascript" language="JavaScript">if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations
          '<div id="captcha" class="captcha">' .
          $error .
@@ -351,103 +351,103 @@ class easy_captcha
          $javascript .
          '</div>';
 
-       return($HTML);
-   }
+        return($HTML);
+    }
 
 
 
-   #-- noteworthy stuff goes here
-   public function log($error, $category, $message)
-   {
-       // append to text file
-      if (CAPTCHA_LOG) {
-          file_put_contents(
+    #-- noteworthy stuff goes here
+    public function log($error, $category, $message)
+    {
+        // append to text file
+        if (CAPTCHA_LOG) {
+            file_put_contents(
              CAPTCHA_TEMP_DIR . "/captcha.log",
              "[$error] -$category- \"$message\" $_SERVER[REMOTE_ADDR] id={$this->id} tries={$this->tries} failures={$this->failures} created/time/expires=$this->created/" . time() . "/$this->expires \n",
              FILE_APPEND | LOCK_EX
          );
-      }
+        }
 
-       return(true);   // for if-chaining
-   }
+        return(true);   // for if-chaining
+    }
 
 
-   #-- load object from saved captcha tracking data
-   public function load()
-   {
-       $fn = $this->data_file();
-       if (file_exists($fn)) {
-           $saved = (array)@unserialize(fread(fopen($fn, "r"), 1 << 20));
-           foreach ($saved as $i => $v) {
-               $this->{$i} = $v;
-           }
-       } else {
-           $this->log("captcha file does not exist $fn");
-       }
-   }
+    #-- load object from saved captcha tracking data
+    public function load()
+    {
+        $fn = $this->data_file();
+        if (file_exists($fn)) {
+            $saved = (array)@unserialize(fread(fopen($fn, "r"), 1 << 20));
+            foreach ($saved as $i => $v) {
+                $this->{$i} = $v;
+            }
+        } else {
+            $this->log("captcha file does not exist $fn");
+        }
+    }
 
-   #-- save $this captcha state
-   public function save()
-   {
-       $this->straighten_temp_dir();
-       if ($fn = $this->data_file()) {
-           $this->saved = file_put_contents($fn, serialize($this), LOCK_EX);
-       }
-   }
+    #-- save $this captcha state
+    public function save()
+    {
+        $this->straighten_temp_dir();
+        if ($fn = $this->data_file()) {
+            $this->saved = file_put_contents($fn, serialize($this), LOCK_EX);
+        }
+    }
    
-   #-- remove $this data file
-   public function delete()
-   {
-       // delete current and all previous data files
-      $this->prev[] = $this->id;
-       if (isset($this->prev)) {
-           foreach ($this->prev as $id) {
-               @unlink($this->data_file($id));
-           }
-       }
-      // clean object
-      foreach ((array)$this as $name => $val) {
-          unset($this->{$name});
-      }
+    #-- remove $this data file
+    public function delete()
+    {
+        // delete current and all previous data files
+        $this->prev[] = $this->id;
+        if (isset($this->prev)) {
+            foreach ($this->prev as $id) {
+                @unlink($this->data_file($id));
+            }
+        }
+        // clean object
+        foreach ((array)$this as $name => $val) {
+            unset($this->{$name});
+        }
 
-       return(false);  // far if-chaining in ->is_valid()
-   }
+        return(false);  // far if-chaining in ->is_valid()
+    }
    
-   #-- clean-up or init temporary directory
-   public function straighten_temp_dir()
-   {
-       // create dir
-      if (!file_exists($dir=CAPTCHA_TEMP_DIR)) {
-          mkdir($dir);
-      }
-      // clean up old files
-      if ((rand(0, 100) <= 5) && ($dh = opendir($dir))) {
-          $t_kill = time() - CAPTCHA_TIMEOUT * 1.2;
-          while (false !== ($fn = readdir($dh))) {
-              if ($fn[0] != ".") {
-                  if (filemtime("$dir/$fn") < $t_kill) {
-                      @unlink("$dir/$fn");
-                  }
-              }
-          }
-      }
-   }
+    #-- clean-up or init temporary directory
+    public function straighten_temp_dir()
+    {
+        // create dir
+        if (!file_exists($dir=CAPTCHA_TEMP_DIR)) {
+            mkdir($dir);
+        }
+        // clean up old files
+        if ((rand(0, 100) <= 5) && ($dh = opendir($dir))) {
+            $t_kill = time() - CAPTCHA_TIMEOUT * 1.2;
+            while (false !== ($fn = readdir($dh))) {
+                if ($fn[0] != ".") {
+                    if (filemtime("$dir/$fn") < $t_kill) {
+                        @unlink("$dir/$fn");
+                    }
+                }
+            }
+        }
+    }
 
-   #-- where's the storage?
-   public function data_file($id=null)
-   {
-       return CAPTCHA_TEMP_DIR . "/" . preg_replace("/[^-,.\w]/", "", ($id?$id:$this->id)) . ".a()";
-   }
+    #-- where's the storage?
+    public function data_file($id=null)
+    {
+        return CAPTCHA_TEMP_DIR . "/" . preg_replace("/[^-,.\w]/", "", ($id?$id:$this->id)) . ".a()";
+    }
 
 
-   #-- unreversable hash from passphrase, with time() slice encoded
-   public function hash($text, $dtime=0, $length=1)
-   {
-       $text = strtolower($text);
-       $pfix = (int) (time() / $length * CAPTCHA_TIMEOUT) + $dtime;
+    #-- unreversable hash from passphrase, with time() slice encoded
+    public function hash($text, $dtime=0, $length=1)
+    {
+        $text = strtolower($text);
+        $pfix = (int) (time() / $length * CAPTCHA_TIMEOUT) + $dtime;
 
-       return md5("captcha::$pfix:$text::" . __FILE__ . ":$_SERVER[SERVER_NAME]:80");
-   }
+        return md5("captcha::$pfix:$text::" . __FILE__ . ":$_SERVER[SERVER_NAME]:80");
+    }
 }
 
 
@@ -463,20 +463,20 @@ class easy_captcha_fuzzy extends easy_captcha
 {
 
    #-- ratio of letters that may differ between solution and real password
-   public $fuzzy = CAPTCHA_FUZZY;
+    public $fuzzy = CAPTCHA_FUZZY;
 
-   #-- compare
-   public function solved($in = null)
-   {
-       if ($in) {
-           $pw      = strtolower($this->solution);
-           $in      = strtolower($in);
-           $diff    = levenshtein($pw, $in);
-           $maxdiff = strlen($pw) * (1 - $this->fuzzy);
+    #-- compare
+    public function solved($in = null)
+    {
+        if ($in) {
+            $pw      = strtolower($this->solution);
+            $in      = strtolower($in);
+            $diff    = levenshtein($pw, $in);
+            $maxdiff = strlen($pw) * (1 - $this->fuzzy);
 
-           return ($pw == $in) or ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
-       }
-   }
+            return ($pw == $in) or ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
+        }
+    }
 }
 
 
@@ -492,56 +492,56 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
 {
 
    #-- config
-   public function __construct($x=null, $y=null)
-   {
-       if (!$y) {
-           $x = strtok(CAPTCHA_IMAGE_SIZE, "x,|/*;:");
-           $y = strtok(",.");
-           $x = rand($x * 0.9, $x * 1.2);
-           $y = rand($y - 5, $y + 15);
-       }
-       $this->width    = $x;
-       $this->height   = $y;
-       $this->inverse  = CAPTCHA_INVERSE;
-       $this->bg       = CAPTCHA_BGCOLOR;
-       $this->maxsize  = 0xFFFFF;
-       $this->quality  = 66;
-       $this->solution = $this->mkpass();
-   }
+    public function __construct($x=null, $y=null)
+    {
+        if (!$y) {
+            $x = strtok(CAPTCHA_IMAGE_SIZE, "x,|/*;:");
+            $y = strtok(",.");
+            $x = rand($x * 0.9, $x * 1.2);
+            $y = rand($y - 5, $y + 15);
+        }
+        $this->width    = $x;
+        $this->height   = $y;
+        $this->inverse  = CAPTCHA_INVERSE;
+        $this->bg       = CAPTCHA_BGCOLOR;
+        $this->maxsize  = 0xFFFFF;
+        $this->quality  = 66;
+        $this->solution = $this->mkpass();
+    }
 
 
-   #-- return a single .ttf font filename
-   public function font()
-   {
-       $fonts = array(/*"FreeMono.ttf"*/);
-       $fonts += glob(CAPTCHA_FONT_DIR . "/*.ttf");
+    #-- return a single .ttf font filename
+    public function font()
+    {
+        $fonts = array(/*"FreeMono.ttf"*/);
+        $fonts += glob(CAPTCHA_FONT_DIR . "/*.ttf");
 
-       return $fonts[rand(0, count($fonts) - 1)];
-   }
+        return $fonts[rand(0, count($fonts) - 1)];
+    }
 
 
-   #-- makes string of random letters (for embedding into image)
-   public function mkpass()
-   {
-       $s = "";
-       for ($n=0; $n < 10; $n++) {
-           $s .= chr(rand(0, 255));
-       }
-       $s = base64_encode($s);   // base64-set, but filter out unwanted chars
+    #-- makes string of random letters (for embedding into image)
+    public function mkpass()
+    {
+        $s = "";
+        for ($n=0; $n < 10; $n++) {
+            $s .= chr(rand(0, 255));
+        }
+        $s = base64_encode($s);   // base64-set, but filter out unwanted chars
       $s  = preg_replace("/[+\/=IG0ODQR]/i", "", $s);  // strips hard to discern letters, depends on used font type
       $s  = substr($s, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
 
-       return($s);
-   }
+        return($s);
+    }
 
 
-   #-- return GD color
-   public function random_color($a, $b)
-   {
-       $R = $this->inverse ? 0xFF : 0x00;
+    #-- return GD color
+    public function random_color($a, $b)
+    {
+        $R = $this->inverse ? 0xFF : 0x00;
 
-       return imagecolorallocate($this->img, rand($a, $b) ^ $R, rand($a, $b) ^ $R, rand($a, $b) ^ $R);
-   }
+        return imagecolorallocate($this->img, rand($a, $b) ^ $R, rand($a, $b) ^ $R, rand($a, $b) ^ $R);
+    }
     public function rgb($r, $g, $b)
     {
         $R = $this->inverse ? 0xFF : 0x00;
@@ -550,19 +550,19 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     }
 
 
-   #-- generate JPEG output
-   public function output()
-   {
-       ob_start();
-       ob_implicit_flush(0);
-       imagejpeg($this->img, null, $this->quality);
-       $jpeg = ob_get_contents();
-       ob_end_clean();
-       imagedestroy($this->img);
-       unset($this->img);
+    #-- generate JPEG output
+    public function output()
+    {
+        ob_start();
+        ob_implicit_flush(0);
+        imagejpeg($this->img, null, $this->quality);
+        $jpeg = ob_get_contents();
+        ob_end_clean();
+        imagedestroy($this->img);
+        unset($this->img);
 
-       return($jpeg);
-   }
+        return($jpeg);
+    }
 }
 
 
@@ -581,163 +581,163 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
    /* returns jpeg file stream with unscannable letters encoded
       in front of colorful disturbing background
    */
-   public function jpeg()
-   {
-       #-- step by step
-      $this->img = $this->create();
-       $this->text();
-      //$this->debug_grid();
-      $this->fog();
-       $this->distort();
+    public function jpeg()
+    {
+        #-- step by step
+        $this->img = $this->create();
+        $this->text();
+        //$this->debug_grid();
+        $this->fog();
+        $this->distort();
 
-       return $this->output();
-   }
+        return $this->output();
+    }
 
 
-   #-- initialize in-memory image with gd library
-   public function create()
-   {
-       $img = imagecreatetruecolor($this->width, $this->height);
-     // imagealphablending($img, TRUE);
+    #-- initialize in-memory image with gd library
+    public function create()
+    {
+        $img = imagecreatetruecolor($this->width, $this->height);
+        // imagealphablending($img, TRUE);
       imagefilledrectangle($img, 0, 0, $this->width, $this->height, $this->inverse ? $this->bg ^ 0xFFFFFF : $this->bg); //$this->rgb(255,255,255)
       if (function_exists("imageantialias")) {
           imageantialias($img, true);
       }
 
-       return($img);
-   }
+        return($img);
+    }
 
 
-   #-- add the real text to it
-   public function text()
-   {
-       $w    = $this->width;
-       $h    = $this->height;
-       $SIZE = rand(30, 36);
-       $DEG  = rand(-2, 9);
-       $LEN  = strlen($this->solution);
-       $left = $w - $LEN * 25;
-       $top  = ($h - $SIZE - abs($DEG * 2));
-       imagettftext($this->img, $SIZE, $DEG, rand(5, $left - 5), $h - rand(3, $top - 3), $this->rgb(0, 0, 0), $this->font(), $this->solution);
-   }
+    #-- add the real text to it
+    public function text()
+    {
+        $w    = $this->width;
+        $h    = $this->height;
+        $SIZE = rand(30, 36);
+        $DEG  = rand(-2, 9);
+        $LEN  = strlen($this->solution);
+        $left = $w - $LEN * 25;
+        $top  = ($h - $SIZE - abs($DEG * 2));
+        imagettftext($this->img, $SIZE, $DEG, rand(5, $left - 5), $h - rand(3, $top - 3), $this->rgb(0, 0, 0), $this->font(), $this->solution);
+    }
 
-   #-- to visualize the sinus waves
-   public function debug_grid()
-   {
-       for ($x=0; $x < 250; $x += 10) {
-           imageline($this->img, $x, 0, $x, 70, 0x333333);
-           imageline($this->img, 0, $x, 250, $x, 0x333333);
-       }
-   }
+    #-- to visualize the sinus waves
+    public function debug_grid()
+    {
+        for ($x=0; $x < 250; $x += 10) {
+            imageline($this->img, $x, 0, $x, 70, 0x333333);
+            imageline($this->img, 0, $x, 250, $x, 0x333333);
+        }
+    }
    
-   #-- add lines
-   public function fog()
-   {
-       $num = rand(10, 25);
-       $x   = $this->width;
-       $y   = $this->height;
-       $s   = rand(0, 270);
-       for ($n=0; $n < $num; $n++) {
-           imagesetthickness($this->img, rand(1, 2));
-           imagearc($this->img,
+    #-- add lines
+    public function fog()
+    {
+        $num = rand(10, 25);
+        $x   = $this->width;
+        $y   = $this->height;
+        $s   = rand(0, 270);
+        for ($n=0; $n < $num; $n++) {
+            imagesetthickness($this->img, rand(1, 2));
+            imagearc($this->img,
             rand(0.1 * $x, 0.9 * $x), rand(0.1 * $y, 0.9 * $y),  //x,y
             rand(0.1 * $x, 0.3 * $x), rand(0.1 * $y, 0.3 * $y),  //w,h
             $s, rand($s + 5, $s + 90),     // s,e
             rand(0, 1) ? 0xFFFFFF : 0x000000   // col
          );
-       }
-       imagesetthickness($this->img, 1);
-   }
+        }
+        imagesetthickness($this->img, 1);
+    }
 
    
-   #-- distortion: wave-transform
-   public function distort()
-   {
+    #-- distortion: wave-transform
+    public function distort()
+    {
 
       #-- init
       $single_pixel  = (CAPTCHA_PIXEL <= 1);   // very fast
       $greyscale2x2  = (CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
       $width         = $this->width;
-       $height       = $this->height;
-       $i            = & $this->img;
-       $dest         = $this->create();
+        $height       = $this->height;
+        $i            = & $this->img;
+        $dest         = $this->create();
       
       
-      #-- URL param ?hires=1 influences used drawing scheme
-      if (isset($_GET["hires"])) {
-          $single_pixel = 0;
-      }
+        #-- URL param ?hires=1 influences used drawing scheme
+        if (isset($_GET["hires"])) {
+            $single_pixel = 0;
+        }
 
-      #-- prepare distortion
-      $wave = new easy_captcha_dxy_wave($width, $height);
-     // $spike = new easy_captcha_dxy_spike($width, $height);
+        #-- prepare distortion
+        $wave = new easy_captcha_dxy_wave($width, $height);
+        // $spike = new easy_captcha_dxy_spike($width, $height);
 
-      #-- generate each new x,y pixel individually from orig $img
-      for ($y = 0; $y < $height; $y++) {
-          for ($x = 0; $x < $width; $x++) {
+        #-- generate each new x,y pixel individually from orig $img
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
 
             #-- pixel movement
             list($dx, $dy) = $wave->dxy($x, $y);   // x- and y- sinus wave
            // list($qx, $qy) = $spike->dxy($x, $y);
             
             #-- if not out of bounds
-            if (($dx + $x >= 0) && ($dy + $y >= 0) && ($dx + $x < $width) && ($dy + $y < $height)) {
+                if (($dx + $x >= 0) && ($dy + $y >= 0) && ($dx + $x < $width) && ($dy + $y < $height)) {
 
                #-- get source pixel(s), paint dest
-               if ($single_pixel) {
-                   // single source dot: one-to-one duplicate (unsmooth, hard edges)
-                  imagesetpixel($dest, $x, $y, @imagecolorat($i, (int)$dx + $x, (int)$dy + $y));
-               } elseif ($greyscale2x2) {
-                   // merge 2x2 simple/greyscale (3 times as slow)
-                  $cXY = $this->get_2x2_greyscale($i, (int)$dx + $x, (int)$dy + $y);
-                   imagesetpixel($dest, $x, $y, imagecolorallocate($dest, $cXY, $cXY, $cXY));
-               } else {
-                   // exact and smooth transformation (5 times as slow)
-                  list($cXY_R, $cXY_G, $cXY_B) = $this->get_2x2_smooth($i, $x + $dx, $y + $dy);
-                   imagesetpixel($dest, $x, $y, imagecolorallocate($dest, (int)$cXY_R, (int)$cXY_G, (int)$cXY_B));
-               }
+                    if ($single_pixel) {
+                        // single source dot: one-to-one duplicate (unsmooth, hard edges)
+                        imagesetpixel($dest, $x, $y, @imagecolorat($i, (int)$dx + $x, (int)$dy + $y));
+                    } elseif ($greyscale2x2) {
+                        // merge 2x2 simple/greyscale (3 times as slow)
+                        $cXY = $this->get_2x2_greyscale($i, (int)$dx + $x, (int)$dy + $y);
+                        imagesetpixel($dest, $x, $y, imagecolorallocate($dest, $cXY, $cXY, $cXY));
+                    } else {
+                        // exact and smooth transformation (5 times as slow)
+                        list($cXY_R, $cXY_G, $cXY_B) = $this->get_2x2_smooth($i, $x + $dx, $y + $dy);
+                        imagesetpixel($dest, $x, $y, imagecolorallocate($dest, (int)$cXY_R, (int)$cXY_G, (int)$cXY_B));
+                    }
+                }
             }
-          }
-      }
+        }
 
-      #-- simply overwrite ->img
-      imagedestroy($i);
-       $this->img = $dest;
-   }
+        #-- simply overwrite ->img
+        imagedestroy($i);
+        $this->img = $dest;
+    }
    
-   #-- get 4 pixels from source image, merges BLUE value simply
-   public function get_2x2_greyscale(&$i, $x, $y)
-   {
-       // this is a pretty simplistic method, actually adds more artefacts
-       // than it "smoothes"
-       // it just merges the brightness from 4 adjoining pixels into one
-       $cXY = (@imagecolorat($i, $x + $dx, $y + $dy) & 0xFF)
+    #-- get 4 pixels from source image, merges BLUE value simply
+    public function get_2x2_greyscale(&$i, $x, $y)
+    {
+        // this is a pretty simplistic method, actually adds more artefacts
+        // than it "smoothes"
+        // it just merges the brightness from 4 adjoining pixels into one
+        $cXY = (@imagecolorat($i, $x + $dx, $y + $dy) & 0xFF)
             + (@imagecolorat($i, $x + $dx, $y + $dy + 1) & 0xFF)
             + (@imagecolorat($i, $x + $dx + 1, $y + $dy) & 0xFF)
             + (@imagecolorat($i, $x + $dx + 1, $y + $dy + 1) & 0xFF);
-       $cXY = (int) ($cXY / 4);
+        $cXY = (int) ($cXY / 4);
 
-       return $cXY;
-   }
+        return $cXY;
+    }
 
-   #-- smooth pixel reading (with x,y being reals, not integers)
-   public function get_2x2_smooth(&$i, $x, $y)
-   {
-       // get R,G,B values from 2x2 source area
+    #-- smooth pixel reading (with x,y being reals, not integers)
+    public function get_2x2_smooth(&$i, $x, $y)
+    {
+        // get R,G,B values from 2x2 source area
        $c00 = $this->get_RGB($i, $x, $y);      //  +------+------+
        $c01 = $this->get_RGB($i, $x, $y + 1);    //  |dx,dy | x1,y0|
        $c10 = $this->get_RGB($i, $x + 1, $y);    //  | rx-> |      |
        $c11 = $this->get_RGB($i, $x + 1, $y + 1);  //  +----##+------+
        // weighting by $dx/$dy fraction part   //  |    ##|<-ry  |
        $rx  = $x - floor($x);
-       $rx_ = 1 - $rx;  //  |x0,y1 | x1,y1|
-       $ry  = $y - floor($y);
-       $ry_ = 1 - $ry;  //  +------+------+
-       // this is extremely slow, but necessary for correct color merging,
-       // the source pixel lies somewhere in the 2x2 quadrant, that's why
-       // RGB values are added proportionately (rx/ry/_)
-       // we use no for-loop because that would slow it even further
-       $cXY_R = (int) (($c00[0]) * $rx_ * $ry_)
+        $rx_ = 1 - $rx;  //  |x0,y1 | x1,y1|
+        $ry  = $y - floor($y);
+        $ry_ = 1 - $ry;  //  +------+------+
+        // this is extremely slow, but necessary for correct color merging,
+        // the source pixel lies somewhere in the 2x2 quadrant, that's why
+        // RGB values are added proportionately (rx/ry/_)
+        // we use no for-loop because that would slow it even further
+        $cXY_R = (int) (($c00[0]) * $rx_ * $ry_)
               + (int) (($c01[0]) * $rx_ * $ry)      // division by 4 not necessary,
               + (int) (($c10[0]) * $rx * $ry_)      // because rx/ry/rx_/ry_ add up
               + (int) (($c11[0]) * $rx * $ry);      // to 255 (=1.0) at most
@@ -745,21 +745,21 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
               + (int) (($c01[1]) * $rx_ * $ry)
               + (int) (($c10[1]) * $rx * $ry_)
               + (int) (($c11[1]) * $rx * $ry);
-       $cXY_B = (int) (($c00[2]) * $rx_ * $ry_)
+        $cXY_B = (int) (($c00[2]) * $rx_ * $ry_)
               + (int) (($c01[2]) * $rx_ * $ry)
               + (int) (($c10[2]) * $rx * $ry_)
               + (int) (($c11[2]) * $rx * $ry);
 
-       return array($cXY_R, $cXY_G, $cXY_B);
-   }
+        return array($cXY_R, $cXY_G, $cXY_B);
+    }
 
-   #-- imagegetcolor from current ->$img split up into RGB array
-   public function get_RGB(&$img, $x, $y)
-   {
-       $rgb = @imagecolorat($img, $x, $y);
+    #-- imagegetcolor from current ->$img split up into RGB array
+    public function get_RGB(&$img, $x, $y)
+    {
+        $rgb = @imagecolorat($img, $x, $y);
 
-       return array(($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, ($rgb) & 0xFF);
-   }
+        return array(($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, ($rgb) & 0xFF);
+    }
 }
 
 
@@ -773,47 +773,47 @@ class easy_captcha_dxy_wave
 {
 
    #-- init params
-   public function __construct($max_x, $max_y)
-   {
-       $this->dist_x = $this->real_rand(2.5, 3.5);     // max +-x/y delta distance
-      $this->dist_y  = $this->real_rand(2.5, 3.5);
-       $this->slow_x = $this->real_rand(7.5, 20.0);    // =wave-width in pixel/3
-      $this->slow_y  = $this->real_rand(7.5, 15.0);
-   }
+    public function __construct($max_x, $max_y)
+    {
+        $this->dist_x = $this->real_rand(2.5, 3.5);     // max +-x/y delta distance
+        $this->dist_y  = $this->real_rand(2.5, 3.5);
+        $this->slow_x = $this->real_rand(7.5, 20.0);    // =wave-width in pixel/3
+        $this->slow_y  = $this->real_rand(7.5, 15.0);
+    }
    
-   #-- calculate source pixel position with overlapping sinus x/y-displacement
-   public function dxy($x, $y)
-   {
-       #-- adapting params
-      $this->dist_x *= 1.000035;
-       $this->dist_y *= 1.000015;
-      #-- dest pixels (with x+y together in each of the sin() calcs you get more deformation, else just yields y-ripple effect)
-      $dx  = $this->dist_x * cos(($x / $this->slow_x) - ($y / 1.1 / $this->slow_y));
-       $dy = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
-      #-- result
-      return array($dx, $dy);
-   }
+    #-- calculate source pixel position with overlapping sinus x/y-displacement
+    public function dxy($x, $y)
+    {
+        #-- adapting params
+        $this->dist_x *= 1.000035;
+        $this->dist_y *= 1.000015;
+        #-- dest pixels (with x+y together in each of the sin() calcs you get more deformation, else just yields y-ripple effect)
+        $dx  = $this->dist_x * cos(($x / $this->slow_x) - ($y / 1.1 / $this->slow_y));
+        $dy = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
+        #-- result
+        return array($dx, $dy);
+    }
    
-   #-- array of values with random start/end values
-   public function from_to_rand($max, $a, $b)
-   {
-       $BEG  = $this->real_rand($a, $b);
-       $DIFF = $this->real_rand($a, $b) - $BEG;
-       $r    = array();
-       for ($i = 0; $i <= $max; $i++) {
-           $r[$i] = $BEG + $DIFF * $i / $max;
-       }
+    #-- array of values with random start/end values
+    public function from_to_rand($max, $a, $b)
+    {
+        $BEG  = $this->real_rand($a, $b);
+        $DIFF = $this->real_rand($a, $b) - $BEG;
+        $r    = array();
+        for ($i = 0; $i <= $max; $i++) {
+            $r[$i] = $BEG + $DIFF * $i / $max;
+        }
 
-       return($r);
-   }
+        return($r);
+    }
 
-   #-- returns random value in given interval
-   public function real_rand($a, $b)
-   {
-       $r = rand(0, 1 << 30);
+    #-- returns random value in given interval
+    public function real_rand($a, $b)
+    {
+        $r = rand(0, 1 << 30);
 
-       return($r / (1 << 30) * ($b - $a) + $a);   // base + diff * (0..1)
-   }
+        return($r / (1 << 30) * ($b - $a) + $a);   // base + diff * (0..1)
+    }
 }
 
 
@@ -823,7 +823,7 @@ class easy_captcha_dxy_spike
     public function dxy($x, $y)
     {
         #-- centre spike
-      $y += 0.0;
+        $y += 0.0;
 
         return array($x,$y);
     }
@@ -844,102 +844,102 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
    /* returns jpeg file stream with unscannable letters encoded
       in front of colorful disturbing background
    */
-   public function jpeg()
-   {
-       #-- step by step
-      $this->create();
-       $this->background_lines();
-       $this->background_letters();
-       $this->text();
+    public function jpeg()
+    {
+        #-- step by step
+        $this->create();
+        $this->background_lines();
+        $this->background_letters();
+        $this->text();
 
-       return $this->output();
-   }
+        return $this->output();
+    }
 
 
-   #-- initialize in-memory image with gd library
-   public function create()
-   {
-       $this->img = imagecreatetruecolor($this->width, $this->height);
-       imagefilledrectangle($this->img, 0, 0, $this->width, $this->height, $this->random_color(222, 255));
+    #-- initialize in-memory image with gd library
+    public function create()
+    {
+        $this->img = imagecreatetruecolor($this->width, $this->height);
+        imagefilledrectangle($this->img, 0, 0, $this->width, $this->height, $this->random_color(222, 255));
       
-      #-- encolour bg
-      $wd  = 20;
-       $x  = 0;
-       while ($x < $this->width) {
-           imagefilledrectangle($this->img, $x, 0, $x += $wd, $this->height, $this->random_color(222, 255));
-           $wd += max(10, rand(0, 20) - 10);
-       }
-   }
+        #-- encolour bg
+        $wd  = 20;
+        $x  = 0;
+        while ($x < $this->width) {
+            imagefilledrectangle($this->img, $x, 0, $x += $wd, $this->height, $this->random_color(222, 255));
+            $wd += max(10, rand(0, 20) - 10);
+        }
+    }
    
 
-   #-- make interesting background I, lines
-   public function background_lines()
-   {
-       $c1 = rand(150, 185);
-       $c2 = rand(195, 230);
-       $wd = 4;
-       $w1 = 0;
-       $w2 = 0;
-       for ($x=0; $x < $this->width; $x += (int)$wd) {
-           if ($x < $this->width) {   // verical
-            imageline($this->img, $x + $w1, 0, $x + $w2, $this->height - 1, $this->random_color($c1++, $c2));
-           }
-           if ($x < $this->height) {  // horizontally ("y")
-            imageline($this->img, 0, $x - $w2, $this->width - 1, $x - $w1, $this->random_color($c1, $c2--));
-           }
-           $wd += rand(0, 8) - 4;
-           if ($wd < 1) {
-               $wd = 2;
-           }
-           $w1 += rand(0, 8) - 4;
-           $w2 += rand(0, 8) - 4;
-           if (($x > $this->height) && ($y > $this->height)) {
-               break;
-           }
-       }
-   }
+    #-- make interesting background I, lines
+    public function background_lines()
+    {
+        $c1 = rand(150, 185);
+        $c2 = rand(195, 230);
+        $wd = 4;
+        $w1 = 0;
+        $w2 = 0;
+        for ($x=0; $x < $this->width; $x += (int)$wd) {
+            if ($x < $this->width) {   // verical
+                imageline($this->img, $x + $w1, 0, $x + $w2, $this->height - 1, $this->random_color($c1++, $c2));
+            }
+            if ($x < $this->height) {  // horizontally ("y")
+                imageline($this->img, 0, $x - $w2, $this->width - 1, $x - $w1, $this->random_color($c1, $c2--));
+            }
+            $wd += rand(0, 8) - 4;
+            if ($wd < 1) {
+                $wd = 2;
+            }
+            $w1 += rand(0, 8) - 4;
+            $w2 += rand(0, 8) - 4;
+            if (($x > $this->height) && ($y > $this->height)) {
+                break;
+            }
+        }
+    }
    
       
-   #-- more disturbing II, random letters
-   public function background_letters()
-   {
-       $limit = rand(30, 90);
-       for ($n=0; $n < $limit; $n++) {
-           $letter = "";
-           do {
-               $letter .= chr(rand(31, 125)); // random symbol
-           } while (rand(0, 1));
-           $size     = rand(5, $this->height / 2);
-           $half     = (int) ($size / 2);
-           $x        = rand(-$half, $this->width + $half);
-           $y        = rand(+$half, $this->height);
-           $rotation = rand(60, 300);
-           imagettftext($this->img, $size, $rotation, $x, $y, $this->random_color(130, 240), $this->font(), $letter);
-       }
-   }
+    #-- more disturbing II, random letters
+    public function background_letters()
+    {
+        $limit = rand(30, 90);
+        for ($n=0; $n < $limit; $n++) {
+            $letter = "";
+            do {
+                $letter .= chr(rand(31, 125)); // random symbol
+            } while (rand(0, 1));
+            $size     = rand(5, $this->height / 2);
+            $half     = (int) ($size / 2);
+            $x        = rand(-$half, $this->width + $half);
+            $y        = rand(+$half, $this->height);
+            $rotation = rand(60, 300);
+            imagettftext($this->img, $size, $rotation, $x, $y, $this->random_color(130, 240), $this->font(), $letter);
+        }
+    }
    
 
-   #-- add the real text to it
-   public function text()
-   {
-       $phrase = $this->solution;
-       $len    = strlen($phrase);
-       $w1     = 10;
-       $w2     = $this->width / ($len + 1);
-       for ($p=0; $p < $len; $p++) {
-           $letter   = $phrase[$p];
-           $size     = rand(18, $this->height / 2.2);
-           $half     = (int) $size / 2;
-           $rotation = rand(-33, 33);
-           $y        = rand($size + 3, $this->height - 3);
-           $x        = $w1 + $w2 * $p;
-           $w1 += rand(-$this->width / 90, $this->width / 40);  // @BUG: last char could be +30 pixel outside of image
-         $font              = $this->font();
-           list($r, $g, $b) = array(rand(30, 99), rand(30, 99), rand(30, 99));
-           imagettftext($this->img, $size, $rotation, $x + 1, $y, $this->rgb($r * 2, $g * 2, $b * 2), $font, $letter);
-           imagettftext($this->img, $size, $rotation, $x, $y - 1, $this->rgb($r, $g, $b), $font, $letter);
-       }
-   }
+    #-- add the real text to it
+    public function text()
+    {
+        $phrase = $this->solution;
+        $len    = strlen($phrase);
+        $w1     = 10;
+        $w2     = $this->width / ($len + 1);
+        for ($p=0; $p < $len; $p++) {
+            $letter   = $phrase[$p];
+            $size     = rand(18, $this->height / 2.2);
+            $half     = (int) $size / 2;
+            $rotation = rand(-33, 33);
+            $y        = rand($size + 3, $this->height - 3);
+            $x        = $w1 + $w2 * $p;
+            $w1 += rand(-$this->width / 90, $this->width / 40);  // @BUG: last char could be +30 pixel outside of image
+            $font              = $this->font();
+            list($r, $g, $b) = array(rand(30, 99), rand(30, 99), rand(30, 99));
+            imagettftext($this->img, $size, $rotation, $x + 1, $y, $this->rgb($r * 2, $g * 2, $b * 2), $font, $letter);
+            imagettftext($this->img, $size, $rotation, $x, $y - 1, $this->rgb($r, $g, $b), $font, $letter);
+        }
+    }
 }
 
 
@@ -956,25 +956,25 @@ class easy_captcha_text_math_formula extends easy_captcha
     public $question = "1+1";
     public $solution = "2";
 
-   #-- set up
-   public function __construct()
-   {
-       $this->question = sprintf(CAPTCHA_WHATIS_TEXT, $this->create_formula());
-       $this->solution = $this->calculate_formula($this->question);
-      // we could do easier with iterated formula+result generation here, of course
+    #-- set up
+    public function __construct()
+    {
+        $this->question = sprintf(CAPTCHA_WHATIS_TEXT, $this->create_formula());
+        $this->solution = $this->calculate_formula($this->question);
+        // we could do easier with iterated formula+result generation here, of course
       // but I had this code handy already ;) and it's easier to modify
-   }
+    }
 
-   #-- simple IS-EQUAL check
-   public function solved($result = null)
-   {
-       return (int)$this->solution == (int)$result;
-   }
+    #-- simple IS-EQUAL check
+    public function solved($result = null)
+    {
+        return (int)$this->solution == (int)$result;
+    }
 
-   #-- make new captcha formula string
-   public function create_formula()
-   {
-       $formula = array(
+    #-- make new captcha formula string
+    public function create_formula()
+    {
+        $formula = array(
          rand(20, 100) . " / " . rand(2, 10),
          rand(50, 150) . " - " . rand(2, 100),
          rand(2, 100) . " + " . rand(2, 100),
@@ -984,22 +984,22 @@ class easy_captcha_text_math_formula extends easy_captcha
    //    rand(20,100) . " / " . rand(2,10) . " + " . rand(1,50),
       );
 
-       return $formula[rand(0, count($formula) - 1)];
-   }
+        return $formula[rand(0, count($formula) - 1)];
+    }
 
-   #-- remove non-arithmetic characters
-   public function clean($s)
-   {
-       return preg_replace("/[^-+*\/\d]/", "", $s);
-   }
+    #-- remove non-arithmetic characters
+    public function clean($s)
+    {
+        return preg_replace("/[^-+*\/\d]/", "", $s);
+    }
 
-   #-- "solve" simple calculations
-   public function calculate_formula($formula)
-   {
-       preg_match("#^(\d+)([-+/*])(\d+)([-+/*])?(\d+)?$#", $this->clean($formula), $uu);
-       @list($uu, $X, $op1, $Y, $op2, $Z) = $uu;
-       if ($Y) {
-           $calc                      = array(
+    #-- "solve" simple calculations
+    public function calculate_formula($formula)
+    {
+        preg_match("#^(\d+)([-+/*])(\d+)([-+/*])?(\d+)?$#", $this->clean($formula), $uu);
+        @list($uu, $X, $op1, $Y, $op2, $Z) = $uu;
+        if ($Y) {
+            $calc                      = array(
         "/" => $X / $Y,  // PHP+ZendVM catches division by zero already, and CAPTCHA "attacker" would get no advantage herefrom anyhow
         "*" => $X * $Y,
         "+" => $X + $Y,
@@ -1008,10 +1008,10 @@ class easy_captcha_text_math_formula extends easy_captcha
         "+-" => $X + $Y - $Z,
         "/+" => $X / $Y + $Z,
       );
-       }
+        }
 
-       return($calc[$op1 . $op2] ? $calc[$op1 . $op2] : rand(0, 1 << 23));
-   }
+        return($calc[$op1 . $op2] ? $calc[$op1 . $op2] : rand(0, 1 << 23));
+    }
 }
 
 #-- to disable textual captcha part
@@ -1040,29 +1040,29 @@ class easy_captcha_persistent_grant extends easy_captcha
     }
    
 
-   #-- give ok, if captach had already been solved recently
-   public function solved($ignore=0)
-   {
-       if (CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
-           return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
-       }
-   }
+    #-- give ok, if captach had already been solved recently
+    public function solved($ignore=0)
+    {
+        if (CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
+            return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
+        }
+    }
    
-   #-- set captcha persistence cookie
-   public function grant()
-   {
-       if (!headers_sent()) {
-           setcookie($this->cookie(), $this->validity_token(), time() + 175 * CAPTCHA_TIMEOUT);
-       } else {
-           // $this->log("::grant", "COOKIES", "too late for cookies");
-       }
-   }
+    #-- set captcha persistence cookie
+    public function grant()
+    {
+        if (!headers_sent()) {
+            setcookie($this->cookie(), $this->validity_token(), time() + 175 * CAPTCHA_TIMEOUT);
+        } else {
+            // $this->log("::grant", "COOKIES", "too late for cookies");
+        }
+    }
 
-   #-- pseudo password (time-bombed)
-   public function validity_token($deviation=0)
-   {
-       return easy_captcha::hash("PERSISTENCE", $deviation, $length=100);
-   }
+    #-- pseudo password (time-bombed)
+    public function validity_token($deviation=0)
+    {
+        return easy_captcha::hash("PERSISTENCE", $deviation, $length=100);
+    }
     public function cookie()
     {
         return "captcha_pass";
@@ -1084,13 +1084,13 @@ class easy_captcha_spamfree_no_new_urls
 {
 
    #-- you have to adapt this, to check for newly added URLs only, in Wikis e.g.
-   #   - for simple comment submission forms, this default however suffices:
-   public function solved($ignore=0)
-   {
-       $r = !preg_match("#(https?://\w+[^/,.]+)#ims", serialize($_GET + $_POST), $uu);
+    #   - for simple comment submission forms, this default however suffices:
+    public function solved($ignore=0)
+    {
+        $r = !preg_match("#(https?://\w+[^/,.]+)#ims", serialize($_GET + $_POST), $uu);
 
-       return $r;
-   }
+        return $r;
+    }
 }
 
 
@@ -1109,9 +1109,9 @@ class easy_captcha_utility
 
 
    #-- determine usable temp directory
-   public function tmp()
-   {
-       return current(
+    public function tmp()
+    {
+        return current(
            array_filter(// filter by writability
                array_filter(// filter empty entries
                    @array(
@@ -1128,80 +1128,80 @@ class easy_captcha_utility
                "is_writable"
            )
        );
-   }
+    }
 
 
-   #-- script was called directly
-   public static function API()
-   {
+    #-- script was called directly
+    public static function API()
+    {
 
       #-- load data
-      if ($id = @$_GET[CAPTCHA_PARAM_ID]) {
+        if ($id = @$_GET[CAPTCHA_PARAM_ID]) {
 
          #-- special case
-         if ($id == 'base.js') {
-             easy_captcha_utility::js_base();
-         } else {
-             $c       = new easy_captcha($id=null, $ignore_expiration=1);
-             $expired = !$c->is_valid();
+            if ($id == 'base.js') {
+                easy_captcha_utility::js_base();
+            } else {
+                $c       = new easy_captcha($id=null, $ignore_expiration=1);
+                $expired = !$c->is_valid();
             
-            #-- JS-RPC request, check entered solution on the fly
-            if ($test = @$_REQUEST[CAPTCHA_PARAM_INPUT]) {
+                #-- JS-RPC request, check entered solution on the fly
+                if ($test = @$_REQUEST[CAPTCHA_PARAM_INPUT]) {
   
                #-- check
-               if ($expired || empty($c->image)) {
-                   die(easy_captcha_utility::js_header('alert("captcha error: request invalid (wrong storage id) / or expired");'));
-               }
-                if (0 >= $c->ajax_tries--) {
-                    $c->log("::API", "JS-RPC", "ajax_tries exhausted ($c->ajax_tries)");
+                    if ($expired || empty($c->image)) {
+                        die(easy_captcha_utility::js_header('alert("captcha error: request invalid (wrong storage id) / or expired");'));
+                    }
+                    if (0 >= $c->ajax_tries--) {
+                        $c->log("::API", "JS-RPC", "ajax_tries exhausted ($c->ajax_tries)");
+                    }
+                    $ok = $c->image->solved($test) || $c->text->solved($test);
+
+                    #-- sendresult
+                    easy_captcha_utility::js_rpc($ok);
                 }
-                $ok = $c->image->solved($test) || $c->text->solved($test);
 
-               #-- sendresult
-               easy_captcha_utility::js_rpc($ok);
-            }
-
-            #-- generate and send image file
-            else {
-                if ($expired) {
-                    $type = "image/png";
-                    $bin  = easy_captcha_utility::expired_png();
-                } else {
-                    $type = "image/jpeg";
-                    $bin  = $c->image->jpeg();
+                #-- generate and send image file
+                else {
+                    if ($expired) {
+                        $type = "image/png";
+                        $bin  = easy_captcha_utility::expired_png();
+                    } else {
+                        $type = "image/jpeg";
+                        $bin  = $c->image->jpeg();
+                    }
+                    header("Pragma: no-cache");
+                    header("Cache-Control: no-cache, no-store, must-revalidate, private");
+                    header("Expires: " . gmdate("r", time()));
+                    header("Content-Length: " . strlen($bin));
+                    header("Content-Type: $type");
+                    print $bin;
                 }
-                header("Pragma: no-cache");
-                header("Cache-Control: no-cache, no-store, must-revalidate, private");
-                header("Expires: " . gmdate("r", time()));
-                header("Content-Length: " . strlen($bin));
-                header("Content-Type: $type");
-                print $bin;
             }
-         }
-          exit;
-      }
-   }
+            exit;
+        }
+    }
 
-   #-- hardwired error img
-   public function expired_png()
-   {
-       return base64_decode("iVBORw0KGgoAAAANSUhEUgAAADwAAAAUAgMAAACsbba6AAAADFBMVEUeEhFcMjGgWFf9jIrTTikpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA3UlEQVQY01XPzwoBcRAH8F9RjpSTm9xR9qQwtnX/latX0DrsA3gC8QDK0QO4bv7UOtmM+x4oZ4X5FQc1hlb41dR8mm/9ZhT/P7X/dDcpZPU3FYft9kWbLuWp4Bgt9v1oGG07Ja8ojfjxQFym02DVmoixkV/m2JI/TUtefR7nD9rkrhkC+6D77/8mUhDvw0ymLPwxf8esghEFRq8hqKcu2iG16Vlun1zYTO7RwCeFyoJqAgC3LQwzYiCokDj0MWRxb+Z6R8mPJb8Q77zlPbuCoJE8a/t7P773uv36tdcTmsXfRycoRJ8AAAAASUVORK5CYII=");
-   }
-
+    #-- hardwired error img
+    public function expired_png()
+    {
+        return base64_decode("iVBORw0KGgoAAAANSUhEUgAAADwAAAAUAgMAAACsbba6AAAADFBMVEUeEhFcMjGgWFf9jIrTTikpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA3UlEQVQY01XPzwoBcRAH8F9RjpSTm9xR9qQwtnX/latX0DrsA3gC8QDK0QO4bv7UOtmM+x4oZ4X5FQc1hlb41dR8mm/9ZhT/P7X/dDcpZPU3FYft9kWbLuWp4Bgt9v1oGG07Ja8ojfjxQFym02DVmoixkV/m2JI/TUtefR7nD9rkrhkC+6D77/8mUhDvw0ymLPwxf8esghEFRq8hqKcu2iG16Vlun1zYTO7RwCeFyoJqAgC3LQwzYiCokDj0MWRxb+Z6R8mPJb8Q77zlPbuCoJE8a/t7P773uv36tdcTmsXfRycoRJ8AAAAASUVORK5CYII=");
+    }
 
 
 
 
-   #-- send base javascript
-   public function js_base()
-   {
-       $captcha_new_urls = $_GET["captcha_new_urls"] ? 0 : 1;
-       $BASE_URL         = CAPTCHA_BASE_URL;
-       $PARAM_ID         = CAPTCHA_PARAM_ID;
-       $PARAM_INPUT      = CAPTCHA_PARAM_INPUT;
-       $COLOR_CALC       =  CAPTCHA_INVERSE ? "32 +" : "224 -";
-       easy_captcha_utility::js_header();
-       print<<<END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END
+
+    #-- send base javascript
+    public function js_base()
+    {
+        $captcha_new_urls = $_GET["captcha_new_urls"] ? 0 : 1;
+        $BASE_URL         = CAPTCHA_BASE_URL;
+        $PARAM_ID         = CAPTCHA_PARAM_ID;
+        $PARAM_INPUT      = CAPTCHA_PARAM_INPUT;
+        $COLOR_CALC       =  CAPTCHA_INVERSE ? "32 +" : "224 -";
+        easy_captcha_utility::js_header();
+        print<<<END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END
 
 
 /* easy_captcha utility code */
@@ -1276,32 +1276,32 @@ function captcha_check_solution() {
 
 
 END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
-   }
+    }
 
 
 
 
 
-   #-- javascript header (also prevent caching)
-   public function js_header($print="")
-   {
-       header("Pragma: no-cache");
-       header("Cache-Control: no-cache, no-store, must-revalidate, private");
-       header("Expires: " . gmdate("r", time()));
-       header("Content-Type: text/javascript");
-       if ($print) {
-           print $print;
-       }
-   }
+    #-- javascript header (also prevent caching)
+    public function js_header($print="")
+    {
+        header("Pragma: no-cache");
+        header("Cache-Control: no-cache, no-store, must-revalidate, private");
+        header("Expires: " . gmdate("r", time()));
+        header("Content-Type: text/javascript");
+        if ($print) {
+            print $print;
+        }
+    }
 
 
-   #-- response javascript
-   public function js_rpc($yes)
-   {
-       $yes         = $yes ? 1 : 0;
-       $PARAM_INPUT = CAPTCHA_PARAM_INPUT;
-       easy_captcha_utility::js_header();
-       print<<<END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END
+    #-- response javascript
+    public function js_rpc($yes)
+    {
+        $yes         = $yes ? 1 : 0;
+        $PARAM_INPUT = CAPTCHA_PARAM_INPUT;
+        easy_captcha_utility::js_header();
+        print<<<END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END
 
 
 // JS-RPC response
@@ -1313,25 +1313,25 @@ if (1) {
 
 
 END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
-   }
+    }
 
 
 
-   /* static */
-   public function canonical_path($url)
-   {
-       $path = @parse_url($url);
+    /* static */
+    public function canonical_path($url)
+    {
+        $path = @parse_url($url);
 
-       if (is_array($path) && !empty($path['path'])) {
-           $url = $path['path'];
-       }
+        if (is_array($path) && !empty($path['path'])) {
+            $url = $path['path'];
+        }
 
-       $path    = array();
-       $abspath = substr("$url ", 0, 1) == '/'? '/': '';
-       $ncomp   = 0;
+        $path    = array();
+        $abspath = substr("$url ", 0, 1) == '/'? '/': '';
+        $ncomp   = 0;
 
-       foreach (explode('/', $url) as $comp) {
-           switch ($comp) {
+        foreach (explode('/', $url) as $comp) {
+            switch ($comp) {
 
        case '':
        case '.':
@@ -1348,10 +1348,10 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
          $ncomp++;
          break;
        }
-       }
+        }
 
-       $path = $abspath . implode('/', $path);
+        $path = $abspath . implode('/', $path);
 
-       return empty($path)? '.': $path;
-   }  //patch contributed from Fedora downstream by Patrick Monnerat
+        return empty($path)? '.': $path;
+    }  //patch contributed from Fedora downstream by Patrick Monnerat
 }
