@@ -205,7 +205,7 @@ class Subsonic_Api
         $defaults = array(
             'namespaceSeparator' => ' :',//you may want this to be something other than a colon
             'attributePrefix' => '',   //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist', 'song'),   //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'),   //array of xml tag names which should always become arrays
             'autoArray' => true,        //only create arrays for tags which appear more than once
             'textContent' => 'value',       //key used for the text content of elements
             'autoText' => true,         //skip textContent key if node has no attributes or child nodes
@@ -286,7 +286,7 @@ class Subsonic_Api
 
         //get text content of node
         $textContentArray = array();
-        $plainText        = trim((string) $xml);
+        $plainText        = (string) $xml;
         if ($plainText !== '') {
             $textContentArray[$options['textContent']] = $plainText;
         }
@@ -298,6 +298,7 @@ class Subsonic_Api
         if (isset($propertiesArray['xmlns'])) {
             unset($propertiesArray['xmlns']);
         }
+        
         //return node as array
         return array(
             $xml->getName() => $propertiesArray
@@ -568,7 +569,7 @@ class Subsonic_Api
                             $albums = Stats::get_recent("album", $size, $offset);
                         } else {
                             if ($type == "starred") {
-                                $albums = Userflag::get_latest('album');
+                                $albums = Userflag::get_latest('album', null, $size);
                             } else {
                                 if ($type == "alphabeticalByName") {
                                     $albums = Catalog::get_albums($size, $offset, $catalogs);
