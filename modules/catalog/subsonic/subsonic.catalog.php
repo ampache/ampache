@@ -28,7 +28,7 @@
  */
 class Catalog_subsonic extends Catalog
 {
-    private $version        = '000001';
+    private $version        = '000002';
     private $type           = 'subsonic';
     private $description    = 'Subsonic Remote Catalog';
 
@@ -223,43 +223,33 @@ class Catalog_subsonic extends Catalog
                     if ($albums['success']) {
                         foreach ($albums['data']['directory']['child'] as $album) {
                             if (is_array($album)) {
-                                $songs = $subsonic->getMusicDirectory(array('id' => $album['id']));
-                                if ($songs['success']) {
-                                    foreach ($songs['data']['directory']['child'] as $song) {
-                                        if (is_array($song)) {
-                                            $data            = array();
-                                            $data['artist']  = html_entity_decode($song['artist']);
-                                            $data['album']   = html_entity_decode($song['album']);
-                                            $data['title']   = html_entity_decode($song['title']);
-                                            $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
-                                            $data['year']    = $song['year'];
-                                            $data['bitrate'] = $song['bitRate'] * 1000;
-                                            $data['size']    = $song['size'];
-                                            $data['time']    = $song['duration'];
-                                            $data['track']   = $song['track'];
-                                            $data['disk']    = $song['discNumber'];
-                                            $data['mode']    = 'vbr';
-                                            $data['genre']   = explode(' ', html_entity_decode($song['genre']));
-                                            $data['file']    = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
-                                            if ($this->check_remote_song($data)) {
-                                                debug_event('subsonic_catalog', 'Skipping existing song ' . $data['path'], 5);
-                                            } else {
-                                                $data['catalog'] = $this->id;
-                                                debug_event('subsonic_catalog', 'Adding song ' . $song['path'], 5, 'ampache-catalog');
-                                                $song_Id = Song::insert($data);
-                                                if (!$song_Id) {
-                                                    debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
-                                                    AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
-                                                } else {
-                                                    parent::gather_art([$song_Id], null);
-                                                }
-                                                $songsadded++;
-                                            }
-                                        }
-                                    }
+                                $data            = array();
+                                $data['artist']  = html_entity_decode($album['artist']);
+                                $data['album']   = html_entity_decode($album['album']);
+                                $data['title']   = html_entity_decode($album['title']);
+                                $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
+                                $data['year']    = $album['year'];
+                                $data['bitrate'] = $album['bitRate'] * 1000;
+                                $data['size']    = $album['size'];
+                                $data['time']    = $album['duration'];
+                                $data['track']   = $album['track'];
+                                $data['disk']    = $song['discNumber'];
+                                $data['mode']    = 'vbr';
+                                $data['genre']   = explode(' ', html_entity_decode($album['genre']));
+                                $data['file']    = $this->uri . '/rest/stream.view?id=' . $album['id'] . '&filename=' . urlencode($album['path']);
+                                if ($this->check_remote_song($data)) {
+                                    debug_event('subsonic_catalog', 'Skipping existing song ' . $data['path'], 5);
                                 } else {
-                                    debug_event('subsonic_catalog', 'Song error:' . $songs['error'], 3);
-                                    AmpError::add('general', T_('Song Error.') . ": " . $songs['error']);
+                                    $data['catalog'] = $this->id;
+                                    debug_event('subsonic_catalog', 'Adding song ' . $album['path'], 5, 'ampache-catalog');
+                                    $song_Id = Song::insert($data);
+                                    if (!$song_Id) {
+                                        debug_event('subsonic_catalog', 'Insert failed for ' . $album['path'], 1);
+                                        AmpError::add('general', T_('Unable to Insert Song - %s'), $album['path']);
+                                    } else {
+                                        parent::gather_art([$song_Id], null);
+                                    }
+                                    $songsadded++;
                                 }
                             }
                         }
