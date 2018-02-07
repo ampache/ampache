@@ -233,7 +233,7 @@ class Catalog_subsonic extends Catalog
                                 $data['size']    = $album['size'];
                                 $data['time']    = $album['duration'];
                                 $data['track']   = $album['track'];
-                                $data['disk']    = $song['discNumber'];
+                                $data['disk']    = $album['discNumber'];
                                 $data['mode']    = 'vbr';
                                 $data['genre']   = explode(' ', html_entity_decode($album['genre']));
                                 $data['file']    = $this->uri . '/rest/stream.view?id=' . $album['id'] . '&filename=' . urlencode($album['path']);
