@@ -6,13 +6,13 @@ return [
 
     'geolocate' => false,
     
-    'allow_localplay_playback' => false,
+    'allow_localplay' => false,
     
     'allow_democratic_playback' => false,
     
     'allow_stream_playback' => false,
     
-    'sociable' => true,
+    'sociable' => false,
     
     'licensing' => true,
     

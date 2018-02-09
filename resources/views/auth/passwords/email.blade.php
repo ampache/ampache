@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div id="main-content" class="w3-container w3-section" style="margin-left:14%">
+ <div class="w3-display-container w3-black" style="height:500px;">
+ <div class="w3-display-middle">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Reset Password</div>
+
                 <div class="panel-body">
                     @if (session('status'))
                         <div class="alert alert-success">
@@ -13,7 +16,7 @@
                         </div>
                     @endif
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('password.email') }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('password.email') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -41,6 +44,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    </div>
     </div>
 </div>
 @endsection

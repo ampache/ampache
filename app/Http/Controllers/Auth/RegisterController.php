@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use App\Events\UserRegistered;
 
 class RegisterController extends Controller
 {
@@ -24,11 +23,11 @@ class RegisterController extends Controller
     use RegistersUsers;
 
     /**
-     * Where to redirect users after registration.App\Events\UserRegistered
+     * Where to redirect users after registration.
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -50,6 +49,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'username' => 'required|string|max:255',
+            'fullname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -59,19 +59,15 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return User
+     * @return \App\Model\User
      */
     protected function create(array $data)
     {
-        $user = User::create([
+        return User::create([
             'username' => $data['username'],
+            'fullname' => $data['fullname'],
             'email' => $data['email'],
-            'password' => $data['password'],
-            'disabled' => config('user.admin_enable_required'),
+            'password' => bcrypt($data['password']),
         ]);
-        
-        event(new UserRegistered($user));
-        
-        return $user;
     }
 }

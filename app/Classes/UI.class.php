@@ -5,7 +5,9 @@
  * IT SHOULD BE REMOVED SOON to have a better code design
  */
 
-namespace Classes;
+namespace App\Classes;
+
+use Illuminate\Support\Str;
 
 class UI
 {
@@ -88,12 +90,16 @@ class UI
         switch ($unit) {
             case 'p':
                 $value *= 1024;
+                // no break
             case 't':
                 $value *= 1024;
+                // no break
             case 'g':
                 $value *= 1024;
+                // no break
             case 'm':
                 $value *= 1024;
+                // no break
             case 'k':
                 $value *= 1024;
         }
@@ -196,5 +202,104 @@ END;
                 return $clean;
             }
         }
+    }
+    
+    /*
+     * Direct access to .env file for programatically updating entries.
+     * Sometiimes necessary because env variables only change when new session started.
+     */
+    
+    public static function updateEnv($env_vars)
+    {
+        $envFile = base_path('.env');
+        $envStr  =file_get_contents($envFile);
+        $keys    = array_keys($env_vars);
+        
+        foreach ($keys as $key) {
+            switch ($key) {
+                case 'DB_DATABASE':
+                    $success = preg_match("~(?m)^DB_DATABASE=([\_\-\w]+)$~", $envStr, $olddb);
+                    $envStr  =str_replace("DB_DATABASE=" . $olddb[1], "DB_DATABASE=" . $env_vars['DB_DATABASE'], $envStr);
+                    break;
+                case 'DB_HOST':
+                    $success = preg_match("~(?m)^DB_HOST=(\w+)$~", $envStr, $oldhost);
+                    $envStr  =str_replace("DB_HOST=" . $oldhost[1], "DB_HOST=" . $env_vars['DB_HOST'], $envStr);
+                    break;
+                case 'DB_PORT':
+                    $success = preg_match("~(?m)^DB_PORT=(\w+)$~", $envStr, $oldport);
+                    $envStr  =str_replace("DB_PORT=" . $oldport[1], "DB_PORT=" . $env_vars['DB_PORT'], $envStr);
+                    break;
+                case 'DB_USERNAME':
+                    $success = preg_match("~(?m)^DB_USERNAME=(\w+)$~", $envStr, $olduser);
+                    $envStr  =str_replace("DB_USERNAME=" . $olduser[1], "DB_USERNAME=" . $env_vars['DB_USERNAME'], $envStr);
+                    break;
+                case 'DB_PASSWORD':
+                    $success = preg_match("~(?m)^DB_PASSWORD=(\w+)$~", $envStr, $oldpassword);
+                    $envStr  =str_replace("DB_PASSWORD=" . $oldpassword[1], "DB_PASSWORD=" . $env_vars['DB_PASSWORD'], $envStr);
+                    break;
+                case 'APP_INSTALLED':
+                    $success = preg_match("~(?m)^APP_INSTALLED=(\w+)$~", $envStr, $oldpassword);
+                    $envStr  =str_replace("APP_INSTALLED=" . $oldpassword[1], "APP_INSTALLED=" . $env_vars['APP_INSTALLED'], $envStr);
+                    break;
+                default:
+            }
+        }
+        file_put_contents(base_path('.env'), $envStr);
+    }
+    
+    
+    public static function getEnv($env_vars, $default = null)
+    {
+        $envFile = base_path('.env');
+        $envStr  =file_get_contents($envFile);
+        
+        switch ($env_vars) {
+                case 'DB_DATABASE':
+                    $success = preg_match("~(?m)^DB_DATABASE=([\_\-\w]+)$~", $envStr, $result);
+                    break;
+                case 'DB_HOST':
+                    $success = preg_match("~(?m)^DB_HOST=(\w+)$~", $envStr, $result);
+                     break;
+                case 'DB_PORT':
+                    $success = preg_match("~(?m)^DB_PORT=(\w+)$~", $envStr, $result);
+                     break;
+                case 'DB_USERNAME':
+                    $success = preg_match("~(?m)^DB_USERNAME=(\w+)$~", $envStr, $result);
+                    break;
+                case 'DB_PASSWORD':
+                    $success = preg_match("~(?m)^DB_PASSWORD=(\w+)$~", $envStr, $result);
+                    break;
+                case 'APP_INSTALLED':
+                    $success = preg_match("~(?m)^APP_INSTALLED=(\w+)$~", $envStr, $result);
+                    break;
+                default:
+            }
+        if ($result[1] === false) {
+            return value($default);
+        }
+        if ($result[1] === true) {
+            return value($default);
+        }
+            
+        switch (strtolower($result[1])) {
+                case 'true':
+                case '(true)':
+                    return true;
+                case 'false':
+                case '(false)':
+                    return false;
+                case 'empty':
+                case '(empty)':
+                    return '';
+                case 'null':
+                case '(null)':
+                    return;
+            }
+            
+        if (strlen($result[1]) > 1 && Str::startsWith($result[1], '"') && Str::endsWith($result[1], '"')) {
+            return substr($result[1], 1, -1);
+        }
+            
+        return $result[1];
     }
 }

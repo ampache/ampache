@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,38 +11,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call('UserTableSeeder');
-        $this->call('CatalogTableSeeder');
-        $this->call('ArtistTableSeeder');
-        $this->call('AlbumTableSeeder');
-        $this->call('LicenseTableSeeder');
-        $this->call('SongTableSeeder');
-        $this->call('LiveStreamTableSeeder');
-        $this->call('ClipTableSeeder');
-        $this->call('MovieTableSeeder');
-        $this->call('PersonalVideoTableSeeder');
-        $this->call('TvshowTableSeeder');
-        $this->call('TvshowSeasonTableSeeder');
-        $this->call('TvshowEpisodeTableSeeder');
-        $this->call('PodcastTableSeeder');
-        $this->call('PodcastEpisodeTableSeeder');
-        $this->call('PlaylistTableSeeder');
-        $this->call('PlaylistItemTableSeeder');
-        $this->call('FavoriteTableSeeder');
-        $this->call('ShareTableSeeder');
-        $this->call('RatingTableSeeder');
-        $this->call('ChannelTableSeeder');
-        $this->call('BookmarkTableSeeder');
-        $this->call('BroadcastTableSeeder');
-        $this->call('LabelTableSeeder');
-        $this->call('LabelMapTableSeeder');
-        $this->call('WantedTableSeeder');
-        $this->call('ShoutTableSeeder');
-//        $this->call('PrivateMsgSeeder');
-        $this->call('UserActivityTableSeeder');
-        $this->call('UserFollowerTableSeeder');
-        $this->call('ImageTableSeeder');
-//        $this->call('RolesSeeder');
-        $this->call('PreferencesTableSeeder');
+        // $this->call(UsersTableSeeder::class);
+       $this->call('RolesAndPermissionsSeeder');
+
     }
 }

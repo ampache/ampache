@@ -1,7 +1,20 @@
 <?php
 
 return [
-      
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    'name' => env('APP_NAME', 'Ampache'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -26,7 +39,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', true),
+    'debug' => env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +52,7 @@ return [
     |
     */
 
-    'url' => 'http://localhost',
+    'url' => env('APP_URL', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
@@ -65,20 +78,20 @@ return [
     |
     */
 
-    'locale' => 'en_US',
+    'locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
     |--------------------------------------------------------------------------
     |
-    | The fallback locale determines the locale to use when the cu$oldconfig[1] . $oldconfig[2] . rrent one
+    | The fallback locale determines the locale to use when the current one
     | is not available. You may change the value to correspond to any of
     | the language folders that are provided through your application.
     |
     */
 
-    'fallback_locale' => 'en_US',
+    'fallback_locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -95,18 +108,6 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    
-     /*
-     |--------------------------------------------------------------------------
-     | Application Installation Status
-     |--------------------------------------------------------------------------
-     |
-     | This value determines if the application has been installed.
-     |
-     */
-    
-    'installed' => env('APP_INSTALLED'),
-
     /*
     |--------------------------------------------------------------------------
     | Logging Configuration
@@ -121,7 +122,7 @@ return [
     */
 
     'log' => env('APP_LOG', 'single'),
-    
+
     'log_level' => env('APP_LOG_LEVEL', 'error'),
 
     /*
@@ -152,6 +153,7 @@ return [
         Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
@@ -161,23 +163,20 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Laravel\Tinker\TinkerServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
+        /*
+         * Package Service Providers...
+         */
+
         /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
- //       App\Providers\PlaylistServiceProvider::class,
- //       App\Providers\RegistrationServiceProvider::class,
-        App\Providers\CatalogServiceProvider::class,
-        
- //       Barryvdh\Debugbar\ServiceProvider::class,
-        Xinax\LaravelGettext\LaravelGettextServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
-        Mews\Captcha\CaptchaServiceProvider::class,
-        anlutro\LaravelSettings\ServiceProvider::class,
 
     ],
 
@@ -198,6 +197,8 @@ return [
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
+        'Broadcast' => Illuminate\Support\Facades\Broadcast::class,
+        'Bus' => Illuminate\Support\Facades\Bus::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
         'Config' => Illuminate\Support\Facades\Config::class,
         'Cookie' => Illuminate\Support\Facades\Cookie::class,
@@ -206,11 +207,14 @@ return [
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
         'File' => Illuminate\Support\Facades\File::class,
+        'Form' => Collective\Html\FormFacade::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
+        'Html' => Collective\Html\HtmlFacade::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
+        'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
         'Redirect' => Illuminate\Support\Facades\Redirect::class,
@@ -224,15 +228,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        
-        'Playlist' => App\Facades\Playlist::class,
-        'Registration' => App\Facades\Registration::class,
-        'Catalog' => App\Facades\Catalog::class,
-        
-        'Captcha' => Mews\Captcha\Facades\Captcha::class,
-        'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class,
-        'Setting' => anlutro\LaravelSettings\Facade::class,
 
     ],
 

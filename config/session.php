@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'lifetime' => 120,
+    'lifetime' => env('SESSION_LIFETIME', 120),
 
     'expire_on_close' => false,
 
@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'connection' => 'mysql',
+    'connection' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -122,19 +122,10 @@ return [
     |
     */
 
-    'cookie' => 'ampache_session',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Session Name
-    |--------------------------------------------------------------------------
-    |
-    | Here you may change the name of the cookie used to identify a session
-    | instance by ID. The name specified here will get used every time a
-    | new session cookie is created by the framework for every driver.
-    |
-    */
-    'session_name' => 'ampache',
+    'cookie' => env(
+        'SESSION_COOKIE',
+        str_slug(env('APP_NAME', 'laravel'), '_').'_session'
+    ),
 
     /*
     |--------------------------------------------------------------------------
@@ -189,20 +180,18 @@ return [
     'http_only' => true,
 
     /*
-    | Length that a session will last expressed in minutes. Default is
-    | one hour.
-    | DEFAULT: 60
+    |--------------------------------------------------------------------------
+    | Same-Site Cookies
+    |--------------------------------------------------------------------------
+    |
+    | This option determines how your cookies behave when cross-site requests
+    | take place, and can be used to mitigate CSRF attacks. By default, we
+    | do not enable this as other CSRF protection services are in place.
+    |
+    | Supported: "lax", "strict"
+    |
     */
-     'session_length' => 60,
 
-    /*
-    | Length that the session for a single streaming instance will last
-    | the default is two hours. With some clients, and long songs this can
-    | cause playback to stop, increase this value if you experience that
-    | DEFAULT: 120
-    */
-    'stream_length' => 120
-
-
+    'same_site' => null,
 
 ];

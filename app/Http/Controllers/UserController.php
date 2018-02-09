@@ -2,199 +2,144 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Validation\Rule;
-use App\Models\User;
-use App\Support\UI;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\UserCreateRequest;
-use App\Events\userUpdatedEvent;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 
-//use App\Events\UserRegistered;
+use App\Models\User;
 
-class UserController extends Controller
-{
-    protected $user;
-    protected $art;
+//Importing laravel-permission models
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
+//Enables us to output flash messaging
+
+class UserController extends Controller {
     
-    public function __construct(User $model)
-    {
-        $this->user = $model;
-        $this->middleware('web');
+    public function __construct() {
+        $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
     }
     
-     /**
+    /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        $users = $this->user->paginate(config('theme.threshold'));
-        $links = $users->setPath('')->render();
-        UI::flip_class(['odd','even']);
-
-        return view('user.index', compact('users', 'links'));
+    public function index() {
+        //Get all users and pass it to the view
+        $users = User::all();
+        return view('users.index')->with('users', $users);
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $maxsize = UI::format_bytes(config('system.avatar_max_size'));
-
-        return view('user.create', compact('maxsize'));
+    public function create() {
+        //Get all roles and pass it to the view
+        $roles = Role::get();
+        return view('users.create', ['roles'=>$roles]);
     }
-
     
     /**
      * Store a newly created resource in storage.
      *
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-
-    public function store(Request $request)
-    {
-        $rules = [
-            'username' => 'required|max:255|unique:users',
-            'email' => 'required|email|max:225|unique:users',
-            'password' => 'required|confirmed|min:4',
-        ];
-        foreach (config('user.registration_mandatory_fields') as $field) {
-            if (!in_array($field, $rules)) {
-                $rules[$field] = 'required|max:225';
+    public function store(Request $request) {
+        //Validate name, email and password fields
+        $this->validate($request, [
+            'name'=>'required|max:120',
+            'fullname'=>'required|max:120',
+            'email'=>'required|email|unique:users',
+            'password'=>'required|min:6|confirmed'
+        ]);
+        
+        $user = User::create($request->only('email', 'username', 'fullname', 'password')); //Retrieving only the email and password data
+        
+        $roles = $request['roles']; //Retrieving the roles field
+        //Checking if a role was selected
+        if (isset($roles)) {
+            
+            foreach ($roles as $role) {
+                $role_r = Role::where('id', '=', $role)->firstOrFail();
+                $user->assignRole($role_r); //Assigning role to user
             }
         }
-        if (config('user.captcha_public_reg')) {
-            $rules['captcha'] = 'required|captcha';
-        }
-
-        return Validator::make($data, $rules);
-        
-        if (($request->hasFile('image')) && ($request->file('image')->isValid())) {
-            $params   = "|dimensions:min_width=config('system.avatar_min_width'),min_height=config('system.avatar_min_height')";
-            $messages = [
-                        'max:' => 'The avatar size exceeds max limits.',
-                        'dimensions' => "The avatar exceeds maximum dimensions."
-                ];
-                 
-            $validator = Validator::make($request->all(), [
-                    'image' => 'image|dimensions:max_width=' . config('system.avatar_max_width') . ',max_height=' . config('system.avatar_max_height') . '|max:' . config('system.avatar_max_size'),
-                    ], $messages);
-            if ($validator->fails()) {
-                $errors = $validator->errors();
-
-                return back()->withErrors($validator)
-                        ->withInput();
-            }
-                                  
-            $file = $request->file('image');
-            $name = time() . $file->getClientOriginalName();
-            $file->move('images/client', $name);
-            $ext = pathinfo('images/client/' . $name, PATHINFO_EXTENSION);
-        
-            $data = array_merge(['avatar' => "images/client/{$name}"], $request->all());
-            $user = $this->user->create($data);
-        } else {
-            $user = $this->user->create($request->all());
-        }
-
-        return redirect('/home')->withOk(T_('User created.'));
+        //Redirect to the users.index view and display message
+        return redirect()->route('users.index')
+        ->with('flash_message',
+            'User successfully added.');
     }
-
+    
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $user = $this->user->findOrFail($id);
-
-        return view('user.details', compact('user'));
+    public function show($id) {
+        return redirect('users');
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $user    = $this->user->findOrFail($id);
-        $maxsize = \App\Support\UI::format_bytes(config('system.avatar_max_size'));
-
-        return view('user.edit', compact('user', 'maxsize'));
+    public function edit($id) {
+        $user = User::findOrFail($id); //Get user with specified id
+        $roles = Role::get(); //Get all roles
+        
+        return view('users.edit', compact('user', 'roles')); //pass user and roles data to view
+        
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        $rules = array();
-        if (!is_null($request->input('email'))) {
-            $rules['email'] = 'required|email|max:255|unique:users' ;
-        }
+    public function update(Request $request, $id) {
+        $user = User::findOrFail($id); //Get role specified by id
         
-        if (!is_null($request->input('password'))) {
-            $rules['password'] = 'confirmed|min:4';
-        }
+        //Validate name, email and password fields
+        $this->validate($request, [
+            'name'=>'required|max:120',
+            'email'=>'required|email|unique:users,email,'.$id,
+            'password'=>'required|min:6|confirmed'
+        ]);
+        $input = $request->only(['name', 'email', 'password']); //Retreive the name, email and password fields
+        $roles = $request['roles']; //Retreive all roles
+        $user->fill($input)->save();
         
-        
-        foreach (config('user.registration_mandatory_fields') as $field) {
-            if (!in_array($field, $rules)) {
-                if ($request->has($field)) {
-                    $rules[$field] = 'required|max:225';
-                }
-            }
+        if (isset($roles)) {
+            $user->roles()->sync($roles);  //If one or more role is selected associate user to roles
         }
-
-        $validated = Validator::make($request->all(), $rules);
-
-        $this->user->findOrFail($id)->fill($request->all())->save();
-
-        return response()->json(
-          [  "status" => "User Info updated" ]
-        );
- 
- //       return back();
+        else {
+            $user->roles()->detach(); //If no role is selected remove exisiting role associated to a user
+        }
+        return redirect()->route('users.index')
+        ->with('flash_message',
+            'User successfully edited.');
     }
-
+    
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $this->user->findOrFail($id)->delete();
-
-        return redirect()->back();
-    }
-
-    public function disable($id)
-    {
-        $flight = $this->user->where('id', $id)->update(['disabled' => 1]);
+    public function destroy($id) {
+        //Find a user with a given id and delete
+        $user = User::findOrFail($id);
+        $user->delete();
         
-        return redirect()->back();
-    }
-    
-    public function enable($id)
-    {
-        $flight = $this->user->where('id', $id)->update(['disabled' => 0]);
-    
-        return redirect()->back();
+        return redirect()->route('users.index')
+        ->with('flash_message',
+            'User successfully deleted.');
     }
 }

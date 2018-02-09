@@ -10,49 +10,25 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-
+/*
 Route::get('/', function () {
-    return view('pages.index');
-})->middleware('install');
-
-Auth::routes();
-Route::get('logout', 'Auth\LoginController@logout')->name=('logout');
-Route::get('server/ajax/index/sidebar/{category}', 'Ajax\IndexController@sidebar');
-Route::get('/home', 'HomeController@index')->name('home');
-Route::post('update/{id}', 'UserController@update')->name('update');
-
-Route::get('index', 'UserController@index')->name('index');
-Route::get('show/{id}', 'UserController@show')->name('show');
-Route::get('edit/{id}', 'UserController@edit')->name('edit');
-Route::get('user.destroy', 'UserController@destroy')->name('user.destroy');
-Route::post('add', 'UserController@create')->name('add');
-Route::get('user/disable/{id}', 'UserController@disable');
-Route::get('user/enable/{id}', 'UserController@enable');
-Route::delete('user/destroy/{id}', 'UserController@destroy')->name('destroy');
-
-Route::get('art/show/{id}/{type}', 'ArtController@show');
-
-Route::get('/messages/index/{id}', 'PrivateMsgController@index');
-Route::delete('messages/destroy/{id}', 'PrivateMsgController@destroy')->name('destroy');
-Route::get('messages/reply/{id}', 'PrivateMsgController@reply')->name('reply');
-Route::get('messages/show/{idselected}', 'PrivateMsgController@show')->name('show');
-
-Route::get('install.language', 'InstallController@selectLanguage')->name('language');
-Route::post('/install/setlanguage/{language}', 'InstallController@setLanguage')->name('setLanguage');
-Route::post('/install/create_config', 'InstallController@create_config');
-Route::post('/install/create_account', 'InstallController@create_account');
-Route::get('/install/show_config', 'InstallController@show_config');
-Route::get('/install/show_account', 'InstallController@show_account');
-Route::get('/install/system_check', function () {
-    return view('install.system_check');
-});    
-Route::post('/install/create_db', 'InstallController@create_db');
-Route::get('/install/show_db', function () {
-    return view('install.database');
+    return view('home');
 });
-Route::get('/modules/show_catalogs', 'ModuleController@show_catalog_modules');
-Route::get('/catalog_type/{type}/action/{action}', 'ModuleController@catalog_action')->name('action');
-Route::resource('catalog', 'CatalogController');
+*/
+Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('users', 'UserController');
+
+Route::resource('roles', 'RoleController');
+
+Route::resource('permissions', 'PermissionController');
+Route::get('/lighttab', function () {
+    return view('partials.sidebar.light');
+});
+
+Route::get('loadtab/{tab}', 'SidebarController@loadTab');
+    
+    

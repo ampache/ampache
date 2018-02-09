@@ -1,418 +1,62 @@
 {
-	"name" : "ampache/laravel",
-	"description" : "Ampache built on The Laravel Framework.",
-	"keywords" : [
-		"ampache",
-		"laravel"
-	],
-	"license" : "AGPL-3.0",
-	"type" : "project",
-	"config" : {
-		"platform" : {
-			"ext-curl" : "1.0",
-			"ext-gd" : "1.0",
-			"ext-gmp" : "1.0",
-			"ext-dom" : "1.0",
-			"ext-pcre" : "1.0",
-			"ext-spl" : "1.0",
-			"ext-simplexml" : "1.0",
-			"ext-ctype" : "1.0",
-			"ext-date" : "1.0",
-			"ext-iconv" : "1.0",
-			"ext-libxml" : "1.0",
-			"ext-mbstring" : "1.0",
-			"ext-xmlwriter" : "1.0",
-			"ext-xmlreader" : "1.0",
-			"lib-libxml" : "2.7.0",
-			"ext-hash" : "1.1",
-			"ext-PDO" : "1.0",
-			"ext-pdo_mysql" : "1.0",
-			"ext-session" : "1.0",
-			"ext-json" : "1.0",
-			"ext-zlib" : "1.0"
-		},
-		"preferred-install" : "dist",
-		"sort-packages" : true,
-		"optimize-autoloader" : true
-	},
-	"require" : {
-		"php": ">=5.6.4",
-		"aehlke/tag-it": "^2.0",
-		"Afterster/php-echonest-api": "dev-master",
-		"anlutro/l4-settings": "^0.5.0",
-		"ampache/ampacheapi-php": "^1.0",
-		"aterrien/jQuery-Knob": "^1.2",
-		"barryvdh/laravel-debugbar": "^2.3",
-		"Belphemur/laravel-gettext": "5.x",
-		"blueimp/jQuery-File-Upload": "^9.18",
-		"carhartl/jquery-cookie": "^1.4",
-		"codacy/coverage": "^1.2",
-		"components/bootstrap": "^3.3",
-		"components/jquery": "^3.2",
-		"components/jqueryui": "^1.12",
-		"evenement/evenement": "^2.0",
-		"gettext/gettext": "^4.4",
-		"happyworm/jplayer": "^2.9",
-		"ise/php-soundcloud": "^3.0",
-		"james-heinrich/getid3": "dev-master",
-		"jeromeetienne/jquery-qrcode": "dev-master",
-		"kumailht/responsive-elements": "dev-master",
-		"kunalvarma05/dropbox-php-sdk": "^0.2.1",
-		"laravel/framework": "5.4",
-		"laravel/tinker": "~1.0",
-		"laravelcollective/html": "^5.4",
-		"maennchen/zipstream-php": "^0.4.1",
-		"mews/captcha": "^2.1",
-		"mikealmond/musicbrainz": "^0.2.2",
-		"needim/noty": "2.3.*",
-		"novius/laravel-artisan-commands": "^0.1.0",
-		"openid/php-openid": "^2.3",
-		"phpmailer/phpmailer": "^5.2",
-		"pklauzinski/jscroll": "^2.3",
-		"react/react": "^0.4.2",
-		"rmccue/requests": "^1.7",
-		"rsd/seafile-php-sdk": "^1.0",
-		"sabre/dav": "^3.2",
-		"scaron/prettyphoto": "^3.1",
-		"swisnl/jQuery-contextMenu": "^2.1",
-		"szymach/c-pchart": "^2.0",
-		"vakata/jstree": "^3.3",
-		"vlucas/phpdotenv": "^2.4",
-		"xdan/datetimepicker": "^2.4"
-	},
-	"require-dev" : {
-		"fzaninotto/faker" : "~1.4",
-		"mockery/mockery" : "0.9.*",
-		"phpunit/phpunit" : "~5.7",
-		"symfony/css-selector" : "2.8.*|3.0.*",
-		"symfony/dom-crawler" : "2.8.*|3.0.*"
-	},
-	"repositories" : [{
-			"type" : "package",
-			"package" : {
-				"name" : "Afterster/php-echonest-api",
-				"version" : "dev-master",
-				"source" : {
-					"url" : "https://github.com/Afterster/php-echonest-api.git",
-					"type" : "git",
-					"reference" : "master"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "jeromeetienne/jquery-qrcode",
-				"type" : "component",
-				"version" : "dev-master",
-				"source" : {
-					"url" : "https://github.com/jeromeetienne/jquery-qrcode.git",
-					"type" : "git",
-					"reference" : "master"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"src/jquery.qrcode.js",
-							"src/qrcode.js"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "carhartl/jquery-cookie",
-				"type" : "component",
-				"version" : "1.4.1",
-				"source" : {
-					"url" : "https://github.com/carhartl/jquery-cookie.git",
-					"type" : "git",
-					"reference" : "v1.4.1"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"jquery.cookie.js"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "aehlke/tag-it",
-				"type" : "component",
-				"version" : "2.0",
-				"source" : {
-					"url" : "https://github.com/aehlke/tag-it.git",
-					"type" : "git",
-					"reference" : "v2.0"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"js/tag-it.js"
-						],
-						"styles" : [
-							"css/jquery.tagit.css"
-						],
-						"files" : [
-							"js/tag-it.min.js"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "scaron/prettyphoto",
-				"type" : "component",
-				"version" : "3.1.6",
-				"source" : {
-					"url" : "https://github.com/scaron/prettyphoto.git",
-					"type" : "git",
-					"reference" : "3.1.6"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"js/jquery.prettyPhoto.js"
-						],
-						"styles" : [
-							"css/prettyPhoto.css"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "xdan/datetimepicker",
-				"type" : "component",
-				"version" : "2.4.5",
-				"source" : {
-					"url" : "https://github.com/xdan/datetimepicker.git",
-					"type" : "git",
-					"reference" : "2.4.5"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"jquery.datetimepicker.js"
-						],
-						"styles" : [
-							"jquery.datetimepicker.css"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "blueimp/jQuery-File-Upload",
-				"type" : "component",
-				"version" : "9.11.2",
-				"source" : {
-					"url" : "https://github.com/blueimp/jQuery-File-Upload.git",
-					"type" : "git",
-					"reference" : "9.11.2"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"js/jquery.fileupload.js",
-							"js/jquery.iframe-transport.js"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "aterrien/jQuery-Knob",
-				"type" : "component",
-				"version" : "1.2.11",
-				"source" : {
-					"url" : "https://github.com/aterrien/jQuery-Knob.git",
-					"type" : "git",
-					"reference" : "1.2.11"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"js/jquery.knob.js"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "pklauzinski/jscroll",
-				"type" : "component",
-				"version" : "2.3.4",
-				"source" : {
-					"url" : "https://github.com/pklauzinski/jscroll.git",
-					"type" : "git",
-					"reference" : "v2.3.4"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"jquery.jscroll.js"
-						],
-						"files" : [
-							"jquery.jscroll.min.js"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "kumailht/responsive-elements",
-				"type" : "component",
-				"version" : "dev-master",
-				"source" : {
-					"url" : "https://github.com/kumailht/responsive-elements.git",
-					"type" : "git",
-					"reference" : "master"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"responsive-elements.js"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "swisnl/jQuery-contextMenu",
-				"type" : "component",
-				"version" : "2.1.0",
-				"source" : {
-					"url" : "https://github.com/swisnl/jQuery-contextMenu.git",
-					"type" : "git",
-					"reference" : "2.1.0"
-				},
-				"extra" : {
-					"component" : {
-						"scripts" : [
-							"dist/jquery.contextMenu.js"
-						],
-						"styles" : [
-							"dist/jquery.contextMenu.css"
-						],
-						"files" : [
-							"dist/jquery.contextMenu.min.js",
-							"dist/jquery.contextMenu.min.css"
-						]
-					}
-				},
-				"require" : {
-					"robloach/component-installer" : "*"
-				}
-			}
-		}, {
-			"type" : "package",
-			"package" : {
-				"name" : "glenscott/soundcloud",
-				"version" : "dev-psr-4",
-				"source" : {
-					"url" : "https://github.com/mptre/php-soundcloud.git",
-					"type" : "git",
-					"reference" : "psr-4"
-				}
-			}
-		}
-	],
-	"autoload" : {
-		"classmap" : [
-			"database",
-			"app/Support/helpers.php",
-			"app/Support/debug.php",
-			"app/Http/Controllers"
-		],
-		"psr-4" : {
-			"Modules\\" : [
-				"modules",
-				"modules/Catalogs",
-				"modules/Catalogs/Beets",
-				"modules/Catalogs/Beetsremote",
-				"modules/Catalogs/Dropbox",
-				"modules/Catalogs/Local",
-				"modules/Catalogs/Remote",
-				"modules/Catalogs/Soundcloud",
-				"modules/Catalogs/Subsonic",
-				"modules/Catalogs/Seafile"
-			],
-			"App\\" : [
-				"app",
-				"app/Console",
-				"app/Events",
-				"app/Exceptions",
-				"app/Facades",
-				"app/Http",
-				"app/Jobs",
-				"app/Listeners",
-				"app/Models",
-				"app/Policies",
-				"app/Providers",
-				"app/Services",
-				"app/Support"
-			],
+    "name": "laravel/laravel",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=7.0.0",
+        "fideloper/proxy": "~3.3",
+        "guzzlehttp/guzzle": "^6.3",
+        "laravel/framework": "5.5.*",
+        "laravel/tinker": "~1.0",
+        "laravelcollective/html": "^5.5",
+        "spatie/laravel-permission": "^2.7"
+    },
+    "require-dev": {
+        "filp/whoops": "~2.0",
+        "fzaninotto/faker": "~1.4",
+        "mockery/mockery": "~1.0",
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/",
 			"Classes\\" : [
 				"app/Classes"
 			]
-		},
-		"files" : [
-			"app/Support/helpers.php",
-			"app/Support/debug.php"
-		]
-	},
-	"autoload-dev" : {
-		"psr-4" : {
-			"Tests\\" : "tests/"
-		}
-	},
-	"scripts" : {
-		"post-root-package-install" : "php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-		"post-create-project-cmd" : "php artisan key:generate",
-		"post-install-cmd" : [
-			"Illuminate\\Foundation\\ComposerScripts::postInstall",
-			"php artisan optimize"
-		],
-		"post-update-cmd" : "Illuminate\\Foundation\\ComposerScripts::postUpdate"
-	},
-	"minimum-stability" : "RC",
-	"homepage" : "http://ampache.org"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+            ]
+        }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
 }
