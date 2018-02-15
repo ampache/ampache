@@ -1,6 +1,20 @@
 CHANGELOG
 =========
 
+3.8.5
+----------
+- Added search capability for user's own ratings option for Song, Artist, Album search.
+- Clean process now removes empty albums.
+- Further translation updates and fixes.
+- Updated Subsonic API to increase compliance with Subsonic json API specs.
+- Added starred date to album list and song and formatted per Subsonic spec.
+- Now compatible with latest Ultrasonic client (json transfer).
+- Fixed ability to edit/save smartplaylist name without setting 'random'.
+- Search/smart playlist now includes favorite artists and albums.
+- Modified SQL statement to not offend default SQL_MODE of ONLY_FULL_GROUP_BY on server versions after 5.7.6.
+- Set redirect to false for streaming types.
+
+
 3.8.4
 ----------
 - Subsonic catalog now displays album art and artist bio.
