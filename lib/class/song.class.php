@@ -751,14 +751,6 @@ class Song extends database_object implements media, library_item
         } else {
             $where .= " AND `album`.`name` = ?";
             $params[] = $data['album'];
-            
-            if ($data['mb_artistid']) {
-                $where .= " AND `artist`.`mbid` = ?";
-                $params[] = $data['mb_artistid'];
-            } else {
-                $where .= " AND `artist`.`name` = ?";
-                $params[] = $data['artist'];
-            }
         }
         
         $sql .= $where . " LIMIT 1";
