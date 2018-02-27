@@ -28,7 +28,7 @@
  */
 class Catalog_subsonic extends Catalog
 {
-    private $version        = '000001';
+    private $version        = '000002';
     private $type           = 'subsonic';
     private $description    = 'Subsonic Remote Catalog';
 
@@ -222,25 +222,28 @@ class Catalog_subsonic extends Catalog
 
                     if ($albums['success']) {
                         foreach ($albums['data']['directory']['child'] as $album) {
-                            if (is_array($album)) {
-                                $songs = $subsonic->getMusicDirectory(array('id' => $album['id']));
-                                if ($songs['success']) {
-                                    foreach ($songs['data']['directory']['child'] as $song) {
-                                        if (is_array($song)) {
+                            $songs = $subsonic->getMusicDirectory(['id' => $album['id']]);
+                            if ($songs['success']) {
+                                foreach ($songs['data']['directory']['child'] as $song) {
+                                    if (!$song['isDir']) {
+                                        if (Catalog::is_audio_file($song['path'])) {
                                             $data            = array();
                                             $data['artist']  = html_entity_decode($song['artist']);
                                             $data['album']   = html_entity_decode($song['album']);
                                             $data['title']   = html_entity_decode($song['title']);
-                                            $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
-                                            $data['year']    = $song['year'];
-                                            $data['bitrate'] = $song['bitRate'] * 1000;
-                                            $data['size']    = $song['size'];
-                                            $data['time']    = $song['duration'];
-                                            $data['track']   = $song['track'];
-                                            $data['disk']    = $song['discNumber'];
-                                            $data['mode']    = 'vbr';
-                                            $data['genre']   = explode(' ', html_entity_decode($song['genre']));
-                                            $data['file']    = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
+                                            if (count($artistInfo['data']['artistInfo'])) {
+                                                $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
+                                            }
+                                            $data['year']     = $song['year'];
+                                            $data['bitrate']  = $song['bitRate'] * 1000;
+                                            $data['size']     = $song['size'];
+                                            $data['time']     = $song['duration'];
+                                            $data['track']    = $song['track'];
+                                            $data['disk']     = $song['discNumber'];
+                                            $data['coverArt'] = $song['coverArt'];
+                                            $data['mode']     = 'vbr';
+                                            $data['genre']    = explode(' ', html_entity_decode($song['genre']));
+                                            $data['file']     = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
                                             if ($this->check_remote_song($data)) {
                                                 debug_event('subsonic_catalog', 'Skipping existing song ' . $data['path'], 5);
                                             } else {
@@ -251,15 +254,14 @@ class Catalog_subsonic extends Catalog
                                                     debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
                                                     AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
                                                 } else {
-                                                    parent::gather_art([$song_Id], null);
+                                                    if ($song['coverArt']) {
+                                                        $this->insertArt($song, $song_Id);
+                                                    }
                                                 }
                                                 $songsadded++;
                                             }
                                         }
                                     }
-                                } else {
-                                    debug_event('subsonic_catalog', 'Song error:' . $songs['error'], 3);
-                                    AmpError::add('general', T_('Song Error.') . ": " . $songs['error']);
                                 }
                             }
                         }
@@ -289,6 +291,20 @@ class Catalog_subsonic extends Catalog
         return array('total' => 0, 'updated' => 0);
     }
 
+    public function insertArt($data, $song_Id)
+    {
+        $subsonic = $this->createClient();
+        $song     = new Song($song_Id);
+        $art      = new Art($song->album, 'album');
+        if (Ampconfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
+            $size = array('width' => AmpConfig::get('album_art_max_width'), 'height' => Ampconfig::get('album_art_max_height'));
+        } else {
+            $size  = array('width' => 275, 'height' => 275);
+        }
+        $image = $subsonic->querySubsonic('getCoverArt', ['id' => $data['coverArt'], $size], true);
+        
+        return $art->insert($image, '');
+    }
     /**
      * clean_catalog_proc
      *
