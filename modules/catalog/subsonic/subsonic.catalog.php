@@ -225,7 +225,7 @@ class Catalog_subsonic extends Catalog
                             $songs = $subsonic->getMusicDirectory(['id' => $album['id']]);
                             if ($songs['success']) {
                                 foreach ($songs['data']['directory']['child'] as $song) {
-                                    if (!$song['isDir'] ) {
+                                    if (!$song['isDir']) {
                                         if (Catalog::is_audio_file($song['path'])) {
                                             $data            = array();
                                             $data['artist']  = html_entity_decode($song['artist']);
@@ -255,13 +255,12 @@ class Catalog_subsonic extends Catalog
                                                     AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
                                                 } else {
                                                     if ($song['coverArt']) {
-        //                                              parent::gather_art([$song['id']], null);
+                                                        //                                              parent::gather_art([$song['id']], null);
                                                         $this->insertArt($song, $song_Id);
                                                     }
                                                 }
                                                 $songsadded++;
-                                        
-                                              }
+                                            }
                                         }
                                     }
                                 }
@@ -296,17 +295,16 @@ class Catalog_subsonic extends Catalog
     public function insertArt($data, $song_Id)
     {
         $subsonic = $this->createClient();
-        $song = new Song($song_Id);
-        $art   = new Art($song->album, 'album');
-        if (Ampconfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width'))  {
-            $size = array('width' =>  AmpConfig::get('album_art_max_width'), 'height' => Ampconfig::get('album_art_max_height'));
+        $song     = new Song($song_Id);
+        $art      = new Art($song->album, 'album');
+        if (Ampconfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
+            $size = array('width' => AmpConfig::get('album_art_max_width'), 'height' => Ampconfig::get('album_art_max_height'));
         } else {
             $size  = array('width' => 275, 'height' => 275);
         }
         $image = $subsonic->querySubsonic('getCoverArt', ['id' => $data['coverArt'], $size], true);
         
-       return $art->insert($image, '');
-
+        return $art->insert($image, '');
     }
     /**
      * clean_catalog_proc
