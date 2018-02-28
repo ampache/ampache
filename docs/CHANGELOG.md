@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+3.8.6
+----------
+- Subsonic Catalog now grabs artwork directly from the subsonic server.
+- Various fixes to Subsonic Catalog and Subsonic API.
+- Release package now downloads from release update alert.
+- Fixed album Search.
+
+
 3.8.5
 ----------
 - Added search capability for user's own ratings option for Song, Artist, Album search.
