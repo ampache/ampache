@@ -210,10 +210,61 @@ class Catalog_subsonic extends Catalog
         $subsonic = $this->createClient();
 
         $songsadded = 0;
-        // Get all artists
-        $artists = $subsonic->getIndexes();
-        if ($artists['success']) {
-            foreach ($artists['data']['indexes']['index'] as $index) {
+        // Get all albums
+         $albumList = $subsonic->querySubsonic('getAlbumList', ['type' => 'alphabeticalByName']);
+        
+        if ($albumList['success']) {
+            foreach ($albumList['data']['albumList']['album'] as $anAlbum) {
+                
+                $album = $subsonic->querySubsonic('getMusicDirectory', ['id' => $anAlbum['id']]);
+                
+                if ($album['success']) {
+                    foreach ($album['data']['directory']['child'] as $song) {
+                        $artistInfo = $subsonic->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
+                        if (Catalog::is_audio_file($song['path'])) {
+                            $data            = array();
+                            $data['artist']  = html_entity_decode($song['artist']);
+                            $data['album']   = html_entity_decode($song['album']);
+                            $data['title']   = html_entity_decode($song['title']);
+                            if ($artistInfo['Success']) {
+                                $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
+                            }
+                            $data['year']     = $song['year'];
+                            $data['bitrate']  = $song['bitRate'] * 1000;
+                            $data['size']     = $song['size'];
+                            $data['time']     = $song['duration'];
+                            $data['track']    = $song['track'];
+                            $data['disk']     = $song['discNumber'];
+                            $data['coverArt'] = $song['coverArt'];
+                            $data['mode']     = 'vbr';
+                            $data['genre']    = explode(' ', html_entity_decode($song['genre']));
+                            $data['file']     = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
+                            if ($this->check_remote_song($data)) {
+                                debug_event('subsonic_catalog', 'Skipping existing song ' . $data['path'], 5);
+                            } else {
+                                $data['catalog'] = $this->id;
+                                debug_event('subsonic_catalog', 'Adding song ' . $song['path'], 5, 'ampache-catalog');
+                                $song_Id = Song::insert($data);
+                                if (!$song_Id) {
+                                    debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
+                                    AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
+                                } else {
+                                    if ($song['coverArt']) {
+                                        //                                              parent::gather_art([$song['id']], null);
+                                        $this->insertArt($song, $song_Id);
+                                    }
+                                }
+                                $songsadded++;
+                            }
+                        }
+                    }   
+                    
+                }
+                else {
+                    debug_event('subsonic_catalog', 'Album error:' . $albums['error'], 3);
+                    AmpError::add('general', T_('Album Error.') . ": " . $albums['error']);
+                }
+                
                 foreach ($index['artist'] as $artist) {
                     $artistInfo = $subsonic->getArtistInfo(array('id' => $artist['id']));
  
@@ -261,14 +312,11 @@ class Catalog_subsonic extends Catalog
                                                 $songsadded++;
                                             }
                                         }
-                                    }
+                                  }
                                 }
                             }
                         }
-                    } else {
-                        debug_event('subsonic_catalog', 'Album error:' . $albums['error'], 3);
-                        AmpError::add('general', T_('Album Error.') . ": " . $albums['error']);
-                    }
+                    } 
                 }
             }
 
