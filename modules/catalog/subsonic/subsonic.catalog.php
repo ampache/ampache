@@ -211,11 +211,10 @@ class Catalog_subsonic extends Catalog
 
         $songsadded = 0;
         // Get all albums
-         $albumList = $subsonic->querySubsonic('getAlbumList', ['type' => 'alphabeticalByName']);
+        $albumList = $subsonic->querySubsonic('getAlbumList', ['type' => 'alphabeticalByName']);
         
         if ($albumList['success']) {
             foreach ($albumList['data']['albumList']['album'] as $anAlbum) {
-                
                 $album = $subsonic->querySubsonic('getMusicDirectory', ['id' => $anAlbum['id']]);
                 
                 if ($album['success']) {
@@ -257,10 +256,8 @@ class Catalog_subsonic extends Catalog
                                 $songsadded++;
                             }
                         }
-                    }   
-                    
-                }
-                else {
+                    }
+                } else {
                     debug_event('subsonic_catalog', 'Album error:' . $albums['error'], 3);
                     AmpError::add('general', T_('Album Error.') . ": " . $albums['error']);
                 }
@@ -312,11 +309,11 @@ class Catalog_subsonic extends Catalog
                                                 $songsadded++;
                                             }
                                         }
-                                  }
+                                    }
                                 }
                             }
                         }
-                    } 
+                    }
                 }
             }
 
