@@ -1,20 +1,14 @@
 CHANGELOG
 =========
+
 3.8.6
 ----------
+
 - Updated Subsonic Remote Catalog Module to version 2.
 - Subsonic Catalog now grabs artwork directly from the subsonic server.
 - Various fixes to Subsonic Catalog and Subsonic API.
 - Release package now downloads from release update alert.
 - Develop package downloads from develop update alert.
-- Fixed album Search.
-
-
-3.8.6
-----------
-- Subsonic Catalog now grabs artwork directly from the subsonic server.
-- Various fixes to Subsonic Catalog and Subsonic API.
-- Release package now downloads from release update alert.
 - Fixed album Search.
 
 
