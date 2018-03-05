@@ -1,62 +1,98 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
-    "type": "project",
-    "require": {
-        "php": ">=7.0.0",
-        "fideloper/proxy": "~3.3",
-        "guzzlehttp/guzzle": "^6.3",
-        "laravel/framework": "5.5.*",
-        "laravel/tinker": "~1.0",
-        "laravelcollective/html": "^5.5",
-        "spatie/laravel-permission": "^2.7"
-    },
-    "require-dev": {
-        "filp/whoops": "~2.0",
-        "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "~1.0",
-        "phpunit/phpunit": "~6.0"
-    },
-    "autoload": {
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ],
-        "psr-4": {
-            "App\\": "app/"
+	"name" : "ampache/laravel",
+	"description" : "Ampache built on the Laravel Framework.",
+	"keywords" : [
+		"framework",
+		"laravel"
+	],
+	"license" : "MIT",
+	"type" : "project",
+	"require" : {
+		"php": ">=7.0.0",
+		"doctrine/inflector": "~1.0",
+		"fideloper/proxy": "~3.3",
+		"guzzlehttp/guzzle": "^6.3",
+		"illuminate/contracts": "5.5.*",
+		"illuminate/support": "5.5.*",
+		"kunalvarma05/dropbox-php-sdk": "^0.2.1",
+		"laravel/framework": "5.5.*",
+		"laravel/tinker": "~1.0",
+		"laravelcollective/html": "^5.5",
+		"mikealmond/musicbrainz": "^0.2.2",
+		"paragonie/random_compat": "2.0.*",
+		"spatie/laravel-permission": "^2.7",
+		"vkr/getid3": "^2.1",
+		"wikimedia/composer-merge-plugin": "^1.4"
+	},
+	   "extra" : {
+        "merge-plugin" : {
+            "include" : [
+                "modules/catalog/*/composer.module.json",
+                "modules/localplay/*/composer.module.json",
+                "modules/plugins/*/composer.module.json"
+            ],
+            "recurse" : false,
+            "replace" : false,
+            "merge-extra" : false
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/",
-			"Classes\\" : [
-				"app/Classes"
-			]
+	"require-dev" : {
+		"filp/whoops" : "~2.0",
+		"fzaninotto/faker" : "~1.4",
+		"mockery/mockery" : "~1.0",
+		"phpunit/phpunit" : "~6.2"
+	},
+
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/mptre/php-soundcloud"
         }
-    },
-    "extra": {
-        "laravel": {
-            "dont-discover": [
-            ]
-        }
-    },
-    "scripts": {
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate"
-        ],
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
-        ]
-    },
-    "config": {
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "optimize-autoloader": true
-    }
+	
+    ],
+
+	"autoload" : {
+		"classmap" : [
+			"database/seeds",
+			"database/factories"
+		],
+		 "psr-0": {
+            "MusicBrainz": "src/"
+        },
+		
+	"psr-4" : {
+		          "Modules\\" : [
+                "modules",
+                "modules/catalog",
+                "modules/catalog/dropbox",
+                "modules/catalog/local",
+                "modules/catalog/remote",
+                "modules/catalog/soundcloud",
+                "modules/catalog/subsonic",
+                "modules/catalog/seafile"
+            ],
+			"App\\" : "app/",
+			"Classes\\" : "app/Classes/",
+			"Traits\\" : "app/Traits/"
+		}
+	},
+	"autoload-dev" : {
+		"psr-4" :
+		 {
+			"Tests\\" : "tests/"
+		}
+	},
+	"scripts" : {
+		"post-root-package-install" : "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+		"post-create-project-cmd" : "@php artisan key:generate",
+		"post-autoload-dump" : [
+			"Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+			"@php artisan package:discover"
+		]
+	},
+	"config" : {
+		"preferred-install" : "dist",
+		"sort-packages" : true,
+		"optimize-autoloader" : true
+	}
 }

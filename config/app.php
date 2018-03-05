@@ -165,6 +165,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+ //       Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
         /*
          * Package Service Providers...
          */
@@ -224,6 +225,7 @@ return [
         'Route' => Illuminate\Support\Facades\Route::class,
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
+ //       'Soundcloud' => Njasm\Laravel\Soundcloud\Facades\Soundcloud::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,

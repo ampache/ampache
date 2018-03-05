@@ -4,15 +4,15 @@
 	{{ isset($_COOKIE['sb_catalogs']) ?:'collapsed' }}">Catalogs<i class="fa fa-caret-down"></i>
     </button>
 	<div id="sb_catalogs" class="w3-animate-left">
-  		<a href="#" class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Add a Catalog</a>
-  		<a href="#"class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Show Catalogs</a>
+  		<a href="{!! url('/catalogs/create') !!}" class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Add a Catalog</a>
+  		<a href="{!! url('/catalogs') !!}"class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Show Catalogs</a>
 	</div>
 	<button id="users" onclick="toggleList('users')"style="height:22px;"class="w3-left-align w3-btn w3-block w3-border-0 w3-small
 	{{ isset($_COOKIE['sb_users']) ?:'collapsed' }}">Users<i class="fa fa-caret-down"></i>
 	</button>
 	<div id="sb_users" class="w3-animate-left">
   		<a href="{!! url('/users/create') !!}" rel="nohtml" class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Add User</a>
-  		<a onclick="$('#main-content').load("{!! url('/users/index') . ' #main' !!}") class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Browse Users</a>
+  		<a href="{!! url('/users') !!}" class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Browse Users</a>
   	</div>
 	<button id="roles" onclick="toggleList('roles')"style="height:22px;"class="w3-left-align w3-btn w3-block w3-border-0 w3-small
 	{{ isset($_COOKIE['sb_roles']) ?:'collapsed' }}">Roles and Permissions<i class="fa fa-caret-down"></i>

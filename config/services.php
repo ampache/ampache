@@ -35,4 +35,10 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'soundcloud' => [
+        'client_id' => env('SOUNDCLOUD_CLIENT_ID'),
+        'client_secret' => env('SOUNDCLOUD_CLIENT_SECRET'),
+        'callback_url' => env('SOUNDCLOUD_CALLBACK_URL'),
+    ],
+
 ];

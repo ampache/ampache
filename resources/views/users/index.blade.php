@@ -8,8 +8,7 @@
 
 @section('content')
  <div id="main" class="w3-container w3-section w3-black" style="margin-left:13%">
-  <h4><i class="fa fa-users"></i> User Administration <a href="{{ route('roles.index') }}" class="w3-btn">Roles</a>
-   <a href="{{ route('permissions.index') }}" class="w3-button">Permissions</a></h4>
+  <h4><i class="fa fa-users"></i> Users</h4>
  <table class="w3-table" style="width: 100%">
 
 <thead >
@@ -51,8 +50,5 @@
      @endforeach
    </tbody>
  </table>
-    
-    <a href="{{ route('users.create') }}" class="btn btn-success">Add User</a>
-    
-   </div>
+</div>
     @endsection
