@@ -1,9 +1,16 @@
 CHANGELOG
 =========
 
+3.8.7
+----------
+- Better able to clean up image extentions when gathering art from remote sites.
+- Check for B.O.M. (\xff\xfe) only in mp3 composer tag and remove.
+- Added .ogv encoding target for more efficient streaming of mkv files.
+- Top menu appearance more reader friendly for translations.
+- Additional fixes to update_remote_catalog function.
+
 3.8.6
 ----------
-
 - Updated Subsonic Remote Catalog Module to version 2.
 - Subsonic Catalog now grabs artwork directly from the subsonic server.
 - Various fixes to Subsonic Catalog and Subsonic API.
