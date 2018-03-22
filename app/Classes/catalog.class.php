@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-abstract class Catalog extends database_object
+abstract class Catalog 
 {
     /**
      * @var int $id
@@ -236,7 +236,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        $filename = basepath('modules/catalog/' . $type . '/' . $type . '.catalog.php');
+        $filename = base_path('modules/catalog/' . $type . '/' . $type . '.catalog.php');
         $include  = require_once $filename;
 
         if (!$include) {
@@ -268,56 +268,58 @@ abstract class Catalog extends database_object
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        echo "<script language=\"javascript\" type=\"text/javascript\">" .
-            "var type_fields = new Array();" .
+        $catTypes = "<script language=\"javascript\" type=\"text/javascript\">\n" .
+            "var type_fields = new Array();\n" .
             "type_fields['none'] = '';";
-        $seltypes = '<option value="none">[Select]</option>';
+        $seltypes = '<option value="none">[Select]</option>\n';
         $types    = self::get_catalog_types();
         foreach ($types as $type) {
             $catalog = self::create_catalog_type($type);
             if ($catalog->is_installed()) {
                 $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
-                echo "type_fields['" . $type . "'] = \"";
+                $catTypes .= "type_fields['" . $type . "'] = \"";
                 $fields = $catalog->catalog_fields();
                 $help   = $catalog->get_create_help();
                 if (!empty($help)) {
-                    echo "<tr><td></td><td>" . $help . "</td></tr>";
+                    $catTypes .= "<tr><td></td><td>" . $help . "</td></tr>\n";
                 }
                 foreach ($fields as $key => $field) {
-                    echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
+                    $catTypes .= "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
 
                     switch ($field['type']) {
                         case 'checkbox':
-                            echo "<input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
+                            $catTypes .= "<input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') .  "/>";
                             break;
                         default:
-                            echo "<input type='" . $field['type'] . "' name='" . $key . "' value='" . $field['value'] . "' />";
+                            $catTypes .= "<input type='" . $field['type'] . "'class=" . "w3-round" . " name=" . $key . "' value='" . (isset( $field['value']) ? : '') . " ' />";
                             break;
                     }
-                    echo "</td></tr>";
+                    $catTypes .= "</td></tr>";
                 }
-                echo "\";";
+                $catTypes .= "\";";
             }
         }
 
-        echo "function catalogTypeChanged() {" .
-            "var sel = document.getElementById('catalog_type');" .
-            "var seltype = sel.options[sel.selectedIndex].value;" .
-            "var ftbl = document.getElementById('" . $divback . "');" .
-            "ftbl.innerHTML = '<table class=\"tabledata\" cellpadding=\"0\" cellspacing=\"0\">' + type_fields[seltype] + '</table>';" .
-            "} </script>" .
+        $catTypes .= "\nfunction catalogTypeChanged() {\n" .
+            "var sel = document.getElementById('catalog_type');\n" .
+            "var seltype = sel.options[sel.selectedIndex].value;\n" .
+            "var ftbl = document.getElementById('" . $divback . "');\n" .
+            "ftbl.innerHTML = '<table class=\"w3-table w3-small\" style=\"width:60%\">' + type_fields[seltype] + '</table>';\n" .
+            "} \n</script>\n" .
             "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
+        
+        return $catTypes;
     }
 
     /**
      * get_catalog_types
-     * This returns the catalog types that are available
+     * This returns the catalog types that are activated
      * @return string[]
      */
     public static function get_catalog_types()
     {
         /* First open the dir */
-        $basedir = basepath('modules/catalog');
+        $basedir = base_path('modules/catalog');
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {

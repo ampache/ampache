@@ -4,11 +4,8 @@
 @section('title', '| Roles')
 
 @section('content')
-<div id="main-content" class="w3-container w3-section" style="margin-left:14%">
- <div class="w3-display-container w3-black" style="height:500px;">
- <div class="w3-display-middle">
 
-<div>
+<div class="col-lg-10 col-lg-offset-1">
     <h1><i class="fa fa-key"></i> Roles
 
     <a href="{{ route('users.index') }}" class="btn btn-default pull-right">Users</a>
@@ -48,9 +45,6 @@
 
     <a href="{{ URL::to('roles/create') }}" class="btn btn-success">Add Role</a>
 
-</div>
-</div>
-</div>
 </div>
 
 @endsection

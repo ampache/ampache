@@ -22,7 +22,7 @@
             </thead>
 
             <tbody>
-		      @if ($catalogs->count())
+		      @if ($Catalogs->count())
                 @foreach ($catalogs as $catalog)
                 <tr>
                     <td>{{ $catalog->name }}</td>

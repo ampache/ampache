@@ -48,7 +48,7 @@ class LoginController extends Controller
     {
         if (Auth::attempt(['username' => $request->input('username'), 'password' => $request->input('password')])) {
             // Authentication passed...
- //           return redirect()->intended('/');
+            //           return redirect()->intended('/');bcrypt($data['password'])
         } else {
             $request->session()->flash('error', 'User name or password incorrect!');
             

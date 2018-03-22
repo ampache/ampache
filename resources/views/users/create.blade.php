@@ -42,7 +42,7 @@
 <div class="w3-container w3-section">
     <div class='form-group'>
         @foreach ($roles as $role)
-            {{ Form::checkbox('roles[]',  $role->id ) }}
+            {{ Form::checkbox('roles[]',  $role->id , in_array($role->name,) }}
             {{ Form::label($role->name, ucfirst($role->name)) }}<br>
 
         @endforeach

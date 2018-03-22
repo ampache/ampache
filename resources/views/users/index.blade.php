@@ -35,7 +35,7 @@
     	<td class="w3-tiny w3-left" style="width: 13.5%;">
     	<a href="{!! url('/users/create') !!}" rel="nohtml"><img style="width:15px" class="w3-small" title="Send private message"
     	    src="{{ asset('images/icon_mail.png') }}" alt="mail"></a> 
-    	<a href="{!! url('/users/create') !!}" rel="nohtml">	<img style="width:15px" class="w3-small" title="Edit" 
+    	<a href="{!! url('/users/edit', $user->id) !!}" rel="nohtml">	<img style="width:15px" class="w3-small" title="Edit" 
     	    src="{{ asset('images/icon_edit.png') }}" alt="edit"></a>
   		<a href="{!! url('/users/create') !!}" rel="nohtml"><img style="width:15px" class="w3-small" title="Preferences"
   			src="{{ asset('images/icon_preferences.png') }}" alt="preferences"> 

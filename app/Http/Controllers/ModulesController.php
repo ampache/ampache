@@ -5,14 +5,50 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Catalog\Local\Catalog_local;
+use Modules\Catalog\Remote\Catalog_remote;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Middleware\Authenticate;
 class ModulesController extends Controller
 {
+    public function __construct() {
+        $this->middleware(['auth', 'clearance'])->except('index', 'show');
+    }
+    
+    
   public function show_Catalogs()
   {
       $catalogs = array();
       $catalog_types = $this->get_module_types('catalog');
       foreach ($catalog_types as $type) {
           $class_name = '\\Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;         
+          $modules[] = new $class_name();
+      }
+      
+      return view('modules.catalog.index', compact('modules'));
+      
+      
+  }
+ 
+  public function show_LocalPlay()
+  {
+      $catalogs = array();
+      $catalog_types = $this->get_module_types('catalog');
+      foreach ($catalog_types as $type) {
+          $class_name = '\\Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;
+          $catalogs[] = new $class_name();
+      }
+      
+      return view('modules.catalogs.index', compact('catalogs'));
+      
+      
+  }
+  public function show_Plugins()
+  {
+      $catalogs = array();
+      $catalog_types = $this->get_module_types('catalog');
+      foreach ($catalog_types as $type) {
+          $class_name = '\\Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;
           $catalogs[] = new $class_name();
       }
       
@@ -21,41 +57,24 @@ class ModulesController extends Controller
       
   }
   
+  
   public function action ($type, $action)
   {
-      switch ($type)
-      {
-          case 'localplay':
-            switch($action)
-            {
-                case 'index':
-                    $modules = $this->get_module_types($type);
-                    return view('modules.' . $type . '.index', compact('modules'));
-                default:     
-            }
-            break;
-          case 'catalog':
-              switch ($action)
-              {
-                  case 'index':
-                      $catalog_types = $this->get_module_types($type);
-                      foreach ($catalog_types as $type) {
-                          $class_name = '\\Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;
-                          $modules[] = new $class_name();
-                      }
-                      return view('modules.' . $type . '.index', compact('modules'));
-                  default:
-              }
-            break;
-          case 'plugin':
-              switch ($action)
-              {
-                  case 'index':
-                      $modules = $this->get_module_types($type);
-                      return view('modules.' . $type . '.index', compact('modules'));
-                  default:
-              }
+      
+      $module = 'Catalog_' . $type;
+      $catalog = new $module();
+      //Check to see if $type is installed
+      
+      if (Schema::hasTable('catalog_' . $type)) {
+          if ($action == 'Disable') {
+              Schema::drop('catalog_' . $type);
+          }
+      } else {
+          $catalog->install();
       }
+      
+      return 'true';
+      
   }
   
   public function get_module_types($type)

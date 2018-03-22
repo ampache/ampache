@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
-
 //Importing laravel-permission models
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -91,8 +91,11 @@ class UserController extends Controller {
     public function edit($id) {
         $user = User::findOrFail($id); //Get user with specified id
         $roles = Role::get(); //Get all roles
-        
-        return view('users.edit', compact('user', 'roles')); //pass user and roles data to view
+        $userRoles = $user->roles()->pluck('name');
+        foreach ($userRoles as $item) {
+            $r[] = $item;
+        }
+        return view('users.edit', compact('user', 'roles', 'r')); //pass user and roles data to view
         
     }
     
@@ -107,12 +110,16 @@ class UserController extends Controller {
         $user = User::findOrFail($id); //Get role specified by id
         
         //Validate name, email and password fields
-        $this->validate($request, [
-            'name'=>'required|max:120',
-            'email'=>'required|email|unique:users,email,'.$id,
-            'password'=>'required|min:6|confirmed'
-        ]);
-        $input = $request->only(['name', 'email', 'password']); //Retreive the name, email and password fields
+        $validate = array();
+        $validate = array('username'=>'required|max:120', 'email'=>'required|email|unique:users,email,'.$id );
+        if (isset($request['password'])) {
+            $validate[] = array('password'=>'required|min:6|confirmed');
+        }
+            
+        $this->validate($request, $validate);
+            
+        
+        $input = $request->only(['username', 'email', 'password']); //Retreive the name, email and password fields
         $roles = $request['roles']; //Retreive all roles
         $user->fill($input)->save();
         

@@ -29,13 +29,8 @@
     <tr>
       <td>Catalog Type:</td>
       <td>
-          <select name="type" style="color:#333" id="catalog_type" onChange="catalogTypeChanged();">
-            <option value="none" selected>[select]</option>
-            @foreach ($catalogs as $catalog)
-              <option value="{{ $catalog->get_type() }}">{{ $catalog->get_type() }}</option>
-            @endforeach
-          </select>
-        </td>
+             {!! $catalogTypes !!}
+      </td>
     </tr>
     <tr>
       <td>Filename Pattern:</td>
@@ -64,6 +59,8 @@
     </tr>
   </table>
 </div>
+    <div id="catalog_type_fields">
+    </div>
 <div class="formValidation">
         <input name="action" value="add_catalog" type="hidden">
         <input name="form_validation" value="170f38f43795d499a4de7e15fe1f1051" type="hidden">

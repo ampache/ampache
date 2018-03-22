@@ -4,7 +4,7 @@
 	<i class="fa fa-caret-down"></i></button>
 		<div id="sb_modules" class="w3-animate-left">
   		<a href="{!! url('/modules/localplay/index') !!}" class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Localplay Modules</a>
-  		<a href="{!! url('/modules/catalog/index') !!}" class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Catalog Modules</a>
+  		<a href="{!! url('/modules/show_catalogs') !!}" class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;">Catalog Modules</a>
   		<a href="{!! url('/modules/plugin/index') !!}" class="w3-btn w3-block w3-left-align w3-tiny w3-text-gray" style="height:22px;"">Available Plugins</a>
 	</div>
 	<button id="tools" onclick="toggleList('tools')" style="height:22px;" class="w3-left-align w3-btn w3-block w3-border-0 w3-small
