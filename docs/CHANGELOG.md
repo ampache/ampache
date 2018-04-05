@@ -8,6 +8,7 @@ CHANGELOG
 - Added .ogv encoding target for more efficient streaming of mkv files.
 - Top menu appearance more reader friendly for translations.
 - Additional fixes to update_remote_catalog function.
+- Enabled similar songs when clicking on radio icon in DSub.
 
 3.8.6
 ----------
