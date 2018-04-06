@@ -203,8 +203,7 @@ class Subsonic_XML_Data
     public static function createSuccessResponse($version = "")
     {
         $response = self::createResponse($version);
-        $response->addAttribute('status', 'ok');
-
+        
         return $response;
     }
 
@@ -215,9 +214,10 @@ class Subsonic_XML_Data
         }
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
-        $response->addAttribute('type', 'ampache');
+        //       $response->addAttribute('type', 'ampache');
+        $response->addAttribute('status', 'ok');
         $response->addAttribute('version', $version);
-
+         
         return $response;
     }
 
@@ -351,7 +351,6 @@ class Subsonic_XML_Data
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', self::getArtistId($artist->id));
         $xartist->addAttribute('name', self::checkName($artist->f_full_name));
-
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
             $allalbums = $artist->get_albums(null, true);
@@ -741,8 +740,8 @@ class Subsonic_XML_Data
         if (Core::is_library_item($object_type)) {
             if (AmpConfig::get('userflags')) {
                 $starred = new Userflag($libitem->id, $object_type);
-                if ($starred->get_flag()) {
-                    $xml->addAttribute('starred', 'true');
+                if ($res = $starred->get_flag(null, true)) {
+                    $xml->addAttribute('starred', date("Y-m-d",$res[1]) . 'T' . date("H:i:s", $res[1]) . 'Z');
                 }
             }
         }

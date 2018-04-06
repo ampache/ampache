@@ -1,6 +1,56 @@
 CHANGELOG
 =========
 
+3.8.7
+----------
+- Better able to clean up image extentions when gathering art from remote sites.
+- Check for B.O.M. (\xff\xfe) only in mp3 composer tag and remove.
+- Added .ogv encoding target for more efficient streaming of mkv files.
+- Top menu appearance more reader friendly for translations.
+- Additional fixes to update_remote_catalog function.
+- Enabled similar songs when clicking on radio icon in DSub.
+
+3.8.6
+----------
+- Updated Subsonic Remote Catalog Module to version 2.
+- Subsonic Catalog now grabs artwork directly from the subsonic server.
+- Various fixes to Subsonic Catalog and Subsonic API.
+- Release package now downloads from release update alert.
+- Develop package downloads from develop update alert.
+- Fixed album Search.
+
+
+3.8.5
+----------
+- Added search capability for user's own ratings option for Song, Artist, Album search.
+- Clean process now removes empty albums.
+- Further translation updates and fixes.
+- Updated Subsonic API to increase compliance with Subsonic json API specs.
+- Added starred date to album list and song and formatted per Subsonic spec.
+- Now compatible with latest Ultrasonic client (json transfer).
+- Fixed ability to edit/save smartplaylist name without setting 'random'.
+- Search/smart playlist now includes favorite artists and albums.
+- Modified SQL statement to not offend default SQL_MODE of ONLY_FULL_GROUP_BY on server versions after 5.7.6.
+- Set redirect to false for streaming types.
+
+
+3.8.4
+----------
+- Subsonic catalog now displays album art and artist bio.
+- Artist info now displays in Ampache's installed language.
+- Updated translations.
+- Composer tag changes now saved to database.
+- Seafile catalog module added.
+- Dropbox catalog updated to V2 API.
+- ip6 addresses now added to user history.
+- Updated api.class.php
+- fix for web_path auto configuration for subdirectory installation
+- Composer tag changes now written to database
+- Fixed catch null reference
+- Changes to make translation easier
+- Smart Playlist can now be edited/saved without 'random' set.
+
+
 3.8.3
 ----------
 - Fixed upload problem
@@ -25,7 +75,7 @@ CHANGELOG
 - Apply trim on dropbox parameters
 - Added Prompt for user to change secret_key during install
 - Enabled use of cache in PHPCs
-- All fies now use UTF8 without BOM
+- All files now use UTF8 without BOM
 - Now require Exact catalog name match on catalog update
 - Port 443 removed from play url
 - Now test all images found to select the one with the good dimensions
@@ -35,7 +85,7 @@ CHANGELOG
 - Cover art is added to live stream
 - Added browse filter and light sidebar options
 - Updated gettext, zipstream, react and sabre dependencies
-- Fixed Subsonic scrobble submission check 
+- Fixed Subsonic scrobble submission check
 
 3.8.2
 ----------

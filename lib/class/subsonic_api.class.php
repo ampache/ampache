@@ -205,7 +205,7 @@ class Subsonic_Api
         $defaults = array(
             'namespaceSeparator' => ' :',//you may want this to be something other than a colon
             'attributePrefix' => '',   //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist', 'song'),   //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'),   //array of xml tag names which should always become arrays
             'autoArray' => true,        //only create arrays for tags which appear more than once
             'textContent' => 'value',       //key used for the text content of elements
             'autoText' => true,         //skip textContent key if node has no attributes or child nodes
@@ -286,7 +286,7 @@ class Subsonic_Api
 
         //get text content of node
         $textContentArray = array();
-        $plainText        = trim((string) $xml);
+        $plainText        = (string) $xml;
         if ($plainText !== '') {
             $textContentArray[$options['textContent']] = $plainText;
         }
@@ -298,6 +298,7 @@ class Subsonic_Api
         if (isset($propertiesArray['xmlns'])) {
             unset($propertiesArray['xmlns']);
         }
+        
         //return node as array
         return array(
             $xml->getName() => $propertiesArray
@@ -568,7 +569,7 @@ class Subsonic_Api
                             $albums = Stats::get_recent("album", $size, $offset);
                         } else {
                             if ($type == "starred") {
-                                $albums = Userflag::get_latest('album');
+                                $albums = Userflag::get_latest('album', null, $size);
                             } else {
                                 if ($type == "alphabeticalByName") {
                                     $albums = Catalog::get_albums($size, $offset, $catalogs);
@@ -1870,21 +1871,41 @@ class Subsonic_Api
      */
     public static function getsimilarsongs($input)
     {
+        if (!AmpConfig::get('show_similar')) {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Show similar must be enabled");
+            self::apiOutput($input, $r);
+
+            return;
+        }
+
         $id    = self::check_parameter($input, 'id');
         $count = $input['count'] ?: 50;
 
-        $songs = null;
+        $songs = array();
         if (Subsonic_XML_Data::isArtist($id)) {
-            // TODO: support similar songs for artists
+            $similars = Recommendation::get_artists_like(Subsonic_XML_Data::getAmpacheId($id));
+            debug_event('similar_songs', 'Found: ' . count($similars) . ' similar artists', '5');
+            foreach ($similars as $similar) {
+                debug_event('similar_songs', $similar['name'] . ' (id=' . $similar['id'] . ')', '5');
+                if ($similar['id']) {
+                    $artist = new Artist($similar['id']);
+                    // get the songs in a random order for even more chaos
+                    $artist_songs = $artist->get_random_songs();
+                    foreach ($artist_songs as $song) {
+                        $songs[] = array('id' => $song);
+                    }
+                }
+            }
+            // randomize and slice
+            shuffle($songs);
+            $songs = array_slice($songs, 0, $count);
         } elseif (Subsonic_XML_Data::isAlbum($id)) {
             // TODO: support similar songs for albums
         } elseif (Subsonic_XML_Data::isSong($id)) {
-            if (AmpConfig::get('show_similar')) {
-                $songs = Recommendation::get_songs_like(Subsonic_XML_Data::getAmpacheId($id));
-            }
+            $songs = Recommendation::get_songs_like(Subsonic_XML_Data::getAmpacheId($id), $count);
         }
 
-        if ($songs === null) {
+        if (count($songs) == 0) {
             $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         } else {
             $r = Subsonic_XML_Data::createSuccessResponse();
@@ -1900,7 +1921,7 @@ class Subsonic_Api
      */
     public static function getsimilarsongs2($input)
     {
-        return self::getsimilarsongs($input);
+        self::getsimilarsongs($input);
     }
 
     /**

@@ -1528,7 +1528,17 @@ class Art extends database_object
                     $match = rawurldecode($match);
                     debug_event('Art', 'Found image at: ' . $match, '5');
                     $results = pathinfo($match);
-                    $mime    = 'image/' . $results['extension'];
+                    $test    = $results['extension'];
+                    $pos     = strpos($test, '?');
+                    if ($pos > 0) {
+                        $results['extension'] = substr($test, 0, $pos);
+                    }
+                    if (preg_match('~[^png|^jpg|^jpeg|^jif|^bmp]~', $test)) {
+                        $results['extension']  = 'jpg';
+                    }
+                        
+                    $mime = 'image/';
+                    $mime .= isset($results['extension']) ? $results['extension'] : 'jpeg';
 
                     $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
                     if ($limit > 0 && count($images) >= $limit) {
