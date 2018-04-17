@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2017-12-12 08:07+0100\n"
-"PO-Revision-Date: 2017-11-12 03:28+0000\n"
+"POT-Creation-Date: 2018-04-17 15:03+0200\n"
+"PO-Revision-Date: 2017-12-13 04:58+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
 "language/zh_TW/)\n"
@@ -36,7 +36,7 @@ msgstr "刪除請求"
 msgid "Are you sure you want to permanently delete"
 msgstr "您確定要永久刪除"
 
-#: ../../admin/access.php:74 ../../lib/class/search.class.php:355
+#: ../../admin/access.php:74 ../../lib/class/search.class.php:396
 #: ../../templates/show_song.inc.php:175 ../../templates/show_video.inc.php:161
 msgid "Added"
 msgstr "已新增"
@@ -45,8 +45,8 @@ msgstr "已新增"
 msgid "Your new Access Control List(s) have been created"
 msgstr "您的新存取控制清單已被建立"
 
-#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1514
-#: ../../lib/class/search.class.php:362 ../../preferences.php:144
+#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1515
+#: ../../lib/class/search.class.php:403 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
 msgstr "已更新"
@@ -974,7 +974,7 @@ msgid "The Broadcast has been deleted"
 msgstr "該廣播已被刪除"
 
 #: ../../browse.php:94 ../../lib/class/browse.class.php:262
-#: ../../templates/header.inc.php:409 ../../templates/sidebar_home.inc.php:40
+#: ../../templates/header.inc.php:426 ../../templates/sidebar_home.inc.php:40
 #: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/sidebar.light.inc.php:30
 msgid "Tag Cloud"
@@ -1120,7 +1120,7 @@ msgid "Unknown (Orphaned)"
 msgstr "未知 (遺孤)"
 
 #: ../../lib/class/album.class.php:645
-#: ../../lib/class/subsonic_xml_data.class.php:518
+#: ../../lib/class/subsonic_xml_data.class.php:519
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -1131,7 +1131,7 @@ msgstr "片"
 
 #: ../../lib/class/album.class.php:657 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:331 ../../lib/ui.lib.php:180
-#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:397
+#: ../../server/search.ajax.php:57 ../../templates/header.inc.php:414
 #: ../../templates/show_label.inc.php:103
 #: ../../templates/show_labels.inc.php:47
 #: ../../templates/show_labels.inc.php:79
@@ -1161,8 +1161,8 @@ msgid "Release Group MusicBrainzID"
 msgstr "成品組的 MusicBrainz 識別碼"
 
 #: ../../lib/class/album.class.php:683 ../../lib/class/artist.class.php:501
-#: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:223
-#: ../../lib/class/search.class.php:451 ../../lib/class/song.class.php:1497
+#: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:239
+#: ../../lib/class/search.class.php:492 ../../lib/class/song.class.php:1489
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_upload.inc.php:177
 #: ../../templates/show_albums.inc.php:40
@@ -1198,7 +1198,7 @@ msgstr "成品組的 MusicBrainz 識別碼"
 msgid "Artist"
 msgstr "作者"
 
-#: ../../lib/class/album.class.php:686 ../../lib/class/search.class.php:216
+#: ../../lib/class/album.class.php:686 ../../lib/class/search.class.php:232
 #: ../../templates/show_add_upload.inc.php:188
 #: ../../templates/show_albums.inc.php:38
 #: ../../templates/show_albums.inc.php:112
@@ -1225,27 +1225,27 @@ msgid "Album"
 msgstr "專輯"
 
 #: ../../lib/class/ampache_rss.class.php:92
-#: ../../lib/class/localplay.class.php:628 ../../templates/header.inc.php:40
+#: ../../lib/class/localplay.class.php:628 ../../templates/header.inc.php:41
 #: ../../templates/show_localplay_status.inc.php:31
 #: ../../templates/show_now_playing.inc.php:32
 msgid "Now Playing"
 msgstr "正在播放"
 
-#: ../../lib/class/ampache_rss.class.php:93 ../../templates/header.inc.php:41
+#: ../../lib/class/ampache_rss.class.php:93 ../../templates/header.inc.php:42
 #: ../../templates/show_recently_played.inc.php:24
 #: ../../templates/show_user.inc.php:114
 msgid "Recently Played"
 msgstr "最近播放"
 
-#: ../../lib/class/ampache_rss.class.php:94 ../../templates/header.inc.php:42
+#: ../../lib/class/ampache_rss.class.php:94 ../../templates/header.inc.php:43
 msgid "Newest Albums"
 msgstr "最新專輯"
 
-#: ../../lib/class/ampache_rss.class.php:95 ../../templates/header.inc.php:43
+#: ../../lib/class/ampache_rss.class.php:95 ../../templates/header.inc.php:44
 msgid "Newest Artists"
 msgstr "最新作者"
 
-#: ../../lib/class/ampache_rss.class.php:96 ../../templates/header.inc.php:46
+#: ../../lib/class/ampache_rss.class.php:96 ../../templates/header.inc.php:48
 msgid "Newest Shouts"
 msgstr "最新留言"
 
@@ -1336,9 +1336,9 @@ msgstr "找不到資料庫項目。"
 msgid "Error: Unable to open"
 msgstr "錯誤：無法開啟"
 
-#: ../../lib/class/art.class.php:1808 ../../lib/class/shoutbox.class.php:311
+#: ../../lib/class/art.class.php:1818 ../../lib/class/shoutbox.class.php:311
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:121
-#: ../../templates/header.inc.php:331 ../../templates/rightbar.inc.php:25
+#: ../../templates/header.inc.php:341 ../../templates/rightbar.inc.php:25
 #: ../../templates/show_album_group_disks.inc.php:64
 #: ../../templates/show_album_group_disks.inc.php:65
 #: ../../templates/show_album_group_disks.inc.php:122
@@ -1372,15 +1372,15 @@ msgstr "錯誤：無法開啟"
 msgid "Play"
 msgstr "播放"
 
-#: ../../lib/class/art.class.php:1817
+#: ../../lib/class/art.class.php:1827
 msgid "Edit/Find Art"
 msgstr "編輯/尋找封面圖片"
 
-#: ../../lib/class/art.class.php:1820
+#: ../../lib/class/art.class.php:1830
 msgid "Do you really want to reset art?"
 msgstr "您確定要重設封面圖片嗎？"
 
-#: ../../lib/class/art.class.php:1821
+#: ../../lib/class/art.class.php:1831
 msgid "Reset Art"
 msgstr "重設封面圖片"
 
@@ -1400,24 +1400,26 @@ msgstr "檢視"
 msgid "changes"
 msgstr "更新日誌"
 
-#: ../../lib/class/autoupdate.class.php:237
+#: ../../lib/class/autoupdate.class.php:238
+#: ../../lib/class/autoupdate.class.php:241
 msgid "or"
 msgstr "或"
 
-#: ../../lib/class/autoupdate.class.php:237
+#: ../../lib/class/autoupdate.class.php:239
+#: ../../lib/class/autoupdate.class.php:242
 msgid "download"
 msgstr "下載"
 
-#: ../../lib/class/autoupdate.class.php:250
+#: ../../lib/class/autoupdate.class.php:256
 msgid "Updating Ampache sources with `"
 msgstr "正在更新 Ampache 原始碼於 `"
 
-#: ../../lib/class/autoupdate.class.php:254
-#: ../../lib/class/autoupdate.class.php:269
+#: ../../lib/class/autoupdate.class.php:260
+#: ../../lib/class/autoupdate.class.php:275
 msgid "Done"
 msgstr "完成"
 
-#: ../../lib/class/autoupdate.class.php:265
+#: ../../lib/class/autoupdate.class.php:271
 msgid "Updating dependencies with `"
 msgstr "正在更新依賴的程式於 `"
 
@@ -1561,7 +1563,7 @@ msgid "Radio Stations"
 msgstr "廣播站"
 
 #: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:403
-#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:403
+#: ../../server/search.ajax.php:148 ../../templates/header.inc.php:420
 #: ../../templates/show_user.inc.php:120
 #: ../../templates/sidebar_home.inc.php:41
 #: ../../templates/sidebar_home.inc.php:189
@@ -1711,30 +1713,30 @@ msgstr[0] "小時"
 msgid "Catalog Insert Failed check debug logs"
 msgstr "目錄插入失敗，請檢查偵錯日誌"
 
-#: ../../lib/class/catalog.class.php:1521
+#: ../../lib/class/catalog.class.php:1522
 msgid "No Update Needed"
 msgstr "不需更新"
 
-#: ../../lib/class/catalog.class.php:1846
+#: ../../lib/class/catalog.class.php:1847
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 
-#: ../../lib/class/catalog.class.php:1871
+#: ../../lib/class/catalog.class.php:1872
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "目錄驗證完成。 %d 中的 %d 個檔案已更新。"
 
-#: ../../lib/class/catalog.class.php:2085
+#: ../../lib/class/catalog.class.php:2086
 msgid "Failed to create playlist."
 msgstr "建立播放清單失敗。"
 
-#: ../../lib/class/catalog.class.php:2102
+#: ../../lib/class/catalog.class.php:2103
 msgid "No valid songs found in playlist file."
 msgstr "播放清單檔案內找不到合法的歌曲。"
 
-#: ../../lib/class/catalog.class.php:2458
+#: ../../lib/class/catalog.class.php:2459
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -1786,7 +1788,7 @@ msgstr "內容管理"
 msgid "Catalog Manager"
 msgstr "目錄管理"
 
-#: ../../lib/class/label.class.php:153 ../../lib/class/search.class.php:244
+#: ../../lib/class/label.class.php:153 ../../lib/class/search.class.php:260
 #: ../../templates/show_edit_song_row.inc.php:81
 #: ../../templates/show_labels.inc.php:45
 #: ../../templates/show_labels.inc.php:77
@@ -1870,8 +1872,8 @@ msgid "Cannot read the feed."
 msgstr "無法讀取消息來源。"
 
 #: ../../lib/class/podcast_episode.class.php:157
-#: ../../lib/class/search.class.php:209 ../../lib/class/search.class.php:444
-#: ../../lib/class/song.class.php:1500 ../../lib/class/video.class.php:303
+#: ../../lib/class/search.class.php:225 ../../lib/class/search.class.php:485
+#: ../../lib/class/song.class.php:1492 ../../lib/class/video.class.php:303
 #: ../../templates/show_democratic_playlist.inc.php:60
 #: ../../templates/show_democratic_playlist.inc.php:113
 #: ../../templates/show_disabled_songs.inc.php:29
@@ -2019,13 +2021,13 @@ msgstr "大於或等於"
 msgid "is less than or equal to"
 msgstr "小於或等於"
 
-#: ../../lib/class/search.class.php:74 ../../lib/class/search.class.php:142
-#: ../../lib/class/search.class.php:161 ../../lib/class/search.class.php:174
+#: ../../lib/class/search.class.php:74 ../../lib/class/search.class.php:144
+#: ../../lib/class/search.class.php:163 ../../lib/class/search.class.php:176
 msgid "is"
 msgstr "是"
 
-#: ../../lib/class/search.class.php:80 ../../lib/class/search.class.php:167
-#: ../../lib/class/search.class.php:180
+#: ../../lib/class/search.class.php:80 ../../lib/class/search.class.php:169
+#: ../../lib/class/search.class.php:182
 msgid "is not"
 msgstr "不是"
 
@@ -2041,53 +2043,62 @@ msgstr "小於"
 msgid "is true"
 msgstr "為真"
 
-#: ../../lib/class/search.class.php:104
+#: ../../lib/class/search.class.php:105
 msgid "is false"
 msgstr "為假"
 
-#: ../../lib/class/search.class.php:110
+#: ../../lib/class/search.class.php:112
 msgid "contains"
 msgstr "包含"
 
-#: ../../lib/class/search.class.php:118
+#: ../../lib/class/search.class.php:120
 msgid "does not contain"
 msgstr "不包含"
 
-#: ../../lib/class/search.class.php:126
+#: ../../lib/class/search.class.php:128
 msgid "starts with"
 msgstr "始於"
 
-#: ../../lib/class/search.class.php:134
+#: ../../lib/class/search.class.php:136
 msgid "ends with"
 msgstr "終於"
 
-#: ../../lib/class/search.class.php:148
+#: ../../lib/class/search.class.php:150
 msgid "sounds like"
 msgstr "接近於"
 
-#: ../../lib/class/search.class.php:154
+#: ../../lib/class/search.class.php:156
 msgid "does not sound like"
 msgstr "不接近於"
 
-#: ../../lib/class/search.class.php:187
+#: ../../lib/class/search.class.php:189
 msgid "before"
 msgstr "之前"
 
-#: ../../lib/class/search.class.php:193
+#: ../../lib/class/search.class.php:195
 msgid "after"
 msgstr "之後"
 
 #: ../../lib/class/search.class.php:202
+msgid "before (x) days ago"
+msgstr ""
+
+#: ../../lib/class/search.class.php:208
+#, fuzzy
+msgid "after (x) days ago"
+msgstr "天前"
+
+#: ../../lib/class/search.class.php:218
 msgid "Any searchable text"
 msgstr "所有可搜尋的文字"
 
-#: ../../lib/class/search.class.php:230
+#: ../../lib/class/search.class.php:246
 #: ../../templates/show_edit_song_row.inc.php:73
 #: ../../templates/show_song.inc.php:150
 msgid "Composer"
 msgstr "作曲者"
 
-#: ../../lib/class/search.class.php:237
+#: ../../lib/class/search.class.php:253
 #: ../../templates/show_edit_song_row.inc.php:77
 #: ../../templates/show_manage_shoutbox.inc.php:31
 #: ../../templates/show_manage_shoutbox.inc.php:62
@@ -2095,17 +2106,17 @@ msgstr "作曲者"
 msgid "Comment"
 msgstr "註解"
 
-#: ../../lib/class/search.class.php:252 ../../lib/class/search.class.php:511
-#: ../../lib/class/search.class.php:545 ../../lib/class/tag.class.php:739
+#: ../../lib/class/search.class.php:268 ../../lib/class/search.class.php:577
+#: ../../lib/class/search.class.php:611 ../../lib/class/tag.class.php:739
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
 msgstr "標籤"
 
-#: ../../lib/class/search.class.php:259
+#: ../../lib/class/search.class.php:275
 msgid "Album tag"
 msgstr "專輯標籤"
 
-#: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:519
+#: ../../lib/class/search.class.php:282 ../../lib/class/search.class.php:585
 #: ../../templates/show_disabled_songs.inc.php:32
 #: ../../templates/show_disabled_songs.inc.php:62
 #: ../../templates/show_duplicates.inc.php:34
@@ -2115,8 +2126,8 @@ msgstr "專輯標籤"
 msgid "Filename"
 msgstr "檔名"
 
-#: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:458
-#: ../../lib/class/search.class.php:533 ../../templates/show_albums.inc.php:42
+#: ../../lib/class/search.class.php:289 ../../lib/class/search.class.php:499
+#: ../../lib/class/search.class.php:599 ../../templates/show_albums.inc.php:42
 #: ../../templates/show_albums.inc.php:116
 #: ../../templates/show_edit_album_row.inc.php:63
 #: ../../templates/show_edit_song_row.inc.php:85
@@ -2131,46 +2142,28 @@ msgstr "檔名"
 msgid "Year"
 msgstr "年"
 
-#: ../../lib/class/search.class.php:280
+#: ../../lib/class/search.class.php:296
 msgid "Length (in minutes)"
 msgstr "長度(分鐘)"
 
-#: ../../lib/class/search.class.php:288 ../../lib/class/search.class.php:480
-#: ../../templates/show_albums.inc.php:53
-#: ../../templates/show_albums.inc.php:127
-#: ../../templates/show_artists.inc.php:55
-#: ../../templates/show_artists.inc.php:129
-#: ../../templates/show_now_playing_row.inc.php:109
-#: ../../templates/show_now_playing_video_row.inc.php:65
-#: ../../templates/show_playlist_medias.inc.php:45
-#: ../../templates/show_playlist_medias.inc.php:91
-#: ../../templates/show_playlists.inc.php:45
-#: ../../templates/show_playlists.inc.php:99
-#: ../../templates/show_podcast_episode.inc.php:31
-#: ../../templates/show_podcast_episodes.inc.php:41
-#: ../../templates/show_podcast_episodes.inc.php:97
-#: ../../templates/show_podcasts.inc.php:53
-#: ../../templates/show_podcasts.inc.php:105
-#: ../../templates/show_recommended_artists.inc.php:44
-#: ../../templates/show_recommended_artists.inc.php:109
-#: ../../templates/show_song.inc.php:34 ../../templates/show_songs.inc.php:54
-#: ../../templates/show_songs.inc.php:116
-#: ../../templates/show_tvshow_seasons.inc.php:45
-#: ../../templates/show_tvshow_seasons.inc.php:98
-#: ../../templates/show_tvshows.inc.php:48
-#: ../../templates/show_tvshows.inc.php:104
-#: ../../templates/show_video.inc.php:62 ../../templates/show_videos.inc.php:58
-#: ../../templates/show_videos.inc.php:123
-msgid "Rating"
-msgstr "評比"
+#: ../../lib/class/search.class.php:304 ../../lib/class/search.class.php:521
+#: ../../lib/class/search.class.php:618
+msgid "Rating (Average)"
+msgstr ""
 
-#: ../../lib/class/search.class.php:306 ../../templates/header.inc.php:417
+#: ../../lib/class/search.class.php:322 ../../templates/header.inc.php:437
 #: ../../templates/sidebar_home.inc.php:142
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
 msgstr "我的最愛"
 
-#: ../../lib/class/search.class.php:315 ../../templates/show_albums.inc.php:45
+#: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
+#: ../../lib/class/search.class.php:643
+#, fuzzy
+msgid "Rating (Mine)"
+msgstr "評比"
+
+#: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
 #: ../../templates/show_artists.inc.php:47
 #: ../../templates/show_artists.inc.php:121
@@ -2182,7 +2175,7 @@ msgstr "我的最愛"
 msgid "# Played"
 msgstr "# 已播放"
 
-#: ../../lib/class/search.class.php:323
+#: ../../lib/class/search.class.php:357
 #: ../../templates/show_add_channel.inc.php:102
 #: ../../templates/show_channels.inc.php:39
 #: ../../templates/show_duplicates.inc.php:32
@@ -2192,12 +2185,18 @@ msgstr "# 已播放"
 msgid "Bitrate"
 msgstr "位元率"
 
-#: ../../lib/class/search.class.php:348 ../../templates/show_album.inc.php:83
+#: ../../lib/class/search.class.php:382 ../../lib/class/search.class.php:556
+#: ../../lib/class/search.class.php:635
+#, fuzzy
+msgid "My Last Play"
+msgstr "上次播放"
+
+#: ../../lib/class/search.class.php:389 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
 msgid "Played"
 msgstr "已播放"
 
-#: ../../lib/class/search.class.php:375 ../../lib/class/search.class.php:503
+#: ../../lib/class/search.class.php:416 ../../lib/class/search.class.php:569
 #: ../../templates/browse_filters.inc.php:87
 #: ../../templates/show_add_live_stream.inc.php:55
 #: ../../templates/show_add_podcast.inc.php:34
@@ -2205,7 +2204,7 @@ msgstr "已播放"
 msgid "Catalog"
 msgstr "目錄"
 
-#: ../../lib/class/search.class.php:388 ../../lib/ui.lib.php:135
+#: ../../lib/class/search.class.php:429 ../../lib/ui.lib.php:135
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_search_bar.inc.php:34
 #: ../../templates/sidebar_home.inc.php:92
@@ -2213,7 +2212,7 @@ msgstr "目錄"
 msgid "Playlist"
 msgstr "播放清單"
 
-#: ../../lib/class/search.class.php:395
+#: ../../lib/class/search.class.php:436
 #: ../../templates/show_playlists.inc.php:35
 #: ../../templates/show_playlists.inc.php:89
 #: ../../templates/show_searches.inc.php:42
@@ -2221,30 +2220,30 @@ msgstr "播放清單"
 msgid "Playlist Name"
 msgstr "播放清單名稱"
 
-#: ../../lib/class/search.class.php:408
+#: ../../lib/class/search.class.php:449
 msgid "Smart Playlist"
 msgstr "智慧播放清單"
 
-#: ../../lib/class/search.class.php:420
+#: ../../lib/class/search.class.php:461
 msgid "Metadata"
 msgstr "後設資料"
 
-#: ../../lib/class/search.class.php:434
+#: ../../lib/class/search.class.php:475
 #: ../../templates/show_add_upload.inc.php:199
 #: ../../templates/show_edit_song_row.inc.php:98
 msgid "Music License"
 msgstr "音樂授權"
 
-#: ../../lib/class/search.class.php:465
+#: ../../lib/class/search.class.php:506
 msgid "Image Width"
 msgstr "圖片寬度"
 
-#: ../../lib/class/search.class.php:472
+#: ../../lib/class/search.class.php:513
 msgid "Image Height"
 msgstr "圖片高度"
 
-#: ../../lib/class/search.class.php:527 ../../lib/class/search.class.php:553
-#: ../../lib/class/search.class.php:561
+#: ../../lib/class/search.class.php:593 ../../lib/class/search.class.php:661
+#: ../../lib/class/search.class.php:669
 #: ../../templates/cookie_disclaimer.inc.php:16
 #: ../../templates/show_access_list.inc.php:47
 #: ../../templates/show_add_access.inc.php:29
@@ -2285,13 +2284,13 @@ msgstr "圖片高度"
 msgid "Name"
 msgstr "名稱"
 
-#: ../../lib/class/search.class.php:539
+#: ../../lib/class/search.class.php:605
 #: ../../templates/show_concerts.inc.php:28
 #: ../../templates/show_concerts.inc.php:56
 msgid "Place"
 msgstr "地點"
 
-#: ../../lib/class/search.class.php:567
+#: ../../lib/class/search.class.php:675
 #: ../../templates/show_add_label.inc.php:34
 #: ../../templates/show_edit_label_row.inc.php:31
 #: ../../templates/show_edit_podcast_episode_row.inc.php:43
@@ -2301,7 +2300,7 @@ msgstr "地點"
 msgid "Category"
 msgstr "目錄"
 
-#: ../../lib/class/search.class.php:575
+#: ../../lib/class/search.class.php:683
 #: ../../modules/catalog/remote/remote.catalog.php:103
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:103
 #: ../../modules/localplay/xbmc/xbmc.controller.php:190
@@ -2396,12 +2395,12 @@ msgstr "發表留言"
 msgid "by"
 msgstr "作者"
 
-#: ../../lib/class/song.class.php:1468
+#: ../../lib/class/song.class.php:1460
 #: ../../templates/show_html5_player.inc.php:154
 msgid "Show Lyrics"
 msgstr "顯示歌詞"
 
-#: ../../lib/class/song.class.php:1494
+#: ../../lib/class/song.class.php:1486
 msgid "Track MusicBrainzID"
 msgstr "音軌的 MusicBrainz 識別碼"
 
@@ -3531,12 +3530,12 @@ msgstr "有病"
 msgid "Off the Charts!"
 msgstr "破表啦！"
 
-#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:391
+#: ../../lib/ui.lib.php:123 ../../templates/header.inc.php:408
 #: ../../templates/sidebar.inc.php:33
 msgid "Home"
 msgstr "首頁"
 
-#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:427
+#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:449
 #: ../../templates/show_add_upload.inc.php:26
 #: ../../templates/show_album.inc.php:196
 #: ../../templates/show_album.inc.php:197
@@ -3645,7 +3644,7 @@ msgstr "正在執行 Beets 遠端更新"
 #: ../../modules/Beets/Catalog.php:200
 #: ../../modules/catalog/remote/remote.catalog.php:273
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:300
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:252
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:254
 #, php-format
 msgid "Unable to Insert Song - %s"
 msgstr "無法插入歌曲 - %s"
@@ -4018,7 +4017,7 @@ msgid "Completed updating SoundCloud catalog(s)."
 msgstr "已完成更新 SoundCloud 目錄。"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:308
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:273
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:271
 msgid "Songs added."
 msgstr "歌曲已新增。"
 
@@ -4054,21 +4053,9 @@ msgstr "錯誤：Subsonic 目錄需要使用者名稱與密碼"
 msgid "Running Subsonic Remote Update"
 msgstr "正在執行 Subsonic 遠端更新"
 
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:262
-msgid "Song Error."
-msgstr "歌曲錯誤。"
-
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:268
-msgid "Album Error."
-msgstr "專輯錯誤。"
-
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:273
+#: ../../modules/catalog/subsonic/subsonic.catalog.php:271
 msgid "Completed updating Subsonic catalog(s)."
 msgstr "已完成更新 Subsonic 目錄。"
-
-#: ../../modules/catalog/subsonic/subsonic.catalog.php:279
-msgid "Artist Error."
-msgstr "作者錯誤。"
 
 #: ../../modules/localplay/httpq/httpq.controller.php:196
 #: ../../modules/localplay/mpd/mpd.controller.php:225
@@ -4120,7 +4107,7 @@ msgid "Highlight"
 msgstr "強調"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:123
-#: ../../templates/header.inc.php:333
+#: ../../templates/header.inc.php:343
 #: ../../templates/show_album_group_disks.inc.php:70
 #: ../../templates/show_album_group_disks.inc.php:71
 #: ../../templates/show_album_group_disks.inc.php:124
@@ -4149,7 +4136,7 @@ msgid "Play last"
 msgstr "最後播放"
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:126
-#: ../../templates/header.inc.php:334
+#: ../../templates/header.inc.php:344
 #: ../../templates/show_album_group_disks.inc.php:80
 #: ../../templates/show_album_group_disks.inc.php:81
 #: ../../templates/show_album_group_disks.inc.php:128
@@ -4620,18 +4607,18 @@ msgstr "快取命中："
 msgid "Load time:"
 msgstr "載入時間："
 
-#: ../../templates/header.inc.php:97
+#: ../../templates/header.inc.php:102
 msgid "Save"
 msgstr "儲存"
 
-#: ../../templates/header.inc.php:98
+#: ../../templates/header.inc.php:103
 #: ../../templates/show_confirmation.inc.php:35
 #: ../../templates/show_get_art.inc.php:64
 msgid "Cancel"
 msgstr "取消"
 
 #. HINT: Translator, "%s" is replaced by "cookie settings"
-#: ../../templates/header.inc.php:297
+#: ../../templates/header.inc.php:305
 #, php-format
 msgid ""
 "We have placed cookies on your computer to help make this website better. "
@@ -4645,11 +4632,11 @@ msgstr ""
 "\n"
 "按下此訊息可使其不再顯示。"
 
-#: ../../templates/header.inc.php:298
+#: ../../templates/header.inc.php:306
 msgid "cookie settings"
 msgstr "cookie 設定"
 
-#: ../../templates/header.inc.php:332 ../../templates/show_album_row.inc.php:32
+#: ../../templates/header.inc.php:342 ../../templates/show_album_row.inc.php:32
 #: ../../templates/show_artist_row.inc.php:32
 #: ../../templates/show_playlist_row.inc.php:30
 #: ../../templates/show_podcast_episode.inc.php:66
@@ -4661,7 +4648,7 @@ msgstr "cookie 設定"
 msgid "Play next"
 msgstr "下一首播放"
 
-#: ../../templates/header.inc.php:335 ../../templates/show_album.inc.php:131
+#: ../../templates/header.inc.php:345 ../../templates/show_album.inc.php:131
 #: ../../templates/show_album.inc.php:134
 #: ../../templates/show_album_row.inc.php:61
 #: ../../templates/show_artist_row.inc.php:57
@@ -4677,33 +4664,33 @@ msgstr "下一首播放"
 msgid "Add to existing playlist"
 msgstr "新增到現存的播放清單"
 
-#: ../../templates/header.inc.php:362
+#: ../../templates/header.inc.php:375
 msgid "New messages"
 msgstr "新訊息"
 
-#: ../../templates/header.inc.php:365
+#: ../../templates/header.inc.php:378
 msgid "Log out"
 msgstr "登出"
 
-#: ../../templates/header.inc.php:371
+#: ../../templates/header.inc.php:384
 #: ../../templates/show_login_form.inc.php:72
 msgid "Login"
 msgstr "登入"
 
-#: ../../templates/header.inc.php:374
+#: ../../templates/header.inc.php:388
 #: ../../templates/show_login_form.inc.php:78
 msgid "Register"
 msgstr "註冊"
 
-#: ../../templates/header.inc.php:502
+#: ../../templates/header.inc.php:531
 msgid "Error: Your config file is out of date!"
 msgstr "錯誤：您的設定檔已過時！"
 
-#: ../../templates/header.inc.php:504
+#: ../../templates/header.inc.php:533
 msgid "Generate and download new config file"
 msgstr "產生並下載新的設定檔"
 
-#: ../../templates/header.inc.php:505
+#: ../../templates/header.inc.php:534
 msgid "Write new config file to disk"
 msgstr "寫入新設定檔到磁碟"
 
@@ -5584,6 +5571,34 @@ msgstr "封面圖片"
 #: ../../templates/show_videos.inc.php:118
 msgid "Tags"
 msgstr "標籤"
+
+#: ../../templates/show_albums.inc.php:53
+#: ../../templates/show_albums.inc.php:127
+#: ../../templates/show_artists.inc.php:55
+#: ../../templates/show_artists.inc.php:129
+#: ../../templates/show_now_playing_row.inc.php:109
+#: ../../templates/show_now_playing_video_row.inc.php:65
+#: ../../templates/show_playlist_medias.inc.php:45
+#: ../../templates/show_playlist_medias.inc.php:91
+#: ../../templates/show_playlists.inc.php:45
+#: ../../templates/show_playlists.inc.php:99
+#: ../../templates/show_podcast_episode.inc.php:31
+#: ../../templates/show_podcast_episodes.inc.php:41
+#: ../../templates/show_podcast_episodes.inc.php:97
+#: ../../templates/show_podcasts.inc.php:53
+#: ../../templates/show_podcasts.inc.php:105
+#: ../../templates/show_recommended_artists.inc.php:44
+#: ../../templates/show_recommended_artists.inc.php:109
+#: ../../templates/show_song.inc.php:34 ../../templates/show_songs.inc.php:54
+#: ../../templates/show_songs.inc.php:116
+#: ../../templates/show_tvshow_seasons.inc.php:45
+#: ../../templates/show_tvshow_seasons.inc.php:98
+#: ../../templates/show_tvshows.inc.php:48
+#: ../../templates/show_tvshows.inc.php:104
+#: ../../templates/show_video.inc.php:62 ../../templates/show_videos.inc.php:58
+#: ../../templates/show_videos.inc.php:123
+msgid "Rating"
+msgstr "評比"
 
 #: ../../templates/show_albums.inc.php:58
 #: ../../templates/show_albums.inc.php:132
@@ -8480,7 +8495,7 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.10.2017 06:14:49 CEST
+# Last Update: 12.12.2017 08:07:46 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
