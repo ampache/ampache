@@ -3,195 +3,195 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Sunghun Park <shpark.x1@gmail.com>, 2017
-# Sunghun Park <shpark.x1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2018-04-17 15:03+0200\n"
-"PO-Revision-Date: 2017-12-13 04:58+0000\n"
-"Last-Translator: Afterster\n"
-"Language-Team: Korean (Korea) (http://www.transifex.com/ampache/ampache/"
-"language/ko_KR/)\n"
-"Language: ko_KR\n"
+"PO-Revision-Date: 2018-03-08 20:29+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"Language-Team: Turkish (Turkey) (http://www.transifex.com/ampache/ampache/"
+"language/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../../admin/access.php:40
 msgid "Deleted"
-msgstr "삭제됨"
+msgstr ""
 
 #: ../../admin/access.php:40
 msgid "Your Access List Entry has been removed"
-msgstr "억세스 리스트 항목이 삭제됨"
+msgstr ""
 
 #: ../../admin/access.php:47 ../../admin/users.php:222
 msgid "Deletion Request"
-msgstr "삭제요청"
+msgstr ""
 
 #: ../../admin/access.php:47
 msgid "Are you sure you want to permanently delete"
-msgstr "영구삭제를 원하세요"
+msgstr ""
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:396
 #: ../../templates/show_song.inc.php:175 ../../templates/show_video.inc.php:161
 msgid "Added"
-msgstr "추가됨"
+msgstr ""
 
 #: ../../admin/access.php:74
 msgid "Your new Access Control List(s) have been created"
-msgstr "새로운 억세스 리스트(들) 만들어짐"
+msgstr ""
 
 #: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1515
 #: ../../lib/class/search.class.php:403 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
-msgstr "수정됨"
+msgstr ""
 
 #: ../../admin/access.php:88
 msgid "Access List Entry updated"
-msgstr "억세스 리스트 항목 수정됨"
+msgstr ""
 
 #: ../../admin/catalog.php:54 ../../admin/catalog.php:62
 #: ../../admin/catalog.php:66 ../../admin/catalog.php:74
 #: ../../admin/catalog.php:83
 msgid "Catalog Update started..."
-msgstr "카탈로그 수정 시작됨"
+msgstr ""
 
 #: ../../admin/catalog.php:105
 msgid "Catalog Deleted"
-msgstr "카탈로그 삭제됨"
+msgstr ""
 
 #: ../../admin/catalog.php:105
 msgid "The Catalog and all associated records have been deleted"
-msgstr "카탈로그와 관련된 모든 레코드들이 삭제됨"
+msgstr ""
 
 #: ../../admin/catalog.php:107 ../../admin/users.php:192
 #: ../../preferences.php:166 ../../templates/error_page.inc.php:50
 msgid "Error"
-msgstr "에러"
+msgstr ""
 
 #: ../../admin/catalog.php:107
 msgid "Cannot delete the catalog"
-msgstr "카탈로그를 사제할 수 없음"
+msgstr ""
 
 #: ../../admin/catalog.php:112
 msgid "Catalog Delete"
-msgstr "카탈로그 삭제"
+msgstr ""
 
 #: ../../admin/catalog.php:112 ../../admin/users.php:230 ../../broadcast.php:38
 #: ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
-msgstr "삭제요청 확인"
+msgstr ""
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] "가요 이용가능"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
-msgstr "이용불가 가요는 선택되지 않음"
+msgstr ""
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] "가요 이용불가 처리중"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
-msgstr "카탈로그 청소 시작됨"
+msgstr ""
 
 #: ../../admin/catalog.php:151
 msgid "Catalog Updated"
-msgstr "카탈로그 수정됨"
+msgstr ""
 
 #: ../../admin/catalog.php:161
 msgid "Subdirectory update started..."
-msgstr "하부 디렉토리 업데이트 시작됨"
+msgstr ""
 
 #: ../../admin/catalog.php:172
 msgid "Error: Please select a catalog type"
-msgstr "에러: 카탈로그 타입을 선택하세요"
+msgstr ""
 
 #: ../../admin/catalog.php:176
 msgid "Error: Name not specified"
-msgstr "에러: 이름 지정되지 않음"
+msgstr ""
 
 #: ../../admin/catalog.php:195
 msgid "Catalog Creation started..."
-msgstr "카탈로그 생성 시작됨"
+msgstr ""
 
 #: ../../admin/catalog.php:207
 msgid "Catalog statistics cleared"
-msgstr "카탈로그 통계정보 청소됨"
+msgstr ""
 
 #: ../../admin/catalog.php:220
 msgid "Now Playing Cleared"
-msgstr "현재 연주리스트 초기화됨"
+msgstr ""
 
 #: ../../admin/catalog.php:220
 msgid "All now playing data has been cleared"
-msgstr "모든 연주 정보가 초기화됨"
+msgstr ""
 
 #: ../../admin/catalog.php:232
 msgid "No Disabled songs found"
-msgstr "이용불가 가요 발견되지 않음"
+msgstr ""
 
 #: ../../admin/catalog.php:244
 msgid "Delete Catalog"
-msgstr "카탈로그 삭제"
+msgstr ""
 
 #: ../../admin/catalog.php:244
 msgid "Do you really want to delete this catalog?"
-msgstr "이 카탈로그 삭제를 원합니까?"
+msgstr ""
 
 #: ../../admin/catalog.php:253
 msgid "Media Art Search started..."
-msgstr "미디어 아트 검색 시작됨"
+msgstr ""
 
 #: ../../admin/license.php:39
 msgid "License Updated"
-msgstr "라이선스 수정됨"
+msgstr ""
 
 #: ../../admin/license.php:42
 msgid "License Created"
-msgstr "라이선스 생성됨"
+msgstr ""
 
 #: ../../admin/license.php:53
 msgid "License Deleted"
-msgstr "라이선스 삭제됨"
+msgstr ""
 
 #: ../../admin/mail.php:63
 msgid "E-mail Sent"
-msgstr "이메일 보냄"
+msgstr ""
 
 #: ../../admin/mail.php:64
 msgid "Your E-mail was successfully sent."
-msgstr "당신의 이메일은 성공적으로 보내짐"
+msgstr ""
 
 #: ../../admin/mail.php:66
 msgid "E-mail Not Sent"
-msgstr "이메일 보내지지 않음"
+msgstr ""
 
 #: ../../admin/mail.php:67
 msgid "Your E-mail was not sent."
-msgstr "당신의 이메일은 보내지지 않음"
+msgstr ""
 
 #: ../../admin/modules.php:38
 msgid "Failed to enable the module, Controller Error"
-msgstr "모듈 작동 실패함, 컨트롤러 에러"
+msgstr ""
 
 #: ../../admin/modules.php:53
 msgid "localplay enabled"
-msgstr "내부플레이 허가됨"
+msgstr ""
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
-msgstr "모듈 허가 실패함, 카탈로그 에러"
+msgstr ""
 
 #: ../../admin/modules.php:70
 msgid "Module enabled"
@@ -1699,11 +1699,13 @@ msgstr ""
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:606
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:651
 msgid "Catalog Insert Failed check debug logs"
@@ -1718,6 +1720,7 @@ msgstr ""
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:1872
 #, php-format
@@ -4144,6 +4147,7 @@ msgstr ""
 msgid "Successfully imported playlist with %d song."
 msgid_plural "Successfully imported playlist with %d songs."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -7393,12 +7397,14 @@ msgstr ""
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:82
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:91
 msgid "Size Limit"
@@ -7423,48 +7429,56 @@ msgstr ""
 msgid "%d second ago"
 msgid_plural "%d seconds ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:75
 #, php-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:78
 #, php-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:81
 #, php-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:84
 #, php-format
 msgid "%d week ago"
 msgid_plural "%d weeks ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:87
 #, php-format
 msgid "%d month ago"
 msgid_plural "%d months ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:90
 #, php-format
 msgid "%d year ago"
 msgid_plural "%d years ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:93
 #, php-format
 msgid "%d decade ago"
 msgid_plural "%d decades ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:152
 msgid "No recently played items found"
