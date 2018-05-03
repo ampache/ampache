@@ -1802,18 +1802,13 @@ abstract class Catalog extends database_object
     
     public function clean_empty_albums()
     {
-        $sql        = 'SELECT `id` FROM `album`';
+        $sql = "SELECT `id` FROM `album` WHERE NOT EXISTS " .
+            "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
         $db_results = Dba::read($sql);
-        
         while ($albumid = Dba::fetch_assoc($db_results)) {
-            $sql         = "SELECT id from ampache.song where album = ?";
             $id          = $albumid['id'];
-            $db_results1 = Dba::read($sql, array($id));
-            $s           = Dba::fetch_assoc($db_results1);
-            if (count($s) == 0) {
-                $sql        = "DELETE FROM `album` WHERE `id` = ?";
-                $db_results = Dba::write($sql, array($id));
-            }
+            $sql         = "DELETE FROM `album` WHERE `id` = ?";
+            $db_results  = Dba::write($sql, array($id));
         }
     }
     

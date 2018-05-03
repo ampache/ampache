@@ -9,6 +9,7 @@ CHANGELOG
 - Top menu appearance more reader friendly for translations.
 - Additional fixes to update_remote_catalog function.
 - Enabled similar songs when clicking on radio icon in DSub.
+- Repaired problem with removing "empty" albums.
 
 3.8.6
 ----------
