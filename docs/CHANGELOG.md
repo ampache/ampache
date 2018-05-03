@@ -10,6 +10,7 @@ CHANGELOG
 - Additional fixes to update_remote_catalog function.
 - Enabled similar songs when clicking on radio icon in DSub.
 - Repaired problem with removing "empty" albums.
+- Can now access XML-API when default ACL(s) are removed.
 
 3.8.6
 ----------

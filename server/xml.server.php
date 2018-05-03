@@ -56,12 +56,16 @@ if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'hands
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-$username =
-    ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping')
-    ? $_REQUEST['user']
-    : Session::username($_REQUEST['auth']);
+$username = null;
+$apikey   = null;
 
-if (!Access::check_network('init-api', $username, 5)) {
+if (($_REQUEST['action'] == 'handshake') && isset($_REQUEST['timestamp'])) {
+    $username = $_REQUEST['user'];
+} else {
+    $apikey = $_REQUEST['auth'];
+}
+
+if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
