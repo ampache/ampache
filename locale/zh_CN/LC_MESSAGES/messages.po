@@ -5,13 +5,14 @@
 # Translators:
 # BoneAsh <yjun0311@126.com>, 2016
 # fjmax <fengjiongmax@gmail.com>, 2016
+# BFDZ <yy194121@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-04-17 15:03+0200\n"
-"PO-Revision-Date: 2017-12-13 04:58+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2018-05-04 16:28+0200\n"
+"PO-Revision-Date: 2018-04-24 06:56+0000\n"
+"Last-Translator: BFDZ <yy194121@outlook.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -2081,12 +2082,11 @@ msgstr "之后"
 
 #: ../../lib/class/search.class.php:202
 msgid "before (x) days ago"
-msgstr ""
+msgstr "(x) 天之前"
 
 #: ../../lib/class/search.class.php:208
-#, fuzzy
 msgid "after (x) days ago"
-msgstr "几天前"
+msgstr "(x) 天之后"
 
 #: ../../lib/class/search.class.php:218
 msgid "Any searchable text"
@@ -2149,7 +2149,7 @@ msgstr "长度（以分钟为单位）"
 #: ../../lib/class/search.class.php:304 ../../lib/class/search.class.php:521
 #: ../../lib/class/search.class.php:618
 msgid "Rating (Average)"
-msgstr ""
+msgstr "评级（平均）"
 
 #: ../../lib/class/search.class.php:322 ../../templates/header.inc.php:437
 #: ../../templates/sidebar_home.inc.php:142
@@ -2159,9 +2159,8 @@ msgstr "最喜爱"
 
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
-#, fuzzy
 msgid "Rating (Mine)"
-msgstr "评级"
+msgstr "评级（自己）"
 
 #: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2187,9 +2186,8 @@ msgstr "比特率"
 
 #: ../../lib/class/search.class.php:382 ../../lib/class/search.class.php:556
 #: ../../lib/class/search.class.php:635
-#, fuzzy
 msgid "My Last Play"
-msgstr "最近播放"
+msgstr "最后一次播放"
 
 #: ../../lib/class/search.class.php:389 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
@@ -3685,7 +3683,7 @@ msgstr "选择 “Dropbos API app”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:75
 msgid "Select 'Full Dropbox'"
-msgstr ""
+msgstr "选择 “Full Dropbox”"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Give a name to your application and create it"
@@ -3693,12 +3691,12 @@ msgstr "给您的应用程序命名并创建应用程序"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
 msgid "Click the 'Generate' button to create an Access Token"
-msgstr ""
+msgstr "点击 '生成' 按钮创建一个访问令牌"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:78
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
-msgstr ""
+msgstr "将您的 App key 和 App 密钥以及访问令牌复制到以下字段。"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
@@ -3714,7 +3712,7 @@ msgstr "Secret"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:119
 msgid "Access Token"
-msgstr ""
+msgstr "访问令牌"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
@@ -3728,7 +3726,7 @@ msgstr "获取有关分析分块文件"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:181
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr ""
+msgstr "错误：需要API密钥，密码和访问令牌才能打开 Dropbox 目录"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:188
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:492
@@ -3758,7 +3756,7 @@ msgstr "没有媒体被更新，您确定选对模式了吗？"
 #: ../../modules/catalog/seafile/seafile.catalog.php:378
 #, php-format
 msgid "Updated song \"%s\""
-msgstr ""
+msgstr "歌曲更新 \"%s\""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:481
 #: ../../modules/catalog/seafile/seafile.catalog.php:381
@@ -8508,7 +8506,7 @@ msgstr "无法删除此视频。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.12.2017 08:07:46 CET
+# Last Update: 17.04.2018 15:03:47 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

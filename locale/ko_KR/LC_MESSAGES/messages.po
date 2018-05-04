@@ -5,13 +5,14 @@
 # Translators:
 # Sunghun Park <shpark.x1@gmail.com>, 2017
 # Sunghun Park <shpark.x1@gmail.com>, 2017
+# 유영재 <yjsoft@yjsoft.pe.kr>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-04-17 15:03+0200\n"
-"PO-Revision-Date: 2017-12-13 04:58+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2018-05-04 16:28+0200\n"
+"PO-Revision-Date: 2018-04-26 01:40+0000\n"
+"Last-Translator: 유영재 <yjsoft@yjsoft.pe.kr>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/ampache/ampache/"
 "language/ko_KR/)\n"
 "Language: ko_KR\n"
@@ -26,15 +27,15 @@ msgstr "삭제됨"
 
 #: ../../admin/access.php:40
 msgid "Your Access List Entry has been removed"
-msgstr "억세스 리스트 항목이 삭제됨"
+msgstr "접근 리스트 항목이 제거되었습니다"
 
 #: ../../admin/access.php:47 ../../admin/users.php:222
 msgid "Deletion Request"
-msgstr "삭제요청"
+msgstr "삭제 요청"
 
 #: ../../admin/access.php:47
 msgid "Are you sure you want to permanently delete"
-msgstr "영구삭제를 원하세요"
+msgstr "다음 항목을 정말로 삭제하시겠습니까? "
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:396
 #: ../../templates/show_song.inc.php:175 ../../templates/show_video.inc.php:161
@@ -43,7 +44,7 @@ msgstr "추가됨"
 
 #: ../../admin/access.php:74
 msgid "Your new Access Control List(s) have been created"
-msgstr "새로운 억세스 리스트(들) 만들어짐"
+msgstr "새 접근 리스트가 만들어졌습니다"
 
 #: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1515
 #: ../../lib/class/search.class.php:403 ../../preferences.php:144
@@ -53,13 +54,13 @@ msgstr "수정됨"
 
 #: ../../admin/access.php:88
 msgid "Access List Entry updated"
-msgstr "억세스 리스트 항목 수정됨"
+msgstr "접근 리스트 업데이트됨"
 
 #: ../../admin/catalog.php:54 ../../admin/catalog.php:62
 #: ../../admin/catalog.php:66 ../../admin/catalog.php:74
 #: ../../admin/catalog.php:83
 msgid "Catalog Update started..."
-msgstr "카탈로그 수정 시작됨"
+msgstr "카탈로그 수정 시작됨..."
 
 #: ../../admin/catalog.php:105
 msgid "Catalog Deleted"
@@ -67,16 +68,16 @@ msgstr "카탈로그 삭제됨"
 
 #: ../../admin/catalog.php:105
 msgid "The Catalog and all associated records have been deleted"
-msgstr "카탈로그와 관련된 모든 레코드들이 삭제됨"
+msgstr "카탈로그와 관련된 모든 레코드들이 삭제되었습니다"
 
 #: ../../admin/catalog.php:107 ../../admin/users.php:192
 #: ../../preferences.php:166 ../../templates/error_page.inc.php:50
 msgid "Error"
-msgstr "에러"
+msgstr "오류"
 
 #: ../../admin/catalog.php:107
 msgid "Cannot delete the catalog"
-msgstr "카탈로그를 사제할 수 없음"
+msgstr "카탈로그를 삭제할 수 없습니다"
 
 #: ../../admin/catalog.php:112
 msgid "Catalog Delete"
@@ -85,21 +86,21 @@ msgstr "카탈로그 삭제"
 #: ../../admin/catalog.php:112 ../../admin/users.php:230 ../../broadcast.php:38
 #: ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
-msgstr "삭제요청 확인"
+msgstr "카탈로그 삭제 요청 확인"
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] "가요 이용가능"
+msgstr[0] "활성화된 노래"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
-msgstr "이용불가 가요는 선택되지 않음"
+msgstr "비활성화된 노래가 선택되지 않았습니다"
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] "가요 이용불가 처리중"
+msgstr[0] "노래 비활성화중"
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
@@ -115,11 +116,11 @@ msgstr "하부 디렉토리 업데이트 시작됨"
 
 #: ../../admin/catalog.php:172
 msgid "Error: Please select a catalog type"
-msgstr "에러: 카탈로그 타입을 선택하세요"
+msgstr "오류: 카탈로그 타입을 선택하세요"
 
 #: ../../admin/catalog.php:176
 msgid "Error: Name not specified"
-msgstr "에러: 이름 지정되지 않음"
+msgstr "오류: 이름 지정되지 않음"
 
 #: ../../admin/catalog.php:195
 msgid "Catalog Creation started..."
@@ -131,15 +132,15 @@ msgstr "카탈로그 통계정보 청소됨"
 
 #: ../../admin/catalog.php:220
 msgid "Now Playing Cleared"
-msgstr "현재 연주리스트 초기화됨"
+msgstr "지금 재생중 목록 초기화됨"
 
 #: ../../admin/catalog.php:220
 msgid "All now playing data has been cleared"
-msgstr "모든 연주 정보가 초기화됨"
+msgstr "모든 지금 재생중 정보가 초기화되었습니다"
 
 #: ../../admin/catalog.php:232
 msgid "No Disabled songs found"
-msgstr "이용불가 가요 발견되지 않음"
+msgstr "비활성화된 노래가 없습니다"
 
 #: ../../admin/catalog.php:244
 msgid "Delete Catalog"
@@ -147,11 +148,11 @@ msgstr "카탈로그 삭제"
 
 #: ../../admin/catalog.php:244
 msgid "Do you really want to delete this catalog?"
-msgstr "이 카탈로그 삭제를 원합니까?"
+msgstr "정말 이 카탈로그를 삭제하시겠습니까?"
 
 #: ../../admin/catalog.php:253
 msgid "Media Art Search started..."
-msgstr "미디어 아트 검색 시작됨"
+msgstr "미디어 아트 검색 시작됨..."
 
 #: ../../admin/license.php:39
 msgid "License Updated"
@@ -171,7 +172,7 @@ msgstr "이메일 보냄"
 
 #: ../../admin/mail.php:64
 msgid "Your E-mail was successfully sent."
-msgstr "당신의 이메일은 성공적으로 보내짐"
+msgstr "이메일을 성공적으로 보냈습니다."
 
 #: ../../admin/mail.php:66
 msgid "E-mail Not Sent"
@@ -179,59 +180,59 @@ msgstr "이메일 보내지지 않음"
 
 #: ../../admin/mail.php:67
 msgid "Your E-mail was not sent."
-msgstr "당신의 이메일은 보내지지 않음"
+msgstr "이메일이 보내지지 않았습니다."
 
 #: ../../admin/modules.php:38
 msgid "Failed to enable the module, Controller Error"
-msgstr "모듈 작동 실패함, 컨트롤러 에러"
+msgstr "모듈을 활성화할 수 없습니다. 컨트롤러 오류입니다"
 
 #: ../../admin/modules.php:53
 msgid "localplay enabled"
-msgstr "내부플레이 허가됨"
+msgstr "로컬 플레이 활성화됨"
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
-msgstr "모듈 허가 실패함, 카탈로그 에러"
+msgstr "모듈을 활성화할 수 없습니다. 카탈로그 오류입니다"
 
 #: ../../admin/modules.php:70
 msgid "Module enabled"
-msgstr ""
+msgstr "모듈 활성화됨"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
 msgid "Are you sure you want to disable this module?"
-msgstr ""
+msgstr "정말 이 모듈을 비활성화하시겠습니까?"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
 msgid "Module disabled"
-msgstr ""
+msgstr "모듈 비활성화됨"
 
 #: ../../admin/modules.php:105
 msgid "Failed to disable module, Catalog Error"
-msgstr ""
+msgstr "모듈을 비활성화할 수 없습니다. 카탈로그 오류입니다"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
-msgstr ""
+msgstr "플러그인을 설치할 수 없음"
 
 #: ../../admin/modules.php:139
 msgid "Plugin enabled"
-msgstr ""
+msgstr "플러그인 활성화됨"
 
 #: ../../admin/modules.php:146
 msgid "Are you sure you want to disable this plugin?"
-msgstr ""
+msgstr "정말 플러그인을 비활성화하시겠습니까?"
 
 #: ../../admin/modules.php:165
 msgid "Plugin disabled"
-msgstr ""
+msgstr "플러그인 비활성화됨"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
-msgstr ""
+msgstr "플러그인 업그레이드됨"
 
 #: ../../admin/modules.php:186
 msgid "Plugins"
-msgstr ""
+msgstr "플러그인"
 
 #: ../../admin/modules.php:192
 msgid "Localplay Controllers"
@@ -239,7 +240,7 @@ msgstr ""
 
 #: ../../admin/modules.php:198
 msgid "Catalog Types"
-msgstr ""
+msgstr "카탈로그 종류"
 
 #: ../../admin/shout.php:39
 msgid "Shoutbox Post Updated"
@@ -261,16 +262,16 @@ msgstr ""
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
-msgstr ""
+msgstr "캐시 비움"
 
 #: ../../admin/system.php:66
 msgid "Your cache has been cleared successfully."
-msgstr ""
+msgstr "캐시를 비웠습니다."
 
 #: ../../admin/users.php:62 ../../admin/users.php:141
 #: ../../lib/class/user.class.php:597
 msgid "Error Username Required"
-msgstr ""
+msgstr "오류 사용자 이름이 필요합니다"
 
 #: ../../admin/users.php:66 ../../admin/users.php:146 ../../register.php:121
 msgid "Error Username already exists"
@@ -283,7 +284,7 @@ msgstr ""
 
 #: ../../admin/users.php:76 ../../admin/users.php:151 ../../register.php:95
 msgid "Invalid email address"
-msgstr ""
+msgstr "잘못된 이메일 주소"
 
 #: ../../admin/users.php:114
 msgid "User Updated"
@@ -295,7 +296,7 @@ msgstr ""
 
 #: ../../admin/users.php:163 ../../register.php:150
 msgid "Error: Insert Failed"
-msgstr ""
+msgstr "오류: 등록 실패"
 
 #: ../../admin/users.php:169 ../../lib/class/democratic.class.php:158
 #: ../../lib/class/shoutbox.class.php:330
@@ -304,7 +305,7 @@ msgstr ""
 #: ../../templates/show_preference_admin.inc.php:43
 #: ../../templates/show_preference_box.inc.php:79
 msgid "Guest"
-msgstr ""
+msgstr "손님"
 
 #: ../../admin/users.php:171 ../../lib/class/democratic.class.php:161
 #: ../../lib/preferences.php:303
@@ -325,7 +326,7 @@ msgstr ""
 #: ../../templates/show_shared_objects.inc.php:28
 #: ../../templates/show_wanted_albums.inc.php:29
 msgid "User"
-msgstr ""
+msgstr "사용자"
 
 #: ../../admin/users.php:173 ../../lib/class/democratic.class.php:170
 #: ../../lib/preferences.php:305 ../../templates/show_add_user.inc.php:89
@@ -338,68 +339,68 @@ msgstr ""
 #: ../../templates/show_preference_box.inc.php:83
 #: ../../templates/sidebar.inc.php:39
 msgid "Admin"
-msgstr ""
+msgstr "관리자"
 
 #. HINT: %1 Username, %2 Access num
 #: ../../admin/users.php:177
 msgid "New User Added"
-msgstr ""
+msgstr "새 사용자 추가됨"
 
 #: ../../admin/users.php:177
 #, php-format
 msgid "%1$s has been created with an access level of %2$s"
-msgstr ""
+msgstr "접근 권한 %2$s의 사용자 %1$s(이)가 생성되었습니다."
 
 #: ../../admin/users.php:185
 msgid "User Enabled"
-msgstr ""
+msgstr "사용자 활성화됨"
 
 #: ../../admin/users.php:190
 msgid "User Disabled"
-msgstr ""
+msgstr "사용자 비활성화됨"
 
 #: ../../admin/users.php:192
 msgid "Unable to Disabled last Administrator"
-msgstr ""
+msgstr "마지막 관리자를 비활성화할 수 없습니다"
 
 #: ../../admin/users.php:212
 msgid "User Deleted"
-msgstr ""
+msgstr "사용자 삭제됨"
 
 #: ../../admin/users.php:212
 #, php-format
 msgid "%s has been Deleted"
-msgstr ""
+msgstr "사용자 %s(이)가 삭제되었습니다"
 
 #: ../../admin/users.php:214
 msgid "Delete Error"
-msgstr ""
+msgstr "삭제 오류"
 
 #: ../../admin/users.php:214
 msgid "Unable to delete last Admin User"
-msgstr ""
+msgstr "마지막 관리자는 삭제할 수 없습니다"
 
 #: ../../admin/users.php:223
 #, php-format
 msgid "Are you sure you want to permanently delete %s?"
-msgstr ""
+msgstr "정말 사용자 %s(을)를 삭제하시겠습니까?"
 
 #: ../../admin/users.php:230
 msgid "User Avatar Delete"
-msgstr ""
+msgstr "프로필 이미지 삭제"
 
 #: ../../admin/users.php:246
 msgid "User Avatar Deleted"
-msgstr ""
+msgstr "프로필 이미지 삭제됨"
 
 #: ../../admin/users.php:246
 msgid "User Avatar has been deleted"
-msgstr ""
+msgstr "프로필 이미지가 삭제되었습니다"
 
 #: ../../admin/users.php:252 ../../templates/show_account.inc.php:102
 #: ../../templates/show_edit_user.inc.php:133
 msgid "Generate new API Key"
-msgstr ""
+msgstr "새 API 키 생성"
 
 #: ../../admin/users.php:252
 msgid "Confirm API Key Generation"
@@ -407,11 +408,11 @@ msgstr ""
 
 #: ../../admin/users.php:268
 msgid "API Key Generated"
-msgstr ""
+msgstr "API 키 생성됨"
 
 #: ../../admin/users.php:268
 msgid "New user API Key has been generated."
-msgstr ""
+msgstr "새 API 키가 생성되었습니다."
 
 #: ../../albums.php:36 ../../albums.php:56 ../../albums.php:58
 msgid "Album Deletion"
@@ -538,7 +539,7 @@ msgstr ""
 #: ../../bin/catalog_update.inc:131
 #, php-format
 msgid "Reading catalog: %s"
-msgstr ""
+msgstr "카탈로그 읽는 중: %s"
 
 #: ../../bin/catalog_update.inc:137
 msgid "Start cleaning orphaned media entries"
@@ -8390,7 +8391,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.12.2017 08:07:46 CET
+# Last Update: 17.04.2018 15:03:47 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

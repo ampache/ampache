@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-04-17 15:03+0200\n"
-"PO-Revision-Date: 2017-12-13 04:58+0000\n"
+"POT-Creation-Date: 2018-05-04 16:28+0200\n"
+"PO-Revision-Date: 2018-04-18 04:42+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: French (France) (http://www.transifex.com/ampache/ampache/"
 "language/fr_FR/)\n"
@@ -2120,9 +2120,8 @@ msgid "before (x) days ago"
 msgstr ""
 
 #: ../../lib/class/search.class.php:208
-#, fuzzy
 msgid "after (x) days ago"
-msgstr "il y a quelques jours"
+msgstr ""
 
 #: ../../lib/class/search.class.php:218
 msgid "Any searchable text"
@@ -2195,9 +2194,8 @@ msgstr "Favoris"
 
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
-#, fuzzy
 msgid "Rating (Mine)"
-msgstr "Vote"
+msgstr ""
 
 #: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2223,9 +2221,8 @@ msgstr "Débit"
 
 #: ../../lib/class/search.class.php:382 ../../lib/class/search.class.php:556
 #: ../../lib/class/search.class.php:635
-#, fuzzy
 msgid "My Last Play"
-msgstr "Dernièrement joués"
+msgstr ""
 
 #: ../../lib/class/search.class.php:389 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
@@ -8668,7 +8665,7 @@ msgstr "Vous ne pouvez pas supprimer cette vidéo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.12.2017 08:07:46 CET
+# Last Update: 17.04.2018 15:03:47 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
