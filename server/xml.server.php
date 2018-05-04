@@ -72,9 +72,12 @@ if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
     exit();
 }
 
-if ($_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
-    Session::extend($_REQUEST['auth']);
-    $GLOBALS['user'] = User::get_from_username($username);
+if (($_REQUEST['action'] != 'handshake') && ($_REQUEST['action'] != 'ping')) {
+    if (isset($_REQUEST['user'])) {
+        $GLOBALS['user'] = User::get_from_username($_REQUEST('user'));
+    } else {
+        $GLOBALS['user'] = User::get_from_apikey($_REQUEST['auth']);
+    }
 }
 
 // Make sure beautiful url is disabled as it is not supported by most Ampache clients
