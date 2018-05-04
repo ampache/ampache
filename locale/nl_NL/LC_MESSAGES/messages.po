@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-04-17 15:03+0200\n"
-"PO-Revision-Date: 2018-03-29 06:01+0000\n"
+"POT-Creation-Date: 2018-05-04 16:28+0200\n"
+"PO-Revision-Date: 2018-04-25 07:09+0000\n"
 "Last-Translator: Maarten Peeters <mwlpeeters@gmail.com>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/ampache/ampache/"
 "language/nl_NL/)\n"
@@ -811,7 +811,7 @@ msgstr "Bestand Verplaatst..."
 #: ../../bin/install/add_user.inc:50
 #, php-format
 msgid "Created %s user %s with password %s"
-msgstr ""
+msgstr "%s gebruiker %s aangemaakt met wachtwoord %s"
 
 #: ../../bin/install/add_user.inc:54
 msgid "User creation failed"
@@ -940,7 +940,7 @@ msgstr "Fout: Kan bestand niet kopieren naar %s"
 
 #: ../../bin/websocket_run.inc:67
 msgid "- WebSocket server -"
-msgstr ""
+msgstr "- WebSocket server -"
 
 #: ../../bin/websocket_run.inc:69
 msgid "Usage: websocket_run.inc [-p {PORT}|-v]"
@@ -958,38 +958,39 @@ msgstr "Fout: Geen schrijfrechten op map %s"
 #: ../../bin/write_playlists.inc:96
 msgid "This will dump a collection of playlists files based on type"
 msgstr ""
+"Dit exporteerd een verzameling afspeellijst bestanden gebaseerd op type. "
 
 #: ../../bin/write_playlists.inc:97
 msgid "Types:"
-msgstr ""
+msgstr "Types:"
 
 #: ../../bin/write_playlists.inc:98
 msgid "Dumps all of your Playlists"
-msgstr ""
+msgstr "Exporteerd al je afspeellijsten"
 
 #: ../../bin/write_playlists.inc:99
 msgid "Dumps all Albums as individual playlists"
-msgstr ""
+msgstr "Exporteerd alle albums als afzonderlijke afspeellijsten"
 
 #: ../../bin/write_playlists.inc:100
 msgid "Dumps all Artists as individual playlists"
-msgstr ""
+msgstr "Exporteerd alle artiesten als afzonderlijke afspeellijsten"
 
 #: ../../bin/write_playlists.inc:101
 msgid "Extensions: m3u (default), xspf, pls"
-msgstr ""
+msgstr "Bestandsextensies: m3u (standaard), xspf, pls"
 
 #: ../../broadcast.php:38
 msgid "Broadcast Delete"
-msgstr ""
+msgstr "Uitzending verwijderen"
 
 #: ../../broadcast.php:51
 msgid "Broadcast Deleted"
-msgstr ""
+msgstr "Uitzending verwijderd"
 
 #: ../../broadcast.php:51
 msgid "The Broadcast has been deleted"
-msgstr ""
+msgstr "De uitzending is verwijderd"
 
 #: ../../browse.php:94 ../../lib/class/browse.class.php:262
 #: ../../templates/header.inc.php:426 ../../templates/sidebar_home.inc.php:40
@@ -1176,7 +1177,7 @@ msgstr "Albums MusicBrainzID"
 
 #: ../../lib/class/album.class.php:680
 msgid "Release Group MusicBrainzID"
-msgstr ""
+msgstr "Release Groep MusicBrainzID"
 
 #: ../../lib/class/album.class.php:683 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:239
@@ -2106,9 +2107,8 @@ msgid "before (x) days ago"
 msgstr ""
 
 #: ../../lib/class/search.class.php:208
-#, fuzzy
 msgid "after (x) days ago"
-msgstr "dagen geleden"
+msgstr ""
 
 #: ../../lib/class/search.class.php:218
 msgid "Any searchable text"
@@ -2181,9 +2181,8 @@ msgstr "Favorieten"
 
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
-#, fuzzy
 msgid "Rating (Mine)"
-msgstr "Waardering"
+msgstr ""
 
 #: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2209,9 +2208,8 @@ msgstr "Bitrate"
 
 #: ../../lib/class/search.class.php:382 ../../lib/class/search.class.php:556
 #: ../../lib/class/search.class.php:635
-#, fuzzy
 msgid "My Last Play"
-msgstr "Laatst gespeeld"
+msgstr ""
 
 #: ../../lib/class/search.class.php:389 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
@@ -3852,7 +3850,7 @@ msgstr ""
 #: ../../modules/catalog/local/local.catalog.php:575
 #, php-format
 msgid "%s does not exist or is not readable"
-msgstr ""
+msgstr "%s bestaat niet of is niet leesbaar"
 
 #: ../../modules/catalog/local/local.catalog.php:604
 msgid "Catalog Root unreadable, stopping clean"
@@ -3865,7 +3863,7 @@ msgstr ""
 #: ../../modules/catalog/local/local.catalog.php:672
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
-msgstr ""
+msgstr "Fout bestand niet gevonden of 0 Bytes: %s"
 
 #: ../../modules/catalog/remote/remote.catalog.php:102
 msgid "Uri"
@@ -4180,7 +4178,7 @@ msgstr ""
 
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:144
 msgid "recommended by"
-msgstr ""
+msgstr "aangeraden door"
 
 #: ../../modules/plugins/FriendsTimeline/FriendsTimeline.plugin.php:96
 msgid "Friends Timeline"
@@ -4201,7 +4199,7 @@ msgstr "Afspeellijst aangemaakt"
 #: ../../playlist.php:54
 #, php-format
 msgid "%1$s (%2$s) has been created"
-msgstr ""
+msgstr "%1$s (%2$s) is aangemaakt"
 
 #: ../../playlist.php:80
 msgid "Playlist Imported"
@@ -4211,8 +4209,8 @@ msgstr "Importeren afspeellijst gelukt"
 #, php-format
 msgid "Successfully imported playlist with %d song."
 msgid_plural "Successfully imported playlist with %d songs."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Het importeren van de afspeellijst met %d liedje is gelukt."
+msgstr[1] "Het importeren van de afspeellijst met %d liedjes is gelukt."
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -4226,14 +4224,16 @@ msgstr "Lege afspeellijst verwijderd"
 msgid ""
 "Changing the server UUID could break clients connectivity. Do you confirm?"
 msgstr ""
+"Het veranderen van de server UUID kan het maken van een connectie door "
+"clients verhinderen. Wil je doorgaan?"
 
 #: ../../plex/web/index.php:84
 msgid "myPlex authentication completed."
-msgstr ""
+msgstr "myPlex authenticatie afgerond."
 
 #: ../../plex/web/index.php:98
 msgid "Server registration completed."
-msgstr ""
+msgstr "Server registratie afgerond."
 
 #: ../../plex/web/index.php:101
 msgid "Cannot register the server on myPlex."
@@ -6298,7 +6298,7 @@ msgstr ""
 
 #: ../../templates/show_edit_album_row.inc.php:111
 msgid "Add tags to sub songs"
-msgstr ""
+msgstr "Voeg tags toe aan onderliggende liedjes"
 
 #: ../../templates/show_edit_artist_row.inc.php:47
 msgid "Place Formed"
@@ -6310,11 +6310,11 @@ msgstr "Jaar van oprichting"
 
 #: ../../templates/show_edit_artist_row.inc.php:68
 msgid "Overwrite tags of sub albums and sub songs"
-msgstr ""
+msgstr "Overschijf tags van onderliggende albums en liedjes"
 
 #: ../../templates/show_edit_artist_row.inc.php:72
 msgid "Add tags to sub albums and sub songs"
-msgstr ""
+msgstr "Voeg tags toe aan onderliggende albums en liedjes "
 
 #: ../../templates/show_edit_catalog.inc.php:23
 #, php-format
@@ -6809,11 +6809,11 @@ msgstr ""
 #: ../../templates/show_install_config.inc.php:134
 #: ../../templates/show_install_config.inc.php:164
 msgid "See wiki page"
-msgstr ""
+msgstr "Zie wiki pagina"
 
 #: ../../templates/show_install_config.inc.php:138
 msgid "Template Configuration"
-msgstr ""
+msgstr "Voorbeeld Configuratie"
 
 #: ../../templates/show_install_config.inc.php:155
 msgid ""
@@ -7310,12 +7310,12 @@ msgstr "Afspeellijst bewerken"
 
 #: ../../templates/show_playlists_dialog.inc.php:26
 msgid "Playlist name"
-msgstr ""
+msgstr "Naam afspeellijst"
 
 #: ../../templates/show_playlists.inc.php:37
 #: ../../templates/show_playlists.inc.php:91
 msgid "Last Update"
-msgstr ""
+msgstr "Laatste update"
 
 #: ../../templates/show_playlists.inc.php:39
 #: ../../templates/show_playlists.inc.php:93
@@ -7977,16 +7977,20 @@ msgid ""
 "This tests whether Ampache can override the limit on maximum execution time. "
 "This is not strictly necessary, but may result in a better experience."
 msgstr ""
+"Dit test of Ampache de maximale uitvoertijd kan overschrijden. Dit is niet "
+"strikt noodzakelijk, maar kan resulteren in een meer gebruikersgemak."
 
 #: ../../templates/show_test_table.inc.php:174
 msgid "PHP max upload size"
-msgstr ""
+msgstr "PHP maximale grootte upload"
 
 #: ../../templates/show_test_table.inc.php:179
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
 msgstr ""
+"Dit test of Ampache middelgrote (>=20M) bestanden kan uploaden. Dit is niet "
+"strikt noodzakelijk, maar kan resulteren in een meer gebruikersgemak."
 
 #: ../../templates/show_test_table.inc.php:183
 msgid "PHP Integer Size"
@@ -8075,15 +8079,15 @@ msgstr ""
 #: ../../templates/show_tvshow_season.inc.php:80
 #: ../../templates/show_tvshow_season_row.inc.php:68
 msgid "Season edit"
-msgstr ""
+msgstr "Bewerk seizoen"
 
 #: ../../templates/show_tvshow_season.inc.php:81
 msgid "Edit Season"
-msgstr ""
+msgstr "Bewerk seizoen"
 
 #: ../../templates/show_tvshow_seasons.inc.php:78
 msgid "No season found"
-msgstr ""
+msgstr "Geen seizoen gevonden"
 
 #: ../../templates/show_tvshows.inc.php:83
 msgid "No tv show found"
@@ -8422,19 +8426,19 @@ msgstr "Account"
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
 msgid "TVShow Season Deletion"
-msgstr ""
+msgstr "TVShow seizoen verwijderd"
 
 #: ../../tvshow_seasons.php:39
 msgid "Are you sure you want to permanently delete this tvshow season?"
-msgstr ""
+msgstr "Weet je zeker dat je dit tvshow seizoen permanent wilt verwijderen?"
 
 #: ../../tvshow_seasons.php:58
 msgid "TVShow Season has been deleted."
-msgstr ""
+msgstr "TVShow seizoen is verwijderd."
 
 #: ../../tvshow_seasons.php:60
 msgid "Cannot delete this tvshow season."
-msgstr ""
+msgstr "Kan dit tvshow seizoen niet verwijderen."
 
 #: ../../tvshows.php:38 ../../tvshows.php:58 ../../tvshows.php:60
 msgid "TVShow Deletion"
@@ -8493,7 +8497,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.12.2017 08:07:46 CET
+# Last Update: 17.04.2018 15:03:47 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

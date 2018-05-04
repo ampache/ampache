@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-04-17 15:03+0200\n"
-"PO-Revision-Date: 2017-12-13 04:58+0000\n"
+"POT-Creation-Date: 2018-05-04 16:28+0200\n"
+"PO-Revision-Date: 2018-04-18 04:42+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/ampache/ampache/"
 "language/hu_HU/)\n"
@@ -8405,7 +8405,7 @@ msgstr "Ez a videó nem törölhető."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 12.12.2017 08:07:46 CET
+# Last Update: 17.04.2018 15:03:47 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
