@@ -11,6 +11,7 @@ CHANGELOG
 - Enabled similar songs when clicking on radio icon in DSub.
 - Repaired problem with removing "empty" albums.
 - Can now access XML-API when default ACL(s) are removed.
+- 'Find Duplicates' tool now works.
 
 3.8.6
 ----------
