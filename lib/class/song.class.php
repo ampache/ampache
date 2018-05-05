@@ -700,9 +700,9 @@ class Song extends database_object implements media, library_item
     public static function find_duplicates($search_type)
     {
         $where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
-        $sql       = 'SELECT `id`, `artist`, `album`, `title`, ' .
+        $sql       = 'SELECT `artist`, `album`, `title`, ' .
             'COUNT(`title`) FROM `song` ' . $where_sql .
-            ' GROUP BY `id`, `artist`, `album`, `title`';
+            ' GROUP BY `artist`, `album`, `title`';
 
         if ($search_type == 'artist_title' ||
             $search_type == 'artist_album_title') {
