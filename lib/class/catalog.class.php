@@ -1800,7 +1800,7 @@ abstract class Catalog extends database_object
         return $types;
     }
     
-    public function clean_empty_albums()
+    public static function clean_empty_albums()
     {
         $sql = "SELECT `id` FROM `album` WHERE NOT EXISTS " .
             "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
@@ -1832,7 +1832,7 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-        $this->clean_empty_albums();
+        self::clean_empty_albums();
         
         debug_event('clean', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
 
@@ -2208,14 +2208,14 @@ abstract class Catalog extends database_object
         if (!$db_results) {
             return false;
         }
-
+        self::clean_empty_albums();
+        
         $sql        = "DELETE FROM `video` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, array($catalog_id));
 
         if (!$db_results) {
             return false;
         }
-
         $catalog = self::create_from_id($catalog_id);
 
         if (!$catalog->id) {

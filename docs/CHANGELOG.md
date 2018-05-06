@@ -12,6 +12,7 @@ CHANGELOG
 - Repaired problem with removing "empty" albums.
 - Can now access XML-API when default ACL(s) are removed.
 - 'Find Duplicates' tool now works.
+- Cleaning now checks for mounted path before removing empty albums/missing files.
 
 3.8.6
 ----------
