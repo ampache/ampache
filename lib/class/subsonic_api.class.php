@@ -1282,7 +1282,7 @@ class Subsonic_Api
                 }
                 foreach ($albumId as $i) {
                     $aid   = Subsonic_XML_Data::getAmpacheId($i);
-                    $ids[] = array('id' => $aid, 'album');
+                    $ids[] = array('id' => $aid, 'type' => 'album');
                 }
             } else {
                 if ($artistId) {
@@ -1291,7 +1291,7 @@ class Subsonic_Api
                     }
                     foreach ($artistId as $i) {
                         $aid   = Subsonic_XML_Data::getAmpacheId($i);
-                        $ids[] = array('id' => $aid, 'artist');
+                        $ids[] = array('id' => $aid, 'type' => 'artist');
                     }
                 } else {
                     $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
