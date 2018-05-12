@@ -419,7 +419,7 @@ class Subsonic_XML_Data
             $xalbum->addAttribute('averageRating', ceil($avg_rating));
         }
         
-        self::setIfStarred($xalbum, $album);
+        self::setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
             $allsongs = $album->get_songs();
@@ -430,40 +430,106 @@ class Subsonic_XML_Data
         }
     }
 
-    public static function addSong($xml, $song, $addAmpacheInfo=false, $elementName='song')
+    public static function addSong($xml, $songId, $addAmpacheInfo=false, $elementName='song')
     {
-        self::createSong($xml, $song, $addAmpacheInfo, $elementName);
+        $songData    = self::getSongData($songId);
+        $albumData   = self::getAlbumData($songData['album']);
+        $artistData  = self::getArtistData($songData['artist']);
+        $catalogData = self::getCatalogData($songData['catalog'], $songData['file']);
+        self::createSong($xml, $songData, $albumData,$artistData, $catalogData, $addAmpacheInfo, $elementName);
+    }
+    
+    public static function getSongData($songId)
+    {
+        $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`,' .
+            '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
+            '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, ' .
+            '`song`.`composer`, `song`.`user_upload`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
+            'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
+            'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
+            'WHERE `song`.`id` = ?';
+        $db_results = Dba::read($sql, array($songId));
+        
+        $results = Dba::fetch_assoc($db_results);
+        if (isset($results['id'])) {
+            if (AmpConfig::get('show_played_times')) {
+                $results['object_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold);
+            }
+        }
+
+        return $results;
+    }
+    public static function getAlbumData($albumId)
+    {
+        $sql        = "SELECT * FROM `album` WHERE `id`='$albumId'";
+        $db_results = Dba::read($sql);
+        
+        if (!$db_results) {
+            return array();
+        }
+        
+        $row = Dba::fetch_assoc($db_results);
+
+        return $row;
     }
 
-    public static function createSong($xml, $song, $addAmpacheInfo=false, $elementName='song')
+    public static function getArtistData($artistId)
+    {
+        $sql        = "SELECT * FROM `artist` WHERE `id`='$artistId'";
+        $db_results = Dba::read($sql);
+        
+        if (!$db_results) {
+            return array();
+        }
+        
+        $row = Dba::fetch_assoc($db_results);
+
+        return $row;
+    }
+    
+    public static function getCatalogData($catalogId, $file_Path)
+    {
+        $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
+        $db_results = Dba::read($sql, array($id));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $catalog_path    = rtrim($results['path'], "/");
+            $results['path'] = str_replace($catalog_path . "/", "", $file_Path);
+
+            return $results;
+        }
+    }
+    
+    public static function createSong($xml, $songData, $albumData, $artistData, $catalogData, $addAmpacheInfo=false, $elementName='song')
     {
         // Don't create entries for disabled songs
-        if (!$song->enabled) {
+        if (!$songData['enabled']) {
             return null;
         }
         
         $xsong = $xml->addChild(htmlspecialchars($elementName));
-        $xsong->addAttribute('id', self::getSongId($song->id));
-        $xsong->addAttribute('parent', self::getAlbumId($song->album));
+        $xsong->addAttribute('id', self::getSongId($songData['id']));
+        $xsong->addAttribute('parent', self::getAlbumId($songData['album']));
         //$xsong->addAttribute('created', );
-        $xsong->addAttribute('title', self::checkName($song->title));
+        $xsong->addAttribute('title', self::checkName($songData['title']));
         $xsong->addAttribute('isDir', 'false');
         $xsong->addAttribute('isVideo', 'false');
         $xsong->addAttribute('type', 'music');
-        $album = new Album($song->album);
-        $xsong->addAttribute('albumId', self::getAlbumId($album->id));
-        $xsong->addAttribute('album', self::checkName($album->full_name));
-        $artist = new Artist($song->artist);
-        $artist->format();
-        $xsong->addAttribute('artistId', self::getArtistId($song->artist));
-        $xsong->addAttribute('artist', self::checkName($artist->f_full_name));
-        $xsong->addAttribute('coverArt', self::getAlbumId($album->id));
-        $xsong->addAttribute('duration', $song->time);
-        $xsong->addAttribute('bitRate', intval($song->bitrate / 1000));
+//        $album = new Album(songData->album);
+        $xsong->addAttribute('albumId', self::getAlbumId($albumData['id']));
+        $albumData['full_name'] = trim(trim($albumData['prefix']) . ' ' . trim($albumData['name']));
+        
+        $xsong->addAttribute('album', self::checkName($albumData['full_name']));
+//        $artist = new Artist($song->artist);
+//        $artist->format();
+        $xsong->addAttribute('artistId', self::getArtistId($songData['artist']));
+        $xsong->addAttribute('artist', self::checkName($artistData['f_full_name']));
+        $xsong->addAttribute('coverArt', self::getAlbumId($albumData['id']));
+        $xsong->addAttribute('duration', $songData['time']);
+        $xsong->addAttribute('bitRate', intval($songData['bitrate'] / 1000));
         if ($addAmpacheInfo) {
-            $xsong->addAttribute('playCount', $song->object_cnt);
+            $xsong->addAttribute('playCount', $songData['object_cnt']);
         }
-        $rating      = new Rating($song->id, "song");
+        $rating      = new Rating($songData['id'], "song");
         $user_rating = $rating->get_user_rating();
         if ($user_rating > 0) {
             $xsong->addAttribute('userRating', ceil($user_rating));
@@ -472,32 +538,31 @@ class Subsonic_XML_Data
         if ($avg_rating > 0) {
             $xsong->addAttribute('averageRating', ceil($avg_rating));
         }
-        self::setIfStarred($xsong, $song);
-        if ($song->track > 0) {
-            $xsong->addAttribute('track', $song->track);
+        self::setIfStarred($xsong, 'song', $songData['id']);
+        if ($songData['track'] > 0) {
+            $xsong->addAttribute('track', $songData['track']);
         }
-        if ($song->year > 0) {
-            $xsong->addAttribute('year', $song->year);
+        if ($songData['year'] > 0) {
+            $xsong->addAttribute('year', $songData['year']);
         }
-        $tags = Tag::get_object_tags('song', $song->id);
+        $tags = Tag::get_object_tags('song', $songData['id']);
         if (count($tags) > 0) {
             $xsong->addAttribute('genre', $tags[0]['name']);
         }
-        $xsong->addAttribute('size', $song->size);
-        if ($album->disk > 0) {
-            $xsong->addAttribute('discNumber', $album->disk);
+        $xsong->addAttribute('size', $songData['size']);
+        if ($albumData['disk'] > 0) {
+            $xsong->addAttribute('discNumber', $albumData['disk']);
         }
-        $xsong->addAttribute('suffix', $song->type);
-        $xsong->addAttribute('contentType', $song->mime);
+        $xsong->addAttribute('suffix', $songData['type']);
+        $xsong->addAttribute('contentType', $songData['mime']);
         // Return a file path relative to the catalog root path
-        $path = $song->get_rel_path();
-        $xsong->addAttribute('path', $path);
+        $xsong->addAttribute('path', $catalogData['path']);
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $valid_types   = Song::get_stream_types_for_type($song->type, 'api');
+        $valid_types   = Song::get_stream_types_for_type($songData['type'], 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
-            $transcode_settings = $song->get_transcode_settings(null, 'api');
+            $transcode_settings = Song::get_transcode_settings_for_media($null, 'api', null, 'song');
             if ($transcode_settings) {
                 $transcode_type = $transcode_settings['format'];
                 $xsong->addAttribute('transcodedSuffix', $transcode_type);
@@ -619,7 +684,7 @@ class Subsonic_XML_Data
         $path = basename($video->file);
         $xvideo->addAttribute('path', $video);
         
-        self::setIfStarred($xvideo, $song);
+        self::setIfStarred($xvideo, 'video', $video->id);
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
@@ -661,9 +726,9 @@ class Subsonic_XML_Data
 
         if ($songs) {
             $allsongs = $playlist->get_songs();
-            foreach ($allsongs as $id) {
-                $song = new Song($id);
-                self::addSong($xplaylist, $song, false, "entry");
+            foreach ($allsongs as $songId) {
+//                $song = new Song($id);
+                self::addSong($xplaylist, $songId, false, "entry");
             }
         }
     }
@@ -734,12 +799,12 @@ class Subsonic_XML_Data
         }
     }
     
-    private static function setIfStarred($xml, $libitem)
+    private static function setIfStarred($xml, $objectType, $objectId)
     {
-        $object_type = strtolower(get_class($libitem));
-        if (Core::is_library_item($object_type)) {
+//        $object_type = strtolower(get_class($libitem));
+        if (Core::is_library_item($objectType)) {
             if (AmpConfig::get('userflags')) {
-                $starred = new Userflag($libitem->id, $object_type);
+                $starred = new Userflag($objectId, $objectType);
                 if ($res = $starred->get_flag(null, true)) {
                     $xml->addAttribute('starred', date("Y-m-d",$res[1]) . 'T' . date("H:i:s", $res[1]) . 'Z');
                 }
@@ -981,7 +1046,7 @@ class Subsonic_XML_Data
             $xepisode->addAttribute("coverArt", self::getPodcastId($episode->podcast));
         }
         
-        self::setIfStarred($xepisode, $episode);
+        self::setIfStarred($xepisode, 'episode', $episode->id);
         
         if ($episode->file) {
             $xepisode->addAttribute("streamId", self::getPodcastEpId($episode->id));
