@@ -424,8 +424,7 @@ class Subsonic_XML_Data
         if ($songs) {
             $allsongs = $album->get_songs();
             foreach ($allsongs as $id) {
-                $song = new Song($id);
-                self::addSong($xalbum, $song, $addAmpacheInfo);
+                self::addSong($xalbum, $id, $addAmpacheInfo);
             }
         }
     }
@@ -632,8 +631,7 @@ class Subsonic_XML_Data
             $disc     = new Album($id);
             $allsongs = $disc->get_songs();
             foreach ($allsongs as $id) {
-                $song = new Song($id);
-                self::addSong($xdir, $song, false, "child");
+                self::addSong($xdir, $id, false, "child");
             }
         }
     }
@@ -727,7 +725,6 @@ class Subsonic_XML_Data
         if ($songs) {
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $songId) {
-//                $song = new Song($id);
                 self::addSong($xplaylist, $songId, false, "entry");
             }
         }
@@ -746,7 +743,7 @@ class Subsonic_XML_Data
             $allitems = $playlist->get_items();
             foreach ($allitems as $item) {
                 $song = new Song($item['object_id']);
-                self::addSong($xplaylist, $song, false, "entry");
+                self::addSong($xplaylist, $song->id, false, "entry");
             }
         }
     }
@@ -755,8 +752,7 @@ class Subsonic_XML_Data
     {
         $xsongs = $xml->addChild('randomSongs');
         foreach ($songs as $id) {
-            $song = new Song($id);
-            self::addSong($xsongs, $song);
+            self::addSong($xsongs, $id);
         }
     }
 
@@ -764,8 +760,7 @@ class Subsonic_XML_Data
     {
         $xsongs = $xml->addChild('songsByGenre');
         foreach ($songs as $id) {
-            $song = new Song($id);
-            self::addSong($xsongs, $song);
+            self::addSong($xsongs, $id);
         }
     }
 
@@ -794,8 +789,7 @@ class Subsonic_XML_Data
             self::addAlbum($xresult, $album);
         }
         foreach ($songs as $id) {
-            $song = new Song($id);
-            self::addSong($xresult, $song);
+            self::addSong($xresult, $id);
         }
     }
     
@@ -827,8 +821,7 @@ class Subsonic_XML_Data
         }
 
         foreach ($songs as $id) {
-            $song = new Song($id);
-            self::addSong($xstarred, $song);
+            self::addSong($xstarred, $id);
         }
     }
 
@@ -898,20 +891,18 @@ class Subsonic_XML_Data
 
         if ($share->object_type == 'song') {
             $song = new Song($share->object_id);
-            self::addSong($xshare, $song, false, "entry");
+            self::addSong($xshare, $song->id, false, "entry");
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
             foreach ($songs as $id) {
-                $song = new Song($id);
-                self::addSong($xshare, $song, false, "entry");
+                self::addSong($xshare, $id, false, "entry");
             }
         } elseif ($share->object_type == 'album') {
             $album = new Album($share->object_id);
             $songs = $album->get_songs();
             foreach ($songs as $id) {
-                $song = new Song($id);
-                self::addSong($xshare, $song, false, "entry");
+                self::addSong($xshare, $id, false, "entry");
             }
         }
     }
@@ -998,7 +989,7 @@ class Subsonic_XML_Data
             $song = new Song($similar_song['id']);
             $song->format();
             if ($song->id) {
-                self::addSong($xsimilar, $song);
+                self::addSong($xsimilar, $song->id);
             }
         }
     }
@@ -1086,7 +1077,8 @@ class Subsonic_XML_Data
         $xbookmark->addAttribute("created", date("c", $bookmark->creation_date));
         $xbookmark->addAttribute("changed", date("c", $bookmark->update_date));
         if ($bookmark->object_type == "song") {
-            self::addSong($xbookmark, new Song($bookmark->object_id), false, 'entry');
+            $song = Song($bookmark->object_id);
+            self::addSong($xbookmark, $song->id, false, 'entry');
         } elseif ($bookmark->object_type == "video") {
             self::addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
         } elseif ($bookmark->object_type == "podcast_episode") {
