@@ -590,6 +590,15 @@ live_stream = "true"
 ; Possible Values: Int > 5
 refresh_limit = "60"
 
+; Embedded Now Playing Page
+; Set this to true to enable the embedded now playing page (now_playing.php).
+; This page allows for embedding a now playing badge into a stream
+; or status page. Use with the parameter 'user_id' to filter by a
+; specific user. This page is like rss in that it doesn't require a
+; login to view.
+; DEFAULT: false
+;use_now_playing_embedded = "false"
+
 ; Now Playing Refresh Limit
 ; This defines the refresh limit in seconds for the
 ; now playing embedded page. This (now_playing.php) is not

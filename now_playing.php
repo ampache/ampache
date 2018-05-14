@@ -23,6 +23,12 @@
 define('NO_SESSION', '1');
 require_once 'lib/init.php';
 
+/* Check Perms */
+if (!AmpConfig::get('use_now_playing_embedded') || AmpConfig::get('demo_mode')) {
+    UI::access_denied();
+    exit;
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
