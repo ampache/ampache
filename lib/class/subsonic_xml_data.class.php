@@ -483,6 +483,9 @@ class Subsonic_XML_Data
         
         $row = Dba::fetch_assoc($db_results);
 
+        $row['f_name'] = trim($row['prefix'] . ' ' . $row['name']);
+        $row['f_full_name'] = trim(trim($row['prefix']) . ' ' . trim($row['name']));
+
         return $row;
     }
     
@@ -521,7 +524,7 @@ class Subsonic_XML_Data
 //        $artist = new Artist($song->artist);
 //        $artist->format();
         $xsong->addAttribute('artistId', self::getArtistId($songData['artist']));
-        $xsong->addAttribute('artist', self::checkName($artistData['name']));
+        $xsong->addAttribute('artist', self::checkName($artistData['f_full_name']));
         $xsong->addAttribute('coverArt', self::getAlbumId($albumData['id']));
         $xsong->addAttribute('duration', $songData['time']);
         $xsong->addAttribute('bitRate', intval($songData['bitrate'] / 1000));
