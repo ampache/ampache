@@ -483,6 +483,9 @@ class Subsonic_XML_Data
         
         $row = Dba::fetch_assoc($db_results);
 
+        $row['f_name']      = trim($row['prefix'] . ' ' . $row['name']);
+        $row['f_full_name'] = trim(trim($row['prefix']) . ' ' . trim($row['name']));
+
         return $row;
     }
     
