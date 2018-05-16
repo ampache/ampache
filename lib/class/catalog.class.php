@@ -1245,6 +1245,8 @@ abstract class Catalog extends database_object
                 if ($inserted) {
                     break;
                 }
+            } elseif ($result === true) {
+                debug_event('gather_art', 'Database already has image.', 3);
             } else {
                 debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
             }

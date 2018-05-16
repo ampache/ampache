@@ -14,6 +14,7 @@ CHANGELOG
 - 'Find Duplicates' tool now works.
 - Cleaning now checks for mounted path before removing empty albums/missing files.
 - Starring album and artist now work via Subsonic client.
+- Modified "Gather Art" debug message to remove confusion from "Image less than 5 chars...".
 
 3.8.6
 ----------
