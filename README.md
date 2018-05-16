@@ -44,7 +44,7 @@ receives the most testing:
     * nginx
     * IIS
 
-* PHP 5.4 or greater.
+* PHP 5.6 or greater.
 
 * PHP modules:
     * PDO
