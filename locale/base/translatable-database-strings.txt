@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 12.12.2017 08:07:46 CET 
+ # Last Update: 04.05.2018 16:28:43 CEST 
 
  #######################################################################
 
