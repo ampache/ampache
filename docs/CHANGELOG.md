@@ -1,6 +1,19 @@
 CHANGELOG
 =========
-
+3.8.7
+----------
+- Better able to clean up image extensions when gathering art from remote sites.
+- Check for B.O.M. (\xff\xfe) only in mp3 composer tag and remove.
+- Added .ogv encoding target for more efficient streaming of mkv files.
+- Top menu appearance more reader friendly for translations.
+- Additional fixes to update_remote_catalog function.
+- Enabled similar songs when clicking on radio icon in DSub.
+- Repaired problem with removing "empty" albums.
+- Can now access XML-API when default ACL(s) are removed.
+- 'Find Duplicates' tool now works.
+- Cleaning now checks for mounted path before removing empty albums/missing files.
+- Starring album and artist now work via Subsonic client.
+- Modified "Gather Art" debug message to remove confusion from "Image less than 5 chars...".
 3.8.6
 ----------
 
