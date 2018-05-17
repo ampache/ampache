@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+3.8.8
+----------
+- Subsonic API now removes illegal characters before returning text.
+
+
 3.8.7
 ----------
 - Better able to clean up image extentions when gathering art from remote sites.

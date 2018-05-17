@@ -185,8 +185,9 @@ class Subsonic_Api
                 $output = $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
             } else {
                 $xmlstr = $xml->asXml();
-                // Format xml output
-                $dom = new DOMDocument();
+                //clean illegal XML characters.
+                $xmlstr = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);               // Format xml output
+                $dom    = new DOMDocument();
                 $dom->loadXML($xmlstr);
                 $dom->formatOutput = true;
                 $output            = $dom->saveXML();
