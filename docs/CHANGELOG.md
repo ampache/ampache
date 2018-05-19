@@ -4,7 +4,8 @@ CHANGELOG
 3.8.8
 ----------
 - Subsonic API now removes illegal characters before returning text.
-
+- Removed hardcoded access level to allow guests to stream audio.
+- Guest accounts can now access songs and public playlists.
 
 3.8.7
 ----------
