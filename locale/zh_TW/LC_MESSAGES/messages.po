@@ -4,14 +4,14 @@
 #
 # Translators:
 # Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
-# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
+# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-05-04 16:28+0200\n"
-"PO-Revision-Date: 2018-04-18 04:42+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2018-06-04 15:57+0200\n"
+"PO-Revision-Date: 2018-05-07 05:13+0000\n"
+"Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
 "language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -45,7 +45,7 @@ msgstr "已新增"
 msgid "Your new Access Control List(s) have been created"
 msgstr "您的新存取控制清單已被建立"
 
-#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1515
+#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1517
 #: ../../lib/class/search.class.php:403 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
@@ -1048,7 +1048,7 @@ msgstr "IP 位址版本不符"
 msgid "Duplicate ACL defined"
 msgstr ""
 
-#: ../../lib/class/access.class.php:463 ../../lib/class/access.class.php:485
+#: ../../lib/class/access.class.php:466 ../../lib/class/access.class.php:488
 #: ../../lib/ui.lib.php:480 ../../templates/browse_filters.inc.php:89
 #: ../../templates/list_header.inc.php:124
 #: ../../templates/show_add_access.inc.php:40
@@ -1061,7 +1061,7 @@ msgstr ""
 msgid "All"
 msgstr "全部"
 
-#: ../../lib/class/access.class.php:466 ../../templates/list_header.inc.php:131
+#: ../../lib/class/access.class.php:469 ../../templates/list_header.inc.php:131
 #: ../../templates/show_add_access.inc.php:37
 #: ../../templates/show_edit_access.inc.php:69
 #: ../../templates/show_graphs.inc.php:83
@@ -1069,19 +1069,19 @@ msgstr "全部"
 msgid "View"
 msgstr "檢視"
 
-#: ../../lib/class/access.class.php:469
+#: ../../lib/class/access.class.php:472
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_edit_access.inc.php:70
 msgid "Read"
 msgstr "讀取"
 
-#: ../../lib/class/access.class.php:472
+#: ../../lib/class/access.class.php:475
 #: ../../templates/show_add_access.inc.php:39
 #: ../../templates/show_edit_access.inc.php:71
 msgid "Read/Write"
 msgstr "讀取/寫入"
 
-#: ../../lib/class/access.class.php:503
+#: ../../lib/class/access.class.php:506
 #: ../../templates/show_add_access.inc.php:56
 #: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:58
@@ -1090,7 +1090,7 @@ msgstr "讀取/寫入"
 msgid "API/RPC"
 msgstr "API/RPC"
 
-#: ../../lib/class/access.class.php:505
+#: ../../lib/class/access.class.php:508
 #: ../../templates/show_add_access.inc.php:65
 #: ../../templates/show_add_access.inc.php:66
 #: ../../templates/show_add_access.inc.php:67
@@ -1099,13 +1099,13 @@ msgstr "API/RPC"
 msgid "Local Network Definition"
 msgstr "區域網路定義"
 
-#: ../../lib/class/access.class.php:507
+#: ../../lib/class/access.class.php:510
 #: ../../templates/show_add_access.inc.php:73
 #: ../../templates/show_edit_access.inc.php:36
 msgid "Web Interface"
 msgstr "網頁界面"
 
-#: ../../lib/class/access.class.php:510
+#: ../../lib/class/access.class.php:513
 #: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:66
 #: ../../templates/show_add_access.inc.php:72
@@ -1120,7 +1120,7 @@ msgid "Unknown (Orphaned)"
 msgstr "未知 (遺孤)"
 
 #: ../../lib/class/album.class.php:645
-#: ../../lib/class/subsonic_xml_data.class.php:519
+#: ../../lib/class/subsonic_xml_data.class.php:586
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -1316,7 +1316,7 @@ msgid "Access denied to this playlist."
 msgstr "已被拒絕存取該播放清單"
 
 #: ../../lib/class/api.class.php:815 ../../lib/class/api.class.php:876
-#: ../../server/xml.server.php:102
+#: ../../server/xml.server.php:109
 msgid "Invalid Request"
 msgstr "非法的請求"
 
@@ -1713,30 +1713,30 @@ msgstr[0] "小時"
 msgid "Catalog Insert Failed check debug logs"
 msgstr "目錄插入失敗，請檢查偵錯日誌"
 
-#: ../../lib/class/catalog.class.php:1522
+#: ../../lib/class/catalog.class.php:1524
 msgid "No Update Needed"
 msgstr "不需更新"
 
-#: ../../lib/class/catalog.class.php:1847
+#: ../../lib/class/catalog.class.php:1844
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 
-#: ../../lib/class/catalog.class.php:1872
+#: ../../lib/class/catalog.class.php:1869
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "目錄驗證完成。 %d 中的 %d 個檔案已更新。"
 
-#: ../../lib/class/catalog.class.php:2086
+#: ../../lib/class/catalog.class.php:2083
 msgid "Failed to create playlist."
 msgstr "建立播放清單失敗。"
 
-#: ../../lib/class/catalog.class.php:2103
+#: ../../lib/class/catalog.class.php:2100
 msgid "No valid songs found in playlist file."
 msgstr "播放清單檔案內找不到合法的歌曲。"
 
-#: ../../lib/class/catalog.class.php:2459
+#: ../../lib/class/catalog.class.php:2456
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -2081,11 +2081,11 @@ msgstr "之後"
 
 #: ../../lib/class/search.class.php:202
 msgid "before (x) days ago"
-msgstr ""
+msgstr "(x) 天前之前"
 
 #: ../../lib/class/search.class.php:208
 msgid "after (x) days ago"
-msgstr ""
+msgstr "(x) 天前之後"
 
 #: ../../lib/class/search.class.php:218
 msgid "Any searchable text"
@@ -3837,11 +3837,11 @@ msgstr "%s 不存在或無法讀取"
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "無法讀取目錄的根資料夾，停止清理"
 
-#: ../../modules/catalog/local/local.catalog.php:629
+#: ../../modules/catalog/local/local.catalog.php:630
 msgid "All files would be removed. Doing nothing"
 msgstr "所有檔案可被移除。無動作"
 
-#: ../../modules/catalog/local/local.catalog.php:672
+#: ../../modules/catalog/local/local.catalog.php:674
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
 msgstr "錯誤，找不到檔案或是無內容： %s"
@@ -4404,7 +4404,7 @@ msgstr "缺少作者"
 msgid "Session Expired"
 msgstr "工作階段已過期"
 
-#: ../../server/xml.server.php:67
+#: ../../server/xml.server.php:71
 msgid "Unauthorized access attempt to API - ACL Error"
 msgstr "未授權的 API 存取 - 存取控制清單錯誤"
 
@@ -8492,7 +8492,7 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 17.04.2018 15:03:47 CEST
+# Last Update: 04.05.2018 16:28:43 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
