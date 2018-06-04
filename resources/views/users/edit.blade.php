@@ -1,4 +1,4 @@
-(!-- \resources\views\users\edit.blade.php --)
+<!-- \resources\views\users\edit.blade.php -->
 
 @extends('layouts.app')
 
@@ -27,7 +27,9 @@
 
     <div class='form-group'>
         @foreach ($roles as $role)
-            {{ Form::checkbox('roles[]',  $role->id, in_array($role->name, $r)) }}
+                 {{ Form::checkbox('roles[]',  $role->id, $user->roles ) }}
+        
+            {{-- Form::checkbox('roles[]',  $role->id, in_array($role->name, $r)) --}}
             {{ Form::label($role->name, ucfirst($role->name)) }}<br>
 
         @endforeach

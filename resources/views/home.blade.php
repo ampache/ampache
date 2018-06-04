@@ -10,8 +10,6 @@
   <h1>My Page</h1>
 </div>
 
-<img src="img_car.jpg" alt="Car" style="width:100%">
-
 <div class="w3-container">
 <h2>Sidebar Navigation Example</h2>
 <p>The sidebar with is set with "style="width:25%".</p>

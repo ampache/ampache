@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
 use App\Models\User;
 //Importing laravel-permission models
 use Spatie\Permission\Models\Role;
@@ -15,7 +15,7 @@ use Spatie\Permission\Models\Permission;
 class UserController extends Controller {
     
     public function __construct() {
-        $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
+       $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
     }
     
     /**
@@ -36,7 +36,7 @@ class UserController extends Controller {
      */
     public function create() {
         //Get all roles and pass it to the view
-        $roles = Role::get();
+         $roles = Role::get(); //Get all roles
         return view('users.create', ['roles'=>$roles]);
     }
     
@@ -49,7 +49,7 @@ class UserController extends Controller {
     public function store(Request $request) {
         //Validate name, email and password fields
         $this->validate($request, [
-            'name'=>'required|max:120',
+            'username'=>'required|max:120',
             'fullname'=>'required|max:120',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|confirmed'
@@ -92,11 +92,7 @@ class UserController extends Controller {
         $user = User::findOrFail($id); //Get user with specified id
         $roles = Role::get(); //Get all roles
         $userRoles = $user->roles()->pluck('name');
-        foreach ($userRoles as $item) {
-            $r[] = $item;
-        }
-        return view('users.edit', compact('user', 'roles', 'r')); //pass user and roles data to view
-        
+        return view('users.edit', compact('user', 'roles'));        
     }
     
     /**

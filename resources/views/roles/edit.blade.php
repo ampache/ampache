@@ -16,16 +16,27 @@
     </div>
 
     <h5><b>Assign Permissions</b></h5>
-    @foreach ($permissions as $permission)
+          @foreach ($permissions as $permission)
+            {{ Form::checkbox('permissions[]',  $permission->id, in_array($permission->name, $p), 
+                ['id'=> $permission->id, 'onClick' => 'toggleCheckbox("' . $permission->id . '")' ]) }}
+            {{ Form::label($permission->name, ucfirst($permission->name)) }}<br>
 
-        {{Form::checkbox('permissions[]',  $permission->id, $role->permissions ) }}
-        {{Form::label($permission->name, ucfirst($permission->name)) }}<br>
-
-    @endforeach
+        @endforeach
+ 
     <br>
-    {{ Form::submit('Edit', array('class' => 'btn btn-primary')) }}
+    {{ Form::submit('Save', array('class' => 'btn btn-primary')) }}
 
     {{ Form::close() }}    
 </div>
+<script>
 
+function toggleCheckbox(id) {
+   var x = document.getElementById(id);
+	if (x.value == id) {
+	    x.value = "";
+	} else {
+        x.value = id;
+	}
+}
+</script>
 @endsection

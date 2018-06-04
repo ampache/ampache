@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Modules\Catalog\Local\Catalog_local;
-use Modules\Catalog\Remote\Catalog_remote;
+use Modules\Catalogs\Local\Catalog_local;
+use Modules\Catalogs\Remote\Catalog_remote;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Http\Middleware\Authenticate;
@@ -21,7 +21,7 @@ class ModulesController extends Controller
       $catalogs = array();
       $catalog_types = $this->get_module_types('catalog');
       foreach ($catalog_types as $type) {
-          $class_name = '\\Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;         
+          $class_name = '\\Modules\\Catalogs\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;         
           $modules[] = new $class_name();
       }
       
@@ -79,7 +79,7 @@ class ModulesController extends Controller
   
   public function get_module_types($type)
   {
-      $basedir = base_path('/modules/' . $type);
+      $basedir = base_path('/modules/' . str_plural($type));
       $handle = opendir($basedir);
       if (!(file_exists($basedir))  || !($handle)) {
           Log::alert("Modules directory doesn't exist or cannot be read");

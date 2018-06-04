@@ -38,7 +38,7 @@ return array(
  * WARNING: this increase sensibly sql requests and slow down Ampache a lot
  *  DEFAULT: false
  */
- 'catalog_disable' => false,
+ 'catalog_disable' => true,
     
     
 /* Delete from disk

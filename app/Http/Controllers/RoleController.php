@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 //Importing laravel-permission models
 use Spatie\Permission\Models\Role;
@@ -87,11 +88,17 @@ class RoleController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
-        $role = Role::findOrFail($id);
-        $permissions = Permission::all();
+    public function edit($id) {       
+        $role = Role::findOrFail($id); //Get user with specified id
+        $permissions = Permission::all(); //Get all roles
+        $rolePermissions = DB::table('role_has_permissions')->select('name')
+        ->join('permissions', 'permission_id','=', 'permission_id')->where('role_id',$id)->distinct()->get();
         
-        return view('roles.edit', compact('role', 'permissions'));
+        foreach ($permissions as $item) {
+            $p[] = $item->name;
+        }
+        return view('roles.edit', compact('role', 'permissions', 'p')); //pass roles and roles data to view
+    
     }
     
     /**
@@ -106,7 +113,7 @@ class RoleController extends Controller {
         $role = Role::findOrFail($id);//Get role with the given id
         //Validate name and permission fields
         $this->validate($request, [
-            'name'=>'required|max:10|unique:roles,name,'.$id,
+            'name'=>'required|max:50|unique:roles,name,'.$id,
             'permissions' =>'required',
         ]);
         

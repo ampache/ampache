@@ -24,7 +24,6 @@ class AdminMiddleware
                 abort('401');
             }
         }
-        
         return $next($request);
     }
 }

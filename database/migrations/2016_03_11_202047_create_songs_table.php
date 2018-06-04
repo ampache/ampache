@@ -30,16 +30,17 @@ class CreateSongsTable extends Migration
                   ->nullable();
             $table->string('composer')
                   ->nullable();
-            
+
             $table->text('comment')
                   ->nullable();
             $table->text('lyrics')
                   ->nullable();
             $table->string('label')
                   ->nullable();
-            $table->string('catalog_number')
-                  ->nullable();
+            $table->integer('catalog');
             $table->string('language')
+                  ->nullable();
+            $table->integer('license')
                   ->nullable();
             $table->binary('waveform')
                   ->nullable();
@@ -54,7 +55,8 @@ class CreateSongsTable extends Migration
             $table->decimal('size')
                   ->unsigned()
                   ->nullable();
-           
+            $table->string('file',4096)
+                  ->nullable();
             $table->integer('album_id')
                   ->unsigned();
             $table->foreign('album_id')

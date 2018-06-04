@@ -29,9 +29,13 @@
  */
 namespace App\Classes;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Modules\Catalogs\Local\Catalog_local;
+use Modules\Catalogs\Remote\Catalog_remote;
 
 abstract class Catalog 
 {
@@ -212,14 +216,8 @@ abstract class Catalog
      */
     public static function create_from_id($id)
     {
-        $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($id));
-        $db_results = DB::table('catalog')->select('catalog_type')->where('id', $id)->get();
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return self::create_catalog_type($results['catalog_type'], $id);
-        }
-
-        return null;
+        $catalog = DB::table('catalogs')->select('catalog_type')->where('id', $id)->get();
+               return self::create_catalog_type($catalog[0]->catalog_type, $id);
     }
 
     /**
@@ -236,7 +234,7 @@ abstract class Catalog
             return false;
         }
 
-        $filename = base_path('modules/catalog/' . $type . '/' . $type . '.catalog.php');
+        $filename = base_path('modules/catalogs/' . $type . '/' . $type . '.catalog.php');
         $include  = require_once $filename;
 
         if (!$include) {
@@ -268,10 +266,10 @@ abstract class Catalog
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        $catTypes = "<script language=\"javascript\" type=\"text/javascript\">\n" .
+        $catTypes = "<script>\n" .
             "var type_fields = new Array();\n" .
             "type_fields['none'] = '';";
-        $seltypes = '<option value="none">[Select]</option>\n';
+        $seltypes = '<option value="">[Select]</option>';
         $types    = self::get_catalog_types();
         foreach ($types as $type) {
             $catalog = self::create_catalog_type($type);
@@ -284,14 +282,15 @@ abstract class Catalog
                     $catTypes .= "<tr><td></td><td>" . $help . "</td></tr>\n";
                 }
                 foreach ($fields as $key => $field) {
-                    $catTypes .= "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
+                    $catTypes .= "<tr><td style='width: 34%;'>" . $field['description'] . ":</td><td>";
 
                     switch ($field['type']) {
                         case 'checkbox':
-                            $catTypes .= "<input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') .  "/>";
+                            $catTypes .= "<div class='form-group'><input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') .  "/>";
                             break;
                         default:
-                            $catTypes .= "<input type='" . $field['type'] . "'class=" . "w3-round" . " name=" . $key . "' value='" . (isset( $field['value']) ? : '') . " ' />";
+                            $catTypes .= "<div class='form-group'><input type='" . $field['type'] . "'class=" . "w3-round" . 
+                            " name=" . $key . " value='" . (isset( $field['value']) ? : '') . "'><div class='messages'></div></div>";
                             break;
                     }
                     $catTypes .= "</td></tr>";
@@ -300,14 +299,14 @@ abstract class Catalog
             }
         }
 
-        $catTypes .= "\nfunction catalogTypeChanged() {\n" .
+ 
+            $catTypes .= "\nfunction catalogTypeChanged() {\n" .
             "var sel = document.getElementById('catalog_type');\n" .
             "var seltype = sel.options[sel.selectedIndex].value;\n" .
             "var ftbl = document.getElementById('" . $divback . "');\n" .
-            "ftbl.innerHTML = '<table class=\"w3-table w3-small\" style=\"width:60%\">' + type_fields[seltype] + '</table>';\n" .
-            "} \n</script>\n" .
-            "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
-        
+            "ftbl.innerHTML = '<table class=\"w3-table w3-small\">' + type_fields[seltype] + '</table>';\n" .
+            "}\n</script>\n";
+ 
         return $catTypes;
     }
 
@@ -319,7 +318,7 @@ abstract class Catalog
     public static function get_catalog_types()
     {
         /* First open the dir */
-        $basedir = base_path('modules/catalog');
+        $basedir = base_path('modules/catalogs');
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
@@ -394,21 +393,10 @@ abstract class Catalog
      * @param string $table
      * @return array
      */
-    public function get_info($id, $table = 'catalog')
+    public function get_info($id, $table = 'catalogs')
     {
-        $info = parent::get_info($id, $table);
-
-        $table      = 'catalog_' . $this->get_type();
-         $db_result = DB::tables($table)->pluck('id')->where('catalog_id', $id)->get();
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $info_type = parent::get_info($results['id'], $table);
-            foreach ($info_type as $key => $value) {
-                if (!$info[$key]) {
-                    $info[$key] = $value;
-                }
-            }
-        }
+        $table_join = 'catalog_' . $this->get_type();
+        $info  = DB::table($table)->join($table_join, 'catalogs.id', '=', $table_join . '.catalog_id')->get();
 
         return $info;
     }
@@ -446,8 +434,7 @@ abstract class Catalog
     {
         if (count($this->_filecache) == 0) {
             // Get _EVERYTHING_
-            $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, array($this->id));
+             $db_results = DB::table('songs')->select('id', 'file')->where('catalog', '=', $this->id)->get();
 
             // Populate the filecache
             while ($results = Dba::fetch_assoc($db_results)) {
@@ -515,17 +502,17 @@ abstract class Catalog
     public function format()
     {
         $this->f_name = $this->name;
-        $this->link   = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' .
-            scrub_out($this->f_name) . '</a>';
+        $this->link   = url('/catalogs/edit') . "/" . $this->id;
+        $this->f_link = '<a href="' . $this->link . '" title="' . e($this->name) . '">' .
+            e($this->f_name) . '</a>';
         $this->f_update = $this->last_update
-            ? date('d/m/Y h:i', $this->last_update)
+            ? date('m/d/Y h:i', strtotime($this->last_update))
             : T_('Never');
         $this->f_add = $this->last_add
-            ? date('d/m/Y h:i', $this->last_add)
+            ? date('m/d/Y h:i', strtotime($this->last_add))
             : T_('Never');
         $this->f_clean = $this->last_clean
-            ? date('d/m/Y h:i', $this->last_clean)
+            ? date('m/d/Y h:i', strtotime($this->last_clean))
             : T_('Never');
     }
 
@@ -539,20 +526,18 @@ abstract class Catalog
     public static function get_catalogs($filter_type='')
     {
         $params     = array();
-        $sql        = "SELECT `id` FROM `catalog` ";
         if (!empty($filter_type)) {
-            $sql .= "WHERE `gather_types` = ? ";
-            $params[] = $filter_type;
+            $db_results = DB::table('catalogs')->select('id')->where('gather_types', $filter_type)->orderBy('name')->get();
         }
-        $sql .= "ORDER BY `name`";
-        $db_results = Dba::read($sql, $params);
-
+        else {
+            $db_results = DB::table('catalogs')->select('id')->orderBy('name')->get();
+        }
         $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+        foreach ($db_results as $db_result) {
+           $results[] = $db_result->id; 
         }
 
+ 
         return $results;
     }
 
@@ -624,11 +609,12 @@ abstract class Catalog
      */
     public static function create($data)
     {
-        $name           = $data['name'];
-        $type           = $data['type'];
+        $name           = $data['catalog_name'];
+        $type           = $data['catalog_type'];
         $rename_pattern = $data['rename_pattern'];
         $sort_pattern   = $data['sort_pattern'];
         $gather_types   = $data['gather_media'];
+        $owner          = $data['catalog_owner'];
 
         // Should it be an array? Not now.
         if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
@@ -636,33 +622,24 @@ abstract class Catalog
         }
 
         $insert_id = 0;
-        $filename  = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '/' . $type . '.catalog.php';
+        $filename  = base_path('/modules/catalogs/' . $type . '/' . $type . '.catalog.php');
         $include   = require_once $filename;
 
         if ($include) {
-            $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' .
-                '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
-            Dba::write($sql, array(
-                $name,
-                $type,
-                $rename_pattern,
-                $sort_pattern,
-                $gather_types
-            ));
-
-            $insert_id = Dba::insert_id();
+            $insert_id = DB::table('catalogs')->insertGetId(
+                ['name' => $name, 'catalog_type' => $type, 'rename_pattern' => $rename_pattern,
+                    'sort_pattern' => $sort_pattern, 'gather_types' => $gather_types, 'owner' => $owner]
+                );
 
             if (!$insert_id) {
-                AmpError::add('general', T_('Catalog Insert Failed check debug logs'));
-                debug_event('catalog', 'Insert failed: ' . json_encode($data), 2);
-
+                 Log::debug(' Catalog insert failed: ' . json_encode($data));
+                 
                 return 0;
             }
 
             $classname = 'Catalog_' . $type;
             if (!$classname::create_type($insert_id, $data)) {
-                $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
-                Dba::write($sql, array($insert_id));
+                DB::table('catalogs')->where("id", "=", $insert_id)->delete();
                 $insert_id = 0;
             }
         }
@@ -679,12 +656,8 @@ abstract class Catalog
     public static function count_tags()
     {
         // FIXME: Ignores catalog_id
-        $sql        = "SELECT COUNT(`id`) FROM `tag`";
-        $db_results = Dba::read($sql);
-
-        $row = Dba::fetch_row($db_results);
-
-        return $row[0];
+        $count = DB::table('tag')->select('id')->count();
+        return $count;
     }
 
     /**
@@ -1276,9 +1249,9 @@ abstract class Catalog
     public function gather_art($songs = null, $videos = null)
     {
         // Make sure they've actually got methods
-        $art_order = AmpConfig::get('art_order');
+        $art_order = config('system.art_order');
         if (!count($art_order)) {
-            debug_event('gather_art', 'art_order not set, Catalog::gather_art aborting', 3);
+           Log::error('gather_art: art_order not set, Catalog::gather_art aborting');
 
             return true;
         }
@@ -2356,7 +2329,7 @@ abstract class Catalog
 
         return $tags;
     }
-
+/*
     public static function can_remove($libitem, $user = null)
     {
         if (!$user) {
@@ -2373,7 +2346,7 @@ abstract class Catalog
 
         return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
     }
-
+*/
     public static function process_action($action, $catalogs, $options = null)
     {
         if (!$options || !is_array($options)) {
@@ -2393,7 +2366,7 @@ abstract class Catalog
                     }
 
                     if (!defined('SSE_OUTPUT')) {
-                        AmpError::display('catalog_add');
+                        Log::error('catalog_add');
                     }
                 }
                 break;
@@ -2461,7 +2434,7 @@ abstract class Catalog
                 } // end if update
 
                 if ($catalog_id <= 0) {
-                    AmpError::add('general', T_("This subdirectory is not part of an existing catalog. Update cannot be processed."));
+                    Log::error(__("This subdirectory is not part of an existing catalog. Update cannot be processed."));
                 }
                 break;
             case 'gather_media_art':
@@ -2473,7 +2446,7 @@ abstract class Catalog
                 foreach ($catalogs as $catalog_id) {
                     $catalog = Catalog::create_from_id($catalog_id);
                     if ($catalog !== null) {
-                        require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
+   //                     require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
                         flush();
                         $catalog->gather_art();
                     }

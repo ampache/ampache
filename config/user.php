@@ -12,9 +12,9 @@ return [
     | Don't forget to set the mail from address further down in the config.
     |
     */
-    
+
     'allow_public_registration' => true,
-    
+
     /*
     |--------------------------------------------------------------------------
     | Notify admin of registrations
@@ -23,9 +23,9 @@ return [
     | This setting turns on/off admin notification of registration.
     |
     */
-    
+
     'admin_notify_reg' => false,
-    
+
     /*
     |--------------------------------------------------------------------------
     | Admin validation required
@@ -36,9 +36,9 @@ return [
     | before it's usable.
     |
     */
-    
+
     'admin_enable_required' => false,
-    
+
     /*
     |--------------------------------------------------------------------------
     | User Agreement
@@ -49,9 +49,9 @@ return [
     | User will need to accept the agreement before they can register.
     |
     */
-    
+
     'user_agreement' => false,
-    
+
     /*
     |--------------------------------------------------------------------------
     | User no email confirmation
@@ -60,9 +60,9 @@ return [
     | This disable email confirmation when registering.
     |
     */
-    
-    'user_no_email_confirm' => true,
-    
+
+    'user_no_email_confirm' => false,
+
     /*
     |--------------------------------------------------------------------------
     | Registration display fields
@@ -70,12 +70,12 @@ return [
     |
     | The fields that will be shown on user registration page.
     | Username and email fields are always displayed.
-    | POSSIBLE VALUES: fullname,website,state,city
+    | POSSIBLE VALUES: full_name,website,state,city
     |
     */
-    
-    'registration_display_fields' => [],
-    
+
+    'registration_display_fields' => ['full_name', 'website'],
+
     /*
     |--------------------------------------------------------------------------
     | Registration mandatory fields
@@ -83,12 +83,12 @@ return [
     |
     | This controls which fields are mandatory for registration.
     | Username and email fields are always mandatory.
-    | POSSIBLE VALUES: fullname,website,state,city
+    | POSSIBLE VALUES: full_name,website,state,city
     |
     */
-    
+
     'registration_mandatory_fields' => [],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Captcha on public registration
@@ -98,9 +98,9 @@ return [
     | the image created by Captcha.
     |
     */
-    
+
     'captcha_public_reg' => false,
-    
+
     /*
     |--------------------------------------------------------------------------
     | Track User IPs
@@ -110,7 +110,7 @@ return [
     | will store user,ip,time at one row per login.
     |
     */
-    
+
     'track_user_ip' => false,
 
 ];

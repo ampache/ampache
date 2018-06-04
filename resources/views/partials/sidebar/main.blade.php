@@ -3,7 +3,7 @@
 
 <!-- Sidebar -->
 <?php $isCollapsed = ((config('feature.sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed"); ?>
- <div id="sidebar" class="w3-sidebar w3-bar-block w3-black w3-section" style="width:12%;height:70%">
+ <div id="sidebar" class="w3-sidebar w3-bar-block w3-theme-d4 w3-section" style="width:12%;">
    <div id="sidebar-header" class="w3-center" style="cursor:pointer">
       <span id="sidebar-header-content">{{ $isCollapsed ? '>>>>' : '<<<<' }}</span>
    </div>

@@ -1,5 +1,8 @@
 <?php
 
+use Sse\Laravel\SseServiceProvider;
+use Sse\Laravel\Facade\SSE;
+
 return [
 
     /*
@@ -164,6 +167,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        SseServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
  //       Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
         /*
@@ -178,7 +182,8 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\CatalogServiceProvider::class,
+        
     ],
 
     /*
@@ -226,12 +231,13 @@ return [
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
  //       'Soundcloud' => Njasm\Laravel\Soundcloud\Facades\Soundcloud::class,
+        'SSE' => SSE::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Catalog_local' => Modules\Catalog\Local\Catalog_local::class,
-        'Catalog_remote' => \Modules\Catalog\Remote\Catalog_remote::class,    
+        'Catalog_local' => Modules\Catalogs\Local\Catalog_local::class,
+        'Catalog_remote' => \Modules\Catalogs\Remote\Catalog_remote::class,    
  //       'Catalog_subsonic' => \Modules\Catalog\Subsonic\Catalog_subsonic::class
     ],
 

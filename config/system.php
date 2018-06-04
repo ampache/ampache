@@ -116,6 +116,18 @@ return [
    ; Un comment if don't want ampache to follow symlinks
    ; DEFAULT: false
  */
-   'no_symlinks'   => false
+   'no_symlinks'   => false,
+ 
+ /* ; Art Gather Order
+ * Simply arrange the following in the order you would like
+ * ampache to search. If you want to disable one of the search
+ * methods simply leave it out. DB should be left as the first
+ * method unless you want it to overwrite what's already in the
+ * database
+ * POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
+ * POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
+ * DEFAULT: db,tags,folder,musicbrainz,lastfm,google
+ */
+ 'art_order' => "db,tags,folder",
     
 ];
