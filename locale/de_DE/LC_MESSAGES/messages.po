@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-05-04 16:28+0200\n"
+"POT-Creation-Date: 2018-06-04 15:57+0200\n"
 "PO-Revision-Date: 2018-04-18 04:42+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/"
@@ -47,7 +47,7 @@ msgstr "Hinzugefügt"
 msgid "Your new Access Control List(s) have been created"
 msgstr "Deine neue(n) Zugriffskontrollliste(n) wurden erstellt"
 
-#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1515
+#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1517
 #: ../../lib/class/search.class.php:403 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
@@ -1076,7 +1076,7 @@ msgstr "IP-Adress-Versions-Fehler"
 msgid "Duplicate ACL defined"
 msgstr "ACL ist schon vorhanden"
 
-#: ../../lib/class/access.class.php:463 ../../lib/class/access.class.php:485
+#: ../../lib/class/access.class.php:466 ../../lib/class/access.class.php:488
 #: ../../lib/ui.lib.php:480 ../../templates/browse_filters.inc.php:89
 #: ../../templates/list_header.inc.php:124
 #: ../../templates/show_add_access.inc.php:40
@@ -1089,7 +1089,7 @@ msgstr "ACL ist schon vorhanden"
 msgid "All"
 msgstr "Alle"
 
-#: ../../lib/class/access.class.php:466 ../../templates/list_header.inc.php:131
+#: ../../lib/class/access.class.php:469 ../../templates/list_header.inc.php:131
 #: ../../templates/show_add_access.inc.php:37
 #: ../../templates/show_edit_access.inc.php:69
 #: ../../templates/show_graphs.inc.php:83
@@ -1097,19 +1097,19 @@ msgstr "Alle"
 msgid "View"
 msgstr "Anzeigen"
 
-#: ../../lib/class/access.class.php:469
+#: ../../lib/class/access.class.php:472
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_edit_access.inc.php:70
 msgid "Read"
 msgstr "Lesen"
 
-#: ../../lib/class/access.class.php:472
+#: ../../lib/class/access.class.php:475
 #: ../../templates/show_add_access.inc.php:39
 #: ../../templates/show_edit_access.inc.php:71
 msgid "Read/Write"
 msgstr "Lesen/Schreiben"
 
-#: ../../lib/class/access.class.php:503
+#: ../../lib/class/access.class.php:506
 #: ../../templates/show_add_access.inc.php:56
 #: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:58
@@ -1118,7 +1118,7 @@ msgstr "Lesen/Schreiben"
 msgid "API/RPC"
 msgstr "API/RPC"
 
-#: ../../lib/class/access.class.php:505
+#: ../../lib/class/access.class.php:508
 #: ../../templates/show_add_access.inc.php:65
 #: ../../templates/show_add_access.inc.php:66
 #: ../../templates/show_add_access.inc.php:67
@@ -1127,13 +1127,13 @@ msgstr "API/RPC"
 msgid "Local Network Definition"
 msgstr "Lokale Netzwerkrichtlinie"
 
-#: ../../lib/class/access.class.php:507
+#: ../../lib/class/access.class.php:510
 #: ../../templates/show_add_access.inc.php:73
 #: ../../templates/show_edit_access.inc.php:36
 msgid "Web Interface"
 msgstr "Web Oberfläche"
 
-#: ../../lib/class/access.class.php:510
+#: ../../lib/class/access.class.php:513
 #: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:66
 #: ../../templates/show_add_access.inc.php:72
@@ -1148,7 +1148,7 @@ msgid "Unknown (Orphaned)"
 msgstr "Unbekannt (Verwaist)"
 
 #: ../../lib/class/album.class.php:645
-#: ../../lib/class/subsonic_xml_data.class.php:519
+#: ../../lib/class/subsonic_xml_data.class.php:586
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -1345,7 +1345,7 @@ msgid "Access denied to this playlist."
 msgstr "Der Zugriff zu dieser Playlist wurde verweigert."
 
 #: ../../lib/class/api.class.php:815 ../../lib/class/api.class.php:876
-#: ../../server/xml.server.php:102
+#: ../../server/xml.server.php:109
 msgid "Invalid Request"
 msgstr "Ungültige Anfrage"
 
@@ -1744,11 +1744,11 @@ msgstr[1] "Stunden"
 msgid "Catalog Insert Failed check debug logs"
 msgstr "Katalog konnte nicht hinzugefügt werden, überprüfe die Log-Dateien"
 
-#: ../../lib/class/catalog.class.php:1522
+#: ../../lib/class/catalog.class.php:1524
 msgid "No Update Needed"
 msgstr "Es wird keine Aktualisierung benötigt."
 
-#: ../../lib/class/catalog.class.php:1847
+#: ../../lib/class/catalog.class.php:1844
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
@@ -1757,21 +1757,21 @@ msgstr[0] ""
 msgstr[1] ""
 "Der Katalog wurde erfolgreich gesäubert. Es wurden %d Dateien entfernt."
 
-#: ../../lib/class/catalog.class.php:1872
+#: ../../lib/class/catalog.class.php:1869
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 "Katalog wurde erfolgreich überprüft. %d von %d Dateien wurden aktualisiert."
 
-#: ../../lib/class/catalog.class.php:2086
+#: ../../lib/class/catalog.class.php:2083
 msgid "Failed to create playlist."
 msgstr "Beim erstellen der Playlist ist ein Fehler aufgetreten."
 
-#: ../../lib/class/catalog.class.php:2103
+#: ../../lib/class/catalog.class.php:2100
 msgid "No valid songs found in playlist file."
 msgstr "Keine gültigen Songs in der Playlist gefunden."
 
-#: ../../lib/class/catalog.class.php:2459
+#: ../../lib/class/catalog.class.php:2456
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
@@ -3919,11 +3919,11 @@ msgstr ""
 "Das Verzeichnis des Kataloges kann nicht gelesen werden. Die Bereinigung "
 "wurde beendet"
 
-#: ../../modules/catalog/local/local.catalog.php:629
+#: ../../modules/catalog/local/local.catalog.php:630
 msgid "All files would be removed. Doing nothing"
 msgstr "Alle Dateien würden gelöscht werden. Abgebrochen!"
 
-#: ../../modules/catalog/local/local.catalog.php:672
+#: ../../modules/catalog/local/local.catalog.php:674
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
 msgstr "Fehler: Die Datei (%s) wurde nicht gefunden oder sie ist 0 Byte groß."
@@ -4514,7 +4514,7 @@ msgstr "Fehlende Interpreten"
 msgid "Session Expired"
 msgstr "Die Sitzung ist abgelaufen"
 
-#: ../../server/xml.server.php:67
+#: ../../server/xml.server.php:71
 msgid "Unauthorized access attempt to API - ACL Error"
 msgstr "Fehler: Nicht autorisierter Zugriff auf 'API - ACL'"
 
@@ -8715,7 +8715,7 @@ msgstr "Ich kann dieses Video nicht löschen."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 17.04.2018 15:03:47 CEST
+# Last Update: 04.05.2018 16:28:43 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
