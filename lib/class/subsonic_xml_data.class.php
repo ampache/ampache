@@ -431,10 +431,12 @@ class Subsonic_XML_Data
 
     public static function addSong($xml, $songId, $addAmpacheInfo=false, $elementName='song')
     {
-        $songData    = self::getSongData($songId);
-        $albumData   = self::getAlbumData($songData['album']);
-        $artistData  = self::getArtistData($songData['artist']);
-        $catalogData = self::getCatalogData($songData['catalog'], $songData['file']);
+        $songData     = self::getSongData($songId);
+        $albumData    = self::getAlbumData($songData['album']);
+        $artistData   = self::getArtistData($songData['artist']);
+        $catalogData  = self::getCatalogData($songData['catalog'], $songData['file']);
+        $catalog_path = rtrim($catalogData[0], "/");
+        
         self::createSong($xml, $songData, $albumData,$artistData, $catalogData, $addAmpacheInfo, $elementName);
     }
     
@@ -455,7 +457,10 @@ class Subsonic_XML_Data
                 $results['object_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold);
             }
         }
-
+        $extension       = pathinfo($results['file'], PATHINFO_EXTENSION);
+        $results['type'] = strtolower($extension);
+        $results['mime'] = Song::type_to_mime($type);
+        
         return $results;
     }
     public static function getAlbumData($albumId)
@@ -492,9 +497,12 @@ class Subsonic_XML_Data
     public static function getCatalogData($catalogId, $file_Path)
     {
         $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($id));
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $catalog_path    = rtrim($results['path'], "/");
+        $db_results = Dba::read($sql, array($catalogId));
+        if ($result = Dba::fetch_assoc($db_results)) {
+            $sql             = 'SELECT `path` FROM ' . 'catalog_' . $result['catalog_type'] . ' WHERE `catalog_id` = ?';
+            $db_results      = Dba::read($sql, array($catalogId));
+            $result          = Dba::fetch_assoc($db_results);
+            $catalog_path    = rtrim($result['path'], "/");
             $results['path'] = str_replace($catalog_path . "/", "", $file_Path);
 
             return $results;
