@@ -140,13 +140,12 @@ foreach ($query as $param) {
     // workaround for clementine/Qt5 bug
     // see https://github.com/clementine-player/Clementine/issues/6080
     $matches = array();
-    if($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
+    if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
         $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
-        if($calc) {
+        if ($calc) {
             debug_event('subsonic', "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc", '4');
             $decvalue = $calc;
-        }
-        else {
+        } else {
             debug_event('subsonic', "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though", '4');
         }
     }
