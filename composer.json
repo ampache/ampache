@@ -72,7 +72,8 @@
 		"friendsofphp/php-cs-fixer": "~2",
 		"kunalvarma05/dropbox-php-sdk": "^0.2.1",
 		"tightenco/collect": "5.2.*",
-		"ampache/ampacheapi-php": "^1.0"
+		"ampache/ampacheapi-php": "^1.0",
+		"phpstan/phpstan": "^0.9.2"
     },
 	
 	"repositories":
