@@ -200,7 +200,9 @@ if (!$share_id) {
 }
 
 /* If we are in demo mode.. die here */
-if (AmpConfig::get('demo_mode') || (!Access::check('interface', '25'))) {
+
+$prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
+if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
     debug_event('UI::access_denied', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access, '3');
     UI::access_denied();
     exit;

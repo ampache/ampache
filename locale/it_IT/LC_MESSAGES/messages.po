@@ -4,6 +4,7 @@
 #
 # Translators:
 # andreaz <azagli@libero.it>, 2016
+# Leonardo Papini <leonardopapini96@gmail.com>, 2018
 # Luigi Mantellini <luigi.mantellini@gmail.com>, 2017
 # Morgan <mfouillat+github@gmail.com>, 2016
 # Simone Rossi <polletto@gmail.com>, 2017
@@ -12,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-05-04 16:28+0200\n"
-"PO-Revision-Date: 2018-04-18 04:42+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2018-06-04 15:57+0200\n"
+"PO-Revision-Date: 2018-05-31 13:37+0000\n"
+"Last-Translator: Leonardo Papini <leonardopapini96@gmail.com>\n"
 "Language-Team: Italian (Italy) (http://www.transifex.com/ampache/ampache/"
 "language/it_IT/)\n"
 "Language: it_IT\n"
@@ -48,7 +49,7 @@ msgstr "Aggiunti"
 msgid "Your new Access Control List(s) have been created"
 msgstr "Il nuovo Access Control List è stato creato"
 
-#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1515
+#: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1517
 #: ../../lib/class/search.class.php:403 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
@@ -707,7 +708,7 @@ msgstr "Cancellazione: %s"
 
 #: ../../bin/fix_filenames.inc:42
 msgid "ERROR: Iconv required for this functionality, quitting"
-msgstr ""
+msgstr "ERRORE: Iconv necessario per questa funzionalità, uscita"
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
@@ -873,7 +874,7 @@ msgstr "Usando: %s E %s per corrispondenza modello file"
 
 #: ../../bin/print_tags.inc:67
 msgid "Raw results:"
-msgstr ""
+msgstr "Risultati raw:"
 
 #: ../../bin/print_tags.inc:71
 #, php-format
@@ -1024,7 +1025,7 @@ msgstr ""
 
 #: ../../install.php:122
 msgid "Error: Ampache SQL Username or Password missing"
-msgstr ""
+msgstr "Errore: username e la password SQL di Ampache mancanti"
 
 #: ../../install.php:176
 msgid "Error: Config files not found or unreadable"
@@ -1036,7 +1037,7 @@ msgstr "Eliminazione dell'etichetta"
 
 #: ../../labels.php:37
 msgid "Are you sure you want to permanently delete this label?"
-msgstr ""
+msgstr "Sei sicuro di voler cancellare definitivamente questa label?"
 
 #: ../../labels.php:56
 msgid "Label has been deleted."
@@ -1056,7 +1057,7 @@ msgstr "L'etichetta non può essere trovata."
 
 #: ../../lib/class/access.class.php:157 ../../lib/class/access.class.php:162
 msgid "Invalid IPv4 / IPv6 Address Entered"
-msgstr ""
+msgstr "Inserito indirizzo IPV4 / IPV6 invalido"
 
 #: ../../lib/class/access.class.php:166 ../../lib/class/access.class.php:167
 msgid "IP Address Version Mismatch"
@@ -1066,7 +1067,7 @@ msgstr "Versione Inidirizzo IP non corrispondente"
 msgid "Duplicate ACL defined"
 msgstr "Definita ACL duplicata"
 
-#: ../../lib/class/access.class.php:463 ../../lib/class/access.class.php:485
+#: ../../lib/class/access.class.php:466 ../../lib/class/access.class.php:488
 #: ../../lib/ui.lib.php:480 ../../templates/browse_filters.inc.php:89
 #: ../../templates/list_header.inc.php:124
 #: ../../templates/show_add_access.inc.php:40
@@ -1079,7 +1080,7 @@ msgstr "Definita ACL duplicata"
 msgid "All"
 msgstr "Tutti"
 
-#: ../../lib/class/access.class.php:466 ../../templates/list_header.inc.php:131
+#: ../../lib/class/access.class.php:469 ../../templates/list_header.inc.php:131
 #: ../../templates/show_add_access.inc.php:37
 #: ../../templates/show_edit_access.inc.php:69
 #: ../../templates/show_graphs.inc.php:83
@@ -1087,19 +1088,19 @@ msgstr "Tutti"
 msgid "View"
 msgstr "Visualizza"
 
-#: ../../lib/class/access.class.php:469
+#: ../../lib/class/access.class.php:472
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_edit_access.inc.php:70
 msgid "Read"
 msgstr "Lettura"
 
-#: ../../lib/class/access.class.php:472
+#: ../../lib/class/access.class.php:475
 #: ../../templates/show_add_access.inc.php:39
 #: ../../templates/show_edit_access.inc.php:71
 msgid "Read/Write"
 msgstr "Lettura/Scrittura"
 
-#: ../../lib/class/access.class.php:503
+#: ../../lib/class/access.class.php:506
 #: ../../templates/show_add_access.inc.php:56
 #: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:58
@@ -1108,7 +1109,7 @@ msgstr "Lettura/Scrittura"
 msgid "API/RPC"
 msgstr "API/RPC"
 
-#: ../../lib/class/access.class.php:505
+#: ../../lib/class/access.class.php:508
 #: ../../templates/show_add_access.inc.php:65
 #: ../../templates/show_add_access.inc.php:66
 #: ../../templates/show_add_access.inc.php:67
@@ -1117,13 +1118,13 @@ msgstr "API/RPC"
 msgid "Local Network Definition"
 msgstr "Definizione Rete Locale"
 
-#: ../../lib/class/access.class.php:507
+#: ../../lib/class/access.class.php:510
 #: ../../templates/show_add_access.inc.php:73
 #: ../../templates/show_edit_access.inc.php:36
 msgid "Web Interface"
 msgstr "Interfaccia web"
 
-#: ../../lib/class/access.class.php:510
+#: ../../lib/class/access.class.php:513
 #: ../../templates/show_add_access.inc.php:57
 #: ../../templates/show_add_access.inc.php:66
 #: ../../templates/show_add_access.inc.php:72
@@ -1135,10 +1136,10 @@ msgstr ""
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
-msgstr ""
+msgstr "Sconosciuto (Orfano)"
 
 #: ../../lib/class/album.class.php:645
-#: ../../lib/class/subsonic_xml_data.class.php:519
+#: ../../lib/class/subsonic_xml_data.class.php:586
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -1326,7 +1327,7 @@ msgstr "Errore Handshake invalido -"
 #: ../../lib/class/api.class.php:194 ../../lib/class/api.class.php:195
 #: ../../lib/class/api.class.php:282
 msgid "Invalid Username/Password"
-msgstr ""
+msgstr "Username/Password invalidi"
 
 #: ../../lib/class/api.class.php:661 ../../lib/class/api.class.php:679
 #: ../../lib/class/api.class.php:697
@@ -1334,7 +1335,7 @@ msgid "Access denied to this playlist."
 msgstr "Accesso negato a questa playlist."
 
 #: ../../lib/class/api.class.php:815 ../../lib/class/api.class.php:876
-#: ../../server/xml.server.php:102
+#: ../../server/xml.server.php:109
 msgid "Invalid Request"
 msgstr "Richiesta non valida"
 
@@ -1348,7 +1349,7 @@ msgstr ""
 
 #: ../../lib/class/api.class.php:1073
 msgid "Library item not found."
-msgstr ""
+msgstr "Elemento della libreria non trovato"
 
 #: ../../lib/class/art.class.php:1313
 msgid "Error: Unable to open"
@@ -1595,7 +1596,7 @@ msgstr ""
 
 #: ../../lib/class/browse.class.php:244
 msgid "Current Playlist"
-msgstr ""
+msgstr "Playlist corrente"
 
 #: ../../lib/class/browse.class.php:249 ../../lib/class/upnp_api.class.php:427
 #: ../../templates/sidebar_home.inc.php:42
@@ -1731,37 +1732,39 @@ msgstr[1] "ore"
 
 #: ../../lib/class/catalog.class.php:651
 msgid "Catalog Insert Failed check debug logs"
-msgstr ""
+msgstr "Inserimento del Catalogo fallito, controlla il log di debug"
 
-#: ../../lib/class/catalog.class.php:1522
+#: ../../lib/class/catalog.class.php:1524
 msgid "No Update Needed"
 msgstr "Non è necessario aggiornare"
 
-#: ../../lib/class/catalog.class.php:1847
+#: ../../lib/class/catalog.class.php:1844
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "Pulizia Catalogo Effettuata. %d file rimosso."
 msgstr[1] "Pulizia Catalogo Effettuata. %d file rimossi."
 
-#: ../../lib/class/catalog.class.php:1872
+#: ../../lib/class/catalog.class.php:1869
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "Verifica Catalogo Effettuata. %d di %d file aggiornati."
 
-#: ../../lib/class/catalog.class.php:2086
+#: ../../lib/class/catalog.class.php:2083
 msgid "Failed to create playlist."
 msgstr "Crezione playlist fallita."
 
-#: ../../lib/class/catalog.class.php:2103
+#: ../../lib/class/catalog.class.php:2100
 msgid "No valid songs found in playlist file."
 msgstr "Nessuna canzone valida trovata nel playlist file."
 
-#: ../../lib/class/catalog.class.php:2459
+#: ../../lib/class/catalog.class.php:2456
 msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
 msgstr ""
+"Questa sotto directory non fa parte di un catalogo esistente. "
+"L'aggiornamento non può essere effettuato."
 
 #: ../../lib/class/channel.class.php:186
 msgid "Start Channel"
@@ -1777,12 +1780,12 @@ msgstr "Modifica canale"
 
 #: ../../lib/class/channel.class.php:341
 msgid "Running"
-msgstr ""
+msgstr "In esecuzione"
 
 #: ../../lib/class/channel.class.php:343
 #: ../../lib/class/localplay.class.php:630
 msgid "Stopped"
-msgstr ""
+msgstr "Fermata"
 
 #: ../../lib/class/democratic.class.php:153 ../../lib/class/video.class.php:288
 #: ../../templates/show_create_democratic.inc.php:36
@@ -1791,7 +1794,7 @@ msgstr "minuti"
 
 #: ../../lib/class/democratic.class.php:154
 msgid "Primary"
-msgstr ""
+msgstr "Principale"
 
 #: ../../lib/class/democratic.class.php:164
 #: ../../templates/show_add_user.inc.php:87
@@ -1799,7 +1802,7 @@ msgstr ""
 #: ../../templates/show_edit_user.inc.php:111
 #: ../../templates/show_preference_box.inc.php:81
 msgid "Content Manager"
-msgstr ""
+msgstr "Gestore contenuti"
 
 #: ../../lib/class/democratic.class.php:167
 #: ../../templates/show_add_user.inc.php:88
@@ -1807,7 +1810,7 @@ msgstr ""
 #: ../../templates/show_edit_user.inc.php:112
 #: ../../templates/show_preference_box.inc.php:82
 msgid "Catalog Manager"
-msgstr ""
+msgstr "Gestore catalogo"
 
 #: ../../lib/class/label.class.php:153 ../../lib/class/search.class.php:260
 #: ../../templates/show_edit_song_row.inc.php:81
@@ -1821,21 +1824,21 @@ msgstr "Etichetta"
 #: ../../lib/class/live_stream.class.php:192
 #: ../../lib/class/live_stream.class.php:229
 msgid "Name Required"
-msgstr ""
+msgstr "Nome richiesto"
 
 #: ../../lib/class/live_stream.class.php:200
 msgid "Invalid URL must be mms:// , https:// or http://"
-msgstr ""
+msgstr "URL invalido, deve essere del formato mms://, https:// o https://"
 
 #: ../../lib/class/live_stream.class.php:206
 #: ../../lib/class/live_stream.class.php:240
 #: ../../lib/class/live_stream.class.php:246
 msgid "Invalid URL must be http:// or https://"
-msgstr ""
+msgstr "URL invalido, deve essere http:// o https://"
 
 #: ../../lib/class/live_stream.class.php:232
 msgid "Codec (eg. MP3, OGG...) Required"
-msgstr ""
+msgstr "Codec (es. MP3, OGG) richiesto"
 
 #: ../../lib/class/live_stream.class.php:253
 msgid "Invalid Catalog"
@@ -1972,6 +1975,21 @@ msgid ""
 "\n"
 "Thank you for registering\n"
 msgstr ""
+"Ti ringraziamo per esserti registrato.\n"
+"\n"
+"\n"
+"Per favore, conserva questa mail. Le informazioni del tuo account sono le "
+"seguenti:\n"
+" ----------------------\n"
+"Username: %s\n"
+"----------------------\n"
+"\n"
+"Il tuo account è attualmente inattivo. Non potrai utilizzarlo finchè non "
+"visiterai il seguente link:\n"
+"\n"
+"%s\n"
+"\n"
+"Ti ringraziamo per esserti registrato.\n"
 
 #: ../../lib/class/registration.class.php:77
 #, php-format
@@ -1985,6 +2003,13 @@ msgid ""
 "Website: %s\n"
 "\n"
 msgstr ""
+"Un nuovo utente si è registrato\n"
+"Sono state inserite le seguenti informazioni.\n"
+"\n"
+"Username: %s\n"
+"Nome e cognome: %s\n"
+"E-mail: %s\n"
+"Sito web: %s\n"
 
 #: ../../lib/class/registration.class.php:104
 #, php-format
@@ -1999,6 +2024,10 @@ msgid ""
 "\n"
 "            Please logon using %s"
 msgstr ""
+"Il tuo account %s è stato abilitato\n"
+"\n"
+"\n"
+"Per favore, accedi con %s"
 
 #: ../../lib/class/search.class.php:62
 msgid "is greater than or equal to"
@@ -2076,7 +2105,7 @@ msgstr ""
 
 #: ../../lib/class/search.class.php:218
 msgid "Any searchable text"
-msgstr ""
+msgstr "Ogni testo ricercabile"
 
 #: ../../lib/class/search.class.php:246
 #: ../../templates/show_edit_song_row.inc.php:73
@@ -2135,7 +2164,7 @@ msgstr "Durata (in minuti)"
 #: ../../lib/class/search.class.php:304 ../../lib/class/search.class.php:521
 #: ../../lib/class/search.class.php:618
 msgid "Rating (Average)"
-msgstr ""
+msgstr "Valutazione (media)"
 
 #: ../../lib/class/search.class.php:322 ../../templates/header.inc.php:437
 #: ../../templates/sidebar_home.inc.php:142
@@ -2146,7 +2175,7 @@ msgstr "Preferiti"
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
 msgid "Rating (Mine)"
-msgstr ""
+msgstr "Valutazione (personale)"
 
 #: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2210,7 +2239,7 @@ msgstr ""
 
 #: ../../lib/class/search.class.php:461
 msgid "Metadata"
-msgstr ""
+msgstr "Metadati"
 
 #: ../../lib/class/search.class.php:475
 #: ../../templates/show_add_upload.inc.php:199
@@ -2303,7 +2332,7 @@ msgstr "Nome utente"
 
 #: ../../lib/class/share.class.php:206
 msgid "Share edit"
-msgstr ""
+msgstr "Modifica condivisione"
 
 #: ../../lib/class/share.class.php:359 ../../lib/class/share.class.php:361
 #: ../../templates/show_shares.inc.php:23
@@ -2316,7 +2345,7 @@ msgstr "Condivisione avanzata"
 
 #: ../../lib/class/share.class.php:384
 msgid "Temporary direct link"
-msgstr ""
+msgstr "Link diretto temporaneo"
 
 #: ../../lib/class/shoutbox.class.php:233
 msgid "New shout on your content"
@@ -2381,7 +2410,7 @@ msgstr "MusicBrainzID della Traccia"
 
 #: ../../lib/class/stream_playlist.class.php:600
 msgid "Vote added"
-msgstr ""
+msgstr "Voto aggiunto"
 
 #: ../../lib/class/tvshow.class.php:195
 #: ../../lib/class/tvshow_episode.class.php:177
@@ -2425,7 +2454,7 @@ msgstr "Ritorna alla pagina principale"
 #: ../../lib/class/update.class.php:2656 ../../lib/class/update.class.php:2672
 #: ../../lib/class/update.class.php:2688
 msgid "File copy error."
-msgstr ""
+msgstr "Errore durante la copia del file."
 
 #: ../../lib/class/update.class.php:2663 ../../lib/class/update.class.php:2679
 #: ../../lib/class/update.class.php:2695
@@ -2447,7 +2476,7 @@ msgstr "Video"
 
 #: ../../lib/class/useractivity.class.php:210
 msgid "commented on"
-msgstr ""
+msgstr "ha commentato su"
 
 #: ../../lib/class/useractivity.class.php:213
 msgid "uploaded"
@@ -2455,11 +2484,11 @@ msgstr "caricato"
 
 #: ../../lib/class/useractivity.class.php:216
 msgid "played"
-msgstr ""
+msgstr "riprodotta"
 
 #: ../../lib/class/useractivity.class.php:219
 msgid "favorited"
-msgstr ""
+msgstr "preferito"
 
 #: ../../lib/class/useractivity.class.php:222
 msgid "started to follow"
@@ -3499,7 +3528,7 @@ msgstr "lo adoro!"
 
 #: ../../lib/rating.lib.php:52
 msgid "It's Insane"
-msgstr ""
+msgstr "E' folle"
 
 #: ../../lib/rating.lib.php:55
 msgid "Off the Charts!"
@@ -3584,19 +3613,19 @@ msgstr "Visualizza licenza"
 
 #: ../../lib/ui.lib.php:734
 msgid "On"
-msgstr ""
+msgstr "On"
 
 #: ../../lib/ui.lib.php:736
 msgid "Off"
-msgstr ""
+msgstr "Off"
 
 #: ../../lostpassword.php:39
 msgid "Password has been sent"
-msgstr ""
+msgstr "La password è stata inviata"
 
 #: ../../lostpassword.php:41
 msgid "Password has not been sent"
-msgstr ""
+msgstr "La password non è stata inviata"
 
 #: ../../lostpassword.php:60
 msgid "Lost Password"
@@ -3665,32 +3694,32 @@ msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Give a name to your application and create it"
-msgstr ""
+msgstr "Da un nome alla tua applicazione e creala"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
 msgid "Click the 'Generate' button to create an Access Token"
-msgstr ""
+msgstr "Clicca il bottone \"Genera\" per creare un Access Token"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:78
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
-msgstr ""
+msgstr "Copia le tue App key, App secret e Access Token nei seguenti campi "
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
-msgstr ""
+msgstr "API Key"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:118
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:108
 #: ../../templates/show_add_share.inc.php:35
 msgid "Secret"
-msgstr ""
+msgstr "Secret"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:119
 msgid "Access Token"
-msgstr ""
+msgstr "Access Token"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
@@ -3713,7 +3742,7 @@ msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:197
 msgid "Invalid \"dropbox-path\": "
-msgstr ""
+msgstr "Invalido \"dropbox-path\":"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:236
 msgid "Running Dropbox Remote Update"
@@ -3729,6 +3758,7 @@ msgstr ""
 #: ../../modules/catalog/seafile/seafile.catalog.php:270
 msgid "No media updated, do you respect the patterns?"
 msgstr ""
+"Nessun contenuto multimediale è stato aggiornato, hai rispettato i pattern?"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:478
 #: ../../modules/catalog/seafile/seafile.catalog.php:378
@@ -3751,7 +3781,7 @@ msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:529
 msgid "API Error: cannot connect to Dropbox."
-msgstr ""
+msgstr "Errore API: impossibile connettersi a Dropbox"
 
 #: ../../modules/catalog/local/local.catalog.php:175
 msgid "Error: Path not specified"
@@ -3760,11 +3790,12 @@ msgstr "Errore: percorso non specificato"
 #: ../../modules/catalog/local/local.catalog.php:182
 msgid "Error: Defined Path is inside an existing catalog"
 msgstr ""
+"Errore: il percorso specificato si trova all'interno di un catalogo esistente"
 
 #: ../../modules/catalog/local/local.catalog.php:190
 #, php-format
 msgid "Error: %s is not readable or does not exist"
-msgstr ""
+msgstr "Errore: %s non è leggibile o non esiste"
 
 #: ../../modules/catalog/local/local.catalog.php:242
 #, php-format
@@ -3797,7 +3828,7 @@ msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:491
 msgid "N/A"
-msgstr ""
+msgstr "N/D"
 
 #: ../../modules/catalog/local/local.catalog.php:497
 #, php-format
@@ -3815,11 +3846,11 @@ msgstr ""
 msgid "Catalog Root unreadable, stopping clean"
 msgstr ""
 
-#: ../../modules/catalog/local/local.catalog.php:629
+#: ../../modules/catalog/local/local.catalog.php:630
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
-#: ../../modules/catalog/local/local.catalog.php:672
+#: ../../modules/catalog/local/local.catalog.php:674
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
 msgstr ""
@@ -3856,7 +3887,7 @@ msgstr "Aggiornamento remoto in corso"
 
 #: ../../modules/catalog/remote/remote.catalog.php:217
 msgid "Error connecting to remote server"
-msgstr ""
+msgstr "Si è verificato un errore durante la connessione al server remoto"
 
 #: ../../modules/catalog/remote/remote.catalog.php:245
 #, php-format
@@ -4383,7 +4414,7 @@ msgstr "Artisti mancanti"
 msgid "Session Expired"
 msgstr "Sessione scaduta"
 
-#: ../../server/xml.server.php:67
+#: ../../server/xml.server.php:71
 msgid "Unauthorized access attempt to API - ACL Error"
 msgstr ""
 
@@ -8420,7 +8451,7 @@ msgstr "Eliminazione del video"
 
 #: ../../video.php:36
 msgid "Are you sure you want to permanently delete this video?"
-msgstr ""
+msgstr "Sei sicuro di voler eliminare definitivamente questo video?"
 
 #: ../../video.php:55
 msgid "Video has been deleted."
@@ -8435,7 +8466,7 @@ msgstr "Impossibile eliminare questo video."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 17.04.2018 15:03:47 CEST
+# Last Update: 04.05.2018 16:28:43 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8527,11 +8558,11 @@ msgstr ""
 
 #: Database preference table id 73
 msgid "Last.FM Username"
-msgstr ""
+msgstr "Username Last.FM"
 
 #: Database preference table id 74
 msgid "Last.FM Password"
-msgstr ""
+msgstr "Password Last.FM"
 
 #: Database preference table id 75
 msgid "Last.FM Submit Port"
@@ -8567,11 +8598,11 @@ msgstr ""
 
 #: Database preference table id 86
 msgid "Use SubSonic backend"
-msgstr ""
+msgstr "Utilizza il backend SubSonic"
 
 #: Database preference table id 87
 msgid "Use Plex backend"
-msgstr ""
+msgstr "Utilizza il backend Plex"
 
 #: Database preference table id 88
 msgid "Authorize Flash Web Player(s)"
@@ -8631,7 +8662,7 @@ msgstr ""
 
 #: Database preference table id 101
 msgid "Enable url rewriting"
-msgstr ""
+msgstr "Abilita riscrittura url"
 
 #: Database preference table id 102
 msgid "Allow Share"
@@ -8713,7 +8744,7 @@ msgstr "Usa backend UPnP"
 
 #: Database preference table id 121
 msgid "Allow video features"
-msgstr ""
+msgstr "Permetti funzionalità video"
 
 #: Database preference table id 122
 msgid "Album - Group per release type"
@@ -8769,15 +8800,15 @@ msgstr ""
 
 #: Database preference table id 139
 msgid "Upload: allow users to remove uploaded songs"
-msgstr ""
+msgstr "Upload: permetti agli utenti di rimuovere le canzoni caricate"
 
 #: Database preference table id 140
 msgid "Custom login page logo url"
-msgstr ""
+msgstr "Url logo pagina di login personalizzato"
 
 #: Database preference table id 141
 msgid "Custom favicon url"
-msgstr ""
+msgstr "Url favicon personalizzato"
 
 #: Database preference table id 142
 msgid "Custom text footer"
@@ -8819,11 +8850,13 @@ msgstr ""
 
 #: Database preference table id 151
 msgid "Rename uploaded file according to catalog pattern"
-msgstr ""
+msgstr "Rinomina il file caricato secondo il pattern del catalogo"
 
 #: Database preference table id 152
 msgid "Check library item at import time and don't import duplicates"
 msgstr ""
+"Controlla l'elemento della libreria durante l'importazione e non importare "
+"duplicati"
 
 #: Database preference table id 153
 msgid "Show filter box on browse"

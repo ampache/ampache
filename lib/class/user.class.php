@@ -578,7 +578,7 @@ class User extends database_object
             return false;
         }
 
-        if (!AmpConfig::get('use_auth') && $GLOBALS['user']->access <= 5) {
+        if (!AmpConfig::get('use_auth') && $GLOBALS['user']->access < 5) {
             return false;
         }
 
