@@ -34,6 +34,14 @@ Installation
 
 Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
 
+### Run on YunoHost
+
+[![Install Ampache with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=ampache)
+
+Ampache app for [YunoHost](https://yunohost.org). See [here](https://github.com/YunoHost-Apps/ampache_ynh)
+
+## Production
+
 Requirements
 ------------
 
