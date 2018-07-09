@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+3.8.9
+----------
+- Fixed uploading of avatar.
+
 3.8.8
 ----------
 - Subsonic API now removes illegal characters before returning text.
