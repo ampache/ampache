@@ -22,11 +22,10 @@ use App\Models\User;
 use App\Models\Role;
 
 Auth::routes();
-
+Route::get('/verifyemail/{token}', 'Auth\RegisterController@verify');
 Route::get('/', function () {
     return view('home');
 });
-//Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('users/create', 'UserController');
@@ -35,7 +34,6 @@ Route::resource('users', 'UserController');
 Route::resource('catalogs', 'CatalogController');
 Route::get('/catalogs/create', 'CatalogController@create');
 Route::get('/catalogs/edit/{id}', 'CatalogController@edit');
-//Route::resource('/catalogs', 'CatalogController');
 
 Route::get('catalogs/action/{action}/{id}', 'CatalogController@action');
 Route::resource('roles', 'RoleController');
@@ -50,4 +48,13 @@ Route::get('loadtab/{tab}', 'SidebarController@loadTab');
 Route::get('/modules/{type}/{action}', 'ModulesController@action');    
 Route::get('/modules/show_catalogs', 'ModulesController@show_catalogs');
 Route::get('/SSE/{action}/{catalogs}/{options}', 'SSEController@processAction');
+
+Route::get('/apikey/create/{id}', function ($id) {
+    $user = User::find($id);
+    $apikey = hash('md5', time() . $user->username . $user->password);
+    $user->apikey=$apikey;
+    $user->save();
+    return $user->apikey;
+});
+
 

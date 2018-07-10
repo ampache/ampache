@@ -28,7 +28,7 @@
                     </div>
                 @endif
             </li>
-            @if (Auth::user()->isAdmin())
+            @role('Administrator')
                 <li id='sb_tab_modules' class='sb1'>
                     {!! App\Support\Ajax::button('index/sidebar/modules', 'plugin', T_('Modules'), 'sidebar_modules') !!}
                     @if (App\Support\UI::get_current_sidebar_tab() === 'modules')
@@ -45,7 +45,7 @@
                         </div>
                     @endif
                 </li>
-            @endif
+            @endrole
 
             <li id="sb_tab_logout" class="sb1">
                 <a target="_top" href="{{ url('logout') }}" id="sidebar_logout" rel="nohtml" >

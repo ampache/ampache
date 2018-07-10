@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class LoginController extends Controller
 {
     /*
@@ -47,19 +48,46 @@ class LoginController extends Controller
     public function validateLogin(Request $request)
     {
         if (Auth::attempt(['username' => $request->input('username'), 'password' => $request->input('password')])) {
-            // Authentication passed...
-            //           return redirect()->intended('/');bcrypt($data['password'])
+ /*           if (config('user.allow_public_registration') == true) {
+                if (!$user->verified) {
+                    auth()->logout();
+                    return back()
+                    ->with('status', 'You need to confirm your account. We have sent you an activation code, please check your email.');
+                }
+            } else {
+                return redirect()->intended($this->redirectPath());
+            } */
         } else {
-            $request->session()->flash('error', 'User name or password incorrect!');
-            
-            return view('auth.login');
-            //          sendFailedLoginResponse($request);
         }
     }
-    
-    public function logout(Request $request)
+    public function login(Request $request)
     {
-        setcookie("sidebar-tab", "home", 30);
+        $this->validateLogin($request);
+        
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+            
+            return $this->sendLockoutResponse($request);
+        }
+        
+        if ($this->attemptLogin($request)) {
+            return $this->sendLoginResponse($request);
+        }
+        
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+        return back()
+        ->with('status', 'Username or password is incorrect.');
+        
+     //   return $this->sendFailedLoginResponse($request);
+        
+    }
+    
+        public function logout(Request $request)
+    {
+        setcookie("sidebar_tab", "", time() - 3600);
         $this->guard()->logout();
         
         $request->session()->invalidate();

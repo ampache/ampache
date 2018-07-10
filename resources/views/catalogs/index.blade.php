@@ -21,9 +21,8 @@
                 @if (isset($Catalogs))
                     @foreach ($Catalogs as $catalog)
                      @php
-                        $icon                 = $catalog->enabled ? 'disable' : 'enable';
-                        $button_flip_state_id = 'button_flip_state_' . $catalog->id;
-                     @endphp
+                        $icon = $catalog->enabled ? 'disable' : 'enable';
+                      @endphp
                		    <tr class="w3-hover-red" id="catalog_{!! $catalog->id !!}">
                  		<td style="cursor: pointer;" class="cel_catalog" onclick="dialogEdit('{!! $catalog->catalog_id !!}', '{!! $catalog->name !!}', 
                      		'{!! $catalog->path !!}', 'catalog-edit')">

@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'user_no_email_confirm' => false,
+    'email_confirm' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -70,11 +70,11 @@ return [
     |
     | The fields that will be shown on user registration page.
     | Username and email fields are always displayed.
-    | POSSIBLE VALUES: full_name,website,state,city
+    | POSSIBLE VALUES: full_name,website,state,city, zip
     |
     */
 
-    'registration_display_fields' => ['full_name', 'website'],
+    'registration_display_fields' => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -83,11 +83,11 @@ return [
     |
     | This controls which fields are mandatory for registration.
     | Username and email fields are always mandatory.
-    | POSSIBLE VALUES: full_name,website,state,city
+    | POSSIBLE VALUES: full_name,website,state,city, zip
     |
     */
 
-    'registration_mandatory_fields' => [],
+    'registration_mandatory_fields' => ['full_name'],
 
     /*
     |--------------------------------------------------------------------------

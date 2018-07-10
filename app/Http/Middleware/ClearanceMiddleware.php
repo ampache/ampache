@@ -19,7 +19,7 @@ class ClearanceMiddleware {
             return $next($request);
         }
         
-        if ($request->is('catalogs/create'))//If user is creating a post
+        if ($request->is('catalogs/create'))//If user is creating a catalog
         {
             if (!Auth::user()->hasPermissionTo('Create Catalog'))
             {

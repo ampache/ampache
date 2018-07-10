@@ -17,6 +17,7 @@ class RolesAndPermissionsSeeder extends Seeder
         app()['cache']->forget('spatie.permission.cache');
 
         // create permissions
+        Permission::create(['name' => 'administer roles & permissions']);
         Permission::create(['name' => 'add users']);
         Permission::create(['name' => 'remove users']);
         Permission::create(['name' => 'disable users']);
@@ -39,7 +40,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
  
         // create roles and assign existing permissions
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::create(['name' => 'Administrator']);
+        $role->givePermissionTo('administer roles & permissions');
         $role->givePermissionTo('add users');
         $role->givePermissionTo('remove users');
         $role->givePermissionTo('disable users');
@@ -61,7 +63,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $role->givePermissionTo('upload files');
 
 
-        $role = Role::create(['name' => 'catalog_manager']);
+        $role = Role::create(['name' => 'Catalog_manager']);
         $role->givePermissionTo('add catalogs');
         $role->givePermissionTo('delete catalogs');
         $role->givePermissionTo('update catalogs');
@@ -70,7 +72,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $role->givePermissionTo('create playlists');
         $role->givePermissionTo('upload files');
 
-        $role = Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'User']);
         $role->givePermissionTo('upload files');
         $role->givePermissionTo('create playlists');
 

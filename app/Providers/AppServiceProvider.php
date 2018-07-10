@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Classes\Catalog;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
+use App\Services\CoreService;
+use App\Services\ArtService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,13 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       if (Auth::check() OR !isset($_COOKIE['sidebar_tab'])) {
+       if (!isset($_COOKIE['sidebar_tab'])) {
                setcookie('sidebar_tab', 'home', time() + (30 * 24 * 60 * 60), '/');
             }
-        else {
-            setcookie('sidebar_tab', 'home', time() + (30 * 24 * 60 * 60), '/');        
-        }
-        
+
         if (!isset($_COOKIE['sidebar_state'])) {
             setcookie('sidebar_state', 'expanded', time() + (30 * 24 * 60 * 60), '/');
         }
@@ -41,14 +41,10 @@ class AppServiceProvider extends ServiceProvider
             $Catalogs[] = $catalog;
             view::share('Catalogs', $Catalogs);
         }
-            $Users = user::all();
+            $Users = User::all();
             view::share('Users', $Users);
-            $cat_types = Catalog::show_catalog_types();
-            $sel_types = Catalog::get_catalog_types();
-            array_unshift($sel_types, "[select]");
-            view::share('cat_types', $cat_types);
-            view::share('sel_types', $sel_types);
-            
+            $roles = Role::get(); //Get all roles
+            view::share('roles', $roles);
     }
 
     /**
@@ -58,6 +54,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        app()->singleton('Core', function () {
+            return new CoreService();
+        });
+        
+        app()->singleton('Art', function () {
+           return new ArtService();
+        });
+                
     }
 }

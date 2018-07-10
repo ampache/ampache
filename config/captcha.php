@@ -1,43 +1,71 @@
-<?php
+<?php if (!class_exists('CaptchaConfiguration')) { return; }
+
+// BotDetect PHP Captcha configuration options
+// more details here: https://captcha.com/doc/php/captcha-options.html
+// ----------------------------------------------------------------------------
 
 return [
-
-    'default' => [
-        'length' => 5,
-        'width' => 120,
-        'height' => 36,
-        'quality' => 90,
+    /*
+    |--------------------------------------------------------------------------
+    | Captcha configuration for example page
+    |--------------------------------------------------------------------------
+    */
+    'ExampleCaptcha' => [
+        'UserInputID' => 'CaptchaCode',
+        'CodeLength' => 4,
+        'ImageWidth' => 200,
+        'ImageHeight' => 40,
     ],
 
-    'flat' => [
-        'length' => 6,
-        'width' => 160,
-        'height' => 46,
-        'quality' => 90,
-        'lines' => 6,
-        'bgImage' => false,
-        'bgColor' => '#ecf2f4',
-        'fontColors' => ['#2c3e50', '#c0392b', '#16a085', '#c0392b', '#8e44ad', '#303f9f', '#f57c00', '#795548'],
-        'contrast' => -5,
+    /*
+    |--------------------------------------------------------------------------
+    | Captcha configuration for contact page
+    |--------------------------------------------------------------------------
+    */
+    'ContactCaptcha' => [
+        'UserInputID' => 'CaptchaCode',
+        'CodeLength' => CaptchaRandomization::GetRandomCodeLength(4, 6),
+        'ImageStyle' => ImageStyle::AncientMosaic,
     ],
 
-    'mini' => [
-        'length' => 3,
-        'width' => 60,
-        'height' => 32,
+    /*
+    |--------------------------------------------------------------------------
+    | Captcha configuration for login page
+    |--------------------------------------------------------------------------
+    */
+    'LoginCaptcha' => [
+        'UserInputID' => 'CaptchaCode',
+        'CodeLength' => 3,
+        'ImageStyle' => [
+            ImageStyle::Radar,
+            ImageStyle::Collage,
+            ImageStyle::Fingerprints,
+        ],
     ],
 
-    'inverse' => [
-        'length' => 5,
-        'width' => 120,
-        'height' => 36,
-        'quality' => 90,
-        'sensitive' => true,
-        'angle' => 12,
-        'sharpen' => 10,
-        'blur' => 2,
-        'invert' => true,
-        'contrast' => -5,
-    ]
+    /*
+    |--------------------------------------------------------------------------
+    | Captcha configuration for register page
+    |--------------------------------------------------------------------------
+    */
+    'RegisterCaptcha' => [
+        'UserInputID' => 'CaptchaCode',
+        'CodeLength' => CaptchaRandomization::GetRandomCodeLength(3, 4),
+        'CodeStyle' => CodeStyle::Alpha,
+        'ImageWidth' => 200,
+        'ImageHeight' => 40,
+    ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Captcha configuration for reset password page
+    |--------------------------------------------------------------------------
+    */
+    'ResetPasswordCaptcha' => [
+        'UserInputID' => 'CaptchaCode',
+        'CodeLength' => 2,
+        'CustomLightColor' => '#9966FF',
+    ],
+
+    // Add more your Captcha configuration here...
 ];

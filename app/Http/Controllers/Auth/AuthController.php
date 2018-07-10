@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
-use Illuminate\Contracts\Validation\Validator  ;
+
+use Illuminate\Contracts\Validation\Validator;
 use App\Http\Controllers\Controller;
 use App\Events\UserRegistered;
 use Illuminate\Http\Request;
@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Support\Ajax;
+use App\Factories\ActivationFactory;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -26,6 +28,9 @@ class AuthController extends Controller
     */
 
     use AuthenticatesUsers, ThrottlesLogins;
+    
+    protected $activationFactory;
+    
 
     /**
      * Where to redirect users after login / registration.
@@ -42,6 +47,7 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+        $this->activationFactory = $activationFactory;
     }
 
     /**
@@ -89,6 +95,23 @@ class AuthController extends Controller
         return user;
     }
     
+    public function register(Request $request)
+    {
+        $validator = $this->validator($request->all());
+        
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+                );
+        }
+        
+        $user = $this->create($request->all());
+        
+        $this->activationFactory->sendActivationMail($user);
+        
+        return redirect('/login')->with('activationStatus', true);
+    }
+    
     public function postLogin(Request $request)
     {
         $credentials = $request->only('username', 'password');
@@ -118,4 +141,24 @@ class AuthController extends Controller
         
         return redirect()->back();
     }
+    
+    public function activateUser($token)
+    {
+        if ($user = $this->activationFactory->activateUser($token)) {
+            auth()->login($user);
+            return redirect($this->redirectPath());
+        }
+        abort(404);
+    }
+    
+    public function authenticated(Request $request, $user)
+    {
+        if (!$user->activated) {
+            $this->activationFactory->sendActivationMail($user);
+            auth()->logout();
+            return back()->with('activationWarning', true);
+        }
+        return redirect()->intended($this->redirectPath());
+    }
+    
 }

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use App\Services\Catalog;
+use App\Services\CatalogService;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use Modules\Catalogs\Local;
 
 class CatalogServiceProvider extends ServiceProvider
 {
@@ -14,7 +16,9 @@ class CatalogServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $cat_types = CatalogService::show_catalog_types();
+        view::share('cat_types', $cat_types[0]);
+        view::share('sel_types', $cat_types[1]);
     }
     
     /**
@@ -25,7 +29,7 @@ class CatalogServiceProvider extends ServiceProvider
     public function register()
     {
         app()->singleton('Catalog', function () {
-            return new Catalog();
+            return new CatalogService();
         });
     }
 }

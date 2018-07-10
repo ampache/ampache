@@ -269,7 +269,7 @@ abstract class Catalog
         $catTypes = "<script>\n" .
             "var type_fields = new Array();\n" .
             "type_fields['none'] = '';";
-        $seltypes = '<option value="">[Select]</option>';
+        $seltypes = '<option value="none">[Select]</option>';
         $types    = self::get_catalog_types();
         foreach ($types as $type) {
             $catalog = self::create_catalog_type($type);

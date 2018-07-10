@@ -144,6 +144,7 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+        Cmgmyr\Messenger\MessengerServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -166,10 +167,12 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
+         Spatie\Permission\PermissionServiceProvider::class,
         SseServiceProvider::class,
+        Jenssegers\Agent\AgentServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
- //       Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
+        LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
+//      Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
         /*
          * Package Service Providers...
          */
@@ -183,7 +186,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\CatalogServiceProvider::class,
-        
+
     ],
 
     /*
@@ -200,6 +203,7 @@ return [
     'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
+        'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
@@ -237,7 +241,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Catalog_local' => Modules\Catalogs\Local\Catalog_local::class,
-        'Catalog_remote' => \Modules\Catalogs\Remote\Catalog_remote::class,    
+        'Catalog_remote' => \Modules\Catalogs\Remote\Catalog_remote::class,
  //       'Catalog_subsonic' => \Modules\Catalog\Subsonic\Catalog_subsonic::class
     ],
 

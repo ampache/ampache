@@ -43,9 +43,7 @@
       <td>
       <div class="form-group">
           <select class = 'catalog_type' name='catalog_type' id='catalog_type' onChange='catalogTypeChanged();' required>
-          @foreach ($sel_types as $type)
-              <option>{!! $type !!}</option>
-          @endforeach
+              {!! $sel_types!!}
             </select>
         <div class="messages"></div>
       </div>

@@ -26,8 +26,7 @@
    <tbody>
 	@foreach ($users as $user)
     	<tr>
-    
-    	<td class="w3-small w3-left" style="width: 13.5%;">{{ $user->username }}</td>
+    	<td class="w3-small w3-left" style="width: 13.5%;"><img src= "{{ $user->avatar }}">{{ $user->username }}({{ $user->fullname }})</td>
     	<td class="w3-small w3-left" style="width: 13.5%;">{{ $user->updated_at->format('m/d/y H:i') }}</td>
     	<td class="w3-small w3-left" style="width: 13.5%;">{{ $user->created_at->format('m/d/y H:i') }}</td>
     	<td class="w3-small w3-left" style="width: 13.5%;">{{ "N/A" }}</td>

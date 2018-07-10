@@ -12,7 +12,7 @@ use Modules\Catalogs\Remote\Catalog_remote;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Providers\CatalogServiceProvider;
-use App\Services\Catalog;
+//use App\Services\Catalog;
 
 
 class CatalogController extends Controller

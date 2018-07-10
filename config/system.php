@@ -14,8 +14,9 @@ return [
  'lc_charset' => "ISO8859-1",
 
     
-    'max_upload_size' => '2048000',
+ 'max_upload_size' => '2048000',
     
+    'max_avatar_size' => '100000',
     
 /*
  * Album Art Minimum Width
@@ -28,7 +29,7 @@ return [
  *		; Specify the maximum width for arts (in pixel).
  *		; DEFAULT: none
 */
-    'album_art_max_width' => 1024,
+    'album_art_max_width' => 259,
         
 /*
  *		; Album Art Minimum Height
@@ -42,7 +43,7 @@ return [
  *		; Specify the maximum height for arts (in pixel).
  *		; DEFAULT: none
  */
-    'album_art_max_height' => 1024,
+    'album_art_max_height' => 250,
         
 
     'avatar_max_size' => 2048000,

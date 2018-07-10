@@ -1,5 +1,4 @@
 
-
 @section('header')
 
 <div class="w3-bar w3-black w3-border-0 w3-top" style="height:48px;">
@@ -10,10 +9,9 @@
 </div>
   <div class="w3-bar-item">
       @if (Auth::check())
-        <span id="loginInfo">
-            <a
-                onclick="dialogEdit('','', '{{ url('user/') . Auth::user()->id }}', 'user-login')"                      
-               href="#">{{ Auth::user()->name ?: Auth::user()->username }}</a>
+        <span id="loginInfo" class="w3-text-orange">
+        <a href="{{ url('/login') }}"></a>                    
+               <u style="cursor:pointer">{{ Auth::user()->name ?: Auth::user()->username }}</u>
            @if (Config::get('feature.sociable'))
               <a href="{{ url('/messages/index', [Auth::user()->id]) }}">({{ App\Models\PrivateMsg::newMessageCount(Auth::user()->id) }} messages)</a>
             @endif
@@ -29,13 +27,9 @@
         </span>
     @else
         <span id="loginInfo" class="w3-text-orange">
-            <a 
-               onclick="dialogEdit('','', '{!! url('/login') !!}', 'user-login')"           
-            href="#" rel="nohtml">{{ 'Login' }}</a>
+            <a class="w3-text-orange" href ="{!! url('/login') !!}">Login</a>
             @if (Config::get('user.allow_public_registration'))
-                / <a
-                   onclick="dialogEdit('','', '{!! url('register') !!}', 'user-register')" 
-                   href="#" rel="nohtml">{{ 'Register' }}</a>
+                / <a href="{!! url('register') !!}">Register</a>
             @endif
         </span>
     @endif

@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('wagnered'),
+    'username' => env('MAIL_USERNAME', 'wagnered'),
 
-    'password' => env('excel1223'),
+    'password' => env('MAIL_PASSWORD', 'Excel1223'),
 
     /*
     |--------------------------------------------------------------------------

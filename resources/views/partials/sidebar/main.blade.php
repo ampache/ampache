@@ -1,13 +1,13 @@
 
 @section('sidebar')
 
-<!-- Sidebar -->
+<!--Main Sidebar -->
 <?php $isCollapsed = ((config('feature.sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed"); ?>
- <div id="sidebar" class="w3-sidebar w3-bar-block w3-theme-d4 w3-section" style="width:12%;">
+ <div id="sidebar" class="w3-sidebar w3-bar-block w3-theme-d4 w3-section" style="width:12%;min-width:165px;">
    <div id="sidebar-header" class="w3-center" style="cursor:pointer">
       <span id="sidebar-header-content">{{ $isCollapsed ? '>>>>' : '<<<<' }}</span>
    </div>
-      @if (Auth::check())
+   @if (Auth::check())
      @if (!$_COOKIE['sidebar_tab']) {
        @php $_COOKIE['sidebar_tab'] = 'home'; @endphp
      @endif
@@ -26,13 +26,18 @@
   		<div onclick="loadTab('localplay')" id="sb_tab_localplay" class="w3-container w3-cell w3-padding-small" title="localplay">
    			<i class="material-icons w3-small w3-hover-red" style="cursor:pointer">speaker</i>
   		</div>
-  		<div onclick="loadTab('modules')" id="sb_tab_modules" class="w3-container w3-cell w3-padding-small" title="modules">
-    		<i class="material-icons w3-small w3-hover-red" style="cursor:pointer">view_module</i>
-  		</div>
-  		<div onclick="loadTab('admin')"id="sb_tab_admin" class="w3-container w3-cell w3-padding-small" title="admin">
-    		<i class="material-icons w3-small w3-hover-red" style="cursor:pointer">supervisor_account</i>
-  		</div>
-  		<div onclick="loadTab('exit')" id="exit" class="w3-container w3-cell w3-padding-small" title="exit">
+  		@role('Administrator')
+   		    <div onclick="loadTab('modules')" id="sb_tab_modules" class="w3-container w3-cell w3-padding-small" title="modules">
+    		    <i class="material-icons w3-small w3-hover-red" style="cursor:pointer">view_module</i>
+  		    </div>
+  		    <div onclick="loadTab('admin')"id="sb_tab_admin" class="w3-container w3-cell w3-padding-small" title="admin">
+    		    <i class="material-icons w3-small w3-hover-red" style="cursor:pointer">supervisor_account</i>
+  		    </div>
+  		@endrole
+  		<div  id="exit" class="w3-container w3-cell w3-padding-small" title="exit">
+              <a href="{!! route('logout') !!}"
+                 Logout
+             </a>
     		<i class="material-icons w3-small w3-hover-red" style="cursor:pointer">exit_to_app</i>
   		</div> 
 		</div>
@@ -64,10 +69,10 @@ function loadTab(tab) {
 	var x = "{{ url('/loadtab') . "/" }}" + tab;
     if ($("#sidebar_" + tab).length == false) {
             $("#sidebar-content").load(x, function(responseTxt, statusTxt, xhr){
-	            setCookie('sidebar_tab', tab, 30);
 	            set_MenuItems();
 	         });
-     }
+      }
+    setCookie('sidebar_tab', tab, 30);
 }
 
 $("#sidebar-header").click(function(){
@@ -110,10 +115,10 @@ function toggleList(item) {
 }
 
 $(document).ready(function() {
-    $("#submit1").click(function()
-    {
-       $("#testForm").submit();	 
-    });
+//    $("#submit1").click(function()
+//    {
+//       $("#testForm").submit();	 
+//    });
 	var tab = getCookie("sidebar_tab");
 	loadTab(tab);
 });
