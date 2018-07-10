@@ -33,21 +33,21 @@
                         <td class="cel_lastclean">{!! e($catalog->f_clean) !!}</td>
                         <td class="cel_action cel_action_text">
                        <?php if (!$catalog->isReady()) {
-                       ?>
+    ?>
                         <a href="{{ url('catalog/add_to_catalog') . "/" . $catalog->catalog_id }}"><b>{{ __('Make it ready ...') }}</b></a><br />
 						<?php
-                        } ?>
+} ?>
                   <form id="form_{!! $catalog->id !!}" >
                       <select id="catalog_action_menu_{!! $catalog->catalog_id !!}">
                      <?php if ($catalog->isReady()) {
-                     ?>
+        ?>
                      <option value="add_to_catalog">{!! __('Add') !!}</option>
                      <option value="update_catalog">{!! __('Verify') !!}</option>
                      <option value="clean_catalog">{!! __('Clean') !!}</option>
                      <option value="full_service">{!! __('Update') !!}</option>
                      <option value="gather_art">{!! __('Gather Art') !!}</option>
                     <?php
-                   } ?>
+    } ?>
                     <option value="delete_catalog">{!! __('Delete') !!}</option>
                    </select>
                   <input type="button" onClick="NavigateTo({!! $catalog->catalog_id !!})" value="{!! __('Go') !!}">

@@ -53,19 +53,19 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
-    {        
+    {
         $rules = ['username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:5|confirmed', 
+            'password' => 'required|string|min:5|confirmed',
         ];
         
         $req_fields = config('user.registration_mandatory_fields');
         if ($req_fields) {
-             foreach ($req_fields as $field) {
-                 $rules[$field] = 'required';
+            foreach ($req_fields as $field) {
+                $rules[$field] = 'required';
             }
-            
         }
+
         return Validator::make($data, $rules);
     }
 
@@ -83,12 +83,11 @@ class RegisterController extends Controller
             $columns = ['verified' => 1];
         }
         $req_fields = config('user.registration_mandatory_fields');
-            if ($req_fields) {
-                foreach ($req_fields as $field) {
-                    $columns[$field] = $data[$field];
-                }
-                
+        if ($req_fields) {
+            foreach ($req_fields as $field) {
+                $columns[$field] = $data[$field];
             }
+        }
             
         return User::create([
             'username' => $data['username'],
@@ -101,22 +100,21 @@ class RegisterController extends Controller
     }
      
      /**
-     
+
      * Handle a registration request for the application.
-     
+
      * @param \Illuminate\Http\Request $request
-     
+
      * @return \Illuminate\Http\Response
-     
+
      */
      
      public function register(Request $request)
-     
      {
          $isHuman = true;
          
          if (config('user.captcha_public_reg') == true) {
-             $code = $request->input('CaptchaCode');
+             $code    = $request->input('CaptchaCode');
              $isHuman = captcha_validate($code);
          }
          
@@ -130,13 +128,12 @@ class RegisterController extends Controller
          event(new Registered($user = $this->create($request->all())));
          $userCount = DB::table("users")->count();
          if ($userCount > 1) {
-            $user->assignRole('User');
-            $role_id = DB::table('roles')->select('id')->where('name', 'User')->get();
-            DB::table('role_users')->insert(
+             $user->assignRole('User');
+             $role_id = DB::table('roles')->select('id')->where('name', 'User')->get();
+             DB::table('role_users')->insert(
                 ['user_id' => $user->id, 'role_id' => $role_id[0]->id]
             );
-            
-         } else {           
+         } else {
              $user->assignRole('Administrator');
              $role_id = DB::table('roles')->select('id')->where('name', 'Administrator')->get();
              DB::table('role_users')->insert(
@@ -144,36 +141,32 @@ class RegisterController extends Controller
              );
          }
          if (config('user.email_confirm') == true) {
-           dispatch(new SendVerificationEmail($user));
-           return view('email.verification');
+             dispatch(new SendVerificationEmail($user));
+
+             return view('email.verification');
          } else {
              return view('welcome', ['Name' => $user->full_name]);
          }
      }
      
      /**
-     
+
      * Handle a registration request for the application.
-     
+
      * @param $token
-     
+
      * @return \Illuminate\Http\Response
-     
+
      */
      
      public function verify($token)
-     
      {
-         
          $user = User::where('email_token', $token)->first();
          
          $user->verified = 1;
          
-         if($user->save()){
-             
-             return view("email.emailconfirm", ['user'=>$user]);
+         if ($user->save()) {
+             return view("email.emailconfirm", ['user' => $user]);
          }
      }
-         
-         
 }

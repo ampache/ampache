@@ -41,26 +41,29 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\VerifyUser');
     }
     
-    public function getSubsonicPasswordAttribute($value) {
+    public function getSubsonicPasswordAttribute($value)
+    {
         if (strlen($value) > 0) {
-          return decrypt($value);
+            return decrypt($value);
         } else {
             return $value;
         }
     }
     
-    public function setSubsonicPasswordAttribute($value) {
-        
+    public function setSubsonicPasswordAttribute($value)
+    {
         $this->attributes['subsonic_password'] = encrypt($value);
     }
     
-    public function getAvatarAttribute($imageData) {
+    public function getAvatarAttribute($imageData)
+    {
         $tmp = '';
         if (!is_null($imageData)) {
-            $f = finfo_open();
+            $f         = finfo_open();
             $mime_type = finfo_buffer($f, $imageData, FILEINFO_MIME_TYPE);
-            $tmp = 'data: '. $mime_type . ';base64,'. base64_encode($imageData);
+            $tmp       = 'data: ' . $mime_type . ';base64,' . base64_encode($imageData);
         }
+
         return $tmp;
     }
 }

@@ -22,7 +22,7 @@ class InstallController extends Controller
     
     public function setLanguage($language)
     {
-         $this->writeConfig('locale', 'app',$language);
+        $this->writeConfig('locale', 'app', $language);
         //return redirect('install.check');
         return redirect('/install/system_check');
     }
@@ -38,7 +38,7 @@ class InstallController extends Controller
         $hostname       = e($request->input('local_host', 'localhost'));
         $database       = e($request->input('local_db'));
         $port           = $request->local_port != null ? : 3306;
-        $skip_admin     = isset($_POST['skip_admin']) ? True : False;
+        $skip_admin     = isset($_POST['skip_admin']) ? true : false;
         $create_db      = $request->input('create_db', true);
         $create_tables  = $request->input('create_tables', false);
         
@@ -59,6 +59,7 @@ class InstallController extends Controller
             $conn = new \PDO($dsn, $username, $password);
         } catch (\PDOException $e) {
             $this->getPDOMessage($e->getCode());
+
             return back();
         }
             
@@ -100,7 +101,7 @@ class InstallController extends Controller
         }
         // end if we are creating a user
         //Write database info to environmental file ,env
-        $env = array('DB_HOST'=>$hostname, 'DB_PORT' =>$port, 'DB_DATABASE'=>$database, 'DB_USERNAME'=>$admin_name, 'DB_PASSWORD'=>$admin_password);
+        $env = array('DB_HOST' => $hostname, 'DB_PORT' => $port, 'DB_DATABASE' => $database, 'DB_USERNAME' => $admin_name, 'DB_PASSWORD' => $admin_password);
         $this->updateEnv($env);
         
         $lang     = config('app.locale');
@@ -112,44 +113,46 @@ class InstallController extends Controller
     }
     
     public function create_config(Request $request)
-    { 
-        $backends = $request->input('backends');
+    {
+        $backends           = $request->input('backends');
         $transcode_template = $request->input('transcode_temlate');
-        $preferences = new Preference();
+        $preferences        = new Preference();
         if ($backends) {
             foreach ($backends as $backend) {
-                $module = $backend . '_backend';
-                $preferences->$module = True;
+                $module               = $backend . '_backend';
+                $preferences->$module = true;
                 $preferences->save();
             }
         }
         $this->writeConfig('transcode_cmd', 'transcoding', $request->input('transcode_template'));
+
         return view('install.account');
-        
     }
   
     public function create_account(Request $request)
     {
-        $username = $request->input('local_username');
-        $password = $request->input('local_pass');
+        $username  = $request->input('local_username');
+        $password  = $request->input('local_pass');
         $password2 = $request->input('local_pass2');
         if (strcmp($password, $password2) != 0) {
             $request->session()->flash('Error', T_('Passwords don\'t match!'));
+
             return view('install.account');
         }
         
         $count = User::where('username', $username)->count();
         if ($count > 0) {
             $request->session()->flash('Error', T_('User name already exists!'));
+
             return view('install.account');
-            
         }
         $user = User::create(['username' => $username,'password' => Hash::make($password)]);
         
         $user->access = 100;
         $user->save();
-        $env = array('APP_INSTALLED'=>"True");
+        $env = array('APP_INSTALLED' => "True");
         $this->updateEnv($env);
+
         return view('pages.index');
     }
     
@@ -171,11 +174,11 @@ class InstallController extends Controller
         $t = $conn->errorInfo();
             
         if (($t[1] == 1007) && ($overwrite == true)) {
-        
             $sql = "DROP DATABASE `" . $database . "`;";
             $conn->query($sql);
         } elseif (intval($t[1]) > 0) {
             $this->getPDOMessage($t[1]);
+
             return false;
         }
         $sql = "CREATE DATABASE `$database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
@@ -188,35 +191,35 @@ class InstallController extends Controller
     {
         $envFile = base_path('.env');
         $envStr  =file_get_contents($envFile);
-        $keys = array_keys($env_vars);
+        $keys    = array_keys($env_vars);
         
         foreach ($keys as $key) {
-            switch ($key)  {
+            switch ($key) {
                 case 'DB_DATABASE':
-                    $success = preg_match("~(?m)^DB_DATABASE=([\_\-\w]+)$~", $envStr,  $olddb);
-                    $envStr=str_replace("DB_DATABASE=" . $olddb[1], "DB_DATABASE=" .$env_vars['DB_DATABASE'], $envStr);
+                    $success = preg_match("~(?m)^DB_DATABASE=([\_\-\w]+)$~", $envStr, $olddb);
+                    $envStr  =str_replace("DB_DATABASE=" . $olddb[1], "DB_DATABASE=" . $env_vars['DB_DATABASE'], $envStr);
                     break;
                 case 'DB_HOST':
-                    $success = preg_match("~(?m)^DB_HOST=(\w+)$~", $envStr, $oldhost );
-                    $envStr=str_replace("DB_HOST=" . $oldhost[1], "DB_HOST=" . $env_vars['DB_HOST'], $envStr);
+                    $success = preg_match("~(?m)^DB_HOST=(\w+)$~", $envStr, $oldhost);
+                    $envStr  =str_replace("DB_HOST=" . $oldhost[1], "DB_HOST=" . $env_vars['DB_HOST'], $envStr);
                     break;
                 case 'DB_PORT':
                     $success = preg_match("~(?m)^DB_PORT=(\w+)$~", $envStr, $oldport);
-                    $envStr=str_replace("DB_PORT=" . $oldport[1], "DB_PORT=" . $env_vars['DB_PORT'], $envStr);
+                    $envStr  =str_replace("DB_PORT=" . $oldport[1], "DB_PORT=" . $env_vars['DB_PORT'], $envStr);
                     break;
                 case 'DB_USERNAME':
                     $success = preg_match("~(?m)^DB_USERNAME=(\w+)$~", $envStr, $olduser);
-                    $envStr=str_replace("DB_USERNAME=" . $olduser[1], "DB_USERNAME=" . $env_vars['DB_USERNAME'], $envStr);
+                    $envStr  =str_replace("DB_USERNAME=" . $olduser[1], "DB_USERNAME=" . $env_vars['DB_USERNAME'], $envStr);
                     break;
                 case 'DB_PASSWORD':
                     $success = preg_match("~(?m)^DB_PASSWORD=(\w+)$~", $envStr, $oldpassword);
-                    $envStr=str_replace("DB_PASSWORD=" . $oldpassword[1], "DB_PASSWORD=" . $env_vars['DB_PASSWORD'], $envStr);
+                    $envStr  =str_replace("DB_PASSWORD=" . $oldpassword[1], "DB_PASSWORD=" . $env_vars['DB_PASSWORD'], $envStr);
                     break;
                 case 'APP_INSTALLED':
                     $success = preg_match("~(?m)^APP_INSTALLED=(\w+)$~", $envStr, $oldpassword);
-                    $envStr=str_replace("APP_INSTALLED=" . $oldpassword[1], "APP_INSTALLED=" . $env_vars['APP_INSTALLED'], $envStr);
+                    $envStr  =str_replace("APP_INSTALLED=" . $oldpassword[1], "APP_INSTALLED=" . $env_vars['APP_INSTALLED'], $envStr);
                     break;
-                default:                    
+                default:
             }
         }
         file_put_contents(base_path('.env'), $envStr);
@@ -298,20 +301,19 @@ class InstallController extends Controller
         return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
     }
     
-    private function writeConfig($paramName, $configName, $newValue) {
+    private function writeConfig($paramName, $configName, $newValue)
+    {
         $configFile = config_path($configName . '.php');
         $configStr  = file_get_contents($configFile);
-        switch ($configName)
-        {
+        switch ($configName) {
             case 'transcoding':
-                $success = preg_match("~(?<=\'" . $paramName . "\')\s*\=\>\s*[\'\"](\w*)[\'\"]~", $configStr,  $oldconfig);
+                $success       = preg_match("~(?<=\'" . $paramName . "\')\s*\=\>\s*[\'\"](\w*)[\'\"]~", $configStr, $oldconfig);
                 $new_configStr = str_ireplace($oldconfig[1], $newValue, $configStr);
                 break;
             default:
-                $success = preg_match("~(?<=\'" . $paramName . "\')\s*\=\>\s*\'*(\w*)\'*~", $configStr,  $oldconfig);
-                $new_configStr=preg_replace("~" . $oldconfig[1] . "~", $newValue , $configStr);
+                $success      = preg_match("~(?<=\'" . $paramName . "\')\s*\=\>\s*\'*(\w*)\'*~", $configStr, $oldconfig);
+                $new_configStr=preg_replace("~" . $oldconfig[1] . "~", $newValue, $configStr);
         }
         file_put_contents($configFile, $new_configStr);
-        
     }
 }

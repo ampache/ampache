@@ -118,7 +118,7 @@ class ArtService
         $db_results = DB::table('images')->select('object_type', 'mime', 'size')->whereIn('object_id', $uidlist)->get();
 
         foreach ($db_results as $result) {
-  //          parent::add_to_cache('art', $result->object_type .
+            //          parent::add_to_cache('art', $result->object_type .
   //              $result->object_id . $result->size, $r);
         }
 
@@ -262,7 +262,7 @@ class ArtService
     public function get_db()
     {
         $results = DB::table('image')->select('id', 'image', 'mime', 'size')
-         ->where([['object_type', '=', $this->type], ['object_id',  '=', $this-uid], ['kind', '=', $this->kind ]])->get();
+         ->where([['object_type', '=', $this->type], ['object_id',  '=', $this - uid], ['kind', '=', $this->kind ]])->get();
 /*
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['size'] == 'original') {
@@ -317,7 +317,7 @@ class ArtService
     {
         $sql        = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         
-        $result = DB::table('image')->select('id as nb_img')->where([['object_type', '=', $object_type], ['object_id'. '=', $object_id], ['kind', '=', $kind]])->count();
+        $result = DB::table('image')->select('id as nb_img')->where([['object_type', '=', $object_type], ['object_id' . '=', $object_id], ['kind', '=', $kind]])->count();
 /*
         $db_results = Dba::read($sql, array($object_type, $object_id, $kind));
         $nb_img     = 0;
@@ -639,9 +639,9 @@ class ArtService
     public function get_thumb($size)
     {
         $sizetext   = $size['width'] . 'x' . $size['height'];
-        $results = DB::table('image')->select('image', 'mime')
+        $results    = DB::table('image')->select('image', 'mime')
         ->where([['size', '=', $sizetext], ['object_type', '=', $this->type], ['object_id', '=', $this->uid],
-          ['kind', '='. $this->kind]])->get();
+          ['kind', '=' . $this->kind]])->get();
         if (count($results)) {
             $image = null;
             if (config('album_art_store_disk')) {
@@ -800,8 +800,9 @@ class ArtService
 
         // If it came from the database
         if (isset($data['db'])) {
-          $result = DB::table('image')->where([['object_type', '=', $type], ['object_id', '=', $data['db']], ['size', '=', 'original']]);
-          return $result->art;
+            $result = DB::table('image')->where([['object_type', '=', $type], ['object_id', '=', $data['db']], ['size', '=', 'original']]);
+
+            return $result->art;
         } // came from the db
 /*
         // Check to see if it's a URL
@@ -951,7 +952,8 @@ class ArtService
  /*                   while ($row = Dba::fetch_row($db_results)) {
                         self::delete_from_dir($row[1], $row[0]);
                     }
-   */             }
+   */
+                }
                 $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
                     $type . "` ON `" . $type . "`.`id`=" .
                     "`image`.`object_id` WHERE `object_type`='" .
@@ -1312,7 +1314,7 @@ class ArtService
             $handle = opendir($dir);
 
             if (!$handle) {
- //               AmpError::add('general', T_('Error: Unable to open') . ' ' . $dir);
+                //               AmpError::add('general', T_('Error: Unable to open') . ' ' . $dir);
                 debug_event('folder_art', "Error: Unable to open $dir for album art read", 2);
                 continue;
             }

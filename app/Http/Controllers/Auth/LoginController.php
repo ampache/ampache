@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class LoginController extends Controller
 {
     /*
@@ -48,7 +47,7 @@ class LoginController extends Controller
     public function validateLogin(Request $request)
     {
         if (Auth::attempt(['username' => $request->input('username'), 'password' => $request->input('password')])) {
- /*           if (config('user.allow_public_registration') == true) {
+            /*           if (config('user.allow_public_registration') == true) {
                 if (!$user->verified) {
                     auth()->logout();
                     return back()
@@ -78,14 +77,14 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
+
         return back()
         ->with('status', 'Username or password is incorrect.');
         
      //   return $this->sendFailedLoginResponse($request);
-        
     }
     
-        public function logout(Request $request)
+    public function logout(Request $request)
     {
         setcookie("sidebar_tab", "", time() - 3600);
         $this->guard()->logout();
@@ -94,5 +93,4 @@ class LoginController extends Controller
         
         return redirect('/');
     }
-    
 }

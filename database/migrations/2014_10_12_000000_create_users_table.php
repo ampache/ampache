@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
             $table->boolean('disabled')
                   ->default(false);
             $table->boolean('verified')
-                  ->default(false);     
+                  ->default(false);
             $table->string('validation')
                   ->nullable();
             $table->timestamp('last_seen');

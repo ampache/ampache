@@ -15,7 +15,7 @@ class ActivationFactory
     public function __construct(ActivationRepository $activationRepo, Mailer $mailer)
     {
         $this->activationRepo = $activationRepo;
-        $this->mailer = $mailer;
+        $this->mailer         = $mailer;
     }
     
     public function sendActivationMail($user)
@@ -26,7 +26,7 @@ class ActivationFactory
         
         $token = $this->activationRepo->createActivation($user);
         
-        $link = route('user.activate', $token);
+        $link    = route('user.activate', $token);
         $message = sprintf('Activate account %s', $link, $link);
         
         $this->mailer->raw($message, function (Message $m) use ($user) {
@@ -56,6 +56,7 @@ class ActivationFactory
     private function shouldSend($user)
     {
         $activation = $this->activationRepo->getActivation($user);
+
         return $activation === null || strtotime($activation->created_at) + 60 * 60 * $this->resendAfter < time();
     }
 }

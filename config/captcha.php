@@ -1,4 +1,6 @@
-<?php if (!class_exists('CaptchaConfiguration')) { return; }
+<?php if (!class_exists('CaptchaConfiguration')) {
+    return;
+}
 
 // BotDetect PHP Captcha configuration options
 // more details here: https://captcha.com/doc/php/captcha-options.html

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-
 use Illuminate\Contracts\Validation\Validator;
 use App\Http\Controllers\Controller;
 use App\Events\UserRegistered;
@@ -146,6 +145,7 @@ class AuthController extends Controller
     {
         if ($user = $this->activationFactory->activateUser($token)) {
             auth()->login($user);
+
             return redirect($this->redirectPath());
         }
         abort(404);
@@ -156,9 +156,10 @@ class AuthController extends Controller
         if (!$user->activated) {
             $this->activationFactory->sendActivationMail($user);
             auth()->logout();
+
             return back()->with('activationWarning', true);
         }
+
         return redirect()->intended($this->redirectPath());
     }
-    
 }

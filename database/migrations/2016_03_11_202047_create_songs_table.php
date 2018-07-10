@@ -55,7 +55,7 @@ class CreateSongsTable extends Migration
             $table->decimal('size')
                   ->unsigned()
                   ->nullable();
-            $table->string('file',4096)
+            $table->string('file', 4096)
                   ->nullable();
             $table->integer('album_id')
                   ->unsigned();

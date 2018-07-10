@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerification;
+
 class SendVerificationEmail implements ShouldQueue
 {
     protected $user;
@@ -33,5 +34,6 @@ class SendVerificationEmail implements ShouldQueue
     {
         $email = new EmailVerification($this->user);
         
-        Mail::to($this->user->email)->send($email);}
+        Mail::to($this->user->email)->send($email);
+    }
 }

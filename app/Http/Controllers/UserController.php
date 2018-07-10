@@ -15,9 +15,10 @@ use App\Services\CoreService;
 
 //Enables us to output flash messaging
 
-class UserController extends Controller {
-    
-    public function __construct() {
+class UserController extends Controller
+{
+    public function __construct()
+    {
     }
     
     /**
@@ -25,9 +26,11 @@ class UserController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         //Get all users and pass it to the view
         $users = User::all();
+
         return view('users.index')->with('users', $users);
     }
     
@@ -36,10 +39,11 @@ class UserController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         //Get all roles and pass it to the view
          $roles = Role::get(); //Get all roles
-        return view('users.create', ['roles'=>$roles]);
+        return view('users.create', ['roles' => $roles]);
     }
     
     /**
@@ -48,13 +52,14 @@ class UserController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         //Validate name, email and password fields
         $this->validate($request, [
-            'username'=>'required|max:120',
-            'fullname'=>'required|max:120',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:6|confirmed'
+            'username' => 'required|max:120',
+            'fullname' => 'required|max:120',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed'
         ]);
         
         $user = User::create($request->only('email', 'username', 'fullname', 'password')); //Retrieving only the email and password data
@@ -62,7 +67,6 @@ class UserController extends Controller {
         $roles = $request['roles']; //Retrieving the roles field
         //Checking if a role was selected
         if (isset($roles)) {
-            
             foreach ($roles as $role) {
                 $role_r = Role::where('id', '=', $role)->firstOrFail();
                 $user->assignRole($role_r); //Assigning role to user
@@ -80,7 +84,8 @@ class UserController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         return redirect('users');
     }
     
@@ -90,11 +95,13 @@ class UserController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
-        $user = User::findOrFail($id); //Get user with specified id
-        $roles = Role::get(); //Get all roles
+    public function edit($id)
+    {
+        $user      = User::findOrFail($id); //Get user with specified id
+        $roles     = Role::get(); //Get all roles
         $userRoles = $user->roles()->pluck('name');
-        return view('users.edit', compact('user', 'roles'));        
+
+        return view('users.edit', compact('user', 'roles'));
     }
     
     /**
@@ -104,19 +111,20 @@ class UserController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $user = User::findOrFail($id); //Get role specified by id
         
         //Validate name, email and password fields
         $validate = array();
         if (!empty($request['username']) && ($user->username != $request['username'])) {
-            $validate[] = array('username'=>'required|max:120');
+            $validate[] = array('username' => 'required|max:120');
         }
         if (!empty($request['email']) && ($user->email != $request['email'])) {
-            $validate[] = array('email'=>'required|email|unique:users,email,'.$id);
+            $validate[] = array('email' => 'required|email|unique:users,email,' . $id);
         }
         if (!empty($request['password']) && (bcrypt($request['password']) != $user->password)) {
-            $validate[] = array('password'=>'required|min:5|confirmed');
+            $validate[] = array('password' => 'required|min:5|confirmed');
         }
         $this->validate($request, $validate);
          
@@ -126,12 +134,12 @@ class UserController extends Controller {
         
         if (isset($roles)) {
             $user->roles()->sync($roles);  //If one or more role is selected associate user to roles
-        }
-        else {
+        } else {
             $user->roles()->detach(); //If no role is selected remove exisiting role associated to a user
         }
         
         $this->upload_avatar($user);
+
         return redirect()->route('users.index')
         ->with('flash_message',
             'User successfully edited.');
@@ -143,7 +151,8 @@ class UserController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         //Find a user with a given id and delete
         $user = User::findOrFail($id);
         $user->delete();
@@ -163,13 +172,13 @@ class UserController extends Controller {
     {
         $upload = array();
         if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= config('system.max_avatar_size')) {
-            $path_info      = pathinfo($_FILES['avatar']['name']); 
+            $path_info      = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, 'user');
             
             if ($image_data) {
-//                $art = new Art($user->id, 'user');
+                //                $art = new Art($user->id, 'user');
 //                $art->insert($data, $mime);
                 
                 
@@ -178,5 +187,4 @@ class UserController extends Controller {
             }
         }
     }
-    
 }

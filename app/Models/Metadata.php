@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Metadata extends Model
 {
-    protected $table = 'metadata';
+    protected $table   = 'metadata';
     public $timestamps = false;
     
     public function gc()
@@ -17,5 +17,4 @@ class Metadata extends Model
         ->whereNull('song.id')
         ->delete();
     }
-    
 }

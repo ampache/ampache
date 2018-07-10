@@ -9,8 +9,7 @@ class SidebarController extends Controller
 {
     public function loadTab(Request $request, $tab)
     {
-        switch ($tab)
-        {
+        switch ($tab) {
             case 'home':
                 return view('partials.sidebar.home');
             case 'preferences':
@@ -23,6 +22,7 @@ class SidebarController extends Controller
                 return view('partials.sidebar.admin');
             default:
                 Auth::logout();
+
                 return view('/');
         }
     }

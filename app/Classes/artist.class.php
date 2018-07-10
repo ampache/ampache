@@ -21,7 +21,6 @@
  */
 namespace App\Classes;
 
-
 class Artist extends database_object implements library_item
 {
     /* Variables from DB */

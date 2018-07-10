@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Schema;
 use Modules\Catalogs\Local\Catalog_local;
 use Modules\Catalogs\Remote\Catalog_remote;
 
-abstract class Catalog 
+abstract class Catalog
 {
     /**
      * @var int $id
@@ -217,7 +217,8 @@ abstract class Catalog
     public static function create_from_id($id)
     {
         $catalog = DB::table('catalogs')->select('catalog_type')->where('id', $id)->get();
-               return self::create_catalog_type($catalog[0]->catalog_type, $id);
+
+        return self::create_catalog_type($catalog[0]->catalog_type, $id);
     }
 
     /**
@@ -251,7 +252,7 @@ abstract class Catalog
                 $catalog = new $class_name();
             }
             if (!($catalog instanceof Catalog)) {
-//                debug_event('catalog', $type . ' not an instance of Catalog abstract, unable to load', '1');
+                //                debug_event('catalog', $type . ' not an instance of Catalog abstract, unable to load', '1');
 
                 return false;
             }
@@ -286,11 +287,11 @@ abstract class Catalog
 
                     switch ($field['type']) {
                         case 'checkbox':
-                            $catTypes .= "<div class='form-group'><input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') .  "/>";
+                            $catTypes .= "<div class='form-group'><input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
                             break;
                         default:
-                            $catTypes .= "<div class='form-group'><input type='" . $field['type'] . "'class=" . "w3-round" . 
-                            " name=" . $key . " value='" . (isset( $field['value']) ? : '') . "'><div class='messages'></div></div>";
+                            $catTypes .= "<div class='form-group'><input type='" . $field['type'] . "'class=" . "w3-round" .
+                            " name=" . $key . " value='" . (isset($field['value']) ? : '') . "'><div class='messages'></div></div>";
                             break;
                     }
                     $catTypes .= "</td></tr>";
@@ -300,7 +301,7 @@ abstract class Catalog
         }
 
  
-            $catTypes .= "\nfunction catalogTypeChanged() {\n" .
+        $catTypes .= "\nfunction catalogTypeChanged() {\n" .
             "var sel = document.getElementById('catalog_type');\n" .
             "var seltype = sel.options[sel.selectedIndex].value;\n" .
             "var ftbl = document.getElementById('" . $divback . "');\n" .
@@ -322,7 +323,7 @@ abstract class Catalog
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
- //           debug_event('catalog', 'Error: Unable to read catalog types directory', '1');
+            //           debug_event('catalog', 'Error: Unable to read catalog types directory', '1');
 
             return array();
         }
@@ -335,13 +336,13 @@ abstract class Catalog
             }
             /* Make sure it is a dir */
             if (! is_dir($basedir . '/' . $file)) {
-//                debug_event('catalog', $file . ' is not a directory.', 3);
+                //                debug_event('catalog', $file . ' is not a directory.', 3);
                 continue;
             }
 
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $file . '.catalog.php')) {
-//                debug_event('catalog', 'Missing class for ' . $file, 3);
+                //                debug_event('catalog', 'Missing class for ' . $file, 3);
                 continue;
             }
 
@@ -396,7 +397,7 @@ abstract class Catalog
     public function get_info($id, $table = 'catalogs')
     {
         $table_join = 'catalog_' . $this->get_type();
-        $info  = DB::table($table)->join($table_join, 'catalogs.id', '=', $table_join . '.catalog_id')->get();
+        $info       = DB::table($table)->join($table_join, 'catalogs.id', '=', $table_join . '.catalog_id')->get();
 
         return $info;
     }
@@ -528,13 +529,12 @@ abstract class Catalog
         $params     = array();
         if (!empty($filter_type)) {
             $db_results = DB::table('catalogs')->select('id')->where('gather_types', $filter_type)->orderBy('name')->get();
-        }
-        else {
+        } else {
             $db_results = DB::table('catalogs')->select('id')->orderBy('name')->get();
         }
         $results = array();
         foreach ($db_results as $db_result) {
-           $results[] = $db_result->id; 
+            $results[] = $db_result->id;
         }
 
  
@@ -632,7 +632,7 @@ abstract class Catalog
                 );
 
             if (!$insert_id) {
-                 Log::debug(' Catalog insert failed: ' . json_encode($data));
+                Log::debug(' Catalog insert failed: ' . json_encode($data));
                  
                 return 0;
             }
@@ -657,6 +657,7 @@ abstract class Catalog
     {
         // FIXME: Ignores catalog_id
         $count = DB::table('tag')->select('id')->count();
+
         return $count;
     }
 
@@ -1251,7 +1252,7 @@ abstract class Catalog
         // Make sure they've actually got methods
         $art_order = config('system.art_order');
         if (!count($art_order)) {
-           Log::error('gather_art: art_order not set, Catalog::gather_art aborting');
+            Log::error('gather_art: art_order not set, Catalog::gather_art aborting');
 
             return true;
         }
@@ -2446,7 +2447,7 @@ abstract class Catalog
                 foreach ($catalogs as $catalog_id) {
                     $catalog = Catalog::create_from_id($catalog_id);
                     if ($catalog !== null) {
-   //                     require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
+                        //                     require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
                         flush();
                         $catalog->gather_art();
                     }

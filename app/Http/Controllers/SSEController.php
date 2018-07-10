@@ -21,8 +21,8 @@ class SSEController extends Controller
     {
     }
     
-    public function processAction($action, $catalogs, $options) {
-        
+    public function processAction($action, $catalogs, $options)
+    {
         if (!$_REQUEST['html']) {
             define('SSE_OUTPUT', true);
             header('Content-Type: text/event-stream; charset=utf-8');
@@ -43,6 +43,5 @@ class SSEController extends Controller
         
         session_write_close();
         Catalog::process_action($action, $catalogs, $options);
-        
     }
 }

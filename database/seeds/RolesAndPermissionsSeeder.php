@@ -13,7 +13,7 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run()
     {
-    	// Reset cached roles and permissions
+        // Reset cached roles and permissions
         app()['cache']->forget('spatie.permission.cache');
 
         // create permissions
@@ -75,6 +75,5 @@ class RolesAndPermissionsSeeder extends Seeder
         $role = Role::create(['name' => 'User']);
         $role->givePermissionTo('upload files');
         $role->givePermissionTo('create playlists');
-
-  }
+    }
 }

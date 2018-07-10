@@ -12,6 +12,7 @@ use Modules\Catalogs\Remote\Catalog_remote;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Providers\CatalogServiceProvider;
+
 //use App\Services\Catalog;
 
 
@@ -30,7 +31,6 @@ class CatalogController extends Controller
      */
     public function index()
     {
-        
         return view('catalogs.index');
     }
 
@@ -41,7 +41,6 @@ class CatalogController extends Controller
      */
     public function create()
     {
-        
         return view('catalogs.create', compact('Users', 'users'));
     }
 
@@ -53,14 +52,15 @@ class CatalogController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $data       = $request->all();
         $catalog_id = cat::create($data);
         if ($catalog_id == false) {
             return response('Folder Path already used for catalog', 200);
         }
+
         return response('Catalog was created', 200);
         $catalogs[] = $catalog_id;
-//        Catalog::catalog_worker('add_to_catalog', $catalogs, $_POST);        
+//        Catalog::catalog_worker('add_to_catalog', $catalogs, $_POST);
     }
 
     /**
@@ -71,14 +71,14 @@ class CatalogController extends Controller
      */
     public function show(Catalog $catalog)
     {
-        $catalogs = array();
+        $catalogs      = array();
         $catalog_types = $this->get_module_types('catalog');
         foreach ($catalog_types as $type) {
             $class_name = '\\Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;
-            $modules[] = new $class_name();
+            $modules[]  = new $class_name();
         }
         
-        return view('modules.catalog.index', compact('modules'));    
+        return view('modules.catalog.index', compact('modules'));
     }
 
     /**
@@ -90,17 +90,15 @@ class CatalogController extends Controller
     public function edit($id)
     {
         $catalog_type = DB::table('catalogs')->select('catalog_type')->where('id', '=', $id)->first();
-        $table = 'catalog_' . $catalog_type->catalog_type;
-        $catalog = DB::table('catalogs')->join($table, 'catalogs.id', '=', $table . '.catalog_id')->where('catalogs.id', '=', $id)->first();
+        $table        = 'catalog_' . $catalog_type->catalog_type;
+        $catalog      = DB::table('catalogs')->join($table, 'catalogs.id', '=', $table . '.catalog_id')->where('catalogs.id', '=', $id)->first();
         
         return view('catalogs.edit', compact('catalog'));
-        
     }
     
-    public function action($action, $id) {
-        
-        switch ($action)
-        {
+    public function action($action, $id)
+    {
+        switch ($action) {
             case "add_to_catalog":
                 
                 break;
@@ -117,11 +115,11 @@ class CatalogController extends Controller
                 break;
             case "delete_catalog":
                 $this->delete($id);
+
                 return response('Deleted', 200);
                 break;
             default:
         }
-        
     }
 
     /**
@@ -133,16 +131,15 @@ class CatalogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $attributes = $request->all();
-        $catalog = Catalogs::find($attributes['catalog_id']);
-        $catalog->name = $attributes['name'];
+        $attributes              = $request->all();
+        $catalog                 = Catalogs::find($attributes['catalog_id']);
+        $catalog->name           = $attributes['name'];
         $catalog->rename_pattern = $attributes['rename_pattern'];
-        $catalog->sort_pattern = $attributes['sort_pattern'];
-        $catalog->owner = $attributes['owner'];
+        $catalog->sort_pattern   = $attributes['sort_pattern'];
+        $catalog->owner          = $attributes['owner'];
         $catalog->save();
+
         return response('Saved', 200);
-        
-        
     }
 
     /**
@@ -153,7 +150,6 @@ class CatalogController extends Controller
      */
     public function destroy(Catalog $catalog)
     {
-        
     }
     
     public function delete($catalog_id)
@@ -178,20 +174,16 @@ class CatalogController extends Controller
         DB::table('catalogs')->where('id', '=', $catalog_id)->delete();
 
         return true;
-        
     }
     public function clean_empty_albums()
-    { 
-            $empties = DB::table('albums')->select('id')
+    {
+        $empties = DB::table('albums')->select('id')
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw('`id` FROM `songs` WHERE `songs`.`album` = `albums`.`id`'));
             })
             ->get();
             
-            if ($empties->count() > 0) {
-                
-            }
-            
+        if ($empties->count() > 0) {
+        }
     }
-        
 }

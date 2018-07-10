@@ -26,6 +26,7 @@ use Exception;
 use GetId3\GetId3Core as getID3;
 use GetId3\Write\Tags;
 use App\Models\User;
+
 /**
  *
  * This class takes the information pulled from getID3 and returns it in a
@@ -101,7 +102,7 @@ class vaInfo
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($file));
             } catch (Exception $error) {
-//                //debug_event('getID3', "Broken file detected: $file: " . $error->getMessage(), 1);
+                //                //debug_event('getID3', "Broken file detected: $file: " . $error->getMessage(), 1);
                 $this->_broken = true;
 
                 return false;
@@ -220,7 +221,7 @@ class vaInfo
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
             } catch (Exception $error) {
-//                //debug_event('getID2', 'Unable to catalog file: ' . $error->getMessage(), 1);
+                //                //debug_event('getID2', 'Unable to catalog file: ' . $error->getMessage(), 1);
             }
         }
 
@@ -274,10 +275,10 @@ class vaInfo
 
             if ($tagWriter->WriteTags()) {
                 if (!empty($tagWriter->warnings)) {
- //                   //debug_event('vainfo', 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
+                    //                   //debug_event('vainfo', 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
                 }
             } else {
- //               //debug_event('vainfo', 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
+                //               //debug_event('vainfo', 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
             }
         }
     } // write_id3
@@ -294,7 +295,7 @@ class vaInfo
 
             return $this->_raw;
         } catch (Exception $e) {
- //           //debug_event('vainfo', "Unable to read file:" . $e->getMessage(), '1');
+            //           //debug_event('vainfo', "Unable to read file:" . $e->getMessage(), '1');
         }
     } // read_id3
 
@@ -933,8 +934,7 @@ class vaInfo
         if (is_array($id3v2['POPM'])) {
             foreach ($id3v2['POPM'] as $popm) {
                 if (array_key_exists('email', $popm) &&
-                    $user = User::select('id')->where('email', $popm['email']))
-                    {
+                    $user = User::select('id')->where('email', $popm['email'])) {
                     if ($user) {
                         // Ratings are out of 255; scale it
                         $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;

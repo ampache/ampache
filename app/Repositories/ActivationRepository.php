@@ -36,6 +36,7 @@ class ActivationRepository
         if (!$activation) {
             return $this->createToken($user);
         }
+
         return $this->regenerateToken($user);
     }
     
@@ -51,6 +52,7 @@ class ActivationRepository
             'token' => $token,
             'created_at' => new Carbon()
         ]);
+
         return $token;
     }
     
@@ -62,6 +64,7 @@ class ActivationRepository
             'token' => $token,
             'created_at' => new Carbon()
         ]);
+
         return $token;
     }
 }

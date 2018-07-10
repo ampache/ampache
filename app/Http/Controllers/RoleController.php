@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-
-class RoleController extends Controller {
-    
-    public function __construct() {
+class RoleController extends Controller
+{
+    public function __construct()
+    {
         $this->middleware(['auth', 'isAdmin']);//isAdmin middleware lets only users with a //specific permission permission to access these resources
     }
     
@@ -21,7 +21,8 @@ class RoleController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         $roles = Role::all();//Get all roles
         
         return view('roles.index')->with('roles', $roles);
@@ -32,10 +33,11 @@ class RoleController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         $permissions = Permission::all();//Get all permissions
         
-        return view('roles.create', ['permissions'=>$permissions]);
+        return view('roles.create', ['permissions' => $permissions]);
     }
     
     /**
@@ -44,16 +46,17 @@ class RoleController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         //Validate name and permissions field
         $this->validate($request, [
-            'name'=>'required|unique:roles',
-            'permissions' =>'required',
+            'name' => 'required|unique:roles',
+            'permissions' => 'required',
         ]
             );
         
-        $name = $request['name'];
-        $role = new Role();
+        $name       = $request['name'];
+        $role       = new Role();
         $role->name = $name;
         
         $permissions = $request['permissions'];
@@ -69,7 +72,7 @@ class RoleController extends Controller {
         
         return redirect()->route('roles.index')
         ->with('flash_message',
-            'Role'. $role->name.' added!');
+            'Role' . $role->name . ' added!');
     }
     
     /**
@@ -78,7 +81,8 @@ class RoleController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         return redirect('roles');
     }
     
@@ -88,17 +92,18 @@ class RoleController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {       
-        $role = Role::findOrFail($id); //Get user with specified id
-        $permissions = Permission::all(); //Get all roles
+    public function edit($id)
+    {
+        $role            = Role::findOrFail($id); //Get user with specified id
+        $permissions     = Permission::all(); //Get all roles
         $rolePermissions = DB::table('role_has_permissions')->select('name')
-        ->join('permissions', 'permission_id','=', 'permission_id')->where('role_id',$id)->distinct()->get();
+        ->join('permissions', 'permission_id', '=', 'permission_id')->where('role_id', $id)->distinct()->get();
         
         foreach ($permissions as $item) {
             $p[] = $item->name;
         }
+
         return view('roles.edit', compact('role', 'permissions', 'p')); //pass roles and roles data to view
-    
     }
     
     /**
@@ -108,16 +113,16 @@ class RoleController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        
+    public function update(Request $request, $id)
+    {
         $role = Role::findOrFail($id);//Get role with the given id
         //Validate name and permission fields
         $this->validate($request, [
-            'name'=>'required|max:50|unique:roles,name,'.$id,
-            'permissions' =>'required',
+            'name' => 'required|max:50|unique:roles,name,' . $id,
+            'permissions' => 'required',
         ]);
         
-        $input = $request->except(['permissions']);
+        $input       = $request->except(['permissions']);
         $permissions = $request['permissions'];
         $role->fill($input)->save();
         
@@ -134,7 +139,7 @@ class RoleController extends Controller {
         
         return redirect()->route('roles.index')
         ->with('flash_message',
-            'Role'. $role->name.' updated!');
+            'Role' . $role->name . ' updated!');
     }
     
     /**
@@ -151,6 +156,5 @@ class RoleController extends Controller {
         return redirect()->route('roles.index')
         ->with('flash_message',
             'Role deleted!');
-        
     }
 }

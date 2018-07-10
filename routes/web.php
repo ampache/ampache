@@ -45,7 +45,7 @@ Route::get('/lighttab', function () {
 
 Route::get('loadtab/{tab}', 'SidebarController@loadTab');
    
-Route::get('/modules/{type}/{action}', 'ModulesController@action');    
+Route::get('/modules/{type}/{action}', 'ModulesController@action');
 Route::get('/modules/show_catalogs', 'ModulesController@show_catalogs');
 Route::get('/SSE/{action}/{catalogs}/{options}', 'SSEController@processAction');
 
@@ -54,7 +54,6 @@ Route::get('/apikey/create/{id}', function ($id) {
     $apikey = hash('md5', time() . $user->username . $user->password);
     $user->apikey=$apikey;
     $user->save();
+
     return $user->apikey;
 });
-
-

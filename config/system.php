@@ -117,7 +117,7 @@ return [
    ; Un comment if don't want ampache to follow symlinks
    ; DEFAULT: false
  */
-   'no_symlinks'   => false,
+   'no_symlinks' => false,
  
  /* ; Art Gather Order
  * Simply arrange the following in the order you would like

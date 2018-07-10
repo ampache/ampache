@@ -22,8 +22,6 @@ class CatalogService
      */
     public function __construct()
     {
-        
-        
     }
     
     public function getCatalogModules()
@@ -54,13 +52,13 @@ class CatalogService
     {
         if (Config::get('interface.ajax_load')) {
             $sse_url = url("/SSE/catalog/" . $action . "/" . urlencode(json_encode($catalogs)));
-        if ($options) {
-            $sse_url .= "&options=" . urlencode(json_encode($_POST));
-        }
-        self::sse_worker($sse_url);
+            if ($options) {
+                $sse_url .= "&options=" . urlencode(json_encode($_POST));
+            }
+            self::sse_worker($sse_url);
         } else {
-        Cat::process_action($action, $catalogs, $options);
-      }
+            Cat::process_action($action, $catalogs, $options);
+        }
     }
 
     public static function sse_worker($url)
@@ -70,10 +68,9 @@ class CatalogService
         echo "</script>\n";
     }
    
-    public function getCatTypes() {
-        
+    public function getCatTypes()
+    {
         return $this->show_catalog_types();
-        
     }
     /**
      * Show dropdown catalog types.
@@ -101,11 +98,11 @@ class CatalogService
                     
                     switch ($field['type']) {
                         case 'checkbox':
-                            $catTypes .= "<div class='form-group'><input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') .  "/>";
+                            $catTypes .= "<div class='form-group'><input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
                             break;
                         default:
                             $catTypes .= "<div class='form-group'><input type='" . $field['type'] . "'class=" . "w3-round" .
-                                " name=" . $key . " value='" . (isset( $field['value']) ? : '') . "'><div class='messages'></div></div>";
+                                " name=" . $key . " value='" . (isset($field['value']) ? : '') . "'><div class='messages'></div></div>";
                             break;
                     }
                     $catTypes .= "</td></tr>";
@@ -164,9 +161,10 @@ class CatalogService
         $tables = array();
         foreach ($results as $result) {
             if (Schema::hasTable('catalog_' . $result)) {
-                $tables[] = $result; 
+                $tables[] = $result;
             }
         }
+
         return $tables;
     } // get_catalog_types
     
@@ -320,5 +318,4 @@ class CatalogService
         // Remove any orphaned artists/albums/etc.
         self::gc();
     }
-    
 }
