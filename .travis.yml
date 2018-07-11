@@ -3,10 +3,6 @@ language: php
 php:
  - 7.1.3
 
-before_install:
- - export PATH="$PATH:$HOME/.composer/vendor/bin"
- - composer global require friendsofphp/php-cs-fixer:2.12.2
-
 before_script:
  - chmod +x scripts/tests/syntax.sh
  - chmod +x scripts/tests/codestyle.sh
