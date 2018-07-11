@@ -9,9 +9,6 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude(__DIR__ . '/resources')
     ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
     ->in(__DIR__)
-    ->in(__DIR__ . '/modules/localplay')
-    ->in(__DIR__ . '/modules/catalogs')
-    ->in(__DIR__ . '/modules/plugins')
 ;
 
 return PhpCsFixer\Config::create()
