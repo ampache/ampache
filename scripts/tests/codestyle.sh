@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -e "php-cs-fixer.phar" ]
+if [ -e "php-cs-fixer" ]
 then
-    PHPCSFIXER="php php-cs-fixer.phar"
+    PHPCSFIXER="php php-cs-fixer"
 elif hash php-cs-fixer
 then
     PHPCSFIXER="php-cs-fixer"
