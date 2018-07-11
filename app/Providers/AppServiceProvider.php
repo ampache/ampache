@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
         $Users = User::all();
         view::share('Users', $Users);
         $roles = Role::get(); //Get all roles
-            view::share('roles', $roles);
+        view::share('roles', $roles);
     }
 
     /**

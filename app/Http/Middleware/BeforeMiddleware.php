@@ -63,6 +63,7 @@ class BeforeMiddleware
         switch ($errorNo) {
             case 1007:
                 $message = "Can't create database '" . $this->database . "'; database exists and overwrite is not enabled.";
+                // no break
             case 1045:
                 $message = "Administrative username or password incorrect.";
                 break;
@@ -74,6 +75,7 @@ class BeforeMiddleware
                 break;
             case 1130:
                 $message = "Host '" . gethostname() . "' is not allowed to connect to this MySQL server.";
+                // no break
             default:
                 $message = "Unknown PDO error.";
         }

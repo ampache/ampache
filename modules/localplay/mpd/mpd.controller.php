@@ -384,43 +384,43 @@ class AmpacheMpd extends localplay_controller
     } // pause
 
 
-        /**
-        * volume
-        * This tells MPD to set the volume to the parameter
-        */
+    /**
+    * volume
+    * This tells MPD to set the volume to the parameter
+    */
     public function volume($volume)
     {
         return $this->_mpd->SetVolume($volume);
     } // volume
 
-       /**
-        * repeat
-        * This tells MPD to set the repeating the playlist (i.e. loop) to either
+    /**
+     * repeat
+     * This tells MPD to set the repeating the playlist (i.e. loop) to either
     * on or off.
-        */
+     */
     public function repeat($state)
     {
         return $this->_mpd->SetRepeat($state);
     } // repeat
 
-       /**
-        * random
-        * This tells MPD to turn on or off the playing of songs from the
+    /**
+     * random
+     * This tells MPD to turn on or off the playing of songs from the
     * playlist in random order.
-        */
-       public function random($onoff)
-       {
-           return $this->_mpd->SetRandom($onoff);
-       } // random
+     */
+    public function random($onoff)
+    {
+        return $this->_mpd->SetRandom($onoff);
+    } // random
 
-       /**
-        * move
-        * This tells MPD to move a song
-        */
-       public function move($source, $destination)
-       {
-           return $this->_mpd->PLMoveTrack($source, $destination);
-       } // move
+    /**
+     * move
+     * This tells MPD to move a song
+     */
+    public function move($source, $destination)
+    {
+        return $this->_mpd->PLMoveTrack($source, $destination);
+    } // move
 
     /**
      * get_songs

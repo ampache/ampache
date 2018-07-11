@@ -217,6 +217,7 @@ class CatalogService
         switch ($action) {
             case 'add_to_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // no break
             case 'add_to_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -233,6 +234,7 @@ class CatalogService
                 break;
             case 'update_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // no break
             case 'update_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -261,6 +263,7 @@ class CatalogService
                 break;
             case 'clean_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // no break
             case 'clean_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {

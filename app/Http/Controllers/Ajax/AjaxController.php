@@ -23,7 +23,7 @@ class AjaxController extends Controller
                 /* We need to escape the value */
                 $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
             }
-        // end foreach elements
+            // end foreach elements
         }
         $string = '<?xml version="1.0" encoding="utf-8" ?>' .
             "\n<root>\n" . $string . "</root>\n";

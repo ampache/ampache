@@ -81,7 +81,7 @@ class LoginController extends Controller
         return back()
         ->with('status', 'Username or password is incorrect.');
         
-     //   return $this->sendFailedLoginResponse($request);
+        //   return $this->sendFailedLoginResponse($request);
     }
     
     public function logout(Request $request)

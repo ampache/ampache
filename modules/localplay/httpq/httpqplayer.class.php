@@ -50,19 +50,19 @@ class HttpQPlayer
      * $name    Name to be shown in the playlist
      * $url        URL of the song
      */
-      public function add($name, $url)
-      {
-          $args['name'] = urlencode($name);
-          $args['url']  = urlencode($url);
+    public function add($name, $url)
+    {
+        $args['name'] = urlencode($name);
+        $args['url']  = urlencode($url);
         
-          $results = $this->sendCommand('playurl', $args);
+        $results = $this->sendCommand('playurl', $args);
         
-          if ($results == '0') {
-              $results = null;
-          }
+        if ($results == '0') {
+            $results = null;
+        }
 
-          return $results;
-      } // add
+        return $results;
+    } // add
 
     /**
      * version

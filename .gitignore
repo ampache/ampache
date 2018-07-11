@@ -26,3 +26,4 @@ public/themes/
 storage/
 .gitattributes
 modules/
+.php_cs.cache

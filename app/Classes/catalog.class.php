@@ -435,7 +435,7 @@ abstract class Catalog
     {
         if (count($this->_filecache) == 0) {
             // Get _EVERYTHING_
-             $db_results = DB::table('songs')->select('id', 'file')->where('catalog', '=', $this->id)->get();
+            $db_results = DB::table('songs')->select('id', 'file')->where('catalog', '=', $this->id)->get();
 
             // Populate the filecache
             while ($results = Dba::fetch_assoc($db_results)) {
@@ -1556,7 +1556,8 @@ abstract class Catalog
         $new_song->lyrics      = str_replace(
                         array("\r\n", "\r", "\n"),
                         '<br />',
-                        strip_tags($results['lyrics']));
+                        strip_tags($results['lyrics'])
+        );
         $new_song->bitrate               = $results['bitrate'];
         $new_song->rate                  = $results['rate'];
         $new_song->mode                  = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
@@ -2330,24 +2331,24 @@ abstract class Catalog
 
         return $tags;
     }
-/*
-    public static function can_remove($libitem, $user = null)
-    {
-        if (!$user) {
-            $user = $GLOBALS['user']->id;
-        }
+    /*
+        public static function can_remove($libitem, $user = null)
+        {
+            if (!$user) {
+                $user = $GLOBALS['user']->id;
+            }
 
-        if (!$user) {
-            return false;
-        }
+            if (!$user) {
+                return false;
+            }
 
-        if (!AmpConfig::get('delete_from_disk')) {
-            return false;
-        }
+            if (!AmpConfig::get('delete_from_disk')) {
+                return false;
+            }
 
-        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
-    }
-*/
+            return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
+        }
+    */
     public static function process_action($action, $catalogs, $options = null)
     {
         if (!$options || !is_array($options)) {
@@ -2357,6 +2358,7 @@ abstract class Catalog
         switch ($action) {
             case 'add_to_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // no break
             case 'add_to_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2373,6 +2375,7 @@ abstract class Catalog
                 break;
             case 'update_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // no break
             case 'update_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2401,6 +2404,7 @@ abstract class Catalog
                 break;
             case 'clean_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // no break
             case 'clean_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {

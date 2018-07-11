@@ -169,6 +169,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
          Spatie\Permission\PermissionServiceProvider::class,
         SseServiceProvider::class,
+        STS\Fixer\FixerServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,

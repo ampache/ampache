@@ -1034,6 +1034,7 @@ class Song extends database_object implements media, library_item
                     if (self::isCustomMetadataEnabled()) {
                         $this->updateMetadata($value);
                     }
+                    // no break
                 default:
                 break;
             } // end whitelist

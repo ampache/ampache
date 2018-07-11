@@ -320,11 +320,13 @@ class AmpacheXbmc extends localplay_controller
             // So we get current status
             $status = $this->status();
             if ($status['state'] == 'stop') {
-                $this->_xbmc->Player->Open(array(
+                $this->_xbmc->Player->Open(
+                    array(
                     'item' => array('playlistid' => $this->_playlistId))
                 );
             } else {
-                $this->_xbmc->Player->PlayPause(array(
+                $this->_xbmc->Player->PlayPause(
+                    array(
                     'playerid' => $this->_playlistId,
                     'play' => true)
                 );
@@ -349,7 +351,8 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-            $this->_xbmc->Player->PlayPause(array(
+            $this->_xbmc->Player->PlayPause(
+                array(
                 'playerid' => $this->_playerId,
                 'play' => false)
             );

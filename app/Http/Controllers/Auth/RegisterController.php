@@ -96,77 +96,77 @@ class RegisterController extends Controller
             'password' => $data['password'],
             $columns,
         ]);
-            // Authentication passed...
+        // Authentication passed...
     }
      
-     /**
+    /**
 
-     * Handle a registration request for the application.
+    * Handle a registration request for the application.
 
-     * @param \Illuminate\Http\Request $request
+    * @param \Illuminate\Http\Request $request
 
-     * @return \Illuminate\Http\Response
+    * @return \Illuminate\Http\Response
 
-     */
+    */
      
-     public function register(Request $request)
-     {
-         $isHuman = true;
+    public function register(Request $request)
+    {
+        $isHuman = true;
          
-         if (config('user.captcha_public_reg') == true) {
-             $code    = $request->input('CaptchaCode');
-             $isHuman = captcha_validate($code);
-         }
+        if (config('user.captcha_public_reg') == true) {
+            $code    = $request->input('CaptchaCode');
+            $isHuman = captcha_validate($code);
+        }
          
-         if ($isHuman) {
-             $this->validator($request->all())->validate();
-         } else {
-             return back()
+        if ($isHuman) {
+            $this->validator($request->all())->validate();
+        } else {
+            return back()
              ->with('status', 'Are you sure you are human? Please try the Captcha again');
-         }
+        }
          
-         event(new Registered($user = $this->create($request->all())));
-         $userCount = DB::table("users")->count();
-         if ($userCount > 1) {
-             $user->assignRole('User');
-             $role_id = DB::table('roles')->select('id')->where('name', 'User')->get();
-             DB::table('role_users')->insert(
+        event(new Registered($user = $this->create($request->all())));
+        $userCount = DB::table("users")->count();
+        if ($userCount > 1) {
+            $user->assignRole('User');
+            $role_id = DB::table('roles')->select('id')->where('name', 'User')->get();
+            DB::table('role_users')->insert(
                 ['user_id' => $user->id, 'role_id' => $role_id[0]->id]
             );
-         } else {
-             $user->assignRole('Administrator');
-             $role_id = DB::table('roles')->select('id')->where('name', 'Administrator')->get();
-             DB::table('role_users')->insert(
+        } else {
+            $user->assignRole('Administrator');
+            $role_id = DB::table('roles')->select('id')->where('name', 'Administrator')->get();
+            DB::table('role_users')->insert(
                  ['user_id' => $user->id, 'role_id' => $role_id[0]->id]
              );
-         }
-         if (config('user.email_confirm') == true) {
-             dispatch(new SendVerificationEmail($user));
+        }
+        if (config('user.email_confirm') == true) {
+            dispatch(new SendVerificationEmail($user));
 
-             return view('email.verification');
-         } else {
-             return view('welcome', ['Name' => $user->full_name]);
-         }
-     }
+            return view('email.verification');
+        } else {
+            return view('welcome', ['Name' => $user->full_name]);
+        }
+    }
      
-     /**
+    /**
 
-     * Handle a registration request for the application.
+    * Handle a registration request for the application.
 
-     * @param $token
+    * @param $token
 
-     * @return \Illuminate\Http\Response
+    * @return \Illuminate\Http\Response
 
-     */
+    */
      
-     public function verify($token)
-     {
-         $user = User::where('email_token', $token)->first();
+    public function verify($token)
+    {
+        $user = User::where('email_token', $token)->first();
          
-         $user->verified = 1;
+        $user->verified = 1;
          
-         if ($user->save()) {
-             return view("email.emailconfirm", ['user' => $user]);
-         }
-     }
+        if ($user->save()) {
+            return view("email.emailconfirm", ['user' => $user]);
+        }
+    }
 }

@@ -88,12 +88,16 @@ class UI
         switch ($unit) {
             case 'p':
                 $value *= 1024;
+                // no break
             case 't':
                 $value *= 1024;
+                // no break
             case 'g':
                 $value *= 1024;
+                // no break
             case 'm':
                 $value *= 1024;
+                // no break
             case 'k':
                 $value *= 1024;
         }

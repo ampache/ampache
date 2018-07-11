@@ -74,8 +74,10 @@ class UserController extends Controller
         }
         //Redirect to the users.index view and display message
         return redirect()->route('users.index')
-        ->with('flash_message',
-            'User successfully added.');
+        ->with(
+            'flash_message',
+            'User successfully added.'
+        );
     }
     
     /**
@@ -141,8 +143,10 @@ class UserController extends Controller
         $this->upload_avatar($user);
 
         return redirect()->route('users.index')
-        ->with('flash_message',
-            'User successfully edited.');
+        ->with(
+            'flash_message',
+            'User successfully edited.'
+        );
     }
     
     /**
@@ -158,8 +162,10 @@ class UserController extends Controller
         $user->delete();
         
         return redirect()->route('users.index')
-        ->with('flash_message',
-            'User successfully deleted.');
+        ->with(
+            'flash_message',
+            'User successfully deleted.'
+        );
     }
     
     public function update_avatar($data, $mime = '')

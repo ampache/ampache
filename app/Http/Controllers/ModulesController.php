@@ -58,15 +58,15 @@ class ModulesController extends Controller
     {
         $module  = 'Catalog_' . $type;
         $catalog = new $module();
-      //Check to see if $type is installed
+        //Check to see if $type is installed
       
-      if (Schema::hasTable('catalog_' . $type)) {
-          if ($action == 'Disable') {
-              Schema::drop('catalog_' . $type);
-          }
-      } else {
-          $catalog->install();
-      }
+        if (Schema::hasTable('catalog_' . $type)) {
+            if ($action == 'Disable') {
+                Schema::drop('catalog_' . $type);
+            }
+        } else {
+            $catalog->install();
+        }
       
         return 'true';
     }
@@ -86,21 +86,21 @@ class ModulesController extends Controller
             if ($file === '.' || $file === '..') {
                 continue;
             }
-          /* Make sure it is a dir */
-          if (! is_dir($basedir . '/' . $file)) {
-              Log::alert('catalog: $file' . ' is not a directory.');
-              continue;
-          }
+            /* Make sure it is a dir */
+            if (! is_dir($basedir . '/' . $file)) {
+                Log::alert('catalog: $file' . ' is not a directory.');
+                continue;
+            }
             $temp = $basedir . '/' . $file . '/' . $file . '.catalog.php';
-          // Make sure the plugin base file exists inside the plugin directory
-          if (! file_exists($basedir . '/' . $file . '/' . strtolower($file) . '.catalog.php')) {
-              Log::alert('Missing class for ' . $file, 3);
-              continue;
-          }
+            // Make sure the plugin base file exists inside the plugin directory
+            if (! file_exists($basedir . '/' . $file . '/' . strtolower($file) . '.catalog.php')) {
+                Log::alert('Missing class for ' . $file, 3);
+                continue;
+            }
           
             $results[] = $file;
         } // end while
       
-      return $results;
+        return $results;
     }
 }

@@ -49,7 +49,9 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //Validate name and permissions field
-        $this->validate($request, [
+        $this->validate(
+            $request,
+            [
             'name' => 'required|unique:roles',
             'permissions' => 'required',
         ]
@@ -71,8 +73,10 @@ class RoleController extends Controller
         }
         
         return redirect()->route('roles.index')
-        ->with('flash_message',
-            'Role' . $role->name . ' added!');
+        ->with(
+            'flash_message',
+            'Role' . $role->name . ' added!'
+        );
     }
     
     /**
@@ -138,8 +142,10 @@ class RoleController extends Controller
         }
         
         return redirect()->route('roles.index')
-        ->with('flash_message',
-            'Role' . $role->name . ' updated!');
+        ->with(
+            'flash_message',
+            'Role' . $role->name . ' updated!'
+        );
     }
     
     /**
@@ -154,7 +160,9 @@ class RoleController extends Controller
         $role->delete();
         
         return redirect()->route('roles.index')
-        ->with('flash_message',
-            'Role deleted!');
+        ->with(
+            'flash_message',
+            'Role deleted!'
+        );
     }
 }

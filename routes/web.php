@@ -57,3 +57,5 @@ Route::get('/apikey/create/{id}', function ($id) {
 
     return $user->apikey;
 });
+
+Route::resource('images', 'ImageController');

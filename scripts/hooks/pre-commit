@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Hook for git which can test code for each commit.
+# To install and use it just copy or symlink it to .git/hooks/pre-commit
+# example (project base dir): pushd .git/hooks/; ln -s ../../scripts/hooks/pre-commit .; popd
+
+if [ -e "php-cs-fixer.phar" ]
+then
+    PHPCSFIXER="php php-cs-fixer.phar"
+elif hash php-cs-fixer
+then
+    PHPCSFIXER="php-cs-fixer"
+else
+    echo -e "\e[1;31mPlease install or download latest stable php-cs-fixer\e[00m";
+    echo -e "\e[1;31mhttp://cs.sensiolabs.org/\e[00m";
+    exit 1
+fi
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+fi
+
+ST=0 # Global exit status
+
+# Loop through all committed files
+for file in $(git diff-index --name-only --diff-filter=AMCRT $against); do
+	echo -n "testing $file..."
+
+	FIXEROUT=$($PHPCSFIXER fix --config-file=.php_cs --dry-run --diff -v "$file" | grep -P '\d\)' | sed -r "s~^.*?${file} ~~"; exit ${PIPESTATUS[0]})
+	FIXERST=$?
+
+	PARSEROUT=$(php --syntax-check "$file" 2>&1 | egrep -v 'No syntax errors|Errors parsing'; exit ${PIPESTATUS[0]})
+	PARSERST=$?
+
+	echo -e -n "\r${file} ... "
+	if [ $FIXERST != 0 ]; then
+		echo $FIXEROUT
+	elif [ $PARSERST != 0 ]; then
+		echo $PARSEROUT
+	else
+		echo -e "\e[0;32mOK\e[00m           ";
+	fi
+	ST=$(($ST | $FIXERST | $PARSERST))
+done
+
+if [ $ST != 0 ]; then
+	echo "Use 'php-cs-fixer fix --config-file=.php_cs -v <file>' to correct"
+fi
+
+exit $ST

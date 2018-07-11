@@ -117,7 +117,7 @@ class SessionController extends Controller
             return false;
         }
     
-//		debug_event('session', 'Session created: ' . $key, '5');
+        //		debug_event('session', 'Session created: ' . $key, '5');
     
         return $key;
     }

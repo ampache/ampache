@@ -160,7 +160,7 @@ class InstallController extends Controller
     public function install_insert_db($conn, $database, $create_db = true, $overwrite = false, $create_tables = true)
     {
         // Make sure that the database name is valid
-      $t = preg_match('/([^\d\w\_\-[0-9])/', $database, $matches);
+        $t = preg_match('/([^\d\w\_\-[0-9])/', $database, $matches);
         
         if (count($matches)) {
             $this->request->session()->flash('status', T_('Error: Invalid database name.'));
@@ -230,6 +230,7 @@ class InstallController extends Controller
         switch ($errorNo) {
             case 1007:
                 $message = "Can't create database '" . $this->database . "'; database exists and overwrite is not enabled.";
+                // no break
             case 1045:
                 $message = "Administrative username or password incorrect.";
                 break;
@@ -241,6 +242,7 @@ class InstallController extends Controller
                 break;
             case 1130:
                 $message = "Host '" . gethostname() . "' is not allowed to connect to this MySQL server.";
+                // no break
             default:
                 $message = "Unknown PDO error.";
         }
