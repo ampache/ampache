@@ -4,6 +4,8 @@ CHANGELOG
 3.8.9
 ----------
 - Fixed uploading of avatar.
+- DSub now writes the correct extension when the ampache config switch 
+  `encode_player_api_target` is enabled.
 
 3.8.8
 ----------
