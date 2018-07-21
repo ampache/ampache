@@ -55,6 +55,10 @@ receives the most testing:
     * simplexml (optional)
     * curl (optional)
 
+  * For FreeBSD The following modules must be loaded:
+    * php-xml
+    * php-dom
+
 * MySQL 5.x
 
 Upgrading
