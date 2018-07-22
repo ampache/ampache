@@ -574,7 +574,7 @@ class Subsonic_XML_Data
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = Song::get_transcode_settings_for_media($null, 'api', null, 'song');
             if ($transcode_settings) {
-                $transcode_type = $transcode_settings['format'];
+                $transcode_type = AmpConfig::get('encode_player_api_target', 'mp3');
                 $xsong->addAttribute('transcodedSuffix', $transcode_type);
                 $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
             }

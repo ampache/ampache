@@ -15,6 +15,14 @@ CHANGELOG
 - Starring album and artist now work via Subsonic client.
 - Modified "Gather Art" debug message to remove confusion from "Image less than 5 chars...".
 
+3.8.9
+----------
+- Fixed uploading of avatar.
+- DSub now writes the correct extension when the ampache config switch 
+  `encode_player_api_target` is enabled.
+- Artist info now properly displayed.
+- Fixed login bug with PHP-7.2 installed.
+
 3.8.8
 ----------
 - Subsonic API now removes illegal characters before returning text.
