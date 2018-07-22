@@ -7,6 +7,8 @@ CHANGELOG
 - DSub now writes the correct extension when the ampache config switch 
   `encode_player_api_target` is enabled.
 - Artist info now properly displayed.
+- Fixed login bug with PHP-7.2 installed.
+
 3.8.8
 ----------
 - Subsonic API now removes illegal characters before returning text.

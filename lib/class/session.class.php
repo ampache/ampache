@@ -275,6 +275,7 @@ class Session
 
         // Set up the cookie params before we start the session.
         // This is vital
+        session_write_close();
         session_set_cookie_params(
             AmpConfig::get('cookie_life'),
             AmpConfig::get('cookie_path'),
@@ -450,9 +451,9 @@ class Session
         $cookie_path   = AmpConfig::get('cookie_path');
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
-
+        
+        session_write_close();
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
-
         session_name(AmpConfig::get('session_name'));
 
         /* Start the session */
