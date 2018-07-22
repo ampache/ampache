@@ -1,5 +1,13 @@
 CHANGELOG
 =========
+3.8.8
+----------
+- Subsonic API now removes illegal characters before returning text.
+- Removed hardcoded access level to allow guests to stream audio.
+- Guest accounts can now access songs and public playlists.
+- Fixed bug in subsonic API which caused DSub not to create folders or
+  add file extensions when caching.
+
 3.8.7
 ----------
 - Better able to clean up image extensions when gathering art from remote sites.
