@@ -13,6 +13,7 @@
         <table class="w3-bordered w3-small">
 
             <thead>
+      {{-- \resources\views\permissions\index.blade.php --}}
                 <tr>
                     <th>Permissions</th>
                     <th>Operation</th>

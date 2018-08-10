@@ -3,25 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Catalog as Catalogs;
-use App\Classes\Catalog as cat;
+use App\Models\Preference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Modules\Catalogs\Local\Catalog_local;
+use Illuminate\Support\Facades\Log;
+use Modules\Catalogs\Local\Catalog_local as Catalog;
 use Modules\Catalogs\Remote\Catalog_remote;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use App\Providers\CatalogServiceProvider;
 
 //use App\Services\Catalog;
 
 
 class CatalogController extends Controller
 {
-    protected $catalogs;
+    protected $preferences;
     
-    public function __construct(User $users)
+    public function __construct(Preference $preferences)
     {
+        $this->preferences = $preferences;
     }
     
     /**
@@ -53,14 +51,48 @@ class CatalogController extends Controller
     public function store(Request $request)
     {
         $data       = $request->all();
-        $catalog_id = cat::create($data);
-        if ($catalog_id == false) {
-            return response('Folder Path already used for catalog', 200);
-        }
+        $type       = $data['catalog_type'];
+        $path       = $data['path'];
 
-        return response('Catalog was created', 200);
-        $catalogs[] = $catalog_id;
-//        Catalog::catalog_worker('add_to_catalog', $catalogs, $_POST);
+        // Make sure this path isn't already in use by an existing catalog
+        if ($this->isDuplicatePath($type, $path)) {
+            return back()->with('status', sprintf(__('Error: Catalog with path %s already exists'), $path));
+        }
+        
+        // Make sure the path is readable/exists
+        if (!is_readable($path) || !is_dir($path)) {
+            //            //debug_event('catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
+            Log::error(sprintf('Error: %s is not readable or does not exist', e($path)));
+
+            return back()->with('status', sprintf('Error: %s is not readable or does not exist', e($data['path'])));
+        }
+        if (config('catalog.allow_embedded_catalogs') == false) {
+            // Make sure that there isn't a catalog with a directory above this one
+            if ($this->isEmbeddedPath($type, $path)) {
+                Log::error('Error: Defined Path is inside an existing catalog');
+
+                return back()->with('status', 'Defined Path is inside an existing catalog!');
+            }
+        }
+        
+        $catalog_id = catalog::create($data);
+        if ($catalog_id) {
+            $catalogs[] = $catalog_id;
+            
+            Catalog::catalog_worker('add_to_catalog', $catalogs, $_POST);
+        } else {
+            Log::error('Error: Defined Path is inside an existing catalog');
+
+            return back()->with('status', 'Catalog creation failed!');
+        }
+        
+
+        $nextPath= url('catalogs/index');
+        $text    = "Catalog creation started...";
+        $cancel  = false;
+        $temp    = array($data, $nextPath . $cancel, $text);
+
+        return view('catalogs.confirm', ['text' => $text, 'cancel' => $cancel, 'nextPath' => $nextPath]);
     }
 
     /**
@@ -96,14 +128,25 @@ class CatalogController extends Controller
         return view('catalogs.edit', compact('catalog'));
     }
     
-    public function action($action, $id)
+    public function action(Request $request, $action, $id)
     {
+        $nextPath= url('catalogs/index');
         switch ($action) {
-            case "add_to_catalog":
+            case 'add_to_all_catalogs':
+                catalog_worker('add_to_all_catalogs');
+
+                return view('catalogs.confirm', ['text' => __('Catalog Update started...'), 'cancel' => false, 'nextPath' => $nextPath]);
+                break;
+            case 'add_to_catalog':
+                if (config('program.demo_mode') == true) {
+                    break;
+                }
                 
+                catalog_worker('add_to_catalog', $catalogs);
+
+                return view('catalogs.confirm', ['text' => __('Catalog Update started...'), 'cancel' => false, 'nextPath' => $nextPath]);
                 break;
             case "update_catalog":
-                
                 break;
             case "clean_catalog":
                 break;
@@ -121,7 +164,28 @@ class CatalogController extends Controller
             default:
         }
     }
-
+    
+    public function catalog_worker($action, $catalogs = null, $options = null)
+    {
+        $ajax_load = $this->preferences->select('value')->where('name', '=', 'ajax_load')->get();
+        if ($ajax_load) {
+            $sse_url = url("/sse") . "/" . $action . "/" . $action . "/" . urlencode(json_encode($catalogs));
+            if ($options) {
+                $sse_url .= "&options=" . urlencode(json_encode($_POST));
+            }
+            $this->sse_worker($sse_url);
+        } else {
+            Catalog::process_action($action, $catalogs, $options);
+        }
+    }
+    
+    public function sse_worker($url)
+    {
+        echo '<script type="text/javascript">';
+        echo "sse_worker('$url');";
+        echo "</script>\n";
+    }
+    
     /**
      * Update the specified resource in storage.
      *
@@ -132,7 +196,7 @@ class CatalogController extends Controller
     public function update(Request $request, $id)
     {
         $attributes              = $request->all();
-        $catalog                 = Catalogs::find($attributes['catalog_id']);
+        $catalog                 = DB::table('catalogs')->find($attributes['catalog_id']);
         $catalog->name           = $attributes['name'];
         $catalog->rename_pattern = $attributes['rename_pattern'];
         $catalog->sort_pattern   = $attributes['sort_pattern'];
@@ -148,9 +212,6 @@ class CatalogController extends Controller
      * @param  \App\Models\Catalog  $catalog
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Catalog $catalog)
-    {
-    }
     
     public function delete($catalog_id)
     {
@@ -179,11 +240,27 @@ class CatalogController extends Controller
     {
         $empties = DB::table('albums')->select('id')
             ->whereNotExists(function ($query) {
-                $query->select(DB::raw('`id` FROM `songs` WHERE `songs`.`album` = `albums`.`id`'));
+                $query->select(DB::raw('`id` FROM `songs` WHERE `songs`.`album_id` = `albums`.`id`'));
             })
             ->get();
             
         if ($empties->count() > 0) {
         }
+    }
+    
+    public function isDuplicatePath($type, $path)
+    {
+        $exists = DB::table('catalog_' . $type)->where('path', $path)->exists();
+        Log::error('Cannot add catalog with duplicate path: ' . $path);
+
+        return $exists;
+    }
+    
+    public function isEmbeddedPath($type, $path)
+    {
+        $Catalog_type = 'Catalog_' . $type;
+        $isEmbedded   = $Catalog_type::get_from_path($path) ;
+
+        return $isEmbedded;
     }
 }

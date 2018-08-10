@@ -4,39 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Classes\Catalog;
-use App\Http\Controllers\Controller;
-use Sse\SSE;
-use Sse\Laravel\Facade;
 
 class SSEController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
+    public function __construct()
     {
+        //
     }
-    
-    public function processAction($action, $catalogs, $options)
+
+    public function processAction(Request $request, $action, $catalogs, $options)
     {
-        if (!$_REQUEST['html']) {
+        if (!$request->html) {
             define('SSE_OUTPUT', true);
             header('Content-Type: text/event-stream; charset=utf-8');
             header('Cache-Control: no-cache');
         }
         
-        $worker = isset($_REQUEST['worker']) ? $_REQUEST['worker'] : null;
-        if (isset($_REQUEST['options'])) {
-            $options = json_decode(urldecode($_REQUEST['options']), true);
+        $worker = isset($this->request->worker) ? $request->worker : null;
+        if (isset($this->$this->request->options)) {
+            $options = json_decode(urldecode($request->options), true);
         } else {
             $options = null;
         }
-        if (isset($_REQUEST['catalogs'])) {
-            $catalogs = scrub_in(json_decode(urldecode($_REQUEST['catalogs']), true));
+        if (isset($request->catalogs)) {
+            $catalogs = scrub_in(json_decode(urldecode($request->catalogs), true));
         } else {
             $catalogs = null;
         }

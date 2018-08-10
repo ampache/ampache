@@ -17,7 +17,6 @@
 		"guzzlehttp/guzzle": "^6.3",
 		"illuminate/contracts": "5.6.*",
 		"illuminate/support": "5.6.*",
-		"jenssegers/agent": "^2.6",
 		"kunalvarma05/dropbox-php-sdk": "^0.2.1",
 		"laravel/framework": "5.6.*",
 		"laravel/socialite": "^3.0",
@@ -80,9 +79,11 @@
 		 "psr-0": {
             "MusicBrainz": "src/"
         },
-
+          "files" : [ 
+             "app/Services/AmpError.php"
+        ],
 	"psr-4" : {
-		          "Modules\\" : [
+		  "Modules\\" : [
                 "modules",
                 "modules/catalogs",
                 "modules/catalogs/dropbox",
@@ -95,7 +96,7 @@
 			"App\\" : "app/",
 			"Classes\\" : "app/Classes/",
 			"Traits\\" : "app/Traits/"
-		}
+  		}
 	},
 	"autoload-dev" : {
 		"psr-4" :

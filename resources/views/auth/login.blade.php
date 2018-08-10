@@ -15,7 +15,7 @@
 </div>
 </div>
 
-  <form id="edit-form" method="POST" action="{{ route('login') }}">
+  <form id="login-form" method="POST" action="{{ route('login') }}">
          {{ csrf_field() }}
     <table class="w3-table w3-small">
         <tr>

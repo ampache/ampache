@@ -24,10 +24,8 @@
    <td>
         {{ Form::text('username', null, array('class' => "w3-round")) }}
     </td>
-          <td style="vertical-align:top; font-family: monospace;" rowspan="4" id="user_avatar">
-          <strong>Current Avatar:</strong><br>
-          <img src= "{{ $user->avatar }}">
-      </td>
+    <td>
+    </td>
 </tr>
 @endrole
 <tr>
@@ -160,29 +158,32 @@
         }) 
   @endphp
      <tr>
-         <td>Avatar (<{{ $avSize }})
+        <td onclick="clearUpload()">
+            Avatar (<{{ $avSize }})
+            <i class="fa fa-random w3-margin-left" style="color:orange;cursor:pointer;" title="Clear upload"></i>
         </td>
-         <td>
+        <td>
           <input id="avatar" name="avatar" value="" data-parsley-filemimetypes="image/jpeg, image/png"  data-parsley-max-file-size="{{ (integer)config('system.max_upload_size') }}" type="file">
       </td>
-       </tr>
-       <tr>
+       <td style="vertical-align:top; font-family: monospace;" rowspan="4" id="user_avatar">
+         @if ($user->avatar !== false)
+          <strong>Current Avatar:</strong><br>
+          <img src= "{{ $user->avatar }}" style="width: 60px; height: 60px;">
+          <div onclick="deleteAvatar()" class="w3-button w3-khaki w3-tiny w3-round">Delete</div>
+         @endif
+      </td>      
+     </tr>
+     <tr>
        <td>
        </td>
-      <td   onclick="clearUpload()">
-            <i class="fa fa-remove fa-2x" style="color:orange;cursor:pointer;" title="Clear Upload"></i>
-            <i class="fa fa-times-rectangle fa-2x w3-margin-left" style="color:orange;cursor:pointer;" title="Delete Current Avatar"></i>
-      </td>
-       </tr>
+     </tr>
 </table>
  
-    {{ Form::submit('Save', array('class' => 'btn btn-primary')) }}
+    {{ Form::submit('Update', array('class' => 'w3-button w3-khaki w3-round w3-tiny')) }}
 
     {{ Form::close() }}
  
    </div>
-    <div class="w3-display-right w3-color-red">
- This is a test
  </div>
   
   </div>
@@ -237,6 +238,19 @@ function clearUpload() {
     $("#avatar").val("");
     $("#avatar").removeClass("parsley-error");
     $("#avatar").next().empty();
+}
+
+function deleteAvatar(id) {
+    if (confirm("Delete Current Avatar?")) {
+        var request = $.ajax({
+            method: "GET",
+            url: "{{ url('avatar/delete', [$user->id]) }}",
+            data: { name: "{{ $user->username }}"}
+          });
+        request.done(function( msg ) {
+            $("#user_avatar").hide();
+        });
+    }
 }
 
 </script>

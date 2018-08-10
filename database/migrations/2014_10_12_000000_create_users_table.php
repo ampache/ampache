@@ -32,9 +32,12 @@ class CreateUsersTable extends Migration
                   ->default(false);
             $table->boolean('verified')
                   ->default(false);
-            $table->string('validation')
-                  ->nullable();
-            $table->timestamp('last_seen');
+            $table->timestamp('last_login')
+                  ->nullable()
+                  ->after('remember_token');
+            $table->string('last_login_ip')
+                  ->nullable()
+                  ->after('last_login');
             $table->boolean('name_public')
                   ->default(false);
             $table->string('street')

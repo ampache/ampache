@@ -38,4 +38,8 @@
   	@include('partials.search_bar')
   </div>
 </div>
+<div id="notification" class="notification-out">
+   <img src="{{ asset('/images/icons/icon_info.png') }}" />
+   <span id="notification-content"></span>
+ </div>
 @endsection

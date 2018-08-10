@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-
+use App\Models\role_user;
 //Importing laravel-permission models
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -29,9 +29,10 @@ class UserController extends Controller
     public function index()
     {
         //Get all users and pass it to the view
-        $users = User::all();
+        $user_ids = DB::table('users')->pluck('id');
+        $owner    = DB::table('role_users')->min('user_id');
 
-        return view('users.index')->with('users', $users);
+        return view('users.index', ['User_ids' => $user_ids, 'owner' => $owner]);
     }
     
     /**
@@ -115,10 +116,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id); //Get role specified by id
+        $user     = User::findOrFail($id); //Get role specified by id
+        $validate = array();
         
         //Validate name, email and password fields
-        $validate = array();
         if (!empty($request['username']) && ($user->username != $request['username'])) {
             $validate[] = array('username' => 'required|max:120');
         }
@@ -128,9 +129,25 @@ class UserController extends Controller
         if (!empty($request['password']) && (bcrypt($request['password']) != $user->password)) {
             $validate[] = array('password' => 'required|min:5|confirmed');
         }
-        $this->validate($request, $validate);
-         
-        $input = $request->only(['username', 'email', 'password', 'subsonic_password']); //Retreive the name, email and password fields
+
+        $required_fields = config('user.registration_mandatory_fields');
+        
+        if (!empty($required_fields)) {
+            foreach ($required_fields as $required_field) {
+                $validate[$required_field] = 'required';
+            }
+        }
+        
+        $validator = Validator::make($request->all(), $validate);
+        
+        if ($validator->fails()) {
+            return redirect('users/edit')
+            ->withErrors($validator)
+            ->withInput();
+        }
+                
+        $input = $request->all(); //Retreive the name, email and password fields
+//        $user->fullname = $input['fullname'];
         $user->fill($input)->save();
         $roles = $request['roles']; //Retreive all roles
         
@@ -157,15 +174,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        
         //Find a user with a given id and delete
         $user = User::findOrFail($id);
         $user->delete();
-        
-        return redirect()->route('users.index')
-        ->with(
-            'flash_message',
-            'User successfully deleted.'
-        );
+        role_user::where('user_id', $id)->delete();
+
+        return response('Removed', 200);
     }
     
     public function update_avatar($data, $mime = '')
@@ -184,13 +199,18 @@ class UserController extends Controller
             $image_data     = Art::get_from_source($upload, 'user');
             
             if ($image_data) {
-                //                $art = new Art($user->id, 'user');
-//                $art->insert($data, $mime);
-                
-                
                 $user->avatar = $image_data;
                 $user->save();
             }
         }
+    }
+    
+    public function deleteAvatar($id)
+    {
+        $user         = User::findOrFail($id); //Get user with specified id
+        $user->avatar = null;
+        $user->save();
+
+        return response('User Avatar Removed', 200);
     }
 }

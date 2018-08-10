@@ -70,7 +70,7 @@ return [
     |
     | The fields that will be shown on user registration page.
     | Username and email fields are always displayed.
-    | POSSIBLE VALUES: full_name,website,state,city, zip
+    | POSSIBLE VALUES: fullname,website,state,city, zip
     |
     */
 
@@ -83,11 +83,11 @@ return [
     |
     | This controls which fields are mandatory for registration.
     | Username and email fields are always mandatory.
-    | POSSIBLE VALUES: full_name,website,state,city, zip
+    | POSSIBLE VALUES: fullname,website,state,city, zip
     |
     */
 
-    'registration_mandatory_fields' => ['full_name'],
+    'registration_mandatory_fields' => ['fullname'],
 
     /*
     |--------------------------------------------------------------------------

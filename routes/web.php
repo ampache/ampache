@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Redis;
 use App\Models\User;
 use App\Models\Role;
 
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Auth::routes();
 Route::get('/verifyemail/{token}', 'Auth\RegisterController@verify');
 Route::get('/', function () {
@@ -28,14 +29,18 @@ Route::get('/', function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('users/delete/{id}', 'UserController@destroy');
+
 Route::resource('users/create', 'UserController');
 Route::get('users/edit/{id}', 'UserController@edit');
+Route::get('avatar/delete/{id}', 'UserController@deleteAvatar');
 Route::resource('users', 'UserController');
-Route::resource('catalogs', 'CatalogController');
+Route::get('catalogs/index', 'CatalogController@index');
 Route::get('/catalogs/create', 'CatalogController@create');
 Route::get('/catalogs/edit/{id}', 'CatalogController@edit');
-
+Route::post('/catalogs/store', 'CatalogController@store');
 Route::get('catalogs/action/{action}/{id}', 'CatalogController@action');
+
 Route::resource('roles', 'RoleController');
 
 Route::resource('permissions', 'PermissionController');
@@ -58,4 +63,11 @@ Route::get('/apikey/create/{id}', function ($id) {
     return $user->apikey;
 });
 
-Route::resource('images', 'ImageController');
+Route::resource('image', 'ImageController');
+//Route::get('image/{id}', 'ImageController');
+
+Route::resource('preference', 'PreferenceController');
+Route::get('user_preference/{id}/edit', 'User_PreferenceController@edit');
+Route::get('profile/{user}', function (App\Models\User_Preference $user) {
+    //
+});

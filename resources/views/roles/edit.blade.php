@@ -8,7 +8,8 @@
     <h1><i class='fa fa-key'></i> Edit Role: {{$role->name}}</h1>
     <hr>
 
-    {{ Form::model($role, array('route' => array('roles.update', $role->id), 'method' => 'PUT')) }}
+    {{ Form::model($role, array('route' => array('roles.update', $role->id), 'method' => 'PUT',
+      'enctype' => "multipart/form-data")) }}
 
     <div class="form-group">
         {{ Form::label('name', 'Role Name') }}
@@ -17,8 +18,8 @@
 
     <h5><b>Assign Permissions</b></h5>
           @foreach ($permissions as $permission)
-            {{ Form::checkbox('permissions[]',  $permission->id, in_array($permission->name, $p), 
-                ['id'=> $permission->id, 'onClick' => 'toggleCheckbox("' . $permission->id . '")' ]) }}
+ {{--         <input id="{!! $permission->id !!}" name="permissions[]" value="{!! $permission->id !!}" type="checkbox"> --}}
+            {{ Form::checkbox('permissions[]',  $permission->id, $role->permissions) }}
             {{ Form::label($permission->name, ucfirst($permission->name)) }}<br>
 
         @endforeach
@@ -29,7 +30,7 @@
     {{ Form::close() }}    
 </div>
 <script>
-
+/*
 function toggleCheckbox(id) {
    var x = document.getElementById(id);
 	if (x.value == id) {
@@ -38,5 +39,6 @@ function toggleCheckbox(id) {
         x.value = id;
 	}
 }
+*/
 </script>
 @endsection

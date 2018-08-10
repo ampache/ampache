@@ -18,11 +18,11 @@
     <script src="{{ asset('js/jquery-validate.js') }}"></script>
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
-    <script src="{{ asset('js/dynamicpage.js') }}"></script>
+{{--    <script src="{{ asset('js/dynamicpage.js') }}"></script> --}}
+    <script src="{{ asset('js/base.js') }}"></script>
     <script src="{{ asset('js/moment.js') }}"></script>
-    <script src="{{ asset('js/parsley.js') }}"></script>
- {{--   @inject('cat_types', 'App\Services\CatalogService')
-    {{ $cat_types->show_catalog_types() }} --}}
+{{--    <script src="{{ asset('js/parsley.js') }}"></script> --}}
+
      {!! $cat_types !!}
  </head>
 <body class="w3-laravel-body w3-padding-48"> 

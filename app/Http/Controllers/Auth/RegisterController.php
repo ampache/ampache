@@ -41,6 +41,8 @@ class RegisterController extends Controller
      *
      * @return void
      */
+    private $message;
+    
     public function __construct()
     {
         $this->middleware('guest');
@@ -52,9 +54,9 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function prepareRules(array $data)
     {
-        $rules = ['username' => 'required|string|max:255',
+        $rules = ['username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:5|confirmed',
         ];
@@ -66,39 +68,9 @@ class RegisterController extends Controller
             }
         }
 
-        return Validator::make($data, $rules);
+        return $rules;
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-//     * @return App\Models\User
-     */
-    protected function create(array $data)
-    {
-        if (config('user.email_confirm') == true) {
-            $columns = ['email_token' => base64_encode($data['email'])];
-        } else {
-            $columns = ['verified' => 1];
-        }
-        $req_fields = config('user.registration_mandatory_fields');
-        if ($req_fields) {
-            foreach ($req_fields as $field) {
-                $columns[$field] = $data[$field];
-            }
-        }
-            
-        return User::create([
-            'username' => $data['username'],
-            'full_name' => $data['full_name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
-            $columns,
-        ]);
-        // Authentication passed...
-    }
-     
     /**
 
     * Handle a registration request for the application.
@@ -119,7 +91,19 @@ class RegisterController extends Controller
         }
          
         if ($isHuman) {
-            $this->validator($request->all())->validate();
+            $rules     = $this->prepareRules($request->all());
+            $validator = Validator::make($request->all(), $rules);
+            
+            if ($validator->fails()) {
+                $errors = $validator->errors();
+                foreach ($errors->get('*') as $message) {
+                    $this->message =  $message[0];
+                    //
+                }
+
+                return back()
+                ->with('status', $this->message)->withInput();
+            }
         } else {
             return back()
              ->with('status', 'Are you sure you are human? Please try the Captcha again');
@@ -145,10 +129,40 @@ class RegisterController extends Controller
 
             return view('email.verification');
         } else {
-            return view('welcome', ['Name' => $user->full_name]);
+            return view('welcome', ['Name' => $user->fullname]);
         }
     }
      
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     //     * @return App\Models\User
+     */
+    protected function create(array $data)
+    {
+        if (config('user.email_confirm') == true) {
+            $columns = ['email_token' => base64_encode($data['email'])];
+        } else {
+            $columns = ['verified' => 1];
+        }
+        $req_fields = config('user.registration_mandatory_fields');
+        if ($req_fields) {
+            foreach ($req_fields as $field) {
+                $columns[$field] = $data[$field];
+            }
+        }
+        
+        return User::create([
+            'username' => $data['username'],
+            'fullname' => $data['fullname'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            $columns,
+        ]);
+        // Authentication passed...
+    }
+    
     /**
 
     * Handle a registration request for the application.

@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\View;
 use App\Classes\Catalog;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
-use App\Services\CoreService;
-use App\Services\ArtService;
+use App\Services\AmpError;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
+    
+   /**
      * Bootstrap any application services.
      *
      * @return void
@@ -45,6 +45,10 @@ class AppServiceProvider extends ServiceProvider
         view::share('Users', $Users);
         $roles = Role::get(); //Get all roles
         view::share('roles', $roles);
+        
+        $cat_types = Catalog::show_catalog_types();
+        view::share('cat_types', $cat_types[0]);
+        view::share('sel_types', $cat_types[1]);
     }
 
     /**
@@ -54,12 +58,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        app()->singleton('Core', function () {
-            return new CoreService();
-        });
-        
-        app()->singleton('Art', function () {
-            return new ArtService();
+        app()->singleton('Registration', function () {
+            return new AmpError();
         });
     }
 }

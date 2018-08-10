@@ -22,6 +22,8 @@
 
 namespace App\Classes;
 
+use Illuminate\Support\Facades\DB;
+
 class Plugin
 {
     /* Base Variables */
@@ -54,7 +56,7 @@ class Plugin
     public function _get_info($cname)
     {
         try {
-            $basedir = AmpConfig::get('prefix') . '/modules/plugins';
+            $basedir = base_path('/modules/plugins');
             if (is_dir($basedir . '/' . $cname)) {
                 $name = $cname;
             } else {
@@ -98,7 +100,7 @@ class Plugin
         $plugins_list[$type] = array();
 
         // Open up the plugin dir
-        $basedir = AmpConfig::get('prefix') . '/modules/plugins';
+        $basedir = base_path('/modules/plugins');
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
@@ -189,16 +191,17 @@ class Plugin
         }
 
         /* Make sure it's within the version confines */
-        $db_version = $this->get_ampache_db_version();
+        /*
+               $db_version = $this->get_ampache_db_version();
 
-        if ($db_version < $this->_plugin->min_ampache) {
-            return false;
-        }
+               if ($db_version < $this->_plugin->min_ampache) {
+                   return false;
+               }
 
-        if ($db_version > $this->_plugin->max_ampache) {
-            return false;
-        }
-
+               if ($db_version > $this->_plugin->max_ampache) {
+                   return false;
+               }
+*/
         // We've passed all of the tests
         return true;
     } // is_valid
@@ -272,14 +275,10 @@ class Plugin
      */
     public static function get_plugin_version($plugin_name)
     {
-        $name = Dba::escape('Plugin_' . $plugin_name);
-
         $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
-        $db_results = Dba::read($sql, array($name));
+        $db_results = DB::table('update_info')->where('key', '=', $plugin_name);
 
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['value'];
-        }
+        return $results['value'];
 
         return false;
     } // get_plugin_version
@@ -291,9 +290,8 @@ class Plugin
     public function get_ampache_db_version()
     {
         $sql        = "SELECT * FROM `update_info` WHERE `key`='db_version'";
-        $db_results = Dba::read($sql);
-
-        $results = Dba::fetch_assoc($db_results);
+        $db_results = DB::table('update_info')->where('key' . '=', 'db_version');
+  
 
         return $results['value'];
     } // get_ampache_db_version

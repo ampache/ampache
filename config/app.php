@@ -68,7 +68,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => date_default_timezone_get(),
 
     /*
     |--------------------------------------------------------------------------
@@ -170,7 +170,6 @@ return [
          Spatie\Permission\PermissionServiceProvider::class,
         SseServiceProvider::class,
         STS\Fixer\FixerServiceProvider::class,
-        Jenssegers\Agent\AgentServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
 //      Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
@@ -181,13 +180,14 @@ return [
         /*
          * Application Service Providers...
          */
+        App\Providers\AmpErrorProvider::class,
+        App\Providers\AccessServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\CatalogServiceProvider::class,
-
+        App\Providers\PreferenceServiceProvider::class,
     ],
 
     /*
@@ -204,7 +204,6 @@ return [
     'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
-        'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,

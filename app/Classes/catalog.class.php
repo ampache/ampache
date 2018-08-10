@@ -216,9 +216,9 @@ abstract class Catalog
      */
     public static function create_from_id($id)
     {
-        $catalog = DB::table('catalogs')->select('catalog_type')->where('id', $id)->get();
+        $catalog = DB::table('catalogs')->select('catalog_type')->where('id', $id)->first();
 
-        return self::create_catalog_type($catalog[0]->catalog_type, $id);
+        return self::create_catalog_type($catalog->catalog_type, $id);
     }
 
     /**
@@ -308,7 +308,7 @@ abstract class Catalog
             "ftbl.innerHTML = '<table class=\"w3-table w3-small\">' + type_fields[seltype] + '</table>';\n" .
             "}\n</script>\n";
  
-        return $catTypes;
+        return [$catTypes, $seltypes];
     }
 
     /**
@@ -359,7 +359,7 @@ abstract class Catalog
      */
     public static function is_audio_file($file)
     {
-        $pattern = "/\.(" . configt('catalog.catalog_file_pattern') . ")$/i";
+        $pattern = "/\.(" . config('catalog.catalog_file_pattern') . ")$/i";
 
         return (preg_match($pattern, $file) === 1);
     }
@@ -438,15 +438,15 @@ abstract class Catalog
             $db_results = DB::table('songs')->select('id', 'file')->where('catalog', '=', $this->id)->get();
 
             // Populate the filecache
-            while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower($results['file'])] = $results['id'];
+            foreach ($db_results as $result) {
+                $this->_filecache[strtolower($result->file)] = $result->id;
             }
 
-            $sql        = 'SELECT `id`,`file` FROM `video` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, array($this->id));
-
-            while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower($results['file'])] = 'v_' . $results['id'];
+            $db_results = DB::table('videos')->select('id', 'file')->where('catalog', '=', $this->id)->get();
+            
+            // Populate the filecache
+            foreach ($db_results as $result) {
+                $this->_filecache[strtolower($result->file)] = $result->id;
             }
         }
 
@@ -508,13 +508,13 @@ abstract class Catalog
             e($this->f_name) . '</a>';
         $this->f_update = $this->last_update
             ? date('m/d/Y h:i', strtotime($this->last_update))
-            : T_('Never');
+            : __('Never');
         $this->f_add = $this->last_add
             ? date('m/d/Y h:i', strtotime($this->last_add))
-            : T_('Never');
+            : __('Never');
         $this->f_clean = $this->last_clean
             ? date('m/d/Y h:i', strtotime($this->last_clean))
-            : T_('Never');
+            : __('Never');
     }
 
     /**
@@ -591,9 +591,9 @@ abstract class Catalog
         $hours = $hours % 24;
 
         $time_text = "$days ";
-        $time_text .= nT_('day', 'days', $days);
+        $time_text .= n__('day', 'days', $days);
         $time_text .= ", $hours ";
-        $time_text .= nT_('hour', 'hours', $hours);
+        $time_text .= n__('hour', 'hours', $hours);
 
         $results['time_text'] = $time_text;
 
@@ -1491,14 +1491,14 @@ abstract class Catalog
             if ($info['change']) {
                 $file = scrub_out($song->file);
                 echo "<dl>\n\t<dd>";
-                echo "<strong>$file " . T_('Updated') . "</strong>\n";
+                echo "<strong>$file " . __('Updated') . "</strong>\n";
                 echo $info['text'];
                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                 flush();
             } // if change
             else {
                 echo"<dl>\n\t<dd>";
-                echo "<strong>" . scrub_out($song->file) . "</strong><br />" . T_('No Update Needed') . "\n";
+                echo "<strong>" . scrub_out($song->file) . "</strong><br />" . __('No Update Needed') . "\n";
                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                 flush();
             }
@@ -1824,7 +1824,7 @@ abstract class Catalog
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text('', sprintf(nT_('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total));
+        UI::update_text('', sprintf(n__('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -1849,7 +1849,7 @@ abstract class Catalog
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text('', sprintf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']));
+        UI::update_text('', sprintf(__('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -2063,7 +2063,7 @@ abstract class Catalog
             if (!$playlist_id) {
                 return array(
                     'success' => false,
-                    'error' => T_('Failed to create playlist.'),
+                    'error' => __('Failed to create playlist.'),
                 );
             }
 
@@ -2080,7 +2080,7 @@ abstract class Catalog
 
         return array(
             'success' => false,
-            'error' => T_('No valid songs found in playlist file.')
+            'error' => __('No valid songs found in playlist file.')
         );
     }
 

@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use DateTime;
 
 class User extends Authenticatable
 {
@@ -19,7 +22,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'full_name', 'email', 'password', 'email_token', 'website', 'state','city', 'zip',
+       'id', 'username', 'fullname', 'email', 'password', 'email_token', 'website', 'state','city', 'zip',
         'subsonic_password', ];
 
     /**
@@ -61,9 +64,55 @@ class User extends Authenticatable
         if (!is_null($imageData)) {
             $f         = finfo_open();
             $mime_type = finfo_buffer($f, $imageData, FILEINFO_MIME_TYPE);
-            $tmp       = 'data: ' . $mime_type . ';base64,' . base64_encode($imageData);
-        }
+            $tmp       = 'data:' . $mime_type . ';base64, ' . base64_encode($imageData);
 
-        return $tmp;
+            return $tmp;
+        } else {
+            return false;
+        }
+    }
+    public function getUpdatedAtAttribute($value)
+    {
+        $format = "Y-m-d H:i:s";
+        
+        return DateTime::createFromFormat($format, $value)->format("m/d/Y");
+    }
+    public function getCreatedAtAttribute($value)
+    {
+        $format = "Y-m-d H:i:s";
+        
+        return DateTime::createFromFormat($format, $value)->format("m/d/Y");
+    }
+    public function getLastSeenAttribute($value)
+    {
+        $last_seen = DB::table('sessions')->where('user_id', '=', $this->id)->max('last_activity');
+        if (is_null($last_seen)) {
+            return 'Never';
+        } else {
+            $temp = strftime('%m/%d/%y %T', $last_seen);
+
+            return $temp;
+        }
+    }
+
+    public function getLastLoginAttribute($value)
+    {
+        if (is_null($value)) {
+            return false;
+        } else {
+            $format  = "Y-m-d H:i:s";
+            $date    = DateTime::createFromFormat($format, $value);
+            $minutes = new \DateInterval('PT' . config('session.lifetime') . 'M');
+            
+            $loginTime =  $date->add($minutes);
+            $now       = new DateTime("now");
+
+            return ($loginTime < $now);
+        }
+    }
+    
+    public function isOnline()
+    {
+        return Cache::has('user-is-online-' . $this->id);
     }
 }

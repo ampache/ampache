@@ -16,7 +16,7 @@ return [
     
  'max_upload_size' => '2048000',
     
-    'max_avatar_size' => '100000',
+ 'max_avatar_size' => '100000',
     
 /*
  * Album Art Minimum Width

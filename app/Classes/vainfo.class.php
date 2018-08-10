@@ -122,12 +122,13 @@ class vaInfo
                 $this->encoding_id3v1 = $encoding_id3v1;
             } else {
                 $tags = array();
-                foreach ($test_tags as $tag) {
-                    if ($value = $this->_raw['id3v1'][$tag]) {
-                        $tags[$tag] = $value;
+                if (array_key_exists('id3_v1', $this->_raw)) {
+                    foreach ($test_tags as $tag) {
+                        if ($value = $this->_raw['id3v1'][$tag]) {
+                            $tags[$tag] = $value;
+                        }
                     }
                 }
-
                 $this->encoding_id3v1 = self::_detect_encoding($tags, $mb_order);
             }
 
@@ -354,76 +355,83 @@ class vaInfo
             $tags = $results[$key];
 
             $info['file']    = $info['file'] ?: $tags['file'];
-            $info['bitrate'] = $info['bitrate'] ?: intval($tags['bitrate']);
-            $info['rate']    = $info['rate'] ?: intval($tags['rate']);
-            $info['mode']    = $info['mode'] ?: $tags['mode'];
+            $info['bitrate'] = !empty($info['bitrate']) ? $info['bitrate']: intval($tags['bitrate']);
+            $info['rate']    = !empty($info['rate']) ? $info['rate'] : intval($tags['rate']);
+            $info['mode']    = !empty($info['mode']) ? $info['mode'] : $tags['mode'];
             // size will be added later, because of conflicts between real file size and getID3 reported filesize
-            $info['mime']     = $info['mime'] ?: $tags['mime'];
-            $info['encoding'] = $info['encoding'] ?: $tags['encoding'];
-            $info['rating']   = $info['rating'] ?: $tags['rating'];
-            $info['time']     = $info['time'] ?: intval($tags['time']);
-            $info['channels'] = $info['channels'] ?: $tags['channels'];
+            $info['mime']     = !empty($info['mime']) ? $info['mime'] : $tags['mime'];
+            $info['encoding'] = !empty($info['encoding']) ? $info['encoding'] : $tags['encoding'];
+            $info['rating']   = !empty($info['rating']) ? $info['rating'] : !empty($tags['rating']) ? $tags['rating'] : '';
+            $info['time']     = !empty($info['time']) ? info['time'] : intval($tags['time']);
+            $info['channels'] = !empty($info['channels']) ? $info['channels']: $tags['channels'];
 
             // This because video title are almost always bad...
-            $info['original_name'] = $info['original_name'] ?: stripslashes(trim($tags['original_name']));
-            $info['title']         = $info['title'] ?: stripslashes(trim($tags['title']));
+            $info['original_name'] = !empty($info['original_name']) ? $info['original_name'] : !empty($tags['original_name']) ?
+            stripslashes(trim($tags['original_name'])) : '';
+            
+            $info['title']         = !empty($info['title']) ? info['title'] : stripslashes(trim($tags['title']));
 
-            $info['year'] = $info['year'] ?: intval($tags['year']);
+            $info['year'] = !empty($info['year']) ? $info['year'] : !empty($tags['year']) ? intval($tags['year']) : false ;
 
-            $info['disk'] = $info['disk'] ?: intval($tags['disk']);
+            $info['disk'] = !empty($info['disk']) ? $info['disk'] : intval($tags['disk']);
 
-            $info['totaldisks'] = $info['totaldisks'] ?: intval($tags['totaldisks']);
+            $info['totaldisks'] = !empty($info['totaldisks']) ? $info['totaldisks'] : intval($tags['totaldisks']);
 
-            $info['artist']         = $info['artist'] ?: trim($tags['artist']);
-            $info['albumartist']    = $info['albumartist'] ?: trim($tags['albumartist']);
+            $info['artist']         = !empty($info['artist']) ? $info['artist'] : trim($tags['artist']);
+            $info['albumartist']    = !empty(info['albumartist']) ? info['albumartist'] : trim($tags['albumartist']);
 
-            $info['album'] = $info['album'] ?: trim($tags['album']);
+            $info['album'] = !empty($info['album']) ? $info['album'] : trim($tags['album']);
 
-            $info['band']      = $info['band'] ?: trim($tags['band']);
-            $info['composer']  = $info['composer'] ?: trim($tags['composer']);
-            $info['publisher'] = $info['publisher'] ?: trim($tags['publisher']);
+            $info['band']      = !empty($info['band']) ? $info['band'] : trim($tags['band']);
+            $info['composer']  = !empty($info['composer']) ? $info['composer'] : trim($tags['composer']);
+            $info['publisher'] = !empty($info['publisher']) ? $info['publisher'] : trim($tags['publisher']);
 
             $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
-            $info['mb_trackid']       = $info['mb_trackid'] ?: trim($tags['mb_trackid']);
-            $info['mb_albumid']       = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
-            $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim($tags['mb_albumid_group']);
-            $info['mb_artistid']      = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
-            $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
-            $info['release_type']     = $info['release_type'] ?: trim($tags['release_type']);
+            $info['mb_trackid']       = !empty($info['mb_trackid']) ? $info['mb_trackid'] : trim($tags['mb_trackid']);
+            $info['mb_albumid']       = !empty($info['mb_albumid']) ? $info['mb_albumid'] : trim($tags['mb_albumid']);
+            $info['mb_albumid_group'] = !empty($info['mb_albumid_group']) ?: trim($tags['mb_albumid_group']);
+            $info['mb_artistid']      = !empty($info['mb_artistid']) ?: trim($tags['mb_artistid']);
+            $info['mb_albumartistid'] = !empty($info['mb_albumartistid']) ?: trim($tags['mb_albumartistid']);
+            $info['release_type']     = !empty($info['release_type']) ?: trim($tags['release_type']);
 
-            $info['language'] = $info['language'] ?: trim($tags['language']);
-            $info['comment']  = $info['comment'] ?: trim($tags['comment']);
+            $info['language'] = !empty($info['language']) ? $info['language'] : trim($tags['language']);
+            $info['comment']  = !empty($info['comment']) ? $info['comment'] : trim($tags['comment']);
 
-            $info['lyrics']    = $info['lyrics']
-                    ?: strip_tags(nl2br($tags['lyrics']), "<br>");
-            $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: floatval($tags['replaygain_track_gain']);
-            $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: floatval($tags['replaygain_track_peak']);
-            $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
-            $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: floatval($tags['replaygain_album_peak']);
+            $info['lyrics']                = !empty($info['lyrics']) ? $info['lyrics'] : strip_tags(nl2br($tags['lyrics']), "<br>");
+            $info['replaygain_track_gain'] = !empty($info['replaygain_track_gain']) ?
+                $info['replaygain_track_gain'] : floatval($tags['replaygain_track_gain']);
+            $info['replaygain_track_peak'] = !empty($info['replaygain_track_peak']) ?
+                $info['replaygain_track_peak'] : floatval($tags['replaygain_track_peak']);
+            $info['replaygain_album_gain'] = !empty($info['replaygain_album_gain']) ?
+                $info['replaygain_album_gain'] : floatval($tags['replaygain_album_gain']);
+            $info['replaygain_album_peak'] = !empty($info['replaygain_album_peak']) ?
+                $info['replaygain_album_peak'] : floatval($tags['replaygain_album_peak']);
 
-            $info['track']         = $info['track'] ?: intval($tags['track']);
-            $info['resolution_x']  = $info['resolution_x'] ?: intval($tags['resolution_x']);
-            $info['resolution_y']  = $info['resolution_y'] ?: intval($tags['resolution_y']);
-            $info['display_x']     = $info['display_x'] ?: intval($tags['display_x']);
-            $info['display_y']     = $info['display_y'] ?: intval($tags['display_y']);
-            $info['frame_rate']    = $info['frame_rate'] ?: floatval($tags['frame_rate']);
-            $info['video_bitrate'] = $info['video_bitrate'] ?: intval($tags['video_bitrate']);
-            $info['audio_codec']   = $info['audio_codec'] ?: trim($tags['audio_codec']);
-            $info['video_codec']   = $info['video_codec'] ?: trim($tags['video_codec']);
-            $info['description']   = $info['description'] ?: trim($tags['description']);
+            $info['track']         = !empty($info['track']) ? $info['track'] : intval($tags['track']);
+            $info['resolution_x']  = !empty($info['resolution_x']) ?
+                $info['resolution_x'] : intval($tags['resolution_x']);
+            $info['resolution_y']  = !empty($info['resolution_y']) ?
+                $info['resolution_y'] : intval($tags['resolution_y']);
+            $info['display_x']     = !empty($info['display_x']) ? $info['display_x'] : intval($tags['display_x']);
+            $info['display_y']     = !empty($info['display_y']) ?: intval($tags['display_y']);
+            $info['frame_rate']    = !empty($info['frame_rate']) ? $info['display_y'] : floatval($tags['frame_rate']);
+            $info['video_bitrate'] = !empty($info['video_bitrate']) ? $info['video_bitrate'] : intval($tags['video_bitrate']);
+            $info['audio_codec']   = !empty($info['audio_codec']) ? $info['audio_codec'] : trim($tags['audio_codec']);
+            $info['video_codec']   = !empty($info['video_codec']) ? $info['video_codec'] : trim($tags['video_codec']);
+            $info['description']   = !empty($info['description']) ? $info['description'] : trim($tags['description']);
 
-            $info['tvshow']         = $info['tvshow'] ?: trim($tags['tvshow']);
-            $info['tvshow_year']    = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
-            $info['tvshow_season']  = $info['tvshow_season'] ?: trim($tags['tvshow_season']);
-            $info['tvshow_episode'] = $info['tvshow_episode'] ?: trim($tags['tvshow_episode']);
-            $info['release_date']   = $info['release_date'] ?: trim($tags['release_date']);
-            $info['summary']        = $info['summary'] ?: trim($tags['summary']);
-            $info['tvshow_summary'] = $info['tvshow_summary'] ?: trim($tags['tvshow_summary']);
+            $info['tvshow']         = !empty($info['tvshow']) ? $info['tvshow'] : trim($tags['tvshow']);
+            $info['tvshow_year']    = !empty($info['tvshow_year']) ? $info['tvshow_year'] : trim($tags['tvshow_year']);
+            $info['tvshow_season']  = !empty($info['tvshow_season']) ? $info['tvshow_season'] : trim($tags['tvshow_season']);
+            $info['tvshow_episode'] = !empty($info['tvshow_episode']) ? $info['tvshow_episode'] : trim($tags['tvshow_episode']);
+            $info['release_date']   = !empty($info['release_date']) ? $info['release_date'] : trim($tags['release_date']);
+            $info['summary']        = !empty($info['summary']) ? $info['summary'] : trim($tags['summary']);
+            $info['tvshow_summary'] = !empty($info['tvshow_summary']) ? $info['tvshow_summary'] : trim($tags['tvshow_summary']);
             
-            $info['tvshow_art']        = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
-            $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
-            $info['art']               = $info['art'] ?: trim($tags['art']);
+            $info['tvshow_art']        = !empty($info['tvshow_art']) ? $info['tvshow_art'] : trim($tags['tvshow_art']);
+            $info['tvshow_season_art'] = !empty($info['tvshow_season_art']) ? $info['tvshow_season_art'] : trim($tags['tvshow_season_art']);
+            $info['art']               = isset($info['art']) ? $info['art'] : trim($tags['art']);
             
             if (config('catalog.enable_custom_metadata') && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
@@ -482,17 +490,23 @@ class vaInfo
     {
         // There are a few places that the file type can come from, in the end
         // we trust the encoding type.
-        if ($type = $this->_raw['video']['dataformat']) {
-            return $this->_clean_type($type);
+        if (array_key_exists('video', $this->_raw)) {
+            if ($type = $this->_raw['video']['dataformat']) {
+                return $this->_clean_type($type);
+            }
         }
-        if ($type = $this->_raw['audio']['streams']['0']['dataformat']) {
-            return $this->_clean_type($type);
+        if (array_key_exists('audio', $this->_raw)) {
+            if ($type = $this->_raw['audio']['streams']['0']['dataformat']) {
+                return $this->_clean_type($type);
+            }
+            if ($type = $this->_raw['audio']['dataformat']) {
+                return $this->_clean_type($type);
+            }
         }
-        if ($type = $this->_raw['audio']['dataformat']) {
-            return $this->_clean_type($type);
-        }
-        if ($type = $this->_raw['fileformat']) {
-            return $this->_clean_type($type);
+        if (array_key_exists('fileformat', $this->_raw)) {
+            if ($type = $this->_raw['fileformat']) {
+                return $this->_clean_type($type);
+            }
         }
 
         return false;
@@ -585,7 +599,7 @@ class vaInfo
 
     private function get_metadata_order()
     {
-        return (array) config('catalog.' . $this->get_metadata_order_key());
+        return (array) config('metadata.' . $this->get_metadata_order_key());
     }
 
     /**
@@ -642,13 +656,15 @@ class vaInfo
         $parsed['mime']          = $tags['mime_type'];
         $parsed['time']          = ($this->_forcedSize ? ((($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate']) : $tags['playtime_seconds']);
         $parsed['audio_codec']   = $tags['audio']['dataformat'];
-        $parsed['video_codec']   = $tags['video']['dataformat'];
-        $parsed['resolution_x']  = $tags['video']['resolution_x'];
-        $parsed['resolution_y']  = $tags['video']['resolution_y'];
-        $parsed['display_x']     = $tags['video']['display_x'];
-        $parsed['display_y']     = $tags['video']['display_y'];
-        $parsed['frame_rate']    = $tags['video']['frame_rate'];
-        $parsed['video_bitrate'] = $tags['video']['bitrate'];
+        if (isset($tags['video'])) {
+            $parsed['video_codec']   = $tags['video']['dataformat'];
+            $parsed['resolution_x']  = $tags['video']['resolution_x'];
+            $parsed['resolution_y']  = $tags['video']['resolution_y'];
+            $parsed['display_x']     = $tags['video']['display_x'];
+            $parsed['display_y']     = $tags['video']['display_y'];
+            $parsed['frame_rate']    = $tags['video']['frame_rate'];
+            $parsed['video_bitrate'] = $tags['video']['bitrate'];
+        }
 
         if (isset($tags['ape'])) {
             if (isset($tags['ape']['items'])) {
@@ -896,22 +912,22 @@ class vaInfo
                 foreach ($id3v2['TXXX'] as $txxx) {
                     switch (strtolower($this->trimAscii($txxx['description']))) {
                         case 'musicbrainz album id':
-                            $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
+                            $parsed['mb_albumid'] = $txxx['description'];
                         break;
                         case 'musicbrainz release group id':
-                            $parsed['mb_albumid_group'] = $id3v2['comments']['text'][$txxx['description']];
+                            $parsed['mb_albumid_group'] = $txxx['description'];
                         break;
                         case 'musicbrainz artist id':
-                            $parsed['mb_artistid'] = $id3v2['comments']['text'][$txxx['description']];
+                            $parsed['mb_artistid'] = $txxx['description'];
                         break;
                         case 'musicbrainz album artist id':
-                            $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
+                            $parsed['mb_albumartistid'] = $txxx['description'];
                         break;
                         case 'musicbrainz album type':
-                            $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
+                            $parsed['release_type'] = $txxx['description'];
                         break;
                         case 'catalognumber':
-                            $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
+                            $parsed['catalog_number'] = $txxx['description'];
                         break;
                         case 'replaygain_track_gain':
                             $parsed['replaygain_track_gain'] = floatval($txxx['data']);
@@ -931,7 +947,7 @@ class vaInfo
         }
 
         // Find the rating
-        if (is_array($id3v2['POPM'])) {
+        if (isset($id3v2['POPM']) && is_array($id3v2['POPM'])) {
             foreach ($id3v2['POPM'] as $popm) {
                 if (array_key_exists('email', $popm) &&
                     $user = User::select('id')->where('email', $popm['email'])) {
@@ -1179,13 +1195,13 @@ class vaInfo
 
             // Iterate over what we found
             foreach ($matches as $key => $value) {
-                $new_key = translate_pattern_code($elements['0'][$key]);
+                $new_key = Vainfo::translate_pattern_code($elements['0'][$key]);
                 if ($new_key) {
                     $results[$new_key] = $value;
                 }
             }
 
-            $results['title'] = $results['title'] ?: basename($filepath);
+            $results['title'] = isset($results['title']) ? $results['title'] : basename($filepath);
         }
 
         return $results;
@@ -1261,4 +1277,29 @@ class vaInfo
 
         return $data;
     }
+    
+    /**
+     * translate_pattern_code
+     * This just contains a keyed array which it checks against to give you the
+     * 'tag' name that said pattern code corrasponds to. It returns false if nothing
+     * is found.
+     */
+    private static function translate_pattern_code($code)
+    {
+        $code_array = array('%A' => 'album',
+            '%a' => 'artist',
+            '%c' => 'comment',
+            '%g' => 'genre',
+            '%T' => 'track',
+            '%t' => 'title',
+            '%y' => 'year',
+            '%d' => 'disk',
+            '%o' => 'zz_other');
+        
+        if (isset($code_array[$code])) {
+            return $code_array[$code];
+        }
+        
+        return false;
+    } // translate_pattern_code
 } // end class vainfo
