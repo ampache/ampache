@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-07-31 01:37+0200\n"
+"POT-Creation-Date: 2018-08-13 06:22+0200\n"
 "PO-Revision-Date: 2018-06-17 05:16+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/"
@@ -8715,7 +8715,7 @@ msgstr "Ich kann dieses Video nicht löschen."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 04.06.2018 15:57:55 CEST
+# Last Update: 31.07.2018 01:37:20 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -9159,3 +9159,39 @@ msgstr "Amazon geheimer Zugriffsschlüssel"
 #: Database preference table id 168
 msgid "Amazon associate tag"
 msgstr "Amazon Partner-Tag"
+
+#: Database preference table id 150
+#, fuzzy
+msgid "library"
+msgstr "Bibliotheksname"
+
+#: Database preference table id 151
+#, fuzzy
+msgid "upload"
+msgstr "hoch geladen"
+
+#: Database preference table id 152
+#, fuzzy
+msgid "catalog"
+msgstr "Katalog"
+
+#: Database preference table id 153 154
+#, fuzzy
+msgid "theme"
+msgstr "Design der Benutzeroberfläche"
+
+#: Database preference table id 155
+msgid "custom"
+msgstr ""
+
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "custom"
+# msgstr ""
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "library"
+# msgstr ""
+#: Database preference table id 156 157 164
+msgid "amazon"
+msgstr ""
