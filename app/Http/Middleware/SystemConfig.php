@@ -24,6 +24,11 @@ class SystemConfig
         } else {
             $id= 0;
         }
+        define('ADMIN_LEVEL', '100');
+        define('CATMAN_LEVEL', '75');
+        define('CONTENTMAN_LEVEL', '50');
+        define('USER_LEVEL', '25');
+        define('GUEST_LEVEL', '5');
         
         return $next($request);
     }

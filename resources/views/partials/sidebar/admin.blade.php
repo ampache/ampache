@@ -51,7 +51,7 @@
 	{{ isset($_COOKIE['sb_server']) ?:'collapsed' }}">Server Config
 	<i class="fa fa-caret-down"></i></button>
 	<div id="sb_server" class="w3-animate-left w3-text-sidebar w3-margin-left">
-  		<a href="#" class="w3-btn w3-block w3-left-align"  style="height:24px;font-size:12px;">Interface</a>
+  		<a href="{!! url('/preference', 'interface') . '/edit' !!}" class="w3-btn w3-block w3-left-align"  style="height:24px;font-size:12px;">Interface</a>
   		<a href="#" class="w3-btn w3-block w3-left-align" style="height:24px;font-size:12px;">Optionas</a>
    		<a href="#" class="w3-btn w3-block w3-left-align" style="height:24px;font-size:12px;">Playlist</a>
   		<a href="#" class="w3-btn w3-block w3-left-align" style="height:24px;font-size:12px;">Streaming</a>

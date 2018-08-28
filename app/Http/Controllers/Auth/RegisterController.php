@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
-use App\Models\VerifyUser;
 use App\Http\Controllers\Controller;
-use App\Mail\EmailVerification;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -111,7 +108,7 @@ class RegisterController extends Controller
          
         event(new Registered($user = $this->create($request->all())));
         $userCount = DB::table("users")->count();
-        if ($userCount > 1) {
+        if ($userCount > 2) {
             $user->assignRole('User');
             $role_id = DB::table('roles')->select('id')->where('name', 'User')->get();
             DB::table('role_users')->insert(
@@ -119,6 +116,8 @@ class RegisterController extends Controller
             );
         } else {
             $user->assignRole('Administrator');
+            $user->access = 100;
+            $user->save();
             $role_id = DB::table('roles')->select('id')->where('name', 'Administrator')->get();
             DB::table('role_users')->insert(
                  ['user_id' => $user->id, 'role_id' => $role_id[0]->id]
@@ -156,7 +155,7 @@ class RegisterController extends Controller
         return User::create([
             'username' => $data['username'],
             'fullname' => $data['fullname'],
-            'email' => $data['email'],
+            'email'    => $data['email'],
             'password' => $data['password'],
             $columns,
         ]);

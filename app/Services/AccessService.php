@@ -1,5 +1,4 @@
 <?php
-namespace App\Services;
 
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
@@ -32,7 +31,9 @@ namespace App\Services;
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Auth;
 use App\Services\AmpError;
+use App\Models\User;
 
 class AccessService
 {
@@ -267,8 +268,8 @@ class AccessService
         
         $sql = 'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' .
             'AND `type` = ? AND `user` = ?';
-        $db_results = Dba::read($sql, array($start, $end, $type, $user));
-        
+       $db_results = Dba::read($sql, array($start, $end, $type, $user));
+       
         if (Dba::fetch_assoc($db_results)) {
             return true;
         }
@@ -344,10 +345,10 @@ class AccessService
         switch ($type) {
             case 'init-api':
                 if ($user) {
-                    $user = User::get_from_username($user);
+                $user = User::get_from_username($user);
                     $user = $user->id;
                 } elseif ($apikey) {
-                    $user = User::get_from_apikey($apikey);
+                 $user = User::get_from_apikey($apikey);
                     $user = $user->id;
                 }
                 // no break
@@ -372,9 +373,9 @@ class AccessService
             $sql .= " AND `user` IN(?, '-1')";
             $params[] = $user;
         } else {
-            $sql .= " AND `user` = '-1'";
+           $sql .= " AND `user` = '-1'";
         }
-        
+
         $db_results = Dba::read($sql, $params);
         
         if (Dba::fetch_row($db_results)) {
@@ -398,7 +399,7 @@ class AccessService
      * @param int|null $user
      * @return boolean
      */
-    public static function check($type, $level, $user_id=null)
+    public function check($type, $level, $user_id=null)
     {
         if (config('program.demo_mode')) {
             return true;
@@ -407,9 +408,10 @@ class AccessService
             return true;
         }
         
-        $user = $GLOBALS['user'];
         if ($user_id) {
             $user = new User($user_id);
+        } else {
+            $user = Auth::user();
         }
         $level = intval($level);
         

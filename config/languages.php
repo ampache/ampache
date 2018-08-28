@@ -4,11 +4,11 @@ return array(
     
     'af_ZA' => 'Afrikaans', /* Afrikaans */
 
-    'bg_BG' => '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;', /* Bulgarian */
+    'bg_BG' => 'български', /* Bulgarian */
  
-    'ca_ES' => 'Catal&#224;',  /* Catalan */
+    'ca_ES' => 'Català;',  /* Catalan */
     
-    'cs_CZ' => '&#x010c;esky',  /* Czech */
+    'cs_CZ' => 'Česky',  /* Czech */
     
     'da_DK' => 'Dansk',  /* Danish */
     
@@ -20,11 +20,11 @@ return array(
     
     'en_US' => 'English (US)', /* English */
     
-    'es_AR' => 'Espa&#241;ol (AR)', /* Spanish */
+    'es_AR' => 'Español (AR)', /* Spanish */
 
-    'es_ES' => 'Espa&#241;ol', /* Spanish */
+    'es_ES' => 'Español', /* Spanish */
 
-    'es_MX' => 'Espa&#241;ol (MX)', /* Spanish */
+    'es_MX' => 'Español (MX)', /* Spanish */
 
     'et_EE' => 'Eesti', /* Estonian */
 
@@ -32,7 +32,7 @@ return array(
 
     'fi_FI' => 'Suomi', /* Finnish */
 
-    'fr_FR' => 'Fran&#231;ais', /* French */
+    'fr_FR' => 'Français', /* French */
 
     'ga_IE' => 'Gaeilge', /* Irish */
 
@@ -44,11 +44,11 @@ return array(
 
     'it_IT' => 'Italiano', /* Italian */
 
-    'ja_JP' => '&#x65e5;&#x672c;&#x8a9e;', /* Japanese */
+    'ja_JP' => '日本語', /* Japanese */
 
-    'ko_KR' => '&#xd55c;&#xad6d;&#xb9d0;', /* Korean */
+    'ko_KR' => '한국어', /* Korean */
 
-    'lt_LT' => 'Lietuvi&#371;', /* Lithuanian */
+    'lt_LT' => 'Lietuviškai', /* Lithuanian */
 
     'lv_LV' => 'Latvie&#353;u', /* Latvian */
 
@@ -56,41 +56,43 @@ return array(
 
     'nl_NL' => 'Nederlands', /* Dutch */
 
-    'no_NO' => 'Norsk bokm&#229;l', /* Norwegian */
+    'no_NO' => 'Norske', /* Norwegian */
 
     'pl_PL' => 'Polski', /* Polish */
 
-    'pt_BR' => 'Portugu&#234;s Brasileiro', /* Portuguese */
+    'pt_BR' => 'Português Brasileiro', /* Portuguese */
 
-    'pt_PT' => 'Portugu&#234;s', /* Portuguese */
+    'pt_PT' => 'Português', /* Portuguese */
 
-    'ro_RO' => 'Rom&#226;n&#259;', /* Romanian */
+    'ro_RO' => 'românesc', /* Romanian */
 
-    'ru_RU' => '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', /* Russian */
+    'ru_RU' => 'русский', /* Russian */
 
-    'sk_SK' => 'Sloven&#269;ina', /* Slovak */
+    'sk_SK' => 'slovenský', /* Slovak */
 
-    'sl_SI' => 'Sloven&#353;&#269;ina', /* Slovenian */
+    'sl_SI' => 'Slovenščina', /* Slovenian */
 
     'sr_CS' => 'Srpski', /* Serbian */
 
     'sv_SE' => 'Svenska', /* Swedish */
 
-    'tr_TR' => 'T&#252;rk&#231;e', /* Turkish */
+    'tr_TR' => 'Türk', /* Turkish */
 
     'uk_UA' => 'Українська', /* Ukrainian */
 
-    'vi_VN' => 'Ti&#7871;ng Vi&#7879;t', /* Vietnamese */
+    'vi_VN' => 'tiếng Việt', /* Vietnamese */
 
-    'zh_CN' => '&#31616;&#20307;&#20013;&#25991;', /* Chinese (simplified)*/
+    'zh_CN' => '中文', /* Chinese (simplified)*/
 
-    'zh_TW' => '&#32321;&#39636;&#20013;&#25991;', /* Chinese (traditional)*/
+    'zh_TW' => '中國', /* Chinese (traditional)*/
 
     /* These languages are right to left. */
 
-    'ar_SA' => '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;', /* Arabic */
+    'ar_SA' => 'عربى', /* Arabic */
 
-    'he_IL' => '&#1506;&#1489;&#1512;&#1497;&#1514;', /* Hebrew */
+    'he_IL' => 'עִברִית', /* Hebrew */
 
-    'fa_IR' => '&#1601;&#1575;&#1585;&#1587;&#1610;', /* Farsi */
+    'fa_IR' => 'فارسی', /* Farsi */
+    
+    'nl_NL' => 'Nederlands',
 );

@@ -19,6 +19,7 @@
     "vue": "^2.5.7"
   },
   "dependencies": {
+    "ajv": "^6.5.2",
     "laravel-echo": "^1.3.5",
     "parsleyjs": "^2.8.1",
     "pusher-js": "^4.2.2",

@@ -4,8 +4,75 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb390b917bd2c2ca1de31571d524087f",
+    "content-hash": "34351207062aa42cf122004fd3519cc4",
     "packages": [
+        {
+            "name": "belphemur/laravel-gettext",
+            "version": "7.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Belphemur/laravel-gettext.git",
+                "reference": "2da7591034be06e59bbd4fc93da2019a3f33308a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Belphemur/laravel-gettext/zipball/2da7591034be06e59bbd4fc93da2019a3f33308a",
+                "reference": "2da7591034be06e59bbd4fc93da2019a3f33308a",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.6",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "laravel/laravel": "^5.6",
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "~7.0",
+                "satooshi/php-coveralls": "^1.0",
+                "squizlabs/php_codesniffer": "1.5.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Xinax\\LaravelGettext\\LaravelGettextServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Xinax\\LaravelGettext\\": "src/"
+                },
+                "files": [
+                    "src/Xinax/LaravelGettext/Support/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolás Daniel Palumbo",
+                    "email": "n@xinax.net"
+                },
+                {
+                    "name": "Antoine Aflalo",
+                    "email": "antoine.aflalo@zerospam.ca"
+                }
+            ],
+            "description": "Adds localization support to laravel applications in an easy way using Poedit and GNU gettext.",
+            "homepage": "https://github.com/Belphemur/laravel-gettext",
+            "keywords": [
+                "gettext",
+                "laravel",
+                "laravel-gettext",
+                "localization",
+                "poEdit",
+                "translation"
+            ],
+            "time": "2018-03-01T16:16:29+00:00"
+        },
         {
             "name": "captcha-com/captcha",
             "version": "4.2.2",

@@ -9,6 +9,7 @@
 	"type" : "project",
 	"require" : {
 		"php": ">=7.1.3",
+		"belphemur/laravel-gettext": "^7.1",
 		"captcha-com/laravel-captcha": "4.*",
 		"cmgmyr/messenger": "^2.16",
 		"doctrine/inflector": "~1.0",

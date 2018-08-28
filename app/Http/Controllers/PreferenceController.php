@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Preference;
+use App\Models\Preference_role;
+use App\Models\Role;
 use Illuminate\Http\Request;
+use Xinax\LaravelGettext\Facades\LaravelGettext;
+use App\Models\User;
 
 class PreferenceController extends Controller
 {
@@ -35,7 +39,7 @@ class PreferenceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
     }
 
     /**
@@ -55,9 +59,12 @@ class PreferenceController extends Controller
      * @param  \App\Models\Preference  $preference
      * @return \Illuminate\Http\Response
      */
-    public function edit(Preference $preference)
-    {
-        //
+    public function edit($preference)
+    {        
+        $preferences = Preference::where('category', '=', 'interface')
+        ->orderBy('subcategory', 'asc')->simplePaginate(15);
+        $roles = Role::all();            
+        return view('preferences.edit', ['preferences' => $preferences, 'roles' => $roles]);
     }
 
     /**
@@ -67,9 +74,23 @@ class PreferenceController extends Controller
      * @param  \App\Models\Preference  $preference
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Preference $preference)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $array1 = array('_token' => 1, '_method' => 2, 'basic' => 3);
+        $name = key(array_diff_key($data, $array1));
+        $result = Preference_role::where('preference_id', '=', $id)->delete();
+        foreach ($data['basic'] as $role_id)
+        {
+            $role = Preference_role::insert( ['role_id' => $role_id,'preference_id' => (int)$id], ['role_id' => $role_id,'preference_id' => (int)$id]);
+        }
+        $result = Preference::find($id);
+        if ($result->value != $data[$name])
+        {
+            $result->value = $name[0];
+            $result->save();
+        }
+    
     }
 
     /**

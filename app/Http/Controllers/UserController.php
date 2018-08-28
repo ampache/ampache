@@ -147,7 +147,6 @@ class UserController extends Controller
         }
                 
         $input = $request->all(); //Retreive the name, email and password fields
-//        $user->fullname = $input['fullname'];
         $user->fill($input)->save();
         $roles = $request['roles']; //Retreive all roles
         
@@ -177,9 +176,8 @@ class UserController extends Controller
         
         //Find a user with a given id and delete
         $user = User::findOrFail($id);
+        $user->roles()->detach(); //Remove exisiting role associated to a user
         $user->delete();
-        role_user::where('user_id', $id)->delete();
-
         return response('Removed', 200);
     }
     

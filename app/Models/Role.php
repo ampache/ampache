@@ -18,6 +18,7 @@ class Role extends Model
         return $this->belongsToMany(User::class, 'role_users');
     }
 
+   
     public function hasAccess(array $permissions)
     {
         foreach ($permissions as $permission) {

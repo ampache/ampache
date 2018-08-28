@@ -45,26 +45,23 @@ class InitAmpache extends Command
         //ALTER TABLE users AUTO_INCREMENT = 0;
         $name = $this->ask('Please enter the mysql database name?');
         $user = $this->ask('Please enter the mysql database user name?');
-        $pass = $this->ask('Please enter the password associated with this user');
+        $pass = $this->secret('Please enter the password associated with this user');
+        $user_pass = bcrypt('guest');
         //CREATE DATABASE menagerie;$dsn = 'mysql:dbname=testdb;host=127.0.0.1';
         $dsn = "mysql:host=127.0.0.1";
         try {
+            $created_at = now();
             $dbh       = new PDO($dsn, $user, $pass);
             $statement = "CREATE DATABASE " . $name . ";";
             $dbh->exec($statement);
-            $dbh->exec($statement);
             $statement = "SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO'";
             $dbh->exec($statement);
-            $statement = "INSERT INTO `ampache`.`users` (`id`, `username`, `fullname`, `access`, `email`, `password`) VALUES (0, 'guest', 'Ampache Guest', 5, 'guest@ampache.org', 'guest');";
+            $statement = "INSERT INTO `ampache`.`users` (`id`, `username`, `fullname`, `access`, `email`, `password`) " .
+            "VALUES (0, 'guest', 'Ampache Guest', 5, 'guest@ampache.org', '" . $user_pass . "');";
             $dbh->exec($statement);
         } catch (PDOException $e) {
             $this->error($e->getMessage());
             exit;
         }
-        /*
-             DB::statement('INSERT INTO `users` (`id`, `username`, `fullname`, `access`, `email`, `password`) " .
-               "VALUES (0, 'guest', 'Ampache Guest', 5, 'guest@ampache.org', 'guest');"
-
-        */
     }
 }

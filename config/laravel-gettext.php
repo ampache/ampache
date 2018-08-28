@@ -1,6 +1,18 @@
 <?php
 
+
 return [
+
+    /**
+     * Translation handlers, options are:
+     *
+     * - symfony: (recommended) uses the symfony translations component. Incompatible with php-gettext
+     * you must uninstall the php-gettext module before use this handler.
+     *
+     * - gettext: requires the php-gettext module installed. This handler has well-known cache issues
+     */
+    'handler' => 'symfony',
+
     /**
      * Session identifier: Key under which the current locale will be stored.
      */
@@ -17,7 +29,33 @@ return [
      */
     'supported-locales' => [
         'en_US',
+        'ar_SA',
+        'ca_ES',
+        'cs_CZ',
+        'da_DK',
+        'de_DE',
+        'el_GR',
+        'en_GB',
+        'es_ES',
+        'fa_IR',
+        'fi_FI',
         'fr_FR',
+        'he_IL',
+        'hu_HU',
+        'id_ID',
+        'it_IT',
+        'ja_JP',
+        'ko_KR',
+        'nb_NO',
+        'nl_NL',
+        'pl_PL',
+        'pt_BR',
+        'ru_RU',
+        'sv_SE',
+        'tr_TR',
+        'uk_UA',
+        'zh_CN',
+        'zh_TW',
     ],
 
     /**
@@ -31,6 +69,13 @@ return [
      * are only for special cases.
      * -----------------------------------------------------------------------
      **/
+
+    /**
+     * Locale categories to set
+     */
+    'categories' => [
+        'LC_ALL',
+    ],
 
     /**
      * Base translation directory path (don't use trailing slash)
@@ -55,42 +100,47 @@ return [
     /**
      * Project name: is used on .po header files
      */
-    'project' => 'Ampache',
+    'project' => 'MultilanguageLaravelApplication',
 
     /**
      * Translator contact data (used on .po headers too)
      */
-    'translator' => 'Afterster <afterster@gmail.com>',
+    'translator' => 'James Translator <james@translations.colm>',
 
     /**
-     * Paths where PoEdit will search recursively for strings to translate.
+     * Paths where Poedit will search recursively for strings to translate.
      * All paths are relative to app/ (don't use trailing slash).
      *
      * Remember to call artisan gettext:update after change this.
      */
     'source-paths' => [
-        'Http/Controllers',
+        'Http',
         '../resources/views',
-        'Console/Commands',
+        'Console',
     ],
 
     /**
      * Multi-domain directory paths. If you want the translations in
      * different files, just wrap your paths into a domain name.
-     * Paths on top-level will be associated to the default domain file,
      * for example:
      */
     /*
     'source-paths' => [
+
+        // 'frontend' domain
         'frontend' => [
-            'controllers',
-            'views/frontend',
-        ],
-        'backend' => [
-            'views/backend',
-        ],
-        'storage/views',
-    ],
+			'controllers',
+			'views/frontend',
+		],
+
+        // 'backend' domain
+		'backend' => [
+			'views/backend',
+		],
+
+        // 'messages' domain (matches default domain)
+		'storage/views',
+	],
     */
 
     /**
@@ -98,6 +148,21 @@ return [
      * be changed when you call LaravelGettext::setLocale.
      */
     'sync-laravel' => true,
+
+    /**
+     * The adapter used to sync the laravel built-in locale
+     */
+    'adapter' => \Xinax\LaravelGettext\Adapters\LaravelAdapter::class,
+
+    /**
+     * Where to store the current locale/domain
+     *
+     * By default, in the session.
+     * Can be changed for only memory or your own storage mechanism
+     *
+     * @see \Xinax\LaravelGettext\Storages\Storage
+     */
+    'storage' => \Xinax\LaravelGettext\Storages\SessionStorage::class,
 
     /**
      * Use custom locale that is not supported by the system
@@ -109,8 +174,9 @@ return [
      *
      * The "_", "__" and "gettext" are singular translation functions
      * The "_n" and "ngettext" are plural translation functions
+     * The "dgettext" function allows a translation domain to be explicitly specified
      *
-     * "__" and "_n" are helpers functions @see \Xinax\LaravelGettext\Support\helpers.php
+     * "__" and "_n" and "_i" and "_s" are helpers functions @see \Xinax\LaravelGettext\Support\helpers.php
      */
-    'keywords-list' => ['_', '__', 'gettext', '_n:1,2', 'ngettext:1,2'],
+    'keywords-list' => ['_', '__', '_i', '_s', 'gettext', '_n:1,2', 'ngettext:1,2', 'dgettext:2'],
 ];

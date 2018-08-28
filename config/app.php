@@ -167,11 +167,12 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-         Spatie\Permission\PermissionServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
         SseServiceProvider::class,
         STS\Fixer\FixerServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
+        Xinax\LaravelGettext\LaravelGettextServiceProvider::class,
 //      Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
         /*
          * Package Service Providers...

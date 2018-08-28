@@ -17,9 +17,7 @@ Route::get('/', function () {
 */
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Redis;
 use App\Models\User;
-use App\Models\Role;
 
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Auth::routes();
@@ -65,9 +63,9 @@ Route::get('/apikey/create/{id}', function ($id) {
 
 Route::resource('image', 'ImageController');
 //Route::get('image/{id}', 'ImageController');
+Route::resource('/preference/{preference}/edit', 'PreferenceController');
 
-Route::resource('preference', 'PreferenceController');
+//Route::resource('preference/{id}', 'PreferenceController');
 Route::get('user_preference/{id}/edit', 'User_PreferenceController@edit');
-Route::get('profile/{user}', function (App\Models\User_Preference $user) {
-    //
-});
+Route::post('user_preference/store', 'User_PreferenceController@store');
+Route::resource('preference', 'PreferenceController');

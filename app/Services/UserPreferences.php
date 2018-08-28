@@ -2,7 +2,9 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
-use App\Services\AccessService;
+use Illuminate\Support\Facades\Log;
+use Xinax\LaravelGettext\Facades\LaravelGettext;
+use App\Facades\AccessService;
 
 class UserPreferences
 {
@@ -10,9 +12,9 @@ class UserPreferences
     {
     }
     
-    public function create_preference_input($name, $value)
+     public function create_preference_input($name, $value, $id)
     {
-        if (!UserPreferences::has_access($name)) {
+        if (!$this->has_access($name)) {
             if ($value == '1') {
                 echo "Enabled";
             } elseif ($value == '0') {
@@ -47,7 +49,7 @@ class UserPreferences
             case 'condPL':
             case 'rio_track_stats':
             case 'rio_global_stats':
-            case 'direct_link':
+            case 'direc__link':
             case 'ajax_load':
             case 'now_playing_per_user':
             case 'show_played_times':
@@ -67,7 +69,7 @@ class UserPreferences
             case 'stream_beautiful_url':
             case 'share':
             case 'share_social':
-            case 'broadcast_by_default':
+            case 'broadcas__by_default':
             case 'album_group':
             case 'topmenu':
             case 'demo_clear_sessions':
@@ -79,8 +81,8 @@ class UserPreferences
             case 'daap_backend':
             case 'upnp_backend':
             case 'album_release_type':
-            case 'home_moment_albums':
-            case 'home_moment_videos':
+            case 'home_momen__albums':
+            case 'home_momen__videos':
             case 'home_recently_played':
             case 'home_now_playing':
             case 'browser_notify':
@@ -102,13 +104,13 @@ class UserPreferences
                 } else {
                     $is_false = "selected=\"selected\"";
                 }
-                echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
-                echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
+                echo "<select class=\"w3-small\" name=\"$name\">\n";
+                echo "\t<option value=\"1\" $is_true>" . __("Enable") . "</option>\n";
+                echo "\t<option value=\"0\" $is_false>" . __("Disable") . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true);
+                $this->show_catalog_select('upload_catalog', $value, '', true);
                 break;
             case 'play_type':
                 $is_localplay  = '';
@@ -125,45 +127,47 @@ class UserPreferences
                     $is_stream = "selected=\"selected\"";
                 }
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"\">" . T_('None') . "</option>\n";
+                echo "\t<option value=\"\">" . __('None') . "</option>\n";
                 if (AmpConfig::get('allow_stream_playback')) {
-                    echo "\t<option value=\"stream\" $is_stream>" . T_('Stream') . "</option>\n";
+                    echo "\t<option value=\"stream\" $is_stream>" . __('Stream') . "</option>\n";
                 }
                 if (AmpConfig::get('allow_democratic_playback')) {
-                    echo "\t<option value=\"democratic\" $is_democratic>" . T_('Democratic') . "</option>\n";
+                    echo "\t<option value=\"democratic\" $is_democratic>" . __('Democratic') . "</option>\n";
                 }
                 if (AmpConfig::get('allow_localplay_playback')) {
-                    echo "\t<option value=\"localplay\" $is_localplay>" . T_('Localplay') . "</option>\n";
+                    echo "\t<option value=\"localplay\" $is_localplay>" . __('Localplay') . "</option>\n";
                 }
-                echo "\t<option value=\"web_player\" $is_web_player>" . T_('Web Player') . "</option>\n";
+                echo "\t<option value=\"web_player\" $is_web_player>" . __('Web Player') . "</option>\n";
                 echo "</select>\n";
                 break;
-            case 'playlist_type':
+            case 'playlis__type':
                 $var_name    = $value . "_type";
                 ${$var_name} = "selected=\"selected\"";
-                echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"m3u\" $m3u_type>" . T_('M3U') . "</option>\n";
-                echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . T_('Simple M3U') . "</option>\n";
-                echo "\t<option value=\"pls\" $pls_type>" . T_('PLS') . "</option>\n";
-                echo "\t<option value=\"asx\" $asx_   }
- type>" . T_('Asx') . "</option>\n";
-                echo "\t<option value=\"ram\" $ram_type>" . T_('RAM') . "</option>\n";
-                echo "\t<option value=\"xspf\" $xspf_type>" . T_('XSPF') . "</option>\n";
+                echo "<select class=\"w3-small\" name=\"$name\">\n";
+                echo "\t<option value=\"m3u\" $m3u_type>" . __('M3U') . "</option>\n";
+                echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . __('Simple M3U') . "</option>\n";
+                echo "\t<option value=\"pls\" $pls_type>" . __('PLS') . "</option>\n";
+                echo "\t<option value=\"asx\" $asx_type>" . __('Asx') . "</option>\n";
+                echo "\t<option value=\"ram\" $ram_type>" . __('RAM') . "</option>\n";
+                echo "\t<option value=\"xspf\" $xspf_type>" . __('XSPF') . "</option>\n";
                 echo "</select>\n";
                 break;
-            case 'lang':
-                $languages = get_languages();
-                echo '<select name="' . $name . '">' . "\n";
-                foreach ($languages as $lang => $name) {
+            case 'lang':                
+                $locales = config('laravel-gettext.supported-locales');
+                $languages = config('languages');
+                
+                echo  '<select class="w3-small" name="' . $name . '">' . "\n";
+                foreach ($locales as $lang => $name) {
                     $selected = ($lang == $value) ? 'selected="selected"' : '';
-                    echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
+                    echo "\t<option value=\"$lang\" " . $selected . ">$languages[$name]</option>\n";
                 } // end foreach
-                echo "</select>\n";
+               echo "</select>\n";
+               
                 break;
-            case 'localplay_controller':
-                $controllers = Localplay::get_controllers();
+ /*           case 'localplay_controller':
+                $controllers = Localplay::ge__controllers();
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"\">" . T_('None') . "</option>\n";
+                echo "\t<option value=\"\">" . __('None') . "</option>\n";
                 foreach ($controllers as $controller) {
                     if (!Localplay::is_enabled($controller)) {
                         continue;
@@ -176,6 +180,7 @@ class UserPreferences
                 } // end foreach
                 echo "</select>\n";
                 break;
+ 
             case 'localplay_level':
                 $is_user    = '';
                 $is_admin   = '';
@@ -188,54 +193,28 @@ class UserPreferences
                     $is_manager = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
-                echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
-                echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
-                echo "<option value=\"50\" $is_manager>" . T_('Manager') . "</option>\n";
-                echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
+                echo "<option value=\"0\">" . __('Disabled') . "</option>\n";
+                echo "<option value=\"25\" $is_user>" . __('User') . "</option>\n";
+                echo "<option value=\"50\" $is_manager>" . __('Manager') . "</option>\n";
+                echo "<option value=\"100\" $is_admin>" . __('Admin') . "</option>\n";
                 echo "</select>\n";
                 break;
-            case 'theme_name':
-                $themes = get_themes();
-                echo "<select name=\"$name\">\n";
-                foreach ($themes as $theme) {
-                    $is_selected = "";
-                    if ($value == $theme['path']) {
-                        $is_selected = "selected=\"selected\"";
-                    }
-                    echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
-                } // foreach themes
-                echo "</select>\n";
-                break;
-            case 'theme_color':
-                // This include a two-step configuration (first change theme and save, then change theme color and save)
-                $theme_cfg = get_theme(AmpConfig::get('theme_name'));
-                if ($theme_cfg !== null) {
-                    echo "<select name=\"$name\">\n";
-                    foreach ($theme_cfg['colors'] as $color) {
-                        $is_selected = "";
-                        if ($value == strtolower($color)) {
-                            $is_selected = "selected=\"selected\"";
-                        }
-                        echo "\t<option value=\"" . strtolower($color) . "\" $is_selected>" . $color . "</option>\n";
-                    } // foreach themes
-                    echo "</select>\n";
-                }
-                break;
+ */
             case 'playlist_method':
                 ${$value} = ' selected="selected"';
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"send\"$send>" . T_('Send on Add') . "</option>\n";
-                echo "\t<option value=\"send_clear\"$send_clear>" . T_('Send and Clear on Add') . "</option>\n";
-                echo "\t<option value=\"clear\"$clear>" . T_('Clear on Send') . "</option>\n";
-                echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
+                echo "\t<option value=\"send\"$send>" . __('Send on Add') . "</option>\n";
+                echo "\t<option value=\"send_clear\"$send_clear>" . __('Send and Clear on Add') . "</option>\n";
+                echo "\t<option value=\"clear\"$clear>" . __('Clear on Send') . "</option>\n";
+                echo "\t<option value=\"default\"$default>" . __('Default') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'transcode':
                 ${$value} = ' selected="selected"';
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"never\"$never>" . T_('Never') . "</option>\n";
-                echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
-                echo "\t<option value=\"always\"$always>" . T_('Always') . "</option>\n";
+                echo "\t<option value=\"never\"$never>" . __('Never') . "</option>\n";
+                echo "\t<option value=\"default\"$default>" . __('Default') . "</option>\n";
+                echo "\t<option value=\"always\"$always>" . __('Always') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'show_lyrics':
@@ -247,36 +226,37 @@ class UserPreferences
                     $is_false = "selected=\"selected\"";
                 }
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
-                echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
+                echo "\t<option value=\"1\" $is_true>" . __("Enable") . "</option>\n";
+                echo "\t<option value=\"0\" $is_false>" . __("Disable") . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'album_sort':
-                $is_sort_year_asc  = '';
-                $is_sort_year_desc = '';
-                $is_sort_name_asc  = '';
-                $is_sort_name_desc = '';
-                $is_sort_default   = '';
+                $is_sor__year_asc  = '';
+                $is_sor__year_desc = '';
+                $is_sor__name_asc  = '';
+                $is_sor__name_desc = '';
+                $is_sor__default   = '';
                 if ($value == 'year_asc') {
-                    $is_sort_year_asc = 'selected="selected"';
+                    $is_sor__year_asc = 'selected="selected"';
                 } elseif ($value == 'year_desc') {
-                    $is_sort_year_desc = 'selected="selected"';
+                    $is_sor__year_desc = 'selected="selected"';
                 } elseif ($value == 'name_asc') {
-                    $is_sort_name_asc = 'selected="selected"';
+                    $is_sor__name_asc = 'selected="selected"';
                 } elseif ($value == 'name_desc') {
-                    $is_sort_name_desc = 'selected="selected"';
+                    $is_sor__name_desc = 'selected="selected"';
                 } else {
-                    $is_sort_default = 'selected="selected"';
+                    $is_sor__default = 'selected="selected"';
                 }
                 
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"default\" $is_sort_default>" . T_('Default') . "</option>\n";
-                echo "\t<option value=\"year_asc\" $is_sort_year_asc>" . T_('Year ascending') . "</option>\n";
-                echo "\t<option value=\"year_desc\" $is_sort_year_desc>" . T_('Year descending') . "</option>\n";
-                echo "\t<option value=\"name_asc\" $is_sort_name_asc>" . T_('Name ascending') . "</option>\n";
-                echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
+                echo "\t<option value=\"default\" $is_sor__default>" . __('Default') . "</option>\n";
+                echo "\t<option value=\"year_asc\" $is_sor__year_asc>" . __('Year ascending') . "</option>\n";
+                echo "\t<option value=\"year_desc\" $is_sor__year_desc>" . __('Year descending') . "</option>\n";
+                echo "\t<option value=\"name_asc\" $is_sor__name_asc>" . __('Name ascending') . "</option>\n";
+                echo "\t<option value=\"name_desc\" $is_sor__name_desc>" . __('Name descending') . "</option>\n";
                 echo "</select>\n";
                 break;
+ /*
             case 'disabled_custom_metadata_fields':
                 $ids             = explode(',', $value);
                 $options         = array();
@@ -287,28 +267,29 @@ class UserPreferences
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 break;
-            case 'lastfm_grant_link':
-            case 'librefm_grapreferencesnt_link':
+ */
+            case 'lastfm_gran__link':
+            case 'librefm_grapreferencesn__link':
                 // construct links for granting access Ampache application to Last.fm and Libre.fm
-                $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
-                $plugin      = new Plugin($plugin_name);
+                $plugin_name = ucfirst(str_replace('_gran__link', '', $name));
+ //               $plugin      = new Plugin($plugin_name);
                 $url         = $plugin->_plugin->url;
                 $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
                 $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
-                echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+   //             echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::ge__icon('plugin', sprintf(__("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 break;
             default:
                 if (preg_match('/_pass$/', $name)) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
-                    echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
+                    echo '<input id="name_' . $id . '" class="w3-small"' .  'type="text" name="' . $name . '" value="' . $value . '" />';
                 }
                 break;
                 
         }
     }
 
-    public function has_access($preference)
+    public  function has_access($preference)
     {
         // Nothing for those demo thugs
         if (config('program.demo_mode')) {
@@ -328,7 +309,7 @@ class UserPreferences
     } // has_access
 
 
-    public static function get_all($user_id)
+    public function get_all($user_id)
     {
         $user_limit = "";
         if ($user_id != '0') {
@@ -351,7 +332,7 @@ class UserPreferences
         }
 
         return $results;
-    } // get_all
+    } // ge__all
 
     public static function update_config($user_id)
     {
@@ -363,4 +344,45 @@ class UserPreferences
             config(['program.' . $key => $value]);
         }
     }
+    public static function get_languages()
+    {
+        $results = LaravelGettext::getSelector()->render();
+        
+        return $results;
+    } // get_languages
+    
+    function show_catalog_select($name='catalog', $catalog_id=0, $style='', $allow_none=false, $filter_type='')
+    {
+        echo "<select name=\"$name\" style=\"$style\">\n";
+        
+        $params     = array();
+        $sql        = "SELECT `id`, `name` FROM `catalog` ";
+        if (!empty($filter_type)) {
+            $results = DB::table('Catalogs')->select('id', 'name')->where('gather_types', '=', $filter_type)
+            ->orderBy('name', 'asc')->get();
+            $sql .= "WHERE `gather_types` = ?";
+            $params[] = $filter_type;
+        } else {
+            $results = DB::table('Catalogs')->select('id', 'name')
+            ->get();
+        }
+        $sql .= "ORDER BY `name`";
+        $db_results = Dba::read($sql, $params);
+        
+        if ($allow_none) {
+            echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
+        }
+        
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $selected = '';
+            if ($r['id'] == $catalog_id) {
+                $selected = "selected=\"selected\"";
+            }
+            
+            echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
+        } // end while
+        
+        echo "</select>\n";
+    } // show_catalog_select
+    
 }
