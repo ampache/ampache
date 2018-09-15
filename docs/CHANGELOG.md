@@ -1,5 +1,8 @@
 CHANGELOG
 =========
+3.9.0
+----------
+- Added  Beets catalog to Composer autoload.
 
 3.8.9
 ----------
