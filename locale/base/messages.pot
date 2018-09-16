@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-06-04 15:57+0200\n"
+"POT-Creation-Date: 2018-08-13 06:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1116,7 +1116,7 @@ msgid "Unknown (Orphaned)"
 msgstr ""
 
 #: ../../lib/class/album.class.php:645
-#: ../../lib/class/subsonic_xml_data.class.php:586
+#: ../../lib/class/subsonic_xml_data.class.php:594
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -8403,7 +8403,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 04.06.2018 15:57:55 CEST 
+ # Last Update: 13.08.2018 06:22:54 CEST 
 
  #######################################################################
 
@@ -8832,3 +8832,69 @@ msgstr ""
 #: Database preference table id 168
 msgid "Amazon associate tag"
 msgstr ""
+
+#: Database preference table id 150
+msgid "library"
+msgstr ""
+
+#: Database preference table id 151
+msgid "upload"
+msgstr ""
+
+#: Database preference table id 152
+msgid "catalog"
+msgstr ""
+
+#: Database preference table id 153
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "library"
+# msgstr ""
+
+#: Database preference table id 154
+msgid "theme"
+msgstr ""
+
+#: Database preference table id 155
+msgid "custom"
+msgstr ""
+
+#: Database preference table id 156
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "custom"
+# msgstr ""
+
+#: Database preference table id 157
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "library"
+# msgstr ""
+
+#: Database preference table id 164
+msgid "amazon"
+msgstr ""
+
+#: Database preference table id 165
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "amazon"
+# msgstr ""
+
+#: Database preference table id 166
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "amazon"
+# msgstr ""
+
+#: Database preference table id 167
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "amazon"
+# msgstr ""
+
+#: Database preference table id 168
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "amazon"
+# msgstr ""

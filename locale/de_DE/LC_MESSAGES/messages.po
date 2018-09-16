@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Manuel <psyvirusx@gmail.com>, 2015-2017
+# Manuel <psyvirusx@gmail.com>, 2015-2018
 # Ottnorml <ottnorml@gmail.com>, 2016
 # Sven, 2016
 # Sven, 2016
@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-06-04 15:57+0200\n"
-"PO-Revision-Date: 2018-04-18 04:42+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2018-08-13 06:22+0200\n"
+"PO-Revision-Date: 2018-06-17 05:16+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/"
 "language/de_DE/)\n"
 "Language: de_DE\n"
@@ -1148,7 +1148,7 @@ msgid "Unknown (Orphaned)"
 msgstr "Unbekannt (Verwaist)"
 
 #: ../../lib/class/album.class.php:645
-#: ../../lib/class/subsonic_xml_data.class.php:586
+#: ../../lib/class/subsonic_xml_data.class.php:594
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -2124,11 +2124,11 @@ msgstr "nach"
 
 #: ../../lib/class/search.class.php:202
 msgid "before (x) days ago"
-msgstr ""
+msgstr "Vor (x) Tagen"
 
 #: ../../lib/class/search.class.php:208
 msgid "after (x) days ago"
-msgstr ""
+msgstr "Nach (x) Tagen"
 
 #: ../../lib/class/search.class.php:218
 msgid "Any searchable text"
@@ -2191,7 +2191,7 @@ msgstr "Länge (in Minuten)"
 #: ../../lib/class/search.class.php:304 ../../lib/class/search.class.php:521
 #: ../../lib/class/search.class.php:618
 msgid "Rating (Average)"
-msgstr ""
+msgstr "Durchschnittliche Bewertung"
 
 #: ../../lib/class/search.class.php:322 ../../templates/header.inc.php:437
 #: ../../templates/sidebar_home.inc.php:142
@@ -2202,7 +2202,7 @@ msgstr "Favoriten"
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
 msgid "Rating (Mine)"
-msgstr ""
+msgstr "Eigene Bewertung"
 
 #: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2229,7 +2229,7 @@ msgstr "Bitrate"
 #: ../../lib/class/search.class.php:382 ../../lib/class/search.class.php:556
 #: ../../lib/class/search.class.php:635
 msgid "My Last Play"
-msgstr ""
+msgstr "Meine zuletzt gespielten"
 
 #: ../../lib/class/search.class.php:389 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
@@ -8715,7 +8715,7 @@ msgstr "Ich kann dieses Video nicht löschen."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 04.05.2018 16:28:43 CEST
+# Last Update: 31.07.2018 01:37:20 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -9159,3 +9159,39 @@ msgstr "Amazon geheimer Zugriffsschlüssel"
 #: Database preference table id 168
 msgid "Amazon associate tag"
 msgstr "Amazon Partner-Tag"
+
+#: Database preference table id 150
+#, fuzzy
+msgid "library"
+msgstr "Bibliotheksname"
+
+#: Database preference table id 151
+#, fuzzy
+msgid "upload"
+msgstr "hoch geladen"
+
+#: Database preference table id 152
+#, fuzzy
+msgid "catalog"
+msgstr "Katalog"
+
+#: Database preference table id 153 154
+#, fuzzy
+msgid "theme"
+msgstr "Design der Benutzeroberfläche"
+
+#: Database preference table id 155
+msgid "custom"
+msgstr ""
+
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "custom"
+# msgstr ""
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "library"
+# msgstr ""
+#: Database preference table id 156 157 164
+msgid "amazon"
+msgstr ""

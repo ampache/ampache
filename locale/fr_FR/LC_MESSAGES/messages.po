@@ -7,6 +7,7 @@
 # Aisyk <aisyko@gmail.com>, 2015-2016
 # Arnaud Bey <arnaud.bey@gmail.com>, 2015
 # UncleBone <arnothebig@yahoo.fr>, 2016-2017
+# iambluedev <iambluedev@gmx.fr>, 2018
 # Morgan <mfouillat+github@gmail.com>, 2016
 # Nicolas Chartoire <nicolas.chartoire@gmail.com>, 2015
 # Nicolas Jeannerod <niols@niols.fr>, 2016
@@ -15,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-06-04 15:57+0200\n"
-"PO-Revision-Date: 2018-04-18 04:42+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2018-08-13 06:22+0200\n"
+"PO-Revision-Date: 2018-08-09 18:40+0000\n"
+"Last-Translator: iambluedev <iambluedev@gmx.fr>\n"
 "Language-Team: French (France) (http://www.transifex.com/ampache/ampache/"
 "language/fr_FR/)\n"
 "Language: fr_FR\n"
@@ -1149,7 +1150,7 @@ msgid "Unknown (Orphaned)"
 msgstr "Inconnu (orphelin)"
 
 #: ../../lib/class/album.class.php:645
-#: ../../lib/class/subsonic_xml_data.class.php:586
+#: ../../lib/class/subsonic_xml_data.class.php:594
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -2117,11 +2118,11 @@ msgstr "après"
 
 #: ../../lib/class/search.class.php:202
 msgid "before (x) days ago"
-msgstr ""
+msgstr "avant (x) jours"
 
 #: ../../lib/class/search.class.php:208
 msgid "after (x) days ago"
-msgstr ""
+msgstr "après (x) jours"
 
 #: ../../lib/class/search.class.php:218
 msgid "Any searchable text"
@@ -2184,7 +2185,7 @@ msgstr "Durée (en minutes)"
 #: ../../lib/class/search.class.php:304 ../../lib/class/search.class.php:521
 #: ../../lib/class/search.class.php:618
 msgid "Rating (Average)"
-msgstr ""
+msgstr "Note (Moyenne)"
 
 #: ../../lib/class/search.class.php:322 ../../templates/header.inc.php:437
 #: ../../templates/sidebar_home.inc.php:142
@@ -2195,7 +2196,7 @@ msgstr "Favoris"
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
 msgid "Rating (Mine)"
-msgstr ""
+msgstr "Note (la mienne)"
 
 #: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2222,7 +2223,7 @@ msgstr "Débit"
 #: ../../lib/class/search.class.php:382 ../../lib/class/search.class.php:556
 #: ../../lib/class/search.class.php:635
 msgid "My Last Play"
-msgstr ""
+msgstr "Ma dernière lecture"
 
 #: ../../lib/class/search.class.php:389 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
@@ -3731,7 +3732,7 @@ msgstr "Sélectionnez 'Dropbox API app'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:75
 msgid "Select 'Full Dropbox'"
-msgstr ""
+msgstr "Sélectionner 'Tout le Dropbox' "
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Give a name to your application and create it"
@@ -3739,12 +3740,14 @@ msgstr "Donnez un nom à votre application et créer"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
 msgid "Click the 'Generate' button to create an Access Token"
-msgstr ""
+msgstr "Cliquez sur le bouton 'Generation' pour créer une clé d’accès "
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:78
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr ""
+"Copiez votre clé d'accès, la clé de votre application ainsi que la clé "
+"privée dans les champs suivants. "
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
@@ -3760,7 +3763,7 @@ msgstr "Secret"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:119
 msgid "Access Token"
-msgstr ""
+msgstr "Clé d'accès "
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
@@ -3775,15 +3778,18 @@ msgstr "Récupérer les fichiers coupés lors de l'analyse"
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:181
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr ""
+"Erreur:  Clé d'accès, Clé de votre application ainsi que la clé privée sont "
+"requises pour les catalogues Dropbox"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:188
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:492
 msgid "Invalid \"API key\", \"secret\", or \"access token\": "
 msgstr ""
+"\"clé d'accès\", \"clé de votre application\" ou \"clé privée\" est invalide:"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:197
 msgid "Invalid \"dropbox-path\": "
-msgstr ""
+msgstr "\"dropbox-path\" invalide: "
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:236
 msgid "Running Dropbox Remote Update"
@@ -3804,20 +3810,20 @@ msgstr "Pas de média mis à jour, respectez-vous les modèles ?"
 #: ../../modules/catalog/seafile/seafile.catalog.php:378
 #, php-format
 msgid "Updated song \"%s\""
-msgstr ""
+msgstr "Musique \"%s\" mise à jour"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:481
 #: ../../modules/catalog/seafile/seafile.catalog.php:381
 #, php-format
 msgid "Song up to date: \"%s\""
-msgstr ""
+msgstr "Musique \"%s\" actuellement à jour"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:485
 #: ../../modules/catalog/seafile/seafile.catalog.php:385
 #: ../../modules/catalog/seafile/seafile.catalog.php:443
 #, php-format
 msgid "Removing song \"%s\""
-msgstr ""
+msgstr "Supprimer la musique \"%s\""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:529
 msgid "API Error: cannot connect to Dropbox."
@@ -3945,23 +3951,27 @@ msgstr "Mise à jour catalogue(s) distant terminée."
 
 #: ../../modules/catalog/seafile/SeafileAdapter.php:45
 msgid "Could not authenticate with Seafile"
-msgstr ""
+msgstr "Impossible d'authentifier avec Seafile"
 
 #: ../../modules/catalog/seafile/SeafileAdapter.php:124
 #, php-format
 msgid "No media updated: could not find Seafile library called \"%s\""
 msgstr ""
+"Aucun média mis à jour: important de trouver la bibliothèque Seafile appelée "
+"\"%s\""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:74
 #, php-format
 msgid "Install a Seafile server as described in its documentation on %s"
-msgstr ""
+msgstr "Installer un serveur Seafile comme décrit dans la documention %s"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:75
 msgid ""
 "Enter url to server (e.g. 'https://seafile.example.com') and library name (e."
 "g. 'Music')."
 msgstr ""
+"Entrez l'adresse du serveur (ex: 'https://seafile.example.com') et le nom de "
+"la bibliothèque (ex: 'Musique') "
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:76
 #, php-format
@@ -3971,85 +3981,92 @@ msgid ""
 "Limiting. <br/>The default is tuned towards Seafile's default rate limit "
 "settings; see %sthis forum post%s for more information."
 msgstr ""
+"'API Call Delay' est un délai entre chaque requêtes répétés à Seafile (comme "
+"ceux durant les actions d'ajout ou de nettoyage)  pour s'adapter à la limite "
+"d'utilisation de Seafile.<br/>Par défaut la valeur est adaptée a la limite "
+"d'utilisation par défaut de Seafile: regardez %sou ce post sur le forum "
+"%spour plus d'information."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:78
 msgid ""
 "After creating the catalog, you must 'Make it ready' on the catalog table."
 msgstr ""
+"Après avoir crée le catalogue, vous devrez 'l'indiquer comme prêt' dans la "
+"liste des catalogues."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:122
 msgid "Server URI"
-msgstr ""
+msgstr "URI du serveur"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:123
 msgid "Library Name"
-msgstr ""
+msgstr "Nom de la bibliothèque"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:124
 msgid "API Call Delay"
-msgstr ""
+msgstr "Délai d'appel de l'API"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:125
 msgid "Seafile Username/Email"
-msgstr ""
+msgstr "Nom d'utilisateur/Email Seafile"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:126
 msgid "Seafile Password"
-msgstr ""
+msgstr "Mot de passe Seafile"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:155
 msgid "Error: Seafile Server URL is required."
-msgstr ""
+msgstr "Erreur: Une adresse URL pour le serveur Seafile est requise."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:161
 msgid "Error: Seafile Server Library Name is required."
-msgstr ""
+msgstr "Erreur: Le nom de la bibliothèque Seafile est requis."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:167
 msgid "Error: Seafile Username is required."
-msgstr ""
+msgstr "Erreur: Le nom d'utilisateur Seafile est requis."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:173
 msgid "Error: Seafile Password is required."
-msgstr ""
+msgstr "Erreur: Le mot de passe Seafile est requis."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:179
 msgid "Error: API Call Delay must have a numeric value."
-msgstr ""
+msgstr "Erreur: Le délai d'appel de l'api doit être une valeur numérique."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:189
 #, php-format
 msgid "Error while authenticating against Seafile API: %s"
-msgstr ""
+msgstr "Erreur durant l'authentification avec l'api Seafile: %s"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:236
 msgid "Running Seafile Remote Update"
-msgstr ""
+msgstr "Lancement de la mise à jour distante Seafile"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:294
 #, php-format
 msgid "Skipping existing song \"%s\""
-msgstr ""
+msgstr "Musique \"%s\" sautée"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:299
 #, php-format
 msgid "Adding song \"%s\""
-msgstr ""
+msgstr "Ajout de la musique \"%s\""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:309
 #, php-format
 msgid "Could not add song \"%s\""
-msgstr ""
+msgstr "Impossible d'ajouter la musique \"%s\""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:433
 #, php-format
 msgid "Error checking song \"%s\": %s"
-msgstr ""
+msgstr "Erreur durant la vérification de la musique \"%s\": %s"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:441
 #, php-format
 msgid "Keeping song \"%s\""
-msgstr ""
+msgstr "Garder la musique \"%s\""
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:107
 msgid "User ID"
@@ -8665,7 +8682,7 @@ msgstr "Vous ne pouvez pas supprimer cette vidéo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 04.05.2018 16:28:43 CEST
+# Last Update: 31.07.2018 01:37:20 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8867,7 +8884,7 @@ msgstr "Auto-pause entre les onglets"
 
 #: Database preference table id 101
 msgid "Enable url rewriting"
-msgstr ""
+msgstr "Activer la réécriture d'url"
 
 #: Database preference table id 102
 msgid "Allow Share"
@@ -9118,3 +9135,39 @@ msgstr "Clé d'accès secrète Amazon"
 #: Database preference table id 168
 msgid "Amazon associate tag"
 msgstr "Tag associé Amazon"
+
+#: Database preference table id 150
+#, fuzzy
+msgid "library"
+msgstr "Nom de la bibliothèque"
+
+#: Database preference table id 151
+#, fuzzy
+msgid "upload"
+msgstr "envoyé"
+
+#: Database preference table id 152
+#, fuzzy
+msgid "catalog"
+msgstr "Catalogue"
+
+#: Database preference table id 153 154
+#, fuzzy
+msgid "theme"
+msgstr "Thème"
+
+#: Database preference table id 155
+msgid "custom"
+msgstr ""
+
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "custom"
+# msgstr ""
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "library"
+# msgstr ""
+#: Database preference table id 156 157 164
+msgid "amazon"
+msgstr ""
