@@ -253,7 +253,7 @@ class vainfo
 
             // Foreach what we've got
             foreach ($data as $key => $value) {
-                if ($key != 'APIC') {
+                if ($key != 'APIC' && $key != 'popularimeter') {
                     $TagData[$key][0] = $value;
                 }
             }
@@ -263,6 +263,11 @@ class vainfo
                 $TagData['attached_picture'][0]['picturetypeid'] = '3';
                 $TagData['attached_picture'][0]['description']   = 'Cover';
                 $TagData['attached_picture'][0]['mime']          = $data['APIC']['mime'];
+            }
+
+            // If popularimeter is available, pass them into ID3 writer
+            if (isset($data['popularimeter'])) {
+                $TagData['popularimeter'] = $data['popularimeter'];
             }
 
             $tagWriter->tag_data = $TagData;
