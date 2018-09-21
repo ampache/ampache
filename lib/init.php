@@ -96,8 +96,9 @@ $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
 if (!isset($results['max_upload_size'])) {
     $results['max_upload_size'] = 1048576;
 }
-$_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
-
+if (!defined('CLI')) {
+    $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
+}
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
     $results['user_ip_cardinality'] = 42;
 }
