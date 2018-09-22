@@ -36,12 +36,6 @@ class Catalog_dropbox extends Catalog
     private $version        = '000002';
     private $type           = 'dropbox';
     private $description    = 'Dropbox Remote Catalog';
-    public $apikey          = '';
-    public $secret          = '';
-    public $path            = '';
-    public $authtoken       = '';
-    public $getchunk        = '';
-    
 
     /**
      * get_description
@@ -145,6 +139,12 @@ class Catalog_dropbox extends Catalog
        // $this->completeAuthToken();
     }
 
+    public $apikey;
+    public $secret;
+    public $path;
+    public $authtoken;
+    public $getchunk;
+
     /**
      * Constructor
      *
@@ -171,8 +171,22 @@ class Catalog_dropbox extends Catalog
      */
     public static function create_type($catalog_id, $data)
     {
+        $apikey    = trim($data['apikey']);
+        $secret    = trim($data['secret']);
+        $authtoken = trim($data['authtoken']);
+        $path      = $data['path'];
         $getchunk  = $data['getchunk'];
-        if (!validateRegisteredApp()) {
+
+        if (!strlen($apikey) or !strlen($secret) or !strlen($authtoken)) {
+            AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
+
+            return false;
+        }
+        try {
+            $app = new DropboxApp($apikey, $secret, $authtoken);
+        } catch (DropboxClientException $e) {
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
+
             return false;
         }
         $dropbox = new Dropbox($app);
@@ -202,24 +216,6 @@ class Catalog_dropbox extends Catalog
 
         return true;
     }
-    
-    public function validateRegisteredApp()
-    {
-        if (!strlen($apikey) or !strlen($secret) or !strlen($authtoken)) {
-            AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
-            
-            return false;
-        }
-        try {
-            $app = new DropboxApp($apikey, $secret, $authtoken);
-        } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
-            
-            return false;
-        }
-
-        return true;
-    }
 
     /**
      * add_to_catalog
@@ -228,10 +224,6 @@ class Catalog_dropbox extends Catalog
      */
     public function add_to_catalog($options = null)
     {
-        if (!$this->validateRegisteredApp()) {
-            return false;
-        }
-        
         // Prevent the script from timing out
         set_time_limit(0);
 
@@ -259,10 +251,6 @@ class Catalog_dropbox extends Catalog
      */
     public function update_remote_catalog()
     {
-        if (!$this->validateRegisteredApp()) {
-            return false;
-        }
-        
         $app             = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox         = new Dropbox($app);
         $this->count     = 0;

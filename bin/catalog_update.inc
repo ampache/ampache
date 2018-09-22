@@ -125,7 +125,7 @@ if ($plimp == 1) {
 // --------
 if ($catname) $where = " name = '$catname' ";
 if ($cattype) { 
-    $where .= "AND catalog_type='$cattype'";
+    $where .= "catalog_type='$cattype'";
 } elseif (!$where) {
     $where .= "catalog_type='local'";
 }
