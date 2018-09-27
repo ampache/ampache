@@ -143,7 +143,7 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
         
         try {
             header = MP3FrameHeader.decode(s);
-        } catch (e) {};
+        } catch (e) {}
         
         // go back to the beginning, for other probes
         stream.seek(off);
@@ -3600,7 +3600,7 @@ function MP3Hufftable(table, linbits, startbits) {
     this.table = table;
     this.linbits = linbits;
     this.startbits = startbits;
-};
+}
 
 /* external tables */
 exports.huff_quad_table = [ hufftabA, hufftabB ];
