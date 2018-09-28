@@ -88,9 +88,12 @@ if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
 }
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
-$results['web_path']  = $http_type . $results['http_host'] .
+
+if (!isset($results['web_path'])) {
+    $results['web_path']  = $http_type . $results['http_host'] .
         (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
         $results['web_path'];
+}
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
 if (!isset($results['max_upload_size'])) {

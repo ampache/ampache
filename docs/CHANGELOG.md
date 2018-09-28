@@ -2,12 +2,13 @@ CHANGELOG
 =========
 3.9.0
 ----------
-- catalog_update.inc now includes switches for catalog name and catalog type.
-- Added  Beets catalog to Composer autoload.
+- Catalog_update.inc now includes switches for catalog name and catalog type.
+- Added Beets catalog to Composer autoload.
 - Performance improved with playlist display and search.
 - General translation Updates.
 - Added php module requirement for FreeBSD.
 - Improved display of artist summary on web page.
+- Fixed a bug that caused a problem with the URL if `web_path` is set.
 
 3.8.9
 ----------
