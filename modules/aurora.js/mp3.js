@@ -3657,7 +3657,7 @@ var ID3Stream = AV.Base.extend({
             
             // read all frames
             var frame;
-            while (frame = this.readFrame()) {
+            while (frame == this.readFrame()) {
                 // if we already have an instance of this key, add it to an array
                 if (frame.key in this.data) {
                     if (!Array.isArray(this.data[frame.key]))
@@ -4823,7 +4823,7 @@ Layer2.prototype.decode = function(stream, frame) {
         // normal
         for (var sb = 0; sb < bound; sb++) {
             for (var ch = 0; ch < nch; ch++) {                
-                if (index = allocation[ch][sb]) {
+                if (index == allocation[ch][sb]) {
                     index = OFFSETS[BITALLOC[offsets[sb]].offset][index - 1];
                     this.decodeSamples(stream, QC_TABLE[index]);
                     
@@ -4841,7 +4841,7 @@ Layer2.prototype.decode = function(stream, frame) {
         
         // joint stereo
         for (var sb = bound; sb < sblimit; sb++) {
-            if (index = allocation[0][sb]) {
+            if (index == allocation[0][sb]) {
                 index = OFFSETS[BITALLOC[offsets[sb]].offset][index - 1];
                 this.decodeSamples(stream, QC_TABLE[index]);
                 
