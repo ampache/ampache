@@ -988,7 +988,7 @@ class mpd
             if ($min_version) {
                 $min = self::_computeVersionValue($min_version);
                 if ($mpd < $min) {
-                    $this->_error('compatibility', "Command '$cmd' is not compatible with this version of MPD, version $min_version required");
+                    self::_error('compatibility', "Command '$cmd' is not compatible with this version of MPD, version $min_version required");
 
                     return false;
                 }
@@ -998,7 +998,7 @@ class mpd
                 $max = self::_computeVersionValue($max_version);
 
                 if ($mpd >= $max) {
-                    $this->_error('compatibility', "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version");
+                    self::_error('compatibility', "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version");
 
                     return false;
                 }
