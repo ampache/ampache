@@ -42,7 +42,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
  * Plugin Dimostrativo
  */
 
-;(function($){
+(function($){
 
 
   /**
@@ -205,7 +205,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
           cols.show();
         } else {
           cols.hide();
-        };
+        }
     };
 
       var updateCheck = function() {
@@ -220,7 +220,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
         }
         else {
           $checkbox.prop("checked", false);
-        };
+        }
       };
 
       $checkbox
@@ -272,7 +272,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
             }
             else {
               $checkbox.prop("checked", false);
-            };
+            }
             
             var val = $checkbox.val();
             var cols = wdg.$table.find("#" + val + ", [headers="+ val +"]");
