@@ -750,7 +750,7 @@ var AV = (window.AV);
 // if ogg.js exists, register a plugin
 try {
   var OggDemuxer = (window.AV.OggDemuxer);
-} catch (e) {};
+} catch (e) {}
 if (!OggDemuxer) return;
 
 OggDemuxer.plugins.push({
