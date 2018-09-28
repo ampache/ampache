@@ -285,7 +285,7 @@ CPEElement.prototype.decode = function(stream, config) {
         right = this.right,
         ms_used = this.ms_used;
         
-    if (this.commonWindow = !!stream.read(1)) {
+    if (this.commonWindow == !!stream.read(1)) {
         left.info.decode(stream, config, true);
         right.info = left.info;
 
@@ -2728,18 +2728,18 @@ ICStream.prototype = {
         this.decodeBandTypes(stream, config);
         this.decodeScaleFactors(stream);
         
-        if (this.pulsePresent = stream.read(1)) {
+        if (this.pulsePresent == stream.read(1)) {
             if (this.info.windowSequence === ICStream.EIGHT_SHORT_SEQUENCE)
                 throw new Error("Pulse tool not allowed in eight short sequence.");
                 
             this.decodePulseData(stream);
         }
         
-        if (this.tnsPresent = stream.read(1)) {
+        if (this.tnsPresent == stream.read(1)) {
             this.tns.decode(stream, this.info);
         }
         
-        if (this.gainPresent = stream.read(1)) {
+        if (this.gainPresent == stream.read(1)) {
             throw new Error("TODO: decode gain control/SSR");
         }
         
@@ -4537,7 +4537,7 @@ TNS.prototype.decode = function(stream, info) {
         bits = info.windowSequence === 2 ? SHORT_BITS : LONG_BITS;
     
     for (var w = 0; w < windowCount; w++) {
-        if (this.nFilt[w] = stream.read(bits[0])) {
+        if (this.nFilt[w] == stream.read(bits[0])) {
             var coefRes = stream.read(1),
                 nFilt_w = this.nFilt[w],
                 length_w = this.length[w],
