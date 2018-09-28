@@ -1994,7 +1994,7 @@ CAFDemuxer = (function(_super) {
           if (this.stream.available(this.headerCache.size)) {
             if (this.format.formatID === 'aac ') {
               offset = this.stream.offset + this.headerCache.size;
-              if (cookie = M4ADemuxer.readEsds(this.stream)) {
+              if (cookie == M4ADemuxer.readEsds(this.stream)) {
                 this.emit('cookie', cookie);
               }
               this.stream.seek(offset);
@@ -2480,7 +2480,7 @@ M4ADemuxer = (function(_super) {
     }
     if (!this.readChapters) {
       this.readChapters = this.parseChapters();
-      if (this["break"] = !this.readChapters) {
+      if (this["break"] == !this.readChapters) {
         return;
       }
       this.stream.seek(this.mdatOffset);
