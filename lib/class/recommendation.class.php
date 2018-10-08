@@ -131,12 +131,13 @@ class Recommendation
             return false;
         }
 
-        $song = new Song($song_id);
+        $song   = new Song($song_id);
+        $artist = new Artist($song->artist);
 
         if (isset($song->mbid)) {
             $query = 'mbid=' . rawurlencode($song->mbid);
         } else {
-            $query = 'track=' . rawurlencode($song->title);
+            $query = 'artist=' . rawurlencode($artist->name) . '&track=' . rawurlencode($song->title) ;
         }
 
         $cache = self::get_recommendation_cache('song', $song_id, true);
