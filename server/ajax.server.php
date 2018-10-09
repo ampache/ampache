@@ -163,6 +163,51 @@ switch ($_REQUEST['action']) {
             ob_start();
             $rating = new Rating($_GET['object_id'], $_GET['rating_type']);
             $rating->set_rating($_GET['rating']);
+            // If song is rated, write it down to ID3
+            if (AmpConfig::get('write_id3')) {
+                if ($_GET['rating_type'] === 'song') {
+                    $song = new Song($_GET['object_id']);
+                    $song->format();
+                    $id3 = new vainfo($song->file);
+                    $data = $id3->read_id3();
+                    if (isset($data['tags']['id3v2'])) {
+                        // Get user mail for rating
+                        $ratingMail = trim($GLOBALS['user']->email);
+                        // If user has no email in record, use user@example.net
+                        if ($ratingMail === '') {
+                            $ratingMail = 'user@example.net';
+                        }
+                        // Convert rating
+                        switch ((int)$_GET['rating']) {
+                            case (5):
+                                $ratingNumber = 255;
+                                break;
+                            case (4):
+                                $ratingNumber = 196;
+                                break;
+                            case (3):
+                                $ratingNumber = 128;
+                                break;
+                            case (2):
+                                $ratingNumber = 64;
+                                break;
+                            case (1):
+                                $ratingNumber = 1;
+                                break;
+                            default:
+                                $ratingNumber = 0;
+                                break;
+                        }
+                        $ndata['popularimeter'] = [
+                            'email' => $ratingMail,
+                            'rating' => $ratingNumber,
+                            'data' => 0
+                        ];
+                        $ndata = array_merge($ndata, $song->get_metadata());
+                        $id3->write_id3($ndata);
+                    }
+                }
+            }
             Rating::show($_GET['object_id'], $_GET['rating_type']);
             $key           = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
             $results[$key] = ob_get_contents();

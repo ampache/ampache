@@ -1050,6 +1050,39 @@ class Song extends database_object implements media, library_item
                         $meta[$metadata->getField()->getName()] = $metadata->getData();
                     }
                 }
+                // Get user mail for rating
+                $ratingMail = trim($GLOBALS['user']->email);
+                // If user has no email in record, use user@example.net
+                if($ratingMail === '') {
+                    $ratingMail = 'user@example.net';
+                }
+                // Get Rating from user
+                $rating = new Rating($this->id, 'song');
+                switch ((int)$rating->get_user_rating()) {
+                    case (5):
+                        $ratingNumber = 255;
+                        break;
+                    case (4):
+                        $ratingNumber = 196;
+                        break;
+                    case (3):
+                        $ratingNumber = 128;
+                        break;
+                    case (2):
+                        $ratingNumber = 64;
+                        break;
+                    case (1):
+                        $ratingNumber = 1;
+                        break;
+                    default:
+                        $ratingNumber = 0;
+                        break;
+                }
+                $meta['popularimeter'] = [
+                    'email' => $ratingMail,
+                    'rating' => $ratingNumber,
+                    'data' => 0
+                ];
                 $id3 = new vainfo($this->file);
                 $id3->write_id3($meta);
                 Catalog::update_media_from_tags($this);
