@@ -1,15 +1,5 @@
 CHANGELOG
 =========
-3.9.0
-----------
-- Video details now correctly displayed for personal video.
-- XML API now fully accepts user's API key. Session will be extended if it exists; Otherwise it's replaced.
-- Artist name added to Lastfm track.getsimilar query.
-- Catalog_update.inc now includes switches for catalog name and catalog type.
-- Added Beets catalog to Composer autoload.
-- Performance improved with playlist display and search.
-- General translation Updates.
-- Documented php module requirement for FreeBSD.
 
 3.9.0
 ----------
