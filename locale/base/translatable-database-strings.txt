@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 04.06.2018 15:57:55 CEST 
+ # Last Update: 13.08.2018 06:22:54 CEST 
 
  #######################################################################
 
@@ -432,3 +432,69 @@ msgstr ""
 #: Database preference table id 168
 msgid "Amazon associate tag"
 msgstr ""
+
+#: Database preference table id 150
+msgid "library"
+msgstr ""
+
+#: Database preference table id 151
+msgid "upload"
+msgstr ""
+
+#: Database preference table id 152
+msgid "catalog"
+msgstr ""
+
+#: Database preference table id 153
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "library"
+# msgstr ""
+
+#: Database preference table id 154
+msgid "theme"
+msgstr ""
+
+#: Database preference table id 155
+msgid "custom"
+msgstr ""
+
+#: Database preference table id 156
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "custom"
+# msgstr ""
+
+#: Database preference table id 157
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "library"
+# msgstr ""
+
+#: Database preference table id 164
+msgid "amazon"
+msgstr ""
+
+#: Database preference table id 165
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "amazon"
+# msgstr ""
+
+#: Database preference table id 166
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "amazon"
+# msgstr ""
+
+#: Database preference table id 167
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "amazon"
+# msgstr ""
+
+#: Database preference table id 168
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "amazon"
+# msgstr ""

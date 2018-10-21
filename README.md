@@ -3,6 +3,8 @@
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 
+**Notice:**  Only pull requests (PR) for bug fixes will be considered.
+
 Basics
 ------
 

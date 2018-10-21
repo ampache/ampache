@@ -376,7 +376,8 @@
 
 	"autoload": {
 		"psr-4": {
-			"Lib\\": "lib/class"
+			"Lib\\": "lib/class",
+            "Beets\\": "modules/Beets"
 		}
 	}
 }

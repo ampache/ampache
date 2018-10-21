@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-06-04 15:57+0200\n"
-"PO-Revision-Date: 2018-04-19 00:45+0000\n"
+"POT-Creation-Date: 2018-08-13 06:22+0200\n"
+"PO-Revision-Date: 2018-07-15 20:52+0000\n"
 "Last-Translator: Paulo Schopf <pschopf@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/ampache/ampache/"
 "language/pt_BR/)\n"
@@ -89,7 +89,7 @@ msgstr "Excluir catálogo"
 #: ../../admin/catalog.php:112 ../../admin/users.php:230 ../../broadcast.php:38
 #: ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
-msgstr "Confirmar solicitação de exclusão"
+msgstr "Confirmar exclusão"
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
@@ -141,7 +141,7 @@ msgstr "Tocando Agora apagadas"
 
 #: ../../admin/catalog.php:220
 msgid "All now playing data has been cleared"
-msgstr "Todos os dados das músicas tocadas agora serão apagados"
+msgstr "Todos os dados de Tocando Agora serão apagados"
 
 #: ../../admin/catalog.php:232
 msgid "No Disabled songs found"
@@ -1139,7 +1139,7 @@ msgid "Unknown (Orphaned)"
 msgstr "Desconhecido (órfão)"
 
 #: ../../lib/class/album.class.php:645
-#: ../../lib/class/subsonic_xml_data.class.php:586
+#: ../../lib/class/subsonic_xml_data.class.php:594
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
 #: ../../templates/show_album.inc.php:31
@@ -3985,7 +3985,7 @@ msgstr "Atraso na Chamada da API"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:125
 msgid "Seafile Username/Email"
-msgstr "Usuário/Email do Seafile"
+msgstr "Usuário/E-mail do Seafile"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:126
 msgid "Seafile Password"
@@ -5068,7 +5068,7 @@ msgid ""
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
 "No formulário abaixo insira um caminho local (exemplo /data/music) ou a URL "
-"para uma instalação remota do Ampache (exemplo http://theotherampache.com)"
+"de uma instalação remota do Ampache (exemplo http://theotherampache.com)"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
@@ -8641,7 +8641,7 @@ msgstr "Não foi possível excluir este vídeo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 04.05.2018 16:28:43 CEST
+# Last Update: 31.07.2018 01:37:20 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8878,7 +8878,7 @@ msgstr "Menu superior"
 
 #: Database preference table id 110
 msgid "Clear democratic votes of expired user sessions"
-msgstr "Limpar votos democráticos de sessões expiradas de usuários"
+msgstr "Limpar votos de sessões expiradas de usuários"
 
 #: Database preference table id 111
 msgid "Show donate button in footer"
@@ -9088,3 +9088,39 @@ msgstr "Chave de acesso secreta da Amazon"
 #: Database preference table id 168
 msgid "Amazon associate tag"
 msgstr "Etiqueta de associado da Amazon"
+
+#: Database preference table id 150
+#, fuzzy
+msgid "library"
+msgstr "Nome da Biblioteca"
+
+#: Database preference table id 151
+#, fuzzy
+msgid "upload"
+msgstr "enviado"
+
+#: Database preference table id 152
+#, fuzzy
+msgid "catalog"
+msgstr "Catálogo"
+
+#: Database preference table id 153 154
+#, fuzzy
+msgid "theme"
+msgstr "Tema"
+
+#: Database preference table id 155
+msgid "custom"
+msgstr ""
+
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "custom"
+# msgstr ""
+# is already in the source code
+# but to avoid confusion, it's added and commented
+# msgid "library"
+# msgstr ""
+#: Database preference table id 156 157 164
+msgid "amazon"
+msgstr ""

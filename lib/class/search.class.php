@@ -421,7 +421,7 @@ class Search extends playlist_object
             $playlists = array();
             foreach (Playlist::get_playlists() as $playlistid) {
                 $playlist = new Playlist($playlistid);
-                $playlist->format();
+                $playlist->format(false);
                 $playlists[$playlistid] = $playlist->f_name;
             }
             $this->types[] = array(
