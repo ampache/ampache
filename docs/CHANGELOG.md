@@ -2,16 +2,17 @@ CHANGELOG
 =========
 3.9.0
 ----------
+- XML API now fully accepts user's API key. Session will be extended if it exists.
 - Artist name added to Lastfm track.getsimilar query.
 - Catalog_update.inc now includes switches for catalog name and catalog type.
 - Added Beets catalog to Composer autoload.
 - Performance improved with playlist display and search.
 - General translation Updates.
-- Added php module requirement for FreeBSD.
-- Improved display of artist summary on web page.
+- Documented php module requirement for FreeBSD.
 
 3.8.9
 ----------
+- Improved display of artist summary on web page.
 - Fixed uploading of avatar.
 - DSub now writes the correct extension when the ampache config switch `encode_player_api_target` is enabled.
 - Artist info now properly displayed.
