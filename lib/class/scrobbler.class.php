@@ -143,6 +143,7 @@ class scrobbler
             $vars['api_sig'] = $sig;
             //call the getSession API
             $response=$this->call_url('/2.0/', 'GET', $vars);
+            error_log($response);
             $xml     = simplexml_load_string($response);
             if ($xml) {
                 $status = (string) $xml['status'];
