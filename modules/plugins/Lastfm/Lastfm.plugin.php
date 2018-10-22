@@ -36,7 +36,7 @@ class AmpacheLastfm
     private $user_id;
     private $api_key;
     private $secret;
-    private $scheme     = 'https';
+    private $scheme     = 'http';
     private $host       = 'www.last.fm';
     private $api_host   = 'ws.audioscrobbler.com';
 

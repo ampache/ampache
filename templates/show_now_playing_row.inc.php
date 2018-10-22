@@ -47,6 +47,10 @@
         <label><?php echo T_('Artist'); ?></label>
         <?php echo $media->f_artist_link; ?>
     </div>
+    <div class="np_cell cel_year">
+        <label><?php echo T_('Year'); ?></label>
+        <?php echo $media->f_year_link; ?>
+    </div>
     <?php
         if (!empty($media->f_tags)) {
             ?>
