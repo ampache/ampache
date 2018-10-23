@@ -333,9 +333,9 @@ class Artist extends database_object implements library_item
      * gets the album ids of albums of the same year
      * of
      * @param int|null $catalog
+     * @param int|null $year
      * @param boolean $ignoreAlbumGroups
      * @param boolean $group_release_type
-     * @param int|null $year
      * @return int[]
      */
     public function get_by_year($catalog = null, $year = null, $ignoreAlbumGroups = false, $group_release_type = false)
@@ -407,7 +407,7 @@ class Artist extends database_object implements library_item
         }
 
         return $results;
-    } // get_albums
+    }// get_albums
     /**
      * get_songs
      * gets the songs for this artist

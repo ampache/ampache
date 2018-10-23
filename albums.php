@@ -116,6 +116,7 @@ switch ($_REQUEST['action']) {
         $walbum->format();
         require AmpConfig::get('prefix') . UI::find_template('show_missing_album.inc.php');
     break;
+    // Browse by Album
     case 'show':
     default:
         $album = new Album($_REQUEST['album']);
