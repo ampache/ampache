@@ -668,7 +668,7 @@ class Album extends database_object implements library_item
         if (!$this->year) {
             $this->f_year = "N/A";
         } else {
-            $year = $this->year;
+            $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/albums.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
         }
 
