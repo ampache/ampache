@@ -144,6 +144,12 @@ class Album extends database_object implements library_item
      * @var string $f_year
      */
     public $f_year;
+
+    /**
+     * @var string f_year_link
+     */
+    public $f_year_link;
+
     /**
      *  @var string $f_title
      */
@@ -661,6 +667,9 @@ class Album extends database_object implements library_item
 
         if (!$this->year) {
             $this->f_year = "N/A";
+        } else {
+            $year = $this->year;
+            $this->f_year_link = "<a href=\"$web_path/albums.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
         }
 
         $this->f_release_type = ucwords($this->release_type);
@@ -1091,4 +1100,7 @@ class Album extends database_object implements library_item
 
         return $results;
     }
+
+
+    
 } //end of album class
