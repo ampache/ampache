@@ -70,7 +70,20 @@ switch ($_REQUEST['action']) {
         }
         $object_type = 'album';
         require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
-        break;
+    break;
+    case 'showyear':
+        $artist = new Artist($_REQUEST['artist']);
+        $artist->format();
+        $year = intval($_REQUEST['year']);
+        if (AmpConfig::get('album_release_type')) {
+            $multi_object_ids = $artist->get_by_year($_REQUEST['catalog'],$year, false, true);
+        } else {
+            $object_ids = $artist->get_by_year($_REQUEST['catalog'], $year);
+        }
+
+        $object_type = 'album';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
+    break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();

@@ -31,7 +31,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <th class="cel_add"></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-            <th class="cel_artist"><?php echo T_('Year'); ?></th>
+            <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
             <?php if (Access::check('interface', 50)) {

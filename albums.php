@@ -64,7 +64,9 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             exit;
         }
-
+        $album = new Album($_REQUEST['album_id']);
+        $album->format();
+        $catalog_id = $album->get_catalogs();
         $type          = 'album';
         $object_id     = intval($_REQUEST['album_id']);
         $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
@@ -114,7 +116,6 @@ switch ($_REQUEST['action']) {
         $walbum->format();
         require AmpConfig::get('prefix') . UI::find_template('show_missing_album.inc.php');
     break;
-    // Browse by Album
     case 'show':
     default:
         $album = new Album($_REQUEST['album']);
