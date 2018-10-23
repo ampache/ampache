@@ -20,17 +20,15 @@
  *
  */
 UI::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
-?>
-<br />
-<strong>Aktualisiere von Tags ...</strong>&nbsp;&nbsp;
-<?php
+
 Catalog::update_single_item($type, $object_id);
-?>
-<br />
-<strong>Suche Cover ...</strong>&nbsp;&nbsp;
-<?php
-$catalog = Catalog::create_from_id(1);
-$catalog->gather_art_item($type, $object_id);
+
+//gather art for this item
+if($catalog_id[0]){
+    $catalog = Catalog::create_from_id($catalog_id[0]);
+    $catalog->gather_art_item($type, $object_id);
+}
+
 ?>
 <br />
 <strong><?php echo T_('Update from Tags Complete'); ?></strong>&nbsp;&nbsp;
