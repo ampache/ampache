@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-08-13 06:22+0200\n"
-"PO-Revision-Date: 2018-04-18 04:42+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2018-10-26 18:02+0200\n"
+"PO-Revision-Date: 2018-10-26 15:36+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/ampache/"
 "ampache/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -488,102 +488,124 @@ msgstr ""
 msgid "UPnP backend disabled. Broadcast skipped."
 msgstr ""
 
-#: ../../bin/catalog_update.inc:41
+#: ../../bin/catalog_update.inc:44
 msgid "Doing all catalog operations"
 msgstr "Doing all catalogue operations"
 
-#: ../../bin/catalog_update.inc:48
+#: ../../bin/catalog_update.inc:52
 msgid "Temporary deactivate PHP memory limit"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:52
+#: ../../bin/catalog_update.inc:56
+msgid "Setting catalog name"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:60
+msgid "Setting catalog type"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:64
 msgid "Cleaning catalog/s"
 msgstr "Cleaning catalogue/s"
 
-#: ../../bin/catalog_update.inc:56
+#: ../../bin/catalog_update.inc:68
 msgid "Verifying catalog/s"
 msgstr "Verifying catalogue/s"
 
-#: ../../bin/catalog_update.inc:60
+#: ../../bin/catalog_update.inc:72
 msgid "Adding new media to catalog/s"
 msgstr "Adding new media to catalogue/s"
 
-#: ../../bin/catalog_update.inc:64
+#: ../../bin/catalog_update.inc:76
 msgid "Gathering new media art"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:68
+#: ../../bin/catalog_update.inc:80
 msgid "Importing playlist/s"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:72
+#: ../../bin/catalog_update.inc:84
 msgid "Database table optimization"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:95
+#: ../../bin/catalog_update.inc:101
 msgid "Starting catalog operations..."
 msgstr "Starting catalogue operations..."
 
-#: ../../bin/catalog_update.inc:101
+#: ../../bin/catalog_update.inc:107
 msgid "Deactivated PHP memory limit"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:108
+#: ../../bin/catalog_update.inc:114
 msgid "Gathering art"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:114
+#: ../../bin/catalog_update.inc:120
 msgid "Parsing playlists"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:131
+#: ../../bin/catalog_update.inc:141
 #, php-format
 msgid "Reading catalog: %s"
 msgstr "Reading catalogue: %s"
 
-#: ../../bin/catalog_update.inc:137
+#: ../../bin/catalog_update.inc:147
 msgid "Start cleaning orphaned media entries"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:144
+#: ../../bin/catalog_update.inc:154
 msgid "Start verifying media related to catalog entries"
 msgstr "Start verifying media related to catalogue entries"
 
-#: ../../bin/catalog_update.inc:151
+#: ../../bin/catalog_update.inc:161
 msgid "Start adding new media"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:158
+#: ../../bin/catalog_update.inc:168
 msgid "Start searching new media art"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:166
+#: ../../bin/catalog_update.inc:176
 msgid "Optimizing database tables"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:191
+#: ../../bin/catalog_update.inc:201
 msgid "- Catalog Update Help -"
 msgstr "- Catalogue Update Help -"
 
-#: ../../bin/catalog_update.inc:193
-msgid "Usage: catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
-msgstr "Usage: catalog_update.inc [CATALOGUE NAME] [-m|-c|-v|-a|-g|-i|-o]"
+#: ../../bin/catalog_update.inc:203
+msgid ""
+"Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-"
+"a|-g|-i|-o]"
+msgstr ""
 
-#: ../../bin/catalog_update.inc:197
+#: ../../bin/catalog_update.inc:207
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:201
+#: ../../bin/catalog_update.inc:211
+msgid "This help message"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:213
+msgid "Name of Catalog (Optional)"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:215
+msgid "Type of Catalog (Optional)"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:217
 msgid "Temporarily deactivates PHP memory limit."
 msgstr ""
 
-#: ../../bin/catalog_update.inc:203
+#: ../../bin/catalog_update.inc:219
 msgid "Cleans catalogs from orphaned entries."
 msgstr "Cleans catalogues from orphaned entries."
 
-#: ../../bin/catalog_update.inc:205
+#: ../../bin/catalog_update.inc:221
 msgid ""
 "Verifies catalog entries and updates them if related files have new "
 "information."
@@ -591,29 +613,29 @@ msgstr ""
 "Verifies catalogue entries and updates them if related files have new "
 "information."
 
-#: ../../bin/catalog_update.inc:207
+#: ../../bin/catalog_update.inc:223
 msgid "Adds new media to catalogs."
 msgstr "Adds new media to catalogues."
 
-#: ../../bin/catalog_update.inc:209
+#: ../../bin/catalog_update.inc:225
 msgid "Gathers media Art."
 msgstr ""
 
-#: ../../bin/catalog_update.inc:211
+#: ../../bin/catalog_update.inc:227
 msgid "Imports playlists."
 msgstr ""
 
-#: ../../bin/catalog_update.inc:213
+#: ../../bin/catalog_update.inc:229
 msgid "Optimizes Database Tables."
 msgstr ""
 
-#: ../../bin/catalog_update.inc:216
+#: ../../bin/catalog_update.inc:232
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:217
+#: ../../bin/catalog_update.inc:233
 msgid ""
 "Depending on your systems performance, this option could need a long time to "
 "finish and extremely slow down other database processes if you have big "
@@ -623,7 +645,7 @@ msgstr ""
 "finish and extremely slow down other database processes if you have big "
 "catalogues!"
 
-#: ../../bin/catalog_update.inc:218
+#: ../../bin/catalog_update.inc:234
 msgid ""
 "The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
 "v|-a|-g] is used."
@@ -1303,34 +1325,34 @@ msgid "Login Failed: timestamp out of range"
 msgstr ""
 
 #: ../../lib/class/api.class.php:182 ../../lib/class/api.class.php:195
-#: ../../lib/class/api.class.php:282
+#: ../../lib/class/api.class.php:290
 msgid "Error Invalid Handshake - "
 msgstr ""
 
 #: ../../lib/class/api.class.php:194 ../../lib/class/api.class.php:195
-#: ../../lib/class/api.class.php:282
+#: ../../lib/class/api.class.php:290
 msgid "Invalid Username/Password"
 msgstr ""
 
-#: ../../lib/class/api.class.php:661 ../../lib/class/api.class.php:679
-#: ../../lib/class/api.class.php:697
+#: ../../lib/class/api.class.php:669 ../../lib/class/api.class.php:687
+#: ../../lib/class/api.class.php:705
 msgid "Access denied to this playlist."
 msgstr ""
 
-#: ../../lib/class/api.class.php:815 ../../lib/class/api.class.php:876
+#: ../../lib/class/api.class.php:823 ../../lib/class/api.class.php:884
 #: ../../server/xml.server.php:109
 msgid "Invalid Request"
 msgstr ""
 
-#: ../../lib/class/api.class.php:836 ../../lib/class/api.class.php:854
+#: ../../lib/class/api.class.php:844 ../../lib/class/api.class.php:862
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
-#: ../../lib/class/api.class.php:1069
+#: ../../lib/class/api.class.php:1077
 msgid "Wrong library item type."
 msgstr ""
 
-#: ../../lib/class/api.class.php:1073
+#: ../../lib/class/api.class.php:1081
 msgid "Library item not found."
 msgstr ""
 
@@ -3733,7 +3755,7 @@ msgstr ""
 msgid "Removing song \"%s\""
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:529
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:521
 msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
@@ -8410,7 +8432,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 31.07.2018 01:37:20 CEST
+# Last Update: 26.10.2018 17:35:10 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8440,11 +8462,7 @@ msgstr ""
 msgid "Type of Playback"
 msgstr ""
 
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Language"
-# msgstr ""
-#: Database preference table id 31 32
+#: Database preference table id 32
 msgid "Playlist Type"
 msgstr ""
 
@@ -8488,15 +8506,7 @@ msgstr ""
 msgid "Playlist Method"
 msgstr ""
 
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Transcoding"
-# msgstr ""
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Show Lyrics"
-# msgstr ""
-#: Database preference table id 55 69 72
+#: Database preference table id 72
 msgid "Shoutcast Active Instance"
 msgstr ""
 
@@ -8841,39 +8851,26 @@ msgstr ""
 msgid "Amazon associate tag"
 msgstr ""
 
-#: Database preference table id 150
+#: Database preference subcategory table id 150
 msgid "library"
 msgstr ""
 
-#: Database preference table id 151
+#: Database preference subcategory table id 151
 msgid "upload"
 msgstr ""
 
-#: Database preference table id 152
-#, fuzzy
+#: Database preference subcategory table id 152
 msgid "catalog"
-msgstr "Catalogues"
+msgstr ""
 
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "library"
-# msgstr ""
-#: Database preference table id 153 154
+#: Database preference subcategory table id 154
 msgid "theme"
 msgstr ""
 
-#: Database preference table id 155
+#: Database preference subcategory table id 155
 msgid "custom"
 msgstr ""
 
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "custom"
-# msgstr ""
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "library"
-# msgstr ""
-#: Database preference table id 156 157 164
+#: Database preference subcategory table id 164
 msgid "amazon"
 msgstr ""

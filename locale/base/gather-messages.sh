@@ -176,16 +176,16 @@ generate_pot_utds() {
         while read dbprefid; do
             dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT description FROM preference where id=$dbprefid")
             dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile)
-			if [ -n "$dbprefdesc" ]; then
+			if [ ! -z "$dbprefdesc" ]; then
 				if [ ! "$dbprefdescchk" ]; then
 					echo -e "\n#: Database preference table id $dbprefid" >> $tdstxt
 					echo -e "msgid \"$dbprefdesc\"" >> $tdstxt
 					echo -e "msgstr \"\"" >> $tdstxt
-				else
-					echo -e "\n#: Database preference table id $dbprefid" >> $tdstxt
-					echo -e "# is already in the source code\n# but to avoid confusion, it's added and commented" >> $tdstxt
-					echo -e "# msgid \"$dbprefdesc\"" >> $tdstxt
-					echo -e "# msgstr \"\"" >> $tdstxt
+				# else
+					# echo -e "\n# Database preference table id $dbprefid" >> $tdstxt
+					# echo -e "# is already in the source code\n# but to avoid confusion, it's added and commented" >> $tdstxt
+					# echo -e "# msgid \"$dbprefdesc\"" >> $tdstxt
+					# echo -e "# msgstr \"\"" >> $tdstxt
 				fi
 			fi
         done
@@ -196,16 +196,16 @@ generate_pot_utds() {
         while read dbprefid; do
             dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcatagory FROM preference where id=$dbprefid AND subcatagory IS NOT NULL")
             dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile $tdstxt)
-			if [ -n "$dbprefdesc" ]; then
+			if [ ! -z "$dbprefdesc" ]; then
 				if [ ! "$dbprefdescchk" ]; then
-					echo -e "\n#: Database preference table id $dbprefid" >> $tdstxt
+					echo -e "\n#: Database preference subcategory table id $dbprefid" >> $tdstxt
 					echo -e "msgid \"$dbprefdesc\"" >> $tdstxt
 					echo -e "msgstr \"\"" >> $tdstxt
-				else
-					echo -e "\n#: Database preference table id $dbprefid" >> $tdstxt
-					echo -e "# is already in the source code\n# but to avoid confusion, it's added and commented" >> $tdstxt
-					echo -e "# msgid \"$dbprefdesc\"" >> $tdstxt
-					echo -e "# msgstr \"\"" >> $tdstxt
+				# else
+					# echo -e "\n# Database preference subcategory table id $dbprefid" >> $tdstxt
+					# echo -e "# is already in the source code\n# but to avoid confusion, it's added and commented" >> $tdstxt
+					# echo -e "# msgid \"$dbprefdesc\"" >> $tdstxt
+					# echo -e "# msgstr \"\"" >> $tdstxt
 				fi
 			fi
         done
