@@ -68,7 +68,7 @@ $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
 
-    $catalog = Catalog::create_from_id($row['0']);
+    $catalog = Catalog::create_from_id($row['id']);
     printf(T_('Checking %s (%s)'), $catalog->name, $catalog->path);
     echo "\n";
     charset_directory_correct($catalog->path);
