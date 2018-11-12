@@ -1,5 +1,10 @@
 CHANGELOG
 =========
+
+3.9.1
+----------
+- Fixed various command ine utilities in bin folder.
+
 3.9.0
 ----------
 - Video details now correctly displayed for personal video.
