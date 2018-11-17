@@ -1057,7 +1057,7 @@ class Song extends database_object implements media, library_item
                 //default fields back again, making it impossible to change e.g albumartist
                 //(albumartist will be overridden by custom metadatafield band which is the id3 field for albumartist, look at relations in get_metadata)
                 $meta = $this->get_metadata();
-                $id3 = new vainfo($this->file);
+                $id3  = new vainfo($this->file);
                 $id3->write_id3($meta);
                 Catalog::update_media_from_tags($this);
             }
