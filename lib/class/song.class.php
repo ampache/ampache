@@ -1029,6 +1029,10 @@ class Song extends database_object implements media, library_item
             } // end whitelist
         } // end foreach
 
+        //16.11.2018 without format, metafields like f_album_full wont be updated - contaning old names.
+        //When writing and re-reading tags is enabled, e.g. old albumid will be restored while name equals old name
+        $this->format();
+
         $this->write_id3();
 
         return $this->id;
