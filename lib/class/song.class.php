@@ -1029,6 +1029,7 @@ class Song extends database_object implements media, library_item
             } // end whitelist
         } // end foreach
 
+        $this->format();
         $this->write_id3();
 
         return $this->id;
