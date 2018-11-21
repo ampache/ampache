@@ -1045,13 +1045,13 @@ class Song extends database_object implements media, library_item
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
                 debug_event('song', 'Writing id3 metadata to file ' . $this->file, 5);
-                $meta = $this->get_metadata();
                 if (self::isCustomMetadataEnabled()) {
                     foreach ($this->getMetadata() as $metadata) {
                         $meta[$metadata->getField()->getName()] = $metadata->getData();
                     }
                 }
-                $id3 = new vainfo($this->file);
+                $meta = $this->get_metadata();
+                $id3  = new vainfo($this->file);
                 $id3->write_id3($meta);
                 Catalog::update_media_from_tags($this);
             }
