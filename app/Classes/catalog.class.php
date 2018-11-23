@@ -267,7 +267,7 @@ abstract class Catalog
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        $catTypes = 
+        $catTypes =
             "var type_fields = new Array();\n" .
             "type_fields['none'] = '';";
         $seltypes = '<option value="none">[Select]</option>';

@@ -10,19 +10,18 @@ use PDO;
 use PDOException;
 use Illuminate\Console\ConfirmableTrait;
 
-
 class InstallAmpache extends Command
 {
-   use ConfirmableTrait;
+    use ConfirmableTrait;
    
-   protected $dbh = '';
+    protected $dbh = '';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-     protected $signature = 'ampache:install';
+    protected $signature = 'ampache:install';
 
     /**
      * The console command description.
@@ -48,7 +47,7 @@ class InstallAmpache extends Command
      */
     public function handle()
     {
-         //SET [GLOBAL|SESSION] sql_mode='NO_AUTO_VALUE_ON_ZERO'
+        //SET [GLOBAL|SESSION] sql_mode='NO_AUTO_VALUE_ON_ZERO'
         //ALTER TABLE users AUTO_INCREMENT = 0;
         $exampleFile = base_path('.env.example');
         $envfile     = base_path('.env');
@@ -61,7 +60,7 @@ class InstallAmpache extends Command
         //create new app key.
         $this->callSilent('key:generate');
         $connectionOk = false;
-        While ($connectionOk == false) {
+        while ($connectionOk == false) {
             $dbname = $this->ask('Please enter the mysql database name:', env('DB_DATABASE', 'ampache'));
             config(['database.connections.mysql.database' => $dbname]);
             $this->setKeyInEnvironmentFile([env('DB_DATABASE'), 'DB_DATABASE', $dbname]);
@@ -79,7 +78,7 @@ class InstallAmpache extends Command
                 $pass  = $this->secret('Please enter the password associated with this user');
                 $pass1 = $this->secret('Please confirm password: ');
                 if ($pass != $pass1) {
-                $this->error("The passwords don't match. Please enter again.");
+                    $this->error("The passwords don't match. Please enter again.");
                 }
             } while ($pass != $pass1);
             config(['database.connections.mysql.password' => $pass]);
@@ -87,22 +86,21 @@ class InstallAmpache extends Command
             //test connection.
             $dsn = 'mysql:host=' . $host;
             try {
-                $this->dbh = new \PDO($dsn, $user, $pass);
+                $this->dbh    = new \PDO($dsn, $user, $pass);
                 $connectionOk = true;
             } catch (\PDOException $e) {
                 $this->error("There is an error in hostname, username or password. Please enter again.");
             }
         }
         //Check for existing database
-        while ($this->schemaExists($dbname))
-         {
+        while ($this->schemaExists($dbname)) {
             $response = $this->ask('Database ' . $dbname . ' exists. Do you want to overwrite?', 'y/N');
-            if (substr($response, 0,1) === 'y') {
+            if (substr($response, 0, 1) === 'y') {
                 $this->dropDatabase($dbname);
                 break;
-             } else {
+            } else {
                 $dbname = $this->ask('Please enter the mysql database name:', env('DB_DATABASE', 'ampache'));
-            }  
+            }
         }
         $this->createSchema($dbname);
         
@@ -128,7 +126,7 @@ class InstallAmpache extends Command
         $this->comment("\nFinished initializing Ampache.");
     }
 
-   protected function setKeyInEnvironmentFile($key)
+    protected function setKeyInEnvironmentFile($key)
     {
         $currentKey = $key[0];
         if (strlen($currentKey) !== 0 && (! $this->confirmToProceed())) {
@@ -142,7 +140,7 @@ class InstallAmpache extends Command
     
     protected function writeNewEnvironmentFileWith($key)
     {
-        $infile = file_get_contents($this->laravel->environmentFilePath());
+        $infile  = file_get_contents($this->laravel->environmentFilePath());
         $pattern = $this->keyReplacementPattern($key);
         file_put_contents($this->laravel->environmentFilePath(), preg_replace(
             $pattern,
@@ -154,6 +152,7 @@ class InstallAmpache extends Command
     protected function dropDatabase($dbname)
     {
         $query = "DROP DATABASE " . $dbname;
+
         return DB::statement($query);
     }
     
@@ -167,9 +166,10 @@ class InstallAmpache extends Command
     protected function schemaExists($dbName)
     {
         try {
-           $query =  "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '$dbName'";
-           $result = $this->dbh->query($query);
-           return $result->rowCount() >0 ? true : false;
+            $query  =  "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '$dbName'";
+            $result = $this->dbh->query($query);
+
+            return $result->rowCount() > 0 ? true : false;
         } catch (PDOException $e) {
             $this->error("There was an error accessing the information table!");
             exit;
@@ -179,15 +179,13 @@ class InstallAmpache extends Command
     protected function createSchema($dbName)
     {
         try {
-            $charset = config(['database.connections.mysql.charset']);
+            $charset   = config(['database.connections.mysql.charset']);
             $collation = config(['database.connections.mysql.collation']);
-            $query = "CREATE DATABASE ampache CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';";
-            $result = $this->dbh->query($query);
-            
+            $query     = "CREATE DATABASE ampache CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';";
+            $result    = $this->dbh->query($query);
         } catch (\PDOException $e) {
             $this->error("There was an error creating new database");
             exit;
         }
     }
-
 }

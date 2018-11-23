@@ -19,11 +19,11 @@ use App\Models\User;
     Auth::routes(['verify' => true]);
 
  Route::get('/', function () {
-    if (!Auth::check()) {
-        Auth::loginUsingId(0, true);
-    }
-    return view('home');
-    
+     if (!Auth::check()) {
+         Auth::loginUsingId(0, true);
+     }
+
+     return view('home');
  });
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -70,4 +70,3 @@ Route::resource('/preference/{preference}/edit', 'PreferenceController');
 
 //Route::resource('preference/{id}', 'PreferenceController');
 Route::resource('preference', 'PreferenceController');
-

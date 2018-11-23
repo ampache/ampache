@@ -21,6 +21,7 @@
  */
 
 namespace App\Classes;
+
 /**
  * TempPlaylist Class
  *

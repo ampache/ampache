@@ -20,6 +20,7 @@
  *
  */
 namespace App\Classes;
+
 /**
  * Userflag class
  *

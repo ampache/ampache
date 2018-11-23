@@ -22,7 +22,7 @@ class ModulesController extends Controller
     
     public function show_Catalogs()
     {
-        $modules       = array();
+        $modules              = array();
         $module_type          = 'Catalog modules';
         
         $catalog_types = $this->get_module_types('catalog');
@@ -54,12 +54,11 @@ class ModulesController extends Controller
     {
         $plugins      = array();
         $title        = "Plugin";
-        $module_type = 'Plugin';
+        $module_type  = 'Plugin';
         $plugin_types = PluginService::get_plugins();
         foreach ($plugin_types as $type) {
             $class_name = '\\Modules\\Plugin\\' . 'Ampache' . $type ;
             $plugins[]  = new $class_name();
-            
         }
       
         return view('modules.index', ['modules' => $plugins, 'title' => $title, 'type' => $module_type]);
@@ -69,8 +68,7 @@ class ModulesController extends Controller
     public function action($type, $action, request $request)
     {
         $module = $request->module;
-        switch ($module)
-        {
+        switch ($module) {
             case "Catalog":
                 $module  = 'Catalog_' . $type;
                 if (Schema::hasTable(lcfirst($module))) {
@@ -85,7 +83,7 @@ class ModulesController extends Controller
                 break;
             case "Plugin":
                 $plugin = new PluginService();
-                $plugin->_get_info($type); 
+                $plugin->_get_info($type);
                 if ($action == 'Enable') {
                     $plugin->install();
                 } else {
@@ -121,7 +119,7 @@ class ModulesController extends Controller
 
             return array();
         }
-    $results = array();
+        $results = array();
         while (false !== ($file = readdir($handle))) {
             if ($file === '.' || $file === '..') {
                 continue;

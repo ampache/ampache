@@ -38,6 +38,7 @@ class LogLastUserActivity
             setcookie("sidebar_state", 'expanded');
             $_COOKIE['sidebar_state'] = 'expanded';
         }
+
         return $next($request);
     }
 }

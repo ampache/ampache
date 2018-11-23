@@ -304,7 +304,7 @@ class PreferenceService
 
     public function get_all($user_id)
     {
-        $results = arraay();
+        $results    = arraay();
         $user_limit = "";
         if ($user_id != '0') {
             $user_limit = "`preferences`.`category` != 'system'";
@@ -359,7 +359,7 @@ class PreferenceService
     public static function delete($preference)
     {
         // First prepare
-        DB::table('preferences')->where('name', '=', $preference)->orWhere('id', '=', $preference)->delete();       
+        DB::table('preferences')->where('name', '=', $preference)->orWhere('id', '=', $preference)->delete();
         self::clean_preferences();
     } // delete
     
@@ -378,9 +378,9 @@ class PreferenceService
      * Return a preference for specific user identifier
      */
     public static function get_by_user($user_id, $pref_name)
-    {   
-        $pdo = DB::connection()->getPdo();
-        $user_id = $pdo::quote($user_id);
+    {
+        $pdo       = DB::connection()->getPdo();
+        $user_id   = $pdo::quote($user_id);
         $pref_name = $pdo::quote($pref_name);
         
         //debug_event('preference.class.php', 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', '5');
@@ -392,11 +392,12 @@ class PreferenceService
         
         $db_results = DB::table('user_preferences')->select('value')
         ->where([['preference', '=', $id],['user', '=',  $user_id]])
-        ->orWhere([['preference', '=', $id],['user', '=', '-1']] )->get();
+        ->orWhere([['preference', '=', $id],['user', '=', '-1']])->get();
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='$user_id'";
 
-        foreach ($db_results as $result)
-        $value = $result->value;
+        foreach ($db_results as $result) {
+            $value = $result->value;
+        }
         
         parent::add_to_cache('get_by_user', $user_id, $value);
         
@@ -430,8 +431,8 @@ class PreferenceService
         if ($applytodefault and Access::check('interface', '100')) {
             DB::table('preferences')->where('id', '=', $id)->update(['value' => $value]);
         }
-        $pdo = DB::connection()->getPdo();
-        $value = $pdo::quote($value);        
+        $pdo   = DB::connection()->getPdo();
+        $value = $pdo::quote($value);
                 
         if (self::has_access($name)) {
             $user_id = $pdo::quote($user_id);
@@ -461,9 +462,9 @@ class PreferenceService
         } else {
             $preference_id = $preference;
         }
-        $pdo = DB::connection()->getPdo();
+        $pdo           = DB::connection()->getPdo();
         $preference_id = $pdo::quote($preference_id);
-        $$level = $pdo::quote($level);
+        $$level        = $pdo::quote($level);
         DB::table('preferences')->where('id', '=', $preference_id)->update('level', '=', $level);
         
         return true;
@@ -475,9 +476,9 @@ class PreferenceService
      */
     public static function update_all($preference_id, $value)
     {
-        $pdo = DB::connection()->getPdo();
+        $pdo           = DB::connection()->getPdo();
         $preference_id = $pdo::quote($preference_id);
-        $value = $pdo::quote($value);
+        $value         = $pdo::quote($value);
         DB::table('user_preferences')->where('preference', '=', $preference_id)->update('value', '=', $value);
         
         parent::clear_cache();
@@ -492,9 +493,9 @@ class PreferenceService
     public static function exists($preference)
     {
         // We assume it's the name
-        $pdo = DB::connection()->getPdo();
+        $pdo        = DB::connection()->getPdo();
         $name       = $pdo::quote($preference);
-        $count = DB::table('preferences')->withCount()->where('name', '=', $name)->get();
+        $count      = DB::table('preferences')->withCount()->where('name', '=', $name)->get();
          
         return $count;
     } // exists
@@ -505,13 +506,13 @@ class PreferenceService
      */
     public static function id_from_name($name)
     {
-        $pdo = DB::connection()->getPdo();
+        $pdo        = DB::connection()->getPdo();
         $name       = $pdo::quote($name);
         
         if (parent::is_cached('id_from_name', $name)) {
             return parent::get_from_cache('id_from_name', $name);
         }
-        $result = DB::table('preferences')->select('id')->where('name', '=', $name)->first();        
+        $result = DB::table('preferences')->select('id')->where('name', '=', $name)->first();
         parent::add_to_cache('id_from_name', $name, $result->id);
         
         return $result->id;
@@ -524,7 +525,7 @@ class PreferenceService
      */
     public static function name_from_id($id)
     {
-        $pdo = DB::connection()->getPdo();
+        $pdo      = DB::connection()->getPdo();
         $id       = $pdo::quote($id);
         $result   = DB::table('preferences')->select('name')->where('id', '=', $id)->first();
                
@@ -563,7 +564,6 @@ class PreferenceService
     {
         if ($subcetagory !== null) {
             $subcategory = strtolower($subcategory);
-            
         }
         
         $id = DB::table('preferences')->insertGetId(['name' => $name, 'description' => $description, 'level' => $level,
@@ -647,5 +647,4 @@ class PreferenceService
         
         return false;
     } // load_from_session
-    
 }

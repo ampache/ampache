@@ -197,8 +197,10 @@ class Access
 
         $sql = 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' .
             '`user` = ?, `name` = ?, `type` = ?, `enabled` = ? WHERE `id` = ?';
-        Dba::write($sql,
-            array($start, $end, $level, $user, $name, $type, $enabled, $this->id));
+        Dba::write(
+            $sql,
+            array($start, $end, $level, $user, $name, $type, $enabled, $this->id)
+        );
 
         return true;
     }
@@ -340,8 +342,10 @@ class Access
                     $user = User::get_from_apikey($apikey);
                     $user = $user->id;
                 }
+                // no break
             case 'api':
                 $type = 'rpc';
+                // no break
             case 'network':
             case 'interface':
             case 'stream':

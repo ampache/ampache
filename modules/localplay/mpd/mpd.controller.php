@@ -132,7 +132,7 @@ class AmpacheMpd extends localplay_controller
     public function uninstall()
     {
 //        $preference = Preference::where('name', 'mpd_active')->get();
-          ;
+        ;
         Schema::drop('localplay_mpd');
  
         return true;
@@ -240,7 +240,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields = array();
+        $fields                = array();
         $fields['name']        = array('description' => T_('Instance Name'),'type' => 'textbox');
         $fields['host']        = array('description' => T_('Hostname'),'type' => 'textbox');
         $fields['port']        = array('description' => T_('Port'),'type' => 'textbox');
@@ -458,7 +458,7 @@ class AmpacheMpd extends localplay_controller
 
         /* Get the Current Playlist */
         $playlist = $this->_mpd->playlist;
-        $results = array();
+        $results  = array();
 
         foreach ($playlist as $entry) {
             $data = array();

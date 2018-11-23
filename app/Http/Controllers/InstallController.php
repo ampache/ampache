@@ -14,21 +14,20 @@ class InstallController extends Controller
     protected $request;
     protected $database;
     
-    public function install () {
-        
+    public function install()
+    {
     }
     
     public function selectLanguage()
     {
         $languages = array_keys(config('languages'));
-        
     }
     
     public function setLanguage(Request $request)
     {
         $this->writeConfig('locale', 'app', $language);
         
-        //return redirect('install.check');        
+        //return redirect('install.check');
 //        return response()->view('/install/system_check'>cookie('install_phase', 'requirements', 0));
     }
     

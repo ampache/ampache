@@ -34,7 +34,6 @@ use Illuminate\Support\Facades\Schema;
 use App\Classes\Song;
 use App\Classes\Democratic;
 
-
 /**
  * AmpacheVlc Class
  *
@@ -72,7 +71,7 @@ class AmpacheVlc extends localplay_controller
         return $this->description;
     } // get_description
 
-   public function get_type()
+    public function get_type()
     {
         return $this->type;
     } // get_type
@@ -94,7 +93,6 @@ class AmpacheVlc extends localplay_controller
     public function is_installed()
     {
         return Schema::hasTable('localplay_vlc');
-
     } // is_installed
 
     /**
@@ -118,16 +116,15 @@ class AmpacheVlc extends localplay_controller
         });
             
         // Add an internal preference for the users current active instance
-            $id = DB::table('preferences')
+        $id = DB::table('preferences')
             ->insertGetId(['name' => 'mpd_active', 'value' => '0',
                 'description' => 'MPD Active Instance', 'level' => '25', 'type' => 'integer', 'catagory' => 'internal', 'subcategory' => 'mpd']);
             
-            $preference = Preference::findOrFail($id);
-            $roles      = array(1,2,3,4);
-            $preference->roles()->sync($roles);
+        $preference = Preference::findOrFail($id);
+        $roles      = array(1,2,3,4);
+        $preference->roles()->sync($roles);
             
-            return true;
- 
+        return true;
     } // install
 
     /**
@@ -141,7 +138,6 @@ class AmpacheVlc extends localplay_controller
         Schema::drop('localplay_vlc');
         
         return true;
-        
     } // uninstall
 
     /**
@@ -169,7 +165,6 @@ class AmpacheVlc extends localplay_controller
         $user_id = $pdo->quote(Auth::id());
         DB::table('localplay_mpd')->insert(['name' => $name, 'host' => $host, 'port' => $port,
             'password' => $password, 'owner' => $user_id]);
- 
     } // add_instance
 
     /**
@@ -185,7 +180,6 @@ class AmpacheVlc extends localplay_controller
         DB::table('localplay_vlc')->where('id', '=', $uid)->delete();
         
         return true;
-        
     } // delete_instance
 
     /**
@@ -203,7 +197,6 @@ class AmpacheVlc extends localplay_controller
         }
         
         return $results;
-        
     } // get_instances
 
     /**
@@ -212,10 +205,9 @@ class AmpacheVlc extends localplay_controller
      */
     public function update_instance($uid, $data)
     {
-       return DB::table('localplay_vlc')->where('id', '=', $uid)
+        return DB::table('localplay_vlc')->where('id', '=', $uid)
         ->update(['host' => $data['host'], 'port' => $data['port'],
          'name' => $data['name'], 'password' => $data['password']]);
-    
     } // update_instance
 
     /**
@@ -225,7 +217,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields = array();
+        $fields                 = array();
         $fields['name']         = array('description' => T_('Instance Name'),'type' => 'textbox');
         $fields['host']         = array('description' => T_('Hostname'),'type' => 'textbox');
         $fields['port']         = array('description' => T_('Port'),'type' => 'textbox');
@@ -240,10 +232,10 @@ class AmpacheVlc extends localplay_controller
     */
     public function get_instance($instance='')
     {
-        $instance = $instance ? $instance : AmpConfig::get('vlc_active');
+        $instance   = $instance ? $instance : AmpConfig::get('vlc_active');
         $db_results = DB::table('localplay_vlc')->where('id', '=', array($instance));
+
         return $db_results->all();
-        
     } // get_instance
 
     /**
@@ -480,7 +472,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function get()
     {
-        $songs = array();
+        $songs  = array();
         $songid = array();
         /* Get the Current Playlist */
         $list = $this->_vlc->get_tracks();
@@ -518,7 +510,7 @@ class AmpacheVlc extends localplay_controller
         $counterforarray = 0;
 
         foreach ($songs as $key => $entry) {
-            $data = array();
+            $data    = array();
             $results = array();
 
             /* Required Elements */
@@ -583,7 +575,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function status()
     {
-        $array = array();
+        $array       = array();
         $arrayholder = $this->_vlc->fullstate();    //get status.xml via parser xmltoarray
         /* Construct the Array */
         $currentstat = $arrayholder['root']['state']['value'];

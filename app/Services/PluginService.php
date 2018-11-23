@@ -268,17 +268,16 @@ class PluginService
      */
     public static function get_plugin_version($plugin_name)
     {
-        $db_results = \App\Models\Update_Info::where('key', '=', $plugin_name )->get();
+        $db_results = \App\Models\Update_Info::where('key', '=', $plugin_name)->get();
         
-            foreach ($db_results as $result) {
-                return $result->value;
-            }
+        foreach ($db_results as $result) {
+            return $result->value;
+        }
             
         return false;
         
 //         $db_results = DB::table('update_info')->where('key', $name)->get();
         return $value;
-
     } // get_plugin_version
 
     /**
@@ -304,6 +303,5 @@ class PluginService
         $db->where('key', '=', $this->name)->delete();
         
         return true;
-    
     } // remove_plugin_version
 } //end plugin class

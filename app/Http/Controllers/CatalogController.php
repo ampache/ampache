@@ -85,7 +85,7 @@ class CatalogController extends Controller
         if ($catalog_id) {
             $catalogs[] = $catalog_id;
             
- //           Catalog::catalog_worker('add_to_catalog', $catalogs, $_POST);
+        //           Catalog::catalog_worker('add_to_catalog', $catalogs, $_POST);
         } else {
             Log::error('Error: Defined Path is inside an existing catalog');
 

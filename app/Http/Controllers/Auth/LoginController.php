@@ -62,8 +62,9 @@ class LoginController extends Controller
     {
         setcookie("sidebar_tab", "", time() - 3600);
         $id  = auth::id();
- //        Session::flush();
-         Auth::logout();        
+        //        Session::flush();
+        Auth::logout();
+
         return view('auth.login');
         //return redirect('/login');
     }

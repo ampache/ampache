@@ -44,7 +44,7 @@ class LocalplayService
      * file for the specified type and attempts to load in the function
      * map, the preferences and the template
      */
-    function __construct($type = null)
+    public function __construct($type = null)
     {
         if ($type != null) {
             $this->type = $type;
@@ -169,7 +169,7 @@ class LocalplayService
             }
             /* Make sure it is a dir */
             if (! is_dir($basedir . '/' . $file)) {
-                Log::error('Localplay: '. $file . ' is not a directory.');
+                Log::error('Localplay: ' . $file . ' is not a directory.');
                 continue;
             }
             
@@ -260,7 +260,6 @@ class LocalplayService
     public function play()
     {
         if (!$this->_player->play()) {
-            
             Log::error('Localplay Error: Unable to start playback, check ' . $this->type . ' controller');
 
             return false;

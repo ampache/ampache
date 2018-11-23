@@ -108,7 +108,7 @@ class RegisterController extends Controller
             return back()
              ->with('status', 'Are you sure you are human? Please try the Captcha again');
         }
-        $user = $this->create($request->all());
+        $user      = $this->create($request->all());
         $userCount = DB::table("users")->count();
         if ($userCount > 2) {
             try {
@@ -143,7 +143,7 @@ class RegisterController extends Controller
      //     * @return App\Models\User
      */
     protected function create(array $data)
-    {        
+    {
         $req_fields = config('user.registration_mandatory_fields');
         if ($req_fields) {
             foreach ($req_fields as $field) {
