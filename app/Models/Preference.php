@@ -3,16 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
 
 class Preference extends Model
 {
+    use HasRoles;
+    
     protected $table   = 'preferences';
     public $timestamps = false;
-    protected $fillable = ['preference_id', 'role_id'];
     
-    public function roles()
+    public function getValueAttribute($value)
     {
-        return $this->belongsToMany(Role::class, 'role_preferences');
+        if ($value === 'true') {
+            return true;
+        }
+        
+        if ($value === 'false') {
+            return 'false';
+        }
+
+        return $value;
     }
-    
 }

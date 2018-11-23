@@ -20,6 +20,8 @@
  *
  */
 
+namespace Modules\Localplay;
+
 /**
  * VlcPlayer Class
  *

@@ -27,14 +27,13 @@ class CreateAlbumsTable extends Migration
             $table->string('release_type', 32)
                   ->nullable();
             $table->timestamps();
-            $table->integer('album_artist_id')
-                  ->unsigned()
+            $table->unsignedInteger('album_artist_id')
                   ->nullable();
             $table->foreign('album_artist_id')
                   ->references('id')
                   ->on('artists')
-                  ->onDelete('set null');
-            $table->engine = 'MYISAM';
+                  ->onDelete('cascade');
+            $table->engine = 'InnoDB';
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
         });

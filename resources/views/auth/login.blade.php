@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+
+{{-- /resources/views/auth/login.blade.php --}}
+
 <div class="w3-display-container w3-black w3-section" style="height:400px;">
 <div class="w3-padding w3-display-middle">
 @if (session('status'))
@@ -16,7 +19,7 @@
 </div>
 
   <form id="login-form" method="POST" action="{{ route('login') }}">
-         {{ csrf_field() }}
+         @csrf
     <table class="w3-table w3-small">
         <tr>
             <td>

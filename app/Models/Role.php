@@ -12,13 +12,24 @@ class Role extends Model
     protected $casts = [
         'permissions' => 'array',
     ];
-
+    
+    public $timestamps = false;
+    
     public function users()
     {
-        return $this->belongsToMany(User::class, 'role_users');
+        return $this->belongsToMany(User::class, 'user_has_roles');
     }
 
-   
+    public function preferences()
+    {
+        return $this->belongsToMany(Preference::class, 'preference_has_roles');
+    }
+    
+    public function access_list()
+    {
+        return $this->belongsToMany(Access_List::class, 'acl_has_roles');
+    }
+    
     public function hasAccess(array $permissions)
     {
         foreach ($permissions as $permission) {

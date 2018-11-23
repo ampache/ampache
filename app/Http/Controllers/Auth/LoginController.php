@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use App\Services\UserPreferences;
 
 class LoginController extends Controller
@@ -57,40 +58,13 @@ class LoginController extends Controller
         }
     }
     
-    /*
-        public function login(Request $request)
-        {
-            $this->validateLogin($request);
-
-            if ($this->hasTooManyLoginAttempts($request)) {
-                $this->fireLockoutEvent($request);
-
-                return $this->sendLockoutResponse($request);
-            }
-
-            if ($this->attemptLogin($request)) {
-                UserPreferences::get_all(auth::id());
-                return $this->sendLoginResponse($request);
-            }
-
-            // If the login attempt was unsuccessful we will increment the number of attempts
-            // to login and redirect the user back to the login form. Of course, when this
-            // user surpasses their maximum number of attempts they will get locked out.
-            $this->incrementLoginAttempts($request);
-
-            return back()
-            ->with('status', 'Username or password is incorrect.');
-
-            //   return $this->sendFailedLoginResponse($request);
-        }
-     */
     public function logout(Request $request)
     {
         setcookie("sidebar_tab", "", time() - 3600);
-        $this->guard()->logout();
-        
-        $request->session()->invalidate();
-        
-        return redirect('/');
+        $id  = auth::id();
+ //        Session::flush();
+         Auth::logout();        
+        return view('auth.login');
+        //return redirect('/login');
     }
 }

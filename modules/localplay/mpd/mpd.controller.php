@@ -20,6 +20,18 @@
  *
  */
 
+namespace Modules\Localplay;
+
+use App\Classes\Localplay_Controller;
+use App\Classes\Stream_URL;
+use App\Facades\AmpConfig;
+use Modules\Localplay\MPD;
+use App\Models\Preference;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
+
 /**
  * AmpacheMpd Class
  *
@@ -32,6 +44,7 @@ class AmpacheMpd extends localplay_controller
     /* Variables */
     private $version        = '000003';
     private $description    = 'Controls an instance of MPD';
+    private $type           = 'mpd';
 
     private $_add_count = 0;
 
@@ -46,7 +59,6 @@ class AmpacheMpd extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        require_once AmpConfig::get('prefix') . '/modules/localplay/mpd/mpd.class.php';
     } // AmpacheMpd
 
     /**
@@ -66,6 +78,12 @@ class AmpacheMpd extends localplay_controller
     {
         return $this->version;
     } // get_version
+    
+    public function get_type()
+    {
+        return $this->type;
+    } // get_type
+    
 
     /**
      * is_installed
@@ -73,10 +91,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function is_installed()
     {
-        $sql        = "SHOW TABLES LIKE 'localplay_mpd'";
-        $db_results = Dba::read($sql);
-
-        return (Dba::num_rows($db_results) > 0);
+        return Schema::hasTable('localplay_mpd');
     } // is_installed
 
     /**
@@ -85,20 +100,28 @@ class AmpacheMpd extends localplay_controller
      */
     public function install()
     {
-        /* We need to create the MPD table */
-        $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                "`owner` INT( 11 ) NOT NULL , " .
-                "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
-                "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-                ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::write($sql);
-
+        if (Schema::hasTable('localplay_mpd')) {
+            return true;
+        }
+        Schema::create('localplay_mpd', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 128);
+            $table->integer('owner');
+            $table->string('host', 128);
+            $table->integer('port')->default('6600');
+            $table->string('password', 255);
+            $table->unsignedSmallInteger('access')->default('0');
+            
+            $table->engine = 'MYISAM';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
+        });
+            
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active', 'MPD Active Instance', '0', '25', 'integer', 'internal', 'mpd');
-
+        $id = DB::table('preferences')
+        ->insertGetId(['name' => 'mpd_active', 'value' => '0',
+                'description' => 'MPD Active Instance', 'level' => '25', 'type' => 'integer', 'category' => 'internal', 'subcategory' => 'mpd']);
+        
         return true;
     } // install
 
@@ -108,11 +131,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function uninstall()
     {
-        $sql        = "DROP TABLE `localplay_mpd`";
-        $db_results = Dba::write($sql);
-
-        Preference::delete('mpd_active');
-
+//        $preference = Preference::where('name', 'mpd_active')->get();
+          ;
+        Schema::drop('localplay_mpd');
+ 
         return true;
     } // uninstall
 
@@ -122,13 +144,15 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_instance($data)
     {
+        $pdo = DB::connection()->getPdo();
+        
         foreach ($data as $key => $value) {
             switch ($key) {
                 case 'name':
                 case 'host':
                 case 'port':
                 case 'password':
-                    ${$key} = Dba::escape($value);
+                    ${$key} = $pdo->quote($value);
                 break;
                 default:
 
@@ -136,13 +160,9 @@ class AmpacheMpd extends localplay_controller
             } // end switch
         } // end foreach
 
-        $user_id = Dba::escape($GLOBALS['user']->id);
-
-        $sql = "INSERT INTO `localplay_mpd` (`name`,`host`,`port`,`password`,`owner`) " .
-            "VALUES ('$name','$host','$port','$password','$user_id')";
-        $db_results = Dba::write($sql);
-
-        return $db_results;
+        $user_id = $pdo->quote(Auth::id());
+        DB::table('localplay_mpd')->insert(['name' => $name, 'host' => $host, 'port' => $port,
+            'password' => $password, 'owner' => $user_id]);
     } // add_instance
 
     /**
@@ -151,11 +171,12 @@ class AmpacheMpd extends localplay_controller
      */
     public function delete_instance($uid)
     {
-        $uid = Dba::escape($uid);
+        $pdo = DB::connection()->getPdo();
+        
+        $uid = $pdo::quote($uid);
 
         // Go ahead and delete this mofo!
-        $sql        = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        DB::table('localplay_mpd')->where('id', '=', $uid)->delete();
 
         return true;
     } // delete_instance
@@ -167,13 +188,11 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instances()
     {
-        $sql        = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
-        $db_results = Dba::read($sql);
-
-        $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = $row['name'];
+        $instances = DB::table('localplay_mpd')->orderBy('name')->get();
+        $results   = array();
+        
+        foreach ($instances as $instance) {
+            $results[$instance->id] = $instance->name;
         }
 
         return $results;
@@ -186,15 +205,12 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instance($instance='')
     {
+        $pdo = DB::connection()->getPdo();
+        
         $instance = $instance ? $instance : AmpConfig::get('mpd_active');
-        $instance = Dba::escape($instance);
+        $instance = $pdo->quote($instance);
 
-        $sql        = "SELECT * FROM `localplay_mpd` WHERE `id`='$instance'";
-        $db_results = Dba::read($sql);
-
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row;
+        return DB::table('localplay_mpd')->where('id', $instance)->get();
     } // get_instance
 
     /**
@@ -203,14 +219,16 @@ class AmpacheMpd extends localplay_controller
      */
     public function update_instance($uid, $data)
     {
-        $uid     = Dba::escape($uid);
-        $host    = $data['host'] ? Dba::escape($data['host']) : '127.0.0.1';
-        $port    = $data['port'] ? Dba::escape($data['port']) : '6600';
-        $name    = Dba::escape($data['name']);
-        $pass    = Dba::escape($data['password']);
+        $pdo = DB::connection()->getPdo();
+        
+        $uid     = $pdo->quote($uid);
+        $host    = $data['host'] ? $pdo->quote($data['host']) : '127.0.0.1';
+        $port    = $data['port'] ? $pdo->quote($data['port']) : '6600';
+        $name    = $pdo->quote($data['name']);
+        $pass    = $pdo->quote($data['password']);
 
-        $sql        = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        DB::table('localplay_mpd')->where('$id', $uid)->update(['host' => $host, 'port' => $port,
+            'name' => $name, 'password' => $pass]);
 
         return true;
     } // update_instance
@@ -222,6 +240,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function instance_fields()
     {
+        $fields = array();
         $fields['name']        = array('description' => T_('Instance Name'),'type' => 'textbox');
         $fields['host']        = array('description' => T_('Hostname'),'type' => 'textbox');
         $fields['port']        = array('description' => T_('Port'),'type' => 'textbox');
@@ -237,12 +256,14 @@ class AmpacheMpd extends localplay_controller
     public function set_active_instance($uid, $user_id='')
     {
         // Not an admin? bubkiss!
-        if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+        if (Auth::user()->hasRole('Administrator')) {
+            $user_id = Auth::id;
         }
 
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
-
+        DB::table('preferences')->where('$name', 'mpd_active')->update(['host' => $host, 'port' => $port,
+            'name' => $name, 'password' => $pass]);
+        
         Preference::update('mpd_active', $user_id, intval($uid));
         AmpConfig::set('mpd_active', intval($uid), true);
 
@@ -437,6 +458,7 @@ class AmpacheMpd extends localplay_controller
 
         /* Get the Current Playlist */
         $playlist = $this->_mpd->playlist;
+        $results = array();
 
         foreach ($playlist as $entry) {
             $data = array();
@@ -467,12 +489,16 @@ class AmpacheMpd extends localplay_controller
                 default:
 
                     /* If we don't know it, look up by filename */
-                    $filename = Dba::escape($entry['file']);
+                    $pdo = DB::connection()->getPdo();
+                    
+                    $filename     = $pdo->quote($entry['file']);
+                    DB::table('songs')->where('file', 'like', '%$filename')
+                        ->unionAll("SELECT `id`,'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ");
+                    
                     $sql      = "SELECT `id`,'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " .
                         "UNION ALL " .
                         "SELECT `id`,'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
-
-                    $db_results = Dba::read($sql);
+/*
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $media = new $row['type']($row['id']);
                         $media->format();
@@ -494,7 +520,7 @@ class AmpacheMpd extends localplay_controller
                         $data['name']   = T_('Unknown');
                         $data['link']   = '';
                     }
-
+*/
                 break;
             } // end switch on primary key type
 
@@ -515,6 +541,7 @@ class AmpacheMpd extends localplay_controller
     public function status()
     {
         $track = $this->_mpd->status['song'];
+        $array = array();
 
         /* Construct the Array */
         $array['state']     = $this->_mpd->status['state'];

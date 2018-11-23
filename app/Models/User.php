@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use Notifiable;
-    use HasRoles;
-    protected $guard_name = 'web';
+    use Notifiable, HasRoles, MustVerifyEmail;
  
     /**
      * The attributes that are mass assignable.
@@ -22,8 +21,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-       'id', 'username', 'fullname', 'email', 'password', 'email_token', 'website', 'state','city', 'zip',
-        'subsonic_password', ];
+       'id', 'username', 'fullname', 'email', 'password', 'website', 'state','city', 'zip',
+        'subsonic_password', 'created_at'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -55,7 +54,9 @@ class User extends Authenticatable
     
     public function setSubsonicPasswordAttribute($value)
     {
-        $this->attributes['subsonic_password'] = encrypt($value);
+        if (!is_null($value)) {
+            $this->attributes['subsonic_password'] = encrypt($value);
+        }
     }
     
     public function getAvatarAttribute($imageData)

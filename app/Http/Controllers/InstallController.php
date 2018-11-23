@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Preference;
 use App\Models\User;
 
@@ -13,18 +14,22 @@ class InstallController extends Controller
     protected $request;
     protected $database;
     
+    public function install () {
+        
+    }
+    
     public function selectLanguage()
     {
         $languages = array_keys(config('languages'));
         
-        return view('install.language', compact('languages'));
     }
     
-    public function setLanguage($language)
+    public function setLanguage(Request $request)
     {
         $this->writeConfig('locale', 'app', $language);
-        //return redirect('install.check');
-        return redirect('/install/system_check');
+        
+        //return redirect('install.check');        
+//        return response()->view('/install/system_check'>cookie('install_phase', 'requirements', 0));
     }
     
     public function create_db(Request $request)
@@ -169,6 +174,9 @@ class InstallController extends Controller
         }
        
         //Test for existing database and create if not existing.
+        
+        $result = Schema::hasTable('mytable');
+        
         $sql = "CREATE DATABASE `$database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
         $conn->query($sql);
         $t = $conn->errorInfo();

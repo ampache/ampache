@@ -1,0 +1,7 @@
+require('echo');
+import Echo from "laravel-echo";
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: SuEUGtsJUHqKeiaWwXWDcGSfV_BE69uevr0QPzUeZXk
+});

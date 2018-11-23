@@ -6,13 +6,14 @@ use App\Models\User_Preference;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\AccessService;
-use App\Services\UserPreferences;
+use App\Services\PreferenceService;
 
 class User_PreferenceController extends Controller
 {
     protected $preferences;
+  
     
-    public function __construct(AccessService $access, UserPreferences $preferences)
+    public function __construct()
     {
 //        $this->Access = $access;
         $this->preferences  = $preferences;

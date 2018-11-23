@@ -39,7 +39,7 @@
     	</td>
     	<td class="w3-small w3-left" style="width: 11.5%;">
     	{{ $user->username }}({{ $user->fullname }})</td>
-    	<td class="w3-small w3-left" style="width: 11.4%;">{!! $user->last_seen !!}</td>
+    	<td class="w3-small w3-left" style="width: 11.4%;">{!! cache('last-activity-' . $user->id) !!}</td>
    	    <td class="w3-small w3-left" style="width: 11.4%;">{!! $user->created_at !!}</td>
     	<td class="w3-small w3-left" style="width: 11.4%;">{{ "N/A" }}</td>
     	<td class="w3-small w3-left" style="width: 11.4%;">{{ "N/A" }}</td>

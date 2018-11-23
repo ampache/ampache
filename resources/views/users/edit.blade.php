@@ -10,7 +10,7 @@
  <div class="w3-display-container w3-black" style="height:600px;">
  <div class="w3-display-middle">
 
-    <h1><i class='fa fa-user-plus'></i> Edit {{$user->username}}</h1>
+    <h1><i class='fa fa-user-plus'></i> Edit User <strong>{{$user->username}}</strong></h1>
     <hr>
     {{ Form::model($user, array('route' => array('users.update', $user->id), 'method' => 'PUT',
      'data-parsley-validate' => '', 'enctype'=>'multipart/form-data')) }}
@@ -122,10 +122,11 @@
     
     </tr>
     <tr>
-         <td onclick="apiKey({{ $user->id }})">
+         <td>
             API Key
             @role('Administrator') 
-            <i class="fa fa-random w3-margin-left" style="color:orange;cursor:pointer;" title="Generate new API Key"></i>
+            <i onclick="apiKey({{ $user->id }})" class="fa fa-random w3-margin-left" style="color:orange;cursor:pointer;" title="Generate new API Key"></i>
+             <i class="fa fa-trash w3-margin-left" style="color:orange;cursor:pointer;" title="Remove API Key"></i>
             @endrole
          </td>
          <td id="api_key">
@@ -173,14 +174,18 @@
          @endif
       </td>      
      </tr>
+     <tr><td></td></tr>
      <tr>
        <td>
+       {{ Form::submit('Update', array('class' => 'w3-button w3-orange w3-round w3-tiny')) }}
        </td>
-     </tr>
+       <td>
+       {{ Form::button('Cancel', array('class' => 'w3-button w3-orange w3-round w3-tiny')) }}
+       </td>
+    </tr>
 </table>
  
-    {{ Form::submit('Update', array('class' => 'w3-button w3-khaki w3-round w3-tiny')) }}
-
+  
     {{ Form::close() }}
  
    </div>

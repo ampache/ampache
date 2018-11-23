@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Catalog;
+use App\Models\Catalog_local;
 use App\Models\User;
 use App\Models\Preference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Catalogs\Local\Catalog_local as Catalog;
-use Modules\Catalogs\Remote\Catalog_remote;
+use Modules\Catalog\Remote\Catalog_remote;
+use Illuminate\Support\Facades\View;
 
 //use App\Services\Catalog;
 
@@ -39,6 +41,10 @@ class CatalogController extends Controller
      */
     public function create()
     {
+        $cat_types = Catalog::show_catalog_types();
+        view::share('cat_types', $cat_types[0]);
+        view::share('sel_types', $cat_types[1]);
+        
         return view('catalogs.create', compact('Users', 'users'));
     }
 
@@ -75,11 +81,11 @@ class CatalogController extends Controller
             }
         }
         
-        $catalog_id = catalog::create($data);
+        $catalog_id = Catalog::create($data);
         if ($catalog_id) {
             $catalogs[] = $catalog_id;
             
-            Catalog::catalog_worker('add_to_catalog', $catalogs, $_POST);
+ //           Catalog::catalog_worker('add_to_catalog', $catalogs, $_POST);
         } else {
             Log::error('Error: Defined Path is inside an existing catalog');
 

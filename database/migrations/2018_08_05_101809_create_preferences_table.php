@@ -21,7 +21,7 @@ class CreatePreferencesTable extends Migration
                   ->nullable();
             $table->string('description', 255)
                   ->nullable();
-            $table->integer('level', 255)
+            $table->integer('level')
                   ->nullable();
             $table->string('type', 128)
                   ->nullable();
@@ -29,8 +29,7 @@ class CreatePreferencesTable extends Migration
                   ->nullable();
             $table->string('subcategory', 128)
                   ->nullable();
-            $table->timestamps();
-            $table->engine = 'MYISAM';
+            $table->engine = 'InnoDB';
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
         });
@@ -43,6 +42,11 @@ class CreatePreferencesTable extends Migration
      */
     public function down()
     {
+        /*
+        Schema::table('preference_has_roles', function (Blueprint $table) {
+            $table->dropForeign('preference_has_roles_preference_id_foreign');
+        });
+        */
         Schema::dropIfExists('preferences');
     }
 }

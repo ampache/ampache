@@ -21,7 +21,10 @@
  */
 namespace App\Classes;
 
+use App\Facades\AmpConfig;
+use App\Services\Stats;
 use App\Traits\Metadata;
+use Illuminate\Support\Facades\DB;
 
 class Song extends database_object implements media, library_item
 {
@@ -407,27 +410,20 @@ class Song extends database_object implements media, library_item
         } else {
             $album_id = intval($results['album_id']);
         }
-
-        $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
-            '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
-            '`addition_time`, `year`, `mbid`, `user_upload`, `license`, ' .
-            '`composer`, `channels`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-
-        $db_results = Dba::write($sql, array(
-            $file, $catalog, $album_id, $artist_id,
-            $title, $bitrate, $rate, $mode, $size, $time, $track,
-            time(), $year, $track_mbid, $user_upload, $license,
-            $composer, $channels));
-
-        if (!$db_results) {
-            debug_event('song', 'Unable to insert ' . $file, 2);
-
-            return false;
-        }
-
-        $song_id = Dba::insert_id();
         
+        $song_id = DB::table('songs')->insertGetId(
+            ['file' => $file, 'catalog' => $catalog,
+             'album' => $album_id, 'artist' => $artist_id,
+             'title' => $title, 'bitrate' -> $bitrate,
+             'rate' => $rate, 'mode' => $mode,
+             'size' => $size, 'time' => $time,
+             'track' => $track, 'addition_time' => $addition_time,
+             'year' => $year, 'mbid' => $track_mbid,
+             'user_upload' => $user_upload, 'license' => $license,
+             'composer' => $composer, 'channels' => $channels,
+            ]
+            );
+         
         if ($user_upload) {
             Useractivity::post_activity(intval($user_upload), 'upload', 'song', $song_id);
         }
@@ -448,10 +444,14 @@ class Song extends database_object implements media, library_item
                 }
             }
         }
-
-        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `catalog_number`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $catalog_number, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak));
+        
+        $song_id = DB::table('song_data')->insertGetId([
+            'song_id' => $song_id, 'comment' => $comment,
+            'lyrics' => $lyrics, 'label' => $label,
+            'language' => $language, 'catalog_number' => $catalog_number,
+            'replaygain_track_gain' => $replaygain_track_gain, 'replaygain_track_peak' => $replaygain_track_peak,
+            'replaygain_album_gain' => $replaygain_album_gain, 'replaygain_album_peak'
+        ]);
 
         return $song_id;
     }
@@ -463,7 +463,7 @@ class Song extends database_object implements media, library_item
      */
     public static function gc()
     {
-        Dba::write('DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` WHERE `song`.`id` IS NULL');
+        DB::table('song_data')->leftJoin('song', 'id', '=', 'song_id')->whereNull('id')->delete();
     }
 
     /**
@@ -511,7 +511,7 @@ class Song extends database_object implements media, library_item
         $tags    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            if (AmpConfig::get('show_played_times')) {
+            if (config('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
             }
             parent::add_to_cache('song', $row['id'], $row);

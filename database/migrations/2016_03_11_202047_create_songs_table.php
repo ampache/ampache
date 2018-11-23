@@ -16,10 +16,6 @@ class CreateSongsTable extends Migration
         Schema::create('songs', function (Blueprint $table) {
             $table->integer('id')
                   ->unsigned();
-            $table->foreign('id')
-                  ->references('id')
-                  ->on('medias')
-                  ->onDelete('cascade');
             $table->primary('id');
             $table->string('title');
             $table->mediumInteger('year');
@@ -37,7 +33,8 @@ class CreateSongsTable extends Migration
                   ->nullable();
             $table->string('label')
                   ->nullable();
-            $table->integer('catalog');
+            $table->unsignedInteger('catalog');
+            $table->foreign('catalog')->references('id')->on('catalogs')->onDelete('cascade');
             $table->string('language')
                   ->nullable();
             $table->integer('license')
@@ -57,19 +54,17 @@ class CreateSongsTable extends Migration
                   ->nullable();
             $table->string('file', 4096)
                   ->nullable();
-            $table->integer('album_id')
-                  ->unsigned();
+            $table->unsignedInteger('album_id');
             $table->foreign('album_id')
                   ->references('id')
                   ->on('albums')
                   ->onDelete('cascade');
-            $table->integer('artist_id')
-                  ->unsigned();
+            $table->unsignedInteger('artist_id');
             $table->foreign('artist_id')
                   ->references('id')
                   ->on('artists')
                   ->onDelete('cascade');
-            $table->engine = 'MYISAM';
+            $table->engine = 'InnoDB';
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
         });

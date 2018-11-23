@@ -72,8 +72,18 @@ class RolesAndPermissionsSeeder extends Seeder
         $role->givePermissionTo('create playlists');
         $role->givePermissionTo('upload files');
 
+        $role = Role::create(['name' => 'Content_manager']);
+        $role->givePermissionTo('update catalogs');
+        $role->givePermissionTo('clean catalogs');
+        $role->givePermissionTo('export catalogs');
+        $role->givePermissionTo('create playlists');
+        $role->givePermissionTo('upload files');
+        
         $role = Role::create(['name' => 'User']);
         $role->givePermissionTo('upload files');
+        $role->givePermissionTo('create playlists');
+        
+        $role = Role::create(['name' => 'Guest']);
         $role->givePermissionTo('create playlists');
     }
 }

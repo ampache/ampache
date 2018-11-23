@@ -32,23 +32,6 @@ class AppServiceProvider extends ServiceProvider
         $sb_homeItems['sb_information']  = isset($_COOKIE['sb_information']) ? : 'collapsed';
         $sb_homeItems['sb_random']       = isset($_COOKIE['sb_random']) ? : 'collapsed';
         view::share('sb_homeItems', $sb_homeItems);
-        
-        $Catalog_ids = Catalog::get_catalogs();
-        $libitem     = array();
-        foreach ($Catalog_ids as $catalog_id) {
-            $catalog = Catalog::create_from_id($catalog_id);
-            $catalog->format();
-            $Catalogs[] = $catalog;
-            view::share('Catalogs', $Catalogs);
-        }
-        $Users = User::all();
-        view::share('Users', $Users);
-        $roles = Role::get(); //Get all roles
-        view::share('roles', $roles);
-        
-        $cat_types = Catalog::show_catalog_types();
-        view::share('cat_types', $cat_types[0]);
-        view::share('sel_types', $cat_types[1]);
     }
 
     /**

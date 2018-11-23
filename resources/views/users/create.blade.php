@@ -15,26 +15,26 @@
 
     {{ Form::open(array('url' => 'users')) }}
 <div class="w3-row w3-small">
-  <div class="w3-col" style="width:50px"><i class="w3-xlarge fa fa-user"></i></div>
+  <div class="w3-col" style="width:50px"><i class="w3-xlarge fa fa-user" title="User Name"></i></div>
     <div class="w3-rest">
       <input class="w3-tiny" name="username" type="text" placeholder="User Name">
     </div>
 </div>
  <div class="w3-row w3-small">
-  <div class="w3-col" style="width:50px"><i class="w3-xlarge fa fa-user-plus"></i></div>
+  <div class="w3-col" style="width:50px"><i class="w3-xlarge fa fa-user-plus" title="Full Name"></i></div>
     <div class="w3-rest">
       <input class="w3-tiny" name="fullname" type="text" placeholder="Full Name">
     </div>
 </div>
 
 <div class="w3-row w3-small">
-  <div class="w3-col" style="width:50px"><i class="w3-xlarge fa fa-envelope-o"></i></div>
+  <div class="w3-col" style="width:50px"><i class="w3-xlarge fa fa-envelope-o" title="Email Address"></i></div>
     <div class="w3-rest">
       <input class="w3-tiny" name="email" type="text" placeholder="Email">
     </div>
 </div>
  <div class="w3-row w3-small">
-  <div class="w3-col" style="width:50px"><i class="w3-xlarge fa fa-home"></i></div>
+  <div class="w3-col" style="width:50px"><i class="w3-xlarge fa fa-home" title="Web Site"></i></div>
     <div class="w3-rest">
       <input class="w3-tiny" name="website" type="text" placeholder="Web site">
     </div>
@@ -42,7 +42,7 @@
 <div class="w3-container w3-section">
     <div class='form-group'>
         @foreach ($roles as $role)
-            {{ Form::checkbox('roles[]',  $role->id) }}
+            {{ Form::checkbox('roles[]',  $role->id, $role->name == 'User' ? 'checked' : ''  ) }}
             {{ Form::label($role->name, ucfirst($role->name)) }}<br>
 
         @endforeach

@@ -1,121 +1,115 @@
 {
-	"name" : "ampache/laravel",
-	"description" : "Ampache built on the Laravel Framework.",
-	"keywords" : [
-		"framework",
-		"laravel"
-	],
-	"license" : "MIT",
-	"type" : "project",
-	"require" : {
-		"php": ">=7.1.3",
-		"belphemur/laravel-gettext": "^7.1",
-		"captcha-com/laravel-captcha": "4.*",
-		"cmgmyr/messenger": "^2.16",
-		"doctrine/inflector": "~1.0",
-		"edw/horde-browser": "2.0.15",
-		"fideloper/proxy": "~4.0",
-		"guzzlehttp/guzzle": "^6.3",
-		"illuminate/contracts": "5.6.*",
-		"illuminate/support": "5.6.*",
-		"kunalvarma05/dropbox-php-sdk": "^0.2.1",
-		"laravel/framework": "5.6.*",
-		"laravel/socialite": "^3.0",
-		"laravelcollective/html": "^5.6",
-		"mikealmond/musicbrainz": "^0.2.2",
-		"paragonie/random_compat": "2.0.*",
-		"pbxg33k/musicbrainz": "^0.3.0",
-		"predis/predis": "^1.1",
-		"spatie/laravel-permission": "^2.7",
-		"stechstudio/laravel-php-cs-fixer": "^1.0",
-		"tonyhhyip/laravel-sse": "^1.0",
-		"tonyhhyip/sse": "^2.1",
-		"vkr/getid3": "^2.1",
-		"wikimedia/composer-merge-plugin": "^1.4"
-	},
-	   "extra" : {
-        "merge-plugin" : {
-            "include" : [
-                "modules/catalog/*/composer.module.json",
-                "modules/localplay/*/composer.module.json",
-                "modules/plugins/*/composer.module.json"
-            ],
-            "recurse" : false,
-            "replace" : false,
-            "merge-extra" : false
+    "name": "laravel/laravel",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=7.1.3",
+        "ext-ctype": ">=7.1",
+        "ext-curl": ">=7.1.3",
+        "ext-date": ">=7.1",
+        "ext-dom": ">=1.0",
+        "ext-gd": ">=7.1.3",
+        "ext-gmp": ">=7.1.3",
+        "ext-iconv": ">=7.1",
+        "ext-libxml": ">=7.1",
+        "ext-mbstring": ">=7.1",
+        "ext-pcre": ">=7.1",
+        "ext-simplexml": ">=7.1",
+        "ext-spl": ">=7.1",
+        "ext-xmlreader": ">=7.1",
+        "ext-xmlwriter": ">=7.1",
+        "lib-libxml": ">=2.7.0",
+        "belphemur/laravel-gettext": ">=7.1",
+        "bstien/laravel-tvdb": "1.0.0",
+        "captcha-com/laravel-captcha": ">=4.0",
+        "fideloper/proxy": ">=4.0",
+        "laravel/framework": ">=5.7",
+        "laravel/tinker": ">=1.0",
+        "laravelcollective/html": "^5.7",
+        "mikealmond/musicbrainz": "^0.2.2",
+        "php-tmdb/laravel": "^1.1",
+        "spatie/laravel-permission": ">=2.7"
+    },
+    "repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/bstien/laravel-tvdb"
+		}
+    ],
+    "require-dev": {
+        "beyondcode/laravel-dump-server": "^1.0",
+        "filp/whoops": "^2.0",
+        "fzaninotto/faker": "^1.4",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^2.0",
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "psr-4": {
+            "App\\": "app/",
+            "Modules\\" : [
+				"modules",
+				"modules/catalog",
+				"modules/catalog/dropbox",
+				"modules/catalog/local",
+				"modules/catalog/remote",
+				"modules/catalog/soundcloud",
+				"modules/catalog/subsonic",
+				"modules/catalog/seafile",
+				"modules/plugin/7Digital",
+				"modules/plugin/Amazon",
+				"modules/plugin/Bitly",
+				"modules/plugin/CatalogFavorites",
+			    "modules/plugin/ChartLyrics",
+                "modules/plugin/Discogs",
+				"modules/plugin/FacebookS",
+				"modules/plugin/Flattr",
+				"modules/plugin/Flickr",
+				"modules/plugin/FriendsTimeline",
+				"modules/plugin/GoogleAnalytics",
+				"modules/plugin/GoogleMaps",
+				"modules/plugin/GooglePlus"
+			]
+		},
+        "psr-0": {
+            "MusicBrainz": "src/"
         }
     },
-	"require-dev" : {
-		"filp/whoops" : "~2.0",
-		"fzaninotto/faker" : "~1.4",
-		"mockery/mockery" : "~1.0",
-		"phpunit/phpunit" : "~6.2"
-	},
-
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/mptre/php-soundcloud"
-        },
-   {
-        "type": "package",
-        "package": {
-            "name": "edw/horde-browser",
-            "version": "2.0.15",
-            "source": {
-                "url": "https://github.com/wagnered/horde-browser.git",
-                "type": "git",
-                "reference": "master"
-            }
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
         }
-    }
-
-    ],
-
-	"autoload" : {
-		"classmap" : [
-			"database/seeds",
-			"database/factories"
-		],
-		 "psr-0": {
-            "MusicBrainz": "src/"
-        },
-          "files" : [ 
-             "app/Services/AmpError.php"
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+            ]
+        }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
-	"psr-4" : {
-		  "Modules\\" : [
-                "modules",
-                "modules/catalogs",
-                "modules/catalogs/dropbox",
-                "modules/catalogs/local",
-                "modules/catalogs/remote",
-                "modules/catalogs/soundcloud",
-                "modules/catalogs/subsonic",
-                "modules/catalogs/seafile"
-            ],
-			"App\\" : "app/",
-			"Classes\\" : "app/Classes/",
-			"Traits\\" : "app/Traits/"
-  		}
-	},
-	"autoload-dev" : {
-		"psr-4" :
-		 {
-			"Tests\\" : "tests/"
-		}
-	},
-	"scripts" : {
-		"post-root-package-install" : "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-		"post-create-project-cmd" : "@php artisan key:generate",
-		"post-autoload-dump" : [
-			"Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-			"php artisan package:discover"
-		]
-	},
-	"config" : {
-		"preferred-install" : "dist",
-		"sort-packages" : true,
-		"optimize-autoloader" : true
-	}
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+        
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

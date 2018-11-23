@@ -11,12 +11,11 @@
       @if (Auth::check())
         <span id="loginInfo" class="w3-text-orange">
         <a href="{{ url('/login') }}"></a>                    
-               <u style="cursor:pointer">{{ Auth::user()->name ?: Auth::user()->username }}</u>
+               <u style="cursor:pointer">{{ Auth::user()->fullname ?: Auth::user()->username }}</u>
            @if (Config::get('feature.sociable'))
               <a href="{{ url('/messages/index', [Auth::user()->id]) }}">({{ App\Models\PrivateMsg::newMessageCount(Auth::user()->id) }} messages)</a>
             @endif
-             <a href="{!! route('logout') !!}"
-				 loadTab("home");
+             <a href="#"
 				 onclick="event.preventDefault();
                  document.getElementById('logout-form').submit();">
                  Logout

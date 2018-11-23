@@ -25,18 +25,16 @@
     <script src="{{ asset('js/base.js') }}"></script>
     <script src="{{ asset('js/moment.js') }}"></script>
     <script src="{{ asset('js/jquery.multiselect.js') }}"></script>
-{{--    <script src="{{ asset('js/parsley.js') }}"></script> --}}
+    <script src="{{ asset('js/parsley.js') }}"></script>
 
-     {!! $cat_types !!}
  </head>
 <body class="w3-laravel-body w3-padding-48"> 
       @section('header')
              @include('partials.header')
       @show
-
 	  @section('sidebar')
 		Reserved for including the sidebar.
-		@include('partials.sidebar.main')
+		@include('partials.sidebar.main', ['roles' => $roles])
 	  @show
 	  
 	<div id="main-content" class="w3-container" style="margin-left:11%">

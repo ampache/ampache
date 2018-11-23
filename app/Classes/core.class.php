@@ -29,6 +29,8 @@
  */
 namespace App\Classes;
 
+use App\Facades\AmpConfig;
+
 class Core
 {
     /**
@@ -90,145 +92,6 @@ class Core
         return array_slice($array, 0, $position, true) +
                 $add +
                 array_slice($array, $position, null, true);
-    }
-
-    /**
-     * Get possible filepaths of namespaced classes
-     * @param string $class
-     * @return string
-     */
-    private static function getNamespacedPaths($class)
-    {
-        $possiblePaths   = array();
-        $namespaceParts  = explode('\\', $class);
-        $possiblePaths[] = AmpConfig::get('prefix') . '/modules/' . implode('/', $namespaceParts) . '.php';
-
-        $classedPath = array('path' => AmpConfig::get('prefix')) +
-                self::insertInArray($namespaceParts, 1, array('add' => 'class'));
-        $possiblePaths[] = implode('/', $classedPath) . '.php';
-
-        return $possiblePaths;
-    }
-
-    /**
-     * Get possible filepaths of non namespaced classes
-     * @param string $class
-     * @return string
-     */
-    private static function getNonNamespacedPaths($class)
-    {
-        $possiblePaths   = array();
-        $possiblePaths[] = AmpConfig::get('prefix') . '/lib/class/' .
-                strtolower($class) . '.class.php';
-
-        return $possiblePaths;
-    }
-
-    /**
-     * form_register
-     * This registers a form with a SID, inserts it into the session
-     * variables and then returns a string for use in the HTML form
-     */
-    public static function form_register($name, $type = 'post')
-    {
-        // Make ourselves a nice little sid
-        $sid    =  md5(uniqid(rand(), true));
-        $window = AmpConfig::get('session_length');
-        $expire = time() + $window;
-
-        // Register it
-        $_SESSION['forms'][$sid] = array('name' => $name, 'expire' => $expire);
-        debug_event('Core', "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
-
-        switch ($type) {
-            case 'get':
-                $string = $sid;
-            break;
-            case 'post':
-            default:
-                $string = '<input type="hidden" name="form_validation" value="' . $sid . '" />';
-            break;
-        } // end switch on type
-
-        return $string;
-    } // form_register
-
-    /**
-     * form_verify
-     *
-     * This takes a form name and then compares it with the posted sid, if
-     * they don't match then it returns false and doesn't let the person
-     * continue
-     */
-    public static function form_verify($name, $type = 'post')
-    {
-        switch ($type) {
-            case 'post':
-                $sid = $_POST['form_validation'];
-            break;
-            case 'get':
-                $sid = $_GET['form_validation'];
-            break;
-            case 'cookie':
-                $sid = $_COOKIE['form_validation'];
-            break;
-            case 'request':
-                $sid = $_REQUEST['form_validation'];
-            break;
-            default:
-                return false;
-        }
-
-        if (!isset($_SESSION['forms'][$sid])) {
-            debug_event('Core', "Form $sid not found in session, rejecting request", 2);
-
-            return false;
-        }
-
-        $form = $_SESSION['forms'][$sid];
-        unset($_SESSION['forms'][$sid]);
-
-        if ($form['name'] == $name) {
-            debug_event('Core', "Verified SID $sid for $type form $name", 5);
-            if ($form['expire'] < time()) {
-                debug_event('Core', "Form $sid is expired, rejecting request", 2);
-
-                return false;
-            }
-
-            return true;
-        }
-
-        // OMG HAX0RZ
-        debug_event('Core', "$type form $sid failed consistency check, rejecting request", 2);
-
-        return false;
-    } // form_verify
-
-    /**
-     * gen_secure_token
-     *
-     * This generates a cryptographically secure token.
-     * Returns a token of the required bytes length, as a string. Returns false
-     * if it could not generate a cryptographically secure token.
-     */
-    public static function gen_secure_token($length)
-    {
-        $buffer = '';
-        if (function_exists('random_bytes')) {
-            $buffer = random_bytes($length);
-        } elseif (function_exists('mcrypt_create_iv')) {
-            $buffer = mcrypt_create_iv($length, MCRYPT_DEV_RANDOM);
-        } elseif (phpversion() > "5.6.12" && function_exists('openssl_random_pseudo_bytes')) {
-            // PHP version check for https://bugs.php.net/bug.php?id=70014
-            $buffer = openssl_random_pseudo_bytes($length);
-        } elseif (file_exists('/dev/random') && is_readable('/dev/random')) {
-            $buffer = file_get_contents('/dev/random', false, null, -1, $length);
-        } else {
-            return false;
-        }
-
-        return bin2hex($buffer);
     }
 
     /**
@@ -411,7 +274,7 @@ class Core
     
     public static function get_tmp_dir()
     {
-        $tmp_dir = AmpConfig::get('tmp_dir_path');
+        $tmp_dir = config('tmp_dir_path');
         if (empty($store_path)) {
             if (function_exists('sys_get_temp_dir')) {
                 $tmp_dir = sys_get_temp_dir();

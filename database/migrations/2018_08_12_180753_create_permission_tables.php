@@ -71,6 +71,42 @@ class CreatePermissionTables extends Migration
 
             app('cache')->forget('spatie.permission.cache');
         });
+        Schema::create($tableNames['preference_has_roles'], function (Blueprint $table) use ($tableNames) {
+            $table->unsignedInteger('preference_id'); //permission_id
+            $table->unsignedInteger('role_id');
+                
+            $table->foreign('preference_id')
+                ->references('id')
+                ->on('preferences')
+                ->onDelete('cascade');
+                
+            $table->foreign('role_id')
+                ->references('id')
+                ->on($tableNames['roles'])
+                ->onDelete('cascade');
+                
+            $table->primary(['preference_id', 'role_id']);
+            $table->engine = 'InnoDB';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
+        });
+            
+        Schema::create('acl_has_roles', function (Blueprint $table) {
+            $table->unsignedInteger('acl_id'); //permission_id
+            $table->unsignedInteger('role_id');
+                
+            $table->foreign('acl_id')
+                    ->references('id')
+                    ->on('access_list')
+                    ->onDelete('cascade');
+                    
+            $table->foreign('role_id')
+                    ->references('id')
+                    ->on('roles')
+                    ->onDelete('cascade');
+                    
+            $table->primary(['acl_id', 'role_id']);
+        });
     }
 
     /**
@@ -87,5 +123,7 @@ class CreatePermissionTables extends Migration
         Schema::drop($tableNames['model_has_permissions']);
         Schema::drop($tableNames['roles']);
         Schema::drop($tableNames['permissions']);
+        Schema::drop($tableNames['preference_has_roles']);
+        Schema::drop('acl_has_roles');
     }
 }

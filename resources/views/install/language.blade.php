@@ -1,67 +1,29 @@
-@extends('layouts.fullform')
-
+@extends('layouts.install')
 @section('content')
-<div class="container">
-    <script>
-     $(function () {
-        $("#dialog").dialog({
-        	closeOnEscape: false,
-         	autoOpen: false,
-        	 open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog | ui).hide()},
-        	position: { my: "top", at: "bottom", of:"#headerlogo"},
-        	width: 300,
-			height: 200,
-			modal: true,
-        
-            title: "Installing Ampache",
-            buttons: {
-	            'Continue': function() {
-		            var language = $("#selectlanguage").val();
-					var url = "{{ url("/install/setlanguage") }}" + "/" + language;
-	                $.post(url,
-	                	    {
-	                	_token: $("[name~='_token']").val()
-	                	    },
-	                	    function(data, status){
-
-	                	    	location.assign('{{ url("/install/system_check") }}');
-	          
-	                	});
-	                $(this).dialog('close');
-            	    }
-            }
-        });
-    });
-	                $(document).ready(function(){
-	                	$( 'a.ui-dialog-titlebar-close' ).remove();
-	   	                $("#dialog").dialog( "open" );
-	                });
-</script>
-<div id="dialog" style="display: none" width="350px">
-   <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Select Language</div>
-
-                <div class="panel-body" style="padding: 0">
-                <form>
+{{-- install/language.blade.php --}}
+   <div class="w3-container" role="main">
+       <div class="jumbotron">
+            <h1 id="headerlogo"><img src="{{ url('/themes/reborn/images/ampache.png') }}" title="Ampache" alt="Ampache">{{ __('Ampache Installation') }}</h1>
+        </div>
+        <div class="page-header">
+            <h1>{{ __('Choose Installation Language') }}</h1>
+        </div>
+     </div>
+                <form class="form-group" role="form" method="post" action="{{ url('setLanguage') }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
+                    <div class="form-group" style="padding: 0">
                     <select class="form-control" id="selectlanguage" style="color:#333;" name="languages">
                     @foreach ($languages as $language)
                     
-                    	@if ($language === 'en_US')
+                    	@if ($locale === $language)
                     	    <option value="{{ $language }}" selected="selected">{{ $language }}</option>
                     	@else
                     	    <option value="{{ $language }}">{{ $language }}</option>
                     	@endif
                     @endforeach
 					</select>
+               </div>
+            <button type="submit" class="btn btn-warning"><?php echo __('Start configuration'); ?></button>
 				</form> 
-                </div>
-            </div>
-        </div>
-    </div>
- </div>
-</div>
-    
+      
 @endsection

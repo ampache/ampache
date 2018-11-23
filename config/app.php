@@ -1,7 +1,7 @@
 <?php
 
-use Sse\Laravel\SseServiceProvider;
-use Sse\Laravel\Facade\SSE;
+use Stien\TvDb\Facades\TvDb;
+use Stien\TvDb\TvDbServiceProvider;
 
 return [
 
@@ -81,7 +81,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => env('APP_LOCALE', 'en_US'),
 
     /*
     |--------------------------------------------------------------------------
@@ -144,7 +144,6 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
-        Cmgmyr\Messenger\MessengerServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -168,12 +167,10 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-        SseServiceProvider::class,
-        STS\Fixer\FixerServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
         LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
-        Xinax\LaravelGettext\LaravelGettextServiceProvider::class,
-//      Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
+        Tmdb\Laravel\TmdbServiceProvider::class,
+        TvDbServiceProvider::class,
+ //      Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
         /*
          * Package Service Providers...
          */
@@ -182,6 +179,7 @@ return [
          * Application Service Providers...
          */
         App\Providers\AmpErrorProvider::class,
+        App\Providers\AmpConfigProvider::class,
         App\Providers\AccessServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
@@ -189,6 +187,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\PreferenceServiceProvider::class,
+        App\Providers\CatalogServiceProvider::class,
     ],
 
     /*
@@ -218,10 +217,10 @@ return [
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
         'File' => Illuminate\Support\Facades\File::class,
-        'Form' => Collective\Html\FormFacade::class,
+//        'Form' => Collective\Html\FormFacade::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
-        'Html' => Collective\Html\HtmlFacade::class,
+//        'Html' => Collective\Html\HtmlFacade::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
@@ -236,13 +235,12 @@ return [
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
  //       'Soundcloud' => Njasm\Laravel\Soundcloud\Facades\Soundcloud::class,
-        'SSE' => SSE::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Catalog_local' => Modules\Catalogs\Local\Catalog_local::class,
-        'Catalog_remote' => \Modules\Catalogs\Remote\Catalog_remote::class,
+        'Catalog_local' => Modules\Catalog\Local\Catalog_local::class,
+        'Catalog_remote' => \Modules\Catalog\Remote\Catalog_remote::class,
  //       'Catalog_subsonic' => \Modules\Catalog\Subsonic\Catalog_subsonic::class
     ],
 

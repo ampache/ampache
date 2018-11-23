@@ -7,6 +7,8 @@
   		<a href="#" class="w3-btn w3-block w3-left-align" style="height:24px;font-size:12px;">Options</a>
   		<a href="#" class="w3-btn w3-block w3-left-align" style="height:24px;font-size:12px;"">Playlist</a>
   		<a href="#" class="w3-btn w3-block w3-left-align" style="height:24px;font-size:12px;">Streaming</a>
-  		<a href="{!! url('/users/edit', Auth::user()->id) !!}" class="w3-btn w3-block w3-left-align" style="height:24px;font-size:12px;">Account</a>
+@if (Auth::check())
+  		<a href="{!! url('/users/edit', Auth::id()) !!}" class="w3-btn w3-block w3-left-align" style="height:24px;font-size:12px;">Account</a>
+@endif
 	</div>
 </div>

@@ -12,7 +12,7 @@ class AccessListSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
+        DB::table('access_list')->insert([
             'name' => 'DEFAULTv4',
             'start' => '00:00:00:00',
             'end' => 'ff:ff:ff:ff',
@@ -21,7 +21,7 @@ class AccessListSeeder extends Seeder
             'user' => -1,
             'enabled' => 1,
         ]);
-        DB::table('users')->insert([
+        DB::table('access_list')->insert([
             'name' => 'DEFAULTv4',
             'start' => '00:00:00:00',
             'end' => 'ff:ff:ff:ff',
@@ -30,7 +30,7 @@ class AccessListSeeder extends Seeder
             'user' => -1,
             'enabled' => 1,
         ]);
-        DB::table('users')->insert([
+        DB::table('access_list')->insert([
             'name' => 'DEFAULTv4',
             'start' => '00:00:00:00',
             'end' => 'ff:ff:ff:ff',
@@ -40,7 +40,7 @@ class AccessListSeeder extends Seeder
             'enabled' => 1,
         ]);
         
-        DB::table('users')->insert([
+        DB::table('access_list')->insert([
             'name' => 'DEFAULTv6',
             'start' => '0000:0000:0000:0000',
             'end' => 'ffff:ffff:ffff:ffff',
@@ -50,7 +50,7 @@ class AccessListSeeder extends Seeder
             'enabled' => 1,
         ]);
         
-        DB::table('users')->insert([
+        DB::table('access_list')->insert([
             'name' => 'DEFAULTv6',
             'start' => '0000:0000:0000:0000',
             'end' => 'ffff:ffff:ffff:ffff',
@@ -60,7 +60,7 @@ class AccessListSeeder extends Seeder
             'enabled' => 1,
         ]);
 
-        DB::table('users')->insert([
+        DB::table('access_list')->insert([
             'name' => 'DEFAULTv6',
             'start' => '0000:0000:0000:0000',
             'end' => 'ffff:ffff:ffff:ffff',

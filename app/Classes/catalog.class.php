@@ -34,8 +34,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use Modules\Catalogs\Local\Catalog_local;
-use Modules\Catalogs\Remote\Catalog_remote;
+use Modules\Catalog\Local\Catalog_local;
+use Modules\Catalog\Remote\Catalog_remote;
 
 abstract class Catalog
 {
@@ -235,7 +235,7 @@ abstract class Catalog
             return false;
         }
 
-        $filename = base_path('modules/catalogs/' . $type . '/' . $type . '.catalog.php');
+        $filename = base_path('modules/catalog/' . $type . '/' . $type . '.catalog.php');
         $include  = require_once $filename;
 
         if (!$include) {
@@ -267,7 +267,7 @@ abstract class Catalog
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        $catTypes = "<script>\n" .
+        $catTypes = 
             "var type_fields = new Array();\n" .
             "type_fields['none'] = '';";
         $seltypes = '<option value="none">[Select]</option>';
@@ -306,7 +306,7 @@ abstract class Catalog
             "var seltype = sel.options[sel.selectedIndex].value;\n" .
             "var ftbl = document.getElementById('" . $divback . "');\n" .
             "ftbl.innerHTML = '<table class=\"w3-table w3-small\">' + type_fields[seltype] + '</table>';\n" .
-            "}\n</script>\n";
+            "}\n";
  
         return [$catTypes, $seltypes];
     }
@@ -319,7 +319,7 @@ abstract class Catalog
     public static function get_catalog_types()
     {
         /* First open the dir */
-        $basedir = base_path('modules/catalogs');
+        $basedir = base_path('modules/catalog');
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
@@ -622,7 +622,7 @@ abstract class Catalog
         }
 
         $insert_id = 0;
-        $filename  = base_path('/modules/catalogs/' . $type . '/' . $type . '.catalog.php');
+        $filename  = base_path('/modules/catalog/' . $type . '/' . $type . '.catalog.php');
         $include   = require_once $filename;
 
         if ($include) {

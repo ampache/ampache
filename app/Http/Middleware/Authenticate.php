@@ -27,4 +27,9 @@ class Authenticate
 
         return $next($request);
     }
+    
+    protected function redirectTo($request)
+    {
+        return route('login');
+    }
 }

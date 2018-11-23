@@ -4,8 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-use App\Services\UserPreferences;
-use Illuminate\Support\Facades\Auth;
+use App\Facades\AmpConfig;
 use Illuminate\Support\Facades\DB;
 
 class SystemConfig
@@ -19,17 +18,13 @@ class SystemConfig
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check()) {
-            $id = Auth::id();
-        } else {
-            $id= 0;
+        if (AmpConfig::get('lang', 'empty') == 'empty') {
+            $preferences = db::table('preferences')->get();
+            foreach ($preferences as $preference) {
+                AmpConfig::set($preference->name, $preference->value, false);
+            }
         }
-        define('ADMIN_LEVEL', '100');
-        define('CATMAN_LEVEL', '75');
-        define('CONTENTMAN_LEVEL', '50');
-        define('USER_LEVEL', '25');
-        define('GUEST_LEVEL', '5');
-        
+
         return $next($request);
     }
 }

@@ -27,7 +27,7 @@ class CreateCatalogsTable extends Migration
             $table->boolean('public')->default(true);
             $table->integer('owner');
             $table->boolean('parse_playlists')->default(false);
-            $table->engine = 'MYISAM';
+            $table->engine = 'InnoDB';
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
         });

@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Services\UserPreferences;
+use App\Services\PreferenceService;
 use App\Services\AccessService;
 
 class PreferenceServiceProvider extends ServiceProvider
@@ -30,12 +30,12 @@ class PreferenceServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('App\Services\UserPreferences', function ($app) {
-            return new UserPreferences($this->access);
+            return new PreferenceService($this->access);
         });
     }
     
     public function provides()
     {
-        return [UserPreferences::class];
+        return [PreferenceService::class];
     }
 }

@@ -16,4 +16,3 @@ class UserPreferences extends Facade
         return \App\Services\UserPreferences::class;
     }
 }
-

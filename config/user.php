@@ -112,5 +112,13 @@ return [
     */
 
     'track_user_ip' => false,
+    
+    /*
+     * Allow guest usage.  guest permissions can be set independently and
+     * default to entries on home tab.
+     * 
+     */
+    
+    'allow_guests' => false,
 
 ];

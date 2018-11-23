@@ -122,6 +122,7 @@
  </form>
 </div>
 <script>
+    {!! $cat_types !!}
 
 $(function () {
     $('#editForm').parsley().on('field:validated', function() {

@@ -7,7 +7,7 @@
    <div id="sidebar-header" class="w3-center" style="cursor:pointer">
       <span id="sidebar-header-content">{{ $isCollapsed ? '>>>>' : '<<<<' }}</span>
    </div>
-   @if (Auth::check())
+@if (Auth::check() && (auth()->user()->id != 0))
      @if (!$_COOKIE['sidebar_tab']) {
        @php $_COOKIE['sidebar_tab'] = 'home'; @endphp
      @endif
@@ -26,26 +26,29 @@
   		<div onclick="loadTab('localplay')" id="sb_tab_localplay" class="w3-container w3-cell w3-padding-small" title="localplay">
    			<i class="material-icons w3-small w3-hover-red" style="cursor:pointer">speaker</i>
   		</div>
-  		@can('Access Modules Tab')
+  		@hasrole ('Administrator')
    		    <div onclick="loadTab('modules')" id="sb_tab_modules" class="w3-container w3-cell w3-padding-small" title="modules">
     		    <i class="material-icons w3-small w3-hover-red" style="cursor:pointer">view_module</i>
   		    </div>
+  		@endhasrole
+  		@hasanyrole('Administrator|Catalog Manager')
   		    <div onclick="loadTab('admin')"id="sb_tab_admin" class="w3-container w3-cell w3-padding-small" title="admin">
     		    <i class="material-icons w3-small w3-hover-red" style="cursor:pointer">supervisor_account</i>
   		    </div>
-  		@endcan
+  		@endhasanyrole
   		<div  id="exit" class="w3-container w3-cell w3-padding-small" title="exit">
-              <a href="{!! route('logout') !!}"
-                 Logout
-             </a>
+             <a href="#"
+				 onclick="event.preventDefault();
+                 document.getElementById('logout-form').submit();">
     		<i class="material-icons w3-small w3-hover-red" style="cursor:pointer">exit_to_app</i>
+             </a>
   		</div> 
 		</div>
 	  </div>
-    @endif
+@endif
   <div id="sidebar-content" class="w3-animate-left {{ $isCollapsed ? 'w3-hide' : '' }}">
        	@include ('partials.sidebar.home')
-</div>
+  </div>
 <!-- // TODO Add guest authorization for favorites and upload capability -->
 <ul id="sidebar-light" class="w3-animate-left w3-hide">
     <li><img src="{{ asset('images/topmenu-artist.png') }}" title="{{ 'Artists' }}" /><br />{{ 'Artists' }}</li>

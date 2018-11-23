@@ -27,14 +27,13 @@ class CreateArtistsTable extends Migration
             $table->integer('yearformed');
             $table->boolean('manual_update');
             $table->timestamps();
-            $table->integer('user_id')
-                    ->unsigned()
+            $table->unsignedInteger('user_id')
                     ->nullable();
             $table->foreign('user_id')
                   ->references('id')
                   ->on('users')
                   ->onDelete('set null');
-            $table->engine = 'MYISAM';
+            $table->engine = 'InnoDB';
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
         });

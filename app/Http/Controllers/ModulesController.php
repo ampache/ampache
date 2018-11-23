@@ -2,99 +2,146 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Catalogs\Local\Catalog_local;
-use Modules\Catalogs\Remote\Catalog_remote;
+use Modules\Catalog\Local\Catalog_local;
+use Modules\Catalog\Remote\Catalog_remote;
+use Exception;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Http\Middleware\Authenticate;
+use App\Models\Catalog;
+use App\Services\PluginService;
+use Illuminate\Http\Request;
+use App\Services\LocalplayService;
 
 class ModulesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'clearance'])->except('index', 'show');
     }
     
     
     public function show_Catalogs()
     {
-        $catalogs      = array();
+        $modules       = array();
+        $module_type          = 'Catalog modules';
+        
         $catalog_types = $this->get_module_types('catalog');
         foreach ($catalog_types as $type) {
-            $class_name = '\\Modules\\Catalogs\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;
+            $class_name = 'Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;
             $modules[]  = new $class_name();
         }
-      
-        return view('modules.catalog.index', compact('modules'));
+        $title = 'Catalog';
+
+        return view('modules.index', ['modules' => $modules, 'title' => $title, 'type' => $module_type]);
     }
  
     public function show_LocalPlay()
     {
-        $catalogs      = array();
-        $catalog_types = $this->get_module_types('catalog');
-        foreach ($catalog_types as $type) {
-            $class_name = '\\Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;
-            $catalogs[] = new $class_name();
+        $title           = 'Localplay';
+        $modules         = array();
+        $module_type     = 'Localplay';
+        $localplay_types = $this->get_module_types('localplay');
+        foreach ($localplay_types as $type) {
+            $class_name = 'Modules\\Localplay\\' . 'Ampache' . ucfirst($type)  ;
+            $modules[]  = new $class_name();
         }
+        $type = 'Localplay modules';
       
-        return view('modules.catalogs.index', compact('catalogs'));
+        return view('modules.index', ['modules' => $modules, 'title' => $title, 'type' => $module_type]);
     }
-    public function show_Plugins()
+    
+    public function show_plugins()
     {
-        $catalogs      = array();
-        $catalog_types = $this->get_module_types('catalog');
-        foreach ($catalog_types as $type) {
-            $class_name = '\\Modules\\Catalog\\' . ucfirst($type) . '\\' . 'Catalog_' . strtolower($type) ;
-            $catalogs[] = new $class_name();
+        $plugins      = array();
+        $title        = "Plugin";
+        $module_type = 'Plugin';
+        $plugin_types = PluginService::get_plugins();
+        foreach ($plugin_types as $type) {
+            $class_name = '\\Modules\\Plugin\\' . 'Ampache' . $type ;
+            $plugins[]  = new $class_name();
+            
         }
       
-        return view('modules.catalogs.index', compact('catalogs'));
+        return view('modules.index', ['modules' => $plugins, 'title' => $title, 'type' => $module_type]);
     }
   
   
-    public function action($type, $action)
+    public function action($type, $action, request $request)
     {
-        $module  = 'Catalog_' . $type;
-        $catalog = new $module();
+        $module = $request->module;
+        switch ($module)
+        {
+            case "Catalog":
+                $module  = 'Catalog_' . $type;
+                if (Schema::hasTable(lcfirst($module))) {
+                    if ($action == 'Disable') {
+                        DB::table('catalogs')->where('catalog_type', '=', $type)->delete();
+                        Schema::dropIfExists(lcfirst($module));
+                    }
+                } else {
+                    $catalog = new $module();
+                    $catalog->install();
+                }
+                break;
+            case "Plugin":
+                $plugin = new PluginService();
+                $plugin->_get_info($type); 
+                if ($action == 'Enable') {
+                    $plugin->install();
+                } else {
+                    $plugin->uninstall();
+                }
+                break;
+                
+            case "Localplay":
+                $localplay = new LocalplayService();
+                $localplay->_get_info($type);
+                if ($action == 'Enable') {
+                    $localplay->install();
+                } else {
+                    $localplay->uninstall();
+                }
+                break;
+                
+            default:
+        }
         //Check to see if $type is installed
       
-        if (Schema::hasTable('catalog_' . $type)) {
-            if ($action == 'Disable') {
-                Schema::drop('catalog_' . $type);
-            }
-        } else {
-            $catalog->install();
-        }
       
         return 'true';
     }
   
     public function get_module_types($type)
     {
-        $basedir = base_path('/modules/' . str_plural($type));
-        $handle  = opendir($basedir);
-        if (!(file_exists($basedir)) || !($handle)) {
-            Log::alert("Modules directory doesn't exist or cannot be read");
+        $basedir = base_path('modules/' . $type);
+        try {
+            $handle  = opendir($basedir);
+        } catch (Exception $e) {
+            Log::alert("Module directory doesn't exist or cannot be read");
 
             return array();
         }
-        $results = array();
-      
+    $results = array();
         while (false !== ($file = readdir($handle))) {
             if ($file === '.' || $file === '..') {
                 continue;
             }
             /* Make sure it is a dir */
             if (! is_dir($basedir . '/' . $file)) {
-                Log::alert('catalog: $file' . ' is not a directory.');
+                Log::alert('catalog: $preferencefile' . ' is not a directory.');
                 continue;
             }
-            $temp = $basedir . '/' . $file . '/' . $file . '.catalog.php';
+            switch ($type) {
+                case 'localplay':
+                    $fullPath = $basedir . '/' . $file . '/' . strtolower($file) . '.controller' . '.php';
+                    break;
+                case 'catalog':
+                    $fullPath = $basedir . '/' . $file . '/' . strtolower($file) . '.' . $type . '.php';
+                    break;
+            }
             // Make sure the plugin base file exists inside the plugin directory
-            if (! file_exists($basedir . '/' . $file . '/' . strtolower($file) . '.catalog.php')) {
-                Log::alert('Missing class for ' . $file, 3);
+            if (! file_exists($fullPath)) {
+                Log::alert('Missing class for ' . $file, [3]);
                 continue;
             }
           
@@ -102,5 +149,20 @@ class ModulesController extends Controller
         } // end while
       
         return $results;
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $input         = $request->all();
+        $catalog_types = $this->get_module_types('catalog');
+        if (in_array($id, $catalog_types)) {
+            if ($input[$id] == true) {
+                $catalog = 'Catalog_' . $id;
+                $cat_type == new $catalog();
+                $cat_type->install();
+            }
+        }
+        Schema::hasTable('catalog_' . $id);
+        $preference = Catalog::find($id);
     }
 }

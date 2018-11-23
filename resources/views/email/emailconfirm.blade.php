@@ -15,7 +15,7 @@
 <div class=”panel-body”>
 
 Your Email is successfully verified. Click here to <a class="w3-text-orange" 
- onclick="dialogEdit('','', '', 'user-login')"><u style="cursor:pointer">login</u></a>
+ href="{{ url('/login') }}"><u style="cursor:pointer">login</u></a>
 
 </div>
 

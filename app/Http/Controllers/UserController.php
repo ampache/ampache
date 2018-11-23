@@ -178,6 +178,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->roles()->detach(); //Remove exisiting role associated to a user
         $user->delete();
+
         return response('Removed', 200);
     }
     

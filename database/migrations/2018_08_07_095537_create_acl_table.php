@@ -19,16 +19,13 @@ class CreateACLTable extends Migration
                   ->nullable();
             $table->ipAddress('start')->index();
             $table->ipAddress('end')->index();
-            $table->smallInteger('level', 3)->index()
-                  ->default('5');
+            $table->smallInteger('level')
+                  ->default('25');
             $table->string('type', 64)
                   ->nullable();
             $table->integer('user');
             $table->boolean('enabled')->index()
                   ->default('1');
-            $table->engine = 'MYISAM';
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
         });
     }
 
@@ -39,6 +36,6 @@ class CreateACLTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('_a_c_l');
+        Schema::dropIfExists('access_list');
     }
 }

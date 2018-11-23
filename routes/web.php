@@ -10,21 +10,21 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*
-Route::get('/', function () {
-    return view('home');
-});
-*/
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Auth::routes();
-Route::get('/verifyemail/{token}', 'Auth\RegisterController@verify');
-Route::get('/', function () {
+//Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    Auth::routes(['verify' => true]);
+
+ Route::get('/', function () {
+    if (!Auth::check()) {
+        Auth::loginUsingId(0, true);
+    }
     return view('home');
-});
+    
+ });
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('users/delete/{id}', 'UserController@destroy');
@@ -48,8 +48,11 @@ Route::get('/lighttab', function () {
 
 Route::get('loadtab/{tab}', 'SidebarController@loadTab');
    
-Route::get('/modules/{type}/{action}', 'ModulesController@action');
+Route::put('/modules/{type}/{action}', 'ModulesController@action');
 Route::get('/modules/show_catalogs', 'ModulesController@show_catalogs');
+Route::get('/modules/show_localplay', 'ModulesController@show_localplay');
+Route::get('/modules/show_plugins', 'ModulesController@show_plugins');
+Route::resource('modules', 'ModulesController');
 Route::get('/SSE/{action}/{catalogs}/{options}', 'SSEController@processAction');
 
 Route::get('/apikey/create/{id}', function ($id) {
@@ -66,6 +69,5 @@ Route::resource('image', 'ImageController');
 Route::resource('/preference/{preference}/edit', 'PreferenceController');
 
 //Route::resource('preference/{id}', 'PreferenceController');
-Route::get('user_preference/{id}/edit', 'User_PreferenceController@edit');
-Route::post('user_preference/store', 'User_PreferenceController@store');
 Route::resource('preference', 'PreferenceController');
+

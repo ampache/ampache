@@ -10,6 +10,9 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Jobs\SendVerificationEmail;
 use \Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Swift_TransportException;
+use App\Mail\EmailVerification;
 
 class RegisterController extends Controller
 {
@@ -105,10 +108,17 @@ class RegisterController extends Controller
             return back()
              ->with('status', 'Are you sure you are human? Please try the Captcha again');
         }
-         
-        event(new Registered($user = $this->create($request->all())));
+        $user = $this->create($request->all());
         $userCount = DB::table("users")->count();
         if ($userCount > 2) {
+            try {
+                $registered = new Registered($user);
+                event($registered);
+            } catch (Swift_TransportException $e) {
+                return back()
+                ->with('status', $e->getMessage())->withInput();
+            }
+        
             $user->assignRole('User');
             $role_id = DB::table('roles')->select('id')->where('name', 'User')->get();
             DB::table('role_users')->insert(
@@ -118,15 +128,9 @@ class RegisterController extends Controller
             $user->assignRole('Administrator');
             $user->access = 100;
             $user->save();
-            $role_id = DB::table('roles')->select('id')->where('name', 'Administrator')->get();
-            DB::table('role_users')->insert(
-                 ['user_id' => $user->id, 'role_id' => $role_id[0]->id]
-             );
         }
         if (config('user.email_confirm') == true) {
-            dispatch(new SendVerificationEmail($user));
-
-            return view('email.verification');
+            return view('auth.verify');
         } else {
             return view('welcome', ['Name' => $user->fullname]);
         }
@@ -139,12 +143,7 @@ class RegisterController extends Controller
      //     * @return App\Models\User
      */
     protected function create(array $data)
-    {
-        if (config('user.email_confirm') == true) {
-            $columns = ['email_token' => base64_encode($data['email'])];
-        } else {
-            $columns = ['verified' => 1];
-        }
+    {        
         $req_fields = config('user.registration_mandatory_fields');
         if ($req_fields) {
             foreach ($req_fields as $field) {
@@ -155,7 +154,7 @@ class RegisterController extends Controller
         return User::create([
             'username' => $data['username'],
             'fullname' => $data['fullname'],
-            'email'    => $data['email'],
+            'email' => $data['email'],
             'password' => $data['password'],
             $columns,
         ]);

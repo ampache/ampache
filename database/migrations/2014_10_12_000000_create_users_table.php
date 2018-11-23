@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username');
-            $table->string('full_name', 225)
+            $table->string('fullname', 225)
                   ->nullable();
             $table->string('email')->unique();
             $table->string('password', 60);
@@ -30,14 +30,8 @@ class CreateUsersTable extends Migration
                   ->nullable();
             $table->boolean('disabled')
                   ->default(false);
-            $table->boolean('verified')
-                  ->default(false);
-            $table->timestamp('last_login')
-                  ->nullable()
-                  ->after('remember_token');
-            $table->string('last_login_ip')
-                  ->nullable()
-                  ->after('last_login');
+            $table->timestamp('email_verified_at')
+                  ->nullable();
             $table->boolean('name_public')
                   ->default(false);
             $table->string('street')
@@ -55,10 +49,12 @@ class CreateUsersTable extends Migration
             $table->binary('avatar')
                   ->nullable();
             $table->rememberToken();
-            $table->string('email_token')
-                  ->nullable();
+            $table->timestamp('last_login')
+            ->nullable();
+            $table->string('last_login_ip')
+            ->nullable();
             $table->timestamps();
-            $table->engine = 'MYISAM';
+            $table->engine = 'InnoDB';
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
         });

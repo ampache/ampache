@@ -3,14 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Preference;
-use App\Models\Preference_role;
+use App\Facades\AmpConfig;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Xinax\LaravelGettext\Facades\LaravelGettext;
 use App\Models\User;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 
 class PreferenceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -40,6 +47,11 @@ class PreferenceController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        if (isset($roles)) {
+            $user->roles()->sync($roles);  //If one or more role is selected associate user to roles
+        } else {
+            $user->roles()->detach(); //If no role is selected remove exisiting role associated to a user
+        }
     }
 
     /**
@@ -60,11 +72,12 @@ class PreferenceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($preference)
-    {        
-        $preferences = Preference::where('category', '=', 'interface')
-        ->orderBy('subcategory', 'asc')->simplePaginate(15);
-        $roles = Role::all();            
-        return view('preferences.edit', ['preferences' => $preferences, 'roles' => $roles]);
+    {
+        $offset      = AmpConfig::get('offset_limit');
+        $preferences = Preference::where('category', '=', $preference)->orderBy('subcategory', 'asc')->simplePaginate($offset);
+        $roles       = Role::all();
+
+        return view('preferences.edit', ['preferences' => $preferences, 'roles' => $roles, 'title' => $preference]);
     }
 
     /**
@@ -76,21 +89,19 @@ class PreferenceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->all();
-        $array1 = array('_token' => 1, '_method' => 2, 'basic' => 3);
-        $name = key(array_diff_key($data, $array1));
-        $result = Preference_role::where('preference_id', '=', $id)->delete();
-        foreach ($data['basic'] as $role_id)
-        {
-            $role = Preference_role::insert( ['role_id' => $role_id,'preference_id' => (int)$id], ['role_id' => $role_id,'preference_id' => (int)$id]);
+        $input      = $request->all();
+        $preference = Preference::find($id);
+        if (array_key_exists('name', $input)) {
+            $preference->value = $input[$preference->name];
+            $preference->save();
         }
-        $result = Preference::find($id);
-        if ($result->value != $data[$name])
-        {
-            $result->value = $name[0];
-            $result->save();
+        $roles = $request['roles']; //Retreive all roles
+        
+        if (isset($roles)) {
+            $preference->roles()->sync($roles);  //If one or more role is selected associate user to roles
+        } else {
+            $preference->roles()->detach(); //If no role is selected remove exisiting role associated to a user
         }
-    
     }
 
     /**
