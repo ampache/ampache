@@ -30,6 +30,7 @@ class UserController extends Controller
     {
         //Get all users and pass it to the view
         $user_ids = DB::table('users')->pluck('id');
+        $user_ids = $user_ids->filter()->all();
         $owner    = DB::table('role_users')->min('user_id');
 
         return view('users.index', ['User_ids' => $user_ids, 'owner' => $owner]);
