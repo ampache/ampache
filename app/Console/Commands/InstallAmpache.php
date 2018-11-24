@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Schema;
 use PDO;
 use PDOException;
 use Illuminate\Console\ConfirmableTrait;
+use Dotenv\Dotenv;
 
 class InstallAmpache extends Command
 {
@@ -47,6 +48,8 @@ class InstallAmpache extends Command
      */
     public function handle()
     {
+        $dotenv = new Dotenv(base_path());
+        chdir(base_path());
         //SET [GLOBAL|SESSION] sql_mode='NO_AUTO_VALUE_ON_ZERO'
         //ALTER TABLE users AUTO_INCREMENT = 0;
         $exampleFile = base_path('.env.example');
@@ -56,7 +59,10 @@ class InstallAmpache extends Command
             if (strtolower($resp) !== 'no') {
                 copy($exampleFile, $envfile);
             }
+        } else {
+            copy($exampleFile, $envfile);
         }
+        $dotenv->load();
         //create new app key.
         $this->callSilent('key:generate');
         $connectionOk = false;
@@ -84,7 +90,7 @@ class InstallAmpache extends Command
             config(['database.connections.mysql.password' => $pass]);
             $this->setKeyInEnvironmentFile([env('DB_PASSWORD'), 'DB_PASSWORD', $pass]);
             //test connection.
-            $dsn = 'mysql:host=' . $host;
+            $dsn = 'mysql:host=' . $host . ";port=" . $port;
             try {
                 $this->dbh    = new \PDO($dsn, $user, $pass);
                 $connectionOk = true;
@@ -94,21 +100,21 @@ class InstallAmpache extends Command
         }
         //Check for existing database
         while ($this->schemaExists($dbname)) {
-            $response = $this->ask('Database ' . $dbname . ' exists. Do you want to overwrite?', 'y/N');
-            if (substr($response, 0, 1) === 'y') {
+            $response = $this->choice('Database ' . $dbname . ' exists. Do you want to overwrite?', ['overwrite', 'change', 'cancel'], 0);
+            if ($response == 'overwrite') {
                 $this->dropDatabase($dbname);
-                break;
-            } else {
+            } elseif ($response == 'change') {
                 $dbname = $this->ask('Please enter the mysql database name:', env('DB_DATABASE', 'ampache'));
+            } else {
+                exit("Install cancelled");
             }
         }
-        $this->createSchema($dbname);
         
+        $this->createSchema($dbname);
         //Migrate database structure
-        $this->call('migrate');
-        $this->call('db:seed');
+        passthru("php artisan migrate");
+        passthru('php artisan db:seed');
         $user_pass = bcrypt('guest');
-        $dsn       = "mysql:host=" . env('DB_HOST', "localhost");
         try {
             $created_at = now();
             $statement  = "SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO'";
@@ -179,10 +185,8 @@ class InstallAmpache extends Command
     protected function createSchema($dbName)
     {
         try {
-            $charset   = config(['database.connections.mysql.charset']);
-            $collation = config(['database.connections.mysql.collation']);
             $query     = "CREATE DATABASE ampache CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';";
-            $result    = $this->dbh->query($query);
+            $this->dbh->query($query);
         } catch (\PDOException $e) {
             $this->error("There was an error creating new database");
             exit;
