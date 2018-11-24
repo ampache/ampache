@@ -1,3 +1,4 @@
+/bootstrap/cache
 /node_modules
 /public/hot
 /public/storage
@@ -25,5 +26,4 @@ public/images/
 public/themes/
 storage/
 .gitattributes
-modules/
 .php_cs.cache

@@ -19,11 +19,11 @@ use App\Models\User;
     Auth::routes(['verify' => true]);
 
  Route::get('/', function () {
-     if (!Auth::check()) {
+     if (!Auth::check() && config('app.allow_guest')) {
          Auth::loginUsingId(0, true);
      }
 
-     return view('home');
+     return view('auth.login');
  });
 
 Route::get('/home', 'HomeController@index')->name('home');

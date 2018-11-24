@@ -17,7 +17,8 @@ class RedirectIfNotInstalled
      */
     public function handle($request, Closure $next)
     {
-        if (!env('AMPACHE_INSTALLED')) {
+        $installed = config('app.installed');
+        if (!$installed) {
             abort(503);
         }
           

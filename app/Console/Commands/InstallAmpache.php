@@ -3,13 +3,12 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use PDO;
 use PDOException;
 use Illuminate\Console\ConfirmableTrait;
 use Dotenv\Dotenv;
+use Modules\Catalog\Local\Catalog_local;
 
 class InstallAmpache extends Command
 {
@@ -64,7 +63,8 @@ class InstallAmpache extends Command
         }
         $dotenv->load();
         //create new app key.
-        $this->callSilent('key:generate');
+        passthru("php artisan key:generate");
+        
         $connectionOk = false;
         while ($connectionOk == false) {
             $dbname = $this->ask('Please enter the mysql database name:', env('DB_DATABASE', 'ampache'));
@@ -126,7 +126,7 @@ class InstallAmpache extends Command
             $this->error($e->getMessage());
             exit;
         }
-        
+                
         $this->setKeyInEnvironmentFile([env('AMPACHE_INSTALLED'), 'AMPACHE_INSTALLED', 'YES']);
         
         $this->comment("\nFinished initializing Ampache.");

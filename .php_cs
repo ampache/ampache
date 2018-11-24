@@ -1,19 +1,20 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude(__DIR__ . '/components')
-    ->exclude(__DIR__ . '/vendor')
-    ->exclude(__DIR__ . '/modules')
-    ->exclude(__DIR__ . '/nbproject')
-	->exclude(__DIR__ . '/storage')
-    ->exclude(__DIR__ . '/storage/framework')
-    ->exclude(__DIR__ . '/resources')
-    ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
+    ->exclude('components')
+    ->exclude('vendor')
+     ->exclude('nbproject')
+	->exclude('storage')
+    ->exclude('storage/framework')
+    ->exclude('bootstrap') 
+    ->notPath('bootstrap/cache/services.php')
+    ->notPath('bootstrap/cache/packages.php')
+   ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
     ->in(__DIR__)
 ;
 
 return PhpCsFixer\Config::create()
-    ->setRules([
+     ->setRules([
         '@PSR2' => true,
         'strict_param' => false,
 		'no_trailing_whitespace' => true,
