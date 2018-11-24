@@ -1,10 +1,9 @@
 <?php
 
-use Stien\TvDb\Facades\TvDb;
-use Stien\TvDb\TvDbServiceProvider;
-
 return [
-
+    
+    
+      'installed' => env('AMPACHE_INSTALLED'),
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -169,8 +168,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
         Tmdb\Laravel\TmdbServiceProvider::class,
-        TvDbServiceProvider::class,
- //      Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
+  //      Njasm\Laravel\Soundcloud\SoundcloudProvider::class,
         /*
          * Package Service Providers...
          */

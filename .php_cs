@@ -7,8 +7,10 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude(__DIR__ . '/nbproject')
 	->exclude(__DIR__ . '/storage')
     ->exclude(__DIR__ . '/storage/framework')
-    ->exclude(__DIR__ . '/resources')
-    ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
+    ->exclude(__DIR__ . '/bootstrap') 
+    ->notPath(__DIR__ . '/bootstrap/cache/services.php')
+    ->notPath(__DIR__ . '/bootstrap/cache/packages.php')
+   ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
     ->in(__DIR__)
 ;
 

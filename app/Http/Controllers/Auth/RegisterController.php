@@ -111,14 +111,15 @@ class RegisterController extends Controller
         $user      = $this->create($request->all());
         $userCount = DB::table("users")->count();
         if ($userCount > 2) {
-            try {
-                $registered = new Registered($user);
-                event($registered);
-            } catch (Swift_TransportException $e) {
-                return back()
+            if (config('user.email_confirm')) {
+                try {
+                    $registered = new Registered($user);
+                    event($registered);
+                } catch (Swift_TransportException $e) {
+                    return back()
                 ->with('status', $e->getMessage())->withInput();
+                }
             }
-        
             $user->assignRole('User');
             $role_id = DB::table('roles')->select('id')->where('name', 'User')->get();
             DB::table('role_users')->insert(

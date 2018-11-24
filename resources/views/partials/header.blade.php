@@ -3,7 +3,7 @@
 
 <div class="w3-bar w3-black w3-border-0 w3-top" style="height:48px;">
   <div class="w3-bar-item" style=" padding: 0px 24px;">
-  <a href="{{ url('/') }}">
+  <a href="{{ url('/home') }}">
     <img width="48" height="48" src="{{ url('/images/ampache.png') }}" title="{{ Config::get('theme.title') }}" alt="{{ Config::get('theme.title') }}" />
   </a>
 </div>
