@@ -1574,6 +1574,9 @@ abstract class Catalog extends database_object
         $new_song->file        = $results['file'];
         $new_song->title       = $results['title'];
         $new_song->year        = $results['year'];
+        if ($new_song->year < 0) { //no year = -1 in most programs, but this leads to error in db-update statement
+            $new_song->year = 0;
+        }
         $new_song->comment     = $results['comment'];
         $new_song->language    = $results['language'];
         $new_song->lyrics      = str_replace(
