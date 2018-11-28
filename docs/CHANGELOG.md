@@ -3,6 +3,7 @@ CHANGELOG
 
 3.9.0
 ----------
+- Autoupdate now ignores pre-release (preview) versions.
 - Video details now correctly displayed for personal video.
 - XML API now fully accepts user's API key. Session will be extended if it exists; Otherwise it's replaced.
 - Artist name added to Lastfm track.getsimilar query.

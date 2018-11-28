@@ -141,12 +141,15 @@ class AutoUpdate
             else {
                 $tags = self::github_request('/tags');
                 if (!empty($tags)) {
-                    $lastversion = $tags[0]->name;
-                    Preference::update('autoupdate_lastversion', $GLOBALS['user']->id, $lastversion);
-                    AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                    $available = self::is_update_available(true);
-                    Preference::update('autoupdate_lastversion_new', $GLOBALS['user']->id, $available);
-                    AmpConfig::set('autoupdate_lastversion_new', $available, true);
+                    $str = strstr($tags[0]->name, "pre-release");
+                    if (!$str) {
+                        $lastversion = $tags[0]->name;
+                        Preference::update('autoupdate_lastversion', $GLOBALS['user']->id, $lastversion);
+                        AmpConfig::set('autoupdate_lastversion', $lastversion, true);
+                        $available = self::is_update_available(true);
+                        Preference::update('autoupdate_lastversion_new', $GLOBALS['user']->id, $available);
+                        AmpConfig::set('autoupdate_lastversion_new', $available, true);
+                    }
                 }
             }
         }
