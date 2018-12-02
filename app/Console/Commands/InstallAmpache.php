@@ -3,12 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use PDO;
 use PDOException;
 use Illuminate\Console\ConfirmableTrait;
 use Dotenv\Dotenv;
-use Modules\Catalog\Local\Catalog_local;
+use Dotenv\Loader;
 
 class InstallAmpache extends Command
 {
@@ -29,7 +28,19 @@ class InstallAmpache extends Command
      * @var string
      */
     protected $description = 'Initialize Ampache';
-
+    
+    protected $dbname = "";
+    
+    protected $password = "";
+    
+    protected $dsn = "";
+    
+    protected $user = "";
+    
+    protected $port = "";
+    
+    protected $host = "";
+    
     /**
      * Create a new command instance.
      *
@@ -47,73 +58,80 @@ class InstallAmpache extends Command
      */
     public function handle()
     {
-        $dotenv = new Dotenv(base_path());
         chdir(base_path());
-        //SET [GLOBAL|SESSION] sql_mode='NO_AUTO_VALUE_ON_ZERO'
-        //ALTER TABLE users AUTO_INCREMENT = 0;
         $exampleFile = base_path('.env.example');
         $envfile     = base_path('.env');
         if (file_exists($envfile)) {
-            $resp =  $this->ask('Do you want to overwrite existing .env file?', 'no');
-            if (strtolower($resp) !== 'no') {
+            $resp =  $this->ask('Do you want to overwrite existing .env file?', 'y|N');
+            if (strtolower($resp) !== 'n') {
                 copy($exampleFile, $envfile);
             }
         } else {
             copy($exampleFile, $envfile);
         }
-        $dotenv->load();
         //create new app key.
-        passthru("php artisan key:generate");
+        $dotenv = new Dotenv(base_path(), '.env');
+        $dotenv->overload();
+        $this->host   = env('DB_HOST', 'localhost');
+        $this->dbname = env('DB_DATABASE', 'ampache');
+        $this->port   = env('DB_PORT', '3306');
+        $this->user   = env('DB_USERNAME', 'root');
+        
+        $this->info('Generating new application key');
+        
+        $this->call("key:generate");
         
         $connectionOk = false;
         while ($connectionOk == false) {
-            $dbname = $this->ask('Please enter the mysql database name:', env('DB_DATABASE', 'ampache'));
-            config(['database.connections.mysql.database' => $dbname]);
-            $this->setKeyInEnvironmentFile([env('DB_DATABASE'), 'DB_DATABASE', $dbname]);
-            $host = $this->ask('Please enter the mysql database host:', env('DB_HOST', 'localhost'));
-            config(['database.connections.mysql.host' => $host]);
-            $this->setKeyInEnvironmentFile([env('DB_HOST'), 'DB_HOST', $host]);
-            $port = $this->ask('Please enter the mysql database port:', env('DB_PORT', '3306'));
-            config(['database.connections.mysql.port' => $port]);
-            $this->setKeyInEnvironmentFile([env('DB_PORT'), 'DB_PORT', $port]);
-        
-            $user = $this->ask('Please enter the mysql database user name: ', env('DB_USERNAME'));
-            config(['database.connections.mysql.username' => $user]);
-            $this->setKeyInEnvironmentFile([env('DB_USERNAME'), 'DB_USERNAME', $user]);
+            $this->dbname = $this->ask('Please enter the mysql database name:', $this->dbname);
+            $this->setKeyInEnvironmentFile([env('DB_DATABASE'), 'DB_DATABASE', $this->dbname]);
+            $this->host = $this->ask('Please enter the mysql database host:', $this->host);
+            $this->setKeyInEnvironmentFile([env('DB_HOST'), 'DB_HOST', $this->host]);
+            $this->port = $this->ask('Please enter the mysql database port:', $this->port);
+            $this->setKeyInEnvironmentFile([env('DB_PORT'), 'DB_PORT', $this->port]);
+            $this->user = $this->ask('Please enter the mysql database user name: ', $this->user);
+            $this->setKeyInEnvironmentFile([env('DB_USERNAME'), 'DB_USERNAME', $this->user]);
             do {
-                $pass  = $this->secret('Please enter the password associated with this user');
-                $pass1 = $this->secret('Please confirm password: ');
-                if ($pass != $pass1) {
+                $this->password  = $this->secret('Please enter the password associated with this user');
+                $pass1           = $this->secret('Please confirm password: ');
+                if ($this->password != $pass1) {
                     $this->error("The passwords don't match. Please enter again.");
+                    $this->password = $pass1 = false;
                 }
-            } while ($pass != $pass1);
-            config(['database.connections.mysql.password' => $pass]);
-            $this->setKeyInEnvironmentFile([env('DB_PASSWORD'), 'DB_PASSWORD', $pass]);
+            } while (empty($this->password) || empty($pass1));
+            $this->setKeyInEnvironmentFile([env('DB_PASSWORD'), 'DB_PASSWORD', $this->password]);
+            config(['database.connections.mysql.password' => $this->password]);
             //test connection.
-            $dsn = 'mysql:host=' . $host . ";port=" . $port;
+            $this->dsn = 'mysql:host=' . $this->host . ";port=" . $this->port;
             try {
-                $this->dbh    = new \PDO($dsn, $user, $pass);
+                $this->dbh    = new \PDO($this->dsn, $this->user, $this->password);
                 $connectionOk = true;
             } catch (\PDOException $e) {
                 $this->error("There is an error in hostname, username or password. Please enter again.");
+                continue;
             }
         }
         //Check for existing database
-        while ($this->schemaExists($dbname)) {
-            $response = $this->choice('Database ' . $dbname . ' exists. Do you want to overwrite?', ['overwrite', 'change', 'cancel'], 0);
+        $response = '';
+        if ($this->schemaExists($this->dbname)) {
+            $response = $this->choice('Database ' . $this->dbname . ' exists. Do you want to overwrite?', ['overwrite', 'change', 'cancel'], 0);
             if ($response == 'overwrite') {
-                $this->dropDatabase($dbname);
+                $this->dropDatabase($this->dbname);
             } elseif ($response == 'change') {
-                $dbname = $this->ask('Please enter the mysql database name:', env('DB_DATABASE', 'ampache'));
+                $this->dbname = $this->ask('Please enter the new database name:');
+                $this->setKeyInEnvironmentFile([env('DB_DATABASE'), 'DB_DATABASE', $this->dbname]);
             } else {
-                exit("Install cancelled");
+                exit("Install cancelled\n");
             }
         }
         
-        $this->createSchema($dbname);
+        $this->createSchema($this->dbname);
         //Migrate database structure
-        passthru("php artisan migrate");
-        passthru('php artisan db:seed');
+        $loader = new Loader(base_path(), '.env');
+        $loader->setEnvironmentVariable('DB_PASSWORD', $this->password);
+        $this->call('migrate');
+        $loader->setEnvironmentVariable('DB_PASSWORD', $this->password);
+        $this->call('db:seed');
         $user_pass = bcrypt('guest');
         try {
             $created_at = now();
@@ -121,7 +139,7 @@ class InstallAmpache extends Command
             $this->dbh->exec($statement);
             $statement = "INSERT INTO `ampache`.`users` (`id`, `username`, `fullname`, `access`, `email`, `password`, `created_at`) " .
                 "VALUES (0, 'guest', 'Ampache Guest', 5, 'guest@ampache.org', '" . $user_pass . "', '" . $created_at . "');";
-            $res = $this->dbh->exec($statement);
+            $this->dbh->exec($statement);
         } catch (PDOException $e) {
             $this->error($e->getMessage());
             exit;
@@ -134,11 +152,6 @@ class InstallAmpache extends Command
 
     protected function setKeyInEnvironmentFile($key)
     {
-        $currentKey = $key[0];
-        if (strlen($currentKey) !== 0 && (! $this->confirmToProceed())) {
-            return false;
-        }
-        
         $this->writeNewEnvironmentFileWith($key);
         
         return true;
@@ -157,9 +170,16 @@ class InstallAmpache extends Command
     
     protected function dropDatabase($dbname)
     {
-        $query = "DROP DATABASE " . $dbname;
-
-        return DB::statement($query);
+        try {
+            $this->dsn    = 'mysql:host=' . $this->host . ";port=" . $this->port;
+            $this->dbh    = new PDO($this->dsn, $this->user, $this->password);
+            
+            $query = "DROP DATABASE " . $dbname;
+            $this->dbh->query($query);
+        } catch (\PDOException $e) {
+            $this->error("There was an error creating new database");
+            exit;
+        }
     }
     
     protected function keyReplacementPattern($key)
@@ -169,23 +189,26 @@ class InstallAmpache extends Command
         return "/^" . $key[1] . "{$escaped}/m";
     }
     
-    protected function schemaExists($dbName)
+    protected function schemaExists($dbname)
     {
         try {
-            $query  =  "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '$dbName'";
-            $result = $this->dbh->query($query);
+            $this->dbh    = new PDO($this->dsn, $this->user, $this->password);
+            
+            $sql   =  "SELECT COUNT(`schema_name`) FROM `information_schema`.`schemata` WHERE `schema_name` = '$dbname'";
+            $count = $this->dbh->query($sql)->fetchColumn();
 
-            return $result->rowCount() > 0 ? true : false;
+            return $count > 0 ? true : false;
         } catch (PDOException $e) {
             $this->error("There was an error accessing the information table!");
             exit;
         }
     }
     
-    protected function createSchema($dbName)
+    protected function createSchema($dbname)
     {
         try {
-            $query     = "CREATE DATABASE ampache CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';";
+            $this->dbh = new PDO($this->dsn, $this->user, $this->password);
+            $query     = "CREATE DATABASE $dbname CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';";
             $this->dbh->query($query);
         } catch (\PDOException $e) {
             $this->error("There was an error creating new database");
