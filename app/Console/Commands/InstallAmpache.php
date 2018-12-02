@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Exception;
 use PDO;
 use PDOException;
 use Illuminate\Console\ConfirmableTrait;
@@ -60,26 +61,32 @@ class InstallAmpache extends Command
     {
         chdir(base_path());
         $exampleFile = base_path('.env.example');
-        $envfile     = base_path('.env');
-        if (file_exists($envfile)) {
+        $envFile     = base_path('.env');
+        $copied      = false;
+        if (file_exists($envFile)) {
             $resp =  $this->ask('Do you want to overwrite existing .env file?', 'y|N');
             if (strtolower($resp) !== 'n') {
-                copy($exampleFile, $envfile);
+                $copied = $this->copyFile($exampleFile, $envFile);
             }
         } else {
-            copy($exampleFile, $envfile);
+            $copied = $this->copyFile($exampleFile, $envFile);
         }
-        //create new app key.
+        //wait for system to finish if copied.
+        if ($copied) {
+            sleep(3);
+        }
+ 
         $dotenv = new Dotenv(base_path(), '.env');
         $dotenv->overload();
         $this->host   = env('DB_HOST', 'localhost');
         $this->dbname = env('DB_DATABASE', 'ampache');
         $this->port   = env('DB_PORT', '3306');
         $this->user   = env('DB_USERNAME', 'root');
-        
+
         $this->info('Generating new application key');
         
         $this->call("key:generate");
+        
         
         $connectionOk = false;
         while ($connectionOk == false) {
@@ -144,12 +151,27 @@ class InstallAmpache extends Command
             $this->error($e->getMessage());
             exit;
         }
-                
+        //create new app key.
+      
         $this->setKeyInEnvironmentFile([env('AMPACHE_INSTALLED'), 'AMPACHE_INSTALLED', 'YES']);
         
         $this->comment("\nFinished initializing Ampache.");
     }
-
+    
+    protected function copyFile($exampleFile, $envFile)
+    {
+        $inFile  = fopen($exampleFile, 'r');
+        $outFile = fopen($envFile, 'wb');
+        try {
+            $contents = fread($inFile, filesize($exampleFile));
+            fwrite($outFile, $contents) ;
+            fclose($inFile);
+            fclose($outFile);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
     protected function setKeyInEnvironmentFile($key)
     {
         $this->writeNewEnvironmentFileWith($key);
