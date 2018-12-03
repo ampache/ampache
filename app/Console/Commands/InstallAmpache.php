@@ -135,10 +135,10 @@ class InstallAmpache extends Command
         $this->createSchema($this->dbname);
         //Migrate database structure
         $loader = new Loader(base_path(), '.env');
-        $loader->setEnvironmentVariable('DB_PASSWORD', $this->password);
-        $this->call('migrate');
-        $loader->setEnvironmentVariable('DB_PASSWORD', $this->password);
-        $this->call('db:seed');
+        $dotenv->overload();
+        
+        passthru('php artisan migrate --force');
+        passthru('php artisan db:seed');
         $user_pass = bcrypt('guest');
         try {
             $created_at = now();
