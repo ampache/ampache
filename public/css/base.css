@@ -1,0 +1,320 @@
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+/**
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * Copyright 2001 - 2015 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+/*****************************************************************************/
+/* Base Definitions, may be overwridden by themes
+/*****************************************************************************/
+
+/*****************
+ * Tag Definitions
+ *****************/
+
+.tag_size1 {
+    font-size:.6em;
+}
+.tag_size2 {
+    font-size:.8em;
+}
+.tag_size3 {
+    font-size:1em;
+}
+.tag_size4 {
+    font-size:1.2em;
+}
+
+a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
+
+.hover-add:hover { color: #347C17; }
+.hover-remove:hover { color: #FF0000; }
+
+/*****************
+ * Generic / Misc
+ *****************/
+
+.hidden {
+    visibility: hidden;
+}
+
+.item_on {
+    color: #347C17;
+}
+
+.item_off {
+    color: #FF0000;
+}
+
+#tabs_wrapper {
+	width: auto;
+}
+
+#tabs_container {
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    line-height: 18px;
+    border-color: #333;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#tabs li {
+	display: inline-block;
+    font-size: 18px;
+    line-height: 18px;
+    margin-right: 30px;
+}
+
+#tabs li a {
+    color: #ff9d00;
+    text-decoration: none;
+}
+
+#tabs li a:hover {
+    color: #ffc466;
+    outline: 0;
+}
+
+#tabs li.tab_active a {
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    padding-bottom: 10px;
+    text-shadow: none;
+    border-bottom: 2px solid #666;
+}
+
+#tabs_content {
+	padding: 10px;
+	width: auto;
+}
+
+.tab_content {
+	display: none;
+}
+
+#aslideshow {
+    background: rgba(0, 0, 0, 0.9);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 5000;
+    display: none;
+}
+
+#aslideshow_container  {
+    width: 50%;
+    max-height: 600px;
+    height: 100%;
+    margin: 80px auto;
+}
+
+#aslideshow_container .rhino-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#fslider {
+    width: 100%;
+    height: 100%;
+}
+
+.shout {
+    clear: float;
+    width: 400px;
+    height: auto;
+    padding-right: 40px;
+    padding-bottom: 20px;
+}
+.shoutbox-item {
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    line-height: normal;
+    position: relative;
+}
+
+.shoutbox-data {
+    min-height: 75px;
+}
+
+.shoutbox-img {
+    float: left;
+    display:inline;
+    padding-right: 10px;
+}
+
+.shoutbox-info {
+    display:inline;
+}
+
+.shoutbox-object {
+    font-weight: bold;
+}
+
+.shoutbox-date {
+    color: #D6D6D6;
+}
+
+.shoutbox-text {
+    padding-top: 10px;
+    word-wrap: break-word;
+}
+
+.shoutbox-footer {
+    width: 100%;
+    padding-top: 5px;
+}
+
+.shoutbox-actions {
+    display:inline;
+}
+
+.shoutbox-user {
+    font-size: 10px;
+    display:inline;
+    text-align: right;
+    float: right;
+}
+
+.noty_ampache {
+    color: #ffffff;
+    background-color: #222;
+}
+
+.searchart {
+    top: 0px;
+    left: 0px;
+    display: block;
+    height: 24px;
+    width: 24px;
+    margin: 1px 6px;
+    padding: 1px;
+    border: 1px solid #F2F2F2;
+    float: left;
+}
+
+.searchitemtxt {
+    display:inline-block;
+    vertical-align:middle;
+    height: 32px;
+}
+
+#topmenu_container {
+    text-align: center;
+}
+
+.topmenu_container-float {
+    margin-top: 10px;
+}
+
+.topmenu_container-fixed {
+    margin-top: 70px;
+}
+
+#topmenu_item {
+    width: 50px;
+    height: 100%;
+    margin-right: 70px;
+    display: inline-block;
+}
+
+#topmenu_container span {
+    font-size: 14px;
+    line-height: 2em;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#topmenu_container img {
+    height: 50px;
+    width: 50px;
+	z-index: 9999;
+    margin: 2px;
+}
+
+#topmenu_container img:hover {
+    border: 2px solid #ff9d00;
+    margin: 0px;
+}
+
+.browse_custom_value {
+    margin-left: 5px;
+    height: 20px;
+    width: 50px;
+    text-align: center;
+    padding: 0;
+}
+
+.expanded {
+    float: right;
+    margin-top: 5px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+}
+
+.collapsed {
+    float: right;
+    margin-top: 5px;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+#notification {
+	position: fixed;
+    top: auto;
+	bottom: 20px;
+	left: 50%;
+	z-index: 8888;
+	width: 50%;
+	padding: 5px 20px;
+	margin: 0;
+	background-color: #000;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,.5);
+	box-shadow: 0 4px 12px rgba(0,0,0,.5);
+	-webkit-transition: all .5s;
+	transition: all .5s;
+	-webkit-transform: translate(-50%,0);
+	-ms-transform: translate(-50%,0);
+	transform: translate(-50%,0);
+}
+
+#notification.notification-out {
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-webkit-transform: translate(-50%,80px);
+	-ms-transform: translate(-50%,80px);
+	transform: translate(-50%,80px);
+}
+
+#notification img {
+	height: 100%;
+	vertical-align: middle;
+	margin-top: -3px;
+}
+
+#notification-content {
+	margin-left: 10px;
+}

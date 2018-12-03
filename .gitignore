@@ -1,7 +1,5 @@
 /bootstrap/cache
 /node_modules
-/public/hot
-/public/storage
 /storage/*.key
 /vendor
 /storage/framework/
@@ -16,14 +14,6 @@ npm-debug.log
 .project
 nbproject/
 public/build
-public/js/
-public/fonts/
-public/mix-manifest.json
-public/css/
-public/js/
 components/
-public/images/
-public/themes/
-storage/
 .gitattributes
 .php_cs.cache
