@@ -14,13 +14,21 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 //Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
     Auth::routes(['verify' => true]);
 
  Route::get('/', function () {
-     if (!Auth::check() && config('app.allow_guest')) {
+     if (!Auth::check() && config('user.allow_guests')) {
          Auth::loginUsingId(0, true);
+
+         return view('/home');
+     }
+
+     $count = DB::table('users')->count();
+     if ($count < 2) {
+         return view('auth.register');
      }
 
      return view('auth.login');
