@@ -134,8 +134,9 @@ class Catalog_beets extends Beets\Catalog
      */
     public function checkSong($song)
     {
-        $date = new DateTime($song['added']);
-        if ($date->format('U') < $this->last_add) {
+        $date       = new DateTime($song['added']);
+        $last_added = date("Y-m-d H:i:s", $this->last_add);
+        if (date_diff($date, $last_added) < 0) {
             debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', '3');
 
             return true;

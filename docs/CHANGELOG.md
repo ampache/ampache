@@ -3,6 +3,7 @@ CHANGELOG
 
 3.9.1
 ----------
+- Fixed Beets catalog creation and updating.
 - Autoupdate now ignores pre-release (preview) versions.
 - Fixed various command ine utilities in bin folder.
 - Fixed XML api syntax for logging in with user name.
