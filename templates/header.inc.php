@@ -362,7 +362,7 @@ $_SESSION['login'] = false;
                   </a>
                 </h1>
                 <div id="headerbox">
-                    <?php 
+                    <?php
                         UI::show_box_top('', 'box box_headerbox');
                         require_once AmpConfig::get('prefix') . UI::find_template('show_search_bar.inc.php');
                         if (User::is_registered()) {
