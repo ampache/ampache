@@ -173,7 +173,7 @@ generate_pot_utds() {
                 "#######################################################################" >> $tdstxt
 
         mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
-        while read dbprefid; do
+        while read -r dbprefid; do
             dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT description FROM preference where id=$dbprefid")
             dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile)
 			if [ ! -z "$dbprefdesc" ]; then
@@ -193,7 +193,7 @@ generate_pot_utds() {
 		echo "Done for preference description"
 		
         mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
-        while read dbprefid; do
+        while read -r dbprefid; do
             dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcatagory FROM preference where id=$dbprefid AND subcatagory IS NOT NULL")
             dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile $tdstxt)
 			if [ ! -z "$dbprefdesc" ]; then
