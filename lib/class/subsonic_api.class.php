@@ -169,20 +169,21 @@ class Subsonic_Api
         header("Access-Control-Allow-Origin: *");
     }
 
-    public static function apiOutput($input, $xml)
+    public static function apiOutput($input, $xml, $alwaysArray=true)
     {
         $f        = $input['f'];
         $callback = $input['callback'];
-        self::apiOutput2(strtolower($f), $xml, $callback);
+        self::apiOutput2(strtolower($f), $xml, $callback, $alwaysArray);
     }
 
-    public static function apiOutput2($f, $xml, $callback='')
+    public static function apiOutput2($f, $xml, $callback='', $alwaysArray=true)
     {
+        $conf = array('alwaysArray' => $alwaysArray ? array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album') : array());
         if ($f == "json") {
-            $output = json_encode(self::xml2json($xml), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+            $output = json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
         } else {
             if ($f == "jsonp") {
-                $output = $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
+                $output = $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
             } else {
                 $xmlstr = $xml->asXml();
                 //clean illegal XML characters.
@@ -484,7 +485,7 @@ class Subsonic_Api
             $r = Subsonic_XML_Data::createSuccessResponse();
             Subsonic_XML_Data::addArtist($r, $artist, true, true);
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $r, false);
     }
 
     /**
@@ -508,7 +509,7 @@ class Subsonic_Api
             Subsonic_XML_Data::addAlbum($r, $album, true, $addAmpacheInfo);
         }
 
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $r, false);
     }
 
     /**
@@ -730,7 +731,7 @@ class Subsonic_Api
         $r      = Subsonic_XML_Data::createSuccessResponse();
         $song   = Subsonic_XML_Data::getAmpacheId($songid);
         Subsonic_XML_Data::addSong($r, $song);
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $r, false);
     }
 
     /**
@@ -769,7 +770,7 @@ class Subsonic_Api
         $data = Stream::get_now_playing();
         $r    = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addNowPlaying($r, $data);
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $r, false);
     }
 
     /**
@@ -897,7 +898,7 @@ class Subsonic_Api
             $playlist = new Playlist($playlistid);
             Subsonic_XML_Data::addPlaylist($r, $playlist, true);
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $r, false);
     }
 
     /**
