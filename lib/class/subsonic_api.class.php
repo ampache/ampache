@@ -728,7 +728,7 @@ class Subsonic_Api
 
         $songid = self::check_parameter($input, 'id');
         $r      = Subsonic_XML_Data::createSuccessResponse();
-        $song   = new Song(Subsonic_XML_Data::getAmpacheId($songid));
+        $song   = Subsonic_XML_Data::getAmpacheId($songid);
         Subsonic_XML_Data::addSong($r, $song);
         self::apiOutput($input, $r);
     }
