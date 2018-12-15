@@ -169,16 +169,16 @@ class Subsonic_Api
         header("Access-Control-Allow-Origin: *");
     }
 
-    public static function apiOutput($input, $xml, $alwaysArray=true)
+    public static function apiOutput($input, $xml, $alwaysArray=array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'))
     {
         $f        = $input['f'];
         $callback = $input['callback'];
         self::apiOutput2(strtolower($f), $xml, $callback, $alwaysArray);
     }
 
-    public static function apiOutput2($f, $xml, $callback='', $alwaysArray=true)
+    public static function apiOutput2($f, $xml, $callback='', $alwaysArray=array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'))
     {
-        $conf = array('alwaysArray' => $alwaysArray ? array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album') : array());
+        $conf = array('alwaysArray' => $alwaysArray);
         if ($f == "json") {
             $output = json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
         } else {
@@ -485,7 +485,7 @@ class Subsonic_Api
             $r = Subsonic_XML_Data::createSuccessResponse();
             Subsonic_XML_Data::addArtist($r, $artist, true, true);
         }
-        self::apiOutput($input, $r, false);
+        self::apiOutput($input, $r, array('musicFolder', 'child', 'playlist', 'song', 'album'));
     }
 
     /**
@@ -509,7 +509,7 @@ class Subsonic_Api
             Subsonic_XML_Data::addAlbum($r, $album, true, $addAmpacheInfo);
         }
 
-        self::apiOutput($input, $r, false);
+        self::apiOutput($input, $r, array('musicFolder', 'artist', 'child', 'playlist', 'song'));
     }
 
     /**
@@ -731,7 +731,7 @@ class Subsonic_Api
         $r      = Subsonic_XML_Data::createSuccessResponse();
         $song   = Subsonic_XML_Data::getAmpacheId($songid);
         Subsonic_XML_Data::addSong($r, $song);
-        self::apiOutput($input, $r, false);
+        self::apiOutput($input, $r, array('musicFolder', 'artist', 'child', 'playlist', 'album'));
     }
 
     /**
@@ -770,7 +770,7 @@ class Subsonic_Api
         $data = Stream::get_now_playing();
         $r    = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addNowPlaying($r, $data);
-        self::apiOutput($input, $r, false);
+        self::apiOutput($input, $r);
     }
 
     /**
@@ -898,7 +898,7 @@ class Subsonic_Api
             $playlist = new Playlist($playlistid);
             Subsonic_XML_Data::addPlaylist($r, $playlist, true);
         }
-        self::apiOutput($input, $r, false);
+        self::apiOutput($input, $r);
     }
 
     /**
