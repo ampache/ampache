@@ -1096,7 +1096,4 @@ class Album extends database_object implements library_item
 
         return $results;
     }
-
-
-    
 } //end of album class
