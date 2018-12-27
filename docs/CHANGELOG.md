@@ -1,5 +1,14 @@
 CHANGELOG
 =========
+
+3.9.1
+----------
+- Fixed Beets catalog creation and updating.
+- Autoupdate now ignores pre-release (preview) versions.
+- Fixed various command ine utilities in bin folder.
+- Fixed XML api syntax for logging in with user name.
+- Fixed newline display in xml data returned in playlist, etc.
+
 3.9.0
 ----------
 - Video details now correctly displayed for personal video.

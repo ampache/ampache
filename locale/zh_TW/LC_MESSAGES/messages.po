@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-08-13 06:22+0200\n"
-"PO-Revision-Date: 2018-05-07 05:13+0000\n"
-"Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>\n"
+"POT-Creation-Date: 2018-10-26 18:02+0200\n"
+"PO-Revision-Date: 2018-10-26 15:36+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
 "language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -487,124 +487,146 @@ msgstr "完成。"
 msgid "UPnP backend disabled. Broadcast skipped."
 msgstr "已停用 UPnP 後端。已略過廣播。"
 
-#: ../../bin/catalog_update.inc:41
+#: ../../bin/catalog_update.inc:44
 msgid "Doing all catalog operations"
 msgstr "正在執行所有目錄操作"
 
-#: ../../bin/catalog_update.inc:48
+#: ../../bin/catalog_update.inc:52
 msgid "Temporary deactivate PHP memory limit"
 msgstr "暫時停用 PHP 的記憶體限制"
 
-#: ../../bin/catalog_update.inc:52
+#: ../../bin/catalog_update.inc:56
+msgid "Setting catalog name"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:60
+msgid "Setting catalog type"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:64
 msgid "Cleaning catalog/s"
 msgstr "正在清理目錄"
 
-#: ../../bin/catalog_update.inc:56
+#: ../../bin/catalog_update.inc:68
 msgid "Verifying catalog/s"
 msgstr "正在驗證目錄"
 
-#: ../../bin/catalog_update.inc:60
+#: ../../bin/catalog_update.inc:72
 msgid "Adding new media to catalog/s"
 msgstr "正在新增媒體到目錄中"
 
-#: ../../bin/catalog_update.inc:64
+#: ../../bin/catalog_update.inc:76
 msgid "Gathering new media art"
 msgstr "正在蒐集新封面圖片"
 
-#: ../../bin/catalog_update.inc:68
+#: ../../bin/catalog_update.inc:80
 msgid "Importing playlist/s"
 msgstr "正在匯入播放清單"
 
-#: ../../bin/catalog_update.inc:72
+#: ../../bin/catalog_update.inc:84
 msgid "Database table optimization"
 msgstr "資料庫表格最佳化"
 
-#: ../../bin/catalog_update.inc:95
+#: ../../bin/catalog_update.inc:101
 msgid "Starting catalog operations..."
 msgstr "正在開始目錄操作…"
 
-#: ../../bin/catalog_update.inc:101
+#: ../../bin/catalog_update.inc:107
 msgid "Deactivated PHP memory limit"
 msgstr "停用 PHP 的記憶體限制"
 
-#: ../../bin/catalog_update.inc:108
+#: ../../bin/catalog_update.inc:114
 msgid "Gathering art"
 msgstr "正在蒐集封面圖片"
 
-#: ../../bin/catalog_update.inc:114
+#: ../../bin/catalog_update.inc:120
 msgid "Parsing playlists"
 msgstr "正在剖析播放清單"
 
-#: ../../bin/catalog_update.inc:131
+#: ../../bin/catalog_update.inc:141
 #, php-format
 msgid "Reading catalog: %s"
 msgstr "正在讀取目錄：%s"
 
-#: ../../bin/catalog_update.inc:137
+#: ../../bin/catalog_update.inc:147
 msgid "Start cleaning orphaned media entries"
 msgstr "開始清理孤立的媒體項目"
 
-#: ../../bin/catalog_update.inc:144
+#: ../../bin/catalog_update.inc:154
 msgid "Start verifying media related to catalog entries"
 msgstr "開始驗證與媒體相關的目錄項目"
 
-#: ../../bin/catalog_update.inc:151
+#: ../../bin/catalog_update.inc:161
 msgid "Start adding new media"
 msgstr "開始新增媒體"
 
-#: ../../bin/catalog_update.inc:158
+#: ../../bin/catalog_update.inc:168
 msgid "Start searching new media art"
 msgstr "開始搜尋新封面圖片"
 
-#: ../../bin/catalog_update.inc:166
+#: ../../bin/catalog_update.inc:176
 msgid "Optimizing database tables"
 msgstr "正在最佳化資料庫表格"
 
-#: ../../bin/catalog_update.inc:191
+#: ../../bin/catalog_update.inc:201
 msgid "- Catalog Update Help -"
 msgstr "- 目錄更新說明 -"
 
-#: ../../bin/catalog_update.inc:193
-msgid "Usage: catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]"
-msgstr "用法：catalog_update.inc [目錄名稱] [-m|-c|-v|-a|-g|-i|-o]"
+#: ../../bin/catalog_update.inc:203
+msgid ""
+"Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-"
+"a|-g|-i|-o]"
+msgstr ""
 
-#: ../../bin/catalog_update.inc:197
+#: ../../bin/catalog_update.inc:207
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
 msgstr "預設行為是除了停用 PHP 記憶體限制以外，執行所有動作"
 
-#: ../../bin/catalog_update.inc:201
+#: ../../bin/catalog_update.inc:211
+msgid "This help message"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:213
+msgid "Name of Catalog (Optional)"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:215
+msgid "Type of Catalog (Optional)"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:217
 msgid "Temporarily deactivates PHP memory limit."
 msgstr "暫時停用 PHP 的記憶體限制。"
 
-#: ../../bin/catalog_update.inc:203
+#: ../../bin/catalog_update.inc:219
 msgid "Cleans catalogs from orphaned entries."
 msgstr "從目錄中清理孤立項目。"
 
-#: ../../bin/catalog_update.inc:205
+#: ../../bin/catalog_update.inc:221
 msgid ""
 "Verifies catalog entries and updates them if related files have new "
 "information."
 msgstr "驗證目錄中的項目，如果相關檔案有新資訊時更新。"
 
-#: ../../bin/catalog_update.inc:207
+#: ../../bin/catalog_update.inc:223
 msgid "Adds new media to catalogs."
 msgstr "新增媒體到目錄。"
 
-#: ../../bin/catalog_update.inc:209
+#: ../../bin/catalog_update.inc:225
 msgid "Gathers media Art."
 msgstr "蒐集封面圖片。"
 
-#: ../../bin/catalog_update.inc:211
+#: ../../bin/catalog_update.inc:227
 msgid "Imports playlists."
 msgstr "匯入播放清單。"
 
-#: ../../bin/catalog_update.inc:213
+#: ../../bin/catalog_update.inc:229
 msgid "Optimizes Database Tables."
 msgstr "最佳化資料庫表格。"
 
-#: ../../bin/catalog_update.inc:216
+#: ../../bin/catalog_update.inc:232
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
@@ -612,7 +634,7 @@ msgstr ""
 "使用此選項時請自行承擔風險！您的系統可能當機，或因為使用過多記憶體而變得沒有"
 "反應！"
 
-#: ../../bin/catalog_update.inc:217
+#: ../../bin/catalog_update.inc:233
 msgid ""
 "Depending on your systems performance, this option could need a long time to "
 "finish and extremely slow down other database processes if you have big "
@@ -621,7 +643,7 @@ msgstr ""
 "依據您系統的效能，此選項可能需要很長時間。如果目錄過大，可能會嚴重拖慢其他資"
 "料庫操作！"
 
-#: ../../bin/catalog_update.inc:218
+#: ../../bin/catalog_update.inc:234
 msgid ""
 "The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-"
 "v|-a|-g] is used."
@@ -1301,34 +1323,34 @@ msgid "Login Failed: timestamp out of range"
 msgstr "登入失敗：時間戳記超出範圍"
 
 #: ../../lib/class/api.class.php:182 ../../lib/class/api.class.php:195
-#: ../../lib/class/api.class.php:282
+#: ../../lib/class/api.class.php:290
 msgid "Error Invalid Handshake - "
 msgstr "無效的握手協議 -"
 
 #: ../../lib/class/api.class.php:194 ../../lib/class/api.class.php:195
-#: ../../lib/class/api.class.php:282
+#: ../../lib/class/api.class.php:290
 msgid "Invalid Username/Password"
 msgstr "無效的使用者名稱/密碼"
 
-#: ../../lib/class/api.class.php:661 ../../lib/class/api.class.php:679
-#: ../../lib/class/api.class.php:697
+#: ../../lib/class/api.class.php:669 ../../lib/class/api.class.php:687
+#: ../../lib/class/api.class.php:705
 msgid "Access denied to this playlist."
 msgstr "已被拒絕存取該播放清單"
 
-#: ../../lib/class/api.class.php:815 ../../lib/class/api.class.php:876
+#: ../../lib/class/api.class.php:823 ../../lib/class/api.class.php:884
 #: ../../server/xml.server.php:109
 msgid "Invalid Request"
 msgstr "非法的請求"
 
-#: ../../lib/class/api.class.php:836 ../../lib/class/api.class.php:854
+#: ../../lib/class/api.class.php:844 ../../lib/class/api.class.php:862
 msgid "Media Object Invalid or Not Specified"
 msgstr "非法的媒體物件，或是未指定"
 
-#: ../../lib/class/api.class.php:1069
+#: ../../lib/class/api.class.php:1077
 msgid "Wrong library item type."
 msgstr "錯誤的資料庫物品類型"
 
-#: ../../lib/class/api.class.php:1073
+#: ../../lib/class/api.class.php:1081
 msgid "Library item not found."
 msgstr "找不到資料庫項目。"
 
@@ -3322,7 +3344,7 @@ msgstr "無效的設定"
 
 #: ../../lib/install.lib.php:285
 msgid "Database Connection Failed Check Hostname, Username and Password"
-msgstr "資料庫連線失敗，請檢查伺服機名稱、使用者名稱與密碼"
+msgstr "資料庫連線失敗，請檢查伺服器名稱、使用者名稱與密碼"
 
 #: ../../lib/install.lib.php:295
 msgid "Config file is not writable"
@@ -3667,7 +3689,7 @@ msgstr "錯誤：目錄 %s 已存在"
 
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:87
 msgid "Beets Server URI"
-msgstr "Beets 伺服機網址"
+msgstr "Beets 伺服器網址"
 
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:104
 msgid "Error: Beets selected, but path is not a URL"
@@ -3771,7 +3793,7 @@ msgstr ""
 msgid "Removing song \"%s\""
 msgstr ""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:529
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:521
 msgid "API Error: cannot connect to Dropbox."
 msgstr "API 錯誤：無法連線到 Dropbox。"
 
@@ -3925,7 +3947,7 @@ msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:122
 msgid "Server URI"
-msgstr ""
+msgstr "伺服器 URI"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:123
 msgid "Library Name"
@@ -8325,7 +8347,7 @@ msgstr "管理授權"
 
 #: ../../templates/sidebar_admin.inc.php:64
 msgid "Server Config"
-msgstr "伺服機設定"
+msgstr "伺服器設定"
 
 #: ../../templates/sidebar_home.inc.php:32
 msgid "Song Titles"
@@ -8492,7 +8514,7 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 31.07.2018 01:37:20 CEST
+# Last Update: 26.10.2018 17:35:10 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8522,11 +8544,7 @@ msgstr "強制使用 Http 協定而不管連接埠"
 msgid "Type of Playback"
 msgstr "播放方式"
 
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Language"
-# msgstr ""
-#: Database preference table id 31 32
+#: Database preference table id 32
 msgid "Playlist Type"
 msgstr "播放清單類型"
 
@@ -8570,15 +8588,7 @@ msgstr "流量限制"
 msgid "Playlist Method"
 msgstr "播放清單行為"
 
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Transcoding"
-# msgstr ""
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Show Lyrics"
-# msgstr ""
-#: Database preference table id 55 69 72
+#: Database preference table id 72
 msgid "Shoutcast Active Instance"
 msgstr ""
 
@@ -8923,37 +8933,26 @@ msgstr "Amazon 存取金鑰密文"
 msgid "Amazon associate tag"
 msgstr "Amazon 關聯標記"
 
-#: Database preference table id 150
+#: Database preference subcategory table id 150
 msgid "library"
 msgstr ""
 
-#: Database preference table id 151
-#, fuzzy
+#: Database preference subcategory table id 151
 msgid "upload"
-msgstr "已上傳了"
+msgstr ""
 
-#: Database preference table id 152
-#, fuzzy
+#: Database preference subcategory table id 152
 msgid "catalog"
-msgstr "目錄"
+msgstr ""
 
-#: Database preference table id 153 154
-#, fuzzy
+#: Database preference subcategory table id 154
 msgid "theme"
-msgstr "佈景主題"
+msgstr ""
 
-#: Database preference table id 155
+#: Database preference subcategory table id 155
 msgid "custom"
 msgstr ""
 
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "custom"
-# msgstr ""
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "library"
-# msgstr ""
-#: Database preference table id 156 157 164
+#: Database preference subcategory table id 164
 msgid "amazon"
 msgstr ""

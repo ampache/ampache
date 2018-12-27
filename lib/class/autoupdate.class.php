@@ -140,7 +140,8 @@ class AutoUpdate
             // Otherwise it is stable version, get latest tag
             else {
                 $tags = self::github_request('/tags');
-                if (!empty($tags)) {
+                $str  = strstr($tags[0]->name, "pre-release");
+                if (!$str) {
                     $lastversion = $tags[0]->name;
                     Preference::update('autoupdate_lastversion', $GLOBALS['user']->id, $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);

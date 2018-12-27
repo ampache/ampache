@@ -362,9 +362,9 @@ class vainfo
             $info['original_name'] = $info['original_name'] ?: stripslashes(trim($tags['original_name']));
             $info['title']         = $info['title'] ?: stripslashes(trim($tags['title']));
 
-            $info['year'] = $info['year'] ?: intval($tags['year']);
-
-            $info['disk'] = $info['disk'] ?: intval($tags['disk']);
+            // Not even sure if these can be negative, but better safe than llama.
+            $info['year'] = Catalog::normalize_year($info['year'] ?: intval($tags['year']));
+            $info['disk'] = abs($info['disk'] ?: intval($tags['disk']));
 
             $info['totaldisks'] = $info['totaldisks'] ?: intval($tags['totaldisks']);
 

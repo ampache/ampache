@@ -55,7 +55,7 @@ $catalogs = array();
 
 while ($r = Dba::fetch_row($db_results)) {
 
-    $catalog = Catalog::create_from_id($r['0']);
+    $catalog = Catalog::create_from_id($r['id']);
     $songs = $catalog->get_songs();
 
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
@@ -113,7 +113,7 @@ function sort_find_home($song,$sort_pattern,$base) {
     /* Do the various check */
     $album_object = new Album($song->album);
     $album_object->format();
-    if ($album_object->artist_count != '1') {
+    if ($album_object->artist_count != 1) {
         $artist = "Various";
     }
 

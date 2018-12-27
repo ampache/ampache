@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
