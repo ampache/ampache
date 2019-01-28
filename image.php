@@ -47,7 +47,7 @@ if (!AmpConfig::get('resize_images')) {
 
 // FIXME: Legacy stuff - should be removed after a version or so
 if (!isset($_GET['object_type'])) {
-    $_GET['object_type'] = 'album';
+    $_GET['object_type'] = 'song';
 }
 
 $type = $_GET['object_type'];

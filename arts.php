@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $image = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
+        $image = Art::get_from_source($_SESSION['form']['images'][$image_id], 'song');
         $mime  = $_SESSION['form']['images'][$image_id]['mime'];
 
         // Special case for albums, I'm not sure if we should keep it, remove it or find a generic way

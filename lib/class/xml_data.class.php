@@ -498,7 +498,7 @@ class XML_Data
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating                = new Rating($song_id, 'song');
-            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url               = Art::url($song->id, 'song', $_REQUEST['auth']);
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
                 // Title is an alias for name

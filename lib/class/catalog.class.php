@@ -1288,9 +1288,11 @@ abstract class Catalog extends database_object
         if ($songs == null) {
             $searches['album']  = $this->get_album_ids();
             $searches['artist'] = $this->get_artist_ids();
+            $searches['song'] = $this->get_songs();
         } else {
             $searches['album']  = array();
             $searches['artist'] = array();
+            $searches['song']  = array();
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->id) {
@@ -1299,6 +1301,9 @@ abstract class Catalog extends database_object
                     }
                     if (!in_array($song->artist, $searches['artist'])) {
                         $searches['artist'][] = $song->artist;
+                    }
+                    if (!in_array($song->id, $searches['song'])) {
+                        $searches['song'][] = $song->id;
                     }
                 }
             }
