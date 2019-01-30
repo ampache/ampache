@@ -65,9 +65,9 @@
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
       <?php
       $song = new Song($media->id);
-      if ($song->id) {
-          $song->format();
-          $song->display_art(1);
+        if ($song->id) {
+            $song->format();
+            $song->display_art(1);
         } ?>
   </div>
 </div>
