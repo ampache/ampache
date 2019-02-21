@@ -506,27 +506,20 @@ class Catalog_dropbox extends Catalog
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox = new Dropbox($app);
         
-        try {
-            $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, array($this->id));
-            while ($row = Dba::fetch_assoc($db_results)) {
-                debug_event('dropbox-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
-                $file     = $row['file'];
-                $metadata = $dropbox->getMetadata($file);
-                if ($metadata) {
-                    debug_event('dropbox-clean', 'keeping song', 5, 'ampache-catalog');
-                } else {
-                    debug_event('dropbox-clean', 'removing song', 5, 'ampache-catalog');
+        $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
+        $db_results = Dba::read($sql, array($this->id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            debug_event('dropbox-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            $file     = $row['file'];
+            try {
+                $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);
+            } catch (DropboxClientException $e) {
+                if ($e->getCode() == 409) {
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                } else {
+                    AmpError::add('general', T_('API Error: cannot connect to Dropbox.'));
                 }
-            }
-        } catch (DropboxClientException $e) {
-            if ($e->getCode() == 409) {
-                $dead++;
-                Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
-            } else {
-                AmpError::add('general', T_('API Error: cannot connect to Dropbox.'));
             }
         }
         $this->update_last_clean();

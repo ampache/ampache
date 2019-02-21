@@ -400,10 +400,6 @@ class Album extends database_object implements library_item
         $mbid_group   = empty($mbid_group) ? null : $mbid_group;
         $release_type = empty($release_type) ? null : $release_type;
 
-        // Not even sure if these can be negative, but better safe than llama.
-        $year = Catalog::normalize_year($year);
-        $disk = abs(intval($disk));
-
         if (!$name) {
             $name         = T_('Unknown (Orphaned)');
             $year         = 0;

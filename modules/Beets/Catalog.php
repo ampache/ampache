@@ -23,6 +23,7 @@
 
 namespace Beets;
 
+use Album;
 use AmpConfig;
 use UI;
 use Dba;
@@ -126,7 +127,7 @@ abstract class Catalog extends \Catalog
         }
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
-        $parser->start($parser->getTimedCommand($this->listCommand, 'added', $this->last_add));
+        $parser->start($parser->getTimedCommand($this->listCommand, 'added', null));
         $this->updateUi('add', $this->addedSongs, null, true);
         $this->update_last_add();
 
@@ -142,10 +143,13 @@ abstract class Catalog extends \Catalog
     public function addSong($song)
     {
         $song['catalog'] = $this->id;
-
+                
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
+            $album_id = Album::check($song['album'],$song['year'],$song['disc'],$song['mbid'],
+                $song['mb_releasegroupid'],$song['album_artist'], null, null );
+            $song['album_id'] = $album_id;
             $songId = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
                 $songObj = new Song($songId);
@@ -153,6 +157,7 @@ abstract class Catalog extends \Catalog
                 $this->updateUi('add', ++$this->addedSongs, $song);
             }
         }
+
     }
 
     public function addMetadata(\library_item $libraryItem, $metadata)
@@ -231,6 +236,8 @@ abstract class Catalog extends \Catalog
     public function verifySong($beetsSong)
     {
         $song = new Song($this->getIdFromPath($beetsSong['file']));
+        $beetsSong['album_id'] = $song->album;
+
         if ($song->id) {
             $song->update($beetsSong);
             if (Song::isCustomMetadataEnabled()) {
@@ -254,7 +261,9 @@ abstract class Catalog extends \Catalog
         $parser->setHandler($this, 'removeFromDeleteList');
         $parser->start($this->listCommand);
         $count = count($this->songs);
-        $this->deleteSongs($this->songs);
+        if ($count > 0) {
+           $this->deleteSongs($this->songs);
+        }
         if (Song::isCustomMetadataEnabled()) {
             \Lib\Metadata\Repository\Metadata::gc();
             \Lib\Metadata\Repository\MetadataField::gc();

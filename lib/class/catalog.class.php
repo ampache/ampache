@@ -1082,8 +1082,9 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `song`.`album` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
-            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.`album` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
+        $sql = "SELECT `song`.`album`as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
+            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where " .
+        "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -1244,6 +1245,8 @@ abstract class Catalog extends database_object
                 if ($inserted) {
                     break;
                 }
+            } elseif ($result === true) {
+                debug_event('gather_art', 'Database already has image.', 3);
             } else {
                 debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
             }
@@ -1799,20 +1802,15 @@ abstract class Catalog extends database_object
         return $types;
     }
     
-    public function clean_empty_albums()
+    public static function clean_empty_albums()
     {
-        $sql        = 'SELECT `id` FROM `album`';
+        $sql = "SELECT `id` FROM `album` WHERE NOT EXISTS " .
+            "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
         $db_results = Dba::read($sql);
-        
         while ($albumid = Dba::fetch_assoc($db_results)) {
-            $sql         = "SELECT id from ampache.song where album = ?";
             $id          = $albumid['id'];
-            $db_results1 = Dba::read($sql, array($id));
-            $s           = Dba::fetch_assoc($db_results1);
-            if (count($s) == 0) {
-                $sql        = "DELETE FROM `album` WHERE `id` = ?";
-                $db_results = Dba::write($sql, array($id));
-            }
+            $sql         = "DELETE FROM `album` WHERE `id` = ?";
+            $db_results  = Dba::write($sql, array($id));
         }
     }
     
@@ -1836,14 +1834,14 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-        $this->clean_empty_albums();
+        self::clean_empty_albums();
         
         debug_event('clean', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text('', sprintf(nT_('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total));
+        UI::update_text('', sprintf(\nT_('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -2212,14 +2210,14 @@ abstract class Catalog extends database_object
         if (!$db_results) {
             return false;
         }
-
+        self::clean_empty_albums();
+        
         $sql        = "DELETE FROM `video` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, array($catalog_id));
 
         if (!$db_results) {
             return false;
         }
-
         $catalog = self::create_from_id($catalog_id);
 
         if (!$catalog->id) {

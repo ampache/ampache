@@ -107,7 +107,7 @@ class Userflag extends database_object
         }
     }
 
-    public function get_flag($user_id = null)
+    public function get_flag($user_id = null, $get_date = null)
     {
         if ($user_id === null) {
             $user_id = $GLOBALS['user']->id;
@@ -118,13 +118,17 @@ class Userflag extends database_object
             return parent::get_from_cache($key, $this->id);
         }
 
-        $sql = "SELECT `id` FROM `user_flag` WHERE `user` = ? " .
+        $sql = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
         $flagged = false;
-        if (Dba::fetch_assoc($db_results)) {
-            $flagged = true;
+        if ($row = Dba::fetch_assoc($db_results)) {
+            if ($get_date) {
+                return array(true, $row['date']);
+            } else {
+                $flagged = true;
+            }
         }
 
         parent::add_to_cache($key, $this->id, $flagged);
