@@ -804,7 +804,7 @@ abstract class Catalog extends database_object
             $results[] = $r['album'];
         }
 
-        return $results;
+        return reverse_array($results);
     }
 
     /**
@@ -945,7 +945,7 @@ abstract class Catalog extends database_object
             $results[] = $r['artist'];
         }
 
-        return $results;
+        return reverse_array($results);
     }
 
     /**
