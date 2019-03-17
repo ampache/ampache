@@ -8,8 +8,8 @@
 # Auka Raiken, 2016-2017
 # David Girón <contacto@duhowpi.net>, 2017
 # Fede Ubal <fefudito@hotmail.com>, 2016
-# Ivan, 2015-2016
-# Ivan, 2016
+# Ivan Gonzalez Martin, 2015-2016
+# Ivan Gonzalez Martin, 2016
 # Josu Lazkano <josu.lazkano@gmail.com>, 2017-2018
 # Ladee Io, 2016
 # Manuel <psyvirusx@gmail.com>, 2018
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-10-26 18:02+0200\n"
+"POT-Creation-Date: 2019-03-17 12:16+0100\n"
 "PO-Revision-Date: 2018-10-26 15:36+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/ampache/ampache/"
@@ -741,8 +741,8 @@ msgstr "ERROR: Para esta funcionalidad se requiere Iconv, saliendo"
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
-msgid "%s For the Love of Music"
-msgstr "%s Por el amor de la música"
+msgid "%s"
+msgstr ""
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
@@ -1162,13 +1162,13 @@ msgstr "Interfaz Web"
 msgid "Stream Access"
 msgstr "Acceso al flujo"
 
-#: ../../lib/class/album.class.php:408 ../../lib/class/artist.class.php:681
+#: ../../lib/class/album.class.php:404 ../../lib/class/artist.class.php:681
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
 msgstr "Desconocido (Huérfano)"
 
-#: ../../lib/class/album.class.php:645
+#: ../../lib/class/album.class.php:641
 #: ../../lib/class/subsonic_xml_data.class.php:594
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
@@ -1178,7 +1178,7 @@ msgstr "Desconocido (Huérfano)"
 msgid "Disk"
 msgstr "Disco"
 
-#: ../../lib/class/album.class.php:657 ../../lib/class/browse.class.php:226
+#: ../../lib/class/album.class.php:653 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:331 ../../lib/ui.lib.php:180
 #: ../../server/search.ajax.php:57 ../../templates/header.inc.php:414
 #: ../../templates/show_label.inc.php:103
@@ -1195,23 +1195,23 @@ msgstr "Disco"
 msgid "Artists"
 msgstr "Artistas"
 
-#: ../../lib/class/album.class.php:657 ../../lib/class/album.class.php:658
+#: ../../lib/class/album.class.php:653 ../../lib/class/album.class.php:654
 #: ../../templates/show_edit_album_row.inc.php:38
 #: ../../templates/show_install_config.inc.php:64
 msgid "Various"
 msgstr "Varios"
 
-#: ../../lib/class/album.class.php:677
+#: ../../lib/class/album.class.php:673
 msgid "Album MusicBrainzID"
 msgstr "Album MusicBrainzID"
 
-#: ../../lib/class/album.class.php:680
+#: ../../lib/class/album.class.php:676
 msgid "Release Group MusicBrainzID"
 msgstr "Release Group MusicBrainzID"
 
-#: ../../lib/class/album.class.php:683 ../../lib/class/artist.class.php:501
+#: ../../lib/class/album.class.php:679 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:239
-#: ../../lib/class/search.class.php:492 ../../lib/class/song.class.php:1489
+#: ../../lib/class/search.class.php:492 ../../lib/class/song.class.php:1490
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_upload.inc.php:177
 #: ../../templates/show_albums.inc.php:40
@@ -1247,7 +1247,7 @@ msgstr "Release Group MusicBrainzID"
 msgid "Artist"
 msgstr "Artista"
 
-#: ../../lib/class/album.class.php:686 ../../lib/class/search.class.php:232
+#: ../../lib/class/album.class.php:682 ../../lib/class/search.class.php:232
 #: ../../templates/show_add_upload.inc.php:188
 #: ../../templates/show_albums.inc.php:38
 #: ../../templates/show_albums.inc.php:112
@@ -1437,38 +1437,38 @@ msgstr "Reiniciar Portada"
 msgid "Artist MusicBrainzID"
 msgstr "Artista MusicBrainzID"
 
-#: ../../lib/class/autoupdate.class.php:233
+#: ../../lib/class/autoupdate.class.php:234
 msgid "Update available"
 msgstr "Actualización disponible"
 
-#: ../../lib/class/autoupdate.class.php:236
+#: ../../lib/class/autoupdate.class.php:237
 msgid "See"
 msgstr "Ver"
 
-#: ../../lib/class/autoupdate.class.php:236
+#: ../../lib/class/autoupdate.class.php:237
 msgid "changes"
 msgstr "cambios"
 
-#: ../../lib/class/autoupdate.class.php:238
-#: ../../lib/class/autoupdate.class.php:241
+#: ../../lib/class/autoupdate.class.php:239
+#: ../../lib/class/autoupdate.class.php:242
 msgid "or"
 msgstr "o"
 
-#: ../../lib/class/autoupdate.class.php:239
-#: ../../lib/class/autoupdate.class.php:242
+#: ../../lib/class/autoupdate.class.php:240
+#: ../../lib/class/autoupdate.class.php:243
 msgid "download"
 msgstr "descargar"
 
-#: ../../lib/class/autoupdate.class.php:256
+#: ../../lib/class/autoupdate.class.php:257
 msgid "Updating Ampache sources with `"
 msgstr "Actualizando fuentes de Ampache con `"
 
-#: ../../lib/class/autoupdate.class.php:260
-#: ../../lib/class/autoupdate.class.php:275
+#: ../../lib/class/autoupdate.class.php:261
+#: ../../lib/class/autoupdate.class.php:276
 msgid "Done"
 msgstr "Hecho"
 
-#: ../../lib/class/autoupdate.class.php:271
+#: ../../lib/class/autoupdate.class.php:272
 msgid "Updating dependencies with `"
 msgstr "Actualizando dependencias con `"
 
@@ -1929,7 +1929,7 @@ msgstr "No puedo leer el feed."
 
 #: ../../lib/class/podcast_episode.class.php:157
 #: ../../lib/class/search.class.php:225 ../../lib/class/search.class.php:485
-#: ../../lib/class/song.class.php:1492 ../../lib/class/video.class.php:303
+#: ../../lib/class/song.class.php:1493 ../../lib/class/video.class.php:303
 #: ../../templates/show_democratic_playlist.inc.php:60
 #: ../../templates/show_democratic_playlist.inc.php:113
 #: ../../templates/show_disabled_songs.inc.php:29
@@ -2449,12 +2449,12 @@ msgstr "Publicar Shout"
 msgid "by"
 msgstr "por"
 
-#: ../../lib/class/song.class.php:1460
+#: ../../lib/class/song.class.php:1461
 #: ../../templates/show_html5_player.inc.php:154
 msgid "Show Lyrics"
 msgstr "Mostrar letra"
 
-#: ../../lib/class/song.class.php:1486
+#: ../../lib/class/song.class.php:1487
 msgid "Track MusicBrainzID"
 msgstr "Pista MusicBrainzID"
 
@@ -3697,11 +3697,11 @@ msgstr "Un usuario desde %s ha pedido un reseteo de contraseña para '%s'."
 msgid "The password has been set to: %s"
 msgstr "La contraseña se ha establecido a: %s"
 
-#: ../../modules/Beets/Catalog.php:125
+#: ../../modules/Beets/Catalog.php:126
 msgid "Running Beets Update"
 msgstr "Ejecutando Actualización de Beets"
 
-#: ../../modules/Beets/Catalog.php:200
+#: ../../modules/Beets/Catalog.php:205
 #: ../../modules/catalog/remote/remote.catalog.php:273
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:300
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:254
@@ -8618,7 +8618,7 @@ msgstr "No se puede eliminar este vídeo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 17:35:10 CEST
+# Last Update: 26.10.2018 18:02:37 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
