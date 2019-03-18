@@ -345,46 +345,6 @@ class Query
             'license' => array(
                 'name'
             ),
-            'tvshow' => array(
-                'name',
-                'year'
-            ),
-            'tvshow_season' => array(
-                'season',
-                'tvshow'
-            ),
-            'tvshow_episode' => array(
-                'title',
-                'resolution',
-                'length',
-                'codec',
-                'episode',
-                'season',
-                'tvshow'
-            ),
-            'movie' => array(
-                'title',
-                'resolution',
-                'length',
-                'codec',
-                'release_date'
-            ),
-            'clip' => array(
-                'title',
-                'artist',
-                'resolution',
-                'length',
-                'codec',
-                'release_date'
-            ),
-            'personal_video' => array(
-                'title',
-                'location',
-                'resolution',
-                'length',
-                'codec',
-                'release_date'
-            ),
             'label' => array(
                 'name',
                 'category',
@@ -725,12 +685,6 @@ class Query
             case 'channel':
             case 'broadcast':
             case 'license':
-            case 'tvshow':
-            case 'tvshow_season':
-            case 'tvshow_episode':
-            case 'movie':
-            case 'personal_video':
-            case 'clip':
             case 'label':
             case 'pvmsg':
             case 'follower':
@@ -1046,30 +1000,6 @@ class Query
                 case 'license':
                     $this->set_select("`license`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `license` ";
-                break;
-                case 'tvshow':
-                    $this->set_select("`tvshow`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `tvshow` ";
-                break;
-                case 'tvshow_season':
-                    $this->set_select("`tvshow_season`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `tvshow_season` ";
-                break;
-                case 'tvshow_episode':
-                    $this->set_select("`tvshow_episode`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `tvshow_episode` ";
-                break;
-                case 'movie':
-                    $this->set_select("`movie`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `movie` ";
-                break;
-                case 'clip':
-                    $this->set_select("`clip`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `clip` ";
-                break;
-                case 'personal_video':
-                    $this->set_select("`personal_video`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `personal_video` ";
                 break;
                 case 'label':
                     $this->set_select("`label`.`id`");
@@ -2124,69 +2054,6 @@ class Query
                 switch ($field) {
                     case 'name':
                         $sql = "`license`.`name`";
-                    break;
-                }
-            break;
-            case 'tvshow':
-                switch ($field) {
-                    case 'name':
-                        $sql = "`tvshow`.`name`";
-                    break;
-                    case 'year':
-                        $sql = "`tvshow`.`year`";
-                    break;
-                }
-            break;
-            case 'tvshow_season':
-                switch ($field) {
-                    case 'season':
-                        $sql = "`tvshow_season`.`season_number`";
-                    break;
-                    case 'tvshow':
-                        $sql = "`tvshow`.`name`";
-                        $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
-                    break;
-                }
-            break;
-            case 'tvshow_episode':
-                switch ($field) {
-                    case 'episode':
-                        $sql = "`tvshow_episode`.`episode_number`";
-                    break;
-                    case 'season':
-                        $sql = "`tvshow_season`.`season_number`";
-                        $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
-                    break;
-                    case 'tvshow':
-                        $sql = "`tvshow`.`name`";
-                        $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
-                        $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
-                    break;
-                    default:
-                        $sql = $this->sql_sort_video($field, 'tvshow_episode');
-                    break;
-                }
-            break;
-            case 'movie':
-                $sql = $this->sql_sort_video($field, 'movie');
-            break;
-            case 'clip':
-                switch ($field) {
-                    case 'location':
-                        $sql = "`clip`.`artist`";
-                    break;
-                    default:
-                        $sql = $this->sql_sort_video($field, 'clip');
-                    break;
-                }
-            break;
-            case 'personal_video':
-                switch ($field) {
-                    case 'location':
-                        $sql = "`personal_video`.`location`";
-                    break;
-                    default:
-                        $sql = $this->sql_sort_video($field, 'personal_video');
                     break;
                 }
             break;

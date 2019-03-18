@@ -239,20 +239,6 @@ CREATE TABLE IF NOT EXISTS `channel` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clip`
---
-
-DROP TABLE IF EXISTS `clip`;
-CREATE TABLE IF NOT EXISTS `clip` (
-  `id` int(11) unsigned NOT NULL,
-  `artist` int(11) DEFAULT NULL,
-  `song` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `daap_session`
 --
 
@@ -437,22 +423,6 @@ CREATE TABLE IF NOT EXISTS `localplay_shoutcast` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `movie`
---
-
-DROP TABLE IF EXISTS `movie`;
-CREATE TABLE IF NOT EXISTS `movie` (
-  `id` int(11) unsigned NOT NULL,
-  `original_name` varchar(80) CHARACTER SET utf8 DEFAULT NULL,
-  `summary` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `year` int(11) unsigned DEFAULT NULL,
-  `prefix` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `now_playing`
 --
 
@@ -494,18 +464,6 @@ CREATE TABLE IF NOT EXISTS `object_count` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `personal_video`
---
-
-DROP TABLE IF EXISTS `personal_video`;
-CREATE TABLE IF NOT EXISTS `personal_video` (
-  `id` int(11) unsigned NOT NULL,
-  `location` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `summary` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -701,7 +659,6 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'),
 (119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'),
 (120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'),
-(121, 'allow_video', '1', 'Allow video features', 75, 'integer', 'options', 'feature'),
 (122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'),
 (124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'),
 (125, 'home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface', 'home'),
@@ -1076,52 +1033,6 @@ CREATE TABLE IF NOT EXISTS `tmp_playlist_data` (
   PRIMARY KEY (`id`),
   KEY `tmp_playlist` (`tmp_playlist`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tvshow`
---
-
-DROP TABLE IF EXISTS `tvshow`;
-CREATE TABLE IF NOT EXISTS `tvshow` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) CHARACTER SET utf8 DEFAULT NULL,
-  `summary` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `year` int(11) unsigned DEFAULT NULL,
-  `prefix` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tvshow_episode`
---
-
-DROP TABLE IF EXISTS `tvshow_episode`;
-CREATE TABLE IF NOT EXISTS `tvshow_episode` (
-  `id` int(11) unsigned NOT NULL,
-  `original_name` varchar(80) CHARACTER SET utf8 DEFAULT NULL,
-  `season` int(11) unsigned NOT NULL,
-  `episode_number` int(11) unsigned NOT NULL,
-  `summary` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tvshow_season`
---
-
-DROP TABLE IF EXISTS `tvshow_season`;
-CREATE TABLE IF NOT EXISTS `tvshow_season` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `season_number` int(11) unsigned NOT NULL,
-  `tvshow` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 

@@ -451,7 +451,6 @@ function install_config_use_case($case)
     $dbconfig = array(
         'download' => '1',
         'share' => '0',
-        'allow_video' => '1',
         'home_now_playing' => '1',
         'home_recently_played' => '1'
     );
@@ -466,7 +465,6 @@ function install_config_use_case($case)
             $trconfig['live_stream'] = 'false';
 
             $dbconfig['download']    = '0';
-            $dbconfig['allow_video'] = '0';
 
             // Default local UI preferences to have a better 'minimalist first look'.
             setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');

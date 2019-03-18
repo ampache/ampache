@@ -415,14 +415,8 @@ class Plex_XML_Data
         $xml->addAttribute('requestParametersInCookie', '1');
         $xml->addAttribute('sync', '1');
         $xml->addAttribute('transcoderAudio', '1');
-        $xml->addAttribute('transcoderActiveVideoSessions', AmpConfig::get('allow_video') ? '1' : '0');
-        $xml->addAttribute('transcoderVideo', AmpConfig::get('allow_video') ? '1' : '0');
-        if (AmpConfig::get('allow_video')) {
-            $xml->addAttribute('transcoderVideoBitrates', '64,96,208,320,720,1500,2000,3000,4000,8000,10000,12000,20000');
-            $xml->addAttribute('transcoderVideoQualities', '0,1,2,3,4,5,6,7,8,9,10,11,12');
-            $xml->addAttribute('transcoderVideoResolutions', '128,128,160,240,320,480,768,720,720,1080,1080,1080,1080');
-            //$xml->addAttributes('transcoderActiveVideoSessions', '0');
-        }
+        $xml->addAttribute('transcoderActiveVideoSessions', '0');
+        $xml->addAttribute('transcoderVideo', '0');
 
         $xml->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
         $xml->addAttribute('version', self::getPlexVersion());
