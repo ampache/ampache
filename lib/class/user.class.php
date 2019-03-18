@@ -578,7 +578,7 @@ class User extends database_object
             return false;
         }
 
-        if (!AmpConfig::get('use_auth') && $GLOBALS['user']->access <= 5) {
+        if (!AmpConfig::get('use_auth') && $GLOBALS['user']->access < 5) {
             return false;
         }
 
@@ -1378,7 +1378,7 @@ class User extends database_object
             $image_data     = Art::get_from_source($upload, 'user');
 
             if ($image_data) {
-                $this->update_avatar($image_data, $upload['0']['mime']);
+                $this->update_avatar($image_data, $upload['mime']);
             }
         }
     }

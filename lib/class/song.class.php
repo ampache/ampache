@@ -700,9 +700,9 @@ class Song extends database_object implements media, library_item
     public static function find_duplicates($search_type)
     {
         $where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
-        $sql       = 'SELECT `id`, `artist`, `album`, `title`, ' .
+        $sql       = 'SELECT `artist`, `album`, `title`, ' .
             'COUNT(`title`) FROM `song` ' . $where_sql .
-            ' GROUP BY `id`, `artist`, `album`, `title`';
+            ' GROUP BY `artist`, `album`, `title`';
 
         if ($search_type == 'artist_title' ||
             $search_type == 'artist_album_title') {
@@ -751,14 +751,6 @@ class Song extends database_object implements media, library_item
         } else {
             $where .= " AND `album`.`name` = ?";
             $params[] = $data['album'];
-            
-            if ($data['mb_artistid']) {
-                $where .= " AND `artist`.`mbid` = ?";
-                $params[] = $data['mb_artistid'];
-            } else {
-                $where .= " AND `artist`.`name` = ?";
-                $params[] = $data['artist'];
-            }
         }
         
         $sql .= $where . " LIMIT 1";
@@ -1037,6 +1029,7 @@ class Song extends database_object implements media, library_item
             } // end whitelist
         } // end foreach
 
+        $this->format();
         $this->write_id3();
 
         return $this->id;
@@ -1052,13 +1045,13 @@ class Song extends database_object implements media, library_item
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
                 debug_event('song', 'Writing id3 metadata to file ' . $this->file, 5);
-                $meta = $this->get_metadata();
                 if (self::isCustomMetadataEnabled()) {
                     foreach ($this->getMetadata() as $metadata) {
                         $meta[$metadata->getField()->getName()] = $metadata->getData();
                     }
                 }
-                $id3 = new vainfo($this->file);
+                $meta = $this->get_metadata();
+                $id3  = new vainfo($this->file);
                 $id3->write_id3($meta);
                 Catalog::update_media_from_tags($this);
             }

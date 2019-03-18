@@ -225,7 +225,15 @@ class Api
                 if (isset($input['geo_name'])) {
                     $data['geo_name'] = $input['geo_name'];
                 }
-                $token = Session::create($data);
+                //Session might not exist or has expired
+                //
+                if (!Session::read($data['apikey'])) {
+                    Session::destroy($data['apikey']);
+                    $token = Session::create($data);
+                } else {
+                    Session::extend($data['apikey']);
+                    $token = $data['apikey'];
+                }
 
                 debug_event('API', 'Login Success, passphrase matched', 1);
 

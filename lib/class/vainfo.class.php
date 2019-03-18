@@ -362,9 +362,9 @@ class vainfo
             $info['original_name'] = $info['original_name'] ?: stripslashes(trim($tags['original_name']));
             $info['title']         = $info['title'] ?: stripslashes(trim($tags['title']));
 
-            $info['year'] = $info['year'] ?: intval($tags['year']);
-
-            $info['disk'] = $info['disk'] ?: intval($tags['disk']);
+            // Not even sure if these can be negative, but better safe than llama.
+            $info['year'] = Catalog::normalize_year($info['year'] ?: intval($tags['year']));
+            $info['disk'] = abs($info['disk'] ?: intval($tags['disk']));
 
             $info['totaldisks'] = $info['totaldisks'] ?: intval($tags['totaldisks']);
 
@@ -859,12 +859,20 @@ class vainfo
                     // First array key can be xFF\xFE in case of UTF-8, better to get it this way
                     $parsed['comment'] = reset($data);
                 break;
+                case 'composer':
+                    $BOM = chr(0xff) . chr(0xfe);
+                    if (strlen($data[0]) == 2 && $data[0] == $BOM) {
+                        $parsed['composer'] = str_replace($BOM, '', $data[0]);
+                    } else {
+                        $parsed['composer'] = reset($data);
+                    }
+                     break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
-                break;
+                    break;
                 case 'unsynchronised_lyric':
                     $parsed['lyrics'] = $data[0];
-                break;
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;

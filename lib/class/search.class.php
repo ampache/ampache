@@ -327,8 +327,8 @@ class Search extends playlist_object
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name'   => 'myratings',
-                    'label'  => T_('Rating (Mine)'),
+                    'name' => 'myratings',
+                    'label' => T_('Rating (Mine)'),
                     'type' => 'numeric',
                     'widget' => array(
                         'select',
@@ -421,7 +421,7 @@ class Search extends playlist_object
             $playlists = array();
             foreach (Playlist::get_playlists() as $playlistid) {
                 $playlist = new Playlist($playlistid);
-                $playlist->format();
+                $playlist->format(false);
                 $playlists[$playlistid] = $playlist->f_name;
             }
             $this->types[] = array(
@@ -535,8 +535,8 @@ class Search extends playlist_object
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name'   => 'myratings',
-                    'label'  => T_('Rating (Mine)'),
+                    'name' => 'myratings',
+                    'label' => T_('Rating (Mine)'),
                     'type' => 'numeric',
                     'widget' => array(
                         'select',
@@ -614,9 +614,9 @@ class Search extends playlist_object
             );
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name'   => 'rating',
-                    'label'  => T_('Rating (Average)'),
-                    'type'   => 'numeric',
+                    'name' => 'rating',
+                    'label' => T_('Rating (Average)'),
+                    'type' => 'numeric',
                     'widget' => array(
                         'select',
                         array(
@@ -639,8 +639,8 @@ class Search extends playlist_object
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name'   => 'myratings',
-                    'label'  => T_('Rating (Mine)'),
+                    'name' => 'myratings',
+                    'label' => T_('Rating (Mine)'),
                     'type' => 'numeric',
                     'widget' => array(
                         'select',
@@ -1118,13 +1118,13 @@ class Search extends playlist_object
                     $join['rating'] = true;
                 break;
                 case 'myratings':
-                    $userid = $GLOBALS['user']->id;
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    $userid          = $GLOBALS['user']->id;
+                    $where[]         = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['ratings'] = true;
                 break;
                 case 'last_play':
-                    $userid = $GLOBALS['user']->id;
-                    $where[] = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $userid               = $GLOBALS['user']->id;
+                    $where[]              = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
                 case 'catalog':
@@ -1278,13 +1278,13 @@ class Search extends playlist_object
                     $join['rating'] = true;
                 break;
                 case 'myratings':
-                    $userid = $GLOBALS['user']->id;
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    $userid            = $GLOBALS['user']->id;
+                    $where[]           = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myratings'] = true;
                 break;
                 case 'last_play':
-                    $userid = $GLOBALS['user']->id;
-                    $where[] = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $userid               = $GLOBALS['user']->id;
+                    $where[]              = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
                 default:
@@ -1454,13 +1454,13 @@ class Search extends playlist_object
                     $where[] .= "`user_flag`.`object_type` = 'song'";
                 break;
                 case 'myratings':
-                    $userid = $GLOBALS['user']->id;
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    $userid            = $GLOBALS['user']->id;
+                    $where[]           = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myratings'] = true;
                 break;
                 case 'last_play':
-                    $userid = $GLOBALS['user']->id;
-                    $where[] = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $userid               = $GLOBALS['user']->id;
+                    $where[]              = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
                 case 'played_times':

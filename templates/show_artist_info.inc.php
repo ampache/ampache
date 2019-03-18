@@ -56,7 +56,7 @@
 <div id="item_summary">
     <?php if ($biography && is_array($biography)) {
             ?>
-        <?php echo $biography['summary']; ?>
+        <?php echo nl2br($biography['summary'], true); ?>
     <?php
         }?>
 </div>

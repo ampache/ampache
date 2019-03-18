@@ -127,12 +127,17 @@ class Recommendation
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
     {
-        $song = new Song($song_id);
+        if (!AmpConfig::get('lastfm_api_key')) {
+            return false;
+        }
+
+        $song   = new Song($song_id);
+        $artist = new Artist($song->artist);
 
         if (isset($song->mbid)) {
             $query = 'mbid=' . rawurlencode($song->mbid);
         } else {
-            $query = 'track=' . rawurlencode($song->title);
+            $query = 'artist=' . rawurlencode($artist->name) . '&track=' . rawurlencode($song->title) ;
         }
 
         $cache = self::get_recommendation_cache('song', $song_id, true);
@@ -217,6 +222,10 @@ class Recommendation
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
     {
+        if (!AmpConfig::get('lastfm_api_key')) {
+            return false;
+        }
+
         $artist = new Artist($artist_id);
 
         $cache = self::get_recommendation_cache('artist', $artist_id, true);

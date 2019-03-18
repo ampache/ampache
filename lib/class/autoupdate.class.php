@@ -140,7 +140,8 @@ class AutoUpdate
             // Otherwise it is stable version, get latest tag
             else {
                 $tags = self::github_request('/tags');
-                if (!empty($tags)) {
+                $str  = strstr($tags[0]->name, "pre-release");
+                if (!$str) {
                     $lastversion = $tags[0]->name;
                     Preference::update('autoupdate_lastversion', $GLOBALS['user']->id, $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
@@ -234,7 +235,13 @@ class AutoUpdate
         echo ' (' . self::get_latest_version() . ').<br />';
 
         echo T_('See') . ' <a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
-        echo T_('or') . ' <a href="https://github.com/ampache/ampache/archive/' . (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
+        if (self::is_develop()) {
+            echo T_('or') . ' <a href="https://github.com/ampache/ampache/archive/' .
+             (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
+        } else {
+            echo T_('or') . ' <a href="https://github.com/ampache/ampache/releases/download/' . self::get_latest_version() .
+              '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank"><b>' . T_('download') . '</b></a>.';
+        }
         if (self::is_git_repository()) {
             echo ' | <a rel="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update">.:: Update ::.</a>';
         }

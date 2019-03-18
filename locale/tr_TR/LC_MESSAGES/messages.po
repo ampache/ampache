@@ -3,9 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Sunghun Park <shpark.x1@gmail.com>, 2017
-# Sunghun Park <shpark.x1@gmail.com>, 2017
-# 유영재 <yjsoft@yjsoft.pe.kr>, 2018
+# Ulaş Çakmak <Celonfix@protonmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
@@ -13,290 +11,294 @@ msgstr ""
 "POT-Creation-Date: 2019-03-17 12:16+0100\n"
 "PO-Revision-Date: 2018-10-26 15:36+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>\n"
-"Language-Team: Korean (Korea) (http://www.transifex.com/ampache/ampache/"
-"language/ko_KR/)\n"
-"Language: ko_KR\n"
+"Language-Team: Turkish (Turkey) (http://www.transifex.com/ampache/ampache/"
+"language/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../../admin/access.php:40
 msgid "Deleted"
-msgstr "삭제됨"
+msgstr "Silindi"
 
 #: ../../admin/access.php:40
 msgid "Your Access List Entry has been removed"
-msgstr "접근 리스트 항목이 제거되었습니다"
+msgstr "Erişim Listesi Girişiniz kaldırıldı"
 
 #: ../../admin/access.php:47 ../../admin/users.php:222
 msgid "Deletion Request"
-msgstr "삭제 요청"
+msgstr "Silme İsteği"
 
 #: ../../admin/access.php:47
 msgid "Are you sure you want to permanently delete"
-msgstr "다음 항목을 정말로 삭제하시겠습니까? "
+msgstr "Kalıcı olarak silmek istediğinizden emin misiniz?"
 
 #: ../../admin/access.php:74 ../../lib/class/search.class.php:396
 #: ../../templates/show_song.inc.php:175 ../../templates/show_video.inc.php:161
 msgid "Added"
-msgstr "추가됨"
+msgstr "Eklendi"
 
 #: ../../admin/access.php:74
 msgid "Your new Access Control List(s) have been created"
-msgstr "새 접근 리스트가 만들어졌습니다"
+msgstr "Yeni Erişim Kontrol Listeniz (ler) oluşturuldu"
 
 #: ../../admin/access.php:88 ../../lib/class/catalog.class.php:1517
 #: ../../lib/class/search.class.php:403 ../../preferences.php:144
 #: ../../preferences.php:162
 msgid "Updated"
-msgstr "수정됨"
+msgstr "Güncellendi"
 
 #: ../../admin/access.php:88
 msgid "Access List Entry updated"
-msgstr "접근 리스트 업데이트됨"
+msgstr "Erişim Listesi Girişi güncellendi"
 
 #: ../../admin/catalog.php:54 ../../admin/catalog.php:62
 #: ../../admin/catalog.php:66 ../../admin/catalog.php:74
 #: ../../admin/catalog.php:83
 msgid "Catalog Update started..."
-msgstr "카탈로그 수정 시작됨..."
+msgstr "Katalog Güncelleme başladı ..."
 
 #: ../../admin/catalog.php:105
 msgid "Catalog Deleted"
-msgstr "카탈로그 삭제됨"
+msgstr "Katalog Silindi"
 
 #: ../../admin/catalog.php:105
 msgid "The Catalog and all associated records have been deleted"
-msgstr "카탈로그와 관련된 모든 레코드들이 삭제되었습니다"
+msgstr "Katalog ve ilişkili tüm kayıtlar silindi"
 
 #: ../../admin/catalog.php:107 ../../admin/users.php:192
 #: ../../preferences.php:166 ../../templates/error_page.inc.php:50
 msgid "Error"
-msgstr "오류"
+msgstr "Hata"
 
 #: ../../admin/catalog.php:107
 msgid "Cannot delete the catalog"
-msgstr "카탈로그를 삭제할 수 없습니다"
+msgstr "Katalog silinemiyor"
 
 #: ../../admin/catalog.php:112
 msgid "Catalog Delete"
-msgstr "카탈로그 삭제"
+msgstr "Katalog Sil"
 
 #: ../../admin/catalog.php:112 ../../admin/users.php:230 ../../broadcast.php:38
 #: ../../channel.php:70 ../../share.php:94
 msgid "Confirm Deletion Request"
-msgstr "카탈로그 삭제 요청 확인"
+msgstr "Silme İsteğini Onayla"
 
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] "활성화된 노래"
+msgstr[0] "Şarkı Etkin"
+msgstr[1] "Şarkılar Etkin"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
-msgstr "비활성화된 노래가 선택되지 않았습니다"
+msgstr "Engelli Şarkılar seçilmedi"
 
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] "노래 비활성화중"
+msgstr[0] "Devre Dışı Şarkı İşlendi"
+msgstr[1] "Devre Dışı Şarkılar İşlendi"
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
-msgstr "카탈로그 청소 시작됨"
+msgstr "Katalog Temizliği başladı ..."
 
 #: ../../admin/catalog.php:151
 msgid "Catalog Updated"
-msgstr "카탈로그 수정됨"
+msgstr "Katalog Güncellendi"
 
 #: ../../admin/catalog.php:161
 msgid "Subdirectory update started..."
-msgstr "하부 디렉토리 업데이트 시작됨"
+msgstr "Alt dizin güncellemesi başladı ..."
 
 #: ../../admin/catalog.php:172
 msgid "Error: Please select a catalog type"
-msgstr "오류: 카탈로그 타입을 선택하세요"
+msgstr "Hata: Lütfen bir katalog türü seçin"
 
 #: ../../admin/catalog.php:176
 msgid "Error: Name not specified"
-msgstr "오류: 이름 지정되지 않음"
+msgstr "Hata: Ad belirtilmemiş"
 
 #: ../../admin/catalog.php:195
 msgid "Catalog Creation started..."
-msgstr "카탈로그 생성 시작됨"
+msgstr "Katalog Oluşturma başladı ..."
 
 #: ../../admin/catalog.php:207
 msgid "Catalog statistics cleared"
-msgstr "카탈로그 통계정보 청소됨"
+msgstr "Katalog istatistikleri temizlendi"
 
 #: ../../admin/catalog.php:220
 msgid "Now Playing Cleared"
-msgstr "지금 재생중 목록 초기화됨"
+msgstr "Şu Anda Oynatılanlar Temizlendi"
 
 #: ../../admin/catalog.php:220
 msgid "All now playing data has been cleared"
-msgstr "모든 지금 재생중 정보가 초기화되었습니다"
+msgstr "Bütün şu anda  oynatma verileri temizlendi"
 
 #: ../../admin/catalog.php:232
 msgid "No Disabled songs found"
-msgstr "비활성화된 노래가 없습니다"
+msgstr "Engelli şarkı bulunamadı"
 
 #: ../../admin/catalog.php:244
 msgid "Delete Catalog"
-msgstr "카탈로그 삭제"
+msgstr "Katalogu Sil"
 
 #: ../../admin/catalog.php:244
 msgid "Do you really want to delete this catalog?"
-msgstr "정말 이 카탈로그를 삭제하시겠습니까?"
+msgstr "Bu kataloğu gerçekten silmek istiyor musunuz?"
 
 #: ../../admin/catalog.php:253
 msgid "Media Art Search started..."
-msgstr "미디어 아트 검색 시작됨..."
+msgstr "Medya Sanat Araması başladı ..."
 
 #: ../../admin/license.php:39
 msgid "License Updated"
-msgstr "라이선스 수정됨"
+msgstr "Lisans Güncellendi"
 
 #: ../../admin/license.php:42
 msgid "License Created"
-msgstr "라이선스 생성됨"
+msgstr "Lisans Oluşturuldu"
 
 #: ../../admin/license.php:53
 msgid "License Deleted"
-msgstr "라이선스 삭제됨"
+msgstr "Lisans Silindi"
 
 #: ../../admin/mail.php:63
 msgid "E-mail Sent"
-msgstr "이메일 보냄"
+msgstr "E-posta gönder"
 
 #: ../../admin/mail.php:64
 msgid "Your E-mail was successfully sent."
-msgstr "이메일을 성공적으로 보냈습니다."
+msgstr "E-postanız başarıyla gönderildi."
 
 #: ../../admin/mail.php:66
 msgid "E-mail Not Sent"
-msgstr "이메일 보내지지 않음"
+msgstr "E-posta Gönderme"
 
 #: ../../admin/mail.php:67
 msgid "Your E-mail was not sent."
-msgstr "이메일이 보내지지 않았습니다."
+msgstr "E-postanız gönderilmedi."
 
 #: ../../admin/modules.php:38
 msgid "Failed to enable the module, Controller Error"
-msgstr "모듈을 활성화할 수 없습니다. 컨트롤러 오류입니다"
+msgstr "Modül etkinleştirilemedi, Denetleyici Hatası"
 
 #: ../../admin/modules.php:53
 msgid "localplay enabled"
-msgstr "로컬 플레이 활성화됨"
+msgstr "yerel oynatma etkinleştirildi"
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
-msgstr "모듈을 활성화할 수 없습니다. 카탈로그 오류입니다"
+msgstr "Modül etkinleştirilemedi, Katalog Hatası"
 
 #: ../../admin/modules.php:70
 msgid "Module enabled"
-msgstr "모듈 활성화됨"
+msgstr "Modül etkinleştirildi"
 
 #: ../../admin/modules.php:77 ../../admin/modules.php:84
 msgid "Are you sure you want to disable this module?"
-msgstr "정말 이 모듈을 비활성화하시겠습니까?"
+msgstr "Bu modülü devre dışı bırakmak istediğinizden emin misiniz?"
 
 #: ../../admin/modules.php:96 ../../admin/modules.php:113
 msgid "Module disabled"
-msgstr "모듈 비활성화됨"
+msgstr "Modül devre dışı bırakıldı"
 
 #: ../../admin/modules.php:105
 msgid "Failed to disable module, Catalog Error"
-msgstr "모듈을 비활성화할 수 없습니다. 카탈로그 오류입니다"
+msgstr "Modül devre dışı bırakılamadı, Katalog Hatası"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
-msgstr "플러그인을 설치할 수 없음"
+msgstr "Eklenti yüklenemedi"
 
 #: ../../admin/modules.php:139
 msgid "Plugin enabled"
-msgstr "플러그인 활성화됨"
+msgstr "Eklenti etkinleştirildi"
 
 #: ../../admin/modules.php:146
 msgid "Are you sure you want to disable this plugin?"
-msgstr "정말 플러그인을 비활성화하시겠습니까?"
+msgstr "Bu eklentiyi devre dışı bırakmak istediğinizden emin misiniz?"
 
 #: ../../admin/modules.php:165
 msgid "Plugin disabled"
-msgstr "플러그인 비활성화됨"
+msgstr "Eklenti devre dışı bırakıldı"
 
 #: ../../admin/modules.php:180
 msgid "Plugin Upgraded"
-msgstr "플러그인 업그레이드됨"
+msgstr "Eklenti yükseltildi"
 
 #: ../../admin/modules.php:186
 msgid "Plugins"
-msgstr "플러그인"
+msgstr "Eklentiler"
 
 #: ../../admin/modules.php:192
 msgid "Localplay Controllers"
-msgstr ""
+msgstr "Yerel Oynatma Denetleyicileri"
 
 #: ../../admin/modules.php:198
 msgid "Catalog Types"
-msgstr "카탈로그 종류"
+msgstr "Katalog Türleri"
 
 #: ../../admin/shout.php:39
 msgid "Shoutbox Post Updated"
-msgstr ""
+msgstr "Posta Kutusu Yayını Güncellendi"
 
 #: ../../admin/shout.php:51
 msgid "Shoutbox Post Deleted"
-msgstr ""
+msgstr "Posta Kutusu Yayını Silindi"
 
 #: ../../admin/system.php:51
 msgid "Database Charset Updated"
-msgstr ""
+msgstr "Veritabanı Yöneticisi Güncellendi"
 
 #: ../../admin/system.php:51
 msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
 msgstr ""
+"Veritabanınız ve ilişkili tablolarınız, yapılandırılmış karakter kümenize "
+"uyacak şekilde güncellendi"
 
 #: ../../admin/system.php:66
 msgid "Cache cleared"
-msgstr "캐시 비움"
+msgstr "Önbellek temizlendi"
 
 #: ../../admin/system.php:66
 msgid "Your cache has been cleared successfully."
-msgstr "캐시를 비웠습니다."
+msgstr "Önbelleğiniz başarıyla temizlendi."
 
 #: ../../admin/users.php:62 ../../admin/users.php:141
 #: ../../lib/class/user.class.php:597
 msgid "Error Username Required"
-msgstr "오류 사용자 이름이 필요합니다"
+msgstr "Hata Kullanıcı Adı Gerekli"
 
 #: ../../admin/users.php:66 ../../admin/users.php:146 ../../register.php:121
 msgid "Error Username already exists"
-msgstr "오류 사용자 이름이 이미 존재합니다"
+msgstr "Hata kullanıcı adı zaten mevcut"
 
 #: ../../admin/users.php:71 ../../admin/users.php:137
 #: ../../lib/class/user.class.php:601
 msgid "Error Passwords don't match"
-msgstr ""
+msgstr "Hata Şifreleri eşleşmiyor"
 
 #: ../../admin/users.php:76 ../../admin/users.php:151 ../../register.php:95
 msgid "Invalid email address"
-msgstr "잘못된 이메일 주소"
+msgstr "Geçersiz e-posta adresi"
 
 #: ../../admin/users.php:114
 msgid "User Updated"
-msgstr ""
+msgstr "Kullanıcı Güncellendi"
 
 #: ../../admin/users.php:114
 msgid "updated"
-msgstr ""
+msgstr "güncellendi"
 
 #: ../../admin/users.php:163 ../../register.php:150
 msgid "Error: Insert Failed"
-msgstr "오류: 등록 실패"
+msgstr "Hata: Eklenemedi"
 
 #: ../../admin/users.php:169 ../../lib/class/democratic.class.php:158
 #: ../../lib/class/shoutbox.class.php:330
@@ -305,7 +307,7 @@ msgstr "오류: 등록 실패"
 #: ../../templates/show_preference_admin.inc.php:43
 #: ../../templates/show_preference_box.inc.php:79
 msgid "Guest"
-msgstr "손님"
+msgstr "Misafir"
 
 #: ../../admin/users.php:171 ../../lib/class/democratic.class.php:161
 #: ../../lib/preferences.php:303
@@ -326,7 +328,7 @@ msgstr "손님"
 #: ../../templates/show_shared_objects.inc.php:28
 #: ../../templates/show_wanted_albums.inc.php:29
 msgid "User"
-msgstr "사용자"
+msgstr "Kullanıcı"
 
 #: ../../admin/users.php:173 ../../lib/class/democratic.class.php:170
 #: ../../lib/preferences.php:305 ../../templates/show_add_user.inc.php:89
@@ -339,162 +341,164 @@ msgstr "사용자"
 #: ../../templates/show_preference_box.inc.php:83
 #: ../../templates/sidebar.inc.php:39
 msgid "Admin"
-msgstr "관리자"
+msgstr "Yönetici"
 
 #. HINT: %1 Username, %2 Access num
 #: ../../admin/users.php:177
 msgid "New User Added"
-msgstr "새 사용자 추가됨"
+msgstr "Yeni Kullanıcı Eklendi"
 
 #: ../../admin/users.php:177
 #, php-format
 msgid "%1$s has been created with an access level of %2$s"
-msgstr "접근 권한 %2$s의 사용자 %1$s(이)가 생성되었습니다."
+msgstr "%1$s erişim seviyesi ile oluşturuldu %2$s"
 
 #: ../../admin/users.php:185
 msgid "User Enabled"
-msgstr "사용자 활성화됨"
+msgstr "Kullanıcı Etkinleştirildi"
 
 #: ../../admin/users.php:190
 msgid "User Disabled"
-msgstr "사용자 비활성화됨"
+msgstr "Kullanıcı Devre Dışı Bırakıldı"
 
 #: ../../admin/users.php:192
 msgid "Unable to Disabled last Administrator"
-msgstr "마지막 관리자를 비활성화할 수 없습니다"
+msgstr "Son Yönetici Devre Dışı Bırakılamıyor"
 
 #: ../../admin/users.php:212
 msgid "User Deleted"
-msgstr "사용자 삭제됨"
+msgstr "Kullanıcı Silindi"
 
 #: ../../admin/users.php:212
 #, php-format
 msgid "%s has been Deleted"
-msgstr "사용자 %s(이)가 삭제되었습니다"
+msgstr "%s Silindi"
 
 #: ../../admin/users.php:214
 msgid "Delete Error"
-msgstr "삭제 오류"
+msgstr "Silme Hatası"
 
 #: ../../admin/users.php:214
 msgid "Unable to delete last Admin User"
-msgstr "마지막 관리자는 삭제할 수 없습니다"
+msgstr "Son Yönetici Kullanıcısı silinemiyor"
 
 #: ../../admin/users.php:223
 #, php-format
 msgid "Are you sure you want to permanently delete %s?"
-msgstr "정말 사용자 %s(을)를 삭제하시겠습니까?"
+msgstr "Kalıcı olarak silmek istediğinizden emin misiniz %s ?"
 
 #: ../../admin/users.php:230
 msgid "User Avatar Delete"
-msgstr "프로필 이미지 삭제"
+msgstr "Kullanıcı Avatarını Sil"
 
 #: ../../admin/users.php:246
 msgid "User Avatar Deleted"
-msgstr "프로필 이미지 삭제됨"
+msgstr "Kullanıcı Avatarı Silindi"
 
 #: ../../admin/users.php:246
 msgid "User Avatar has been deleted"
-msgstr "프로필 이미지가 삭제되었습니다"
+msgstr "Kullanıcı Avatarı Silindi"
 
 #: ../../admin/users.php:252 ../../templates/show_account.inc.php:102
 #: ../../templates/show_edit_user.inc.php:133
 msgid "Generate new API Key"
-msgstr "새 API 키 생성"
+msgstr "Yeni API Anahtarı oluştur"
 
 #: ../../admin/users.php:252
 msgid "Confirm API Key Generation"
-msgstr ""
+msgstr "API Anahtar Üretimini Onayla"
 
 #: ../../admin/users.php:268
 msgid "API Key Generated"
-msgstr "API 키 생성됨"
+msgstr "API Anahtarı Oluşturuldu"
 
 #: ../../admin/users.php:268
 msgid "New user API Key has been generated."
-msgstr "새 API 키가 생성되었습니다."
+msgstr "Yeni kullanıcı API Anahtarı oluşturuldu."
 
 #: ../../albums.php:36 ../../albums.php:56 ../../albums.php:58
 msgid "Album Deletion"
-msgstr "앨범 삭제"
+msgstr "Albüm Silme"
 
 #: ../../albums.php:37
 msgid "Are you sure you want to permanently delete this album?"
-msgstr "정말 이 앨범을 삭제하시겠습니까?"
+msgstr "Bu albümü kalıcı olarak silmek istediğinizden emin misiniz?"
 
 #: ../../albums.php:56
 msgid "Album has been deleted."
-msgstr "앨범이 삭제되었습니다."
+msgstr "Albüm silindi."
 
 #: ../../albums.php:58
 msgid "Cannot delete this album."
-msgstr "이 앨범을 삭제할 수 없습니다."
+msgstr "Bu albüm silinemiyor."
 
 #: ../../artists.php:38 ../../artists.php:58 ../../artists.php:60
 msgid "Artist Deletion"
-msgstr ""
+msgstr "Sanatçı Silme"
 
 #: ../../artists.php:39
 msgid "Are you sure you want to permanently delete this artist?"
-msgstr ""
+msgstr "Bu sanatçıyı kalıcı olarak silmek istediğinizden emin misiniz?"
 
 #: ../../artists.php:58
 msgid "Artist has been deleted."
-msgstr ""
+msgstr "Sanatçı silindi."
 
 #: ../../artists.php:60
 msgid "Cannot delete this artist."
-msgstr ""
+msgstr "Bu sanatçı silinemiyor."
 
 #: ../../artists.php:98
 msgid "Show Artists starting with"
-msgstr ""
+msgstr "Ile başlayan sanatçıları göster"
 
 #: ../../arts.php:50
 msgid "Art Cleared"
-msgstr ""
+msgstr "Sanat temizlendi"
 
 #: ../../arts.php:50
 msgid "Art information has been removed from the database"
-msgstr ""
+msgstr "Sanat bilgileri veritabanından kaldırıldı"
 
 #: ../../arts.php:56 ../../arts.php:72 ../../arts.php:139
 msgid "Art Not Located"
-msgstr ""
+msgstr "Sanat Bulunamadı"
 
 #: ../../arts.php:56 ../../arts.php:72 ../../arts.php:139
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
 msgstr ""
+"Sanat şu anda bulunamadı. Bu yazma erişim hatası nedeniyle olabilir veya "
+"dosya doğru şekilde alınmadı."
 
 #: ../../arts.php:68 ../../arts.php:94
 msgid "Art Inserted"
-msgstr ""
+msgstr "Sanat Eklendi"
 
 #: ../../bin/broadcast.inc:32
 msgid "Starting broadcasts..."
-msgstr "방송 시작중..."
+msgstr "Yayınlar başlatılıyor ..."
 
 #: ../../bin/broadcast.inc:35
 msgid "UPnP broadcast... "
-msgstr "UPnP 방송..."
+msgstr "UPnP yayını ..."
 
 #: ../../bin/broadcast.inc:37
 msgid "Done."
-msgstr "완료"
+msgstr "Tamam."
 
 #: ../../bin/broadcast.inc:39
 msgid "UPnP backend disabled. Broadcast skipped."
-msgstr "UPnP 백앤드가 비활성화되어 있습니다. 방송을 스킵합니다."
+msgstr "UPnP arka ucu devre dışı. Yayın atlandı."
 
 #: ../../bin/catalog_update.inc:44
 msgid "Doing all catalog operations"
-msgstr ""
+msgstr "Tüm katalog işlemlerini yapmak"
 
 #: ../../bin/catalog_update.inc:52
 msgid "Temporary deactivate PHP memory limit"
-msgstr "일시적으로 PHP 메모리 제한 해제"
+msgstr "PHP bellek sınırını geçici olarak devre dışı bırak"
 
 #: ../../bin/catalog_update.inc:56
 msgid "Setting catalog name"
@@ -506,39 +510,39 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:64
 msgid "Cleaning catalog/s"
-msgstr ""
+msgstr "Katalog/lar Temizleniyor"
 
 #: ../../bin/catalog_update.inc:68
 msgid "Verifying catalog/s"
-msgstr ""
+msgstr "Katalog/lar doğrulanıyor"
 
 #: ../../bin/catalog_update.inc:72
 msgid "Adding new media to catalog/s"
-msgstr ""
+msgstr "Katalog/lara yeni medya ekleniyor"
 
 #: ../../bin/catalog_update.inc:76
 msgid "Gathering new media art"
-msgstr ""
+msgstr "Yeni medya sanatı toplanıyor"
 
 #: ../../bin/catalog_update.inc:80
 msgid "Importing playlist/s"
-msgstr ""
+msgstr "Oynatma liste/leri içe aktarılıyor"
 
 #: ../../bin/catalog_update.inc:84
 msgid "Database table optimization"
-msgstr ""
+msgstr "Veritabanı tablosu optimizasyonu"
 
 #: ../../bin/catalog_update.inc:101
 msgid "Starting catalog operations..."
-msgstr ""
+msgstr "Katalog işlemleri başlatılıyor ..."
 
 #: ../../bin/catalog_update.inc:107
 msgid "Deactivated PHP memory limit"
-msgstr "PHP 메모리 제한을 해제했습니다"
+msgstr "PHP bellek limiti Devre dışı bırakıldı "
 
 #: ../../bin/catalog_update.inc:114
 msgid "Gathering art"
-msgstr ""
+msgstr "Sanat toplanıyor"
 
 #: ../../bin/catalog_update.inc:120
 msgid "Parsing playlists"
@@ -547,7 +551,7 @@ msgstr ""
 #: ../../bin/catalog_update.inc:141
 #, php-format
 msgid "Reading catalog: %s"
-msgstr "카탈로그 읽는 중: %s"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:147
 msgid "Start cleaning orphaned media entries"
@@ -710,7 +714,7 @@ msgstr ""
 
 #: ../../bin/fix_filenames.inc:42
 msgid "ERROR: Iconv required for this functionality, quitting"
-msgstr "오류: 이 기능이 정상 동작하려면 iconv가 필요합니다"
+msgstr ""
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
@@ -807,7 +811,7 @@ msgstr ""
 
 #: ../../bin/fix_filenames.inc:212
 msgid "File Moved..."
-msgstr "파일 이동됨..."
+msgstr ""
 
 #: ../../bin/install/add_user.inc:50
 #, php-format
@@ -844,15 +848,15 @@ msgstr ""
 
 #: ../../bin/migrate_config.inc:50
 msgid "Parsing old config file..."
-msgstr "예전 설정 파일 파싱중..."
+msgstr ""
 
 #: ../../bin/migrate_config.inc:80
 msgid "Parse complete, writing"
-msgstr "파싱 완료. 쓰는중"
+msgstr ""
 
 #: ../../bin/migrate_config.inc:88
 msgid "Write success, config migrated"
-msgstr "쓰기 성공. 설정이 마이그레이션 되었습니다"
+msgstr ""
 
 #: ../../bin/migrate_config.inc:92
 msgid "Access Denied, config migration failed"
@@ -1005,15 +1009,15 @@ msgstr ""
 
 #: ../../channel.php:61
 msgid "Channel Created"
-msgstr "채널 생성됨"
+msgstr ""
 
 #: ../../channel.php:70
 msgid "Channel Delete"
-msgstr "채널 삭제"
+msgstr ""
 
 #: ../../channel.php:83
 msgid "Channel Deleted"
-msgstr "채널 삭제됨"
+msgstr ""
 
 #: ../../channel.php:83
 msgid "The Channel has been deleted"
@@ -1722,11 +1726,13 @@ msgstr ""
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:606
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:651
 msgid "Catalog Insert Failed check debug logs"
@@ -1741,6 +1747,7 @@ msgstr ""
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../lib/class/catalog.class.php:1869
 #, php-format
@@ -4167,6 +4174,7 @@ msgstr ""
 msgid "Successfully imported playlist with %d song."
 msgid_plural "Successfully imported playlist with %d songs."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
@@ -7416,12 +7424,14 @@ msgstr ""
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:82
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_random.inc.php:91
 msgid "Size Limit"
@@ -7446,48 +7456,56 @@ msgstr ""
 msgid "%d second ago"
 msgid_plural "%d seconds ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:75
 #, php-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:78
 #, php-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:81
 #, php-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:84
 #, php-format
 msgid "%d week ago"
 msgid_plural "%d weeks ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:87
 #, php-format
 msgid "%d month ago"
 msgid_plural "%d months ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:90
 #, php-format
 msgid "%d year ago"
 msgid_plural "%d years ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:93
 #, php-format
 msgid "%d decade ago"
 msgid_plural "%d decades ago"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:152
 msgid "No recently played items found"

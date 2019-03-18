@@ -185,8 +185,9 @@ class Subsonic_Api
                 $output = $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
             } else {
                 $xmlstr = $xml->asXml();
-                // Format xml output
-                $dom = new DOMDocument();
+                //clean illegal XML characters.
+                $xmlstr = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);               // Format xml output
+                $dom    = new DOMDocument();
                 $dom->loadXML($xmlstr);
                 $dom->formatOutput = true;
                 $output            = $dom->saveXML();
@@ -203,9 +204,9 @@ class Subsonic_Api
     private static function xml2json($xml, $options = array())
     {
         $defaults = array(
-            'namespaceSeparator' => ':',//you may want this to be something other than a colon
+            'namespaceSeparator' => ' :',//you may want this to be something other than a colon
             'attributePrefix' => '',   //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array(),   //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'),   //array of xml tag names which should always become arrays
             'autoArray' => true,        //only create arrays for tags which appear more than once
             'textContent' => 'value',       //key used for the text content of elements
             'autoText' => true,         //skip textContent key if node has no attributes or child nodes
@@ -259,10 +260,18 @@ class Subsonic_Api
 
                 if (!isset($tagsArray[$childTagName])) {
                     //only entry with this key
+                    
+                    if (count($childProperties) == 0) {
+                        $tagsArray[$childTagName] = (object) $childProperties;
+                    } elseif (self::has_Nested_Array($childProperties)) {
+                        $tagsArray[$childTagName] = (object) $childProperties;
+                    } else {
+                        
                     //test if tags of this type should always be arrays, no matter the element count
-                    $tagsArray[$childTagName] =
+                        $tagsArray[$childTagName] =
                             in_array($childTagName, $options['alwaysArray']) || !$options['autoArray']
                             ? array($childProperties) : $childProperties;
+                    }
                 } elseif (
                     is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName])
                     === range(0, count($tagsArray[$childTagName]) - 1)
@@ -278,7 +287,7 @@ class Subsonic_Api
 
         //get text content of node
         $textContentArray = array();
-        $plainText        = trim((string) $xml);
+        $plainText        = (string) $xml;
         if ($plainText !== '') {
             $textContentArray[$options['textContent']] = $plainText;
         }
@@ -290,12 +299,23 @@ class Subsonic_Api
         if (isset($propertiesArray['xmlns'])) {
             unset($propertiesArray['xmlns']);
         }
+        
         //return node as array
         return array(
             $xml->getName() => $propertiesArray
         );
     }
 
+    private static function has_Nested_Array($properties)
+    {
+        foreach ($properties as $property) {
+            if (is_array($property)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * ping
@@ -505,6 +525,7 @@ class Subsonic_Api
         Subsonic_XML_Data::addVideos($r, $videos);
         self::apiOutput($input, $r);
     }
+    
 
     /**
      * getAlbumList
@@ -549,7 +570,7 @@ class Subsonic_Api
                             $albums = Stats::get_recent("album", $size, $offset);
                         } else {
                             if ($type == "starred") {
-                                $albums = Userflag::get_latest('album');
+                                $albums = Userflag::get_latest('album', null, $size);
                             } else {
                                 if ($type == "alphabeticalByName") {
                                     $albums = Catalog::get_albums($size, $offset, $catalogs);
@@ -1262,7 +1283,7 @@ class Subsonic_Api
                 }
                 foreach ($albumId as $i) {
                     $aid   = Subsonic_XML_Data::getAmpacheId($i);
-                    $ids[] = array('id' => $aid, 'album');
+                    $ids[] = array('id' => $aid, 'type' => 'album');
                 }
             } else {
                 if ($artistId) {
@@ -1271,7 +1292,7 @@ class Subsonic_Api
                     }
                     foreach ($artistId as $i) {
                         $aid   = Subsonic_XML_Data::getAmpacheId($i);
-                        $ids[] = array('id' => $aid, 'artist');
+                        $ids[] = array('id' => $aid, 'type' => 'artist');
                     }
                 } else {
                     $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
@@ -1851,21 +1872,41 @@ class Subsonic_Api
      */
     public static function getsimilarsongs($input)
     {
+        if (!AmpConfig::get('show_similar')) {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Show similar must be enabled");
+            self::apiOutput($input, $r);
+
+            return;
+        }
+
         $id    = self::check_parameter($input, 'id');
         $count = $input['count'] ?: 50;
 
-        $songs = null;
+        $songs = array();
         if (Subsonic_XML_Data::isArtist($id)) {
-            // TODO: support similar songs for artists
+            $similars = Recommendation::get_artists_like(Subsonic_XML_Data::getAmpacheId($id));
+            debug_event('similar_songs', 'Found: ' . count($similars) . ' similar artists', '5');
+            foreach ($similars as $similar) {
+                debug_event('similar_songs', $similar['name'] . ' (id=' . $similar['id'] . ')', '5');
+                if ($similar['id']) {
+                    $artist = new Artist($similar['id']);
+                    // get the songs in a random order for even more chaos
+                    $artist_songs = $artist->get_random_songs();
+                    foreach ($artist_songs as $song) {
+                        $songs[] = array('id' => $song);
+                    }
+                }
+            }
+            // randomize and slice
+            shuffle($songs);
+            $songs = array_slice($songs, 0, $count);
         } elseif (Subsonic_XML_Data::isAlbum($id)) {
             // TODO: support similar songs for albums
         } elseif (Subsonic_XML_Data::isSong($id)) {
-            if (AmpConfig::get('show_similar')) {
-                $songs = Recommendation::get_songs_like(Subsonic_XML_Data::getAmpacheId($id));
-            }
+            $songs = Recommendation::get_songs_like(Subsonic_XML_Data::getAmpacheId($id), $count);
         }
 
-        if ($songs === null) {
+        if (count($songs) == 0) {
             $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         } else {
             $r = Subsonic_XML_Data::createSuccessResponse();
@@ -1881,7 +1922,7 @@ class Subsonic_Api
      */
     public static function getsimilarsongs2($input)
     {
-        return self::getsimilarsongs($input);
+        self::getsimilarsongs($input);
     }
 
     /**
