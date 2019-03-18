@@ -117,11 +117,7 @@ class Graph
             $type = $object_type;
         }
         $song_values = $this->$fct($id, $type, $object_id, $start_date, $end_date, $zoom);
-        if ($object_type == null && AmpConfig::get('allow_video')) {
-            $video_values = $this->$fct($id, 'video', $object_id, $start_date, $end_date, $zoom);
-        } else {
-            $video_values = array();
-        }
+        $video_values = array();
         $values = $song_values;
         foreach ($video_values as $date => $value) {
             if (array_key_exists($date, $values)) {

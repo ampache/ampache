@@ -196,7 +196,6 @@ function create_preference_input($name, $value)
         case 'home_recently_played':
         case 'home_now_playing':
         case 'browser_notify':
-        case 'allow_video':
         case 'geolocation':
         case 'webplayer_aurora':
         case 'upload_allow_remove':

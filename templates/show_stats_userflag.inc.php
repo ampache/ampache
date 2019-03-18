@@ -41,15 +41,6 @@ $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-if (AmpConfig::get('allow_video')) {
-    $sql    = Userflag::get_latest_sql('video');
-    $browse = new Browse();
-    $browse->set_type('video', $sql);
-    $browse->set_simple_browse(true);
-    $browse->show_objects();
-    $browse->store();
-}
-
 $sql    = Userflag::get_latest_sql('playlist');
 $browse = new Browse();
 $browse->set_type('playlist', $sql);
