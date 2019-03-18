@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-10-26 18:02+0200\n"
+"POT-Creation-Date: 2019-03-17 12:16+0100\n"
 "PO-Revision-Date: 2018-10-26 15:36+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
@@ -717,8 +717,8 @@ msgstr ""
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
-msgid "%s For the Love of Music"
-msgstr "%s 獻給對音樂之愛"
+msgid "%s"
+msgstr ""
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
@@ -1135,13 +1135,13 @@ msgstr "網頁界面"
 msgid "Stream Access"
 msgstr "串流存取"
 
-#: ../../lib/class/album.class.php:408 ../../lib/class/artist.class.php:681
+#: ../../lib/class/album.class.php:404 ../../lib/class/artist.class.php:681
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
 msgstr "未知 (遺孤)"
 
-#: ../../lib/class/album.class.php:645
+#: ../../lib/class/album.class.php:641
 #: ../../lib/class/subsonic_xml_data.class.php:594
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
@@ -1151,7 +1151,7 @@ msgstr "未知 (遺孤)"
 msgid "Disk"
 msgstr "片"
 
-#: ../../lib/class/album.class.php:657 ../../lib/class/browse.class.php:226
+#: ../../lib/class/album.class.php:653 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:331 ../../lib/ui.lib.php:180
 #: ../../server/search.ajax.php:57 ../../templates/header.inc.php:414
 #: ../../templates/show_label.inc.php:103
@@ -1168,23 +1168,23 @@ msgstr "片"
 msgid "Artists"
 msgstr "作者"
 
-#: ../../lib/class/album.class.php:657 ../../lib/class/album.class.php:658
+#: ../../lib/class/album.class.php:653 ../../lib/class/album.class.php:654
 #: ../../templates/show_edit_album_row.inc.php:38
 #: ../../templates/show_install_config.inc.php:64
 msgid "Various"
 msgstr "多位"
 
-#: ../../lib/class/album.class.php:677
+#: ../../lib/class/album.class.php:673
 msgid "Album MusicBrainzID"
 msgstr "專輯的 MusicBrainz 識別碼"
 
-#: ../../lib/class/album.class.php:680
+#: ../../lib/class/album.class.php:676
 msgid "Release Group MusicBrainzID"
 msgstr "成品組的 MusicBrainz 識別碼"
 
-#: ../../lib/class/album.class.php:683 ../../lib/class/artist.class.php:501
+#: ../../lib/class/album.class.php:679 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:239
-#: ../../lib/class/search.class.php:492 ../../lib/class/song.class.php:1489
+#: ../../lib/class/search.class.php:492 ../../lib/class/song.class.php:1490
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_upload.inc.php:177
 #: ../../templates/show_albums.inc.php:40
@@ -1220,7 +1220,7 @@ msgstr "成品組的 MusicBrainz 識別碼"
 msgid "Artist"
 msgstr "作者"
 
-#: ../../lib/class/album.class.php:686 ../../lib/class/search.class.php:232
+#: ../../lib/class/album.class.php:682 ../../lib/class/search.class.php:232
 #: ../../templates/show_add_upload.inc.php:188
 #: ../../templates/show_albums.inc.php:38
 #: ../../templates/show_albums.inc.php:112
@@ -1410,38 +1410,38 @@ msgstr "重設封面圖片"
 msgid "Artist MusicBrainzID"
 msgstr "作者的 MusicBrainz 識別碼"
 
-#: ../../lib/class/autoupdate.class.php:233
+#: ../../lib/class/autoupdate.class.php:234
 msgid "Update available"
 msgstr "有可用更新"
 
-#: ../../lib/class/autoupdate.class.php:236
+#: ../../lib/class/autoupdate.class.php:237
 msgid "See"
 msgstr "檢視"
 
-#: ../../lib/class/autoupdate.class.php:236
+#: ../../lib/class/autoupdate.class.php:237
 msgid "changes"
 msgstr "更新日誌"
 
-#: ../../lib/class/autoupdate.class.php:238
-#: ../../lib/class/autoupdate.class.php:241
+#: ../../lib/class/autoupdate.class.php:239
+#: ../../lib/class/autoupdate.class.php:242
 msgid "or"
 msgstr "或"
 
-#: ../../lib/class/autoupdate.class.php:239
-#: ../../lib/class/autoupdate.class.php:242
+#: ../../lib/class/autoupdate.class.php:240
+#: ../../lib/class/autoupdate.class.php:243
 msgid "download"
 msgstr "下載"
 
-#: ../../lib/class/autoupdate.class.php:256
+#: ../../lib/class/autoupdate.class.php:257
 msgid "Updating Ampache sources with `"
 msgstr "正在更新 Ampache 原始碼於 `"
 
-#: ../../lib/class/autoupdate.class.php:260
-#: ../../lib/class/autoupdate.class.php:275
+#: ../../lib/class/autoupdate.class.php:261
+#: ../../lib/class/autoupdate.class.php:276
 msgid "Done"
 msgstr "完成"
 
-#: ../../lib/class/autoupdate.class.php:271
+#: ../../lib/class/autoupdate.class.php:272
 msgid "Updating dependencies with `"
 msgstr "正在更新依賴的程式於 `"
 
@@ -1895,7 +1895,7 @@ msgstr "無法讀取消息來源。"
 
 #: ../../lib/class/podcast_episode.class.php:157
 #: ../../lib/class/search.class.php:225 ../../lib/class/search.class.php:485
-#: ../../lib/class/song.class.php:1492 ../../lib/class/video.class.php:303
+#: ../../lib/class/song.class.php:1493 ../../lib/class/video.class.php:303
 #: ../../templates/show_democratic_playlist.inc.php:60
 #: ../../templates/show_democratic_playlist.inc.php:113
 #: ../../templates/show_disabled_songs.inc.php:29
@@ -2414,12 +2414,12 @@ msgstr "發表留言"
 msgid "by"
 msgstr "作者"
 
-#: ../../lib/class/song.class.php:1460
+#: ../../lib/class/song.class.php:1461
 #: ../../templates/show_html5_player.inc.php:154
 msgid "Show Lyrics"
 msgstr "顯示歌詞"
 
-#: ../../lib/class/song.class.php:1486
+#: ../../lib/class/song.class.php:1487
 msgid "Track MusicBrainzID"
 msgstr "音軌的 MusicBrainz 識別碼"
 
@@ -3656,11 +3656,11 @@ msgstr "一個來自 %s 的使用者要求重設「%s」的密碼。"
 msgid "The password has been set to: %s"
 msgstr "密碼已被寄送到：%s"
 
-#: ../../modules/Beets/Catalog.php:125
+#: ../../modules/Beets/Catalog.php:126
 msgid "Running Beets Update"
 msgstr "正在執行 Beets 遠端更新"
 
-#: ../../modules/Beets/Catalog.php:200
+#: ../../modules/Beets/Catalog.php:205
 #: ../../modules/catalog/remote/remote.catalog.php:273
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:300
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:254
@@ -8514,7 +8514,7 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 17:35:10 CEST
+# Last Update: 26.10.2018 18:02:37 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

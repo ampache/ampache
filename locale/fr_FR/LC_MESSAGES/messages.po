@@ -12,14 +12,15 @@
 # Morgan <mfouillat+github@gmail.com>, 2016
 # Nicolas Chartoire <nicolas.chartoire@gmail.com>, 2015
 # Nicolas Jeannerod <niols@niols.fr>, 2016
+# simon511000 <simonledoux012345@gmail.com>, 2019
 # tap3 tap3 <bs-flip@gmx.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2018-10-26 18:02+0200\n"
-"PO-Revision-Date: 2018-10-26 15:36+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"POT-Creation-Date: 2019-03-17 12:16+0100\n"
+"PO-Revision-Date: 2019-02-12 15:41+0000\n"
+"Last-Translator: simon511000 <simonledoux012345@gmail.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/ampache/ampache/"
 "language/fr_FR/)\n"
 "Language: fr_FR\n"
@@ -512,11 +513,11 @@ msgstr "Désactive temporairement la limite de mémoire de PHP"
 
 #: ../../bin/catalog_update.inc:56
 msgid "Setting catalog name"
-msgstr ""
+msgstr "Réglage du nom du catalogue"
 
 #: ../../bin/catalog_update.inc:60
 msgid "Setting catalog type"
-msgstr ""
+msgstr "Réglage du type de catalogue"
 
 #: ../../bin/catalog_update.inc:64
 msgid "Cleaning catalog/s"
@@ -592,6 +593,8 @@ msgid ""
 "Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-"
 "a|-g|-i|-o]"
 msgstr ""
+"Utilisation: catalog_update.inc [-n NOM DU CATALOGUE] [-t TYPE DU CATALOGUE] "
+"[-h|-m|-c|-v|-a|-g|-i|-o]"
 
 #: ../../bin/catalog_update.inc:207
 msgid ""
@@ -603,15 +606,15 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:211
 msgid "This help message"
-msgstr ""
+msgstr "Ce message d'aide"
 
 #: ../../bin/catalog_update.inc:213
 msgid "Name of Catalog (Optional)"
-msgstr ""
+msgstr "Nom du Catalogue (Optionnel)"
 
 #: ../../bin/catalog_update.inc:215
 msgid "Type of Catalog (Optional)"
-msgstr ""
+msgstr "Type du Catalogue (Optionnel)"
 
 #: ../../bin/catalog_update.inc:217
 msgid "Temporarily deactivates PHP memory limit."
@@ -740,8 +743,8 @@ msgstr "ERREUR : Iconv nécessaire pour cette fonctionnalité, fermeture."
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
-msgid "%s For the Love of Music"
-msgstr "%s pour l'amour de la musique."
+msgid "%s"
+msgstr ""
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
@@ -1164,13 +1167,13 @@ msgstr "Interface Web"
 msgid "Stream Access"
 msgstr "Accès Flux"
 
-#: ../../lib/class/album.class.php:408 ../../lib/class/artist.class.php:681
+#: ../../lib/class/album.class.php:404 ../../lib/class/artist.class.php:681
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
 msgstr "Inconnu (orphelin)"
 
-#: ../../lib/class/album.class.php:645
+#: ../../lib/class/album.class.php:641
 #: ../../lib/class/subsonic_xml_data.class.php:594
 #: ../../server/search.ajax.php:87
 #: ../../templates/show_album_group_disks.inc.php:109
@@ -1180,7 +1183,7 @@ msgstr "Inconnu (orphelin)"
 msgid "Disk"
 msgstr "Disque"
 
-#: ../../lib/class/album.class.php:657 ../../lib/class/browse.class.php:226
+#: ../../lib/class/album.class.php:653 ../../lib/class/browse.class.php:226
 #: ../../lib/class/upnp_api.class.php:331 ../../lib/ui.lib.php:180
 #: ../../server/search.ajax.php:57 ../../templates/header.inc.php:414
 #: ../../templates/show_label.inc.php:103
@@ -1197,23 +1200,23 @@ msgstr "Disque"
 msgid "Artists"
 msgstr "Artistes"
 
-#: ../../lib/class/album.class.php:657 ../../lib/class/album.class.php:658
+#: ../../lib/class/album.class.php:653 ../../lib/class/album.class.php:654
 #: ../../templates/show_edit_album_row.inc.php:38
 #: ../../templates/show_install_config.inc.php:64
 msgid "Various"
 msgstr "Divers"
 
-#: ../../lib/class/album.class.php:677
+#: ../../lib/class/album.class.php:673
 msgid "Album MusicBrainzID"
 msgstr "Album MusicBrainzID"
 
-#: ../../lib/class/album.class.php:680
+#: ../../lib/class/album.class.php:676
 msgid "Release Group MusicBrainzID"
 msgstr "Groupe de sortie MusicBrainzID"
 
-#: ../../lib/class/album.class.php:683 ../../lib/class/artist.class.php:501
+#: ../../lib/class/album.class.php:679 ../../lib/class/artist.class.php:501
 #: ../../lib/class/clip.class.php:121 ../../lib/class/search.class.php:239
-#: ../../lib/class/search.class.php:492 ../../lib/class/song.class.php:1489
+#: ../../lib/class/search.class.php:492 ../../lib/class/song.class.php:1490
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_upload.inc.php:177
 #: ../../templates/show_albums.inc.php:40
@@ -1249,7 +1252,7 @@ msgstr "Groupe de sortie MusicBrainzID"
 msgid "Artist"
 msgstr "Artiste"
 
-#: ../../lib/class/album.class.php:686 ../../lib/class/search.class.php:232
+#: ../../lib/class/album.class.php:682 ../../lib/class/search.class.php:232
 #: ../../templates/show_add_upload.inc.php:188
 #: ../../templates/show_albums.inc.php:38
 #: ../../templates/show_albums.inc.php:112
@@ -1439,38 +1442,38 @@ msgstr "Réinitialiser la jaquette"
 msgid "Artist MusicBrainzID"
 msgstr "MusicBrainzID de l'artiste"
 
-#: ../../lib/class/autoupdate.class.php:233
+#: ../../lib/class/autoupdate.class.php:234
 msgid "Update available"
 msgstr "Mise à jour disponible"
 
-#: ../../lib/class/autoupdate.class.php:236
+#: ../../lib/class/autoupdate.class.php:237
 msgid "See"
 msgstr "Voir"
 
-#: ../../lib/class/autoupdate.class.php:236
+#: ../../lib/class/autoupdate.class.php:237
 msgid "changes"
 msgstr "changements"
 
-#: ../../lib/class/autoupdate.class.php:238
-#: ../../lib/class/autoupdate.class.php:241
+#: ../../lib/class/autoupdate.class.php:239
+#: ../../lib/class/autoupdate.class.php:242
 msgid "or"
 msgstr "ou"
 
-#: ../../lib/class/autoupdate.class.php:239
-#: ../../lib/class/autoupdate.class.php:242
+#: ../../lib/class/autoupdate.class.php:240
+#: ../../lib/class/autoupdate.class.php:243
 msgid "download"
 msgstr "téléchargement"
 
-#: ../../lib/class/autoupdate.class.php:256
+#: ../../lib/class/autoupdate.class.php:257
 msgid "Updating Ampache sources with `"
 msgstr "Mise à jour des sources Ampache via `"
 
-#: ../../lib/class/autoupdate.class.php:260
-#: ../../lib/class/autoupdate.class.php:275
+#: ../../lib/class/autoupdate.class.php:261
+#: ../../lib/class/autoupdate.class.php:276
 msgid "Done"
 msgstr "Terminé"
 
-#: ../../lib/class/autoupdate.class.php:271
+#: ../../lib/class/autoupdate.class.php:272
 msgid "Updating dependencies with `"
 msgstr "Mise à jour des dépendances via `"
 
@@ -1929,7 +1932,7 @@ msgstr "Impossible de lire le flux."
 
 #: ../../lib/class/podcast_episode.class.php:157
 #: ../../lib/class/search.class.php:225 ../../lib/class/search.class.php:485
-#: ../../lib/class/song.class.php:1492 ../../lib/class/video.class.php:303
+#: ../../lib/class/song.class.php:1493 ../../lib/class/video.class.php:303
 #: ../../templates/show_democratic_playlist.inc.php:60
 #: ../../templates/show_democratic_playlist.inc.php:113
 #: ../../templates/show_disabled_songs.inc.php:29
@@ -2451,12 +2454,12 @@ msgstr "Écrire un commentaire"
 msgid "by"
 msgstr "par"
 
-#: ../../lib/class/song.class.php:1460
+#: ../../lib/class/song.class.php:1461
 #: ../../templates/show_html5_player.inc.php:154
 msgid "Show Lyrics"
 msgstr "Afficher paroles"
 
-#: ../../lib/class/song.class.php:1486
+#: ../../lib/class/song.class.php:1487
 msgid "Track MusicBrainzID"
 msgstr "Suivre MusicBrainzID"
 
@@ -3704,11 +3707,11 @@ msgstr ""
 msgid "The password has been set to: %s"
 msgstr "Le mot de passe a été défini comme : %s"
 
-#: ../../modules/Beets/Catalog.php:125
+#: ../../modules/Beets/Catalog.php:126
 msgid "Running Beets Update"
 msgstr "Mise à jour de beets"
 
-#: ../../modules/Beets/Catalog.php:200
+#: ../../modules/Beets/Catalog.php:205
 #: ../../modules/catalog/remote/remote.catalog.php:273
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:300
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:254
@@ -8703,7 +8706,7 @@ msgstr "Vous ne pouvez pas supprimer cette vidéo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 17:35:10 CEST
+# Last Update: 26.10.2018 18:02:37 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -9147,11 +9150,11 @@ msgstr "Tag associé Amazon"
 
 #: Database preference subcategory table id 150
 msgid "library"
-msgstr ""
+msgstr "bibliothèque"
 
 #: Database preference subcategory table id 151
 msgid "upload"
-msgstr ""
+msgstr "envoyer"
 
 #: Database preference subcategory table id 152
 msgid "catalog"
@@ -9159,12 +9162,12 @@ msgstr "catalogue"
 
 #: Database preference subcategory table id 154
 msgid "theme"
-msgstr ""
+msgstr "thème"
 
 #: Database preference subcategory table id 155
 msgid "custom"
-msgstr ""
+msgstr "personnalisé"
 
 #: Database preference subcategory table id 164
 msgid "amazon"
-msgstr ""
+msgstr "amazon"
