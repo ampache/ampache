@@ -253,33 +253,6 @@ switch ($_REQUEST['action']) {
         $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
     break;
-    case 'start_channel':
-        if (Access::check('interface', '75')) {
-            ob_start();
-            $channel = new Channel($_REQUEST['id']);
-            if ($channel->id) {
-                if ($channel->check_channel()) {
-                    $channel->stop_channel();
-                }
-                $channel->start_channel();
-                sleep(1);
-                echo $channel->get_channel_state();
-            }
-            $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
-        }
-    break;
-    case 'stop_channel':
-        if (Access::check('interface', '75')) {
-            ob_start();
-            $channel = new Channel($_REQUEST['id']);
-            if ($channel->id) {
-                $channel->stop_channel();
-                sleep(1);
-                echo $channel->get_channel_state();
-            }
-            $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
-        }
-    break;
     case 'slideshow':
         ob_start();
         $images = Slideshow::get_current_slideshow();

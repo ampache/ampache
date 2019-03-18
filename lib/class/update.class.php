@@ -4023,7 +4023,12 @@ class Update
     {
         $retval = true;
 
+        // disable video
         $sql = "UPDATE `preference` SET `value`=0 WHERE `preference`.`name`='allow_video'";
+        $retval &= Dba::write($sql);
+
+        // drop channel table
+        $sql    = "DROP TABLE IF EXISTS `channel`";
         $retval &= Dba::write($sql);
 
         return $retval;
