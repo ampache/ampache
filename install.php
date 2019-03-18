@@ -37,7 +37,6 @@ define('INSTALL', 1);
 
 $htaccess_play_file    = AmpConfig::get('prefix') . '/play/.htaccess';
 $htaccess_rest_file    = AmpConfig::get('prefix') . '/rest/.htaccess';
-$htaccess_channel_file = AmpConfig::get('prefix') . '/channel/.htaccess';
 
 // Clean up incoming variables
 $web_path   = scrub_in($_REQUEST['web_path']);
@@ -143,17 +142,12 @@ switch ($_REQUEST['action']) {
         if (!$skip) {
             $write                     = (isset($_POST['write']));
             $download                  = (isset($_POST['download']));
-            $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
             $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
             $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
-            $write_htaccess_channel    = (isset($_POST['write_htaccess_channel']));
             $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
             $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
 
             $created_config = true;
-            if ($write_htaccess_channel || $download_htaccess_channel || $all) {
-                $created_config = $created_config && install_rewrite_rules($htaccess_channel_file, $_POST['web_path'], $download_htaccess_channel);
-            }
             if ($write_htaccess_rest || $download_htaccess_rest || $all) {
                 $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
             }

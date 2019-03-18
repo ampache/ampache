@@ -4012,4 +4012,20 @@ class Update
 
         return $retval;
     }
+
+    /**
+     * update_380013
+     *
+     * Disable allow_video
+     *
+     */
+    public static function update_380013()
+    {
+        $retval = true;
+
+        $sql = "UPDATE `preference` SET `value`=0 WHERE `preference`.`name`='allow_video'";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
 }

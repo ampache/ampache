@@ -441,7 +441,7 @@ function install_config_use_case($case)
         'sociable' => 'true',
         'licensing' => 'false',
         'wanted' => 'true',
-        'channel' => 'true',
+        'channel' => 'false',
         'live_stream' => 'true',
         'allow_public_registration' => 'false',
         'cookie_disclaimer' => 'false',
