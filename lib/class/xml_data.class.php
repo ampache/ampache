@@ -262,7 +262,7 @@ class XML_Data
      */
     public static function tags($tags)
     {
-        $string = '<total_count>' . count($tags) . "</total_count>\n";
+        $string = "<total_count>" . count($tags) . "</total_count>\n";
 
         if (count($tags) > self::$limit or self::$offset > 0) {
             if (null !== self::$limit) {
@@ -305,7 +305,7 @@ class XML_Data
         if (null == $include) {
             $include = array();
         }
-        $string = '<total_count>' . count($artists) . "</total_count>\n";
+        $string = "<total_count>" . count($artists) . "</total_count>\n";
 
         if (count($artists) > self::$limit or self::$offset > 0) {
             if (null !== self::$limit) {
@@ -373,7 +373,7 @@ class XML_Data
         if (null == $include) {
             $include = array();
         }
-        $string = '<total_count>' . count($albums) . "</total_count>\n";
+        $string = "<total_count>" . count($albums) . "</total_count>\n";
 
         if (count($albums) > self::$limit or self::$offset > 0) {
             if (null !== self::$limit) {
@@ -398,7 +398,9 @@ class XML_Data
                     "\t<name><![CDATA[" . $album->name . "]]></name>\n";
 
             // Do a little check for artist stuff
-            if ($album->artist_count != 1) {
+            if ($album->album_artist_name != "") {
+                $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->album_artist_name]]></artist>\n";
+            } elseif ($album->artist_count != 1) {
                 $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
             } else {
                 $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n";
@@ -436,7 +438,7 @@ class XML_Data
      */
     public static function playlists($playlists)
     {
-        $string = '<total_count>' . count($playlists) . "</total_count>\n";
+        $string = "<total_count>" . count($playlists) . "</total_count>\n";
 
         if (count($playlists) > self::$limit or self::$offset > 0) {
             if (null !== self::$limit) {
@@ -472,7 +474,7 @@ class XML_Data
      */
     public static function songs($songs, $playlist_data='', $full_xml=true)
     {
-        $string = '<total_count>' . count($songs) . "</total_count>\n";
+        $string = "<total_count>" . count($songs) . "</total_count>\n";
 
         if (count($songs) > self::$limit or self::$offset > 0) {
             if (null !== self::$limit) {
