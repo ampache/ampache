@@ -40,11 +40,6 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
     } else {
         echo T_('Artists');
     } ?></td>
-        <td><?php if ($_REQUEST['type'] != 'video') {
-        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php
-    } else {
-        echo T_('Videos');
-    } ?></td>
     </tr>
     <tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>

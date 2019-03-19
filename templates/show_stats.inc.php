@@ -33,7 +33,6 @@ $catalogs = Catalog::get_catalogs();
             <th><?php echo T_('Albums'); ?></th>
             <th><?php echo T_('Artists'); ?></th>
             <th><?php echo T_('Songs'); ?></th>
-            <th><?php echo T_('Videos'); ?></th>
             <th><?php echo T_('Tags'); ?></th>
             <th><?php echo T_('Catalog Size'); ?></th>
             <th><?php echo T_('Catalog Time'); ?></th>
@@ -73,7 +72,6 @@ $catalogs = Catalog::get_catalogs();
             <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
             <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
             <th class="cel_songs"><?php echo T_('Songs'); ?></th>
-            <th class="cel_video"><?php echo T_('Videos'); ?></th>
             <th class="cel_total"><?php echo T_('Catalog Size'); ?></th>
         </tr>
     </thead>
