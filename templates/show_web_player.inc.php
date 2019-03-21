@@ -31,7 +31,7 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <!-- Propulsed by Ampache | ampache.org -->
 <title><?php echo AmpConfig::get('site_title'); ?></title>
 <meta property="og:title" content="<?php echo AmpConfig::get('site_title'); ?>" />
-<meta property="og:image" content="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png'; ?>"/>
+<meta property="og:image" content="<?php echo UI::get_logo_url(); ?>"/>
 <meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
 <meta property="og:site_name" content="Ampache"/>
 <?php
