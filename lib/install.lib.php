@@ -462,6 +462,7 @@ function install_config_use_case($case)
             $trconfig['userflags']   = 'false';
             $trconfig['sociable']    = 'false';
             $trconfig['wanted']      = 'false';
+            $trconfig['channel']     = 'false';
             $trconfig['live_stream'] = 'false';
 
             $dbconfig['download']    = '0';
