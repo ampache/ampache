@@ -22,7 +22,7 @@
 
 $logo_url = AmpConfig::get('custom_login_logo');
 if (empty($logo_url)) {
-    $logo_url = AmpConfig::get('web_path') . "/themes/reborn/images/ampache.png";
+    $logo_url = AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
 }
 
 $web_path = AmpConfig::get('web_path');
