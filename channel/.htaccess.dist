@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-s
+    RewriteRule ^([0-9]+)/(.*)$ /channel/index.php?channel=$1&target=$2 [PT,L,QSA]
+</IfModule>

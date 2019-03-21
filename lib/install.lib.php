@@ -441,6 +441,7 @@ function install_config_use_case($case)
         'sociable' => 'true',
         'licensing' => 'false',
         'wanted' => 'true',
+        'channel' => 'false',
         'live_stream' => 'true',
         'allow_public_registration' => 'false',
         'cookie_disclaimer' => 'false',
@@ -475,6 +476,7 @@ function install_config_use_case($case)
             $trconfig['use_auth']                  = 'false';
             $trconfig['licensing']                 = 'true';
             $trconfig['wanted']                    = 'false';
+            $trconfig['channel']                   = 'false';
             $trconfig['live_stream']               = 'false';
             $trconfig['allow_public_registration'] = 'true';
             $trconfig['cookie_disclaimer']         = 'true';
