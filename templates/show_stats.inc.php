@@ -34,10 +34,10 @@ $catalogs = Catalog::get_catalogs();
             <th><?php echo T_('Artists'); ?></th>
             <th><?php echo T_('Songs'); ?></th>
             <?php if (AmpConfig::get('allow_video')) {
-    ?>
+        ?>
                 <th><?php echo T_('Videos'); ?></th>
             <?php
-}
+    }
     ?>
             <th><?php echo T_('Tags'); ?></th>
             <th><?php echo T_('Catalog Size'); ?></th>
@@ -105,11 +105,10 @@ $catalogs = Catalog::get_catalogs();
         <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
         <td class="cel_songs"><?php echo scrub_out($stats['songs']); ?></td>
             <?php if (AmpConfig::get('allow_video')) {
-        ?>
+            ?>
                 <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
             <?php
-    }
-    ?>
+        } ?>
         <td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
     </tr>
 <?php
