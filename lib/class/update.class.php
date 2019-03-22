@@ -2993,7 +2993,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_video','1','Allow video features',75,'integer','options')";
+            "VALUES ('allow_video','0','Allow video features',75,'integer','options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -3153,7 +3153,7 @@ class Update
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('home_moment_videos','1','Show Videos of the moment at home page',25,'integer','interface')";
+            "VALUES ('home_moment_videos','0','Show Videos of the moment at home page',25,'integer','interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";

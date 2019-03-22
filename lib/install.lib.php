@@ -451,9 +451,9 @@ function install_config_use_case($case)
     $dbconfig = array(
         'download' => '1',
         'share' => '0',
-        'allow_video' => '1',
+        'allow_video' => '0',
         'home_now_playing' => '1',
-        'home_recently_played' => '1'
+        'home_recently_played' => '0'
     );
 
     switch ($case) {
