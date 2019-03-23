@@ -328,6 +328,14 @@ class Query
                 'allow_download',
                 'expire'
             ),
+            'channel' => array(
+                'id',
+                'name',
+                'interface',
+                'port',
+                'max_listeners',
+                'listeners'
+            ),
             'broadcast' => array(
                 'name',
                 'user',
@@ -714,6 +722,7 @@ class Query
             case 'wanted':
             case 'share':
             case 'song_preview':
+            case 'channel':
             case 'broadcast':
             case 'license':
             case 'tvshow':
@@ -1025,6 +1034,10 @@ class Query
                 case 'share':
                     $this->set_select("`share`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `share` ";
+                break;
+                case 'channel':
+                    $this->set_select("`channel`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `channel` ";
                 break;
                 case 'broadcast':
                     $this->set_select("`broadcast`.`id`");
@@ -2069,6 +2082,25 @@ class Query
                     break;
                     case 'expire':
                         $sql = "`share`.`expire`";
+                    break;
+                } // end switch on field
+            break;
+            case 'channel':
+                switch ($field) {
+                    case 'name':
+                        $sql = "`channel`.`name`";
+                    break;
+                    case 'interface':
+                        $sql = "`channel`.`interface`";
+                    break;
+                    case 'port':
+                        $sql = "`channel`.`port`";
+                    break;
+                    case 'max_listeners':
+                        $sql = "`channel`.`max_listeners`";
+                    break;
+                    case 'listeners':
+                        $sql = "`channel`.`listeners`";
                     break;
                 } // end switch on field
             break;

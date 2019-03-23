@@ -559,9 +559,6 @@ class Update
         $update_string = "- Fix change in <a href='https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee'>this commit</a>, that left the userbase with an inconsistent database, if users updated or installed Ampache before 28 Apr 2015<br />";
         $version[]     = array('version' => '380012', 'description' => $update_string);
 
-        $update_string = "Disable allow_video and drop the channel table.<br />";
-        $version[]     = array('version' => '380013', 'description' => $update_string);
-          
         return $version;
     }
 
@@ -2996,7 +2993,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_video','1','Allow video features',75,'integer','options')";
+            "VALUES ('allow_video','0','Allow video features',75,'integer','options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -3156,7 +3153,7 @@ class Update
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('home_moment_videos','1','Show Videos of the moment at home page',25,'integer','interface')";
+            "VALUES ('home_moment_videos','0','Show Videos of the moment at home page',25,'integer','interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
@@ -4011,27 +4008,6 @@ class Update
         $retval = true;
 
         $sql = "UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url'";
-        $retval &= Dba::write($sql);
-
-        return $retval;
-    }
-
-    /**
-     * update_380013
-     *
-     * Disable allow_video
-     * Drop channel table
-     */
-    public static function update_380013()
-    {
-        $retval = true;
-
-        // disable video
-        $sql = "UPDATE `preference` SET `value`=0 WHERE `preference`.`name`='allow_video'";
-        $retval &= Dba::write($sql);
-
-        // drop channel table
-        $sql    = "DROP TABLE IF EXISTS `channel`";
         $retval &= Dba::write($sql);
 
         return $retval;
