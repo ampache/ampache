@@ -48,7 +48,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                <img src="<?php echo UI::get_logo_url(); ?>" title="Ampache" alt="Ampache">
                 <?php echo T_('Ampache Installation'); ?> - For the love of Music
             </a>
         </div>

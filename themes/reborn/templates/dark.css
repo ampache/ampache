@@ -24,9 +24,11 @@
 ***********************************************/
 
 body {
-    color: #fff;
     background-color: #222;
+    color: #fff;
     height: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .error {
@@ -84,8 +86,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Main
 ***********************************************/
 #ajax-loading {
-    color: #ff9d00;
     background-image: url(../images/ajax-loader.gif);
+    color: #ff9d00;
 }
 
 /***********************************************
@@ -104,9 +106,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sb_Subsearch input[type=text]:focus {
-    color: #555;
     background: rgba(255,255,255,0.9);
     border-color:#ff9d00;
+    color: #555;
 }
 
 #headerbox  select {
@@ -117,15 +119,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Login
 ***********************************************/
 #loginPage #maincontainer, #registerPage #maincontainer {
-    background-color: rgba(0,0,0,0.15);
+    background-color: rgba(0,0,0,0.9);
     border: 2px solid rgba(0,0,0,0.15);
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    max-width: 500px;
 }
 
 #loginPage #headerlogo, #registerPage #headerlogo {
-    background-image: url('../images/ampache-reborn.png');
+    background-image: url('../images/ampache-reborn-dark.png');
 }
 
 #loginPage #loginbox, #registerPage #registerbox {
@@ -189,12 +192,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-content, #sidebar-content-light, #sidebar-light {
+    background-color: #1a1a1a;
     border-color: rgba(0,0,0,0.15);
+    border-right-color: #000;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    background-color: #1a1a1a;
-    border-right-color: #000;
 }
 
 /* Tabs content */
@@ -207,12 +210,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-tabs .sb2 li h4 {
-    color: #fff;
     background-color: #262626;
     border-bottom-color: #0f0f0f;
     -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
     -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
     box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    color: #fff;
 }
 
 #sidebar-tabs .sb2 li ul li a {
@@ -254,7 +257,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
-    color: #fff;
     background-color: #c85a00;
     background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
     background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
@@ -262,6 +264,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
     background-image: -o-linear-gradient(top,#cc6200,#c24d00);
     background-image: linear-gradient(top,#cc6200,#c24d00);
+    color: #fff;
 }
 
 #rightbar #rb_current_playlist li.odd {
@@ -355,8 +358,8 @@ table.tabledata .th-top:hover,
 table.tabledata .th-bottom:hover,
 table.tabledata .th-top:focus,
 table.tabledata .th-bottom:focus {
-    color: #fff;
     background-color: #262626;
+    color: #fff;
 }
 
 table.tabledata tbody .odd {
@@ -476,21 +479,16 @@ span.fatalerror {
 /************************************************/
 /*        Styles for user flags                 */
 /************************************************/
-.userflag a.userflag_true {
+.userflag a.userflag_true,
+.userflag a:hover.userflag_false {
     background: url(../../../images/icon_flag.png) left top;
 }
 
+.userflag a.userflag_false,
 .userflag a:hover.userflag_true {
     background: url(../../../images/icon_flag_off.png) left top;
 }
 
-.userflag a.userflag_false {
-    background: url(../../../images/icon_flag_off.png) left top;
-}
-
-.userflag a:hover.userflag_false {
-    background: url(../../../images/icon_flag.png) left top;
-}
 
 /***********************************************
         Content (Track view)
@@ -516,8 +514,8 @@ dl.media_details dt {
 div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
-	color: #999;
 	border: 1px solid #191919;
+	color: #999;
 }
 
 div.jp-video div.jp-interface {
@@ -561,8 +559,8 @@ div.jp-playlist li {
         Other
 ***********************************************/
 .jscroll-next {
-    border-color: #ccc;
     background-color: #eee;
+    border-color: #ccc;
     color: #999;
 }
 

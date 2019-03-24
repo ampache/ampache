@@ -283,7 +283,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Login
 ***********************************************/
 #loginPage #maincontainer, #registerPage #maincontainer {
-    padding: 20px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -292,8 +291,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
     display: block;
-    width: 800px;
     margin: 50px auto 0 auto;
+    max-width: 450px;
+    padding: 20px;
 }
 
 #loginPage #maincontainer {
@@ -334,7 +334,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #loginbox, #registerPage #registerbox {
-    width: 500px;
+    max-width: 390px;
     margin: auto auto 20px auto;
 }
 
@@ -421,8 +421,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #footer {
-    width: 800px;
-    margin: 10px auto;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 450px;
 }
 
 /***********************************************
@@ -847,8 +848,8 @@ table.tabledata .th-bottom:focus {
 table.tabledata tbody .cel_play {
     max-width: 60px;
     min-width: 60px;
-    width: 40px !important;
     text-align: right;
+    width: 40px !important;
 }
 
 table.tabledata tbody .cel_play_content {
@@ -920,6 +921,7 @@ table.tabledata tbody .cel_cover img {
     -moz-border-radius: 2px;
     border-radius: 2px;
     margin: 2px;
+    object-fit: cover;
 }
 
 table.tabledata tbody .cel_cover img:hover {

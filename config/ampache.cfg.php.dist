@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 34
+config_version = 35
 
 ;#########################################################
 ; Path Vars                                              #
@@ -551,8 +551,8 @@ wanted_types = "album,official"
 ; Channels
 ; Set this to true to enable channels and the
 ; possibility for users to create channels from playlists
-; DEFAULT: true
-channel = "true"
+; DEFAULT: false
+channel = "false"
 
 ; Live Streams
 ; Set this to true to enable live streams (radio) and the

@@ -45,7 +45,7 @@ $web_path = AmpConfig::get('web_path');
             <div id="header"><!-- This is the header -->
                 <h1 id="headerlogo">
                     <a href="<?php echo $web_path ?>/login.php">
-                        <img src="<?php echo $web_path ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
+                        <img src="<?php echo UI::get_logo_url(); ?>" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
                     </a>
                 </h1>
             </div>
