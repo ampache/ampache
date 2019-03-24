@@ -575,7 +575,7 @@ CREATE TABLE IF NOT EXISTS `podcast` (
   `website` varchar(255) NULL,
   `description` varchar(4096) CHARACTER SET utf8 NULL,
   `language` varchar(5) NULL,
-  `copyright` varchar(64) NULL,
+  `copyright` varchar(255) NULL,
   `generator` varchar(64) NULL,
   `lastbuilddate` int(11) unsigned DEFAULT '0' NOT NULL,
   `lastsync` int(11) unsigned DEFAULT '0' NOT NULL,
