@@ -27,8 +27,6 @@ body {
     color: #666;
     background-color: #fff;
     height: 90%;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .error {
@@ -117,7 +115,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 ***********************************************/
 #loginPage {
     background-color: #eee;
-    max-width: 500px;
 }
 
 #loginPage #maincontainer, #registerPage #maincontainer {
@@ -129,7 +126,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #headerlogo, #registerPage #headerlogo {
-    background-image: url('../images/ampache-reborn-light.png');
+    background-image: url('../images/ampache-reborn-blue.png');
 }
 
 #loginPage #loginbox #usernamefield input:focus,
@@ -461,14 +458,20 @@ span.fatalerror {
 /************************************************/
 /*        Styles for user flags                 */
 /************************************************/
-.userflag a:hover.userflag_false,
 .userflag a.userflag_true {
     background: url(../../../images/icon_flag.png) left top;
 }
 
-.userflag a:hover.userflag_true,
+.userflag a:hover.userflag_true {
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
 .userflag a.userflag_false {
     background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a:hover.userflag_false {
+    background: url(../../../images/icon_flag.png) left top;
 }
 
 /***********************************************

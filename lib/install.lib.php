@@ -441,7 +441,7 @@ function install_config_use_case($case)
         'sociable' => 'true',
         'licensing' => 'false',
         'wanted' => 'true',
-        'channel' => 'false',
+        'channel' => 'true',
         'live_stream' => 'true',
         'allow_public_registration' => 'false',
         'cookie_disclaimer' => 'false',
@@ -451,9 +451,9 @@ function install_config_use_case($case)
     $dbconfig = array(
         'download' => '1',
         'share' => '0',
-        'allow_video' => '0',
+        'allow_video' => '1',
         'home_now_playing' => '1',
-        'home_recently_played' => '0'
+        'home_recently_played' => '1'
     );
 
     switch ($case) {
@@ -477,7 +477,6 @@ function install_config_use_case($case)
             $trconfig['use_auth']                  = 'false';
             $trconfig['licensing']                 = 'true';
             $trconfig['wanted']                    = 'false';
-            $trconfig['channel']                   = 'false';
             $trconfig['live_stream']               = 'false';
             $trconfig['allow_public_registration'] = 'true';
             $trconfig['cookie_disclaimer']         = 'true';

@@ -392,7 +392,7 @@ END;
         if (AmpConfig::get('custom_logo')) {
             return AmpConfig::get('custom_logo');
         } else {
-            return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
+            return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache.png';
         }
     }
     
