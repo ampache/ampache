@@ -537,6 +537,6 @@ $_SESSION['login'] = false;
                         }
                         echo '</div>';
                     }
-                Stream_Playlist::show_web_player() ?> //load the web_player early to make sure the browser doesn't block audio playback
+                Stream_Playlist::show_web_player() //load the web_player early to make sure the browser doesn't block audio playback?>
 
                 <div id="guts">
