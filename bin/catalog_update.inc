@@ -36,49 +36,55 @@ $catadd = 0;
 $artadd = 0;
 $plimp = 0;
 $optimizetables = 0;
+$cattype = '';
+$catname = '';
+$options = getopt("hn:t:mvcagio");
 
-if (count($_SERVER['argv']) == 1) { 
+if (count($options) == 0) { 
     $operations_string = "\n\t- ". T_('Doing all catalog operations');
-} 
+} else {
 
-if (count($_SERVER['argv']) > 1) {
-    for ($x = 1; $x < count($_SERVER['argv']); $x++) {
-
-        if ($_SERVER['argv'][$x] == "-m") {
+        if (array_key_exists('h', $options)) {
+            usage();
+            exit;
+        }
+        if (array_key_exists('m', $options)) {
             $operations_string .= "\n\t- " . T_('Temporary deactivate PHP memory limit');
             $tmpmemlimoff = 1;
         }
-        elseif ($_SERVER['argv'][$x] == "-c") {
+        if (array_key_exists('n', $options)) {
+            $operations_string .= "\n\t- " . T_('Setting catalog name');
+            $catname = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
+        }
+        if (array_key_exists('t', $options)) {
+            $operations_string .= "\n\t- " . T_('Setting catalog type');
+            $cattype = strtolower($options['t']);
+        }
+        if (array_key_exists('c', $options)) {
             $operations_string .= "\n\t- " . T_('Cleaning catalog/s');
             $catclean = 1;
         } 
-        elseif ($_SERVER['argv'][$x] == "-v") {
+        if (array_key_exists('v', $options)) {
             $operations_string .= "\n\t- " . T_('Verifying catalog/s');
             $catverify = 1;
         } 
-        elseif ($_SERVER['argv'][$x] == "-a") {
+        if (array_key_exists('a', $options)) {
             $operations_string .= "\n\t- " . T_('Adding new media to catalog/s');
             $catadd = 1;
         }
-        elseif ($_SERVER['argv'][$x] == "-g") { 
+        if (array_key_exists('g', $options)) { 
             $operations_string .= "\n\t- " . T_('Gathering new media art');
             $artadd = 1;
         } 
-        elseif ($_SERVER['argv'][$x] == "-i") { 
+        if (array_key_exists('i', $options)) { 
             $operations_string .= "\n\t- " . T_('Importing playlist/s');
             $plimp = 1;
         }
-        elseif ($_SERVER['argv'][$x] == "-o") { 
+        if (array_key_exists('o', $options)) { 
             $operations_string .= "\n\t- " . T_('Database table optimization');
             $optimizetables = 1;
         }
-        else {
-            if ($where) $where .= " OR ";
-            $where .= "name = '" . Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x])) . "'";
-        }
-    }
 }
-
 if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
     usage();
     exit;
@@ -103,7 +109,7 @@ if ($tmpmemlimoff == 1) {
     echo "------------------\n\n";
 }
 
-$options = array(); // for $catadd
+//$options = array(); // for $catadd
 if ($artadd == 1) {
     echo "- " . T_("Gathering art") . " - \n";
     $options['gather_art'] = true;
@@ -117,8 +123,12 @@ if ($plimp == 1) {
     $options['parse_playlist'] = false;
 }
 // --------
-if ($where) $where = "($where) AND catalog_type='local'";
-else $where = "catalog_type='local'";
+if ($catname) $where = " name = '$catname' ";
+if ($cattype) { 
+    $where .= "catalog_type='$cattype'";
+} elseif (!$where) {
+    $where .= "catalog_type='local'";
+}
 $sql = "SELECT id FROM catalog";
 if ($where) $sql .= " WHERE $where";
 $db_results = Dba::read($sql);
@@ -170,7 +180,7 @@ while ($row = Dba::fetch_row($db_results)) {
     }
 
 ob_end_flush();
-echo "\n";
+echo '\n';
 
 function ob_html_strip($string) {
 
@@ -190,13 +200,19 @@ function usage() {
     echo "----------------------------------------------------------\n\t\t";
     echo T_("- Catalog Update Help -");
     echo "\n\033[32m";
-    echo T_("Usage: catalog_update.inc [CATALOG NAME] [-m|-c|-v|-a|-g|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
+    echo T_("Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
     echo "\033[0m\n";
     echo "----------------------------------------------------------";
     echo "\n";
     echo T_("Default behavior is to do all except temporarily deactivate the php memory limit");
     echo "\n";
     echo "----------------------------------------------------------";
+    echo "\n-h\t";
+    echo T_('This help message');
+    echo "\n-n\t";
+    echo T_('Name of Catalog (Optional)');
+    echo "\n-t\t";
+    echo T_('Type of Catalog (Optional)');
     echo "\n-m\t";
     echo T_('Temporarily deactivates PHP memory limit.') . " (\033[31m1\033[0m)";
     echo "\n-c\t";

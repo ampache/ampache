@@ -164,7 +164,7 @@ if (!$share_id) {
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
-                $sid = $_COOKIE[AmpConfig::get('session_name')];
+                    $sid = $_COOKIE[AmpConfig::get('session_name')];
                     if (!Session::exists('interface', $sid)) {
                         debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
                         header('HTTP/1.1 403 Session Expired');
@@ -200,7 +200,9 @@ if (!$share_id) {
 }
 
 /* If we are in demo mode.. die here */
-if (AmpConfig::get('demo_mode') || (!Access::check('interface', '25'))) {
+
+$prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
+if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
     debug_event('UI::access_denied', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access, '3');
     UI::access_denied();
     exit;

@@ -104,8 +104,7 @@ $democratic = Democratic::get_current_playlist();
         } ?>
 </tr>
 <?php
-    } // end foreach
-?>
+    } // end foreach?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">
@@ -116,10 +115,10 @@ $democratic = Democratic::get_current_playlist();
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (Access::check('interface', '100')) {
-    ?>
+        ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php
-} ?>
+    } ?>
     </tr>
 </tfoot>
 <?php

@@ -586,7 +586,7 @@ function xml_from_array($array, $callback = false, $type = '')
                     $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
                 } elseif (is_string($value)) {
                     /* We need to escape the value */
-                $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
+                    $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
                 }
             }
         } // end foreach
@@ -604,7 +604,7 @@ function xml_from_array($array, $callback = false, $type = '')
                     $string .= "\t\t\t<$key>$value</$key>\n";
                 } elseif (is_string($value)) {
                     /* We need to escape the value */
-                $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
+                    $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
                 }
             }
         } // end foreach
@@ -625,7 +625,7 @@ function xml_from_array($array, $callback = false, $type = '')
                 /* We need to escape the value */
                 $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
             }
-        // end foreach elements
+            // end foreach elements
         }
         if (!$callback) {
             $string = '<?xml version="1.0" encoding="utf-8" ?>' .

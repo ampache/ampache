@@ -314,7 +314,7 @@ class Access
      * @param string $ip
      * @return boolean
      */
-    public static function check_network($type, $user, $level, $ip=null)
+    public static function check_network($type, $user=null, $level, $ip=null, $apikey = null)
     {
         if (!AmpConfig::get('access_control')) {
             switch ($type) {
@@ -334,6 +334,9 @@ class Access
             case 'init-api':
                 if ($user) {
                     $user = User::get_from_username($user);
+                    $user = $user->id;
+                } elseif ($apikey) {
+                    $user = User::get_from_apikey($apikey);
                     $user = $user->id;
                 }
             case 'api':

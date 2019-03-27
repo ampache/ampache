@@ -4,6 +4,8 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('lib/components')
     ->exclude('lib/vendor')
     ->exclude('modules')
+	->exclude('modules/captcha')
+	->exclude('modules/oauth')
     ->exclude('nbproject')
     ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
     ->in(__DIR__)
@@ -19,7 +21,7 @@ return PhpCsFixer\Config::create()
 		'no_trailing_whitespace' => true,
 		'blank_line_before_return' => true,
 		'full_opening_tag' => true,
-		'braces' => true,
+		'braces' => ['allow_single_line_closure' => true],
 		'single_blank_line_at_eof' => true,
 		'visibility_required' => true,
 		'binary_operator_spaces' => ['align_equals' => true],
@@ -28,13 +30,11 @@ return PhpCsFixer\Config::create()
 		'blank_line_after_namespace' => true,
 		'lowercase_constants' => true,
 		'encoding' => true,
+		'no_break_comment' => false,
+		'method_argument_space' => false,
      ])
    ->setIndent("    ")
    ->setUsingCache(false)
    ->setFinder($finder)
 ;
 
-/*
---fixers=indentation,linefeed,trailing_spaces,short_tag,braces,controls_spaces,
-eof_ending,visibility,align_equals,concat_with_spaces,elseif,line_after_namespace,lowercase_constants,encoding .
-*/

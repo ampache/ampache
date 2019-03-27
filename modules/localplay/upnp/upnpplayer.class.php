@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -111,11 +111,11 @@ class UPnPPlayer
         return true;
     }
 
-     /**
-     * GetPlayListItems
-     * This returns a delimited string of all of the filenames
-     * current in your playlist, only url's at the moment
-     */
+    /**
+    * GetPlayListItems
+    * This returns a delimited string of all of the filenames
+    * current in your playlist, only url's at the moment
+    */
     public function GetPlaylistItems()
     {
         return $this->Playlist()->AllItems();

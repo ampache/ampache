@@ -1136,7 +1136,7 @@ class Plex_XML_Data
         $xdir->addAttribute('grandparentThumb', self::getMetadataUri($artistid) . '/thumb/' . $artistid);
         $xdir->addAttribute('parentThumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid);
         $xdir->addAttribute('thumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid); // No song art, set album art
-       $xdir->addAttribute('index', $song->track);
+        $xdir->addAttribute('index', $song->track);
         $xdir->addAttribute('duration', $time);
         $xdir->addAttribute('type', 'track');
         $xdir->addAttribute('addedAt', '');
@@ -1154,8 +1154,8 @@ class Plex_XML_Data
         $xmedia->addAttribute('duration', $time);
         $xmedia->addAttribute('bitrate', intval($song->bitrate / 1000));
         $xmedia->addAttribute('audioChannels', $song->channels);
-       // Type != Codec != Container, but that's how Ampache works today...
-       $xmedia->addAttribute('audioCodec', $song->type);
+        // Type != Codec != Container, but that's how Ampache works today...
+        $xmedia->addAttribute('audioCodec', $song->type);
         $xmedia->addAttribute('container', $song->type);
 
         $xpart  = $xmedia->addChild('Part');
@@ -1249,18 +1249,18 @@ class Plex_XML_Data
 
         $xmedia = $xvid->addChild('Media');
         $xmedia->addAttribute('id', $id); // Same ID that video => OK?
-       $xmedia->addAttribute('duration', $time);
+        $xmedia->addAttribute('duration', $time);
         $xmedia->addAttribute('bitrate', intval($video->bitrate / 1000));
         $xmedia->addAttribute('audioChannels', $video->channels);
-       // Type != Codec != Container, but that's how Ampache works today...
-       $xmedia->addAttribute('audioCodec', $video->audio_codec);
+        // Type != Codec != Container, but that's how Ampache works today...
+        $xmedia->addAttribute('audioCodec', $video->audio_codec);
         $xmedia->addAttribute('videoCodec', $video->video_codec);
         $xmedia->addAttribute('container', $video->type);
         $xmedia->addAttribute('width', $video->resolution_x);
         $xmedia->addAttribute('height', $video->resolution_y);
-       //$xmedia->addAttribute('videoResolution', 'sd'); // TODO
-       //$xmedia->addAttribute('aspectRatio', '1.78'); // TODO
-       $xmedia->addAttribute('videoFrameRate', intval(ceil($video->frame_rate)) . 'p');
+        //$xmedia->addAttribute('videoResolution', 'sd'); // TODO
+        //$xmedia->addAttribute('aspectRatio', '1.78'); // TODO
+        $xmedia->addAttribute('videoFrameRate', intval(ceil($video->frame_rate)) . 'p');
 
         $xpart  = $xmedia->addChild('Part');
         $partid = self::getPartId($id);
@@ -1271,14 +1271,14 @@ class Plex_XML_Data
         $xpart->addAttribute('size', $video->size);
         $xpart->addAttribute('container', $video->type);
 
-       // TODO: support Writer/Director tags here as part of Video/
-       /*
-        <Writer tag="Grant Scharbo" />
-        <Writer tag="Richard Hatem" />
-        <Director tag="Terry McDonough" />
-        */
+        // TODO: support Writer/Director tags here as part of Video/
+        /*
+         <Writer tag="Grant Scharbo" />
+         <Writer tag="Richard Hatem" />
+         <Director tag="Terry McDonough" />
+         */
 
-       $tags = Tag::get_top_tags('video', $video->id);
+        $tags = Tag::get_top_tags('video', $video->id);
         if (is_array($tags)) {
             foreach ($tags as $tag_id => $tag) {
                 $xgenre = $xvid->addChild('Genre');
@@ -1289,7 +1289,7 @@ class Plex_XML_Data
 
         if ($details) {
             // Subtitles
-           $subtitles = $video->get_subtitles();
+            $subtitles = $video->get_subtitles();
             foreach ($subtitles as $subtitle) {
                 $streamid = hexdec(bin2hex($subtitle['lang_code'])) . $partid;
                 $xstream  = $xpart->addChild('Stream');
@@ -1302,7 +1302,7 @@ class Plex_XML_Data
                 $xstream->addAttribute('format', 'srt');
             }
 
-           // TODO: support real audio/video streams!
+            // TODO: support real audio/video streams!
            /*
             <Stream id="93" streamType="1" codec="mpeg4" index="0" bitrate="833" bitDepth="8" chromaSubsampling="4:2:0" colorSpace="yuv" duration="2989528" frameRate="23,976" gmc="0" height="352" level="5" profile="asp" qpel="0" scanType="progressive" width="624" />
             <Stream id="94" streamType="2" selected="1" codec="mp3" index="1" channels="2" bitrate="135" bitrateMode="vbr" duration="2989488" samplingRate="48000" />

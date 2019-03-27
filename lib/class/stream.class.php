@@ -346,12 +346,12 @@ class Stream
         Dba::write($sql, array($sid, $oid, $type, $uid, $time, time()));
     }
 
-     /**
-      * clear_now_playing
-      *
-      * There really isn't anywhere else for this function, shouldn't have
-      * deleted it in the first place.
-      */
+    /**
+     * clear_now_playing
+     *
+     * There really isn't anywhere else for this function, shouldn't have
+     * deleted it in the first place.
+     */
     public static function clear_now_playing()
     {
         $sql = 'TRUNCATE `now_playing`';

@@ -26,3 +26,14 @@ robots.txt
 php-cs-fixer.phar
 .php_cs.cache
 cs_fixer_tmp_*
+.buildpath
+.env
+.project
+.settings/
+bootstrap/
+components/
+node_modules/
+public/
+resources/
+storage/
+vendor/

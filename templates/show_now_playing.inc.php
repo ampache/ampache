@@ -37,10 +37,10 @@ foreach ($results as $item) {
         $np_user->format();
         $agent = $item['agent'];
 
-    /* If we've gotten a non-song object just skip this row */
-    if (!is_object($media)) {
-        continue;
-    }
+        /* If we've gotten a non-song object just skip this row */
+        if (!is_object($media)) {
+            continue;
+        }
         if (!$np_user->fullname) {
             $np_user->fullname = "Ampache User";
         } ?>

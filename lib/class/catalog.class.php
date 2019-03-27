@@ -1082,8 +1082,9 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `song`.`album` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
-            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.`album` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
+        $sql = "SELECT `song`.`album`as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
+            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where " .
+        "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -1244,6 +1245,8 @@ abstract class Catalog extends database_object
                 if ($inserted) {
                     break;
                 }
+            } elseif ($result === true) {
+                debug_event('gather_art', 'Database already has image.', 3);
             } else {
                 debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
             }
@@ -1536,21 +1539,11 @@ abstract class Catalog extends database_object
      */
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern='', $rename_pattern='')
     {
-        // Check for patterns
-        if (!$sort_pattern or !$rename_pattern) {
-            $catalog        = Catalog::create_from_id($media->catalog);
-            $sort_pattern   = $catalog->sort_pattern;
-            $rename_pattern = $catalog->rename_pattern;
-        }
-
         debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
 
-        $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
-        $vainfo->get_info();
+        $catalog        = Catalog::create_from_id($media->catalog);
 
-        $key = vainfo::get_tag_type($vainfo->tags);
-
-        $results = vainfo::clean_tag_info($vainfo->tags, $key, $media->file);
+        $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
 
         // Figure out what type of object this is and call the right
         // function, giving it the stuff we've figured out above
@@ -1766,6 +1759,25 @@ abstract class Catalog extends database_object
         }
     }
 
+
+    public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
+    {
+        // Check for patterns
+        if (!$sort_pattern or !$rename_pattern) {
+            $sort_pattern   = $this->sort_pattern;
+            $rename_pattern = $this->rename_pattern;
+        }
+
+        $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
+        $vainfo->get_info();
+
+        $key = vainfo::get_tag_type($vainfo->tags);
+
+        $results = vainfo::clean_tag_info($vainfo->tags, $key, $media->file);
+
+        return $results;
+    }
+
     /**
      *
      * @param string $media_type
@@ -1789,6 +1801,19 @@ abstract class Catalog extends database_object
 
         return $types;
     }
+    
+    public static function clean_empty_albums()
+    {
+        $sql = "SELECT `id` FROM `album` WHERE NOT EXISTS " .
+            "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
+        $db_results = Dba::read($sql);
+        while ($albumid = Dba::fetch_assoc($db_results)) {
+            $id          = $albumid['id'];
+            $sql         = "DELETE FROM `album` WHERE `id` = ?";
+            $db_results  = Dba::write($sql, array($id));
+        }
+    }
+    
 
     /**
      * clean_catalog
@@ -1809,13 +1834,14 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-
+        self::clean_empty_albums();
+        
         debug_event('clean', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text('', sprintf(nT_('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total));
+        UI::update_text('', sprintf(\nT_('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -2184,14 +2210,14 @@ abstract class Catalog extends database_object
         if (!$db_results) {
             return false;
         }
-
+        self::clean_empty_albums();
+        
         $sql        = "DELETE FROM `video` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, array($catalog_id));
 
         if (!$db_results) {
             return false;
         }
-
         $catalog = self::create_from_id($catalog_id);
 
         if (!$catalog->id) {
@@ -2275,7 +2301,7 @@ abstract class Catalog extends database_object
                         date("Y-m-d\TH:i:s\Z", $song->addition_time) . '","' .
                         $song->f_bitrate . '","' .
                         $song->played . '","' .
-                        $song->file . "\n";
+                        $song->file . '"' . "\n";
                 }
                 break;
         } // end switch

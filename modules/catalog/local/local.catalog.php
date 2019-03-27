@@ -623,11 +623,13 @@ class Catalog_local extends Catalog
 
             $dead_count = count($dead);
             // The AlmightyOatmeal sanity check
-            // Never remove everything; it might be a dead mount
-            if ($dead_count >= $total) {
-                debug_event('catalog', 'All files would be removed. Doing nothing.', 1);
-                AmpError::add('general', T_('All files would be removed. Doing nothing'));
-                continue;
+            // Check for unmounted path
+            if (!file_exists($this->path)) {
+                if ($dead_count >= $total) {
+                    debug_event('catalog', 'All files would be removed. Doing nothing.', 1);
+                    AmpError::add('general', T_('All files would be removed. Doing nothing'));
+                    continue;
+                }
             }
             if ($dead_count) {
                 $dead_total += $dead_count;

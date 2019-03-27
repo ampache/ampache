@@ -299,17 +299,17 @@ if (AmpConfig::get('webplayer_aurora')) {
         } else {
             if ($stype == 'm4a') {
                 // m4a could requires aac / alac codecs
-            if (!in_array('aac', $atypes)) {
-                $atypes[] = 'aac';
-            }
+                if (!in_array('aac', $atypes)) {
+                    $atypes[] = 'aac';
+                }
                 if (!in_array('alac', $atypes)) {
                     $atypes[] = 'alac';
                 }
             } else {
                 // We support that other filetypes requires a codec name matching the filetype
-            if (!in_array($stype, $atypes)) {
-                $atypes[] = $stype;
-            }
+                if (!in_array($stype, $atypes)) {
+                    $atypes[] = $stype;
+                }
             }
         }
     }

@@ -700,9 +700,9 @@ class Song extends database_object implements media, library_item
     public static function find_duplicates($search_type)
     {
         $where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
-        $sql       = 'SELECT `id`, `artist`, `album`, `title`, ' .
+        $sql       = 'SELECT `artist`, `album`, `title`, ' .
             'COUNT(`title`) FROM `song` ' . $where_sql .
-            ' GROUP BY `id`, `artist`, `album`, `title`';
+            ' GROUP BY `artist`, `album`, `title`';
 
         if ($search_type == 'artist_title' ||
             $search_type == 'artist_album_title') {
@@ -751,14 +751,6 @@ class Song extends database_object implements media, library_item
         } else {
             $where .= " AND `album`.`name` = ?";
             $params[] = $data['album'];
-            
-            if ($data['mb_artistid']) {
-                $where .= " AND `artist`.`mbid` = ?";
-                $params[] = $data['mb_artistid'];
-            } else {
-                $where .= " AND `artist`.`name` = ?";
-                $params[] = $data['artist'];
-            }
         }
         
         $sql .= $where . " LIMIT 1";
@@ -1037,6 +1029,7 @@ class Song extends database_object implements media, library_item
             } // end whitelist
         } // end foreach
 
+        $this->format();
         $this->write_id3();
 
         return $this->id;
@@ -1052,13 +1045,13 @@ class Song extends database_object implements media, library_item
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
                 debug_event('song', 'Writing id3 metadata to file ' . $this->file, 5);
-                $meta = $this->get_metadata();
                 if (self::isCustomMetadataEnabled()) {
                     foreach ($this->getMetadata() as $metadata) {
                         $meta[$metadata->getField()->getName()] = $metadata->getData();
                     }
                 }
-                $id3 = new vainfo($this->file);
+                $meta = $this->get_metadata();
+                $id3  = new vainfo($this->file);
                 $id3->write_id3($meta);
                 Catalog::update_media_from_tags($this);
             }
@@ -1093,11 +1086,11 @@ class Song extends database_object implements media, library_item
         $update_time = time();
 
         $sql = "UPDATE `song` SET `album` = ?, `year` = ?, `artist` = ?, " .
-            "`title` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, " .
+            "`title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, " .
             "`size` = ?, `time` = ?, `track` = ?, `mbid` = ?, " .
             "`update_time` = ? WHERE `id` = ?";
 
-        Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist, $new_song->title, $new_song->bitrate, $new_song->rate,
+        Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer, $new_song->bitrate, $new_song->rate,
             $new_song->mode, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id));
 
         $sql = "UPDATE `song_data` SET `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, " .
@@ -1643,9 +1636,9 @@ class Song extends database_object implements media, library_item
         // Some additional fields
         $fields['tag']     = true;
         $fields['catalog'] = true;
-//FIXME: These are here to keep the ideas, don't want to have to worry about them for now
-//        $fields['rating'] = true;
-//        $fields['recently Played'] = true;
+        //FIXME: These are here to keep the ideas, don't want to have to worry about them for now
+        //        $fields['rating'] = true;
+        //        $fields['recently Played'] = true;
 
         return $fields;
     } // get_fields
@@ -1789,7 +1782,7 @@ class Song extends database_object implements media, library_item
         } else {
             if (!Access::check('interface', '100')) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
-            $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
+                $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
                 if ($personal_info_id) {
                     $current_user = $GLOBALS['user']->id;
                     $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";

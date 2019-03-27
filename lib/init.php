@@ -67,7 +67,7 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']            = '3.8.4-develop';
+$results['version']            = '3.9.1-develop';
 $results['int_config_version'] = '34';
 
 if (!empty($results['force_ssl'])) {
@@ -88,16 +88,19 @@ if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
 }
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
+
 $results['web_path']  = $http_type . $results['http_host'] .
-        (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
-        $results['web_path'];
+    (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
+    $results['web_path'];
+    
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
 if (!isset($results['max_upload_size'])) {
     $results['max_upload_size'] = 1048576;
 }
-$_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
-
+if (!defined('CLI')) {
+    $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
+}
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
     $results['user_ip_cardinality'] = 42;
 }

@@ -129,7 +129,7 @@ class Art extends database_object
             /*if (isset($_COOKIE['art_enabled'])) {
                 $_SESSION['art_enabled'] = $_COOKIE['art_enabled'];
             } else {*/
-                $_SESSION['art_enabled'] = true;
+            $_SESSION['art_enabled'] = true;
             //}
         }
 
@@ -1050,8 +1050,8 @@ class Art extends database_object
             } else {
                 if (in_array($method_name, $methods)) {
                     debug_event('Art', "Method used: $method_name", 3);
-                // Some of these take options!
-                switch ($method_name) {
+                    // Some of these take options!
+                    switch ($method_name) {
                     case 'gather_lastfm':
                         $data = $this->{$method_name}($limit, $options);
                     break;
@@ -1528,7 +1528,17 @@ class Art extends database_object
                     $match = rawurldecode($match);
                     debug_event('Art', 'Found image at: ' . $match, '5');
                     $results = pathinfo($match);
-                    $mime    = 'image/' . $results['extension'];
+                    $test    = $results['extension'];
+                    $pos     = strpos($test, '?');
+                    if ($pos > 0) {
+                        $results['extension'] = substr($test, 0, $pos);
+                    }
+                    if (preg_match('~[^png|^jpg|^jpeg|^jif|^bmp]~', $test)) {
+                        $results['extension']  = 'jpg';
+                    }
+                        
+                    $mime = 'image/';
+                    $mime .= isset($results['extension']) ? $results['extension'] : 'jpeg';
 
                     $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
                     if ($limit > 0 && count($images) >= $limit) {
