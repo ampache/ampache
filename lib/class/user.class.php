@@ -553,6 +553,7 @@ class User extends database_object
      * has_access
      * this function checkes to see if this user has access
      * to the passed action (pass a level requirement)
+     * @param integer $needed_level
      */
     public function has_access($needed_level)
     {
@@ -733,6 +734,7 @@ class User extends database_object
     /**
      * update_apikey
      * Updates their api key
+     * @param string $new_apikey
      */
     public function update_apikey($new_apikey)
     {
@@ -930,6 +932,7 @@ class User extends database_object
     /**
      * create
      * inserts a new user into ampache
+     * @param null|string $website
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false)
     {
@@ -1053,7 +1056,7 @@ class User extends database_object
 
         $avatar = $this->get_avatar();
         if (!empty($avatar['url'])) {
-            $this->f_avatar = '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '" />';
+            $this->f_avatar = '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '"' . ' width="256px" height="auto" />';
         }
         if (!empty($avatar['url_mini'])) {
             $this->f_avatar_mini = '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
@@ -1359,9 +1362,18 @@ class User extends database_object
             }
         }
 
+        if ($avatar['url'] === null) {
+            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/images/blankuser.png';
+            $avatar['url_mini']   = $avatar['url'];
+            $avatar['url_medium'] = $avatar['url'];
+        }
+
         return $avatar;
     } // get_avatar
 
+    /**
+     * @param string $data
+     */
     public function update_avatar($data, $mime = '')
     {
         $art = new Art($this->id, 'user');
