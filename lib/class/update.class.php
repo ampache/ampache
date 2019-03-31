@@ -559,6 +559,9 @@ class Update
         $update_string = "- Fix change in <a href='https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee'>this commit</a>, that left the userbase with an inconsistent database, if users updated or installed Ampache before 28 Apr 2015<br />";
         $version[]     = array('version' => '380012', 'description' => $update_string);
         
+        $update_string = "- Fix copyright max size in the podcast table.<br />";
+        $version[]     = array('version' => '380013', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -4008,6 +4011,21 @@ class Update
         $retval = true;
 
         $sql = "UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url'";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    
+    /**
+     * update_380013
+     *
+     * Fix copyright max size in the podcast table.
+     */
+    public static function update_380013()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `podcast` MODIFY `copyright` VARCHAR(255)";
         $retval &= Dba::write($sql);
 
         return $retval;
