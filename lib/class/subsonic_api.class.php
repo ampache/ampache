@@ -188,7 +188,7 @@ class Subsonic_Api
                 //clean illegal XML characters.
                 $xmlstr = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);               // Format xml output
                 $dom    = new DOMDocument();
-                $dom->loadXML($xmlstr);
+                $dom->loadXML($xmlstr, LIBXML_PARSEHUGE);
                 $dom->formatOutput = true;
                 $output            = $dom->saveXML();
             }
