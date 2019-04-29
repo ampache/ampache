@@ -259,11 +259,16 @@ class Plex_Api
         }
     }
 
-    public static function apiOutputXml($xml)
+       /**
+     * @param string|false $xmlstr
+     */
+     */
+    public static function apiOutputXml($xmlstr)
+    {
     {
         // Format xml output
         $dom = new DOMDocument();
-        $dom->loadXML($xml);
+        $dom->loadXML($xmlstr, LIBXML_PARSEHUGE);
         $dom->formatOutput = true;
         self::apiOutput($dom->saveXML());
     }
