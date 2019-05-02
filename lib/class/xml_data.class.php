@@ -938,7 +938,7 @@ class XML_Data
         $xmlstr = $xml->asXml();
         // Format xml output
         $dom = new DOMDocument();
-        if ($dom->loadXML($xmlstr) !== false) {
+        if ($dom->loadXML($xmlstr, LIBXML_PARSEHUGE) !== false) {
             $dom->formatOutput = true;
 
             return $dom->saveXML();
