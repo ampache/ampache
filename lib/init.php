@@ -67,8 +67,8 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']            = '3.9.1-develop';
-$results['int_config_version'] = '34';
+$results['version']            = '4.0.0-core';
+$results['int_config_version'] = '35';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
