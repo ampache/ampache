@@ -1,3 +1,5 @@
+/* global __trInit, __reset */
+
 /**
    #####################################################################
    #                               Warning                             #
@@ -162,7 +164,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
           scripts[sil].parentNode.removeChild(scripts[sil]);
         }
         colname = $(div).text();
-        if (colname != '') {
+        if (colname !== '') {
             var $li = $('<li><input type="checkbox" name="toggle-cols" id="toggle-col-'+wdg.id+'-'+i+'" value="'+id+'" /> <label for="toggle-col-'+wdg.id+'-'+i+'">'+colname+'</label></li>');
             wdg.$menu.$list.append($li);
 
@@ -228,7 +230,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
         .bind('updateCheck', updateCheck )
         .trigger( 'updateCheck' );
 
-    } // EndOf: "__liInitActions()" ###
+    }; // EndOf: "__liInitActions()" ###
 
 
 
@@ -254,7 +256,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
           });
     }
 
-  }
+  };
   
   var __reset = function() {
     // Get the widget context.
@@ -281,7 +283,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
         }
         
     });
-  }
+  };
 
 
 

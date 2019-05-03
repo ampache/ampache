@@ -6,7 +6,7 @@
   * Dual licensed under the MIT or GPL Version 2 licenses.
   * http://rhinoslider.com/license/
   */
-(function ($, window, undefined) {
+(function ($, window) {
 
 	$.extend($.easing, {
 		def: 'out',
@@ -52,14 +52,14 @@
 
 		var
 			setUpSettings = function (settings) {
-				settings.controlsPrevNext = String(settings.controlsPrevNext) == 'true' ? true : false;
-				settings.controlsKeyboard = String(settings.controlsKeyboard) == 'true' ? true : false;
-				settings.controlsMousewheel = String(settings.controlsMousewheel) == 'true' ? true : false;
-				settings.controlsPlayPause = String(settings.controlsPlayPause) == 'true' ? true : false;
-				settings.pauseOnHover = String(settings.pauseOnHover) == 'true' ? true : false;
-				settings.animateActive = String(settings.animateActive) == 'true' ? true : false;
-				settings.autoPlay = String(settings.autoPlay) == 'true' ? true : false;
-				settings.cycled = String(settings.cycled) == 'true' ? true : false;
+				settings.controlsPrevNext = String(settings.controlsPrevNext) === 'true' ? true : false;
+				settings.controlsKeyboard = String(settings.controlsKeyboard) === 'true' ? true : false;
+				settings.controlsMousewheel = String(settings.controlsMousewheel) === 'true' ? true : false;
+				settings.controlsPlayPause = String(settings.controlsPlayPause) === 'true' ? true : false;
+				settings.pauseOnHover = String(settings.pauseOnHover) === 'true' ? true : false;
+				settings.animateActive = String(settings.animateActive) === 'true' ? true : false;
+				settings.autoPlay = String(settings.autoPlay) === 'true' ? true : false;
+				settings.cycled = String(settings.cycled) === 'true' ? true : false;
 				settings.showTime = parseInt(settings.showTime, 10);
 				settings.effectTime = parseInt(settings.effectTime, 10);
 				settings.controlFadeTime = parseInt(settings.controlFadeTime, 10);
@@ -173,7 +173,7 @@
 							break;
 					}
 				});
-				if(vars.container.css('position') == 'static'){
+				if(vars.container.css('position') === 'static'){
 					vars.container.css('position', 'relative');
 				}
 
@@ -250,10 +250,10 @@
 					vars.container.addClass(vars.prefix + 'show-captions');
 					vars.items.each(function () {
 						var $item = $(this);
-						if ($item.children('.' + vars.prefix + 'caption').length == 0) {
+						if ($item.children('.' + vars.prefix + 'caption').length === 0) {
 							if ($item.children('img').length > 0) {
 								var title = $.trim($item.children('img:first').attr('title'));
-								if(undefined != title || '' == title){
+								if(typeof(title) !== "undefined" || '' === title){
 									$item.append('<div class="' + vars.prefix + 'caption">' + title + '</div>');
 									$item.children('.' + vars.prefix + 'caption:empty').remove();
 								}
@@ -390,7 +390,7 @@
 					}
 				}
 				
-				if(preparations[settings.effect] == undefined){
+				if(typeof(preparations[settings.effect]) === "undefined"){
 					console.log('Effect for ' + settings.effect + ' not found.');
 				}else{
 					preparations[settings.effect]($slider, settings, vars);
@@ -472,7 +472,7 @@
 					$('.' + vars.prefix + 'caption').stop(true, true).fadeOut(settings.captionsFadeTime);
 				}
 				
-				if (settings.showBullets !== 'never' && settings.changeBullets == 'before') {
+				if (settings.showBullets !== 'never' && settings.changeBullets === 'before') {
 					vars.navigation.find('.' + vars.prefix + 'active-bullet').removeClass(vars.prefix + 'active-bullet');
 					vars.navigation.find('#' + vars.next.attr('id') + '-bullet').addClass(vars.prefix + 'active-bullet');
 				}
@@ -483,14 +483,14 @@
 					params.animateActive = settings.animateActive;
 					params.direction = settings.slidePrevDirection;
 	
-					if(effects[settings.effect] == undefined){
+					if(type0f(effects[settings.effect]) === "undefined"){
 						console.log('Preparations for ' + settings.effect + ' not found.');
 					}else{
 						effects[settings.effect]($slider, params, resetElements);
 					}
 	
 					setTimeout(function () {
-						if (settings.showBullets !== 'never' && settings.changeBullets == 'after') {
+						if (settings.showBullets !== 'never' && settings.changeBullets === 'after') {
 							vars.navigation.find('.' + vars.prefix + 'active-bullet').removeClass(vars.prefix + 'active-bullet');
 							vars.navigation.find('#' + vars.next.attr('id') + '-bullet').addClass(vars.prefix + 'active-bullet');
 						}
@@ -498,7 +498,7 @@
 					}, settings.effectTime);
 				}, settings.captionsFadeTime);
 				
-				if (settings.showBullets !== 'never' && settings.changeBullets == 'after') {
+				if (settings.showBullets !== 'never' && settings.changeBullets === 'after') {
 					vars.navigation.find('.' + vars.prefix + 'active-bullet').removeClass(vars.prefix + 'active-bullet');
 					vars.navigation.find('#' + vars.next.attr('id') + '-bullet').addClass(vars.prefix + 'active-bullet');
 				}
@@ -538,7 +538,7 @@
 					$('.' + vars.prefix + 'caption').stop(true, true).fadeOut(settings.captionsFadeTime);
 				}
 								
-				if (settings.showBullets !== 'never' && settings.changeBullets == 'before') {
+				if (settings.showBullets !== 'never' && settings.changeBullets === 'before') {
 					vars.navigation.find('.' + vars.prefix + 'active-bullet').removeClass(vars.prefix + 'active-bullet');
 					vars.navigation.find('#' + vars.next.attr('id') + '-bullet').addClass(vars.prefix + 'active-bullet');
 				}
@@ -550,14 +550,14 @@
 					params.direction = settings.slideNextDirection;
 	
 					//run effect
-					if(effects[settings.effect] == undefined){
+					if(typeof(effects[settings.effect]) === "undefined"){
 						console.log('Preparations for ' + settings.effect + ' not found.');
 					}else{
 						effects[settings.effect]($slider, params, resetElements);
 					}
 	
 					setTimeout(function () {
-						if (settings.showBullets !== 'never' && settings.changeBullets == 'after') {
+						if (settings.showBullets !== 'never' && settings.changeBullets === 'after') {
 							vars.navigation.find('.' + vars.prefix + 'active-bullet').removeClass(vars.prefix + 'active-bullet');
 							vars.navigation.find('#' + vars.next.attr('id') + '-bullet').addClass(vars.prefix + 'active-bullet');
 						}
@@ -577,7 +577,7 @@
 					vars.playedCounter = 0;
 					vars.playedArray = [];
 				}
-				if (curID == nextID || vars.playedArray[nextKey] === true) {
+				if (curID === nextID || vars.playedArray[nextKey] === true) {
 					return getRandom(vars);
 				} else {
 					vars.playedArray[nextKey] = true;

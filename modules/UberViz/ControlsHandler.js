@@ -1,3 +1,5 @@
+/* global dat, AudioHandler */
+
 //UberViz ControlsHandler
 //Handles side menu controls
 
@@ -14,7 +16,7 @@ var ControlsHandler = (function() {
 
 	var vizParams = {
 		fullSize: true,
-		showControls: false,
+		showControls: false
 		// useBars: false,
 		// useGoldShapes: true,
 		// useNebula:true,

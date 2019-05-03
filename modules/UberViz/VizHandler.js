@@ -1,3 +1,5 @@
+/* global events, THREE, WhiteRing, Bars, ControlsHandler */
+
 //UberViz VizHandler
 //Handle 3D world
 //Camera movement

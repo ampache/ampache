@@ -1,4 +1,6 @@
 
+/* global events, THREE, VizHandler, AudioHandler */
+
 //WHITE RING VIZ
 //white hollow flat shapes
 // randomly generated
@@ -93,7 +95,7 @@ var WhiteRing = (function() {
 	return {
 		init:init,
 		update:update,
-		onBeat:onBeat,
+		onBeat:onBeat
 	};
 
 }());

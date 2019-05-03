@@ -1,3 +1,5 @@
+/* global events, THREE, VizHandler, ATUtil, ControlsHandler */
+
 //UberViz FXHandler
 //Handles Post-Proc Shaders
 

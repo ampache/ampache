@@ -1,3 +1,5 @@
+/* global THREE */
+
 /**
  * @author alteredq / http://alteredqualia.com/
  *

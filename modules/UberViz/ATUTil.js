@@ -1,3 +1,5 @@
+/* global THREE */
+
 ATUtil = {
 	
 	getRandVec3D : function(minVal, maxVal) {

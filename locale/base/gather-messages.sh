@@ -26,7 +26,7 @@ if ! which xgettext &>/dev/null ; then
     exit 1;
 fi
 
-[[ $OLANG ]] || OLANG=$(echo $LANG | sed 's/\..*//;')
+[[ $OLANG ]] || OLANG=$(echo "${LANG//.*/}")
 potfile='messages.pot'
 tdstxt='translatable-database-strings.txt'
 ampconf='../../config/ampache.cfg.php'

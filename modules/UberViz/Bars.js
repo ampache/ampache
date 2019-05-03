@@ -1,3 +1,5 @@
+/* global events, VizHandler, THREE, AudioHandler, simplexNoise, ATUtil */
+
 //GRAPHIC EQUALIZER BARS VIZ
 
 var Bars = (function() {
@@ -25,7 +27,7 @@ var Bars = (function() {
 		for ( var j = 0; j < BAR_COUNT; j ++ ) {
 
 			var planeMat = new THREE.MeshBasicMaterial( {
-				color: 0xEBFF33,
+				color: 0xEBFF33
 				//side:THREE.DoubleSide //more complex shapes
 			});
 			planeMat.color.setHSL(j/BAR_COUNT, 1.0, 0.5);

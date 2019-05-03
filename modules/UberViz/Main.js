@@ -1,3 +1,5 @@
+/* global Detector, AudioHandler, ControlsHandler, VizHandler, FXHandler */
+
 //UberViz Main v0.1
 //Handles HTML and wiring data
 //Using Three v60
