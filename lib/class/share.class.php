@@ -71,7 +71,7 @@ class Share extends database_object
         $params = array( $id );
         if (!$GLOBALS['user']->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = User::get_user_id();
         }
 
         return Dba::write($sql, $params);
@@ -126,7 +126,7 @@ class Share extends database_object
         }
 
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array($GLOBALS['user']->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
+        $params = array(User::get_user_id(), $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
         Dba::write($sql, $params);
 
         $id = Dba::insert_id();
@@ -168,7 +168,7 @@ class Share extends database_object
         $sql = "SELECT `id` FROM `share` ";
 
         if (!$GLOBALS['user']->has_access('75')) {
-            $sql .= "WHERE `user` = '" . scrub_in($GLOBALS['user']->id) . "'";
+            $sql .= "WHERE `user` = '" . scrub_in(User::get_user_id()) . "'";
         }
 
         return $sql;
@@ -202,7 +202,7 @@ class Share extends database_object
     public function show_action_buttons()
     {
         if ($this->id) {
-            if ($GLOBALS['user']->has_access('75') || $this->user == $GLOBALS['user']->id) {
+            if ($GLOBALS['user']->has_access('75') || $this->user == User::get_user_id()) {
                 echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
@@ -239,7 +239,7 @@ class Share extends database_object
         $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->description, $this->id);
         if (!$GLOBALS['user']->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = User::get_user_id();
         }
 
         return Dba::write($sql, $params);

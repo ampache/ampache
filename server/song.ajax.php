@@ -27,7 +27,7 @@ if (!defined('AJAX_INCLUDE')) {
     exit;
 }
 
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'flip_state':
         if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to change the state of a song', '1');

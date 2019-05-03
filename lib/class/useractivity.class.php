@@ -40,15 +40,16 @@ class Useractivity extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
+     * @param integer $useract_id
      */
-    public function __construct($id)
+    public function __construct($useract_id)
     {
-        if (!$id) {
+        if (!$useract_id) {
             return false;
         }
         
         /* Get the information from the db */
-        $info = $this->get_info($id, 'user_activity');
+        $info = $this->get_info($useract_id, 'user_activity');
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -76,17 +77,21 @@ class Useractivity extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('user_activity', $row['id'], $row);
         }
+
+        return true;
     }
     /**
      * gc
      *
      * Remove activities for items that no longer exist.
+     * @param string $object_type
+     * @param integer $object_id
      */
     public static function gc($object_type = null, $object_id = null)
     {
         $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
 
-        if ($object_type != null) {
+        if ($object_type !== null) {
             if (in_array($object_type, $types)) {
                 $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
@@ -103,22 +108,79 @@ class Useractivity extends database_object
     /**
      * post_activity
      * @param int $user_id
-     * @param string $activity
      * @param string $object_type
      * @param int $object_id
+     * @param string $action
      */
     public static function post_activity($user_id, $action, $object_type, $object_id)
     {
-        // Only save the activity if sociable
-        if (!AmpConfig::get('sociable')) {
-            return false;
+        if ($object_type === 'song') {
+            // insert fields to be more like last.fm activity stats
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`," .
+                    " `name_track`, `name_artist`, `name_album`,`mbid_track`, `mbid_artist`, `mbid_album`)" .
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $song = new Song($object_id);
+            $song->format();
+            $name_song   = $song->f_title;
+            $name_artist = $song->f_artist;
+            $name_album  = $song->f_album;
+            $mbid_song   = $song->mbid;
+            $mbid_artist = $song->artist_mbid;
+            $mbid_album  = $song->album_mbid;
+            debug_event('post_activity', 'Inserting details for ' . $name_song . ' - ' . $name_artist . ' - ' . $name_album . '.', 5);
+
+            if ($name_song and $name_artist and $name_album) {
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
+            }
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
+
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
+        }
+        if ($object_type === 'artist') {
+            // insert fields to be more like last.fm activity stats
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `mbid_artist`)" .
+                    " VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $artist = new Artist($object_id);
+            $artist->format();
+            $name_artist = $artist->f_name;
+            $mbid_artist = $artist->mbid;
+            debug_event('post_activity', 'Inserting details for ' . $name_artist . '.', 5);
+
+            if ($name_artist) {
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_artist, $mbid_artist));
+            }
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
+
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
+        }
+        if ($object_type === 'album') {
+            // insert fields to be more like last.fm activity stats
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `name_album`, `mbid_artist`, `mbid_album`)" .
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $album = new Album($object_id);
+            $album->format();
+            $name_artist  = $album->f_album_artist_name;
+            $name_album   = $album->f_title;
+            $mbid_album   = $album->mbid;
+            $mbid_artist  = $album->mbid_group;
+            debug_event('post_activity', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
+
+            if ($name_artist and $name_album) {
+                debug_event('post_activity', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
+
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_artist, $name_album, $mbid_artist, $mbid_album));
+            }
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
+
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
         }
         
+        // This is probably a good feature to keep by default
         $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
         return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
     }
-    
+
     /**
      * get_activities
      * @param int $user_id

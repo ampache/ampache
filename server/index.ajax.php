@@ -28,7 +28,7 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'random_albums':
         $albums = Album::get_random(6);
         if (count($albums) and is_array($albums)) {

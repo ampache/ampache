@@ -28,10 +28,10 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'geolocation':
         if (AmpConfig::get('geolocation')) {
-            if ($GLOBALS['user']->id) {
+            if (User::get_user_id()) {
                 $latitude  = floatval($_REQUEST['latitude']);
                 $longitude = floatval($_REQUEST['longitude']);
                 $name      = $_REQUEST['name'];

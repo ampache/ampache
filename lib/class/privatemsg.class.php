@@ -149,7 +149,7 @@ class PrivateMsg extends database_object
         }
 
         if (!AmpError::occurred()) {
-            $from_user     = $data['from_user'] ?: $GLOBALS['user']->id;
+            $from_user     = $data['from_user'] ?: User::get_user_id();
             $creation_date = $data['creation_date'] ?: time();
             $is_read       = $data['is_read'] ?: 0;
             $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " .

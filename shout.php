@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 UI::show_header();
 
 // Switch on the incomming action
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'add_shout':
         // Must be at least a user to do this
         if (!Access::check('interface', '25')) {

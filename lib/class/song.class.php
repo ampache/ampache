@@ -1352,7 +1352,7 @@ class Song extends database_object implements media, library_item
     {
         if ($check_owner) {
             $item = new Song($song_id);
-            if ($item->id && $item->get_user_owner() == $GLOBALS['user']->id) {
+            if ($item->id && $item->get_user_owner() == User::get_user_id()) {
                 $level = 25;
             }
         }
@@ -1386,7 +1386,7 @@ class Song extends database_object implements media, library_item
     {
         if ($check_owner) {
             $item = new Song($song_id);
-            if ($item->id && $item->get_user_owner() == $GLOBALS['user']->id) {
+            if ($item->id && $item->get_user_owner() == User::get_user_id()) {
                 $level = 25;
             }
         }
@@ -1706,7 +1706,7 @@ class Song extends database_object implements media, library_item
             return null;
         }
 
-        $uid  = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
+        $uid  = User::get_user_id() ? scrub_out(User::get_user_id()) : '-1';
         $type = $media->type;
 
         // Checking if the media is gonna be transcoded into another type
@@ -1784,7 +1784,7 @@ class Song extends database_object implements media, library_item
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
                 $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
                 if ($personal_info_id) {
-                    $current_user = $GLOBALS['user']->id;
+                    $current_user = User::get_user_id();
                     $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
                 }
             }

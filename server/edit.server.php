@@ -55,7 +55,7 @@ $libitem = new $object_type($object_id);
 $libitem->format();
 
 $level = '50';
-if ($libitem->get_user_owner() == $GLOBALS['user']->id) {
+if ($libitem->get_user_owner() == User::get_user_id()) {
     $level = '25';
 }
 if ($_REQUEST['action'] == 'show_edit_playlist') {
@@ -68,7 +68,7 @@ if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
     exit;
 }
 
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'show_edit_object':
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_edit_' . $type . '.inc.php');
@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
         $entities($_POST);
 
         $libitem = new $object_type($_POST['id']);
-        if ($libitem->get_user_owner() == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+        if ($libitem->get_user_owner() == User::get_user_id() && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
             // TODO: improve this uniqueless check
             if (isset($_POST['user'])) {
                 unset($_POST['user']);

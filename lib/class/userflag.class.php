@@ -57,7 +57,7 @@ class Userflag extends database_object
         }
 
         if ($user_id === null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = User::get_user_id();
         }
 
         $userflags = array();
@@ -110,7 +110,7 @@ class Userflag extends database_object
     public function get_flag($user_id = null, $get_date = null)
     {
         if ($user_id === null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = User::get_user_id();
         }
 
         $key = 'userflag_' . $this->type . '_user' . $user_id;
@@ -144,7 +144,7 @@ class Userflag extends database_object
     public function set_flag($flagged, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = User::get_user_id();
         }
         $user_id = intval($user_id);
 
@@ -197,7 +197,7 @@ class Userflag extends database_object
     public static function get_latest_sql($type, $user_id=null)
     {
         if ($user_id === null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = User::get_user_id();
         }
         $user_id = intval($user_id);
 

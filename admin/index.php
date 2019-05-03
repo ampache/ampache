@@ -29,7 +29,7 @@ if (!Access::check('interface', 100)) {
 
 UI::show_header();
 
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     default:
         // Show Catalogs
         $catalog_ids = Catalog::get_catalogs();

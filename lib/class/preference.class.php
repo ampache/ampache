@@ -446,7 +446,7 @@ class Preference extends database_object
      */
     public static function init()
     {
-        $user_id = $GLOBALS['user']->id ? intval($GLOBALS['user']->id) : -1;
+        $user_id = User::get_user_id() ? intval(User::get_user_id()) : -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {

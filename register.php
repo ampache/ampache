@@ -40,7 +40,7 @@ if (AmpConfig::get('captcha_public_reg')) {
 
 
 /* Start switch based on action passed */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'validate':
         $username      = scrub_in($_GET['username']);
         $validation    = scrub_in($_GET['auth']);

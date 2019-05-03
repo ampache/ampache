@@ -30,11 +30,11 @@ if (!defined('AJAX_INCLUDE')) {
 
 $user_id = intval($_REQUEST['user_id']);
 
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'flip_follow':
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
             $fuser = new User($user_id);
-            if ($fuser->id > 0 && $user_id !== $GLOBALS['user']->id) {
+            if ($fuser->id > 0 && $user_id !== User::get_user_id()) {
                 $GLOBALS['user']->toggle_follow($user_id);
                 $results['button_follow_' . $user_id] = $fuser->get_display_follow();
             }

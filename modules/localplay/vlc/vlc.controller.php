@@ -122,7 +122,7 @@ class AmpacheVlc extends localplay_controller
     public function add_instance($data)
     {
         $sql        = "INSERT INTO `localplay_vlc` (`name`,`host`,`port`,`password`,`owner`) VALUES (?, ?, ?, ?, ?)";
-        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['password'], $GLOBALS['user']->id));
+        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['password'], User::get_user_id()));
 
         return $db_results;
     } // add_instance
@@ -209,10 +209,10 @@ class AmpacheVlc extends localplay_controller
     {
         // Not an admin? bubkiss!
         if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = User::get_user_id();
         }
 
-        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+        $user_id = $user_id ? $user_id : User::get_user_id();
 
         Preference::update('vlc_active', $user_id, intval($uid));
         AmpConfig::set('vlc_active', intval($uid), true);

@@ -30,7 +30,7 @@ if (!Access::check('interface', '100')) {
 UI::show_header();
 
 // Switch on the actions
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'update_user':
         if (AmpConfig::get('demo_mode')) {
             break;

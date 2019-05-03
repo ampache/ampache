@@ -52,7 +52,7 @@ foreach ($data as $row) {
 
     $has_allowed_agent = true;
     $has_allowed_time  = true;
-    $is_allowed        = Access::check('interface', '100') || $GLOBALS['user']->id == $row_user->id;
+    $is_allowed        = Access::check('interface', '100') || User::get_user_id() == $row_user->id;
     if (!$is_allowed) {
         $has_allowed_time  = Preference::get_by_user($row_user->id, 'allow_personal_info_time');
         $has_allowed_agent = Preference::get_by_user($row_user->id, 'allow_personal_info_agent');

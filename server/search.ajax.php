@@ -27,7 +27,7 @@ if (!defined('AJAX_INCLUDE')) {
     exit;
 }
 
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'search':
         $search = $_REQUEST['search'];
         $target = $_REQUEST['target'];

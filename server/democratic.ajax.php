@@ -32,7 +32,7 @@ $democratic->set_parent();
 
 $show_browse = false;
 $results     = array();
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete_vote':
         $democratic->remove_vote($_REQUEST['row_id']);
         $show_browse = true;

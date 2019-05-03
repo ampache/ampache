@@ -483,7 +483,7 @@ class Graph
             }
         }
         
-        if (($owner_id <= 0 || $owner_id != $GLOBALS['user']->id) && !Access::check('interface', '50')) {
+        if (($owner_id <= 0 || $owner_id != User::get_user_id()) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
             $user_id      = $_REQUEST['user_id'];

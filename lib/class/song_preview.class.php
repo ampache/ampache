@@ -282,7 +282,7 @@ class Song_Preview extends database_object implements media, playable_item
     public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         $song        = new Song_Preview($oid);
-        $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
+        $user_id     = User::get_user_id() ? scrub_out(User::get_user_id()) : '-1';
         $type        = $song->type;
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);

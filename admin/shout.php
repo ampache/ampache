@@ -30,7 +30,7 @@ if (!Access::check('interface', '100')) {
 UI::show_header();
 
 // Switch on the incomming action
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'edit_shout':
         $shout = new Shoutbox($_REQUEST['shout_id']);
         if ($shout->id) {

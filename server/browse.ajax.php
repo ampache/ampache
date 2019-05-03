@@ -53,7 +53,7 @@ if ($_REQUEST['argument']) {
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'browse':
         $object_ids = array();
 

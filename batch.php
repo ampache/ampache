@@ -73,7 +73,7 @@ if (Core::is_playable_item($_REQUEST['action'])) {
         }
     }
 } else {
-    switch ($_REQUEST['action']) {
+    switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         case 'tmp_playlist':
             $media_ids = $GLOBALS['user']->playlist->get_items();
             $name      = $GLOBALS['user']->username . ' - Playlist';

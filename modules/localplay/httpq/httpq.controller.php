@@ -125,7 +125,7 @@ class AmpacheHttpq extends localplay_controller
         $host     = Dba::escape($data['host']);
         $port     = Dba::escape($data['port']);
         $password = Dba::escape($data['password']);
-        $user_id  = Dba::escape($GLOBALS['user']->id);
+        $user_id  = Dba::escape(User::get_user_id());
 
         $sql = "INSERT INTO `localplay_httpq` (`name`,`host`,`port`,`password`,`owner`) " .
             "VALUES ('$name','$host','$port','$password','$user_id')";
@@ -226,10 +226,10 @@ class AmpacheHttpq extends localplay_controller
     {
         // Not an admin? bubkiss!
         if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = User::get_user_id();
         }
 
-        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+        $user_id = $user_id ? $user_id : User::get_user_id();
 
         Preference::update('httpq_active', $user_id, intval($uid));
         AmpConfig::set('httpq_active', intval($uid), true);

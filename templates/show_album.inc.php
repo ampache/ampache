@@ -165,7 +165,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php
     } ?>
-        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', '50')) {
+        <?php if (($owner_id > 0 && $owner_id == User::get_user_id()) || Access::check('interface', '50')) {
         ?>
         <?php if (AmpConfig::get('statistical_graphs')) {
             ?>

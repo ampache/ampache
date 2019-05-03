@@ -55,7 +55,7 @@ class Bookmark extends database_object
             $info = $this->get_info($object_id);
         } else {
             if ($user_id == null) {
-                $user_id = $GLOBALS['user']->id;
+                $user_id = User::get_user_id();
             }
 
             $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";
@@ -128,7 +128,7 @@ class Bookmark extends database_object
     
     public static function create(array $data)
     {
-        $user     = $data['user'] ?: $GLOBALS['user']->id;
+        $user     = $data['user'] ?: User::get_user_id();
         $position = $data['position'] ?: 0;
         $comment  = scrub_in($data['comment']);
         

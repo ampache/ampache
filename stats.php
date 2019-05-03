@@ -29,7 +29,7 @@ define('TABLE_RENDERED', 1);
 define('NO_BROWSE_SORTING', true);
 
 /* Switch on the action to be performed */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     // Show a Users "Profile" page
     case 'show_user':
         $client = new User($_REQUEST['user_id']);

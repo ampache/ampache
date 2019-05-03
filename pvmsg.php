@@ -35,7 +35,7 @@ switch ($action) {
     case 'show_add_message':
         if (isset($_REQUEST['reply_to'])) {
             $pvmsg = new PrivateMsg($_REQUEST['reply_to']);
-            if ($pvmsg->id && ($pvmsg->from_user === $GLOBALS['user']->id || $pvmsg->to_user === $GLOBALS['user']->id)) {
+            if ($pvmsg->id && ($pvmsg->from_user === User::get_user_id() || $pvmsg->to_user === (int) User::get_user_id())) {
                 $to_user             = new User($pvmsg->from_user);
                 $_REQUEST['to_user'] = $to_user->username;
                 $_REQUEST['subject'] = "RE: " . $pvmsg->subject;
@@ -77,7 +77,7 @@ switch ($action) {
         $msgs = explode(',', $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
             $pvmsg = new PrivateMsg(intval($msg_id));
-            if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
+            if ($pvmsg->id && $pvmsg->to_user === User::get_user_id()) {
                 $read = intval($_REQUEST['read']) !== 0;
                 $pvmsg->set_is_read($read);
             } else {
@@ -112,7 +112,7 @@ switch ($action) {
         foreach ($msgs as $msg_id) {
             $msg_id = intval($msg_id);
             $pvmsg  = new PrivateMsg($msg_id);
-            if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
+            if ($pvmsg->id && $pvmsg->to_user === (int) User::get_user_id()) {
                 $pvmsg->delete();
             } else {
                 debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
@@ -127,7 +127,7 @@ switch ($action) {
     default:
         $msg_id = intval($_REQUEST['pvmsg_id']);
         $pvmsg  = new PrivateMsg($msg_id);
-        if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
+        if ($pvmsg->id && $pvmsg->to_user === User::get_user_id()) {
             $pvmsg->format();
             if (!$pvmsg->is_read) {
                 $pvmsg->set_is_read(true);

@@ -110,7 +110,7 @@ $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 
 unset($safe_dirname);
 
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'create_db':
         $new_user = '';
         $new_pass = '';

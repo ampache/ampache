@@ -30,7 +30,7 @@ if (!Access::check('interface', '100')) {
 UI::show_header();
 
 /* Switch on Action */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'export':
 
         // This may take a while

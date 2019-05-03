@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
 /* Switch on Action */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;

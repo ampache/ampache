@@ -28,7 +28,7 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'show_add_tag':
 
     break;

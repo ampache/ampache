@@ -28,7 +28,7 @@ $next_url          = "";
 $notification_text = "";
 
 // Switch on the action
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'update_preferences':
         if ($_POST['method'] == 'admin' && !Access::check('interface', '100')) {
             UI::access_denied();
@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
             $fullname           = T_('Server');
             $_REQUEST['action'] = 'admin';
         } else {
-            $user_id  = $GLOBALS['user']->id;
+            $user_id  = User::get_user_id();
             $fullname = $GLOBALS['user']->fullname;
         }
 
@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', '25') && $GLOBALS['user']->id > 0) {
+        if (!Access::check('interface', '25') && User::get_user_id() > 0) {
             UI::access_denied();
             exit;
         }
@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'grant':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', '25') && $GLOBALS['user']->id > 0) {
+        if (!Access::check('interface', '25') && User::get_user_id() > 0) {
             UI::access_denied();
             exit;
         }
@@ -158,7 +158,7 @@ switch ($_REQUEST['action']) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
             if ($plugin = new Plugin($_REQUEST['plugin'])) {
                 $plugin->load($GLOBALS['user']);
-                if ($plugin->_plugin->get_session($GLOBALS['user']->id, $_REQUEST['token'])) {
+                if ($plugin->_plugin->get_session(User::get_user_id(), $_REQUEST['token'])) {
                     $title    = T_('Updated');
                     $text     = T_('Your Account has been updated') . ' : ' . $_REQUEST['plugin'];
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
@@ -183,7 +183,7 @@ UI::show_header();
 /**
  * switch on the view
  */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'confirm':
     case 'grant':
         show_confirmation($title, $text, $next_url, $cancel);

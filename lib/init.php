@@ -167,7 +167,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
     /* If the user ID doesn't exist deny them */
-    if (!$GLOBALS['user']->id && !AmpConfig::get('demo_mode')) {
+    if (!User::get_user_id() && !AmpConfig::get('demo_mode')) {
         Auth::logout(session_id());
         exit;
     }
@@ -195,12 +195,12 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
         } else {
             $GLOBALS['user']           = new User($auth['username']);
-            $GLOBALS['user']->id       = -1;
+            User::get_user_id()       = -1;
             $GLOBALS['user']->username = $auth['username'];
             $GLOBALS['user']->fullname = $auth['fullname'];
             $GLOBALS['user']->access   = intval($auth['access']);
         }
-        if (!$GLOBALS['user']->id and !AmpConfig::get('demo_mode')) {
+        if (!User::get_user_id() and !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());
             exit;
         }

@@ -43,7 +43,7 @@ debug_event("stream.php", "Asked for {" . $_REQUEST['action'] . "}.", 5);
 /**
  * action switch
  */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'basket':
         // Pull in our items (multiple types)
         $media_ids = $GLOBALS['user']->playlist->get_items();
@@ -146,7 +146,7 @@ switch ($_REQUEST['action']) {
 } // end action switch
 
 // See if we need a special streamtype
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'download':
         $stream_type = 'download';
     break;
@@ -176,7 +176,7 @@ if (count($media_ids) || isset($urls)) {
         }
     }
 
-    if ($GLOBALS['user']->id > -1) {
+    if (User::get_user_id() > -1) {
         Session::update_username(Stream::get_session(), $GLOBALS['user']->username);
     }
 

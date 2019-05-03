@@ -31,7 +31,7 @@ if (!$GLOBALS['user']->has_access(100)) {
 /* Always show the header */
 UI::show_header();
 
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'install_localplay':
         $localplay = new Localplay($_REQUEST['type']);
         if (!$localplay->player_loaded()) {
@@ -45,8 +45,8 @@ switch ($_REQUEST['action']) {
         // Go ahead and enable Localplay (Admin->System) as we assume they want to do that
         // if they are enabling this
         Preference::update('allow_localplay_playback', '-1', '1');
-        Preference::update('localplay_level', $GLOBALS['user']->id, '100');
-        Preference::update('localplay_controller', $GLOBALS['user']->id, $localplay->type);
+        Preference::update('localplay_level', User::get_user_id(), '100');
+        Preference::update('localplay_controller', User::get_user_id(), $localplay->type);
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';

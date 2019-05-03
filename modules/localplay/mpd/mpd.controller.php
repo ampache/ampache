@@ -136,7 +136,7 @@ class AmpacheMpd extends localplay_controller
             } // end switch
         } // end foreach
 
-        $user_id = Dba::escape($GLOBALS['user']->id);
+        $user_id = Dba::escape(User::get_user_id());
 
         $sql = "INSERT INTO `localplay_mpd` (`name`,`host`,`port`,`password`,`owner`) " .
             "VALUES ('$name','$host','$port','$password','$user_id')";
@@ -238,10 +238,10 @@ class AmpacheMpd extends localplay_controller
     {
         // Not an admin? bubkiss!
         if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = User::get_user_id();
         }
 
-        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+        $user_id = $user_id ? $user_id : User::get_user_id();
 
         Preference::update('mpd_active', $user_id, intval($uid));
         AmpConfig::set('mpd_active', intval($uid), true);

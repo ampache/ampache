@@ -29,7 +29,7 @@ if (!Access::check('interface', '100')) {
 
 UI::show_header();
 
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete_record':
         if (!Core::form_verify('delete_access')) {
             UI::access_denied();

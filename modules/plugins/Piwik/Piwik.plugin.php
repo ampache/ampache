@@ -102,7 +102,7 @@ class AmpachePiwik
         echo "var u='" . scrub_out($this->piwik_url) . "';\n";
         echo "_paq.push(['setTrackerUrl', u+'piwik.php']);\n";
         echo "_paq.push(['setSiteId', " . scrub_out($this->site_id) . "]);\n";
-        if ($GLOBALS['user']->id > 0) {
+        if (User::get_user_id() > 0) {
             echo "_paq.push(['setUserId', '" . $GLOBALS['user']->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";

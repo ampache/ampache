@@ -37,13 +37,13 @@ if (isset($_GET['burl'])) {
 $item = new $object_type($object_id);
 
 // If not a content manager user then kick em out
-if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != $GLOBALS['user']->id)) {
+if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != User::get_user_id())) {
     UI::access_denied();
     exit;
 }
 
 /* Switch on Action */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'clear_art':
         $art = new Art($object_id, $object_type);
         $art->reset();

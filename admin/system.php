@@ -30,7 +30,7 @@ if (!Access::check('interface', 100) or AmpConfig::get('demo_mode')) {
 UI::show_header();
 
 /* Switch on action boys */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     /* This re-generates the config file comparing
      * /config/ampache.cfg to .cfg.dist
      */

@@ -27,7 +27,7 @@ require_once '../lib/init.php';
 debug_event('refresh_reordered.server.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
 
 /* Switch on the action passed in */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'refresh_playlist_medias':
         $playlist = new Playlist($_REQUEST['id']);
         $playlist->format();

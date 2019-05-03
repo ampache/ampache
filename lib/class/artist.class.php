@@ -640,7 +640,7 @@ class Artist extends database_object implements library_item
     public function can_edit($user = null)
     {
         if (!$user) {
-            $user = $GLOBALS['user']->id;
+            $user = User::get_user_id();
         }
 
         if (!$user) {

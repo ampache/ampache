@@ -28,7 +28,7 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete_track':
         // Create the object and remove the track
         $playlist = new Playlist($_REQUEST['playlist_id']);

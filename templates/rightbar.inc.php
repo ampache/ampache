@@ -33,7 +33,7 @@
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
-                $playlists = Playlist::get_users($GLOBALS['user']->id);
+                $playlists = Playlist::get_users(User::get_user_id());
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);

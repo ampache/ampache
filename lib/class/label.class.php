@@ -204,7 +204,7 @@ class Label extends database_object implements library_item
     public function can_edit($user = null)
     {
         if (!$user) {
-            $user = $GLOBALS['user']->id;
+            $user = User::get_user_id();
         }
 
         if (!$user) {
@@ -258,7 +258,7 @@ class Label extends database_object implements library_item
         $address       = $data['address'];
         $email         = $data['email'];
         $website       = $data['website'];
-        $user          = $data['user'] ?: $GLOBALS['user']->id;
+        $user          = $data['user'] ?: User::get_user_id();
         $creation_date = $data['creation_date'] ?: time();
 
         $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) " .

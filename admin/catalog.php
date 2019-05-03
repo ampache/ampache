@@ -48,7 +48,7 @@ if (is_array($catalogs) && count($catalogs) == 1 && $_REQUEST['action'] !== 'del
 
 
 /* Big switch statement to handle various actions */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'add_to_all_catalogs':
         catalog_worker('add_to_all_catalogs');
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);

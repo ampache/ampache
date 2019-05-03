@@ -55,7 +55,7 @@ class Core
         }
 
         foreach ($possiblePaths as $path) {
-            if (is_file($path) && Core::is_readable($path)) {
+            if (is_file($path) && self::is_readable($path)) {
                 require_once($path);
                 self::executeAutoCall($class);
             } else {
@@ -93,7 +93,7 @@ class Core
     /**
      * Get possible filepaths of namespaced classes
      * @param string $class
-     * @return string
+     * @return string[]
      */
     private static function getNamespacedPaths($class)
     {
@@ -111,7 +111,7 @@ class Core
     /**
      * Get possible filepaths of non namespaced classes
      * @param string $class
-     * @return string
+     * @return string[]
      */
     private static function getNonNamespacedPaths($class)
     {
@@ -209,14 +209,13 @@ class Core
      * This generates a cryptographically secure token.
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
+     * @param integer $length
      */
     public static function gen_secure_token($length)
     {
         $buffer = '';
         if (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
-        } elseif (function_exists('mcrypt_create_iv')) {
-            $buffer = mcrypt_create_iv($length, MCRYPT_DEV_RANDOM);
         } elseif (phpversion() > "5.6.12" && function_exists('openssl_random_pseudo_bytes')) {
             // PHP version check for https://bugs.php.net/bug.php?id=70014
             $buffer = openssl_random_pseudo_bytes($length);
@@ -234,6 +233,7 @@ class Core
     * This returns the dimensions of the passed song of the passed type
     * returns an empty array if PHP-GD is not currently installed, returns
     * false on error
+    * @param string $image_data
     */
     public static function image_dimensions($image_data)
     {
@@ -268,6 +268,10 @@ class Core
      *
      * Replacement function because PHP's is_readable is buggy:
      * https://bugs.php.net/bug.php?id=49620
+     */
+
+    /**
+     * @param string|false $path
      */
     public static function is_readable($path)
     {
@@ -356,6 +360,9 @@ class Core
         return false;
     }
 
+    /**
+     * @param string $typeofname
+     */
     private static function is_class_typeof($classname, $typeofname)
     {
         if (class_exists($classname)) {
@@ -387,7 +394,7 @@ class Core
 
     public static function requests_options($options = null)
     {
-        if ($options == null) {
+        if ($options === null) {
             $options = array();
         }
 
@@ -407,23 +414,24 @@ class Core
         return $options;
     }
     
+    /**
+     * @return string
+     */
     public static function get_tmp_dir()
     {
         $tmp_dir = AmpConfig::get('tmp_dir_path');
-        if (empty($store_path)) {
-            if (function_exists('sys_get_temp_dir')) {
-                $tmp_dir = sys_get_temp_dir();
+        if (function_exists('sys_get_temp_dir')) {
+            $tmp_dir = sys_get_temp_dir();
+        } else {
+            if (strpos(PHP_OS, 'WIN') === 0) {
+                $tmp_dir = $_ENV['TMP'];
+                if (!isset($tmp_dir)) {
+                    $tmp_dir = 'C:\Windows\Temp';
+                }
             } else {
-                if (strpos(PHP_OS, 'WIN') === 0) {
-                    $tmp_dir = $_ENV['TMP'];
-                    if (!isset($tmp_dir)) {
-                        $tmp_dir = 'C:\Windows\Temp';
-                    }
-                } else {
-                    $tmp_dir = @$_ENV['TMPDIR'];
-                    if (!isset($tmp_dir)) {
-                        $tmp_dir = '/tmp';
-                    }
+                $tmp_dir = @$_ENV['TMPDIR'];
+                if (!isset($tmp_dir)) {
+                    $tmp_dir = '/tmp';
                 }
             }
         }

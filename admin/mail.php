@@ -30,7 +30,7 @@ if (!Access::check('interface', '75')) {
 UI::show_header();
 
 // Action switch
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'send_mail':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();

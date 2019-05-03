@@ -31,7 +31,7 @@ if (!AmpConfig::get('allow_democratic_playback')) {
 UI::show_header();
 
 // Switch on their action
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'manage':
                 $democratic = Democratic::get_current_playlist();
                 $democratic->set_parent();

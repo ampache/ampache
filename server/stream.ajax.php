@@ -31,7 +31,7 @@ if (!defined('AJAX_INCLUDE')) {
 debug_event('stream.ajax.php', 'Called for action {' . $_REQUEST['action'] . '}', 5);
 
 $results = array();
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'set_play_type':
         // Make sure they have the rights to do this
         if (!Preference::has_access('play_type')) {
@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
         $current = AmpConfig::get('play_type');
 
         // Go ahead and update their preference
-        if (Preference::update('play_type', $GLOBALS['user']->id, $new)) {
+        if (Preference::update('play_type', User::get_user_id(), $new)) {
             AmpConfig::set('play_type', $new, true);
         }
 

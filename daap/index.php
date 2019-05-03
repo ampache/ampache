@@ -36,7 +36,7 @@ $headers = apache_request_headers();
 //$daapValidation = $headers['Client-DAAP-Validation']; // That's header hash, we don't care about it (only required by iTunes >= 7.0)
 debug_event('daap', 'Request headers: ' . print_r($headers, true), '5');
 
-// Get the list of possible methods for the Plex API
+// Get the list of possible methods for the daap API
 $methods = get_class_methods('daap_api');
 // Define list of internal functions that should be skipped
 $internal_functions = array('apiOutput', 'create_dictionary', 'createError', 'output_body', 'output_header', 'follow_stream');

@@ -84,7 +84,7 @@ $catalogs = Catalog::get_catalogs();
     $stats = Catalog::get_stats($catalog_id); ?>
     <tr>
         <td class="cel_catalog"><?php echo $catalog->name; ?></td>
-        <td class="cel_path"><?php echo scrub_out($catalog->f_path); ?></td>
+        <td class="cel_path"><?php echo scrub_out($catalog->f_full_info); ?></td>
         <td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
         <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
         <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>

@@ -62,7 +62,7 @@
             $libitem->format();
             
             // Don't show empty playlist if not admin or the owner
-            if (Access::check('interface', '100') || $libitem->get_user_owner() == $GLOBALS['user']->id || $libitem->get_media_count() > 0) {
+            if (Access::check('interface', '100') || $libitem->get_user_owner() == User::get_user_id() || $libitem->get_media_count() > 0) {
                 ?>
         <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php'); ?>

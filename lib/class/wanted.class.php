@@ -296,7 +296,7 @@ class Wanted extends database_object
         $params = array( $mbid );
         if (!$GLOBALS['user']->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = User::get_user_id();
         }
 
         Dba::write($sql, $params);
@@ -329,7 +329,7 @@ class Wanted extends database_object
         $params = array( $artist, $album_name, $year );
         if (!$GLOBALS['user']->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = User::get_user_id();
         }
 
         Dba::write($sql, $params);
@@ -364,7 +364,7 @@ class Wanted extends database_object
     public static function has_wanted($mbid, $userid = 0)
     {
         if ($userid == 0) {
-            $userid = $GLOBALS['user']->id;
+            $userid = User::get_user_id();
         }
 
         $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ?";
@@ -389,7 +389,7 @@ class Wanted extends database_object
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $accept = $GLOBALS['user']->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
-        $params = array($GLOBALS['user']->id, $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
+        $params = array(User::get_user_id(), $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
         Dba::write($sql, $params);
 
         if ($accept) {
@@ -521,7 +521,7 @@ class Wanted extends database_object
         $sql = "SELECT `id` FROM `wanted` ";
 
         if (!$GLOBALS['user']->has_access('75')) {
-            $sql .= "WHERE `user` = '" . scrub_in($GLOBALS['user']->id) . "'";
+            $sql .= "WHERE `user` = '" . scrub_in(User::get_user_id()) . "'";
         }
 
         return $sql;

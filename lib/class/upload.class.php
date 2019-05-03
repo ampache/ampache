@@ -92,7 +92,7 @@ class Upload
                         }
 
                         $options                = array();
-                        $options['user_upload'] = $GLOBALS['user']->id;
+                        $options['user_upload'] = User::get_user_id();
                         if (isset($_POST['license'])) {
                             $options['license'] = $_POST['license'];
                         }
@@ -107,7 +107,7 @@ class Upload
                             if (count($artists) == 0) {
                                 $artists[] = Artist::check($GLOBALS['user']->f_name);
                                 $artist    = new Artist($artists[0]);
-                                $artist->update_artist_user($GLOBALS['user']->id);
+                                $artist->update_artist_user((int) User::get_user_id());
                             } else {
                                 $artist = new Artist($artists[0]);
                             }
@@ -124,7 +124,7 @@ class Upload
                                     $artist_id = Artist::check($_REQUEST['artist_name']);
                                     $artist    = new Artist($artist_id);
                                     if (!$artist->get_user_owner()) {
-                                        $artist->update_artist_user($GLOBALS['user']->id);
+                                        $artist->update_artist_user((int) User::get_user_id());
                                     }
                                 }
                             }
@@ -136,7 +136,7 @@ class Upload
                                     return self::rerror($targetfile);
                                 }
                                 $artist = new Artist($artist_id);
-                                if ($artist->get_user_owner() != $GLOBALS['user']->id) {
+                                if ($artist->get_user_owner() != User::get_user_id()) {
                                     debug_event('upload', 'Artist owner doesn\'t match the current user.', 3);
 
                                     return self::rerror($targetfile);
@@ -156,7 +156,7 @@ class Upload
                                 return self::rerror($targetfile);
                             }
                             $album = new Album($album_id);
-                            if ($album->get_user_owner() != $GLOBALS['user']->id) {
+                            if ($album->get_user_owner() != User::get_user_id()) {
                                 debug_event('upload', 'Album owner doesn\'t match the current user.', 3);
 
                                 return self::rerror($targetfile);

@@ -34,15 +34,15 @@ class Tag extends database_object implements library_item
 
     /**
      * constructor
-     * This takes a tag id and returns all of the relevent information
+     * This takes a tag id and returns all of the relevant information
      */
-    public function __construct($id)
+    public function __construct($tag_id)
     {
-        if (!$id) {
+        if (!$tag_id) {
             return false;
         }
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($tag_id);
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -88,6 +88,7 @@ class Tag extends database_object implements library_item
     /**
      * build_map_cache
      * This builds a cache of the mappings for the specified object, no limit is given
+     * @param string $type
      */
     public static function build_map_cache($type, $ids)
     {
@@ -132,6 +133,7 @@ class Tag extends database_object implements library_item
      * add
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
+     * @param string $type
      */
     public static function add($type, $id, $value, $user=true)
     {
@@ -150,11 +152,11 @@ class Tag extends database_object implements library_item
         }
 
         if ($user === true) {
-            $uid = intval($GLOBALS['user']->id);
+            $uid = (int) (User::get_user_id());
         } elseif ($user === false) {
             $uid = 0;
         } else {
-            $uid = intval($user);
+            $uid = (int) ($user);
         }
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
@@ -210,12 +212,15 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($data[name], $this->id));
 
         if ($data['edit_tags']) {
-            $tag_names = explode(',', $data['edit_tags']);
+            $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
+            $filterunder = str_replace('_', ',', $filterfolk);
+            $filter      = str_replace(';', ',', $filterunder);
+            $tag_names   = explode(',', $filter);
             foreach ($tag_names as $tag) {
-                $merge_to = Tag::construct_from_name($tag);
+                $merge_to = self::construct_from_name($tag);
                 if ($merge_to->id == 0) {
-                    Tag::add_tag($tag);
-                    $merge_to = Tag::construct_from_name($tag);
+                    self::add_tag($tag);
+                    $merge_to = self::construct_from_name($tag);
                 }
                 $this->merge($merge_to->id, $data['merge_persist'] == '1');
             }
@@ -237,6 +242,7 @@ class Tag extends database_object implements library_item
     /**
      * merge
      * merges this tag to another one.
+     * @param boolean $is_persistent
      */
     public function merge($merge_to, $is_persistent)
     {
@@ -286,24 +292,25 @@ class Tag extends database_object implements library_item
     /**
      * add_tag_map
      * This adds a specific tag to the map for specified object
+     * @param string $type
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user=true)
     {
         if ($user === true) {
-            $uid = intval($GLOBALS['user']->id);
+            $uid = (int) (User::get_user_id());
         } elseif ($user === false) {
             $uid = 0;
         } else {
-            $uid = intval($user);
+            $uid = (int) ($user);
         }
         
-        $tag_id = intval($tag_id);
+        $tag_id = (int) ($tag_id);
         if (!Core::is_library_item($type)) {
             debug_event('tag.class', $type . " is not a library item.", 3);
 
             return false;
         }
-        $id = intval($object_id);
+        $id = (int) ($object_id);
 
         if (!$tag_id || !$id) {
             return false;
@@ -347,18 +354,6 @@ class Tag extends database_object implements library_item
             "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
         Dba::write($sql);
 
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` " .
-            "WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL";
-        Dba::write($sql);
-
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `tvshow` ON `tvshow`.`id`=`tag_map`.`object_id` " .
-            "WHERE `tag_map`.`object_type`='tvshow' AND `tvshow`.`id` IS NULL";
-        Dba::write($sql);
-
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id`=`tag_map`.`object_id` " .
-            "WHERE `tag_map`.`object_type`='tvshow_season' AND `tvshow_season`.`id` IS NULL";
-        Dba::write($sql);
-
         // Now nuke the tags themselves
         $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
             "WHERE `tag_map`.`id` IS NULL " .
@@ -384,7 +379,7 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($this->id));
 
         // Call the garbage collector to clean everything
-        Tag::gc();
+        self:gc();
 
         parent::clear_cache();
     }
@@ -413,6 +408,8 @@ class Tag extends database_object implements library_item
      * tag_map_exists
      * This looks to see if the current mapping of the current object of the current tag of the current
      * user exists, lots of currents... taste good in scones.
+     * @param integer $user
+     * @param string $type
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
@@ -434,6 +431,7 @@ class Tag extends database_object implements library_item
     /**
      * get_top_tags
      * This gets the top tags for the specified object using limit
+     * @param string $type
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
@@ -441,9 +439,9 @@ class Tag extends database_object implements library_item
             return array();
         }
 
-        $object_id = intval($object_id);
+        $object_id = (int) ($object_id);
 
-        $limit = intval($limit);
+        $limit = (int) ($limit);
         $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
             "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " .
@@ -464,6 +462,7 @@ class Tag extends database_object implements library_item
      * get_object_tags
      * Display all tags that apply to maching target type of the specified id
      *
+     * @param string $type
      */
     public static function get_object_tags($type, $id)
     {
@@ -499,9 +498,9 @@ class Tag extends database_object implements library_item
         if ($count) {
             $limit_sql = "LIMIT ";
             if ($offset) {
-                $limit_sql .= intval($offset) . ',';
+                $limit_sql .= (int) ($offset) . ',';
             }
-            $limit_sql .= intval($count);
+            $limit_sql .= (int) ($count);
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
@@ -602,13 +601,19 @@ class Tag extends database_object implements library_item
     /**
      * update_tag_list
      * Update the tags list based on commated list (ex. tag1,tag2,tag3,..)
+     * @param string $type
+     * @param integer $object_id
+     * @param boolean $overwrite
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
         debug_event('tag.class', 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', '5');
 
-        $ctags      = Tag::get_top_tags($type, $object_id);
-        $editedTags = explode(",", $tags_comma);
+        $ctags       = self::get_top_tags($type, $object_id);
+        $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
+        $filterunder = str_replace('_', ',', $filterfolk);
+        $filter      = str_replace(';', ',', $filterunder);
+        $editedTags  = explode(",", $filter);
 
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
@@ -641,7 +646,7 @@ class Tag extends database_object implements library_item
         foreach ($editedTags as  $tk => $tv) {
             if ($tv != '') {
                 debug_event('tag.class', 'Adding new tag {' . $tv . '}', '5');
-                Tag::add($type, $object_id, $tv, false);
+                self::add($type, $object_id, $tv, false);
             }
         }
     } // update_tag_list
@@ -655,16 +660,19 @@ class Tag extends database_object implements library_item
     public static function clean_to_existing($tags)
     {
         if (is_array($tags)) {
-            $ar = $tags;
+            $taglist = $tags;
         } else {
-            $ar = explode(",", $tags);
+            $filterfolk       = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
+            $filterunder      = str_replace('_', ',', $filterfolk);
+            $filter           = str_replace(';', ',', $filterunder);
+            $taglist          = explode(",", $filter);
         }
 
         $ret = array();
-        foreach ($ar as $tag) {
+        foreach ($taglist as $tag) {
             $tag = trim($tag);
             if (!empty($tag)) {
-                if (Tag::tag_exists($tag)) {
+                if (self::tag_exists($tag)) {
                     $ret[] = $tag;
                 }
             }
@@ -707,6 +715,8 @@ class Tag extends database_object implements library_item
     /**
      * remove_map
      * This will only remove tag maps for the current user
+     * @param string $type
+     * @param integer $object_id
      */
     public function remove_map($type, $object_id, $user=true)
     {
@@ -715,11 +725,11 @@ class Tag extends database_object implements library_item
         }
 
         if ($user === true) {
-            $uid = intval($GLOBALS['user']->id);
+            $uid = (int) (User::get_user_id());
         } elseif ($user === false) {
             $uid = 0;
         } else {
-            $uid = intval($user);
+            $uid = (int) ($user);
         }
 
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
@@ -742,6 +752,9 @@ class Tag extends database_object implements library_item
         return $keywords;
     }
 
+    /**
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->name;
@@ -766,7 +779,7 @@ class Tag extends database_object implements library_item
     {
         $medias = array();
         if ($filter_type) {
-            $ids = Tag::get_tag_objects($filter_type, $this->id);
+            $ids = self::get_tag_objects($filter_type, $this->id);
             if ($ids) {
                 foreach ($ids as $id) {
                     $medias[] = array(
@@ -816,11 +829,11 @@ class Tag extends database_object implements library_item
     public static function can_edit_tag_map($object_type, $object_id, $user = true)
     {
         if ($user === true) {
-            $uid = intval($GLOBALS['user']->id);
+            $uid = (int) (User::get_user_id());
         } elseif ($user === false) {
             $uid = 0;
         } else {
-            $uid = intval($user);
+            $uid = (int) ($user);
         }
         
         if ($uid > 0) {

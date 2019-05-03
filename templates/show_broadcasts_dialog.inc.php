@@ -23,7 +23,7 @@
 
 <ul>
 <?php
-    $broadcasts = Broadcast::get_broadcasts($GLOBALS['user']->id);
+    $broadcasts = Broadcast::get_broadcasts(User::get_user_id());
     foreach ($broadcasts as $broadcast_id) {
         $broadcast = new Broadcast($broadcast_id);
         $broadcast->format(); ?>

@@ -25,6 +25,7 @@
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ampache -- Debug Page</title>
         <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -34,7 +35,7 @@
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                    <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
                     <?php echo T_('Ampache'); ?> - For the love of Music
                 </a>
             </div>

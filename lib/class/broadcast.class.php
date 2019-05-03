@@ -152,7 +152,7 @@ class Broadcast extends database_object implements library_item
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
-            $params = array($GLOBALS['user']->id, $name, $description);
+            $params = array(User::get_user_id(), $name, $description);
             Dba::write($sql, $params);
 
             return Dba::insert_id();

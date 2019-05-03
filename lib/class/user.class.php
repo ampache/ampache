@@ -23,8 +23,8 @@
 /**
  * User Class
  *
- * This class handles all of the user related functions includingn the creationg
- * and deletion of the user objects from the database by defualt you constrcut it
+ * This class handles all of the user related functions including the creation
+ * and deletion of the user objects from the database by default you construct it
  * with a user_id from user.id
  *
  */
@@ -151,7 +151,7 @@ class User extends database_object
             return false;
         }
 
-        $this->id = intval($user_id);
+        $this->id = (int) ($user_id);
 
         $info = $this->_get_info();
 
@@ -200,15 +200,15 @@ class User extends database_object
      */
     private function _get_info()
     {
-        $id = intval($this->id);
+        $user_id = (int) ($this->id);
 
-        if (parent::is_cached('user', $id)) {
-            return parent::get_from_cache('user', $id);
+        if (parent::is_cached('user', $user_id)) {
+            return parent::get_from_cache('user', $user_id);
         }
 
         $data = array();
         // If the ID is -1 then
-        if ($id == '-1') {
+        if ($user_id == '-1') {
             $data['username'] = 'System';
             $data['fullname'] = 'Ampache User';
             $data['access']   = '25';
@@ -216,12 +216,12 @@ class User extends database_object
             return $data;
         }
 
-        $sql        = "SELECT * FROM `user` WHERE `id`='$id'";
+        $sql        = "SELECT * FROM `user` WHERE `id`='$user_id'";
         $db_results = Dba::read($sql);
 
         $data = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('user', $id, $data);
+        parent::add_to_cache('user', $user_id, $data);
 
         return $data;
     } // _get_info
@@ -384,14 +384,14 @@ class User extends database_object
         $results    = array();
         $type_array = array();
         /* Ok this is crapy, need to clean this up or improve the code FIXME */
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $type  = $r['catagory'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $type  = $row['catagory'];
             $admin = false;
             if ($type == 'system') {
                 $admin = true;
             }
-            $type_array[$type][$r['name']] = array('name' => $r['name'],'level' => $r['level'],'description' => $r['description'],'value' => $r['value'],'subcategory' => $r['subcatagory']);
-            $results[$type]                = array('title' => ucwords($type),'admin' => $admin,'prefs' => $type_array[$type]);
+            $type_array[$type][$row['name']] = array('name' => $row['name'],'level' => $row['level'],'description' => $row['description'],'value' => $row['value'],'subcategory' => $row['subcatagory']);
+            $results[$type]                  = array('title' => ucwords($type),'admin' => $admin,'prefs' => $type_array[$type]);
         } // end while
 
         return $results;
@@ -409,9 +409,9 @@ class User extends database_object
             "AND user_preference.preference=preference.id AND preference.type != 'system'";
         $db_results = Dba::read($sql);
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $key               = $r['name'];
-            $this->prefs[$key] = $r['value'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $key               = $row['name'];
+            $this->prefs[$key] = $row['value'];
         }
     } // set_preferences
 
@@ -425,34 +425,34 @@ class User extends database_object
 
         $items = array();
 
-        foreach ($results as $r) {
+        foreach ($results as $row) {
             /* If its a song */
             if ($type == 'song') {
-                $data        = new Song($r['object_id']);
-                $data->count = $r['count'];
+                $data        = new Song($row['object_id']);
+                $data->count = $row['count'];
                 $data->format();
                 $data->f_link;
                 $items[] = $data;
             }
             /* If its an album */
             elseif ($type == 'album') {
-                $data = new Album($r['object_id']);
-                //$data->count = $r['count'];
+                $data = new Album($row['object_id']);
+                //$data->count = $row['count'];
                 $data->format();
                 $items[] = $data;
             }
             /* If its an artist */
             elseif ($type == 'artist') {
-                $data = new Artist($r['object_id']);
-                //$data->count = $r['count'];
+                $data = new Artist($row['object_id']);
+                //$data->count = $row['count'];
                 $data->format();
                 $data->f_name = $data->f_link;
                 $items[]      = $data;
             }
             /* If it's a genre */
             elseif ($type == 'genre') {
-                $data = new Genre($r['object_id']);
-                //$data->count = $r['count'];
+                $data = new Genre($row['object_id']);
+                //$data->count = $row['count'];
                 $data->format();
                 $data->f_name = $data->f_link;
                 $items[]      = $data;
@@ -477,15 +477,15 @@ class User extends database_object
         // Incase they only have one user
         $users   = array();
         $ratings = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
+        while ($row = Dba::fetch_assoc($db_results)) {
             /* Store the fact that you rated this */
-            $key           = $r['object_id'];
+            $key           = $row['object_id'];
             $ratings[$key] = true;
 
             /* Build a key'd array of users with this same rating */
             $sql = "SELECT user FROM ratings WHERE object_type='" . Dba::escape($type) . "' " .
-                "AND user !='" . Dba::escape($this->id) . "' AND object_id='" . Dba::escape($r['object_id']) . "' " .
-                "AND user_rating ='" . Dba::escape($r['user_rating']) . "'";
+                "AND user !='" . Dba::escape($this->id) . "' AND object_id='" . Dba::escape($row['object_id']) . "' " .
+                "AND user_rating ='" . Dba::escape($row['user_rating']) . "'";
             $user_results = Dba::read($sql);
 
             while ($user_info = Dba::fetch_assoc($user_results)) {
@@ -509,8 +509,8 @@ class User extends database_object
                 "object_type = '" . Dba::escape($type) . "' ORDER BY user_rating DESC";
             $db_results = Dba::read($sql);
 
-            while ($r = Dba::fetch_assoc($db_results)) {
-                $key = $r['object_id'];
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $key = $row['object_id'];
                 if (isset($ratings[$key])) {
                     continue;
                 }
@@ -520,7 +520,7 @@ class User extends database_object
                     return $recommendations;
                 }
 
-                $recommendations[$key] = $r['user_rating'];
+                $recommendations[$key] = $row['user_rating'];
             } // end while
         } // end foreach users
 
@@ -553,6 +553,7 @@ class User extends database_object
      * has_access
      * this function checkes to see if this user has access
      * to the passed action (pass a level requirement)
+     * @param integer $needed_level
      */
     public function has_access($needed_level)
     {
@@ -574,7 +575,7 @@ class User extends database_object
      */
     public static function is_registered()
     {
-        if (!$GLOBALS['user']->id) {
+        if (!self::get_user_id()) {
             return false;
         }
 
@@ -733,6 +734,7 @@ class User extends database_object
     /**
      * update_apikey
      * Updates their api key
+     * @param string $new_apikey
      */
     public function update_apikey($new_apikey)
     {
@@ -857,7 +859,7 @@ class User extends database_object
                     debug_event('user.class.php', 'Error when starting the thread.', 1);
                 }
             } else {
-                User::save_mediaplay($GLOBALS['user'], $media);
+                self::save_mediaplay($GLOBALS['user'], $media);
             }
         } else {
             debug_event('user.class.php', 'Scrobbling explicitly skipped', 5);
@@ -901,7 +903,7 @@ class User extends database_object
         // Remove port information if any
         if (!empty($sip)) {
             // Use parse_url to support easily ipv6
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === true) {
+            if (filter_var($sip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === true) {
                 $sipar = parse_url("http://" . $sip);
             } else {
                 $sipar = parse_url("http://[" . $sip . "]");
@@ -909,12 +911,12 @@ class User extends database_object
             $sip   = $sipar['host'];
         }
 
-        $ip    = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
-        $date  = time();
-        $user  = $this->id;
-        $agent = Dba::escape($_SERVER['HTTP_USER_AGENT']);
+        $uip    = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
+        $date   = time();
+        $user   = $this->id;
+        $agent  = Dba::escape($_SERVER['HTTP_USER_AGENT']);
 
-        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$ip','$user','$date','$agent')";
+        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip','$user','$date','$agent')";
         Dba::write($sql);
 
         /* Clean up old records... sometimes  */
@@ -930,6 +932,7 @@ class User extends database_object
     /**
      * create
      * inserts a new user into ampache
+     * @param null|string $website
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false)
     {
@@ -1053,7 +1056,7 @@ class User extends database_object
 
         $avatar = $this->get_avatar();
         if (!empty($avatar['url'])) {
-            $this->f_avatar = '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '" />';
+            $this->f_avatar = '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '"' . ' width="256px" height="auto" />';
         }
         if (!empty($avatar['url_mini'])) {
             $this->f_avatar_mini = '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
@@ -1100,13 +1103,13 @@ class User extends database_object
 
         $results = array();
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $pref_id = $r['preference'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $pref_id = $row['preference'];
             /* Check for duplicates */
             if (isset($results[$pref_id])) {
-                $r['value'] = Dba::escape($r['value']);
-                $sql        = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $r['preference'] . "' AND" .
-                    " `value`='" . Dba::escape($r['value']) . "'";
+                $row['value'] = Dba::escape($row['value']);
+                $sql          = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $row['preference'] . "' AND" .
+                    " `value`='" . Dba::escape($row['value']) . "'";
                 Dba::write($sql);
             } // if its set
             else {
@@ -1121,9 +1124,9 @@ class User extends database_object
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             $zero_results = array();
-            while ($r = Dba::fetch_assoc($db_results)) {
-                $key                = $r['preference'];
-                $zero_results[$key] = $r['value'];
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $key                = $row['preference'];
+                $zero_results[$key] = $row['value'];
             }
         } // if not user -1
 
@@ -1136,15 +1139,15 @@ class User extends database_object
         }
         $db_results = Dba::read($sql);
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $key = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $key = $row['id'];
 
             /* Check if this preference is set */
             if (!isset($results[$key])) {
                 if (isset($zero_results[$key])) {
-                    $r['value'] = $zero_results[$key];
+                    $row['value'] = $zero_results[$key];
                 }
-                $value = Dba::escape($r['value']);
+                $value = Dba::escape($row['value']);
                 $sql   = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$key','$value')";
                 Dba::write($sql);
             }
@@ -1211,14 +1214,6 @@ class User extends database_object
         // Delete their voted stuff in democratic play
         $sql = "DELETE FROM `user_vote` WHERE `user` = ?";
         Dba::write($sql, array($this->id));
-
-        // Delete their shoutbox posts
-        $sql = "DELETE FROM `user_shout` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
-
-        // Delete their private messages posts
-        $sql = "DELETE FROM `user_pvmsg` WHERE `from_user` = ? OR `to_user` = ?";
-        Dba::write($sql, array($this->id, $this->id));
 
         // Delete their following/followers
         $sql = "DELETE FROM `user_follow` WHERE `user` = ? OR `follow_user` = ?";
@@ -1359,9 +1354,18 @@ class User extends database_object
             }
         }
 
+        if ($avatar['url'] === null) {
+            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/images/blankuser.png';
+            $avatar['url_mini']   = $avatar['url'];
+            $avatar['url_medium'] = $avatar['url'];
+        }
+
         return $avatar;
     } // get_avatar
 
+    /**
+     * @param string $data
+     */
     public function update_avatar($data, $mime = '')
     {
         $art = new Art($this->id, 'user');
@@ -1522,15 +1526,24 @@ class User extends database_object
     }
 
     /**
+     * get_user_id
+     * Get the user id to stop using globals everywhere
+     * @return string
+     */
+    public static function get_user_id()
+    {
+        return $GLOBALS['user']->id;
+    }
+    
+    /**
      * get_display_follow
      * Get html code to display the follow/unfollow link
-     * @param int|null $display_user_id
      * @return string
      */
     public function get_display_follow($user_id = null)
     {
         if (!$user_id) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = self::get_user_id();
         }
 
         if ($user_id === $this->id) {
@@ -1584,7 +1597,7 @@ class User extends database_object
             "SELECT COUNT(`id`) FROM `preference` WHERE `catagory` != 'system')";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            User::fix_preferences($row['user']);
+            self::fix_preferences($row['user']);
         }
 
         return true;
@@ -1599,7 +1612,7 @@ class User extends database_object
      */
     public static function stream_control($media_ids, User $user = null)
     {
-        if ($user == null) {
+        if ($user === null) {
             $user = $GLOBALS['user'];
         }
 

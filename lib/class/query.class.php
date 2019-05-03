@@ -1578,7 +1578,7 @@ class Query
                     $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'playlist_type':
-                    $user_id    = intval($GLOBALS['user']->id);
+                    $user_id    = intval(User::get_user_id());
                     $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
                 break;
                 default:
@@ -1605,7 +1605,7 @@ class Query
                     $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'playlist_type':
-                    $user_id    = intval($GLOBALS['user']->id);
+                    $user_id    = intval(User::get_user_id());
                     $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
                 break;
             } // end switch on $filter

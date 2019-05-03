@@ -27,7 +27,7 @@ UI::show_header();
 /**
  * action switch
  */
-switch ($_REQUEST['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'search':
         if ($_REQUEST['rule_1'] != 'missing_artist') {
             $browse = new Browse();
