@@ -327,7 +327,7 @@ class Access
         }
 
         // Clean incoming variables
-        $ip = $ip ?: $_SERVER['REMOTE_ADDR'];
+        $ip = $ip ?: filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
         $ip = inet_pton($ip);
 
         switch ($type) {

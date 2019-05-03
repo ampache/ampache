@@ -25,6 +25,7 @@
 <head>
 <!-- Propulsed by Ampache | ampache.org -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ampache -- Config Debug Page</title>
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 <style type="text/css">

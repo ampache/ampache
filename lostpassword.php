@@ -32,7 +32,7 @@ switch ($action) {
         if (isset($_POST['email']) && $_POST['email']) {
             /* Get the email address and the current ip*/
             $email      = scrub_in($_POST['email']);
-            $current_ip =(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :$_SERVER['REMOTE_ADDR'];
+            $current_ip =(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
             $result     = send_newpassword($email, $current_ip);
         }
         if ($result) {

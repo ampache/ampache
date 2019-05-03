@@ -51,6 +51,7 @@ $_SESSION['login'] = false;
             }
         ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+        <meta name="viewport" content="width=1024, initial-scale=1.0">
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
 
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>

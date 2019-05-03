@@ -29,7 +29,7 @@ if (!Access::check('interface', '25') || !AmpConfig::get('sociable')) {
 }
 
 UI::show_header();
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+$action = isset($_REQUEST['action']) ? filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) : '';
 
 switch ($action) {
     case 'show_add_message':

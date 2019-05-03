@@ -30,6 +30,7 @@ $_SESSION['login'] = true;
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
     </head>

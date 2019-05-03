@@ -31,7 +31,7 @@ if (!AmpConfig::get('subsonic_backend')) {
 $action = strtolower($_REQUEST['ssaction']);
 // Compatibility reason
 if (empty($action)) {
-    $action = strtolower($_REQUEST['action']);
+    $action = strtolower(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS));
 }
 $f        = $_REQUEST['f'];
 $callback = $_REQUEST['callback'];
@@ -101,7 +101,7 @@ if (!$auth['success']) {
 }
 
 if (!Access::check_network('init-api', $user, 5)) {
-    debug_event('Access Denied', 'Unauthorized access attempt to Subsonic API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    debug_event('Access Denied', 'Unauthorized access attempt to Subsonic API [' . filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'), $callback);
     exit();

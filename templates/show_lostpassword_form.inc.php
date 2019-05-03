@@ -37,6 +37,7 @@ $web_path = AmpConfig::get('web_path');
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
         <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
     </head>

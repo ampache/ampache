@@ -139,7 +139,7 @@ class Api
             $passphrase = $_POST['auth'];
         }
         $username = trim($input['user']);
-        $ip       = $_SERVER['REMOTE_ADDR'];
+        $ip       = filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
         if (isset($input['version'])) {
             // If version is provided, use it
             $version = $input['version'];
@@ -315,7 +315,7 @@ class Api
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event('API', 'Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'], '5');
+        debug_event('API', 'Ping Received from ' . filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], '5');
 
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);
@@ -1311,9 +1311,10 @@ class Api
         if (AmpConfig::get('sociable')) {
             $limit = intval($input['limit']);
             $since = intval($input['since']);
+            $user  = User::get_user_id();
 
-            if ($GLOBALS['user']->id > 0) {
-                $activities = Useractivity::get_friends_activities($GLOBALS['user']->id, $limit, $since);
+            if ($user > 0) {
+                $activities = Useractivity::get_friends_activities($user, $limit, $since);
                 ob_end_clean();
                 echo XML_Data::timeline($activities);
             }

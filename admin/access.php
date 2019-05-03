@@ -35,7 +35,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             UI::access_denied();
             exit;
         }
-        Access::delete($_REQUEST['access_id']);
+        Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $url = AmpConfig::get('web_path') . '/admin/access.php';
         show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'), $url);
     break;
@@ -82,7 +82,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             UI::access_denied();
             exit;
         }
-        $access = new Access($_REQUEST['access_id']);
+        $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->update($_POST);
         if (!AmpError::occurred()) {
             show_confirmation(T_('Updated'), T_('Access List Entry updated'), AmpConfig::get('web_path') . '/admin/access.php');
@@ -95,11 +95,11 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'show_add_rpc':
     case 'show_add_local':
     case 'show_add_advanced':
-        $action = $_REQUEST['action'];
+        $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
     break;
     case 'show_edit_record':
-        $access = new Access($_REQUEST['access_id']);
+        $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
     break;

@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
+if (!filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     debug_event("stream.php", "Asked without action. Exiting...", 5);
     exit;
 }
@@ -38,7 +38,7 @@ if (!defined('NO_SESSION')) {
 $media_ids = array();
 $web_path  = AmpConfig::get('web_path');
 
-debug_event("stream.php", "Asked for {" . $_REQUEST['action'] . "}.", 5);
+debug_event("stream.php", "Asked for {" . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . "}.", 5);
 
 /**
  * action switch

@@ -153,7 +153,7 @@ switch ($action) {
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
-        debug_event('UI::access_denied', 'Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list', '3');
+        debug_event('UI::access_denied', 'Access Denied:' . filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', '3');
         UI::access_denied();
         exit();
     }

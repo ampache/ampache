@@ -93,7 +93,7 @@
                     <?php AmpError::display('start'); ?>
                     <input type="text" name="start" value="<?php
                 if ($action == 'show_add_current') {
-                    echo scrub_out($_SERVER['REMOTE_ADDR']);
+                    echo scrub_out(filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
                 } else {
                     echo scrub_out($_REQUEST['start']);
                 } ?>" />
@@ -103,7 +103,7 @@
                     <?php AmpError::display('end'); ?>
                     <input type="text" name="end" value="<?php
                     if ($action == 'show_add_current') {
-                        echo scrub_out($_SERVER['REMOTE_ADDR']);
+                        echo scrub_out(filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
                     } else {
                         echo scrub_out($_REQUEST['end']);
                     } ?>" />

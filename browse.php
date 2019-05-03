@@ -59,7 +59,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'pvmsg':
     case 'podcast':
     case 'podcast_episode':
-        $browse->set_type($_REQUEST['action']);
+        $browse->set_type(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS));
         $browse->set_simple_browse(true);
     break;
 } // end switch

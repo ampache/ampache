@@ -197,8 +197,8 @@ class Catalog_soundcloud extends Catalog
         $authurl = $api->getAuthorizeUrl(array('scope' => 'non-expiring'));
         echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
         echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
-        if ($_REQUEST['action']) {
-            echo "<input type='hidden' name='action' value='" . scrub_in($_REQUEST['action']) . "' />";
+        if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+            echo "<input type='hidden' name='action' value='" . scrub_in(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) . "' />";
             echo "<input type='hidden' name='catalogs[]' value='" . $this->id . "' />";
         }
         echo "<input type='hidden' name='perform_ready' value='true' />";

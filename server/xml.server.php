@@ -28,7 +28,7 @@ define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
-if ($_REQUEST['action'] != 'handshake') {
+if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'handshake') {
     set_time_limit(0);
 }
 
@@ -48,8 +48,8 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
-    debug_event('Access Denied', 'Invalid Session attempt to API [' . $_REQUEST['action'] . ']', '3');
+if (!Session::exists('api', $_REQUEST['auth']) and filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'handshake' and filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'ping') {
+    debug_event('Access Denied', 'Invalid Session attempt to API [' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . ']', '3');
     ob_end_clean();
     echo XML_Data::error('401', T_('Session Expired'));
     exit();
@@ -59,20 +59,20 @@ if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'hands
 $username = null;
 $apikey   = null;
 
-if (($_REQUEST['action'] == 'handshake') && isset($_REQUEST['timestamp'])) {
+if ((filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'handshake') && isset($_REQUEST['timestamp'])) {
     $username = $_REQUEST['user'];
 } else {
     $apikey = $_REQUEST['auth'];
 }
 
 if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
-    debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    debug_event('Access Denied', 'Unauthorized access attempt to API [' . (string) filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
     exit();
 }
 
-if (($_REQUEST['action'] != 'handshake') && ($_REQUEST['action'] != 'ping')) {
+if ((filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'handshake') && (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'ping')) {
     if (isset($_REQUEST['user'])) {
         $GLOBALS['user'] = User::get_from_username($_REQUEST['user']);
     } else {

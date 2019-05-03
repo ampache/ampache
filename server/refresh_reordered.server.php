@@ -24,7 +24,7 @@ define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 
-debug_event('refresh_reordered.server.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
+debug_event('refresh_reordered.server.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
 
 /* Switch on the action passed in */
 switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {

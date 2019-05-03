@@ -896,7 +896,7 @@ class User extends database_object
             $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
             debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
         } else {
-            $sip = $_SERVER['REMOTE_ADDR'];
+            $sip = filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
             debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
         }
         

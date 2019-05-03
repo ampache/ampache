@@ -28,7 +28,7 @@ if (!defined('AJAX_INCLUDE')) {
     exit;
 }
 
-debug_event('stream.ajax.php', 'Called for action {' . $_REQUEST['action'] . '}', 5);
+debug_event('stream.ajax.php', 'Called for action {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', 5);
 
 $results = array();
 switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {

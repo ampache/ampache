@@ -31,7 +31,7 @@ require_once '../lib/init.php';
 
 $results = '';
 
-debug_event('edit.server.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
+debug_event('edit.server.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
 
 // Post first
 $type = $_POST['type'];
@@ -58,7 +58,7 @@ $level = '50';
 if ($libitem->get_user_owner() == User::get_user_id()) {
     $level = '25';
 }
-if ($_REQUEST['action'] == 'show_edit_playlist') {
+if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'show_edit_playlist') {
     $level = '25';
 }
 

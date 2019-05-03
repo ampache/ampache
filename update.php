@@ -30,7 +30,7 @@ require_once 'lib/init.php';
 // Get the version and format it
 $version = Update::get_version();
 
-if (isset($_REQUEST['action']) && filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'update') {
+if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'update') {
     if ($_REQUEST['type'] == 'sources') {
         if (!Access::check('interface', '100')) {
             UI::access_denied();

@@ -1051,7 +1051,7 @@ class Horde_Browser
     public function getIPAddress()
     {
         return empty($_SERVER['HTTP_X_FORWARDED_FOR'])
-            ? $_SERVER['REMOTE_ADDR']
+            ? filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP)
             : $_SERVER['HTTP_X_FORWARDED_FOR'];
     }
 
