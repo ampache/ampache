@@ -1,7 +1,7 @@
 //UberViz ControlsHandler
 //Handles side menu controls
 
-var ControlsHandler = function() {
+var ControlsHandler = (function() {
 
 	var audioParams = {
 		showDebug:true,
@@ -32,19 +32,19 @@ var ControlsHandler = function() {
 
 		//Init DAT GUI control panel
 		gui = new dat.GUI({autoPlace: false });
-		$('#settings').append(gui.domElement);
+		$("#settings").append(gui.domElement);
 
-		var f2 = gui.addFolder('Audio');
-		f2.add(audioParams, 'volSens', 0, 10).step(0.1).name("Gain");
-		f2.add(audioParams, 'beatHoldTime', 0, 100).step(1).name("Beat Hold");
-		f2.add(audioParams, 'beatDecayRate', 0.9, 1).step(0.01).name("Beat Decay");
-		// f2.add(audioParams, 'bpmMode').listen();
-		// f2.add(audioParams, 'bpmRate', 0, 4).step(1).listen().onChange(AudioHandler.onChangeBPMRate);
+		var f2 = gui.addFolder("Audio");
+		f2.add(audioParams, "volSens", 0, 10).step(0.1).name("Gain");
+		f2.add(audioParams, "beatHoldTime", 0, 100).step(1).name("Beat Hold");
+		f2.add(audioParams, "beatDecayRate", 0.9, 1).step(0.01).name("Beat Decay");
+		// f2.add(audioParams, "bpmMode").listen();
+		// f2.add(audioParams, "bpmRate", 0, 4).step(1).listen().onChange(AudioHandler.onChangeBPMRate);
 		f2.open();
 
-		//var f5 = gui.addFolder('Viz');
-		var f5 = gui.addFolder('FX');
-		f5.add(fxParams, 'glow', 0, 4).step(0.1);
+		//var f5 = gui.addFolder("Viz");
+		var f5 = gui.addFolder("FX");
+		f5.add(fxParams, "glow", 0, 4).step(0.1);
 		//f5.open();
 		AudioHandler.onShowDebug();
 
@@ -56,4 +56,4 @@ var ControlsHandler = function() {
 		fxParams: fxParams,
 		vizParams:vizParams
 	};
-}();
+}());

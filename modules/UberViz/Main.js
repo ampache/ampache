@@ -8,7 +8,7 @@ var simplexNoise = new SimplexNoise();
 
 
 //MAIN RMP
-var UberVizMain = function() {
+var UberVizMain = (function() {
 
 	var stats;
 	var windowHalfX;
@@ -27,18 +27,18 @@ var UberVizMain = function() {
 			return false;
 		};
 
-		document.addEventListener('mousemove', onDocumentMouseMove, false);
-		document.addEventListener('mousedown', onDocumentMouseDown, false);
-		document.addEventListener('mouseup', onDocumentMouseUp, false);
-		document.addEventListener('drop', onDocumentDrop, false);
-		document.addEventListener('dragover', onDocumentDragOver, false);
-		window.addEventListener('resize', onResize, false);
-		window.addEventListener('keydown', onKeyDown, false);
-		window.addEventListener('keyup', onKeyUp, false);
+		document.addEventListener("mousemove", onDocumentMouseMove, false);
+		document.addEventListener("mousedown", onDocumentMouseDown, false);
+		document.addEventListener("mouseup", onDocumentMouseUp, false);
+		document.addEventListener("drop", onDocumentDrop, false);
+		document.addEventListener("dragover", onDocumentDragOver, false);
+		window.addEventListener("resize", onResize, false);
+		window.addEventListener("keydown", onKeyDown, false);
+		window.addEventListener("keyup", onKeyUp, false);
 
 		//STATS
 		stats = new Stats();
-		$('#controls').append(stats.domElement);
+		$("#controls").append(stats.domElement);
 		stats.domElement.id = "stats";
 
 		//INIT HANDLERS
@@ -51,7 +51,7 @@ var UberVizMain = function() {
 
 
 		if (ControlsHandler.vizParams.showControls){
-			$('#controls').show();
+			$("#controls").show();
 		}
 
 		update();
@@ -115,7 +115,7 @@ var UberVizMain = function() {
 
 	function toggleControls(){
 		ControlsHandler.vizParams.showControls = !ControlsHandler.vizParams.showControls;
-		$('#controls').toggle();
+		$("#controls").toggle();
 		VizHandler.onResize();
 	}
 
@@ -124,4 +124,4 @@ var UberVizMain = function() {
 		trace: trace
 	};
 
-}();
+}());

@@ -3,7 +3,7 @@
 //white hollow flat shapes
 // randomly generated
 
-var WhiteRing = function() {
+var WhiteRing = (function() {
 
 
 	var groupHolder;
@@ -96,4 +96,4 @@ var WhiteRing = function() {
 		onBeat:onBeat,
 	};
 
-}();
+}());

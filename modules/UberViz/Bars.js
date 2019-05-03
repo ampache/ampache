@@ -1,6 +1,6 @@
 //GRAPHIC EQUALIZER BARS VIZ
 
-var Bars = function() {
+var Bars = (function() {
 
 	//Viz Template
 	var groupHolder;
@@ -84,4 +84,4 @@ var Bars = function() {
 		init:init
 	};
 
-}();
+}());

@@ -1,7 +1,7 @@
 //UberViz FXHandler
 //Handles Post-Proc Shaders
 
-var FXHandler = function() {
+var FXHandler = (function() {
 
 	var shaderTime = 0;
 	var screenW = 800;
@@ -32,8 +32,8 @@ var FXHandler = function() {
 		//GLOW COMP - ADDIITVELY BLENDED LAYER
 		hblurPass = new THREE.ShaderPass( THREE.HorizontalBlurShader );
 		vblurPass = new THREE.ShaderPass( THREE.VerticalBlurShader );
-		hblurPass.uniforms[ 'h' ].value = blurriness/screenW;
-		vblurPass.uniforms[ 'v' ].value = blurriness/screenH;
+		hblurPass.uniforms[ "h" ].value = blurriness/screenW;
+		vblurPass.uniforms[ "v" ].value = blurriness/screenH;
 		copyPass = new THREE.ShaderPass( THREE.CopyShader );
 		renderTarget2 = new THREE.WebGLRenderTarget( screenW/4, screenH/4, renderTargetParameters ); //1/2 res for performance
 		glowComposer = new THREE.EffectComposer( VizHandler.getRenderer(),renderTarget2);
@@ -48,9 +48,9 @@ var FXHandler = function() {
 		//BLEND COMP - COMBINE 1st 2 PASSES
 		blendComposer = new THREE.EffectComposer( VizHandler.getRenderer() );
 		blendPass = new THREE.ShaderPass( THREE.AdditiveBlendShader );
-		blendPass.uniforms[ 'tBase' ].value = renderComposer.renderTarget1;
-		blendPass.uniforms[ 'tAdd' ].value = glowComposer.renderTarget1;
-		blendPass.uniforms[ 'amount' ].value = 0;
+		blendPass.uniforms[ "tBase" ].value = renderComposer.renderTarget1;
+		blendPass.uniforms[ "tAdd" ].value = glowComposer.renderTarget1;
+		blendPass.uniforms[ "amount" ].value = 0;
 		blendComposer.addPass( blendPass );
 
 
@@ -94,9 +94,9 @@ var FXHandler = function() {
 	function update( t ) {
 
 		shaderTime += 0.1;
-		filmPass.uniforms[ 'time' ].value =  shaderTime;
-		badTVPass.uniforms[ 'time' ].value =  shaderTime;
-		blendPass.uniforms[ 'amount' ].value = ControlsHandler.fxParams.glow;
+		filmPass.uniforms[ "time" ].value =  shaderTime;
+		badTVPass.uniforms[ "time" ].value =  shaderTime;
+		blendPass.uniforms[ "amount" ].value = ControlsHandler.fxParams.glow;
 
 		renderComposer.render( 0.1 );
 		glowComposer.render( 0.1 );
@@ -110,4 +110,4 @@ var FXHandler = function() {
 		onBeat:onBeat
 	};
 
-}();
+}());
