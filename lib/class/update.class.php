@@ -558,7 +558,15 @@ class Update
         
         $update_string = "- Fix change in <a href='https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee'>this commit</a>, that left the userbase with an inconsistent database, if users updated or installed Ampache before 28 Apr 2015<br />";
         $version[]     = array('version' => '380012', 'description' => $update_string);
-        
+
+        $update_string = "* Enable better podcast defaults<br />" .
+                         "* Increase copyright column size to fix issue #1861<br />" .
+                         "* Add name_track, name_artist, name_album to user_activity<br />" .
+                         "* Add mbid_track, mbid_artist, mbid_album to user_activity<br />" .
+                         "* Insert some decent SmartLists for a better default experience<br />";
+                         "* Delete plex preferences from the server<br />";
+        $version[]     = array('version' => '400000', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4008,6 +4016,140 @@ class Update
         $retval = true;
 
         $sql = "UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url'";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400000
+     *
+     * Set better podcast defaults
+     * Increase copyright column size to fix issue #1861
+     * Add name_track, name_artist, name_album to user_activity
+     * Add mbid_track, mbid_artist, mbid_album to user_activity
+     * Insert some decent SmartLists for a better default experience
+     * Delete the following plex preferences from the server
+     *   plex_backend
+     *   myplex_username
+     *   myplex_authtoken
+     *   myplex_published
+     *   plex_uniqid
+     *   plex_servername
+     *   plex_public_address
+     *   plex_public_port
+     *   plex_local_auth
+     *   plex_match_email
+     */
+    public static function update_400000()
+    {
+        $retval = true;
+
+        $sql = "UPDATE `preference` SET `value`= 0 WHERE `preference`.`name`='podcast_keep'";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` SET `value`= 0 WHERE `preference`.`name`='podcast_new_download'";
+        $retval &= Dba::write($sql);
+
+        $sql = "ALTER TABLE `podcast` MODIFY `copyright` VARCHAR(255)";
+        $retval &= Dba::write($sql);
+
+        $sql = "ALTER TABLE `user_activity` " .
+                "ADD COLUMN `name_track` VARCHAR(255) NULL DEFAULT NULL," .
+                "ADD COLUMN `name_artist` VARCHAR(255) NULL DEFAULT NULL," .
+                "ADD COLUMN `name_album` VARCHAR(255) NULL DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+
+        $sql = "ALTER TABLE `user_activity` " .
+                "ADD COLUMN `mbid_track` VARCHAR(255) NULL DEFAULT NULL," .
+                "ADD COLUMN `mbid_artist` VARCHAR(255) NULL DEFAULT NULL," .
+                "ADD COLUMN `mbid_album` VARCHAR(255) NULL DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+
+        $sql = "INSERT IGNORE INTO `search` (`user`, `type`, `rules`, `name`, `logic_operator`, `random`, `limit`) VALUES " .
+                "(-1, 'public', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0), " .
+                "(-1, 'public', '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0);";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'plex_backend');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'myplex_username');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'myplex_authtoken');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'myplex_published');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'plex_uniqid');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'plex_servername');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'plex_public_address');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'plex_public_port');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'plex_local_auth');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'plex_match_email');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `preference` " .
+               "WHERE `preference`.`name` IN " .
+               "('plex_backend', 'myplex_username', " .
+               "'myplex_authtoken', 'myplex_published', 'plex_uniqid', " .
+               "'plex_servername', 'plex_public_address', " .
+               "'plex_public_port ', 'plex_local_auth', 'plex_match_email');";
         $retval &= Dba::write($sql);
 
         return $retval;

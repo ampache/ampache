@@ -38,14 +38,15 @@ function get_themes()
     }
 
     $results = array();
-    while (($f = readdir($handle)) !== false) {
-        debug_event('theme', "Checking $f", 5);
-        $cfg = get_theme($f);
-        if ($cfg !== null) {
-            $results[$cfg['name']] = $cfg;
+    while (($file = readdir($handle)) !== false) {
+        if ($file !== '.' or $file !== '..') {
+            debug_event('theme', "Checking $file", 5);
+            $cfg = get_theme($file);
+            if ($cfg !== null) {
+                $results[$cfg['name']] = $cfg;
+            }
         }
     } // end while directory
-
     // Sort by the theme name
     ksort($results);
 
