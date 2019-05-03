@@ -563,7 +563,7 @@ class Update
                          "* Increase copyright column size to fix issue #1861<br />" .
                          "* Add name_track, name_artist, name_album to user_activity<br />" .
                          "* Add mbid_track, mbid_artist, mbid_album to user_activity<br />" .
-                         "* Insert some decent SmartLists for a better default experience<br />";
+                         "* Insert some decent SmartLists for a better default experience<br />" .
                          "* Delete plex preferences from the server<br />";
         $version[]     = array('version' => '400000', 'description' => $update_string);
 
