@@ -195,7 +195,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
         } else {
             $GLOBALS['user']           = new User($auth['username']);
-            User::get_user_id()       = -1;
+            $GLOBALS['user']->id       = -1;
             $GLOBALS['user']->username = $auth['username'];
             $GLOBALS['user']->fullname = $auth['fullname'];
             $GLOBALS['user']->access   = intval($auth['access']);
