@@ -17,7 +17,6 @@
    - Web
    - Ampache
    - SubSonic
-   - Plex
    - DAAP
    - UPnP
    - WebDAV
