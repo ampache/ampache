@@ -1,4 +1,5 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -53,21 +54,21 @@ function get_themes()
     return $results;
 } // get_themes
 
-/*!
-    @function get_theme
-    @discussion get a single theme and read the config file
-        then return the results
-*/
+/**
+ * @function get_theme
+ * @discussion get a single theme and read the config file
+ * then return the results
+ */
 function get_theme($name)
 {
     static $_mapcache = array();
-            
+
     if (strlen($name) < 1) {
         return false;
     }
-    
+
     $name = strtolower($name);
-    
+
     if (isset($_mapcache[$name])) {
         return $_mapcache[$name];
     }
@@ -87,14 +88,14 @@ function get_theme($name)
         $results = null;
     }
     $_mapcache[$name] = $results;
-    
+
     return $results;
 } // get_theme
 
-/*!
-    @function get_theme_author
-    @discussion returns the author of this theme
-*/
+/**
+ * @function get_theme_author
+ * @discussion returns the author of this theme
+ */
 function get_theme_author($theme_name)
 {
     $theme_path = AmpConfig::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
@@ -103,10 +104,10 @@ function get_theme_author($theme_name)
     return $results['author'];
 } // get_theme_author
 
-/*!
-    @function theme_exists
-    @discussion this function checks to make sure that a theme actually exists
-*/
+/**
+ * @function theme_exists
+ * @discussion this function checks to make sure that a theme actually exists
+ */
 function theme_exists($theme_name)
 {
     $theme_path = AmpConfig::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';

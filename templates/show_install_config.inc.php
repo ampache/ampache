@@ -176,11 +176,6 @@ require $prefix . '/templates/install_header.inc.php';
         } ?>>Subsonic</label>
     </div>
     <div class="checkbox-inline">
-        <label><input type="checkbox" name="backends[]" value="plex" <?php if (isset($_REQUEST['backends']) && in_array('plex', $_REQUEST['backends'])) {
-            echo 'checked';
-        } ?>>Plex</label>
-    </div>
-    <div class="checkbox-inline">
         <label><input type="checkbox" name="backends[]" value="upnp" <?php if (isset($_REQUEST['backends']) && in_array('upnp', $_REQUEST['backends'])) {
             echo 'checked';
         } ?>>UPnP</label>

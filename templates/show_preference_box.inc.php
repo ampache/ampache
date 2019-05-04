@@ -23,7 +23,7 @@
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page
  */
-if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
+if (Access::check('interface', '100') && (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'admin') {
     $is_admin = true;
 }
 ?>

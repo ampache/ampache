@@ -1,5 +1,7 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -26,7 +28,7 @@
  * and then runs throught $_REQUEST looking for those
  * values and updates them for this user
  */
-function update_preferences($pref_id=0)
+function update_preferences($pref_id = 0)
 {
     /* Get current keys */
     $sql = "SELECT `id`,`name`,`type` FROM `preference`";
@@ -40,18 +42,18 @@ function update_preferences($pref_id=0)
 
     $results = array();
     // Collect the current possible keys
-    while ($r = Dba::fetch_assoc($db_results)) {
-        $results[] = array('id' => $r['id'], 'name' => $r['name'],'type' => $r['type']);
+    while ($row = Dba::fetch_assoc($db_results)) {
+        $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type']);
     } // end collecting keys
 
     /* Foreach through possible keys and assign them */
     foreach ($results as $data) {
         /* Get the Value from POST/GET var called $data */
-        $name            = $data['name'];
-        $apply_to_all    = 'check_' . $data['name'];
-        $new_level       = 'level_' . $data['name'];
-        $id              = $data['id'];
-        $value           = scrub_in($_REQUEST[$name]);
+        $name         = $data['name'];
+        $apply_to_all = 'check_' . $data['name'];
+        $new_level    = 'level_' . $data['name'];
+        $id           = $data['id'];
+        $value        = scrub_in($_REQUEST[$name]);
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
@@ -165,7 +167,6 @@ function create_preference_input($name, $value)
         case 'show_played_times':
         case 'song_page_title':
         case 'subsonic_backend':
-        case 'plex_backend':
         case 'webplayer_flash':
         case 'webplayer_html5':
         case 'allow_personal_info_now':
@@ -254,20 +255,19 @@ function create_preference_input($name, $value)
             $var_name    = $value . "_type";
             ${$var_name} = "selected=\"selected\"";
             echo "<select name=\"$name\">\n";
-            echo "\t<option value=\"m3u\" $m3u_type>" . T_('M3U') . "</option>\n";
-            echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . T_('Simple M3U') . "</option>\n";
-            echo "\t<option value=\"pls\" $pls_type>" . T_('PLS') . "</option>\n";
-            echo "\t<option value=\"asx\" $asx_type>" . T_('Asx') . "</option>\n";
-            echo "\t<option value=\"ram\" $ram_type>" . T_('RAM') . "</option>\n";
-            echo "\t<option value=\"xspf\" $xspf_type>" . T_('XSPF') . "</option>\n";
+            echo "\t<option value=\"simple_m3u\" >" . T_('Simple M3U') . "</option>\n";
+            echo "\t<option value=\"pls\">" . T_('PLS') . "</option>\n";
+            echo "\t<option value=\"asx\">" . T_('Asx') . "</option>\n";
+            echo "\t<option value=\"ram\">" . T_('RAM') . "</option>\n";
+            echo "\t<option value=\"xspf\">" . T_('XSPF') . "</option>\n";
             echo "</select>\n";
         break;
         case 'lang':
             $languages = get_languages();
             echo '<select name="' . $name . '">' . "\n";
-            foreach ($languages as $lang => $name) {
+            foreach ($languages as $lang => $tongue) {
                 $selected = ($lang == $value) ? 'selected="selected"' : '';
-                echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
+                echo "\t<option value=\"$lang\" " . $selected . ">$tongue</option>\n";
             } // end foreach
             echo "</select>\n";
         break;
@@ -397,7 +397,7 @@ function create_preference_input($name, $value)
                 $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
             }
             echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
-            break;
+        break;
         case 'lastfm_grant_link':
         case 'librefm_grant_link':
             // construct links for granting access Ampache application to Last.fm and Libre.fm
@@ -415,6 +415,5 @@ function create_preference_input($name, $value)
                 echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
             }
         break;
-
     }
 } // create_preference_input
