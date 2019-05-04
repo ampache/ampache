@@ -455,7 +455,7 @@ class Song extends database_object implements media, library_item
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * Cleans up the song_data table
      */

@@ -256,7 +256,7 @@ class Tmp_Playlist extends database_object
     } // session_clean
 
     /**
-     * gc
+     * garbage_collection
      * This cleans up old data
      */
     public static function garbage_collection()

@@ -161,7 +161,7 @@ class Art extends database_object
      */
     public static function set_enabled($value = null)
     {
-        if (is_null($value)) {
+        if ($value === null) {
             self::$enabled = self::$enabled ? false : true;
         } else {
             self::$enabled = make_bool($value);
@@ -935,7 +935,7 @@ class Art extends database_object
     } // url
 
     /**
-     * gc
+     * garbage_collection
      * This cleans up art that no longer has a corresponding object
      * @param string $object_type
      */

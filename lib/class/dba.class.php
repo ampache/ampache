@@ -128,7 +128,7 @@ class Dba
     /**
      * escape
      *
-     * This runs a escape on a variable so that it can be safely inserted
+     * This runs an escape on a variable so that it can be safely inserted
      * into the sql
      */
     public static function escape($var)
@@ -137,7 +137,7 @@ class Dba
         if (!$dbh) {
             debug_event('Dba', 'Wrong dbh.', 1);
 
-            return false;
+            return '';
         }
         $var = $dbh->quote($var);
         // This is slightly less ugly than it was, but still ugly
@@ -353,14 +353,14 @@ class Dba
     public static function check_database_inserted()
     {
         $sql        = "DESCRIBE session";
-        $db_results = Dba::read($sql);
+        $db_results = self::read($sql);
 
         if (!$db_results) {
             return false;
         }
 
         // Make sure the table is there
-        if (Dba::num_rows($db_results) < 1) {
+        if (self::num_rows($db_results) < 1) {
             return false;
         }
 
@@ -376,10 +376,10 @@ class Dba
     {
         if (AmpConfig::get('sql_profiling')) {
             print '<br/>Profiling data: <br/>';
-            $res = Dba::read('SHOW PROFILES');
+            $res = self::read('SHOW PROFILES');
             print '<table>';
-            while ($r = Dba::fetch_row($res)) {
-                print '<tr><td>' . implode('</td><td>', $r) . '</td></tr>';
+            while ($row = self::fetch_row($res)) {
+                print '<tr><td>' . implode('</td><td>', $row) . '</td></tr>';
             }
             print '</table>';
         }
@@ -523,28 +523,28 @@ class Dba
 
         // Alter the charset for the entire database
         $sql = "ALTER DATABASE `" . AmpConfig::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
-        Dba::write($sql);
+        self::write($sql);
 
         $sql        = "SHOW TABLES";
-        $db_results = Dba::read($sql);
+        $db_results = self::read($sql);
 
         // Go through the tables!
-        while ($row = Dba::fetch_row($db_results)) {
+        while ($row = self::fetch_row($db_results)) {
             $sql              = "DESCRIBE `" . $row['0'] . "`";
-            $describe_results = Dba::read($sql);
+            $describe_results = self::read($sql);
 
             // Change the tables default charset and colliation
             $sql = "ALTER TABLE `" . $row['0'] . "`  DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
-            Dba::write($sql);
+            self::write($sql);
 
             // Iterate through the columns of the table
-            while ($table = Dba::fetch_assoc($describe_results)) {
+            while ($table = self::fetch_assoc($describe_results)) {
                 if (
                 (strpos($table['Type'], 'varchar') !== false) ||
                 (strpos($table['Type'], 'enum') !== false) ||
                 (strpos($table['Table'], 'text') !== false)) {
                     $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset;
-                    $charset_results = Dba::write($sql);
+                    $charset_results = self::write($sql);
                     if (!$charset_results) {
                         debug_event('CHARSET', 'Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset, '3');
                     } // if it fails
@@ -565,14 +565,14 @@ class Dba
     public static function optimize_tables()
     {
         $sql        = "SHOW TABLES";
-        $db_results = Dba::read($sql);
+        $db_results = self::read($sql);
 
-        while ($row = Dba::fetch_row($db_results)) {
+        while ($row = self::fetch_row($db_results)) {
             $sql = "OPTIMIZE TABLE `" . $row[0] . "`";
-            Dba::write($sql);
+            self::write($sql);
 
             $sql = "ANALYZE TABLE `" . $row[0] . "`";
-            Dba::write($sql);
+            self::write($sql);
         }
     }
 }

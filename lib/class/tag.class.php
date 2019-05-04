@@ -335,7 +335,7 @@ class Tag extends database_object implements library_item
     } // add_tag_map
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out tag_maps that are obsolete and then removes tags that
      * have no maps.

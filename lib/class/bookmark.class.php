@@ -78,7 +78,7 @@ class Bookmark extends database_object
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * Remove bookmark for items that no longer exist.
      */

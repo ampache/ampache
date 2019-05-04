@@ -51,7 +51,7 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused tv shows episodes
      */

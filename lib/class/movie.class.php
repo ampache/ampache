@@ -48,7 +48,7 @@ class Movie extends Video
     } // Constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused movies
      */

@@ -90,10 +90,10 @@ class UPnPFind
             $buf = null;
             @socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);
 
-            if (!is_null($buf)) {
+            if ($buf !== null) {
                 $response[] = self::discoveryReponse2Array($buf);
             }
-        } while (!is_null($buf));
+        } while ($buf !== null);
         //socket_close($socket);
 
         return $response;

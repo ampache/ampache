@@ -56,7 +56,7 @@ class Playlist extends playlist_object
     } // Playlist
 
     /**
-     * gc
+     * garbage_collection
      *
      * Clean dead items out of playlists
      */

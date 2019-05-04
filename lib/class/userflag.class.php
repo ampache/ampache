@@ -86,7 +86,7 @@ class Userflag extends database_object
     } // build_cache
 
     /**
-     * gc
+     * garbage_collection
      *
      * Remove userflag for items that no longer exist.
      * @param string $object_type

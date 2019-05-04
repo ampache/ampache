@@ -58,15 +58,15 @@ class Podcast_Episode extends database_object implements media, library_item
      * Constructor
      *
      * Podcast Episode class
-     * @param int|null $id
+     * @param int|null $podcastep_id
      */
-    public function __construct($id = null)
+    public function __construct($podcastep_id = null)
     {
-        if (!$id) {
+        if ($podcastep_id === null) {
             return false;
         }
 
-        $this->id = (int) ($id);
+        $this->id = (int) ($podcastep_id);
 
         if ($info = $this->get_info($this->id)) {
             foreach ($info as $key => $value) {
@@ -87,7 +87,7 @@ class Podcast_Episode extends database_object implements media, library_item
     } // constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * Cleans up the podcast_episode table
      */
@@ -271,7 +271,7 @@ class Podcast_Episode extends database_object implements media, library_item
         }
 
         /* If it hasn't been played, set it! */
-        Podcast_Episode::update_played(true, $this->id);
+        self::update_played(true, $this->id);
 
         return true;
     } // set_played
@@ -290,7 +290,7 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * _update_item
      * This is a private function that should only be called from within the podcast episode class.
-     * It takes a field, value video id and level. first and foremost it checks the level
+     * It takes a field, value song_id and level. first and foremost it checks the level
      * against $GLOBALS['user'] to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
@@ -394,10 +394,10 @@ class Podcast_Episode extends database_object implements media, library_item
             $file    = $podcast->get_root_path();
             if (!empty($file)) {
                 $pinfo = pathinfo($this->source);
-                $file .= DIRECTORY_SEPARATOR . $this->id . '-' . strtok($pinfo['basename'], '?');
+                $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . $this->title . '-' . strtok($pinfo['basename'], '?');
                 debug_event('podcast_episode', 'Downloading ' . $this->source . ' to ' . $file . ' ...', 5);
                 if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
-                    debug_event('podcast_episode', 'Download completed.', 5);
+                    debug_event('podcast_episode', 'Download completed.', 4);
                     $this->file = $file;
                     
                     $vainfo = new vainfo($this->file);

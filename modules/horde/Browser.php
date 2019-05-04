@@ -264,7 +264,7 @@ class Horde_Browser
     public function match($userAgent = null, $accept = null)
     {
         // Set our agent string.
-        if (is_null($userAgent)) {
+        if ($userAgent == null) {
             if (isset($_SERVER['HTTP_USER_AGENT'])) {
                 $this->_agent = trim($_SERVER['HTTP_USER_AGENT']);
             }
@@ -274,7 +274,7 @@ class Horde_Browser
         $this->_lowerAgent = strtolower($this->_agent);
 
         // Set our accept string.
-        if (is_null($accept)) {
+        if ($accept === null) {
             if (isset($_SERVER['HTTP_ACCEPT'])) {
                 $this->_accept = strtolower(trim($_SERVER['HTTP_ACCEPT']));
             }
@@ -837,7 +837,7 @@ class Horde_Browser
      */
     public function isRobot()
     {
-        if (is_null($this->_robotAgentRegexp)) {
+        if ($this->_robotAgentRegexp === null) {
             $regex = array();
             foreach ($this->_robotAgents as $r) {
                 $regex[] = preg_quote($r, '/');
@@ -1124,7 +1124,7 @@ class Horde_Browser
      */
     public function wasFileUploaded($field, $name = null)
     {
-        if (is_null($name)) {
+        if ($name === null) {
             $name = 'file';
         }
 
@@ -1199,7 +1199,7 @@ class Horde_Browser
 
         /* Content-Type/Content-Disposition Header. */
         if ($inline) {
-            if (!is_null($cType)) {
+            if ($cType !== null) {
                 header('Content-Type: ' . trim($cType));
             } elseif ($this->isBrowser('msie')) {
                 header('Content-Type: application/x-msdownload');
@@ -1210,7 +1210,7 @@ class Horde_Browser
         } else {
             if ($this->isBrowser('msie')) {
                 header('Content-Type: application/x-msdownload');
-            } elseif (!is_null($cType)) {
+            } elseif ($cType !== null) {
                 header('Content-Type: ' . trim($cType));
             } else {
                 header('Content-Type: application/octet-stream');
@@ -1225,7 +1225,7 @@ class Horde_Browser
 
         /* Content-Length Header. Only send if we are not compressing
          * output. */
-        if (!is_null($cLength) &&
+        if ($cLength !== null &&
             !in_array('ob_gzhandler', ob_list_handlers())) {
             header('Content-Length: ' . $cLength);
         }

@@ -63,10 +63,10 @@ class Query
     /**
      * constructor
      * This should be called
-     * @param int|null $id
+     * @param int|null $query_id
      * @param boolean $cached
      */
-    public function __construct($id = null, $cached = true)
+    public function __construct($query_id = null, $cached = true)
     {
         $sid = session_id();
 
@@ -76,7 +76,7 @@ class Query
             return true;
         }
 
-        if (is_null($id)) {
+        if ($query_id === null) {
             $this->reset();
             $data = self::_serialize($this->_state);
 
@@ -88,9 +88,9 @@ class Query
         } else {
             $sql = 'SELECT `data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
-            $db_results = Dba::read($sql, array($id, $sid));
+            $db_results = Dba::read($sql, array($query_id, $sid));
             if ($results = Dba::fetch_assoc($db_results)) {
-                $this->id     = $id;
+                $this->id     = $query_id;
                 $this->_state = (array) self::_unserialize($results['data']);
 
                 return true;
@@ -417,7 +417,7 @@ class Query
     }
 
     /**
-     * gc
+     * garbage_collection
      * This cleans old data out of the table
      */
     public static function garbage_collection()

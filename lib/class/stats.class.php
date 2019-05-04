@@ -65,7 +65,7 @@ class Stats
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * This removes stats for things that no longer exist.
      */

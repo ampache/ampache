@@ -107,7 +107,7 @@ class Session
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * This function is randomly called and it cleans up the spoo
      */

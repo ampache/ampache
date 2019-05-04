@@ -47,7 +47,7 @@ class Clip extends Video
     } // Constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused clips
      */

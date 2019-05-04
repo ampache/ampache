@@ -179,7 +179,7 @@ class Artist extends database_object implements library_item
     } // construct_from_array
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused artists
      */

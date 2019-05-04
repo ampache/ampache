@@ -46,7 +46,7 @@ class Personal_Video extends Video
     } // Constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused personal videos
      */

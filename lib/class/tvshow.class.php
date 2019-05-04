@@ -64,7 +64,7 @@ class TVShow extends database_object implements library_item
     } //constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused tv shows
      */

@@ -81,7 +81,7 @@ class Useractivity extends database_object
         return true;
     }
     /**
-     * gc
+     * garbage_collection
      *
      * Remove activities for items that no longer exist.
      * @param string $object_type

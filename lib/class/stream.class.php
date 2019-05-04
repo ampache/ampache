@@ -319,7 +319,7 @@ class Stream
     }
 
     /**
-     * gc_now_playing
+     * garbage_collection_now_playing
      *
      * This will garbage collect the now playing data,
      * this is done on every play start.

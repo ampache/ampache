@@ -133,7 +133,7 @@ class scrobbler
      */
     public function get_session_key($token=null)
     {
-        if (!is_null($token)) {
+        if ($token !== null) {
             $vars = array(
             'method' => 'auth.getSession',
             'api_key' => $this->api_key,

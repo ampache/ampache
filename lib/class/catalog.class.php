@@ -764,7 +764,7 @@ abstract class Catalog extends database_object
      */
     public static function get_uploads_sql($type, $user_id=null)
     {
-        if (is_null($user_id)) {
+        if ($user_id === null) {
             $user_id = User::get_user_id();
         }
         $user_id = (int) ($user_id);
@@ -1884,7 +1884,7 @@ abstract class Catalog extends database_object
     } // verify_catalog
 
     /**
-     * gc
+     * garbage_collection
      *
      * This is a wrapper function for all of the different cleaning
      * functions, it runs them in an order that resembles correctness.

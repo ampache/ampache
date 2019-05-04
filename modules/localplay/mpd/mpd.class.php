@@ -476,7 +476,7 @@ class mpd
             $command = self::COMMAND_SETVOL;
         } else {
             $this->RefreshInfo(); // Get the latest volume
-            if (is_null($this->status['volume'])) {
+            if ($this->status['volume'] === null) {
                 return false;
             } else {
                 $command = self::COMMAND_VOLUME;
@@ -938,7 +938,7 @@ class mpd
         $this->_debug('GetAlbums', 'start', 5);
 
         $params[] = self::TABLE_ALBUM;
-        if (!is_null($artist)) {
+        if ($artist === null) {
             $params[] = $artist;
         }
 
@@ -1073,7 +1073,7 @@ class mpd
             echo "$source / $message\n";
         }
 
-        if (!is_null($this->_debug_callback)) {
+        if ($this->_debug_callback === null) {
             call_user_func($this->_debug_callback, 'MPD', "$source / $message", $level);
         }
     }

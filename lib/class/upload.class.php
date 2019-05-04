@@ -223,7 +223,7 @@ class Upload
             }
         }
 
-        if (is_null($username)) {
+        if ($username === null) {
             $username = $GLOBALS['user']->username;
         }
 

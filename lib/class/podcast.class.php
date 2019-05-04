@@ -50,15 +50,15 @@ class Podcast extends database_object implements library_item
      * Podcast
      * Takes the ID of the podcast and pulls the info from the db
      */
-    public function __construct($id='')
+    public function __construct($podcast_id='')
     {
         /* If they failed to pass in an id, just run for it */
-        if (!$id) {
+        if (!$podcast_id) {
             return false;
         }
 
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($podcast_id);
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -68,7 +68,7 @@ class Podcast extends database_object implements library_item
     } //constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused podcasts
      */
@@ -111,8 +111,8 @@ class Podcast extends database_object implements library_item
         $db_results = Dba::read($sql, $params);
 
         $results = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -392,8 +392,8 @@ class Podcast extends database_object implements library_item
     
     private function add_episode(SimpleXMLElement $episode, $afterdate=0)
     {
-        debug_event('podcast', 'Adding new episode to podcast ' . $this->id . '...', 5);
-        
+        debug_event('podcast', 'Adding new episode to podcast ' . $this->id . '...', 4);
+
         $title       = html_entity_decode($episode->title);
         $website     = $episode->link;
         $guid        = $episode->guid;
@@ -415,20 +415,19 @@ class Podcast extends database_object implements library_item
         if ($pubdatestr) {
             $pubdate = strtotime($pubdatestr);
         }
-        
         if ($pubdate <= 0) {
             debug_event('podcast', 'Invalid episode publication date, skipped', 3);
 
             return false;
         }
-        
+
         if ($pubdate > $afterdate) {
             $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`) " .
-                    "VALUES (?, ?, ?, 'skipped', ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?)";
 
             return Dba::write($sql, array($title, $guid, $this->id, $source, $website, $description, $author, $category, $time, $pubdate, time()));
         } else {
-            debug_event('podcast', 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 5);
+            debug_event('podcast', 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 4);
 
             return true;
         }

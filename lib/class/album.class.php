@@ -262,7 +262,7 @@ class Album extends database_object implements library_item
     } // construct_from_array
 
     /**
-     * gc
+     * garbage_collection
      *
      * Cleans out unused albums
      */

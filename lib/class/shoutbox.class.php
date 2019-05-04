@@ -67,7 +67,7 @@ class Shoutbox
     } // _get_info
 
     /**
-     * gc
+     * garbage_collection
      *
      * Cleans out orphaned shoutbox items
      * @param string $object_type
