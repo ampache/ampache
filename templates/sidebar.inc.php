@@ -59,7 +59,7 @@ if (User::is_registered()) {
         }
     }
 } else {
-        ?>
+    ?>
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
             <?php
@@ -67,7 +67,7 @@ if (User::is_registered()) {
             </div>
         </li>
 <?php
-    }
+}
 ?>
 </ul>
 
