@@ -85,7 +85,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 ***********************************************/
 #ajax-loading {
     color: #1990db;
-    background-image: url(../images/ajax-loader.gif);
+    background-image: url(../images/ajax-loader-light.gif);
 }
 
 /***********************************************
