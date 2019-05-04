@@ -24,6 +24,7 @@ require_once 'lib/init.php';
 
 if (!AmpConfig::get('allow_upload') || !Access::check('interface', '25')) {
     UI::access_denied();
+
     return false;
 }
 
@@ -35,6 +36,7 @@ if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
 // Check to handle POST requests exceeding max post size.
 if ($_SERVER['CONTENT_LENGTH'] > 0 && $post_max > 0 && $_SERVER['CONTENT_LENGTH'] > $post_max) {
     Upload::rerror();
+
     return false;
 }
 
@@ -43,10 +45,12 @@ switch ($_REQUEST['actionp']) {
     case 'upload':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
+
             return false;
         }
 
         Upload::process();
+
         return false;
 
     default:

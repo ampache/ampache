@@ -168,6 +168,7 @@ function install_rewrite_rules($file, $web_path, $download)
         $browser = new Horde_Browser();
         $browser->downloadHeaders(basename($file), 'text/plain', false, strlen($final));
         echo $final;
+
         return false;
     }
 
@@ -239,7 +240,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
         $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
         $pieces   = split_sql($query);
-        $p_count = count($pieces);
+        $p_count  = count($pieces);
         $errors   = array();
         for ($i=0; $i < $p_count; $i++) {
             $pieces[$i] = trim($pieces[$i]);
@@ -314,6 +315,7 @@ function install_create_config($download = false)
         $browser = new Horde_Browser();
         $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen($final));
         echo $final;
+
         return false;
     }
 

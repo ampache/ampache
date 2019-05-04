@@ -41,6 +41,7 @@ if (!AmpConfig::get('access_control')) {
     ob_end_clean();
     debug_event('Access Control', 'Error Attempted to use XML API with Access Control turned off', '3');
     echo XML_Data::error('501', T_('Access Control not Enabled'));
+
     return false;
 }
 
@@ -52,6 +53,7 @@ if (!Session::exists('api', $_REQUEST['auth']) and filter_input(INPUT_GET, 'acti
     debug_event('Access Denied', 'Invalid Session attempt to API [' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . ']', '3');
     ob_end_clean();
     echo XML_Data::error('401', T_('Session Expired'));
+
     return false;
 }
 
@@ -69,6 +71,7 @@ if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
+
     return false;
 }
 

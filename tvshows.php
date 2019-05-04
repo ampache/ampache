@@ -51,6 +51,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (!Catalog::can_remove($tvshow)) {
             debug_event('tvshow', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
             UI::access_denied();
+
             return false;
         }
 

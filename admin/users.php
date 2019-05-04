@@ -24,6 +24,7 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
+
     return false;
 }
 
@@ -38,6 +39,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Core::form_verify('edit_user', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -120,6 +122,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Core::form_verify('add_user', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -205,6 +208,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         }
         if (!Core::form_verify('delete_user')) {
             UI::access_denied();
+
             return false;
         }
         $client = new User($_REQUEST['user_id']);
@@ -236,6 +240,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Core::form_verify('delete_avatar', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -258,6 +263,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Core::form_verify('generate_apikey', 'post')) {
             UI::access_denied();
+
             return false;
         }
 

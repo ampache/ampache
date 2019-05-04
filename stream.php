@@ -24,6 +24,7 @@ require_once 'lib/init.php';
 
 if (!filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     debug_event("stream.php", "Asked without action. Exiting...", 5);
+
     return false;
 }
 
@@ -31,6 +32,7 @@ if (!defined('NO_SESSION')) {
     /* If we are running a demo, quick while you still can! */
     if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface', '25')) {
         UI::access_denied();
+
         return false;
     }
 }
@@ -172,6 +174,7 @@ if (count($media_ids) || isset($urls)) {
         if (!User::stream_control($media_ids)) {
             debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, 3);
             UI::access_denied();
+
             return false;
         }
     }

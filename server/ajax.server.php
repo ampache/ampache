@@ -37,48 +37,63 @@ debug_event('ajax.server.php', 'Called for page: {' . $page . '}', '5');
 switch ($page) {
     case 'stats':
         require_once AmpConfig::get('prefix') . '/server/stats.ajax.php';
+
         return false;
     case 'browse':
         require_once AmpConfig::get('prefix') . '/server/browse.ajax.php';
+
         return false;
     case 'random':
         require_once AmpConfig::get('prefix') . '/server/random.ajax.php';
+
         return false;
     case 'playlist':
         require_once AmpConfig::get('prefix') . '/server/playlist.ajax.php';
+
         return false;
     case 'localplay':
         require_once AmpConfig::get('prefix') . '/server/localplay.ajax.php';
+
         return false;
     case 'tag':
         require_once AmpConfig::get('prefix') . '/server/tag.ajax.php';
+
         return false;
     case 'stream':
         require_once AmpConfig::get('prefix') . '/server/stream.ajax.php';
+
         return false;
     case 'song':
         require_once AmpConfig::get('prefix') . '/server/song.ajax.php';
+
         return false;
     case 'democratic':
         require_once AmpConfig::get('prefix') . '/server/democratic.ajax.php';
+
         return false;
     case 'index':
         require_once AmpConfig::get('prefix') . '/server/index.ajax.php';
+
         return false;
     case 'catalog':
         require_once AmpConfig::get('prefix') . '/server/catalog.ajax.php';
+
         return false;
     case 'search':
         require_once AmpConfig::get('prefix') . '/server/search.ajax.php';
+
         return false;
     case 'player':
         require_once AmpConfig::get('prefix') . '/server/player.ajax.php';
+
         return false;
     case 'user':
         require_once AmpConfig::get('prefix') . '/server/user.ajax.php';
+
         return false;
     case 'podcast':
         require_once AmpConfig::get('prefix') . '/server/podcast.ajax.php';
+
         return false;
     default:
         // A taste of compatibility

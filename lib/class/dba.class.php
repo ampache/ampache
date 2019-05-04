@@ -136,6 +136,7 @@ class Dba
         $dbh = self::dbh();
         if (!$dbh) {
             debug_event('Dba', 'Wrong dbh.', 1);
+
             return false;
         }
         $var = $dbh->quote($var);

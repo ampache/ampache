@@ -36,6 +36,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         $results = ob_get_contents();
         ob_end_clean();
         echo $results;
+
         return false;
     case 'broadcast':
         $broadcast_id = $_GET['broadcast_id'];

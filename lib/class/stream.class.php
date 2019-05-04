@@ -116,6 +116,7 @@ class Stream
             if ($bit_rate < ($min_bitrate ?: 8)) {
                 debug_event('stream', 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
+
                 return false;
             }
 

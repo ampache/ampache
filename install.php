@@ -30,6 +30,7 @@ set_error_handler('ampache_error_handler');
 if (!install_check_status($configfile)) {
     $redirect_url = 'login.php';
     require_once AmpConfig::get('prefix') . UI::find_template('error_page.inc.php');
+
     return false;
 }
 

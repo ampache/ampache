@@ -48,6 +48,7 @@ if (empty($type)) {
 
 if (!Core::is_library_item($object_type) && $object_type != 'share') {
     debug_event('edit.server.php', 'Type `' . $type . '` is not based on an item library.', '3');
+
     return false;
 }
 
@@ -65,6 +66,7 @@ if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'show_ed
 // Make sure they got them rights
 if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
     echo xoutput_from_array(array('rfc3514' => '0x1'));
+
     return false;
 }
 
@@ -142,6 +144,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         xoutput_headers();
         $results['id'] = $new_id;
         echo xoutput_from_array($results);
+
         return false;
     default:
         return false;

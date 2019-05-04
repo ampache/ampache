@@ -49,6 +49,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (!Catalog::can_remove($album)) {
             debug_event('album', 'Unauthorized to remove the album `.' . $album->id . '`.', 1);
             UI::access_denied();
+
             return false;
         }
 
@@ -62,6 +63,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         // Make sure they are a 'power' user at least
         if (!Access::check('interface', '75')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -75,6 +77,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Access::check('interface', '75')) {
             UI::access_denied();
+
             return false;
         }
 

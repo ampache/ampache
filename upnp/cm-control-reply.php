@@ -4,6 +4,7 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     echo "Disabled.";
+
     return false;
 }
 
@@ -19,6 +20,7 @@ if ($requestRaw != '') {
 } else {
     echo 'Error: no UPnP request.';
     debug_event('upnp-cm', 'No request', '5');
+
     return false;
 }
 

@@ -25,6 +25,7 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('webdav_backend')) {
     echo "Disabled.";
+
     return false;
 }
 

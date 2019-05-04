@@ -4,6 +4,7 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     echo "Disabled.";
+
     return false;
 }
 

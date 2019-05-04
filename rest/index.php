@@ -25,6 +25,7 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('subsonic_backend')) {
     echo "Disabled.";
+
     return false;
 }
 
@@ -45,6 +46,7 @@ if (!AmpConfig::get('access_control')) {
     debug_event('Access Control', 'Error Attempted to use Subsonic API with Access Control turned off', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
+
     return false;
 }
 
@@ -70,6 +72,7 @@ if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || emp
     ob_end_clean();
     debug_event('subsonic', 'Missing Subsonic base parameters', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM), $callback);
+
     return false;
 }
 
@@ -86,6 +89,7 @@ if (isset($token) && isset($salt)) {
     debug_event('Access Denied', 'Token authentication not supported in Subsonic API for user [' . $user . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_TOKENAUTHNOTSUPPORTED), $callback);
+
     return false;
 }
 
@@ -97,6 +101,7 @@ if (!$auth['success']) {
     debug_event('Access Denied', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH), $callback);
+
     return false;
 }
 
@@ -104,6 +109,7 @@ if (!Access::check_network('init-api', $user, 5)) {
     debug_event('Access Denied', 'Unauthorized access attempt to Subsonic API [' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'), $callback);
+
     return false;
 }
 
@@ -113,6 +119,7 @@ if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     ob_end_clean();
     debug_event('subsonic', 'Requested client version is not supported', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER), $callback);
+
     return false;
 }
 Preference::init();

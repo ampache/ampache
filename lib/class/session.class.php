@@ -423,6 +423,7 @@ class Session
     {
         if (!function_exists('session_start')) {
             header("Location:" . AmpConfig::get('web_path') . "/test.php");
+
             return false;
         }
 

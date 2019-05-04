@@ -32,11 +32,13 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'update_preferences':
         if ($_POST['method'] == 'admin' && !Access::check('interface', '100')) {
             UI::access_denied();
+
             return false;
         }
 
         if (!Core::form_verify('update_preference', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -72,11 +74,13 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         // Make sure only admins here
         if (!Access::check('interface', '100')) {
             UI::access_denied();
+
             return false;
         }
 
         if (!Core::form_verify('update_preference', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -88,6 +92,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         // Make sure only admins here
         if (!Access::check('interface', '100')) {
             UI::access_denied();
+
             return false;
         }
         $fullname    = T_('Server');
@@ -96,6 +101,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'user':
         if (!Access::check('interface', '100')) {
             UI::access_denied();
+
             return false;
         }
         $client      = new User($_REQUEST['user_id']);
@@ -106,11 +112,13 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         // Make sure we're a user and they came from the form
         if (!Access::check('interface', '25') && User::get_user_id() > 0) {
             UI::access_denied();
+
             return false;
         }
 
         if (!Core::form_verify('update_user', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -152,6 +160,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         // Make sure we're a user and they came from the form
         if (!Access::check('interface', '25') && User::get_user_id() > 0) {
             UI::access_denied();
+
             return false;
         }
         if ($_REQUEST['token'] && in_array($_REQUEST['plugin'], Plugin::get_plugins('save_mediaplay'))) {

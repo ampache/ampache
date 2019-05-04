@@ -24,6 +24,7 @@ require_once '../lib/init.php';
 
 if (!$GLOBALS['user']->has_access(100)) {
     UI::access_denied();
+
     return false;
 }
 

@@ -24,6 +24,7 @@ require_once 'lib/init.php';
 
 if (!AmpConfig::get('broadcast')) {
     UI::access_denied();
+
     return false;
 }
 
@@ -37,10 +38,12 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($id);
         show_confirmation(T_('Broadcast Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_broadcast');
         UI::show_footer();
+
         return false;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -51,6 +54,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             show_confirmation(T_('Broadcast Deleted'), T_('The Broadcast has been deleted'), $next_url);
         }
         UI::show_footer();
+
         return false;
 } // switch on the action
 

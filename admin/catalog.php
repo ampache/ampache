@@ -25,6 +25,7 @@ require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.ph
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
+
     return false;
 }
 
@@ -40,6 +41,7 @@ if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog'
         if (!isset($_REQUEST['perform_ready'])) {
             $catalog->show_ready_process();
             UI::show_footer();
+
             return false;
         } else {
             $catalog->perform_ready();
@@ -90,6 +92,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Core::form_verify('delete_catalog')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -179,6 +182,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Core::form_verify('add_catalog', 'post')) {
             UI::access_denied();
+
             return false;
         }
 

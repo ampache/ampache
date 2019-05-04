@@ -51,6 +51,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (!Catalog::can_remove($artist)) {
             debug_event('artist', 'Unauthorized to remove the artist `.' . $artist->id . '`.', 1);
             UI::access_denied();
+
             return false;
         }
 

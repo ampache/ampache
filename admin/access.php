@@ -24,6 +24,7 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
+
     return false;
 }
 
@@ -33,6 +34,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete_record':
         if (!Core::form_verify('delete_access')) {
             UI::access_denied();
+
             return false;
         }
         Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -52,6 +54,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         // Make sure we've got a valid form submission
         if (!Core::form_verify('add_acl', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -80,6 +83,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'update_record':
         if (!Core::form_verify('edit_acl')) {
             UI::access_denied();
+
             return false;
         }
         $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));

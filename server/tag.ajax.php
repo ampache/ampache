@@ -43,6 +43,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'add_tag':
         if (!Tag::can_edit_tag_map($_GET['type'], $_GET['object_id'], false)) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to add unauthorized tag map', 1);
+
             return false;
         }
         debug_event('tag.ajax', 'Adding new tag...', '5');
@@ -51,6 +52,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'add_tag_by_name':
         if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to add new tag', 1);
+
             return false;
         }
         debug_event('tag.ajax', 'Adding new tag by name...', '5');
@@ -59,16 +61,19 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete':
         if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to delete tag', 1);
+
             return false;
         }
         debug_event('tag.ajax', 'Deleting tag...', '5');
         $tag = new Tag($_GET['tag_id']);
         $tag->delete();
         header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=tag');
+
         return false;
     case 'remove_tag_map':
         if (!Tag::can_edit_tag_map($_GET['type'], $_GET['object_id'], false)) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to delete unauthorized tag map', 1);
+
             return false;
         }
         debug_event('tag.ajax', 'Removing tag map...', '5');

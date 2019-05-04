@@ -376,6 +376,7 @@ class Catalog_remote extends Catalog
         // If we don't get anything back we failed and should bail now
         if (!$remote_handle) {
             debug_event('play', 'Connection to remote server failed', 1);
+
             return false;
         }
 

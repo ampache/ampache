@@ -30,11 +30,13 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         // Must be at least a user to do this
         if (!Access::check('interface', '25')) {
             UI::access_denied();
+
             return false;
         }
 
         if (!Core::form_verify('add_shout', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -48,11 +50,13 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Core::is_library_item($_POST['object_type'])) {
             UI::access_denied();
+
             return false;
         }
 
         $shout_id = Shoutbox::create($_POST);
         header("Location:" . AmpConfig::get('web_path') . '/shout.php?action=show_add_shout&type=' . $_POST['object_type'] . '&id=' . (int) ($_POST['object_id']));
+
         return false;
     break;
     case 'show_add_shout':

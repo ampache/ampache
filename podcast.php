@@ -24,6 +24,7 @@ require_once 'lib/init.php';
 
 if (!AmpConfig::get('podcast')) {
     UI::access_denied();
+
     return false;
 }
 
@@ -34,6 +35,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'show_create':
         if (!Access::check('interface', 75)) {
             UI::access_denied();
+
             return false;
         }
 
@@ -43,11 +45,13 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'create':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
+
             return false;
         }
 
         if (!Core::form_verify('add_podcast', 'post')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -65,6 +69,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
+
             return false;
         }
 
@@ -80,6 +85,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'confirm_delete':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
+
             return false;
         }
 

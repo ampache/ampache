@@ -4,6 +4,7 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     echo "Disabled.";
+
     return false;
 }
 
@@ -22,6 +23,7 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     } else {
         echo 'Error: no UPnP request.';
         debug_event('upnp', 'No request', '5');
+
         return false;
     }
 

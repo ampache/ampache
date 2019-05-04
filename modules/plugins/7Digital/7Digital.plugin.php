@@ -134,6 +134,7 @@ class Ampache7digital
             $url = $request->to_url();
             
             header("Location: " . $url);
+
             return false;
         }
         

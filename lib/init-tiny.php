@@ -25,6 +25,7 @@
 // Do a check for PHP5.4 because nothing will work without it
 if (version_compare(phpversion(), '5.4.0', '<')) {
     echo "ERROR: Ampache requires PHP version >= 5.4";
+
     return false;
 }
 

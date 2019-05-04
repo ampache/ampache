@@ -24,6 +24,7 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', 100) or AmpConfig::get('demo_mode')) {
     UI::access_denied();
+
     return false;
 }
 
@@ -41,10 +42,12 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         $browser = new Horde_Browser();
         $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
         echo $final;
+
         return false;
     case 'write_config':
         write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
         header('Location: ' . AmpConfig::get('web_path') . '/index.php');
+
         return false;
     case 'reset_db_charset':
         Dba::reset_db_charset();
