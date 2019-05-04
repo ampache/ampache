@@ -28,7 +28,7 @@ if (!defined('AJAX_INCLUDE')) {
     exit;
 }
 
-$user_id = intval($_REQUEST['user_id']);
+$user_id = (int) ($_REQUEST['user_id']);
 
 switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'flip_follow':

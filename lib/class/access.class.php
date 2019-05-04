@@ -98,7 +98,7 @@ class Access
         }
 
         /* Assign id for use in get_info() */
-        $this->id = intval($access_id);
+        $this->id = (int) $access_id;
 
         $info = $this->_get_info();
         foreach ($info as $key => $value) {
@@ -190,7 +190,7 @@ class Access
         $end     = @inet_pton($data['end']);
         $name    = $data['name'];
         $type    = self::validate_type($data['type']);
-        $level   = intval($data['level']);
+        $level   = (int) $data['level'];
         $user    = $data['user'] ?: '-1';
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
@@ -228,7 +228,7 @@ class Access
         $end     = @inet_pton($data['end']);
         $name    = $data['name'];
         $user    = $data['user'] ?: '-1';
-        $level   = intval($data['level']);
+        $level   = (int) $data['level'];
         $type    = self::validate_type($data['type']);
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
@@ -398,7 +398,7 @@ class Access
         if ($user_id) {
             $user = new User($user_id);
         }
-        $level = intval($level);
+        $level = (int) $level;
 
         // Switch on the type
         switch ($type) {

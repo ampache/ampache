@@ -84,7 +84,7 @@ class AmpacheOmdb
         $r    = explode(' ', $runtime, 2);
         if (count($r) == 2) {
             if ($r[1] == 'min') {
-                $time = intval($r[0]) * 60;
+                $time = (int) ($r[0]) * 60;
             }
         }
 

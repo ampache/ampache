@@ -42,7 +42,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         }
 
         /* Clean up the variables */
-        $user_id         = intval($_POST['user_id']);
+        $user_id         = (int) $_POST['user_id'];
         $username        = scrub_in($_POST['username']);
         $fullname        = scrub_in($_POST['fullname']);
         $email           = scrub_in($_POST['email']);

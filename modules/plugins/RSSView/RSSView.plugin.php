@@ -137,7 +137,7 @@ class AmpacheRSSView
 
             return false;
         }
-        $this->maxitems = intval($data['rssview_max_items']);
+        $this->maxitems = (int) ($data['rssview_max_items']);
 
         return true;
     }

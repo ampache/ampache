@@ -228,8 +228,8 @@ class Share extends database_object
 
     public function update(array $data)
     {
-        $this->max_counter    = intval($data['max_counter']);
-        $this->expire_days    = intval($data['expire']);
+        $this->max_counter    = (int) ($data['max_counter']);
+        $this->expire_days    = (int) ($data['expire']);
         $this->allow_stream   = $data['allow_stream'] == '1';
         $this->allow_download = $data['allow_download'] == '1';
         $this->description    = isset($data['description']) ? $data['description'] : $this->description;

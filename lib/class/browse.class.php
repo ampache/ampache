@@ -75,7 +75,7 @@ class Browse extends Query
      */
     public function add_supplemental_object($class, $uid)
     {
-        $_SESSION['browse']['supplemental'][$this->id][$class] = intval($uid);
+        $_SESSION['browse']['supplemental'][$this->id][$class] = (int) ($uid);
 
         return true;
     } // add_supplemental_object
@@ -178,7 +178,7 @@ class Browse extends Query
             $match = ' (' . $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id(intval($filter_value));
+            $catalog = Catalog::create_from_id((int) ($filter_value));
             $match   = ' (' . $catalog->name . ')';
         }
 

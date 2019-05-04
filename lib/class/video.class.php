@@ -265,8 +265,8 @@ class Video extends database_object implements media, library_item
         }
 
         // Format the Bitrate
-        $this->f_bitrate       = intval($this->bitrate / 1000) . "-" . strtoupper($this->mode);
-        $this->f_video_bitrate = (string) intval($this->video_bitrate / 1000);
+        $this->f_bitrate       = (int) ($this->bitrate / 1000) . "-" . strtoupper($this->mode);
+        $this->f_video_bitrate = (string) (int) ($this->video_bitrate / 1000);
         if ($this->frame_rate) {
             $this->f_frame_rate = $this->frame_rate . ' fps';
         }
@@ -541,21 +541,21 @@ class Video extends database_object implements media, library_item
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $bitrate        = intval($data['bitrate']);
+        $bitrate        = (int) ($data['bitrate']);
         $mode           = $data['mode'];
-        $rezx           = intval($data['resolution_x']);
-        $rezy           = intval($data['resolution_y']);
-        $release_date   = intval($data['release_date']);
+        $rezx           = (int) ($data['resolution_x']);
+        $rezy           = (int) ($data['resolution_y']);
+        $release_date   = (int) ($data['release_date']);
         // No release date, then release date = production year
         if (!$release_date && $data['year']) {
             $release_date = strtotime(strval($data['year']) . '-01-01');
         }
         $tags           = $data['genre'];
-        $channels       = intval($data['channels']);
-        $disx           = intval($data['display_x']);
-        $disy           = intval($data['display_y']);
+        $channels       = (int) ($data['channels']);
+        $disx           = (int) ($data['display_x']);
+        $disy           = (int) ($data['display_y']);
         $frame_rate     = floatval($data['frame_rate']);
-        $video_bitrate  = intval($data['video_bitrate']);
+        $video_bitrate  = (int) ($data['video_bitrate']);
 
         $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`,`release_date`,`addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -703,7 +703,7 @@ class Video extends database_object implements media, library_item
         }
 
         $sql .= $where;
-        $sql .= "ORDER BY RAND() LIMIT " . intval($count);
+        $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {

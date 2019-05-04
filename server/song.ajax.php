@@ -58,7 +58,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             foreach ($shouts as $id) {
                 $shout = new Shoutbox($id);
                 $shout->format();
-                $key = intval($shout->data);
+                $key = (int) ($shout->data);
                 echo "if (shouts['" . $key . "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
                 echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
                 echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->data / $media->time) * 400) - 1) . "px;\' />');\r\n";

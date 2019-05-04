@@ -43,7 +43,7 @@ if ($cargv > 1) {
             $verbose = true;
         } 
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
-            $port = intval($_SERVER['argv'][++$x]);
+            $port = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('- Port ' . $port);
         }
     }

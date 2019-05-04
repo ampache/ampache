@@ -106,7 +106,7 @@ class Shoutbox
         }
 
         // Only get as many as we need
-        $limit  = intval($limit) - count($shouts);
+        $limit  = (int) ($limit) - count($shouts);
         $params = array();
         $sql    = "SELECT `user_shout`.`id` AS `id` FROM `user_shout` LEFT JOIN `user` ON `user`.`id` = `user_shout`.`user` WHERE `user_shout`.`sticky`='0' ";
         if ($username !== null) {
@@ -205,8 +205,8 @@ class Shoutbox
         }
 
         $sticky     = isset($data['sticky']) ? 1 : 0;
-        $user       = intval($data['user'] ?: User::get_user_id());
-        $date       = intval($data['date'] ?: time());
+        $user       = (int) ($data['user'] ?: User::get_user_id());
+        $date       = (int) ($data['date'] ?: time());
         $comment    = strip_tags($data['comment']);
 
         $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .

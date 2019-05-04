@@ -39,7 +39,7 @@ class Rating extends database_object
      */
     public function __construct($id, $type)
     {
-        $this->id   = intval($id);
+        $this->id   = (int) ($id);
         $this->type = $type;
 
         return true;
@@ -106,7 +106,7 @@ class Rating extends database_object
             if (!isset($user_ratings[$id])) {
                 $rating = 0;
             } else {
-                $rating = intval($user_ratings[$id]);
+                $rating = (int) ($user_ratings[$id]);
             }
             parent::add_to_cache('rating_' . $type . '_user' . User::get_user_id(), $id, $rating);
 
@@ -201,11 +201,11 @@ class Rating extends database_object
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
         }
-        $count = intval($count);
+        $count = (int) ($count);
         if (!$offset) {
             $limit = $count;
         } else {
-            $limit = intval($offset) . "," . $count;
+            $limit = (int) ($offset) . "," . $count;
         }
 
         /* Select Top objects counting by # of rows */
@@ -232,7 +232,7 @@ class Rating extends database_object
         if (is_null($user_id)) {
             $user_id = User::get_user_id();
         }
-        $user_id = intval($user_id);
+        $user_id = (int) ($user_id);
 
         debug_event('Rating', "Setting rating for $this->type $this->id to $rating", 5);
 

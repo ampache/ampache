@@ -214,8 +214,8 @@ class AmpacheVlc extends localplay_controller
 
         $user_id = $user_id ? $user_id : User::get_user_id();
 
-        Preference::update('vlc_active', $user_id, intval($uid));
-        AmpConfig::set('vlc_active', intval($uid), true);
+        Preference::update('vlc_active', $user_id, (int) ($uid));
+        AmpConfig::set('vlc_active', (int) ($uid), true);
 
         return true;
     } // set_active_instance
@@ -549,7 +549,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         $array['state']     = $state;
-        $array['volume']    = intval((intval($arrayholder['root']['volume']['value']) / 2.6));
+        $array['volume']    = (int) (((int) ($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat']    = $arrayholder['root']['repeat']['value'];
         $array['random']    = $arrayholder['root']['random']['value'];
         $array['track']     =   htmlspecialchars_decode($arrayholder['root']['information']['meta-information']['title']['value'], ENT_NOQUOTES);

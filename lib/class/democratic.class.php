@@ -242,7 +242,7 @@ class Democratic extends Tmp_Playlist
             'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), `tmp_playlist_data`.`id` ';
 
         if ($limit) {
-            $sql .= 'LIMIT ' . intval($limit);
+            $sql .= 'LIMIT ' . (string) ($limit);
         }
 
         $db_results = Dba::read($sql);
@@ -280,7 +280,7 @@ class Democratic extends Tmp_Playlist
     {
         // FIXME: Shouldn't this return object_type?
 
-        $offset = intval($offset);
+        $offset = (int) ($offset);
 
         $items = $this->get_items($offset + 1);
 
@@ -402,7 +402,7 @@ class Democratic extends Tmp_Playlist
         }
 
         $media = new $object_type($object_id);
-        $track = isset($media->track) ? intval($media->track) : null;
+        $track = isset($media->track) ? (int) ($media->track) : null;
 
         /* If it's on the playlist just vote */
         $sql = "SELECT `id` FROM `tmp_playlist_data` " .

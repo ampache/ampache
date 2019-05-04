@@ -88,7 +88,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         }
     break;
     case 'show':
-        $label_id = intval($_REQUEST['label']);
+        $label_id = (int) $_REQUEST['label'];
         if (!$label_id) {
             if (!empty($_REQUEST['name'])) {
                 $label_id = Label::lookup($_REQUEST);

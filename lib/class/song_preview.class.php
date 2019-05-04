@@ -58,7 +58,7 @@ class Song_Preview extends database_object implements media, playable_item
             return false;
         }
 
-        $this->id = intval($id);
+        $this->id = (int) ($id);
 
         if ($info = $this->_get_info()) {
             foreach ($info as $key => $value) {

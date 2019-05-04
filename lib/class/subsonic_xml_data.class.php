@@ -561,7 +561,7 @@ class Subsonic_XML_Data
         $xsong->addAttribute('artist', self::checkName($artistData['f_full_name']));
         $xsong->addAttribute('coverArt', self::getAlbumId($albumData['id']));
         $xsong->addAttribute('duration', $songData['time']);
-        $xsong->addAttribute('bitRate', intval($songData['bitrate'] / 1000));
+        $xsong->addAttribute('bitRate', (int) ($songData['bitrate'] / 1000));
         if ($addAmpacheInfo) {
             $xsong->addAttribute('playCount', $songData['object_cnt']);
         }
@@ -797,7 +797,7 @@ class Subsonic_XML_Data
             $track = self::addSong($xplaynow, $d['media'], false, "entry");
             if ($track !== null) {
                 $track->addAttribute('username', $d['client']->username);
-                $track->addAttribute('minutesAgo', intval(time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
+                $track->addAttribute('minutesAgo', (int) (time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
                 $track->addAttribute('playerId', $d['agent']);
             }
         }

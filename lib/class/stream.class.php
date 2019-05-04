@@ -104,7 +104,7 @@ class Stream
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_row($db_results);
 
-            $active_streams = intval($results[0]) ?: 0;
+            $active_streams = (int) ($results[0]) ?: 0;
             debug_event('stream', 'Active transcoding streams: ' . $active_streams, 5);
 
             // We count as one for the algorithm
@@ -218,7 +218,7 @@ class Stream
     public static function get_image_preview($media)
     {
         $image = null;
-        $sec   = ($media->time >= 30) ? 30 : intval($media->time / 2);
+        $sec   = ($media->time >= 30) ? 30 : (int) ($media->time / 2);
         $frame = gmdate("H:i:s", $sec);
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
@@ -336,7 +336,7 @@ class Stream
      */
     public static function insert_now_playing($oid, $uid, $length, $sid, $type)
     {
-        $time = intval(time() + $length);
+        $time = (int) (time() + $length);
         $type = strtolower($type);
 
         // Ensure that this client only has a single row

@@ -106,7 +106,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
-            $track = $_GET['offset'] ? (intval($_GET['offset']) + 1) : 1;
+            $track = $_GET['offset'] ? ((int) ($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     $playlist->update_track_number($song_id, $track);

@@ -527,7 +527,7 @@ class Album extends database_object implements library_item
         }
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
         if ($limit) {
-            $sql .= " LIMIT " . intval($limit);
+            $sql .= " LIMIT " . (string) $limit;
         }
         $db_results = Dba::read($sql, $params);
 
@@ -902,8 +902,8 @@ class Album extends database_object implements library_item
     public function update(array $data)
     {
         $year         = isset($data['year']) ? $data['year'] : $this->year;
-        $artist       = isset($data['artist']) ? intval($data['artist']) : $this->artist_id;
-        $album_artist = isset($data['album_artist']) ? intval($data['album_artist']) : $this->album_artist;
+        $artist       = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        $album_artist = isset($data['album_artist']) ? (int) ($data['album_artist']) : $this->album_artist;
         $name         = isset($data['name']) ? $data['name'] : $this->name;
         $disk         = isset($data['disk']) ? $data['disk'] : $this->disk;
         $mbid         = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
@@ -1124,7 +1124,7 @@ class Album extends database_object implements library_item
                     " AND `rating`.`user` = " . $user_id . ")";
         }
 
-        $sql .= "ORDER BY RAND() LIMIT " . intval($count);
+        $sql .= "ORDER BY RAND() LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {

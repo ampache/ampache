@@ -498,9 +498,9 @@ class Tag extends database_object implements library_item
         if ($count) {
             $limit_sql = "LIMIT ";
             if ($offset) {
-                $limit_sql .= (int) ($offset) . ',';
+                $limit_sql .= (string) ($offset) . ',';
             }
-            $limit_sql .= (int) ($count);
+            $limit_sql .= (string) ($count);
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .

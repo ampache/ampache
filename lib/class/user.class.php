@@ -1285,13 +1285,13 @@ class User extends database_object
     public function get_ip_history($count='', $distinct='')
     {
         $username     = Dba::escape($this->id);
-        $count        = $count ? intval($count) : intval(AmpConfig::get('user_ip_cardinality'));
+        $count        = $count ? (int) ($count) : (int) (AmpConfig::get('user_ip_cardinality'));
 
         // Make sure it's something
         if ($count < 1) {
             $count = '1';
         }
-        $limit_sql = "LIMIT " . intval($count);
+        $limit_sql = "LIMIT " . (string) ($count);
 
         $group_sql = "";
         if ($distinct) {

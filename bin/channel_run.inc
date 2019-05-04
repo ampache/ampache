@@ -42,7 +42,7 @@ if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
 
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
-            $chanid = intval($_SERVER['argv'][++$x]);
+            $chanid = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('- Channel ' . $chanid);
         }
         elseif ($_SERVER['argv'][$x] == "-v") {
@@ -50,7 +50,7 @@ if ($cargv > 1) {
             $verbose = true;
         }
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
-            $port = intval($_SERVER['argv'][++$x]);
+            $port = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('- Port ' . $port);
         }
     }

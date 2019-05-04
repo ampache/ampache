@@ -57,21 +57,21 @@ class Graph
         if ($end_date == null) {
             $end_date = time();
         } else {
-            $end_date = intval($end_date);
+            $end_date = (int) ($end_date);
         }
         if ($start_date == null) {
             $start_date = $end_date - 864000;
         } else {
-            $start_date = intval($start_date);
+            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `object_count`.`date` >= " . $start_date . " AND `object_count`.`date` <= " . $end_date;
         if ($user > 0) {
-            $user = intval($user);
+            $user = (int) ($user);
             $sql .= " AND `object_count`.`user` = " . $user;
         }
 
-        $object_id = intval($object_id);
+        $object_id = (int) ($object_id);
         if (Core::is_library_item($object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id) {
@@ -87,21 +87,21 @@ class Graph
         if ($end_date == null) {
             $end_date = time();
         } else {
-            $end_date = intval($end_date);
+            $end_date = (int) ($end_date);
         }
         if ($start_date == null) {
             $start_date = $end_date - 864000;
         } else {
-            $start_date = intval($start_date);
+            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
         if ($catalog > 0) {
-            $catalog = intval($catalog);
+            $catalog = (int) ($catalog);
             $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog;
         }
 
-        $object_id = intval($object_id);
+        $object_id = (int) ($object_id);
         if ($object_id) {
             $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
         }
@@ -300,11 +300,11 @@ class Graph
     protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
-        $width = intval($width);
+        $width = (int) ($width);
         if ($width <= 50 || $width > 4096) {
             $width = 700;
         }
-        $height = intval($height);
+        $height = (int) ($height);
         if ($height <= 60 || $height > 4096) {
             $height = 260;
         }

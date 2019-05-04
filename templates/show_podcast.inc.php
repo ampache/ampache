@@ -43,7 +43,7 @@ UI::show_box_top($podcast->f_title, 'info-box');
     <?php
     if (AmpConfig::get('ratings')) {
         ?>
-    <div id="rating_<?php echo intval($podcast->id); ?>_podcast" style="display:inline;">
+    <div id="rating_<?php echo (int) ($podcast->id); ?>_podcast" style="display:inline;">
         <?php show_rating($podcast->id, 'podcast'); ?>
     </div>
     <?php

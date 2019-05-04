@@ -52,7 +52,7 @@ class Tmp_Playlist extends database_object
             return false;
         }
 
-        $this->id     = intval($playlist_id);
+        $this->id     = (int) ($playlist_id);
         $info         = $this->_get_info();
 
         foreach ($info as $key => $value) {

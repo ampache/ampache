@@ -289,12 +289,12 @@ class XML_Data
             $counts = $tag->count();
             $string .= "<tag id=\"$tag_id\">\n" .
                     "\t<name><![CDATA[$tag->name]]></name>\n" .
-                    "\t<albums>" . intval($counts['album']) . "</albums>\n" .
-                    "\t<artists>" . intval($counts['artist']) . "</artists>\n" .
-                    "\t<songs>" . intval($counts['song']) . "</songs>\n" .
-                    "\t<videos>" . intval($counts['video']) . "</videos>\n" .
-                    "\t<playlists>" . intval($counts['playlist']) . "</playlists>\n" .
-                    "\t<stream>" . intval($counts['live_stream']) . "</stream>\n" .
+                    "\t<albums>" . (int) ($counts['album']) . "</albums>\n" .
+                    "\t<artists>" . (int) ($counts['artist']) . "</artists>\n" .
+                    "\t<songs>" . (int) ($counts['song']) . "</songs>\n" .
+                    "\t<videos>" . (int) ($counts['video']) . "</videos>\n" .
+                    "\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n" .
+                    "\t<stream>" . (int) ($counts['live_stream']) . "</stream>\n" .
                     "</tag>\n";
         } // end foreach
 

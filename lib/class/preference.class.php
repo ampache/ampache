@@ -290,7 +290,7 @@ class Preference extends database_object
         }
         $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`,`subcatagory`) " .
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, intval($level), $type, $catagory, $subcatagory));
+        $db_results = Dba::write($sql, array($name, $description, $default, (int) ($level), $type, $catagory, $subcatagory));
 
         if (!$db_results) {
             return false;
@@ -446,7 +446,7 @@ class Preference extends database_object
      */
     public static function init()
     {
-        $user_id = User::get_user_id() ? intval(User::get_user_id()) : -1;
+        $user_id = User::get_user_id() ? (int) (User::get_user_id()) : -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {

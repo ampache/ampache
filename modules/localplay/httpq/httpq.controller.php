@@ -231,8 +231,8 @@ class AmpacheHttpq extends localplay_controller
 
         $user_id = $user_id ? $user_id : User::get_user_id();
 
-        Preference::update('httpq_active', $user_id, intval($uid));
-        AmpConfig::set('httpq_active', intval($uid), true);
+        Preference::update('httpq_active', $user_id, (int) ($uid));
+        AmpConfig::set('httpq_active', (int) ($uid), true);
 
         return true;
     } // set_active_instance

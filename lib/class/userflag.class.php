@@ -39,7 +39,7 @@ class Userflag extends database_object
      */
     public function __construct($id, $type)
     {
-        $this->id   = intval($id);
+        $this->id   = (int) ($id);
         $this->type = $type;
 
         return true;
@@ -76,7 +76,7 @@ class Userflag extends database_object
             if (!isset($userflags[$id])) {
                 $userflag = 0;
             } else {
-                $userflag = intval($userflags[$id]);
+                $userflag = (int) ($userflags[$id]);
             }
             parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $id, $userflag);
         }
@@ -146,7 +146,7 @@ class Userflag extends database_object
         if ($user_id === null) {
             $user_id = User::get_user_id();
         }
-        $user_id = intval($user_id);
+        $user_id = (int) ($user_id);
 
         debug_event('Userflag', "Setting userflag for $this->type $this->id to $flagged", 5);
 
@@ -199,7 +199,7 @@ class Userflag extends database_object
         if ($user_id === null) {
             $user_id = User::get_user_id();
         }
-        $user_id = intval($user_id);
+        $user_id = (int) ($user_id);
 
         $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
         if ($user_id <= 0) {
@@ -235,11 +235,11 @@ class Userflag extends database_object
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
         }
-        $count = intval($count);
+        $count = (int) ($count);
         if (!$offset) {
             $limit = $count;
         } else {
-            $limit = intval($offset) . "," . $count;
+            $limit = (int) ($offset) . "," . $count;
         }
 
         /* Select Top objects counting by # of rows */

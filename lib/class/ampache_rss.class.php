@@ -234,7 +234,7 @@ class Ampache_RSS
             $song   = new Song($item['object_id']);
             if ($song->enabled) {
                 $song->format();
-                $amount     = intval(time() - $item['date'] + 2);
+                $amount     = (int) (time() - $item['date'] + 2);
                 $final      = '0';
                 $time_place = '0';
                 while ($amount >= 1) {

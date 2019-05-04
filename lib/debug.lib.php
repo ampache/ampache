@@ -142,7 +142,7 @@ function check_php_memory()
     $current_memory = ini_get('memory_limit');
     $current_memory = substr($current_memory, 0, strlen($current_memory) - 1);
 
-    if (intval($current_memory) < 48) {
+    if ((int) ($current_memory) < 48) {
         return false;
     }
 
@@ -156,7 +156,7 @@ function check_php_memory()
  */
 function check_php_timelimit()
 {
-    $current = intval(ini_get('max_execution_time'));
+    $current = (int) (ini_get('max_execution_time'));
 
     return ($current >= 60 || $current == 0);
 } // check_php_timelimit

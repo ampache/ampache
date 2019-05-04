@@ -1332,8 +1332,8 @@ class Update
             $row['end']   = Dba::escape(inet_pton($row['end']));
             $row['key']   = Dba::escape($row['key']);
             $sql          = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " .
-                "VALUES ('" . Dba::escape($row['name']) . "','" . intval($row['level']) .
-                "','" . $row['start'] . "','" . $row['end'] . "','" . $row['key'] . "','" . intval($row['user']) . "','" .
+                "VALUES ('" . Dba::escape($row['name']) . "','" . (int) ($row['level']) .
+                "','" . $row['start'] . "','" . $row['end'] . "','" . $row['key'] . "','" . (int) ($row['user']) . "','" .
                 $row['type'] . "','1')";
             Dba::write($sql);
         } // end foreach of existing rows

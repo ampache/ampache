@@ -165,7 +165,7 @@ class AmpacheCatalogFavorites
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = intval($data['catalogfav_max_items']);
+        $this->maxitems = (int) ($data['catalogfav_max_items']);
         if ($this->maxitems < 1) {
             $this->maxitems = 5;
         }

@@ -274,7 +274,7 @@ class Podcast extends database_object implements library_item
             AmpError::add('feed', T_('Wrong feed url'));
         }
         
-        $catalog_id = intval($data['catalog']);
+        $catalog_id = (int) ($data['catalog']);
         if ($catalog_id <= 0) {
             AmpError::add('catalog', T_('Target catalog required'));
         } else {

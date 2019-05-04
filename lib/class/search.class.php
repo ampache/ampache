@@ -927,7 +927,7 @@ class Search extends playlist_object
             $sql .= " ORDER BY RAND()";
         }
         if ($this->limit > 0) {
-            $sql .= " LIMIT " . intval($this->limit);
+            $sql .= " LIMIT " . (string) ($this->limit);
         }
         debug_event('search', 'SQL get_items: ' . $sql, 4);
 
@@ -979,7 +979,7 @@ class Search extends playlist_object
         }
 
         $sql .= ' ORDER BY RAND()';
-        $sql .= $limit ? ' LIMIT ' . intval($limit) : '';
+        $sql .= $limit ? ' LIMIT ' . (string) ($limit) : '';
         debug_event('search', 'SQL get_random_items: ' . $sql, 4);
 
         $db_results = Dba::read($sql);
@@ -1136,7 +1136,7 @@ class Search extends playlist_object
         }
 
         if ($type == 'numeric') {
-            return intval($data);
+            return (int) ($data);
         }
 
         if ($type == 'boolean') {

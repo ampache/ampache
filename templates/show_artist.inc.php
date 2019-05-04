@@ -57,7 +57,7 @@ if (AmpConfig::get('lastfm_api_key')) {
     <?php
     if (AmpConfig::get('ratings')) {
         ?>
-    <div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">
+    <div id="rating_<?php echo (int) ($artist->id); ?>_artist" style="display:inline;">
         <?php show_rating($artist->id, 'artist'); ?>
     </div>
     <?php

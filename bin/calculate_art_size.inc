@@ -43,8 +43,8 @@ while ($row = Dba::fetch_assoc($db_results)) {
     $id = $row['id'];
         $dimensions = Core::image_dimensions($source);
         if ($dimensions) {
-        $width = intval($dimensions['width']);
-        $height = intval($dimensions['height']);
+        $width = (int) $dimensions['width'];
+        $height = (int) $dimensions['height'];
         $sql = "Update `image` SET `width`=". $width . ",`height`=".$height." WHERE `id`='".$id."'";
         Dba::write($sql);
     }

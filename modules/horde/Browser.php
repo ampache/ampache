@@ -534,7 +534,7 @@ class Horde_Browser
                 // numbers until Version 3.
                 if (preg_match('|Version/([0-9.]+)|', $agent, $version_string)) {
                     list($this->_majorVersion, $this->_minorVersion) = explode('.', $version_string[1], 2);
-                    $this->_minorVersion                             = intval($this->_minorVersion);
+                    $this->_minorVersion                             = (int) ($this->_minorVersion);
                     $this->setFeature('ajax');
                     $this->setFeature('rte');
                 } elseif ($this->_majorVersion >= 412) {
@@ -1073,38 +1073,38 @@ class Horde_Browser
         $filesize = ini_get('upload_max_filesize');
         switch (strtolower(substr($filesize, -1, 1))) {
         case 'k':
-            $filesize = intval(floatval($filesize) * 1024);
+            $filesize = (int) (floatval($filesize) * 1024);
             break;
 
         case 'm':
-            $filesize = intval(floatval($filesize) * 1024 * 1024);
+            $filesize = (int) (floatval($filesize) * 1024 * 1024);
             break;
 
         case 'g':
-            $filesize = intval(floatval($filesize) * 1024 * 1024 * 1024);
+            $filesize = (int) (floatval($filesize) * 1024 * 1024 * 1024);
             break;
 
         default:
-            $filesize = intval($filesize);
+            $filesize = (int) ($filesize);
             break;
         }
 
         $postsize = ini_get('post_max_size');
         switch (strtolower(substr($postsize, -1, 1))) {
         case 'k':
-            $postsize = intval(floatval($postsize) * 1024);
+            $postsize = (int) (floatval($postsize) * 1024);
             break;
 
         case 'm':
-            $postsize = intval(floatval($postsize) * 1024 * 1024);
+            $postsize = (int) (floatval($postsize) * 1024 * 1024);
             break;
 
         case 'g':
-            $postsize = intval(floatval($postsize) * 1024 * 1024 * 1024);
+            $postsize = (int) (floatval($postsize) * 1024 * 1024 * 1024);
             break;
 
         default:
-            $postsize = intval($postsize);
+            $postsize = (int) ($postsize);
             break;
         }
 

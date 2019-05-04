@@ -103,7 +103,7 @@ class SubsonicClient
                 CURLOPT_CONNECTTIMEOUT => 8,
                 CURLOPT_SSL_VERIFYPEER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_PORT => intval($this->_serverPort)
+                CURLOPT_PORT => (int) ($this->_serverPort)
             );
             $ch = curl_init();
             curl_setopt_array($ch, $options);

@@ -138,7 +138,7 @@ class Catalog_soundcloud extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = intval($catalog_id);
+            $this->id = (int) ($catalog_id);
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -289,7 +289,7 @@ class Catalog_soundcloud extends Catalog
                             $data['comment'] = $song->description;
                             $data['file']    = $song->stream_url . '.mp3'; // Always stream as mp3, if evolve => $song->original_format;
                             $data['size']    = $song->original_content_size;
-                            $data['time']    = intval($song->duration / 1000);
+                            $data['time']    = (int) ($song->duration / 1000);
                             if ($this->check_remote_song($data)) {
                                 debug_event('soundcloud_catalog', 'Skipping existing song ' . $data['file'], 5);
                             } else {

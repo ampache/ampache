@@ -45,7 +45,7 @@ while ($i <= $rows) {
                 <p align="center">
                 <?php if (is_array($dimensions)) {
                 ?>
-                [<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['height']); ?>]
+                [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
                 <?php
             } else {
                 ?>

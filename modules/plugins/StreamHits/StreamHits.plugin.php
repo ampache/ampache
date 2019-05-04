@@ -117,13 +117,13 @@ class AmpacheStreamHits
         $data = $user->prefs;
         
         $this->user_id = $user->id;
-        if (intval($data['stream_control_hits_max'])) {
-            $this->hits_max = intval($data['stream_control_hits_max']);
+        if ((int) ($data['stream_control_hits_max'])) {
+            $this->hits_max = (int) ($data['stream_control_hits_max']);
         } else {
             $this->hits_max = -1;
         }
-        if (intval($data['stream_control_hits_days']) > 0) {
-            $this->hits_days = intval($data['stream_control_hits_days']);
+        if ((int) ($data['stream_control_hits_days']) > 0) {
+            $this->hits_days = (int) ($data['stream_control_hits_days']);
         } else {
             $this->hits_days = 30;
         }

@@ -142,7 +142,7 @@ class AmpacheYourls
             return false;
         }
         
-        $this->yourls_use_idn = (intval($data['yourls_use_idn']) == 1);
+        $this->yourls_use_idn = ((int) ($data['yourls_use_idn']) == 1);
 
         return true;
     } // load

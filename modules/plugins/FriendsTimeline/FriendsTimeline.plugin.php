@@ -116,7 +116,7 @@ class AmpacheFriendsTimeline
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = intval($data['ftl_max_items']);
+        $this->maxitems = (int) ($data['ftl_max_items']);
         if ($this->maxitems < 1) {
             $this->maxitems = 10;
         }

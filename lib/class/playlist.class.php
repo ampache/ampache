@@ -187,7 +187,7 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $limit_sql = $limit ? 'LIMIT ' . intval($limit) : '';
+        $limit_sql = $limit ? 'LIMIT ' . (string) ($limit) : '';
 
         $sql = "SELECT `object_id`,`object_type` FROM `playlist_data` " .
             "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";

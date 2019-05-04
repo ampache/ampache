@@ -38,7 +38,7 @@ UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box');
     <?php
     if (AmpConfig::get('ratings')) {
         ?>
-    <div id="rating_<?php echo intval($season->id); ?>_tvshow_season" style="display:inline;">
+    <div id="rating_<?php echo (int) ($season->id); ?>_tvshow_season" style="display:inline;">
         <?php show_rating($season->id, 'tvshow_season'); ?>
     </div>
     <?php

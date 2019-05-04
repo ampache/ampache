@@ -152,7 +152,7 @@ class Api
         debug_event('API', "Handshake Attempt, IP:$ip User:$username Version:$version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if (intval($version) < self::$auth_version) {
+        if ((int) ($version) < self::$auth_version) {
             debug_event('API', 'Login Failed: version too old', 1);
             AmpError::add('api', T_('Login Failed: version too old'));
 
@@ -1139,7 +1139,7 @@ class Api
      */
     public static function last_shouts($input)
     {
-        $limit = intval($input['limit']);
+        $limit = (int) ($input['limit']);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold');
         }
@@ -1279,8 +1279,8 @@ class Api
     {
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
-            $limit    = intval($input['limit']);
-            $since    = intval($input['since']);
+            $limit    = (int) ($input['limit']);
+            $since    = (int) ($input['since']);
 
             if (!empty($username)) {
                 $user = User::get_from_username($username);
@@ -1309,8 +1309,8 @@ class Api
     public static function friends_timeline($input)
     {
         if (AmpConfig::get('sociable')) {
-            $limit = intval($input['limit']);
-            $since = intval($input['since']);
+            $limit = (int) ($input['limit']);
+            $since = (int) ($input['since']);
             $user  = User::get_user_id();
 
             if ($user > 0) {

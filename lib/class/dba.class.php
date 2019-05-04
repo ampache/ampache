@@ -283,7 +283,7 @@ class Dba
             $dsn = 'mysql:host=' . $hostname ?: 'localhost';
         }
         if ($port) {
-            $dsn .= ';port=' . intval($port);
+            $dsn .= ';port=' . (int) ($port);
         }
 
         try {
