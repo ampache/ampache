@@ -86,7 +86,7 @@ if (AmpConfig::get('geolocation')) {
     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
     <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
     <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
-    <input type="hidden" name="action" value="<?php echo $_REQUEST['action']; ?>" />
+    <input type="hidden" name="action" value="<?php echo filter_input(INPUT_GET, 'action', FILTER_SANITIZE_URL); ?>" />
     <input type="hidden" name="type" value="<?php echo $type; ?>" />
 </form>
 <script>

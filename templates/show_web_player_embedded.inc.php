@@ -1,5 +1,5 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -21,18 +21,31 @@
  */
 
 ?>
+<html>
+<head>
+<title><?php echo AmpConfig::get('site_title'); ?></title>
+<script language="javascript" type="text/javascript">
+function PlayerFrame()
+{
+    var appendmedia = false;
+    var playnext = false;
+    var $webplayer = $("#webplayer");
+    if ($webplayer.is(':visible')) {
 
-<script type="text/javascript" language="javascript">
-// Set refresh interval (in seconds)
-var refreshInterval=<?php echo $refresh_limit ?>;
-
-function refresh() {
-    <?php echo Ajax::action($ajax_url, ''); ?>;
+<?php if (AmpConfig::get('webplayer_confirmclose')) {
+    ?>
+    document.onbeforeunload = null;
+<?php
+} ?>
+        $webplayer.show();
+        $("#webplayer-minimize").show();
+    }
+    return false;
 }
-$(document).ready(function() {
-    clearInterval(window.reloaditv);
-    window.reloaditv = setInterval(function(){
-        refresh();
-    }, refreshInterval * 1000);
-});
+
+PlayerFrame();
 </script>
+</head>
+<body>
+</body>
+</html>

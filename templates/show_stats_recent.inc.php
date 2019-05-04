@@ -49,3 +49,10 @@ if (AmpConfig::get('allow_video')) {
     $browse->show_objects();
     $browse->store();
 }
+
+$sql    = Stats::get_recent_sql('playlist', $user_id);
+$browse = new Browse();
+$browse->set_type('playlist', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
+$browse->store();

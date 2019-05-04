@@ -173,15 +173,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #ajax-loading {
-    position: fixed;
-    top: 63px;
-    left: 6px;
-    font-size: 12px;
-    text-align: center;
-    width: 120px;
-    display: none;
     background-repeat: no-repeat;
     background-position: right; 
+    display: none;
+    font-size: 12px;
+    left: 52px;
+    position: absolute;
+    text-align: center;
+    top: 39px;
+    width: 120px;
 }
 
 /***********************************************
@@ -190,7 +190,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #header {
     z-index: 5;
     height: 64px;
-    padding: 0 32px;
+    padding: 0 5px;
     font-size: 15px;
 }
 
@@ -240,8 +240,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #loginInfo {
     position: absolute;
-    left: 150px;
-    top: 20px;
+    left: 80px;
+    top: 17px;
 }
 
 #sb_Subsearch input[type=submit] {
@@ -288,12 +288,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
     display: block;
-    width: 800px;
-    margin: 50px auto 0 auto;
+    min-width: 350px;
+    margin: 0 auto 0 auto;
 }
 
 #loginPage #maincontainer {
-    height: 580px;
+    height: 400px;
 }
 
 #registerPage #maincontainer {
@@ -302,23 +302,20 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #loginPage #header, #registerPage #header {
     background-color: transparent;
-    width: 254px;
+    width: 128px;
     margin: auto;
     border: none;
     box-shadow: none;
 }
 
-#loginPage #header {
-    height: 254px;
-}
-
+#loginPage #header,
 #registerPage #header {
-    height: 314px;
+    height: 128px;
 }
 
 #loginPage #headerlogo, #registerPage #headerlogo {
-    width: 256px;
-    height: 256px;
+    width: 128px;
+    height: 128px;
     background-repeat: no-repeat;
     background-position: center; 
     background-size: contain;
@@ -330,8 +327,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #loginbox, #registerPage #registerbox {
-    width: 500px;
     margin: auto auto 20px auto;
+    max-width: 350px;
+    min-width: 250px;
 }
 
 #loginPage #loginbox h2, #registerPage #registerbox h2{
@@ -417,7 +415,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #footer {
-    width: 800px;
+    min-width: 350px;
     margin: 10px auto;
 }
 
@@ -436,13 +434,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 125px;
+    width: 148px;
     display: inline-block;
 }
 
 #sidebar-header {
     height: 20px;
-    width: 175px;
+    width: 148px;
     border: 2px solid;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -514,7 +512,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .sidebar-float {
-    margin: 20px auto auto 5px;
+    margin: 5px auto auto 5px;
     float: left;
 }
 
@@ -543,7 +541,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 /* Tabs content */
 #sidebar-page {
-    width: 175px;
+    width: 148px;
     margin: 3px auto 5px 5px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -629,9 +627,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     right: 10px;
     top: 66px;
     width: 200px;
-    margin: 20px 20px auto auto;
+    margin: 5px 15px auto auto;
     max-height: 85%;
-    padding: 10px;
+    padding: 4px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -640,7 +638,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
-    z-index: 10;
+    z-index: 10000;
     overflow-y: auto;
 }
 
@@ -660,12 +658,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #rightbar #rb_action {
     list-style-type: none;
-    padding: 4px;
 }
 
 #rightbar #rb_action li {
-    margin-right: 5px;
     display: inline;
+    margin-bottom: 5px;
+    margin-right: 5px;
 }
 
 #rightbar li #rb_add, #rightbar li #pl_add {
@@ -697,7 +695,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar .submenu {
     display: none;
     position: fixed;
-    top: 120px;
+    top: 98px;
     right: 15px;
     border: 2px solid;
     width: 210px;
@@ -744,7 +742,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Content
 ***********************************************/
 #content {
-    z-index: 3;
+    z-index: 3000000;
     -webkit-transition: top .5s;
     -moz-transition: top .5s;
     -ms-transition: top .5s;
@@ -765,7 +763,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .content-float {
-    margin: 20px 250px 0px 205px;
+    margin: 5px 0 0 160px;
 }
 
 .content-right-wild {
@@ -773,7 +771,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .content-left-wild {
-    margin-left: 90px !important;
+    margin-left: 80px !important;
 }
 
 .content-fixed {
@@ -1378,6 +1376,7 @@ span.fatalerror {
 }
 
 .external_links {
+    margin-top: 10px
     text-align: right;
 }
 

@@ -46,7 +46,6 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
         echo T_('Videos');
     } ?></td>
     </tr>
-    <tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>
 <table class="tabledata" cellpadding="3" cellspacing="0">
     <tr id="search_max_results">

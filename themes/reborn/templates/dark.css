@@ -125,7 +125,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #headerlogo, #registerPage #headerlogo {
-    background-image: url('../images/ampache-reborn.png');
+    background-image: url('../images/ampache-dark.png');
 }
 
 #loginPage #loginbox, #registerPage #registerbox {

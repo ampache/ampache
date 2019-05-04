@@ -36,7 +36,7 @@ $web_path = AmpConfig::get('web_path');
         <?php
         foreach ($catalogs as $type) {
             $catalog = Catalog::create_catalog_type($type);
-            if ($catalog == null) {
+            if ($catalog === null) {
                 continue;
             }
             $catalog->format();

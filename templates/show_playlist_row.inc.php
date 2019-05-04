@@ -39,8 +39,10 @@
 <?php if (AmpConfig::get('playlist_art')) {
         ?>
 <td class="cel_cover">
+<div style="max-width: 128px;">
     <?php
-    $libitem->display_art(3); ?>
+    $libitem->display_art(2); ?>
+</div>
 </td>
 <?php
     } ?>

@@ -36,7 +36,7 @@
             <th class="cel_add essential"></th>
             <th class="cel_last_update optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update'); ?></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
-            <th class="cel_medias optional"><?php echo T_('# Medias'); ?></th>
+            <th class="cel_medias optional"><?php echo T_('# Items'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'), 'playlist_sort_owner'); ?></th>
             <?php if (User::is_registered()) {
         ?>
@@ -90,7 +90,7 @@
             <th class="cel_add essential"></th>
             <th class="cel_last_update"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update_bottom'); ?></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
-            <th class="cel_medias optional"><?php echo T_('# Medias'); ?></th>
+            <th class="cel_medias optional"><?php echo T_('# Items'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'), 'playlist_sort_owner_bottom'); ?></th>
             <?php if (User::is_registered()) {
             ?>

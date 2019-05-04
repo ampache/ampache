@@ -33,11 +33,6 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-            <?php if (Access::check('interface', 50)) {
-    ?>
-            <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-            <?php
-} ?>
         </tr>
     </thead>
     <tbody>
@@ -56,13 +51,6 @@ foreach ($data as $row) {
     if (!$is_allowed) {
         $has_allowed_time  = Preference::get_by_user($row_user->id, 'allow_personal_info_time');
         $has_allowed_agent = Preference::get_by_user($row_user->id, 'allow_personal_info_agent');
-    }
-
-    if ($is_allowed || $has_allowed_agent) {
-        $agent = $row['agent'];
-        if (!empty($row['geo_name'])) {
-            $agent .= ' - ' . $row['geo_name'];
-        }
     }
 
     if ($is_allowed || $has_allowed_time) {
@@ -132,15 +120,7 @@ foreach ($data as $row) {
             </a>
         </td>
         <td class="cel_lastplayed"><?php echo $time_string; ?></td>
-        <?php if (Access::check('interface', 50)) {
-        ?>
-        <td class="cel_agent">
-            <?php if (!empty($agent)) {
-            echo UI::get_icon('info', $agent);
-        } ?>
         </td>
-        <?php
-    } ?>
     </tr>
 <?php
     ++$nb;
@@ -163,11 +143,6 @@ foreach ($data as $row) {
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-            <?php if (Access::check('interface', 50)) {
-        ?>
-            <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-            <?php
-    } ?>
         </tr>
     </tfoot>
 </table>
