@@ -423,7 +423,7 @@ class Session
     {
         if (!function_exists('session_start')) {
             header("Location:" . AmpConfig::get('web_path') . "/test.php");
-            exit;
+            return false;
         }
 
         session_set_save_handler(

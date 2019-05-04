@@ -30,7 +30,7 @@ if (!Core::is_session_started()) {
 }
 
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 if (isset($_REQUEST['browse_id'])) {
@@ -105,7 +105,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
                 // Check the perms we need to on this
                 $playlist = new Playlist($_REQUEST['id']);
                 if (!$playlist->has_access()) {
-                    exit;
+                    return false;
                 }
 
                 // Delete it!
@@ -115,21 +115,21 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             case 'smartplaylist':
                 $playlist = new Search($_REQUEST['id'], 'song');
                 if (!$playlist->has_access()) {
-                    exit;
+                    return false;
                 }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
                 if (!$GLOBALS['user']->has_access('75')) {
-                    exit;
+                    return false;
                 }
                 $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
             break;
             default:
-                exit;
+                return false;
         } // end switch on type
 
         $results[$key] = '';
@@ -210,7 +210,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (Core::is_library_item($object_type) && $object_id > 0) {
             Share::display_ui_links($object_type, $object_id);
-            exit;
+            return false;
         }
     break;
     default:

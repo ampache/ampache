@@ -21,7 +21,7 @@
  */
 
 if (INIT_LOADED != '1') {
-    exit;
+    return false;
 }
 
 $web_path          = AmpConfig::get('web_path');

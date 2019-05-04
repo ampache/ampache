@@ -26,7 +26,7 @@ require_once 'lib/init.php';
 /* Check Perms */
 if (!AmpConfig::get('use_rss') || AmpConfig::get('demo_mode')) {
     UI::access_denied();
-    exit;
+    return false;
 }
 
 // Add in our base hearder defining the content type

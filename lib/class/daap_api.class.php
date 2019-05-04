@@ -406,7 +406,7 @@ class Daap_Api
                     $params .= '&transcode_to=' . $type;
                     $url = Song::play_url($id, $params, 'api', true);
                     self::follow_stream($url);
-                    exit();
+                    return false;
                 }
             }
         } elseif (count($input) == 4) {
@@ -842,7 +842,7 @@ class Daap_Api
         
         $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
         self::apiOutput($html);
-        exit();
+        return false;
     }
 
     /**
@@ -857,6 +857,6 @@ class Daap_Api
         }
         $o = self::tlv($tag, $o);
         self::apiOutput($o);
-        exit();
+        return false;
     }
 }

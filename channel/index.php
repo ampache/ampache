@@ -36,12 +36,12 @@ set_time_limit(0);
 $channel = new Channel($_REQUEST['channel']);
 if (!$channel->id) {
     debug_event('channel', 'Unknown channel.', '1');
-    exit;
+    return false;
 }
 
 if (!function_exists('curl_version')) {
     debug_event('channel', 'Error: Curl is required for this feature.', '1');
-    exit;
+    return false;
 }
 
 // Authenticate the user here
@@ -63,7 +63,7 @@ if ($channel->is_private) {
                     !Access::check_network('network', User::get_user_id(), '25')) {
                     debug_event('UI::access_denied', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
                     UI::access_denied();
-                    exit;
+                    return false;
                 }
             }
         }
@@ -73,7 +73,7 @@ if ($channel->is_private) {
         header('WWW-Authenticate: Basic realm="Ampache Channel Authentication"');
         header('HTTP/1.0 401 Unauthorized');
         echo T_('Unauthorized.');
-        exit;
+        return false;
     }
 }
 

@@ -24,7 +24,7 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit();
+    return false;
 }
 
 UI::show_header();
@@ -33,7 +33,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete_record':
         if (!Core::form_verify('delete_access')) {
             UI::access_denied();
-            exit;
+            return false;
         }
         Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $url = AmpConfig::get('web_path') . '/admin/access.php';
@@ -52,7 +52,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         // Make sure we've got a valid form submission
         if (!Core::form_verify('add_acl', 'post')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         Access::create($_POST);
@@ -80,7 +80,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'update_record':
         if (!Core::form_verify('edit_acl')) {
             UI::access_denied();
-            exit;
+            return false;
         }
         $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->update($_POST);

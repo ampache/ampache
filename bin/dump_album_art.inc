@@ -41,6 +41,3 @@ foreach ($catalogs as $catalog_id) {
     $catalog = Catalog::create_from_id($catalog_id);
     $catalog->dump_album_art(array('metadata' => $meta));
 }
-
-
-?>

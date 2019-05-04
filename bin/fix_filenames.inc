@@ -41,7 +41,7 @@ ob_end_clean();
 if (!function_exists('iconv')) {
     echo T_("ERROR: Iconv required for this functionality, quitting");
     echo "\n";
-    exit;
+    return false;
 }
 
 // Attempt to figure out what the System Charset is
@@ -237,5 +237,3 @@ function charset_clean_name($string) {
         return $string;
 
 } // charset_clean_name
-
-?>

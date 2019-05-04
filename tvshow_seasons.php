@@ -51,7 +51,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (!Catalog::can_remove($tvshow_season)) {
             debug_event('tvshow_season', 'Unauthorized to remove the tvshow `.' . $tvshow_season->id . '`.', 1);
             UI::access_denied();
-            exit;
+            return false;
         }
 
         if ($tvshow_season->remove_from_disk()) {

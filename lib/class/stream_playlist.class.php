@@ -296,7 +296,7 @@ class Stream_Playlist
             // Our ID is the SID, so we always want to include it
             AmpConfig::set('require_session', true, true);
             header('Location: ' . Stream::get_base_url() . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
-            exit;
+            return false;
         }
 
         if (isset($ext)) {
@@ -616,7 +616,7 @@ class Stream_Playlist
         $url = current($this->urls);
         $url = Stream_URL::add_options($url->url, '&action=download');
         header('Location: ' . $url);
-        exit;
+        return false;
     } //create_download
 
     /**

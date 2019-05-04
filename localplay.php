@@ -27,7 +27,7 @@ UI::show_header();
 // Check to see if we've got the rights to be here
 if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '25')) {
     UI::access_denied();
-    exit;
+    return false;
 }
 
 switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {

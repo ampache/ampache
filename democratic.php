@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 /* Make sure they have access to this */
 if (!AmpConfig::get('allow_democratic_playback')) {
     UI::access_denied();
-    exit;
+    return false;
 }
 
 UI::show_header();
@@ -67,7 +67,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
         if (!Core::form_verify('create_democratic')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         $democratic = Democratic::get_current_playlist();

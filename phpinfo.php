@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 if (!Access::check('interface', 100)) {
     UI::access_denied();
-    exit();
+    return false;
 }
 
 phpinfo();

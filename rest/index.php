@@ -25,7 +25,7 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('subsonic_backend')) {
     echo "Disabled.";
-    exit;
+    return false;
 }
 
 $action = strtolower($_REQUEST['ssaction']);
@@ -45,7 +45,7 @@ if (!AmpConfig::get('access_control')) {
     debug_event('Access Control', 'Error Attempted to use Subsonic API with Access Control turned off', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
-    exit;
+    return false;
 }
 
 // Authenticate the user with preemptive HTTP Basic authentication first
@@ -70,7 +70,7 @@ if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || emp
     ob_end_clean();
     debug_event('subsonic', 'Missing Subsonic base parameters', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM), $callback);
-    exit();
+    return false;
 }
 
 if (isset($token) && isset($salt)) {
@@ -86,7 +86,7 @@ if (isset($token) && isset($salt)) {
     debug_event('Access Denied', 'Token authentication not supported in Subsonic API for user [' . $user . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_TOKENAUTHNOTSUPPORTED), $callback);
-    exit();
+    return false;
 }
 
 $password = Subsonic_Api::decrypt_password($password);
@@ -97,14 +97,14 @@ if (!$auth['success']) {
     debug_event('Access Denied', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH), $callback);
-    exit();
+    return false;
 }
 
 if (!Access::check_network('init-api', $user, 5)) {
     debug_event('Access Denied', 'Unauthorized access attempt to Subsonic API [' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'), $callback);
-    exit();
+    return false;
 }
 
 $GLOBALS['user'] = User::get_from_username($user);
@@ -113,7 +113,7 @@ if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     ob_end_clean();
     debug_event('subsonic', 'Requested client version is not supported', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER), $callback);
-    exit();
+    return false;
 }
 Preference::init();
 
@@ -176,7 +176,7 @@ foreach ($methods as $method) {
     if ($action == $method) {
         call_user_func(array('subsonic_api', $method), $params);
         // We only allow a single function to be called, and we assume it's cleaned up!
-        exit();
+        return false;
     }
 } // end foreach methods in API
 

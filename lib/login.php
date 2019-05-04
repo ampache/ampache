@@ -35,7 +35,7 @@ if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
         debug_event('UI::access_denied', 'Access Denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', '3');
         UI::access_denied();
-        exit();
+        return false;
     }
 } // access_control is enabled
 
@@ -74,7 +74,7 @@ if (empty($_REQUEST['step'])) {
                 $username = $auth['username'];
             } elseif ($auth['ui_required']) {
                 echo $auth['ui_required'];
-                exit();
+                return false;
             } else {
                 debug_event('Login', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' attempted to login and failed', '1');
                 AmpError::add('general', T_('Error Username or Password incorrect, please try again'));
@@ -205,8 +205,8 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         strpos($_POST['referrer'], 'activate.php') === false &&
         strpos($_POST['referrer'], 'admin') === false) {
         header('Location: ' . $_POST['referrer']);
-        exit();
+        return false;
     } // if we've got a referrer
     header('Location: ' . AmpConfig::get('web_path') . '/index.php');
-    exit();
+    return false;
 } // auth success

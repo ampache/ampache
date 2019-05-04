@@ -25,7 +25,7 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $user_id = (int) ($_REQUEST['user_id']);

@@ -28,7 +28,7 @@ $version = "1.0";
 
 if (count($GLOBALS['argv']) != 2) {
     usage();
-    exit;
+    return false;
 } else {
     $filename = $GLOBALS['argv'][1];
 }
@@ -37,7 +37,7 @@ if(!file_exists($filename)) {
     print T_("File not found.");
     print "\n";
     usage();
-    exit;
+    return false;
 }
 
 printf(T_('Reading: %s'), $filename);
@@ -85,5 +85,3 @@ function usage() {
     return print $text;
 
 }// usage()
-
-?>

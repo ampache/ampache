@@ -22,7 +22,7 @@
 
 /* Make sure they aren't directly accessing it */
 if (!defined('INIT_LOADED') || INIT_LOADED != '1') {
-    exit;
+    return false;
 }
 
 /**
@@ -136,7 +136,7 @@ class Dba
         $dbh = self::dbh();
         if (!$dbh) {
             debug_event('Dba', 'Wrong dbh.', 1);
-            exit;
+            return false;
         }
         $var = $dbh->quote($var);
         // This is slightly less ugly than it was, but still ugly
