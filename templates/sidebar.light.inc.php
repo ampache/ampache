@@ -30,7 +30,6 @@ $web_path = AmpConfig::get('web_path');
     <li><a href="<?php echo $web_path ?>/browse.php?action=smartplaylist"><img src="<?php echo $web_path ?>/images/topmenu-playlist.png" title="<?php echo T_('Smartlists') ?>" /><br /><?php echo T_('Smartlists') ?></a></li>
     <li><a href="<?php echo $web_path ?>/browse.php?action=tag"><img src="<?php echo $web_path ?>/images/topmenu-tagcloud.png" title="<?php echo T_('Tag Cloud') ?>" /><br /><?php echo T_('Tag Cloud') ?></a></li>
     <?php if (AmpConfig::get('live_stream')) {
-<?php if (AmpConfig::get('live_stream')) {
     ?>
     <li><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><img src="<?php echo $web_path ?>/images/topmenu-radio.png" title="<?php echo T_('Radio Stations') ?>" /><br /><?php echo T_('Radio') ?></a></li>
     <?php
