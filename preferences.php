@@ -84,9 +84,9 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             return false;
         }
 
-        update_preferences($_POST['user_id']);
+        update_preferences(filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT));
 
-        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_POST['user_id']));
+        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . (string) scrub_out(filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT)));
     break;
     case 'admin':
         // Make sure only admins here

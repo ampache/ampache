@@ -58,8 +58,8 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
          * and 'click here to login' would just be a link back to index.php
          */
         $fullname       = scrub_in($_POST['fullname']);
-        $username       = scrub_in($_POST['username']);
-        $email          = scrub_in($_POST['email']);
+        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
+        $email          = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website        = scrub_in($_POST['website']);
         $pass1          = $_POST['password_1'];
         $pass2          = $_POST['password_2'];
@@ -87,7 +87,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             }
         } // if they have to agree to something
 
-        if (!$_POST['username']) {
+        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)) {
             AmpError::add('username', T_("You did not enter a username"));
         }
 

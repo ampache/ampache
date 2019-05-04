@@ -57,7 +57,7 @@ if (empty($_REQUEST['step'])) {
             $auth['info']['offset_limit']    = 25;
         } else {
             if ($_POST['username']) {
-                $username = scrub_in($_POST['username']);
+                $username = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
                 $password = $_POST['password'];
             } else {
                 if ($_SERVER['REMOTE_USER']) {

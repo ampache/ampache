@@ -31,15 +31,16 @@ switch ($action) {
         $result = false;
         if (isset($_POST['email']) && $_POST['email']) {
             /* Get the email address and the current ip*/
-            $email      = scrub_in($_POST['email']);
+            $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
             $current_ip =(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
             $result     = send_newpassword($email, $current_ip);
         }
+        /* Do not acknowledge a password has been sent or failed
         if ($result) {
             AmpError::add('general', T_('Password has been sent'));
         } else {
             AmpError::add('general', T_('Password has not been sent'));
-        }
+        }*/
 
         require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');
         break;
@@ -49,10 +50,16 @@ switch ($action) {
 
 function send_newpassword($email, $current_ip)
 {
-    /* get the Client and set the new password */
+    // get the Client and set the new password
     $client = User::get_from_email($email);
+
+    // do not allow administrator password resets
+    if ($client->has_access(100)) {
+
+        return false;
+    }
     if ($client && $client->email == $email) {
-        $newpassword = generate_password(6);
+        $newpassword = generate_password();
         $client->update_password($newpassword);
 
         $mailer = new Mailer();

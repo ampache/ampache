@@ -44,14 +44,14 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         }
 
         /* Clean up the variables */
-        $user_id         = (int) $_POST['user_id'];
-        $username        = scrub_in($_POST['username']);
+        $user_id         = (int) filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+        $username        = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
         $fullname        = scrub_in($_POST['fullname']);
-        $email           = scrub_in($_POST['email']);
+        $email           = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website         = scrub_in($_POST['website']);
         $access          = scrub_in($_POST['access']);
-        $pass1           = $_POST['password_1'];
-        $pass2           = $_POST['password_2'];
+        $pass1           = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING);
+        $pass2           = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING);
         $state           = scrub_in($_POST['state']);
         $city            = scrub_in($_POST['city']);
         $fullname_public = isset($_POST['fullname_public']);
@@ -126,13 +126,13 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             return false;
         }
 
-        $username       = scrub_in($_POST['username']);
+        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
         $fullname       = scrub_in($_POST['fullname']);
-        $email          = scrub_in($_POST['email']);
+        $email          = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website        = scrub_in($_POST['website']);
         $access         = scrub_in($_POST['access']);
-        $pass1          = $_POST['password_1'];
-        $pass2          = $_POST['password_2'];
+        $pass1          = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING);
+        $pass2          = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING);
         $state          = (string) scrub_in($_POST['state']);
         $city           = (string) scrub_in($_POST['city']);
 
