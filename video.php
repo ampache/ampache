@@ -48,7 +48,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (!Catalog::can_remove($video)) {
             debug_event('video', 'Unauthorized to remove the video `.' . $video->id . '`.', 1);
             UI::access_denied();
-            exit;
+            return false;
         }
 
         if ($video->remove_from_disk()) {

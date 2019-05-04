@@ -30,7 +30,7 @@ if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'delete_
         $playlist->delete();
         // Go elsewhere
         header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=smartplaylist');
-        exit;
+        return false;
     }
 }
 

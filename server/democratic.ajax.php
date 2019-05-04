@@ -24,7 +24,7 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $democratic = Democratic::get_current_playlist();
@@ -49,7 +49,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'delete':
         if (!$GLOBALS['user']->has_access('75')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
-            exit;
+            return false;
         }
 
         $democratic->delete_votes($_REQUEST['row_id']);
@@ -58,7 +58,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'send_playlist':
         if (!Access::check('interface', '75')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
-            exit;
+            return false;
         }
 
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
@@ -67,7 +67,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'clear_playlist':
         if (!Access::check('interface', '100')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
-            exit;
+            return false;
         }
 
         $democratic = new Democratic($_REQUEST['democratic_id']);

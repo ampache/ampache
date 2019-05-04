@@ -32,7 +32,7 @@ Preference::init();
 if (!AmpConfig::get('share')) {
     debug_event('UI::access_denied', 'Access Denied: sharing features are not enabled.', '3');
     UI::access_denied();
-    exit();
+    return false;
 }
 
 switch ($action) {
@@ -53,16 +53,16 @@ switch ($action) {
             }
         }
         UI::show_footer();
-        exit;
+        return false;
     case 'create':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         if (!Core::form_verify('add_share', 'post')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         UI::show_header();
@@ -85,7 +85,7 @@ switch ($action) {
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/stats.php?action=share');
         }
         UI::show_footer();
-        exit;
+        return false;
     case 'show_delete':
         UI::show_header();
         $id = $_REQUEST['id'];
@@ -93,11 +93,11 @@ switch ($action) {
         $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($id);
         show_confirmation(T_('Share Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_share');
         UI::show_footer();
-        exit;
+        return false;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         UI::show_header();
@@ -107,11 +107,11 @@ switch ($action) {
             show_confirmation(T_('Share Deleted'), T_('The Share has been deleted'), $next_url);
         }
         UI::show_footer();
-        exit;
+        return false;
     case 'clean':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         UI::show_header();
@@ -119,17 +119,17 @@ switch ($action) {
         $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
         show_confirmation(T_('Shared Objects cleaned'), T_('Expired shared objects have been cleaned.'), $next_url);
         UI::show_footer();
-        exit;
+        return false;
     case 'external_share':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         $plugin = new Plugin($_GET['plugin']);
         if (!$plugin) {
             UI::access_denied('Access Denied - Unkown external share plugin.');
-            exit;
+            return false;
         }
         $plugin->load($GLOBALS['user']);
 
@@ -143,7 +143,7 @@ switch ($action) {
         $share->format(true);
 
         header("Location: " . $plugin->_plugin->external_share($share->public_url, $share->f_name));
-        exit;
+        return false;
 }
 
 /**
@@ -155,7 +155,7 @@ if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
         debug_event('UI::access_denied', 'Access Denied:' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', '3');
         UI::access_denied();
-        exit();
+        return false;
     }
 } // access_control is enabled
 
@@ -173,7 +173,7 @@ if (empty($action) && $share->id) {
 
 if (!$share->is_valid($secret, $action)) {
     UI::access_denied();
-    exit();
+    return false;
 }
 
 $share->format();
@@ -195,5 +195,5 @@ if ($action == 'download') {
 } else {
     debug_event('UI::access_denied', 'Access Denied: unknown action.', '3');
     UI::access_denied();
-    exit();
+    return false;
 }

@@ -92,5 +92,3 @@ else {
     echo T_("Access Denied, config migration failed");
     echo "\n";
 }
-
-?>

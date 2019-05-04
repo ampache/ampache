@@ -34,7 +34,7 @@ if (AmpConfig::get('use_auth') && !isset($_GET['force_display'])) {
     }
     if ($auth) {
         header("Location: " . AmpConfig::get('web_path'));
-        exit;
+        return false;
     }
 }
 require_once 'lib/login.php';

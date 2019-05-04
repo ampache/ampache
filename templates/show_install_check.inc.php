@@ -22,7 +22,7 @@
 require $prefix . '/templates/install_header.inc.php';
 ?>
 <?php if (!defined('INSTALL')) {
-    exit;
+    return false;
 } ?>
         <div class="page-header requirements">
             <h1><?php echo T_('Requirements'); ?></h1>

@@ -53,4 +53,3 @@ while ($row = Dba::fetch_assoc($db_results)) {
         $del_results = Dba::write($sql, array($row['id']));
     }
 }
-?>

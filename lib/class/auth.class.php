@@ -77,7 +77,7 @@ class Auth
             header('Location: ' . $target);
         }
 
-        exit;
+        return false;
     }
 
     /**

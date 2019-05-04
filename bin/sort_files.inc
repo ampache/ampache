@@ -277,7 +277,9 @@ function sort_move_file($song,$fullname) {
         }
 
         debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');
-        @copy($old_art,$folder_art);
+        if (copy($old_art, $folder_art) === false) {
+            throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+        }
 
         if (!$results) { printf (T_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
 
@@ -304,5 +306,3 @@ function sort_move_file($song,$fullname) {
     return true;
 
 } // sort_move_file
-
-?>

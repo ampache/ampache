@@ -41,5 +41,3 @@ if (AmpConfig::get('upnp_backend')) {
 
 ob_end_flush(); 
 echo "\n"; 
-
-?>

@@ -24,7 +24,7 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit;
+    return false;
 }
 
 UI::show_header();
@@ -63,7 +63,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         } // end switch on format
 
         // We don't want the footer so we're done here
-        exit;
+        return false;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_export.inc.php');
     break;

@@ -25,10 +25,10 @@ require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.ph
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit;
+    return false;
 }
 if (AmpConfig::get('demo_mode')) {
-    exit;
+    return false;
 }
 
 ob_end_clean();

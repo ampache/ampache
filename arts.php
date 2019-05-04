@@ -28,7 +28,7 @@ $object_type = $_GET['object_type'];
 $object_id   = $_GET['object_id'];
 if (!Core::is_library_item($object_type)) {
     UI::access_denied();
-    exit;
+    return false;
 }
 $burl = '';
 if (isset($_GET['burl'])) {
@@ -39,7 +39,7 @@ $item = new $object_type($object_id);
 // If not a content manager user then kick em out
 if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != User::get_user_id())) {
     UI::access_denied();
-    exit;
+    return false;
 }
 
 /* Switch on Action */

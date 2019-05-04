@@ -1178,7 +1178,7 @@ class easy_captcha_utility
                     print $bin;
                 }
             }
-            exit;
+            return false;
         }
     }
 

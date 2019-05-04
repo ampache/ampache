@@ -24,7 +24,7 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $results = array();
@@ -239,11 +239,11 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
                 if (Access::check('interface', '100')) {
                     $button = $_REQUEST['button'];
                 } else {
-                    exit;
+                    return false;
                 }
             break;
             default:
-                exit;
+                return false;
         } // end switch on button
 
         Ajax::set_include_override(true);

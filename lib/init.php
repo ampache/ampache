@@ -62,7 +62,7 @@ if (!check_php() || !check_dependencies_folder()) {
 // Do the redirect if we can't continue
 if (!empty($link)) {
     header("Location: $link");
-    exit();
+    return false;
 }
 
 $results['load_time_begin'] = $load_time_begin;
@@ -156,7 +156,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         if (!Session::auth_remember()) {
             Auth::logout($_COOKIE[AmpConfig::get('session_name')]);
-            exit;
+            return false;
         }
     }
 
@@ -169,7 +169,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     /* If the user ID doesn't exist deny them */
     if (!User::get_user_id() && !AmpConfig::get('demo_mode')) {
         Auth::logout(session_id());
-        exit;
+        return false;
     }
 
     /* Load preferences and theme */
@@ -202,7 +202,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         }
         if (!User::get_user_id() and !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());
-            exit;
+            return false;
         }
         $GLOBALS['user']->update_last_seen();
     }
@@ -248,7 +248,7 @@ unset($results);
 if (!defined('OUTDATED_DATABASE_OK')) {
     if (Update::need_update()) {
         header("Location: " . AmpConfig::get('web_path') . "/update.php");
-        exit();
+        return false;
     }
 }
 // For the XMLRPC stuff

@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 if (!AmpConfig::get('channel')) {
     UI::access_denied();
-    exit;
+    return false;
 }
 
 UI::show_header();
@@ -41,16 +41,16 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             }
         }
         UI::show_footer();
-        exit;
+        return false;
     case 'create':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         if (!Core::form_verify('add_channel', 'post')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         $created = Channel::create($_REQUEST['name'], $_REQUEST['description'], $_REQUEST['url'], $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['interface'], $_REQUEST['port'], $_REQUEST['admin_password'], isset($_REQUEST['private']) ? 1 : 0, $_REQUEST['max_listeners'], $_REQUEST['random'] ?: 0, $_REQUEST['loop'] ?: 0, $_REQUEST['stream_type'], $_REQUEST['bitrate']);
@@ -62,18 +62,18 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=channel');
         }
         UI::show_footer();
-        exit;
+        return false;
     case 'show_delete':
         $id = $_REQUEST['id'];
 
         $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($id);
         show_confirmation(T_('Channel Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_channel');
         UI::show_footer();
-        exit;
+        return false;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         $id      = $_REQUEST['id'];
@@ -83,7 +83,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
             show_confirmation(T_('Channel Deleted'), T_('The Channel has been deleted'), $next_url);
         }
         UI::show_footer();
-        exit;
+        return false;
 } // switch on the action
 
 UI::show_footer();

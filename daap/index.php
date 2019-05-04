@@ -25,7 +25,7 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('daap_backend')) {
     echo "Disabled.";
-    exit;
+    return false;
 }
 
 $action = $_GET['action'];
@@ -43,10 +43,11 @@ $internal_functions = array('apiOutput', 'create_dictionary', 'createError', 'ou
 
 Daap_Api::create_dictionary();
 
-$params = array_filter(explode('/', $action), 'strlen');
-if (count($params) > 0) {
+$params  = array_filter(explode('/', $action), 'strlen');
+$p_count = count($params);
+if ($p_count > 0) {
     // Recurse through them and see if we're calling one of them
-    for ($i = count($params); $i > 0; $i--) {
+    for ($i = $p_count; $i > 0; $i--) {
         $act = strtolower(implode('_', array_slice($params, 0, $i)));
         $act = str_replace("-", "_", $act);
         foreach ($methods as $method) {
@@ -57,9 +58,9 @@ if (count($params) > 0) {
             // If the method is the same as the action being called
             // Then let's call this function!
             if ($act == $method) {
-                call_user_func(array('daap_api', $method), array_slice($params, $i, count($params) - $i));
+                call_user_func(array('daap_api', $method), array_slice($params, $i, $p_count - $i));
                 // We only allow a single function to be called, and we assume it's cleaned up!
-                exit();
+                return false;
             }
         } // end foreach methods in API
     }

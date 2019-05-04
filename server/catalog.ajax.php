@@ -24,14 +24,14 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'flip_state':
         if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to change the state of a catalog', '1');
-            exit;
+            return false;
         }
 
         $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);

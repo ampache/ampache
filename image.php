@@ -36,7 +36,7 @@ if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
     // Check to see if they've got an interface session or a valid API session, if not GTFO
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
         debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
-        exit;
+        return false;
     }
 }
 
@@ -52,7 +52,7 @@ if (!isset($_GET['object_type'])) {
 
 $type = $_GET['object_type'];
 if (!Art::is_valid_type($type)) {
-    exit;
+    return false;
 }
 
 /* Decide what size this image is */
@@ -98,7 +98,7 @@ if (!$typeManaged) {
             // Same image than the cached one? Use the cache.
             if ($cetag == $etag) {
                 header('HTTP/1.1 304 Not Modified');
-                exit;
+                return false;
             }
         }
     }

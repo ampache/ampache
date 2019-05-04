@@ -49,6 +49,3 @@ while ($row = Dba::fetch_assoc($db_results)) {
         Dba::write($sql);
     }
 }
-
-
-?>

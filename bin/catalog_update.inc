@@ -46,7 +46,7 @@ if (count($options) == 0) {
 
         if (array_key_exists('h', $options)) {
             usage();
-            exit;
+            return false;
         }
         if (array_key_exists('m', $options)) {
             $operations_string .= "\n\t- " . T_('Temporary deactivate PHP memory limit');
@@ -87,7 +87,7 @@ if (count($options) == 0) {
 }
 if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
     usage();
-    exit;
+    return false;
 }
 
 if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0) {    //didn't pass any clean/verify/add arguments
@@ -236,5 +236,3 @@ function usage() {
     echo "----------------------------------------------------------";
     echo "\n";
 }
-
-?>

@@ -24,7 +24,7 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '75')) {
     UI::access_denied();
-    exit();
+    return false;
 }
 
 UI::show_header();
@@ -34,7 +34,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'send_mail':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+            return false;
         }
 
         // Multi-byte Character Mail

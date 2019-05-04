@@ -28,12 +28,12 @@ require_once 'lib/init.php';
 // Check to see if they've got an interface session or a valid API session, if not GTFO
 if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
     debug_event('graph', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
-    exit;
+    return false;
 }
 
 if (!AmpConfig::get('statistical_graphs')) {
     debug_event('graph', 'Access denied, statistical graph disabled.', 1);
-    exit;
+    return false;
 }
 
 $type = $_REQUEST['type'];

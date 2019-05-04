@@ -1211,9 +1211,10 @@ class vainfo
         $abbr         = explode(",", AmpConfig::get('common_abbr'));
         $commonabbr   = preg_replace("~\n~", '', $abbr);
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
+        $abbr_count   = count($commonabbr);
 
         //scan for brackets, braces, etc and ignore case.
-        for ($i=0; $i < count($commonabbr);$i++) {
+        for ($i=0; $i < $abbr_count;$i++) {
             $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
         }
         $string = preg_replace($commonabbr, '', $name);

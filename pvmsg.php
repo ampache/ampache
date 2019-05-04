@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 if (!Access::check('interface', '25') || !AmpConfig::get('sociable')) {
     debug_event('UI::access_denied', 'Access Denied: sociable features are not enabled.', '3');
     UI::access_denied();
-    exit();
+    return false;
 }
 
 UI::show_header();
@@ -83,7 +83,7 @@ switch ($action) {
             } else {
                 debug_event('UI::access_denied', 'Unknown or unauthorized private message `' . $pvmsg->id . '`.', '3');
                 UI::access_denied();
-                exit();
+                return false;
             }
         }
 
@@ -117,7 +117,7 @@ switch ($action) {
             } else {
                 debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
                 UI::access_denied();
-                exit();
+                return false;
             }
         }
 
@@ -136,7 +136,7 @@ switch ($action) {
         } else {
             debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
             UI::access_denied();
-            exit();
+            return false;
         }
     break;
 }

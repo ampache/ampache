@@ -58,7 +58,7 @@ if ($cargv > 1) {
 
 if ($chanid <= 0) {
     usage();
-    exit;
+    return false;
 }
 
 // Transcode is mandatory to have consistent stream codec
@@ -328,8 +328,9 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
     }
 
     $headers = explode("\n", $data);
+    $h_count = count($headers);
 
-    if (count($headers) > 0) {
+    if ($h_count > 0) {
         $cmd = explode(" ", $headers[0]);
         if ($cmd['0'] == 'GET') {
             switch ($cmd['1']) {
@@ -341,7 +342,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                             );
 
                     //debug_event('channel', 'HTTP HEADERS: '.$data,'5');
-                    for ($i = 1; $i < count($headers); $i++) {
+                    for ($i = 1; $i < $h_count; $i++) {
                         $headerpart = explode(":", $headers[$i], 2);
                         $header = strtolower(trim($headerpart[0]));
                         $value = trim($headerpart[1]);
@@ -574,5 +575,3 @@ function strtohex($x) {
     foreach(str_split($x) as $c) $s.=sprintf("%02X",ord($c));
     return($s);
 }
-
-?>

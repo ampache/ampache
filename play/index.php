@@ -57,8 +57,9 @@ if (AmpConfig::get('transcode_player_customize')) {
     // Trick to avoid LimitInternalRecursion reconfiguration
     $vsettings = $_REQUEST['vsettings'];
     if ($vsettings) {
-        $vparts = explode('-', $vsettings);
-        for ($i = 0; $i < count($vparts); $i += 2) {
+        $vparts  = explode('-', $vsettings);
+        $v_count = count($vparts);
+        for ($i = 0; $i < $v_count; $i += 2) {
             switch ($vparts[$i]) {
                 case 'maxbitrate':
                     $maxbitrate = (int) ($vparts[$i + 1]);
@@ -96,7 +97,7 @@ $random     = Dba::escape($_REQUEST['random']);
 if (empty($oid) && empty($demo_id) && empty($random)) {
     debug_event('play', 'No object UID specified, nothing to play', 2);
     header('HTTP/1.1 400 Nothing To Play');
-    exit;
+    return false;
 }
 
 // Authenticate the user if specified
@@ -133,7 +134,7 @@ if (!empty($apikey)) {
 if (empty($uid)) {
     debug_event('play', 'No user specified', 2);
     header('HTTP/1.1 400 No User Specified');
-    exit;
+    return false;
 } elseif ($uid == '-1' && AmpConfig::get('use_auth')) {
     // Identify the user according to it's web session
     // We try to avoid the generic 'Ampache User' as much as possible
@@ -154,7 +155,7 @@ if (!$share_id) {
         if (make_bool($GLOBALS['user']->disabled)) {
             debug_event('UI::access_denied', $GLOBALS['user']->username . " is currently disabled, stream access denied", '3');
             header('HTTP/1.1 403 User Disabled');
-            exit;
+            return false;
         }
 
         // If require session is set then we need to make sure we're legit
@@ -168,7 +169,7 @@ if (!$share_id) {
                     if (!Session::exists('interface', $sid)) {
                         debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
                         header('HTTP/1.1 403 Session Expired');
-                        exit;
+                        return false;
                     }
                 }
             }
@@ -187,12 +188,12 @@ if (!$share_id) {
 
     if (!$share->is_valid($secret, 'stream')) {
         header('HTTP/1.1 403 Access Unauthorized');
-        exit;
+        return false;
     }
 
     if (!$share->is_shared_media($oid)) {
         header('HTTP/1.1 403 Access Unauthorized');
-        exit;
+        return false;
     }
 
     $GLOBALS['user'] = new User($share->user);
@@ -205,7 +206,7 @@ $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['prefe
 if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
     debug_event('UI::access_denied', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access, '3');
     UI::access_denied();
-    exit;
+    return false;
 }
 
 /*
@@ -217,7 +218,7 @@ if (AmpConfig::get('access_control')) {
         !Access::check_network('network', User::get_user_id(), '25')) {
         debug_event('UI::access_denied', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
         UI::access_denied();
-        exit;
+        return false;
     }
 } // access_control is enabled
 
@@ -227,10 +228,10 @@ if ($type == 'playlist' && isset($playlist_type)) {
     // Some rudimentary security
     if ($uid != $playlist->user) {
         UI::access_denied();
-        exit;
+        return false;
     }
     $playlist->generate_playlist($playlist_type, false);
-    exit;
+    return false;
 }
 
 /**
@@ -303,7 +304,7 @@ if ($type == 'song') {
 if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
     debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username . ' on ' . $media->get_stream_name(), 3);
     UI::access_denied();
-    exit;
+    return false;
 }
 
 if ($media->catalog) {
@@ -318,13 +319,13 @@ if ($media->catalog) {
             $democratic->delete_from_oid($oid, $type);
         }
         header('HTTP/1.1 404 File Disabled');
-        exit;
+        return false;
     }
 
     // If we are running in Legalize mode, don't play medias already playing
     if (AmpConfig::get('lock_songs')) {
         if (!Stream::check_lock_media($media->id, $type)) {
-            exit;
+            return false;
         }
     }
 
@@ -336,7 +337,7 @@ if ($media->catalog) {
         $media->stream();
     } else {
         header('Location: ' . $media->file);
-        exit;
+        return false;
     }
 }
 if ($media == null) {
@@ -344,7 +345,7 @@ if ($media == null) {
     if ($demo_id && isset($democratic)) {
         $democratic->delete_from_oid($oid, $type);
     }
-    exit;
+    return false;
 }
 
 /* If we don't have a file, or the file is not readable */
@@ -363,7 +364,7 @@ if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
 
     debug_event('play', "Media $media->file ($media->title) does not have a valid filename specified", 2);
     header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
-    exit;
+    return false;
 }
 
 // don't abort the script if user skips this media because we need to update now_playing
@@ -391,7 +392,7 @@ if ($_GET['action'] == 'download' and AmpConfig::get('download')) {
 
     if (!is_resource($fp)) {
         debug_event('Play', "Error: Unable to open $media->file for downloading", '2');
-        exit();
+        return false;
     }
 
     if (!$share_id) {
@@ -417,7 +418,7 @@ if ($_GET['action'] == 'download' and AmpConfig::get('download')) {
     }
 
     fclose($fp);
-    exit();
+    return false;
 } // if they are trying to download and they can
 
 // Prevent the script from timing out
@@ -560,7 +561,7 @@ if ($transcode) {
 
 if (!is_resource($fp)) {
     debug_event('play', "Failed to open $media->file for streaming", 2);
-    exit();
+    return false;
 }
 
 if (!$transcode) {
