@@ -431,11 +431,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .sidebar-header-title {
-    white-space: nowrap;
+    display: inline-block;
+    max-width: 148px;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 148px;
-    display: inline-block;
+    white-space: nowrap;
 }
 
 #sidebar-header {
