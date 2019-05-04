@@ -55,7 +55,6 @@ function send_newpassword($email, $current_ip)
 
     // do not allow administrator password resets
     if ($client->has_access(100)) {
-
         return false;
     }
     if ($client && $client->email == $email) {
