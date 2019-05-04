@@ -157,6 +157,7 @@ abstract class Catalog extends database_object
      */
     abstract public function get_rel_path($file_path);
     /**
+     * @param Song $media
      * @return media|null
      */
     abstract public function prepare_media($media);
@@ -373,7 +374,7 @@ abstract class Catalog extends database_object
     /**
      * Check if a file is a playlist.
      * @param string $file
-     * @return boolean
+     * @return integer
      */
     public static function is_playlist_file($file)
     {
@@ -478,7 +479,7 @@ abstract class Catalog extends database_object
      * against $GLOBALS['user'] to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param mixed $value
+     * @param boolean $value
      * @param int $catalog_id
      * @param int $level
      * @return boolean
@@ -990,6 +991,9 @@ abstract class Catalog extends database_object
         return $results;
     }
 
+    /**
+     * @param string $name
+     */
     public static function search_childrens($name, $catalog_id = 0)
     {
         $search                    = array();
@@ -1760,6 +1764,11 @@ abstract class Catalog extends database_object
     }
 
 
+    /**
+     * @param media $media
+     * @param string $sort_pattern
+     * @param string $rename_pattern
+     */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
         // Check for patterns
@@ -1880,26 +1889,26 @@ abstract class Catalog extends database_object
      * This is a wrapper function for all of the different cleaning
      * functions, it runs them in an order that resembles correctness.
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         debug_event('catalog', 'Database cleanup started', 5);
-        Song::gc();
-        Album::gc();
-        Artist::gc();
-        Video::gc();
-        Art::gc();
-        Stats::gc();
-        Rating::gc();
-        Userflag::gc();
-        Useractivity::gc();
-        Playlist::gc();
-        Tmp_Playlist::gc();
-        Shoutbox::gc();
-        Tag::gc();
+        Song::garbage_collection();
+        Album::garbage_collection();
+        Artist::garbage_collection();
+        Video::garbage_collection();
+        Art::garbage_collection();
+        Stats::garbage_collection();
+        Rating::garbage_collection();
+        Userflag::garbage_collection();
+        Useractivity::garbage_collection();
+        Playlist::garbage_collection();
+        Tmp_Playlist::garbage_collection();
+        Shoutbox::garbage_collection();
+        Tag::garbage_collection();
 
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
-        \Lib\Metadata\Repository\Metadata::gc();
-        \Lib\Metadata\Repository\MetadataField::gc();
+        \Lib\Metadata\Repository\Metadata::garbage_collection();
+        \Lib\Metadata\Repository\MetadataField::garbage_collection();
         debug_event('catalog', 'Database cleanup ended', 5);
     }
 
@@ -2474,7 +2483,7 @@ abstract class Catalog extends database_object
         }
 
         // Remove any orphaned artists/albums/etc.
-        self::gc();
+        self::garbage_collection();
     }
 }
 

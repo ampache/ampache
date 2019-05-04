@@ -459,7 +459,7 @@ class Song extends database_object implements media, library_item
      *
      * Cleans up the song_data table
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         Dba::write('DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` WHERE `song`.`id` IS NULL');
     }
@@ -898,6 +898,10 @@ class Song extends database_object implements media, library_item
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     } // compare_song_information
 
+    /**
+     * @param string[] $string_array
+     * @param string[] $skip_array
+     */
     public static function compare_media_information($media, $new_media, $string_array, $skip_array)
     {
         $array        = array();
@@ -1376,7 +1380,7 @@ class Song extends database_object implements media, library_item
      * This updates a song record that is housed in the song_ext_info table
      * These are items that aren't used normally, and often large/informational only
      * @param string $field
-     * @param mixed $value
+     * @param string $value
      * @param int $song_id
      * @param int $level
      * @param boolean $check_owner
@@ -1555,7 +1559,7 @@ class Song extends database_object implements media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -1743,6 +1747,7 @@ class Song extends database_object implements media, library_item
      * @param int $oid
      * @param string $additional_params
      * @param boolean $local
+     * @param string $player
      * @return string
      */
     public static function play_url($oid, $additional_params='', $player=null, $local=false)
@@ -2095,11 +2100,11 @@ class Song extends database_object implements media, library_item
             $sql     = "DELETE FROM `song` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::gc('song', $this->id);
-                Userflag::gc('song', $this->id);
-                Rating::gc('song', $this->id);
-                Shoutbox::gc('song', $this->id);
-                Useractivity::gc('song', $this->id);
+                Art::garbage_collection('song', $this->id);
+                Userflag::garbage_collection('song', $this->id);
+                Rating::garbage_collection('song', $this->id);
+                Shoutbox::garbage_collection('song', $this->id);
+                Useractivity::garbage_collection('song', $this->id);
             }
         } else {
             debug_event('song', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);

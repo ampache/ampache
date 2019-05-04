@@ -111,7 +111,7 @@ class Session
      *
      * This function is randomly called and it cleans up the spoo
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
@@ -120,10 +120,10 @@ class Session
         Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
-        Query::gc();
-        Tmp_Playlist::gc();
-        Stream_Playlist::gc();
-        Song_Preview::gc();
+        Query::garbage_collection();
+        Tmp_Playlist::garbage_collection();
+        Stream_Playlist::garbage_collection();
+        Song_Preview::garbage_collection();
 
         return true;
     }
@@ -142,6 +142,7 @@ class Session
      * _read
      *
      * This returns the specified column from the session row.
+     * @param string $column
      */
     private static function _read($key, $column)
     {
@@ -211,7 +212,7 @@ class Session
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $ip    = filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? inet_pton(filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP)) : '0';
+        $ip    = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)) : '0';
         $type  = $data['type'];
         $value = '';
         if (isset($data['value'])) {
@@ -298,6 +299,7 @@ class Session
      * This checks to see if the specified session of the specified type
      * exists
      * based on the type.
+     * @param string $type
      */
     public static function exists($type, $key)
     {
@@ -340,6 +342,7 @@ class Session
      * extend
      *
      * This takes a SID and extends its expiration.
+     * @param string $type
      */
     public static function extend($sid, $type = null)
     {
@@ -509,6 +512,9 @@ class Session
         return md5(uniqid(mt_rand(), true));
     }
 
+    /**
+     * @param string $token
+     */
     public static function storeTokenForUser($username, $token, $remember_length)
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";

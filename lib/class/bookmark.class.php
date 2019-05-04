@@ -44,6 +44,7 @@ class Bookmark extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull for
+     * @param string $object_type
      */
     public function __construct($object_id, $object_type = null, $user_id = null)
     {
@@ -81,7 +82,7 @@ class Bookmark extends database_object
      *
      * Remove bookmark for items that no longer exist.
      */
-    public static function gc($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array('song', 'video', 'podcast_episode');
 

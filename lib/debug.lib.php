@@ -249,6 +249,9 @@ function check_php_gd()
     return (extension_loaded('gd') || extension_loaded('gd2'));
 }
 
+/**
+ * @param string $val
+ */
 function return_bytes($val)
 {
     $val  = trim($val);

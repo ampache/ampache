@@ -81,6 +81,7 @@ class Tmp_Playlist extends database_object
      * get_from_session
      * This returns a playlist object based on the session that is passed to
      * us.  This is used by the load_playlist on user for the most part.
+     * @param string $session_id
      */
     public static function get_from_session($session_id)
     {
@@ -258,7 +259,7 @@ class Tmp_Playlist extends database_object
      * gc
      * This cleans up old data
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         self::prune_playlists();
         self::prune_tracks();

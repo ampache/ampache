@@ -146,6 +146,7 @@ function sort_find_home($song,$sort_pattern,$base) {
 /**
  * sort_element_name
  * gets the name of the %? in a yea.. too much beer
+ * @param string $key
  */
 function sort_element_name($key) {
 

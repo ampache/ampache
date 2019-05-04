@@ -89,6 +89,9 @@ class Art extends database_object
         $this->kind = $kind;
     } // constructor
 
+    /**
+     * @param string $type
+     */
     public static function is_valid_type($type)
     {
         return (Core::is_library_item($type) || $type == 'user');
@@ -510,6 +513,11 @@ class Art extends database_object
         return $path;
     }
 
+    /**
+     * @param string $source
+     * @param string $type
+     * @param integer $uid
+     */
     private static function write_to_dir($source, $sizetext, $type, $uid, $kind)
     {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
@@ -527,6 +535,10 @@ class Art extends database_object
         return true;
     }
 
+    /**
+     * @param string $type
+     * @param integer $uid
+     */
     private static function read_from_dir($sizetext, $type, $uid, $kind)
     {
         $path = self::get_dir_on_disk($type, $uid, $kind);
@@ -558,6 +570,9 @@ class Art extends database_object
         }
     }
 
+    /**
+     * @param false|string $path
+     */
     private static function delete_rec_dir($path)
     {
         debug_event('Art', 'Deleting ' . $path . ' directory...', 5);
@@ -922,8 +937,9 @@ class Art extends database_object
     /**
      * gc
      * This cleans up art that no longer has a corresponding object
+     * @param string $object_type
      */
-    public static function gc($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array('album', 'artist','tvshow','tvshow_season','video','user','live_stream');
 

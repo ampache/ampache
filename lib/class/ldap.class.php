@@ -26,6 +26,7 @@
  *
  * This function is here for retrocompatibility with PHP < 5.6.
  * For PHP >= 5.6, one can use array_filter with flag ARRAY_FILTER_USE_KEY.
+ * @param string $callback
  */
 function array_filter_key($array, $callback)
 {
@@ -157,6 +158,7 @@ class LDAP
     
     /**
      * Binds to the LDAP
+     * @param string $password
      */
     private static function bind($link, $username = null, $password = null)
     {
@@ -204,6 +206,7 @@ class LDAP
     
     /**
      * Search for a DN in the LDAP
+     * @return string
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
     {

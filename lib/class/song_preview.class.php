@@ -332,6 +332,9 @@ class Song_Preview extends database_object implements media, playable_item
         // Do nothing
     }
 
+    /**
+     * @param string $album_mbid
+     */
     public static function get_song_previews($album_mbid)
     {
         $songs = array();
@@ -347,7 +350,7 @@ class Song_Preview extends database_object implements media, playable_item
         return $songs;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = 'DELETE FROM `song_preview` USING `song_preview` ' .
             'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' .

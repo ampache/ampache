@@ -50,7 +50,7 @@ class Personal_Video extends Video
      *
      * This cleans out unused personal videos
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `personal_video` USING `personal_video` LEFT JOIN `video` ON `video`.`id` = `personal_video`.`id` " .
             "WHERE `video`.`id` IS NULL";

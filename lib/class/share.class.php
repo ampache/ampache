@@ -77,7 +77,7 @@ class Share extends database_object
         return Dba::write($sql, $params);
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
         Dba::write($sql);
@@ -114,6 +114,10 @@ class Share extends database_object
         }
     }
 
+    /**
+     * @param string $object_type
+     * @param integer $object_id
+     */
     public static function create_share($object_type, $object_id, $allow_stream=true, $allow_download=true, $expire=0, $secret='', $max_counter=0, $description='')
     {
         $object_type = self::format_type($object_type);
@@ -153,6 +157,9 @@ class Share extends database_object
         return $id;
     }
 
+    /**
+     * @param string $secret
+     */
     public static function get_url($id, $secret)
     {
         $url = AmpConfig::get('web_path') . '/share.php?id=' . $id;

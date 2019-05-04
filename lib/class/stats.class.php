@@ -69,7 +69,7 @@ class Stats
      *
      * This removes stats for things that no longer exist.
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         foreach (array('song', 'album', 'artist', 'live_stream', 'video') as $object_type) {
             Dba::write("DELETE FROM `object_count` USING `object_count` LEFT JOIN `$object_type` ON `$object_type`.`id` = `object_count`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
@@ -137,6 +137,7 @@ class Stats
      * Check if the same stat has not already been inserted within a graceful delay
      * @param string $type
      * @param integer $user
+     * @param integer $oid
      */
     public static function is_already_inserted($type, $oid, $user, $count_type = 'stream')
     {
@@ -160,6 +161,7 @@ class Stats
      * get_object_count
      * Get count for an object
      * @param string $object_type
+     * @param string $threshold
      */
     public static function get_object_count($object_type, $object_id, $threshold = null, $count_type = 'stream')
     {

@@ -834,6 +834,7 @@ class User extends database_object
     /**
      * update_user_stats
      * updates the playcount mojo for this specific user
+     * @param string $media_type
      */
     public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false)
     {
@@ -896,7 +897,7 @@ class User extends database_object
             $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
             debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
         } else {
-            $sip = filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+            $sip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
             debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
         }
         

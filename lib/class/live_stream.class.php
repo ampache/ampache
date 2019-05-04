@@ -336,7 +336,7 @@ class Live_Stream extends database_object implements media, library_item
         return $radios;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
     }
 

@@ -420,7 +420,7 @@ class Query
      * gc
      * This cleans old data out of the table
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = 'DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ' .
             '`session` ON `session`.`id` = `tmp_browse`.`sid` ' .
@@ -610,6 +610,7 @@ class Query
     /**
      * get_filter
      * returns the specified filter value
+     * @param string $key
      * @return string|boolean
      */
     public function get_filter($key)

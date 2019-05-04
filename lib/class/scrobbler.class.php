@@ -67,6 +67,7 @@ class scrobbler
      * call_url
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
+     * @param string $url
      */
     public function call_url($url, $method='GET', $vars=null)
     {

@@ -111,8 +111,8 @@ trait Metadata
 
     /**
      *
-     * @param type $name
-     * @param type $public
+     * @param string $name
+     * @param boolean $public
      * @return \Lib\Metadata\Model\MetadataField
      */
     protected function createField($name, $public)

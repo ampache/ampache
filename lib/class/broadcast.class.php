@@ -410,7 +410,7 @@ class Broadcast extends database_object implements library_item
         return $broadcasts;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
     }
 

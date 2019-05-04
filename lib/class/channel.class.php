@@ -204,6 +204,9 @@ class Channel extends database_object implements media, library_item
         return array();
     }
 
+    /**
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->name;
@@ -539,10 +542,13 @@ class Channel extends database_object implements media, library_item
         return false;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
     }
 
+    /**
+     * @param string $x
+     */
     private function strtohex($x)
     {
         $s='';

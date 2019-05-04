@@ -51,7 +51,7 @@ class Clip extends Video
      *
      * This cleans out unused clips
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` " .
             "WHERE `video`.`id` IS NULL";

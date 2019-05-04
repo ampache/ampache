@@ -365,7 +365,7 @@ class Video extends database_object implements media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -407,14 +407,14 @@ class Video extends database_object implements media, library_item
      *
      * Cleans up the inherited object tables
      */
-    public static function gc()
+    public static function garbage_collection()
     {
-        Movie::gc();
-        TVShow_Episode::gc();
-        TVShow_Season::gc();
-        TVShow::gc();
-        Personal_Video::gc();
-        Clip::gc();
+        Movie::garbage_collection();
+        TVShow_Episode::garbage_collection();
+        TVShow_Season::garbage_collection();
+        TVShow::garbage_collection();
+        Personal_Video::garbage_collection();
+        Clip::garbage_collection();
     }
 
     /**
@@ -463,7 +463,7 @@ class Video extends database_object implements media, library_item
 
     /**
      * Get derived video types.
-     * @return array
+     * @return string[]
      */
     private static function get_derived_types()
     {
@@ -640,6 +640,9 @@ class Video extends database_object implements media, library_item
         return $this->id;
     } // update
 
+    /**
+     * @param integer $video_id
+     */
     public static function update_video($video_id, Video $new_video)
     {
         $update_time = time();
@@ -1018,11 +1021,11 @@ class Video extends database_object implements media, library_item
             $sql     = "DELETE FROM `video` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::gc('video', $this->id);
-                Userflag::gc('video', $this->id);
-                Rating::gc('video', $this->id);
-                Shoutbox::gc('video', $this->id);
-                Useractivity::gc('video', $this->id);
+                Art::garbage_collection('video', $this->id);
+                Userflag::garbage_collection('video', $this->id);
+                Rating::garbage_collection('video', $this->id);
+                Shoutbox::garbage_collection('video', $this->id);
+                Useractivity::garbage_collection('video', $this->id);
             }
         } else {
             debug_event('video', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
@@ -1049,7 +1052,7 @@ class Video extends database_object implements media, library_item
      * against $GLOBALS['user'] to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param mixed $value
+     * @param integer $value
      * @param int $song_id
      * @param int $level
      * @return boolean

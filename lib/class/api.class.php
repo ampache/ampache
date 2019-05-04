@@ -139,7 +139,7 @@ class Api
             $passphrase = $_POST['auth'];
         }
         $username = trim($input['user']);
-        $ip       = filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+        $ip       = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
         if (isset($input['version'])) {
             // If version is provided, use it
             $version = $input['version'];
@@ -315,7 +315,7 @@ class Api
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event('API', 'Ping Received from ' . filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], '5');
+        debug_event('API', 'Ping Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], '5');
 
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);

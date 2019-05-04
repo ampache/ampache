@@ -55,6 +55,9 @@ class vainfo
      * This function just sets up the class, it doesn't pull the information.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param string $encoding
+     * @param string $encoding_id3v1
+     * @param string $encoding_id3v2
      */
     public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
     {
@@ -447,6 +450,9 @@ class vainfo
         return $info;
     }
 
+    /**
+     * @param string $field
+     */
     private static function clean_array_tag($field, $info, $tags)
     {
         $arr = array();
@@ -1047,6 +1053,7 @@ class vainfo
      *  parse movie names:
      *    title.[date].ext
      *    /movie title [(date)]/title.ext
+     * @param string $filepath
      */
     private function _parse_filename($filepath)
     {
@@ -1144,6 +1151,10 @@ class vainfo
         return $results;
     }
     
+    /**
+     * @param string $dir_pattern
+     * @param string $file_pattern
+     */
     public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
     {
         $results         = array();
@@ -1192,6 +1203,9 @@ class vainfo
         return $results;
     }
     
+    /**
+     * @return string
+     */
     private function removeCommonAbbreviations($name)
     {
         $abbr         = explode(",", AmpConfig::get('common_abbr'));

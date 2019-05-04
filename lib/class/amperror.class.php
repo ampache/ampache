@@ -116,6 +116,7 @@ class AmpError
      * display
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
+     * @param string $name
      */
     public static function display($name)
     {

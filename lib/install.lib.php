@@ -23,6 +23,7 @@
 /**
  * split_sql
  * splits up a standard SQL dump file into distinct sql queries
+ * @param string $sql
  */
 function split_sql($sql)
 {
@@ -149,6 +150,10 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
     return $valid;
 }
 
+/**
+ * @param string $file
+ * @param boolean $download
+ */
 function install_rewrite_rules($file, $web_path, $download)
 {
     $final = install_check_rewrite_rules($file, $web_path, true);
@@ -360,6 +365,9 @@ function install_create_account($username, $password, $password2)
     return true;
 } // install_create_account
 
+/**
+ * @param string $command
+ */
 function command_exists($command)
 {
     if (!function_exists('proc_open')) {

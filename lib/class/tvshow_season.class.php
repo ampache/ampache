@@ -65,7 +65,7 @@ class TVShow_Season extends database_object implements library_item
      *
      * This cleans out unused tv shows seasons
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
             "WHERE `tvshow_episode`.`id` IS NULL";
@@ -334,11 +334,11 @@ class TVShow_Season extends database_object implements library_item
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::gc('tvshow_season', $this->id);
-                Userflag::gc('tvshow_season', $this->id);
-                Rating::gc('tvshow_season', $this->id);
-                Shoutbox::gc('tvshow_season', $this->id);
-                Useractivity::gc('tvshow_season', $this->id);
+                Art::garbage_collection('tvshow_season', $this->id);
+                Userflag::garbage_collection('tvshow_season', $this->id);
+                Rating::garbage_collection('tvshow_season', $this->id);
+                Shoutbox::garbage_collection('tvshow_season', $this->id);
+                Useractivity::garbage_collection('tvshow_season', $this->id);
             }
         }
 

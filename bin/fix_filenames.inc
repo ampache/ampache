@@ -161,6 +161,8 @@ function charset_directory_correct($path) {
 /**
  * charset_rename_file
  * This just takes a source / dest and does the renaming
+ * @param string $full_file
+ * @param string $translated_filename
  */
 function charset_rename_file($full_file,$translated_filename) {
 

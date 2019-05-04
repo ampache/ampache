@@ -266,7 +266,7 @@ class Album extends database_object implements library_item
      *
      * Cleans out unused albums
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         Dba::write('DELETE FROM `album` USING `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`id` IS NULL');
     }
@@ -921,7 +921,7 @@ class Album extends database_object implements library_item
                 Song::update_artist($artist, $song_id);
             }
             $updated = true;
-            Artist::gc();
+            Artist::garbage_collection();
         }
 
         if (!empty($data['album_artist_name'])) {
@@ -943,7 +943,7 @@ class Album extends database_object implements library_item
             $updated    = true;
             Stats::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
-            self::gc();
+            self::garbage_collection();
         } else {
             self::update_year($year, $album_id);
             self::update_mbid_group($mbid_group, $album_id);
@@ -961,10 +961,10 @@ class Album extends database_object implements library_item
             foreach ($songs as $song_id) {
                 Song::update_utime($song_id);
             } // foreach song of album
-            Stats::gc();
-            Rating::gc();
-            Userflag::gc();
-            Useractivity::gc();
+            Stats::garbage_collection();
+            Rating::garbage_collection();
+            Userflag::garbage_collection();
+            Useractivity::garbage_collection();
         } // if updated
 
         $override_childs = false;
@@ -1028,11 +1028,11 @@ class Album extends database_object implements library_item
             $sql     = "DELETE FROM `album` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::gc('album', $this->id);
-                Userflag::gc('album', $this->id);
-                Rating::gc('album', $this->id);
-                Shoutbox::gc('album', $this->id);
-                Useractivity::gc('album', $this->id);
+                Art::garbage_collection('album', $this->id);
+                Userflag::garbage_collection('album', $this->id);
+                Rating::garbage_collection('album', $this->id);
+                Shoutbox::garbage_collection('album', $this->id);
+                Useractivity::garbage_collection('album', $this->id);
             }
         }
 

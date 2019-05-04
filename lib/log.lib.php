@@ -24,6 +24,9 @@
  * log_event
  * Logs an event to a defined log file based on config options
  */
+/**
+ * @param string $log_name
+ */
 function log_event($username, $event_name, $event_description, $log_name)
 {
     /* Set it up here to make sure it's _always_ the same */
@@ -135,6 +138,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * This function is called inside ampache, it's actually a wrapper for the
  * log_event. It checks config for debug and debug_level and only
  * calls log event if both requirements are met.
+ * @param string $type
  */
 function debug_event($type, $message, $level, $file = '', $username = '')
 {

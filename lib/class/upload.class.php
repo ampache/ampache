@@ -198,6 +198,9 @@ class Upload
         return self::rerror();
     }
 
+    /**
+     * @param string $file
+     */
     public static function rerror($file = null)
     {
         if ($file) {

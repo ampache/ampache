@@ -78,6 +78,7 @@ class Stream_URL extends memory_object
      * add_options
      *
      * Add options to an existing stream url.
+     * @param string $options
      */
     public static function add_options($url, $options)
     {
@@ -107,6 +108,7 @@ class Stream_URL extends memory_object
     /**
      * format
      * This format the string url according to settings.
+     * @param string $url
      */
     public static function format($url)
     {

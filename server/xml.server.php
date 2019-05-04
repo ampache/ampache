@@ -66,7 +66,7 @@ if ((filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'handsh
 }
 
 if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
-    debug_event('Access Denied', 'Unauthorized access attempt to API [' . (string) filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
+    debug_event('Access Denied', 'Unauthorized access attempt to API [' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
     exit();

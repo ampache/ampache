@@ -31,7 +31,7 @@ class Metadata extends \Lib\Repository
 {
     protected $modelClassName = '\Lib\Metadata\Model\Metadata';
 
-    public static function gc()
+    public static function garbage_collection()
     {
         \Dba::write('DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL');
     }

@@ -115,7 +115,7 @@ switch ($action) {
         }
 
         UI::show_header();
-        Share::gc();
+        Share::garbage_collection();
         $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
         show_confirmation(T_('Shared Objects cleaned'), T_('Expired shared objects have been cleaned.'), $next_url);
         UI::show_footer();
@@ -153,7 +153,7 @@ switch ($action) {
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
-        debug_event('UI::access_denied', 'Access Denied:' . filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', '3');
+        debug_event('UI::access_denied', 'Access Denied:' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', '3');
         UI::access_denied();
         exit();
     }

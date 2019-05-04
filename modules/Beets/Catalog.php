@@ -265,8 +265,8 @@ abstract class Catalog extends \Catalog
            $this->deleteSongs($this->songs);
         }
         if (Song::isCustomMetadataEnabled()) {
-            \Lib\Metadata\Repository\Metadata::gc();
-            \Lib\Metadata\Repository\MetadataField::gc();
+            \Lib\Metadata\Repository\Metadata::garbage_collection();
+            \Lib\Metadata\Repository\MetadataField::garbage_collection();
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 

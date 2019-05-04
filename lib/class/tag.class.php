@@ -340,7 +340,7 @@ class Tag extends database_object implements library_item
      * This cleans out tag_maps that are obsolete and then removes tags that
      * have no maps.
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " .
             "WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
@@ -379,7 +379,7 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($this->id));
 
         // Call the garbage collector to clean everything
-        self:gc();
+        self:garbage_collection();
 
         parent::clear_cache();
     }

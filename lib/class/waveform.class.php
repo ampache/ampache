@@ -169,7 +169,7 @@ class Waveform
     /**
      * Create waveform from song file.
      * @param string $filename
-     * @return binary|string|null
+     * @return null|string
      */
     protected static function create_waveform($filename)
     {

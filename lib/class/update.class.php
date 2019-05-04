@@ -687,6 +687,7 @@ class Update
      *
      * This updates the 'update_info' which is used by the updater
      * and plugins
+     * @param string $key
      */
     private static function set_version($key, $value)
     {

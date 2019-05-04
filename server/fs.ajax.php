@@ -58,6 +58,10 @@ class fs
 
         return $id;
     }
+
+    /**
+     * @param string $path
+     */
     protected function id($path)
     {
         $path = $this->real($path);

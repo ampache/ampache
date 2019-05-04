@@ -215,6 +215,9 @@ class Stream
         return self::start_process($command, array('format' => $transcode_settings['format']));
     }
 
+    /**
+     * @param Video $media
+     */
     public static function get_image_preview($media)
     {
         $image = null;
@@ -415,6 +418,8 @@ class Stream
      * check_lock_media
      *
      * This checks to see if the media is already being played.
+     * @param integer $media_id
+     * @param string $type
      */
     public static function check_lock_media($media_id, $type)
     {

@@ -101,7 +101,7 @@ if (!$auth['success']) {
 }
 
 if (!Access::check_network('init-api', $user, 5)) {
-    debug_event('Access Denied', 'Unauthorized access attempt to Subsonic API [' . filter_input(INPUT_ENV, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
+    debug_event('Access Denied', 'Unauthorized access attempt to Subsonic API [' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', '3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'), $callback);
     exit();

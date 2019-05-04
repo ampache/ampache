@@ -52,7 +52,7 @@ class Movie extends Video
      *
      * This cleans out unused movies
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` " .
             "WHERE `video`.`id` IS NULL";

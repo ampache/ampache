@@ -62,7 +62,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @return string|null
+     * @return integer
      */
     public static function getArtistId($artistid)
     {
@@ -70,7 +70,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @return string|null
+     * @return integer
      */
     public static function getAlbumId($albumid)
     {
@@ -91,7 +91,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @return string|null
+     * @return integer
      */
     public static function getPodcastId($podcastid)
     {
@@ -535,6 +535,9 @@ class Subsonic_XML_Data
         }
     }
     
+    /**
+     * @param SimpleXMLElement $xml
+     */
     public static function createSong($xml, $songData, $albumData, $artistData, $catalogData, $addAmpacheInfo=false, $elementName='song')
     {
         // Don't create entries for disabled songs

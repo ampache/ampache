@@ -41,5 +41,5 @@ interface library_item extends playable_item
 
     public function update(array $data);
 
-    public static function gc();
+    public static function garbage_collection();
 } // end interface

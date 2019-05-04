@@ -40,6 +40,7 @@ class Preference extends database_object
     /**
      * get_by_user
      * Return a preference for specific user identifier
+     * @param string $pref_name
      */
     public static function get_by_user($user_id, $pref_name)
     {
@@ -282,6 +283,12 @@ class Preference extends database_object
      * insert
      * This inserts a new preference into the preference table
      * it does NOT sync up the users, that should be done independently
+     * @param string $name
+     * @param string $description
+     * @param string $default
+     * @param string $level
+     * @param string $type
+     * @param string $catagory
      */
     public static function insert($name, $description, $default, $level, $type, $catagory, $subcatagory=null)
     {

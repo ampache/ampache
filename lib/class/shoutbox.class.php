@@ -70,8 +70,9 @@ class Shoutbox
      * gc
      *
      * Cleans out orphaned shoutbox items
+     * @param string $object_type
      */
-    public static function gc($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array('song', 'album', 'artist', 'label');
 

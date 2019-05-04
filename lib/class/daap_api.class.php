@@ -78,6 +78,9 @@ class Daap_Api
     {
     }
 
+    /**
+     * @param string $url
+     */
     public static function follow_stream($url)
     {
         set_time_limit(0);
@@ -218,6 +221,9 @@ class Daap_Api
         self::apiOutput($o);
     }
 
+    /**
+     * @param string $code
+     */
     private static function check_session($code)
     {
         // Purge expired sessions
@@ -749,6 +755,11 @@ class Daap_Api
         self::add_dict('aeSP', 'byte', 'com.apple.itunes.smart-playlist');
     }
 
+    /**
+     * @param string $code
+     * @param string $type
+     * @param string $name
+     */
     private static function add_dict($code, $type, $name)
     {
         self::$tags[$name] = array(
@@ -798,6 +809,9 @@ class Daap_Api
         header("Expires: -1");
     }
 
+    /**
+     * @param string $string
+     */
     public static function apiOutput($string)
     {
         self::setHeaders();
@@ -831,6 +845,10 @@ class Daap_Api
         exit();
     }
 
+    /**
+     * @param string $tag
+     * @param integer $code
+     */
     public static function createApiError($tag, $code, $msg = '')
     {
         $o = self::tlv('dmap.status', $code);
