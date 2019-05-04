@@ -21,11 +21,7 @@
 
 @font-face {
     font-family: 'DejaVuSansCondensed';
-    src: url('fonts/dejavusanscondensed.eot');
-    src: url('fonts/dejavusanscondensed.eot') format('embedded-opentype'),
-         url('fonts/dejavusanscondensed.woff') format('woff'),
-         url('fonts/dejavusanscondensed.ttf') format('truetype'),
-         url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
+    src: url('fonts/dejavusanscondensed.eot?') format('embedded-opentype'),  url('fonts/dejavusanscondensed.woff') format('woff'), url('fonts/dejavusanscondensed.ttf') format('truetype'), url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
 }
 
 /***********************************************

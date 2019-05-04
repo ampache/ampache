@@ -123,14 +123,18 @@ if ($plimp == 1) {
     $options['parse_playlist'] = false;
 }
 // --------
-if ($catname) $where = " name = '$catname' ";
+if ($catname !== false) {
+    $where = " name = '$catname' ";
+}
 if ($cattype) { 
     $where .= "catalog_type='$cattype'";
 } elseif (!$where) {
     $where .= "catalog_type='local'";
 }
 $sql = "SELECT id FROM catalog";
-if ($where) $sql .= " WHERE $where";
+if ($where) {
+    $sql .= " WHERE $where";
+}
 $db_results = Dba::read($sql);
 
 ob_start("ob_html_strip",'1024',true);

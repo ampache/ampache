@@ -581,7 +581,7 @@ class Democratic extends Tmp_Playlist
     {
         $tmp_id = Dba::escape($this->tmp_playlist);
 
-        if ($tmp_id) {
+        if ($tmp_id !== false) {
             /* Clear all votes then prune */
             $sql = "DELETE FROM `user_vote` USING `user_vote` " .
                 "LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` " .
