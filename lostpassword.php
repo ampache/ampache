@@ -53,6 +53,11 @@ function send_newpassword($email, $current_ip)
     // get the Client and set the new password
     $client = User::get_from_email($email);
 
+    // do not do anything if they aren't a user
+    if (!$client) {
+        return false;
+    }
+
     // do not allow administrator password resets
     if ($client->has_access(100)) {
         return false;
