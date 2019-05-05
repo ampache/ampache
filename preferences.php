@@ -27,8 +27,10 @@ $text              = "";
 $next_url          = "";
 $notification_text = "";
 
-// Switch on the action
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'update_preferences':
         if ($_POST['method'] == 'admin' && !Access::check('interface', '100')) {
             UI::access_denied();
@@ -189,10 +191,10 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
 UI::show_header();
 
-/**
- * switch on the view
- */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+//$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'confirm':
     case 'grant':
         show_confirmation($title, $text, $next_url, $cancel);

@@ -24,7 +24,10 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'get_advanced':
         $object_ids = Random::advanced($_REQUEST['type'], $_POST);
 

@@ -28,8 +28,10 @@ define('TABLE_RENDERED', 1);
 // Temporary workaround to avoid sorting on custom base requests
 define('NO_BROWSE_SORTING', true);
 
-/* Switch on the action to be performed */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     // Show a Users "Profile" page
     case 'show_user':
         $client = new User($_REQUEST['user_id']);

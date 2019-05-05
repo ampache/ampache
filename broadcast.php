@@ -30,8 +30,10 @@ if (!AmpConfig::get('broadcast')) {
 
 UI::show_header();
 
-/* Switch on the action passed in */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'show_delete':
         $id = $_REQUEST['id'];
 

@@ -31,7 +31,9 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '
     return false;
 }
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+switch ($action) {
     case 'show_add_instance':
         // This requires 50 or better
         if (!Access::check('localplay', '75')) {

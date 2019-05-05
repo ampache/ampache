@@ -37,8 +37,10 @@ if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'delete_
 
 UI::show_header();
 
-/* Switch on the action passed in */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'create_playlist':
         /* Check rights */
         if (!Access::check('interface', '25')) {

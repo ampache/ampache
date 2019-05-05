@@ -42,10 +42,10 @@ $web_path  = AmpConfig::get('web_path');
 
 debug_event("stream.php", "Asked for {" . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . "}.", 5);
 
-/**
- * action switch
- */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'basket':
         // Pull in our items (multiple types)
         $media_ids = $GLOBALS['user']->playlist->get_items();
@@ -148,7 +148,10 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
 } // end action switch
 
 // See if we need a special streamtype
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+//$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'download':
         $stream_type = 'download';
     break;

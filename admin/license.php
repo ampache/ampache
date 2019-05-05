@@ -30,7 +30,10 @@ if (!Access::check('interface', '100')) {
 
 UI::show_header();
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'edit':
         if (isset($_POST['license_id'])) {
             $license = new License($_POST['license_id']);

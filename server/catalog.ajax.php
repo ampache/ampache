@@ -27,7 +27,10 @@ if (!defined('AJAX_INCLUDE')) {
     return false;
 }
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'flip_state':
         if (!Access::check('interface', '75')) {
             debug_event('DENIED', $GLOBALS['user']->username . ' attempted to change the state of a catalog', '1');

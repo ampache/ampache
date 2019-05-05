@@ -233,7 +233,24 @@ class UI
 
         return $value;
     }
+    
+    /**
+     * get_action
+     *
+     * Returns a string from INPUT_GET / INPUT_POST
+     * @return string $action
+     */
+    public static function get_action()
+        {
+        if ((string) filter_input(INPUT_GET, 'action')) {
+            $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+        } else {
+            $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+        }
 
+        return (string) $action;
+    }
+    
     /**
      * get_icon
      *

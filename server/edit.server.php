@@ -70,7 +70,10 @@ if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
     return false;
 }
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'show_edit_object':
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_edit_' . $type . '.inc.php');

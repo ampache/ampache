@@ -44,8 +44,10 @@ if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item
     return false;
 }
 
-/* Switch on Action */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'clear_art':
         $art = new Art($object_id, $object_type);
         $art->reset();

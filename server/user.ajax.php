@@ -29,8 +29,10 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $user_id = (int) ($_REQUEST['user_id']);
+$action  = UI::get_action();
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+// Switch on the actions
+switch ($action) {
     case 'flip_follow':
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
             $fuser = new User($user_id);

@@ -30,8 +30,10 @@ if (!AmpConfig::get('channel')) {
 
 UI::show_header();
 
-/* Switch on the action passed in */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'show_create':
         $type = Channel::format_type($_REQUEST['type']);
         if (!empty($type) && !empty($_REQUEST['id'])) {

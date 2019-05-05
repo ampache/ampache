@@ -24,10 +24,10 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-/**
- * action switch
- */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'search':
         if ($_REQUEST['rule_1'] != 'missing_artist') {
             $browse = new Browse();

@@ -27,7 +27,10 @@ if (!defined('AJAX_INCLUDE')) {
     return false;
 }
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'search':
         $search = $_REQUEST['search'];
         $target = $_REQUEST['target'];

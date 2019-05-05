@@ -49,9 +49,16 @@ if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog'
     }
 }
 
+if ((string) filter_input(INPUT_GET, 'action')) {
+    $action = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+    debug_event('admin/users', 'INPUT_GET: "' . $action . '"', 5);
+} else {
+    $action = (string) filter_input(INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+    debug_event('admin/users', 'INPUT_POST: "' . $action . '"', 5);
+}
 
-/* Big switch statement to handle various actions */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+// Big switch statement to handle various actions
+switch ($action) {
     case 'add_to_all_catalogs':
         catalog_worker('add_to_all_catalogs');
         show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);

@@ -39,9 +39,10 @@ if (AmpConfig::get('captcha_public_reg')) {
     require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
 }
 
+$action = UI::get_action();
 
-/* Start switch based on action passed */
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+// Switch on the actions
+switch ($action) {
     case 'validate':
         $username      = scrub_in($_GET['username']);
         $validation    = scrub_in($_GET['auth']);

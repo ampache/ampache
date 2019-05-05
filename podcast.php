@@ -30,8 +30,10 @@ if (!AmpConfig::get('podcast')) {
 
 UI::show_header();
 
-// Switch on Action
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'show_create':
         if (!Access::check('interface', 75)) {
             UI::access_denied();

@@ -31,7 +31,10 @@ if (!defined('AJAX_INCLUDE')) {
 debug_event('stream.ajax.php', 'Called for action {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', 5);
 
 $results = array();
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action  = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'set_play_type':
         // Make sure they have the rights to do this
         if (!Preference::has_access('play_type')) {

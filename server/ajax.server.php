@@ -100,7 +100,10 @@ switch ($page) {
     break;
 } // end switch on page
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'refresh_rightbar':
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;

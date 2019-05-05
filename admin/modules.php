@@ -32,7 +32,10 @@ if (!$GLOBALS['user']->has_access(100)) {
 /* Always show the header */
 UI::show_header();
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'install_localplay':
         $localplay = new Localplay($_REQUEST['type']);
         if (!$localplay->player_loaded()) {

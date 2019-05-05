@@ -111,7 +111,10 @@ $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 
 unset($safe_dirname);
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'create_db':
         $new_user = '';
         $new_pass = '';
