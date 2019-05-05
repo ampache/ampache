@@ -30,13 +30,7 @@ if (!Access::check('interface', '100')) {
 
 UI::show_header();
 
-if ((string) filter_input(INPUT_GET, 'action')) {
-    $action = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-    debug_event('admin/users', 'INPUT_GET: "' . $action . '"', 5);
-} else {
-    $action = (string) filter_input(INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-    debug_event('admin/users', 'INPUT_POST: "' . $action . '"', 5);
-}
+$action = UI::get_action();
 
 // Switch on the actions
 switch ($action) {

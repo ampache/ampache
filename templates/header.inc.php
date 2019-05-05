@@ -525,7 +525,7 @@ $_SESSION['login'] = false;
                             echo '<br />';
                         }
                         $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
-                        
+
                         if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version')) {
                             ?>
                             <div class="fatalerror">
@@ -538,5 +538,8 @@ $_SESSION['login'] = false;
                         }
                         echo '</div>';
                     }
+                if (AmpConfig::get("ajax_load")) {
+                    require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
+                } //load the web_player early to make sure the browser doesn't block audio playback?>
                 ?>
                 <div id="guts">

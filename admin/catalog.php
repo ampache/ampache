@@ -49,13 +49,7 @@ if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog'
     }
 }
 
-if ((string) filter_input(INPUT_GET, 'action')) {
-    $action = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-    debug_event('admin/users', 'INPUT_GET: "' . $action . '"', 5);
-} else {
-    $action = (string) filter_input(INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-    debug_event('admin/users', 'INPUT_POST: "' . $action . '"', 5);
-}
+$action = UI::get_action();
 
 // Big switch statement to handle various actions
 switch ($action) {

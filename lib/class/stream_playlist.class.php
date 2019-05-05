@@ -552,6 +552,19 @@ class Stream_Playlist
     }  // create_web_player
 
     /**
+     * show_web_player
+     *
+     * Show the created web player for ajax page loading.
+     * Browsers block autoplay when you haven't interacted with the page so load it early.
+     */
+    public function show_web_player()
+    {
+        if (AmpConfig::get("ajax_load")) {
+            require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
+        }
+    }  // show_web_player
+
+    /**
      * create_localplay
      * This calls the Localplay API to add the URLs and then start playback
      */
