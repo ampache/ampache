@@ -652,6 +652,9 @@ class User extends database_object
     {
         $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
+
+        debug_event('user.class.php', 'Updating username', 4);
+
         Dba::write($sql, array($new_username, $this->id));
     } // update_username
 
@@ -677,6 +680,9 @@ class User extends database_object
     public function update_fullname($new_fullname)
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
+
+        debug_event('user.class.php', 'Updating fullname', 4);
+
         Dba::write($sql, array($new_fullname, $this->id));
     } // update_fullname
 
@@ -687,6 +693,9 @@ class User extends database_object
     public function update_fullname_public($new_fullname_public)
     {
         $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
+
+        debug_event('user.class.php', 'Updating fullname public', 4);
+
         Dba::write($sql, array($new_fullname_public ? '1' : '0', $this->id));
     } // update_fullname_public
 
@@ -697,6 +706,9 @@ class User extends database_object
     public function update_email($new_email)
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
+
+        debug_event('user.class.php', 'Updating email', 4);
+
         Dba::write($sql, array($new_email, $this->id));
     } // update_email
 
@@ -708,6 +720,9 @@ class User extends database_object
     {
         $new_website = rtrim($new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
+
+        debug_event('user.class.php', 'Updating website', 4);
+
         Dba::write($sql, array($new_website, $this->id));
     } // update_website
 
@@ -718,6 +733,9 @@ class User extends database_object
     public function update_state($new_state)
     {
         $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
+
+        debug_event('user.class.php', 'Updating state', 4);
+
         Dba::write($sql, array($new_state, $this->id));
     } // update_state
 
@@ -728,6 +746,9 @@ class User extends database_object
     public function update_city($new_city)
     {
         $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
+
+        debug_event('user.class.php', 'Updating city', 4);
+
         Dba::write($sql, array($new_city, $this->id));
     } // update_city
 
@@ -739,6 +760,9 @@ class User extends database_object
     public function update_apikey($new_apikey)
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
+
+        debug_event('user.class.php', 'Updating apikey', 4);
+
         Dba::write($sql, array($new_apikey, $this->id));
     } // update_website
 
@@ -818,6 +842,9 @@ class User extends database_object
 
         $new_access = Dba::escape($new_access);
         $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
+
+        debug_event('user.class.php', 'Updating access level', 4);
+
         Dba::write($sql);
     } // update_access
 
@@ -994,6 +1021,9 @@ class User extends database_object
     public function update_password($new_password)
     {
         $new_password = hash('sha256', $new_password);
+
+        debug_event('user.class.php', 'Updating password', 4);
+
 
         $new_password = Dba::escape($new_password);
         $sql          = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
@@ -1369,6 +1399,8 @@ class User extends database_object
      */
     public function update_avatar($data, $mime = '')
     {
+        debug_event('user.class.php', 'Updating avatar', 4);
+
         $art = new Art($this->id, 'user');
         $art->insert($data, $mime);
     }
