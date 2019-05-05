@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,7 +59,7 @@ switch ($action) {
         show_confirmation($title, $body, $url);
     break;
     case 'install_catalog_type':
-        $type    = (string) scrub_in($_REQUEST['type']);
+        $type    = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
             AmpError::add('general', T_('Failed to enable the module, Catalog Error'));
@@ -76,21 +76,21 @@ switch ($action) {
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_localplay':
-        $type  = (string) scrub_in($_REQUEST['type']);
+        $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
         $title = T_('Are you sure you want to disable this module?');
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
     case 'confirm_uninstall_catalog_type':
-        $type  = (string) scrub_in($_REQUEST['type']);
+        $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
         $title = T_('Are you sure you want to disable this module?');
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
     case 'uninstall_localplay':
-        $type = (string) scrub_in($_REQUEST['type']);
+        $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $localplay = new Localplay($type);
         $localplay->uninstall();
@@ -102,7 +102,7 @@ switch ($action) {
         show_confirmation($title, $body, $url);
     break;
     case 'uninstall_catalog_type':
-        $type = (string) scrub_in($_REQUEST['type']);
+        $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {

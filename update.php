@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@
  *
  */
 
-if (!isset($_REQUEST['type']) || $_REQUEST['type'] != 'sources') {
+if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'sources') {
     // We need this stuff
     define('NO_SESSION', 1);
     define('OUTDATED_DATABASE_OK', 1);

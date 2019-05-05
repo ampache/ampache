@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -204,9 +204,11 @@ class Upload
     public static function rerror($file = null)
     {
         if ($file) {
-            @unlink($file);
+            if (unlink($file) === false) {
+                throw new \RuntimeException('The file handle ' . $file . ' could not be unlinked.');
+            }
         }
-        @header($_SERVER['SERVER_PROTOCOL'] . ' 500 File Upload Error', true, 500);
+        header($_SERVER['SERVER_PROTOCOL'] . ' 500 File Upload Error', true, 500);
         ob_get_contents();
         ob_end_clean();
         echo '{"status":"error"}';

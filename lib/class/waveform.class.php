@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -118,7 +118,9 @@ class Waveform
                                 $waveform = self::create_waveform($tmpfile);
                                 //$waveform = self::create_waveform("C:\\tmp\\test.wav");
 
-                                @unlink($tmpfile);
+                                if (unlink($tmpfile) === false) {
+                                    throw new \RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked.');
+                                }
                             } else {
                                 debug_event('waveform', 'transcode setting to wav required for waveform.', '3');
                             }

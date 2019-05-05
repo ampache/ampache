@@ -88,7 +88,9 @@ class UPnPFind
         $response = array();
         do {
             $buf = null;
-            @socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);
+            $from = null;
+            $port = null;
+            socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);
 
             if ($buf !== null) {
                 $response[] = self::discoveryReponse2Array($buf);

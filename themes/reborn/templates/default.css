@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -210,6 +210,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #header #headerlogo, #header #headerbox , #header .box_headerbox, #header .box-inside, #header .box-content {
     height: 100%;
+	overflow: hidden;
 }
 
 #header #headerlogo {
@@ -630,6 +631,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin: 5px 15px auto auto;
     max-height: 85%;
     padding: 4px;
+	border-color: #161616;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;

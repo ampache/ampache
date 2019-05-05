@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,8 +40,10 @@ if ($_SERVER['CONTENT_LENGTH'] > 0 && $post_max > 0 && $_SERVER['CONTENT_LENGTH'
     return false;
 }
 
-/* Switch on the action passed in */
-switch ($_REQUEST['actionp']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'upload':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();

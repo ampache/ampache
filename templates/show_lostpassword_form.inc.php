@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -64,7 +64,7 @@ $web_path = AmpConfig::get('web_path');
         </div>
         <div id="footer">
             <a href="http://www.ampache.org/index.php">Ampache v.<?php echo AmpConfig::get('version'); ?></a><br />
-            Copyright (c) 2001 - 2015 Ampache.org <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?>
+            Copyright (c) 2001 - 2019 Ampache.org <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?>
             <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
         </div>
     </body>

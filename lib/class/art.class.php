@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -214,12 +214,14 @@ class Art extends database_object
         // Check to make sure PHP:GD exists.  If so, we can sanity check
         // the image.
         if (function_exists('ImageCreateFromString')) {
-            $image = @ImageCreateFromString($source);
+            $image = ImageCreateFromString($source);
             if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('Art', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
-            @imagedestroy($image);
+            if (imagedestroy($image) === false) {
+                throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed.');
+            }
         }
 
         return $test;

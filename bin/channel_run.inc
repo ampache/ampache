@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -294,7 +294,9 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     $key = array_search($sock, $client_socks);
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
-    @fclose($sock);
+    if (fclose($sock) === false) {
+        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed.');
+    }
     $channel->update_listeners(count($client_socks));
     debug_event('channel', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', '5');
     echo "Client disconnected.\n";
