@@ -82,7 +82,6 @@ function ExitPlayer()
 {
     $("#webplayer").text('');
     $("#webplayer").hide();
-    $("#webplayer-minimize").hide();
 
 <?php
 if (AmpConfig::get('song_page_title')) {

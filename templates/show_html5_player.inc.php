@@ -339,15 +339,6 @@ if ($is_share && $isVideo) {
 </head>
 <body>
 <?php
-if ($iframed && !$is_share) {
-    ?>
-  <div class="jp-close">
-    <a href="javascript:ExitPlayer();" title="Close Player"><img src="<?php echo AmpConfig::get('web_path') ?>/images/close.png" border="0" /></a><br />
-  </div>
-<?php
-}
-?>
-<?php
 $areaClass = "";
 if ((!AmpConfig::get('waveform') || $is_share) && !$embed) {
     $areaClass .= " jp-area-center";

@@ -540,6 +540,6 @@ $_SESSION['login'] = false;
                     }
                 if (AmpConfig::get("ajax_load")) {
                     require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
-                } //load the web_player early to make sure the browser doesn't block audio playback?>
+                } //load the web_player early to make sure the browser doesn't block audio playback
                 ?>
                 <div id="guts">
