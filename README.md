@@ -23,6 +23,7 @@ Recommended Version
 -------------------
 
 The recommended and most stable version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/117e7de6b137483cb27101f3b397c9c1)](https://app.codacy.com/app/Ampache/ampache?utm_source=github.com&utm_medium=referral&utm_content=ampache/ampache&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
 
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
