@@ -959,9 +959,9 @@ table.disablegv thead {
 
 table.disablegv tr {
     float: left;
+    max-width: 215px;
+    padding: 0.5%;
     text-align: center;
-    width: 215px;
-    padding: 20px;
 }
 
 table.disablegv tr.odd {
@@ -971,6 +971,8 @@ table.disablegv tr.odd {
 table.disablegv td {
     display: block !important;
     height: 25px;
+    margin-left: 4%;
+    margin-right: 4%;
 }
 
 table.disablegv td.optional {
