@@ -87,7 +87,7 @@ class UPnPFind
 
         $response = array();
         do {
-            $buf = null;
+            $buf  = null;
             $from = null;
             $port = null;
             socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);

@@ -241,7 +241,7 @@ class UI
      * @return string $action
      */
     public static function get_action()
-        {
+    {
         if ((string) filter_input(INPUT_GET, 'action')) {
             $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
         } else {
