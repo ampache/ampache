@@ -78,10 +78,10 @@ define('TABLE_RENDERED', 1);
                         <input type="hidden" name="action" value="login" />
 
                         <?php if (AmpConfig::get('allow_public_registration')) {
-    ?>
+                            ?>
                             <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                         <?php
-} // end if allow_public_registration?>
+                        } // end if allow_public_registration?>
                     </div>
                 </form>
         <?php
