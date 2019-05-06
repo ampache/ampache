@@ -71,7 +71,7 @@ define('TABLE_RENDERED', 1);
                     <div class="formValidation">
                         <?php
                         if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
-                            echo "<a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=\"<?php" . $web_path . "/lostpassword.php\">Lost password</a>";
+                            echo "<a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=\"" . $web_path . "/lostpassword.php\">Lost password</a>";
                         } ?>
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
                         <input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
