@@ -526,7 +526,7 @@ $_SESSION['login'] = false;
                         }
                         $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
 
-                        if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version')) {
+                        if (AmpConfig::get('int_config_version') < AmpConfig::get('config_version')) {
                             ?>
                             <div class="fatalerror">
                                 <?php echo T_('Error: Your config file is out of date!'); ?>

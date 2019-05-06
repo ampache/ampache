@@ -23,6 +23,13 @@
 define('NO_SESSION', '1');
 require_once 'lib/init.php';
 
+/* Check Perms */
+if (!Mailer::is_mail_enabled() || AmpConfig::get('demo_mode')) {
+    UI::access_denied();
+
+    return false;
+}
+
 $action = (isset($_POST['action'])) ? $_POST['action'] : "";
 
 switch ($action) {
@@ -62,7 +69,7 @@ function send_newpassword($email, $current_ip)
     if ($client->has_access(100)) {
         return false;
     }
-    if ($client && $client->email == $email) {
+    if ($client && $client->email == $email && Mailer::is_mail_enabled()) {
         $newpassword = generate_password();
         $client->update_password($newpassword);
 

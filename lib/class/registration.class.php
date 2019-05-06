@@ -45,6 +45,10 @@ class Registration
      */
     public static function send_confirmation($username, $fullname, $email, $website, $password, $validation)
     {
+        if (!Mailer::is_mail_enabled()) {
+            return false;
+        }
+
         $mailer = new Mailer();
 
         // We are the system

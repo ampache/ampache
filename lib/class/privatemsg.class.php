@@ -160,7 +160,7 @@ class PrivateMsg extends database_object
                 // Never send email in case of user impersonation
                 if (!isset($data['from_user']) && $insert_id) {
                     if (Preference::get_by_user($to_user->id, 'notify_email')) {
-                        if (!empty($to_user->email)) {
+                        if (!empty($to_user->email) && Mailer::is_mail_enabled()) {
                             $mailer = new Mailer();
                             $mailer->set_default_sender();
                             $mailer->recipient      = $to_user->email;

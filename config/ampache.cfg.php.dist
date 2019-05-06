@@ -1022,6 +1022,12 @@ encode_ss_duration = "-t %DURATION%"
 ;  Mail Settings                                         #
 ;#########################################################
 
+;Enable or disable email server features
+;otherwise, you can reset your password 
+;and never receive an email with the new one
+;Default: false
+;mail_enable = "false"
+
 ;Method used to send mail
 ;POSSIBLE VALUES: smtp sendmail php
 ;DEFAULT: php

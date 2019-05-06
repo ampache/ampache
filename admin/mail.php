@@ -49,29 +49,31 @@ switch ($action) {
             }
             mb_language("uni");
         }
+        
+        if (Mailer::is_mail_enabled()) {
+            $mailer = new Mailer();
 
-        $mailer = new Mailer();
+            // Set the vars on the object
+            $mailer->subject = $_REQUEST['subject'];
+            $mailer->message = $_REQUEST['message'];
 
-        // Set the vars on the object
-        $mailer->subject = $_REQUEST['subject'];
-        $mailer->message = $_REQUEST['message'];
+            if ($_REQUEST['from'] == 'system') {
+                $mailer->set_default_sender();
+            } else {
+                $mailer->sender      = $GLOBALS['user']->email;
+                $mailer->sender_name = $GLOBALS['user']->fullname;
+            }
 
-        if ($_REQUEST['from'] == 'system') {
-            $mailer->set_default_sender();
-        } else {
-            $mailer->sender      = $GLOBALS['user']->email;
-            $mailer->sender_name = $GLOBALS['user']->fullname;
+            if ($mailer->send_to_group($_REQUEST['to'])) {
+                $title  = T_('E-mail Sent');
+                $body   = T_('Your E-mail was successfully sent.');
+            } else {
+                $title     = T_('E-mail Not Sent');
+                $body      = T_('Your E-mail was not sent.');
+            }
+            $url = AmpConfig::get('web_path') . '/admin/mail.php';
+            show_confirmation($title, $body, $url);
         }
-
-        if ($mailer->send_to_group($_REQUEST['to'])) {
-            $title  = T_('E-mail Sent');
-            $body   = T_('Your E-mail was successfully sent.');
-        } else {
-            $title     = T_('E-mail Not Sent');
-            $body      = T_('Your E-mail was not sent.');
-        }
-        $url = AmpConfig::get('web_path') . '/admin/mail.php';
-        show_confirmation($title, $body, $url);
 
     break;
     default:

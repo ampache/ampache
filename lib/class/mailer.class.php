@@ -46,6 +46,22 @@ class Mailer
         // Eh bien.
     } // Constructor
 
+    /*
+     * is_mail_enabled
+     * 
+     * Check that the mail feature is enabled
+     * @return boolean
+     */
+    public static function is_mail_enabled()
+    {
+        if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
+            return true;
+        }
+        
+        // by default you actually want people to set up mail first
+        return false;
+    }
+    
     /**
      * validate_address
      *
