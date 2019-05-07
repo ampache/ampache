@@ -89,9 +89,9 @@ $catalogs = Catalog::get_catalogs();
     </thead>
     <tbody>
 <?php foreach ($catalogs as $catalog_id) {
-    $catalog = Catalog::create_from_id($catalog_id);
-    $catalog->format();
-    $stats = Catalog::get_stats($catalog_id); ?>
+        $catalog = Catalog::create_from_id($catalog_id);
+        $catalog->format();
+        $stats = Catalog::get_stats($catalog_id); ?>
     <tr>
         <td class="cel_catalog"><?php echo $catalog->name; ?></td>
         <td class="cel_path"><?php echo scrub_out($catalog->f_full_info); ?></td>
