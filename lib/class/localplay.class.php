@@ -42,20 +42,20 @@ class Localplay
     {
         $this->type = $type;
 
-        $this->_get_info();
+        $this->has_info();
     } // Localplay
 
     /**
-     * _get_info
+     * has_info
      * This functions takes the type and attempts to get all the
      * information needed to load it. Will log errors if there are
      * any failures, fatal errors will actually return something to the
      * gui
      */
-    private function _get_info()
+    private function has_info()
     {
         $this->_load_player();
-    } // _get_info
+    } // has_info
 
     /**
      * player_loaded

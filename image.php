@@ -86,7 +86,7 @@ if (!$typeManaged) {
     $filename = $item->name ?: $item->title;
 
     $art = new Art($item->id, $type, $kind);
-    $art->get_db();
+    $art->has_db_info();
     $etag = $art->id;
 
     // That means the client has a cached version of the image

@@ -41,7 +41,7 @@ if (Art::is_enabled()) {
         $name = scrub_out($libitem->full_name); ?>
 <td class="cel_cover">
     <?php
-    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
+    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
         Art::display('artist', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <?php

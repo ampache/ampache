@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 $thcount  = 6;
 ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="tvshow_season">
@@ -110,6 +110,6 @@ $thcount  = 6;
     <tfoot>
 </table>
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

@@ -36,7 +36,7 @@ class Plugin
     public function __construct($name)
     {
         /* Load the plugin */
-        if (!$this->_get_info($name)) {
+        if (!$this->has_info($name)) {
             return false;
         }
 
@@ -45,11 +45,11 @@ class Plugin
 
 
     /**
-     * _get_info
+     * has_info
      * This actually loads the config file for the plugin the name of the
      * class contained within the config file must be Plugin[NAME OF FILE]
      */
-    public function _get_info($cname)
+    public function has_info($cname)
     {
         try {
             $basedir = AmpConfig::get('prefix') . '/modules/plugins';
@@ -79,7 +79,7 @@ class Plugin
         }
 
         return true;
-    } // _get_info
+    } // has_info
 
     /**
      * get_plugins

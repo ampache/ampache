@@ -40,7 +40,7 @@ $thcount = 5;
         <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=' + getSelectionArray());"><?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?></a></li>
     </ul>
 </div>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="label">
@@ -86,6 +86,6 @@ $thcount = 5;
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

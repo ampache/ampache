@@ -185,7 +185,7 @@ class Browse extends Query
         $type = $this->get_type();
 
         // Update the session value only if it's allowed on the current browser
-        if ($this->get_update_session()) {
+        if ($this->is_update_session()) {
             $_SESSION['browse_current_' . $type]['start'] = $browse->get_start();
         }
 
@@ -346,7 +346,7 @@ class Browse extends Query
         } // end switch on type
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        if ($this->get_show_header()) {
+        if ($this->is_show_header()) {
             if (isset($box_req) && isset($box_title)) {
                 UI::show_box_top($box_title, $class);
             }
@@ -356,7 +356,7 @@ class Browse extends Query
             require $box_req;
         }
 
-        if ($this->get_show_header()) {
+        if ($this->is_show_header()) {
             if (isset($box_req)) {
                 UI::show_box_bottom();
             }
@@ -364,7 +364,7 @@ class Browse extends Query
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
         } else {
-            if (!$this->get_use_pages()) {
+            if (!$this->is_use_pages()) {
                 $this->show_next_link($argument);
             }
         }
@@ -465,7 +465,7 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function get_use_pages()
+    public function is_use_pages()
     {
         return $this->_state['use_pages'];
     }
@@ -486,7 +486,7 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function get_grid_view()
+    public function is_grid_view()
     {
         return $this->_state['grid_view'];
     }
@@ -515,7 +515,7 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function get_use_alpha()
+    public function is_use_alpha()
     {
         return $this->_state['use_alpha'];
     }
@@ -542,7 +542,7 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function get_show_header()
+    public function is_show_header()
     {
         return $this->show_header;
     }
@@ -551,7 +551,7 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function get_update_session()
+    public function is_update_session()
     {
         return $this->_state['update_session'];
     }

@@ -239,7 +239,7 @@ class Art extends database_object
     public function get($raw=false)
     {
         // Get the data either way
-        if (!$this->get_db()) {
+        if (!$this->has_db_info()) {
             return false;
         }
 
@@ -252,13 +252,13 @@ class Art extends database_object
 
 
     /**
-     * get_db
+     * has_db_info
      * This pulls the information out from the database, depending
      * on if we want to resize and if there is not a thumbnail go
      * ahead and try to resize
      * @return boolean
      */
-    public function get_db()
+    public function has_db_info()
     {
         $sql        = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, array($this->type, $this->uid, $this->kind));
@@ -303,7 +303,7 @@ class Art extends database_object
         } // if no thumb, but art and we want to resize
 
         return true;
-    } // get_db
+    } // has_db_info
 
     /**
      * This check if an object has an associated image in db.
@@ -1112,7 +1112,7 @@ class Art extends database_object
      */
     public function gather_db($limit = null)
     {
-        if ($this->get_db()) {
+        if ($this->has_db_info()) {
             return array('db' => true);
         }
 
@@ -1824,7 +1824,7 @@ class Art extends database_object
         // This to keep browser cache feature but force a refresh in case image just changed
         if (Art::has_db($object_id, $object_type)) {
             $art = new Art($object_id, $object_type);
-            if ($art->get_db()) {
+            if ($art->has_db_info()) {
                 $imgurl .= '&fooid=' . $art->id;
             }
         }

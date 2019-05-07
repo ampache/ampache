@@ -43,16 +43,16 @@ class Shoutbox
     public function __construct($shout_id)
     {
         // Load the data from the database
-        $this->_get_info($shout_id);
+        $this->has_info($shout_id);
 
         return true;
     } // Constructor
 
     /**
-     * _get_info
+     * has_info
      * does the db call, reads from the user_shout table
      */
-    private function _get_info($shout_id)
+    private function has_info($shout_id)
     {
         $sql        = "SELECT * FROM `user_shout` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($shout_id));
@@ -64,7 +64,7 @@ class Shoutbox
         }
 
         return true;
-    } // _get_info
+    } // has_info
 
     /**
      * garbage_collection

@@ -91,7 +91,7 @@ switch ($action) {
             $browse->set_sort($_REQUEST['sort']);
         }
 
-        if (!$browse->get_use_pages()) {
+        if (!$browse->is_use_pages()) {
             $browse->set_start(0);
         }
 

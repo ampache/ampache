@@ -1379,7 +1379,7 @@ abstract class Catalog extends database_object
             $album = new Album($album_id);
             $art   = new Art($album_id, 'album');
 
-            if (!$art->get_db()) {
+            if (!$art->has_db_info()) {
                 continue;
             }
 

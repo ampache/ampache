@@ -21,7 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-if ($browse->get_show_header()) {
+if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 }
 ?>
@@ -135,6 +135,6 @@ if (isset($video_type) && $video_type != 'video') {
     </tfoot>
 </table>
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
     } ?>

@@ -32,7 +32,7 @@ $thcount  = 5;
 } ?>
     </ul>
 </div>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
     } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="podcast">
@@ -117,6 +117,6 @@ $thcount  = 5;
     <tfoot>
 </table>
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

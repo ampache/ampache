@@ -60,7 +60,7 @@ class Song_Preview extends database_object implements media, playable_item
 
         $this->id = (int) ($id);
 
-        if ($info = $this->_get_info()) {
+        if ($info = $this->has_info()) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -147,9 +147,9 @@ class Song_Preview extends database_object implements media, playable_item
     } // build_cache
 
     /**
-     * _get_info
+     * has_info
      */
-    private function _get_info()
+    private function has_info()
     {
         $id = $this->id;
 

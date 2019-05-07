@@ -40,7 +40,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
 <td class="cel_cover">
 <div style="max-width: 80px;">
     <?php
-    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 3;
+    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 3;
         $libitem->display_art($thumb); ?>
 </div>
 </td>

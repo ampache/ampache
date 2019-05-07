@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 $thcount  = 8;
 ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
@@ -134,6 +134,6 @@ $thcount  = 8;
 </table>
 
 <?php show_table_render($argument); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
                 require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
             } ?>

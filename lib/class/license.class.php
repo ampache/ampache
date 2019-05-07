@@ -53,18 +53,18 @@ class License
     public function __construct($id)
     {
         // Load the data from the database
-        $this->_get_info($id);
+        $this->has_info($id);
 
         return true;
     } // Constructor
 
     /**
-     * _get_info
+     * has_info
      * does the db call, reads from the license table
      * @param int $id
      * @return boolean
      */
-    private function _get_info($id)
+    private function has_info($id)
     {
         $sql        = "SELECT * FROM `license` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($id));
@@ -76,7 +76,7 @@ class License
         }
 
         return true;
-    } // _get_info
+    } // has_info
 
     /**
      * create

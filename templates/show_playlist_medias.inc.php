@@ -22,7 +22,7 @@
 
 $web_path = AmpConfig::get('web_path');
 ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
@@ -105,6 +105,6 @@ $web_path = AmpConfig::get('web_path');
     </table>
 </form>
 <?php show_table_render($argument); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
     } ?>

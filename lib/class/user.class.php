@@ -153,7 +153,7 @@ class User extends database_object
 
         $this->id = (int) ($user_id);
 
-        $info = $this->_get_info();
+        $info = $this->has_info();
 
         foreach ($info as $key => $value) {
             // Let's not save the password in this object :S
@@ -195,10 +195,10 @@ class User extends database_object
     }
 
     /**
-     * _get_info
+     * has_info
      * This function returns the information for this object
      */
-    private function _get_info()
+    private function has_info()
     {
         $user_id = (int) ($this->id);
 
@@ -224,7 +224,7 @@ class User extends database_object
         parent::add_to_cache('user', $user_id, $data);
 
         return $data;
-    } // _get_info
+    } // has_info
 
     /**
      * load_playlist
@@ -1363,7 +1363,7 @@ class User extends database_object
 
         $avatar['title'] = T_('User avatar');
         $upavatar        = new Art($this->id, 'user');
-        if ($upavatar->get_db()) {
+        if ($upavatar->has_db_info()) {
             $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];

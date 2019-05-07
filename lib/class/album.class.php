@@ -364,7 +364,7 @@ class Album extends database_object implements library_item
         $results    = array_merge($results, Dba::fetch_assoc($db_results));
 
         $art = new Art($this->id, 'album');
-        $art->get_db();
+        $art->has_db_info();
         $results['has_art']   = make_bool($art->raw);
         $results['has_thumb'] = make_bool($art->thumb);
 

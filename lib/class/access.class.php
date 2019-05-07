@@ -111,7 +111,7 @@ class Access
         /* Assign id for use in get_info() */
         $this->id = (int) $access_id;
 
-        $info = $this->_get_info();
+        $info = $this->has_info();
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -120,12 +120,12 @@ class Access
     }
 
     /**
-     * _get_info
+     * has_info
      *
      * Gets the vars for $this out of the database.
      * @return array
      */
-    private function _get_info()
+    private function has_info()
     {
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($this->id));

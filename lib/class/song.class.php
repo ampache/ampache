@@ -319,7 +319,7 @@ class Song extends database_object implements media, library_item
             $this->initializeMetadata();
         }
 
-        if ($info = $this->_get_info($limit_threshold)) {
+        if ($info = $this->has_info($limit_threshold)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -546,10 +546,10 @@ class Song extends database_object implements media, library_item
     } // build_cache
 
     /**
-     * _get_info
+     * has_info
      * @return array|boolean
      */
-    private function _get_info($limit_threshold = '')
+    private function has_info($limit_threshold = '')
     {
         $id = $this->id;
 
@@ -1681,12 +1681,12 @@ class Song extends database_object implements media, library_item
     {
         $info = null;
         if (!$file_path) {
-            $info      = $this->_get_info();
+            $info      = $this->has_info();
             $file_path = $info['file'];
         }
         if (!$catalog_id) {
             if (!is_array($info)) {
-                $info = $this->_get_info();
+                $info = $this->has_info();
             }
             $catalog_id = $info['catalog'];
         }
