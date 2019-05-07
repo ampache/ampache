@@ -44,9 +44,9 @@ if (User::is_registered()) {
         if (Access::check('interface', $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
             $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'"; ?>
-        <li <?php echo $li_params; ?>>
+        <li <?php print_r($li_params); ?>>
     <?php
-            echo Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']);
+            print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
             if ($item['id'] == $_SESSION['state']['sidebar_tab']) {
                 ?>
             <div id="sidebar-page" class="sidebar-page-float">
