@@ -128,7 +128,7 @@ class AmpacheCatalogFavorites
                     }
 
                     echo '<div style="float: left; margin-right: 10px;">';
-                    $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 2; // default to 128x128
+                    $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
                     $item->display_art($thumb, true);
                     echo '</div>';
                     echo '</td>';

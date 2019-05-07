@@ -1756,6 +1756,11 @@ class Art extends database_object
                 /* Popup Web Player size */
             case 11:
                 /* Large view browse size */
+            case 12:
+                /* Search preview size */
+                 $size['height'] = 150;
+                 $size['width']  = 150;
+            break;
             default:
                 $size['height']   = 200;
                 $size['width']    = 200;
@@ -1830,7 +1835,7 @@ class Art extends database_object
         }
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
         
-        if ($size['height'] >= 128) {
+        if ($size['height'] >= 150) {
             echo "<div class=\"item_art_play\">";
             echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' . $object_id);
             echo "</div>";

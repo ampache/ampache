@@ -1260,13 +1260,13 @@ span.fatalerror {
     text-align: right;
     color: #999;
     font-size: 13px;
-	clear: right;
-	max-width: 128px;
+    clear: right;
+    max-width: 128px;
 }
 
 .item_art {
     border: 2px solid transparent;
-    display: contents;
+    display: inline-block;
     position: relative;
 }
 
