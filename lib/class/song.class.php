@@ -304,16 +304,16 @@ class Song extends database_object implements media, library_item
     /**
      * Constructor
      *
-     * Song class, for modifing a song.
-     * @param int|null $id
+     * Song class, for modifying a song.
+     * @param int|null $songid
      */
-    public function __construct($id = null, $limit_threshold = '')
+    public function __construct($songid = null, $limit_threshold = '')
     {
-        if (!$id) {
+        if ($songid === null) {
             return false;
         }
 
-        $this->id = (int) ($id);
+        $this->id = (int) ($songid);
 
         if (self::isCustomMetadataEnabled()) {
             $this->initializeMetadata();
@@ -381,7 +381,6 @@ class Song extends database_object implements media, library_item
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
 
-        $albumartist_id = null;
         if (!isset($results['albumartist_id'])) {
             if ($albumartist) {
                 // Multiple artist per songs not supported for now
@@ -391,7 +390,6 @@ class Song extends database_object implements media, library_item
         } else {
             $albumartist_id = (int) ($results['albumartist_id']);
         }
-        $artist_id = null;
         if (!isset($results['artist_id'])) {
             // Multiple artist per songs not supported for now
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
@@ -399,7 +397,6 @@ class Song extends database_object implements media, library_item
         } else {
             $artist_id = (int) ($results['artist_id']);
         }
-        $album_id = null;
         if (!isset($results['album_id'])) {
             $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type);
         } else {
@@ -1046,6 +1043,7 @@ class Song extends database_object implements media, library_item
     public function write_id3()
     {
         if (AmpConfig::get('write_id3')) {
+            $meta    = array();
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
                 debug_event('song', 'Writing id3 metadata to file ' . $this->file, 5);
@@ -1473,7 +1471,7 @@ class Song extends database_object implements media, library_item
         $this->f_publisher = $this->label;
         $this->f_composer  = $this->composer;
         
-        if (AmpConfig::get('licensing') && $this->license) {
+        if (AmpConfig::get('licensing') && $this->license !== null) {
             $license = new License($this->license);
             $license->format();
             $this->f_license = $license->f_link;
@@ -1545,7 +1543,7 @@ class Song extends database_object implements media, library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song') {
+        if ($filter_type === null || $filter_type == 'song') {
             $medias[] = array(
                 'object_type' => 'song',
                 'object_id' => $this->id
@@ -1572,7 +1570,7 @@ class Song extends database_object implements media, library_item
      */
     public function get_user_owner()
     {
-        if ($this->user_upload) {
+        if ($this->user_upload !== null) {
             return $this->user_upload;
         }
 
@@ -1680,7 +1678,7 @@ class Song extends database_object implements media, library_item
     public function get_rel_path($file_path=null, $catalog_id=0)
     {
         $info = null;
-        if (!$file_path) {
+        if ($file_path === null) {
             $info      = $this->has_info();
             $file_path = $info['file'];
         }
