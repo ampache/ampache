@@ -249,7 +249,7 @@ if ($type == 'playlist' && isset($playlist_type)) {
  * current song, and do any other crazyness
  * we need to
  */
-if ($demo_id !== false) {
+if ($demo_id !== '') {
     $democratic = new Democratic($demo_id);
     $democratic->set_parent();
 
@@ -275,7 +275,7 @@ if ($demo_id !== false) {
 /**
  * if we are doing random let's pull the random object
  */
-if ($random !== false) {
+if ($random !== '') {
     if ($_REQUEST['start'] < 1) {
         if (isset($_REQUEST['random_type'])) {
             $rtype = $_REQUEST['random_type'];
@@ -326,7 +326,7 @@ if ($media->catalog) {
     if (isset($media->enabled) && !make_bool($media->enabled)) {
         debug_event('Play', "Error: $media->file is currently disabled, song skipped", '5');
         // Check to see if this is a democratic playlist, if so remove it completely
-        if ($demo_id !== false && isset($democratic)) {
+        if ($demo_id !== '' && isset($democratic)) {
             $democratic->delete_from_oid($oid, $type);
         }
         header('HTTP/1.1 404 File Disabled');
@@ -355,7 +355,7 @@ if ($media->catalog) {
 }
 if ($media == null) {
     // Handle democratic removal
-    if ($demo_id !== false && isset($democratic)) {
+    if ($demo_id !== '' && isset($democratic)) {
         $democratic->delete_from_oid($oid, $type);
     }
 
@@ -372,7 +372,7 @@ if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
     }
     // FIXME: why are these separate?
     // Remove the media votes if this is a democratic song
-    if ($demo_id !== false && isset($democratic)) {
+    if ($demo_id !== '' && isset($democratic)) {
         $democratic->delete_from_oid($oid, $type);
     }
 

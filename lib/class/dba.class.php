@@ -130,6 +130,7 @@ class Dba
      *
      * This runs an escape on a variable so that it can be safely inserted
      * into the sql
+     * @return string
      */
     public static function escape($var)
     {
