@@ -824,7 +824,7 @@ table.tabledata td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 3px 10px 3px 0;
+    padding: 3px 3px 3px 0;
 }
 
 table.tabledata tr:hover, table.tabledata tr:focus {
@@ -1011,8 +1011,10 @@ table.disablegv td.cel_rating {
 
 .random_selection .random_album, .random_selection .random_video {
     float: left;
-    width: 16%;
-    margin-bottom: 10px;
+    min-width: 110px;
+    max-width: 16%;
+    margin-bottom: 1%;
+    margin-right: 3%;
     text-align: center;
 }
 
@@ -1264,28 +1266,25 @@ span.fatalerror {
 
 .item_art {
     border: 2px solid transparent;
-    display: inline-block;
+    display: contents;
     position: relative;
 }
 
 .item_art .item_art_play {
     display: none;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
+    height: 64px;
+    margin: 35% auto 0 auto;
+    position: relative;
     width: 64px;
-    height: 100%;
-    position: absolute;
 }
 
 .item_art .item_art_play .item_art_play_icon {
-    width: 64px;
+    display: block;
     height: 64px;
+    opacity: 0.4;
     position: relative;
     text-align: center;
-    opacity: 0.4;
-    display: block;
-    margin: 100% 0 0 0;
+    width: 64px;
 }
 
 .item_art .item_art_play .item_art_play_icon:hover {
