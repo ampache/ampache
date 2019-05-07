@@ -903,7 +903,7 @@ class Artist extends database_object implements library_item
             $album   = new Album($albumid);
             $deleted = $album->remove_from_disk();
             if (!$deleted) {
-                debug_event('artist', 'Error when deleting the album `' . $id . '`.', 1);
+                debug_event('artist', 'Error when deleting the album `' . $albumid . '`.', 1);
                 break;
             }
         }
