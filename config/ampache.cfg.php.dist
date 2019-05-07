@@ -564,7 +564,7 @@ wanted_types = "album,official"
 ; Set this to true to enable channels and the
 ; possibility for users to create channels from playlists
 ; DEFAULT: true
-channel = "true"
+channel = "false"
 
 ; Live Streams
 ; Set this to true to enable live streams (radio) and the

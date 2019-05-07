@@ -33,7 +33,12 @@ $catalogs = Catalog::get_catalogs();
             <th><?php echo T_('Albums'); ?></th>
             <th><?php echo T_('Artists'); ?></th>
             <th><?php echo T_('Songs'); ?></th>
-            <th><?php echo T_('Videos'); ?></th>
+            <?php if (AmpConfig::get('allow_video')) {
+    ?>
+                <th><?php echo T_('Videos'); ?></th>
+            <?php
+}
+    ?>
             <th><?php echo T_('Tags'); ?></th>
             <th><?php echo T_('Catalog Size'); ?></th>
             <th><?php echo T_('Catalog Time'); ?></th>
@@ -46,7 +51,12 @@ $catalogs = Catalog::get_catalogs();
             <td><?php echo $stats['albums']; ?></td>
             <td><?php echo $stats['artists']; ?></td>
             <td><?php echo $stats['songs']; ?></td>
-            <td><?php echo $stats['videos']; ?></td>
+            <?php if (AmpConfig::get('allow_video')) {
+        ?>
+                <td><?php echo $stats['videos']; ?></td>
+            <?php
+    }
+    ?>
             <td><?php echo $stats['tags']; ?></td>
             <td><?php echo $stats['formatted_size']; ?></td>
             <td><?php echo $stats['time_text']; ?></td>
@@ -89,11 +99,15 @@ $catalogs = Catalog::get_catalogs();
         <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
         <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
         <td class="cel_songs"><?php echo scrub_out($stats['songs']); ?></td>
-        <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
+            <?php if (AmpConfig::get('allow_video')) {
+            ?>
+                <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
+            <?php
+        } ?>
         <td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
     </tr>
 <?php
-} ?>
+    } ?>
     </tbody>
 </table>
 <?php UI::show_box_bottom(); ?>
