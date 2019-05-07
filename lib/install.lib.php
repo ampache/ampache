@@ -110,6 +110,9 @@ function install_check_server_apache()
     return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
 }
 
+/**
+ * @param string $file
+ */
 function install_check_rewrite_rules($file, $web_path, $fix = false)
 {
     if (!is_readable($file)) {

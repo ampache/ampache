@@ -198,6 +198,8 @@ class Userflag extends database_object
     /**
      * get_latest_sql
      * Get the latest sql
+     * @param string|null $type
+     * @param string $user_id
      */
     public static function get_latest_sql($type, $user_id=null)
     {

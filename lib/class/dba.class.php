@@ -139,9 +139,9 @@ class Dba
 
             return '';
         }
-        $var = $dbh->quote($var);
+        $out_var = $dbh->quote(filter_var($var, FILTER_SANITIZE_STRING));
         // This is slightly less ugly than it was, but still ugly
-        return substr($var, 1, -1);
+        return substr($out_var, 1, -1);
     }
 
     /**

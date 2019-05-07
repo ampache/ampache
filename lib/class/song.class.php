@@ -1700,6 +1700,7 @@ class Song extends database_object implements media, library_item
      * @param int $object_id
      * @param string $additional_params
      * @param boolean $local
+     * @param string $player
      * @return string
      */
     public static function generic_play_url($object_type, $object_id, $additional_params, $player=null, $local=false)

@@ -26,6 +26,7 @@
  */
 /**
  * @param string $log_name
+ * @param string $event_name
  */
 function log_event($username, $event_name, $event_description, $log_name)
 {

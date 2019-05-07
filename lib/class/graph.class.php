@@ -139,6 +139,9 @@ class Graph
         return $values;
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
         $values = $this->get_all_type_pts($fct, $id, $object_type, $object_id, $start_date, $end_date, $zoom);

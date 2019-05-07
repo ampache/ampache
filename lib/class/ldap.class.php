@@ -159,6 +159,7 @@ class LDAP
     /**
      * Binds to the LDAP
      * @param string $password
+     * @param string $username
      */
     private static function bind($link, $username = null, $password = null)
     {

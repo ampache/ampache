@@ -890,6 +890,7 @@ class Subsonic_XML_Data
 
     /**
      * @param string $objectType
+     * @param SimpleXMLElement $xml
      */
     private static function setIfStarred($xml, $objectType, $objectId)
     {

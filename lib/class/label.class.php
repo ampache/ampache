@@ -308,6 +308,9 @@ class Label extends database_object implements library_item
         return $results;
     }
 
+    /**
+     * @param integer $artist_id
+     */
     public function add_artist_assoc($artist_id)
     {
         $sql = "INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)";
@@ -315,6 +318,9 @@ class Label extends database_object implements library_item
         return Dba::write($sql, array($this->id, $artist_id, time()));
     }
 
+    /**
+     * @param integer $artist_id
+     */
     public function remove_artist_assoc($artist_id)
     {
         $sql = "DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?";
@@ -376,6 +382,9 @@ class Label extends database_object implements library_item
         return $results;
     }
 
+    /**
+     * @param integer $artist_id
+     */
     public static function get_labels($artist_id)
     {
         $sql = "SELECT `label`.`id`, `label`.`name` FROM `label` " .

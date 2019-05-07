@@ -1020,6 +1020,8 @@ class User extends database_object
      */
     public function update_password($new_password)
     {
+        
+        $salt = AmpConfig::get('secret_key');
         $new_password = hash('sha256', $new_password);
 
         debug_event('user.class.php', 'Updating password', 4);

@@ -101,6 +101,9 @@ class Share extends database_object
         return $secret;
     }
 
+    /**
+     * @param string $type
+     */
     public static function format_type($type)
     {
         switch ($type) {
