@@ -152,6 +152,12 @@ class Subsonic_XML_Data
         return (self::cleanId($plistid) >= self::AMPACHEID_SMARTPL && $plistid < self::AMPACHEID_VIDEO);
     }
 
+    public static function isVideo($videoid)
+    {
+        $videoid = self::cleanId($id);
+        return (self::cleanId($videoid) >= self::AMPACHEID_VIDEO && $videoid < self::AMPACHEID_PODCAST);
+    }
+
     public static function isPodcast($podcastid)
     {
         return (self::cleanId($podcastid) >= self::AMPACHEID_PODCAST && $podcastid < self::AMPACHEID_PODCASTEP);
@@ -172,6 +178,8 @@ class Subsonic_XML_Data
             return "song";
         } elseif (self::isSmartPlaylist($objectid)) {
             return "search";
+        } elseif (self::isVideo($id)) {
+            return "video";
         } elseif (self::isPodcast($objectid)) {
             return "podcast";
         } elseif (self::isPodcastEp($objectid)) {
@@ -706,6 +714,52 @@ class Subsonic_XML_Data
         }
     }
 
+    public static function addVideos($xml, $videos)
+    {
+        $xvideos = $xml->addChild('videos');
+        foreach ($videos as $video) {
+            $video->format();
+            self::addVideo($xvideos, $video);
+        }
+    }
+    public static function addVideo($xml, $video, $elementName = 'video')
+    {
+        $xvideo = $xml->addChild($elementName);
+        $xvideo->addAttribute('id', self::getVideoId($video->id));
+        $xvideo->addAttribute('title', $video->f_full_title);
+        $xvideo->addAttribute('isDir', 'false');
+        $xvideo->addAttribute('coverArt', self::getVideoId($video->id));
+        $xvideo->addAttribute('isVideo', 'true');
+        $xvideo->addAttribute('type', 'video');
+        $xvideo->addAttribute('duration', $video->time);
+        if ($video->year > 0) {
+            $xvideo->addAttribute('year', $video->year);
+        }
+        $tags = Tag::get_object_tags('video', $video->id);
+        if (count($tags) > 0) {
+            $xvideo->addAttribute('genre', $tags[0]['name']);
+        }
+        $xvideo->addAttribute('size', $video->size);
+        $xvideo->addAttribute('suffix', $video->type);
+        $xvideo->addAttribute('contentType', $video->mime);
+        // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
+        $path = basename($video->file);
+        $xvideo->addAttribute('path', $video);
+        
+        self::setIfStarred($xvideo, 'video', $video->id);
+        // Set transcoding information if required
+        $transcode_cfg = AmpConfig::get('transcode');
+        $valid_types   = Song::get_stream_types_for_type($video->type, 'api');
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+            $transcode_settings = $video->get_transcode_settings(null, 'api');
+            if ($transcode_settings) {
+                $transcode_type = $transcode_settings['format'];
+                $xvideo->addAttribute('transcodedSuffix', $transcode_type);
+                $xvideo->addAttribute('transcodedContentType', Video::type_to_mime($transcode_type));
+            }
+        }
+    }
+
     /**
      * @param SimpleXMLElement $xml
      */
@@ -1170,6 +1224,8 @@ class Subsonic_XML_Data
         if ($bookmark->object_type == "song") {
             $song = new Song($bookmark->object_id);
             self::addSong($xbookmark, $song->id, false, 'entry');
+        } elseif ($bookmark->object_type == "video") {
+            self::addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
         } elseif ($bookmark->object_type == "podcast_episode") {
             self::addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
         }

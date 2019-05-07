@@ -44,8 +44,13 @@ class AutoUpdate
      */
     protected static function is_develop()
     {
-        $version = AmpConfig::get('version');
-        $vspart  = explode('-', $version);
+        $version_develop = AmpConfig::get('autoupdate_develop');
+        $version         = AmpConfig::get('version');
+        $vspart          = explode('-', $version);
+
+        if ($version_develop == '1') {
+            return true;
+        }
 
         return ($vspart[count($vspart) - 1] == 'develop');
     }
@@ -254,6 +259,9 @@ class AutoUpdate
     public static function update_files()
     {
         $cmd = 'git pull https://github.com/ampache/ampache.git';
+        if (self::is_develop()) {
+            $cmd = 'git pull https://github.com/ampcore/amuzak.git develop';
+        }
         echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         ob_flush();
         chdir(AmpConfig::get('prefix'));
