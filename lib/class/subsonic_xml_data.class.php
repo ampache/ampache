@@ -83,6 +83,14 @@ class Subsonic_XML_Data
     }
 
     /**
+     * @param integer $videoid
+     */
+    public static function getVideoId($videoid)
+    {
+        return $videoid + Subsonic_XML_Data::AMPACHEID_VIDEO;
+    }
+
+    /**
      * @param integer $plistid
      */
     public static function getSmartPlId($plistid)
@@ -154,7 +162,7 @@ class Subsonic_XML_Data
 
     public static function isVideo($videoid)
     {
-        $videoid = self::cleanId($id);
+        $videoid = self::cleanId($videoid);
         return (self::cleanId($videoid) >= self::AMPACHEID_VIDEO && $videoid < self::AMPACHEID_PODCAST);
     }
 
@@ -178,7 +186,7 @@ class Subsonic_XML_Data
             return "song";
         } elseif (self::isSmartPlaylist($objectid)) {
             return "search";
-        } elseif (self::isVideo($id)) {
+        } elseif (self::isVideo($objectid)) {
             return "video";
         } elseif (self::isPodcast($objectid)) {
             return "podcast";
@@ -277,10 +285,10 @@ class Subsonic_XML_Data
     public static function addMusicFolders($xml, $catalogs)
     {
         $xfolders = $xml->addChild('musicFolders');
-        foreach ($catalogs as $id) {
-            $catalog = Catalog::create_from_id($id);
+        foreach ($catalogs as $folderid) {
+            $catalog = Catalog::create_from_id($folderid);
             $xfolder = $xfolders->addChild('musicFolder');
-            $xfolder->addAttribute('id', $id);
+            $xfolder->addAttribute('id', $folderid);
             $xfolder->addAttribute('name', $catalog->name);
         }
     }
@@ -387,8 +395,8 @@ class Subsonic_XML_Data
             }
         }
         if ($albums) {
-            foreach ($allalbums as $id) {
-                $album = new Album($id);
+            foreach ($allalbums as $albumid) {
+                $album = new Album($albumid);
                 self::addAlbum($xartist, $album);
             }
         }
@@ -400,8 +408,8 @@ class Subsonic_XML_Data
     public static function addAlbumList($xml, $albums, $elementName="albumList")
     {
         $xlist = $xml->addChild(htmlspecialchars($elementName));
-        foreach ($albums as $id) {
-            $album = new Album($id);
+        foreach ($albums as $albumid) {
+            $album = new Album($albumid);
             self::addAlbum($xlist, $album);
         }
     }
@@ -452,8 +460,8 @@ class Subsonic_XML_Data
 
         if ($songs) {
             $allsongs = $album->get_songs();
-            foreach ($allsongs as $id) {
-                self::addSong($xalbum, $id, $addAmpacheInfo);
+            foreach ($allsongs as $songid) {
+                self::addSong($xalbum, $songid, $addAmpacheInfo);
             }
         }
     }
@@ -668,8 +676,8 @@ class Subsonic_XML_Data
         $xdir->addAttribute('name', $artist->f_full_name);
 
         $allalbums = $artist->get_albums();
-        foreach ($allalbums as $id) {
-            $album = new Album($id);
+        foreach ($allalbums as $albumid) {
+            $album = new Album($albumid);
             self::addAlbum($xdir, $album, false, false, "child");
         }
     }
@@ -689,8 +697,8 @@ class Subsonic_XML_Data
         }
 
         $disc_ids = $album->get_group_disks_ids();
-        foreach ($disc_ids as $id) {
-            $disc     = new Album($id);
+        foreach ($disc_ids as $discid) {
+            $disc     = new Album($discid);
             $allsongs = $disc->get_songs();
             foreach ($allsongs as $songid) {
                 self::addSong($xdir, $songid, false, "child");
@@ -766,12 +774,12 @@ class Subsonic_XML_Data
     public static function addPlaylists($xml, $playlists, $smartplaylists = array())
     {
         $xplaylists = $xml->addChild('playlists');
-        foreach ($playlists as $id) {
-            $playlist = new Playlist($id);
+        foreach ($playlists as $plistid) {
+            $playlist = new Playlist($plistid);
             self::addPlaylist($xplaylists, $playlist);
         }
-        foreach ($smartplaylists as $id) {
-            $smartplaylist = new Search($id, 'song');
+        foreach ($smartplaylists as $splistid) {
+            $smartplaylist = new Search($splistid, 'song');
             self::addSmartPlaylist($xplaylists, $smartplaylist);
         }
     }
@@ -828,8 +836,8 @@ class Subsonic_XML_Data
     public static function addRandomSongs($xml, $songs)
     {
         $xsongs = $xml->addChild('randomSongs');
-        foreach ($songs as $id) {
-            self::addSong($xsongs, $id);
+        foreach ($songs as $songid) {
+            self::addSong($xsongs, $songid);
         }
     }
 
@@ -839,8 +847,8 @@ class Subsonic_XML_Data
     public static function addSongsByGenre($xml, $songs)
     {
         $xsongs = $xml->addChild('songsByGenre');
-        foreach ($songs as $id) {
-            self::addSong($xsongs, $id);
+        foreach ($songs as $songid) {
+            self::addSong($xsongs, $songid);
         }
     }
 
@@ -866,16 +874,16 @@ class Subsonic_XML_Data
     public static function addSearchResult($xml, $artists, $albums, $songs, $elementName = "searchResult2")
     {
         $xresult = $xml->addChild(htmlspecialchars($elementName));
-        foreach ($artists as $id) {
-            $artist = new Artist($id);
+        foreach ($artists as $artistid) {
+            $artist = new Artist($artistid);
             self::addArtist($xresult, $artist);
         }
-        foreach ($albums as $id) {
-            $album = new Album($id);
+        foreach ($albums as $albumid) {
+            $album = new Album($albumid);
             self::addAlbum($xresult, $album);
         }
-        foreach ($songs as $id) {
-            self::addSong($xresult, $id);
+        foreach ($songs as $songid) {
+            self::addSong($xresult, $songid);
         }
     }
 
@@ -902,18 +910,18 @@ class Subsonic_XML_Data
     {
         $xstarred = $xml->addChild(htmlspecialchars($elementName));
 
-        foreach ($artists as $id) {
-            $artist = new Artist($id);
+        foreach ($artists as $artistid) {
+            $artist = new Artist($artistid);
             self::addArtist($xstarred, $artist);
         }
 
-        foreach ($albums as $id) {
-            $album = new Album($id);
+        foreach ($albums as $albumid) {
+            $album = new Album($albumid);
             self::addAlbum($xstarred, $album);
         }
 
-        foreach ($songs as $id) {
-            self::addSong($xstarred, $id);
+        foreach ($songs as $songid) {
+            self::addSong($xstarred, $songid);
         }
     }
 
@@ -946,8 +954,8 @@ class Subsonic_XML_Data
     public static function addUsers($xml, $users)
     {
         $xusers = $xml->addChild('users');
-        foreach ($users as $id) {
-            $user = new User($id);
+        foreach ($users as $userid) {
+            $user = new User($userid);
             self::addUser($xusers, $user);
         }
     }
@@ -971,8 +979,8 @@ class Subsonic_XML_Data
     public static function addRadios($xml, $radios)
     {
         $xradios = $xml->addChild('internetRadioStations');
-        foreach ($radios as $id) {
-            $radio = new Live_Stream($id);
+        foreach ($radios as $radioid) {
+            $radio = new Live_Stream($radioid);
             self::addRadio($xradios, $radio);
         }
     }
@@ -1004,14 +1012,14 @@ class Subsonic_XML_Data
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
-            foreach ($songs as $id) {
-                self::addSong($xshare, $id, false, "entry");
+            foreach ($songs as $songid) {
+                self::addSong($xshare, $songid, false, "entry");
             }
         } elseif ($share->object_type == 'album') {
             $album = new Album($share->object_id);
             $songs = $album->get_songs();
-            foreach ($songs as $id) {
-                self::addSong($xshare, $id, false, "entry");
+            foreach ($songs as $songid) {
+                self::addSong($xshare, $songid, false, "entry");
             }
         }
     }
@@ -1022,8 +1030,8 @@ class Subsonic_XML_Data
     public static function addShares($xml, $shares)
     {
         $xshares = $xml->addChild('shares');
-        foreach ($shares as $id) {
-            $share = new Share($id);
+        foreach ($shares as $shareid) {
+            $share = new Share($shareid);
             // Don't add share with max counter already reached
             if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);

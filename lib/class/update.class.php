@@ -4155,7 +4155,8 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`,`subcatagory`) " .
-        "VALUES ('autoupdate_develop','0','Force server to follow develop branch','100','boolean','system', 'update')";
+               "VALUES ('autoupdate_develop','0','Force server to follow develop branch','100','boolean','system', 'update')";
+        $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
 
