@@ -53,8 +53,8 @@ switch ($action) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $artist = new Artist($id);
+            foreach ($sres as $artistid) {
+                $artist = new Artist($artistid);
                 $artist->format(false);
                 $results[] = array(
                     'type' => T_('Artists'),
@@ -82,8 +82,8 @@ switch ($action) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $album = new Album($id);
+            foreach ($sres as $albumid) {
+                $album = new Album($albumid);
                 $album->format(true);
                 $a_title = $album->f_title;
                 if ($album->disk) {
@@ -115,8 +115,8 @@ switch ($action) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $song = new Song($id);
+            foreach ($sres as $songid) {
+                $song = new Song($songid);
                 $song->format(false);
                 $results[] = array(
                     'type' => T_('Songs'),
@@ -144,8 +144,8 @@ switch ($action) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $playlist = new Playlist($id);
+            foreach ($sres as $playlistid) {
+                $playlist = new Playlist($playlistid);
                 $playlist->format(false);
                 $results[] = array(
                     'type' => T_('Playlists'),
@@ -174,8 +174,8 @@ switch ($action) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $label = new Label($id);
+            foreach ($sres as $labelid) {
+                $label = new Label($labelid);
                 $label->format(false);
                 $results[] = array(
                     'type' => T_('Labels'),
@@ -224,8 +224,8 @@ switch ($action) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $user = new User($id);
+            foreach ($sres as $userid) {
+                $user = new User($userid);
                 $user->format();
                 $avatar    = $user->get_avatar();
                 $results[] = array(

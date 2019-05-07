@@ -50,8 +50,8 @@ switch ($type) {
     case 'albums':
         $ids = Catalog::get_albums();
         $items = array();
-        foreach ($ids as $id) {
-            $items[] = new Album($id);
+        foreach ($ids as $albumid) {
+            $items[] = new Album($albumid);
         }
     break;
     case 'artists':
@@ -60,8 +60,8 @@ switch ($type) {
     default:
         $ids = Playlist::get_playlists(false, -1);
         $items = array();
-        foreach ($ids as $id) {
-            $items[] = new Playlist($id);
+        foreach ($ids as $playlistid) {
+            $items[] = new Playlist($playlistid);
         }
     break;
 } // end type switch

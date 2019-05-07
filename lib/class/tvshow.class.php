@@ -413,11 +413,11 @@ class TVShow extends database_object implements library_item
     {
         $deleted    = true;
         $season_ids = $this->get_seasons();
-        foreach ($season_ids as $id) {
-            $season  = new TVShow_Season($id);
+        foreach ($season_ids as $season) {
+            $season  = new TVShow_Season($season);
             $deleted = $season->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow', 'Error when deleting the season `' . $id . '`.', 1);
+                debug_event('tvshow', 'Error when deleting the season `' . $season . '`.', 1);
                 break;
             }
         }

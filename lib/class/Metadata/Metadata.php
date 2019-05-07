@@ -163,8 +163,8 @@ trait Metadata
         if (!$this->disabledMetadataFields) {
             $fields = array();
             $ids    = explode(',', \AmpConfig::get('disabled_custom_metadata_fields'));
-            foreach ($ids as $id) {
-                $field = $this->metadataFieldRepository->findById($id);
+            foreach ($ids as $metaid) {
+                $field = $this->metadataFieldRepository->findById($metaid);
                 if ($field) {
                     $fields[] = $field->getName();
                 }

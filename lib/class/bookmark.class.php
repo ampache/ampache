@@ -120,8 +120,8 @@ class Bookmark extends database_object
     {
         $bookmarks = array();
         $ids       = self::get_bookmarks_ids($user);
-        foreach ($ids as $id) {
-            $bookmarks[] = new Bookmark($id);
+        foreach ($ids as $bookmarkid) {
+            $bookmarks[] = new Bookmark($bookmarkid);
         }
 
         return $bookmarks;

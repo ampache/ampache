@@ -51,16 +51,16 @@ switch ($action) {
     break;
     case 'shouts':
         ob_start();
-        $type = $_REQUEST['object_type'];
-        $id   = $_REQUEST['object_id'];
+        $type   = $_REQUEST['object_type'];
+        $songid = $_REQUEST['object_id'];
 
         if ($type == "song") {
-            $media  = new Song($id);
-            $shouts = Shoutbox::get_shouts($type, $id);
+            $media  = new Song($songid);
+            $shouts = Shoutbox::get_shouts($type, $songid);
             echo "<script type='text/javascript'>\r\n";
             echo "shouts = {};\r\n";
-            foreach ($shouts as $id) {
-                $shout = new Shoutbox($id);
+            foreach ($shouts as $shoutsid) {
+                $shout = new Shoutbox($shoutsid);
                 $shout->format();
                 $key = (int) ($shout->data);
                 echo "if (shouts['" . $key . "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";

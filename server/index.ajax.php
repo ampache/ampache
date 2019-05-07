@@ -137,8 +137,8 @@ switch ($action) {
             $labels     = Label::get_labels($_REQUEST['artist']);
             $object_ids = array();
             if (count($labels) > 0) {
-                foreach ($labels as $id => $label) {
-                    $object_ids[] = $id;
+                foreach ($labels as $labelid => $label) {
+                    $object_ids[] = $labelid;
                 }
             }
             $browse = new Browse();

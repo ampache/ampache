@@ -191,8 +191,8 @@ class XML_Data
                 }
             }
 
-            foreach ($atags as $id => $data) {
-                $string .= "\t<tag id=\"" . $id . "\" " .
+            foreach ($atags as $tag => $data) {
+                $string .= "\t<tag id=\"" . $tag . "\" " .
                         "count=\"" . $data['count'] . "\" " .
                         "><![CDATA[" . $data['name'] . "]]></tag>\n";
             }

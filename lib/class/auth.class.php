@@ -434,8 +434,8 @@ class Auth
                             } else {
                                 // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
                                 // Should we make website field unique?
-                                foreach ($users as $id) {
-                                    $user = new User($id);
+                                foreach ($users as $userid) {
+                                    $user = new User($userid);
                                     if ($user->username == $results['username']) {
                                         $results['success']  = true;
                                         $results['username'] = $user->username;

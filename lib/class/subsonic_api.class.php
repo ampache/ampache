@@ -390,9 +390,9 @@ class Subsonic_Api
         $lastmodified = 0;
         $fcatalogs    = array();
 
-        foreach ($catalogs as $id) {
+        foreach ($catalogs as $catalogid) {
             $clastmodified = 0;
-            $catalog       = Catalog::create_from_id($id);
+            $catalog       = Catalog::create_from_id($catalogid);
 
             if ($catalog->last_update > $clastmodified) {
                 $clastmodified = $catalog->last_update;
@@ -408,7 +408,7 @@ class Subsonic_Api
                 $lastmodified = $clastmodified;
             }
             if (!empty($ifModifiedSince) && $clastmodified > ($ifModifiedSince / 1000)) {
-                $fcatalogs[] = $id;
+                $fcatalogs[] = $catalogid;
             }
         }
         if (empty($ifModifiedSince)) {

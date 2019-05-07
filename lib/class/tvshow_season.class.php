@@ -321,11 +321,11 @@ class TVShow_Season extends database_object implements library_item
     {
         $deleted   = true;
         $video_ids = $this->get_episodes();
-        foreach ($video_ids as $id) {
-            $video   = Video::create_from_id($id);
+        foreach ($video_ids as $videos) {
+            $video   = Video::create_from_id($videos);
             $deleted = $video->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow_season', 'Error when deleting the video `' . $id . '`.', 1);
+                debug_event('tvshow_season', 'Error when deleting the video `' . $videos . '`.', 1);
                 break;
             }
         }

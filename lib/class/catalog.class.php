@@ -563,8 +563,8 @@ abstract class Catalog extends database_object
         if ($catalogs == null || !is_array($catalogs)) {
             $catalogs = self::get_catalogs();
         }
-        foreach ($catalogs as $id) {
-            $catalog = Catalog::create_from_id($id);
+        foreach ($catalogs as $catalogid) {
+            $catalog = Catalog::create_from_id($catalogid);
             if ($catalog->last_add > $last_update) {
                 $last_update = $catalog->last_add;
             }
@@ -1315,8 +1315,8 @@ abstract class Catalog extends database_object
 
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
-            foreach ($values as $id) {
-                $this->gather_art_item($key, $id);
+            foreach ($values as $objectid) {
+                $this->gather_art_item($key, $objectid);
 
                 // Stupid little cutesie thing
                 $search_count++;

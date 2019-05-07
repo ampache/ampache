@@ -401,8 +401,8 @@ class easy_captcha
         // delete current and all previous data files
         $this->prev[] = $this->id;
         if (isset($this->prev)) {
-            foreach ($this->prev as $id) {
-                @unlink($this->data_file($id));
+            foreach ($this->prev as $file) {
+                @unlink($this->data_file($file));
             }
         }
         // clean object

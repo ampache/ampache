@@ -341,8 +341,8 @@ class Share extends database_object
             case 'playlist':
                 $object = new $this->object_type($this->object_id);
                 $songs  = $object->get_songs();
-                foreach ($songs as $id) {
-                    $is_shared = ($media_id == $id);
+                foreach ($songs as $songid) {
+                    $is_shared = ($media_id == $songid);
                     if ($is_shared) {
                         break;
                     }

@@ -117,13 +117,13 @@ class Tag extends database_object implements library_item
 
         // Run through our original ids as we also want to cache NULL
         // results
-        foreach ($ids as $id) {
-            if (!isset($tags[$id])) {
-                $tags[$id]    = null;
-                $tag_map[$id] = null;
+        foreach ($ids as $tagid) {
+            if (!isset($tags[$tagid])) {
+                $tags[$tagid]    = null;
+                $tag_map[$tagid] = null;
             }
-            parent::add_to_cache('tag_top_' . $type, $id, $tags[$id]);
-            parent::add_to_cache('tag_map_' . $type, $id, $tag_map[$id]);
+            parent::add_to_cache('tag_top_' . $type, $tagid, $tags[$tagid]);
+            parent::add_to_cache('tag_map_' . $type, $tagid, $tag_map[$tagid]);
         }
 
         return true;
@@ -781,10 +781,10 @@ class Tag extends database_object implements library_item
         if ($filter_type) {
             $ids = self::get_tag_objects($filter_type, $this->id);
             if ($ids) {
-                foreach ($ids as $id) {
+                foreach ($ids as $objectid) {
                     $medias[] = array(
                         'object_type' => $filter_type,
-                        'object_id' => $id
+                        'object_id' => $objectid
                     );
                 }
             }

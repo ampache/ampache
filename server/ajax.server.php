@@ -125,9 +125,9 @@ switch ($action) {
             if (!is_array($object_id)) {
                 $object_id = array($object_id);
             }
-            foreach ($object_id as $id) {
-                $item   = new $object_type($id);
-                $medias = $item->get_medias();
+            foreach ($object_id as $item) {
+                $object = new $object_type($item);
+                $medias = $object->get_medias();
                 $GLOBALS['user']->playlist->add_medias($medias);
             }
         } else {

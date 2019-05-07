@@ -73,13 +73,13 @@ class Userflag extends database_object
             $userflags[$row['object_id']] = true;
         }
 
-        foreach ($ids as $id) {
-            if (!isset($userflags[$id])) {
+        foreach ($ids as $objectid) {
+            if (!isset($userflags[$objectid])) {
                 $userflag = 0;
             } else {
-                $userflag = (int) ($userflags[$id]);
+                $userflag = (int) ($userflags[$objectid]);
             }
-            parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $id, $userflag);
+            parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, $userflag);
         }
 
         return true;

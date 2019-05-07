@@ -133,8 +133,8 @@ class Wanted extends database_object
         $wartist   = array();
         if ($artist) {
             $albums = $artist->get_albums();
-            foreach ($albums as $id) {
-                $album = new Album($id);
+            foreach ($albums as $albumid) {
+                $album = new Album($albumid);
                 if (trim($album->mbid_group)) {
                     $owngroups[] = $album->mbid_group;
                 } else {

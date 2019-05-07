@@ -286,8 +286,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $album = new Album($id);
+        foreach ($ids as $albumid) {
+            $album = new Album($albumid);
             $album->format();
 
             $xml_array = array('title' => $album->f_name,
@@ -314,8 +314,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $artist = new Artist($id);
+        foreach ($ids as $artistid) {
+            $artist = new Artist($artistid);
             $artist->format();
 
             $xml_array = array('title' => $artist->f_name,
@@ -342,8 +342,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $shout = new Shoutbox($id);
+        foreach ($ids as $shoutid) {
+            $shout = new Shoutbox($shoutid);
             $shout->format();
             $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
             if ($object !== null) {
