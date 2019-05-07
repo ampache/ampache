@@ -4025,7 +4025,6 @@ class Update
     /**
      * update_400000
      *
-     * Set better podcast defaults
      * Increase copyright column size to fix issue #1861
      * Add name_track, name_artist, name_album to user_activity
      * Add mbid_track, mbid_artist, mbid_album to user_activity
@@ -4046,12 +4045,6 @@ class Update
     public static function update_400000()
     {
         $retval = true;
-
-        $sql = "UPDATE `preference` SET `value`= 0 WHERE `preference`.`name`='podcast_keep'";
-        $retval &= Dba::write($sql);
-
-        $sql = "UPDATE `preference` SET `value`= 0 WHERE `preference`.`name`='podcast_new_download'";
-        $retval &= Dba::write($sql);
 
         $sql = "ALTER TABLE `podcast` MODIFY `copyright` VARCHAR(255)";
         $retval &= Dba::write($sql);
