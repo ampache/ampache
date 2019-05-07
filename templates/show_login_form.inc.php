@@ -85,14 +85,5 @@ define('TABLE_RENDERED', 1);
                     </div>
                 </form>
         <?php
-        if (@is_readable(AmpConfig::get('prefix') . '/config/motd.php')) {
-            ?>
-            </div>
-            <div id="motd">
-        <?php
-                UI::show_box_top(T_('Message of the Day'));
-            require_once AmpConfig::get('prefix') . '/config/motd.php';
-            UI::show_box_bottom();
-        }
         UI::show_footer();
         ?>
