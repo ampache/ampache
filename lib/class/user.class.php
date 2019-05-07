@@ -202,8 +202,8 @@ class User extends database_object
     {
         $user_id = (int) ($this->id);
 
-        if (parent::is_cached('user', $user_id)) {
-            return parent::get_from_cache('user', $user_id);
+        if ($this->is_cached('user', $user_id)) {
+            return $this->get_from_cache('user', $user_id);
         }
 
         $data = array();
@@ -221,7 +221,7 @@ class User extends database_object
 
         $data = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('user', $user_id, $data);
+        $this->add_to_cache('user', $user_id, $data);
 
         return $data;
     } // has_info

@@ -382,6 +382,7 @@ class Song extends database_object implements media, library_item
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
 
         if (!isset($results['albumartist_id'])) {
+            $albumartist_id   = null;
             if ($albumartist) {
                 // Multiple artist per songs not supported for now
                 $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
