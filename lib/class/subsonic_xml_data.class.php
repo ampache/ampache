@@ -163,6 +163,7 @@ class Subsonic_XML_Data
     public static function isVideo($videoid)
     {
         $videoid = self::cleanId($videoid);
+
         return (self::cleanId($videoid) >= self::AMPACHEID_VIDEO && $videoid < self::AMPACHEID_PODCAST);
     }
 
