@@ -37,7 +37,7 @@ $action = UI::get_action();
 // Switch on the actions
 switch ($action) {
     case 'install_localplay':
-        $localplay = new Localplay($_REQUEST['type']);
+        $localplay = new Localplay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
             AmpError::add('general', T_('Failed to enable the module, Controller Error'));
             AmpError::display('general');

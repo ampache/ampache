@@ -3770,7 +3770,7 @@ HTTPSource = (function(_super) {
     this.xhr = new XMLHttpRequest();
     this.xhr.onload = (function(_this) {
       return function(event) {
-        _this.length = parseInt(_this.xhr.getResponseHeader("Content-Length"));
+        _this.length = parseInt(_this.xhr.getResponseHeader("Content-Length"), 10);
         _this.inflight = false;
         return _this.loop();
       };

@@ -42,7 +42,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
     } ?></td>
     <?php if (AmpConfig::get('allow_video')) {
         ?>
-        <td><?php if ($_REQUEST['type'] != 'video') {
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) != 'video') {
             ?>
             <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) !== 'video') {
                 ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php

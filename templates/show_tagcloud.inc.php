@@ -35,7 +35,7 @@ $tag_types = array(
         <?php
         foreach ($tag_types as $tag_type => $tag_name) {
             echo "<option value='" . $tag_type . "'";
-            if ($tag_type == $_REQUEST['type']) {
+            if ($tag_type == (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) {
                 echo " selected";
             }
             echo ">" . $tag_name . "</option>";

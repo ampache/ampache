@@ -61,9 +61,9 @@ switch ($action) {
         $media_ids    = $tmp_playlist->get_items();
     break;
     case 'play_favorite':
-        $data      = $GLOBALS['user']->get_favorites($_REQUEST['type']);
+        $data      = $GLOBALS['user']->get_favorites((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $media_ids = array();
-        switch ($_REQUEST['type']) {
+        switch ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) {
             case 'artist':
             case 'album':
                 foreach ($data as $value) {

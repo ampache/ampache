@@ -27,7 +27,7 @@ $thcount = 5;
     {
         var checked = []
         $("input[name='pvmsg_select[]']:checked").each(function () {
-            checked.push(parseInt($(this).val()));
+            checked.push(parseInt($(this).val(), 10));
         });
         return checked.join(",");
     }

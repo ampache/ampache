@@ -280,7 +280,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Login
 ***********************************************/
 #loginPage #maincontainer, #registerPage #maincontainer {
-    padding: 20px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -294,7 +293,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #maincontainer {
-    height: 400px;
+    height: 460px;
 }
 
 #registerPage #maincontainer {
@@ -328,7 +327,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #loginbox, #registerPage #registerbox {
-    margin: auto auto 20px auto;
+    margin: 0 auto 20px auto;
     max-width: 350px;
     min-width: 250px;
 }
