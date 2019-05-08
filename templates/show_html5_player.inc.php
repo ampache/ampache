@@ -460,7 +460,7 @@ if ($isVideo) {
         <div id="broadcast" class="broadcast action_button">
 <?php
         if (AmpConfig::get('broadcast_by_default')) {
-            $broadcasts = Broadcast::get_broadcasts(User::get_user_id());
+            $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
             if (count($broadcasts) < 1) {
                 $broadcast_id = Broadcast::create(T_('My Broadcast'));
             } else {

@@ -33,7 +33,7 @@ $action = UI::get_action();
 switch ($action) {
     case 'flip_state':
         if (!Access::check('interface', '75')) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to change the state of a catalog', '1');
+            debug_event('DENIED', Core::get_global('user')->username . ' attempted to change the state of a catalog', '1');
 
             return false;
         }

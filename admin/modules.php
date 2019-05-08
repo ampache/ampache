@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!$GLOBALS['user']->has_access(100)) {
+if (!Core::get_global('user')->has_access(100)) {
     UI::access_denied();
 
     return false;
@@ -49,8 +49,8 @@ switch ($action) {
         // Go ahead and enable Localplay (Admin->System) as we assume they want to do that
         // if they are enabling this
         Preference::update('allow_localplay_playback', '-1', '1');
-        Preference::update('localplay_level', User::get_user_id(), '100');
-        Preference::update('localplay_controller', User::get_user_id(), $localplay->type);
+        Preference::update('localplay_level', Core::get_global('user')->id, '100');
+        Preference::update('localplay_controller', Core::get_global('user')->id, $localplay->type);
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';

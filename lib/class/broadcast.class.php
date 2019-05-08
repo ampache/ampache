@@ -152,7 +152,7 @@ class Broadcast extends database_object implements library_item
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
-            $params = array(User::get_user_id(), $name, $description);
+            $params = array(Core::get_global('user')->id, $name, $description);
             Dba::write($sql, $params);
 
             return Dba::insert_id();
@@ -357,7 +357,7 @@ class Broadcast extends database_object implements library_item
     public function show_action_buttons()
     {
         if ($this->id) {
-            if ($GLOBALS['user']->has_access('75')) {
+            if (Core::get_global('user')->has_access('75')) {
                 echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }

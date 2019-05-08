@@ -812,7 +812,7 @@ class Search extends playlist_object
     public static function get_searches()
     {
         $sql = "SELECT `id` from `search` WHERE `type`='public' OR " .
-            "`user`='" . User::get_user_id() . "' ORDER BY `name`";
+            "`user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -959,7 +959,7 @@ class Search extends playlist_object
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
             if (empty($sqltbl['where_sql'])) {
                 $sql .= " WHERE ";
             } else {
@@ -1045,7 +1045,7 @@ class Search extends playlist_object
     {
         // Make sure we have a unique name
         if (! $this->name) {
-            $this->name = $GLOBALS['user']->username . ' - ' . date('Y-m-d H:i:s', time());
+            $this->name = Core::get_global('user')->username . ' - ' . date('Y-m-d H:i:s', time());
         }
         $sql        = "SELECT `id` FROM `search` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($this->name));
@@ -1054,7 +1054,7 @@ class Search extends playlist_object
         }
 
         $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($this->name, $this->type, User::get_user_id(), json_encode($this->rules), $this->logic_operator, $this->random ? 1 : 0, $this->limit));
+        Dba::write($sql, array($this->name, $this->type, Core::get_global('user')->id, json_encode($this->rules), $this->logic_operator, $this->random ? 1 : 0, $this->limit));
         $insert_id = Dba::insert_id();
         $this->id  = (int) $insert_id;
 
@@ -1154,7 +1154,7 @@ class Search extends playlist_object
     private function album_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = User::get_user_id();
+        $userid             = Core::get_global('user')->id;
 
         $where       = array();
         $table       = array();
@@ -1313,7 +1313,7 @@ class Search extends playlist_object
     private function artist_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = User::get_user_id();
+        $userid             = Core::get_global('user')->id;
 
         $where              = array();
         $table              = array();
@@ -1447,7 +1447,7 @@ class Search extends playlist_object
     private function song_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = User::get_user_id();
+        $userid             = Core::get_global('user')->id;
 
         $where       = array();
         $table       = array();

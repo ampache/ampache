@@ -118,7 +118,7 @@ function sort_find_home($song,$sort_pattern,$base) {
     }
 
     /* IF we want a,b,c,d we need to know the first element */
-    if ($GLOBALS['alphabet_prefix']) {
+    if (Core::get_global('alphabet_prefix')) {
         $sort_pattern = preg_replace("/\/?%o\//","",$sort_pattern);
         $first_element = substr($sort_pattern,0,2);
         $element = sort_element_name($first_element);
@@ -220,7 +220,7 @@ function sort_move_file($song,$fullname) {
 
         /* We need to check for the existance of this directory */
         if (!is_dir($path)) {
-            if ($GLOBALS['test_mode']) {
+            if (Core::get_global('test_mode')) {
                 echo "\t";
                 printf (T_('Making %s Directory'), $path);
                 echo "\n";
@@ -239,7 +239,7 @@ function sort_move_file($song,$fullname) {
     } // foreach dir
 
     /* Now that we've got the correct directory structure let's try to copy it */
-    if ($GLOBALS['test_mode']) {
+    if (Core::get_global('test_mode')) {
         echo "\t";
         // HINT: %1$s: file, %2$s: directory
         printf (T_('Copying %1$s to %2$s'), $file, $directory);

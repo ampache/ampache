@@ -56,7 +56,7 @@ class Stream_Playlist
                 return false;
             }
 
-            $this->user = (int) (User::get_user_id());
+            $this->user = (int) (Core::get_global('user')->id);
 
             $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
             $db_results = Dba::read($sql, array($this->id));

@@ -128,7 +128,7 @@ switch ($action) {
         $playlist->add_songs(array($_REQUEST['song_id']), true);
     break;
     case 'prune_empty':
-        if (!$GLOBALS['user']->has_access(100)) {
+        if (!Core::get_global('user')->has_access(100)) {
             UI::access_denied();
             break;
         }

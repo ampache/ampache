@@ -34,7 +34,7 @@ switch ($action) {
         // We need to add them to the active playlist
         if (is_array($object_ids)) {
             foreach ($object_ids as $object_id) {
-                $GLOBALS['user']->playlist->add_object($object_id, 'song');
+                Core::get_global('user')->playlist->add_object($object_id, 'song');
             }
         }
     case 'advanced':

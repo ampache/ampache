@@ -125,7 +125,7 @@ switch ($action) {
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
-                if (!$GLOBALS['user']->has_access('75')) {
+                if (!Core::get_global('user')->has_access('75')) {
                     return false;
                 }
                 $radio = new Live_Stream($_REQUEST['id']);

@@ -92,7 +92,7 @@ class Upload
                         }
 
                         $options                = array();
-                        $options['user_upload'] = User::get_user_id();
+                        $options['user_upload'] = Core::get_global('user')->id;
                         if (isset($_POST['license'])) {
                             $options['license'] = $_POST['license'];
                         }
@@ -101,13 +101,13 @@ class Upload
 
                         // Override artist information with artist's user
                         if (AmpConfig::get('upload_user_artist')) {
-                            $artists = $GLOBALS['user']->get_artists();
+                            $artists = Core::get_global('user')->get_artists();
                             $artist  = null;
                             // No associated artist yet, we create a default one for the user sender
                             if (count($artists) == 0) {
-                                $artists[] = Artist::check($GLOBALS['user']->f_name);
+                                $artists[] = Artist::check(Core::get_global('user')->f_name);
                                 $artist    = new Artist($artists[0]);
-                                $artist->update_artist_user((int) User::get_user_id());
+                                $artist->update_artist_user((int) Core::get_global('user')->id);
                             } else {
                                 $artist = new Artist($artists[0]);
                             }
@@ -124,7 +124,7 @@ class Upload
                                     $artist_id = Artist::check($_REQUEST['artist_name']);
                                     $artist    = new Artist($artist_id);
                                     if (!$artist->get_user_owner()) {
-                                        $artist->update_artist_user((int) User::get_user_id());
+                                        $artist->update_artist_user((int) Core::get_global('user')->id);
                                     }
                                 }
                             }
@@ -136,7 +136,7 @@ class Upload
                                     return self::rerror($targetfile);
                                 }
                                 $artist = new Artist($artist_id);
-                                if ($artist->get_user_owner() != User::get_user_id()) {
+                                if ($artist->get_user_owner() != Core::get_global('user')->id) {
                                     debug_event('upload', 'Artist owner doesn\'t match the current user.', 3);
 
                                     return self::rerror($targetfile);
@@ -156,7 +156,7 @@ class Upload
                                 return self::rerror($targetfile);
                             }
                             $album = new Album($album_id);
-                            if ($album->get_user_owner() != User::get_user_id()) {
+                            if ($album->get_user_owner() != Core::get_global('user')->id) {
                                 debug_event('upload', 'Album owner doesn\'t match the current user.', 3);
 
                                 return self::rerror($targetfile);
@@ -226,7 +226,7 @@ class Upload
         }
 
         if ($username === null) {
-            $username = $GLOBALS['user']->username;
+            $username = Core::get_global('user')->username;
         }
 
         $rootdir = "";

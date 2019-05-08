@@ -113,7 +113,7 @@ if (!Access::check_network('init-api', $user, 5)) {
     return false;
 }
 
-$GLOBALS['user'] = User::get_from_username($user);
+Core::get_global('user') = User::get_from_username($user);
 // Check server version
 if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     ob_end_clean();

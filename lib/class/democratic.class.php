@@ -201,7 +201,7 @@ class Democratic extends Tmp_Playlist
         $democratic_id = AmpConfig::get('democratic_id');
 
         if (!$democratic_id) {
-            $level = Dba::escape($GLOBALS['user']->access);
+            $level = Dba::escape(Core::get_global('user')->access);
             $sql   = "SELECT `id` FROM `democratic` WHERE `level` <= '$level' " .
                 " ORDER BY `level` DESC,`primary` DESC";
             $db_results    = Dba::read($sql);
@@ -265,7 +265,7 @@ class Democratic extends Tmp_Playlist
      */
     public function play_url()
     {
-        $link = Stream::get_base_url() . 'uid=' . scrub_out(User::get_user_id()) . '&demo_id=' . scrub_out($this->id);
+        $link = Stream::get_base_url() . 'uid=' . scrub_out(Core::get_global('user')->id) . '&demo_id=' . scrub_out($this->id);
 
         return Stream_URL::format($link);
     } // play_url
@@ -337,7 +337,7 @@ class Democratic extends Tmp_Playlist
         // Convert cooldown time to a timestamp in the past
         $cool_time = time() - ($this->cooldown * 60);
 
-        $song_ids = Stats::get_object_history(User::get_user_id(), $cool_time);
+        $song_ids = Stats::get_object_history(Core::get_global('user')->id, $cool_time);
 
         return $song_ids;
     } // get_cool_songs
@@ -376,9 +376,9 @@ class Democratic extends Tmp_Playlist
             "WHERE `tmp_playlist_data`.`object_type` = ? " .
             "AND `tmp_playlist_data`.`object_id` = ? " .
             "AND `tmp_playlist_data`.`tmp_playlist` = ? ";
-        if (User::get_user_id() > 0) {
+        if (Core::get_global('user')->id > 0) {
             $sql .= "AND `user_vote`.`user` = ? ";
-            $params[] = User::get_user_id();
+            $params[] = Core::get_global('user')->id;
         } else {
             $sql .= "AND `user_vote`.`sid` = ? ";
             $params[] = session_id();
@@ -423,7 +423,7 @@ class Democratic extends Tmp_Playlist
         $time = time();
         $sql  = "INSERT INTO user_vote (`user`,`object_id`,`date`,`sid`) " .
             "VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array(User::get_user_id(), $results['id'], $time, session_id()));
+        Dba::write($sql, array(Core::get_global('user')->id, $results['id'], $time, session_id()));
 
         return true;
     }
@@ -438,9 +438,9 @@ class Democratic extends Tmp_Playlist
     {
         $sql    = "DELETE FROM `user_vote` WHERE `object_id` = ? ";
         $params = array($row_id);
-        if (User::get_user_id() > 0) {
+        if (Core::get_global('user')->id > 0) {
             $sql .= "AND `user` = ?";
-            $params[] = User::get_user_id();
+            $params[] = Core::get_global('user')->id;
         } else {
             $sql .= "AND `user_vote`.`sid` = ? ";
             $params[] = session_id();
@@ -537,7 +537,7 @@ class Democratic extends Tmp_Playlist
         $cool     = Dba::escape($data['cooldown']);
         $level    = Dba::escape($data['level']);
         $default  = Dba::escape($data['make_default']);
-        $user     = Dba::escape(User::get_user_id());
+        $user     = Dba::escape(Core::get_global('user')->id);
 
         $sql = "INSERT INTO `democratic` (`name`,`base_playlist`,`cooldown`,`level`,`user`,`primary`) " .
             "VALUES ('$name','$base','$cool','$level','$user','$default')";

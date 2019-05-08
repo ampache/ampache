@@ -60,8 +60,8 @@ switch ($action) {
             if ($_REQUEST['from'] == 'system') {
                 $mailer->set_default_sender();
             } else {
-                $mailer->sender      = $GLOBALS['user']->email;
-                $mailer->sender_name = $GLOBALS['user']->fullname;
+                $mailer->sender      = Core::get_global('user')->email;
+                $mailer->sender_name = Core::get_global('user')->fullname;
             }
 
             if ($mailer->send_to_group($_REQUEST['to'])) {

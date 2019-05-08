@@ -1049,7 +1049,7 @@ class Video extends database_object implements media, library_item
      * _update_item
      * This is a private function that should only be called from within the video class.
      * It takes a field, value video id and level. first and foremost it checks the level
-     * against $GLOBALS['user'] to make sure they are allowed to update this record
+     * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
      * @param integer $value

@@ -149,7 +149,7 @@ class PrivateMsg extends database_object
         }
 
         if (!AmpError::occurred()) {
-            $from_user     = $data['from_user'] ?: User::get_user_id();
+            $from_user     = $data['from_user'] ?: Core::get_global('user')->id;
             $creation_date = $data['creation_date'] ?: time();
             $is_read       = $data['is_read'] ?: 0;
             $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " .
@@ -172,7 +172,7 @@ class PrivateMsg extends database_object
         ----------------------
 
         %s
-        "), $GLOBALS['user']->fullname, $message, AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id);
+        "), Core::get_global('user')->fullname, $message, AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id);
                             $mailer->send();
                         }
                     }

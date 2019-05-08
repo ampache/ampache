@@ -38,7 +38,7 @@ if (isset($_GET['burl'])) {
 $item = new $object_type($object_id);
 
 // If not a content manager user then kick em out
-if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != User::get_user_id())) {
+if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
     UI::access_denied();
 
     return false;

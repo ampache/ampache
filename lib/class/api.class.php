@@ -1118,7 +1118,7 @@ class Api
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
-                    $GLOBALS['user']->toggle_follow($user->id);
+                    Core::get_global('user')->toggle_follow($user->id);
                     ob_end_clean();
                     echo XML_Data::single_string('success');
                 }
@@ -1311,7 +1311,7 @@ class Api
         if (AmpConfig::get('sociable')) {
             $limit = (int) ($input['limit']);
             $since = (int) ($input['since']);
-            $user  = User::get_user_id();
+            $user  = Core::get_global('user')->id;
 
             if ($user > 0) {
                 $activities = Useractivity::get_friends_activities($user, $limit, $since);

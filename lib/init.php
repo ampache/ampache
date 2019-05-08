@@ -166,17 +166,17 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     Session::check();
 
     /* Create the new user */
-    $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+    Core::get_global('user') = User::get_from_username($_SESSION['userdata']['username']);
 
     /* If the user ID doesn't exist deny them */
-    if (!User::get_user_id() && !AmpConfig::get('demo_mode')) {
+    if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
         Auth::logout(session_id());
 
         return false;
     }
 
     /* Load preferences and theme */
-    $GLOBALS['user']->update_last_seen();
+    Core::get_global('user')->update_last_seen();
 } elseif (!AmpConfig::get('use_auth')) {
     $auth['success']      = 1;
     $auth['username']     = '-1';
@@ -188,27 +188,27 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         Session::create_cookie();
         Session::create($auth);
         Session::check();
-        $GLOBALS['user']           = new User($auth['username']);
-        $GLOBALS['user']->username = $auth['username'];
-        $GLOBALS['user']->fullname = $auth['fullname'];
-        $GLOBALS['user']->access   = (int) ($auth['access']);
+        Core::get_global('user')           = new User($auth['username']);
+        Core::get_global('user')->username = $auth['username'];
+        Core::get_global('user')->fullname = $auth['fullname'];
+        Core::get_global('user')->access   = (int) ($auth['access']);
     } else {
         Session::check();
         if ($_SESSION['userdata']['username']) {
-            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            Core::get_global('user') = User::get_from_username($_SESSION['userdata']['username']);
         } else {
-            $GLOBALS['user']           = new User($auth['username']);
-            $GLOBALS['user']->id       = -1;
-            $GLOBALS['user']->username = $auth['username'];
-            $GLOBALS['user']->fullname = $auth['fullname'];
-            $GLOBALS['user']->access   = (int) ($auth['access']);
+            Core::get_global('user')           = new User($auth['username']);
+            Core::get_global('user')->id       = -1;
+            Core::get_global('user')->username = $auth['username'];
+            Core::get_global('user')->fullname = $auth['fullname'];
+            Core::get_global('user')->access   = (int) ($auth['access']);
         }
-        if (!User::get_user_id() and !AmpConfig::get('demo_mode')) {
+        if (!Core::get_global('user')->id and !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());
 
             return false;
         }
-        $GLOBALS['user']->update_last_seen();
+        Core::get_global('user')->update_last_seen();
     }
 }
 // If Auth, but no session is set
@@ -217,9 +217,9 @@ else {
         session_name(AmpConfig::get('session_name'));
         session_id(scrub_in($_REQUEST['sid']));
         session_start();
-        $GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
+        Core::get_global('user') = new User($_SESSION['userdata']['uid']);
     } else {
-        $GLOBALS['user'] = new User();
+        Core::get_global('user') = new User();
     }
 } // If NO_SESSION passed
 
@@ -229,12 +229,12 @@ Preference::init();
 // Load gettext mojo
 load_gettext();
 
-$GLOBALS['user']->format(false);
+Core::get_global('user')->format(false);
 
 if (session_id()) {
     Session::extend(session_id());
     // We only need to create the tmp playlist if we have a session
-    $GLOBALS['user']->load_playlist();
+    Core::get_global('user')->load_playlist();
 }
 
 /* Add in some variables for ajax done here because we need the user */
@@ -257,7 +257,7 @@ if (!defined('OUTDATED_DATABASE_OK')) {
     }
 }
 // For the XMLRPC stuff
-$GLOBALS['xmlrpc_internalencoding'] = AmpConfig::get('site_charset');
+Core::get_global('xmlrpc_internalencoding') = AmpConfig::get('site_charset');
 
 // If debug is on GIMMIE DA ERRORS
 if (AmpConfig::get('debug')) {

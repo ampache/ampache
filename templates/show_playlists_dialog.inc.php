@@ -28,7 +28,7 @@
         </a>
     </li>
 <?php
-    $playlists = Playlist::get_users(User::get_user_id());
+    $playlists = Playlist::get_users(Core::get_global('user')->id);
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);

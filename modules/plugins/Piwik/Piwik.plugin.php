@@ -102,8 +102,8 @@ class AmpachePiwik
         echo "var u='" . scrub_out($this->piwik_url) . "';\n";
         echo "_paq.push(['setTrackerUrl', u+'piwik.php']);\n";
         echo "_paq.push(['setSiteId', " . scrub_out($this->site_id) . "]);\n";
-        if (User::get_user_id() > 0) {
-            echo "_paq.push(['setUserId', '" . $GLOBALS['user']->username . "']);\n";
+        if (Core::get_global('user')->id > 0) {
+            echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
         echo "g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";

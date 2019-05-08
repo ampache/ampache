@@ -476,7 +476,7 @@ abstract class Catalog extends database_object
      * _update_item
      * This is a private function that should only be called from within the catalog class.
      * It takes a field, value, catalog id and level. first and foremost it checks the level
-     * against $GLOBALS['user'] to make sure they are allowed to update this record
+     * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
      * @param boolean $value
@@ -765,7 +765,7 @@ abstract class Catalog extends database_object
     public static function get_uploads_sql($type, $user_id=null)
     {
         if ($user_id === null) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
         }
         $user_id = (int) ($user_id);
 
@@ -2361,7 +2361,7 @@ abstract class Catalog extends database_object
     public static function can_remove($libitem, $user = null)
     {
         if (!$user) {
-            $user = User::get_user_id();
+            $user = Core::get_global('user')->id;
         }
 
         if (!$user) {

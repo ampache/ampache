@@ -50,7 +50,7 @@ switch ($action) {
         $show_browse = true;
     break;
     case 'delete':
-        if (!$GLOBALS['user']->has_access('75')) {
+        if (!Core::get_global('user')->has_access('75')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
 
             return false;

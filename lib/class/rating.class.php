@@ -89,7 +89,7 @@ class Rating extends database_object
         $sql    = "SELECT `rating`, `object_id` FROM `rating` " .
                 "WHERE `user` = ? AND `object_id` IN $idlist " .
                 "AND `object_type` = ?";
-        $db_results = Dba::read($sql, array(User::get_user_id(), $type));
+        $db_results = Dba::read($sql, array(Core::get_global('user')->id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $user_ratings[$row['object_id']] = $row['rating'];
@@ -111,7 +111,7 @@ class Rating extends database_object
             } else {
                 $rating = (int) $user_ratings[$objectid];
             }
-            parent::add_to_cache('rating_' . $type . '_user' . User::get_user_id(), $objectid, $rating);
+            parent::add_to_cache('rating_' . $type . '_user' . Core::get_global('user')->id, $objectid, $rating);
 
             // Then store the average
             if (!isset($ratings[$objectid])) {
@@ -134,7 +134,7 @@ class Rating extends database_object
     public function get_user_rating($user_id = null)
     {
         if ($user_id === null) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
         }
 
         $key = 'rating_' . $this->type . '_user' . $user_id;
@@ -237,7 +237,7 @@ class Rating extends database_object
     public function set_rating($rating, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
         }
         $user_id = (int) $user_id;
 
@@ -262,7 +262,7 @@ class Rating extends database_object
 
         foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($GLOBALS['user'])) {
+            if ($plugin->load(Core::get_global('user'))) {
                 $plugin->_plugin->save_rating($this, $rating);
             }
         }

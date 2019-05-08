@@ -34,7 +34,7 @@ $action  = UI::get_action();
 switch ($action) {
     case 'geolocation':
         if (AmpConfig::get('geolocation')) {
-            if (User::get_user_id()) {
+            if (Core::get_global('user')->id) {
                 $latitude  = floatval($_REQUEST['latitude']);
                 $longitude = floatval($_REQUEST['longitude']);
                 $name      = $_REQUEST['name'];
@@ -44,7 +44,7 @@ switch ($action) {
                     if (empty($name)) {
                         foreach (Plugin::get_plugins('get_location_name') as $plugin_name) {
                             $plugin = new Plugin($plugin_name);
-                            if ($plugin->load($GLOBALS['user'])) {
+                            if ($plugin->load(Core::get_global('user'))) {
                                 $name = $plugin->_plugin->get_location_name($latitude, $longitude);
                                 if (!empty($name)) {
                                     break;

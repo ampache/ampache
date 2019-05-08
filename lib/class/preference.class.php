@@ -108,7 +108,7 @@ class Preference extends database_object
 
             return true;
         } else {
-            debug_event('denied', $GLOBALS['user'] ? $GLOBALS['user']->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
+            debug_event('denied', Core::get_global('user') ? Core::get_global('user')->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
         }
 
         return false;
@@ -455,7 +455,7 @@ class Preference extends database_object
      */
     public static function init()
     {
-        $user_id = User::get_user_id() ? (int) (User::get_user_id()) : -1;
+        $user_id = Core::get_global('user')->id ? (int) (Core::get_global('user')->id) : -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {

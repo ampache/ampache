@@ -152,7 +152,7 @@ class Tag extends database_object implements library_item
         }
 
         if ($user === true) {
-            $uid = (int) (User::get_user_id());
+            $uid = (int) (Core::get_global('user')->id);
         } elseif ($user === false) {
             $uid = 0;
         } else {
@@ -297,7 +297,7 @@ class Tag extends database_object implements library_item
     public static function add_tag_map($type, $object_id, $tag_id, $user=true)
     {
         if ($user === true) {
-            $uid = (int) (User::get_user_id());
+            $uid = (int) (Core::get_global('user')->id);
         } elseif ($user === false) {
             $uid = 0;
         } else {
@@ -725,7 +725,7 @@ class Tag extends database_object implements library_item
         }
 
         if ($user === true) {
-            $uid = (int) (User::get_user_id());
+            $uid = (int) (Core::get_global('user')->id);
         } elseif ($user === false) {
             $uid = 0;
         } else {
@@ -829,7 +829,7 @@ class Tag extends database_object implements library_item
     public static function can_edit_tag_map($object_type, $object_id, $user = true)
     {
         if ($user === true) {
-            $uid = (int) (User::get_user_id());
+            $uid = (int) (Core::get_global('user')->id);
         } elseif ($user === false) {
             $uid = 0;
         } else {

@@ -26,11 +26,11 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
-if (count($GLOBALS['argv']) != 2) {
+if (count(Core::get_global('argv')) != 2) {
     usage();
     return false;
 } else {
-    $filename = $GLOBALS['argv'][1];
+    $filename = Core::get_global('argv')[1];
 }
 
 if(!file_exists($filename)) {

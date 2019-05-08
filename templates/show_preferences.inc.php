@@ -46,7 +46,7 @@
 <?php
 }  // end if not account
 if ($_REQUEST['tab'] == 'account') {
-    $client = $GLOBALS['user'];
+    $client = Core::get_global('user');
     require AmpConfig::get('prefix') . UI::find_template('show_account.inc.php');
 }
 ?>

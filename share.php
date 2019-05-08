@@ -143,7 +143,7 @@ switch ($action) {
 
             return false;
         }
-        $plugin->load($GLOBALS['user']);
+        $plugin->load(Core::get_global('user'));
 
         $type           = $_REQUEST['type'];
         $id             = $_REQUEST['id'];

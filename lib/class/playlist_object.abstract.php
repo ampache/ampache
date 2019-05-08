@@ -86,7 +86,7 @@ abstract class playlist_object extends database_object implements library_item
         if (!Access::check('interface', 25)) {
             return false;
         }
-        if ($this->user == User::get_user_id()) {
+        if ($this->user == Core::get_global('user')->id) {
             return true;
         } else {
             return Access::check('interface', 75);

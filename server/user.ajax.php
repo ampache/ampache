@@ -36,8 +36,8 @@ switch ($action) {
     case 'flip_follow':
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
             $fuser = new User($user_id);
-            if ($fuser->id > 0 && $user_id !== (int) User::get_user_id()) {
-                $GLOBALS['user']->toggle_follow($user_id);
+            if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
+                Core::get_global('user')->toggle_follow($user_id);
                 $results['button_follow_' . $user_id] = $fuser->get_display_follow();
             }
         }

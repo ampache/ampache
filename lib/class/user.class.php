@@ -267,9 +267,9 @@ class User extends database_object
         $db_results = Dba::read($sql, array($username));
         $results    = Dba::fetch_assoc($db_results);
 
-        $user = new User($results['id']);
+        $user_id = new User($results['id']);
 
-        return $user;
+        return $user_id;
     } // get_from_username
 
     /**
@@ -279,7 +279,7 @@ class User extends database_object
      */
     public static function get_from_apikey($apikey)
     {
-        $user   = null;
+        $user_id   = null;
         $apikey = trim($apikey);
         if (!empty($apikey)) {
             $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
@@ -287,11 +287,11 @@ class User extends database_object
             $results    = Dba::fetch_assoc($db_results);
 
             if ($results['id']) {
-                $user = new User($results['id']);
+                $user_id = new User($results['id']);
             }
         }
 
-        return $user;
+        return $user_id;
     } // get_from_apikey
 
     /**
@@ -301,14 +301,14 @@ class User extends database_object
      */
     public static function get_from_email($email)
     {
-        $user       = null;
+        $user_id    = null;
         $sql        = "SELECT `id` FROM `user` WHERE `email` = ?";
         $db_results = Dba::read($sql, array($email));
         if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User($results['id']);
+            $user_id = new User($results['id']);
         }
 
-        return $user;
+        return $user_id;
     } // get_from_email
 
     /**
@@ -575,11 +575,11 @@ class User extends database_object
      */
     public static function is_registered()
     {
-        if (!self::get_user_id()) {
+        if (!Core::get_global('user')->id) {
             return false;
         }
 
-        if (!AmpConfig::get('use_auth') && $GLOBALS['user']->access < 5) {
+        if (!AmpConfig::get('use_auth') && Core::get_global('user')->access < 5) {
             return false;
         }
 
@@ -868,7 +868,7 @@ class User extends database_object
         debug_event('user.class.php', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
         $media = new $media_type($media_id);
         $media->format();
-        $user = $this->id;
+        $user_id = $this->id;
 
         // We shouldn't test on file only
         if (!strlen($media->file)) {
@@ -880,31 +880,31 @@ class User extends database_object
             // If pthreads available, we call save_songplay in a new thread to quickly return
             if (class_exists("Thread", false)) {
                 debug_event('user.class.php', 'Calling save_mediaplay plugins in a new thread...', 5);
-                $thread = new scrobbler_async($GLOBALS['user'], $media);
+                $thread = new scrobbler_async(Core::get_global('user'), $media);
                 if ($thread->start()) {
                     //$thread->join();
                 } else {
                     debug_event('user.class.php', 'Error when starting the thread.', 1);
                 }
             } else {
-                self::save_mediaplay($GLOBALS['user'], $media);
+                self::save_mediaplay(Core::get_global('user'), $media);
             }
         } else {
             debug_event('user.class.php', 'Scrobbling explicitly skipped', 5);
         }
 
-        $media->set_played($user, $agent, $location);
+        $media->set_played($user_id, $agent, $location);
 
         return true;
     } // update_stats
 
-    public static function save_mediaplay($user, $media)
+    public static function save_mediaplay($user_id, $media)
     {
         debug_event('user.class.php', 'save_mediaplay...', 5);
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($user)) {
+                if ($plugin->load($user_id)) {
                     $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $e) {
@@ -939,12 +939,12 @@ class User extends database_object
             $sip   = $sipar['host'];
         }
 
-        $uip    = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
-        $date   = time();
-        $user   = $this->id;
-        $agent  = Dba::escape($_SERVER['HTTP_USER_AGENT']);
+        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
+        $date    = time();
+        $user_id = $this->id;
+        $agent   = Dba::escape($_SERVER['HTTP_USER_AGENT']);
 
-        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip','$user','$date','$agent')";
+        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip','$user_id','$date','$agent')";
         Dba::write($sql);
 
         /* Clean up old records... sometimes  */
@@ -1374,7 +1374,7 @@ class User extends database_object
         } else {
             foreach (Plugin::get_plugins('get_avatar_url') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($GLOBALS['user'])) {
+                if ($plugin->load(Core::get_global('user'))) {
                     $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
                     if (!empty($avatar['url'])) {
                         $avatar['url_mini']   = $plugin->_plugin->get_avatar_url($this, 32);
@@ -1558,16 +1558,6 @@ class User extends database_object
 
         return Dba::write($sql, $params);
     }
-
-    /**
-     * get_user_id
-     * Get the user id to stop using globals everywhere
-     * @return string
-     */
-    public static function get_user_id()
-    {
-        return $GLOBALS['user']->id;
-    }
     
     /**
      * get_display_follow
@@ -1577,7 +1567,7 @@ class User extends database_object
     public function get_display_follow($user_id = null)
     {
         if (!$user_id) {
-            $user_id = self::get_user_id();
+            $user_id = Core::get_global('user')->id;
         }
 
         if ($user_id === $this->id) {
@@ -1644,15 +1634,15 @@ class User extends database_object
      * @param User $user
      * @return boolean
      */
-    public static function stream_control($media_ids, User $user = null)
+    public static function stream_control($media_ids, User $user_id = null)
     {
-        if ($user === null) {
-            $user = $GLOBALS['user'];
+        if ($user_id === null) {
+            $user_id = Core::get_global('user');
         }
 
         foreach (Plugin::get_plugins('stream_control') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($user)) {
+            if ($plugin->load($user_id)) {
                 if (!$plugin->_plugin->stream_control($media_ids)) {
                     return false;
                 }

@@ -48,11 +48,11 @@ $action = UI::get_action();
 switch ($action) {
     case 'basket':
         // Pull in our items (multiple types)
-        $media_ids = $GLOBALS['user']->playlist->get_items();
+        $media_ids = Core::get_global('user')->playlist->get_items();
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
         if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
-            $GLOBALS['user']->playlist->clear();
+            Core::get_global('user')->playlist->clear();
         }
     break;
     /* This is run if we need to gather info based on a tmp playlist */
@@ -61,7 +61,7 @@ switch ($action) {
         $media_ids    = $tmp_playlist->get_items();
     break;
     case 'play_favorite':
-        $data      = $GLOBALS['user']->get_favorites((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $data      = Core::get_global('user')->get_favorites((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $media_ids = array();
         switch ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) {
             case 'artist':
@@ -175,15 +175,15 @@ debug_event('stream.php', 'Stream Type: ' . $stream_type . ' Media IDs: ' . json
 if (count($media_ids) || isset($urls)) {
     if ($stream_type != 'democratic') {
         if (!User::stream_control($media_ids)) {
-            debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, 3);
+            debug_event('UI::access_denied', 'Stream control failed for user ' . Core::get_global('user')->username, 3);
             UI::access_denied();
 
             return false;
         }
     }
 
-    if (User::get_user_id() > -1) {
-        Session::update_username(Stream::get_session(), $GLOBALS['user']->username);
+    if (Core::get_global('user')->id > -1) {
+        Session::update_username(Stream::get_session(), Core::get_global('user')->username);
     }
 
     $playlist = new Stream_Playlist();

@@ -21,7 +21,7 @@
  */
 
 $threshold = AmpConfig::get('stats_threshold');
-$user_id   = User::get_user_id();
+$user_id   = Core::get_global('user')->id;
 $count     = 18;
 ?>
 <p>

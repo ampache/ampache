@@ -36,7 +36,7 @@ switch ($action) {
     case 'show_add_message':
         if (isset($_REQUEST['reply_to'])) {
             $pvmsg = new PrivateMsg($_REQUEST['reply_to']);
-            if ($pvmsg->id && ($pvmsg->from_user === (int) User::get_user_id() || $pvmsg->to_user === (int) User::get_user_id())) {
+            if ($pvmsg->id && ($pvmsg->from_user === (int) Core::get_global('user')->id || $pvmsg->to_user === (int) Core::get_global('user')->id)) {
                 $to_user             = new User($pvmsg->from_user);
                 $_REQUEST['to_user'] = $to_user->username;
                 $_REQUEST['subject'] = "RE: " . $pvmsg->subject;
@@ -78,7 +78,7 @@ switch ($action) {
         $msgs = explode(',', $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
             $pvmsg = new PrivateMsg((int) ($msg_id));
-            if ($pvmsg->id && $pvmsg->to_user === (int) User::get_user_id()) {
+            if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
                 $read = (int) ($_REQUEST['read']) !== 0;
                 $pvmsg->set_is_read($read);
             } else {
@@ -114,7 +114,7 @@ switch ($action) {
         foreach ($msgs as $msg_id) {
             $msg_id = (int) ($msg_id);
             $pvmsg  = new PrivateMsg($msg_id);
-            if ($pvmsg->id && $pvmsg->to_user === (int) User::get_user_id()) {
+            if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
                 $pvmsg->delete();
             } else {
                 debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
@@ -130,7 +130,7 @@ switch ($action) {
     default:
         $msg_id = (int) filter_input(INPUT_GET, 'pvmsg_id', FILTER_SANITIZE_NUMBER_INT);
         $pvmsg  = new PrivateMsg($msg_id);
-        if ($pvmsg->id && $pvmsg->to_user === (int) User::get_user_id()) {
+        if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
             $pvmsg->format();
             if (!$pvmsg->is_read) {
                 $pvmsg->set_is_read(true);

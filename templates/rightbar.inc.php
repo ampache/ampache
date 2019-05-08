@@ -33,7 +33,7 @@
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
-                $playlists = Playlist::get_users(User::get_user_id());
+                $playlists = Playlist::get_users(Core::get_global('user')->id);
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);
@@ -50,7 +50,7 @@
 <?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) {
         ?>
     <li>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     </li>
@@ -89,7 +89,7 @@
 
     //FIXME :: this is kludgy
     if (!defined('NO_SONGS')) {
-        $objects = $GLOBALS['user']->playlist->get_items();
+        $objects = Core::get_global('user')->playlist->get_items();
     }
 ?>
     <script type="text/javascript">

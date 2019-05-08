@@ -29,8 +29,8 @@
         <?php
             $count_temp_playlist = 1;
             if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-                if ($GLOBALS['user']->playlist) {
-                    $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
+                if (Core::get_global('user')->playlist) {
+                    $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
                 }
             }
         ?>

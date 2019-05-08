@@ -206,7 +206,7 @@ class Shoutbox
         }
 
         $sticky     = isset($data['sticky']) ? 1 : 0;
-        $user       = (int) ($data['user'] ?: User::get_user_id());
+        $user       = (int) ($data['user'] ?: Core::get_global('user')->id);
         $date       = (int) ($data['date'] ?: time());
         $comment    = strip_tags($data['comment']);
 
@@ -238,7 +238,7 @@ class Shoutbox
     ----------------------
 
     %s
-    "), $GLOBALS['user']->fullname, $libitem->get_fullname(), $comment, AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $data['object_type'] . "&id=" . $data['object_id'] . "#shout" . $insert_id);
+    "), Core::get_global('user')->fullname, $libitem->get_fullname(), $comment, AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $data['object_type'] . "&id=" . $data['object_id'] . "#shout" . $insert_id);
                         $mailer->send();
                     }
                 }

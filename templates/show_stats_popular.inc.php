@@ -21,7 +21,7 @@
  */
 
 $thresh_value = AmpConfig::get('stats_threshold');
-$user_id      = (int) User::get_user_id();
+$user_id      = (int) Core::get_global('user')->id;
 
 $sql    = Stats::get_top_sql('album', $thresh_value, 'stream', $user_id);
 $browse = new Browse();

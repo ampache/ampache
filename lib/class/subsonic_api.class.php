@@ -862,7 +862,7 @@ class Subsonic_Api
         $username = $input['username'];
 
         // Don't allow playlist listing for another user
-        if (empty($username) || $username == $GLOBALS['user']->username) {
+        if (empty($username) || $username == Core::get_global('user')->username) {
             Subsonic_XML_Data::addPlaylists($r, Playlist::get_playlists(), Search::get_searches());
         } else {
             $user = User::get_from_username($username);
@@ -1200,7 +1200,7 @@ class Subsonic_Api
     {
         self::check_version($input, "1.7.0");
 
-        $user_id = User::get_user_id();
+        $user_id = Core::get_global('user')->id;
 
         $response = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addStarred($response, Userflag::get_latest('artist', $user_id, 10000), Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000), $elementName);
@@ -1319,16 +1319,16 @@ class Subsonic_Api
 
         $username = self::check_parameter($input, 'username');
 
-        if ($GLOBALS['user']->access >= 100 || $GLOBALS['user']->username == $username) {
+        if (Core::get_global('user')->access >= 100 || Core::get_global('user')->username == $username) {
             $response = Subsonic_XML_Data::createSuccessResponse();
-            if ($GLOBALS['user']->username == $username) {
-                $user = $GLOBALS['user'];
+            if (Core::get_global('user')->username == $username) {
+                $user = Core::get_global('user');
             } else {
                 $user = User::get_from_username($username);
             }
             Subsonic_XML_Data::addUser($response, $user);
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $GLOBALS['user']->username . ' is not authorized to get details for other users.');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.');
         }
         self::apiOutput($input, $response);
     }
@@ -1343,12 +1343,12 @@ class Subsonic_Api
     {
         self::check_version($input, "1.7.0");
 
-        if ($GLOBALS['user']->access >= 100) {
+        if (Core::get_global('user')->access >= 100) {
             $response     = Subsonic_XML_Data::createSuccessResponse();
             $users        = User::get_valid_users();
             Subsonic_XML_Data::addUsers($response, $users);
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $GLOBALS['user']->username . ' is not authorized to get details for other users.');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.');
         }
         self::apiOutput($input, $response);
     }
@@ -1362,9 +1362,9 @@ class Subsonic_Api
         $username = self::check_parameter($input, 'username');
 
         $response = null;
-        if ($GLOBALS['user']->access >= 100 || $GLOBALS['user']->username == $username) {
-            if ($GLOBALS['user']->username == $username) {
-                $user = $GLOBALS['user'];
+        if (Core::get_global('user')->access >= 100 || Core::get_global('user')->username == $username) {
+            if (Core::get_global('user')->username == $username) {
+                $user = Core::get_global('user');
             } else {
                 $user = User::get_from_username($username);
             }
@@ -1380,7 +1380,7 @@ class Subsonic_Api
                 $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $GLOBALS['user']->username . ' is not authorized to get avatar for other users.');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get avatar for other users.');
         }
 
         if ($response != null) {
@@ -1632,7 +1632,7 @@ class Subsonic_Api
         $password = self::check_parameter($input, 'password');
         $password = self::decrypt_password($password);
 
-        if ($GLOBALS['user']->username == $username || Access::check('interface', 100)) {
+        if (Core::get_global('user')->username == $username || Access::check('interface', 100)) {
             $user = User::get_from_username($username);
             if ($user->id) {
                 $user->update_password($password);
@@ -1773,7 +1773,7 @@ class Subsonic_Api
 
                 $media = new $type($aid);
                 $media->format();
-                User::save_mediaplay($GLOBALS['user'], $media);
+                User::save_mediaplay(Core::get_global('user'), $media);
             }
 
             $response = Subsonic_XML_Data::createSuccessResponse();

@@ -129,7 +129,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $sql = "INSERT INTO `localplay_xbmc` (`name`,`host`,`port`, `user`, `pass`,`owner`) " .
             "VALUES (?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['user'], $data['pass'], User::get_user_id()));
+        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['user'], $data['pass'], Core::get_global('user')->id));
 
         return $db_results;
     } // add_instance
@@ -216,11 +216,11 @@ class AmpacheXbmc extends localplay_controller
     public function set_active_instance($uid, $user_id='')
     {
         // Not an admin? bubkiss!
-        if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = User::get_user_id();
+        if (!Core::get_global('user')->has_access('100')) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        $user_id = $user_id ? $user_id : User::get_user_id();
+        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
 
         Preference::update('xbmc_active', $user_id, (int) ($uid));
         AmpConfig::set('xbmc_active', (int) ($uid), true);

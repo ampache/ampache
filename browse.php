@@ -198,9 +198,9 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
         $browse->set_sort('creation_date', 'DESC');
         $folder = $_REQUEST['folder'];
         if ($folder === "sent") {
-            $browse->set_filter('user', User::get_user_id());
+            $browse->set_filter('user', Core::get_global('user')->id);
         } else {
-            $browse->set_filter('to_user', User::get_user_id());
+            $browse->set_filter('to_user', Core::get_global('user')->id);
         }
         $browse->update_browse_from_session();
         $browse->show_objects();

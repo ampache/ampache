@@ -45,7 +45,7 @@ switch ($action) {
     break;
     case 'add_tag':
         if (!Tag::can_edit_tag_map($_GET['type'], $_GET['object_id'], false)) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to add unauthorized tag map', 1);
+            debug_event('DENIED', Core::get_global('user')->username . ' attempted to add unauthorized tag map', 1);
 
             return false;
         }
@@ -54,7 +54,7 @@ switch ($action) {
     break;
     case 'add_tag_by_name':
         if (!Access::check('interface', '75')) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to add new tag', 1);
+            debug_event('DENIED', Core::get_global('user')->username . ' attempted to add new tag', 1);
 
             return false;
         }
@@ -63,7 +63,7 @@ switch ($action) {
     break;
     case 'delete':
         if (!Access::check('interface', '75')) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to delete tag', 1);
+            debug_event('DENIED', Core::get_global('user')->username . ' attempted to delete tag', 1);
 
             return false;
         }
@@ -75,7 +75,7 @@ switch ($action) {
         return false;
     case 'remove_tag_map':
         if (!Tag::can_edit_tag_map($_GET['type'], $_GET['object_id'], false)) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to delete unauthorized tag map', 1);
+            debug_event('DENIED', Core::get_global('user')->username . ' attempted to delete unauthorized tag map', 1);
 
             return false;
         }

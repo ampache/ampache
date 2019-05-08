@@ -56,13 +56,13 @@ if ($channel->is_private) {
         $auth = Auth::login($htusername, $htpassword);
         if ($auth['success']) {
             $username        = $auth['username'];
-            $GLOBALS['user'] = new User($username);
+            Core::get_global('user') = new User($username);
             $is_auth         = true;
             Preference::init();
 
             if (AmpConfig::get('access_control')) {
-                if (!Access::check_network('stream', User::get_user_id(), '25') and
-                    !Access::check_network('network', User::get_user_id(), '25')) {
+                if (!Access::check_network('stream', Core::get_global('user')->id, '25') and
+                    !Access::check_network('network', Core::get_global('user')->id, '25')) {
                     debug_event('UI::access_denied', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
                     UI::access_denied();
 

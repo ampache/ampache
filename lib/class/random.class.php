@@ -43,7 +43,7 @@ class Random
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
             $sql .= " AND `artist`.`id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
@@ -113,7 +113,7 @@ class Random
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
             $sql .= " WHERE `song`.`artist` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
@@ -145,7 +145,7 @@ class Random
         $results = array();
 
         // Get the last album played by us
-        $data      = $GLOBALS['user']->get_recently_played('1', 'album');
+        $data      = Core::get_global('user')->get_recently_played('1', 'album');
         $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`album`='" . $data[0] . "' ";
@@ -158,7 +158,7 @@ class Random
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
             $sql .= " WHERE `song`.`artist` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
@@ -189,7 +189,7 @@ class Random
     {
         $results = array();
 
-        $data      = $GLOBALS['user']->get_recently_played('1', 'artist');
+        $data      = Core::get_global('user')->get_recently_played('1', 'artist');
         $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
@@ -202,7 +202,7 @@ class Random
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
             $sql .= " WHERE `song`.`artist` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .

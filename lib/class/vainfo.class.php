@@ -606,7 +606,7 @@ class vainfo
                 $plugin            = new Plugin($tag_source);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {
-                    if ($plugin->load($GLOBALS['user'])) {
+                    if ($plugin->load(Core::get_global('user'))) {
                         $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gather_types, self::clean_tag_info($this->tags, self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));
                     }
                 }

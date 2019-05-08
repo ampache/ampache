@@ -24,7 +24,7 @@ class Slideshow
 {
     public static function get_current_slideshow()
     {
-        $songs  = Song::get_recently_played((int) User::get_user_id());
+        $songs  = Song::get_recently_played((int) Core::get_global('user')->id);
         $images = array();
         if (count($songs) > 0) {
             $last_song = new Song($songs[0]['object_id']);
@@ -51,7 +51,7 @@ class Slideshow
 
         foreach (Plugin::get_plugins('get_photos') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($GLOBALS['user'])) {
+            if ($plugin->load(Core::get_global('user'))) {
                 $images += $plugin->_plugin->get_photos($artist_name);
             }
         }

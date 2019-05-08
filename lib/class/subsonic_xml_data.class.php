@@ -717,7 +717,7 @@ class Subsonic_XML_Data
         foreach ($tags as $tag) {
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
-            $counts = $otag->count('', User::get_user_id());
+            $counts = $otag->count('', Core::get_global('user')->id);
             $xgenre->addAttribute("songCount", $counts['song']);
             $xgenre->addAttribute("albumCount", $counts['album']);
         }

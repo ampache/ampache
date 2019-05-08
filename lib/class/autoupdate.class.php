@@ -108,7 +108,7 @@ class AutoUpdate
     {
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
-            Preference::update('autoupdate_lastcheck', User::get_user_id(), '1');
+            Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, '1');
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
 
@@ -127,7 +127,7 @@ class AutoUpdate
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
             $time = time();
-            Preference::update('autoupdate_lastcheck', User::get_user_id(), $time);
+            Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
             AmpConfig::set('autoupdate_lastcheck', $time, true);
 
             // Development version, get latest commit on develop branch
@@ -135,10 +135,10 @@ class AutoUpdate
                 $commits = self::github_request('/commits/develop');
                 if (!empty($commits)) {
                     $lastversion = $commits->sha;
-                    Preference::update('autoupdate_lastversion', User::get_user_id(), $lastversion);
+                    Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                     $available = self::is_update_available(true);
-                    Preference::update('autoupdate_lastversion_new', User::get_user_id(), $available);
+                    Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
                 }
             }
@@ -148,10 +148,10 @@ class AutoUpdate
                 $str  = strstr($tags[0]->name, "pre-release");
                 if (!$str) {
                     $lastversion = $tags[0]->name;
-                    Preference::update('autoupdate_lastversion', User::get_user_id(), $lastversion);
+                    Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                     $available = self::is_update_available(true);
-                    Preference::update('autoupdate_lastversion_new', User::get_user_id(), $available);
+                    Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
                 }
             }

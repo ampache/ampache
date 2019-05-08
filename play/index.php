@@ -117,16 +117,16 @@ $user_authenticated = false;
 if (!empty($apikey)) {
     $user = User::get_from_apikey($apikey);
     if ($user != null) {
-        $GLOBALS['user'] = $user;
-        $uid             = User::get_user_id();
+        Core::get_global('user') = $user;
+        $uid             = Core::get_global('user')->id;
         Preference::init();
         $user_authenticated = true;
     }
 } elseif (!empty($u) && !empty($p)) {
     $auth = Auth::login($u, $p);
     if ($auth['success']) {
-        $GLOBALS['user'] = User::get_from_username($auth['username']);
-        $uid             = User::get_user_id();
+        Core::get_global('user') = User::get_from_username($auth['username']);
+        $uid             = Core::get_global('user')->id;
         Preference::init();
         $user_authenticated = true;
     }
@@ -150,12 +150,12 @@ if (empty($uid)) {
 if (!$share_id) {
     // No explicit authentication, use session
     if (!$user_authenticated) {
-        $GLOBALS['user'] = new User($uid);
+        Core::get_global('user') = new User($uid);
         Preference::init();
 
         /* If the user has been disabled (true value) */
-        if (make_bool($GLOBALS['user']->disabled)) {
-            debug_event('UI::access_denied', $GLOBALS['user']->username . " is currently disabled, stream access denied", '3');
+        if (make_bool(Core::get_global('user')->disabled)) {
+            debug_event('UI::access_denied', Core::get_global('user')->username . " is currently disabled, stream access denied", '3');
             header('HTTP/1.1 403 User Disabled');
 
             return false;
@@ -163,14 +163,14 @@ if (!$share_id) {
 
         // If require session is set then we need to make sure we're legit
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            if (!AmpConfig::get('require_localnet_session') and Access::check_network('network', User::get_user_id(), '5')) {
+            if (!AmpConfig::get('require_localnet_session') and Access::check_network('network', Core::get_global('user')->id, '5')) {
                 debug_event('play', 'Streaming access allowed for local network IP ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), '5');
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
                     $sid = $_COOKIE[AmpConfig::get('session_name')];
                     if (!Session::exists('interface', $sid)) {
-                        debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
+                        debug_event('UI::access_denied', 'Streaming access denied: ' . Core::get_global('user')->username . "'s session has expired", 3);
                         header('HTTP/1.1 403 Session Expired');
 
                         return false;
@@ -185,7 +185,7 @@ if (!$share_id) {
     }
 
     /* Update the users last seen information */
-    $GLOBALS['user']->update_last_seen();
+    Core::get_global('user')->update_last_seen();
 } else {
     $secret = $_REQUEST['share_secret'];
     $share  = new Share($share_id);
@@ -202,7 +202,7 @@ if (!$share_id) {
         return false;
     }
 
-    $GLOBALS['user'] = new User($share->user);
+    Core::get_global('user') = new User($share->user);
     Preference::init();
 }
 
@@ -210,7 +210,7 @@ if (!$share_id) {
 
 $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
 if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
-    debug_event('UI::access_denied', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access, '3');
+    debug_event('UI::access_denied', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . Core::get_global('user')->access, '3');
     UI::access_denied();
 
     return false;
@@ -221,8 +221,8 @@ if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
    that they have enough access to play this mojo
 */
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('stream', User::get_user_id(), '25') and
-        !Access::check_network('network', User::get_user_id(), '25')) {
+    if (!Access::check_network('stream', Core::get_global('user')->id, '25') and
+        !Access::check_network('network', Core::get_global('user')->id, '25')) {
         debug_event('UI::access_denied', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
         UI::access_denied();
 
@@ -312,7 +312,7 @@ if ($type == 'song') {
 }
 
 if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
-    debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username . ' on ' . $media->get_stream_name(), 3);
+    debug_event('UI::access_denied', 'Stream control failed for user ' . Core::get_global('user')->username . ' on ' . $media->get_stream_name(), 3);
     UI::access_denied();
 
     return false;
@@ -443,12 +443,12 @@ set_time_limit(0);
 
 // We're about to start. Record this user's IP.
 if (AmpConfig::get('track_user_ip')) {
-    $GLOBALS['user']->insert_ip_history();
+    Core::get_global('user')->insert_ip_history();
 }
 
 $force_downsample = false;
 if (AmpConfig::get('downsample_remote')) {
-    if (!Access::check_network('network', User::get_user_id(), '0')) {
+    if (!Access::check_network('network', Core::get_global('user')->id, '0')) {
         debug_event('play', 'Downsampling enabled for non-local address ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), 5);
         $force_downsample = true;
     }
@@ -637,7 +637,7 @@ if (!isset($_REQUEST['segment'])) {
                 $sessionkey = $sid ?: Stream::get_session();
                 $agent      = Session::agent($sessionkey);
                 $location   = Session::get_geolocation($sessionkey);
-                $GLOBALS['user']->update_stats($type, $media->id, $agent, $location, isset($_REQUEST['noscrobble']));
+                Core::get_global('user')->update_stats($type, $media->id, $agent, $location, isset($_REQUEST['noscrobble']));
             }
         }
     }

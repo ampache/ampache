@@ -81,8 +81,8 @@ if (Core::is_playable_item(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPE
     // Switch on the actions
     switch ($action) {
         case 'tmp_playlist':
-            $media_ids = $GLOBALS['user']->playlist->get_items();
-            $name      = $GLOBALS['user']->username . ' - Playlist';
+            $media_ids = Core::get_global('user')->playlist->get_items();
+            $name      = Core::get_global('user')->username . ' - Playlist';
         break;
         case 'browse':
             $id               = (int) scrub_in(filter_input(INPUT_POST, 'browse_id', FILTER_SANITIZE_NUMBER_INT));
@@ -110,7 +110,7 @@ if (Core::is_playable_item(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPE
 }
 
 if (!User::stream_control($media_ids)) {
-    debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, '3');
+    debug_event('UI::access_denied', 'Stream control failed for user ' . Core::get_global('user')->username, '3');
     UI::access_denied();
 
     return false;

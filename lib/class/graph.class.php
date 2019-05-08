@@ -481,7 +481,7 @@ class Graph
 
         foreach (Plugin::get_plugins('display_map') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($GLOBALS['user'])) {
+            if ($plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->display_map($pts)) {
                     break;
                 }
@@ -503,7 +503,7 @@ class Graph
             }
         }
         
-        if (($owner_id <= 0 || $owner_id != User::get_user_id()) && !Access::check('interface', '50')) {
+        if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
             $user_id      = $_REQUEST['user_id'];

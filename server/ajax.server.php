@@ -110,7 +110,7 @@ switch ($action) {
     case 'current_playlist':
         switch ($_REQUEST['type']) {
             case 'delete':
-                $GLOBALS['user']->playlist->delete_track($_REQUEST['id']);
+                Core::get_global('user')->playlist->delete_track($_REQUEST['id']);
             break;
         } // end switch
 
@@ -128,7 +128,7 @@ switch ($action) {
             foreach ($object_id as $item) {
                 $object = new $object_type($item);
                 $medias = $object->get_medias();
-                $GLOBALS['user']->playlist->add_medias($medias);
+                Core::get_global('user')->playlist->add_medias($medias);
             }
         } else {
             switch ($_REQUEST['type']) {
@@ -136,7 +136,7 @@ switch ($action) {
                     $browse  = new Browse($_REQUEST['browse_id']);
                     $objects = $browse->get_saved();
                     foreach ($objects as $object_id) {
-                        $GLOBALS['user']->playlist->add_object($object_id, 'song');
+                        Core::get_global('user')->playlist->add_object($object_id, 'song');
                     }
                 break;
                 case 'album_random':
@@ -146,7 +146,7 @@ switch ($action) {
                         $object = new $type($i);
                         $songs  = $object->get_random_songs();
                         foreach ($songs as $song_id) {
-                            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+                            Core::get_global('user')->playlist->add_object($song_id, 'song');
                         }
                     }
                 break;
@@ -157,18 +157,18 @@ switch ($action) {
                     $object = new $type($_REQUEST['id']);
                     $songs  = $object->get_random_songs();
                     foreach ($songs as $song_id) {
-                        $GLOBALS['user']->playlist->add_object($song_id, 'song');
+                        Core::get_global('user')->playlist->add_object($song_id, 'song');
                     }
                 break;
                 case 'playlist_random':
                     $playlist = new Playlist($_REQUEST['id']);
                     $items    = $playlist->get_random_items();
                     foreach ($items as $item) {
-                        $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
+                        Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
                     }
                 break;
                 case 'clear_all':
-                    $GLOBALS['user']->playlist->clear();
+                    Core::get_global('user')->playlist->clear();
                 break;
             }
         }

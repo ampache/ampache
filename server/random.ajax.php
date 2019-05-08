@@ -41,7 +41,7 @@ switch ($action) {
         }
 
         foreach ($songs as $song_id) {
-            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+            Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
@@ -56,7 +56,7 @@ switch ($action) {
         $album = new Album($album_id[0]);
         $songs = $album->get_songs();
         foreach ($songs as $song_id) {
-            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+            Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
@@ -71,7 +71,7 @@ switch ($action) {
         $artist = new Artist($artist_id);
         $songs  = $artist->get_songs();
         foreach ($songs as $song_id) {
-            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+            Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
@@ -86,7 +86,7 @@ switch ($action) {
         $playlist = new Playlist($playlist_id);
         $items    = $playlist->get_items();
         foreach ($items as $item) {
-            $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
+            Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
@@ -96,7 +96,7 @@ switch ($action) {
         // First add them to the active playlist
         if (is_array($object_ids)) {
             foreach ($object_ids as $object_id) {
-                $GLOBALS['user']->playlist->add_object($object_id, 'song');
+                Core::get_global('user')->playlist->add_object($object_id, 'song');
             }
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');

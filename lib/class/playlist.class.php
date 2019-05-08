@@ -95,7 +95,7 @@ class Playlist extends playlist_object
     public static function get_playlists($incl_public = true, $user_id = null)
     {
         if (!$user_id) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
         }
 
         $sql    = 'SELECT `id` FROM `playlist`';
@@ -338,7 +338,7 @@ class Playlist extends playlist_object
      */
     private function _update_item($field, $value, $level)
     {
-        if (User::get_user_id() != $this->user && !Access::check('interface', $level)) {
+        if (Core::get_global('user')->id != $this->user && !Access::check('interface', $level)) {
             return false;
         }
 
@@ -432,7 +432,7 @@ class Playlist extends playlist_object
     public static function create($name, $type, $user_id = null, $date = null)
     {
         if ($user_id == null) {
-            $user_id = User::get_user_id();
+            $user_id = Core::get_global('user')->id;
         }
         if ($date == null) {
             $date = time();

@@ -28,11 +28,11 @@ require_once($prefix . '/lib/init.php');
 
 $valid_exts = array ('m3u', 'xspf', 'pls');
 
-if (!$GLOBALS['argv'][1] || $GLOBALS['argv'][1] == '-h') { usage(); }
+if (!Core::get_global('argv')[1] || Core::get_global('argv')[1] == '-h') { usage(); }
 else {
-    $dirname    = $GLOBALS['argv'][1];
-    $type       = $GLOBALS['argv'][2];
-    $ext        = $GLOBALS['argv'][3];
+    $dirname    = Core::get_global('argv')[1];
+    $type       = Core::get_global('argv')[2];
+    $ext        = Core::get_global('argv')[3];
     if (!$ext || !in_array($ext, $valid_exts)) {
         $ext = 'm3u';
     }

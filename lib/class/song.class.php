@@ -1342,7 +1342,7 @@ class Song extends database_object implements media, library_item
      * _update_item
      * This is a private function that should only be called from within the song class.
      * It takes a field, value song id and level. first and foremost it checks the level
-     * against $GLOBALS['user'] to make sure they are allowed to update this record
+     * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
      * @param mixed $value
@@ -1355,7 +1355,7 @@ class Song extends database_object implements media, library_item
     {
         if ($check_owner) {
             $item = new Song($song_id);
-            if ($item->id && $item->get_user_owner() == User::get_user_id()) {
+            if ($item->id && $item->get_user_owner() == Core::get_global('user')->id) {
                 $level = 25;
             }
         }
@@ -1389,7 +1389,7 @@ class Song extends database_object implements media, library_item
     {
         if ($check_owner) {
             $item = new Song($song_id);
-            if ($item->id && $item->get_user_owner() == User::get_user_id()) {
+            if ($item->id && $item->get_user_owner() == Core::get_global('user')->id) {
                 $level = 25;
             }
         }
@@ -1710,7 +1710,7 @@ class Song extends database_object implements media, library_item
             return null;
         }
 
-        $uid  = User::get_user_id() ? scrub_out(User::get_user_id()) : '-1';
+        $uid  = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
         $type = $media->type;
 
         // Checking if the media is gonna be transcoded into another type
@@ -1789,7 +1789,7 @@ class Song extends database_object implements media, library_item
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
                 $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
                 if ($personal_info_id) {
-                    $current_user = User::get_user_id();
+                    $current_user = Core::get_global('user')->id;
                     $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
                 }
             }
@@ -1939,7 +1939,7 @@ class Song extends database_object implements media, library_item
 
         foreach (Plugin::get_plugins('get_lyrics') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($GLOBALS['user'])) {
+            if ($plugin->load(Core::get_global('user'))) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
                 if ($lyrics != false) {
                     return $lyrics;

@@ -195,7 +195,7 @@ class Wanted extends database_object
                             }
                             $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                             $wanted->f_artist_link = $artist ? $artist->f_link : $wartist['link'];
-                            $wanted->f_user        = $GLOBALS['user']->f_name;
+                            $wanted->f_user        = Core::get_global('user')->f_name;
                         }
                         $results[] = $wanted;
                     }
@@ -295,9 +295,9 @@ class Wanted extends database_object
     {
         $sql    = "DELETE FROM `wanted` WHERE `mbid` = ?";
         $params = array( $mbid );
-        if (!$GLOBALS['user']->has_access('75')) {
+        if (!Core::get_global('user')->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = User::get_user_id();
+            $params[] = Core::get_global('user')->id;
         }
 
         Dba::write($sql, $params);
@@ -328,9 +328,9 @@ class Wanted extends database_object
     {
         $sql    = "DELETE FROM `wanted` WHERE `artist` = ? AND `name` = ? AND `year` = ?";
         $params = array( $artist, $album_name, $year );
-        if (!$GLOBALS['user']->has_access('75')) {
+        if (!Core::get_global('user')->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = User::get_user_id();
+            $params[] = Core::get_global('user')->id;
         }
 
         Dba::write($sql, $params);
@@ -341,7 +341,7 @@ class Wanted extends database_object
      */
     public function accept()
     {
-        if ($GLOBALS['user']->has_access('75')) {
+        if (Core::get_global('user')->has_access('75')) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array( $this->mbid ));
             $this->accepted = true;
@@ -349,7 +349,7 @@ class Wanted extends database_object
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
                 debug_event('wanted', 'Using Wanted Process plugin: ' . $plugin_name, '5');
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($GLOBALS['user'])) {
+                if ($plugin->load(Core::get_global('user'))) {
                     $plugin->_plugin->process_wanted($this);
                 }
             }
@@ -365,7 +365,7 @@ class Wanted extends database_object
     public static function has_wanted($mbid, $userid = 0)
     {
         if ($userid == 0) {
-            $userid = User::get_user_id();
+            $userid = Core::get_global('user')->id;
         }
 
         $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ?";
@@ -389,8 +389,8 @@ class Wanted extends database_object
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = $GLOBALS['user']->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
-        $params = array(User::get_user_id(), $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
+        $accept = Core::get_global('user')->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
+        $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
         Dba::write($sql, $params);
 
         if ($accept) {
@@ -409,11 +409,11 @@ class Wanted extends database_object
     {
         if ($this->id) {
             if (!$this->accepted) {
-                if ($GLOBALS['user']->has_access('75')) {
+                if (Core::get_global('user')->has_access('75')) {
                     echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'), 'wanted_accept_' . $this->mbid);
                 }
             }
-            if ($GLOBALS['user']->has_access('75') || (Wanted::has_wanted($this->mbid) && $this->accepted != '1')) {
+            if (Core::get_global('user')->has_access('75') || (Wanted::has_wanted($this->mbid) && $this->accepted != '1')) {
                 echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
         } else {
@@ -468,7 +468,7 @@ class Wanted extends database_object
                             $song['file'] = null;
                             foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
                                 $plugin = new Plugin($plugin_name);
-                                if ($plugin->load($GLOBALS['user'])) {
+                                if ($plugin->load(Core::get_global('user'))) {
                                     $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
                                     if ($song['file'] != null) {
                                         break;
@@ -521,8 +521,8 @@ class Wanted extends database_object
     {
         $sql = "SELECT `id` FROM `wanted` ";
 
-        if (!$GLOBALS['user']->has_access('75')) {
-            $sql .= "WHERE `user` = '" . scrub_in(User::get_user_id()) . "'";
+        if (!Core::get_global('user')->has_access('75')) {
+            $sql .= "WHERE `user` = '" . scrub_in(Core::get_global('user')->id) . "'";
         }
 
         return $sql;

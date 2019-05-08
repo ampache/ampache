@@ -129,8 +129,8 @@ class Art extends database_object
     public static function _auto_init()
     {
         if (!isset($_SESSION['art_enabled'])) {
-            /*if (isset($_COOKIE['art_enabled'])) {
-                $_SESSION['art_enabled'] = $_COOKIE['art_enabled'];
+            /*if (isset(Core::get_cookie('art_enabled'))) {
+                $_SESSION['art_enabled'] = Core::get_cookie('art_enabled');
             } else {*/
             $_SESSION['art_enabled'] = true;
             //}
@@ -1061,7 +1061,7 @@ class Art extends database_object
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {
-                    if ($plugin->load($GLOBALS['user'])) {
+                    if ($plugin->load(Core::get_global('user'))) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }
@@ -1844,7 +1844,7 @@ class Art extends database_object
         if ($prettyPhoto) {
             $libitem = new $object_type($object_id);
             echo "<div class=\"item_art_actions\">";
-            if ($GLOBALS['user']->has_access(50) || ($GLOBALS['user']->has_access(25) && User::get_user_id() == $libitem->get_user_owner())) {
+            if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";

@@ -60,13 +60,13 @@ switch ($action) {
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface', '25')) {
-                debug_event('DENIED', 'Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist', '1');
+                debug_event('DENIED', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', '1');
                 break;
             }
 
             $name        = $_REQUEST['name'];
             if (empty($name)) {
-                $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s", time());
+                $name = Core::get_global('user')->username . ' - ' . date("Y-m-d H:i:s", time());
             }
             $playlist_id = Playlist::create($name, 'private');
             if (!$playlist_id) {
@@ -94,7 +94,7 @@ switch ($action) {
             }
         } else {
             debug_event('playlist', 'Adding all medias of current playlist...', 5);
-            $medias = $GLOBALS['user']->playlist->get_items();
+            $medias = Core::get_global('user')->playlist->get_items();
         }
 
         if (count($medias) > 0) {
