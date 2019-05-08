@@ -428,10 +428,10 @@ class Art extends database_object
 
     public static function check_dimensions($dimensions)
     {
-        $w = (int) ($dimensions['width']);
-        $h = (int) ($dimensions['height']);
+        $width = (int) ($dimensions['width']);
+        $height = (int) ($dimensions['height']);
 
-        if ($w > 0 && $h > 0) {
+        if ($width > 0 && $height > 0) {
             $minw = AmpConfig::get('album_art_min_width');
             $maxw = AmpConfig::get('album_art_max_width');
             $minh = AmpConfig::get('album_art_min_height');
@@ -452,24 +452,24 @@ class Art extends database_object
             }
 
             // minimum width is set and current width is too low
-            if ($minw > 0 && $w < $minw) {
-                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$w).", 1);
+            if ($minw > 0 && $width < $minw) {
+                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$width).", 1);
 
                 return false;
             }
             // max width is set and current width is too high
-            if ($maxw > 0 && $w > $maxw) {
-                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$w).", 1);
+            if ($maxw > 0 && $width > $maxw) {
+                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$width).", 1);
 
                 return false;
             }
-            if ($minh > 0 && $h < $minh) {
-                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$h).", 1);
+            if ($minh > 0 && $height < $minh) {
+                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$height).", 1);
 
                 return false;
             }
-            if ($maxh > 0 && $h > $maxh) {
-                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$h).", 1);
+            if ($maxh > 0 && $height > $maxh) {
+                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$height).", 1);
 
                 return false;
             }

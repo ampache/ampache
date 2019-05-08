@@ -139,7 +139,7 @@ class Api
             $passphrase = $_POST['auth'];
         }
         $username = trim($input['user']);
-        $ip       = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+        $user_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
         if (isset($input['version'])) {
             // If version is provided, use it
             $version = $input['version'];
@@ -149,7 +149,7 @@ class Api
         }
 
         // Log the attempt
-        debug_event('API', "Handshake Attempt, IP:$ip User:$username Version:$version", 5);
+        debug_event('API', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {

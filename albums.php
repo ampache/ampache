@@ -70,7 +70,7 @@ switch ($action) {
         }
 
         $type          = 'album';
-        $object_id     = (int) $_REQUEST['album_id'];
+        $object_id     = (int) filter_input(INPUT_POST, 'album_id', FILTER_SANITIZE_NUMBER_INT);
         $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
         require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;

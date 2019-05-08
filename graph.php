@@ -40,18 +40,18 @@ if (!AmpConfig::get('statistical_graphs')) {
 
 $type = $_REQUEST['type'];
 
-$user_id     = (int) $_REQUEST['user_id'];
+$user_id     = (int) filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
 $object_type = (string) scrub_in($_REQUEST['object_type']);
 if (!Core::is_library_item($object_type)) {
     $object_type = null;
 }
-$object_id  = (int) $_REQUEST['object_id'];
+$object_id  = (int) filter_input(INPUT_POST, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 $start_date = scrub_in($_REQUEST['start_date']);
 $end_date   = scrub_in($_REQUEST['end_date']);
 $zoom       = (string) scrub_in($_REQUEST['zoom']);
 
-$width  = (int) $_REQUEST['width'];
-$height = (int) $_REQUEST['height'];
+$width  = (int) filter_input(INPUT_POST, 'width', FILTER_SANITIZE_NUMBER_INT);
+$height = (int) filter_input(INPUT_POST, 'height', FILTER_SANITIZE_NUMBER_INT);
 
 $graph = new Graph();
 

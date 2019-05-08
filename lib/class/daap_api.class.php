@@ -393,8 +393,8 @@ class Daap_Api
             if ($input[1] == 'items') {
                 $finfo = explode('.', $input[2]);
                 if (count($finfo) == 2) {
-                    $id   = (int) ($finfo[0]);
-                    $type = $finfo[1];
+                    $object_id = (int) ($finfo[0]);
+                    $type      = $finfo[1];
                     
                     $params  = '';
                     $headers = apache_request_headers();
@@ -404,7 +404,7 @@ class Daap_Api
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
-                    $url = Song::play_url($id, $params, 'api', true);
+                    $url = Song::play_url($object_id, $params, 'api', true);
                     self::follow_stream($url);
 
                     return false;
@@ -413,19 +413,19 @@ class Daap_Api
         } elseif (count($input) == 4) {
             // Playlist
             if ($input[1] == 'containers' && $input[3] == 'items') {
-                $id = (int) ($input[2]);
+                $object_id = (int) ($input[2]);
                 
                 self::check_session('daap.playlistsongs');
                 
-                if ($id == Daap_Api::BASE_LIBRARY) {
+                if ($object_id == Daap_Api::BASE_LIBRARY) {
                     $o = self::catalog_songs();
                     $o = self::tlv('daap.playlistsongs', $o);
                 } else {
-                    if ($id > Daap_Api::AMPACHEID_SMARTPL) {
-                        $id -= Daap_Api::AMPACHEID_SMARTPL;
-                        $playlist = new Search($id, 'song');
+                    if ($object_id > Daap_Api::AMPACHEID_SMARTPL) {
+                        $object_id -= Daap_Api::AMPACHEID_SMARTPL;
+                        $playlist = new Search($object_id, 'song');
                     } else {
-                        $playlist = new Playlist($id);
+                        $playlist = new Playlist($object_id);
                     }
 
                     if ($playlist->id) {
@@ -452,7 +452,7 @@ class Daap_Api
 
                         $o = self::tlv('daap.playlistsongs', $o);
                     } else {
-                        self::createApiError('daap.playlistsongs', 500, 'Invalid playlist id: ' . $id);
+                        self::createApiError('daap.playlistsongs', 500, 'Invalid playlist id: ' . $object_id);
                     }
                 }
             }
