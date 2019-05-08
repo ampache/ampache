@@ -84,9 +84,9 @@ Find /lib/preferences.php and then find "case 'lang':" under
 the "create_preference_input" function and add a line for your own
 language. For example to add en_US support add the following line
 
-  ```php
+    ```php
     echo "\t<option value=\"en_US\" $en_US_lang>" . T_("English") . "</option>\n";
-  ```
+    ```
 
 Make sure that it comes after the `<select>` statement. This will be fixed
 for future releases... Sorry :S
