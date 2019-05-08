@@ -1173,9 +1173,8 @@ class Search extends playlist_object
                 }
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
-            $raw_match_operator = $operator['sql'];
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING);
-            $sql_match_operator = filter_var($raw_match_operator, FILTER_SANITIZE_STRING);
+            $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
                 case 'title':
