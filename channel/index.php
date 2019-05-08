@@ -109,6 +109,7 @@ curl_close($ch);
  */
 function progress($totaldownload, $downloaded, $us, $ud)
 {
+    flush();
     ob_flush();
 }
 

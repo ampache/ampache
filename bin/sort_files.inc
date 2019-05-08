@@ -103,10 +103,10 @@ function sort_find_home($song,$sort_pattern,$base) {
     $home = rtrim($home,"\\");
 
     /* Create the filename that this file should have */
-    $album     = sort_clean_name($song->f_album_full);
-    $artist = sort_clean_name($song->f_artist_full);
-    $track    = sort_clean_name($song->track);
-    $title    = sort_clean_name($song->title);
+    $album   = sort_clean_name($song->f_album_full);
+    $artist  = sort_clean_name($song->f_artist_full);
+    $track   = sort_clean_name($song->track);
+    $title   = sort_clean_name($song->title);
     $year    = sort_clean_name($song->year);
     $comment = sort_clean_name($song->comment);
 
@@ -153,21 +153,16 @@ function sort_element_name($key) {
     switch ($key) {
         case '%t':
             return 'title';
-        break;
         case '%T':
             return 'track';
-        break;
         case '%a':
             return 'artist';
-        break;
         case '%A':
             return 'album';
-        break;
         case '%y':
             return 'year';
-        break;
         default:
-        break;
+            break;
     } // switch on key
 
     return false;
@@ -258,7 +253,7 @@ function sort_move_file($song,$fullname) {
         /* Check for file existance */
         if (file_exists($fullname)) {
             debug_event('file exists','Error: $fullname already exists','1');
-            printf (T_('Error: %s already exists'), $filename);
+            printf (T_('Error: %s already exists'), $fullname);
             echo "\n";
             return false;
         }

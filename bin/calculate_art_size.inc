@@ -35,10 +35,11 @@ $db_results = Dba::read($sql);
 $results = array();
 
 while ($row = Dba::fetch_assoc($db_results)) {
-    if ($inDisk)
-	    $source = Art::get_from_source(array('file' => Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default').'art-'.$row['size'].'.jpg'), $row['object_type']);
-    else
+    if ($inDisk) {
+        $source = Art::get_from_source(array('file' => Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default') . 'art-' . $row['size'] . '.jpg'), $row['object_type']);
+    } else {
         $source = $row['image'];
+    }
 
     $id = $row['id'];
         $dimensions = Core::image_dimensions($source);

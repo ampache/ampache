@@ -958,7 +958,7 @@ table.disablegv thead {
 
 table.disablegv tr {
     float: left;
-    min-width: 160px;
+    min-width: 170px;
     padding: 0.5%;
     text-align: center;
     width: 15%;

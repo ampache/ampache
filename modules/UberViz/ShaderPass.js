@@ -6,7 +6,7 @@
 
 THREE.ShaderPass = function ( shader, textureID ) {
 
-	this.textureID = ( textureID !== undefined ) ? textureID : "tDiffuse";
+	this.textureID = ( typeof textureID !== "undefined" ) ? textureID : "tDiffuse";
 
 	this.uniforms = THREE.UniformsUtils.clone( shader.uniforms );
 

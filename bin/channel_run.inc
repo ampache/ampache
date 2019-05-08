@@ -83,7 +83,7 @@ if ($port <= 0) {
         $address = "127.0.0.1";
         // Try to find an available port
         for ($p = 8200; $p < 8300; ++$p) {
-            $connection = @fsockopen($address, $p);
+            $connection = fsockopen($address, $p);
             if (is_resource($connection)) {
                 fclose($connection);
             } else {
@@ -154,16 +154,18 @@ while(true)
         //debug_event('channel', 'time_offset : '. $time_offset, '5');
         //debug_event('channel', 'last_stream: '.$last_stream, '5');
 
-        if ($time_offset < 1)
-            usleep(1000000 - ($time_offset * 1000000)); // always at least 1 second between cycles
+        if ($time_offset < 1) {
+            usleep(1000000 - ($time_offset * 1000000));
+        } // always at least 1 second between cycles
 
         $last_stream = microtime(true);
         $mtime = ($time_offset > 1) ? $time_offset : 1;
         $nb_chunks = ceil(($mtime * ($channel->bitrate+1/100*$channel->bitrate) * 1000 / 8) / $channel->chunk_size); // channel->bitrate+1% ... leave some headroom for metadata / headers
 
         // we only send full blocks, save remainder and apply when appropriate: allows more granular/arbitrary average bitrates
-        if ($nb_chunks - ($mtime * ($channel->bitrate+1/100*$channel->bitrate) * 1000 / 8 / $channel->chunk_size) > 0)
+        if ($nb_chunks - ($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8 / $channel->chunk_size) > 0) {
             $nb_chunks_remainder += $nb_chunks - ($mtime * $channel->bitrate * 1000 / 8 / $channel->chunk_size);
+        }
         if ($nb_chunks >= 1 && $nb_chunks_remainder >= 1){
             $nb_chunks -= 1;
             $nb_chunks_remainder -= 1;
@@ -574,6 +576,8 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
 
 function strtohex($x) {
     $s='';
-    foreach(str_split($x) as $c) $s.=sprintf("%02X",ord($c));
+    foreach (str_split($x) as $c) {
+        $s .= sprintf("%02X", ord($c));
+    }
     return($s);
 }
