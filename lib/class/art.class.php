@@ -428,7 +428,7 @@ class Art extends database_object
 
     public static function check_dimensions($dimensions)
     {
-        $width = (int) ($dimensions['width']);
+        $width  = (int) ($dimensions['width']);
         $height = (int) ($dimensions['height']);
 
         if ($width > 0 && $height > 0) {
