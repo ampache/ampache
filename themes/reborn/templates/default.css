@@ -958,9 +958,9 @@ table.disablegv thead {
 
 table.disablegv tr {
     float: left;
-    max-width: 215px;
     padding: 0.5%;
     text-align: center;
+    width: 15%;
 }
 
 table.disablegv tr.odd {
