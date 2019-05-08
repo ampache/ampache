@@ -288,14 +288,14 @@ class Search extends playlist_object
                 'name' => 'year',
                 'label' => T_('Year'),
                 'type' => 'numeric',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
 
             $this->types[] = array(
                 'name' => 'time',
                 'label' => T_('Length (in minutes)'),
                 'type' => 'numeric',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
 
             if (AmpConfig::get('ratings')) {
@@ -383,7 +383,7 @@ class Search extends playlist_object
                     'name' => 'played_times',
                     'label' => T_('# Played'),
                     'type' => 'numeric',
-                    'widget' => array('input', 'text')
+                    'widget' => array('input', 'number')
                 );
             }
 
@@ -416,7 +416,7 @@ class Search extends playlist_object
                 'name' => 'last_play',
                 'label' => T_('My Last Play'),
                 'type' => 'days',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
 
             $this->types[] = array(
@@ -451,14 +451,14 @@ class Search extends playlist_object
                 'name' => 'added',
                 'label' => T_('Added'),
                 'type' => 'date',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'datetime-local')
             );
 
             $this->types[] = array(
                 'name' => 'updated',
                 'label' => T_('Updated'),
                 'type' => 'date',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'datetime-local')
             );
 
             $catalogs = array();
@@ -554,21 +554,21 @@ class Search extends playlist_object
                 'name' => 'year',
                 'label' => T_('Year'),
                 'type' => 'numeric',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
 
             $this->types[] = array(
                 'name' => 'image width',
                 'label' => T_('Image Width'),
                 'type' => 'numeric',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
 
             $this->types[] = array(
                 'name' => 'image height',
                 'label' => T_('Image Height'),
                 'type' => 'numeric',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
 
             if (AmpConfig::get('ratings')) {
@@ -611,7 +611,7 @@ class Search extends playlist_object
                 'name' => 'last_play',
                 'label' => T_('My Last Play'),
                 'type' => 'days',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
 
             $catalogs = array();
@@ -654,7 +654,7 @@ class Search extends playlist_object
                 'name' => 'yearformed',
                 'label' => T_('Year'),
                 'type' => 'numeric',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
             $this->types[] = array(
                 'name' => 'placeformed',
@@ -690,7 +690,7 @@ class Search extends playlist_object
                 'name' => 'last_play',
                 'label' => T_('My Last Play'),
                 'type' => 'days',
-                'widget' => array('input', 'text')
+                'widget' => array('input', 'number')
             );
 
             if (AmpConfig::get('ratings')) {
