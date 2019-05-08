@@ -63,7 +63,7 @@ class Query
     /**
      * constructor
      * This should be called
-     * @param int|null $query_id
+     * @param integer|null $query_id
      * @param boolean $cached
      */
     public function __construct($query_id = null, $cached = true)
@@ -645,7 +645,7 @@ class Query
     /**
      * set_total
      * This sets the total number of objects
-     * @param int $total
+     * @param integer $total
      */
     public function set_total($total)
     {
@@ -792,7 +792,7 @@ class Query
     /**
      * set_offset
      * This sets the current offset of this query
-     * @param int $offset
+     * @param integer $offset
      */
     public function set_offset($offset)
     {
@@ -801,7 +801,7 @@ class Query
 
     /**
      *
-     * @param int $catalog_number
+     * @param integer $catalog_number
      */
     public function set_catalog($catalog_number)
     {
@@ -828,7 +828,7 @@ class Query
      * @param string $table
      * @param string $source
      * @param string $dest
-     * @param int $priority
+     * @param integer $priority
      */
     public function set_join($type, $table, $source, $dest, $priority)
     {
@@ -851,7 +851,7 @@ class Query
      * This sets the start point for our show functions
      * We need to store this in the session so that it can be pulled
      * back, if they hit the back button
-     * @param int $start
+     * @param integer $start
      */
     public function set_start($start)
     {
@@ -1870,7 +1870,7 @@ class Query
      * these should be limited as they are often intensive and
      * require additional queries per object... :(
      *
-     * @param int $object_id
+     * @param integer $object_id
      * @return boolean
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

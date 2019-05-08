@@ -478,7 +478,7 @@ class Subsonic_XML_Data
         $catalogData  = self::getCatalogData($songData['catalog'], $songData['file']);
         //$catalog_path = rtrim($catalogData[0], "/");
         
-        self::createSong($xml, $songData, $albumData, $artistData, $catalogData, $addAmpacheInfo, $elementName);
+        return self::createSong($xml, $songData, $albumData, $artistData, $catalogData, $addAmpacheInfo, $elementName);
     }
     
     public static function getSongData($songId)

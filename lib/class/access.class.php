@@ -100,7 +100,7 @@ class Access
      * constructor
      *
      * Takes an ID of the access_id dealie :)
-     * @param int|null $access_id
+     * @param integer|null $access_id
      */
     public function __construct($access_id = null)
     {
@@ -280,7 +280,7 @@ class Access
      * delete
      *
      * deletes the specified access_list entry
-     * @param int $user_id
+     * @param integer $user_id
      */
     public static function delete($user_id)
     {
@@ -320,8 +320,8 @@ class Access
      * This takes a type, ip, user, level and key and then returns whether they
      * are allowed. The IP is passed as a dotted quad.
      * @param string $type
-     * @param int|string $user
-     * @param int $level
+     * @param integer|string $user
+     * @param integer $level
      * @param string $user_ip
      * @return boolean
      */
@@ -393,8 +393,8 @@ class Access
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
      * @param string $type
-     * @param int $level
-     * @param int|null $user_id
+     * @param integer $level
+     * @param integer|null $user_id
      * @return boolean
      */
     public static function check($type, $level, $user_id = null)

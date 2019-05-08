@@ -137,8 +137,8 @@ class Artist extends database_object implements library_item
      * Artist
      * Artist class, for modifing a artist
      * Takes the ID of the artist and pulls the info from the db
-     * @param int|null $id
-     * @param int $catalog_init
+     * @param integer|null $id
+     * @param integer $catalog_init
      */
     public function __construct($id=null, $catalog_init=0)
     {
@@ -253,10 +253,10 @@ class Artist extends database_object implements library_item
      * get_albums
      * gets the album ids that this artist is a part
      * of
-     * @param int|null $catalog
+     * @param integer|null $catalog
      * @param boolean $ignoreAlbumGroups
      * @param boolean $group_release_type
-     * @return int[]
+     * @return integer[]
      */
     public function get_albums($catalog = null, $ignoreAlbumGroups = false, $group_release_type = false)
     {
@@ -332,7 +332,7 @@ class Artist extends database_object implements library_item
     /**
      * get_songs
      * gets the songs for this artist
-     * @return int[]
+     * @return integer[]
      */
     public function get_songs()
     {
@@ -358,7 +358,7 @@ class Artist extends database_object implements library_item
     /**
      * get_random_songs
      * Gets the songs from this artist in a random order
-     * @return int[]
+     * @return integer[]
      */
     public function get_random_songs()
     {
@@ -385,7 +385,7 @@ class Artist extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
-     * @param int $catalog
+     * @param integer $catalog
      * @return array
      */
     private function _get_extra_info($catalog=0, $limit_threshold ='')
@@ -844,7 +844,7 @@ class Artist extends database_object implements library_item
      * Update tags of artists and/or albums
      * @param string $tags_comma
      * @param boolean $override_childs
-     * @param int|null $current_id
+     * @param integer|null $current_id
      * @param boolean $add_to_childs
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
@@ -868,7 +868,7 @@ class Artist extends database_object implements library_item
      * Update artist information.
      * @param string $summary
      * @param string $placeformed
-     * @param int $yearformed
+     * @param integer $yearformed
      * @return boolean
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
@@ -885,7 +885,7 @@ class Artist extends database_object implements library_item
 
     /**
      * Update artist associated user.
-     * @param int $user
+     * @param integer $user
      * @return boolean
      */
     public function update_artist_user($user)

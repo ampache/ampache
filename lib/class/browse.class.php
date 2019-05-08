@@ -39,7 +39,7 @@ class Browse extends Query
     /**
      * Constructor.
      *
-     * @param int|null $id
+     * @param integer|null $id
      * @param boolean $cached
      */
     public function __construct($id = null, $cached = true)
@@ -71,7 +71,7 @@ class Browse extends Query
      * Legacy function, need to find a better way to do that
      *
      * @param string $class
-     * @param int $uid
+     * @param integer $uid
      */
     public function add_supplemental_object($class, $uid)
     {

@@ -207,7 +207,7 @@ class Ajax
       * set_include_override
      * This sets the including div override, used only one place. Kind of a
      * hack.
-     * @param bool $value
+     * @param boolean $value
      */
     public static function set_include_override($value)
     {

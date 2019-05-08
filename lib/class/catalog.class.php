@@ -205,7 +205,7 @@ abstract class Catalog extends database_object
 
     /**
      * Create a catalog from its id.
-     * @param int $id
+     * @param integer $id
      * @return Catalog|null
      */
     public static function create_from_id($id)
@@ -224,7 +224,7 @@ abstract class Catalog extends database_object
      * This function attempts to create a catalog type
      * all Catalog modules should be located in /modules/catalog/<name>/<name>.class.php
      * @param string $type
-     * @param int $id
+     * @param integer $id
      * @return Catalog|null
      */
     public static function create_catalog_type($type, $id=0)
@@ -385,7 +385,7 @@ abstract class Catalog extends database_object
 
     /**
      * Get catalog info from table.
-     * @param int $id
+     * @param integer $id
      * @param string $table
      * @return array
      */
@@ -412,7 +412,7 @@ abstract class Catalog extends database_object
     /**
      * Get enable sql filter;
      * @param string $type
-     * @param int $id
+     * @param integer $id
      * @return string
      */
     public static function get_enable_filter($type, $id)
@@ -465,7 +465,7 @@ abstract class Catalog extends database_object
      * update_enabled
      * sets the enabled flag
      * @param boolean $new_enabled
-     * @param int $catalog_id
+     * @param integer $catalog_id
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
@@ -480,8 +480,8 @@ abstract class Catalog extends database_object
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
      * @param boolean $value
-     * @param int $catalog_id
-     * @param int $level
+     * @param integer $catalog_id
+     * @param integer $level
      * @return boolean
      */
     private static function _update_item($field, $value, $catalog_id, $level)
@@ -530,7 +530,7 @@ abstract class Catalog extends database_object
      *
      * Pull all the current catalogs and return an array of ids
      * of what you find
-     * @return int[]
+     * @return integer[]
      */
     public static function get_catalogs($filter_type='')
     {
@@ -585,7 +585,7 @@ abstract class Catalog extends database_object
      * This returns an hash with the #'s for the different
      * objects that are associated with this catalog. This is used
      * to build the stats box, it also calculates time.
-     * @param int|null $catalog_id
+     * @param integer|null $catalog_id
      * @return array
      */
     public static function get_stats($catalog_id = null)
@@ -688,7 +688,7 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, albums, and artists
      * in this catalog.
-     * @param int|null $catalog_id
+     * @param integer|null $catalog_id
      * @return array
      */
     public static function count_medias($catalog_id = null)
@@ -759,7 +759,7 @@ abstract class Catalog extends database_object
     /**
      *
      * @param string $type
-     * @param int|null $user_id
+     * @param integer|null $user_id
      * @return string
      */
     public static function get_uploads_sql($type, $user_id=null)
@@ -792,7 +792,7 @@ abstract class Catalog extends database_object
      *
      * This returns an array of ids of albums that have songs in this
      * catalog
-     * @return int[]
+     * @return integer[]
      */
     public function get_album_ids()
     {
@@ -813,7 +813,7 @@ abstract class Catalog extends database_object
      *
      * This returns an array of ids of videos in this catalog
      * @param string $type
-     * @return int[]
+     * @return integer[]
      */
     public function get_video_ids($type = '')
     {
@@ -859,7 +859,7 @@ abstract class Catalog extends database_object
 
     /**
      *
-     * @param int|null $catalog_id
+     * @param integer|null $catalog_id
      * @param string $type
      * @return int
      */
@@ -885,7 +885,7 @@ abstract class Catalog extends database_object
      * get_tvshow_ids
      *
      * This returns an array of ids of tvshows in this catalog
-     * @return int[]
+     * @return integer[]
      */
     public function get_tvshow_ids()
     {
@@ -933,7 +933,7 @@ abstract class Catalog extends database_object
      *
      * This returns an array of ids of artist that have songs in this
      * catalog
-     * @return int[]
+     * @return integer[]
      */
     public function get_artist_ids()
     {
@@ -1023,10 +1023,10 @@ abstract class Catalog extends database_object
      * get_albums
      *
      * Returns an array of ids of albums that have songs in the catalogs parameter
-     * @param int $size
-     * @param int $offset
+     * @param integer $size
+     * @param integer $offset
      * @param int[]|null $catalogs
-     * @return int[]
+     * @return integer[]
     */
     public static function get_albums($size = 0, $offset = 0, $catalogs = null)
     {
@@ -1062,10 +1062,10 @@ abstract class Catalog extends database_object
      * get_albums_by_artist
      *
      * Returns an array of ids of albums that have songs in the catalogs parameter, grouped by artist
-     * @param int $size
+     * @param integer $size
      * @oaram int $offset
      * @param int[]|null $catalogs
-     * @return int[]
+     * @return integer[]
     */
     public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null)
     {
@@ -1103,7 +1103,7 @@ abstract class Catalog extends database_object
      * get_podcast_ids
      *
      * This returns an array of ids of podcasts in this catalog
-     * @return int[]
+     * @return integer[]
      */
     public function get_podcast_ids()
     {
@@ -1146,7 +1146,7 @@ abstract class Catalog extends database_object
      * get_newest_podcasts_ids
      *
      * This returns an array of ids of latest podcast episodes in this catalog
-     * @return int[]
+     * @return integer[]
      */
     public function get_newest_podcasts_ids()
     {
@@ -1190,7 +1190,7 @@ abstract class Catalog extends database_object
     /**
      *
      * @param string $type
-     * @param int $id
+     * @param integer $id
      */
     public function gather_art_item($type, $id)
     {
@@ -1488,7 +1488,7 @@ abstract class Catalog extends database_object
      * updates a single album,artist,song from the tag data
      * this can be done by 75+
      * @param string $type
-     * @param int $id
+     * @param integer $id
      */
     public static function update_single_item($type, $id)
     {
@@ -2204,7 +2204,7 @@ abstract class Catalog extends database_object
      * delete
      * Deletes the catalog and everything associated with it
      * it takes the catalog id
-     * @param int $catalog_id
+     * @param integer $catalog_id
      */
     public static function delete($catalog_id)
     {
@@ -2251,7 +2251,7 @@ abstract class Catalog extends database_object
      * exports the catalog
      * it exports all songs in the database to the given export type.
      * @param string $type
-     * @param int|null $catalog_id
+     * @param integer|null $catalog_id
      */
     public static function export($type, $catalog_id =null)
     {

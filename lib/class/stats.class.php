@@ -52,7 +52,7 @@ class Stats
      * clear
      *
      * This clears all stats for _everything_.
-     * @param int $user
+     * @param integer $user
      */
     public static function clear($user = 0)
     {
@@ -79,8 +79,8 @@ class Stats
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

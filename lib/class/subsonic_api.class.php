@@ -304,7 +304,7 @@ class Subsonic_Api
         }
 
         //stick it all together
-        $propertiesArray = !$options['autoText'] || $attributesArray || $tagsArray || ($plainText === '') ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
+        $propertiesArray = !$options['autoText'] || ! empty($attributesArray) || ! empty($tagsArray) || ($plainText === '') ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
 
         if (isset($propertiesArray['xmlns'])) {
             unset($propertiesArray['xmlns']);

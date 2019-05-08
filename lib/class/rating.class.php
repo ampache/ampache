@@ -111,7 +111,7 @@ class Rating extends database_object
             } else {
                 $rating = (int) $user_ratings[$objectid];
             }
-            parent::add_to_cache('rating_' . $type . '_user' . User::get_user_id(), $objectid, $rating);
+            $this->add_to_cache('rating_' . $type . '_user' . User::get_user_id(), $objectid, $rating);
 
             // Then store the average
             if (!isset($ratings[$objectid])) {

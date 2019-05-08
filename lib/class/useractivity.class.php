@@ -107,9 +107,9 @@ class Useractivity extends database_object
     
     /**
      * post_activity
-     * @param int $user_id
+     * @param integer $user_id
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $action
      */
     public static function post_activity($user_id, $action, $object_type, $object_id)
@@ -183,10 +183,10 @@ class Useractivity extends database_object
 
     /**
      * get_activities
-     * @param int $user_id
-     * @param int $limit
-     * @param int $since
-     * @return int[]
+     * @param integer $user_id
+     * @param integer $limit
+     * @param integer $since
+     * @return integer[]
      */
     public static function get_activities($user_id, $limit = 0, $since = 0)
     {
@@ -212,10 +212,10 @@ class Useractivity extends database_object
     
     /**
      * get_friends_activities
-     * @param int $user_id
-     * @param int $limit
-     * @param int $since
-     * @return int[]
+     * @param integer $user_id
+     * @param integer $limit
+     * @param integer $since
+     * @return integer[]
      */
     public static function get_friends_activities($user_id, $limit = 0, $since = 0)
     {

@@ -488,7 +488,7 @@ class XML_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs, $playlist_data = '', $full_xml = true)
+    public static function songs($songs, $playlist_data = array(), $full_xml = true)
     {
         $string = "<total_count>" . count($songs) . "</total_count>\n";
 

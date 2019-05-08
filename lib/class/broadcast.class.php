@@ -74,7 +74,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Constructor
-     * @param int $id
+     * @param integer $id
      */
     public function __construct($id=0)
     {
@@ -108,7 +108,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast listeners.
-     * @param int $listeners
+     * @param integer $listeners
      */
     public function update_listeners($listeners)
     {
@@ -120,7 +120,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast current song.
-     * @param int $song_id
+     * @param integer $song_id
      */
     public function update_song($song_id)
     {
@@ -259,7 +259,7 @@ class Broadcast extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -309,7 +309,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get all broadcasts.
-     * @return int[]
+     * @return integer[]
      */
     public static function get_broadcast_list()
     {
@@ -379,7 +379,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get unbroadcast link.
-     * @param int $id
+     * @param integer $id
      * @return string
      */
     public static function get_unbroadcast_link($id)
@@ -394,8 +394,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get broadcasts from an user.
-     * @param int $user_id
-     * @return int[]
+     * @param integer $user_id
+     * @return integer[]
      */
     public static function get_broadcasts($user_id)
     {
@@ -417,7 +417,7 @@ class Broadcast extends database_object implements library_item
     /*
      * Get play url.
      *
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
      * @param boolean $local

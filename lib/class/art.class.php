@@ -75,7 +75,7 @@ class Art extends database_object
      * Constructor
      * Art constructor, takes the UID of the object and the
      * object type.
-     * @param int $uid
+     * @param integer $uid
      * @param string $type
      * @param string $kind
      */
@@ -157,7 +157,7 @@ class Art extends database_object
     /**
      * set_enabled
      * Changes the value of enabled
-     * @param bool|null $value
+     * @param boolean|null $value
      */
     public static function set_enabled($value = null)
     {
@@ -307,7 +307,7 @@ class Art extends database_object
 
     /**
      * This check if an object has an associated image in db.
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $object_type
      * @param string $kind
      * @return boolean
@@ -863,10 +863,10 @@ class Art extends database_object
     /**
      * url
      * This returns the constructed URL for the art in question
-     * @param int $uid
+     * @param integer $uid
      * @param string $type
      * @param string $sid
-     * @param int|null $thumb
+     * @param integer|null $thumb
      * @return string
      */
     public static function url($uid, $type, $sid=null, $thumb=null)
@@ -980,8 +980,8 @@ class Art extends database_object
     /**
      * Migrate an object associate images to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
@@ -994,8 +994,8 @@ class Art extends database_object
     /**
      * Duplicate an object associate images to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
@@ -1020,7 +1020,7 @@ class Art extends database_object
      * gather
      * This tries to get the art in question
      * @param array $options
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather($options = array(), $limit = 0)
@@ -1106,7 +1106,7 @@ class Art extends database_object
      * gather_db
      * This function retrieves art that's already in the database
      *
-     * @param int|null $limit
+     * @param integer|null $limit
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -1123,7 +1123,7 @@ class Art extends database_object
      * gather_musicbrainz
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      */
@@ -1274,7 +1274,7 @@ class Art extends database_object
      * This returns the art from the folder of the files
      * If a limit is passed or the preferred filename is found the current
      * results set is returned
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_folder($limit = 5)
@@ -1401,7 +1401,7 @@ class Art extends database_object
      * gather_tags
      * This looks for the art in the meta-tags of the file
      * itself
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_tags($limit = 5)
@@ -1434,7 +1434,7 @@ class Art extends database_object
 
     /**
      * Gather tags from audio files.
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_song_tags($limit = 5)
@@ -1513,7 +1513,7 @@ class Art extends database_object
      * gather_google
      * Raw google search to retrieve the art, not very reliable
      *
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -1574,7 +1574,7 @@ class Art extends database_object
      * gather_lastfm
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      */
@@ -1700,7 +1700,7 @@ class Art extends database_object
 
     /**
      * Get thumb size from thumb type.
-     * @param int $thumb
+     * @param integer $thumb
      * @return array
      */
     public static function get_thumb_size($thumb)
@@ -1773,7 +1773,7 @@ class Art extends database_object
     /**
      * Display an item art.
      * @param library_item $item
-     * @param int $thumb
+     * @param integer $thumb
      * @param string $link
      * @return boolean
      */
@@ -1785,9 +1785,9 @@ class Art extends database_object
     /**
      * Display an item art.
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $name
-     * @param int $thumb
+     * @param integer $thumb
      * @param string $link
      * @param boolean $show_default
      * @param string $kind

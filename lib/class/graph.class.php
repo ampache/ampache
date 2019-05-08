@@ -113,6 +113,9 @@ class Graph
         return $sql;
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_all_type_pts($fct, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         if ($object_type == null) {

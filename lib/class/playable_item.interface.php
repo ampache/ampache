@@ -75,7 +75,7 @@ interface playable_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs();
 } // end interface

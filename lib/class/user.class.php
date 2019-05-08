@@ -1020,15 +1020,15 @@ class User extends database_object
      */
     public function update_password($new_password)
     {
-        $salt         = AmpConfig::get('secret_key');
-        $new_password = hash('sha256', $new_password);
+        //$salt             = AmpConfig::get('secret_key');
+        $hashed_password  = hash('sha256', $new_password);
+        $escaped_password = Dba::escape($hashed_password);
 
         debug_event('user.class.php', 'Updating password', 4);
 
 
-        $new_password = Dba::escape($new_password);
         $sql          = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
-        $db_results   = Dba::write($sql, array($new_password, $this->id));
+        $db_results   = Dba::write($sql, array($escaped_password, $this->id));
 
         // Clear this (temp fix)
         if ($db_results) {
@@ -1476,7 +1476,7 @@ class User extends database_object
     /**
      * get_followers
      * Get users following this user
-     * @return int[]
+     * @return integer[]
      */
     public function get_followers()
     {
@@ -1493,7 +1493,7 @@ class User extends database_object
     /**
      * get_following
      * Get users followed by this user
-     * @return int[]
+     * @return integer[]
      */
     public function get_following()
     {

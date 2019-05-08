@@ -191,7 +191,7 @@ class PrivateMsg extends database_object
      * @param integer $to_user
      * @param boolean $unread_only
      * @param integer $from_user
-     * @return int[]
+     * @return integer[]
      */
     public static function get_private_msgs($to_user, $unread_only = false, $from_user = 0)
     {

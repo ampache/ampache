@@ -215,7 +215,7 @@ class Album extends database_object implements library_item
      * to this album from the database it does not
      * pull the album or thumb art by default or
      * get any of the counts.
-     * @param int|null $album_id
+     * @param integer|null $album_id
      */
     public function __construct($album_id = null)
     {
@@ -413,8 +413,8 @@ class Album extends database_object implements library_item
      *
      * Searches for an album; if none is found, insert a new one.
      * @param string $name
-     * @param int $year
-     * @param int $disk
+     * @param integer $year
+     * @param integer $disk
      * @param string $mbid
      * @param string $mbid_group
      * @param string $album_artist
@@ -504,9 +504,9 @@ class Album extends database_object implements library_item
      * gets the songs for this album takes an optional limit
      * and an optional artist, if artist is passed it only gets
      * songs with this album + specified artist
-     * @param int $limit
+     * @param integer $limit
      * @param string $artist
-     * @return int[]
+     * @return integer[]
      */
     public function get_songs($limit = 0, $artist = '')
     {
@@ -558,7 +558,7 @@ class Album extends database_object implements library_item
     /**
      * get_group_disks_ids
      * return all album suite ids or current album if no albums
-     * @return int[]
+     * @return integer[]
      */
     public function get_group_disks_ids()
     {
@@ -573,7 +573,7 @@ class Album extends database_object implements library_item
     /**
      * get_album_suite
      * gets the album ids with the same musicbrainz identifier
-     * @param int $catalog
+     * @param integer $catalog
      * return int[]
      */
     public function get_album_suite($catalog = 0)
@@ -869,7 +869,7 @@ class Album extends database_object implements library_item
     /**
      * get_random_songs
      * gets a random number, and a random assortment of songs from this album
-     * @return int[]
+     * @return integer[]
      */
     public function get_random_songs()
     {
@@ -992,7 +992,7 @@ class Album extends database_object implements library_item
      * @param string $tags_comma
      * @param boolean $override_childs
      * @param boolean $add_to_childs
-     * @param int|null $current_id
+     * @param integer|null $current_id
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
@@ -1041,8 +1041,8 @@ class Album extends database_object implements library_item
 
     /**
      * Update album year.
-     * @param int $year
-     * @param int $album_id
+     * @param integer $year
+     * @param integer $album_id
      */
     public static function update_year($year, $album_id)
     {
@@ -1052,7 +1052,7 @@ class Album extends database_object implements library_item
     /**
      * Update album mbid group.
      * @param string $mbid_group
-     * @param int $album_id
+     * @param integer $album_id
      */
     public static function update_mbid_group($mbid_group, $album_id)
     {
@@ -1063,7 +1063,7 @@ class Album extends database_object implements library_item
     /**
      * Update album release type.
      * @param string $release_type
-     * @param int $album_id
+     * @param integer $album_id
      */
     public static function update_release_type($release_type, $album_id)
     {
@@ -1074,7 +1074,7 @@ class Album extends database_object implements library_item
     /**
      * Update an album field.
      * @param string $field
-     * @param int $album_id
+     * @param integer $album_id
      * @return boolean
      */
     private static function update_field($field, $value, $album_id)
@@ -1088,9 +1088,9 @@ class Album extends database_object implements library_item
      * get_random
      *
      * This returns a number of random albums.
-     * @param int $count
+     * @param integer $count
      * @param boolean $with_art
-     * @return int[]
+     * @return integer[]
      */
     public static function get_random($count = 1, $with_art = false)
     {

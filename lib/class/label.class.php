@@ -331,7 +331,7 @@ class Label extends database_object implements library_item
     /**
      * get_songs
      * gets the songs for this label, based on label name
-     * @return int[]
+     * @return integer[]
      */
     public function get_songs()
     {

@@ -75,7 +75,7 @@ class Api
      * end users--so we have to do a little extra work to make them work
      * internally.
      * @param string $filter
-     * @param int|string|boolean|null $value
+     * @param integer|string|boolean|null $value
      * @return boolean
      */
     public static function set_filter($filter, $value)

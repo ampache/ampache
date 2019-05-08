@@ -58,7 +58,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * Constructor
      *
      * Podcast Episode class
-     * @param int|null $podcastep_id
+     * @param integer|null $podcastep_id
      */
     public function __construct($podcastep_id = null)
     {
@@ -100,7 +100,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -256,7 +256,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @return boolean
@@ -280,7 +280,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * update_played
      * sets the played flag
      * @param boolean $new_played
-     * @param int $id
+     * @param integer $id
      */
     public static function update_played($new_played, $id)
     {
@@ -295,8 +295,8 @@ class Podcast_Episode extends database_object implements media, library_item
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
      * @param integer $value
-     * @param int $song_id
-     * @param int $level
+     * @param integer $song_id
+     * @param integer $level
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)
@@ -342,7 +342,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param boolean $local
      * @param string $player
