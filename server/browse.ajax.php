@@ -210,7 +210,7 @@ switch ($action) {
     break;
     case 'get_share_links':
         $object_type = $_REQUEST['object_type'];
-        $object_id   = (int) ($_REQUEST['object_id']);
+        $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         if (Core::is_library_item($object_type) && $object_id > 0) {
             Share::display_ui_links($object_type, $object_id);

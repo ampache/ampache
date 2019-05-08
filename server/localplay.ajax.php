@@ -99,7 +99,7 @@ switch ($action) {
                 ob_end_clean();
             break;
             case 'skip':
-                $localplay->skip((int) ($_REQUEST['id']));
+                $localplay->skip((int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT));
                 $objects = $localplay->get();
                 ob_start();
                 $browse = new Browse();
@@ -128,7 +128,7 @@ switch ($action) {
         $localplay->connect();
 
         // Scrub in the delete request
-        $id = (int) ($_REQUEST['id']);
+        $id = (int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
         $localplay->delete_track($id);
 

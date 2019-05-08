@@ -99,7 +99,7 @@ switch ($action) {
         }
     break;
     case 'show':
-        $podcast_id = (int) ($_REQUEST['podcast']);
+        $podcast_id = (int) filter_input(INPUT_GET, 'podcast', FILTER_SANITIZE_NUMBER_INT);
         if ($podcast_id > 0) {
             $podcast = new Podcast($podcast_id);
             $podcast->format();

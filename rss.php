@@ -39,6 +39,6 @@ $params = null;
 if ($type === "podcast") {
     $params                = array();
     $params['object_type'] = $_REQUEST['object_type'];
-    $params['object_id']   = $_REQUEST['object_id'];
+    $params['object_id']   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 }
 echo $rss->get_xml($params);

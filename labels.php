@@ -93,7 +93,7 @@ switch ($action) {
         }
     break;
     case 'show':
-        $label_id = (int) filter_input(INPUT_POST, 'label', FILTER_SANITIZE_NUMBER_INT);
+        $label_id = (int) filter_input(INPUT_GET, 'label', FILTER_SANITIZE_NUMBER_INT);
         if (!$label_id) {
             if (!empty($_REQUEST['name'])) {
                 $label_id = Label::lookup($_REQUEST);

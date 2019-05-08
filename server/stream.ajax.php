@@ -80,7 +80,7 @@ switch ($action) {
 
         debug_event('stream.ajax.php', 'Play type {' . $_REQUEST['playtype'] . '}', 5);
         $object_type = $_REQUEST['object_type'];
-        $object_id   = $_REQUEST['object_id'];
+        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         if (is_array($object_id)) {
             $object_id = implode(',', $object_id);
         }

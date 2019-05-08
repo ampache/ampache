@@ -44,7 +44,7 @@ switch ($action) {
         $democratic->add_vote(array(
             array(
                 'object_type' => $_REQUEST['type'],
-                'object_id' => $_REQUEST['object_id']
+                'object_id' => filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
             )
         ));
         $show_browse = true;

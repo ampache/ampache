@@ -128,7 +128,7 @@ switch ($action) {
     break;
     case 'show':
     default:
-        $msg_id = (int) ($_REQUEST['pvmsg_id']);
+        $msg_id = (int) filter_input(INPUT_GET, 'pvmsg_id', FILTER_SANITIZE_NUMBER_INT);
         $pvmsg  = new PrivateMsg($msg_id);
         if ($pvmsg->id && $pvmsg->to_user === (int) User::get_user_id()) {
             $pvmsg->format();

@@ -52,7 +52,7 @@ switch ($action) {
     case 'shouts':
         ob_start();
         $type   = $_REQUEST['object_type'];
-        $songid = $_REQUEST['object_id'];
+        $songid = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         if ($type == "song") {
             $media  = new Song($songid);

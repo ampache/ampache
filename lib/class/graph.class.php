@@ -492,7 +492,7 @@ class Graph
     public static function display_from_request()
     {
         $object_type = $_REQUEST['object_type'];
-        $object_id   = $_REQUEST['object_id'];
+        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         
         $libitem  = null;
         $owner_id = 0;

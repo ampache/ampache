@@ -80,7 +80,7 @@ switch ($action) {
     break;
     case 'play_item':
         $object_type = $_REQUEST['object_type'];
-        $object_ids  = explode(',', $_REQUEST['object_id']);
+        $object_ids  = explode(',', filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
 
         if (Core::is_playable_item($object_type)) {
             foreach ($object_ids as $object_id) {
