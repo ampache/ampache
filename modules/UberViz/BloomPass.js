@@ -1,13 +1,15 @@
+/* global THREE */
+
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
 THREE.BloomPass = function ( strength, kernelSize, sigma, resolution ) {
 
-	strength = ( strength !== undefined ) ? strength : 1;
-	kernelSize = ( kernelSize !== undefined ) ? kernelSize : 25;
-	sigma = ( sigma !== undefined ) ? sigma : 4.0;
-	resolution = ( resolution !== undefined ) ? resolution : 256;
+	strength = ( typeof strength !== "undefined" ) ? strength : 1;
+	kernelSize = ( typeof kernelSize !== "undefined" ) ? kernelSize : 25;
+	sigma = ( typeof sigma !== "undefined" ) ? sigma : 4.0;
+	resolution = ( typeof resolution !== "undefined" ) ? resolution : 256;
 
 	// render targets
 
@@ -18,8 +20,9 @@ THREE.BloomPass = function ( strength, kernelSize, sigma, resolution ) {
 
 	// copy material
 
-	if ( THREE.CopyShader === undefined )
+	if ( typeof THREE.CopyShader === "undefined" ) {
 		console.error( "THREE.BloomPass relies on THREE.CopyShader" );
+    }
 
 	var copyShader = THREE.CopyShader;
 
@@ -39,8 +42,9 @@ THREE.BloomPass = function ( strength, kernelSize, sigma, resolution ) {
 
 	// convolution material
 
-	if ( THREE.ConvolutionShader === undefined )
+	if ( typeof THREE.ConvolutionShader === "undefined" ) {
 		console.error( "THREE.BloomPass relies on THREE.ConvolutionShader" );
+    }
 
 	var convolutionShader = THREE.ConvolutionShader;
 
@@ -71,7 +75,9 @@ THREE.BloomPass.prototype = {
 
 	render: function ( renderer, writeBuffer, readBuffer, delta, maskActive ) {
 
-		if ( maskActive ) renderer.context.disable( renderer.context.STENCIL_TEST );
+		if ( maskActive ) {
+            renderer.context.disable( renderer.context.STENCIL_TEST );
+        }
 
 		// Render quad with blured scene into texture (convolution pass 1)
 
@@ -96,7 +102,9 @@ THREE.BloomPass.prototype = {
 
 		this.copyUniforms[ "tDiffuse" ].value = this.renderTargetY;
 
-		if ( maskActive ) renderer.context.enable( renderer.context.STENCIL_TEST );
+		if ( maskActive ) {
+            renderer.context.enable( renderer.context.STENCIL_TEST );
+        }
 
 		renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, readBuffer, this.clear );
 

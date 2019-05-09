@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -104,7 +104,7 @@ class Stream
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_row($db_results);
 
-            $active_streams = intval($results[0]) ?: 0;
+            $active_streams = (int) ($results[0]) ?: 0;
             debug_event('stream', 'Active transcoding streams: ' . $active_streams, 5);
 
             // We count as one for the algorithm
@@ -116,7 +116,8 @@ class Stream
             if ($bit_rate < ($min_bitrate ?: 8)) {
                 debug_event('stream', 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
-                exit();
+
+                return false;
             }
 
             // Never go over the user's sample rate
@@ -215,10 +216,13 @@ class Stream
         return self::start_process($command, array('format' => $transcode_settings['format']));
     }
 
+    /**
+     * @param Video $media
+     */
     public static function get_image_preview($media)
     {
         $image = null;
-        $sec   = ($media->time >= 30) ? 30 : intval($media->time / 2);
+        $sec   = ($media->time >= 30) ? 30 : (int) ($media->time / 2);
         $frame = gmdate("H:i:s", $sec);
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
@@ -309,13 +313,13 @@ class Stream
     public static function validate_bitrate($bitrate)
     {
         /* Round to standard bitrates */
-        $bit_rate = 16 * (floor($bitrate / 16));
+        $bit_rate = (int) (16 * (floor($bitrate / 16)));
 
         return $bit_rate;
     }
 
     /**
-     * gc_now_playing
+     * garbage_collection_now_playing
      *
      * This will garbage collect the now playing data,
      * this is done on every play start.
@@ -336,7 +340,7 @@ class Stream
      */
     public static function insert_now_playing($oid, $uid, $length, $sid, $type)
     {
-        $time = intval(time() + $length);
+        $time = (int) (time() + $length);
         $type = strtolower($type);
 
         // Ensure that this client only has a single row
@@ -384,7 +388,7 @@ class Stream
             // We need to check only for users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {
-                $current_user = $GLOBALS['user']->id;
+                $current_user = Core::get_global('user')->id;
                 $sql .= "WHERE (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
@@ -415,6 +419,8 @@ class Stream
      * check_lock_media
      *
      * This checks to see if the media is already being played.
+     * @param integer $media_id
+     * @param string $type
      */
     public static function check_lock_media($media_id, $type)
     {

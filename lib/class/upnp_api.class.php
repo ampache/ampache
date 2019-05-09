@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,6 +59,9 @@ class Upnp_Api
         return $uuidstr;
     }
 
+    /**
+     * @param string $buf
+     */
     private static function udpSend($buf, $delay=15, $host="239.255.255.250", $port=1900)
     {
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
@@ -309,6 +312,9 @@ class Upnp_Api
         return $doc;
     }
 
+    /**
+     * @param string $prmPath
+     */
     public static function _musicMetadata($prmPath, $prmQuery = '')
     {
         $root    = 'amp://music';
@@ -721,6 +727,9 @@ class Upnp_Api
         return array($maxCount, $mediaItems);
     }
 
+    /**
+     * @param string $prmPath
+     */
     public static function _videoMetadata($prmPath, $prmQuery = '')
     {
         $root    = 'amp://video';
@@ -983,6 +992,10 @@ class Upnp_Api
         return $title;
     }
 
+    /**
+     * @param Artist $artist
+     * @param string $parent
+     */
     private static function _itemArtist($artist, $parent)
     {
         return array(
@@ -995,6 +1008,10 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param Album $album
+     * @param string $parent
+     */
     private static function _itemAlbum($album, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1011,6 +1028,9 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param string $parent
+     */
     private static function _itemPlaylist($playlist, $parent)
     {
         return array(
@@ -1023,6 +1043,10 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param Search $playlist
+     * @param string $parent
+     */
     private static function _itemSmartPlaylist($playlist, $parent)
     {
         return array(
@@ -1035,6 +1059,9 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param string $parent
+     */
     public static function _itemSong($song, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1067,6 +1094,10 @@ class Upnp_Api
         );
     }
     
+    /**
+     * @param Live_Stream $radio
+     * @param string $parent
+     */
     public static function _itemLiveStream($radio, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1088,6 +1119,9 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param string $parent
+     */
     private static function _itemTVShow($tvshow, $parent)
     {
         return array(
@@ -1100,6 +1134,10 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param TVShow_Season $season
+     * @param string $parent
+     */
     private static function _itemTVShowSeason($season, $parent)
     {
         return array(
@@ -1112,6 +1150,9 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param string $parent
+     */
     private static function _itemVideo($video, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1136,6 +1177,9 @@ class Upnp_Api
         );
     }
     
+    /**
+     * @param string $parent
+     */
     private static function _itemPodcast($podcast, $parent)
     {
         return array(
@@ -1148,6 +1192,10 @@ class Upnp_Api
         );
     }
     
+    /**
+     * @param Podcast_Episode $episode
+     * @param string $parent
+     */
     private static function _itemPodcastEpisode($episode, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;

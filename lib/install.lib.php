@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@
 /**
  * split_sql
  * splits up a standard SQL dump file into distinct sql queries
+ * @param string $sql
  */
 function split_sql($sql)
 {
@@ -109,6 +110,9 @@ function install_check_server_apache()
     return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
 }
 
+/**
+ * @param string $file
+ */
 function install_check_rewrite_rules($file, $web_path, $fix = false)
 {
     if (!is_readable($file)) {
@@ -119,10 +123,11 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
     $new_lines = array();
     $lines     = explode("\n", $htaccess);
     foreach ($lines as $line) {
-        $parts = explode(' ', $line);
-        for ($i = 0; $i < count($parts); $i++) {
+        $parts   = explode(' ', $line);
+        $p_count = count($parts);
+        for ($i = 0; $i < $p_count; $i++) {
             // Matching url rewriting rule syntax
-            if ($parts[$i] == 'RewriteRule' && $i < (count($parts) - 2)) {
+            if ($parts[$i] === 'RewriteRule' && $i < ($p_count - 2)) {
                 $reprule = $parts[$i + 2];
                 if (!empty($web_path) && strpos($reprule, $web_path) !== 0) {
                     $reprule = $web_path . $reprule;
@@ -149,6 +154,10 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
     return $valid;
 }
 
+/**
+ * @param string $file
+ * @param boolean $download
+ */
 function install_rewrite_rules($file, $web_path, $download)
 {
     $final = install_check_rewrite_rules($file, $web_path, true);
@@ -162,7 +171,8 @@ function install_rewrite_rules($file, $web_path, $download)
         $browser = new Horde_Browser();
         $browser->downloadHeaders(basename($file), 'text/plain', false, strlen($final));
         echo $final;
-        exit();
+
+        return false;
     }
 
     return true;
@@ -233,8 +243,9 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
         $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
         $pieces   = split_sql($query);
+        $p_count  = count($pieces);
         $errors   = array();
-        for ($i=0; $i < count($pieces); $i++) {
+        for ($i=0; $i < $p_count; $i++) {
             $pieces[$i] = trim($pieces[$i]);
             if (!empty($pieces[$i]) && $pieces[$i] != '#') {
                 if (!$result = Dba::write($pieces[$i])) {
@@ -307,7 +318,8 @@ function install_create_config($download = false)
         $browser = new Horde_Browser();
         $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen($final));
         echo $final;
-        exit();
+
+        return false;
     }
 
     return true;
@@ -360,6 +372,9 @@ function install_create_account($username, $password, $password2)
     return true;
 } // install_create_account
 
+/**
+ * @param string $command
+ */
 function command_exists($command)
 {
     if (!function_exists('proc_open')) {
@@ -440,8 +455,8 @@ function install_config_use_case($case)
         'userflags' => 'true',
         'sociable' => 'true',
         'licensing' => 'false',
-        'wanted' => 'true',
-        'channel' => 'true',
+        'wanted' => 'false',
+        'channel' => 'false',
         'live_stream' => 'true',
         'allow_public_registration' => 'false',
         'cookie_disclaimer' => 'false',
@@ -451,7 +466,7 @@ function install_config_use_case($case)
     $dbconfig = array(
         'download' => '1',
         'share' => '0',
-        'allow_video' => '1',
+        'allow_video' => '0',
         'home_now_playing' => '1',
         'home_recently_played' => '1'
     );
@@ -501,7 +516,6 @@ function install_config_backends(array $backends)
 {
     $dbconfig = array(
         'subsonic_backend' => '0',
-        'plex_backend' => '0',
         'daap_backend' => '0',
         'upnp_backend' => '0',
         'webdav_backend' => '0',
@@ -512,9 +526,6 @@ function install_config_backends(array $backends)
         switch ($backend) {
             case 'subsonic':
                 $dbconfig['subsonic_backend'] = '1';
-                break;
-            case 'plex':
-                $dbconfig['plex_backend'] = '1';
                 break;
             case 'upnp':
                 $dbconfig['upnp_backend']         = '1';

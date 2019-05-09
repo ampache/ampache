@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,7 +39,7 @@ class Userflag extends database_object
      */
     public function __construct($id, $type)
     {
-        $this->id   = intval($id);
+        $this->id   = (int) ($id);
         $this->type = $type;
 
         return true;
@@ -49,6 +49,7 @@ class Userflag extends database_object
       * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
+     * @param string $type
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
@@ -57,7 +58,7 @@ class Userflag extends database_object
         }
 
         if ($user_id === null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = Core::get_global('user')->id;
         }
 
         $userflags = array();
@@ -72,24 +73,25 @@ class Userflag extends database_object
             $userflags[$row['object_id']] = true;
         }
 
-        foreach ($ids as $id) {
-            if (!isset($userflags[$id])) {
+        foreach ($ids as $objectid) {
+            if (!isset($userflags[$objectid])) {
                 $userflag = 0;
             } else {
-                $userflag = intval($userflags[$id]);
+                $userflag = (int) ($userflags[$objectid]);
             }
-            parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $id, $userflag);
+            parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, $userflag);
         }
 
         return true;
     } // build_cache
 
     /**
-     * gc
+     * garbage_collection
      *
      * Remove userflag for items that no longer exist.
+     * @param string $object_type
      */
-    public static function gc($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
 
@@ -107,10 +109,13 @@ class Userflag extends database_object
         }
     }
 
+    /**
+     * @param boolean $get_date
+     */
     public function get_flag($user_id = null, $get_date = null)
     {
         if ($user_id === null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = Core::get_global('user')->id;
         }
 
         $key = 'userflag_' . $this->type . '_user' . $user_id;
@@ -144,9 +149,9 @@ class Userflag extends database_object
     public function set_flag($flagged, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = Core::get_global('user')->id;
         }
-        $user_id = intval($user_id);
+        $user_id = (int) ($user_id);
 
         debug_event('Userflag', "Setting userflag for $this->type $this->id to $flagged", 5);
 
@@ -193,13 +198,15 @@ class Userflag extends database_object
     /**
      * get_latest_sql
      * Get the latest sql
+     * @param string|null $type
+     * @param string $user_id
      */
     public static function get_latest_sql($type, $user_id=null)
     {
         if ($user_id === null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = Core::get_global('user')->id;
         }
-        $user_id = intval($user_id);
+        $user_id = (int) ($user_id);
 
         $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
         if ($user_id <= 0) {
@@ -229,17 +236,19 @@ class Userflag extends database_object
     /**
      * get_latest
      * Get the latest user flagged objects
+     * @param string $type
+     * @param string $user_id
      */
     public static function get_latest($type=null, $user_id=null, $count='', $offset='')
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
         }
-        $count = intval($count);
+        $count = (int) ($count);
         if (!$offset) {
             $limit = $count;
         } else {
-            $limit = intval($offset) . "," . $count;
+            $limit = (int) ($offset) . "," . $count;
         }
 
         /* Select Top objects counting by # of rows */

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -137,8 +137,8 @@ class Artist extends database_object implements library_item
      * Artist
      * Artist class, for modifing a artist
      * Takes the ID of the artist and pulls the info from the db
-     * @param int|null $id
-     * @param int $catalog_init
+     * @param integer|null $id
+     * @param integer $catalog_init
      */
     public function __construct($id=null, $catalog_init=0)
     {
@@ -179,11 +179,11 @@ class Artist extends database_object implements library_item
     } // construct_from_array
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused artists
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ' .
             'LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` ' .
@@ -253,10 +253,10 @@ class Artist extends database_object implements library_item
      * get_albums
      * gets the album ids that this artist is a part
      * of
-     * @param int|null $catalog
+     * @param integer|null $catalog
      * @param boolean $ignoreAlbumGroups
      * @param boolean $group_release_type
-     * @return int[]
+     * @return integer[]
      */
     public function get_albums($catalog = null, $ignoreAlbumGroups = false, $group_release_type = false)
     {
@@ -332,7 +332,7 @@ class Artist extends database_object implements library_item
     /**
      * get_songs
      * gets the songs for this artist
-     * @return int[]
+     * @return integer[]
      */
     public function get_songs()
     {
@@ -358,7 +358,7 @@ class Artist extends database_object implements library_item
     /**
      * get_random_songs
      * Gets the songs from this artist in a random order
-     * @return int[]
+     * @return integer[]
      */
     public function get_random_songs()
     {
@@ -385,7 +385,7 @@ class Artist extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
-     * @param int $catalog
+     * @param integer $catalog
      * @return array
      */
     private function _get_extra_info($catalog=0, $limit_threshold ='')
@@ -592,7 +592,7 @@ class Artist extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -640,7 +640,7 @@ class Artist extends database_object implements library_item
     public function can_edit($user = null)
     {
         if (!$user) {
-            $user = $GLOBALS['user']->id;
+            $user = Core::get_global('user')->id;
         }
 
         if (!$user) {
@@ -785,17 +785,17 @@ class Artist extends database_object implements library_item
                 $current_id = $artist_id;
                 Stats::migrate('artist', $this->id, $artist_id);
                 Art::migrate('artist', $this->id, $artist_id);
-                self::gc();
+                self::garbage_collection();
             } // end if it changed
 
             if ($updated) {
                 foreach ($songs as $song_id) {
                     Song::update_utime($song_id);
                 }
-                Stats::gc();
-                Rating::gc();
-                Userflag::gc();
-                Useractivity::gc();
+                Stats::garbage_collection();
+                Rating::garbage_collection();
+                Userflag::garbage_collection();
+                Useractivity::garbage_collection();
             } // if updated
         } else {
             if ($this->mbid != $mbid) {
@@ -844,7 +844,8 @@ class Artist extends database_object implements library_item
      * Update tags of artists and/or albums
      * @param string $tags_comma
      * @param boolean $override_childs
-     * @param int|null $current_id
+     * @param integer|null $current_id
+     * @param boolean $add_to_childs
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
@@ -867,7 +868,7 @@ class Artist extends database_object implements library_item
      * Update artist information.
      * @param string $summary
      * @param string $placeformed
-     * @param int $yearformed
+     * @param integer $yearformed
      * @return boolean
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
@@ -884,7 +885,7 @@ class Artist extends database_object implements library_item
 
     /**
      * Update artist associated user.
-     * @param int $user
+     * @param integer $user
      * @return boolean
      */
     public function update_artist_user($user)
@@ -898,11 +899,11 @@ class Artist extends database_object implements library_item
     {
         $deleted   = true;
         $album_ids = $this->get_albums();
-        foreach ($album_ids as $id) {
-            $album   = new Album($id);
+        foreach ($album_ids as $albumid) {
+            $album   = new Album($albumid);
             $deleted = $album->remove_from_disk();
             if (!$deleted) {
-                debug_event('artist', 'Error when deleting the album `' . $id . '`.', 1);
+                debug_event('artist', 'Error when deleting the album `' . $albumid . '`.', 1);
                 break;
             }
         }
@@ -911,11 +912,11 @@ class Artist extends database_object implements library_item
             $sql     = "DELETE FROM `artist` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::gc('artist', $this->id);
-                Userflag::gc('artist', $this->id);
-                Rating::gc('artist', $this->id);
-                Shoutbox::gc('artist', $this->id);
-                Useractivity::gc('artist', $this->id);
+                Art::garbage_collection('artist', $this->id);
+                Userflag::garbage_collection('artist', $this->id);
+                Rating::garbage_collection('artist', $this->id);
+                Shoutbox::garbage_collection('artist', $this->id);
+                Useractivity::garbage_collection('artist', $this->id);
             }
         }
 

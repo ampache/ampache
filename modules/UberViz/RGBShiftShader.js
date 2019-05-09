@@ -1,3 +1,5 @@
+/* global THREE */
+
 /**
  * @author felixturner / http://airtight.cc/
  *

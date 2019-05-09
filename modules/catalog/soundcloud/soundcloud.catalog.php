@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -138,7 +138,7 @@ class Catalog_soundcloud extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = intval($catalog_id);
+            $this->id = (int) ($catalog_id);
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -197,8 +197,8 @@ class Catalog_soundcloud extends Catalog
         $authurl = $api->getAuthorizeUrl(array('scope' => 'non-expiring'));
         echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
         echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
-        if ($_REQUEST['action']) {
-            echo "<input type='hidden' name='action' value='" . scrub_in($_REQUEST['action']) . "' />";
+        if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+            echo "<input type='hidden' name='action' value='" . scrub_in(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) . "' />";
             echo "<input type='hidden' name='catalogs[]' value='" . $this->id . "' />";
         }
         echo "<input type='hidden' name='perform_ready' value='true' />";
@@ -289,7 +289,7 @@ class Catalog_soundcloud extends Catalog
                             $data['comment'] = $song->description;
                             $data['file']    = $song->stream_url . '.mp3'; // Always stream as mp3, if evolve => $song->original_format;
                             $data['size']    = $song->original_content_size;
-                            $data['time']    = intval($song->duration / 1000);
+                            $data['time']    = (int) ($song->duration / 1000);
                             if ($this->check_remote_song($data)) {
                                 debug_event('soundcloud_catalog', 'Skipping existing song ' . $data['file'], 5);
                             } else {

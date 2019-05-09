@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -204,7 +204,7 @@ class Label extends database_object implements library_item
     public function can_edit($user = null)
     {
         if (!$user) {
-            $user = $GLOBALS['user']->id;
+            $user = Core::get_global('user')->id;
         }
 
         if (!$user) {
@@ -258,7 +258,7 @@ class Label extends database_object implements library_item
         $address       = $data['address'];
         $email         = $data['email'];
         $website       = $data['website'];
-        $user          = $data['user'] ?: $GLOBALS['user']->id;
+        $user          = $data['user'] ?: Core::get_global('user')->id;
         $creation_date = $data['creation_date'] ?: time();
 
         $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) " .
@@ -291,7 +291,7 @@ class Label extends database_object implements library_item
         return $ret;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
         // Don't remove labels, it could still be used as description in a search
     }
@@ -308,6 +308,9 @@ class Label extends database_object implements library_item
         return $results;
     }
 
+    /**
+     * @param integer $artist_id
+     */
     public function add_artist_assoc($artist_id)
     {
         $sql = "INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)";
@@ -315,6 +318,9 @@ class Label extends database_object implements library_item
         return Dba::write($sql, array($this->id, $artist_id, time()));
     }
 
+    /**
+     * @param integer $artist_id
+     */
     public function remove_artist_assoc($artist_id)
     {
         $sql = "DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?";
@@ -325,7 +331,7 @@ class Label extends database_object implements library_item
     /**
      * get_songs
      * gets the songs for this label, based on label name
-     * @return int[]
+     * @return integer[]
      */
     public function get_songs()
     {
@@ -354,11 +360,11 @@ class Label extends database_object implements library_item
         $sql     = "DELETE FROM `label` WHERE `id` = ?";
         $deleted = Dba::write($sql, array($this->id));
         if ($deleted) {
-            Art::gc('label', $this->id);
-            Userflag::gc('label', $this->id);
-            Rating::gc('label', $this->id);
-            Shoutbox::gc('label', $this->id);
-            Useractivity::gc('label', $this->id);
+            Art::garbage_collection('label', $this->id);
+            Userflag::garbage_collection('label', $this->id);
+            Rating::garbage_collection('label', $this->id);
+            Shoutbox::garbage_collection('label', $this->id);
+            Useractivity::garbage_collection('label', $this->id);
         }
 
         return $deleted;
@@ -376,6 +382,9 @@ class Label extends database_object implements library_item
         return $results;
     }
 
+    /**
+     * @param integer $artist_id
+     */
     public static function get_labels($artist_id)
     {
         $sql = "SELECT `label`.`id`, `label`.`name` FROM `label` " .
@@ -422,6 +431,8 @@ class Label extends database_object implements library_item
     /**
      * update_label_list
      * Update the labels list based on commated list (ex. label1,label2,label3,..)
+     * @param integer $artist_id
+     * @param boolean $overwrite
      */
     public static function update_label_list($labels_comma, $artist_id, $overwrite)
     {

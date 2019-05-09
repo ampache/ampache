@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,11 +61,11 @@ class TVShow_Season extends database_object implements library_item
     } //constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused tv shows seasons
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
             "WHERE `tvshow_episode`.`id` IS NULL";
@@ -204,7 +204,7 @@ class TVShow_Season extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -321,11 +321,11 @@ class TVShow_Season extends database_object implements library_item
     {
         $deleted   = true;
         $video_ids = $this->get_episodes();
-        foreach ($video_ids as $id) {
-            $video   = Video::create_from_id($id);
+        foreach ($video_ids as $videos) {
+            $video   = Video::create_from_id($videos);
             $deleted = $video->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow_season', 'Error when deleting the video `' . $id . '`.', 1);
+                debug_event('tvshow_season', 'Error when deleting the video `' . $videos . '`.', 1);
                 break;
             }
         }
@@ -334,11 +334,11 @@ class TVShow_Season extends database_object implements library_item
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::gc('tvshow_season', $this->id);
-                Userflag::gc('tvshow_season', $this->id);
-                Rating::gc('tvshow_season', $this->id);
-                Shoutbox::gc('tvshow_season', $this->id);
-                Useractivity::gc('tvshow_season', $this->id);
+                Art::garbage_collection('tvshow_season', $this->id);
+                Userflag::garbage_collection('tvshow_season', $this->id);
+                Rating::garbage_collection('tvshow_season', $this->id);
+                Shoutbox::garbage_collection('tvshow_season', $this->id);
+                Useractivity::garbage_collection('tvshow_season', $this->id);
             }
         }
 

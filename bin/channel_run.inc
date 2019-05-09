@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,7 +42,7 @@ if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
 
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
-            $chanid = intval($_SERVER['argv'][++$x]);
+            $chanid = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('- Channel ' . $chanid);
         }
         elseif ($_SERVER['argv'][$x] == "-v") {
@@ -50,7 +50,7 @@ if ($cargv > 1) {
             $verbose = true;
         }
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
-            $port = intval($_SERVER['argv'][++$x]);
+            $port = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('- Port ' . $port);
         }
     }
@@ -58,7 +58,7 @@ if ($cargv > 1) {
 
 if ($chanid <= 0) {
     usage();
-    exit;
+    return false;
 }
 
 // Transcode is mandatory to have consistent stream codec
@@ -83,7 +83,7 @@ if ($port <= 0) {
         $address = "127.0.0.1";
         // Try to find an available port
         for ($p = 8200; $p < 8300; ++$p) {
-            $connection = @fsockopen($address, $p);
+            $connection = fsockopen($address, $p);
             if (is_resource($connection)) {
                 fclose($connection);
             } else {
@@ -154,16 +154,18 @@ while(true)
         //debug_event('channel', 'time_offset : '. $time_offset, '5');
         //debug_event('channel', 'last_stream: '.$last_stream, '5');
 
-        if ($time_offset < 1)
-            usleep(1000000 - ($time_offset * 1000000)); // always at least 1 second between cycles
+        if ($time_offset < 1) {
+            usleep(1000000 - ($time_offset * 1000000));
+        } // always at least 1 second between cycles
 
         $last_stream = microtime(true);
         $mtime = ($time_offset > 1) ? $time_offset : 1;
         $nb_chunks = ceil(($mtime * ($channel->bitrate+1/100*$channel->bitrate) * 1000 / 8) / $channel->chunk_size); // channel->bitrate+1% ... leave some headroom for metadata / headers
 
         // we only send full blocks, save remainder and apply when appropriate: allows more granular/arbitrary average bitrates
-        if ($nb_chunks - ($mtime * ($channel->bitrate+1/100*$channel->bitrate) * 1000 / 8 / $channel->chunk_size) > 0)
+        if ($nb_chunks - ($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8 / $channel->chunk_size) > 0) {
             $nb_chunks_remainder += $nb_chunks - ($mtime * $channel->bitrate * 1000 / 8 / $channel->chunk_size);
+        }
         if ($nb_chunks >= 1 && $nb_chunks_remainder >= 1){
             $nb_chunks -= 1;
             $nb_chunks_remainder -= 1;
@@ -294,7 +296,9 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     $key = array_search($sock, $client_socks);
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
-    @fclose($sock);
+    if (fclose($sock) === false) {
+        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed.');
+    }
     $channel->update_listeners(count($client_socks));
     debug_event('channel', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', '5');
     echo "Client disconnected.\n";
@@ -328,8 +332,9 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
     }
 
     $headers = explode("\n", $data);
+    $h_count = count($headers);
 
-    if (count($headers) > 0) {
+    if ($h_count > 0) {
         $cmd = explode(" ", $headers[0]);
         if ($cmd['0'] == 'GET') {
             switch ($cmd['1']) {
@@ -341,7 +346,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                             );
 
                     //debug_event('channel', 'HTTP HEADERS: '.$data,'5');
-                    for ($i = 1; $i < count($headers); $i++) {
+                    for ($i = 1; $i < $h_count; $i++) {
                         $headerpart = explode(":", $headers[$i], 2);
                         $header = strtolower(trim($headerpart[0]));
                         $value = trim($headerpart[1]);
@@ -571,8 +576,8 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
 
 function strtohex($x) {
     $s='';
-    foreach(str_split($x) as $c) $s.=sprintf("%02X",ord($c));
+    foreach (str_split($x) as $c) {
+        $s .= sprintf("%02X", ord($c));
+    }
     return($s);
 }
-
-?>

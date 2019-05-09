@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,10 +24,13 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'search':
         $search = $_REQUEST['search'];
         $target = $_REQUEST['target'];
@@ -50,8 +53,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $artist = new Artist($id);
+            foreach ($sres as $artistid) {
+                $artist = new Artist($artistid);
                 $artist->format(false);
                 $results[] = array(
                     'type' => T_('Artists'),
@@ -79,8 +82,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $album = new Album($id);
+            foreach ($sres as $albumid) {
+                $album = new Album($albumid);
                 $album->format(true);
                 $a_title = $album->f_title;
                 if ($album->disk) {
@@ -112,8 +115,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $song = new Song($id);
+            foreach ($sres as $songid) {
+                $song = new Song($songid);
                 $song->format(false);
                 $results[] = array(
                     'type' => T_('Songs'),
@@ -141,8 +144,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $playlist = new Playlist($id);
+            foreach ($sres as $playlistid) {
+                $playlist = new Playlist($playlistid);
                 $playlist->format(false);
                 $results[] = array(
                     'type' => T_('Playlists'),
@@ -171,8 +174,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $label = new Label($id);
+            foreach ($sres as $labelid) {
+                $label = new Label($labelid);
                 $label->format(false);
                 $results[] = array(
                     'type' => T_('Labels'),
@@ -221,8 +224,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $user = new User($id);
+            foreach ($sres as $userid) {
+                $user = new User($userid);
                 $user->format();
                 $avatar    = $user->get_avatar();
                 $results[] = array(

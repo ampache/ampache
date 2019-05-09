@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,18 +25,22 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+$action  = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'show_broadcasts':
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_broadcasts_dialog.inc.php');
         $results = ob_get_contents();
         ob_end_clean();
         echo $results;
-        exit;
+
+        return false;
     case 'broadcast':
         $broadcast_id = $_GET['broadcast_id'];
         if (empty($broadcast_id)) {

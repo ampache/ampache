@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -75,7 +75,7 @@ class Art extends database_object
      * Constructor
      * Art constructor, takes the UID of the object and the
      * object type.
-     * @param int $uid
+     * @param integer $uid
      * @param string $type
      * @param string $kind
      */
@@ -85,10 +85,13 @@ class Art extends database_object
             return false;
         }
         $this->type = $type;
-        $this->uid  = intval($uid);
+        $this->uid  = (int) ($uid);
         $this->kind = $kind;
     } // constructor
 
+    /**
+     * @param string $type
+     */
     public static function is_valid_type($type)
     {
         return (Core::is_library_item($type) || $type == 'user');
@@ -126,11 +129,7 @@ class Art extends database_object
     public static function _auto_init()
     {
         if (!isset($_SESSION['art_enabled'])) {
-            /*if (isset($_COOKIE['art_enabled'])) {
-                $_SESSION['art_enabled'] = $_COOKIE['art_enabled'];
-            } else {*/
             $_SESSION['art_enabled'] = true;
-            //}
         }
 
         self::$enabled = make_bool($_SESSION['art_enabled']);
@@ -154,11 +153,11 @@ class Art extends database_object
     /**
      * set_enabled
      * Changes the value of enabled
-     * @param bool|null $value
+     * @param boolean|null $value
      */
     public static function set_enabled($value = null)
     {
-        if (is_null($value)) {
+        if ($value === null) {
             self::$enabled = self::$enabled ? false : true;
         } else {
             self::$enabled = make_bool($value);
@@ -211,12 +210,14 @@ class Art extends database_object
         // Check to make sure PHP:GD exists.  If so, we can sanity check
         // the image.
         if (function_exists('ImageCreateFromString')) {
-            $image = @ImageCreateFromString($source);
+            $image = ImageCreateFromString($source);
             if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('Art', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
-            @imagedestroy($image);
+            if (imagedestroy($image) === false) {
+                throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed.');
+            }
         }
 
         return $test;
@@ -234,7 +235,7 @@ class Art extends database_object
     public function get($raw=false)
     {
         // Get the data either way
-        if (!$this->get_db()) {
+        if (!$this->has_db_info()) {
             return false;
         }
 
@@ -247,13 +248,13 @@ class Art extends database_object
 
 
     /**
-     * get_db
+     * has_db_info
      * This pulls the information out from the database, depending
      * on if we want to resize and if there is not a thumbnail go
      * ahead and try to resize
      * @return boolean
      */
-    public function get_db()
+    public function has_db_info()
     {
         $sql        = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, array($this->type, $this->uid, $this->kind));
@@ -298,11 +299,11 @@ class Art extends database_object
         } // if no thumb, but art and we want to resize
 
         return true;
-    } // get_db
+    } // has_db_info
 
     /**
      * This check if an object has an associated image in db.
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $object_type
      * @param string $kind
      * @return boolean
@@ -401,8 +402,8 @@ class Art extends database_object
         }
 
         $dimensions = Core::image_dimensions($source);
-        $width      = intval($dimensions['width']);
-        $height     = intval($dimensions['height']);
+        $width      = (int) ($dimensions['width']);
+        $height     = (int) ($dimensions['height']);
         $sizetext   = 'original';
 
         if (!self::check_dimensions($dimensions)) {
@@ -423,10 +424,10 @@ class Art extends database_object
 
     public static function check_dimensions($dimensions)
     {
-        $w = intval($dimensions['width']);
-        $h = intval($dimensions['height']);
+        $width  = (int) ($dimensions['width']);
+        $height = (int) ($dimensions['height']);
 
-        if ($w > 0 && $h > 0) {
+        if ($width > 0 && $height > 0) {
             $minw = AmpConfig::get('album_art_min_width');
             $maxw = AmpConfig::get('album_art_max_width');
             $minh = AmpConfig::get('album_art_min_height');
@@ -447,24 +448,24 @@ class Art extends database_object
             }
 
             // minimum width is set and current width is too low
-            if ($minw > 0 && $w < $minw) {
-                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$w).", 1);
+            if ($minw > 0 && $width < $minw) {
+                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$width).", 1);
 
                 return false;
             }
             // max width is set and current width is too high
-            if ($maxw > 0 && $w > $maxw) {
-                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$w).", 1);
+            if ($maxw > 0 && $width > $maxw) {
+                debug_event('Art', "Image width not in range (min=$minw, max=$maxw, current=$width).", 1);
 
                 return false;
             }
-            if ($minh > 0 && $h < $minh) {
-                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$h).", 1);
+            if ($minh > 0 && $height < $minh) {
+                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$height).", 1);
 
                 return false;
             }
-            if ($maxh > 0 && $h > $maxh) {
-                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$h).", 1);
+            if ($maxh > 0 && $height > $maxh) {
+                debug_event('Art', "Image height not in range (min=$minh, max=$maxh, current=$height).", 1);
 
                 return false;
             }
@@ -510,6 +511,11 @@ class Art extends database_object
         return $path;
     }
 
+    /**
+     * @param string $source
+     * @param string $type
+     * @param integer $uid
+     */
     private static function write_to_dir($source, $sizetext, $type, $uid, $kind)
     {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
@@ -527,6 +533,10 @@ class Art extends database_object
         return true;
     }
 
+    /**
+     * @param string $type
+     * @param integer $uid
+     */
     private static function read_from_dir($sizetext, $type, $uid, $kind)
     {
         $path = self::get_dir_on_disk($type, $uid, $kind);
@@ -558,6 +568,9 @@ class Art extends database_object
         }
     }
 
+    /**
+     * @param false|string $path
+     */
     private static function delete_rec_dir($path)
     {
         debug_event('Art', 'Deleting ' . $path . ' directory...', 5);
@@ -605,8 +618,8 @@ class Art extends database_object
             return false;
         }
 
-        $width    = intval($size['width']);
-        $height   = intval($size['height']);
+        $width    = (int) ($size['width']);
+        $height   = (int) ($size['height']);
         $sizetext = $width . 'x' . $height;
 
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
@@ -846,10 +859,10 @@ class Art extends database_object
     /**
      * url
      * This returns the constructed URL for the art in question
-     * @param int $uid
+     * @param integer $uid
      * @param string $type
      * @param string $sid
-     * @param int|null $thumb
+     * @param integer|null $thumb
      * @return string
      */
     public static function url($uid, $type, $sid=null, $thumb=null)
@@ -920,10 +933,11 @@ class Art extends database_object
     } // url
 
     /**
-     * gc
+     * garbage_collection
      * This cleans up art that no longer has a corresponding object
+     * @param string $object_type
      */
-    public static function gc($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array('album', 'artist','tvshow','tvshow_season','video','user','live_stream');
 
@@ -962,8 +976,8 @@ class Art extends database_object
     /**
      * Migrate an object associate images to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
@@ -976,8 +990,8 @@ class Art extends database_object
     /**
      * Duplicate an object associate images to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
@@ -1002,7 +1016,7 @@ class Art extends database_object
      * gather
      * This tries to get the art in question
      * @param array $options
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather($options = array(), $limit = 0)
@@ -1043,7 +1057,7 @@ class Art extends database_object
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {
-                    if ($plugin->load($GLOBALS['user'])) {
+                    if ($plugin->load(Core::get_global('user'))) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }
@@ -1088,13 +1102,13 @@ class Art extends database_object
      * gather_db
      * This function retrieves art that's already in the database
      *
-     * @param int|null $limit
+     * @param integer|null $limit
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function gather_db($limit = null)
     {
-        if ($this->get_db()) {
+        if ($this->has_db_info()) {
             return array('db' => true);
         }
 
@@ -1105,7 +1119,7 @@ class Art extends database_object
      * gather_musicbrainz
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      */
@@ -1233,8 +1247,7 @@ class Art extends database_object
                     debug_event('mbz-gatherart', "Matched coverart site: " . $casite['name'], '5');
                     if (preg_match($casite['regexp'], $arurl, $matches)) {
                         $num_found++;
-                        $url = '';
-                        eval("\$url = \"$casite[imguri]\";");
+                        $url = $casite[imguri];
                         debug_event('mbz-gatherart', "Generated URL added: " . $url, '5');
                         $images[] = array(
                             'url' => $url,
@@ -1257,7 +1270,7 @@ class Art extends database_object
      * This returns the art from the folder of the files
      * If a limit is passed or the preferred filename is found the current
      * results set is returned
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_folder($limit = 5)
@@ -1384,7 +1397,7 @@ class Art extends database_object
      * gather_tags
      * This looks for the art in the meta-tags of the file
      * itself
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_tags($limit = 5)
@@ -1417,7 +1430,7 @@ class Art extends database_object
 
     /**
      * Gather tags from audio files.
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_song_tags($limit = 5)
@@ -1496,7 +1509,7 @@ class Art extends database_object
      * gather_google
      * Raw google search to retrieve the art, not very reliable
      *
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -1557,7 +1570,7 @@ class Art extends database_object
      * gather_lastfm
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      */
@@ -1683,7 +1696,7 @@ class Art extends database_object
 
     /**
      * Get thumb size from thumb type.
-     * @param int $thumb
+     * @param integer $thumb
      * @return array
      */
     public static function get_thumb_size($thumb)
@@ -1739,6 +1752,11 @@ class Art extends database_object
                 /* Popup Web Player size */
             case 11:
                 /* Large view browse size */
+            case 12:
+                /* Search preview size */
+                 $size['height'] = 150;
+                 $size['width']  = 150;
+            break;
             default:
                 $size['height']   = 200;
                 $size['width']    = 200;
@@ -1751,7 +1769,7 @@ class Art extends database_object
     /**
      * Display an item art.
      * @param library_item $item
-     * @param int $thumb
+     * @param integer $thumb
      * @param string $link
      * @return boolean
      */
@@ -1763,9 +1781,9 @@ class Art extends database_object
     /**
      * Display an item art.
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $name
-     * @param int $thumb
+     * @param integer $thumb
      * @param string $link
      * @param boolean $show_default
      * @param string $kind
@@ -1807,13 +1825,13 @@ class Art extends database_object
         // This to keep browser cache feature but force a refresh in case image just changed
         if (Art::has_db($object_id, $object_type)) {
             $art = new Art($object_id, $object_type);
-            if ($art->get_db()) {
+            if ($art->has_db_info()) {
                 $imgurl .= '&fooid=' . $art->id;
             }
         }
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
         
-        if ($size['height'] > 150) {
+        if ($size['height'] >= 150) {
             echo "<div class=\"item_art_play\">";
             echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' . $object_id);
             echo "</div>";
@@ -1822,7 +1840,7 @@ class Art extends database_object
         if ($prettyPhoto) {
             $libitem = new $object_type($object_id);
             echo "<div class=\"item_art_actions\">";
-            if ($GLOBALS['user']->has_access(50) || ($GLOBALS['user']->has_access(25) && $GLOBALS['user']->id == $libitem->get_user_owner())) {
+            if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";

@@ -1,3 +1,5 @@
+/* global THREE */
+
 /**
  * @author alteredq / http://alteredqualia.com/
  *
@@ -11,7 +13,7 @@ THREE.ConvolutionShader = {
 	defines: {
 
 		"KERNEL_SIZE_FLOAT": "25.0",
-		"KERNEL_SIZE_INT": "25",
+		"KERNEL_SIZE_INT": "25"
 
 	},
 
@@ -78,7 +80,9 @@ THREE.ConvolutionShader = {
 
 		var i, values, sum, halfWidth, kMaxKernelSize = 25, kernelSize = 2 * Math.ceil( sigma * 3.0 ) + 1;
 
-		if ( kernelSize > kMaxKernelSize ) kernelSize = kMaxKernelSize;
+		if ( kernelSize > kMaxKernelSize ) {
+            kernelSize = kMaxKernelSize;
+        }
 		halfWidth = ( kernelSize - 1 ) * 0.5;
 
 		values = new Array( kernelSize );
@@ -92,7 +96,9 @@ THREE.ConvolutionShader = {
 
 		// normalize the kernel
 
-		for ( i = 0; i < kernelSize; ++i ) values[ i ] /= sum;
+		for ( i = 0; i < kernelSize; ++i ) {
+            values[ i ] /= sum;
+        }
 
 		return values;
 

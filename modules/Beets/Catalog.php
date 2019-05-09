@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -68,7 +68,7 @@ abstract class Catalog extends \Catalog
     public function __construct($catalog_id = null)
     { // TODO: Basic constructer should be provided from parent
         if ($catalog_id) {
-            $this->id = intval($catalog_id);
+            $this->id = (int) ($catalog_id);
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -265,8 +265,8 @@ abstract class Catalog extends \Catalog
            $this->deleteSongs($this->songs);
         }
         if (Song::isCustomMetadataEnabled()) {
-            \Lib\Metadata\Repository\Metadata::gc();
-            \Lib\Metadata\Repository\MetadataField::gc();
+            \Lib\Metadata\Repository\Metadata::garbage_collection();
+            \Lib\Metadata\Repository\MetadataField::garbage_collection();
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 

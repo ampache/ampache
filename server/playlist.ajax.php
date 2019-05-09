@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,11 +24,14 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+$action  = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'delete_track':
         // Create the object and remove the track
         $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -57,13 +60,13 @@ switch ($_REQUEST['action']) {
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface', '25')) {
-                debug_event('DENIED', 'Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist', '1');
+                debug_event('DENIED', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', '1');
                 break;
             }
 
             $name        = $_REQUEST['name'];
             if (empty($name)) {
-                $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s", time());
+                $name = Core::get_global('user')->username . ' - ' . date("Y-m-d H:i:s", time());
             }
             $playlist_id = Playlist::create($name, 'private');
             if (!$playlist_id) {
@@ -91,7 +94,7 @@ switch ($_REQUEST['action']) {
             }
         } else {
             debug_event('playlist', 'Adding all medias of current playlist...', 5);
-            $medias = $GLOBALS['user']->playlist->get_items();
+            $medias = Core::get_global('user')->playlist->get_items();
         }
 
         if (count($medias) > 0) {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,6 +41,7 @@ define('TABLE_RENDERED', 1);
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
         <title> <?php echo AmpConfig::get('site_title'); ?> </title>
     </head>
@@ -68,27 +69,21 @@ define('TABLE_RENDERED', 1);
                     <?php AmpError::display('general'); ?>
 
                     <div class="formValidation">
-                        <a rel="nohtml" class="button" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
+                        <?php
+                        if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
+                            echo "<a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=\"" . $web_path . "/lostpassword.php\">Lost password</a>";
+                        } ?>
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
                         <input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
                         <input type="hidden" name="action" value="login" />
 
                         <?php if (AmpConfig::get('allow_public_registration')) {
-    ?>
+                            ?>
                             <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                         <?php
-} // end if allow_public_registration?>
+                        } // end if allow_public_registration?>
                     </div>
                 </form>
         <?php
-        if (@is_readable(AmpConfig::get('prefix') . '/config/motd.php')) {
-            ?>
-            </div>
-            <div id="motd">
-        <?php
-                UI::show_box_top(T_('Message of the Day'));
-            require_once AmpConfig::get('prefix') . '/config/motd.php';
-            UI::show_box_bottom();
-        }
         UI::show_footer();
         ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,13 +25,16 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
-debug_event('stream.ajax.php', 'Called for action {' . $_REQUEST['action'] . '}', 5);
+debug_event('stream.ajax.php', 'Called for action {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', 5);
 
 $results = array();
-switch ($_REQUEST['action']) {
+$action  = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'set_play_type':
         // Make sure they have the rights to do this
         if (!Preference::has_access('play_type')) {
@@ -63,7 +66,7 @@ switch ($_REQUEST['action']) {
         $current = AmpConfig::get('play_type');
 
         // Go ahead and update their preference
-        if (Preference::update('play_type', $GLOBALS['user']->id, $new)) {
+        if (Preference::update('play_type', Core::get_global('user')->id, $new)) {
             AmpConfig::set('play_type', $new, true);
         }
 
@@ -77,7 +80,7 @@ switch ($_REQUEST['action']) {
 
         debug_event('stream.ajax.php', 'Play type {' . $_REQUEST['playtype'] . '}', 5);
         $object_type = $_REQUEST['object_type'];
-        $object_id   = $_REQUEST['object_id'];
+        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         if (is_array($object_id)) {
             $object_id = implode(',', $object_id);
         }

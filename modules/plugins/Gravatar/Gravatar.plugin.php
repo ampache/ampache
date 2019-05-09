@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -72,7 +72,7 @@ class AmpacheGravatar
     {
         $url = "";
         if (!empty($user->email)) {
-            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            if (filter_has_var(INPUT_SERVER, 'HTTPS') && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING) !== 'off') {
                 $url = "https://secure.gravatar.com";
             } else {
                 $url = "http://www.gravatar.com";

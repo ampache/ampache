@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,18 +22,22 @@
 
 require_once '../lib/init.php';
 
-if (!$GLOBALS['user']->has_access(100)) {
+if (!Core::get_global('user')->has_access(100)) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 
 /* Always show the header */
 UI::show_header();
 
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'install_localplay':
-        $localplay = new Localplay($_REQUEST['type']);
+        $localplay = new Localplay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
             AmpError::add('general', T_('Failed to enable the module, Controller Error'));
             AmpError::display('general');
@@ -45,8 +49,8 @@ switch ($_REQUEST['action']) {
         // Go ahead and enable Localplay (Admin->System) as we assume they want to do that
         // if they are enabling this
         Preference::update('allow_localplay_playback', '-1', '1');
-        Preference::update('localplay_level', $GLOBALS['user']->id, '100');
-        Preference::update('localplay_controller', $GLOBALS['user']->id, $localplay->type);
+        Preference::update('localplay_level', Core::get_global('user')->id, '100');
+        Preference::update('localplay_controller', Core::get_global('user')->id, $localplay->type);
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
@@ -55,7 +59,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'install_catalog_type':
-        $type    = (string) scrub_in($_REQUEST['type']);
+        $type    = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
             AmpError::add('general', T_('Failed to enable the module, Catalog Error'));
@@ -72,21 +76,21 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_localplay':
-        $type  = (string) scrub_in($_REQUEST['type']);
+        $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
         $title = T_('Are you sure you want to disable this module?');
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
     case 'confirm_uninstall_catalog_type':
-        $type  = (string) scrub_in($_REQUEST['type']);
+        $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
         $title = T_('Are you sure you want to disable this module?');
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
     case 'uninstall_localplay':
-        $type = (string) scrub_in($_REQUEST['type']);
+        $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $localplay = new Localplay($type);
         $localplay->uninstall();
@@ -98,7 +102,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'uninstall_catalog_type':
-        $type = (string) scrub_in($_REQUEST['type']);
+        $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {

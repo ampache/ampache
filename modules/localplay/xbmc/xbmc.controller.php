@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -129,7 +129,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $sql = "INSERT INTO `localplay_xbmc` (`name`,`host`,`port`, `user`, `pass`,`owner`) " .
             "VALUES (?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['user'], $data['pass'], $GLOBALS['user']->id));
+        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['user'], $data['pass'], Core::get_global('user')->id));
 
         return $db_results;
     } // add_instance
@@ -216,14 +216,14 @@ class AmpacheXbmc extends localplay_controller
     public function set_active_instance($uid, $user_id='')
     {
         // Not an admin? bubkiss!
-        if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+        if (!Core::get_global('user')->has_access('100')) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
 
-        Preference::update('xbmc_active', $user_id, intval($uid));
-        AmpConfig::set('xbmc_active', intval($uid), true);
+        Preference::update('xbmc_active', $user_id, (int) ($uid));
+        AmpConfig::set('xbmc_active', (int) ($uid), true);
 
         return true;
     } // set_active_instance
@@ -638,7 +638,7 @@ class AmpacheXbmc extends localplay_controller
             $appprop = $this->_xbmc->Application->GetProperties(array(
                 'properties' => array('volume')
             ));
-            $array['volume']    = intval($appprop['volume']);
+            $array['volume']    = (int) ($appprop['volume']);
 
             try {
                 $currentplay = $this->_xbmc->Player->GetItem(array(

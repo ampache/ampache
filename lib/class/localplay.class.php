@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,20 +42,20 @@ class Localplay
     {
         $this->type = $type;
 
-        $this->_get_info();
+        $this->has_info();
     } // Localplay
 
     /**
-     * _get_info
+     * has_info
      * This functions takes the type and attempts to get all the
      * information needed to load it. Will log errors if there are
      * any failures, fatal errors will actually return something to the
      * gui
      */
-    private function _get_info()
+    private function has_info()
     {
         $this->_load_player();
-    } // _get_info
+    } // has_info
 
     /**
      * player_loaded
@@ -216,7 +216,7 @@ class Localplay
 
         // If its our current player, reset player to nothing
         if (AmpConfig::get('localplay_controller') == $this->type) {
-            Preference::update('localplay_controller', $GLOBALS['user']->id, '');
+            Preference::update('localplay_controller', Core::get_global('user')->id, '');
         }
 
         return true;
@@ -299,6 +299,7 @@ class Localplay
      * repeat
      * This turns the repeat feature of a localplay method on or
      * off, takes a 0/1 value
+     * @param boolean $state
      */
     public function repeat($state)
     {
@@ -315,6 +316,7 @@ class Localplay
       * random
      * This turns on the random feature of a localplay method
      * It takes a 0/1 value
+     * @param boolean $state
      */
     public function random($state)
     {

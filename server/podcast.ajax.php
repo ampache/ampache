@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,14 +24,18 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'sync':
         if (!Access::check('interface', '75')) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to sync podcast', 1);
-            exit;
+            debug_event('DENIED', Core::get_global('user')->username . ' attempted to sync podcast', 1);
+
+            return false;
         }
         
         if (isset($_REQUEST['podcast_id'])) {

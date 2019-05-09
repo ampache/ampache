@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,7 +46,7 @@ if (isset($_REQUEST['browse_uid'])) {
 $sides  = 0;
 
 ?>
-<?php if (!$browse->get_use_pages() && !$is_header) {
+<?php if (!$browse->is_use_pages() && !$is_header) {
     ?>
 <?php $this->show_next_link(); ?>
 </p>
@@ -82,7 +82,7 @@ if ($limit > 0 && $total > $limit) {
 }
 ?>
 <div class="list-header">
-<?php if ($browse->get_use_alpha()) {
+<?php if ($browse->is_use_alpha()) {
     ?>
     <div class="list-header-alpha">
     <?php
@@ -110,7 +110,7 @@ if ($limit > 0 && $total > $limit) {
             $current_page = floor($start / $limit);
         }
 
-        if ($browse->get_use_pages()) {
+        if ($browse->is_use_pages()) {
             ?>
     <span class="list-header-navmenu-border">
     <span><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid . $argument_param, T_('Prev'), 'browse_' . $uid . 'prev', '', 'prev'); ?></span>
@@ -130,15 +130,15 @@ if ($limit > 0 && $total > $limit) {
     <span class="browse-options">
         <a href="#" onClick="showFilters(this);" class="browse-options-link"><?php echo T_("View"); ?></a>
         <span class="browse-options-content">
-            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo(($browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_pages_" . $is_header); ?>"><?php echo T_('Pages'); ?></span>
-            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo((!$browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>"><?php echo T_('Infinite Scroll'); ?></span>
-            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_grid_view_<?php echo $is_header; ?>" value="true" <?php echo(($browse->get_grid_view()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=grid_view&value=' + ($('#browse_" . $browse->id . "_grid_view_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_grid_view_" . $is_header); ?>"><?php echo T_('Grid View'); ?></span>
+            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_pages_" . $is_header); ?>"><?php echo T_('Pages'); ?></span>
+            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo((!$browse->is_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>"><?php echo T_('Infinite Scroll'); ?></span>
+            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_grid_view_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_grid_view()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=grid_view&value=' + ($('#browse_" . $browse->id . "_grid_view_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_grid_view_" . $is_header); ?>"><?php echo T_('Grid View'); ?></span>
             <?php if (!$browse->is_static_content()) {
     ?>
-            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo(($browse->get_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>"><?php echo T_('Alphabet'); ?></span>
+            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>"><?php echo T_('Alphabet'); ?></span>
             <?php
 } ?>
-        <?php if ($browse->get_use_pages()) {
+        <?php if ($browse->is_use_pages()) {
         ?>
             <span>|</span>
             <span>
@@ -153,7 +153,7 @@ if ($limit > 0 && $total > $limit) {
     </span>
 </div>
 <span class="item-count"><?php echo T_('Item Count') . ': ' . $total; ?></span>
-<?php if (!$browse->get_use_pages() && $is_header) {
+<?php if (!$browse->is_use_pages() && $is_header) {
         ?>
 <div id="browse_<?php echo $browse->id; ?>_scroll">
 <p>

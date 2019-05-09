@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,10 +24,12 @@ define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 
-debug_event('refresh_reordered.server.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
+debug_event('refresh_reordered.server.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
 
-/* Switch on the action passed in */
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'refresh_playlist_medias':
         $playlist = new Playlist($_REQUEST['id']);
         $playlist->format();

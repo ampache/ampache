@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,8 +39,10 @@
 <?php if (AmpConfig::get('playlist_art')) {
         ?>
 <td class="cel_cover">
+<div style="max-width: 128px;">
     <?php
-    $libitem->display_art(3); ?>
+    $libitem->display_art(2); ?>
+</div>
 </td>
 <?php
     } ?>

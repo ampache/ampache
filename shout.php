@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,18 +24,22 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-// Switch on the incomming action
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'add_shout':
         // Must be at least a user to do this
         if (!Access::check('interface', '25')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if (!Core::form_verify('add_shout', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         // Remove unauthorized defined values from here
@@ -48,13 +52,14 @@ switch ($_REQUEST['action']) {
 
         if (!Core::is_library_item($_POST['object_type'])) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         $shout_id = Shoutbox::create($_POST);
-        header("Location:" . AmpConfig::get('web_path') . '/shout.php?action=show_add_shout&type=' . $_POST['object_type'] . '&id=' . intval($_POST['object_id']));
-        exit;
-    break;
+        header("Location:" . AmpConfig::get('web_path') . '/shout.php?action=show_add_shout&type=' . $_POST['object_type'] . '&id=' . (int) ($_POST['object_id']));
+
+        return false;
     case 'show_add_shout':
         // Get our object first
         $object = Shoutbox::get_object($_REQUEST['type'], $_REQUEST['id']);

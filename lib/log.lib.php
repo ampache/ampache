@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,10 @@
 /*
  * log_event
  * Logs an event to a defined log file based on config options
+ */
+/**
+ * @param string $log_name
+ * @param string $event_name
  */
 function log_event($username, $event_name, $event_description, $log_name)
 {
@@ -135,6 +139,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * This function is called inside ampache, it's actually a wrapper for the
  * log_event. It checks config for debug and debug_level and only
  * calls log event if both requirements are met.
+ * @param string $type
  */
 function debug_event($type, $message, $level, $file = '', $username = '')
 {

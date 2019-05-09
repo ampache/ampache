@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,18 +26,18 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
-if (count($GLOBALS['argv']) != 2) {
+if (count(Core::get_global('argv')) != 2) {
     usage();
-    exit;
+    return false;
 } else {
-    $filename = $GLOBALS['argv'][1];
+    $filename = Core::get_global('argv')[1];
 }
 
 if(!file_exists($filename)) {
     print T_("File not found.");
     print "\n";
     usage();
-    exit;
+    return false;
 }
 
 printf(T_('Reading: %s'), $filename);
@@ -85,5 +85,3 @@ function usage() {
     return print $text;
 
 }// usage()
-
-?>

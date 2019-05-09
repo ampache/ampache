@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,8 @@ set_error_handler('ampache_error_handler');
 if (!install_check_status($configfile)) {
     $redirect_url = 'login.php';
     require_once AmpConfig::get('prefix') . UI::find_template('error_page.inc.php');
-    exit;
+
+    return false;
 }
 
 define('INSTALL', 1);
@@ -110,7 +111,10 @@ $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 
 unset($safe_dirname);
 
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'create_db':
         $new_user = '';
         $new_pass = '';

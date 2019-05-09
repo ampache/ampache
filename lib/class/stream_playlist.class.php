@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,6 +39,7 @@ class Stream_Playlist
     /**
      * Stream_Playlist constructor
      * If an ID is passed, it should be a stream session ID.
+     * @param integer $id
      */
     public function __construct($id = null)
     {
@@ -55,7 +56,7 @@ class Stream_Playlist
                 return false;
             }
 
-            $this->user = intval($GLOBALS['user']->id);
+            $this->user = (int) (Core::get_global('user')->id);
 
             $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
             $db_results = Dba::read($sql, array($this->id));
@@ -95,7 +96,7 @@ class Stream_Playlist
         return Dba::write($sql, $values);
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
             'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' .
@@ -295,7 +296,8 @@ class Stream_Playlist
             // Our ID is the SID, so we always want to include it
             AmpConfig::set('require_session', true, true);
             header('Location: ' . Stream::get_base_url() . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
-            exit;
+
+            return false;
         }
 
         if (isset($ext)) {
@@ -550,6 +552,19 @@ class Stream_Playlist
     }  // create_web_player
 
     /**
+     * show_web_player
+     *
+     * Show the created web player for ajax page loading.
+     * Browsers block autoplay when you haven't interacted with the page so load it early.
+     */
+    public function show_web_player()
+    {
+        if (AmpConfig::get("ajax_load")) {
+            require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
+        }
+    }  // show_web_player
+
+    /**
      * create_localplay
      * This calls the Localplay API to add the URLs and then start playback
      */
@@ -615,7 +630,8 @@ class Stream_Playlist
         $url = current($this->urls);
         $url = Stream_URL::add_options($url->url, '&action=download');
         header('Location: ' . $url);
-        exit;
+
+        return false;
     } //create_download
 
     /**

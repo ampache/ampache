@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,15 +58,15 @@ class Podcast_Episode extends database_object implements media, library_item
      * Constructor
      *
      * Podcast Episode class
-     * @param int|null $id
+     * @param integer|null $podcastep_id
      */
-    public function __construct($id = null)
+    public function __construct($podcastep_id = null)
     {
-        if (!$id) {
+        if ($podcastep_id === null) {
             return false;
         }
 
-        $this->id = intval($id);
+        $this->id = (int) ($podcastep_id);
 
         if ($info = $this->get_info($this->id)) {
             foreach ($info as $key => $value) {
@@ -87,11 +87,11 @@ class Podcast_Episode extends database_object implements media, library_item
     } // constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * Cleans up the podcast_episode table
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         Dba::write('DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL');
     }
@@ -100,7 +100,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -256,7 +256,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @return boolean
@@ -271,7 +271,7 @@ class Podcast_Episode extends database_object implements media, library_item
         }
 
         /* If it hasn't been played, set it! */
-        Podcast_Episode::update_played(true, $this->id);
+        self::update_played(true, $this->id);
 
         return true;
     } // set_played
@@ -280,7 +280,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * update_played
      * sets the played flag
      * @param boolean $new_played
-     * @param int $id
+     * @param integer $id
      */
     public static function update_played($new_played, $id)
     {
@@ -290,13 +290,13 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * _update_item
      * This is a private function that should only be called from within the podcast episode class.
-     * It takes a field, value video id and level. first and foremost it checks the level
-     * against $GLOBALS['user'] to make sure they are allowed to update this record
+     * It takes a field, value song_id and level. first and foremost it checks the level
+     * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param mixed $value
-     * @param int $song_id
-     * @param int $level
+     * @param integer $value
+     * @param integer $song_id
+     * @param integer $level
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)
@@ -342,9 +342,10 @@ class Podcast_Episode extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param boolean $local
+     * @param string $player
      * @return string
      */
     public static function play_url($oid, $additional_params='', $player=null, $local=false)
@@ -376,6 +377,9 @@ class Podcast_Episode extends database_object implements media, library_item
         return Dba::write($sql, array($this->id));
     }
     
+    /**
+     * @param string $state
+     */
     public function change_state($state)
     {
         $sql = "UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?";
@@ -390,10 +394,10 @@ class Podcast_Episode extends database_object implements media, library_item
             $file    = $podcast->get_root_path();
             if (!empty($file)) {
                 $pinfo = pathinfo($this->source);
-                $file .= DIRECTORY_SEPARATOR . $this->id . '-' . strtok($pinfo['basename'], '?');
+                $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . $this->title . '-' . strtok($pinfo['basename'], '?');
                 debug_event('podcast_episode', 'Downloading ' . $this->source . ' to ' . $file . ' ...', 5);
                 if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
-                    debug_event('podcast_episode', 'Download completed.', 5);
+                    debug_event('podcast_episode', 'Download completed.', 4);
                     $this->file = $file;
                     
                     $vainfo = new vainfo($this->file);

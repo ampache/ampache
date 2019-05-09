@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,21 +23,24 @@
 require_once 'lib/init.php';
 
 // We special-case this so we can send a 302 if the delete succeeded
-if ($_REQUEST['action'] == 'delete_playlist') {
+if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'delete_playlist') {
     // Check rights
     $playlist = new Search($_REQUEST['playlist_id'], 'song');
     if ($playlist->has_access()) {
         $playlist->delete();
         // Go elsewhere
         header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=smartplaylist');
-        exit;
+
+        return false;
     }
 }
 
 UI::show_header();
 
-/* Switch on the action passed in */
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'create_playlist':
         /* Check rights */
         if (!Access::check('interface', '25')) {

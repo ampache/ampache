@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -121,7 +121,7 @@ class AmpacheUPnP extends localplay_controller
     {
         $sql = "INSERT INTO `localplay_upnp` (`name`,`url`, `owner`) " .
             "VALUES (?, ?, ?)";
-        $db_results = Dba::query($sql, array($data['name'], $data['url'], $GLOBALS['user']->id));
+        $db_results = Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
 
         return $db_results;
     }
@@ -204,14 +204,14 @@ class AmpacheUPnP extends localplay_controller
     public function set_active_instance($uid, $user_id='')
     {
         // Not an admin? bubkiss!
-        if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+        if (!Core::get_global('user')->has_access('100')) {
+            $user_id = Core::get_global('user')->id;
         }
-        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
         debug_event('upnp', 'set_active_instance userid: ' . $user_id, 5);
 
-        Preference::update('upnp_active', $user_id, intval($uid));
-        AmpConfig::set('upnp_active', intval($uid), true);
+        Preference::update('upnp_active', $user_id, (int) ($uid));
+        AmpConfig::set('upnp_active', (int) ($uid), true);
 
         return true;
     }

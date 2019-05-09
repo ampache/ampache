@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
  */
 
 if (INIT_LOADED != '1') {
-    exit;
+    return false;
 }
 
 $web_path          = AmpConfig::get('web_path');
@@ -51,7 +51,8 @@ $_SESSION['login'] = false;
             }
         ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
+        <meta name="viewport" content="width=1024, initial-scale=1.0">
+        <title><?php print_r(AmpConfig::get('site_title')); ?> - <?php print_r($location['title']); ?></title>
 
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
 
@@ -295,7 +296,7 @@ $_SESSION['login'] = false;
         </script>
 
         <?php
-            if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
+            if (AmpConfig::get('cookie_disclaimer') && !(filter_has_var(INPUT_COOKIE, 'cookie_disclaimer'))) {
                 ?>
 
         <script type="text/javascript" language="javascript">
@@ -368,11 +369,11 @@ $_SESSION['login'] = false;
                         if (User::is_registered()) {
                             require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id; ?>"><?php echo $GLOBALS['user']->fullname; ?></a>
+                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
                         <?php
                             if (AmpConfig::get('sociable')) {
                                 ?>
-                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true)); ?>)</a>
+                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs(Core::get_global('user')->id, true)); ?>)</a>
                         <?php
                             } ?>
                             <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
@@ -523,9 +524,9 @@ $_SESSION['login'] = false;
                             AutoUpdate::show_new_version();
                             echo '<br />';
                         }
-                        $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
-                        
-                        if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version')) {
+                        $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
+
+                        if (AmpConfig::get('int_config_version') < AmpConfig::get('config_version')) {
                             ?>
                             <div class="fatalerror">
                                 <?php echo T_('Error: Your config file is out of date!'); ?>
@@ -537,5 +538,8 @@ $_SESSION['login'] = false;
                         }
                         echo '</div>';
                     }
+                if (AmpConfig::get("ajax_load")) {
+                    require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
+                } //load the web_player early to make sure the browser doesn't block audio playback
                 ?>
                 <div id="guts">

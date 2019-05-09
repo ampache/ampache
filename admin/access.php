@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,18 +24,23 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 UI::show_header();
 
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'delete_record':
         if (!Core::form_verify('delete_access')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
-        Access::delete($_REQUEST['access_id']);
+        Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $url = AmpConfig::get('web_path') . '/admin/access.php';
         show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'), $url);
     break;
@@ -52,7 +57,8 @@ switch ($_REQUEST['action']) {
         // Make sure we've got a valid form submission
         if (!Core::form_verify('add_acl', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         Access::create($_POST);
@@ -80,9 +86,10 @@ switch ($_REQUEST['action']) {
     case 'update_record':
         if (!Core::form_verify('edit_acl')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
-        $access = new Access($_REQUEST['access_id']);
+        $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->update($_POST);
         if (!AmpError::occurred()) {
             show_confirmation(T_('Updated'), T_('Access List Entry updated'), AmpConfig::get('web_path') . '/admin/access.php');
@@ -95,11 +102,11 @@ switch ($_REQUEST['action']) {
     case 'show_add_rpc':
     case 'show_add_local':
     case 'show_add_advanced':
-        $action = $_REQUEST['action'];
+        $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
     break;
     case 'show_edit_record':
-        $access = new Access($_REQUEST['access_id']);
+        $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
     break;

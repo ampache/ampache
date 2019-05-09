@@ -1,6 +1,9 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
+    ->exclude('master')
+    ->exclude('develop')
+    ->exclude('core')
     ->exclude('lib/components')
     ->exclude('lib/vendor')
     ->exclude('modules')

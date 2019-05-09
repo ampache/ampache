@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,8 +24,10 @@ require_once 'lib/init.php';
 
 require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
-/* Switch on Action */
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -49,7 +51,8 @@ switch ($_REQUEST['action']) {
         if (!Catalog::can_remove($album)) {
             debug_event('album', 'Unauthorized to remove the album `.' . $album->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($album->remove_from_disk()) {
@@ -62,11 +65,12 @@ switch ($_REQUEST['action']) {
         // Make sure they are a 'power' user at least
         if (!Access::check('interface', '75')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         $type          = 'album';
-        $object_id     = intval($_REQUEST['album_id']);
+        $object_id     = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
         $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
         require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
@@ -75,7 +79,8 @@ switch ($_REQUEST['action']) {
 
         if (!Access::check('interface', '75')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         // Retrieving final song order from url
@@ -86,7 +91,7 @@ switch ($_REQUEST['action']) {
 
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
-            $track = $_GET['offset'] ? (intval($_GET['offset']) + 1) : 1;
+            $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     Song::update_track($track, $song_id);

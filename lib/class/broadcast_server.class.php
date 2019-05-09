@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -124,7 +124,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param int $song_id
+     * @param integer $song_id
      * @return string
      */
     protected function getSongJS($song_id)
@@ -142,7 +142,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param \Ratchet\ConnectionInterface $from
-     * @param int $song_id
+     * @param integer $song_id
      */
     protected function notifySong(ConnectionInterface $from, $song_id)
     {
@@ -166,7 +166,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param \Ratchet\ConnectionInterface $from
-     * @param int $song_position
+     * @param integer $song_position
      */
     protected function notifySongPosition(ConnectionInterface $from, $song_position)
     {
@@ -265,7 +265,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param int $broadcast_id
+     * @param integer $broadcast_id
      * @return Broadcast
      */
     protected function getRunningBroadcast($broadcast_id)
@@ -284,7 +284,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param \Ratchet\ConnectionInterface $from
-     * @param int $broadcast_id
+     * @param integer $broadcast_id
      */
     protected function registerListener(ConnectionInterface $from, $broadcast_id)
     {

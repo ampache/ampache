@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,9 +38,11 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
 <?php if (Art::is_enabled()) {
         ?>
 <td class="cel_cover">
+<div style="max-width: 80px;">
     <?php
-    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 5;
+    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 3;
         $libitem->display_art($thumb); ?>
+</div>
 </td>
 <?php
     } ?>
@@ -83,16 +85,18 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             Share::display_ui($object_type, $libitem->id, false);
         }
     }
-    if (get_class($playlist) == "Playlist" && $playlist->has_access()) {
-        echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']);
-    } ?>
-</td>
-<?php if (Access::check('interface', '50') && get_class($playlist) == "Playlist") {
-        ?>
-<td class="cel_drag">
-    <?php echo UI::get_icon('drag', T_('Reorder')) ?>
-        </td>
-    <?php
+    if ($playlist) {
+        if (get_class($playlist) == "Playlist" && $playlist->has_access()) {
+            echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']);
+        } ?>
+    </td>
+    <?php if (Access::check('interface', '50') && get_class($playlist) == "Playlist") {
+            ?>
+    <td class="cel_drag">
+        <?php echo UI::get_icon('drag', T_('Reorder')) ?>
+            </td>
+        <?php
+        }
     }
 }
 ?>

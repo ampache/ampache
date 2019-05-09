@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,11 +56,11 @@ class Playlist extends playlist_object
     } // Playlist
 
     /**
-     * gc
+     * garbage_collection
      *
      * Clean dead items out of playlists
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         foreach (array('song', 'video') as $object_type) {
             Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `playlist_data`.`object_id` WHERE `" . $object_type . "`.`file` IS NULL AND `playlist_data`.`object_type`='" . $object_type . "'");
@@ -95,7 +95,7 @@ class Playlist extends playlist_object
     public static function get_playlists($incl_public = true, $user_id = null)
     {
         if (!$user_id) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = Core::get_global('user')->id;
         }
 
         $sql    = 'SELECT `id` FROM `playlist`';
@@ -187,7 +187,7 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $limit_sql = $limit ? 'LIMIT ' . intval($limit) : '';
+        $limit_sql = $limit ? 'LIMIT ' . (string) ($limit) : '';
 
         $sql = "SELECT `object_id`,`object_type` FROM `playlist_data` " .
             "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
@@ -226,6 +226,7 @@ class Playlist extends playlist_object
      * get_media_count
      * This simply returns a int of how many media elements exist in this playlist
      * For now let's consider a dyn_media a single entry
+     * @return string|null
      */
     public function get_media_count($type = '')
     {
@@ -245,6 +246,7 @@ class Playlist extends playlist_object
     /**
     * get_total_duration
     * Get the total duration of all songs.
+    * @return string|null
     */
     public function get_total_duration()
     {
@@ -331,10 +333,12 @@ class Playlist extends playlist_object
     /**
      * _update_item
      * This is the generic update function, it does the escaping and error checking
+     * @param string $field
+     * @param integer $level
      */
     private function _update_item($field, $value, $level)
     {
-        if ($GLOBALS['user']->id != $this->user && !Access::check('interface', $level)) {
+        if (Core::get_global('user')->id != $this->user && !Access::check('interface', $level)) {
             return false;
         }
 
@@ -347,6 +351,7 @@ class Playlist extends playlist_object
     /**
      * update_track_number
      * This takes a playlist_data.id and a track (int) and updates the track value
+     * @param integer $index
      */
     public function update_track_number($track_id, $index)
     {
@@ -427,7 +432,7 @@ class Playlist extends playlist_object
     public static function create($name, $type, $user_id = null, $date = null)
     {
         if ($user_id == null) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = Core::get_global('user')->id;
         }
         if ($date == null) {
             $date = time();

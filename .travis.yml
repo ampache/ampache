@@ -2,11 +2,11 @@ language: php
 sudo: false
 php:
  - 5.6
- - 7.0
+ - 7.3
 
 before_install:
  - export PATH="$PATH:$HOME/.composer/vendor/bin"
- - composer global require friendsofphp/php-cs-fixer:~2.4.0
+ - composer global require friendsofphp/php-cs-fixer:~2.12.0
  - 
 before_script:
  - chmod +x scripts/tests/syntax.sh

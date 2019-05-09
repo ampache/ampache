@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,13 +24,16 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 UI::show_header();
 
+$action = UI::get_action();
+
 // Switch on the actions
-switch ($_REQUEST['action']) {
+switch ($action) {
     case 'update_user':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -38,21 +41,22 @@ switch ($_REQUEST['action']) {
 
         if (!Core::form_verify('edit_user', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         /* Clean up the variables */
-        $user_id         = intval($_POST['user_id']);
-        $username        = scrub_in($_POST['username']);
-        $fullname        = scrub_in($_POST['fullname']);
-        $email           = scrub_in($_POST['email']);
-        $website         = scrub_in($_POST['website']);
-        $access          = scrub_in($_POST['access']);
-        $pass1           = $_POST['password_1'];
-        $pass2           = $_POST['password_2'];
-        $state           = scrub_in($_POST['state']);
-        $city            = scrub_in($_POST['city']);
-        $fullname_public = isset($_POST['fullname_public']);
+        $user_id         = (int) filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+        $username        = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
+        $fullname        = scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING));
+        $email           = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+        $website         = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING));
+        $access          = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING));
+        $pass1           = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING);
+        $pass2           = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING);
+        $state           = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING));
+        $city            = scrub_in(filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING));
+        $fullname_public = filter_has_var(INPUT_POST, 'fullname_public');
 
         /* Setup the temp user */
         $client = new User($user_id);
@@ -120,17 +124,18 @@ switch ($_REQUEST['action']) {
 
         if (!Core::form_verify('add_user', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
-        $username       = scrub_in($_POST['username']);
-        $fullname       = scrub_in($_POST['fullname']);
-        $email          = scrub_in($_POST['email']);
-        $website        = scrub_in($_POST['website']);
-        $access         = scrub_in($_POST['access']);
-        $pass1          = $_POST['password_1'];
-        $pass2          = $_POST['password_2'];
-        $state          = (string) scrub_in($_POST['state']);
+        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
+        $fullname       = scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING));
+        $email          = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+        $website        = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING));
+        $access         = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING));
+        $pass1          = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING);
+        $pass2          = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING);
+        $state          = (string) scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING));
         $city           = (string) scrub_in($_POST['city']);
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
@@ -205,7 +210,8 @@ switch ($_REQUEST['action']) {
         }
         if (!Core::form_verify('delete_user')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
         $client = new User($_REQUEST['user_id']);
         if ($client->delete()) {
@@ -236,7 +242,8 @@ switch ($_REQUEST['action']) {
 
         if (!Core::form_verify('delete_avatar', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         $client = new User($_REQUEST['user_id']);
@@ -258,7 +265,8 @@ switch ($_REQUEST['action']) {
 
         if (!Core::form_verify('generate_apikey', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         $client = new User($_REQUEST['user_id']);

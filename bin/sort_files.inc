@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,10 +103,10 @@ function sort_find_home($song,$sort_pattern,$base) {
     $home = rtrim($home,"\\");
 
     /* Create the filename that this file should have */
-    $album     = sort_clean_name($song->f_album_full);
-    $artist = sort_clean_name($song->f_artist_full);
-    $track    = sort_clean_name($song->track);
-    $title    = sort_clean_name($song->title);
+    $album   = sort_clean_name($song->f_album_full);
+    $artist  = sort_clean_name($song->f_artist_full);
+    $track   = sort_clean_name($song->track);
+    $title   = sort_clean_name($song->title);
     $year    = sort_clean_name($song->year);
     $comment = sort_clean_name($song->comment);
 
@@ -118,7 +118,7 @@ function sort_find_home($song,$sort_pattern,$base) {
     }
 
     /* IF we want a,b,c,d we need to know the first element */
-    if ($GLOBALS['alphabet_prefix']) {
+    if (Core::get_global('alphabet_prefix')) {
         $sort_pattern = preg_replace("/\/?%o\//","",$sort_pattern);
         $first_element = substr($sort_pattern,0,2);
         $element = sort_element_name($first_element);
@@ -146,27 +146,23 @@ function sort_find_home($song,$sort_pattern,$base) {
 /**
  * sort_element_name
  * gets the name of the %? in a yea.. too much beer
+ * @param string $key
  */
 function sort_element_name($key) {
 
     switch ($key) {
         case '%t':
             return 'title';
-        break;
         case '%T':
             return 'track';
-        break;
         case '%a':
             return 'artist';
-        break;
         case '%A':
             return 'album';
-        break;
         case '%y':
             return 'year';
-        break;
         default:
-        break;
+            break;
     } // switch on key
 
     return false;
@@ -224,7 +220,7 @@ function sort_move_file($song,$fullname) {
 
         /* We need to check for the existance of this directory */
         if (!is_dir($path)) {
-            if ($GLOBALS['test_mode']) {
+            if (Core::get_global('test_mode')) {
                 echo "\t";
                 printf (T_('Making %s Directory'), $path);
                 echo "\n";
@@ -243,7 +239,7 @@ function sort_move_file($song,$fullname) {
     } // foreach dir
 
     /* Now that we've got the correct directory structure let's try to copy it */
-    if ($GLOBALS['test_mode']) {
+    if (Core::get_global('test_mode')) {
         echo "\t";
         // HINT: %1$s: file, %2$s: directory
         printf (T_('Copying %1$s to %2$s'), $file, $directory);
@@ -257,7 +253,7 @@ function sort_move_file($song,$fullname) {
         /* Check for file existance */
         if (file_exists($fullname)) {
             debug_event('file exists','Error: $fullname already exists','1');
-            printf (T_('Error: %s already exists'), $filename);
+            printf (T_('Error: %s already exists'), $fullname);
             echo "\n";
             return false;
         }
@@ -276,7 +272,9 @@ function sort_move_file($song,$fullname) {
         }
 
         debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');
-        @copy($old_art,$folder_art);
+        if (copy($old_art, $folder_art) === false) {
+            throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+        }
 
         if (!$results) { printf (T_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
 
@@ -303,5 +301,3 @@ function sort_move_file($song,$fullname) {
     return true;
 
 } // sort_move_file
-
-?>

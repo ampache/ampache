@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,8 +24,10 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-// Switch on the incomming action
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -49,7 +51,8 @@ switch ($_REQUEST['action']) {
         if (!Catalog::can_remove($label)) {
             debug_event('label', 'Unauthorized to remove the label `.' . $label->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($label->remove()) {
@@ -62,12 +65,14 @@ switch ($_REQUEST['action']) {
         // Must be at least a content manager or edit upload enabled
         if (!Access::check('interface', '50') && !AmpConfig::get('upload_allow_edit')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if (!Core::form_verify('add_label', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         // Remove unauthorized defined values from here
@@ -88,7 +93,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'show':
-        $label_id = intval($_REQUEST['label']);
+        $label_id = (int) filter_input(INPUT_GET, 'label', FILTER_SANITIZE_NUMBER_INT);
         if (!$label_id) {
             if (!empty($_REQUEST['name'])) {
                 $label_id = Label::lookup($_REQUEST);
@@ -101,7 +106,8 @@ switch ($_REQUEST['action']) {
             $object_type = 'artist';
             require_once AmpConfig::get('prefix') . UI::find_template('show_label.inc.php');
             UI::show_footer();
-            exit;
+
+            return false;
         }
     case 'show_add_label':
         if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {

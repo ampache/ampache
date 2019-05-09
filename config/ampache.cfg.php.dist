@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 34
+config_version = 35
 
 ;#########################################################
 ; Path Vars                                              #
@@ -373,6 +373,18 @@ default_auth_level = "guest"
 ; DEFAULT: true
 ratings = "true"
 
+; Enable filtering on browse pages for artists and albums.
+; If you enable this setting the get_random and browse pages
+; will remove artists and albums that are <= to that rating
+; DEFAULT: false
+;rating_browse_filter = "false"
+
+; Set the rating that will be filtered
+; eg. 2 will filter 1 and 2 start albums and artists
+; this setting mus be set for the filter to work
+; DEFAULT: null
+;rating_browse_minimum_stars = 1
+
 ; User flags/favorites
 ; This allows user flags for almost any object in ampache as favorite
 ; POSSIBLE VALUES: false true
@@ -552,7 +564,7 @@ wanted_types = "album,official"
 ; Set this to true to enable channels and the
 ; possibility for users to create channels from playlists
 ; DEFAULT: true
-channel = "true"
+channel = "false"
 
 ; Live Streams
 ; Set this to true to enable live streams (radio) and the
@@ -1009,6 +1021,12 @@ encode_ss_duration = "-t %DURATION%"
 ;#########################################################
 ;  Mail Settings                                         #
 ;#########################################################
+
+;Enable or disable email server features
+;otherwise, you can reset your password 
+;and never receive an email with the new one
+;Default: false
+;mail_enable = "false"
 
 ;Method used to send mail
 ;POSSIBLE VALUES: smtp sendmail php

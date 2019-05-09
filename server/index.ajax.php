@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,11 +24,14 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+$action  = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'random_albums':
         $albums = Album::get_random(6);
         if (count($albums) and is_array($albums)) {
@@ -134,8 +137,8 @@ switch ($_REQUEST['action']) {
             $labels     = Label::get_labels($_REQUEST['artist']);
             $object_ids = array();
             if (count($labels) > 0) {
-                foreach ($labels as $id => $label) {
-                    $object_ids[] = $id;
+                foreach ($labels as $labelid => $label) {
+                    $object_ids[] = $labelid;
                 }
             }
             $browse = new Browse();
@@ -239,11 +242,11 @@ switch ($_REQUEST['action']) {
                 if (Access::check('interface', '100')) {
                     $button = $_REQUEST['button'];
                 } else {
-                    exit;
+                    return false;
                 }
             break;
             default:
-                exit;
+                return false;
         } // end switch on button
 
         Ajax::set_include_override(true);
@@ -308,7 +311,7 @@ switch ($_REQUEST['action']) {
         $results['fslider_script'] = ob_get_clean();
     break;
     case 'songs':
-        $label_id = intval($_REQUEST['label']);
+        $label_id = (int) ($_REQUEST['label']);
 
         ob_start();
         if ($label_id > 0) {

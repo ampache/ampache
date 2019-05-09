@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,12 +36,12 @@ ob_end_clean();
  */
 
 // If set to true / 1 then it will not prompt!
-//$GLOBALS['i_am_crazy'] = true;
+//Core::get_global('i_am_crazy') = true;
 
 if (!function_exists('iconv')) {
     echo T_("ERROR: Iconv required for this functionality, quitting");
     echo "\n";
-    exit;
+    return false;
 }
 
 // Attempt to figure out what the System Charset is
@@ -143,7 +143,7 @@ function charset_directory_correct($path) {
             printf (T_('NEW: %s'), $translated_filename);
             echo "\n";
             echo "--------------------------------------------------------------------------------------------\n";
-            if (!$GLOBALS['i_am_crazy']) {
+            if (!Core::get_global('i_am_crazy')) {
                 echo T_("Rename File (Y/N):");
                 $input = trim(fgets(STDIN));
                 if (strcasecmp($input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
@@ -161,6 +161,8 @@ function charset_directory_correct($path) {
 /**
  * charset_rename_file
  * This just takes a source / dest and does the renaming
+ * @param string $full_file
+ * @param string $translated_filename
  */
 function charset_rename_file($full_file,$translated_filename) {
 
@@ -235,5 +237,3 @@ function charset_clean_name($string) {
         return $string;
 
 } // charset_clean_name
-
-?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,23 +24,27 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+$action  = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'set_instance':
         // Make sure they they are allowed to do this
         if (!Access::check('localplay', '5')) {
             debug_event('DENIED', 'Error attempted to set instance without required level', '1');
-            exit;
+
+            return false;
         }
 
         $type = $_REQUEST['instance'] ? 'localplay' : 'stream';
 
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->set_active_instance($_REQUEST['instance']);
-        Preference::update('play_type', $GLOBALS['user']->id, $type);
+        Preference::update('play_type', Core::get_global('user')->id, $type);
 
         // We should also refesh the sidebar
         ob_start();
@@ -52,7 +56,8 @@ switch ($_REQUEST['action']) {
         // Make sure they are allowed to do this
         if (!Access::check('localplay', '50')) {
             debug_event('DENIED', 'Attempted to control Localplay without sufficient access', '1');
-            exit;
+
+            return false;
         }
 
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
@@ -94,7 +99,7 @@ switch ($_REQUEST['action']) {
                 ob_end_clean();
             break;
             case 'skip':
-                $localplay->skip(intval($_REQUEST['id']));
+                $localplay->skip((int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT));
                 $objects = $localplay->get();
                 ob_start();
                 $browse = new Browse();
@@ -116,13 +121,14 @@ switch ($_REQUEST['action']) {
         // Load Connect... yada yada
         if (!Access::check('localplay', '50')) {
             debug_event('DENIED', 'Attempted to delete track without access', '1');
-            exit;
+
+            return false;
         }
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
         // Scrub in the delete request
-        $id = intval($_REQUEST['id']);
+        $id = (int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
         $localplay->delete_track($id);
 
@@ -146,7 +152,8 @@ switch ($_REQUEST['action']) {
         // Make sure that you have access to do this...
         if (!Access::check('localplay', '75')) {
             debug_event('DENIED', 'Attempted to delete instance without access', '1');
-            exit;
+
+            return false;
         }
 
         // Scrub it in
@@ -160,7 +167,8 @@ switch ($_REQUEST['action']) {
         // Make sure that they have access to do this again no clue
         if (!Access::check('localplay', '50')) {
             debug_event('DENIED', 'Attempted to set repeat without access', '1');
-            exit;
+
+            return false;
         }
 
         // Scrub her in
@@ -179,7 +187,8 @@ switch ($_REQUEST['action']) {
         // Make sure that they have access to do this
         if (!Access::check('localplay', '50')) {
             debug_event('DENIED', 'Attempted to set random without access', '1');
-            exit;
+
+            return false;
         }
 
         // Scrub her in

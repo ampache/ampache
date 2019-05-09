@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -92,22 +92,22 @@ class Upload
                         }
 
                         $options                = array();
-                        $options['user_upload'] = $GLOBALS['user']->id;
+                        $options['user_upload'] = Core::get_global('user')->id;
                         if (isset($_POST['license'])) {
                             $options['license'] = $_POST['license'];
                         }
-                        $artist_id = intval($_REQUEST['artist']);
-                        $album_id  = intval($_REQUEST['album']);
+                        $artist_id = (int) ($_REQUEST['artist']);
+                        $album_id  = (int) ($_REQUEST['album']);
 
                         // Override artist information with artist's user
                         if (AmpConfig::get('upload_user_artist')) {
-                            $artists = $GLOBALS['user']->get_artists();
+                            $artists = Core::get_global('user')->get_artists();
                             $artist  = null;
                             // No associated artist yet, we create a default one for the user sender
                             if (count($artists) == 0) {
-                                $artists[] = Artist::check($GLOBALS['user']->f_name);
+                                $artists[] = Artist::check(Core::get_global('user')->f_name);
                                 $artist    = new Artist($artists[0]);
-                                $artist->update_artist_user($GLOBALS['user']->id);
+                                $artist->update_artist_user((int) Core::get_global('user')->id);
                             } else {
                                 $artist = new Artist($artists[0]);
                             }
@@ -124,7 +124,7 @@ class Upload
                                     $artist_id = Artist::check($_REQUEST['artist_name']);
                                     $artist    = new Artist($artist_id);
                                     if (!$artist->get_user_owner()) {
-                                        $artist->update_artist_user($GLOBALS['user']->id);
+                                        $artist->update_artist_user((int) Core::get_global('user')->id);
                                     }
                                 }
                             }
@@ -136,7 +136,7 @@ class Upload
                                     return self::rerror($targetfile);
                                 }
                                 $artist = new Artist($artist_id);
-                                if ($artist->get_user_owner() != $GLOBALS['user']->id) {
+                                if ($artist->get_user_owner() != Core::get_global('user')->id) {
                                     debug_event('upload', 'Artist owner doesn\'t match the current user.', 3);
 
                                     return self::rerror($targetfile);
@@ -156,7 +156,7 @@ class Upload
                                 return self::rerror($targetfile);
                             }
                             $album = new Album($album_id);
-                            if ($album->get_user_owner() != $GLOBALS['user']->id) {
+                            if ($album->get_user_owner() != Core::get_global('user')->id) {
                                 debug_event('upload', 'Album owner doesn\'t match the current user.', 3);
 
                                 return self::rerror($targetfile);
@@ -198,12 +198,17 @@ class Upload
         return self::rerror();
     }
 
+    /**
+     * @param string $file
+     */
     public static function rerror($file = null)
     {
         if ($file) {
-            @unlink($file);
+            if (unlink($file) === false) {
+                throw new \RuntimeException('The file handle ' . $file . ' could not be unlinked.');
+            }
         }
-        @header($_SERVER['SERVER_PROTOCOL'] . ' 500 File Upload Error', true, 500);
+        header($_SERVER['SERVER_PROTOCOL'] . ' 500 File Upload Error', true, 500);
         ob_get_contents();
         ob_end_clean();
         echo '{"status":"error"}';
@@ -220,8 +225,8 @@ class Upload
             }
         }
 
-        if (is_null($username)) {
-            $username = $GLOBALS['user']->username;
+        if ($username === null) {
+            $username = Core::get_global('user')->username;
         }
 
         $rootdir = "";

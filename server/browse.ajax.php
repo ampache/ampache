@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,7 @@ if (!Core::is_session_started()) {
 }
 
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 if (isset($_REQUEST['browse_id'])) {
@@ -39,7 +39,7 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
-debug_event('browse.ajax.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
+debug_event('browse.ajax.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
 
 $browse = new Browse($browse_id);
 
@@ -53,7 +53,11 @@ if ($_REQUEST['argument']) {
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
+
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'browse':
         $object_ids = array();
 
@@ -87,7 +91,7 @@ switch ($_REQUEST['action']) {
             $browse->set_sort($_REQUEST['sort']);
         }
 
-        if (!$browse->get_use_pages()) {
+        if (!$browse->is_use_pages()) {
             $browse->set_start(0);
         }
 
@@ -105,7 +109,7 @@ switch ($_REQUEST['action']) {
                 // Check the perms we need to on this
                 $playlist = new Playlist($_REQUEST['id']);
                 if (!$playlist->has_access()) {
-                    exit;
+                    return false;
                 }
 
                 // Delete it!
@@ -115,21 +119,21 @@ switch ($_REQUEST['action']) {
             case 'smartplaylist':
                 $playlist = new Search($_REQUEST['id'], 'song');
                 if (!$playlist->has_access()) {
-                    exit;
+                    return false;
                 }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
-                if (!$GLOBALS['user']->has_access('75')) {
-                    exit;
+                if (!Core::get_global('user')->has_access('75')) {
+                    return false;
                 }
                 $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
             break;
             default:
-                exit;
+                return false;
         } // end switch on type
 
         $results[$key] = '';
@@ -180,13 +184,13 @@ switch ($_REQUEST['action']) {
                 $browse->set_grid_view($value);
             break;
             case 'limit':
-                $value = intval($value);
+                $value = (int) ($value);
                 if ($value > 0) {
                     $browse->set_offset($value);
                 }
             break;
             case 'custom':
-                $value = intval($value);
+                $value = (int) ($value);
                 $limit = $browse->get_offset();
                 if ($limit > 0 && $value > 0) {
                     $total = $browse->get_total();
@@ -206,11 +210,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'get_share_links':
         $object_type = $_REQUEST['object_type'];
-        $object_id   = intval($_REQUEST['object_id']);
+        $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         if (Core::is_library_item($object_type) && $object_id > 0) {
             Share::display_ui_links($object_type, $object_id);
-            exit;
+
+            return false;
         }
     break;
     default:

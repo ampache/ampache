@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -67,6 +67,7 @@ class scrobbler
      * call_url
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
+     * @param string $url
      */
     public function call_url($url, $method='GET', $vars=null)
     {
@@ -132,7 +133,7 @@ class scrobbler
      */
     public function get_session_key($token=null)
     {
-        if (!is_null($token)) {
+        if ($token !== null) {
             $vars = array(
             'method' => 'auth.getSession',
             'api_key' => $this->api_key,

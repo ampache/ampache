@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,6 +55,9 @@ class vainfo
      * This function just sets up the class, it doesn't pull the information.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param string $encoding
+     * @param string $encoding_id3v1
+     * @param string $encoding_id3v2
      */
     public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
     {
@@ -348,14 +351,14 @@ class vainfo
             $tags = $results[$key];
 
             $info['file']    = $info['file'] ?: $tags['file'];
-            $info['bitrate'] = $info['bitrate'] ?: intval($tags['bitrate']);
-            $info['rate']    = $info['rate'] ?: intval($tags['rate']);
+            $info['bitrate'] = $info['bitrate'] ?: (int) ($tags['bitrate']);
+            $info['rate']    = $info['rate'] ?: (int) ($tags['rate']);
             $info['mode']    = $info['mode'] ?: $tags['mode'];
             // size will be added later, because of conflicts between real file size and getID3 reported filesize
             $info['mime']     = $info['mime'] ?: $tags['mime'];
             $info['encoding'] = $info['encoding'] ?: $tags['encoding'];
             $info['rating']   = $info['rating'] ?: $tags['rating'];
-            $info['time']     = $info['time'] ?: intval($tags['time']);
+            $info['time']     = $info['time'] ?: (int) ($tags['time']);
             $info['channels'] = $info['channels'] ?: $tags['channels'];
 
             // This because video title are almost always bad...
@@ -363,10 +366,10 @@ class vainfo
             $info['title']         = $info['title'] ?: stripslashes(trim($tags['title']));
 
             // Not even sure if these can be negative, but better safe than llama.
-            $info['year'] = Catalog::normalize_year($info['year'] ?: intval($tags['year']));
-            $info['disk'] = abs($info['disk'] ?: intval($tags['disk']));
+            $info['year'] = Catalog::normalize_year($info['year'] ?: (int) ($tags['year']));
+            $info['disk'] = abs($info['disk'] ?: (int) ($tags['disk']));
 
-            $info['totaldisks'] = $info['totaldisks'] ?: intval($tags['totaldisks']);
+            $info['totaldisks'] = $info['totaldisks'] ?: (int) ($tags['totaldisks']);
 
             $info['artist']         = $info['artist'] ?: trim($tags['artist']);
             $info['albumartist']    = $info['albumartist'] ?: trim($tags['albumartist']);
@@ -396,13 +399,13 @@ class vainfo
             $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
             $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: floatval($tags['replaygain_album_peak']);
 
-            $info['track']         = $info['track'] ?: intval($tags['track']);
-            $info['resolution_x']  = $info['resolution_x'] ?: intval($tags['resolution_x']);
-            $info['resolution_y']  = $info['resolution_y'] ?: intval($tags['resolution_y']);
-            $info['display_x']     = $info['display_x'] ?: intval($tags['display_x']);
-            $info['display_y']     = $info['display_y'] ?: intval($tags['display_y']);
+            $info['track']         = $info['track'] ?: (int) ($tags['track']);
+            $info['resolution_x']  = $info['resolution_x'] ?: (int) ($tags['resolution_x']);
+            $info['resolution_y']  = $info['resolution_y'] ?: (int) ($tags['resolution_y']);
+            $info['display_x']     = $info['display_x'] ?: (int) ($tags['display_x']);
+            $info['display_y']     = $info['display_y'] ?: (int) ($tags['display_y']);
             $info['frame_rate']    = $info['frame_rate'] ?: floatval($tags['frame_rate']);
-            $info['video_bitrate'] = $info['video_bitrate'] ?: intval($tags['video_bitrate']);
+            $info['video_bitrate'] = $info['video_bitrate'] ?: (int) ($tags['video_bitrate']);
             $info['audio_codec']   = $info['audio_codec'] ?: trim($tags['audio_codec']);
             $info['video_codec']   = $info['video_codec'] ?: trim($tags['video_codec']);
             $info['description']   = $info['description'] ?: trim($tags['description']);
@@ -447,6 +450,9 @@ class vainfo
         return $info;
     }
 
+    /**
+     * @param string $field
+     */
     private static function clean_array_tag($field, $info, $tags)
     {
         $arr = array();
@@ -600,7 +606,7 @@ class vainfo
                 $plugin            = new Plugin($tag_source);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {
-                    if ($plugin->load($GLOBALS['user'])) {
+                    if ($plugin->load(Core::get_global('user'))) {
                         $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gather_types, self::clean_tag_info($this->tags, self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));
                     }
                 }
@@ -629,8 +635,8 @@ class vainfo
             $parsed['mode'] = 'cbr';
         }
         $parsed['bitrate']       = $tags['audio']['bitrate'];
-        $parsed['channels']      = intval($tags['audio']['channels']);
-        $parsed['rate']          = intval($tags['audio']['sample_rate']);
+        $parsed['channels']      = (int) ($tags['audio']['channels']);
+        $parsed['rate']          = (int) ($tags['audio']['sample_rate']);
         $parsed['size']          = $this->_forcedSize ?: $tags['filesize'];
         $parsed['encoding']      = $tags['encoding'];
         $parsed['mime']          = $tags['mime_type'];
@@ -1047,6 +1053,7 @@ class vainfo
      *  parse movie names:
      *    title.[date].ext
      *    /movie title [(date)]/title.ext
+     * @param string $filepath
      */
     private function _parse_filename($filepath)
     {
@@ -1060,7 +1067,7 @@ class vainfo
             $tvyear  = array();
             $temp    = array();
             preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath, $tvyear);
-            $results['year'] = !empty($tvyear) ? intval($tvyear[0]) : null;
+            $results['year'] = !empty($tvyear) ? (int) ($tvyear[0]) : null;
         
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
                 $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~", $file, 2);
@@ -1144,6 +1151,11 @@ class vainfo
         return $results;
     }
     
+    /**
+     * @param string $dir_pattern
+     * @param string $file_pattern
+     * @param string $filepath
+     */
     public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
     {
         $results         = array();
@@ -1192,14 +1204,18 @@ class vainfo
         return $results;
     }
     
+    /**
+     * @return string
+     */
     private function removeCommonAbbreviations($name)
     {
         $abbr         = explode(",", AmpConfig::get('common_abbr'));
         $commonabbr   = preg_replace("~\n~", '', $abbr);
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
+        $abbr_count   = count($commonabbr);
 
         //scan for brackets, braces, etc and ignore case.
-        for ($i=0; $i < count($commonabbr);$i++) {
+        for ($i=0; $i < $abbr_count;$i++) {
             $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
         }
         $string = preg_replace($commonabbr, '', $name);

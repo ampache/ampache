@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,18 +36,20 @@ set_time_limit(0);
 $channel = new Channel($_REQUEST['channel']);
 if (!$channel->id) {
     debug_event('channel', 'Unknown channel.', '1');
-    exit;
+
+    return false;
 }
 
 if (!function_exists('curl_version')) {
     debug_event('channel', 'Error: Curl is required for this feature.', '1');
-    exit;
+
+    return false;
 }
 
 // Authenticate the user here
 if ($channel->is_private) {
     $is_auth = false;
-    if (isset($_SERVER['PHP_AUTH_USER'])) {
+    if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
         $htusername = $_SERVER['PHP_AUTH_USER'];
         $htpassword = $_SERVER['PHP_AUTH_PW'];
 
@@ -59,11 +61,12 @@ if ($channel->is_private) {
             Preference::init();
 
             if (AmpConfig::get('access_control')) {
-                if (!Access::check_network('stream', $GLOBALS['user']->id, '25') and
-                    !Access::check_network('network', $GLOBALS['user']->id, '25')) {
-                    debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access", '3');
+                if (!Access::check_network('stream', Core::get_global('user')->id, '25') and
+                    !Access::check_network('network', Core::get_global('user')->id, '25')) {
+                    debug_event('UI::access_denied', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
                     UI::access_denied();
-                    exit;
+
+                    return false;
                 }
             }
         }
@@ -73,7 +76,8 @@ if ($channel->is_private) {
         header('WWW-Authenticate: Basic realm="Ampache Channel Authentication"');
         header('HTTP/1.0 401 Unauthorized');
         echo T_('Unauthorized.');
-        exit;
+
+        return false;
     }
 }
 
@@ -105,6 +109,7 @@ curl_close($ch);
  */
 function progress($totaldownload, $downloaded, $us, $ud)
 {
+    flush();
     ob_flush();
 }
 

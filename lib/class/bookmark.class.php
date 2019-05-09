@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,6 +44,7 @@ class Bookmark extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull for
+     * @param string $object_type
      */
     public function __construct($object_id, $object_type = null, $user_id = null)
     {
@@ -55,7 +56,7 @@ class Bookmark extends database_object
             $info = $this->get_info($object_id);
         } else {
             if ($user_id == null) {
-                $user_id = $GLOBALS['user']->id;
+                $user_id = Core::get_global('user')->id;
             }
 
             $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";
@@ -77,11 +78,11 @@ class Bookmark extends database_object
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * Remove bookmark for items that no longer exist.
      */
-    public static function gc($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array('song', 'video', 'podcast_episode');
 
@@ -103,7 +104,7 @@ class Bookmark extends database_object
     {
         $ids = array();
         if ($user == null) {
-            $user = $GLOBALS['user'];
+            $user = Core::get_global('user');
         }
         
         $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ?";
@@ -119,8 +120,8 @@ class Bookmark extends database_object
     {
         $bookmarks = array();
         $ids       = self::get_bookmarks_ids($user);
-        foreach ($ids as $id) {
-            $bookmarks[] = new Bookmark($id);
+        foreach ($ids as $bookmarkid) {
+            $bookmarks[] = new Bookmark($bookmarkid);
         }
 
         return $bookmarks;
@@ -128,7 +129,7 @@ class Bookmark extends database_object
     
     public static function create(array $data)
     {
-        $user     = $data['user'] ?: $GLOBALS['user']->id;
+        $user     = $data['user'] ?: Core::get_global('user')->id;
         $position = $data['position'] ?: 0;
         $comment  = scrub_in($data['comment']);
         

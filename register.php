@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,8 @@ require_once 'lib/init.php';
 if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode')) {
     debug_event('DENIED', 'Error Attempted registration', '1');
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 /* Don't even include it if we aren't going to use it */
@@ -38,9 +39,10 @@ if (AmpConfig::get('captcha_public_reg')) {
     require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
 }
 
+$action = UI::get_action();
 
-/* Start switch based on action passed */
-switch ($_REQUEST['action']) {
+// Switch on the actions
+switch ($action) {
     case 'validate':
         $username      = scrub_in($_GET['username']);
         $validation    = scrub_in($_GET['auth']);
@@ -57,8 +59,8 @@ switch ($_REQUEST['action']) {
          * and 'click here to login' would just be a link back to index.php
          */
         $fullname       = scrub_in($_POST['fullname']);
-        $username       = scrub_in($_POST['username']);
-        $email          = scrub_in($_POST['email']);
+        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
+        $email          = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website        = scrub_in($_POST['website']);
         $pass1          = $_POST['password_1'];
         $pass2          = $_POST['password_2'];
@@ -86,7 +88,7 @@ switch ($_REQUEST['action']) {
             }
         } // if they have to agree to something
 
-        if (!$_POST['username']) {
+        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)) {
             AmpError::add('username', T_("You did not enter a username"));
         }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -182,7 +182,7 @@ class Channel extends database_object implements media, library_item
     public function show_action_buttons()
     {
         if ($this->id) {
-            if ($GLOBALS['user']->has_access('75')) {
+            if (Core::get_global('user')->has_access('75')) {
                 echo Ajax::button('?page=index&action=start_channel&id=' . $this->id, 'run', T_('Start Channel'), 'channel_start_' . $this->id);
                 echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id, 'stop', T_('Stop Channel'), 'channel_stop_' . $this->id);
                 echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel edit') . "', 'channel_row_', 'refresh_channel')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
@@ -204,6 +204,9 @@ class Channel extends database_object implements media, library_item
         return array();
     }
 
+    /**
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->name;
@@ -504,7 +507,7 @@ class Channel extends database_object implements media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -539,10 +542,13 @@ class Channel extends database_object implements media, library_item
         return false;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
     }
 
+    /**
+     * @param string $x
+     */
     private function strtohex($x)
     {
         $s='';

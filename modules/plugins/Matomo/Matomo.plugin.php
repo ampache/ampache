@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2019 ampcore
+ * Copyright 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -90,7 +90,7 @@ class AmpacheMatomo
      */
     public function display_on_footer()
     {
-        $currentUrl = scrub_out("http" . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        $currentUrl = scrub_out("http" . (filter_has_var(INPUT_SERVER, 'HTTPS') ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 
         echo "<!-- Matomo -->\n";
         echo "<script type='text/javascript'>\n";
@@ -102,8 +102,8 @@ class AmpacheMatomo
         echo "var u='" . scrub_out($this->matomo_url) . "';\n";
         echo "_paq.push(['setTrackerUrl', u+'matomo.php']);\n";
         echo "_paq.push(['setSiteId', " . scrub_out($this->site_id) . "]);\n";
-        if ($GLOBALS['user']->id > 0) {
-            echo "_paq.push(['setUserId', '" . $GLOBALS['user']->username . "']);\n";
+        if (Core::get_global('user')->id > 0) {
+            echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
         echo "g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);\n";

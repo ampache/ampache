@@ -1,4 +1,6 @@
-# ![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
+# Ampache
+
+![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
 
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
@@ -51,19 +53,20 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
   * json
   * simplexml (optional)
   * curl (optional)
-  
-* For FreeBSD The following modules must be loaded:
+
+* For FreeBSD The following php modules must be loaded:
   * php-xml
   * php-dom
 
-* MySQL 5.x
+* MySQL 5.x / MariaDB 10.x
 
 ## Upgrading
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
 its place and then copying the old /config/ampache.cfg.php, /rest/.htaccess,
-and /play/.htaccess files if any. All database updates will be handled by Ampache.
+/channel/.htaccess, and /play/.htaccess files if any.
+All database updates will be handled by Ampache.
 
 ## License
 
@@ -83,12 +86,11 @@ for more instructions.
 
 Translation progress so far:
 
-[![](https://www.transifex.com/_/charts/redirects/ampache/ampache/image_png/messagespot/)](https://www.transifex.com/projects/p/ampache/)
+[![Transifex](https://www.transifex.com/_/charts/redirects/ampache/ampache/image_png/messagespot/)](https://www.transifex.com/projects/p/ampache/)
 
 ## Credits
 
 Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS)
-
 
 ## Contact Us
 

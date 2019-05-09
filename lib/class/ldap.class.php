@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,7 @@
  *
  * This function is here for retrocompatibility with PHP < 5.6.
  * For PHP >= 5.6, one can use array_filter with flag ARRAY_FILTER_USE_KEY.
+ * @param string $callback
  */
 function array_filter_key($array, $callback)
 {
@@ -157,6 +158,8 @@ class LDAP
     
     /**
      * Binds to the LDAP
+     * @param string $password
+     * @param string $username
      */
     private static function bind($link, $username = null, $password = null)
     {
@@ -204,6 +207,7 @@ class LDAP
     
     /**
      * Search for a DN in the LDAP
+     * @return string
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
     {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,8 @@
  */
 
 $threshold = AmpConfig::get('stats_threshold');
-$count     = 6;
+$user_id   = Core::get_global('user')->id;
+$count     = 18;
 ?>
 <p>
     <input type="button" value="<?php echo T_('Browse Library') ?>" onclick="NavigateTo('<?php echo AmpConfig::get('web_path') ?>/browse.php?action=<?php echo $object_type ?>');" />
@@ -50,7 +51,7 @@ UI::show_box_bottom();
 ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=popular"><?php UI::show_box_top(T_('Popular')) ?></a>
 <?php
-$object_ids = Stats::get_top($object_type, $count, $threshold);
+$object_ids = Stats::get_top($object_type, $count, $threshold, '', $user_id);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);

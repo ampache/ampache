@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,9 +33,10 @@ Preference::init();
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
-        debug_event('UI::access_denied', 'Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list', '3');
+        debug_event('UI::access_denied', 'Access Denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', '3');
         UI::access_denied();
-        exit();
+
+        return false;
     }
 } // access_control is enabled
 
@@ -56,7 +57,7 @@ if (empty($_REQUEST['step'])) {
             $auth['info']['offset_limit']    = 25;
         } else {
             if ($_POST['username']) {
-                $username = scrub_in($_POST['username']);
+                $username = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
                 $password = $_POST['password'];
             } else {
                 if ($_SERVER['REMOTE_USER']) {
@@ -74,9 +75,10 @@ if (empty($_REQUEST['step'])) {
                 $username = $auth['username'];
             } elseif ($auth['ui_required']) {
                 echo $auth['ui_required'];
-                exit();
+
+                return false;
             } else {
-                debug_event('Login', scrub_out($username) . ' From ' . $_SERVER['REMOTE_ADDR'] . ' attempted to login and failed', '1');
+                debug_event('Login', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' attempted to login and failed', '1');
                 AmpError::add('general', T_('Error Username or Password incorrect, please try again'));
             }
         }
@@ -102,7 +104,7 @@ if (!empty($username) && isset($auth)) {
     } // if user disabled
     elseif (AmpConfig::get('prevent_multiple_logins')) {
         $session_ip = $user->is_logged_in();
-        $current_ip = inet_pton($_SERVER['REMOTE_ADDR']);
+        $current_ip = inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
             AmpError::add('general', T_('User Already Logged in'));
@@ -205,8 +207,10 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         strpos($_POST['referrer'], 'activate.php') === false &&
         strpos($_POST['referrer'], 'admin') === false) {
         header('Location: ' . $_POST['referrer']);
-        exit();
+
+        return false;
     } // if we've got a referrer
     header('Location: ' . AmpConfig::get('web_path') . '/index.php');
-    exit();
+
+    return false;
 } // auth success

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,10 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -48,7 +51,8 @@ switch ($_REQUEST['action']) {
         if (!Catalog::can_remove($episode)) {
             debug_event('video', 'Unauthorized to remove the episode `.' . $episode->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($episode->remove()) {

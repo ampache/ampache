@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,11 +24,12 @@ require_once 'lib/init.php';
 
 require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
-$object_type = $_GET['object_type'];
-$object_id   = $_GET['object_id'];
+$object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING);
+$object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 if (!Core::is_library_item($object_type)) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 $burl = '';
 if (isset($_GET['burl'])) {
@@ -37,13 +38,16 @@ if (isset($_GET['burl'])) {
 $item = new $object_type($object_id);
 
 // If not a content manager user then kick em out
-if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != $GLOBALS['user']->id)) {
+if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
-/* Switch on Action */
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'clear_art':
         $art = new Art($object_id, $object_type);
         $art->reset();

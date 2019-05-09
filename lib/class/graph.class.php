@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,6 +31,10 @@ class Graph
         return true;
     }
     
+    /**
+     * @param string $field
+     * @param string $zoom
+     */
     protected function get_sql_date_format($field, $zoom)
     {
         switch ($zoom) {
@@ -57,21 +61,21 @@ class Graph
         if ($end_date == null) {
             $end_date = time();
         } else {
-            $end_date = intval($end_date);
+            $end_date = (int) ($end_date);
         }
         if ($start_date == null) {
             $start_date = $end_date - 864000;
         } else {
-            $start_date = intval($start_date);
+            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `object_count`.`date` >= " . $start_date . " AND `object_count`.`date` <= " . $end_date;
         if ($user > 0) {
-            $user = intval($user);
+            $user = (int) ($user);
             $sql .= " AND `object_count`.`user` = " . $user;
         }
 
-        $object_id = intval($object_id);
+        $object_id = (int) ($object_id);
         if (Core::is_library_item($object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id) {
@@ -87,21 +91,21 @@ class Graph
         if ($end_date == null) {
             $end_date = time();
         } else {
-            $end_date = intval($end_date);
+            $end_date = (int) ($end_date);
         }
         if ($start_date == null) {
             $start_date = $end_date - 864000;
         } else {
-            $start_date = intval($start_date);
+            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
         if ($catalog > 0) {
-            $catalog = intval($catalog);
+            $catalog = (int) ($catalog);
             $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog;
         }
 
-        $object_id = intval($object_id);
+        $object_id = (int) ($object_id);
         if ($object_id) {
             $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
         }
@@ -109,6 +113,9 @@ class Graph
         return $sql;
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_all_type_pts($fct, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         if ($object_type == null) {
@@ -135,6 +142,9 @@ class Graph
         return $values;
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
         $values = $this->get_all_type_pts($fct, $id, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -148,6 +158,9 @@ class Graph
         return $values;
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_user_all_pts($fct, CpChart\Chart\Data $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $values = $this->get_all_pts($fct, $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -171,6 +184,9 @@ class Graph
         }
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_catalog_all_pts($fct, CpChart\Chart\Data $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $values = $this->get_all_pts($fct, $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom, false);
@@ -297,14 +313,18 @@ class Graph
         return $pts;
     }
 
+    /**
+     * @param string $title
+     * @param string $zoom
+     */
     protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
-        $width = intval($width);
+        $width = (int) ($width);
         if ($width <= 50 || $width > 4096) {
             $width = 700;
         }
-        $height = intval($height);
+        $height = (int) ($height);
         if ($height <= 60 || $height > 4096) {
             $height = 260;
         }
@@ -461,7 +481,7 @@ class Graph
 
         foreach (Plugin::get_plugins('display_map') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($GLOBALS['user'])) {
+            if ($plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->display_map($pts)) {
                     break;
                 }
@@ -472,7 +492,7 @@ class Graph
     public static function display_from_request()
     {
         $object_type = $_REQUEST['object_type'];
-        $object_id   = $_REQUEST['object_id'];
+        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         
         $libitem  = null;
         $owner_id = 0;
@@ -483,7 +503,7 @@ class Graph
             }
         }
         
-        if (($owner_id <= 0 || $owner_id != $GLOBALS['user']->id) && !Access::check('interface', '50')) {
+        if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
             $user_id      = $_REQUEST['user_id'];

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -142,7 +142,7 @@ function check_php_memory()
     $current_memory = ini_get('memory_limit');
     $current_memory = substr($current_memory, 0, strlen($current_memory) - 1);
 
-    if (intval($current_memory) < 48) {
+    if ((int) ($current_memory) < 48) {
         return false;
     }
 
@@ -156,7 +156,7 @@ function check_php_memory()
  */
 function check_php_timelimit()
 {
-    $current = intval(ini_get('max_execution_time'));
+    $current = (int) (ini_get('max_execution_time'));
 
     return ($current >= 60 || $current == 0);
 } // check_php_timelimit
@@ -249,6 +249,9 @@ function check_php_gd()
     return (extension_loaded('gd') || extension_loaded('gd2'));
 }
 
+/**
+ * @param string $val
+ */
 function return_bytes($val)
 {
     $val  = trim($val);

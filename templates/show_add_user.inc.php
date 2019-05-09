@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,7 @@
                 <?php echo  T_('Username'); ?>: *
             </td>
             <td>
-                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($_POST['username']); ?>" />
+                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)); ?>" />
                 <?php AmpError::display('username'); ?>
             </td>
         </tr>
@@ -45,7 +45,7 @@
                 <?php echo  T_('E-mail'); ?>: *
             </td>
             <td>
-                <input type="text" name="email" value="<?php echo scrub_out($_POST['email']); ?>" />
+                <input type="text" name="email" value="<?php echo scrub_out(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
                 <?php AmpError::display('email'); ?>
             </td>
         </tr>

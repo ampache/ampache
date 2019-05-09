@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,8 +28,10 @@ define('TABLE_RENDERED', 1);
 // Temporary workaround to avoid sorting on custom base requests
 define('NO_BROWSE_SORTING', true);
 
-/* Switch on the action to be performed */
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     // Show a Users "Profile" page
     case 'show_user':
         $client = new User($_REQUEST['user_id']);

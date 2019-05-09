@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,13 +24,16 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', 100) or AmpConfig::get('demo_mode')) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 UI::show_header();
 
-/* Switch on action boys */
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     /* This re-generates the config file comparing
      * /config/ampache.cfg to .cfg.dist
      */
@@ -41,11 +44,13 @@ switch ($_REQUEST['action']) {
         $browser = new Horde_Browser();
         $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
         echo $final;
-        exit;
+
+        return false;
     case 'write_config':
         write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
         header('Location: ' . AmpConfig::get('web_path') . '/index.php');
-        exit;
+
+        return false;
     case 'reset_db_charset':
         Dba::reset_db_charset();
         show_confirmation(T_('Database Charset Updated'), T_('Your Database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');

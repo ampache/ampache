@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,7 +103,7 @@ class SubsonicClient
                 CURLOPT_CONNECTTIMEOUT => 8,
                 CURLOPT_SSL_VERIFYPEER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_PORT => intval($this->_serverPort)
+                CURLOPT_PORT => (int) ($this->_serverPort)
             );
             $ch = curl_init();
             curl_setopt_array($ch, $options);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,7 +46,7 @@ if (count($options) == 0) {
 
         if (array_key_exists('h', $options)) {
             usage();
-            exit;
+            return false;
         }
         if (array_key_exists('m', $options)) {
             $operations_string .= "\n\t- " . T_('Temporary deactivate PHP memory limit');
@@ -87,7 +87,7 @@ if (count($options) == 0) {
 }
 if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
     usage();
-    exit;
+    return false;
 }
 
 if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0) {    //didn't pass any clean/verify/add arguments
@@ -123,14 +123,18 @@ if ($plimp == 1) {
     $options['parse_playlist'] = false;
 }
 // --------
-if ($catname) $where = " name = '$catname' ";
+if ($catname !== false) {
+    $where = " name = '$catname' ";
+}
 if ($cattype) { 
     $where .= "catalog_type='$cattype'";
 } elseif (!$where) {
     $where .= "catalog_type='local'";
 }
 $sql = "SELECT id FROM catalog";
-if ($where) $sql .= " WHERE $where";
+if ($where) {
+    $sql .= " WHERE $where";
+}
 $db_results = Dba::read($sql);
 
 ob_start("ob_html_strip",'1024',true);
@@ -236,5 +240,3 @@ function usage() {
     echo "----------------------------------------------------------";
     echo "\n";
 }
-
-?>

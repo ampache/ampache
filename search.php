@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,10 +24,10 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-/**
- * action switch
- */
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'search':
         if ($_REQUEST['rule_1'] != 'missing_artist') {
             $browse = new Browse();
@@ -46,7 +46,8 @@ switch ($_REQUEST['action']) {
     case 'save_as_smartplaylist':
         if (!Access::check('interface', 25)) {
             UI::access_denied();
-            exit();
+
+            return false;
         }
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
@@ -57,7 +58,8 @@ switch ($_REQUEST['action']) {
         // This is a little special we don't want header/footers so trash what we've got in the OB
         ob_clean();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search_descriptor.inc.php');
-        exit;
+
+        return false;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
     break;

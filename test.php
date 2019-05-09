@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,8 +24,8 @@ $prefix = dirname(__FILE__);
 require_once $prefix . '/lib/init-tiny.php';
 
 $action = 'default';
-if (isset($_REQUEST['action'])) {
-    $action = $_REQUEST['action'];
+if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+    $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 }
 switch ($action) {
     case 'config':
@@ -58,7 +58,7 @@ switch ($action) {
 
         // Try to load localization from cookie
         $session_name = AmpConfig::get('session_name');
-        if (isset($_COOKIE[$session_name . '_lang'])) {
+        if ((filter_has_var(INPUT_COOKIE, $session_name . '_lang'))) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
 

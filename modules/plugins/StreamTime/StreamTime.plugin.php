@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -123,13 +123,13 @@ class AmpacheStreamTime
         $data = $user->prefs;
         
         $this->user_id = $user->id;
-        if (intval($data['stream_control_time_max'])) {
-            $this->time_max = intval($data['stream_control_time_max']);
+        if ((int) ($data['stream_control_time_max'])) {
+            $this->time_max = (int) ($data['stream_control_time_max']);
         } else {
             $this->time_max = 1024;
         }
-        if (intval($data['stream_control_time_days']) > 0) {
-            $this->time_days = intval($data['stream_control_time_days']);
+        if ((int) ($data['stream_control_time_days']) > 0) {
+            $this->time_days = (int) ($data['stream_control_time_days']);
         } else {
             $this->time_days = 30;
         }

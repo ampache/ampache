@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,14 +20,14 @@
  *
  */
 
-$sql    = Catalog::get_uploads_sql('song', $GLOBALS['user']->id);
+$sql    = Catalog::get_uploads_sql('song', (int) Core::get_global('user')->id);
 $browse = new Browse();
 $browse->set_type('song', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql    = Catalog::get_uploads_sql('album', $GLOBALS['user']->id);
+$sql    = Catalog::get_uploads_sql('album', (int) Core::get_global('user')->id);
 $browse = new Browse();
 $browse->set_type('album', $sql);
 $browse->set_simple_browse(true);
@@ -35,7 +35,7 @@ $browse->show_objects();
 $browse->store();
 
 if (!AmpConfig::get('upload_user_artist')) {
-    $sql    = Catalog::get_uploads_sql('artist', $GLOBALS['user']->id);
+    $sql    = Catalog::get_uploads_sql('artist', (int) Core::get_global('user')->id);
     $browse = new Browse();
     $browse->set_type('artist', $sql);
     $browse->set_simple_browse(true);

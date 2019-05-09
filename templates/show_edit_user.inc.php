@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -69,7 +69,7 @@
                 <?php echo  T_('State'); ?>:
             </td>
             <td>
-                <input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" />
+                <input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
                 <?php AmpError::display('state'); ?>
             </td>
         </tr>
@@ -78,7 +78,7 @@
                 <?php echo  T_('City'); ?>:
             </td>
             <td>
-                <input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" />
+                <input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
                 <?php AmpError::display('city'); ?>
             </td>
         </tr>
@@ -87,7 +87,7 @@
                 <?php echo T_('Password'); ?> :
             </td>
             <td>
-                <input type="password" name="password_1" value="" />
+                <input type="password" name="password_1" value="" autocomplete="off" />
                 <?php AmpError::display('password'); ?>
             </td>
         </tr>
@@ -96,7 +96,7 @@
                 <?php echo T_('Confirm Password'); ?>:
             </td>
             <td>
-                <input type="password" name="password_2" value="" />
+                <input type="password" name="password_2" value="" autocomplete="off" />
             </td>
         </tr>
         <tr>

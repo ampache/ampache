@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,35 +22,37 @@
 
 require_once 'lib/init.php';
 
-if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
+if (!filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     debug_event("stream.php", "Asked without action. Exiting...", 5);
-    exit;
+
+    return false;
 }
 
 if (!defined('NO_SESSION')) {
     /* If we are running a demo, quick while you still can! */
     if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface', '25')) {
         UI::access_denied();
-        exit;
+
+        return false;
     }
 }
 
 $media_ids = array();
 $web_path  = AmpConfig::get('web_path');
 
-debug_event("stream.php", "Asked for {" . $_REQUEST['action'] . "}.", 5);
+debug_event("stream.php", "Asked for {" . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . "}.", 5);
 
-/**
- * action switch
- */
-switch ($_REQUEST['action']) {
+$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'basket':
         // Pull in our items (multiple types)
-        $media_ids = $GLOBALS['user']->playlist->get_items();
+        $media_ids = Core::get_global('user')->playlist->get_items();
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
         if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
-            $GLOBALS['user']->playlist->clear();
+            Core::get_global('user')->playlist->clear();
         }
     break;
     /* This is run if we need to gather info based on a tmp playlist */
@@ -59,9 +61,9 @@ switch ($_REQUEST['action']) {
         $media_ids    = $tmp_playlist->get_items();
     break;
     case 'play_favorite':
-        $data      = $GLOBALS['user']->get_favorites($_REQUEST['type']);
+        $data      = Core::get_global('user')->get_favorites((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $media_ids = array();
-        switch ($_REQUEST['type']) {
+        switch ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) {
             case 'artist':
             case 'album':
                 foreach ($data as $value) {
@@ -78,7 +80,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'play_item':
         $object_type = $_REQUEST['object_type'];
-        $object_ids  = explode(',', $_REQUEST['object_id']);
+        $object_ids  = explode(',', filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
 
         if (Core::is_playable_item($object_type)) {
             foreach ($object_ids as $object_id) {
@@ -146,7 +148,10 @@ switch ($_REQUEST['action']) {
 } // end action switch
 
 // See if we need a special streamtype
-switch ($_REQUEST['action']) {
+//$action = UI::get_action();
+
+// Switch on the actions
+switch ($action) {
     case 'download':
         $stream_type = 'download';
     break;
@@ -170,14 +175,15 @@ debug_event('stream.php', 'Stream Type: ' . $stream_type . ' Media IDs: ' . json
 if (count($media_ids) || isset($urls)) {
     if ($stream_type != 'democratic') {
         if (!User::stream_control($media_ids)) {
-            debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, 3);
+            debug_event('UI::access_denied', 'Stream control failed for user ' . Core::get_global('user')->username, 3);
             UI::access_denied();
-            exit;
+
+            return false;
         }
     }
 
-    if ($GLOBALS['user']->id > -1) {
-        Session::update_username(Stream::get_session(), $GLOBALS['user']->username);
+    if (Core::get_global('user')->id > -1) {
+        Session::update_username(Stream::get_session(), Core::get_global('user')->username);
     }
 
     $playlist = new Stream_Playlist();

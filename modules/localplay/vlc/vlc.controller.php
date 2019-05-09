@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -122,7 +122,7 @@ class AmpacheVlc extends localplay_controller
     public function add_instance($data)
     {
         $sql        = "INSERT INTO `localplay_vlc` (`name`,`host`,`port`,`password`,`owner`) VALUES (?, ?, ?, ?, ?)";
-        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['password'], $GLOBALS['user']->id));
+        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['password'], Core::get_global('user')->id));
 
         return $db_results;
     } // add_instance
@@ -208,14 +208,14 @@ class AmpacheVlc extends localplay_controller
     public function set_active_instance($uid, $user_id='')
     {
         // Not an admin? bubkiss!
-        if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+        if (!Core::get_global('user')->has_access('100')) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
 
-        Preference::update('vlc_active', $user_id, intval($uid));
-        AmpConfig::set('vlc_active', intval($uid), true);
+        Preference::update('vlc_active', $user_id, (int) ($uid));
+        AmpConfig::set('vlc_active', (int) ($uid), true);
 
         return true;
     } // set_active_instance
@@ -549,7 +549,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         $array['state']     = $state;
-        $array['volume']    = intval((intval($arrayholder['root']['volume']['value']) / 2.6));
+        $array['volume']    = (int) (((int) ($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat']    = $arrayholder['root']['repeat']['value'];
         $array['random']    = $arrayholder['root']['random']['value'];
         $array['track']     =   htmlspecialchars_decode($arrayholder['root']['information']['meta-information']['title']['value'], ENT_NOQUOTES);

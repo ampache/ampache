@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -78,6 +78,9 @@ class Daap_Api
     {
     }
 
+    /**
+     * @param string $url
+     */
     public static function follow_stream($url)
     {
         set_time_limit(0);
@@ -218,6 +221,9 @@ class Daap_Api
         self::apiOutput($o);
     }
 
+    /**
+     * @param string $code
+     */
     private static function check_session($code)
     {
         // Purge expired sessions
@@ -303,7 +309,7 @@ class Daap_Api
     
     private static function catalog_songs()
     {
-        // $type = $_GET['type'];
+        // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
         $meta = explode(',', strtolower($_GET['meta']));
         $o    = self::tlv('dmap.status', 200);
         $o .= self::tlv('dmap.updatetype', 0);
@@ -387,8 +393,8 @@ class Daap_Api
             if ($input[1] == 'items') {
                 $finfo = explode('.', $input[2]);
                 if (count($finfo) == 2) {
-                    $id   = intval($finfo[0]);
-                    $type = $finfo[1];
+                    $object_id = (int) ($finfo[0]);
+                    $type      = $finfo[1];
                     
                     $params  = '';
                     $headers = apache_request_headers();
@@ -398,27 +404,28 @@ class Daap_Api
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
-                    $url = Song::play_url($id, $params, 'api', true);
+                    $url = Song::play_url($object_id, $params, 'api', true);
                     self::follow_stream($url);
-                    exit();
+
+                    return false;
                 }
             }
         } elseif (count($input) == 4) {
             // Playlist
             if ($input[1] == 'containers' && $input[3] == 'items') {
-                $id = intval($input[2]);
+                $object_id = (int) ($input[2]);
                 
                 self::check_session('daap.playlistsongs');
                 
-                if ($id == Daap_Api::BASE_LIBRARY) {
+                if ($object_id == Daap_Api::BASE_LIBRARY) {
                     $o = self::catalog_songs();
                     $o = self::tlv('daap.playlistsongs', $o);
                 } else {
-                    if ($id > Daap_Api::AMPACHEID_SMARTPL) {
-                        $id -= Daap_Api::AMPACHEID_SMARTPL;
-                        $playlist = new Search($id, 'song');
+                    if ($object_id > Daap_Api::AMPACHEID_SMARTPL) {
+                        $object_id -= Daap_Api::AMPACHEID_SMARTPL;
+                        $playlist = new Search($object_id, 'song');
                     } else {
-                        $playlist = new Playlist($id);
+                        $playlist = new Playlist($object_id);
                     }
 
                     if ($playlist->id) {
@@ -445,7 +452,7 @@ class Daap_Api
 
                         $o = self::tlv('daap.playlistsongs', $o);
                     } else {
-                        self::createApiError('daap.playlistsongs', 500, 'Invalid playlist id: ' . $id);
+                        self::createApiError('daap.playlistsongs', 500, 'Invalid playlist id: ' . $object_id);
                     }
                 }
             }
@@ -484,7 +491,7 @@ class Daap_Api
                         $o .= self::tlv($m, $song->f_composer);
                         break;
                     case 'daap.songbitrate':
-                        $o .= self::tlv($m, intval($song->bitrate / 1000));
+                        $o .= self::tlv($m, (int) ($song->bitrate / 1000));
                         break;
                     case 'daap.songcomment':
                         $o .= self::tlv($m, $song->comment);
@@ -749,6 +756,11 @@ class Daap_Api
         self::add_dict('aeSP', 'byte', 'com.apple.itunes.smart-playlist');
     }
 
+    /**
+     * @param string $code
+     * @param string $type
+     * @param string $name
+     */
     private static function add_dict($code, $type, $name)
     {
         self::$tags[$name] = array(
@@ -798,6 +810,9 @@ class Daap_Api
         header("Expires: -1");
     }
 
+    /**
+     * @param string $string
+     */
     public static function apiOutput($string)
     {
         self::setHeaders();
@@ -828,9 +843,14 @@ class Daap_Api
         
         $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
         self::apiOutput($html);
-        exit();
+
+        return false;
     }
 
+    /**
+     * @param string $tag
+     * @param integer $code
+     */
     public static function createApiError($tag, $code, $msg = '')
     {
         $o = self::tlv('dmap.status', $code);
@@ -839,6 +859,7 @@ class Daap_Api
         }
         $o = self::tlv($tag, $o);
         self::apiOutput($o);
-        exit();
+
+        return false;
     }
 }

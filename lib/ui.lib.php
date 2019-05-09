@@ -10,7 +10,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,6 +62,9 @@ function catalog_worker($action, $catalogs = null, $options = null)
     }
 }
 
+/**
+ * @param string $url
+ */
 function sse_worker($url)
 {
     echo '<script type="text/javascript">';
@@ -644,6 +647,7 @@ function json_from_array($array, $callback = false, $type = '')
 /**
  * xml_get_header
  * This takes the type and returns the correct xml header
+ * @param string $type
  */
 function xml_get_header($type)
 {
@@ -684,6 +688,7 @@ function xml_get_header($type)
 /**
  * xml_get_footer
  * This takes the type and returns the correct xml footer
+ * @param string $type
  */
 function xml_get_footer($type)
 {
@@ -746,7 +751,7 @@ function print_bool($value)
  */
 function show_now_playing()
 {
-    Session::gc();
+    Session::garbage_collection();
     Stream::gc_now_playing();
 
     $web_path = AmpConfig::get('web_path');

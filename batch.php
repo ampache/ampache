@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,8 @@ if (!defined('NO_SESSION')) {
         require_once 'lib/init.php';
         if (!Session::exists('stream', $_REQUEST['ssid'])) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
     } else {
         require_once 'lib/init.php';
@@ -37,7 +38,8 @@ ob_end_clean();
 //test that batch download is permitted
 if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 /* Drop the normal Time limit constraints, this can take a while */
@@ -45,7 +47,7 @@ set_time_limit(0);
 
 $media_ids    = array();
 $default_name = "Unknown.zip";
-$object_type  = scrub_in($_REQUEST['action']);
+$object_type  = scrub_in(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS));
 $name         = $default_name;
 
 if ($object_type == 'browse') {
@@ -55,10 +57,11 @@ if ($object_type == 'browse') {
 if (!check_can_zip($object_type)) {
     debug_event('batch', 'Object type `' . $object_type . '` is not allowed to be zipped.', 1);
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
-if (Core::is_playable_item($_REQUEST['action'])) {
+if (Core::is_playable_item(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS))) {
     $id = $_REQUEST['id'];
     if (!is_array($id)) {
         $id = array($id);
@@ -73,13 +76,16 @@ if (Core::is_playable_item($_REQUEST['action'])) {
         }
     }
 } else {
-    switch ($_REQUEST['action']) {
+    $action = UI::get_action();
+
+    // Switch on the actions
+    switch ($action) {
         case 'tmp_playlist':
-            $media_ids = $GLOBALS['user']->playlist->get_items();
-            $name      = $GLOBALS['user']->username . ' - Playlist';
+            $media_ids = Core::get_global('user')->playlist->get_items();
+            $name      = Core::get_global('user')->username . ' - Playlist';
         break;
         case 'browse':
-            $id               = intval(scrub_in($_REQUEST['browse_id']));
+            $id               = (int) scrub_in(filter_input(INPUT_POST, 'browse_id', FILTER_SANITIZE_NUMBER_INT));
             $browse           = new Browse($id);
             $browse_media_ids = $browse->get_saved();
             foreach ($browse_media_ids as $media_id) {
@@ -104,9 +110,10 @@ if (Core::is_playable_item($_REQUEST['action'])) {
 }
 
 if (!User::stream_control($media_ids)) {
-    debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, '3');
+    debug_event('UI::access_denied', 'Stream control failed for user ' . Core::get_global('user')->username, '3');
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 // Write/close session data to release session lock for this script.
@@ -120,4 +127,5 @@ if (is_array($song_files['0'])) {
     set_memory_limit($song_files['1'] + 32);
     send_zip($name, $song_files['0']);
 }
-exit;
+
+return false;

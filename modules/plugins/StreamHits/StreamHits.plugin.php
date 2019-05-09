@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -117,13 +117,13 @@ class AmpacheStreamHits
         $data = $user->prefs;
         
         $this->user_id = $user->id;
-        if (intval($data['stream_control_hits_max'])) {
-            $this->hits_max = intval($data['stream_control_hits_max']);
+        if ((int) ($data['stream_control_hits_max'])) {
+            $this->hits_max = (int) ($data['stream_control_hits_max']);
         } else {
             $this->hits_max = -1;
         }
-        if (intval($data['stream_control_hits_days']) > 0) {
-            $this->hits_days = intval($data['stream_control_hits_days']);
+        if ((int) ($data['stream_control_hits_days']) > 0) {
+            $this->hits_days = (int) ($data['stream_control_hits_days']);
         } else {
             $this->hits_days = 30;
         }
