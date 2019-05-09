@@ -122,8 +122,8 @@ var UberVizMain = (function() {
 	}
 
 	return {
-		init:init,
-		trace: trace
+		init,
+		trace
 	};
 
 }());

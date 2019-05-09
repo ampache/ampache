@@ -93,9 +93,9 @@ var WhiteRing = (function() {
 	}
 
 	return {
-		init:init,
-		update:update,
-		onBeat:onBeat
+		init,
+		update,
+		onBeat
 	};
 
 }());

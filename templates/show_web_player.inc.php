@@ -37,7 +37,7 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <?php
 if (!$is_share) {
     $stream_id = $_REQUEST['playlist_id'];
-    if (gettype($stream_id) === 'string' || gettype($stream_id) === 'integer') {
+    if (is_string($stream_id) || is_integer($stream_id)) {
         $playlist = new Stream_Playlist($stream_id);
     }
 }

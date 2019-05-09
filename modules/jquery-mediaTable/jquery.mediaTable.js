@@ -228,7 +228,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
         }
         else {
           $checkbox.prop("checked", false);
-        };
+        }
       };
 
       $checkbox

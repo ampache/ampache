@@ -53,9 +53,9 @@ var ControlsHandler = (function() {
 	}
 
 	return {
-		init:init,
-		audioParams: audioParams,
-		fxParams: fxParams,
-		vizParams:vizParams
+		init,
+		audioParams,
+		fxParams,
+		vizParams
 	};
 }());
