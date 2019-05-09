@@ -188,22 +188,22 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         Session::create_cookie();
         Session::create($auth);
         Session::check();
-        Core::get_global('user')           = new User($auth['username']);
-        Core::get_global('user')->username = $auth['username'];
-        Core::get_global('user')->fullname = $auth['fullname'];
-        Core::get_global('user')->access   = (int) ($auth['access']);
+        $GLOBALS['user']           = new User($auth['username']);
+        $GLOBALS['user']->username = $auth['username'];
+        $GLOBALS['user']->fullname = $auth['fullname'];
+        $GLOBALS['user']->access   = (int) ($auth['access']);
     } else {
         Session::check();
         if ($_SESSION['userdata']['username']) {
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
         } else {
-            Core::get_global('user')           = new User($auth['username']);
-            Core::get_global('user')->id       = -1;
-            Core::get_global('user')->username = $auth['username'];
-            Core::get_global('user')->fullname = $auth['fullname'];
-            Core::get_global('user')->access   = (int) ($auth['access']);
+            $GLOBALS['user']           = new User($auth['username']);
+            $GLOBALS['user']->id       = -1;
+            $GLOBALS['user']->username = $auth['username'];
+            $GLOBALS['user']->fullname = $auth['fullname'];
+            $GLOBALS['user']->access   = (int) ($auth['access']);
         }
-        if (!Core::get_global('user')->id and !AmpConfig::get('demo_mode')) {
+        if (!$GLOBALS['user']->id and !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());
 
             return false;
@@ -257,7 +257,7 @@ if (!defined('OUTDATED_DATABASE_OK')) {
     }
 }
 // For the XMLRPC stuff
-Core::get_global('xmlrpc_internalencoding') = AmpConfig::get('site_charset');
+$GLOBALS['xmlrpc_internalencoding'] = AmpConfig::get('site_charset');
 
 // If debug is on GIMMIE DA ERRORS
 if (AmpConfig::get('debug')) {
