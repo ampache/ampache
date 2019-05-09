@@ -94,13 +94,13 @@ class Core
      * get_global
      * Return a $GLOBAL variable instead of calling directly
      * 
-     * @param string $variable
+     * @param string $cookiename
      */
-    public static function get_cookie($variable)
+    public static function get_cookie($cookiename)
     {
-        debug_event('Core', "Requested COOKIE " . $variable, 5);
+        debug_event('Core', "Requested COOKIE " . $cookiename, 5);
 
-        return filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_STRING);
+        return filter_input(INPUT_COOKIE, $cookiename, FILTER_SANITIZE_STRING);
     }
 
     /**

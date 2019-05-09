@@ -1586,13 +1586,16 @@ class User extends database_object
     /**
      * check_username
      * This checks to make sure the username passed doesn't already
-     * exist in this instance of ampache
+     * exist in this instance of Ampache
+     * 
+     * @param string $username
+     * @return boolean
      */
     public static function check_username($username)
     {
-        $username = Dba::escape($username);
+        $user = Dba::escape($username);
 
-        $sql        = "SELECT `id` FROM `user` WHERE `username`='$username'";
+        $sql        = "SELECT `id` FROM `user` WHERE `username`='$user'";
         $db_results = Dba::read($sql);
 
         if (Dba::num_rows($db_results)) {
@@ -1631,7 +1634,7 @@ class User extends database_object
      * stream_control
      * Check all stream control plugins
      * @param array $media_ids
-     * @param User $user
+     * @param User $user_id
      * @return boolean
      */
     public static function stream_control($media_ids, User $user_id = null)

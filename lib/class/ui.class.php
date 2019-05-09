@@ -451,8 +451,8 @@ class UI
     {
         $isgv   = true;
         $name   = 'browse_' . $type . '_grid_view';
-        if (isset($_COOKIE[$name])) {
-            $isgv = ($_COOKIE[$name] == 'true');
+        if (isset(Core::get_cookie($name))) {
+            $isgv = (Core::get_cookie($name) == 'true');
         }
 
         return $isgv;

@@ -140,7 +140,7 @@ if (empty($uid)) {
 } elseif ($uid == '-1' && AmpConfig::get('use_auth')) {
     // Identify the user according to it's web session
     // We try to avoid the generic 'Ampache User' as much as possible
-    if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
+    if (Session::exists('interface', Core::get_cookie(AmpConfig::get('session_name')))) {
         Session::check();
         $user = User::get_from_username($_SESSION['userdata']['username']);
         $uid  = $user->id;
@@ -168,7 +168,7 @@ if (!$share_id) {
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
-                    $sid = $_COOKIE[AmpConfig::get('session_name')];
+                    $sid = Core::get_cookie(AmpConfig::get('session_name'));
                     if (!Session::exists('interface', $sid)) {
                         debug_event('UI::access_denied', 'Streaming access denied: ' . Core::get_global('user')->username . "'s session has expired", 3);
                         header('HTTP/1.1 403 Session Expired');

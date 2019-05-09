@@ -35,8 +35,8 @@ $action = UI::get_action();
 // Switch on the actions
 switch ($action) {
     case 'edit':
-        if (isset($_POST['license_id'])) {
-            $license = new License($_POST['license_id']);
+        if (isset(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING))) {
+            $license = new License(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING));
             if ($license->id) {
                 $license->update($_POST);
             }

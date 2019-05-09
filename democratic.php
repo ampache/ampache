@@ -86,7 +86,7 @@ switch ($action) {
         }
 
         // Now check for additional things we might have to do
-        if ($_POST['force_democratic']) {
+        if (filter_input(INPUT_POST, 'force_democratic', FILTER_SANITIZE_STRING)) {
             Democratic::set_user_preferences();
         }
 
