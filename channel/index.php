@@ -49,7 +49,7 @@ if (!function_exists('curl_version')) {
 // Authenticate the user here
 if ($channel->is_private) {
     $is_auth = false;
-    if (isset($_SERVER['PHP_AUTH_USER'])) {
+    if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
         $htusername = $_SERVER['PHP_AUTH_USER'];
         $htpassword = $_SERVER['PHP_AUTH_PW'];
 
