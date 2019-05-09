@@ -1,6 +1,7 @@
 # Ampache
 
- ![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
+![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
+
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 
@@ -27,7 +28,7 @@ The recommended and most stable version is [git HEAD](https://github.com/ampache
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
-[![Codacy Badge](https://api.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/91ed1d627b7a4ab7a5cc3d69db3361b3)](https://www.codacy.com/app/Ampache/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
 ## Installation
@@ -53,18 +54,19 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
   * simplexml (optional)
   * curl (optional)
 
-  * For FreeBSD The following modules must be loaded:
-    * php-xml
-    * php-dom
+* For FreeBSD The following php modules must be loaded:
+  * php-xml
+  * php-dom
 
-* MySQL 5.x
+* MySQL 5.x / MariaDB 10.x
 
 ## Upgrading
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
 its place and then copying the old /config/ampache.cfg.php, /rest/.htaccess,
-and /play/.htaccess files if any. All database updates will be handled by Ampache.
+/channel/.htaccess, and /play/.htaccess files if any.
+All database updates will be handled by Ampache.
 
 ## License
 
