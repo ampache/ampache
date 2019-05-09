@@ -270,7 +270,7 @@ class Session
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!filter_has_var(INPUT_COOKIE, $session_name)) {
+        if (!isset(filter_has_var(INPUT_COOKIE, $session_name))) {
             return false;
         }
 
