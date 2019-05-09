@@ -55,9 +55,9 @@ if ($channel->is_private) {
 
         $auth = Auth::login($htusername, $htpassword);
         if ($auth['success']) {
-            $username                = $auth['username'];
-            Core::get_global('user') = new User($username);
-            $is_auth                 = true;
+            $username        = $auth['username'];
+            $GLOBALS['user'] = new User($username);
+            $is_auth         = true;
             Preference::init();
 
             if (AmpConfig::get('access_control')) {

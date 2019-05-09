@@ -166,7 +166,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     Session::check();
 
     /* Create the new user */
-    Core::get_global('user') = User::get_from_username($_SESSION['userdata']['username']);
+    $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
     /* If the user ID doesn't exist deny them */
     if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
@@ -195,7 +195,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     } else {
         Session::check();
         if ($_SESSION['userdata']['username']) {
-            Core::get_global('user') = User::get_from_username($_SESSION['userdata']['username']);
+            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
         } else {
             Core::get_global('user')           = new User($auth['username']);
             Core::get_global('user')->id       = -1;
@@ -217,9 +217,9 @@ else {
         session_name(AmpConfig::get('session_name'));
         session_id(scrub_in($_REQUEST['sid']));
         session_start();
-        Core::get_global('user') = new User($_SESSION['userdata']['uid']);
+        $GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
     } else {
-        Core::get_global('user') = new User();
+        $GLOBALS['user'] = new User();
     }
 } // If NO_SESSION passed
 

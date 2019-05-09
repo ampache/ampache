@@ -77,9 +77,9 @@ if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
 
 if ((filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'handshake') && (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'ping')) {
     if (isset($_REQUEST['user'])) {
-        Core::get_global('user') = User::get_from_username($_REQUEST['user']);
+        $GLOBALS['user'] = User::get_from_username($_REQUEST['user']);
     } else {
-        Core::get_global('user') = User::get_from_apikey($_REQUEST['auth']);
+        $GLOBALS['user'] = User::get_from_apikey($_REQUEST['auth']);
     }
 }
 
