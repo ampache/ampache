@@ -75,7 +75,7 @@ function update_preferences($pref_id = 0)
         }
 
         /* Run the update for this preference only if it's set */
-        if (isset(filter_has_var(INPUT_GET, $name))) {
+        if (filter_has_var(INPUT_GET, $name)) {
             Preference::update($id, $pref_id, $value, $_REQUEST[$apply_to_all]);
         }
 
