@@ -56,7 +56,7 @@ switch ($action) {
         $pass2           = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING);
         $state           = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING));
         $city            = scrub_in(filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING));
-        $fullname_public = isset(filter_input(INPUT_POST, 'fullname_public'));
+        $fullname_public = isset(filter_has_var(INPUT_POST, 'fullname_public'));
 
         /* Setup the temp user */
         $client = new User($user_id);

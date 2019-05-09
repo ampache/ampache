@@ -270,7 +270,7 @@ class Session
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!isset($_COOKIE[$session_name])) {
+        if (!filter_has_var(INPUT_COOKIE, $session_name)) {
             return false;
         }
 
@@ -526,9 +526,9 @@ class Session
     public static function auth_remember()
     {
         $auth  = false;
-        $cname = AmpConfig::get('session_name') . '_remember';
-        if (isset($_COOKIE[$cname])) {
-            list($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
+        $name = AmpConfig::get('session_name') . '_remember';
+        if (isset(filter_has_var(INPUT_COOKIE, $name))) {
+            list($username, $token, $mac) = explode(':', filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING));
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));

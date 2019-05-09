@@ -1043,7 +1043,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     #-- give ok, if captach had already been solved recently
     public function solved($ignore=0)
     {
-        if (CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
+        if (CAPTCHA_PERSISTENT && filter_has_var(INPUT_COOKIE, $this->cookie())) {
             return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
         }
     }
