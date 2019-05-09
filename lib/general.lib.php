@@ -118,7 +118,7 @@ function scrub_arg($arg)
  * make_bool
  * This takes a value and returns what we consider to be the correct boolean
  * value. We need a special function because PHP considers "false" to be true.
- * 
+ *
  * @param string $string
  * @return boolean
  */
