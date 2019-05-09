@@ -526,7 +526,7 @@ class Session
     public static function auth_remember()
     {
         $auth  = false;
-        $name = AmpConfig::get('session_name') . '_remember';
+        $name  = AmpConfig::get('session_name') . '_remember';
         if (isset(filter_has_var(INPUT_COOKIE, $name))) {
             list($username, $token, $mac) = explode(':', filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING));
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
