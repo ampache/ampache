@@ -118,7 +118,7 @@ if (!empty($apikey)) {
     $user = User::get_from_apikey($apikey);
     if ($user != null) {
         Core::get_global('user') = $user;
-        $uid             = Core::get_global('user')->id;
+        $uid                     = Core::get_global('user')->id;
         Preference::init();
         $user_authenticated = true;
     }
@@ -126,7 +126,7 @@ if (!empty($apikey)) {
     $auth = Auth::login($u, $p);
     if ($auth['success']) {
         Core::get_global('user') = User::get_from_username($auth['username']);
-        $uid             = Core::get_global('user')->id;
+        $uid                     = Core::get_global('user')->id;
         Preference::init();
         $user_authenticated = true;
     }

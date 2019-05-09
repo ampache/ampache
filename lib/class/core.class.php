@@ -80,7 +80,7 @@ class Core
     /**
      * get_global
      * Return a $GLOBAL variable instead of calling directly
-     * 
+     *
      * @param string $variable
      */
     public static function get_global($variable)
@@ -93,7 +93,7 @@ class Core
     /**
      * get_global
      * Return a $GLOBAL variable instead of calling directly
-     * 
+     *
      * @param string $cookiename
      */
     public static function get_cookie($cookiename)
@@ -260,7 +260,7 @@ class Core
      * This returns the dimensions of the passed song of the passed type
      * returns an empty array if PHP-GD is not currently installed, returns
      * false on error
-     * 
+     *
      * @param string $image_data
      */
     public static function image_dimensions($image_data)
@@ -296,7 +296,7 @@ class Core
      *
      * Replacement function because PHP's is_readable is buggy:
      * https://bugs.php.net/bug.php?id=49620
-     * 
+     *
      * @param string|false $path
      */
     public static function is_readable($path)
@@ -388,7 +388,7 @@ class Core
 
     /**
      * is_class_typeof
-     * 
+     *
      * @param string $typeofname
      */
     private static function is_class_typeof($classname, $typeofname)
@@ -444,7 +444,7 @@ class Core
     
     /**
      * get_tmp_dir
-     * 
+     *
      * @return string
      */
     public static function get_tmp_dir()

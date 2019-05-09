@@ -280,7 +280,7 @@ class User extends database_object
     public static function get_from_apikey($apikey)
     {
         $user_id   = null;
-        $apikey = trim($apikey);
+        $apikey    = trim($apikey);
         if (!empty($apikey)) {
             $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
             $db_results = Dba::read($sql, array($apikey));
@@ -1587,7 +1587,7 @@ class User extends database_object
      * check_username
      * This checks to make sure the username passed doesn't already
      * exist in this instance of Ampache
-     * 
+     *
      * @param string $username
      * @return boolean
      */

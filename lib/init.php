@@ -154,9 +154,9 @@ set_memory_limit($results['memory_limit']);
 // If we want a session
 if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     /* Verify their session */
-    if (!Session::exists('interface', Core::get_cookie(AmpConfig::get('session_name')])) {
+    if (!Session::exists('interface', Core::get_cookie(AmpConfig::get('session_name')))) {
         if (!Session::auth_remember()) {
-            Auth::logout(Core::get_cookie(AmpConfig::get('session_name')]);
+            Auth::logout(Core::get_cookie(AmpConfig::get('session_name')));
 
             return false;
         }
