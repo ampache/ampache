@@ -125,7 +125,7 @@ if (!empty($apikey)) {
 } elseif (!empty($u) && !empty($p)) {
     $auth = Auth::login($u, $p);
     if ($auth['success']) {
-        $GLOBALS['user'] = User::get_from_username($auth['username']);
+        $GLOBALS['user']         = User::get_from_username($auth['username']);
         $uid                     = Core::get_global('user')->id;
         Preference::init();
         $user_authenticated = true;

@@ -148,7 +148,7 @@ function debug_event($type, $message, $level, $file = '', $username = '')
     }
 
     if (!$username && isset($GLOBALS['user'])) {
-        $username = Core::get_global('user')->username;
+        $username = $GLOBALS['user']->username;
     }
 
     // If the message is multiple lines, make multiple log lines
