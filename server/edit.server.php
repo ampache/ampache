@@ -36,12 +36,12 @@ debug_event('edit.server.php', 'Called for action: {' . (string) filter_input(IN
 // Post first
 $type = $_POST['type'];
 if (empty($type)) {
-    $type = $_GET['type'];
+    $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
 }
 $object_id = $_GET['id'];
 
 if (empty($type)) {
-    $object_type = $_GET['object_type'];
+    $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING);
 } else {
     $object_type = implode('_', explode('_', $type, -1));
 }

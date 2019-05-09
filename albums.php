@@ -91,7 +91,7 @@ switch ($action) {
 
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
-            $track = $_GET['offset'] ? ((int) ($_GET['offset']) + 1) : 1;
+            $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     Song::update_track($track, $song_id);

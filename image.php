@@ -51,7 +51,7 @@ if (!isset($_GET['object_type'])) {
     $_GET['object_type'] = 'album';
 }
 
-$type = $_GET['object_type'];
+$type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING);
 if (!Art::is_valid_type($type)) {
     return false;
 }
@@ -66,7 +66,7 @@ $filename    = '';
 $etag        = '';
 $typeManaged = false;
 if (isset($_GET['type'])) {
-    switch ($_GET['type']) {
+    switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING)) {
         case 'popup':
             $typeManaged = true;
             require_once AmpConfig::get('prefix') . UI::find_template('show_big_art.inc.php');
@@ -82,7 +82,7 @@ if (isset($_GET['type'])) {
     }
 }
 if (!$typeManaged) {
-    $item     = new $type($_GET['object_id']);
+    $item     = new $type(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
     $filename = $item->name ?: $item->title;
 
     $art = new Art($item->id, $type, $kind);

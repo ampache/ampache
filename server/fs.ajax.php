@@ -263,7 +263,7 @@ if (isset($_GET['operation'])) {
                 break;
             case 'create_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
-                $rslt = $fs->create($node, isset($_GET['text']) ? $_GET['text'] : '', (!isset($_GET['type']) || $_GET['type'] !== 'file'));
+                $rslt = $fs->create($node, isset($_GET['text']) ? $_GET['text'] : '', (!isset($_GET['type']) || filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) !== 'file'));
                 break;
             case 'rename_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
