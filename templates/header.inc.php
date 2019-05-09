@@ -296,7 +296,7 @@ $_SESSION['login'] = false;
         </script>
 
         <?php
-            if (AmpConfig::get('cookie_disclaimer') && !isset(Core::get_cookie('cookie_disclaimer'))) {
+            if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
                 ?>
 
         <script type="text/javascript" language="javascript">

@@ -417,11 +417,11 @@ class Browse extends Query
     public function set_type($type, $custom_base = '')
     {
         $cookiename = 'browse_' . $type . '_pages';
-        if (isset(Core::get_cookie($cookiename))) {
+        if (isset($_COOKIE[$cookiename])) {
             $this->set_use_pages(Core::get_cookie($cookiename) == 'true');
         }
         $cookiename = 'browse_' . $type . '_alpha';
-        if (isset(Core::get_cookie($cookiename))) {
+        if (isset($_COOKIE[$cookiename])) {
             $this->set_use_alpha(Core::get_cookie($cookiename) == 'true');
         } else {
             $default_alpha = explode(",", AmpConfig::get('libitem_browse_alpha'));
@@ -430,7 +430,7 @@ class Browse extends Query
             }
         }
         $cookiename = 'browse_' . $type . '_grid_view';
-        if (isset(Core::get_cookie($cookiename))) {
+        if (isset($_COOKIE[$cookiename])) {
             $this->set_grid_view(Core::get_cookie($cookiename) == 'true');
         }
 
