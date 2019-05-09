@@ -45,7 +45,7 @@ unset($auth);
 
 if (empty($_REQUEST['step'])) {
     /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
-    if ((filter_input(INPUT_GET, 'username', FILTER_SANITIZE_STRING)) ||
+    if (($_POST['username']) ||
         (in_array('http', AmpConfig::get('auth_methods')) &&
         ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
 
@@ -56,7 +56,7 @@ if (empty($_REQUEST['step'])) {
             $auth['info']['fullname']        = 'Administrative User';
             $auth['info']['offset_limit']    = 25;
         } else {
-            if (filter_input(INPUT_GET, 'username', FILTER_SANITIZE_STRING)) {
+            if ($_POST['username']) {
                 $username = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
                 $password = $_POST['password'];
             } else {
@@ -199,16 +199,14 @@ if (isset($auth) && $auth['success'] && isset($user)) {
      * to redirect them back into an admin section
      */
     $web_path = AmpConfig::get('web_path');
-    $referrer = filter_input(INPUT_POST, 'referrer', FILTER_SANITIZE_STRING);
-    if ((substr($referrer, 0, strlen($web_path)) == $web_path) &&
-        strpos($referrer, 'install.php') === false &&
-        // TO BE ADDED strpos($referrer, 'jukebox.php') === false &&
-        strpos($referrer, 'login.php') === false &&
-        strpos($referrer, 'logout.php') === false &&
-        strpos($referrer, 'update.php') === false &&
-        strpos($referrer, 'activate.php') === false &&
-        strpos($referrer, 'admin') === false) {
-        header('Location: ' . $referrer);
+    if ((substr($_POST['referrer'], 0, strlen($web_path)) == $web_path) &&
+        strpos($_POST['referrer'], 'install.php') === false &&
+        strpos($_POST['referrer'], 'login.php') === false &&
+        strpos($_POST['referrer'], 'logout.php') === false &&
+        strpos($_POST['referrer'], 'update.php') === false &&
+        strpos($_POST['referrer'], 'activate.php') === false &&
+        strpos($_POST['referrer'], 'admin') === false) {
+        header('Location: ' . $_POST['referrer']);
 
         return false;
     } // if we've got a referrer

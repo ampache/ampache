@@ -305,7 +305,7 @@ class Access
 
                     return false;
                 }
-                if (AmpConfig::get('allow_zip_download') and Core::get_global('user')->has_access('5')) {
+                if (AmpConfig::get('allow_zip_download') and $GLOBALS['user']->has_access('5')) {
                     return make_bool(AmpConfig::get('download'));
                 }
                 break;
@@ -406,7 +406,7 @@ class Access
             return true;
         }
 
-        $user = Core::get_global('user');
+        $user = $GLOBALS['user'];
         if ($user_id !== null) {
             $user = new User($user_id);
         }
