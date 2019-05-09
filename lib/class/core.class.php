@@ -91,19 +91,6 @@ class Core
     }
 
     /**
-     * get_global
-     * Return a $GLOBAL variable instead of calling directly
-     *
-     * @param string $cookiename
-     */
-    public static function get_cookie($cookiename)
-    {
-        debug_event('Core', "Requested COOKIE " . $cookiename, 5);
-
-        return filter_input(INPUT_COOKIE, $cookiename, FILTER_SANITIZE_STRING);
-    }
-
-    /**
      * Place a new key on a specific position in array
      * @param array $array
      * @param integer $position
@@ -195,7 +182,7 @@ class Core
                 $sid = $_GET['form_validation'];
             break;
             case 'cookie':
-                $sid = self::get_cookie('form_validation');
+                $sid = $_COOKIE['form_validation'];
             break;
             case 'request':
                 $sid = $_REQUEST['form_validation'];

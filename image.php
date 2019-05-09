@@ -34,8 +34,8 @@ require_once 'lib/init.php';
 
 if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
     // Check to see if they've got an interface session or a valid API session, if not GTFO
-    if (!Session::exists('interface', Core::get_cookie(AmpConfig::get('session_name'))) && !Session::exists('api', $_REQUEST['auth'])) {
-        debug_event('image', 'Access denied, checked cookie session:' . Core::get_cookie(AmpConfig::get('session_name')) . ' and auth:' . $_REQUEST['auth'], 1);
+    if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
+        debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
 
         return false;
     }

@@ -129,11 +129,7 @@ class Art extends database_object
     public static function _auto_init()
     {
         if (!isset($_SESSION['art_enabled'])) {
-            /*if (isset($_COOKIE[('art_enabled'))) {
-                $_SESSION['art_enabled'] = Core::get_cookie('art_enabled');
-            } else {*/
             $_SESSION['art_enabled'] = true;
-            //}
         }
 
         self::$enabled = make_bool($_SESSION['art_enabled']);

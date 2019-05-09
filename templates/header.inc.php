@@ -458,7 +458,7 @@ $_SESSION['login'] = false;
 
             <?php
                 }
-                $isCollapsed = ((AmpConfig::get('sidebar_light') && Core::get_cookie('sidebar_state') != "expanded") || Core::get_cookie('sidebar_state') == "collapsed");
+                $isCollapsed = ((AmpConfig::get('sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed");
             ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
