@@ -1527,7 +1527,7 @@ class Song extends database_object implements media, library_item
     }
 
     /**
-     * Search for item children.
+     * Search for item childrens.
      * @param string $name
      * @return array
      */
@@ -1699,7 +1699,6 @@ class Song extends database_object implements media, library_item
      * @param string $object_type
      * @param integer $object_id
      * @param string $additional_params
-     * @param string $player
      * @param boolean $local
      * @param string $player
      * @return string
@@ -1747,7 +1746,6 @@ class Song extends database_object implements media, library_item
      * else, this is the true function
      * @param integer $oid
      * @param string $additional_params
-     * @param string $player
      * @param boolean $local
      * @param string $player
      * @return string
@@ -1875,10 +1873,12 @@ class Song extends database_object implements media, library_item
         if ($target) {
             debug_event('media', 'Explicit format request {' . $target . '}', 5);
         } else {
-            if ($target === AmpConfig::get('encode_target_' . $source)) {
+            if ($target = AmpConfig::get('encode_target_' . $source)) {
                 debug_event('media', 'Defaulting to configured target format for ' . $source, 5);
             } else {
-                if ($target !== AmpConfig::get($setting_target)) {
+                if ($target = AmpConfig::get($setting_target)) {
+                    debug_event('media', 'Using default target format', 5);
+                } else {
                     $target = $source;
                     debug_event('media', 'No default target for ' . $source . ', choosing to resample', 5);
                 }

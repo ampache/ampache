@@ -22,7 +22,7 @@
 
 $threshold = AmpConfig::get('stats_threshold');
 $user_id   = Core::get_global('user')->id;
-$count     = 18;
+$count     = 16;
 ?>
 <p>
     <input type="button" value="<?php echo T_('Browse Library') ?>" onclick="NavigateTo('<?php echo AmpConfig::get('web_path') ?>/browse.php?action=<?php echo $object_type ?>');" />
