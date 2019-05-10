@@ -489,7 +489,11 @@ class XML_Data
                 } else {
                     $playlist_user  = $playlist->type;
                 }
-                $playitem_total = $playlist->limit;
+                if ($playlist->limit === 0 || $playlist->limit > 5000) {
+                    $playitem_total = 5000;
+                } else {
+                    $playitem_total = $playlist->limit;
+                }
                 $playlist_type  = $playlist->type;
             }
             // Build this element
