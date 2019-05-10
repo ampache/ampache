@@ -674,7 +674,7 @@ class Api
         } else {
             //Smartlists
             $playlist = new Search($input['filter']);
-            $items    = $playlist->get_items(); 
+            $items    = $playlist->get_items();
         }
 
         $songs = array();
