@@ -56,8 +56,7 @@ class XML_Data
      */
     public static function set_offset($offset)
     {
-        $offset       = (int) ($offset);
-        self::$offset = $offset;
+        self::$offset = (int) $offset;
     }
     // set_offset
 
@@ -113,9 +112,9 @@ class XML_Data
      */
     public static function error($code, $string)
     {
-        $string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
+        $xml_string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
 
-        return self::output_xml($string);
+        return self::output_xml($xml_string);
     }
     // error
 
@@ -772,13 +771,12 @@ class XML_Data
      *
      * @param    array    $data    (description here...)
      * @param    string    $title    RSS feed title
-     * @param    string    $description    (The parameter is not used)
      * @param    string    $date    publish date
      * @return    string    RSS feed xml
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function rss_feed($data, $title, $description, $date = null)
+    public static function rss_feed($data, $title, $date = null)
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if ($date !== null) {

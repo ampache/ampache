@@ -172,9 +172,9 @@ class Api
         }
 
         // Log this attempt
-        debug_event('API', "Login Attempt, IP:$ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event('API', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
-        if ($user_id > 0 && Access::check_network('api', $user_id, 5, $ip)) {
+        if ($user_id > 0 && Access::check_network('api', $user_id, 5, $user_ip)) {
 
             // Authentication with user/password, we still need to check the password
             if ($username) {
@@ -1073,7 +1073,7 @@ class Api
                 if ($user !== null) {
                     $users = $user->get_followers();
                     ob_end_clean();
-                    echo XML_Data::users($user);
+                    echo XML_Data::users($users);
                 } else {
                     debug_event('API', 'User `' . $username . '` cannot be found.', 1);
                 }
