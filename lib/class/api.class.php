@@ -665,9 +665,16 @@ class Api
      */
     public static function playlist_songs($input)
     {
-        $playlist = new Playlist($input['filter']);
-        $items    = $playlist->get_items();
-
+        if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
+            // Playlists
+            $playlist = new Playlist($input['filter']);
+            $items    = $playlist->get_items();
+        } else {
+            //Smartlists
+            $playlist = new Search($input['filter']);
+            $items    = $playlist->get_items();
+            
+        }
         $songs = array();
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
@@ -1000,7 +1007,7 @@ class Api
                             if ($user !== null) {
                                 $albums = $user->get_recently_played($limit, 'album');
                             } else {
-                                debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                                debug_event('API', 'User `' . $username . '` cannot be found.', 1);
                             }
                         } else {
                             $albums = Stats::get_recent("album", $limit, $offset);
@@ -1041,10 +1048,10 @@ class Api
                 ob_end_clean();
                 echo XML_Data::user($user);
             } else {
-                debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                debug_event('API', 'User `' . $username . '` cannot be found.', 1);
             }
         } else {
-            debug_event('api', 'Username required on user function call.', 1);
+            debug_event('API', 'Username required on user function call.', 1);
         }
     } // user
 
@@ -1066,13 +1073,13 @@ class Api
                     ob_end_clean();
                     echo XML_Data::users($user);
                 } else {
-                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                    debug_event('API', 'User `' . $username . '` cannot be found.', 1);
                 }
             } else {
-                debug_event('api', 'Username required on followers function call.', 1);
+                debug_event('API', 'Username required on followers function call.', 1);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // followers
 
@@ -1094,13 +1101,13 @@ class Api
                     ob_end_clean();
                     echo XML_Data::users($user);
                 } else {
-                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                    debug_event('API', 'User `' . $username . '` cannot be found.', 1);
                 }
             } else {
-                debug_event('api', 'Username required on following function call.', 1);
+                debug_event('API', 'Username required on following function call.', 1);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // following
 
@@ -1123,10 +1130,10 @@ class Api
                     echo XML_Data::single_string('success');
                 }
             } else {
-                debug_event('api', 'Username to toggle required on follow function call.', 1);
+                debug_event('API', 'Username to toggle required on follow function call.', 1);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // toggle_follow
 
@@ -1154,7 +1161,7 @@ class Api
             ob_end_clean();
             echo XML_Data::shouts($shouts);
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // last_shouts
 
@@ -1292,10 +1299,10 @@ class Api
                     }
                 }
             } else {
-                debug_event('api', 'Username required on timeline function call.', 1);
+                debug_event('API', 'Username required on timeline function call.', 1);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // timeline
 
@@ -1319,7 +1326,7 @@ class Api
                 echo XML_Data::timeline($activities);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // friends_timeline
 } // API class
