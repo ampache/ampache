@@ -474,8 +474,7 @@ class XML_Data
                 $playlist = new Playlist($playlist_id);
                 $playlist->format();
                 $item_total = $playlist->get_media_count('song');
-            }
-            else {
+            } else {
                 $playlist = new Search($playlist_id);
                 $playlist->format();
                 $item_total = $playlist->limit;

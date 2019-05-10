@@ -136,10 +136,10 @@ class Playlist extends playlist_object
         }
 
         // Search for smartplaylists
-        $sql    .= "UNION ALL SELECT CONCAT('smart_', `id`) FROM `search`";
+        $sql .= "UNION ALL SELECT CONCAT('smart_', `id`) FROM `search`";
         if ($user_id > -1) {
             $sql .= ' WHERE `user` = ?';
-        $params[] = $user_id;
+            $params[] = $user_id;
         }
 
         if ($incl_public) {
