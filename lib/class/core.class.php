@@ -85,8 +85,6 @@ class Core
      */
     public static function get_global($variable)
     {
-        debug_event('Core', "Requested GLOBAL " . $variable, 5);
-
         return $GLOBALS[$variable];
     }
 

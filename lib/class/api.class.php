@@ -172,9 +172,9 @@ class Api
         }
 
         // Log this attempt
-        debug_event('API', "Login Attempt, IP:$ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event('API', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
-        if ($user_id > 0 && Access::check_network('api', $user_id, 5, $ip)) {
+        if ($user_id > 0 && Access::check_network('api', $user_id, 5, $user_ip)) {
 
             // Authentication with user/password, we still need to check the password
             if ($username) {
@@ -633,7 +633,7 @@ class Api
         self::set_filter($method, $input['filter']);
         self::$browse->set_filter('playlist_type', '1');
 
-        $playlist_ids = self::$browse->get_objects();
+        $playlist_ids = array_merge(self::$browse->get_objects(), Playlist::get_smartlists());
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
@@ -665,8 +665,17 @@ class Api
      */
     public static function playlist_songs($input)
     {
-        $playlist = new Playlist($input['filter']);
-        $items    = $playlist->get_items();
+        debug_event('API', 'Loading playlist: ' . $input['filter'] . ' ' .
+                    (str_replace('smart_', '', (string) $input['filter']) === (string) $input['filter']), '5');
+        if (str_replace('smart_', '', (string) $input['filter']) === (string) $input['filter']) {
+            // Playlists
+            $playlist = new Playlist($input['filter']);
+            $items    = $playlist->get_items();
+        } else {
+            //Smartlists
+            $playlist = new Search(str_replace('smart_', '', $input['filter']));
+            $items    = $playlist->get_items();
+        }
 
         $songs = array();
         foreach ($items as $object) {
@@ -1000,7 +1009,7 @@ class Api
                             if ($user !== null) {
                                 $albums = $user->get_recently_played($limit, 'album');
                             } else {
-                                debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                                debug_event('API', 'User `' . $username . '` cannot be found.', 1);
                             }
                         } else {
                             $albums = Stats::get_recent("album", $limit, $offset);
@@ -1041,10 +1050,10 @@ class Api
                 ob_end_clean();
                 echo XML_Data::user($user);
             } else {
-                debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                debug_event('API', 'User `' . $username . '` cannot be found.', 1);
             }
         } else {
-            debug_event('api', 'Username required on user function call.', 1);
+            debug_event('API', 'Username required on user function call.', 1);
         }
     } // user
 
@@ -1064,15 +1073,15 @@ class Api
                 if ($user !== null) {
                     $users = $user->get_followers();
                     ob_end_clean();
-                    echo XML_Data::users($user);
+                    echo XML_Data::users($users);
                 } else {
-                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                    debug_event('API', 'User `' . $username . '` cannot be found.', 1);
                 }
             } else {
-                debug_event('api', 'Username required on followers function call.', 1);
+                debug_event('API', 'Username required on followers function call.', 1);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // followers
 
@@ -1094,13 +1103,13 @@ class Api
                     ob_end_clean();
                     echo XML_Data::users($user);
                 } else {
-                    debug_event('api', 'User `' . $username . '` cannot be found.', 1);
+                    debug_event('API', 'User `' . $username . '` cannot be found.', 1);
                 }
             } else {
-                debug_event('api', 'Username required on following function call.', 1);
+                debug_event('API', 'Username required on following function call.', 1);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // following
 
@@ -1123,10 +1132,10 @@ class Api
                     echo XML_Data::single_string('success');
                 }
             } else {
-                debug_event('api', 'Username to toggle required on follow function call.', 1);
+                debug_event('API', 'Username to toggle required on follow function call.', 1);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // toggle_follow
 
@@ -1154,7 +1163,7 @@ class Api
             ob_end_clean();
             echo XML_Data::shouts($shouts);
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // last_shouts
 
@@ -1292,10 +1301,10 @@ class Api
                     }
                 }
             } else {
-                debug_event('api', 'Username required on timeline function call.', 1);
+                debug_event('API', 'Username required on timeline function call.', 1);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // timeline
 
@@ -1319,7 +1328,7 @@ class Api
                 echo XML_Data::timeline($activities);
             }
         } else {
-            debug_event('api', 'Sociable feature is not enabled.', 3);
+            debug_event('API', 'Sociable feature is not enabled.', 3);
         }
     } // friends_timeline
 } // API class

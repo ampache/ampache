@@ -74,7 +74,7 @@ class Ampache_RSS
             }
 
             XML_Data::set_type('rss');
-            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $this->get_description(), $pub_date);
+            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $pub_date);
 
             return $xml_document;
         }

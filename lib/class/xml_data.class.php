@@ -56,8 +56,7 @@ class XML_Data
      */
     public static function set_offset($offset)
     {
-        $offset       = (int) ($offset);
-        self::$offset = $offset;
+        self::$offset = (int) $offset;
     }
     // set_offset
 
@@ -113,9 +112,9 @@ class XML_Data
      */
     public static function error($code, $string)
     {
-        $string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
+        $xml_string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
 
-        return self::output_xml($string);
+        return self::output_xml($xml_string);
     }
     // error
 
@@ -465,16 +464,43 @@ class XML_Data
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            $playlist = new Playlist($playlist_id);
-            $playlist->format();
-            $item_total = $playlist->get_media_count('song');
+            /**
+             * Strip smart_ from playlist id and compare to original
+             * smartlist = 'smart_1'
+             * playlist  = 1000000
+             */
+            if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
+                $playlist     = new Playlist($playlist_id);
+                $playlist_id  = $playlist->id;
+                $playlist->format();
 
+                $playlist_name  = $playlist->name;
+                $playlist_user  = $playlist->f_user;
+                $playitem_total = $playlist->get_media_count('song');
+                $playlist_type  = $playlist->type;
+            } else {
+                $playlist     = new Search(str_replace('smart_', '', (string) $playlist_id));
+                $playlist->format();
+
+                $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
+                if ($playlist->type !== 'public') {
+                    $playlist_user  = $playlist->f_user;
+                } else {
+                    $playlist_user  = $playlist->type;
+                }
+                if ($playlist->limit === 0 || $playlist->limit > 5000) {
+                    $playitem_total = 5000;
+                } else {
+                    $playitem_total = $playlist->limit;
+                }
+                $playlist_type  = $playlist->type;
+            }
             // Build this element
-            $string .= "<playlist id=\"$playlist->id\">\n" .
-                    "\t<name><![CDATA[$playlist->name]]></name>\n" .
-                    "\t<owner><![CDATA[$playlist->f_user]]></owner>\n" .
-                    "\t<items>$item_total</items>\n" .
-                    "\t<type>$playlist->type</type>\n" .
+            $string .= "<playlist id=\"$playlist_id\">\n" .
+                    "\t<name><![CDATA[$playlist_name]]></name>\n" .
+                    "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
+                    "\t<items>$playitem_total</items>\n" .
+                    "\t<type>$playlist_type</type>\n" .
                     "</playlist>\n";
         } // end foreach
 
@@ -745,13 +771,12 @@ class XML_Data
      *
      * @param    array    $data    (description here...)
      * @param    string    $title    RSS feed title
-     * @param    string    $description    (The parameter is not used)
      * @param    string    $date    publish date
      * @return    string    RSS feed xml
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function rss_feed($data, $title, $description, $date = null)
+    public static function rss_feed($data, $title, $date = null)
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if ($date !== null) {
