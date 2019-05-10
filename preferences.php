@@ -52,8 +52,8 @@ switch ($action) {
             $fullname           = T_('Server');
             $_REQUEST['action'] = 'admin';
         } else {
-            $user_id  = Core::get_global('user')->id;
-            $fullname = Core::get_global('user')->fullname;
+            $user_id  = User::get_user_id();
+            $fullname = $GLOBALS['user']->fullname;
         }
 
         /* Update and reset preferences */
@@ -64,7 +64,7 @@ switch ($action) {
         // FIXME: do we need to do any header fiddling?
         load_gettext();
 
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], $system);
+        $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], $system);
 
         if ($_POST['method'] == 'admin') {
             $notification_text = T_('Server preferences updated successfully');
@@ -86,9 +86,9 @@ switch ($action) {
             return false;
         }
 
-        update_preferences($_REQUEST['tab']);
+        update_preferences(filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT));
 
-        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . (string) scrub_out($_REQUEST['tab']));
+        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . (string) scrub_out(filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT)));
     break;
     case 'admin':
         // Make sure only admins here
@@ -98,7 +98,7 @@ switch ($action) {
             return false;
         }
         $fullname    = T_('Server');
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);
+        $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], true);
     break;
     case 'user':
         if (!Access::check('interface', '100')) {
@@ -112,7 +112,7 @@ switch ($action) {
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', '25') && Core::get_global('user')->id > 0) {
+        if (!Access::check('interface', '25') && User::get_user_id() > 0) {
             UI::access_denied();
 
             return false;
@@ -129,7 +129,7 @@ switch ($action) {
 
         // Don't let them change access, or username here
         unset($_POST['access']);
-        $_POST['username'] = Core::get_global('user')->username;
+        $_POST['username'] = $GLOBALS['user']->username;
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
@@ -145,10 +145,10 @@ switch ($action) {
             AmpError::add('city', T_("Please fill in your city"));
         }
 
-        if (!Core::get_global('user')->update($_POST)) {
+        if (!$GLOBALS['user']->update($_POST)) {
             AmpError::add('general', T_('Error Update Failed'));
         } else {
-            Core::get_global('user')->upload_avatar();
+            $GLOBALS['user']->upload_avatar();
 
             //$_REQUEST['action'] = 'confirm';
             $title    = T_('Updated');
@@ -160,7 +160,7 @@ switch ($action) {
     break;
     case 'grant':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', '25') && Core::get_global('user')->id > 0) {
+        if (!Access::check('interface', '25') && User::get_user_id() > 0) {
             UI::access_denied();
 
             return false;
@@ -168,8 +168,8 @@ switch ($action) {
         if ($_REQUEST['token'] && in_array($_REQUEST['plugin'], Plugin::get_plugins('save_mediaplay'))) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
             if ($plugin = new Plugin($_REQUEST['plugin'])) {
-                $plugin->load(Core::get_global('user'));
-                if ($plugin->_plugin->get_session(Core::get_global('user')->id, $_REQUEST['token'])) {
+                $plugin->load($GLOBALS['user']);
+                if ($plugin->_plugin->get_session(User::get_user_id(), $_REQUEST['token'])) {
                     $title    = T_('Updated');
                     $text     = T_('Your Account has been updated') . ' : ' . $_REQUEST['plugin'];
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
@@ -180,12 +180,12 @@ switch ($action) {
                 }
             }
         }
-        $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
+        $fullname    = $GLOBALS['user']->fullname;
+        $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab']);
     break;
     default:
-        $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
+        $fullname    = $GLOBALS['user']->fullname;
+        $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab']);
     break;
 } // End Switch Action
 
