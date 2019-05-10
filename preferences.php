@@ -64,7 +64,7 @@ switch ($action) {
         // FIXME: do we need to do any header fiddling?
         load_gettext();
 
-        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_POST, 'tab', FILTER_SANITIZE_STRING), $system);
+        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING), $system);
 
         if ($_POST['method'] == 'admin') {
             $notification_text = T_('Server preferences updated successfully');
@@ -88,7 +88,7 @@ switch ($action) {
 
         update_preferences(filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT));
 
-        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . (string) scrub_out(filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT)));
+        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . (string) scrub_out(filter_input(INPUT_GET, 'user_id', FILTER_SANITIZE_NUMBER_INT)));
     break;
     case 'admin':
         // Make sure only admins here
@@ -98,7 +98,7 @@ switch ($action) {
             return false;
         }
         $fullname    = T_('Server');
-        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_POST, 'tab', FILTER_SANITIZE_STRING), true);
+        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING), true);
     break;
     case 'user':
         if (!Access::check('interface', '100')) {
@@ -108,7 +108,7 @@ switch ($action) {
         }
         $client      = new User($_REQUEST['user_id']);
         $fullname    = $client->fullname;
-        $preferences = $client->get_preferences(filter_input(INPUT_POST, 'tab', FILTER_SANITIZE_STRING));
+        $preferences = $client->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING));
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
@@ -181,11 +181,11 @@ switch ($action) {
             }
         }
         $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_POST, 'tab', FILTER_SANITIZE_STRING));
+        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING));
     break;
     default:
         $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_POST, 'tab', FILTER_SANITIZE_STRING));
+        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING));
     break;
 } // End Switch Action
 
