@@ -313,7 +313,7 @@ class Stream
     public static function validate_bitrate($bitrate)
     {
         /* Round to standard bitrates */
-        $bit_rate = (int) (16 * (floor($bitrate / 16)));
+        $bit_rate = (int) (16 * (floor((int) $bitrate / 16)));
 
         return $bit_rate;
     }
