@@ -465,10 +465,21 @@ class XML_Data
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            $playlist = new Playlist($playlist_id);
-            $playlist->format();
-            $item_total = $playlist->get_media_count('song');
-
+            /**
+             * Strip smart_ from playlist id and compare to original
+             * smartlist = 'smart_1'
+             * playlist  = 1000000
+             */
+            if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
+                $playlist = new Playlist($playlist_id);
+                $playlist->format();
+                $item_total = $playlist->get_media_count('song');
+            }
+            else {
+                $playlist = new Search($playlist_id);
+                $playlist->format();
+                $item_total = $playlist->limit;
+            }
             // Build this element
             $string .= "<playlist id=\"$playlist->id\">\n" .
                     "\t<name><![CDATA[$playlist->name]]></name>\n" .

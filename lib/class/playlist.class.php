@@ -104,7 +104,7 @@ class Playlist extends playlist_object
             $sql .= ' WHERE `user` = ?';
             $params[] = $user_id;
         }
-               
+
         if ($incl_public) {
             if (count($params) > 0) {
                 $sql .= ' OR ';
@@ -123,6 +123,44 @@ class Playlist extends playlist_object
 
         return $results;
     } // get_playlists
+
+    /**
+     * get_smartlists
+     * Returns a list of playlists accessible by the user.
+     * @return array
+     */
+    public static function get_smartlists($incl_public = true, $user_id = null)
+    {
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
+        }
+
+        // Search for smartplaylists
+        $sql    .= "UNION ALL SELECT CONCAT('smart_', `id`) FROM `search`";
+        if ($user_id > -1) {
+            $sql .= ' WHERE `user` = ?';
+        $params[] = $user_id;
+        }
+
+        if ($incl_public) {
+            if (count($params) > 0) {
+                $sql .= ' OR ';
+            } else {
+                $sql .= ' WHERE ';
+            }
+            $sql .= "`type` = 'public'";
+        }
+
+        $sql .= ' ORDER BY `name`';
+
+        $db_results = Dba::read($sql, $params);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    } // get_smartlists
 
     /**
      * format
@@ -157,7 +195,7 @@ class Playlist extends playlist_object
     /**
      * get_items
      * This returns an array of playlist medias that are in this playlist.
-     * Because the same meda can be on the same playlist twice they are
+     * Because the same media can be on the same playlist twice they are
      * keyed by the uid from playlist_data
      */
     public function get_items()

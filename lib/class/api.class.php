@@ -633,7 +633,7 @@ class Api
         self::set_filter($method, $input['filter']);
         self::$browse->set_filter('playlist_type', '1');
 
-        $playlist_ids = self::$browse->get_objects();
+        $playlist_ids = array_merge(self::$browse->get_objects(), Playlist::get_smartlists($incl_public));
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 

@@ -995,6 +995,17 @@ class Search extends playlist_object
     }
 
     /**
+     * get_media_count
+     * This simply returns a int of how many media elements exist in this playlist
+     * For now let's consider a dyn_media a single entry
+     * @return string|null
+     */
+    public function get_media_count($type = '')
+    {
+        return '0';
+    } // get_media_count
+
+    /**
      * name_to_basetype
      *
      * Iterates over our array of types to find out the basetype for
