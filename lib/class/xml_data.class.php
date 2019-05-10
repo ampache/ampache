@@ -488,8 +488,7 @@ class XML_Data
                 $playlist_name  = Search::get_name_byid($playlist_id);
                 if ($playlist->type !== 'public') {
                     $playlist_user  = $playlist->f_user;
-                }
-                else {
+                } else {
                     $playlist_user  = $playlist->type;
                 }
                 $playitem_total = $playlist->limit;
