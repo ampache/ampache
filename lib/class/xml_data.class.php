@@ -481,9 +481,9 @@ class XML_Data
                 $playlist_type  = $playlist->type;
             } else {
                 $playlist     = new Search(str_replace('smart_', '', (string) $playlist_id));
-                $playlist_id  = str_replace('smart_', '', (string) $playlist_id);
+                $playlist->format();
 
-                $playlist_name  = Search::get_name_byid($playlist_id);
+                $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
                 if ($playlist->type !== 'public') {
                     $playlist_user  = $playlist->f_user;
                 } else {
