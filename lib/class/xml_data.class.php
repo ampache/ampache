@@ -465,8 +465,6 @@ class XML_Data
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            debug_event('XML_DATA', 'Loading playlist: ' . $playlist_id . ' ' .
-                        (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id), '5');
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'

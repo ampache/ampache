@@ -665,16 +665,18 @@ class Api
      */
     public static function playlist_songs($input)
     {
-        if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
+        debug_event('API', 'Loading playlist: ' . $input . ' ' .
+                    (str_replace('smart_', '', (string) $input) === (string) $input), '5');
+        if (str_replace('smart_', '', (string) $input) === (string) $input) {
             // Playlists
             $playlist = new Playlist($input['filter']);
             $items    = $playlist->get_items();
         } else {
             //Smartlists
             $playlist = new Search($input['filter']);
-            $items    = $playlist->get_items();
-            
+            $items    = $playlist->get_items(); 
         }
+
         $songs = array();
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
