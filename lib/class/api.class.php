@@ -673,7 +673,7 @@ class Api
             $items    = $playlist->get_items();
         } else {
             //Smartlists
-            $playlist = new Search($input['filter']);
+            $playlist = new Search(str_replace('smart_', '', $input['filter']));
             $items    = $playlist->get_items();
         }
 
