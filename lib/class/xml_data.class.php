@@ -465,26 +465,42 @@ class XML_Data
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
+            debug_event('XML_DATA', 'Loading playlist: ' . $playlist_id . ' ' .
+                        (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id), '5');
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
             if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
-                $playlist = new Playlist($playlist_id);
+                $playlist     = new Playlist($playlist_id);
+                $playlist_id  = $playlist->id;
                 $playlist->format();
-                $item_total = $playlist->get_media_count('song');
+
+                $playlist_name  = $playlist->name;
+                $playlist_user  = $playlist->f_user;
+                $playitem_total = $playlist->get_media_count('song');
+                $playlist_type  = $playlist->type;
             } else {
-                $playlist = new Search($playlist_id);
-                $playlist->format();
-                $item_total = $playlist->limit;
+                $playlist     = new Search(str_replace('smart_', '', (string) $playlist_id));
+                $playlist_id  = str_replace('smart_', '', (string) $playlist_id);
+
+                $playlist_name  = Search::get_name_byid($playlist_id);
+                if ($playlist->type !== 'public') {
+                    $playlist_user  = $playlist->f_user;
+                }
+                else {
+                    $playlist_user  = $playlist->type;
+                }
+                $playitem_total = $playlist->limit;
+                $playlist_type  = $playlist->type;
             }
             // Build this element
-            $string .= "<playlist id=\"$playlist->id\">\n" .
-                    "\t<name><![CDATA[$playlist->name]]></name>\n" .
-                    "\t<owner><![CDATA[$playlist->f_user]]></owner>\n" .
-                    "\t<items>$item_total</items>\n" .
-                    "\t<type>$playlist->type</type>\n" .
+            $string .= "<playlist id=\"$playlist_id\">\n" .
+                    "\t<name><![CDATA[$playlist_name]]></name>\n" .
+                    "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
+                    "\t<items>$playitem_total</items>\n" .
+                    "\t<type>$playlist_type</type>\n" .
                     "</playlist>\n";
         } // end foreach
 
