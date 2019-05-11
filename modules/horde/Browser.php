@@ -1027,7 +1027,7 @@ class Horde_Browser
     public function usingSSLConnection()
     {
         return ((filter_has_var(INPUT_SERVER, 'HTTPS') &&
-                 (filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING) == 'on')) ||
+                 ($_SERVER['HTTPS'] == 'on')) ||
                 getenv('SSL_PROTOCOL_VERSION'));
     }
 

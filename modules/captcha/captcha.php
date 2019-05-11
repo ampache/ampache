@@ -104,7 +104,7 @@ Mike O'Connell <wb:gm.c>
 @define("CAPTCHA_SALT", ",e?c:7<");
 #define("CAPTCHA_DATA_URLS", 0);     // RFC2397-URLs exclude MSIE users
 @define("CAPTCHA_FONT_DIR", dirname(__FILE__));
-@define("CAPTCHA_BASE_URL", (empty(filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING))? "http": "https") . "://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/" . substr(realpath(__FILE__), strlen(realpath($_SERVER["DOCUMENT_ROOT"]))));
+@define("CAPTCHA_BASE_URL", (empty($_SERVER['HTTPS'])? "http": "https") . "://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/" . substr(realpath(__FILE__), strlen(realpath($_SERVER["DOCUMENT_ROOT"]))));
 
 #-- texts
 @define("CAPTCHA_PROMPT_TEXT", 'please enter the letters you recognize in the CAPTCHA image to the left');
