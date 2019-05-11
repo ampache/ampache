@@ -49,7 +49,7 @@ if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog'
     }
 }
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Big switch statement to handle various actions
 switch ($action) {

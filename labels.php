@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

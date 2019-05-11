@@ -28,7 +28,7 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $results = array();
-$action  = UI::get_action();
+$action  = Core::get_request();
 
 // Switch on the actions
 switch ($action) {

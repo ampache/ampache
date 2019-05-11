@@ -44,7 +44,7 @@ if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item
     return false;
 }
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

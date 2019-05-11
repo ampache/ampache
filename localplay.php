@@ -31,7 +31,7 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '
     return false;
 }
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 switch ($action) {
     case 'show_add_instance':

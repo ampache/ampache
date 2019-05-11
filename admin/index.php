@@ -30,7 +30,7 @@ if (!Access::check('interface', 100)) {
 
 UI::show_header();
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {
