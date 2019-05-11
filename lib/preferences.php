@@ -75,8 +75,8 @@ function update_preferences($pref_id = 0)
         }
 
         /* Run the update for this preference only if it's set */
-        if (isset(Core::get_request($name))) {
-            Preference::update($id, $pref_id, $value, Core::get_request($apply_to_all));
+        if (isset($_REQUEST[$name])) {
+            Preference::update($id, $pref_id, $value, $_REQUEST[$apply_to_all]);
         }
 
         if (Access::check('interface', '100') && Core::get_request($new_level)) {
@@ -105,8 +105,8 @@ function update_preference($user_id, $name, $pref_id, $value)
     }
 
     /* Check and see if they are an admin and the level def is set */
-    if ($GLOBALS['user']->has_access(100) and make_bool(Core::get_request($level_check))) {
-        Preference::update_level($pref_id, Core::get_request($level_check));
+    if (Core::get_global('user')->has_access(100) and make_bool($_REQUEST[$level_check])) {
+        Preference::update_level($pref_id, $_REQUEST[$level_check]);
     }
 
     /* Else make sure that the current users has the right to do this */

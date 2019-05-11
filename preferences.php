@@ -63,7 +63,7 @@ switch ($action) {
         // FIXME: do we need to do any header fiddling?
         load_gettext();
 
-        $preferences = Core::get_global('user')->get_preferences(Core::get_request('tab'), $system);
+        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], $system);
 
         if ($_POST['method'] == 'admin') {
             $notification_text = T_('Server preferences updated successfully');
@@ -97,7 +97,7 @@ switch ($action) {
             return false;
         }
         $fullname    = T_('Server');
-        $preferences = Core::get_global('user')->get_preferences(Core::get_request('tab'), true);
+        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);
     break;
     case 'user':
         if (!Access::check('interface', '100')) {
@@ -107,7 +107,7 @@ switch ($action) {
         }
         $client      = new User(Core::get_request('user_id'));
         $fullname    = $client->fullname;
-        $preferences = $client->get_preferences(Core::get_request('tab'));
+        $preferences = $client->get_preferences($_REQUEST['tab']);
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
@@ -180,11 +180,11 @@ switch ($action) {
             }
         }
         $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences(Core::get_request('tab'));
+        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
     break;
     default:
         $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences(Core::get_request('tab'));
+        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
     break;
 } // End Switch Action
 
