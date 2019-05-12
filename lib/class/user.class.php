@@ -1593,9 +1593,9 @@ class User extends database_object
      */
     public static function check_username($username)
     {
-        $user = Dba::escape($username);
+        $username = Dba::escape($username);
 
-        $sql        = "SELECT `id` FROM `user` WHERE `username`='$user'";
+        $sql        = "SELECT `id` FROM `user` WHERE `username`='$username'";
         $db_results = Dba::read($sql);
 
         if (Dba::num_rows($db_results)) {
@@ -1634,7 +1634,7 @@ class User extends database_object
      * stream_control
      * Check all stream control plugins
      * @param array $media_ids
-     * @param User $user_id
+     * @param User $user
      * @return boolean
      */
     public static function stream_control($media_ids, User $user_id = null)

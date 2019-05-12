@@ -173,11 +173,11 @@ switch ($action) {
 
         ob_end_flush();
 
-        if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING) == 'none') {
+        if (!strlen($_POST['type']) || $_POST['type'] == 'none') {
             AmpError::add('general', T_('Error: Please select a catalog type'));
         }
 
-        if (!strlen(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING))) {
+        if (!strlen($_POST['name'])) {
             AmpError::add('general', T_('Error: Name not specified'));
         }
 

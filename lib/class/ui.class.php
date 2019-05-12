@@ -434,8 +434,8 @@ class UI
     {
         $isgv   = true;
         $name   = 'browse_' . $type . '_grid_view';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $isgv = (filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING) == 'true');
+        if (isset($_COOKIE[$name])) {
+            $isgv = ($_COOKIE[$name] == 'true');
         }
 
         return $isgv;

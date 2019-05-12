@@ -35,8 +35,8 @@ $action = Core::get_request('action');
 // Switch on the actions
 switch ($action) {
     case 'edit':
-        if ((filter_has_var(INPUT_POST, 'license_id'))) {
-            $license = new License(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING));
+        if (isset($_POST['license_id'])) {
+            $license = new License($_POST['license_id']);
             if ($license->id) {
                 $license->update($_POST);
             }
