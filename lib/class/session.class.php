@@ -556,7 +556,7 @@ class Session
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (filter_has_var(INPUT_SERVER, 'HTTPS') && $_SERVER['HTTPS'] != 'on') {
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'on') {
             return true;
         }
 

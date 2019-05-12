@@ -920,7 +920,7 @@ class User extends database_object
      */
     public function insert_ip_history()
     {
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
             debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
         } else {

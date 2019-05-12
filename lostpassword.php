@@ -39,7 +39,7 @@ switch ($action) {
         if (isset($_POST['email']) && $_POST['email']) {
             /* Get the email address and the current ip*/
             $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-            $current_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')  ? $_SERVER['HTTP_X_FORWARDED_FOR'] :filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+            $current_ip = (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
             $result     = send_newpassword($email, $current_ip);
         }
         /* Do not acknowledge a password has been sent or failed
