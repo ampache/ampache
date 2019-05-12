@@ -32,7 +32,7 @@ $democratic->set_parent();
 
 $show_browse = false;
 $results     = array();
-$action      = Core::get_request();
+$action      = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

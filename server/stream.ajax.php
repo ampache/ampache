@@ -31,7 +31,7 @@ if (!defined('AJAX_INCLUDE')) {
 debug_event('stream.ajax.php', 'Called for action {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', 5);
 
 $results = array();
-$action  = Core::get_request();
+$action  = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

@@ -29,7 +29,7 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $results = array();
-$action  = Core::get_request();
+$action  = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {
