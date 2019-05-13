@@ -132,7 +132,7 @@ class Art extends database_object
             $_SESSION['art_enabled'] = true;
         }
 
-        self::$enabled = make_bool($_SESSION['art_enabled']);
+        self::$enabled = $_SESSION['art_enabled'];
         //setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
     }
 
@@ -160,7 +160,7 @@ class Art extends database_object
         if ($value === null) {
             self::$enabled = self::$enabled ? false : true;
         } else {
-            self::$enabled = make_bool($value);
+            self::$enabled = $value;
         }
 
         $_SESSION['art_enabled'] = self::$enabled;
@@ -648,7 +648,6 @@ class Art extends database_object
 
         $results = Dba::fetch_assoc($db_results);
         if (count($results)) {
-            $image = null;
             if (AmpConfig::get('album_art_store_disk')) {
                 $image = self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind);
             } else {
@@ -914,13 +913,13 @@ class Art extends database_object
                 $extension = 'jpg';
             }
             $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . scrub_out($uid) . '/thumb';
-            if ($thumb) {
+            if ($thumb !== null) {
                 $url .= $thumb;
             }
             $url .= '.' . $extension;
         } else {
             $url = AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
-            if ($thumb) {
+            if ($thumb !== null) {
                 $url .= '&thumb=' . $thumb;
             }
             if (!empty($extension)) {
@@ -941,7 +940,7 @@ class Art extends database_object
     {
         $types = array('album', 'artist','tvshow','tvshow_season','video','user','live_stream');
 
-        if ($object_type != null) {
+        if ($object_type !== null) {
             if (in_array($object_type, $types)) {
                 if (AmpConfig::get('album_art_store_disk')) {
                     self::delete_from_dir($object_type, $object_id);
@@ -1001,7 +1000,7 @@ class Art extends database_object
             $db_results = Dba::read($sql, array($object_type, $old_object_id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind']);
-                if ($image != null) {
+                if ($image !== null) {
                     self::write_to_dir($image, $row['size'], $object_type, $new_object_id, $row['kind']);
                 }
             }
@@ -1102,11 +1101,10 @@ class Art extends database_object
      * gather_db
      * This function retrieves art that's already in the database
      *
-     * @param integer|null $limit
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function gather_db($limit = null)
+    public function gather_db()
     {
         if ($this->has_db_info()) {
             return array('db' => true);
@@ -1599,7 +1597,7 @@ class Art extends database_object
             }
             
             $coverart = (array) $xalbum->image;
-            if (!$coverart) {
+            if (empty($coverart)) {
                 return array();
             }
 
@@ -1802,8 +1800,8 @@ class Art extends database_object
             }
         }
         $size        = self::get_thumb_size($thumb);
-        $prettyPhoto = ($link == null);
-        if ($link == null) {
+        $prettyPhoto = ($link === null);
+        if ($link === null) {
             $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
             if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
                 $link .= "&auth=" . session_id();
