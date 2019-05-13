@@ -1879,11 +1879,14 @@ class Song extends database_object implements media, library_item
                 debug_event('media', 'Defaulting to configured target format for ' . $source, 5);
             } else {
                 if ($target !== AmpConfig::get($setting_target)) {
+                    debug_event('media', 'Using default target format', 5);
+                } else {
                     $target = $source;
                     debug_event('media', 'No default target for ' . $source . ', choosing to resample', 5);
                 }
             }
         }
+
 
         debug_event('media', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
 
