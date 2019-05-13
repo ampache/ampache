@@ -251,21 +251,23 @@ class Useractivity extends database_object
         if (!AmpConfig::get('userflags') || !$this->id) {
             return false;
         }
-        
+
         $user = new User($this->user);
         $user->format();
         $libitem = new $this->object_type($this->object_id);
         $libitem->format();
-        
+
         echo '<div>';
-        $fdate = date('m/d/Y H:i:s', $this->activity_date);
+        $fdate = date('Y/m/d H:i:s', $this->activity_date);
+        /*
         echo '<div class="shoutbox-date">';
         if ($user->f_avatar_mini) {
             echo '<a href="' . $user->link . '">' . $user->f_avatar_mini . '</a> ';
         }
-        echo $fdate;
-        echo '</div>';
-                      
+         */
+        echo $fdate . ' ';
+        //echo '</div>';
+
         $descr = $user->f_link . ' ';
         switch ($this->action) {
             case 'shout':
@@ -288,15 +290,17 @@ class Useractivity extends database_object
                 break;
         }
         $descr .= ' ' . $libitem->f_link;
-        echo '<div>';
+        //echo '<div>';
         echo $descr;
-        
+
+        /*
         if (Core::is_library_item($this->object_type)) {
             echo ' ';
             $libitem->display_art(10);
         }
         echo '</div>';
-        
-        echo '</div><br />';
+         */
+
+        echo '</div>';//<br />';
     } // show
 } //end useractivity class
