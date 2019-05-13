@@ -96,7 +96,7 @@ class Core
      */
     public static function get_request($variable)
     {
-        return filter_input($_REQUEST[$variable]);
+        return $_REQUEST[$variable];
     }
 
     /**
