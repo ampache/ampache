@@ -87,6 +87,7 @@ class Core
     {
         return $GLOBALS[$variable];
     }
+
     /**
      * get_request
      * Return a $GLOBAL variable instead of calling directly

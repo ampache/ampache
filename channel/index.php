@@ -33,7 +33,7 @@ ob_end_clean();
 
 set_time_limit(0);
 
-$channel = new Channel(Core::get_request('channel'));
+$channel = new Channel($_REQUEST['channel']);
 if (!$channel->id) {
     debug_event('channel', 'Unknown channel.', '1');
 
@@ -49,7 +49,7 @@ if (!function_exists('curl_version')) {
 // Authenticate the user here
 if ($channel->is_private) {
     $is_auth = false;
-    if (isset($_SERVER['PHP_AUTH_USER'])) {
+    if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
         $htusername = $_SERVER['PHP_AUTH_USER'];
         $htpassword = $_SERVER['PHP_AUTH_PW'];
 
@@ -63,7 +63,7 @@ if ($channel->is_private) {
             if (AmpConfig::get('access_control')) {
                 if (!Access::check_network('stream', Core::get_global('user')->id, '25') and
                     !Access::check_network('network', Core::get_global('user')->id, '25')) {
-                    debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access", '3');
+                    debug_event('UI::access_denied', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
                     UI::access_denied();
 
                     return false;
@@ -81,7 +81,7 @@ if ($channel->is_private) {
     }
 }
 
-$url = 'http://' . $channel->interface . ':' . $channel->port . '/' . Core::get_request('target');
+$url = 'http://' . $channel->interface . ':' . $channel->port . '/' . $_REQUEST['target'];
 // Redirect request to the real channel server
 $headers         = getallheaders();
 $headers['Host'] = $channel->interface;

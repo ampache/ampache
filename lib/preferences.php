@@ -53,7 +53,7 @@ function update_preferences($pref_id = 0)
         $apply_to_all    = 'check_' . $data['name'];
         $new_level       = 'level_' . $data['name'];
         $id              = $data['id'];
-        $value           = scrub_in(Core::get_request($name));
+        $value           = scrub_in($_REQUEST[$name]);
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
@@ -66,7 +66,7 @@ function update_preferences($pref_id = 0)
 
         if (preg_match('/_pass$/', $name)) {
             if ($value == '******') {
-                unset(Core::get_request($name));
+                unset($_REQUEST[$name]);
             } else {
                 if (preg_match('/md5_pass$/', $name)) {
                     $value = md5($value);
@@ -79,8 +79,8 @@ function update_preferences($pref_id = 0)
             Preference::update($id, $pref_id, $value, $_REQUEST[$apply_to_all]);
         }
 
-        if (Access::check('interface', '100') && Core::get_request($new_level)) {
-            Preference::update_level($id, Core::get_request($new_level));
+        if (Access::check('interface', '100') && $_REQUEST[$new_level]) {
+            Preference::update_level($id, $_REQUEST[$new_level]);
         }
     } // end foreach preferences
 
@@ -98,14 +98,14 @@ function update_preference($user_id, $name, $pref_id, $value)
     $level_check = "level_" . $name;
 
     /* First see if they are an administrator and we are applying this to everything */
-    if ($GLOBALS['user']->has_access(100) and make_bool(Core::get_request($apply_check))) {
+    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$apply_check])) {
         Preference::update_all($pref_id, $value);
 
         return true;
     }
 
     /* Check and see if they are an admin and the level def is set */
-    if (Core::get_global('user')->has_access(100) and make_bool($_REQUEST[$level_check])) {
+    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$level_check])) {
         Preference::update_level($pref_id, $_REQUEST[$level_check]);
     }
 
