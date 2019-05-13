@@ -35,7 +35,7 @@ Session::_auto_init();
 
 // Set up for redirection on important error cases
 $path = get_web_path();
-if (filter_has_var(INPUT_SERVER, 'HTTP_HOST')) {
+if (isset($_SERVER['HTTP_HOST'])) {
     $path = $http_type . $_SERVER['HTTP_HOST'] . $path;
 }
 

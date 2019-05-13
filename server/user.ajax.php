@@ -29,7 +29,7 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $user_id = (int) ($_REQUEST['user_id']);
-$action  = UI::get_action();
+$action  = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

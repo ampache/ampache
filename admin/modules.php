@@ -32,7 +32,7 @@ if (!Core::get_global('user')->has_access(100)) {
 /* Always show the header */
 UI::show_header();
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

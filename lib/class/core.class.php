@@ -89,6 +89,17 @@ class Core
     }
 
     /**
+     * get_request
+     * Return a $GLOBAL variable instead of calling directly
+     *
+     * @param string $variable
+     */
+    public static function get_request($variable)
+    {
+        return $_REQUEST[$variable];
+    }
+
+    /**
      * Place a new key on a specific position in array
      * @param array $array
      * @param integer $position

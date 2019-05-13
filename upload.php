@@ -40,7 +40,7 @@ if ($_SERVER['CONTENT_LENGTH'] > 0 && $post_max > 0 && $_SERVER['CONTENT_LENGTH'
     return false;
 }
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

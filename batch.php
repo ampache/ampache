@@ -76,7 +76,7 @@ if (Core::is_playable_item(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPE
         }
     }
 } else {
-    $action = UI::get_action();
+    $action = Core::get_request('action');
 
     // Switch on the actions
     switch ($action) {

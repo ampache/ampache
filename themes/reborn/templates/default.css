@@ -915,6 +915,7 @@ table.tabledata tbody .cel_cover img {
     -moz-border-radius: 2px;
     border-radius: 2px;
     margin: 2px;
+	object-fit: cover;
 }
 
 table.tabledata tbody .cel_cover img:hover {

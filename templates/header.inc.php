@@ -52,7 +52,7 @@ $_SESSION['login'] = false;
         ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=1024, initial-scale=1.0">
-        <title><?php print_r(AmpConfig::get('site_title')); ?> - <?php print_r($location['title']); ?></title>
+        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
 
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
 
@@ -296,7 +296,7 @@ $_SESSION['login'] = false;
         </script>
 
         <?php
-            if (AmpConfig::get('cookie_disclaimer') && !(filter_has_var(INPUT_COOKIE, 'cookie_disclaimer'))) {
+            if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
                 ?>
 
         <script type="text/javascript" language="javascript">
@@ -369,11 +369,11 @@ $_SESSION['login'] = false;
                         if (User::is_registered()) {
                             require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
+                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id; ?>"><?php echo $GLOBALS['user']->fullname; ?></a>
                         <?php
                             if (AmpConfig::get('sociable')) {
                                 ?>
-                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs(Core::get_global('user')->id, true)); ?>)</a>
+                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true)); ?>)</a>
                         <?php
                             } ?>
                             <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
@@ -506,7 +506,7 @@ $_SESSION['login'] = false;
             });
             </script>
 
-            <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo $count_temp_playlist ? '' : 'hidden' ?>">
+            <div id="rightbar" class="rightbar-fixed">
                 <?php require_once AmpConfig::get('prefix') . UI::find_template('rightbar.inc.php'); ?>
             </div>
 
@@ -524,7 +524,7 @@ $_SESSION['login'] = false;
                             AutoUpdate::show_new_version();
                             echo '<br />';
                         }
-                        $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
+                        $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
 
                         if (AmpConfig::get('int_config_version') < AmpConfig::get('config_version')) {
                             ?>

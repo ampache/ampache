@@ -26,7 +26,7 @@ require_once '../lib/init.php';
 
 debug_event('refresh_reordered.server.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

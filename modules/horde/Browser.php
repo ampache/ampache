@@ -265,7 +265,7 @@ class Horde_Browser
     {
         // Set our agent string.
         if ($userAgent == null) {
-            if (filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
+            if (isset($_SERVER['HTTP_USER_AGENT'])) {
                 $this->_agent = trim($_SERVER['HTTP_USER_AGENT']);
             }
         } else {
@@ -275,7 +275,7 @@ class Horde_Browser
 
         // Set our accept string.
         if ($accept === null) {
-            if (filter_has_var(INPUT_SERVER, 'HTTP_ACCEPT')) {
+            if (isset($_SERVER['HTTP_ACCEPT'])) {
                 $this->_accept = strtolower(trim($_SERVER['HTTP_ACCEPT']));
             }
         } else {
@@ -283,7 +283,7 @@ class Horde_Browser
         }
 
         // Check for UTF support.
-        if (filter_has_var(INPUT_SERVER, 'HTTP_ACCEPT_CHARSET')) {
+        if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
             $this->setFeature('utf', strpos(strtolower($_SERVER['HTTP_ACCEPT_CHARSET']), 'utf') !== false);
         }
 
@@ -1026,8 +1026,8 @@ class Horde_Browser
      */
     public function usingSSLConnection()
     {
-        return ((filter_has_var(INPUT_SERVER, 'HTTPS') &&
-                 (filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING) == 'on')) ||
+        return ((isset($_SERVER['HTTPS']) &&
+                 ($_SERVER['HTTPS'] == 'on')) ||
                 getenv('SSL_PROTOCOL_VERSION'));
     }
 
@@ -1038,7 +1038,7 @@ class Horde_Browser
      */
     public function getHTTPProtocol()
     {
-        return (filter_has_var(INPUT_SERVER, 'SERVER_PROTOCOL') && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'], '/')))
+        return (isset($_SERVER['SERVER_PROTOCOL']) && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'], '/')))
             ? substr($_SERVER['SERVER_PROTOCOL'], $pos + 1)
             : null;
     }

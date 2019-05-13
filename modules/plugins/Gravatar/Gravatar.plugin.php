@@ -72,7 +72,7 @@ class AmpacheGravatar
     {
         $url = "";
         if (!empty($user->email)) {
-            if (filter_has_var(INPUT_SERVER, 'HTTPS') && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING) !== 'off') {
+            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
                 $url = "https://secure.gravatar.com";
             } else {
                 $url = "http://www.gravatar.com";

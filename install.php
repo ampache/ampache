@@ -111,7 +111,7 @@ $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 
 unset($safe_dirname);
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

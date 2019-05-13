@@ -42,7 +42,7 @@ $web_path  = AmpConfig::get('web_path');
 
 debug_event("stream.php", "Asked for {" . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . "}.", 5);
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {
@@ -148,7 +148,7 @@ switch ($action) {
 } // end action switch
 
 // See if we need a special streamtype
-//$action = UI::get_action();
+//$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

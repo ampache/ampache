@@ -31,7 +31,7 @@ if (!AmpConfig::get('allow_democratic_playback')) {
 
 UI::show_header();
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {
@@ -86,7 +86,7 @@ switch ($action) {
         }
 
         // Now check for additional things we might have to do
-        if (filter_input(INPUT_POST, 'force_democratic', FILTER_SANITIZE_STRING)) {
+        if ($_POST['force_democratic']) {
             Democratic::set_user_preferences();
         }
 

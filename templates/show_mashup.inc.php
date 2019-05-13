@@ -22,7 +22,7 @@
 
 $threshold = AmpConfig::get('stats_threshold');
 $user_id   = Core::get_global('user')->id;
-$count     = 18;
+$count     = 16;
 ?>
 <p>
     <input type="button" value="<?php echo T_('Browse Library') ?>" onclick="NavigateTo('<?php echo AmpConfig::get('web_path') ?>/browse.php?action=<?php echo $object_type ?>');" />
@@ -30,7 +30,7 @@ $count     = 18;
 </p>
 <?php
 UI::show_box_top(T_('Trending'));
-$object_ids = Stats::get_top($object_type, $count, 7);
+$object_ids = Stats::get_top($object_type, $threshold, 7);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
@@ -41,7 +41,7 @@ UI::show_box_bottom();
 ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=newest#browse_content_<?php echo $object_type ?>"><?php UI::show_box_top(T_('Newest')) ?></a>
 <?php
-$object_ids = Stats::get_newest($object_type, $count);
+$object_ids = Stats::get_newest($object_type, $threshold);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);

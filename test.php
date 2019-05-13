@@ -58,7 +58,7 @@ switch ($action) {
 
         // Try to load localization from cookie
         $session_name = AmpConfig::get('session_name');
-        if ((filter_has_var(INPUT_COOKIE, $session_name . '_lang'))) {
+        if (isset($_COOKIE[$session_name . '_lang'])) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
 

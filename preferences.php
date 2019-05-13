@@ -26,8 +26,7 @@ $title             = "";
 $text              = "";
 $next_url          = "";
 $notification_text = "";
-
-$action = UI::get_action();
+$action            = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {
@@ -64,7 +63,7 @@ switch ($action) {
         // FIXME: do we need to do any header fiddling?
         load_gettext();
 
-        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING), $system);
+        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], $system);
 
         if ($_POST['method'] == 'admin') {
             $notification_text = T_('Server preferences updated successfully');
@@ -86,9 +85,9 @@ switch ($action) {
             return false;
         }
 
-        update_preferences(filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT));
+        update_preferences($_POST['user_id']);
 
-        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . (string) scrub_out(filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT)));
+        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_POST['user_id']));
     break;
     case 'admin':
         // Make sure only admins here
@@ -98,7 +97,7 @@ switch ($action) {
             return false;
         }
         $fullname    = T_('Server');
-        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING), true);
+        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);
     break;
     case 'user':
         if (!Access::check('interface', '100')) {
@@ -106,9 +105,9 @@ switch ($action) {
 
             return false;
         }
-        $client      = new User($_REQUEST['user_id']);
+        $client      = new User(Core::get_request('user_id'));
         $fullname    = $client->fullname;
-        $preferences = $client->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING));
+        $preferences = $client->get_preferences($_REQUEST['tab']);
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
@@ -165,35 +164,37 @@ switch ($action) {
 
             return false;
         }
-        if ($_REQUEST['token'] && in_array($_REQUEST['plugin'], Plugin::get_plugins('save_mediaplay'))) {
+        if (Core::get_request('token') && in_array(Core::get_request('plugin'), Plugin::get_plugins('save_mediaplay'))) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
-            if ($plugin = new Plugin($_REQUEST['plugin'])) {
+            if ($plugin = new Plugin(Core::get_request('plugin'))) {
                 $plugin->load(Core::get_global('user'));
-                if ($plugin->_plugin->get_session(Core::get_global('user')->id, $_REQUEST['token'])) {
+                if ($plugin->_plugin->get_session(Core::get_global('user')->id, Core::get_request('token'))) {
                     $title    = T_('Updated');
-                    $text     = T_('Your Account has been updated') . ' : ' . $_REQUEST['plugin'];
+                    $text     = T_('Your Account has been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 } else {
                     $title    = T_('Error');
-                    $text     = T_('Your Account has not been updated') . ' : ' . $_REQUEST['plugin'];
+                    $text     = T_('Your Account has not been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 }
             }
         }
         $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING));
+        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
     break;
     default:
         $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING));
+        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
     break;
 } // End Switch Action
 
 UI::show_header();
 
-//$action = UI::get_action();
+/**
+ * switch on the view
+ */
+$action = Core::get_request('action');
 
-// Switch on the actions
 switch ($action) {
     case 'confirm':
     case 'grant':

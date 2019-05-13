@@ -43,17 +43,17 @@ function update_preferences($pref_id = 0)
     $results = array();
     // Collect the current possible keys
     while ($row = Dba::fetch_assoc($db_results)) {
-        $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type']);
+        $results[] = array('id' => $row['id'], 'name' => $row['name'],'type' => $row['type']);
     } // end collecting keys
 
     /* Foreach through possible keys and assign them */
     foreach ($results as $data) {
         /* Get the Value from POST/GET var called $data */
-        $name         = $data['name'];
-        $apply_to_all = 'check_' . $data['name'];
-        $new_level    = 'level_' . $data['name'];
-        $id           = $data['id'];
-        $value        = scrub_in($_REQUEST[$name]);
+        $name            = $data['name'];
+        $apply_to_all    = 'check_' . $data['name'];
+        $new_level       = 'level_' . $data['name'];
+        $id              = $data['id'];
+        $value           = scrub_in($_REQUEST[$name]);
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
@@ -75,7 +75,7 @@ function update_preferences($pref_id = 0)
         }
 
         /* Run the update for this preference only if it's set */
-        if (filter_has_var(INPUT_GET, $name)) {
+        if (isset($_REQUEST[$name])) {
             Preference::update($id, $pref_id, $value, $_REQUEST[$apply_to_all]);
         }
 
@@ -98,15 +98,15 @@ function update_preference($user_id, $name, $pref_id, $value)
     $level_check = "level_" . $name;
 
     /* First see if they are an administrator and we are applying this to everything */
-    if (Core::get_global('user')->has_access(100) and make_bool($_REQUEST[$apply_check])) {
+    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$apply_check])) {
         Preference::update_all($pref_id, $value);
 
         return true;
     }
 
     /* Check and see if they are an admin and the level def is set */
-    if (Core::get_global('user')->has_access(100) and make_bool(filter_input(INPUT_GET, $level_check, FILTER_SANITIZE_STRING))) {
-        Preference::update_level($pref_id, filter_input(INPUT_GET, $level_check, FILTER_SANITIZE_STRING));
+    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$level_check])) {
+        Preference::update_level($pref_id, $_REQUEST[$level_check]);
     }
 
     /* Else make sure that the current users has the right to do this */
@@ -167,6 +167,7 @@ function create_preference_input($name, $value)
         case 'show_played_times':
         case 'song_page_title':
         case 'subsonic_backend':
+        case 'plex_backend':
         case 'webplayer_flash':
         case 'webplayer_html5':
         case 'allow_personal_info_now':
@@ -255,19 +256,20 @@ function create_preference_input($name, $value)
             $var_name    = $value . "_type";
             ${$var_name} = "selected=\"selected\"";
             echo "<select name=\"$name\">\n";
-            echo "\t<option value=\"simple_m3u\" >" . T_('Simple M3U') . "</option>\n";
-            echo "\t<option value=\"pls\">" . T_('PLS') . "</option>\n";
-            echo "\t<option value=\"asx\">" . T_('Asx') . "</option>\n";
-            echo "\t<option value=\"ram\">" . T_('RAM') . "</option>\n";
-            echo "\t<option value=\"xspf\">" . T_('XSPF') . "</option>\n";
+            echo "\t<option value=\"m3u\" $m3u_type>" . T_('M3U') . "</option>\n";
+            echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . T_('Simple M3U') . "</option>\n";
+            echo "\t<option value=\"pls\" $pls_type>" . T_('PLS') . "</option>\n";
+            echo "\t<option value=\"asx\" $asx_type>" . T_('Asx') . "</option>\n";
+            echo "\t<option value=\"ram\" $ram_type>" . T_('RAM') . "</option>\n";
+            echo "\t<option value=\"xspf\" $xspf_type>" . T_('XSPF') . "</option>\n";
             echo "</select>\n";
         break;
         case 'lang':
             $languages = get_languages();
             echo '<select name="' . $name . '">' . "\n";
-            foreach ($languages as $lang => $tongue) {
+            foreach ($languages as $lang => $name) {
                 $selected = ($lang == $value) ? 'selected="selected"' : '';
-                echo "\t<option value=\"$lang\" " . $selected . ">$tongue</option>\n";
+                echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
             } // end foreach
             echo "</select>\n";
         break;
@@ -397,7 +399,7 @@ function create_preference_input($name, $value)
                 $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
             }
             echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
-        break;
+            break;
         case 'lastfm_grant_link':
         case 'librefm_grant_link':
             // construct links for granting access Ampache application to Last.fm and Libre.fm
@@ -415,5 +417,6 @@ function create_preference_input($name, $value)
                 echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
             }
         break;
+
     }
 } // create_preference_input

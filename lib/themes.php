@@ -40,7 +40,7 @@ function get_themes()
 
     $results = array();
     while (($file = readdir($handle)) !== false) {
-        if ($file !== '.' or $file !== '..') {
+        if ((string) $file !== '.' or (string) $file !== '..') {
             debug_event('theme', "Checking $file", 5);
             $cfg = get_theme($file);
             if ($cfg !== null) {
@@ -84,7 +84,6 @@ function get_theme($name)
         }
         $results['colors'] = explode(',', $results['colors']);
     } else {
-        debug_event('theme', $config_file . ' not found.', 3);
         $results = null;
     }
     $_mapcache[$name] = $results;

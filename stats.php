@@ -28,7 +28,7 @@ define('TABLE_RENDERED', 1);
 // Temporary workaround to avoid sorting on custom base requests
 define('NO_BROWSE_SORTING', true);
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

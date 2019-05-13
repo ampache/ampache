@@ -235,23 +235,6 @@ class UI
     }
     
     /**
-     * get_action
-     *
-     * Returns a string from INPUT_GET / INPUT_POST
-     * @return string $action
-     */
-    public static function get_action()
-    {
-        if ((string) filter_input(INPUT_GET, 'action')) {
-            $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-        } else {
-            $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-        }
-
-        return (string) $action;
-    }
-    
-    /**
      * get_icon
      *
      * Returns an <img> tag for the specified icon
@@ -451,8 +434,8 @@ class UI
     {
         $isgv   = true;
         $name   = 'browse_' . $type . '_grid_view';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $isgv = (filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING) == 'true');
+        if (isset($_COOKIE[$name])) {
+            $isgv = ($_COOKIE[$name] == 'true');
         }
 
         return $isgv;

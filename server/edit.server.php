@@ -70,7 +70,7 @@ if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
     return false;
 }
 
-$action = UI::get_action();
+$action = Core::get_request('action');
 
 // Switch on the actions
 switch ($action) {

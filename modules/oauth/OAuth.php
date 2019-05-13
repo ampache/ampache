@@ -293,7 +293,7 @@ class OAuthRequest
      */
     public static function from_request($http_method=null, $http_url=null, $parameters=null)
     {
-        $scheme = (!filter_has_var(INPUT_SERVER, 'HTTPS') || filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING) != "on")
+        $scheme = (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on")
               ? 'http'
               : 'https';
         $http_url = ($http_url) ? $http_url : $scheme .
@@ -897,7 +897,7 @@ class OAuthUtil
             // otherwise we don't have apache and are just going to have to hope
             // that $_SERVER actually contains what we need
             $out = array();
-            if (filter_has_var(INPUT_SERVER, 'CONTENT_TYPE')) {
+            if (isset($_SERVER['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_SERVER['CONTENT_TYPE'];
             }
             if (isset($_ENV['CONTENT_TYPE'])) {
