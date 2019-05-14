@@ -15,14 +15,13 @@
 # Manuel <psyvirusx@gmail.com>, 2018
 # Pablo Ganuza Vidal <pablerkas@gmail.com>, 2016
 # Raul Fernandez Garcia <raulfg3@gmail.com>, 2017
-# José Diaz <info@josediaz.site>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2019-05-14 20:20+0200\n"
-"Last-Translator: José Diaz <info@josediaz.site>\n"
+"PO-Revision-Date: 2018-10-26 15:36+0000\n"
+"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/ampache/ampache/"
 "language/es_ES/)\n"
 "Language: es_ES\n"
@@ -70,7 +69,7 @@ msgstr "Entrada de Lista de Acceso actualizada"
 #: ../../admin/catalog.php:66 ../../admin/catalog.php:74
 #: ../../admin/catalog.php:83
 msgid "Catalog Update started..."
-msgstr "Actualización del catálogo iniciada..."
+msgstr "Actualización de catálogo iniciada..."
 
 #: ../../admin/catalog.php:105
 msgid "Catalog Deleted"
@@ -101,8 +100,8 @@ msgstr "Confirmar petición de borrado"
 #: ../../admin/catalog.php:125
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] " Canción habilitada"
-msgstr[1] " Canciones habilitadas"
+msgstr[0] "Canción habilitada"
+msgstr[1] "Canciones habilitadas"
 
 #: ../../admin/catalog.php:127
 msgid "No Disabled Songs selected"
@@ -111,8 +110,8 @@ msgstr "Ninguna canción deshabilitada seleccionada"
 #: ../../admin/catalog.php:130
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] " Canción deshabilitada procesada"
-msgstr[1] " Canciones deshabilitadas procesadas"
+msgstr[0] "Canción deshabilitada procesada"
+msgstr[1] "Canciones deshabilitadas procesadas"
 
 #: ../../admin/catalog.php:135 ../../admin/catalog.php:139
 msgid "Catalog Clean started..."
@@ -200,7 +199,7 @@ msgstr "Fallo al habilitar el módulo, error de controlador"
 
 #: ../../admin/modules.php:53
 msgid "localplay enabled"
-msgstr "localplay habilitado"
+msgstr "Localplay habilitado"
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
@@ -494,7 +493,7 @@ msgstr "Iniciando transmisiones..."
 
 #: ../../bin/broadcast.inc:35
 msgid "UPnP broadcast... "
-msgstr "Transmision UPnP... "
+msgstr "Transmision UPnP..."
 
 #: ../../bin/broadcast.inc:37
 msgid "Done."
@@ -514,11 +513,11 @@ msgstr "Desactivar temporalmente el límite de memoria de PHP"
 
 #: ../../bin/catalog_update.inc:56
 msgid "Setting catalog name"
-msgstr "Configuración del nombre del catálogo"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:60
 msgid "Setting catalog type"
-msgstr "Configuración del tipo de catálogo"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:64
 msgid "Cleaning catalog/s"
@@ -594,8 +593,6 @@ msgid ""
 "Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-"
 "a|-g|-i|-o]"
 msgstr ""
-"Uso: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-"
-"g|-i|-o]"
 
 #: ../../bin/catalog_update.inc:207
 msgid ""
@@ -607,15 +604,15 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:211
 msgid "This help message"
-msgstr "Este mensaje de ayuda"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:213
 msgid "Name of Catalog (Optional)"
-msgstr "Nombre de catalogo (opcional)"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:215
 msgid "Type of Catalog (Optional)"
-msgstr "Tipo de catalogo (opcional)"
+msgstr ""
 
 #: ../../bin/catalog_update.inc:217
 msgid "Temporarily deactivates PHP memory limit."
@@ -677,7 +674,7 @@ msgstr ""
 
 #: ../../bin/channel_run.inc:46
 msgid "- Channel "
-msgstr "- Canal "
+msgstr "- Canal"
 
 #: ../../bin/channel_run.inc:49 ../../bin/websocket_run.inc:42
 msgid "- Verbose"
@@ -685,7 +682,7 @@ msgstr "- Verboso"
 
 #: ../../bin/channel_run.inc:54 ../../bin/websocket_run.inc:47
 msgid "- Port "
-msgstr "- Puerto "
+msgstr "- Puerto"
 
 #: ../../bin/channel_run.inc:71
 msgid "Starting Channel..."
@@ -697,11 +694,11 @@ msgstr "Canal desconocido."
 
 #: ../../bin/channel_run.inc:90
 msgid "Found available port "
-msgstr "Encontrado puerto disponible "
+msgstr "Encontrado puerto disponible"
 
 #: ../../bin/channel_run.inc:107
 msgid "Listening on "
-msgstr "Escuchando en "
+msgstr "Escuchando en"
 
 #: ../../bin/channel_run.inc:306
 msgid "- Channel Listening -"
@@ -745,7 +742,7 @@ msgstr "ERROR: Para esta funcionalidad se requiere Iconv, saliendo"
 #: ../../bin/fix_filenames.inc:51
 #, php-format
 msgid "%s"
-msgstr "%s"
+msgstr ""
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
@@ -1342,7 +1339,7 @@ msgstr "encendido"
 #: ../../lib/class/ampconfig.class.php:85
 #, php-format
 msgid "Trying to clobber '%s' without setting clobber"
-msgstr "Intentando pegar ‘%s’ sin configurar pegar"
+msgstr ""
 
 #: ../../lib/class/api.class.php:152
 msgid "Login Failed: version too old"
@@ -1355,7 +1352,7 @@ msgstr "Inicio de sesión fallida: marca horaria fuera de rango"
 #: ../../lib/class/api.class.php:182 ../../lib/class/api.class.php:195
 #: ../../lib/class/api.class.php:290
 msgid "Error Invalid Handshake - "
-msgstr "Error Handshake invalido - "
+msgstr "Error Handshake invalido -"
 
 #: ../../lib/class/api.class.php:194 ../../lib/class/api.class.php:195
 #: ../../lib/class/api.class.php:290
@@ -1791,7 +1788,7 @@ msgstr "Fallo al crear lista de reproducción."
 msgid "No valid songs found in playlist file."
 msgstr ""
 "No se han encontrado canciones validas en el archivo de la lista de "
-"reproducción."
+"reproducción"
 
 #: ../../lib/class/catalog.class.php:2456
 msgid ""
@@ -1920,11 +1917,11 @@ msgstr "Se requiere un catalogo de destino"
 
 #: ../../lib/class/podcast.class.php:283
 msgid "Wrong target catalog type"
-msgstr "Tipo del catálogo objetivo incorrecto"
+msgstr "Tipo del catálogo objetivo incorrecto."
 
 #: ../../lib/class/podcast.class.php:303
 msgid "Cannot access the feed."
-msgstr "No puedo acceder al feed."
+msgstr "No puedo acceder al feed"
 
 #: ../../lib/class/podcast.class.php:307
 msgid "Cannot read the feed."
@@ -2208,7 +2205,7 @@ msgstr "Duración (en minutos)"
 #: ../../lib/class/search.class.php:304 ../../lib/class/search.class.php:521
 #: ../../lib/class/search.class.php:618
 msgid "Rating (Average)"
-msgstr "Clasificación (promedio)"
+msgstr ""
 
 #: ../../lib/class/search.class.php:322 ../../templates/header.inc.php:437
 #: ../../templates/sidebar_home.inc.php:142
@@ -2219,7 +2216,7 @@ msgstr "Favoritos"
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
 msgid "Rating (Mine)"
-msgstr "Clasificación (mía)"
+msgstr ""
 
 #: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2246,7 +2243,7 @@ msgstr "Tasa de bits"
 #: ../../lib/class/search.class.php:382 ../../lib/class/search.class.php:556
 #: ../../lib/class/search.class.php:635
 msgid "My Last Play"
-msgstr "Mi ultima reproducción"
+msgstr ""
 
 #: ../../lib/class/search.class.php:389 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
@@ -3751,7 +3748,7 @@ msgstr "Selecciona 'Dropbox API app'"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:75
 msgid "Select 'Full Dropbox'"
-msgstr "Selecciona ‘Full Dropbox’"
+msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Give a name to your application and create it"
@@ -3765,8 +3762,6 @@ msgstr "Haga click en 'Generar' para crear un clave de acceso"
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr ""
-"Copie la clave de su aplicación, el secreto de la aplicación y el token de "
-"acceso en los siguientes campos."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
@@ -3782,7 +3777,7 @@ msgstr "Secreto"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:119
 msgid "Access Token"
-msgstr "Clave de acceso"
+msgstr "Clave de acceso "
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
@@ -3797,13 +3792,11 @@ msgstr "Obtener archivos fragmentados al analizar"
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:181
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr ""
-"Error: Clave de API, Secreto y token de acceso requerido para catálogos de "
-"Dropbox"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:188
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:492
 msgid "Invalid \"API key\", \"secret\", or \"access token\": "
-msgstr "“Clave de API”, “secreto” o “token de acceso” no válido: "
+msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:197
 msgid "Invalid \"dropbox-path\": "
@@ -3822,7 +3815,7 @@ msgstr "Finalizada Actualización de Catálogo. Medios Totales: [%s]"
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:261
 #: ../../modules/catalog/seafile/seafile.catalog.php:270
 msgid "No media updated, do you respect the patterns?"
-msgstr "No hay medios actualizados, ¿respetas los patrones?"
+msgstr ""
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:478
 #: ../../modules/catalog/seafile/seafile.catalog.php:378
@@ -3971,8 +3964,6 @@ msgstr "No ha posible autenticarse con Seafile"
 #, php-format
 msgid "No media updated: could not find Seafile library called \"%s\""
 msgstr ""
-"Sin medios actualizados: no se pudo encontrar la biblioteca de Seafile "
-"llamada “% s”"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:74
 #, php-format
@@ -3985,8 +3976,6 @@ msgid ""
 "Enter url to server (e.g. 'https://seafile.example.com') and library name (e."
 "g. 'Music')."
 msgstr ""
-"Ingrese la url al servidor (por ejemplo, ‘https://seafile.example.com’) y el "
-"nombre de la biblioteca (por ejemplo, ‘Música’)."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:76
 #, php-format
@@ -3996,17 +3985,11 @@ msgid ""
 "Limiting. <br/>The default is tuned towards Seafile's default rate limit "
 "settings; see %sthis forum post%s for more information."
 msgstr ""
-"‘API Call Delay’ es un retraso insertado entre solicitudes repetidas a "
-"Seafile (como durante una acción Agregar o Limpiar) para adaptarse a la "
-"limitación de velocidad de Seafile. <br/> El valor predeterminado se ajusta "
-"a la configuración de límite de tasa predeterminada de Seafile; ver% sthis "
-"foro post% s para más información."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:78
 msgid ""
 "After creating the catalog, you must 'Make it ready' on the catalog table."
 msgstr ""
-"Después de crear el catálogo, debe ‘Prepararlo’ en la tabla de catálogo."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:122
 msgid "Server URI"
@@ -4030,24 +4013,24 @@ msgstr "Contraseña de Seafile"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:155
 msgid "Error: Seafile Server URL is required."
-msgstr "Error: URI del servidor Seafile es obligatorio."
+msgstr "Error: URI del servidor Seafile es obligatorio"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:161
 msgid "Error: Seafile Server Library Name is required."
-msgstr "Error: El nombre de la biblioteca del servidor Seafile es obligatorio."
+msgstr "Error: El nombre de la biblioteca del servidor Seafile es obligatorio"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:167
 msgid "Error: Seafile Username is required."
-msgstr "Error: El nombre de usuario de Seafile es obligatorio."
+msgstr "Error: El nombre de usuario de Seafile es obligatorio"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:173
 msgid "Error: Seafile Password is required."
-msgstr "Error: La Contraseña de Seafile es obligatoria."
+msgstr "Error: La Contraseña de Seafile es obligatoria"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:179
 msgid "Error: API Call Delay must have a numeric value."
 msgstr ""
-"Error: El retraso de la llamada a la API tiene que ser un valor numérico."
+"Error: El retraso de la llamada a la API tiene que ser un valor numérico"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:189
 #, php-format
@@ -4120,7 +4103,7 @@ msgstr "Error de la API: No se pudo conectar a SoundCloud."
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:379
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:455
 msgid "SoundCloud exception: "
-msgstr "Excepción de SoundCloud: "
+msgstr "Excepción de SoundCloud:"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:102
 msgid "URI"
@@ -4132,7 +4115,7 @@ msgstr "Error: Subsonic seleccionado, pero la ruta no es una URL"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:152
 msgid "Error: Username and Password Required for Subsonic Catalogs"
-msgstr "Error: Nombre de usuario y contraseña necesarios para catálogos de"
+msgstr "Error: Nombre de usuario y contraseña necesarios para catálogos de "
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:185
 msgid "Running Subsonic Remote Update"
@@ -4299,7 +4282,7 @@ msgstr ""
 
 #: ../../plex/web/index.php:84
 msgid "myPlex authentication completed."
-msgstr "Autentificación en myPlex completada."
+msgstr "Autentificación en myPlex completada"
 
 #: ../../plex/web/index.php:98
 msgid "Server registration completed."
@@ -4384,7 +4367,7 @@ msgstr "Por favor rellena tu ciudad"
 
 #: ../../preferences.php:139
 msgid "Error Update Failed"
-msgstr "Error Fallo de Actualizacion"
+msgstr "Error Fallo de Actualizacion "
 
 #: ../../preferences.php:145 ../../preferences.php:163
 msgid "Your Account has been updated"
@@ -4507,7 +4490,7 @@ msgstr "Intento de acceso no autorizado a la API, o error ACL"
 
 #: ../../share.php:75
 msgid "Share created."
-msgstr "Objeto compartido creado."
+msgstr "Objeto compartido creado"
 
 #: ../../share.php:76
 msgid "You can now start sharing the following url:"
@@ -4683,7 +4666,7 @@ msgstr "Ampache"
 msgid ""
 "The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
-msgstr "El siguiente error ha ocurrido, será redirigido pasados 10 segundos."
+msgstr "El siguiente error ha ocurrido, será redirigido pasados 10 segundos"
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
@@ -4785,7 +4768,7 @@ msgstr "Registrar"
 
 #: ../../templates/header.inc.php:531
 msgid "Error: Your config file is out of date!"
-msgstr "Error: Su fichero de configuración ¡esta desfasado!"
+msgstr "Error: Su fichero de configuración esta desfasado"
 
 #: ../../templates/header.inc.php:533
 msgid "Generate and download new config file"
@@ -5137,7 +5120,7 @@ msgstr "Cometario id3"
 #: ../../templates/show_add_catalog.inc.php:41
 #: ../../templates/show_edit_catalog.inc.php:35
 msgid "track number (padded with leading 0)"
-msgstr "número de pista (con ceros por la izquierda)"
+msgstr "Número de pista (con ceros por la izquierda)"
 
 #: ../../templates/show_add_catalog.inc.php:42
 #: ../../templates/show_edit_catalog.inc.php:36
@@ -5157,7 +5140,7 @@ msgstr "otro"
 #: ../../templates/show_add_catalog.inc.php:48
 #: ../../templates/show_edit_catalog.inc.php:42
 msgid "Catalog Type"
-msgstr "Tipo de catalogo"
+msgstr "tipo de catalogo"
 
 #: ../../templates/show_add_catalog.inc.php:52
 msgid "Filename Pattern"
@@ -5251,7 +5234,7 @@ msgstr "Repetir"
 #: ../../templates/show_add_channel.inc.php:88
 #: ../../templates/show_edit_channel_row.inc.php:76
 msgid "Max Listeners"
-msgstr "Numero maximo de escuchas"
+msgstr "nº max. de escuchas"
 
 #: ../../templates/show_add_channel.inc.php:95
 #: ../../templates/show_channels.inc.php:38
@@ -6458,7 +6441,7 @@ msgstr "Límite de elementos (0 = ilimitado)"
 
 #: ../../templates/show_edit_shout.inc.php:23
 msgid "Edit existing Shoutbox Post"
-msgstr "Editar la publicación de Shoutbox existente"
+msgstr ""
 
 #. HINT: Client link, Object link
 #: ../../templates/show_edit_shout.inc.php:28
@@ -6872,7 +6855,7 @@ msgid ""
 "only essential features are enabled to stream simply your music from a web "
 "interface."
 msgstr ""
-"solo las opciones mínimas se habilitan en la interfaz WEB para realizar "
+"Solo las opciones minimas se habilitan en la interfaz WEB para realizar "
 "stream."
 
 #: ../../templates/show_install_config.inc.php:125
@@ -6884,12 +6867,12 @@ msgid ""
 "use recommended settings when using Ampache as a frontend for a music "
 "community."
 msgstr ""
-"usar las opciones recomendadas cuando se usa Ampache como frontend para una "
+"Usar las opciones recomendadas cuando se usa Ampache como frontend para una "
 "comunidad de música."
 
 #: ../../templates/show_install_config.inc.php:130
 msgid "Transcoding"
-msgstr "Transcodificación"
+msgstr "Transcodificación."
 
 #: ../../templates/show_install_config.inc.php:132
 msgid ""
@@ -6914,9 +6897,6 @@ msgid ""
 "application you want to use. You may need to customize settings once this "
 "setup ended"
 msgstr ""
-"Esta sección aplica la configuración de transcodificación predeterminada de "
-"acuerdo con la aplicación que desea utilizar. Es posible que deba "
-"personalizar la configuración una vez finalizada esta configuración"
 
 #: ../../templates/show_install_config.inc.php:134
 #: ../../templates/show_install_config.inc.php:164
@@ -6933,10 +6913,6 @@ msgid ""
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
 msgstr ""
-"No se ha encontrado ninguna aplicación de transcodificación predeterminada. "
-"Es posible que deba instalar una aplicación popular (ffmpeg, avconv …) o "
-"personalizar la configuración de transcodificación manualmente después de la "
-"instalación."
 
 #: ../../templates/show_install_config.inc.php:162
 msgid "Players"
@@ -6947,20 +6923,16 @@ msgid ""
 "Ampache is more than only a web interface. Several backends are implemented "
 "to ensure you can stream your media from anywhere."
 msgstr ""
-"Ampache es más que solo una interfaz web. Se implementan varios backends "
-"para garantizar que pueda transmitir sus medios desde cualquier lugar."
 
 #: ../../templates/show_install_config.inc.php:164
 msgid ""
 "Select backends to enable. Depending the backend, you may need to perform "
 "additional configuration."
 msgstr ""
-"Seleccione backends para habilitar. Dependiendo del backend, es posible que "
-"necesite realizar una configuración adicional."
 
 #: ../../templates/show_install_config.inc.php:204
 msgid "File Insight"
-msgstr "Visión archivo"
+msgstr ""
 
 #: ../../templates/show_install_config.inc.php:214
 msgid "channel/.htaccess action"
@@ -7379,7 +7351,7 @@ msgstr "Canciones similares"
 
 #: ../../templates/show_object_rating.inc.php:47
 msgid "Current rating: "
-msgstr "Puntuación actual: "
+msgstr "Puntuación actual:"
 
 #: ../../templates/show_object_rating.inc.php:49
 msgid "not rated yet"
@@ -7542,7 +7514,7 @@ msgstr "Nivel de acceso"
 #: ../../templates/show_user_preferences.inc.php:29
 #, php-format
 msgid "Editing %s preferences"
-msgstr "Editando preferencias de %s"
+msgstr "Editando preferencias de %s "
 
 #: ../../templates/show_preferences.inc.php:36
 #: ../../templates/show_user_preferences.inc.php:53
@@ -7933,8 +7905,6 @@ msgid ""
 "You may have reached this page because a configuration error has occured. "
 "Debug information is below."
 msgstr ""
-"Es posible que haya llegado a esta página porque se ha producido un error de "
-"configuración. La información de depuración está abajo."
 
 #: ../../templates/show_test.inc.php:51
 msgid "Web Installation"
@@ -7949,8 +7919,6 @@ msgid ""
 "This tests whether you are running at least the minimum version of PHP "
 "required by Ampache."
 msgstr ""
-"Esto prueba si está ejecutando al menos la versión mínima de PHP requerida "
-"por Ampache."
 
 #: ../../templates/show_test_table.inc.php:33
 msgid "Dependencies"
@@ -7958,7 +7926,7 @@ msgstr "Dependencias"
 
 #: ../../templates/show_test_table.inc.php:38
 msgid "This tests whether Ampache dependencies are installed."
-msgstr "Esto prueba si las dependencias de Ampache están instaladas."
+msgstr ""
 
 #: ../../templates/show_test_table.inc.php:42
 msgid ""
@@ -8015,8 +7983,6 @@ msgid ""
 "This tests whether the MySQL driver for PDO is enabled. This driver is "
 "required by Ampache."
 msgstr ""
-"Esto prueba si el controlador MySQL para PDO está habilitado. Este "
-"controlador es requerido por Ampache."
 
 #: ../../templates/show_test_table.inc.php:84
 msgid "PHP session extension"
@@ -8112,9 +8078,6 @@ msgid ""
 "This test makes sure that PHP is not running in safe mode. Some features of "
 "Ampache will not work correctly in safe mode."
 msgstr ""
-"Esta prueba se asegura de que PHP no se esté ejecutando en modo seguro. "
-"Algunas características de Ampache no funcionarán correctamente en modo "
-"seguro."
 
 #: ../../templates/show_test_table.inc.php:156
 msgid "PHP memory limit override"
@@ -8125,8 +8088,6 @@ msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
 msgstr ""
-"Esto prueba si Ampache puede anular el límite de memoria. Esto no es "
-"estrictamente necesario, pero puede resultar en una mejor experiencia."
 
 #: ../../templates/show_test_table.inc.php:165
 msgid "PHP execution time override"
@@ -8137,9 +8098,6 @@ msgid ""
 "This tests whether Ampache can override the limit on maximum execution time. "
 "This is not strictly necessary, but may result in a better experience."
 msgstr ""
-"Esto prueba si Ampache puede anular el límite del tiempo máximo de "
-"ejecución. Esto no es estrictamente necesario, pero puede resultar en una "
-"mejor experiencia."
 
 #: ../../templates/show_test_table.inc.php:174
 msgid "PHP max upload size"
@@ -8150,8 +8108,6 @@ msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
 msgstr ""
-"Esto prueba si Ampache puede cargar archivos medianos (> = 20M). Esto no es "
-"estrictamente necesario, pero puede resultar en una mejor experiencia."
 
 #: ../../templates/show_test_table.inc.php:183
 msgid "PHP Integer Size"
@@ -8163,9 +8119,6 @@ msgid ""
 "strictly necessary, but may result in a better experience. This generally "
 "requires 64-bit operating system."
 msgstr ""
-"Esto prueba si Ampache puede administrar archivos grandes (> 2GB). Esto no "
-"es estrictamente necesario, pero puede resultar en una mejor experiencia. "
-"Esto generalmente requiere un sistema operativo de 64 bits."
 
 #: ../../templates/show_test_table.inc.php:192
 msgid "PHP mbstring.func_overload"
@@ -8179,44 +8132,32 @@ msgid ""
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
 msgstr ""
-"Esto prueba si PHP %s está configurado ya que puede romper el soporte de "
-"etiquetas ID3. Esto no es estrictamente necesario, pero habilitar el soporte "
-"de escritura de etiquetas ID3 de Ampache (deshabilitado de forma "
-"predeterminada) junto con mbstring.func_overload puede provocar la "
-"corrupción irreversible de sus archivos de música."
 
 #: ../../templates/show_test_table.inc.php:204
 msgid "Configuration file readability"
-msgstr "Legibilidad del archivo de configuración"
+msgstr ""
 
 #: ../../templates/show_test_table.inc.php:209
 msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file "
 "either is not in the correct location or is not currently readable."
 msgstr ""
-"Esta prueba intenta leer config / ampache.cfg.php. Si esto falla, el archivo "
-"no se encuentra en la ubicación correcta o no se puede leer actualmente."
 
 #: ../../templates/show_test_table.inc.php:214
 msgid "Configuration file validity"
-msgstr "Validez del archivo de configuración"
+msgstr ""
 
 #: ../../templates/show_test_table.inc.php:223
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to completely parse your config file."
 msgstr ""
-"Esta prueba garantiza que haya configurado todas las variables de "
-"configuración necesarias y que podamos analizar completamente su archivo de "
-"configuración."
 
 #: ../../templates/show_test_table.inc.php:232
 msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
 msgstr ""
-"Esto intenta conectarse a su base de datos utilizando los valores leídos de "
-"su archivo de configuración."
 
 #: ../../templates/show_test_table.inc.php:236
 msgid "Database tables"
@@ -8227,9 +8168,6 @@ msgid ""
 "This checks a few key tables to make sure that you have successfully "
 "inserted the Ampache database and that the user has access to the database"
 msgstr ""
-"Esto comprueba algunas tablas clave para asegurarse de que haya insertado "
-"correctamente la base de datos de Ampache y de que el usuario tenga acceso a "
-"la base de datos"
 
 #: ../../templates/show_test_table.inc.php:246
 msgid "Web path"
@@ -8279,7 +8217,7 @@ msgstr "Iniciando actualización desde etiquetas"
 
 #: ../../templates/show_update_items.inc.php:27
 msgid "Update from Tags Complete"
-msgstr "Actualización de las etiquetas completas"
+msgstr ""
 
 #: ../../templates/show_uploads.inc.php:23
 #: ../../templates/sidebar_home.inc.php:157
@@ -8430,7 +8368,7 @@ msgstr "Mostrar"
 
 #: ../../templates/show_video.inc.php:151
 msgid "Audio Bitrate"
-msgstr "BitRate de Audio"
+msgstr "itRate de Audio"
 
 #: ../../templates/show_video.inc.php:152
 msgid "Video Bitrate"
@@ -8627,8 +8565,6 @@ msgstr "Borrar TVShow"
 #: ../../tvshows.php:39
 msgid "Are you sure you want to permanently delete this tvshow?"
 msgstr ""
-"¿Estás seguro de que deseas eliminar de forma permanente este programa de "
-"televisión?"
 
 #: ../../tvshows.php:58
 msgid "TVShow has been deleted."
@@ -8636,7 +8572,7 @@ msgstr "TVShow ha sido borrado."
 
 #: ../../tvshows.php:60
 msgid "Cannot delete this tvshow."
-msgstr "No puedo borrar este TVShow."
+msgstr "No puedo borrar este TVShow"
 
 #: ../../tvshows.php:81
 msgid "Show TV Shows starting with"
@@ -8706,7 +8642,7 @@ msgstr "Bloquear Canciones"
 
 #: Database preference table id 24
 msgid "Forces Http play regardless of port"
-msgstr "Fuerza reproducción HTTP sin importar el puerto"
+msgstr "Fuerza reproducción HTTP sin importar el puerto."
 
 #: Database preference table id 29
 msgid "Type of Playback"
@@ -8738,7 +8674,7 @@ msgstr "Permitir reproducción democrática"
 
 #: Database preference table id 46
 msgid "Allow Localplay Play"
-msgstr "Permitir"
+msgstr "Permitir "
 
 #: Database preference table id 47
 msgid "Statistics Day Threshold"
@@ -8746,11 +8682,11 @@ msgstr "Limite estadísticas diarias"
 
 #: Database preference table id 51
 msgid "Offset Limit"
-msgstr "Límite de compensación"
+msgstr ""
 
 #: Database preference table id 52
 msgid "Rate Limit"
-msgstr "Límite de tarifa"
+msgstr ""
 
 #: Database preference table id 53
 msgid "Playlist Method"
@@ -8758,7 +8694,7 @@ msgstr "Método de lista de reproducción"
 
 #: Database preference table id 72
 msgid "Shoutcast Active Instance"
-msgstr "Instancia activa de Shoutcast"
+msgstr ""
 
 #: Database preference table id 73
 msgid "Last.FM Username"
@@ -8786,11 +8722,11 @@ msgstr "Reto de envío Last.FM"
 
 #: Database preference table id 82
 msgid "Now playing filtered per user"
-msgstr "Ahora reproduciendo filtrado por usuario"
+msgstr ""
 
 #: Database preference table id 83
 msgid "Album Default Sort"
-msgstr "Ordenar por defecto del álbum"
+msgstr ""
 
 #: Database preference table id 84
 msgid "Show # played"
@@ -8842,7 +8778,7 @@ msgstr ""
 
 #: Database preference table id 94
 msgid "Fix header position on compatible themes"
-msgstr "Fijar la posición del encabezado en temas compatibles"
+msgstr ""
 
 #: Database preference table id 95
 msgid "Check for Ampache updates automatically"
@@ -8882,7 +8818,7 @@ msgstr "Dias por defecto de compartición de enlaces.  (0=nunca)"
 
 #: Database preference table id 104
 msgid "Artist slideshow inactivity time"
-msgstr "Artista pase de diapositivas tiempo de inactividad"
+msgstr ""
 
 #: Database preference table id 105
 msgid "Broadcast web player by default"
@@ -8938,7 +8874,7 @@ msgstr ""
 
 #: Database preference table id 117
 msgid "Upload: allow users to edit uploaded songs"
-msgstr "Subir: permitir a los usuarios editar las canciones subidas"
+msgstr "Subir: permitir a los usuarios editar las canciones subidas."
 
 #: Database preference table id 118
 msgid "Use DAAP backend"
@@ -8966,23 +8902,23 @@ msgstr "Carga de página Ajax"
 
 #: Database preference table id 124
 msgid "Limit direct play to maximum media count"
-msgstr "Limita el juego directo a la cantidad máxima de medios"
+msgstr ""
 
 #: Database preference table id 125
 msgid "Show Albums of the moment at home page"
-msgstr "Mostrar los álbumes del momento en la página de inicio"
+msgstr ""
 
 #: Database preference table id 126
 msgid "Show Videos of the moment at home page"
-msgstr "Mostrar los videos del momento en la página de inicio"
+msgstr ""
 
 #: Database preference table id 127
 msgid "Show Recently Played at home page"
-msgstr "Mostrar los últimos reproducidos en la página de inicio"
+msgstr ""
 
 #: Database preference table id 128
 msgid "Show Now Playing at home page"
-msgstr "Mostrar ahora reproduciendo en la página de inicio"
+msgstr ""
 
 #: Database preference table id 129
 msgid "Custom logo url"
@@ -9015,7 +8951,7 @@ msgstr "Subir: permitir a los usuarios eliminar canciones subidas"
 
 #: Database preference table id 140
 msgid "Custom login page logo url"
-msgstr "Página de inicio de sesión personalizada logo url"
+msgstr ""
 
 #: Database preference table id 141
 msgid "Custom favicon url"
@@ -9040,16 +8976,12 @@ msgstr "Color del tema"
 #: Database preference table id 146
 msgid "Disable custom metadata fields (ctrl / shift click to select multiple)"
 msgstr ""
-"Deshabilitar campos de metadatos personalizados (ctrl / shift hacer clic "
-"para seleccionar múltiples)"
 
 #: Database preference table id 147
 msgid ""
 "Disable custom metadata fields. Insert them in a comma separated list. They "
 "will add to the fields selected above."
 msgstr ""
-"Desactivar los campos de metadatos personalizados. Insértelos en una lista "
-"separada por comas. Se agregarán a los campos seleccionados arriba."
 
 #: Database preference table id 148
 msgid "Podcast: # latest episodes to keep"
@@ -9061,40 +8993,36 @@ msgstr "Podcast: descargar # nuevos episodios cuando estén disponibles"
 
 #: Database preference table id 150
 msgid "Library item context menu"
-msgstr "Menú contextual del elemento de biblioteca"
+msgstr ""
 
 #: Database preference table id 151
 msgid "Rename uploaded file according to catalog pattern"
-msgstr "Renombrar archivo subido de acuerdo al patrón de catálogo"
+msgstr ""
 
 #: Database preference table id 152
 msgid "Check library item at import time and don't import duplicates"
 msgstr ""
-"Compruebe el elemento de la biblioteca en el momento de la importación y no "
-"importe duplicados"
 
 #: Database preference table id 153
 msgid "Show filter box on browse"
-msgstr "Mostrar el cuadro de filtro en navegar"
+msgstr ""
 
 #: Database preference table id 154
 msgid "Light sidebar by default"
-msgstr "Barra lateral de luz por defecto"
+msgstr ""
 
 #: Database preference table id 155
 msgid "Custom blank album default image"
-msgstr "Imagen predeterminada del álbum en blanco personalizado"
+msgstr ""
 
 #: Database preference table id 156
 msgid "Custom blank video default image"
-msgstr "Imagen en blanco personalizada de video por defecto"
+msgstr ""
 
 #: Database preference table id 157
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
-"Navegación alfabética por defecto para los siguientes elementos de la "
-"biblioteca (álbum, artista, …)"
 
 #: Database preference table id 164
 msgid "Amazon base url"
@@ -9126,15 +9054,15 @@ msgstr "subir"
 
 #: Database preference subcategory table id 152
 msgid "catalog"
-msgstr "catalogo"
+msgstr ""
 
 #: Database preference subcategory table id 154
 msgid "theme"
-msgstr "tema"
+msgstr ""
 
 #: Database preference subcategory table id 155
 msgid "custom"
-msgstr "personalizado"
+msgstr ""
 
 #: Database preference subcategory table id 164
 msgid "amazon"
