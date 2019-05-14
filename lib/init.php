@@ -46,7 +46,7 @@ if (!file_exists($configfile)) {
     $link = $path . '/install.php';
 } else {
     // Make sure the config file is set up and parsable
-    $results = @parse_ini_file($configfile);
+    $results = parse_ini_file($configfile);
 
     if (!count($results)) {
         $link = $path . '/test.php?action=config';

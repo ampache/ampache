@@ -77,6 +77,7 @@ function sse_worker($url)
  * returns the script part of the referer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need
  * to clean it up, take the filename then check for a /admin/ and dump the rest
+ * @return string
  */
 function return_referer()
 {
@@ -208,7 +209,7 @@ function show_preference_box($preferences)
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_album_select($name='album', $album_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
+function show_album_select($name, $album_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
 {
     static $album_id_cnt = 0;
 
@@ -266,7 +267,7 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  */
-function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
+function show_artist_select($name, $artist_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -319,7 +320,7 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
  */
-function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $season_id=0, $allow_none=false)
+function show_tvshow_select($name, $tvshow_id=0, $allow_add=false, $season_id=0, $allow_none=false)
 {
     static $tvshow_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -355,7 +356,7 @@ function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $sea
     echo "</select>\n";
 } // show_tvshow_select
 
-function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add=false, $video_id=0, $allow_none=false)
+function show_tvshow_season_select($name, $season_id, $allow_add=false, $video_id=0, $allow_none=false)
 {
     if (!$season_id) {
         return false;
@@ -401,7 +402,7 @@ function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  */
-function show_catalog_select($name='catalog', $catalog_id=0, $style='', $allow_none=false, $filter_type='')
+function show_catalog_select($name, $catalog_id, $style='', $allow_none=false, $filter_type='')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
@@ -435,7 +436,7 @@ function show_catalog_select($name='catalog', $catalog_id=0, $style='', $allow_n
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_license_select($name='license', $license_id=0, $song_id=0)
+function show_license_select($name, $license_id=0, $song_id=0)
 {
     static $license_id_cnt = 0;
 
@@ -548,7 +549,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
 {
     $output = isset($_REQUEST['xoutput']) ? $_REQUEST['xoutput'] : 'xml';
     if ($output == 'xml') {
-        return xml_from_array($array, $callback, $type);
+        return XML_Data::output_xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {
         $outputnode = $_REQUEST['xoutputnode'];
 
@@ -557,87 +558,6 @@ function xoutput_from_array($array, $callback = false, $type = '')
         return json_from_array($array, $callback, $type);
     }
 }
-
-// FIXME: This should probably go in XML_Data
-/**
- * xml_from_array
- * This takes a one dimensional array and creates a XML document from it. For
- * use primarily by the ajax mojo.
- */
-function xml_from_array($array, $callback = false, $type = '')
-{
-    $string = '';
-
-    // If we weren't passed an array then return
-    if (!is_array($array)) {
-        return $string;
-    }
-
-    // The type is used for the different XML docs we pass
-    switch ($type) {
-    case 'itunes':
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $value = xoutput_from_array($value, true, $type);
-                $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-            } else {
-                if ($key == "key") {
-                    $string .= "\t\t<$key>$value</$key>\n";
-                } elseif (is_int($value)) {
-                    $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
-                } elseif ($key == "Date Added") {
-                    $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
-                } elseif (is_string($value)) {
-                    /* We need to escape the value */
-                    $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
-                }
-            }
-        } // end foreach
-
-        return $string;
-    case 'xspf':
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $value = xoutput_from_array($value, true, $type);
-                $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-            } else {
-                if ($key == "key") {
-                    $string .= "\t\t<$key>$value</$key>\n";
-                } elseif (is_numeric($value)) {
-                    $string .= "\t\t\t<$key>$value</$key>\n";
-                } elseif (is_string($value)) {
-                    /* We need to escape the value */
-                    $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
-                }
-            }
-        } // end foreach
-
-        return $string;
-    default:
-        foreach ($array as $key => $value) {
-            // No numeric keys
-            if (is_numeric($key)) {
-                $key = 'item';
-            }
-
-            if (is_array($value)) {
-                // Call ourself
-                $value = xoutput_from_array($value, true);
-                $string .= "\t<content div=\"$key\">$value</content>\n";
-            } else {
-                /* We need to escape the value */
-                $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
-            }
-            // end foreach elements
-        }
-        if (!$callback) {
-            $string = '<?xml version="1.0" encoding="utf-8" ?>' .
-                "\n<root>\n" . $string . "</root>\n";
-        }
-
-        return UI::clean_utf8($string);
-    }
-} // xml_from_array
 
 function json_from_array($array, $callback = false, $type = '')
 {

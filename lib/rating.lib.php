@@ -36,6 +36,7 @@ function show_rating($object_id, $type)
 /**
  * get_rating_name
  * This takes a score and returns the name that we should use
+ * @return string
  */
 function get_rating_name($score)
 {

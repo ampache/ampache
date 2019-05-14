@@ -26,6 +26,7 @@
  * this looks in /themes and pulls all of the
  * theme.cfg.php files it can find and returns an
  * array of the results
+ * @return array
  */
 function get_themes()
 {
@@ -106,6 +107,7 @@ function get_theme_author($theme_name)
 /**
  * @function theme_exists
  * @discussion this function checks to make sure that a theme actually exists
+ * @return boolean
  */
 function theme_exists($theme_name)
 {

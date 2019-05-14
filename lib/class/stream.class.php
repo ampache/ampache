@@ -319,7 +319,7 @@ class Stream
     }
 
     /**
-     * garbage_collection_now_playing
+     * gc_now_playing
      *
      * This will garbage collect the now playing data,
      * this is done on every play start.
@@ -340,14 +340,11 @@ class Stream
      */
     public static function insert_now_playing($oid, $uid, $length, $sid, $type)
     {
-        $time = (int) (time() + $length);
-        $type = strtolower($type);
-
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
             '(`id`,`object_id`,`object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $oid, $type, $uid, $time, time()));
+        Dba::write($sql, array($sid, $oid, strtolower($type), $uid, (int) (time() + $length), time()));
     }
 
     /**
