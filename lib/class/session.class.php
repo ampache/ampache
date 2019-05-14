@@ -183,6 +183,7 @@ class Session
      * This is called when you want to create a new session
      * it takes care of setting the initial cookie, and inserting the first
      * chunk of data, nifty ain't it!
+     * @return string
      */
     public static function create($data)
     {

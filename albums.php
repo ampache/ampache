@@ -85,7 +85,7 @@ switch ($action) {
 
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
-            $_GET[$key] = unhtmlentities(scrub_in((string) $data));
+            $_GET[$key] = unhtmlentities((string) scrub_in($data));
             debug_event('albums', $key . '=' . $_GET[$key], '5');
         }
 
