@@ -102,7 +102,6 @@ class Upload
                         // Override artist information with artist's user
                         if (AmpConfig::get('upload_user_artist')) {
                             $artists = Core::get_global('user')->get_artists();
-                            $artist  = null;
                             // No associated artist yet, we create a default one for the user sender
                             if (count($artists) == 0) {
                                 $artists[] = Artist::check(Core::get_global('user')->f_name);
@@ -116,21 +115,21 @@ class Upload
                             // Try to create a new artist
                             if (isset($_REQUEST['artist_name'])) {
                                 $artist_id = Artist::check($_REQUEST['artist_name'], null, true);
-                                if ($artist_id && !Access::check('interface', 50)) {
+                                if ($artist_id !== null && !Access::check('interface', 50)) {
                                     debug_event('upload', 'An artist with the same name already exists, uploaded song skipped.', 3);
 
                                     return self::rerror($targetfile);
                                 } else {
                                     $artist_id = Artist::check($_REQUEST['artist_name']);
                                     $artist    = new Artist($artist_id);
-                                    if (!$artist->get_user_owner()) {
+                                    if ($artist->get_user_owner() === null) {
                                         $artist->update_artist_user((int) Core::get_global('user')->id);
                                     }
                                 }
                             }
                             if (!Access::check('interface', 50)) {
                                 // If the user doesn't have privileges, check it is assigned to an artist he owns
-                                if (!$artist_id) {
+                                if ($artist_id === null) {
                                     debug_event('upload', 'Artist information required, uploaded song skipped.', 3);
 
                                     return self::rerror($targetfile);
@@ -150,7 +149,7 @@ class Upload
 
                         if (!Access::check('interface', 50)) {
                             // If the user doesn't have privileges, check it is assigned to an album he owns
-                            if (!$album_id) {
+                            if ($album_id === null) {
                                 debug_event('upload', 'Album information required, uploaded song skipped.', 3);
 
                                 return self::rerror($targetfile);
@@ -163,10 +162,10 @@ class Upload
                             }
                         }
 
-                        if ($artist_id) {
+                        if ($artist_id !== null) {
                             $options['artist_id'] = $artist_id;
                         }
-                        if ($album_id) {
+                        if ($album_id !== null) {
                             $options['album_id'] = $album_id;
                         }
                         if (AmpConfig::get('upload_catalog_pattern')) {
@@ -203,7 +202,7 @@ class Upload
      */
     public static function rerror($file = null)
     {
-        if ($file) {
+        if ($file !== null) {
             if (unlink($file) === false) {
                 throw new \RuntimeException('The file handle ' . $file . ' could not be unlinked.');
             }

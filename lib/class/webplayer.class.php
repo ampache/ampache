@@ -24,7 +24,7 @@ class WebPlayer
 {
     /**
      * Check if the playlist is a radio playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return boolean
      */
     public static function is_playlist_radio($playlist)
