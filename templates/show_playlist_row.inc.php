@@ -41,7 +41,7 @@
 <td class="cel_cover">
 <div style="max-width: 128px;">
     <?php
-    $libitem->display_art(1); ?>
+    $libitem->display_art(2); ?>
 </div>
 </td>
 <?php

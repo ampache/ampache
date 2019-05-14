@@ -224,22 +224,22 @@ class XML_Data
     }
     // playlist_song_tracks_string
 
-/**
- * output_xml_from_array
- * This takes a one dimensional array and creates a XML document from it. For
- * use primarily by the ajax mojo.
- */
-function output_xml_from_array($array, $callback = false, $type = '')
-{
-    $string = '';
+    /**
+     * output_xml_from_array
+     * This takes a one dimensional array and creates a XML document from it. For
+     * use primarily by the ajax mojo.
+     */
+    public function output_xml_from_array($array, $callback = false, $type = '')
+    {
+        $string = '';
 
-    // If we weren't passed an array then return
-    if (!is_array($array)) {
-        return $string;
-    }
+        // If we weren't passed an array then return
+        if (!is_array($array)) {
+            return $string;
+        }
 
-    // The type is used for the different XML docs we pass
-    switch ($type) {
+        // The type is used for the different XML docs we pass
+        switch ($type) {
     case 'itunes':
         foreach ($array as $key => $value) {
             if (is_array($value)) {
@@ -302,7 +302,7 @@ function output_xml_from_array($array, $callback = false, $type = '')
 
         return UI::clean_utf8($string);
     }
-} // output_from_array
+    } // output_from_array
 
     /**
      * keyed_array

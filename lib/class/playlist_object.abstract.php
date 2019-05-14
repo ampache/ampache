@@ -163,6 +163,7 @@ abstract class playlist_object extends database_object implements library_item
         if (AmpConfig::get('playlist_art')) {
             $medias     = $this->get_medias();
             $media_arts = array();
+            shuffle($medias);
             foreach ($medias as $media) {
                 if (Core::is_library_item($media['object_type'])) {
                     if (!Art::has_db($media['object_id'], $media['object_type'])) {
@@ -178,7 +179,7 @@ abstract class playlist_object extends database_object implements library_item
                     if ($media !== null) {
                         if (!in_array($media, $media_arts)) {
                             $media_arts[] = $media;
-                            if (count($media_arts) >= 4) {
+                            if (count($media_arts) >= 1) {
                                 break;
                             }
                         }
