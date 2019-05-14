@@ -45,5 +45,3 @@ if (Update::need_update()) {
 }
 
 Update::display_update();
-
-?>

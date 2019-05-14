@@ -160,7 +160,7 @@ switch ($action) {
             $client->update_validation($validation);
 
             // Notify user and/or admins
-            Registration::send_confirmation($username, $fullname, $email, $website, $pass1, $validation);
+            Registration::send_confirmation($username, $fullname, $email, $website, $validation);
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_registration_confirmation.inc.php');
