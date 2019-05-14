@@ -27,7 +27,7 @@ require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
 if (count(Core::get_global('argv')) != 2) {
-    usage();
+    print_tags_usage();
     return false;
 } else {
     $filename = Core::get_global('argv')[1];
@@ -36,7 +36,7 @@ if (count(Core::get_global('argv')) != 2) {
 if(!file_exists($filename)) {
     print T_("File not found.");
     print "\n";
-    usage();
+    print_tags_usage();
     return false;
 }
 
@@ -72,7 +72,7 @@ printf(T_('Final results seen by Ampache using %s:'), implode(' + ', $keys));
 echo "\n\n";
 print_r($ampache_results);
 
-function usage() {
+function print_tags_usage() {
     global $version;
 
     $text  = sprintf(T_('%s Version %s'), 'print_tags.inc', $version);
@@ -84,4 +84,4 @@ function usage() {
 
     return print $text;
 
-}// usage()
+}// print_tags_usage()

@@ -42,7 +42,7 @@ class WebPlayer
 
     /**
      * Check if the playlist is a video playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return boolean
      */
     public static function is_playlist_video($playlist)
@@ -165,7 +165,7 @@ class WebPlayer
 
     /**
      * Get all supplied types for a playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return array
      */
     public static function get_supplied_types($playlist)
@@ -187,7 +187,7 @@ class WebPlayer
 
     /**
      * Get add_media javascript.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @param string $callback_container
      * @return string
      */
@@ -208,7 +208,7 @@ class WebPlayer
 
     /**
      * Get play_next javascript.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @param string $callback_container
      * @return string
      */

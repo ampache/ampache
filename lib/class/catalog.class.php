@@ -1955,6 +1955,7 @@ abstract class Catalog extends database_object
      */
     public static function trim_slashed_list($string)
     {
+        $first = '';
         if ($string) {
             $items = explode("\x00", $string);
             $first = trim($items[0]);
@@ -1968,9 +1969,6 @@ abstract class Catalog extends database_object
                     $first = trim($items[0]);
                 }
             }
-        }
-        if ($first == '') {
-            $first = null;
         }
 
         return $first;
