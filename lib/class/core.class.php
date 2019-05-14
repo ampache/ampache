@@ -96,13 +96,6 @@ class Core
      */
     public static function get_request($variable)
     {
-        debug_event('Core', "REQUEST: name " . $_REQUEST[$variable], 5);
-        debug_event('Core', "REQUEST: post " . (string) (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING) === null), 5);
-        debug_event('Core', "REQUEST: get  " . filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING), 5);
-        debug_event('Core', "REQUEST: cook " . filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_STRING), 5);
-        debug_event('Core', "REQUEST: serv " . filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_STRING), 5);
-        debug_event('Core', "REQUEST: env  " . filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_STRING), 5);
-
         return $_REQUEST[$variable];
     }
 
