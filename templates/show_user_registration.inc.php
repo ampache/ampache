@@ -80,7 +80,7 @@ $_SESSION['login'] = true;
                     <h3><?php echo T_('User Information'); ?></h3>
                     <div class="registerfield require">
                         <label for="username"><?php echo T_('Username'); ?>:</label>
-                        <input type='text' name='username' id='username' value='<?php echo scrub_out($username); ?>' />
+                        <input type='text' name='username' id='username' value='<?php echo scrub_out((string) $username); ?>' />
                         <?php AmpError::display('username'); ?>
                         <?php AmpError::display('duplicate_user'); ?>
                     </div>
@@ -90,7 +90,7 @@ $_SESSION['login'] = true;
                             echo 'require';
                         } ?>">
                             <label for="fullname"><?php echo T_('Full Name'); ?>:</label>
-                            <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
+                            <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out((string) $fullname); ?>' />
                             <?php AmpError::display('fullname'); ?>
                         </div>
                     <?php
@@ -98,7 +98,7 @@ $_SESSION['login'] = true;
 
                     <div class="registerfield require">
                         <label for="email"><?php echo T_('E-mail'); ?>:</label>
-                        <input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
+                        <input type='text' name='email' id='email' value='<?php echo scrub_out((string) $email); ?>' />
                         <?php AmpError::display('email'); ?>
                     </div>
                     <?php if (in_array('website', $display_fields)) {
@@ -107,7 +107,7 @@ $_SESSION['login'] = true;
                             echo 'require';
                         } ?>">
                             <label for="website"><?php echo T_('Website'); ?>:</label>
-                            <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
+                            <input type='text' name='website' id='website' value='<?php echo scrub_out((string) $website); ?>' />
                             <?php AmpError::display('website'); ?>
                         </div>
                     <?php
@@ -118,7 +118,7 @@ $_SESSION['login'] = true;
                             echo 'require';
                         } ?>">
                             <label for="state"><?php echo T_('State'); ?>:</label>
-                            <input type='text' name='state' id='state' value='<?php echo scrub_out($state); ?>' />
+                            <input type='text' name='state' id='state' value='<?php echo scrub_out((string) $state); ?>' />
                             <?php AmpError::display('state'); ?>
                         </div>
                     <?php
@@ -129,7 +129,7 @@ $_SESSION['login'] = true;
                             echo 'require';
                         } ?>">
                             <label for="city"><?php echo T_('City'); ?>:</label>
-                            <input type='text' name='city' id='city' value='<?php echo scrub_out($city); ?>' />
+                            <input type='text' name='city' id='city' value='<?php echo scrub_out((string) $city); ?>' />
                             <?php AmpError::display('city'); ?>
                         </div>
                     <?php

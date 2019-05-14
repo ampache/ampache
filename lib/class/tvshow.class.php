@@ -188,6 +188,10 @@ class TVShow extends database_object implements library_item
         return true;
     }
 
+    /*
+     * get_keywords
+     * @return array $keywords
+     */
     public function get_keywords()
     {
         $keywords           = array();

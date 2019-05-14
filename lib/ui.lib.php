@@ -401,6 +401,8 @@ function show_tvshow_season_select($name, $season_id, $allow_add=false, $video_i
  * show_catalog_select
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
+ * @param string $name
+ * @param integer $catalog_id
  */
 function show_catalog_select($name, $catalog_id, $style='', $allow_none=false, $filter_type='')
 {
@@ -419,13 +421,13 @@ function show_catalog_select($name, $catalog_id, $style='', $allow_none=false, $
         echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
     }
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
-        if ($r['id'] == $catalog_id) {
+        if ($row['id'] == (string) $catalog_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     echo "</select>\n";
@@ -641,6 +643,11 @@ function toggle_visible($element)
     echo "</script>\n";
 } // toggle_visible
 
+/**
+ * display_notification
+ * Show a javascript notification to the user
+ * @param string $message
+ */
 function display_notification($message, $timeout = 5000)
 {
     echo "<script type='text/javascript'>";

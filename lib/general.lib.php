@@ -249,9 +249,9 @@ function is_rtl($locale)
 /**
  * translate_pattern_code
  * This just contains a keyed array which it checks against to give you the
- * 'tag' name that said pattern code corrasponds to. It returns false if nothing
+ * 'tag' name that said pattern code corresponds to. It returns false if nothing
  * is found.
- * @return array
+ * @return string|false
  */
 function translate_pattern_code($code)
 {
