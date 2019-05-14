@@ -489,7 +489,7 @@ class Album extends database_object implements library_item
             try {
                 Wanted::delete_wanted_release($mbid);
             } catch (Exception $e) {
-                debug_event('wanted', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), '1');
+                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), '1');
             }
         }
 
@@ -1019,7 +1019,7 @@ class Album extends database_object implements library_item
             $song    = new Song($song_id);
             $deleted = $song->remove_from_disk();
             if (!$deleted) {
-                debug_event('album', 'Error when deleting the song `' . $song_id . '`.', 1);
+                debug_event('album.class', 'Error when deleting the song `' . $song_id . '`.', 1);
                 break;
             }
         }

@@ -530,9 +530,9 @@ class Tag extends database_object implements library_item
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
-        //debug_event('tag.class.php', 'Get tags list called...', '5');
+        //debug_event('tag.class', 'Get tags list called...', '5');
         if (parent::is_cached('tags_list', 'no_name')) {
-            //debug_event('tag.class.php', 'Tags list found into cache memory!', '5');
+            //debug_event('tag.class', 'Tags list found into cache memory!', '5');
             return parent::get_from_cache('tags_list', 'no_name');
         }
 
@@ -574,7 +574,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_display($tags, $link=false, $filter_type='')
     {
-        //debug_event('tag.class.php', 'Get display tags called...', '5');
+        //debug_event('tag.class', 'Get display tags called...', '5');
         if (!is_array($tags)) {
             return '';
         }
@@ -583,9 +583,9 @@ class Tag extends database_object implements library_item
 
         // Iterate through the tags, format them according to type and element id
         foreach ($tags as $tag_id => $value) {
-            /*debug_event('tag.class.php', $tag_id, '5');
+            /*debug_event('tag.class', $tag_id, '5');
             foreach ($value as $vid=>$v) {
-                debug_event('tag.class.php', $vid.' = {'.$v.'}', '5');
+                debug_event('tag.class', $vid.' = {'.$v.'}', '5');
             }*/
             if ($link) {
                 $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . $value['name'] . '">';
@@ -777,6 +777,7 @@ class Tag extends database_object implements library_item
 
     public function search_childrens($name)
     {
+        debug_event('tag.class', 'search_childrens ' . $name, 5);
         return array();
     }
 

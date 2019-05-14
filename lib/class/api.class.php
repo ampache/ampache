@@ -149,11 +149,11 @@ class Api
         }
 
         // Log the attempt
-        debug_event('API', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
+        debug_event('api.class', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {
-            debug_event('API', 'Login Failed: version too old', 1);
+            debug_event('api.class', 'Login Failed: version too old', 1);
             AmpError::add('api', T_('Login Failed: version too old'));
 
             return false;
@@ -172,7 +172,7 @@ class Api
         }
 
         // Log this attempt
-        debug_event('API', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5, $user_ip)) {
 
@@ -182,7 +182,7 @@ class Api
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
+                    debug_event('api.class', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
                     echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
 
@@ -195,7 +195,7 @@ class Api
                 $realpwd = $client->get_password();
 
                 if (!$realpwd) {
-                    debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
+                    debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Invalid Username/Password'));
                     echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
@@ -240,7 +240,7 @@ class Api
                     $token = $data['apikey'];
                 }
 
-                debug_event('API', 'Login Success, passphrase matched', 1);
+                debug_event('api.class', 'Login Success, passphrase matched', 1);
 
                 // We need to also get the 'last update' of the
                 // catalog information in an RFC 2822 Format
@@ -291,7 +291,7 @@ class Api
             } // match
         } // end while
 
-        debug_event('API', 'Login Failed, unable to match passphrase', '1');
+        debug_event('api.class', 'Login Failed, unable to match passphrase', '1');
         echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
@@ -315,7 +315,7 @@ class Api
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event('API', 'Ping Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], '5');
+        debug_event('api.class', 'Ping Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], '5');
 
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);
@@ -665,7 +665,7 @@ class Api
      */
     public static function playlist_songs($input)
     {
-        debug_event('API', 'Loading playlist: ' . $input['filter'] . ' ' .
+        debug_event('api.class', 'Loading playlist: ' . $input['filter'] . ' ' .
                     (str_replace('smart_', '', (string) $input['filter']) === (string) $input['filter']), '5');
         if (str_replace('smart_', '', (string) $input['filter']) === (string) $input['filter']) {
             // Playlists
@@ -1009,7 +1009,7 @@ class Api
                             if ($user !== null) {
                                 $albums = $user->get_recently_played($limit, 'album');
                             } else {
-                                debug_event('API', 'User `' . $username . '` cannot be found.', 1);
+                                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                             }
                         } else {
                             $albums = Stats::get_recent("album", $limit, $offset);
@@ -1050,10 +1050,10 @@ class Api
                 ob_end_clean();
                 echo XML_Data::user($user);
             } else {
-                debug_event('API', 'User `' . $username . '` cannot be found.', 1);
+                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
             }
         } else {
-            debug_event('API', 'Username required on user function call.', 1);
+            debug_event('api.class', 'Username required on user function call.', 1);
         }
     } // user
 
@@ -1075,13 +1075,13 @@ class Api
                     ob_end_clean();
                     echo XML_Data::users($users);
                 } else {
-                    debug_event('API', 'User `' . $username . '` cannot be found.', 1);
+                    debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }
             } else {
-                debug_event('API', 'Username required on followers function call.', 1);
+                debug_event('api.class', 'Username required on followers function call.', 1);
             }
         } else {
-            debug_event('API', 'Sociable feature is not enabled.', 3);
+            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
     } // followers
 
@@ -1103,13 +1103,13 @@ class Api
                     ob_end_clean();
                     echo XML_Data::users($user);
                 } else {
-                    debug_event('API', 'User `' . $username . '` cannot be found.', 1);
+                    debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }
             } else {
-                debug_event('API', 'Username required on following function call.', 1);
+                debug_event('api.class', 'Username required on following function call.', 1);
             }
         } else {
-            debug_event('API', 'Sociable feature is not enabled.', 3);
+            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
     } // following
 
@@ -1132,10 +1132,10 @@ class Api
                     echo XML_Data::single_string('success');
                 }
             } else {
-                debug_event('API', 'Username to toggle required on follow function call.', 1);
+                debug_event('api.class', 'Username to toggle required on follow function call.', 1);
             }
         } else {
-            debug_event('API', 'Sociable feature is not enabled.', 3);
+            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
     } // toggle_follow
 
@@ -1163,7 +1163,7 @@ class Api
             ob_end_clean();
             echo XML_Data::shouts($shouts);
         } else {
-            debug_event('API', 'Sociable feature is not enabled.', 3);
+            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
     } // last_shouts
 
@@ -1301,10 +1301,10 @@ class Api
                     }
                 }
             } else {
-                debug_event('API', 'Username required on timeline function call.', 1);
+                debug_event('api.class', 'Username required on timeline function call.', 1);
             }
         } else {
-            debug_event('API', 'Sociable feature is not enabled.', 3);
+            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
     } // timeline
 
@@ -1328,7 +1328,7 @@ class Api
                 echo XML_Data::timeline($activities);
             }
         } else {
-            debug_event('API', 'Sociable feature is not enabled.', 3);
+            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
     } // friends_timeline
 } // API class

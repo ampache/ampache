@@ -82,7 +82,7 @@ class AmpConfig
         $rating_filter = 0;
         if (self::get('rating_browse_filter')) {
             $rating_filter = (int) self::get('rating_browse_minimum_stars');
-            debug_event('stats', 'Requested a ratings filter of: ' . $rating_filter . '.', 5);
+            debug_event('ampconfig.class', 'Requested a ratings filter of: ' . $rating_filter . '.', 5);
         }
         if ($rating_filter > 0 && $rating_filter <= 5) {
             return $rating_filter;
@@ -102,7 +102,7 @@ class AmpConfig
     public static function set($name, $value, $clobber = false)
     {
         if (isset(self::$_global[$name]) && !$clobber) {
-            debug_event('Config', "Tried to overwrite existing key $name without setting clobber", 5);
+            debug_event('ampconfig.class', "Tried to overwrite existing key $name without setting clobber", 5);
             AmpError::add('Config Global', sprintf(T_('Trying to clobber \'%s\' without setting clobber'), $name));
 
             return false;

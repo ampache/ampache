@@ -653,7 +653,7 @@ class User extends database_object
         $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
 
-        debug_event('user.class.php', 'Updating username', 4);
+        debug_event('user.class', 'Updating username', 4);
 
         Dba::write($sql, array($new_username, $this->id));
     } // update_username
@@ -681,7 +681,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
 
-        debug_event('user.class.php', 'Updating fullname', 4);
+        debug_event('user.class', 'Updating fullname', 4);
 
         Dba::write($sql, array($new_fullname, $this->id));
     } // update_fullname
@@ -694,7 +694,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
 
-        debug_event('user.class.php', 'Updating fullname public', 4);
+        debug_event('user.class', 'Updating fullname public', 4);
 
         Dba::write($sql, array($new_fullname_public ? '1' : '0', $this->id));
     } // update_fullname_public
@@ -707,7 +707,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
 
-        debug_event('user.class.php', 'Updating email', 4);
+        debug_event('user.class', 'Updating email', 4);
 
         Dba::write($sql, array($new_email, $this->id));
     } // update_email
@@ -721,7 +721,7 @@ class User extends database_object
         $new_website = rtrim($new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 
-        debug_event('user.class.php', 'Updating website', 4);
+        debug_event('user.class', 'Updating website', 4);
 
         Dba::write($sql, array($new_website, $this->id));
     } // update_website
@@ -734,7 +734,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
 
-        debug_event('user.class.php', 'Updating state', 4);
+        debug_event('user.class', 'Updating state', 4);
 
         Dba::write($sql, array($new_state, $this->id));
     } // update_state
@@ -747,7 +747,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
 
-        debug_event('user.class.php', 'Updating city', 4);
+        debug_event('user.class', 'Updating city', 4);
 
         Dba::write($sql, array($new_city, $this->id));
     } // update_city
@@ -761,7 +761,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 
-        debug_event('user.class.php', 'Updating apikey', 4);
+        debug_event('user.class', 'Updating apikey', 4);
 
         Dba::write($sql, array($new_apikey, $this->id));
     } // update_website
@@ -843,7 +843,7 @@ class User extends database_object
         $new_access = Dba::escape($new_access);
         $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
 
-        debug_event('user.class.php', 'Updating access level', 4);
+        debug_event('user.class', 'Updating access level', 4);
 
         Dba::write($sql);
     } // update_access
@@ -865,7 +865,7 @@ class User extends database_object
      */
     public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false)
     {
-        debug_event('user.class.php', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
+        debug_event('user.class', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
         $media = new $media_type($media_id);
         $media->format();
         $user_id = $this->id;
@@ -879,18 +879,18 @@ class User extends database_object
             $this->set_preferences();
             // If pthreads available, we call save_songplay in a new thread to quickly return
             if (class_exists("Thread", false)) {
-                debug_event('user.class.php', 'Calling save_mediaplay plugins in a new thread...', 5);
+                debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
                 $thread = new scrobbler_async(Core::get_global('user'), $media);
                 if ($thread->start()) {
                     //$thread->join();
                 } else {
-                    debug_event('user.class.php', 'Error when starting the thread.', 1);
+                    debug_event('user.class', 'Error when starting the thread.', 1);
                 }
             } else {
                 self::save_mediaplay(Core::get_global('user'), $media);
             }
         } else {
-            debug_event('user.class.php', 'Scrobbling explicitly skipped', 5);
+            debug_event('user.class', 'Scrobbling explicitly skipped', 5);
         }
 
         $media->set_played($user_id, $agent, $location);
@@ -900,7 +900,7 @@ class User extends database_object
 
     public static function save_mediaplay($user_id, $media)
     {
-        debug_event('user.class.php', 'save_mediaplay...', 5);
+        debug_event('user.class', 'save_mediaplay...', 5);
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
@@ -908,7 +908,7 @@ class User extends database_object
                     $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $e) {
-                debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), 1);
+                debug_event('user.class', 'Stats plugin error: ' . $e->getMessage(), 1);
             }
         }
     }
@@ -1024,7 +1024,7 @@ class User extends database_object
         $hashed_password  = hash('sha256', $new_password);
         $escaped_password = Dba::escape($hashed_password);
 
-        debug_event('user.class.php', 'Updating password', 4);
+        debug_event('user.class', 'Updating password', 4);
 
 
         $sql          = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
@@ -1400,7 +1400,7 @@ class User extends database_object
      */
     public function update_avatar($data, $mime = '')
     {
-        debug_event('user.class.php', 'Updating avatar', 4);
+        debug_event('user.class', 'Updating avatar', 4);
 
         $art = new Art($this->id, 'user');
         $art->insert($data, $mime);

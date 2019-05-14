@@ -1533,6 +1533,7 @@ class Song extends database_object implements media, library_item
      */
     public function search_childrens($name)
     {
+        debug_event('song.class', 'search_childrens ' . $name, 5);
         return array();
     }
 

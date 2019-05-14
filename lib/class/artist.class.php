@@ -217,7 +217,7 @@ class Artist extends database_object implements library_item
         if ($extra) {
             $sql = "SELECT `song`.`artist`, COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 
-            debug_event("Artist", "build_cache sql: " . $sql, "6");
+            debug_event("artist.class", "build_cache sql: " . $sql, "6");
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -904,7 +904,7 @@ class Artist extends database_object implements library_item
             $album   = new Album($albumid);
             $deleted = $album->remove_from_disk();
             if (!$deleted) {
-                debug_event('artist', 'Error when deleting the album `' . $albumid . '`.', 1);
+                debug_event('artist.class', 'Error when deleting the album `' . $albumid . '`.', 1);
                 break;
             }
         }

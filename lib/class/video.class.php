@@ -340,6 +340,7 @@ class Video extends database_object implements media, library_item
      */
     public function search_childrens($name)
     {
+        debug_event('video.class', 'search_childrens ' . $name, 5);
         return array();
     }
 
