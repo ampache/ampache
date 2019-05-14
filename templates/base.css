@@ -92,7 +92,6 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 #tabs li.tab_active a {
     text-shadow: 0 0 10px rgba(255,255,255,0.5);
     padding-bottom: 10px;
-    text-shadow: none;
     border-bottom: 2px solid #666;
 }
 
@@ -152,7 +151,6 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 .shoutbox-img {
-    float: left;
     display:inline;
     padding-right: 10px;
 }
@@ -187,7 +185,6 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     font-size: 10px;
     display:inline;
     text-align: right;
-    float: right;
 }
 
 .noty_ampache {
@@ -266,10 +263,6 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     margin: 2px;
 }
 
-#topmenu_container img:hover {
-
-}
-
 .browse_custom_value {
     margin-left: 5px;
     height: 20px;
@@ -290,14 +283,10 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 .collapsed {
     float: right;
     margin-top: 5px;
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
+    -webkit-transform: rotate(0deg) scaleX(-1);
+    -moz-transform: rotate(0deg) scaleX(-1);
+    -o-transform: rotate(0deg) scaleX(-1);
+    transform: rotate(0deg) scaleX(-1);
 }
 
 #notification {

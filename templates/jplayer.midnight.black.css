@@ -155,7 +155,6 @@ div.jp-video div.jp-type-playlist ul.jp-controls {
 div.jp-video ul.jp-controls,
 div.jp-interface ul.jp-controls li {
 	display: inline;
-	float: left;
 }
 
 div.jp-interface ul.jp-controls a {
@@ -408,12 +407,10 @@ div.jp-duration {
 	font-style: italic;
 }
 div.jp-current-time {
-	float: left;
 	display: inline;
 	text-align: left;
 }
 div.jp-duration {
-	float: right;
 	display: inline;
 	text-align: right;
 }
@@ -518,7 +515,6 @@ div.jp-type-playlist div.jp-playlist a.jp-playlist-current {
 }
 
 div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove {
-	float: right;
 	display: inline;
 	text-align: right;
 	margin-right: 10px;
@@ -529,7 +525,6 @@ div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove:hover {
 	color: #FFF;
 }
 div.jp-type-playlist div.jp-playlist span.jp-free-media {
-	float: right;
 	display: inline;
 	text-align: right;
 	margin-right: 10px;
