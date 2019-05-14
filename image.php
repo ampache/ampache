@@ -57,7 +57,7 @@ if (!Art::is_valid_type($type)) {
 }
 
 /* Decide what size this image is */
-$size = Art::get_thumb_size(filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_INT));
+$size = Art::get_thumb_size(filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT));
 $kind = filter_has_var(INPUT_GET, 'kind') ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING) : 'default';
 
 $image       = '';
@@ -82,7 +82,7 @@ if (filter_has_var(INPUT_GET, 'type')) {
     }
 }
 if (!$typeManaged) {
-    $item     = new $type(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT));
+    $item     = new $type(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
     $filename = $item->name ?: $item->title;
 
     $art = new Art($item->id, $type, $kind);
