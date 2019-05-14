@@ -51,8 +51,10 @@ if (!filter_has_var(INPUT_GET, 'object_type')) {
     $_GET['object_type'] = 'album';
 }
 
-$type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING);
+$type = $_GET['object_type'];
 if (!Art::is_valid_type($type)) {
+    debug_event('image', 'INVALID TYPE: ' . $type, 4);
+
     return false;
 }
 
