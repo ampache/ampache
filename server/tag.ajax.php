@@ -50,7 +50,7 @@ switch ($action) {
             return false;
         }
         debug_event('tag.ajax', 'Adding new tag...', '5');
-        Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['tag_id'], false);
+        Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), (int) $_GET['tag_id'], false);
     break;
     case 'add_tag_by_name':
         if (!Access::check('interface', '75')) {

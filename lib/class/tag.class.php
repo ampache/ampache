@@ -23,7 +23,7 @@
 /**
  * Tag Class
  *
- * This class hnadles all of the tag relation operations
+ * This class handles all of the tag relation operations
  *
  */
 class Tag extends database_object implements library_item
@@ -89,6 +89,7 @@ class Tag extends database_object implements library_item
      * build_map_cache
      * This builds a cache of the mappings for the specified object, no limit is given
      * @param string $type
+     * @params array $ids
      */
     public static function build_map_cache($type, $ids)
     {
@@ -293,6 +294,9 @@ class Tag extends database_object implements library_item
      * add_tag_map
      * This adds a specific tag to the map for specified object
      * @param string $type
+     * @param integer|string $object_id
+     * @param integer|string $tag_id
+     * @param integer|boolean $user
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user=true)
     {
@@ -408,8 +412,8 @@ class Tag extends database_object implements library_item
      * tag_map_exists
      * This looks to see if the current mapping of the current object of the current tag of the current
      * user exists, lots of currents... taste good in scones.
-     * @param integer $user
      * @param string $type
+     * @param integer $user
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
@@ -600,7 +604,8 @@ class Tag extends database_object implements library_item
 
     /**
      * update_tag_list
-     * Update the tags list based on commated list (ex. tag1,tag2,tag3,..)
+     * Update the tags list based on a comma-separated list
+     *  (ex. tag1,tag2,tag3,..)
      * @param string $type
      * @param integer $object_id
      * @param boolean $overwrite
