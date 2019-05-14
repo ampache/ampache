@@ -143,7 +143,7 @@ class Artist extends database_object implements library_item
     public function __construct($id=null, $catalog_init=0)
     {
         /* If they failed to pass in an id, just run for it */
-        if (!$id) {
+        if ($id === null) {
             return false;
         }
 
@@ -547,6 +547,7 @@ class Artist extends database_object implements library_item
      */
     public function search_childrens($name)
     {
+        $search                    = array();
         $search['type']            = "album";
         $search['rule_0_input']    = $name;
         $search['rule_0_operator'] = 4;
@@ -575,7 +576,7 @@ class Artist extends database_object implements library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song') {
+        if ($filter_type === null || $filter_type == 'song') {
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
                 $medias[] = array(
@@ -665,7 +666,7 @@ class Artist extends database_object implements library_item
      * @param boolean $readonly
      * @return int|null
      */
-    public static function check($name, $mbid = null, $readonly = false)
+    public static function check($name, $mbid = '', $readonly = false)
     {
         $trimmed = Catalog::trim_prefix(trim($name));
         $name    = $trimmed['string'];
@@ -689,7 +690,7 @@ class Artist extends database_object implements library_item
         $id     = 0;
         $exists = false;
 
-        if ($mbid) {
+        if ($mbid !== '') {
             $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
             $db_results = Dba::read($sql, array($mbid));
 
@@ -710,7 +711,7 @@ class Artist extends database_object implements library_item
             }
 
             if (count($id_array)) {
-                if ($mbid) {
+                if ($mbid !== '') {
                     if (isset($id_array['null']) && !$readonly) {
                         $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
                         Dba::write($sql, array($mbid, $id_array['null']));
@@ -776,7 +777,7 @@ class Artist extends database_object implements library_item
             $songs   = array();
 
             // If it's changed we need to update
-            if ($artist_id != null && $artist_id != $this->id) {
+            if ($artist_id !== null && $artist_id !== $this->id) {
                 $songs = $this->get_songs();
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id);
@@ -849,7 +850,7 @@ class Artist extends database_object implements library_item
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
-        if ($current_id == null) {
+        if ($current_id === null) {
             $current_id = $this->id;
         }
 
