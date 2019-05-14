@@ -47,26 +47,26 @@ if (!AmpConfig::get('resize_images')) {
 }
 
 // FIXME: Legacy stuff - should be removed after a version or so
-if (!isset($_GET['object_type'])) {
+if (!filter_has_var(INPUT_GET, 'object_type')) {
     $_GET['object_type'] = 'album';
 }
 
-$type = $_GET['object_type'];
+$type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING);
 if (!Art::is_valid_type($type)) {
     return false;
 }
 
 /* Decide what size this image is */
-$size = Art::get_thumb_size($_GET['thumb']);
-$kind = isset($_GET['kind']) ? $_GET['kind'] : 'default';
+$size = Art::get_thumb_size(filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_INT));
+$kind = filter_has_var(INPUT_GET, 'kind') ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING) : 'default';
 
 $image       = '';
 $mime        = '';
 $filename    = '';
 $etag        = '';
 $typeManaged = false;
-if (isset($_GET['type'])) {
-    switch ($_GET['type']) {
+if (filter_has_var(INPUT_GET, 'type')) {
+    switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING)) {
         case 'popup':
             $typeManaged = true;
             require_once AmpConfig::get('prefix') . UI::find_template('show_big_art.inc.php');
@@ -82,7 +82,7 @@ if (isset($_GET['type'])) {
     }
 }
 if (!$typeManaged) {
-    $item     = new $type($_GET['object_id']);
+    $item     = new $type(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT));
     $filename = $item->name ?: $item->title;
 
     $art = new Art($item->id, $type, $kind);
@@ -127,9 +127,9 @@ if (!$typeManaged) {
         }
         $image = file_get_contents($defaultimg);
     } else {
-        if ($_GET['thumb']) {
+        if (filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_STRING)) {
             $thumb_data = $art->get_thumb($size);
-            $etag .= '-' . $_GET['thumb'];
+            $etag .= '-' . filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_STRING);
         }
 
         $mime  = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;
