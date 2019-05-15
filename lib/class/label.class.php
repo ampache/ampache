@@ -184,6 +184,7 @@ class Label extends database_object implements library_item
 
     public function search_childrens($name)
     {
+        $search                    = array();
         $search['type']            = "artist";
         $search['rule_0_input']    = $name;
         $search['rule_0_operator'] = 4;

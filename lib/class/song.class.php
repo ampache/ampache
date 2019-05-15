@@ -319,7 +319,8 @@ class Song extends database_object implements media, library_item
             $this->initializeMetadata();
         }
 
-        if ($info = $this->has_info($limit_threshold)) {
+        $info = $this->has_info($limit_threshold);
+        if ($info !== false) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -428,13 +429,13 @@ class Song extends database_object implements media, library_item
             Useractivity::post_activity((int) ($user_upload), 'upload', 'song', $song_id);
         }
 
-        if (is_array($tags)) {
-            // Allow scripts to populate new tags when injecting user uploads
-            if (!defined('NO_SESSION')) {
-                if ($user_upload && !Access::check('interface', 50, $user_upload)) {
-                    $tags = Tag::clean_to_existing($tags);
-                }
+        // Allow scripts to populate new tags when injecting user uploads
+        if (!defined('NO_SESSION')) {
+            if ($user_upload && !Access::check('interface', 50, $user_upload)) {
+                $tags = Tag::clean_to_existing($tags);
             }
+        }
+        if (is_array($tags)) {
             foreach ($tags as $tag) {
                 $tag = trim($tag);
                 if (!empty($tag)) {
@@ -1873,7 +1874,7 @@ class Song extends database_object implements media, library_item
             }
         }
 
-        if ($target) {
+        if ($target !== null) {
             debug_event('song.class', 'Explicit format request {' . $target . '}', 5);
         } else {
             if ($target = AmpConfig::get('encode_target_' . $source)) {
@@ -1888,8 +1889,7 @@ class Song extends database_object implements media, library_item
             }
         }
 
-
-        debug_event('song.class', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
+        debug_event('song.class', 'Transcode settings: from ' . $source . ' to ' . $target, 4);
 
         $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         $args = '';

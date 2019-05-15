@@ -163,9 +163,10 @@ class AmazonSearch
     } // runSearch
 
     /**
+     * getProxyConfig
      * Build the proxy options array.
-     *
-     * @return array() $options The array of proxy config options.
+     * Returning the array of proxy config options.
+     * @return array 
      */
     public function getProxyConfig()
     {
@@ -184,11 +185,11 @@ class AmazonSearch
     } // getProxyConfig
 
     /**
-     * Create the search string.
+     * Create an XML search string.
      *
-     * @param array() $terms The serach terms to include within the query.
+     * @param array() $terms The search terms to include within the query.
      * @param string $type The type of result desired.
-     * @return string $results The XML return string.
+     * @return string
      */
     public function search($terms, $type = 'Music')
     {
@@ -231,10 +232,10 @@ class AmazonSearch
     } // search
 
     /**
+     * signString
      * Sign a query string
-     *
      * @param string $string_to_sign The string to sign
-     * @return string $signature The signed query.
+     * @return string
      */
     public function signString($string_to_sign)
     {

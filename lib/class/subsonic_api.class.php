@@ -937,7 +937,7 @@ class Subsonic_Api
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
 
-        if ($songsIdToAdd) {
+        if (!empty($songsIdToAdd)) {
             if (!is_array($songsIdToAdd)) {
                 $songsIdToAdd       = array($songsIdToAdd);
                 $songsIdToAdd_count = count($songsIdToAdd);
@@ -950,7 +950,7 @@ class Subsonic_Api
             }
         }
 
-        if ($songIndexToRemove) {
+        if (!empty($songIndexToRemove)) {
             if (!is_array($songIndexToRemove)) {
                 $songIndexToRemove = array($songIndexToRemove);
             }
@@ -1704,7 +1704,7 @@ class Subsonic_Api
                                 $url = Song::generic_play_url('song', Subsonic_XML_Data::getAmpacheId($i), '', 'api');
                             }
 
-                            if ($url) {
+                            if ($url !== null) {
                                 debug_event('subsonic_api.class', 'Adding ' . $url, 5);
                                 $stream        = array();
                                 $stream['url'] = $url;
@@ -2063,7 +2063,7 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $episode = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($id));
-            if ($episode->id) {
+            if ($episode->id !== null) {
                 if ($episode->remove()) {
                     $response = Subsonic_XML_Data::createSuccessResponse();
                 } else {

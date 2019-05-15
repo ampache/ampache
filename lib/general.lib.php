@@ -46,7 +46,7 @@ function set_memory_limit($new_limit)
  * or will use a random length between 14-20
  *
  * @param integer $length (optional)
- * @return string $password
+ * @return string
  */
 function generate_password($length = null)
 {
@@ -153,7 +153,7 @@ function invert_bool($value)
  * different languages installed, this means that all you have to do
  * is drop one in and it will show up on the context menu. It returns
  * in the form of an array of names
- * @return array $results
+ * @return array
  */
 function get_languages()
 {

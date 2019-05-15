@@ -263,6 +263,7 @@ class scrobbler
      */
     public function love($is_loved, $type, $artist = '', $title = '', $album = '')
     {
+        $vars           = array();
         $vars['track']  = $title;
         $vars['artist'] = $artist;
         // Add the method, API and session keys

@@ -114,7 +114,7 @@ class vainfo
 
             $test_tags = array('artist', 'album', 'genre', 'title');
 
-            if ($encoding_id3v1) {
+            if ($encoding_id3v1 !== null) {
                 $this->encoding_id3v1 = $encoding_id3v1;
             } else {
                 $tags = array();
@@ -168,13 +168,13 @@ class vainfo
                     $tag = implode(" ", $tag);
                 }
                 $enc = mb_detect_encoding($tag, $mb_order, true);
-                if ($enc != false) {
+                if ($enc !== false) {
                     $encodings[$enc]++;
                 }
             }
         } else {
             $enc = mb_detect_encoding($tags, $mb_order, true);
-            if ($enc != false) {
+            if ($enc !== false) {
                 $encodings[$enc]++;
             }
         }
@@ -1152,9 +1152,9 @@ class vainfo
     }
     
     /**
+     * @param string $filepath
      * @param string $dir_pattern
      * @param string $file_pattern
-     * @param string $filepath
      */
     public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
     {
@@ -1193,7 +1193,7 @@ class vainfo
             // Iterate over what we found
             foreach ($matches as $key => $value) {
                 $new_key = translate_pattern_code($elements['0'][$key]);
-                if ($new_key) {
+                if ($new_key !== false) {
                     $results[$new_key] = $value;
                 }
             }

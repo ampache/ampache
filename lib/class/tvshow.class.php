@@ -190,7 +190,7 @@ class TVShow extends database_object implements library_item
 
     /*
      * get_keywords
-     * @return array $keywords
+     * @return array
      */
     public function get_keywords()
     {
