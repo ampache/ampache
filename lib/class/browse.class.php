@@ -194,7 +194,7 @@ class Browse extends Query
 
         $argument_param = ($argument ? '&argument=' . scrub_in($argument) : '');
 
-        debug_event('browse', 'Show objects called for type {' . $type . '}', '5');
+        debug_event('browse.class', 'Show objects called for type {' . $type . '}', '5');
 
         $limit_threshold = $this->get_threshold();
 

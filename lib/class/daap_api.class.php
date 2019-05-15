@@ -235,7 +235,7 @@ class Daap_Api
         self::check_auth($code);
         
         if (! isset($_GET['session-id'])) {
-            debug_event('daap', 'Missing session id.', '');
+            debug_event('daap_api.class', 'Missing session id.', '');
         } else {
             $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
             $db_results = Dba::read($sql, array(
@@ -243,7 +243,7 @@ class Daap_Api
             ));
             
             if (Dba::num_rows($db_results) == 0) {
-                debug_event('daap', 'Unknown session id `' . $_GET['session-id'] . '`.', '4');
+                debug_event('daap_api.class', 'Unknown session id `' . $_GET['session-id'] . '`.', '4');
             }
         }
     }
@@ -270,7 +270,7 @@ class Daap_Api
         }
         
         if (! $authenticated) {
-            debug_event('daap', 'Authentication failed. Wrong DAAP password?', '5');
+            debug_event('daap_api.class', 'Authentication failed. Wrong DAAP password?', '5');
             if (! empty($code)) {
                 self::createApiError($code, 403);
             }
@@ -594,13 +594,13 @@ class Daap_Api
                 case 'list':
                     return self::tlv_list($code, $value);
                 default:
-                    debug_event('daap', 'Unsupported tag type `' . self::$tags[$tag]['type'] . '`.', '5');
+                    debug_event('daap_api.class', 'Unsupported tag type `' . self::$tags[$tag]['type'] . '`.', '5');
                     break;
             }
 
             return $code . pack("N", strlen($value)) . $value;
         } else {
-            debug_event('daap', 'Unknown DAAP tag `' . $tag . '`.', '5');
+            debug_event('daap_api.class', 'Unknown DAAP tag `' . $tag . '`.', '5');
         }
         
         return '';
@@ -644,7 +644,7 @@ class Daap_Api
         if (count($v) == 4) {
             return $tag . "\x00\x00\x00\x04" . pack("C", $v[0]) . pack("C", $v[1]) . pack("C", $v[2]) . pack("C", $v[3]);
         } else {
-            debug_event('daap', 'Malformed `' . $tag . '` version `' . $value . '`.', '5');
+            debug_event('daap_api.class', 'Malformed `' . $tag . '` version `' . $value . '`.', '5');
         }
         
         return '';

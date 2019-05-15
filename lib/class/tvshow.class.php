@@ -422,7 +422,7 @@ class TVShow extends database_object implements library_item
             $season  = new TVShow_Season($season);
             $deleted = $season->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow', 'Error when deleting the season `' . $season . '`.', 1);
+                debug_event('tvshow.class', 'Error when deleting the season `' . $season . '`.', 1);
                 break;
             }
         }

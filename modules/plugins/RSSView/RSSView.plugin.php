@@ -133,7 +133,7 @@ class AmpacheRSSView
         if (strlen(trim($data['rssview_feed_url']))) {
             $this->feed_url = trim($data['rssview_feed_url']);
         } else {
-            debug_event($this->name, 'No rss feed url, home plugin skipped', '3');
+            debug_event('rssview.plugin', 'No rss feed url, home plugin skipped', '3');
 
             return false;
         }

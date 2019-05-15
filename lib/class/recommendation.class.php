@@ -53,7 +53,7 @@ class Recommendation
      */
     public static function query_lastfm($url)
     {
-        debug_event('Recommendation', 'search url : ' . $url, 5);
+        debug_event('recommendation.class', 'search url : ' . $url, 5);
 
         $request = Requests::get($url, array(), Core::requests_options());
         $content = $request->body;
@@ -190,14 +190,14 @@ class Recommendation
                     }
 
                     if ($local_id === null) {
-                        debug_event('Recommendation', "$name did not match any local song", 5);
+                        debug_event('recommendation.class', "$name did not match any local song", 5);
                         $similars[] = array(
                             'id' => null,
                             'name' => $name,
                             'rel' => $artist_name
                         );
                     } else {
-                        debug_event('Recommendation', "$name matched local song $local_id", 5);
+                        debug_event('recommendation.class', "$name matched local song $local_id", 5);
                         $similars[] = array(
                             'id' => $local_id,
                             'name' => $name
@@ -288,14 +288,14 @@ class Recommendation
 
                 // Then we give up
                 if ($local_id === null) {
-                    debug_event('Recommendation', "$name did not match any local artist", 5);
+                    debug_event('recommendation.class', "$name did not match any local artist", 5);
                     $similars[] = array(
                         'id' => null,
                         'name' => $name,
                         'mbid' => $mbid
                     );
                 } else {
-                    debug_event('Recommendation', "$name matched local artist " . $local_id, 5);
+                    debug_event('recommendation.class', "$name matched local artist " . $local_id, 5);
                     $similars[] = array(
                         'id' => $local_id,
                         'name' => $name

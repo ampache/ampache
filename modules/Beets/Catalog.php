@@ -84,7 +84,7 @@ abstract class Catalog extends \Catalog
      */
     public function prepare_media($media)
     {
-        debug_event('play', 'Started remote stream - ' . $media->file, 5);
+        debug_event('beets_catalog', 'Play: Started remote stream - ' . $media->file, 5);
 
         return $media;
     }
@@ -216,7 +216,7 @@ abstract class Catalog extends \Catalog
      */
     public function verify_catalog_proc()
     {
-        debug_event('verify', 'Starting on ' . $this->name, 5);
+        debug_event('beets_catalog', 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
         /* @var $parser Handler */

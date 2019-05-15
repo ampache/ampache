@@ -326,7 +326,7 @@ class TVShow_Season extends database_object implements library_item
             $video   = Video::create_from_id($videos);
             $deleted = $video->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow_season', 'Error when deleting the video `' . $videos . '`.', 1);
+                debug_event('tvshow_season.class', 'Error when deleting the video `' . $videos . '`.', 1);
                 break;
             }
         }

@@ -99,7 +99,7 @@ class Ampache7digital
             $enProfile = $echonest->getTrackApi()->profile('musicbrainz:track:' . $track_mbid);
             $enSong    = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
         } catch (Exception $e) {
-            debug_event('echonest', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $e->getMessage(), '1');
+            debug_event('7digital.plugin', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $e->getMessage(), '1');
         }
 
         // Wans't able to get the song with MusicBrainz ID, try a search
@@ -112,14 +112,14 @@ class Ampache7digital
                     'bucket' => array( 'id:7digital-US', 'audio_summary', 'tracks'),
                 ));
             } catch (Exception $e) {
-                debug_event('echonest', 'EchoNest song search error: ' . $e->getMessage(), '1');
+                debug_event('7digital.plugin', 'EchoNest song search error: ' . $e->getMessage(), '1');
             }
         }
 
         if ($enSong != null) {
             $file = $enSong[0]['tracks'][0]['preview_url'];
             
-            debug_event('echonest', 'EchoNest `' . $title . '` preview: ' . $file, '1');
+            debug_event('7digital.plugin', 'EchoNest `' . $title . '` preview: ' . $file, '1');
         }
         
         return $file;
@@ -154,14 +154,14 @@ class Ampache7digital
         if (strlen(trim($data['7digital_api_key']))) {
             $this->api_key = trim($data['7digital_api_key']);
         } else {
-            debug_event($this->name, 'No 7digital api key, song preview plugin skipped', '3');
+            debug_event('7digital.plugin', 'No 7digital api key, song preview plugin skipped', '3');
 
             return false;
         }
         if (strlen(trim($data['7digital_secret_api_key']))) {
             $this->secret = trim($data['7digital_secret_api_key']);
         } else {
-            debug_event($this->name, 'No 7digital secret, song preview plugin skipped', '3');
+            debug_event('7digital.plugin', 'No 7digital secret, song preview plugin skipped', '3');
 
             return false;
         }

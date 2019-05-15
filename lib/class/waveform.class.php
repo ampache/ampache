@@ -92,7 +92,7 @@ class Waveform
 
                                 $tfp = fopen($tmpfile, 'wb');
                                 if (!is_resource($tfp)) {
-                                    debug_event('waveform', "Failed to open " . $tmpfile, 3);
+                                    debug_event('waveform.class', "Failed to open " . $tmpfile, 3);
 
                                     return null;
                                 }
@@ -100,7 +100,7 @@ class Waveform
                                 $transcoder = Stream::start_transcode($song, $transcode_to);
                                 $fp         = $transcoder['handle'];
                                 if (!is_resource($fp)) {
-                                    debug_event('waveform', "Failed to open " . $song->file . " for waveform.", 3);
+                                    debug_event('waveform.class', "Failed to open " . $song->file . " for waveform.", 3);
 
                                     return null;
                                 }
@@ -122,10 +122,10 @@ class Waveform
                                     throw new \RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked.');
                                 }
                             } else {
-                                debug_event('waveform', 'transcode setting to wav required for waveform.', '3');
+                                debug_event('waveform.class', 'transcode setting to wav required for waveform.', '3');
                             }
                         } else {
-                            debug_event('waveform', 'tmp_dir_path setting required for waveform.', '3');
+                            debug_event('waveform.class', 'tmp_dir_path setting required for waveform.', '3');
                         }
                     }
                     // Already wav file, no transcode required
@@ -176,13 +176,13 @@ class Waveform
     protected static function create_waveform($filename)
     {
         if (!file_exists($filename)) {
-            debug_event('waveform', 'File ' . $filename . ' doesn\'t exists', 1);
+            debug_event('waveform.class', 'File ' . $filename . ' doesn\'t exists', 1);
 
             return null;
         }
         
         if (!check_php_gd()) {
-            debug_event('waveform', 'GD extension must be loaded', 1);
+            debug_event('waveform.class', 'GD extension must be loaded', 1);
 
             return null;
         }
@@ -233,7 +233,7 @@ class Waveform
         // and resized later (if specified)
         $img = imagecreatetruecolor($data_size / $detail, $height);
         if ($img === false) {
-            debug_event('waveform', 'Cannot create image.', 1);
+            debug_event('waveform.class', 'Cannot create image.', 1);
 
             return null;
         }

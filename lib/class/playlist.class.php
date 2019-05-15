@@ -439,7 +439,7 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, array($this->id));
         $data       = Dba::fetch_assoc($db_results);
         $base_track = $data['track'] ?: 0;
-        debug_event('add_medias', 'Track number: ' . $base_track, '5');
+        debug_event('playlist.class', 'Adding Media; Track number: ' . $base_track, '5');
 
         $i = 0;
         foreach ($medias as $data) {

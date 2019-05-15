@@ -251,7 +251,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'add_url failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'add_url failed: ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -275,7 +275,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'delete_track failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'delete_track failed: ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -298,7 +298,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'clear_playlist failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'clear_playlist failed: ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -332,7 +332,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'play failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'play failed: ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -356,7 +356,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'pause failed, is the player started? ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'pause failed, is the player started? ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -380,7 +380,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'stop failed, is the player started? ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'stop failed, is the player started? ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -404,7 +404,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'skip failed, is the player started?: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'skip failed, is the player started?: ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -426,7 +426,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'volume_up failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'volume_up failed: ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -448,7 +448,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'volume_down failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'volume_down failed: ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -472,7 +472,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'next failed, is the player started? ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'next failed, is the player started? ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -496,7 +496,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'prev failed, is the player started? ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'prev failed, is the player started? ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -519,7 +519,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'volume failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'volume failed: ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -543,7 +543,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'repeat failed, is the player started? ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'repeat failed, is the player started? ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -567,7 +567,7 @@ class AmpacheXbmc extends localplay_controller
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'random failed, is the player started? ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'random failed, is the player started? ' . $ex->getMessage(), 1);
 
             return false;
         }
@@ -615,7 +615,7 @@ class AmpacheXbmc extends localplay_controller
                 $results[] = $data;
             }
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'get failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'get failed: ' . $ex->getMessage(), 1);
         }
 
         return $results;
@@ -664,11 +664,11 @@ class AmpacheXbmc extends localplay_controller
                     $array['track_album']      = $song->get_album_name();
                 }
             } catch (XBMC_RPC_Exception $ex) {
-                debug_event('xbmc', 'get current item failed, player probably stopped. ' . $ex->getMessage(), 1);
+                debug_event('xbmc.controller', 'get current item failed, player probably stopped. ' . $ex->getMessage(), 1);
                 $array['state'] = 'stop';
             }
         } catch (XBMC_RPC_Exception $ex) {
-            debug_event('xbmc', 'status failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'status failed: ' . $ex->getMessage(), 1);
         }
 
         return $array;
@@ -684,13 +684,13 @@ class AmpacheXbmc extends localplay_controller
     {
         $options = self::get_instance();
         try {
-            debug_event('xbmc', 'Trying to connect xbmc instance ' . $options['host'] . ':' . $options['port'] . '.', '5');
+            debug_event('xbmc.controller', 'Trying to connect xbmc instance ' . $options['host'] . ':' . $options['port'] . '.', '5');
             $this->_xbmc = new XBMC_RPC_HTTPClient($options);
-            debug_event('xbmc', 'Connected.', '5');
+            debug_event('xbmc.controller', 'Connected.', '5');
 
             return true;
         } catch (XBMC_RPC_ConnectionException $ex) {
-            debug_event('xbmc', 'xbmc connection failed: ' . $ex->getMessage(), 1);
+            debug_event('xbmc.controller', 'xbmc connection failed: ' . $ex->getMessage(), 1);
 
             return false;
         }

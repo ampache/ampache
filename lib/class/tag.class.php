@@ -166,7 +166,7 @@ class Tag extends database_object implements library_item
         }
 
         if (!$tag_id) {
-            debug_event('Error', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', '1');
+            debug_event('tag.class', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', '1');
 
             return false;
         }
@@ -248,7 +248,7 @@ class Tag extends database_object implements library_item
     public function merge($merge_to, $is_persistent)
     {
         if ($this->id != $merge_to) {
-            debug_event('tag', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', '5');
+            debug_event('tag.class', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', '5');
 
             $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
                    "SELECT ?,`user`,`object_type`,`object_id` " .
@@ -418,7 +418,7 @@ class Tag extends database_object implements library_item
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
         if (!Core::is_library_item($type)) {
-            debug_event('tag', 'Requested type is not a library item.', 3);
+            debug_event('tag.class', 'Requested type is not a library item.', 3);
 
             return false;
         }

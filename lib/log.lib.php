@@ -131,7 +131,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
     }
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
-    debug_event('PHP', $log_line, $level, '', 'ampache');
+    debug_event('log.lib', $log_line, $level, '', 'ampache');
 }
 
 /**

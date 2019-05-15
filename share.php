@@ -30,7 +30,7 @@ require_once 'lib/init.php';
 Preference::init();
 
 if (!AmpConfig::get('share')) {
-    debug_event('UI::access_denied', 'Access Denied: sharing features are not enabled.', '3');
+    debug_event('share', 'Access Denied: sharing features are not enabled.', '3');
     UI::access_denied();
 
     return false;
@@ -166,7 +166,7 @@ switch ($action) {
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
-        debug_event('UI::access_denied', 'Access Denied:' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', '3');
+        debug_event('share', 'Access Denied:' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', '3');
         UI::access_denied();
 
         return false;
@@ -208,7 +208,7 @@ if ($action == 'download') {
 } elseif ($action == 'stream') {
     require AmpConfig::get('prefix') . UI::find_template('show_share.inc.php');
 } else {
-    debug_event('UI::access_denied', 'Access Denied: unknown action.', '3');
+    debug_event('share', 'Access Denied: unknown action.', '3');
     UI::access_denied();
 
     return false;

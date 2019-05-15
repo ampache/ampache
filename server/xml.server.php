@@ -39,7 +39,7 @@ header("Content-Disposition: attachment; filename=information.xml");
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
-    debug_event('Access Control', 'Error Attempted to use XML API with Access Control turned off', '3');
+    debug_event('xml.server', 'Error Attempted to use XML API with Access Control turned off', '3');
     echo XML_Data::error('501', T_('Access Control not Enabled'));
 
     return false;

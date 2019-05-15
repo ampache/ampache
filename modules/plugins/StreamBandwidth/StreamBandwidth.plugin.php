@@ -107,7 +107,7 @@ class AmpacheStreamBandwidth
         $next_total += $current_total;
         $max = $this->bandwidth_max * 1024 * 1024;
         
-        debug_event('stream_control_bandwidth', 'Next stream bandwidth will be ' . $next_total . ' / ' . $max, 3);
+        debug_event('streambandwidth.plugin', 'Next stream bandwidth will be ' . $next_total . ' / ' . $max, 3);
         
         return ($next_total <= $max);
     }

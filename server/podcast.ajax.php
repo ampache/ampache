@@ -33,7 +33,7 @@ $action = Core::get_request('action');
 switch ($action) {
     case 'sync':
         if (!Access::check('interface', '75')) {
-            debug_event('DENIED', Core::get_global('user')->username . ' attempted to sync podcast', 1);
+            debug_event('podcast.ajax', Core::get_global('user')->username . ' attempted to sync podcast', 1);
 
             return false;
         }
@@ -43,14 +43,14 @@ switch ($action) {
             if ($podcast->id) {
                 $podcast->sync_episodes(true);
             } else {
-                debug_event('podcast', 'Cannot found podcast', 1);
+                debug_event('podcast.ajax', 'Cannot find podcast', 1);
             }
         } elseif (isset($_REQUEST['podcast_episode_id'])) {
             $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
             if ($episode->id) {
                 $episode->gather();
             } else {
-                debug_event('podcast', 'Cannot found podcast episode', 1);
+                debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
             }
         }
         $results['rfc3514'] = '0x1';

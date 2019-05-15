@@ -49,7 +49,7 @@ switch ($action) {
 
         $album = new Album($_REQUEST['album_id']);
         if (!Catalog::can_remove($album)) {
-            debug_event('album', 'Unauthorized to remove the album `.' . $album->id . '`.', 1);
+            debug_event('albums', 'Unauthorized to remove the album `.' . $album->id . '`.', 1);
             UI::access_denied();
 
             return false;

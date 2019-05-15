@@ -107,7 +107,7 @@ class AmpacheStreamTime
         $next_total += $current_total;
         $max = $this->time_max * 60;
         
-        debug_event('stream_control_time', 'Next stream time will be ' . $next_total . ' / ' . $max, 3);
+        debug_event('streamtime.plugin', 'Next stream time will be ' . $next_total . ' / ' . $max, 3);
         
         return ($next_total <= $max);
     }

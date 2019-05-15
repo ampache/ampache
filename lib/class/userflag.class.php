@@ -100,7 +100,7 @@ class Userflag extends database_object
                 $sql = "DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('userflag', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event('userflag.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -153,7 +153,7 @@ class Userflag extends database_object
         }
         $user_id = (int) ($user_id);
 
-        debug_event('Userflag', "Setting userflag for $this->type $this->id to $flagged", 5);
+        debug_event('userflag.class', "Setting userflag for $this->type $this->id to $flagged", 5);
 
         if (!$flagged) {
             $sql = "DELETE FROM `user_flag` WHERE " .
@@ -186,7 +186,7 @@ class Userflag extends database_object
                             $plugin->_plugin->set_flag($song, $flagged);
                         }
                     } catch (Exception $e) {
-                        debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
+                        debug_event('userflag.class', 'Stats plugin error: ' . $e->getMessage(), '1');
                     }
                 }
             }

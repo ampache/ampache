@@ -922,10 +922,10 @@ class User extends database_object
     {
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
             $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
+            debug_event('user.class', 'Login from ip adress: ' . $sip, '3');
         } else {
             $sip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
-            debug_event('User Ip', 'Login from ip adress: ' . $sip, '3');
+            debug_event('user.class', 'Login from ip adress: ' . $sip, '3');
         }
         
         // Remove port information if any

@@ -34,7 +34,7 @@ function get_themes()
     $handle = opendir(AmpConfig::get('prefix') . '/themes');
 
     if (!is_resource($handle)) {
-        debug_event('theme', 'Failed to open /themes directory', 2);
+        debug_event('themes', 'Failed to open /themes directory', 2);
 
         return array();
     }
@@ -42,7 +42,7 @@ function get_themes()
     $results = array();
     while (($file = readdir($handle)) !== false) {
         if ((string) $file !== '.' or (string) $file !== '..') {
-            debug_event('theme', "Checking $file", 5);
+            debug_event('themes', "Checking $file", 5);
             $cfg = get_theme($file);
             if ($cfg !== null) {
                 $results[$cfg['name']] = $cfg;

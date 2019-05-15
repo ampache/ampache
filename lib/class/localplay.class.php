@@ -112,7 +112,7 @@ class Localplay
             $class_name    = "Ampache" . $this->type;
             $this->_player = new $class_name();
             if (!($this->_player instanceof localplay_controller)) {
-                debug_event('Localplay', $this->type . ' not an instance of controller abstract, unable to load', '1');
+                debug_event('localplay.class', $this->type . ' not an instance of controller abstract, unable to load', '1');
                 unset($this->_player);
 
                 return false;
@@ -145,7 +145,7 @@ class Localplay
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
-            debug_event('Localplay', 'Error: Unable to read localplay controller directory', '1');
+            debug_event('localplay.class', 'Error: Unable to read localplay controller directory', '1');
 
             return array();
         }
@@ -158,13 +158,13 @@ class Localplay
             }
             /* Make sure it is a dir */
             if (! is_dir($basedir . '/' . $file)) {
-                debug_event('Localplay', $file . ' is not a directory.', 3);
+                debug_event('localplay.class', $file . ' is not a directory.', 3);
                 continue;
             }
             
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $file . '.controller.php')) {
-                debug_event('Localplay', 'Missing class for ' . $file, 3);
+                debug_event('localplay.class', 'Missing class for ' . $file, 3);
                 continue;
             }
             

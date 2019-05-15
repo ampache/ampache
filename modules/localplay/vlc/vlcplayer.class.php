@@ -369,7 +369,7 @@ class VlcPlayer
         $fp = fsockopen($this->host, $this->port, $errno, $errstr);
 
         if (!$fp) {
-            debug_event('vlc', "VlcPlayer: $errstr ($errno)", '1');
+            debug_event('vlcplayer.class', "VlcPlayer: $errstr ($errno)", '1');
 
             return null;
         }

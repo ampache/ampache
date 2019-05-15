@@ -83,7 +83,7 @@ class AmpacheTheaudiodb
         if (strlen(trim($data['tadb_api_key']))) {
             $this->api_key = trim($data['tadb_api_key']);
         } else {
-            debug_event($this->name, 'No TheAudioDb api key, metadata plugin skipped', '3');
+            debug_event('theaudiodb.plugin', 'No TheAudioDb api key, metadata plugin skipped', '3');
 
             return false;
         }
@@ -97,11 +97,11 @@ class AmpacheTheaudiodb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('tadb', 'Getting metadata from TheAudioDb...', '5');
+        debug_event('theaudiodb.plugin', 'Getting metadata from TheAudioDb...', '5');
 
         // Music metadata only
         if (!in_array('music', $gather_types)) {
-            debug_event('tadb', 'Not a valid media type, skipped.', '5');
+            debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', '5');
 
             return null;
         }
@@ -156,7 +156,7 @@ class AmpacheTheaudiodb
                 }
             }
         } catch (Exception $e) {
-            debug_event('tadb', 'Error getting metadata: ' . $e->getMessage(), '1');
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $e->getMessage(), '1');
         }
         
         return $results;
@@ -164,7 +164,7 @@ class AmpacheTheaudiodb
 
     public function gather_arts($type, $options = array(), $limit = 5)
     {
-        debug_event('tadb', 'gather_arts for type `' . $type . '`', 5);
+        debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
         return Art::gather_metadata_plugin($this, $type, $options);
     }
@@ -172,7 +172,7 @@ class AmpacheTheaudiodb
     private function api_call($func)
     {
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
-        debug_event('tadb', 'API call: ' . $url, 5);
+        debug_event('theaudiodb.plugin', 'API call: ' . $url, 5);
         $request = Requests::get($url, array(), Core::requests_options());
 
         if ($request->status_code != 200) {

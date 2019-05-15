@@ -105,7 +105,7 @@ class Stream
             $results    = Dba::fetch_row($db_results);
 
             $active_streams = (int) ($results[0]) ?: 0;
-            debug_event('stream', 'Active transcoding streams: ' . $active_streams, 5);
+            debug_event('stream.class', 'Active transcoding streams: ' . $active_streams, 5);
 
             // We count as one for the algorithm
             // FIXME: Should this reflect the actual bit rates?
@@ -114,7 +114,7 @@ class Stream
 
             // Exit if this would be insane
             if ($bit_rate < ($min_bitrate ?: 8)) {
-                debug_event('stream', 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
+                debug_event('stream.class', 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
 
                 return false;
@@ -140,12 +140,12 @@ class Stream
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
-        debug_event('stream.class.php', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, true) . '}...', 5);
+        debug_event('stream.class', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, true) . '}...', 5);
 
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings === false) {
-            debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
+            debug_event('stream.class', 'Transcode requested, but get_transcode_settings failed', 2);
 
             return false;
         }
@@ -153,7 +153,7 @@ class Stream
         //$media_rate = $media->video_bitrate ?: $media->bitrate;
         if (!$options['bitrate']) {
             $bit_rate = self::get_allowed_bitrate($media);
-            debug_event('stream', 'Configured bitrate is ' . $bit_rate, 5);
+            debug_event('stream.class', 'Configured bitrate is ' . $bit_rate, 5);
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
         } else {
@@ -162,11 +162,11 @@ class Stream
 
         // Never upsample a media
         if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate) {
-            debug_event('stream', 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
+            debug_event('stream.class', 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
             $bit_rate = self::validate_bitrate($media->bitrate / 1000);
         }
 
-        debug_event('stream', 'Final transcode bitrate is ' . $bit_rate, 5);
+        debug_event('stream.class', 'Final transcode bitrate is ' . $bit_rate, 5);
 
         $song_file = scrub_arg($media->file);
 
@@ -209,7 +209,7 @@ class Stream
         foreach ($string_map as $search => $replace) {
             $command = str_replace($search, $replace, $command, $ret);
             if (!$ret) {
-                debug_event('stream', "$search not in transcode command", 5);
+                debug_event('stream.class', "$search not in transcode command", 5);
             }
         }
 
@@ -234,7 +234,7 @@ class Stream
             foreach ($string_map as $search => $replace) {
                 $command = str_replace($search, $replace, $command, $ret);
                 if (!$ret) {
-                    debug_event('stream', "$search not in transcode command", 5);
+                    debug_event('stream.class', "$search not in transcode command", 5);
                 }
             }
             $proc = self::start_process($command);
@@ -247,7 +247,7 @@ class Stream
                 fclose($proc['handle']);
             }
         } else {
-            debug_event('stream', 'Missing transcode_cmd / encode_get_image parameters to generate media preview.', 3);
+            debug_event('stream.class', 'Missing transcode_cmd / encode_get_image parameters to generate media preview.', 3);
         }
 
         return $image;
@@ -255,7 +255,7 @@ class Stream
 
     private static function start_process($command, $settings = array())
     {
-        debug_event('stream', "Transcode command: " . $command, 3);
+        debug_event('stream.class', "Transcode command: " . $command, 3);
 
         $descriptors = array(1 => array('pipe', 'w'));
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
@@ -267,12 +267,12 @@ class Stream
         }
 
 
-        debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
+        debug_event('stream.class', "Transcode command prefix: " . $cmdPrefix, 3);
 
         $parray  = array();
         $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
         if ($process === false) {
-            debug_event('stream', 'Transcode command failed to open.', 1);
+            debug_event('stream.class', 'Transcode command failed to open.', 1);
             $parray = array(
                 'handle' => null
             );
@@ -296,13 +296,13 @@ class Stream
         $status = proc_get_status($transcoder['process']);
         if ($status['running'] == true) {
             $pid = $status['pid'];
-            debug_event('stream', 'Stream process about to be killed. pid:' . $pid, 1);
+            debug_event('stream.class', 'Stream process about to be killed. pid:' . $pid, 1);
 
             (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("kill -9 $pid") : exec("taskkill /F /T /PID $pid");
 
             proc_close($transcoder['process']);
         } else {
-            debug_event('stream', 'Process is not running, kill skipped.', 5);
+            debug_event('stream.class', 'Process is not running, kill skipped.', 5);
         }
     }
 
@@ -426,7 +426,7 @@ class Stream
         $db_results = Dba::read($sql, array($media_id, $type));
 
         if (Dba::num_rows($db_results)) {
-            debug_event('Stream', 'Unable to play media currently locked by another user', 3);
+            debug_event('stream.class', 'Unable to play media currently locked by another user', 3);
 
             return false;
         }

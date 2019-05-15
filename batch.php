@@ -110,7 +110,7 @@ if (Core::is_playable_item(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPE
 }
 
 if (!User::stream_control($media_ids)) {
-    debug_event('UI::access_denied', 'Stream control failed for user ' . Core::get_global('user')->username, '3');
+    debug_event('batch', 'UI::access_denied: Stream control failed for user ' . Core::get_global('user')->username, '3');
     UI::access_denied();
 
     return false;

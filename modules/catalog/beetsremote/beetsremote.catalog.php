@@ -111,7 +111,7 @@ class Catalog_beetsremote extends Beets\Catalog
         $db_results = Dba::read($selectSql, array($uri));
 
         if (Dba::num_rows($db_results)) {
-            debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
+            debug_event('beetsremote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
 
             return false;
@@ -136,7 +136,7 @@ class Catalog_beetsremote extends Beets\Catalog
     public function checkSong($song)
     {
         if ($song['added'] < $this->last_add) {
-            debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', '3');
+            debug_event('beetsremote.catalog', 'Skipping ' . $song['file'] . ' File modify time before last add run', '3');
 
             return true;
         }

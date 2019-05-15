@@ -158,7 +158,7 @@ class Catalog_remote extends Catalog
         $db_results = Dba::read($sql, array($uri));
 
         if (Dba::num_rows($db_results)) {
-            debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
+            debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
 
             return false;
@@ -204,7 +204,7 @@ class Catalog_remote extends Catalog
                 'api_secure' => (substr($this->uri, 0, 8) == 'https://')
             ));
         } catch (Exception $e) {
-            debug_event('catalog', 'Connection error: ' . $e->getMessage(), 1);
+            debug_event('remote.catalog', 'Connection error: ' . $e->getMessage(), 1);
             AmpError::add('general', $e->getMessage());
             AmpError::display('general');
             flush();
@@ -213,7 +213,7 @@ class Catalog_remote extends Catalog
         }
 
         if ($remote_handle->state() != 'CONNECTED') {
-            debug_event('catalog', 'API client failed to connect', 1);
+            debug_event('remote.catalog', 'API client failed to connect', 1);
             AmpError::add('general', T_('Error connecting to remote server'));
             AmpError::display('general');
 
@@ -255,7 +255,7 @@ class Catalog_remote extends Catalog
             try {
                 $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
             } catch (Exception $e) {
-                debug_event('catalog', 'Songs parsing error: ' . $e->getMessage(), 1);
+                debug_event('remote.catalog', 'Songs parsing error: ' . $e->getMessage(), 1);
                 AmpError::add('general', $e->getMessage());
                 AmpError::display('general');
                 flush();
@@ -264,12 +264,12 @@ class Catalog_remote extends Catalog
             // Iterate over the songs we retrieved and insert them
             foreach ($songs as $data) {
                 if ($this->check_remote_song($data['song'])) {
-                    debug_event('remote_catalog', 'Skipping existing song ' . $data['song']['url'], 5);
+                    debug_event('remote.catalog', 'Skipping existing song ' . $data['song']['url'], 5);
                 } else {
                     $data['song']['catalog'] = $this->id;
                     $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
                     if (!Song::insert($data['song'])) {
-                        debug_event('remote_catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
+                        debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
                         AmpError::add('general', T_('Unable to Insert Song - %s'), $data['song']['title']);
                         AmpError::display('general');
                         flush();
@@ -300,7 +300,7 @@ class Catalog_remote extends Catalog
     {
         $remote_handle = $this->connect();
         if (!$remote_handle) {
-            debug_event('remote-clean', 'Remote login failed', 1, 'ampache-catalog');
+            debug_event('remote.catalog', 'Remote login failed', 1, 'ampache-catalog');
 
             return false;
         }
@@ -310,18 +310,18 @@ class Catalog_remote extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
             try {
                 $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
             } catch (Exception $e) {
                 // FIXME: What to do, what to do
-                debug_event('catalog', 'url_to_song parsing error: ' . $e->getMessage(), 1);
+                debug_event('remote.catalog', 'url_to_song parsing error: ' . $e->getMessage(), 1);
             }
 
             if (count($song) == 1) {
-                debug_event('remote-clean', 'keeping song', 5, 'ampache-catalog');
+                debug_event('remote.catalog', 'keeping song', 5, 'ampache-catalog');
             } else {
-                debug_event('remote-clean', 'removing song', 5, 'ampache-catalog');
+                debug_event('remote.catalog', 'removing song', 5, 'ampache-catalog');
                 $dead++;
                 Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
             }
@@ -375,7 +375,7 @@ class Catalog_remote extends Catalog
 
         // If we don't get anything back we failed and should bail now
         if (!$remote_handle) {
-            debug_event('play', 'Connection to remote server failed', 1);
+            debug_event('remote.catalog', 'Connection to remote server failed', 1);
 
             return false;
         }
@@ -384,7 +384,7 @@ class Catalog_remote extends Catalog
         $url       = $media->file . '&ssid=' . $handshake['auth'];
 
         header('Location: ' . $url);
-        debug_event('play', 'Started remote stream - ' . $url, 5);
+        debug_event('remote.catalog', 'Started remote stream - ' . $url, 5);
 
         return null;
     }

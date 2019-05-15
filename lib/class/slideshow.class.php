@@ -45,7 +45,7 @@ class Slideshow
             try {
                 $images = $echonest->getArtistApi()->setName($artist_name)->getImages();
             } catch (Exception $e) {
-                debug_event('echonest', 'EchoNest artist images error: ' . $e->getMessage(), '1');
+                debug_event('slideshow.class', 'EchoNest artist images error: ' . $e->getMessage(), '1');
             }
         }
 

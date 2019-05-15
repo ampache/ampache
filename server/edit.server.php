@@ -31,7 +31,7 @@ require_once '../lib/init.php';
 
 $results = '';
 
-debug_event('edit.server.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
+debug_event('edit.server', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
 
 // Post first
 $type = $_POST['type'];
@@ -47,7 +47,7 @@ if (empty($type)) {
 }
 
 if (!Core::is_library_item($object_type) && $object_type != 'share') {
-    debug_event('edit.server.php', 'Type `' . $type . '` is not based on an item library.', '3');
+    debug_event('edit.server', 'Type `' . $type . '` is not based on an item library.', '3');
 
     return false;
 }

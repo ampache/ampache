@@ -26,7 +26,7 @@ require_once 'lib/init.php';
 
 /* Check Perms */
 if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode')) {
-    debug_event('DENIED', 'Error Attempted registration', '1');
+    debug_event('register', 'Error Attempted registration', '1');
     UI::access_denied();
 
     return false;

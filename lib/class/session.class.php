@@ -71,7 +71,7 @@ class Session
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
-        debug_event('session', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
+        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
 
         return true;
     }
@@ -91,7 +91,7 @@ class Session
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
         Dba::write($sql, array($key));
 
-        debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
+        debug_event('session.class', 'Deleting Session with key:' . $key, 6);
 
         $session_name  = AmpConfig::get('session_name');
         $cookie_path   = AmpConfig::get('cookie_path');
@@ -153,7 +153,7 @@ class Session
             return $results[$column];
         }
 
-        debug_event('session', 'Unable to read session from key ' . $key . ' no data found', 5);
+        debug_event('session.class', 'Unable to read session from key ' . $key . ' no data found', 5);
 
         return '';
     }
@@ -250,12 +250,12 @@ class Session
         $db_results = Dba::write($sql, array($key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
-            debug_event('session', 'Session creation failed', '1');
+            debug_event('session.class', 'Session creation failed', '1');
 
             return false;
         }
 
-        debug_event('session', 'Session created: ' . $key, '5');
+        debug_event('session.class', 'Session created: ' . $key, '5');
 
         return $key;
     }
@@ -356,7 +356,7 @@ class Session
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
-            debug_event('session', $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            debug_event('session.class', $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
         }
 
         return $db_results;
@@ -387,7 +387,7 @@ class Session
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
             Dba::write($sql, array($latitude, $longitude, $name, $sid));
         } else {
-            debug_event('session', 'Missing session id to update geolocation.', 3);
+            debug_event('session.class', 'Missing session id to update geolocation.', 3);
         }
     }
 

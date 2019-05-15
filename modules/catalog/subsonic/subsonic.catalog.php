@@ -159,7 +159,7 @@ class Catalog_subsonic extends Catalog
         $db_results = Dba::read($sql, array($uri));
         
         if (Dba::num_rows($db_results)) {
-            debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
+            debug_event('subsonic.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
             
             return false;
@@ -205,7 +205,7 @@ class Catalog_subsonic extends Catalog
      */
     public function update_remote_catalog()
     {
-        debug_event('subsonic_catalog', 'Updating remote catalog...', 5);
+        debug_event('subsonic.catalog', 'Updating remote catalog...', 5);
         
         $subsonic = $this->createClient();
         
@@ -244,13 +244,13 @@ class Catalog_subsonic extends Catalog
                                 $data['genre']      = explode(' ', html_entity_decode($song['genre']));
                                 $data['file']       = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
                                 if ($this->check_remote_song($data)) {
-                                    debug_event('subsonic_catalog', 'Skipping existing song ' . $data['path'], 5);
+                                    debug_event('subsonic.catalog', 'Skipping existing song ' . $data['path'], 5);
                                 } else {
                                     $data['catalog'] = $this->id;
-                                    debug_event('subsonic_catalog', 'Adding song ' . $song['path'], 5, 'ampache-catalog');
+                                    debug_event('subsonic.catalog', 'Adding song ' . $song['path'], 5, 'ampache-catalog');
                                     $song_Id = Song::insert($data);
                                     if (!$song_Id) {
-                                        debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
+                                        debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
                                         AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
                                     } else {
                                         if ($song['coverArt']) {
@@ -273,7 +273,7 @@ class Catalog_subsonic extends Catalog
         // Update the last update value
         $this->update_last_update();
        
-        debug_event('subsonic_catalog', 'Catalog updated.', 5);
+        debug_event('subsonic.catalog', 'Catalog updated.', 5);
         
         return true;
     }
@@ -311,7 +311,7 @@ class Catalog_subsonic extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('subsonic-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            debug_event('subsonic.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
             $remove = false;
             try {
                 $songid = $this->url_to_songid($row['file']);
@@ -320,13 +320,13 @@ class Catalog_subsonic extends Catalog
                     $remove = true;
                 }
             } catch (Exception $e) {
-                debug_event('subsonic-clean', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
             }
             
             if (!$remove) {
-                debug_event('subsonic-clean', 'keeping song', 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'keeping song', 5, 'ampache-catalog');
             } else {
-                debug_event('subsonic-clean', 'removing song', 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'removing song', 5, 'ampache-catalog');
                 $dead++;
                 Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
             }
@@ -391,7 +391,7 @@ class Catalog_subsonic extends Catalog
         $url      = $subsonic->parameterize($media->file . '&');
         
         header('Location: ' . $url);
-        debug_event('play', 'Started remote stream - ' . $url, 5);
+        debug_event('subsonic.catalog', 'Started remote stream - ' . $url, 5);
         
         return null;
     }

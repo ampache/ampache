@@ -97,7 +97,7 @@ class scrobbler
         $target = $this->scheme . '://' . $this->host . $url . $params;
         $fp     = @fopen($target, 'r', false, $context);
         if (!$fp) {
-            debug_event('Scrobbler', 'Cannot access ' . $target, 1);
+            debug_event('scrobbler.class', 'Cannot access ' . $target, 1);
 
             return false;
         }
@@ -180,7 +180,7 @@ class scrobbler
     public function queue_track($artist, $album, $title, $timestamp, $length, $track)
     {
         if ($length < 30) {
-            debug_event('Scrobbler', "Not queuing track, too short", '5');
+            debug_event('scrobbler.class', "Not queuing track, too short", '5');
 
             return false;
         }

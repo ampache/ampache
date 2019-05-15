@@ -22,11 +22,11 @@ class UPnPDevice
      */
     private function restoreDescriptionUrl($descriptionUrl)
     {
-        debug_event('UPnPDevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
+        debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
         $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);
 
         if ($this->_settings['descriptionURL'] == $descriptionUrl) {
-            debug_event('UPnPDevice', 'service Urls restored from session.', 5);
+            debug_event('upnpdevice', 'service Urls restored from session.', 5);
 
             return true;
         }
@@ -36,14 +36,14 @@ class UPnPDevice
 
     private function parseDescriptionUrl($descriptionUrl)
     {
-        debug_event('UPnPDevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
+        debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $descriptionUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         curl_close($ch);
-        //!!debug_event('UPnPDevice', 'parseDescriptionUrl response: ' . $response, 5);
+        //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string($response);
         $services    = $responseXML->device->serviceList->service;
@@ -94,9 +94,9 @@ class UPnPDevice
             'Connection: close',
             'Content-Length: ' . mb_strlen($body),
         );
-        //debug_event('UPnPDevice', 'sendRequestToDevice Met: ' . $method . ' | ' . $controlUrl, 5);
-        //debug_event('UPnPDevice', 'sendRequestToDevice Body: ' . $body, 5);
-        //debug_event('UPnPDevice', 'sendRequestToDevice Hdr: ' . print_r($header, true), 5);
+        //debug_event('upnpdevice', 'sendRequestToDevice Met: ' . $method . ' | ' . $controlUrl, 5);
+        //debug_event('upnpdevice', 'sendRequestToDevice Body: ' . $body, 5);
+        //debug_event('upnpdevice', 'sendRequestToDevice Hdr: ' . print_r($header, true), 5);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $controlUrl);
@@ -109,7 +109,7 @@ class UPnPDevice
 
         $response = curl_exec($ch);
         curl_close($ch);
-        //debug_event('UPnPDevice', 'sendRequestToDevice response: ' . $response, 5);
+        //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = array();
         $tmp     = explode("\r\n\r\n", $response);
@@ -126,14 +126,14 @@ class UPnPDevice
         /*
         $lastHeaders = $headers[count($headers) - 1];
         $responseCode = $this->getResponseCode($lastHeaders);
-        debug_event('UPnPDevice', 'sendRequestToDevice responseCode: ' . $responseCode, 5);
+        debug_event('upnpdevice', 'sendRequestToDevice responseCode: ' . $responseCode, 5);
         if ($responseCode == 500)
         {
-            debug_event('UPnPDevice', 'sendRequestToDevice HTTP-Code 500 - Create error response', 5);
+            debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code 500 - Create error response', 5);
         }
         else
         {
-            debug_event('UPnPDevice', 'sendRequestToDevice HTTP-Code OK - Create response', 5);
+            debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code OK - Create response', 5);
         }
         */
         
@@ -191,7 +191,7 @@ class UPnPDevice
             'NT: upnp:event',
             'TIMEOUT: Second-180',
         );
-        debug_event('UPnPDevice', 'Subscribe with: ' . print_r($header, true), 5);
+        debug_event('upnpdevice', 'Subscribe with: ' . print_r($header, true), 5);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $eventUrl);
@@ -203,7 +203,7 @@ class UPnPDevice
 
         $response = curl_exec($ch);
         curl_close( $ch );
-        debug_event('UPnPDevice', 'Subscribe response: ' . $response, 5);
+        debug_event('upnpdevice', 'Subscribe response: ' . $response, 5);
 
         $lines = explode("\r\n", trim($response));
         foreach($lines as $line) {
@@ -213,7 +213,7 @@ class UPnPDevice
 
             if ($key == 'SID')
             {
-                debug_event('UPnPDevice', 'Subscribtion SID: ' . $value, 5);
+                debug_event('upnpdevice', 'Subscribtion SID: ' . $value, 5);
                 return $value;
             }
         }
@@ -241,7 +241,7 @@ class UPnPDevice
             'SID: ' . $sid,
         );
 
-        debug_event('UPnPDevice', 'Unsubscribe from SID: ' . $sid . ' with: ' . "\n" . print_r($header, true), 5);
+        debug_event('upnpdevice', 'Unsubscribe from SID: ' . $sid . ' with: ' . "\n" . print_r($header, true), 5);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $eventUrl);

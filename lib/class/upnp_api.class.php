@@ -194,8 +194,8 @@ class Upnp_Api
         # Add each item in $prmItems array to $ndDIDL:
         foreach ($prmItems as $item) {
             if (!is_array($item)) {
-                debug_event('upnp_class', 'item is not array', 2);
-                debug_event('upnp_class', $item, '5');
+                debug_event('upnp_api.class', 'item is not array', 2);
+                debug_event('upnp_api.class', $item, '5');
                 continue;
             }
 
@@ -519,7 +519,7 @@ class Upnp_Api
     private static function _slice($items, $start, $count)
     {
         $maxCount = count($items);
-        debug_event('upnp-api', 'slice: ' . $maxCount . "   " . $start . "    " . $count, '5');
+        debug_event('upnp_api.class', 'slice: ' . $maxCount . "   " . $start . "    " . $count, '5');
 
         return array($maxCount, array_slice($items, $start, ($count == 0 ? $maxCount - $start : $count)));
     }
@@ -980,10 +980,10 @@ class Upnp_Api
 
     private static function _replaceSpecialSymbols($title)
     {
-        ///debug_event('upnp_class', 'replace <<< ' . $title, 5);
+        ///debug_event('upnp_api.class', 'replace <<< ' . $title, 5);
         // replace non letter or digits
         $title = preg_replace('~[^\\pL\d\.\s\(\)\.\,\'\"]+~u', '-', $title);
-        ///debug_event('upnp_class', 'replace >>> ' . $title, 5);
+        ///debug_event('upnp_api.class', 'replace >>> ' . $title, 5);
 
         if ($title == "") {
             $title = '(no title)';

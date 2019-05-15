@@ -417,7 +417,7 @@ class Song extends database_object implements media, library_item
             $composer, $channels));
 
         if (!$db_results) {
-            debug_event('song', 'Unable to insert ' . $file, 2);
+            debug_event('song.class', 'Unable to insert ' . $file, 2);
 
             return false;
         }
@@ -957,7 +957,7 @@ class Song extends database_object implements media, library_item
         } // end foreach
 
         if ($array['change']) {
-            debug_event('media-diff', json_encode($array['element']), 5);
+            debug_event('song.class', 'media-diff ' . json_encode($array['element']), 5);
         }
 
         return $array;
@@ -985,7 +985,7 @@ class Song extends database_object implements media, library_item
     public function update(array $data)
     {
         foreach ($data as $key => $value) {
-            debug_event('song.class.php', $key . '=' . $value, '5');
+            debug_event('song.class', $key . '=' . $value, '5');
 
             switch ($key) {
                 case 'artist_name':
@@ -1047,7 +1047,7 @@ class Song extends database_object implements media, library_item
             $meta    = array();
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
-                debug_event('song', 'Writing id3 metadata to file ' . $this->file, 5);
+                debug_event('song.class', 'Writing id3 metadata to file ' . $this->file, 5);
                 if (self::isCustomMetadataEnabled()) {
                     foreach ($this->getMetadata() as $metadata) {
                         $meta[$metadata->getField()->getName()] = $metadata->getData();
@@ -1722,7 +1722,7 @@ class Song extends database_object implements media, library_item
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $media->get_transcode_settings(null);
             if ($transcode_settings) {
-                debug_event("media", "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings...", 5);
+                debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings...", 5);
                 $type = $transcode_settings['format'];
             }
         }
@@ -1874,22 +1874,22 @@ class Song extends database_object implements media, library_item
         }
 
         if ($target) {
-            debug_event('media', 'Explicit format request {' . $target . '}', 5);
+            debug_event('song.class', 'Explicit format request {' . $target . '}', 5);
         } else {
             if ($target = AmpConfig::get('encode_target_' . $source)) {
-                debug_event('media', 'Defaulting to configured target format for ' . $source, 5);
+                debug_event('song.class', 'Defaulting to configured target format for ' . $source, 5);
             } else {
                 if ($target = AmpConfig::get($setting_target)) {
-                    debug_event('media', 'Using default target format', 5);
+                    debug_event('song.class', 'Using default target format', 5);
                 } else {
                     $target = $source;
-                    debug_event('media', 'No default target for ' . $source . ', choosing to resample', 5);
+                    debug_event('song.class', 'No default target for ' . $source . ', choosing to resample', 5);
                 }
             }
         }
 
 
-        debug_event('media', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
+        debug_event('song.class', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
 
         $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         $args = '';
@@ -1903,19 +1903,19 @@ class Song extends database_object implements media, library_item
         $args .= ' ' . AmpConfig::get('transcode_input');
 
         if (AmpConfig::get('encode_srt') && $options['subtitle']) {
-            debug_event('media', 'Using subtitle ' . $options['subtitle'], 5);
+            debug_event('song.class', 'Using subtitle ' . $options['subtitle'], 5);
             $args .= ' ' . AmpConfig::get('encode_srt');
         }
 
         $argst = AmpConfig::get('encode_args_' . $target);
         if (!$args) {
-            debug_event('media', 'Target format ' . $target . ' is not properly configured', 2);
+            debug_event('song.class', 'Target format ' . $target . ' is not properly configured', 2);
 
             return false;
         }
         $args .= ' ' . $argst;
 
-        debug_event('media', 'Command: ' . $cmd . ' Arguments:' . $args, 5);
+        debug_event('song.class', 'Command: ' . $cmd . ' Arguments:' . $args, 5);
 
         return array('format' => $target, 'command' => $cmd . $args);
     }
@@ -1976,7 +1976,7 @@ class Song extends database_object implements media, library_item
             $run = str_replace("%A", $this->f_album, $run);
             $run = str_replace("%t", $this->f_title, $run);
 
-            debug_event('song', "Running custom play action: " . $run, 3);
+            debug_event('song.class', "Running custom play action: " . $run, 3);
 
             $descriptors = array(1 => array('pipe', 'w'));
             if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
@@ -2111,7 +2111,7 @@ class Song extends database_object implements media, library_item
                 Useractivity::garbage_collection('song', $this->id);
             }
         } else {
-            debug_event('song', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+            debug_event('song.class', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
         }
 
         return $deleted;

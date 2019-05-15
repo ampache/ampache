@@ -39,7 +39,7 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
-debug_event('browse.ajax.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
+debug_event('browse.ajax', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
 
 $browse = new Browse($browse_id);
 

@@ -68,7 +68,7 @@ class LDAPException extends Exception
             $message = 'LDAP error: [' . $message . '] ' . ldap_err2str($message);
         }
 
-        debug_event('LDAP', 'Exception: ' . $message, 6);
+        debug_event('ldap.class', 'Exception: ' . $message, 5);
         parent::__construct($message);
     }
 }
@@ -87,7 +87,7 @@ class LDAP
      */
     public function __construct()
     {
-        debug_event('LDAP', '__construct has been called. This should not happen', 2);
+        debug_event('ldap.class', '__construct has been called. This should not happen', 2);
     }
 
 
@@ -163,7 +163,7 @@ class LDAP
      */
     private static function bind($link, $username = null, $password = null)
     {
-        debug_event('LDAP', "binding with username `$username`", 5);
+        debug_event('ldap.class', "binding with username `$username`", 5);
         
         if ($username === null && $password === null) {
             $username = AmpConfig::get('ldap_username', '');
@@ -191,7 +191,7 @@ class LDAP
     private static function read($link, $dn, $attrs = [], $filter='objectClass=*')
     {
         $attrs_json = json_encode($attrs);
-        debug_event('LDAP', "reading attributes $attrs_json in `$dn`", 5);
+        debug_event('ldap.class', "reading attributes $attrs_json in `$dn`", 5);
         
         if (! $result = ldap_read($link, $dn, $filter, $attrs)) {
             throw new LDAPException("Could not read attributes `$attrs_json` for dn `$dn`");
@@ -211,7 +211,7 @@ class LDAP
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
     {
-        debug_event('LDAP', "searching in `$base_dn` for `$filter`", 5);
+        debug_event('ldap.class', "searching in `$base_dn` for `$filter`", 5);
         
         if (! $result = ldap_search($link, $base_dn, $filter)) {
             throw new LDAPException(ldap_errno($link));
@@ -271,7 +271,7 @@ class LDAP
             }
 
             $search = "(&(objectclass=$objectclass)$filter)";
-            debug_event('LDAP', 'search: ' . $search, 5);
+            debug_event('ldap.class', 'search: ' . $search, 5);
 
             if (! $base_dn = AmpConfig::get('ldap_search_dn')) {
                 throw new LDAPException('Required configuration value missing: ldap_search_dn');
@@ -328,7 +328,7 @@ class LDAP
         } catch (LDAPException $e) {
             $message = $e->getMessage();
 
-            debug_event('LDAP', 'Error during authentication: ' . $message, 3);
+            debug_event('ldap.class', 'Error during authentication: ' . $message, 3);
 
             $return_value = [
                 'success' => false,
@@ -340,7 +340,7 @@ class LDAP
             self::unbind($link);
         }
 
-        debug_event('LDAP', 'Return value of authentication: ' . json_encode($return_value), 5);
+        debug_event('ldap.class', 'Return value of authentication: ' . json_encode($return_value), 5);
 
         return $return_value;
     }
