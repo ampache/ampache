@@ -320,7 +320,7 @@ class Song extends database_object implements media, library_item
         }
 
         $info = $this->has_info($limit_threshold);
-        if ($info !== false) {
+        if ($info !== false && is_array($info)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
