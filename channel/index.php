@@ -119,9 +119,9 @@ function progress($totaldownload, $downloaded, $us, $ud)
  */
 function output_header($ch, $header)
 {
-    $th = trim($header);
-    if (!empty($th)) {
-        header($th);
+    $trimheader = trim($header);
+    if (!empty($trimheader)) {
+        header($trimheader);
     }
 
     return strlen($header);

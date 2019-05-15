@@ -237,17 +237,17 @@ function show_album_select($name, $album_id=0, $allow_add=false, $song_id=0, $al
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected   = '';
-        $album_name = trim($r['prefix'] . " " . $r['name']);
-        if ($r['disk'] >= 1) {
-            $album_name .= ' [Disk ' . $r['disk'] . ']';
+        $album_name = trim($row['prefix'] . " " . $row['name']);
+        if ($row['disk'] >= 1) {
+            $album_name .= ' [Disk ' . $row['disk'] . ']';
         }
-        if ($r['id'] == $album_id) {
+        if ($row['id'] == $album_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -293,14 +293,14 @@ function show_artist_select($name, $artist_id=0, $allow_add=false, $song_id=0, $
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected    = '';
-        $artist_name = trim($r['prefix'] . " " . $r['name']);
-        if ($r['id'] == $artist_id) {
+        $artist_name = trim($row['prefix'] . " " . $row['name']);
+        if ($row['id'] == $artist_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($artist_name) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($artist_name) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -339,13 +339,13 @@ function show_tvshow_select($name, $tvshow_id=0, $allow_add=false, $season_id=0,
     $sql        = "SELECT `id`, `name` FROM `tvshow` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
-        if ($r['id'] == $tvshow_id) {
+        if ($row['id'] == $tvshow_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -380,13 +380,13 @@ function show_tvshow_season_select($name, $season_id, $allow_add=false, $video_i
     $sql        = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
     $db_results = Dba::read($sql, array($season->tvshow));
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
-        if ($r['id'] == $season_id) {
+        if ($row['id'] == $season_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['season_number']) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['season_number']) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -455,20 +455,20 @@ function show_license_select($name, $license_id=0, $song_id=0)
     $sql        = "SELECT `id`, `name`, `description`, `external_link` FROM `license` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
-        if ($r['id'] == $license_id) {
+        if ($row['id'] == $license_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected";
-        if (!empty($r['description'])) {
-            echo " title=\"" . addslashes($r['description']) . "\"";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected";
+        if (!empty($row['description'])) {
+            echo " title=\"" . addslashes($row['description']) . "\"";
         }
-        if (!empty($r['external_link'])) {
-            echo " data-link=\"" . $r['external_link'] . "\"";
+        if (!empty($row['external_link'])) {
+            echo " data-link=\"" . $row['external_link'] . "\"";
         }
-        echo ">" . $r['name'] . "</option>\n";
+        echo ">" . $row['name'] . "</option>\n";
     } // end while
 
     echo "</select>\n";

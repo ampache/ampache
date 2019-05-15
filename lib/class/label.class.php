@@ -349,8 +349,8 @@ class Label extends database_object implements library_item
         $db_results = Dba::read($sql, array($this->name));
 
         $results = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -497,13 +497,13 @@ class Label extends database_object implements library_item
     public static function clean_to_existing($labels)
     {
         if (is_array($labels)) {
-            $ar = $labels;
+            $array = $labels;
         } else {
-            $ar = explode(",", $labels);
+            $array = explode(",", $labels);
         }
 
         $ret = array();
-        foreach ($ar as $label) {
+        foreach ($array as $label) {
             $label = trim($label);
             if (!empty($label)) {
                 if (Label::lookup(array('name' => $label)) > 0) {

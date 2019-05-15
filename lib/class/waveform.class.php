@@ -98,19 +98,19 @@ class Waveform
                                 }
 
                                 $transcoder = Stream::start_transcode($song, $transcode_to);
-                                $fp         = $transcoder['handle'];
-                                if (!is_resource($fp)) {
+                                $fpointer   = $transcoder['handle'];
+                                if (!is_resource($fpointer)) {
                                     debug_event('waveform.class', "Failed to open " . $song->file . " for waveform.", 3);
 
                                     return null;
                                 }
 
                                 do {
-                                    $buf = fread($fp, 2048);
+                                    $buf = fread($fpointer, 2048);
                                     fwrite($tfp, $buf);
-                                } while (!feof($fp));
+                                } while (!feof($fpointer));
 
-                                fclose($fp);
+                                fclose($fpointer);
                                 fclose($tfp);
 
                                 Stream::kill_process($transcoder);
@@ -195,7 +195,7 @@ class Waveform
         $draw_flat  = true;
 
         // generate foreground color
-        list($r, $g, $b) = self::html2rgb($foreground);
+        list($red, $green, $blue) = self::html2rgb($foreground);
 
         $handle = fopen($filename, "r");
         // wav file header retrieval
@@ -245,8 +245,8 @@ class Waveform
             $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
             imagefill($img, 0, 0, $transparentColor);
         } else {
-            list($br, $bg, $bb) = self::html2rgb($background);
-            imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $br, $bg, $bb));
+            list($bred, $bgreen, $bblue) = self::html2rgb($background);
+            imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $bred, $bgreen, $bblue));
         }
         while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail == 0) {
@@ -298,7 +298,7 @@ class Waveform
                   (int) ($data_point / $detail),
                   // y2: same as y1, but from the bottom of the image
                   $height - ($height - $v),
-                  imagecolorallocate($img, $r, $g, $b)
+                  imagecolorallocate($img, $red, $green, $blue)
                 );
                 }
             } else {

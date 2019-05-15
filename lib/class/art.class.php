@@ -526,9 +526,9 @@ class Art extends database_object
         if (Core::is_readable($path)) {
             unlink($path);
         }
-        $fp = fopen($path, "wb");
-        fwrite($fp, $source);
-        fclose($fp);
+        $filepath = fopen($path, "wb");
+        fwrite($filepath, $source);
+        fclose($filepath);
 
         return true;
     }
@@ -550,12 +550,12 @@ class Art extends database_object
             return null;
         }
 
-        $image = '';
-        $fp    = fopen($path, "rb");
+        $image    = '';
+        $filepath = fopen($path, "rb");
         do {
-            $image .= fread($fp, 2048);
-        } while (!feof($fp));
-        fclose($fp);
+            $image .= fread($filepath, 2048);
+        } while (!feof($filepath));
+        fclose($filepath);
 
         return $image;
     }

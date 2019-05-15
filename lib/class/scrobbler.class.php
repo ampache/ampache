@@ -95,17 +95,17 @@ class scrobbler
             $params='?' . $params;
         }
         $target = $this->scheme . '://' . $this->host . $url . $params;
-        $fp     = @fopen($target, 'r', false, $context);
-        if (!$fp) {
+        $filepath     = @fopen($target, 'r', false, $context);
+        if (!$filepath) {
             debug_event('scrobbler.class', 'Cannot access ' . $target, 1);
 
             return false;
         }
         ob_start();
-        fpassthru($fp);
+        fpassthru($filepath);
         $buffer = ob_get_contents();
         ob_end_clean();
-        fclose($fp);
+        fclose($filepath);
 
         return $buffer;
     } // call_url

@@ -681,8 +681,8 @@ class Song extends database_object implements media, library_item
         }
         $db_results = Dba::read($sql);
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = new Song($r['id']);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = new Song($row['id']);
         }
 
         return $results;

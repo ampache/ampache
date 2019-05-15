@@ -254,8 +254,8 @@ class Playlist extends playlist_object
         $sql        = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
         $db_results = Dba::read($sql, array($this->id));
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['object_id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['object_id'];
         } // end while
 
         return $results;
@@ -562,9 +562,9 @@ class Playlist extends playlist_object
         $count   = 1;
         $results = array();
 
-        while ($r = Dba::fetch_assoc($db_results)) {
+        while ($row = Dba::fetch_assoc($db_results)) {
             $new_data               = array();
-            $new_data['id']         = $r['id'];
+            $new_data['id']         = $row['id'];
             $new_data['track']      = $count;
             $results[]              = $new_data;
             $count++;
