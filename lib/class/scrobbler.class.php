@@ -217,7 +217,7 @@ class scrobbler
 
         // Build the query string (encoded per RFC1738 by the call method)
         $count   = 0;
-        $vars= array();
+        $vars    = array();
         foreach ($this->queued_tracks as $track) {
             //construct array of parameters for each song
             $vars["artist[$count]"]      = $track['artist'];

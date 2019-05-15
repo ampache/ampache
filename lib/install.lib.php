@@ -133,7 +133,7 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
                     $reprule = $web_path . $reprule;
                     if ($fix) {
                         $parts[$count + 2] = $reprule;
-                        $line          = implode(' ', $parts);
+                        $line              = implode(' ', $parts);
                     } else {
                         $valid = false;
                     }
