@@ -66,7 +66,7 @@ switch ($action) {
         $website        = scrub_in(Core::get_post('website'));
         $state          = scrub_in(Core::get_post('state'));
         $city           = scrub_in(Core::get_post('city'));
-        
+
         if ($website === null) {
             $website = '';
         }
@@ -129,7 +129,7 @@ switch ($action) {
             AmpError::add('password', T_("Your passwords do not match"));
         }
 
-        if (!User::check_username($username) || $username == null) {
+        if (!User::check_username((string) $username) || $username == null) {
             AmpError::add('duplicate_user', T_("Error Username already exists"));
         }
 
@@ -154,8 +154,7 @@ switch ($action) {
             break;
         } // auto-user level
 
-        $new_user = User::create($username, $fullname, $email, $website, $pass1,
-            $access, $state, $city, AmpConfig::get('admin_enable_required'));
+        $new_user = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
             AmpError::add('duplicate_user', T_("Error: Insert Failed"));

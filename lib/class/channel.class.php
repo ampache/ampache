@@ -549,7 +549,8 @@ class Channel extends database_object implements media, library_item
     }
 
     /**
-     * @param string $x
+     * @param string $source
+     * @return string
      */
     private function strtohex($source)
     {
