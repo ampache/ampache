@@ -57,7 +57,7 @@ switch ($action) {
             $mailer->subject = $_REQUEST['subject'];
             $mailer->message = $_REQUEST['message'];
 
-            if ($_REQUEST['from'] == 'system') {
+            if (Core::get_request('from') == 'system') {
                 $mailer->set_default_sender();
             } else {
                 $mailer->sender      = Core::get_global('user')->email;

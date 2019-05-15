@@ -366,10 +366,10 @@ class VlcPlayer
      */
     private function sendCommand($cmd, $args)
     {
-        $fp = fsockopen($this->host, $this->port, $errno, $errstr);
+        $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
 
-        if (!$fp) {
-            debug_event('vlc', "VlcPlayer: $errstr ($errno)", '1');
+        if (!$fsock) {
+            debug_event('vlcplayer.class', "VlcPlayer: $errstr ($errno)", '1');
 
             return null;
         }
@@ -392,22 +392,22 @@ class VlcPlayer
         
         $msg .= "\r\n";
                        
-        fputs($fp, $msg);
+        fputs($fsock, $msg);
         $data   = '';
         $header = "";
         // here the header is split from the xml to avoid problems
         do {
             // loop until the end of the header
 
-            $header .= fgets($fp);
+            $header .= fgets($fsock);
         } while (strpos($header, "\r\n\r\n") === false);
 
         // now put the body in variable $data
-        while (! feof($fp)) {
-            $data .= fgets($fp);
+        while (! feof($fsock)) {
+            $data .= fgets($fsock);
         }
         
-        fclose($fp);
+        fclose($fsock);
 
         // send to xml parser and make an array
         $result = $this->xmltoarray($data);

@@ -24,7 +24,7 @@ class WebPlayer
 {
     /**
      * Check if the playlist is a radio playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return boolean
      */
     public static function is_playlist_radio($playlist)
@@ -42,7 +42,7 @@ class WebPlayer
 
     /**
      * Check if the playlist is a video playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return boolean
      */
     public static function is_playlist_video($playlist)
@@ -91,7 +91,7 @@ class WebPlayer
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode forced from client side
                     if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
-                        debug_event("webplayer.class.php", "Forcing type to {" . $force_type . "}", 5);
+                        debug_event("webplayer.class", "Forcing type to {" . $force_type . "}", 5);
                         // Transcode only if excepted type available
                         $transcode_settings = $media->get_transcode_settings($force_type, 'webplayer');
                         if ($transcode_settings) {
@@ -158,14 +158,14 @@ class WebPlayer
             $types['player'] = $types['real'];
         }
 
-        debug_event("webplayer.class.php", "Types {" . json_encode($types) . "}", 5);
+        debug_event("webplayer.class", "Types {" . json_encode($types) . "}", 5);
 
         return $types;
     }
 
     /**
      * Get all supplied types for a playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return array
      */
     public static function get_supplied_types($playlist)
@@ -187,7 +187,7 @@ class WebPlayer
 
     /**
      * Get add_media javascript.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @param string $callback_container
      * @return string
      */
@@ -208,7 +208,7 @@ class WebPlayer
 
     /**
      * Get play_next javascript.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @param string $callback_container
      * @return string
      */
@@ -296,7 +296,7 @@ class WebPlayer
             $js['poster'] = $item->image_url;
         }
 
-        debug_event("webplayer.class.php", "Return get_media_js_param {" . json_encode($js) . "}", 5);
+        debug_event("webplayer.class", "Return get_media_js_param {" . json_encode($js) . "}", 5);
 
         return json_encode($js);
     }

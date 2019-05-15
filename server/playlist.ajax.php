@@ -56,11 +56,11 @@ switch ($action) {
     case 'append_item':
         // Only song item are supported with playlists
 
-        debug_event('playlist', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', '5');
+        debug_event('playlist.ajax', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', '5');
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface', '25')) {
-                debug_event('DENIED', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', '1');
+                debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', '1');
                 break;
             }
 
@@ -86,14 +86,14 @@ switch ($action) {
         $item_type = $_REQUEST['item_type'];
 
         if (!empty($item_type) && Core::is_playable_item($item_type)) {
-            debug_event('playlist', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
+            debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
             $item_ids = explode(',', $item_id);
             foreach ($item_ids as $iid) {
                 $libitem = new $item_type($iid);
                 $medias  = array_merge($medias, $libitem->get_medias());
             }
         } else {
-            debug_event('playlist', 'Adding all medias of current playlist...', 5);
+            debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);
             $medias = Core::get_global('user')->playlist->get_items();
         }
 
@@ -101,12 +101,12 @@ switch ($action) {
             Ajax::set_include_override(true);
             $playlist->add_medias($medias, true);
             
-            debug_event('playlist', 'Items added successfully!', '5');
+            debug_event('playlist.ajax', 'Items added successfully!', '5');
             ob_start();
             display_notification(T_('Added to playlist'));
             $results['rfc3514'] = ob_get_clean();
         } else {
-            debug_event('playlist', 'No item to add. Aborting...', '5');
+            debug_event('playlist.ajax', 'No item to add. Aborting...', '5');
         }
     break;
     default:

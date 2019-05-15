@@ -83,7 +83,12 @@ $catalogs = Catalog::get_catalogs();
             <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
             <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
             <th class="cel_songs"><?php echo T_('Songs'); ?></th>
+            <?php if (AmpConfig::get('allow_video')) {
+        ?>
             <th class="cel_video"><?php echo T_('Videos'); ?></th>
+            <?php
+    }
+    ?>
             <th class="cel_total"><?php echo T_('Catalog Size'); ?></th>
         </tr>
     </thead>

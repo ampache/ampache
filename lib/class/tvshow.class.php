@@ -101,8 +101,8 @@ class TVShow extends database_object implements library_item
         $sql        = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -128,8 +128,8 @@ class TVShow extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         $results = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -188,6 +188,10 @@ class TVShow extends database_object implements library_item
         return true;
     }
 
+    /*
+     * get_keywords
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords           = array();
@@ -219,6 +223,8 @@ class TVShow extends database_object implements library_item
 
     public function search_childrens($name)
     {
+        debug_event('tvshow.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
@@ -417,7 +423,7 @@ class TVShow extends database_object implements library_item
             $season  = new TVShow_Season($season);
             $deleted = $season->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow', 'Error when deleting the season `' . $season . '`.', 1);
+                debug_event('tvshow.class', 'Error when deleting the season `' . $season . '`.', 1);
                 break;
             }
         }

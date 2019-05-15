@@ -31,7 +31,7 @@ require_once '../lib/init.php';
 
 $results = '';
 
-debug_event('edit.server.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
+debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', '5');
 
 // Post first
 $type = $_POST['type'];
@@ -47,7 +47,7 @@ if (empty($type)) {
 }
 
 if (!Core::is_library_item($object_type) && $object_type != 'share') {
-    debug_event('edit.server.php', 'Type `' . $type . '` is not based on an item library.', '3');
+    debug_event('edit.server', 'Type `' . $type . '` is not based on an item library.', '3');
 
     return false;
 }
@@ -59,7 +59,7 @@ $level = '50';
 if ($libitem->get_user_owner() == Core::get_global('user')->id) {
     $level = '25';
 }
-if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'show_edit_playlist') {
+if (Core::get_request('action') == 'show_edit_playlist') {
     $level = '25';
 }
 
@@ -93,7 +93,7 @@ switch ($action) {
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {
             foreach ($data as $key => $value) {
-                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
+                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities((string) scrub_in($value));
             }
 
             return $data;

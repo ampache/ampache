@@ -91,7 +91,7 @@ class Bookmark extends database_object
                 $sql = "DELETE FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('bookmark', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event('bookmark.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 3);
             }
         } else {
             foreach ($types as $type) {

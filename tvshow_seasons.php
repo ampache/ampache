@@ -49,7 +49,7 @@ switch ($action) {
 
         $tvshow_season = new TVShow_Season($_REQUEST['tvshow_season_id']);
         if (!Catalog::can_remove($tvshow_season)) {
-            debug_event('tvshow_season', 'Unauthorized to remove the tvshow `.' . $tvshow_season->id . '`.', 1);
+            debug_event('tvshow_seasons', 'Unauthorized to remove the tvshow `.' . $tvshow_season->id . '`.', 1);
             UI::access_denied();
 
             return false;

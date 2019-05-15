@@ -118,7 +118,7 @@ switch ($action) {
     case 'create_db':
         $new_user = '';
         $new_pass = '';
-        if ($_POST['db_user'] == 'create_db_user') {
+        if (Core::get_post('db_user') == 'create_db_user') {
             $new_user = $_POST['db_username'];
             $new_pass = $_POST['db_password'];
 

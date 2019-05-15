@@ -226,7 +226,7 @@ function sort_move_file($song,$fullname) {
                 echo "\n";
             }
             else {
-                debug_event('mkdir',"Creating $path directory",'5');
+                debug_event('sort_files.inc', "Creating $path directory", 5);
                 $results = mkdir($path);
                 if (!$results) {
                     printf (T_('Error: Unable to create %s move failed'), $path);
@@ -252,14 +252,14 @@ function sort_move_file($song,$fullname) {
 
         /* Check for file existance */
         if (file_exists($fullname)) {
-            debug_event('file exists','Error: $fullname already exists','1');
+            debug_event('sort_files.inc', 'Error: $fullname already exists', 1);
             printf (T_('Error: %s already exists'), $fullname);
             echo "\n";
             return false;
         }
 
         $results = copy($song->file,$fullname);
-        debug_event('copy','Copied ' . $song->file . ' to ' . $fullname,'5');
+        debug_event('sort_files.inc', 'Copied ' . $song->file . ' to ' . $fullname, 5);
 
         /* Look for the folder art and copy that as well */
         if (!AmpConfig::get('album_art_preferred_filename') OR strstr(AmpConfig::get('album_art_preferred_filename'),"%")) {
@@ -271,7 +271,7 @@ function sort_move_file($song,$fullname) {
             $old_art     = $old_dir . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
         }
 
-        debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');
+        debug_event('sort_files.inc', 'Copied ' . $old_art . ' to ' . $folder_art, 5);
         if (copy($old_art, $folder_art) === false) {
             throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
         }

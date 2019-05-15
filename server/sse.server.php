@@ -65,7 +65,7 @@ switch ($worker) {
             flush();
         }
 
-        Catalog::process_action(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS), $catalogs, $options);
+        Catalog::process_action(Core::get_request('action'), $catalogs, $options);
 
         if (defined('SSE_OUTPUT')) {
             echo "data: toggleVisible('ajax-loading')\n\n";

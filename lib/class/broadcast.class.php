@@ -233,6 +233,8 @@ class Broadcast extends database_object implements library_item
      */
     public function search_childrens($name)
     {
+        debug_event('broadcast.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 

@@ -68,7 +68,7 @@ THREE.ConvolutionShader = {
 
 	].join("\n"),
 
-	buildKernel: function ( sigma ) {
+	buildKernel( sigma ) {
 
 		// We lop off the sqrt(2 * pi) * sigma term, since we're going to normalize anyway.
 

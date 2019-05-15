@@ -57,7 +57,7 @@ switch ($action) {
     break;
     case 'show_debug':
         $configuration = AmpConfig::get_all();
-        if ($_REQUEST['autoupdate'] == 'force') {
+        if (Core::get_request('autoupdate') == 'force') {
             $version = AutoUpdate::get_latest_version(true);
         }
         require_once AmpConfig::get('prefix') . UI::find_template('show_debug.inc.php');

@@ -49,7 +49,7 @@ switch ($action) {
 
         $tvshow = new TVShow($_REQUEST['tvshow_id']);
         if (!Catalog::can_remove($tvshow)) {
-            debug_event('tvshow', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
+            debug_event('tvshows', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
             UI::access_denied();
 
             return false;

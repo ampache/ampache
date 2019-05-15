@@ -96,7 +96,7 @@ class Useractivity extends database_object
                 $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('userflag', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event('useractivity.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -127,7 +127,7 @@ class Useractivity extends database_object
             $mbid_song   = $song->mbid;
             $mbid_artist = $song->artist_mbid;
             $mbid_album  = $song->album_mbid;
-            debug_event('post_activity', 'Inserting details for ' . $name_song . ' - ' . $name_artist . ' - ' . $name_album . '.', 5);
+            debug_event('useractivity.class', 'Inserting details for ' . $name_song . ' - ' . $name_artist . ' - ' . $name_album . '.', 5);
 
             if ($name_song and $name_artist and $name_album) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
@@ -144,7 +144,7 @@ class Useractivity extends database_object
             $artist->format();
             $name_artist = $artist->f_name;
             $mbid_artist = $artist->mbid;
-            debug_event('post_activity', 'Inserting details for ' . $name_artist . '.', 5);
+            debug_event('useractivity.class', 'Inserting details for ' . $name_artist . '.', 5);
 
             if ($name_artist) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_artist, $mbid_artist));
@@ -163,10 +163,10 @@ class Useractivity extends database_object
             $name_album   = $album->f_title;
             $mbid_album   = $album->mbid;
             $mbid_artist  = $album->mbid_group;
-            debug_event('post_activity', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
+            debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
 
             if ($name_artist and $name_album) {
-                debug_event('post_activity', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
+                debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
 
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_artist, $name_album, $mbid_artist, $mbid_album));
             }
@@ -251,21 +251,23 @@ class Useractivity extends database_object
         if (!AmpConfig::get('userflags') || !$this->id) {
             return false;
         }
-        
+
         $user = new User($this->user);
         $user->format();
         $libitem = new $this->object_type($this->object_id);
         $libitem->format();
-        
+
         echo '<div>';
-        $fdate = date('m/d/Y H:i:s', $this->activity_date);
+        $fdate = date('Y/m/d H:i:s', $this->activity_date);
+        /*
         echo '<div class="shoutbox-date">';
         if ($user->f_avatar_mini) {
             echo '<a href="' . $user->link . '">' . $user->f_avatar_mini . '</a> ';
         }
-        echo $fdate;
-        echo '</div>';
-                      
+         */
+        echo $fdate . ' ';
+        //echo '</div>';
+
         $descr = $user->f_link . ' ';
         switch ($this->action) {
             case 'shout':
@@ -288,15 +290,17 @@ class Useractivity extends database_object
                 break;
         }
         $descr .= ' ' . $libitem->f_link;
-        echo '<div>';
+        //echo '<div>';
         echo $descr;
-        
+
+        /*
         if (Core::is_library_item($this->object_type)) {
             echo ' ';
             $libitem->display_art(10);
         }
         echo '</div>';
-        
-        echo '</div><br />';
+         */
+
+        echo '</div>';//<br />';
     } // show
 } //end useractivity class

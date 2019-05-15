@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 session_start();
 
-$object_type = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+$object_type = Core::get_request('action');
 if (!Core::is_library_item($object_type)) {
     return UI::access_denied();
 }

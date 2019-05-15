@@ -102,6 +102,7 @@ function send_zip($name, $media_files)
  * Check that an object type is allowed to be zipped.
  *
  * @param string $object_type
+ * @return boolean
  */
 function check_can_zip($object_type)
 {

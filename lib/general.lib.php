@@ -46,7 +46,7 @@ function set_memory_limit($new_limit)
  * or will use a random length between 14-20
  *
  * @param integer $length (optional)
- * @return string $password
+ * @return string
  */
 function generate_password($length = null)
 {
@@ -65,6 +65,8 @@ function generate_password($length = null)
 /**
  * scrub_in
  * Run on inputs, stuff that might get stuck in our db
+ * @param string|array $input
+ * @return string|array
  */
 function scrub_in($input)
 {
@@ -85,6 +87,8 @@ function scrub_in($input)
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo
  * This is the inverse of the scrub_in function
+ * @param string $string
+ * @return string
  */
 function scrub_out($string)
 {
@@ -94,6 +98,8 @@ function scrub_out($string)
 /**
  * unhtmlentities
  * Undoes htmlentities()
+ * @param string $string
+ * @return string
  */
 function unhtmlentities($string)
 {
@@ -104,6 +110,7 @@ function unhtmlentities($string)
  * scrub_arg
  *
  * This function behaves like escapeshellarg, but isn't broken
+ * @return string
  */
 function scrub_arg($arg)
 {
@@ -146,14 +153,15 @@ function invert_bool($value)
  * different languages installed, this means that all you have to do
  * is drop one in and it will show up on the context menu. It returns
  * in the form of an array of names
+ * @return array
  */
 function get_languages()
 {
     /* Open the locale directory */
-    $handle    = @opendir(AmpConfig::get('prefix') . '/locale');
+    $handle    = opendir(AmpConfig::get('prefix') . '/locale');
 
     if (!is_resource($handle)) {
-        debug_event('language', 'Error unable to open locale directory', '1');
+        debug_event('general.lib', 'Error unable to open locale directory', '1');
     }
 
     $results = array();
@@ -171,6 +179,7 @@ function get_languages()
                 case 'da_DK': $name = 'Dansk'; break; /* Danish */
                 case 'de_DE': $name = 'Deutsch'; break; /* German */
                 case 'el_GR': $name = 'Greek'; break; /* Greek */
+                case 'en_AU': $name = 'English (AU)'; break; /* English */
                 case 'en_GB': $name = 'English (UK)'; break; /* English */
                 case 'en_US': $name = 'English (US)'; break; /* English */
                 case 'es_AR': $name = 'Espa&#241;ol (AR)'; break; /* Spanish */
@@ -229,7 +238,8 @@ function get_languages()
 
 /**
  * is_rtl
- * This checks whether to be a rtl language.
+ * This checks whether to be a Right-To-Left language.
+ * @return boolean
  */
 function is_rtl($locale)
 {
@@ -239,8 +249,9 @@ function is_rtl($locale)
 /**
  * translate_pattern_code
  * This just contains a keyed array which it checks against to give you the
- * 'tag' name that said pattern code corrasponds to. It returns false if nothing
+ * 'tag' name that said pattern code corresponds to. It returns false if nothing
  * is found.
+ * @return string|false
  */
 function translate_pattern_code($code)
 {
@@ -266,6 +277,7 @@ function translate_pattern_code($code)
  *
  * This takes an array of results and re-generates the config file
  * this is used by the installer and by the admin/system page
+ * @return string
  */
 function generate_config($current)
 {
@@ -375,8 +387,7 @@ function get_current_path()
 function get_web_path()
 {
     $root = get_current_path();
-    //$root = rtrim(dirname($root),"/\\");
-    $root = preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
+    $path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
 
-    return $root;
+    return $path;
 }

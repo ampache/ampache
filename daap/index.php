@@ -29,13 +29,13 @@ if (!AmpConfig::get('daap_backend')) {
     return false;
 }
 
-$action = $_GET['action'];
+$action = Core::get_get('action');
 
 $headers = apache_request_headers();
 //$daapAccessIndex = $headers['Client-DAAP-Access-Index'];
 //$daapVersion = $headers['Client-DAAP-Version'];
 //$daapValidation = $headers['Client-DAAP-Validation']; // That's header hash, we don't care about it (only required by iTunes >= 7.0)
-debug_event('daap', 'Request headers: ' . print_r($headers, true), '5');
+debug_event('daap/index', 'Request headers: ' . print_r($headers, true), '5');
 
 // Get the list of possible methods for the daap API
 $methods = get_class_methods('daap_api');

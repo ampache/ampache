@@ -238,7 +238,7 @@ abstract class Catalog extends database_object
 
         if (!$include) {
             /* Throw Error Here */
-            debug_event('catalog', 'Unable to load ' . $type . ' catalog type', '2');
+            debug_event('catalog.class', 'Unable to load ' . $type . ' catalog type', '2');
 
             return false;
         } // include
@@ -250,7 +250,7 @@ abstract class Catalog extends database_object
                 $catalog = new $class_name();
             }
             if (!($catalog instanceof Catalog)) {
-                debug_event('catalog', $type . ' not an instance of Catalog abstract, unable to load', '1');
+                debug_event('catalog.class', $type . ' not an instance of Catalog abstract, unable to load', '1');
 
                 return false;
             }
@@ -318,7 +318,7 @@ abstract class Catalog extends database_object
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
-            debug_event('catalog', 'Error: Unable to read catalog types directory', '1');
+            debug_event('catalog.class', 'Error: Unable to read catalog types directory', '1');
 
             return array();
         }
@@ -331,13 +331,13 @@ abstract class Catalog extends database_object
             }
             /* Make sure it is a dir */
             if (! is_dir($basedir . '/' . $file)) {
-                debug_event('catalog', $file . ' is not a directory.', 3);
+                debug_event('catalog.class', $file . ' is not a directory.', 3);
                 continue;
             }
 
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $file . '.catalog.php')) {
-                debug_event('catalog', 'Missing class for ' . $file, 3);
+                debug_event('catalog.class', 'Missing class for ' . $file, 3);
                 continue;
             }
 
@@ -650,7 +650,7 @@ abstract class Catalog extends database_object
 
             if (!$insert_id) {
                 AmpError::add('general', T_('Catalog Insert Failed check debug logs'));
-                debug_event('catalog', 'Insert failed: ' . json_encode($data), 2);
+                debug_event('catalog.class', 'Insert failed: ' . json_encode($data), 2);
 
                 return 0;
             }
@@ -801,8 +801,8 @@ abstract class Catalog extends database_object
         $sql        = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['album'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['album'];
         }
 
         return array_reverse($results);
@@ -826,8 +826,8 @@ abstract class Catalog extends database_object
         $sql .= 'WHERE `video`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -898,8 +898,8 @@ abstract class Catalog extends database_object
         $sql .= 'WHERE `video`.`catalog` = ?';
 
         $db_results = Dba::read($sql, array($this->id));
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -942,8 +942,8 @@ abstract class Catalog extends database_object
         $sql        = 'SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `song`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['artist'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['artist'];
         }
 
         return array_reverse($results);
@@ -984,8 +984,8 @@ abstract class Catalog extends database_object
         $results    = array();
         $db_results = Dba::read($sql);
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = Artist::construct_from_array($r);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = Artist::construct_from_array($row);
         }
 
         return $results;
@@ -1051,8 +1051,8 @@ abstract class Catalog extends database_object
 
         $db_results = Dba::read($sql);
         $results    = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -1092,8 +1092,8 @@ abstract class Catalog extends database_object
 
         $db_results = Dba::read($sql);
         $results    = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -1112,8 +1112,8 @@ abstract class Catalog extends database_object
         $sql = 'SELECT `podcast`.`id` FROM `podcast` ';
         $sql .= 'WHERE `podcast`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -1157,8 +1157,8 @@ abstract class Catalog extends database_object
                 'WHERE `podcast`.`catalog` = ? ' .
                 'ORDER BY `podcast_episode`.`pubdate` DESC';
         $db_results = Dba::read($sql, array($this->id));
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -1194,7 +1194,7 @@ abstract class Catalog extends database_object
      */
     public function gather_art_item($type, $id)
     {
-        debug_event('gather_art', 'Gathering art for ' . $type . '/' . $id . '...', 5);
+        debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 5);
 
         // Should be more generic !
         if ($type == 'video') {
@@ -1250,9 +1250,9 @@ abstract class Catalog extends database_object
                     break;
                 }
             } elseif ($result === true) {
-                debug_event('gather_art', 'Database already has image.', 3);
+                debug_event('catalog.class', 'Database already has image.', 3);
             } else {
-                debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
+                debug_event('catalog.class', 'Image less than 5 chars, not inserting', 3);
             }
         }
 
@@ -1279,7 +1279,7 @@ abstract class Catalog extends database_object
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
         if (!count($art_order)) {
-            debug_event('gather_art', 'art_order not set, Catalog::gather_art aborting', 3);
+            debug_event('catalog.class', 'art_order not set, Catalog::gather_art aborting', 3);
 
             return true;
         }
@@ -1372,7 +1372,7 @@ abstract class Catalog extends database_object
         $albums = $this->get_album_ids();
 
         echo "Starting Dump Album Art...\n";
-        $i = 0;
+        $count = 0;
 
         // Run through them and get the art!
         foreach ($albums as $album_id) {
@@ -1419,13 +1419,13 @@ abstract class Catalog extends database_object
                         fwrite($meta_handle, $string);
                         fclose($meta_handle);
                     } // end metadata
-                    $i++;
-                    if (!($i % 100)) {
-                        echo "Written: $i. . .\n";
-                        debug_event('art_write', "$album->name Art written to $file", '5');
+                    $count++;
+                    if (!($count % 100)) {
+                        echo "Written: $count. . .\n";
+                        debug_event('catalog.class', "$album->name Art written to $file", '5');
                     }
                 } else {
-                    debug_event('art_write', "Unable to open $file for writing", 5);
+                    debug_event('catalog.class', "Unable to open $file for writing", 5);
                     echo "Error: unable to open file for writing [$file]\n";
                 }
             }
@@ -1543,7 +1543,7 @@ abstract class Catalog extends database_object
      */
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern='', $rename_pattern='')
     {
-        debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
+        debug_event('catalog.class', 'Reading tags from ' . $media->file, 5);
 
         $catalog        = Catalog::create_from_id($media->catalog);
 
@@ -1642,7 +1642,7 @@ abstract class Catalog extends database_object
 
         $info = Song::compare_song_information($song, $new_song);
         if ($info['change']) {
-            debug_event('update', "$song->file : differences found, updating database", 5);
+            debug_event('catalog.class', "$song->file : differences found, updating database", 5);
 
             // Duplicate arts if required
             if ($song->artist != $new_song->artist) {
@@ -1671,14 +1671,14 @@ abstract class Catalog extends database_object
             // Refine our reference
             //$song = $new_song;
         } else {
-            debug_event('update', "$song->file : no differences found", 5);
+            debug_event('catalog.class', "$song->file : no differences found", 5);
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
         if ($song->id && array_key_exists('rating', $results) && is_array($results['rating'])) {
             // For each user's ratings, call the function
             foreach ($results['rating'] as $user => $rating) {
-                debug_event('Rating', "Updating rating for Song " . $song->id . " to $rating for user $user", 5);
+                debug_event('catalog.class', "Updating rating for Song " . $song->id . " to $rating for user $user", 5);
                 $o_rating = new Rating($song->id, 'song');
                 $o_rating->set_rating($rating, $user);
             }
@@ -1717,7 +1717,7 @@ abstract class Catalog extends database_object
 
         $info = Video::compare_video_information($video, $new_video);
         if ($info['change']) {
-            debug_event('update', $video->file . " : differences found, updating database", 5);
+            debug_event('catalog.class', $video->file . " : differences found, updating database", 5);
 
             $video->update_video($video->id, $new_video);
 
@@ -1725,7 +1725,7 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
             }
         } else {
-            debug_event('update', $video->file . " : no differences found", 5);
+            debug_event('catalog.class', $video->file . " : no differences found", 5);
         }
 
         return $info;
@@ -1834,7 +1834,7 @@ abstract class Catalog extends database_object
         // We don't want to run out of time
         set_time_limit(0);
 
-        debug_event('clean', 'Starting on ' . $this->name, 5);
+        debug_event('catalog.class', 'Starting clean on ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
             require AmpConfig::get('prefix') . UI::find_template('show_clean_catalog.inc.php');
@@ -1845,7 +1845,7 @@ abstract class Catalog extends database_object
         $dead_total = $this->clean_catalog_proc();
         self::clean_empty_albums();
         
-        debug_event('clean', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
+        debug_event('catalog.class', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
@@ -1891,7 +1891,7 @@ abstract class Catalog extends database_object
      */
     public static function garbage_collection()
     {
-        debug_event('catalog', 'Database cleanup started', 5);
+        debug_event('catalog.class', 'Database cleanup started', 5);
         Song::garbage_collection();
         Album::garbage_collection();
         Artist::garbage_collection();
@@ -1909,7 +1909,7 @@ abstract class Catalog extends database_object
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         \Lib\Metadata\Repository\Metadata::garbage_collection();
         \Lib\Metadata\Repository\MetadataField::garbage_collection();
-        debug_event('catalog', 'Database cleanup ended', 5);
+        debug_event('catalog.class', 'Database cleanup ended', 5);
     }
 
     /**
@@ -1955,6 +1955,7 @@ abstract class Catalog extends database_object
      */
     public static function trim_slashed_list($string)
     {
+        $first = '';
         if ($string) {
             $items = explode("\x00", $string);
             $first = trim($items[0]);
@@ -1968,9 +1969,6 @@ abstract class Catalog extends database_object
                     $first = trim($items[0]);
                 }
             }
-        }
-        if ($first == '') {
-            $first = null;
         }
 
         return $first;
@@ -2052,7 +2050,7 @@ abstract class Catalog extends database_object
                             $file = str_replace("/", DIRECTORY_SEPARATOR, $file);
                         }
                     }
-                    debug_event('catalog', 'Add file ' . $file . ' to playlist.', '5');
+                    debug_event('catalog.class', 'Add file ' . $file . ' to playlist.', '5');
 
                     // First, try to found the file as absolute path
                     $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
@@ -2080,7 +2078,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        debug_event('import_playlist', "Parsed " . $playlist . ", found " . count($songs) . " songs", 5);
+        debug_event('catalog.class', "import_playlist Parsed " . $playlist . ", found " . count($songs) . " songs", 5);
 
         if (count($songs)) {
             $name        = $pinfo['extension'] . " - " . $pinfo['filename'];

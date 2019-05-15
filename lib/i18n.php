@@ -41,6 +41,12 @@ function load_gettext()
     $t->register();
 } // load_gettext
 
+/*
+ * T_
+ * Translate string
+ * @param string $msgid
+ * @return string
+ */
 function T_($msgid)
 {
     if (function_exists('__')) {

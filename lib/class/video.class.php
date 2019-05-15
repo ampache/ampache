@@ -340,6 +340,8 @@ class Video extends database_object implements media, library_item
      */
     public function search_childrens($name)
     {
+        debug_event('video.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
@@ -1028,7 +1030,7 @@ class Video extends database_object implements media, library_item
                 Useractivity::garbage_collection('video', $this->id);
             }
         } else {
-            debug_event('video', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+            debug_event('video.class', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
         }
 
         return $deleted;

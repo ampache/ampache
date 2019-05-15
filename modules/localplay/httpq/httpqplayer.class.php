@@ -37,11 +37,11 @@ class HttpQPlayer
      * This is the constructor, it defaults to localhost
      * with port 4800
      */
-    public function __construct($h = "localhost", $pw = "", $p = 4800)
+    public function __construct($host = "localhost", $password = "", $port = 4800)
     {
-        $this->host     = $h;
-        $this->port     = $p;
-        $this->password = $pw;
+        $this->host     = $host;
+        $this->port     = $port;
+        $this->password = $password;
     } // HttpQPlayer
 
     /**
@@ -329,8 +329,8 @@ class HttpQPlayer
     {
 
         // Convert it to base 255
-        $value   = $value * 2.55;
-        $args    = array('level' => $value);
+        $volume  = $value * 2.55;
+        $args    = array('level' => $volume);
         $results = $this->sendCommand('setvolume', $args);
 
         if ($results == '0') {
@@ -422,10 +422,10 @@ class HttpQPlayer
      */
     private function sendCommand($cmd, $args)
     {
-        $fp = fsockopen($this->host, $this->port, $errno, $errstr);
+        $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
 
-        if (!$fp) {
-            debug_event('httpq', "HttpQPlayer: $errstr ($errno)", '1');
+        if (!$fsock) {
+            debug_event('httpqplayer.class', "HttpQPlayer: $errstr ($errno)", '1');
 
             return null;
         }
@@ -439,13 +439,13 @@ class HttpQPlayer
         }
 
         $msg = $msg . " HTTP/1.0\r\n\r\n";
-        fputs($fp, $msg);
+        fputs($fsock, $msg);
         $data = '';
 
-        while (!feof($fp)) {
-            $data .= fgets($fp);
+        while (!feof($fsock)) {
+            $data .= fgets($fsock);
         }
-        fclose($fp);
+        fclose($fsock);
 
         // Explode the results by line break and take 4th line (results)
         $data = explode("\n", $data);
@@ -455,4 +455,3 @@ class HttpQPlayer
         return $result;
     } // sendCommand
 } // End HttpQPlayer Class
-;

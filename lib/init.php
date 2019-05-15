@@ -46,7 +46,7 @@ if (!file_exists($configfile)) {
     $link = $path . '/install.php';
 } else {
     // Make sure the config file is set up and parsable
-    $results = @parse_ini_file($configfile);
+    $results = parse_ini_file($configfile);
 
     if (!count($results)) {
         $link = $path . '/test.php?action=config';
@@ -203,7 +203,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user']->fullname = $auth['fullname'];
             $GLOBALS['user']->access   = (int) ($auth['access']);
         }
-        if (!$GLOBALS['user']->id and !AmpConfig::get('demo_mode')) {
+        if (!Core::get_global('user')->id and !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());
 
             return false;

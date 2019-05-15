@@ -101,7 +101,7 @@ class AmpacheStreamHits
         $current_total = $graph->get_total_hits($this->user_id, $start_date, $end_date);
         $next_total += $current_total;
         
-        debug_event('stream_control_bandwidth', 'Next stream hits will be ' . $next_total . ' / ' . $this->hits_max, 3);
+        debug_event('streamhits.plugin', 'Next stream hits will be ' . $next_total . ' / ' . $this->hits_max, 3);
         
         return ($next_total <= $this->hits_max);
     }

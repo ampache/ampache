@@ -22,8 +22,8 @@
 
 require_once 'lib/init.php';
 
-if (!filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
-    debug_event("stream.php", "Asked without action. Exiting...", 5);
+if (!Core::get_request('action')) {
+    debug_event('stream', "Asked without action. Exiting...", 5);
 
     return false;
 }
@@ -40,7 +40,7 @@ if (!defined('NO_SESSION')) {
 $media_ids = array();
 $web_path  = AmpConfig::get('web_path');
 
-debug_event("stream.php", "Asked for {" . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . "}.", 5);
+debug_event('stream', "Asked for {" . Core::get_request('action') . "}.", 5);
 
 $action = Core::get_request('action');
 
@@ -114,8 +114,8 @@ switch ($action) {
         if ($_REQUEST['genre'][0] != '-1') {
             $matchlist['genre'] = $_REQUEST['genre'];
         }
-        if ($_REQUEST['catalog'] != '-1') {
-            $matchlist['catalog'] = $_REQUEST['catalog'];
+        if (Core::get_request('catalog') != '-1') {
+            $matchlist['catalog'] = Core::get_request('catalog');
         }
         /* Setup the options array */
         $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit' => $_REQUEST['size_limit']);
@@ -170,12 +170,12 @@ switch ($action) {
     break;
 }
 
-debug_event('stream.php', 'Stream Type: ' . $stream_type . ' Media IDs: ' . json_encode($media_ids), 5);
+debug_event('stream', 'Stream Type: ' . $stream_type . ' Media IDs: ' . json_encode($media_ids), 5);
 
 if (count($media_ids) || isset($urls)) {
     if ($stream_type != 'democratic') {
         if (!User::stream_control($media_ids)) {
-            debug_event('UI::access_denied', 'Stream control failed for user ' . Core::get_global('user')->username, 3);
+            debug_event('stream', 'Stream control failed for user ' . Core::get_global('user')->username, 3);
             UI::access_denied();
 
             return false;

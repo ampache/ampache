@@ -369,11 +369,11 @@ $_SESSION['login'] = false;
                         if (User::is_registered()) {
                             require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $GLOBALS['user']->id; ?>"><?php echo $GLOBALS['user']->fullname; ?></a>
+                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
                         <?php
                             if (AmpConfig::get('sociable')) {
                                 ?>
-                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs($GLOBALS['user']->id, true)); ?>)</a>
+                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs(Core::get_global('user')->id, true)); ?>)</a>
                         <?php
                             } ?>
                             <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
@@ -524,7 +524,7 @@ $_SESSION['login'] = false;
                             AutoUpdate::show_new_version();
                             echo '<br />';
                         }
-                        $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
+                        $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
 
                         if (AmpConfig::get('int_config_version') < AmpConfig::get('config_version')) {
                             ?>

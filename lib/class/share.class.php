@@ -94,7 +94,7 @@ class Share extends database_object
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $secret     = '';
-        for ($i = 0; $i < $length; $i++) {
+        for ($count = 0; $count < $length; $count++) {
             $secret .= $characters[rand(0, strlen($characters) - 1)];
         }
 
@@ -151,7 +151,7 @@ class Share extends database_object
                     }
                 }
             } catch (Exception $e) {
-                debug_event('share', 'Share plugin error: ' . $e->getMessage(), '1');
+                debug_event('share.class', 'Share plugin error: ' . $e->getMessage(), '1');
             }
         }
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
@@ -265,43 +265,43 @@ class Share extends database_object
     public function is_valid($secret, $action)
     {
         if (!$this->id) {
-            debug_event('share', 'Access Denied: Invalid share.', '3');
+            debug_event('share.class', 'Access Denied: Invalid share.', '3');
 
             return false;
         }
 
         if (!AmpConfig::get('share')) {
-            debug_event('share', 'Access Denied: share feature disabled.', '3');
+            debug_event('share.class', 'Access Denied: share feature disabled.', '3');
 
             return false;
         }
 
         if ($this->expire_days > 0 && ($this->creation_date + ($this->expire_days * 86400)) < time()) {
-            debug_event('share', 'Access Denied: share expired.', '3');
+            debug_event('share.class', 'Access Denied: share expired.', '3');
 
             return false;
         }
 
         if ($this->max_counter > 0 && $this->counter >= $this->max_counter) {
-            debug_event('share', 'Access Denied: max counter reached.', '3');
+            debug_event('share.class', 'Access Denied: max counter reached.', '3');
 
             return false;
         }
 
         if (!empty($this->secret) && $secret != $this->secret) {
-            debug_event('share', 'Access Denied: secret requires to access share ' . $this->id . '.', '3');
+            debug_event('share.class', 'Access Denied: secret requires to access share ' . $this->id . '.', '3');
 
             return false;
         }
 
         if ($action == 'download' && (!AmpConfig::get('download') || !$this->allow_download)) {
-            debug_event('share', 'Access Denied: download unauthorized.', '3');
+            debug_event('share.class', 'Access Denied: download unauthorized.', '3');
 
             return false;
         }
 
         if ($action == 'stream' && !$this->allow_stream) {
-            debug_event('share', 'Access Denied: stream unauthorized.', '3');
+            debug_event('share.class', 'Access Denied: stream unauthorized.', '3');
 
             return false;
         }

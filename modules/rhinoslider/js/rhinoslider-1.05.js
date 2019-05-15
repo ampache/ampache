@@ -10,16 +10,16 @@
 
 	$.extend($.easing, {
 		def: "out",
-		out: function (none, currentTime, startValue, endValue, totalTime) {
+		out(none, currentTime, startValue, endValue, totalTime) {
 			return -endValue * (currentTime /= totalTime) * (currentTime - 2) + startValue;
 		},
-		kick: function (none, currentTime, startValue, endValue, totalTime) {
+		kick(none, currentTime, startValue, endValue, totalTime) {
 			if ((currentTime /= totalTime / 2) < 1) {
 				return endValue / 2 * Math.pow(2, 10 * (currentTime - 1)) + startValue;
 			}
 			return endValue / 2 * (-Math.pow(2, -10 * --currentTime) + 2) + startValue;
 		},
-		shuffle: function (none, currentTime, startValue, endValue, totalTime) {
+		shuffle(none, currentTime, startValue, endValue, totalTime) {
 			if ((currentTime /= totalTime / 2) < 1) {
 				return endValue / 2 * currentTime * currentTime * currentTime * currentTime * currentTime + startValue;
 			}
@@ -749,46 +749,46 @@
 		styles: "position,top,right,bottom,left,margin-top,margin-right,margin-bottom,margin-left,width,height",
 		//callbacks
 		//the function, which is started bofore anything is done by this script
-		callBeforeInit: function () {
+		callBeforeInit() {
 			return false;
 		},
 		//the function, which is started when the slider is ready (only once)
-		callBackInit: function () {
+		callBackInit() {
 			return false;
 		},
 		//the function, which is started before the blending-effect
-		callBeforeNext: function () {
+		callBeforeNext() {
 			return false;
 		},
 		//the function, which is started before the blending-effect
-		callBeforePrev: function () {
+		callBeforePrev() {
 			return false;
 		},
 		//the function, which is started after the blending-effect
-		callBackNext: function () {
+		callBackNext() {
 			return false;
 		},
 		//the function, which is started after the blending-effect
-		callBackPrev: function () {
+		callBackPrev() {
 			return false;
 		},
 		//the function, which is started if the autoplay intervall starts
-		callBackPlay: function () {
+		callBackPlay() {
 			return false;
 		},
 		//the function, which is started if the autoplay intervall ends
-		callBackPause: function () {
+		callBackPause() {
 			return false;
 		},
 		//the function, which is started within resetElements
-		additionalResets: function () {
+		additionalResets() {
 			return false;
 		}
 	};
 
 	$.fn.rhinoslider.effects = {
 		//options: direction, animateActive, easing
-		slide: function ($slider, params, callback) {
+		slide($slider, params, callback) {
 			var vars = $slider.data("slider:vars");
 			var settings = params.settings;
 			var direction = params.direction;
@@ -862,7 +862,7 @@
 	};
 
 	$.fn.rhinoslider.preparations = {
-		slide: function ($slider, settings, vars) {
+		slide($slider, settings, vars) {
 			vars.items.css("overflow", "hidden");
 			$slider.css("overflow", "hidden");
 		}

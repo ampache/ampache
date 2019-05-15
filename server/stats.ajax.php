@@ -61,7 +61,7 @@ switch ($action) {
                 }
             }
         } else {
-            debug_event('stats.ajax.php', 'Geolocation not enabled for the user.', 3);
+            debug_event('stats.ajax', 'Geolocation not enabled for the user.', 3);
         }
         break;
     default:

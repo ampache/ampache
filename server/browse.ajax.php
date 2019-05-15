@@ -39,7 +39,7 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
-debug_event('browse.ajax.php', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
+debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', '5');
 
 $browse = new Browse($browse_id);
 
@@ -77,7 +77,7 @@ switch ($action) {
         if ($_REQUEST['catalog_key'] || $_SESSION['catalog'] != 0) {
             $browse->set_filter('catalog', $_REQUEST['catalog_key']);
             $_SESSION['catalog'] = $_REQUEST['catalog_key'];
-        } elseif ($_REQUEST['catalog_key'] == 0) {
+        } elseif ((int) Core::get_request('catalog_key') == 0) {
             $browse->set_filter('catalog', null);
             unset($_SESSION['catalog']);
         }

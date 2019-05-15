@@ -5,7 +5,7 @@
 //Handles Audio Analysis + publishes audio data
 //Handles Tap BPM
 
-var AudioHandler = function() {
+var AudioHandler = (function() {
 
     //PUBLIC/////////////
     var audioContext = new AudioContext();
@@ -385,7 +385,9 @@ var AudioHandler = function() {
         bpmTime = (new Date().getTime() - bpmStart)/msecsAvg;
         //trace(bpmStart);
 
-        if (ControlsHandler.audioParams.showDebug) debugDraw();
+        if (ControlsHandler.audioParams.showDebug) {
+            debugDraw();
+        }
     }
 
     function debugDraw(){
@@ -537,4 +539,4 @@ var AudioHandler = function() {
 
     };
 
-}();
+}());

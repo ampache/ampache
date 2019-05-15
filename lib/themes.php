@@ -26,6 +26,7 @@
  * this looks in /themes and pulls all of the
  * theme.cfg.php files it can find and returns an
  * array of the results
+ * @return array
  */
 function get_themes()
 {
@@ -33,15 +34,15 @@ function get_themes()
     $handle = opendir(AmpConfig::get('prefix') . '/themes');
 
     if (!is_resource($handle)) {
-        debug_event('theme', 'Failed to open /themes directory', 2);
+        debug_event('themes', 'Failed to open /themes directory', 2);
 
         return array();
     }
 
     $results = array();
     while (($file = readdir($handle)) !== false) {
-        if ((string) $file !== '.' or (string) $file !== '..') {
-            debug_event('theme', "Checking $file", 5);
+        if ((string) $file !== '.' && (string) $file !== '..') {
+            debug_event('themes', "Checking $file", 5);
             $cfg = get_theme($file);
             if ($cfg !== null) {
                 $results[$cfg['name']] = $cfg;
@@ -79,8 +80,8 @@ function get_theme($name)
         $results['path'] = $name;
         $results['base'] = explode(',', $results['base']);
         $nbbases         = count($results['base']);
-        for ($i = 0; $i < $nbbases; $i++) {
-            $results['base'][$i] = explode('|', $results['base'][$i]);
+        for ($count = 0; $count < $nbbases; $count++) {
+            $results['base'][$count] = explode('|', $results['base'][$count]);
         }
         $results['colors'] = explode(',', $results['colors']);
     } else {
@@ -106,6 +107,7 @@ function get_theme_author($theme_name)
 /**
  * @function theme_exists
  * @discussion this function checks to make sure that a theme actually exists
+ * @return boolean
  */
 function theme_exists($theme_name)
 {

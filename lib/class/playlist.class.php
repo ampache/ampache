@@ -136,7 +136,8 @@ class Playlist extends playlist_object
         }
 
         // Search for smartplaylists
-        $sql .= "SELECT CONCAT('smart_', `id`) AS id FROM `search`";
+        $sql    = "SELECT CONCAT('smart_', `id`) AS id FROM `search`";
+        $params = array();
         if ($user_id > -1) {
             $sql .= ' WHERE `user` = ?';
             $params[] = $user_id;
@@ -253,8 +254,8 @@ class Playlist extends playlist_object
         $sql        = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
         $db_results = Dba::read($sql, array($this->id));
 
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['object_id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['object_id'];
         } // end while
 
         return $results;
@@ -438,18 +439,18 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, array($this->id));
         $data       = Dba::fetch_assoc($db_results);
         $base_track = $data['track'] ?: 0;
-        debug_event('add_medias', 'Track number: ' . $base_track, '5');
+        debug_event('playlist.class', 'Adding Media; Track number: ' . $base_track, '5');
 
-        $i = 0;
+        $count = 0;
         foreach ($medias as $data) {
             $media = new $data['object_type']($data['object_id']);
 
-            // Based on the ordered prop we use track + base or just $i++
+            // Based on the ordered prop we use track + base or just $count++
             if (!$ordered && $data['object_type'] == 'song') {
                 $track    = $media->track + $base_track;
             } else {
-                $i++;
-                $track = $base_track + $i;
+                $count++;
+                $track = $base_track + $count;
             }
 
             /* Don't insert dead media */
@@ -558,15 +559,15 @@ class Playlist extends playlist_object
                      B.`track` ASC";
         $db_results = Dba::query($sql, array($this->id));
 
-        $i       = 1;
+        $count   = 1;
         $results = array();
 
-        while ($r = Dba::fetch_assoc($db_results)) {
+        while ($row = Dba::fetch_assoc($db_results)) {
             $new_data               = array();
-            $new_data['id']         = $r['id'];
-            $new_data['track']      = $i;
+            $new_data['id']         = $row['id'];
+            $new_data['track']      = $count;
             $results[]              = $new_data;
-            $i++;
+            $count++;
         } // end while results
 
         foreach ($results as $data) {

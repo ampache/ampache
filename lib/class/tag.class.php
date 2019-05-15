@@ -23,7 +23,7 @@
 /**
  * Tag Class
  *
- * This class hnadles all of the tag relation operations
+ * This class handles all of the tag relation operations
  *
  */
 class Tag extends database_object implements library_item
@@ -89,6 +89,7 @@ class Tag extends database_object implements library_item
      * build_map_cache
      * This builds a cache of the mappings for the specified object, no limit is given
      * @param string $type
+     * @params array $ids
      */
     public static function build_map_cache($type, $ids)
     {
@@ -165,7 +166,7 @@ class Tag extends database_object implements library_item
         }
 
         if (!$tag_id) {
-            debug_event('Error', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', '1');
+            debug_event('tag.class', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', '1');
 
             return false;
         }
@@ -247,7 +248,7 @@ class Tag extends database_object implements library_item
     public function merge($merge_to, $is_persistent)
     {
         if ($this->id != $merge_to) {
-            debug_event('tag', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', '5');
+            debug_event('tag.class', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', '5');
 
             $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
                    "SELECT ?,`user`,`object_type`,`object_id` " .
@@ -293,6 +294,9 @@ class Tag extends database_object implements library_item
      * add_tag_map
      * This adds a specific tag to the map for specified object
      * @param string $type
+     * @param integer|string $object_id
+     * @param integer|string $tag_id
+     * @param integer $user
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user=true)
     {
@@ -408,13 +412,13 @@ class Tag extends database_object implements library_item
      * tag_map_exists
      * This looks to see if the current mapping of the current object of the current tag of the current
      * user exists, lots of currents... taste good in scones.
-     * @param integer $user
      * @param string $type
+     * @param integer $user
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
         if (!Core::is_library_item($type)) {
-            debug_event('tag', 'Requested type is not a library item.', 3);
+            debug_event('tag.class', 'Requested type is not a library item.', 3);
 
             return false;
         }
@@ -526,9 +530,9 @@ class Tag extends database_object implements library_item
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
-        //debug_event('tag.class.php', 'Get tags list called...', '5');
+        //debug_event('tag.class', 'Get tags list called...', '5');
         if (parent::is_cached('tags_list', 'no_name')) {
-            //debug_event('tag.class.php', 'Tags list found into cache memory!', '5');
+            //debug_event('tag.class', 'Tags list found into cache memory!', '5');
             return parent::get_from_cache('tags_list', 'no_name');
         }
 
@@ -570,7 +574,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_display($tags, $link=false, $filter_type='')
     {
-        //debug_event('tag.class.php', 'Get display tags called...', '5');
+        //debug_event('tag.class', 'Get display tags called...', '5');
         if (!is_array($tags)) {
             return '';
         }
@@ -579,9 +583,9 @@ class Tag extends database_object implements library_item
 
         // Iterate through the tags, format them according to type and element id
         foreach ($tags as $tag_id => $value) {
-            /*debug_event('tag.class.php', $tag_id, '5');
+            /*debug_event('tag.class', $tag_id, '5');
             foreach ($value as $vid=>$v) {
-                debug_event('tag.class.php', $vid.' = {'.$v.'}', '5');
+                debug_event('tag.class', $vid.' = {'.$v.'}', '5');
             }*/
             if ($link) {
                 $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . $value['name'] . '">';
@@ -600,7 +604,8 @@ class Tag extends database_object implements library_item
 
     /**
      * update_tag_list
-     * Update the tags list based on commated list (ex. tag1,tag2,tag3,..)
+     * Update the tags list based on a comma-separated list
+     *  (ex. tag1,tag2,tag3,..)
      * @param string $type
      * @param integer $object_id
      * @param boolean $overwrite
@@ -772,6 +777,8 @@ class Tag extends database_object implements library_item
 
     public function search_childrens($name)
     {
+        debug_event('tag.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
@@ -822,7 +829,7 @@ class Tag extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tag') || $force) {
-            Art::display('tag', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('tag', $this->id, $this->get_fullname(), $thumb, null);
         }
     }
     

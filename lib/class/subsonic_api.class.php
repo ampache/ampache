@@ -133,7 +133,7 @@ class Subsonic_Api
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
-            debug_event('subsonic', 'Stream proxy: ' . $url, 5);
+            debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
 
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
@@ -151,7 +151,7 @@ class Subsonic_Api
                 CURLOPT_TIMEOUT => 0
             ));
             if (curl_exec($ch) === false) {
-                debug_event('subsonic', 'Stream error: ' . curl_error($ch), 1);
+                debug_event('subsonic_api.class', 'Stream error: ' . curl_error($ch), 1);
             }
             curl_close($ch);
         } else {
@@ -937,7 +937,7 @@ class Subsonic_Api
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
 
-        if ($songsIdToAdd) {
+        if (!empty($songsIdToAdd)) {
             if (!is_array($songsIdToAdd)) {
                 $songsIdToAdd       = array($songsIdToAdd);
                 $songsIdToAdd_count = count($songsIdToAdd);
@@ -950,7 +950,7 @@ class Subsonic_Api
             }
         }
 
-        if ($songIndexToRemove) {
+        if (!empty($songIndexToRemove)) {
             if (!is_array($songIndexToRemove)) {
                 $songIndexToRemove = array($songIndexToRemove);
             }
@@ -1660,7 +1660,7 @@ class Subsonic_Api
         $gain   = $input['gain'];
 
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        debug_event('subsonic', 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
+        debug_event('subsonic_api.class', 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
 
         if ($localplay->connect()) {
@@ -1682,7 +1682,7 @@ class Subsonic_Api
                             $ret = $localplay->play();
                         }
                     } elseif (isset($input['offset'])) {
-                        debug_event('subsonic', 'Skip with offset is not supported on JukeboxControl.', 5);
+                        debug_event('subsonic_api.class', 'Skip with offset is not supported on JukeboxControl.', 5);
                     } else {
                         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
                     }
@@ -1704,8 +1704,8 @@ class Subsonic_Api
                                 $url = Song::generic_play_url('song', Subsonic_XML_Data::getAmpacheId($i), '', 'api');
                             }
 
-                            if ($url) {
-                                debug_event('subsonic', 'Adding ' . $url, 5);
+                            if ($url !== null) {
+                                debug_event('subsonic_api.class', 'Adding ' . $url, 5);
                                 $stream        = array();
                                 $stream['url'] = $url;
                                 $ret           = $localplay->add_url(new Stream_URL($stream));
@@ -1881,9 +1881,9 @@ class Subsonic_Api
         if (Subsonic_XML_Data::isArtist($id)) {
             $similars = Recommendation::get_artists_like(Subsonic_XML_Data::getAmpacheId($id));
             if (!empty($similars)) {
-                debug_event('similar_songs', 'Found: ' . count($similars) . ' similar artists', '5');
+                debug_event('subsonic_api.class', 'Found: ' . count($similars) . ' similar artists', '5');
                 foreach ($similars as $similar) {
-                    debug_event('similar_songs', $similar['name'] . ' (id=' . $similar['id'] . ')', '5');
+                    debug_event('subsonic_api.class', $similar['name'] . ' (id=' . $similar['id'] . ')', '5');
                     if ($similar['id']) {
                         $artist = new Artist($similar['id']);
                         // get the songs in a random order for even more chaos
@@ -2063,7 +2063,7 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $episode = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($id));
-            if ($episode->id) {
+            if ($episode->id !== null) {
                 if ($episode->remove()) {
                     $response = Subsonic_XML_Data::createSuccessResponse();
                 } else {

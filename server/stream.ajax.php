@@ -28,7 +28,7 @@ if (!defined('AJAX_INCLUDE')) {
     return false;
 }
 
-debug_event('stream.ajax.php', 'Called for action {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', 5);
+debug_event('stream.ajax', 'Called for action {' . Core::get_request('action') . '}', 5);
 
 $results = array();
 $action  = Core::get_request('action');
@@ -78,7 +78,7 @@ switch ($action) {
     break;
     case 'directplay':
 
-        debug_event('stream.ajax.php', 'Play type {' . $_REQUEST['playtype'] . '}', 5);
+        debug_event('stream.ajax', 'Play type {' . $_REQUEST['playtype'] . '}', 5);
         $object_type = $_REQUEST['object_type'];
         $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         if (is_array($object_id)) {

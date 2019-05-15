@@ -16,10 +16,10 @@ header("Content-Type: text/html; charset=UTF-8");
 $requestRaw = file_get_contents('php://input');
 if ($requestRaw != '') {
     $upnpRequest = Upnp_Api::parseUPnPRequest($requestRaw);
-    debug_event('upnp-cm', 'Request: ' . $requestRaw, '5');
+    debug_event('cm-control-reply', 'Request: ' . $requestRaw, '5');
 } else {
     echo 'Error: no UPnP request.';
-    debug_event('upnp-cm', 'No request', '5');
+    debug_event('cm-control-reply', 'No request', '5');
 
     return false;
 }

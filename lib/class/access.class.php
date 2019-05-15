@@ -229,7 +229,7 @@ class Access
 
         // Check existing ACLs to make sure we're not duplicating values here
         if (self::exists($data)) {
-            debug_event('ACL Create', 'Error: An ACL equal to the created one already exists. Not adding another one: ' . $data['start'] . ' - ' . $data['end'], 1);
+            debug_event('access.class', 'Error: An ACL equal to the created one already exists. Not adding another one: ' . $data['start'] . ' - ' . $data['end'], 1);
             AmpError::add('general', T_('Duplicate ACL defined'));
 
             return false;
@@ -301,11 +301,11 @@ class Access
                 return make_bool(AmpConfig::get('download'));
             case 'batch_download':
                 if (!function_exists('gzcompress')) {
-                    debug_event('access', 'ZLIB extension not loaded, batch download disabled', 3);
+                    debug_event('access.class', 'ZLIB extension not loaded, batch download disabled', 3);
 
                     return false;
                 }
-                if (AmpConfig::get('allow_zip_download') and $GLOBALS['user']->has_access('5')) {
+                if (AmpConfig::get('allow_zip_download') and Core::get_global('user')->has_access('5')) {
                     return make_bool(AmpConfig::get('download'));
                 }
                 break;
@@ -406,7 +406,7 @@ class Access
             return true;
         }
 
-        $user = $GLOBALS['user'];
+        $user = Core::get_global('user');
         if ($user_id !== null) {
             $user = new User($user_id);
         }

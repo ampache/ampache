@@ -26,7 +26,7 @@ require_once 'lib/init.php';
 
 /* Check Perms */
 if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode')) {
-    debug_event('DENIED', 'Error Attempted registration', '1');
+    debug_event('register', 'Error Attempted registration', '1');
     UI::access_denied();
 
     return false;
@@ -44,8 +44,8 @@ $action = Core::get_request('action');
 // Switch on the actions
 switch ($action) {
     case 'validate':
-        $username      = scrub_in($_GET['username']);
-        $validation    = scrub_in($_GET['auth']);
+        $username      = scrub_in(Core::get_get('username'));
+        $validation    = scrub_in(Core::get_get('auth'));
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_activate.inc.php');
     break;
     case 'add_user':
@@ -58,14 +58,24 @@ switch ($action) {
          * possibly by logging them in right then and there with their current info
          * and 'click here to login' would just be a link back to index.php
          */
-        $fullname       = scrub_in($_POST['fullname']);
-        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
-        $email          = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website        = scrub_in($_POST['website']);
-        $pass1          = $_POST['password_1'];
-        $pass2          = $_POST['password_2'];
-        $state          = (string) scrub_in($_POST['state']);
-        $city           = (string) scrub_in($_POST['city']);
+        $fullname       = (string) scrub_in(Core::get_post('fullname'));
+        $username       = (string) scrub_in(Core::get_post('username'));
+        $email          = scrub_in(Core::get_post('email'));
+        $pass1          = Core::get_post('password_1');
+        $pass2          = Core::get_post('password_2');
+        $website        = scrub_in(Core::get_post('website'));
+        $state          = scrub_in(Core::get_post('state'));
+        $city           = scrub_in(Core::get_post('city'));
+
+        if ($website === null) {
+            $website = '';
+        }
+        if ($state === null) {
+            $state = '';
+        }
+        if ($city === null) {
+            $city = '';
+        }
 
         /* If we're using the captcha stuff */
         if (AmpConfig::get('captcha_public_reg')) {
@@ -119,7 +129,7 @@ switch ($action) {
             AmpError::add('password', T_("Your passwords do not match"));
         }
 
-        if (!User::check_username($username)) {
+        if (!User::check_username((string) $username) || $username == null) {
             AmpError::add('duplicate_user', T_("Error Username already exists"));
         }
 
@@ -144,9 +154,7 @@ switch ($action) {
             break;
         } // auto-user level
 
-
-        $new_user = User::create($username, $fullname, $email, $website, $pass1,
-            $access, $state, $city, AmpConfig::get('admin_enable_required'));
+        $new_user = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
             AmpError::add('duplicate_user', T_("Error: Insert Failed"));
@@ -160,7 +168,7 @@ switch ($action) {
             $client->update_validation($validation);
 
             // Notify user and/or admins
-            Registration::send_confirmation($username, $fullname, $email, $website, $pass1, $validation);
+            Registration::send_confirmation($username, $fullname, $email, $website, $validation);
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_registration_confirmation.inc.php');

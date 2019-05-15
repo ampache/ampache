@@ -143,7 +143,7 @@ require $prefix . '/templates/install_header.inc.php';
             $modes = install_get_transcode_modes();
             foreach ($modes as $mode) {
                 ?>
-            <option value="<?php echo $mode; ?>" <?php if ($_REQUEST['transcode_template'] == $mode) {
+            <option value="<?php echo $mode; ?>" <?php if (Core::get_request('transcode_template') == $mode) {
                     echo 'selected';
                 } ?>><?php echo $mode; ?></option>
         <?php

@@ -28,7 +28,7 @@
 function show_rating($object_id, $type)
 {
     $rating = new Rating($object_id, $type);
-    debug_event('rating', 'Get artist rating ' . $rating->id, 5);
+    debug_event('rating.lib', 'Get artist rating ' . $rating->id, 5);
 
     require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
 } // show_rating
@@ -36,6 +36,7 @@ function show_rating($object_id, $type)
 /**
  * get_rating_name
  * This takes a score and returns the name that we should use
+ * @return string
  */
 function get_rating_name($score)
 {

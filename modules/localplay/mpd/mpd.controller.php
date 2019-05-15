@@ -274,7 +274,7 @@ class AmpacheMpd extends localplay_controller
         }
 
         if (!$this->_mpd->PlAdd($url->url)) {
-            debug_event('mpd', 'add_url failed to add: ' . json_encode($url), 1);
+            debug_event('mdp.controller', 'add_url failed to add: ' . json_encode($url), 1);
 
             return false;
         }
@@ -527,7 +527,7 @@ class AmpacheMpd extends localplay_controller
 
         $url_data = $this->parse_url($playlist_item['file']);
 
-        debug_event('mdp.controller.php', 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), '5');
+        debug_event('mdp.controller', 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), '5');
 
         if (count($url_data) > 0 && !empty($url_data['oid'])) {
             $song                  = new Song($url_data['oid']);

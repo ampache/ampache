@@ -73,43 +73,43 @@ Mike O'Connell <wb:gm.c>
 
 
 #-- behaviour
-@define("CAPTCHA_PERSISTENT", 1);     // cookie-pass after it's solved once (does not work if headers were already sent on innovocation of captcha::solved() check)
-@define("CAPTCHA_NEW_URLS", 0);       // force captcha only when URLs submitted
-@define("CAPTCHA_AJAX", 1);           // visual feedback while entering letters
-@define("CAPTCHA_LOG", 0);            // create /tmp/captcha/log file
-@define("CAPTCHA_NOTEXT", 0);         // disables the accessible text/math riddle
+define("CAPTCHA_PERSISTENT", 1);     // cookie-pass after it's solved once (does not work if headers were already sent on innovocation of captcha::solved() check)
+define("CAPTCHA_NEW_URLS", 0);       // force captcha only when URLs submitted
+define("CAPTCHA_AJAX", 1);           // visual feedback while entering letters
+define("CAPTCHA_LOG", 0);            // create /tmp/captcha/log file
+define("CAPTCHA_NOTEXT", 0);         // disables the accessible text/math riddle
 
 #-- look
-@define("CAPTCHA_IMAGE_TYPE", 1);     // 1=wave, 2=whirly
-@define("CAPTCHA_INVERSE", 0);        // white(=0) or black(=1)
-@define("CAPTCHA_IMAGE_SIZE", "200x60");  // randomly adapted a little
-@define("CAPTCHA_INPUT_STYLE", "height:46px; font-size:34px; font-weight:500;");
-@define("CAPTCHA_PIXEL", 1);          // set to 2 for smoother 2x2 grayscale pixel transform
-@define("CAPTCHA_ONCLICK_HIRES", 1);  // use better/slower drawing mode on reloading
+define("CAPTCHA_IMAGE_TYPE", 1);     // 1=wave, 2=whirly
+define("CAPTCHA_INVERSE", 0);        // white(=0) or black(=1)
+define("CAPTCHA_IMAGE_SIZE", "200x60");  // randomly adapted a little
+define("CAPTCHA_INPUT_STYLE", "height:46px; font-size:34px; font-weight:500;");
+define("CAPTCHA_PIXEL", 1);          // set to 2 for smoother 2x2 grayscale pixel transform
+define("CAPTCHA_ONCLICK_HIRES", 1);  // use better/slower drawing mode on reloading
 
 #-- solving
-@define("CAPTCHA_FUZZY", 0.65);       // easier solving: accept 1 or 2 misguessed letters
-@define("CAPTCHA_TRIES", 5);          // maximum failures for solving the captcha
-@define("CAPTCHA_AJAX_TRIES", 25);    // AJAX testing limit (prevents brute-force cracking via check API)
-@define("CAPTCHA_MAXPASSES", 2);      // 2 passes prevent user annoyment with caching/reload failures
-@define("CAPTCHA_TIMEOUT", 5000);     // (in seconds/2) = 3:00 hours to solve a displayed captcha
-@define("CAPTCHA_MIN_CHARS", 5);      // how many letters to use
-@define("CAPTCHA_MAX_CHARS", 7);
+define("CAPTCHA_FUZZY", 0.65);       // easier solving: accept 1 or 2 misguessed letters
+define("CAPTCHA_TRIES", 5);          // maximum failures for solving the captcha
+define("CAPTCHA_AJAX_TRIES", 25);    // AJAX testing limit (prevents brute-force cracking via check API)
+define("CAPTCHA_MAXPASSES", 2);      // 2 passes prevent user annoyment with caching/reload failures
+define("CAPTCHA_TIMEOUT", 5000);     // (in seconds/2) = 3:00 hours to solve a displayed captcha
+define("CAPTCHA_MIN_CHARS", 5);      // how many letters to use
+define("CAPTCHA_MAX_CHARS", 7);
 
 #-- operation
-@define("CAPTCHA_TEMP_DIR", easy_captcha_utility::tmp() . "/captcha/");    // storage directory for captcha handles
-@define("CAPTCHA_PARAM_ID", "__ec_i");
-@define("CAPTCHA_PARAM_INPUT", "__ec_s");
-@define("CAPTCHA_BGCOLOR", 0xFFFFFF);   // initial background color (non-inverse, white)
-@define("CAPTCHA_SALT", ",e?c:7<");
+define("CAPTCHA_TEMP_DIR", easy_captcha_utility::tmp() . "/captcha/");    // storage directory for captcha handles
+define("CAPTCHA_PARAM_ID", "__ec_i");
+define("CAPTCHA_PARAM_INPUT", "__ec_s");
+define("CAPTCHA_BGCOLOR", 0xFFFFFF);   // initial background color (non-inverse, white)
+define("CAPTCHA_SALT", ",e?c:7<");
 #define("CAPTCHA_DATA_URLS", 0);     // RFC2397-URLs exclude MSIE users
-@define("CAPTCHA_FONT_DIR", dirname(__FILE__));
-@define("CAPTCHA_BASE_URL", (empty($_SERVER['HTTPS'])? "http": "https") . "://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/" . substr(realpath(__FILE__), strlen(realpath($_SERVER["DOCUMENT_ROOT"]))));
+define("CAPTCHA_FONT_DIR", dirname(__FILE__));
+define("CAPTCHA_BASE_URL", (empty($_SERVER['HTTPS'])? "http": "https") . "://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/" . substr(realpath(__FILE__), strlen(realpath($_SERVER["DOCUMENT_ROOT"]))));
 
 #-- texts
-@define("CAPTCHA_PROMPT_TEXT", 'please enter the letters you recognize in the CAPTCHA image to the left');
-@define("CAPTCHA_WHATIS_TEXT", 'What is %s = ');
-@define("CAPTCHA_REDRAW_TEXT", 'click on image to redraw');
+define("CAPTCHA_PROMPT_TEXT", 'please enter the letters you recognize in the CAPTCHA image to the left');
+define("CAPTCHA_WHATIS_TEXT", 'What is %s = ');
+define("CAPTCHA_REDRAW_TEXT", 'click on image to redraw');
 
 
 
@@ -166,7 +166,7 @@ class easy_captcha
     {
 
       #-- load
-        if (($this->id = $id) or ($this->id = preg_replace("/[^-,.\w]+/", "", @$_REQUEST[CAPTCHA_PARAM_ID]))) {
+        if (($this->id = $id) or ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID]))) {
             $this->load();
         }
 
@@ -196,12 +196,12 @@ class easy_captcha
         $this->passed = 0;
 
         #-- captcha processing info
-        $this->sent        = 0;
+        $this->sent       = 0;
         $this->tries      = CAPTCHA_TRIES;  // 5
-      $this->ajax_tries  = CAPTCHA_AJAX_TRIES;  // 25
-      $this->passed      = 0;
+        $this->ajax_tries = CAPTCHA_AJAX_TRIES;  // 25
+        $this->passed     = 0;
         $this->maxpasses  = CAPTCHA_MAXPASSES;   // 2
-        $this->failures    = 0;
+        $this->failures   = 0;
         $this->shortcut   = array();
         $this->grant      = 0;  // unchecked access
       
@@ -252,9 +252,9 @@ class easy_captcha
 
 
     #-- check backends for correctness of solution
-    public function solved($in=null/*parameter only used in subclasses*/)
+    public function solved($input=null/*parameter only used in subclasses*/)
     {
-        $ok = false;
+        $okay = false;
 
         #-- failure
         if ((0 >= $this->tries--) || !$this->is_valid()) {
@@ -264,21 +264,21 @@ class easy_captcha
       
         #-- test
         elseif ($this->sent) {
-            $in = @$_REQUEST[CAPTCHA_PARAM_INPUT];  // might be empty string
+            $input = $_REQUEST[CAPTCHA_PARAM_INPUT];  // might be empty string
       
             #-- check individual modules
-            $ok = $this->grant;
+            $okay = $this->grant;
             foreach ($this->shortcut as $test) {
-                $ok = $ok || $test->solved($in);    // cookie & nourls
+                $okay = $okay || $test->solved($input);    // cookie & nourls
             }
-            $ok = $ok  // either letters or math formula submitted
-             || isset($this->image) && $this->image->solved($in)
-             || isset($this->text) && $this->text->solved($in);
+            $okay = $okay  // either letters or math formula submitted
+             || isset($this->image) && $this->image->solved($input)
+             || isset($this->text) && $this->text->solved($input);
                
             #-- update state
-            if ($ok) {
+            if ($okay) {
                 $this->passed++;
-                $this->log("::solved", "OKAY", "captcha passed ($in) for image({$this->image->solution}) and text({$this->text->solution})");
+                $this->log("::solved", "OKAY", "captcha passed ($input) for image({$this->image->solution}) and text({$this->text->solution})");
             
                 #-- set cookie on success
                 if (CAPTCHA_PERSISTENT) {
@@ -287,7 +287,7 @@ class easy_captcha
                 }
             } else {
                 $this->failures++;
-                $this->log("::solved", "WRONG", "solution failure ($in) for image({$this->image->solution}) and text({$this->text->solution})");
+                $this->log("::solved", "WRONG", "solution failure ($input) for image({$this->image->solution}) and text({$this->text->solution})");
             }
         }
 
@@ -301,7 +301,7 @@ class easy_captcha
         }
 
         #-- return result
-        return($ok);
+        return($okay);
     }
    
    
@@ -325,7 +325,7 @@ class easy_captcha
         }
       
         #-- prepare output vars
-        $p_id        = CAPTCHA_PARAM_ID;
+        $p_id       = CAPTCHA_PARAM_ID;
         $p_input    = CAPTCHA_PARAM_INPUT;
         $base_url   = CAPTCHA_BASE_URL . '?' . CAPTCHA_PARAM_ID . '=';
         $id         = htmlentities($this->id);
@@ -375,14 +375,14 @@ class easy_captcha
     #-- load object from saved captcha tracking data
     public function load()
     {
-        $fn = $this->data_file();
-        if (file_exists($fn)) {
-            $saved = (array)@unserialize(fread(fopen($fn, "r"), 1 << 20));
+        $filepath = $this->data_file();
+        if (file_exists($filepath)) {
+            $saved = (array)unserialize(fread(fopen($filepath, "r"), 1 << 20));
             foreach ($saved as $i => $v) {
                 $this->{$i} = $v;
             }
         } else {
-            $this->log("captcha file does not exist $fn");
+            $this->log("captcha file does not exist $filepath");
         }
     }
 
@@ -390,8 +390,8 @@ class easy_captcha
     public function save()
     {
         $this->straighten_temp_dir();
-        if ($fn = $this->data_file()) {
-            $this->saved = file_put_contents($fn, serialize($this), LOCK_EX);
+        if ($filepath == $this->data_file()) {
+            $this->saved = file_put_contents($filepath, serialize($this), LOCK_EX);
         }
     }
    
@@ -423,10 +423,10 @@ class easy_captcha
         // clean up old files
         if ((rand(0, 100) <= 5) && ($dh = opendir($dir))) {
             $t_kill = time() - CAPTCHA_TIMEOUT * 1.2;
-            while (false !== ($fn = readdir($dh))) {
-                if ($fn[0] != ".") {
-                    if (filemtime("$dir/$fn") < $t_kill) {
-                        @unlink("$dir/$fn");
+            while (false !== ($filepath = readdir($dh))) {
+                if ($filepath[0] != ".") {
+                    if (filemtime("$dir/$filepath") < $t_kill) {
+                        @unlink("$dir/$filepath");
                     }
                 }
             }
@@ -451,13 +451,6 @@ class easy_captcha
 }
 
 
-
-
-
-
-
-
-
 #-- checks the supplied solution, allows differences (incorrectly guessed letters)
 class easy_captcha_fuzzy extends easy_captcha
 {
@@ -466,26 +459,18 @@ class easy_captcha_fuzzy extends easy_captcha
     public $fuzzy = CAPTCHA_FUZZY;
 
     #-- compare
-    public function solved($in = null)
+    public function solved($input = null)
     {
-        if ($in) {
+        if ($input) {
             $pw      = strtolower($this->solution);
-            $in      = strtolower($in);
-            $diff    = levenshtein($pw, $in);
+            $input   = strtolower($input);
+            $diff    = levenshtein($pw, $input);
             $maxdiff = strlen($pw) * (1 - $this->fuzzy);
 
-            return ($pw == $in) or ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
+            return ($pw == $input) or ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
         }
     }
 }
-
-
-
-
-
-
-
-
 
 #-- image captchas, base and utility code
 class easy_captcha_graphic extends easy_captcha_fuzzy
@@ -523,15 +508,15 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     #-- makes string of random letters (for embedding into image)
     public function mkpass()
     {
-        $s = "";
+        $string = "";
         for ($n=0; $n < 10; $n++) {
-            $s .= chr(rand(0, 255));
+            $string .= chr(rand(0, 255));
         }
-        $s = base64_encode($s);   // base64-set, but filter out unwanted chars
-      $s  = preg_replace("/[+\/=IG0ODQR]/i", "", $s);  // strips hard to discern letters, depends on used font type
-      $s  = substr($s, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
+        $string = base64_encode($string);   // base64-set, but filter out unwanted chars
+        $string = preg_replace("/[+\/=IG0ODQR]/i", "", $string);  // strips hard to discern letters, depends on used font type
+        $string = substr($string, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
 
-        return($s);
+        return($string);
     }
 
 
@@ -655,12 +640,12 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     {
 
       #-- init
-      $single_pixel  = (CAPTCHA_PIXEL <= 1);   // very fast
-      $greyscale2x2  = (CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
-      $width         = $this->width;
-        $height       = $this->height;
-        $i            = & $this->img;
-        $dest         = $this->create();
+      $single_pixel = (CAPTCHA_PIXEL <= 1);   // very fast
+      $greyscale2x2 = (CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
+      $width        = $this->width;
+      $height       = $this->height;
+      $image        = & $this->img;
+      $dest         = $this->create();
       
       
         #-- URL param ?hires=1 influences used drawing scheme
@@ -677,23 +662,23 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
             for ($x = 0; $x < $width; $x++) {
 
             #-- pixel movement
-            list($dx, $dy) = $wave->dxy($x, $y);   // x- and y- sinus wave
+            list($distortx, $distorty) = $wave->dxy($x, $y);   // x- and y- sinus wave
            // list($qx, $qy) = $spike->dxy($x, $y);
             
             #-- if not out of bounds
-                if (($dx + $x >= 0) && ($dy + $y >= 0) && ($dx + $x < $width) && ($dy + $y < $height)) {
+                if (($distortx + $x >= 0) && ($distorty + $y >= 0) && ($distortx + $x < $width) && ($distorty + $y < $height)) {
 
                #-- get source pixel(s), paint dest
                     if ($single_pixel) {
                         // single source dot: one-to-one duplicate (unsmooth, hard edges)
-                        imagesetpixel($dest, $x, $y, @imagecolorat($i, (int)$dx + $x, (int)$dy + $y));
+                        imagesetpixel($dest, $x, $y, imagecolorat($image, (int)$distortx + $x, (int)$distorty + $y));
                     } elseif ($greyscale2x2) {
                         // merge 2x2 simple/greyscale (3 times as slow)
-                        $cXY = $this->get_2x2_greyscale($i, (int)$dx + $x, (int)$dy + $y);
+                        $cXY = $this->get_2x2_greyscale($image, (int)$distortx + $x, (int)$distorty + $y);
                         imagesetpixel($dest, $x, $y, imagecolorallocate($dest, $cXY, $cXY, $cXY));
                     } else {
                         // exact and smooth transformation (5 times as slow)
-                        list($cXY_R, $cXY_G, $cXY_B) = $this->get_2x2_smooth($i, $x + $dx, $y + $dy);
+                        list($cXY_R, $cXY_G, $cXY_B) = $this->get_2x2_smooth($image, $x + $distortx, $y + $distorty);
                         imagesetpixel($dest, $x, $y, imagecolorallocate($dest, (int)$cXY_R, (int)$cXY_G, (int)$cXY_B));
                     }
                 }
@@ -701,7 +686,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         }
 
         #-- simply overwrite ->img
-        imagedestroy($i);
+        imagedestroy($image);
         $this->img = $dest;
     }
    
@@ -711,10 +696,10 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         // this is a pretty simplistic method, actually adds more artefacts
         // than it "smoothes"
         // it just merges the brightness from 4 adjoining pixels into one
-        $cXY = (@imagecolorat($i, $x + $dx, $y + $dy) & 0xFF)
-            + (@imagecolorat($i, $x + $dx, $y + $dy + 1) & 0xFF)
-            + (@imagecolorat($i, $x + $dx + 1, $y + $dy) & 0xFF)
-            + (@imagecolorat($i, $x + $dx + 1, $y + $dy + 1) & 0xFF);
+        $cXY = (imagecolorat($i, $x + $distortx, $y + $distorty) & 0xFF)
+            + (imagecolorat($i, $x + $distortx, $y + $distorty + 1) & 0xFF)
+            + (imagecolorat($i, $x + $distortx + 1, $y + $distorty) & 0xFF)
+            + (imagecolorat($i, $x + $distortx + 1, $y + $distorty + 1) & 0xFF);
         $cXY = (int) ($cXY / 4);
 
         return $cXY;
@@ -728,7 +713,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
        $c01 = $this->get_RGB($i, $x, $y + 1);    //  |dx,dy | x1,y0|
        $c10 = $this->get_RGB($i, $x + 1, $y);    //  | rx-> |      |
        $c11 = $this->get_RGB($i, $x + 1, $y + 1);  //  +----##+------+
-       // weighting by $dx/$dy fraction part   //  |    ##|<-ry  |
+       // weighting by $distortx/$distorty fraction part   //  |    ##|<-ry  |
        $rx  = $x - floor($x);
         $rx_ = 1 - $rx;  //  |x0,y1 | x1,y1|
         $ry  = $y - floor($y);
@@ -756,7 +741,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     #-- imagegetcolor from current ->$img split up into RGB array
     public function get_RGB(&$img, $x, $y)
     {
-        $rgb = @imagecolorat($img, $x, $y);
+        $rgb = imagecolorat($img, $x, $y);
 
         return array(($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, ($rgb) & 0xFF);
     }
@@ -788,31 +773,31 @@ class easy_captcha_dxy_wave
         $this->dist_x *= 1.000035;
         $this->dist_y *= 1.000015;
         #-- dest pixels (with x+y together in each of the sin() calcs you get more deformation, else just yields y-ripple effect)
-        $dx  = $this->dist_x * cos(($x / $this->slow_x) - ($y / 1.1 / $this->slow_y));
-        $dy = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
+        $distortx  = $this->dist_x * cos(($x / $this->slow_x) - ($y / 1.1 / $this->slow_y));
+        $distorty = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
         #-- result
-        return array($dx, $dy);
+        return array($distortx, $distorty);
     }
    
     #-- array of values with random start/end values
     public function from_to_rand($max, $a, $b)
     {
-        $BEG  = $this->real_rand($a, $b);
-        $DIFF = $this->real_rand($a, $b) - $BEG;
-        $r    = array();
-        for ($i = 0; $i <= $max; $i++) {
-            $r[$i] = $BEG + $DIFF * $i / $max;
+        $BEG    = $this->real_rand($a, $b);
+        $DIFF   = $this->real_rand($a, $b) - $BEG;
+        $result = array();
+        for ($count = 0; $count <= $max; $count++) {
+            $result[$count] = $BEG + $DIFF * $count / $max;
         }
 
-        return($r);
+        return($result);
     }
 
     #-- returns random value in given interval
     public function real_rand($a, $b)
     {
-        $r = rand(0, 1 << 30);
+        $random = rand(0, 1 << 30);
 
-        return($r / (1 << 30) * ($b - $a) + $a);   // base + diff * (0..1)
+        return($random / (1 << 30) * ($b - $a) + $a);   // base + diff * (0..1)
     }
 }
 
@@ -894,6 +879,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
             $w1 += rand(0, 8) - 4;
             $w2 += rand(0, 8) - 4;
             if (($x > $this->height) && ($y > $this->height)) {
+                // FIXME $y is undefined
                 break;
             }
         }
@@ -929,7 +915,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         for ($p=0; $p < $len; $p++) {
             $letter   = $phrase[$p];
             $size     = rand(18, $this->height / 2.2);
-            $half     = (int) $size / 2;
+            //$half     = (int) $size / 2;
             $rotation = rand(-33, 33);
             $y        = rand($size + 3, $this->height - 3);
             $x        = $w1 + $w2 * $p;
@@ -996,8 +982,9 @@ class easy_captcha_text_math_formula extends easy_captcha
     #-- "solve" simple calculations
     public function calculate_formula($formula)
     {
+        // FIXME $uu is undefined
         preg_match("#^(\d+)([-+/*])(\d+)([-+/*])?(\d+)?$#", $this->clean($formula), $uu);
-        @list($uu, $X, $op1, $Y, $op2, $Z) = $uu;
+        list($uu, $X, $op1, $Y, $op2, $Z) = $uu;
         if ($Y) {
             $calc                      = array(
         "/" => $X / $Y,  // PHP+ZendVM catches division by zero already, and CAPTCHA "attacker" would get no advantage herefrom anyhow
@@ -1018,7 +1005,7 @@ class easy_captcha_text_math_formula extends easy_captcha
 class easy_captcha_text_disable extends easy_captcha
 {
     public $question = "";
-    public function solved($in = null)
+    public function solved($input = null)
     {
         return false;
     }
@@ -1087,19 +1074,12 @@ class easy_captcha_spamfree_no_new_urls
     #   - for simple comment submission forms, this default however suffices:
     public function solved($ignore=0)
     {
+        // FIXME $uu is undefined
         $r = !preg_match("#(https?://\w+[^/,.]+)#ims", serialize($_GET + $_POST), $uu);
 
         return $r;
     }
 }
-
-
-
-
-
-
-
-
 
 
 #-- "AJAX" and utility code
@@ -1114,7 +1094,7 @@ class easy_captcha_utility
         return current(
            array_filter(// filter by writability
                array_filter(// filter empty entries
-                   @array(
+                   array(
                       $_SERVER['TMPDIR'],
                       $_SERVER['REDIRECT_TMPDIR'],
                       $_SERVER['TEMP'],
@@ -1136,7 +1116,7 @@ class easy_captcha_utility
     {
 
       #-- load data
-        if ($id = @$_GET[CAPTCHA_PARAM_ID]) {
+        if ($id == Core::get_get(CAPTCHA_PARAM_ID)) {
 
          #-- special case
             if ($id == 'base.js') {
@@ -1146,7 +1126,7 @@ class easy_captcha_utility
                 $expired = !$c->is_valid();
             
                 #-- JS-RPC request, check entered solution on the fly
-                if ($test = @$_REQUEST[CAPTCHA_PARAM_INPUT]) {
+                if ($test = $_REQUEST[CAPTCHA_PARAM_INPUT]) {
   
                #-- check
                     if ($expired || empty($c->image)) {
@@ -1155,10 +1135,10 @@ class easy_captcha_utility
                     if (0 >= $c->ajax_tries--) {
                         $c->log("::API", "JS-RPC", "ajax_tries exhausted ($c->ajax_tries)");
                     }
-                    $ok = $c->image->solved($test) || $c->text->solved($test);
+                    $okay = $c->image->solved($test) || $c->text->solved($test);
 
                     #-- sendresult
-                    easy_captcha_utility::js_rpc($ok);
+                    easy_captcha_utility::js_rpc($okay);
                 }
 
                 #-- generate and send image file
@@ -1320,7 +1300,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
     /* static */
     public function canonical_path($url)
     {
-        $path = @parse_url($url);
+        $path = parse_url($url);
 
         if (is_array($path) && !empty($path['path'])) {
             $url = $path['path'];

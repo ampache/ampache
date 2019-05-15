@@ -36,7 +36,7 @@
         <tr>
             <td><?php echo  T_('Full Name'); ?>:</td>
             <td>
-                <input type="text" name="fullname" value="<?php echo scrub_out($_POST['fullname']); ?>" />
+                <input type="text" name="fullname" value="<?php echo scrub_out(Core::get_post('fullname')); ?>" />
                 <?php AmpError::display('fullname'); ?>
             </td>
         </tr>
@@ -54,7 +54,7 @@
                 <?php echo  T_('Website'); ?>:
             </td>
             <td>
-                <input type="text" name="website" value="<?php echo scrub_out($_POST['website']); ?>" />
+                <input type="text" name="website" value="<?php echo scrub_out(Core::get_post('website')); ?>" />
                 <?php AmpError::display('website'); ?>
             </td>
         </tr>

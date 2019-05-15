@@ -159,7 +159,7 @@ switch ($action) {
                 if ($artist->mbid) {
                     $walbums = Wanted::get_missing_albums($artist);
                 } else {
-                    debug_event('wanted', 'Cannot get missing albums: MusicBrainz ID required.', '5');
+                    debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', '5');
                 }
             } else {
                 $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
@@ -191,7 +191,7 @@ switch ($action) {
                 $walbum->show_action_buttons();
                 $results['wanted_action_' . $mbid] = ob_get_clean();
             } else {
-                debug_event('wanted', 'Already wanted, skipped.', '5');
+                debug_event('index.ajax', 'Already wanted, skipped.', '5');
             }
         }
     break;

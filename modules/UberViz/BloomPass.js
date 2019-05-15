@@ -73,7 +73,7 @@ THREE.BloomPass = function ( strength, kernelSize, sigma, resolution ) {
 
 THREE.BloomPass.prototype = {
 
-	render: function ( renderer, writeBuffer, readBuffer, delta, maskActive ) {
+	render( renderer, writeBuffer, readBuffer, delta, maskActive ) {
 
 		if ( maskActive ) {
             renderer.context.disable( renderer.context.STENCIL_TEST );

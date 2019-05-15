@@ -43,7 +43,7 @@ class Registration
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function send_confirmation($username, $fullname, $email, $website, $password, $validation)
+    public static function send_confirmation($username, $fullname, $email, $website, $validation)
     {
         if (!Mailer::is_mail_enabled()) {
             return false;

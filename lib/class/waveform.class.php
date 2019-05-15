@@ -92,25 +92,25 @@ class Waveform
 
                                 $tfp = fopen($tmpfile, 'wb');
                                 if (!is_resource($tfp)) {
-                                    debug_event('waveform', "Failed to open " . $tmpfile, 3);
+                                    debug_event('waveform.class', "Failed to open " . $tmpfile, 3);
 
                                     return null;
                                 }
 
                                 $transcoder = Stream::start_transcode($song, $transcode_to);
-                                $fp         = $transcoder['handle'];
-                                if (!is_resource($fp)) {
-                                    debug_event('waveform', "Failed to open " . $song->file . " for waveform.", 3);
+                                $fpointer   = $transcoder['handle'];
+                                if (!is_resource($fpointer)) {
+                                    debug_event('waveform.class', "Failed to open " . $song->file . " for waveform.", 3);
 
                                     return null;
                                 }
 
                                 do {
-                                    $buf = fread($fp, 2048);
+                                    $buf = fread($fpointer, 2048);
                                     fwrite($tfp, $buf);
-                                } while (!feof($fp));
+                                } while (!feof($fpointer));
 
-                                fclose($fp);
+                                fclose($fpointer);
                                 fclose($tfp);
 
                                 Stream::kill_process($transcoder);
@@ -122,10 +122,10 @@ class Waveform
                                     throw new \RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked.');
                                 }
                             } else {
-                                debug_event('waveform', 'transcode setting to wav required for waveform.', '3');
+                                debug_event('waveform.class', 'transcode setting to wav required for waveform.', '3');
                             }
                         } else {
-                            debug_event('waveform', 'tmp_dir_path setting required for waveform.', '3');
+                            debug_event('waveform.class', 'tmp_dir_path setting required for waveform.', '3');
                         }
                     }
                     // Already wav file, no transcode required
@@ -176,13 +176,13 @@ class Waveform
     protected static function create_waveform($filename)
     {
         if (!file_exists($filename)) {
-            debug_event('waveform', 'File ' . $filename . ' doesn\'t exists', 1);
+            debug_event('waveform.class', 'File ' . $filename . ' doesn\'t exists', 1);
 
             return null;
         }
         
         if (!check_php_gd()) {
-            debug_event('waveform', 'GD extension must be loaded', 1);
+            debug_event('waveform.class', 'GD extension must be loaded', 1);
 
             return null;
         }
@@ -195,7 +195,7 @@ class Waveform
         $draw_flat  = true;
 
         // generate foreground color
-        list($r, $g, $b) = self::html2rgb($foreground);
+        list($red, $green, $blue) = self::html2rgb($foreground);
 
         $handle = fopen($filename, "r");
         // wav file header retrieval
@@ -233,7 +233,7 @@ class Waveform
         // and resized later (if specified)
         $img = imagecreatetruecolor($data_size / $detail, $height);
         if ($img === false) {
-            debug_event('waveform', 'Cannot create image.', 1);
+            debug_event('waveform.class', 'Cannot create image.', 1);
 
             return null;
         }
@@ -245,16 +245,16 @@ class Waveform
             $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
             imagefill($img, 0, 0, $transparentColor);
         } else {
-            list($br, $bg, $bb) = self::html2rgb($background);
-            imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $br, $bg, $bb));
+            list($bred, $bgreen, $bblue) = self::html2rgb($background);
+            imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $bred, $bgreen, $bblue));
         }
         while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail == 0) {
                 $bytes = array();
 
                 // get number of bytes depending on bitrate
-                for ($i = 0; $i < $byte; $i++) {
-                    $bytes[$i] = fgetc($handle);
+                for ($count = 0; $count < $byte; $count++) {
+                    $bytes[$count] = fgetc($handle);
                 }
 
                 switch ($byte) {
@@ -298,7 +298,7 @@ class Waveform
                   (int) ($data_point / $detail),
                   // y2: same as y1, but from the bottom of the image
                   $height - ($height - $v),
-                  imagecolorallocate($img, $r, $g, $b)
+                  imagecolorallocate($img, $red, $green, $blue)
                 );
                 }
             } else {

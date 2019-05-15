@@ -32,7 +32,7 @@ function log_event($username, $event_name, $event_description, $log_name)
 {
     /* Set it up here to make sure it's _always_ the same */
     $time        = time();
-    $log_time    = @date('Y-m-d H:i:s', $time);
+    $log_time    = date('Y-m-d H:i:s', $time);
 
     /* must have some name */
     $log_name    = $log_name ? $log_name : 'ampache';
@@ -44,9 +44,9 @@ function log_event($username, $event_name, $event_description, $log_name)
     }
 
     $log_filename = str_replace("%name", $log_name, $log_filename);
-    $log_filename = str_replace("%Y", @date('Y'), $log_filename);
-    $log_filename = str_replace("%m", @date('m'), $log_filename);
-    $log_filename = str_replace("%d", @date('d'), $log_filename);
+    $log_filename = str_replace("%Y", date('Y'), $log_filename);
+    $log_filename = str_replace("%m", date('m'), $log_filename);
+    $log_filename = str_replace("%d", date('d'), $log_filename);
 
     $log_filename    = AmpConfig::get('log_path') . "/" . $log_filename;
     $log_line        = "$log_time [$username] ($event_name) -> $event_description \n";
@@ -131,15 +131,16 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
     }
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
-    debug_event('PHP', $log_line, $level, '', 'ampache');
+    debug_event('log.lib', $log_line, $level, '', 'ampache');
 }
 
 /**
  * debug_event
- * This function is called inside ampache, it's actually a wrapper for the
+ * This function is called inside Ampache, it's actually a wrapper for the
  * log_event. It checks config for debug and debug_level and only
  * calls log event if both requirements are met.
  * @param string $type
+ * @return boolean
  */
 function debug_event($type, $message, $level, $file = '', $username = '')
 {
@@ -148,11 +149,13 @@ function debug_event($type, $message, $level, $file = '', $username = '')
     }
 
     if (!$username && isset($GLOBALS['user'])) {
-        $username = $GLOBALS['user']->username;
+        $username = Core::get_global('user')->username;
     }
 
     // If the message is multiple lines, make multiple log lines
     foreach (explode("\n", $message) as $line) {
         log_event($username, $type, $line, $file);
     }
+
+    return true;
 } // debug_event

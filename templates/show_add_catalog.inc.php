@@ -32,7 +32,7 @@ $default_sort   = "%a/%A";
     <table class="tabledata" cellpadding="0" cellspacing="0">
         <tr>
             <td style="width: 25%;"><?php echo T_('Catalog Name'); ?>: </td>
-            <td><input type="text" name="name" value="<?php echo scrub_out($_POST['name']); ?>" /></td>
+            <td><input type="text" name="name" value="<?php echo scrub_out(Core::get_post('name')); ?>" /></td>
             <td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
                 <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
                 <span class="format-specifier">%A</span> = <?php echo T_('album name'); ?><br />

@@ -35,13 +35,13 @@ set_time_limit(0);
 
 $channel = new Channel($_REQUEST['channel']);
 if (!$channel->id) {
-    debug_event('channel', 'Unknown channel.', '1');
+    debug_event('channel/index', 'Unknown channel.', '1');
 
     return false;
 }
 
 if (!function_exists('curl_version')) {
-    debug_event('channel', 'Error: Curl is required for this feature.', '1');
+    debug_event('channel/index', 'Error: Curl is required for this feature.', '1');
 
     return false;
 }
@@ -63,7 +63,7 @@ if ($channel->is_private) {
             if (AmpConfig::get('access_control')) {
                 if (!Access::check_network('stream', Core::get_global('user')->id, '25') and
                     !Access::check_network('network', Core::get_global('user')->id, '25')) {
-                    debug_event('UI::access_denied', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
+                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
                     UI::access_denied();
 
                     return false;
@@ -119,9 +119,9 @@ function progress($totaldownload, $downloaded, $us, $ud)
  */
 function output_header($ch, $header)
 {
-    $th = trim($header);
-    if (!empty($th)) {
-        header($th);
+    $trimheader = trim($header);
+    if (!empty($trimheader)) {
+        header($trimheader);
     }
 
     return strlen($header);

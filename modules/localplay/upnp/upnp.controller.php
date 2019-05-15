@@ -208,7 +208,7 @@ class AmpacheUPnP extends localplay_controller
             $user_id = Core::get_global('user')->id;
         }
         $user_id = $user_id ? $user_id : Core::get_global('user')->id;
-        debug_event('upnp', 'set_active_instance userid: ' . $user_id, 5);
+        debug_event('upnp.controller', 'set_active_instance userid: ' . $user_id, 5);
 
         Preference::update('upnp_active', $user_id, (int) ($uid));
         AmpConfig::set('upnp_active', (int) ($uid), true);
@@ -228,7 +228,7 @@ class AmpacheUPnP extends localplay_controller
 
     public function add_url(Stream_URL $url)
     {
-        debug_event('upnp', 'add_url: ' . $url->title . " | " . $url->url, 5);
+        debug_event('upnp.controller', 'add_url: ' . $url->title . " | " . $url->url, 5);
 
         if (!$this->_upnp) {
             return false;
@@ -400,7 +400,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function repeat($state)
     {
-        debug_event('upnp', 'repeat: ' . $state, 5);
+        debug_event('upnp.controller', 'repeat: ' . $state, 5);
 
         if (!$this->_upnp) {
             return false;
@@ -419,7 +419,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function random($onoff)
     {
-        debug_event('upnp', 'random: ' . $onoff, 5);
+        debug_event('upnp.controller', 'random: ' . $onoff, 5);
 
         if (!$this->_upnp) {
             return false;
@@ -438,7 +438,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get()
     {
-        debug_event('upnp', 'get', 5);
+        debug_event('upnp.controller', 'get', 5);
 
         if (!$this->_upnp) {
             return false;
@@ -480,7 +480,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function status()
     {
-        debug_event('upnp', 'status', 5);
+        debug_event('upnp.controller', 'status', 5);
 
         if (!$this->_upnp) {
             return false;
@@ -518,9 +518,9 @@ class AmpacheUPnP extends localplay_controller
     public function connect()
     {
         $options = self::get_instance();
-        debug_event('upnp', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', '5');
+        debug_event('upnp.controller', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', '5');
         $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
-        debug_event('upnp', 'Connected.', '5');
+        debug_event('upnp.controller', 'Connected.', '5');
 
         return true;
     }

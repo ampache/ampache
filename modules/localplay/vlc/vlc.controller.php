@@ -232,7 +232,7 @@ class AmpacheVlc extends localplay_controller
     public function add_url(Stream_URL $url)
     {
         if ($this->_vlc->add($url->title, $url->url) === null) {
-            debug_event('vlc', 'add_url failed to add: ' . json_encode($url), 1);
+            debug_event('vlc.controller', 'add_url failed to add: ' . json_encode($url), 1);
 
             return false;
         }

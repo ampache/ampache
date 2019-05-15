@@ -146,7 +146,7 @@ class UI
                 return $clean;
             }
 
-            debug_event('UI', 'Charset cleanup failed, something might break', 1);
+            debug_event('ui.class', 'Charset cleanup failed, something might break', 1);
         }
     }
 

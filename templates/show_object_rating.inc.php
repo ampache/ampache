@@ -51,10 +51,10 @@ if (!$rate) {
         printf(T_('%s of 5'), $rate);
     } echo "</li>\n";
 
-    for ($i = 1; $i < 6; $i++) {
+    for ($count = 1; $count < 6; $count++) {
         ?>
       <li>
-          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i); ?>
+          <?php echo Ajax::text($base_url . '&rating=' . $count, '', 'rating' . $count . '_' . $rating->id . '_' . $rating->type, '', 'star' . $count); ?>
       </li>
     <?php
     }

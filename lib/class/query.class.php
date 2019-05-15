@@ -806,7 +806,7 @@ class Query
     public function set_catalog($catalog_number)
     {
         $this->catalog = $catalog_number;
-        debug_event("Catalog", "set catalog id: " . $this->catalog, "5");
+        debug_event('query.class', "set catalog id: " . $this->catalog, "5");
     }
 
     /**

@@ -94,18 +94,18 @@ class scrobbler
             // If there are paramters for GET request, adding the "?" caracter before
             $params='?' . $params;
         }
-        $target = $this->scheme . '://' . $this->host . $url . $params;
-        $fp     = @fopen($target, 'r', false, $context);
-        if (!$fp) {
-            debug_event('Scrobbler', 'Cannot access ' . $target, 1);
+        $target       = $this->scheme . '://' . $this->host . $url . $params;
+        $filepath     = @fopen($target, 'r', false, $context);
+        if (!$filepath) {
+            debug_event('scrobbler.class', 'Cannot access ' . $target, 1);
 
             return false;
         }
         ob_start();
-        fpassthru($fp);
+        fpassthru($filepath);
         $buffer = ob_get_contents();
         ob_end_clean();
-        fclose($fp);
+        fclose($filepath);
 
         return $buffer;
     } // call_url
@@ -180,7 +180,7 @@ class scrobbler
     public function queue_track($artist, $album, $title, $timestamp, $length, $track)
     {
         if ($length < 30) {
-            debug_event('Scrobbler', "Not queuing track, too short", '5');
+            debug_event('scrobbler.class', "Not queuing track, too short", '5');
 
             return false;
         }
@@ -216,17 +216,17 @@ class scrobbler
         ksort($this->queued_tracks);
 
         // Build the query string (encoded per RFC1738 by the call method)
-        $i   = 0;
-        $vars= array();
+        $count   = 0;
+        $vars    = array();
         foreach ($this->queued_tracks as $track) {
             //construct array of parameters for each song
-            $vars["artist[$i]"]      = $track['artist'];
-            $vars["track[$i]"]       = $track['title'];
-            $vars["timestamp[$i]"]   = $track['time'];
-            $vars["album[$i]"]       = $track['album'];
-            $vars["trackNumber[$i]"] = $track['track'];
-            $vars["duration[$i]"]    = $track['length'];
-            $i++;
+            $vars["artist[$count]"]      = $track['artist'];
+            $vars["track[$count]"]       = $track['title'];
+            $vars["timestamp[$count]"]   = $track['time'];
+            $vars["album[$count]"]       = $track['album'];
+            $vars["trackNumber[$count]"] = $track['track'];
+            $vars["duration[$count]"]    = $track['length'];
+            $count++;
         }
         // Add the method, API and session keys
         $vars['method']  = 'track.scrobble';
@@ -263,6 +263,7 @@ class scrobbler
      */
     public function love($is_loved, $type, $artist = '', $title = '', $album = '')
     {
+        $vars           = array();
         $vars['track']  = $title;
         $vars['artist'] = $artist;
         // Add the method, API and session keys

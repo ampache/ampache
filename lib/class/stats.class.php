@@ -125,10 +125,10 @@ class Stats
             }
 
             if (!$db_results) {
-                debug_event('statistics', 'Unabled to insert statistics:' . $sql, '3');
+                debug_event('stats.class', 'Unabled to insert statistics:' . $sql, '3');
             }
         } else {
-            debug_event('statistics', 'Statistics insertion ignored due to graceful delay.', '3');
+            debug_event('stats.class', 'Statistics insertion ignored due to graceful delay.', '3');
         }
     } // insert
 

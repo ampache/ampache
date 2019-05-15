@@ -405,7 +405,7 @@ class Album extends database_object implements library_item
 
         $owner = $this->get_user_owner();
 
-        return ($owner && $owner === $user);
+        return ($owner !== null && $owner === $user);
     }
 
     /**
@@ -452,12 +452,12 @@ class Album extends database_object implements library_item
         } else {
             $sql .= 'AND `album`.`mbid` IS NULL ';
         }
-        if ($prefix) {
+        if ($prefix !== null) {
             $sql .= 'AND `album`.`prefix` = ? ';
             $params[] = $prefix;
         }
 
-        if ($album_artist) {
+        if ($album_artist !== null) {
             $sql .= 'AND `album`.`album_artist` = ? ';
             $params[] = $album_artist;
         }
@@ -489,7 +489,7 @@ class Album extends database_object implements library_item
             try {
                 Wanted::delete_wanted_release($mbid);
             } catch (Exception $e) {
-                debug_event('wanted', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), '1');
+                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), '1');
             }
         }
 
@@ -782,14 +782,14 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Get all childrens and sub-childrens medias.
+     * Get all children and sub-children media.
      * @param string $filter_type
      * @return array
      */
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song') {
+        if ($filter_type !== null || $filter_type == 'song') {
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
                 $medias[] = array(
@@ -1019,7 +1019,7 @@ class Album extends database_object implements library_item
             $song    = new Song($song_id);
             $deleted = $song->remove_from_disk();
             if (!$deleted) {
-                debug_event('album', 'Error when deleting the song `' . $song_id . '`.', 1);
+                debug_event('album.class', 'Error when deleting the song `' . $song_id . '`.', 1);
                 break;
             }
         }

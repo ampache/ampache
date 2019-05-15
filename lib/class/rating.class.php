@@ -61,7 +61,7 @@ class Rating extends database_object
                 $sql = "DELETE FROM `rating` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('rating', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event('rating.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -241,7 +241,7 @@ class Rating extends database_object
         }
         $user_id = (int) $user_id;
 
-        debug_event('Rating', "Setting rating for $this->type $this->id to $rating", 5);
+        debug_event('rating.class', "Setting rating for $this->type $this->id to $rating", 5);
 
         // If score is -1, then remove rating
         if ($rating == '-1') {

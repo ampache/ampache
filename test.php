@@ -24,8 +24,8 @@ $prefix = dirname(__FILE__);
 require_once $prefix . '/lib/init-tiny.php';
 
 $action = 'default';
-if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
-    $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+if (Core::get_request('action')) {
+    $action = Core::get_request('action');
 }
 switch ($action) {
     case 'config':

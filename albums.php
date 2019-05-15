@@ -49,7 +49,7 @@ switch ($action) {
 
         $album = new Album($_REQUEST['album_id']);
         if (!Catalog::can_remove($album)) {
-            debug_event('album', 'Unauthorized to remove the album `.' . $album->id . '`.', 1);
+            debug_event('albums', 'Unauthorized to remove the album `.' . $album->id . '`.', 1);
             UI::access_denied();
 
             return false;
@@ -85,12 +85,12 @@ switch ($action) {
 
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
-            $_GET[$key] = unhtmlentities(scrub_in($data));
-            debug_event('albums', $key . '=' . $_GET[$key], '5');
+            $_GET[$key] = unhtmlentities((string) scrub_in($data));
+            debug_event('albums', $key . '=' . Core::get_get($key), '5');
         }
 
         if (isset($_GET['order'])) {
-            $songs = explode(";", $_GET['order']);
+            $songs = explode(";", Core::get_get('order'));
             $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
