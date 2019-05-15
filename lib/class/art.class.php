@@ -326,7 +326,7 @@ class Art extends database_object
      */
     public function insert_url($url)
     {
-        debug_event('art.class', 'Insert art from url ' . $url, '5');
+        debug_event('art.class', 'Insert art from url ' . $url, 5);
         $image = Art::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
         $mime  = "image/" . $rurl['extension'];
@@ -339,7 +339,7 @@ class Art extends database_object
      */
     public function insert_from_file($filepath)
     {
-        debug_event('art.class', 'Insert art from file on disk ' . $filepath, '5');
+        debug_event('art.class', 'Insert art from file on disk ' . $filepath, 5);
         $image = Art::get_from_source(array('file' => $filepath), $this->type);
         $rfile = pathinfo($filepath);
         $mime  = "image/" . $rfile['extension'];
@@ -1131,7 +1131,7 @@ class Art extends database_object
         }
 
         if ($data['mbid']) {
-            debug_event('art.class'. "gather_musicbrainz: Album MBID: " . $data['mbid'], '5');
+            debug_event('art.class', "gather_musicbrainz: Album MBID: " . $data['mbid'], 5);
         } else {
             return $images;
         }
@@ -1149,7 +1149,7 @@ class Art extends database_object
         $asin = $release->asin;
 
         if ($asin) {
-            debug_event('art.class'. "gather_musicbrainz: Found ASIN: " . $asin, '5');
+            debug_event('art.class', "gather_musicbrainz: Found ASIN: " . $asin, 5);
             $base_urls = array(
                 "01" => "ec1.images-amazon.com",
                 "02" => "ec1.images-amazon.com",
@@ -1160,11 +1160,11 @@ class Art extends database_object
             foreach ($base_urls as $server_num => $base_url) {
                 // to avoid complicating things even further, we only look for large cover art
                 $url = 'http://' . $base_url . '/images/P/' . $asin . '.' . $server_num . '.LZZZZZZZ.jpg';
-                debug_event('art.class'. "gather_musicbrainz: Evaluating Amazon URL: " . $url, '5');
+                debug_event('art.class', "gather_musicbrainz: Evaluating Amazon URL: " . $url, 5);
                 $request = Requests::get($url, array(), Core::requests_options());
                 if ($request->status_code == 200) {
                     $num_found++;
-                    debug_event('art.class'. "gather_musicbrainz: Amazon URL added: " . $url, '5');
+                    debug_event('art.class', "gather_musicbrainz: Amazon URL added: " . $url, 5);
                     $images[] = array(
                         'url' => $url,
                         'mime' => 'image/jpeg',
@@ -1239,14 +1239,14 @@ class Art extends database_object
         );
         foreach ($release->relations as $ar) {
             $arurl = $ar->url->resource;
-            debug_event('art.class'. "gather_musicbrainz: Found URL AR: " . $arurl, '5');
+            debug_event('art.class', "gather_musicbrainz: Found URL AR: " . $arurl, 5);
             foreach ($coverartsites as $casite) {
                 if (strpos($arurl, $casite['domain']) !== false) {
-                    debug_event('art.class'. "gather_musicbrainz: Matched coverart site: " . $casite['name'], '5');
+                    debug_event('art.class', "gather_musicbrainz: Matched coverart site: " . $casite['name'], 5);
                     if (preg_match($casite['regexp'], $arurl, $matches)) {
                         $num_found++;
                         $url = $casite[imguri];
-                        debug_event('art.class'. "gather_musicbrainz: Generated URL added: " . $url, '5');
+                        debug_event('art.class', "gather_musicbrainz: Generated URL added: " . $url, 5);
                         $images[] = array(
                             'url' => $url,
                             'mime' => 'image/jpeg',
@@ -1315,14 +1315,14 @@ class Art extends database_object
                 continue;
             }
 
-            debug_event('art.class'. "gather_folder: Opening $dir and checking for Album Art", 3);
+            debug_event('art.class', "gather_folder: Opening $dir and checking for Album Art", 3);
 
             /* Open up the directory */
             $handle = opendir($dir);
 
             if (!$handle) {
                 AmpError::add('general', T_('Error: Unable to open') . ' ' . $dir);
-                debug_event('art.class'. "gather_folder: Error: Unable to open $dir for album art read", 2);
+                debug_event('art.class', "gather_folder: Error: Unable to open $dir for album art read", 2);
                 continue;
             }
 
@@ -1342,7 +1342,7 @@ class Art extends database_object
 
                 // Make sure it's got something in it
                 if (!Core::get_filesize($full_filename)) {
-                    debug_event('art.class'. "gather_folder: Empty file, rejecting $file", 5);
+                    debug_event('art.class', "gather_folder: Empty file, rejecting" . $file, 5);
                     continue;
                 }
 
@@ -1358,7 +1358,7 @@ class Art extends database_object
                 if ($file == $preferred_filename) {
                     // We found the preferred filename and
                     // so we're done.
-                    debug_event('art.class'. "gather_folder: Found preferred image file: $file", 5);
+                    debug_event('art.class', "gather_folder: Found preferred image file: $file", 5);
                     $preferred[$index] = array(
                         'file' => $full_filename,
                         'mime' => 'image/' . $extension,
@@ -1367,7 +1367,7 @@ class Art extends database_object
                     break;
                 }
 
-                debug_event('art.class'. "gather_folder: Found image file: $file", 5);
+                debug_event('art.class', "gather_folder: Found image file: $file", 5);
                 $results[$index] = array(
                     'file' => $full_filename,
                     'mime' => 'image/' . $extension,
@@ -1383,7 +1383,7 @@ class Art extends database_object
             $results = $preferred;
         }
 
-        debug_event('art.class'. "gather_folder: Results: " . json_encode($results), 5);
+        debug_event('art.class', "gather_folder: Results: " . json_encode($results), 5);
         if ($limit && count($results) > $limit) {
             $results = array_slice($results, 0, $limit);
         }
@@ -1523,7 +1523,7 @@ class Art extends database_object
         $size   = '&imgsz=m'; // Medium
 
         $url = "http://www.google.com/search?source=hp&tbm=isch&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
-        debug_event('art.class', 'Search url: ' . $url, '5');
+        debug_event('art.class', 'Search url: ' . $url, 5);
 
         try {
             // Need this to not be considered as a bot (are we? ^^)
@@ -1537,7 +1537,7 @@ class Art extends database_object
             if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)) {
                 foreach ($matches[1] as $match) {
                     $match = rawurldecode($match);
-                    debug_event('art.class', 'Found image at: ' . $match, '5');
+                    debug_event('art.class', 'Found image at: ' . $match, 5);
                     $results = pathinfo($match);
                     $test    = $results['extension'];
                     $pos     = strpos($test, '?');
