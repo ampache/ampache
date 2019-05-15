@@ -346,8 +346,8 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                             );
 
                     //debug_event('channel_run', 'HTTP HEADERS: '.$data,'5');
-                    for ($i = 1; $i < $h_count; $i++) {
-                        $headerpart = explode(":", $headers[$i], 2);
+                    for ($count = 1; $count < $h_count; $count++) {
+                        $headerpart = explode(":", $headers[$count], 2);
                         $header = strtolower(trim($headerpart[0]));
                         $value = trim($headerpart[1]);
                         switch ($header) {

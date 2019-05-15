@@ -86,7 +86,7 @@ switch ($action) {
         }
 
         // Now check for additional things we might have to do
-        if ($_POST['force_democratic']) {
+        if (Core::get_post('force_democratic') !== '') {
             Democratic::set_user_preferences();
         }
 

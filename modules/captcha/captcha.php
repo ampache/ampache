@@ -655,12 +655,12 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     {
 
       #-- init
-      $single_pixel  = (CAPTCHA_PIXEL <= 1);   // very fast
-      $greyscale2x2  = (CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
-      $width         = $this->width;
-        $height       = $this->height;
-        $i            = & $this->img;
-        $dest         = $this->create();
+      $single_pixel = (CAPTCHA_PIXEL <= 1);   // very fast
+      $greyscale2x2 = (CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
+      $width        = $this->width;
+      $height       = $this->height;
+      $image        = & $this->img;
+      $dest         = $this->create();
       
       
         #-- URL param ?hires=1 influences used drawing scheme
@@ -686,14 +686,14 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
                #-- get source pixel(s), paint dest
                     if ($single_pixel) {
                         // single source dot: one-to-one duplicate (unsmooth, hard edges)
-                        imagesetpixel($dest, $x, $y, @imagecolorat($i, (int)$dx + $x, (int)$dy + $y));
+                        imagesetpixel($dest, $x, $y, imagecolorat($image, (int)$dx + $x, (int)$dy + $y));
                     } elseif ($greyscale2x2) {
                         // merge 2x2 simple/greyscale (3 times as slow)
-                        $cXY = $this->get_2x2_greyscale($i, (int)$dx + $x, (int)$dy + $y);
+                        $cXY = $this->get_2x2_greyscale($image, (int)$dx + $x, (int)$dy + $y);
                         imagesetpixel($dest, $x, $y, imagecolorallocate($dest, $cXY, $cXY, $cXY));
                     } else {
                         // exact and smooth transformation (5 times as slow)
-                        list($cXY_R, $cXY_G, $cXY_B) = $this->get_2x2_smooth($i, $x + $dx, $y + $dy);
+                        list($cXY_R, $cXY_G, $cXY_B) = $this->get_2x2_smooth($image, $x + $dx, $y + $dy);
                         imagesetpixel($dest, $x, $y, imagecolorallocate($dest, (int)$cXY_R, (int)$cXY_G, (int)$cXY_B));
                     }
                 }
@@ -701,7 +701,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         }
 
         #-- simply overwrite ->img
-        imagedestroy($i);
+        imagedestroy($image);
         $this->img = $dest;
     }
    
@@ -797,22 +797,22 @@ class easy_captcha_dxy_wave
     #-- array of values with random start/end values
     public function from_to_rand($max, $a, $b)
     {
-        $BEG  = $this->real_rand($a, $b);
-        $DIFF = $this->real_rand($a, $b) - $BEG;
-        $r    = array();
-        for ($i = 0; $i <= $max; $i++) {
-            $r[$i] = $BEG + $DIFF * $i / $max;
+        $BEG    = $this->real_rand($a, $b);
+        $DIFF   = $this->real_rand($a, $b) - $BEG;
+        $result = array();
+        for ($count = 0; $count <= $max; $count++) {
+            $result[$count] = $BEG + $DIFF * $count / $max;
         }
 
-        return($r);
+        return($result);
     }
 
     #-- returns random value in given interval
     public function real_rand($a, $b)
     {
-        $r = rand(0, 1 << 30);
+        $random = rand(0, 1 << 30);
 
-        return($r / (1 << 30) * ($b - $a) + $a);   // base + diff * (0..1)
+        return($random / (1 << 30) * ($b - $a) + $a);   // base + diff * (0..1)
     }
 }
 

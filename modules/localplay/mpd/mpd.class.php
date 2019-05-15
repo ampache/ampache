@@ -517,8 +517,8 @@ class mpd
     {
         $this->_debug('PLAddBulk', 'start', 5);
         $num_files = count($trackArray);
-        for ($i = 0; $i < $num_files; $i++) {
-            $this->QueueCommand(self::COMMAND_ADD, $trackArray[$i]);
+        for ($count = 0; $count < $num_files; $count++) {
+            $this->QueueCommand(self::COMMAND_ADD, $trackArray[$count]);
         }
         $response = $this->SendCommandQueue();
         $this->_debug('PLAddBulk', "return: $response", 5);

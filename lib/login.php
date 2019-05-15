@@ -56,7 +56,7 @@ if (empty($_REQUEST['step'])) {
             $auth['info']['fullname']        = 'Administrative User';
             $auth['info']['offset_limit']    = 25;
         } else {
-            if ($_POST['username']) {
+            if (Core::get_post('username') !== '') {
                 $username = scrub_in(Core::get_post('username'));
                 $password = Core::get_post('password');
             } else {
@@ -83,7 +83,7 @@ if (empty($_REQUEST['step'])) {
             }
         }
     }
-} elseif ($_REQUEST['step'] == '2') {
+} elseif (Core::get_request('step') == '2') {
     $auth_mod = $_REQUEST['auth_mod'];
     $auth     = Auth::login_step2($auth_mod);
     if ($auth['success']) {

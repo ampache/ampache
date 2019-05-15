@@ -29,7 +29,7 @@ $action = Core::get_request('action');
 // Switch on the actions
 switch ($action) {
     case 'search':
-        if ($_REQUEST['rule_1'] != 'missing_artist') {
+        if (Core::get_request('rule_1') != 'missing_artist') {
             $browse = new Browse();
             require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
             require_once AmpConfig::get('prefix') . UI::find_template('show_search_options.inc.php');

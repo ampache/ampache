@@ -114,8 +114,8 @@ switch ($action) {
         if ($_REQUEST['genre'][0] != '-1') {
             $matchlist['genre'] = $_REQUEST['genre'];
         }
-        if ($_REQUEST['catalog'] != '-1') {
-            $matchlist['catalog'] = $_REQUEST['catalog'];
+        if (Core::get_request('catalog') != '-1') {
+            $matchlist['catalog'] = Core::get_request('catalog');
         }
         /* Setup the options array */
         $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit' => $_REQUEST['size_limit']);

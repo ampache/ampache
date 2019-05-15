@@ -80,8 +80,8 @@ function get_theme($name)
         $results['path'] = $name;
         $results['base'] = explode(',', $results['base']);
         $nbbases         = count($results['base']);
-        for ($i = 0; $i < $nbbases; $i++) {
-            $results['base'][$i] = explode('|', $results['base'][$i]);
+        for ($count = 0; $count < $nbbases; $count++) {
+            $results['base'][$count] = explode('|', $results['base'][$count]);
         }
         $results['colors'] = explode(',', $results['colors']);
     } else {

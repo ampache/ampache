@@ -260,35 +260,35 @@ class Stream_Playlist
             case 'localplay':
             case 'web_player':
                 // These are valid, but witchy
-                $ct       = "";
+                $ctype    = "";
                 $redirect = false;
                 unset($ext);
             break;
             case 'asx':
-                $ct = 'video/x-ms-asf';
+                $ctype = 'video/x-ms-asf';
             break;
             case 'pls':
-                $ct = 'audio/x-scpls';
+                $ctype = 'audio/x-scpls';
             break;
             case 'ram':
-                $ct = 'audio/x-pn-realaudio ram';
+                $ctype = 'audio/x-pn-realaudio ram';
             break;
             case 'simple_m3u':
-                $ext = 'm3u';
-                $ct  = 'audio/x-mpegurl';
+                $ext   = 'm3u';
+                $ctype = 'audio/x-mpegurl';
             break;
             case 'xspf':
-                $ct = 'application/xspf+xml';
+                $ctype = 'application/xspf+xml';
             break;
             case 'hls':
-                $ext = 'm3u8';
-                $ct  = 'application/vnd.apple.mpegurl';
+                $ext   = 'm3u8';
+                $ctype = 'application/vnd.apple.mpegurl';
             break;
             case 'm3u':
             default:
                 // Assume M3U if the pooch is screwed
-                $ext = $type = 'm3u';
-                $ct  = 'audio/x-mpegurl';
+                $ext   = $type = 'm3u';
+                $ctype = 'audio/x-mpegurl';
             break;
         }
 
@@ -303,7 +303,7 @@ class Stream_Playlist
         if (isset($ext)) {
             header('Cache-control: public');
             header('Content-Disposition: filename=ampache_playlist.' . $ext);
-            header('Content-Type: ' . $ct . ';');
+            header('Content-Type: ' . $ctype . ';');
         }
 
         $this->{'create_' . $type}();
@@ -362,11 +362,11 @@ class Stream_Playlist
     {
         $ret = "#EXTM3U\n";
 
-        $i = 0;
+        $count = 0;
         foreach ($this->urls as $url) {
             $ret .= '#EXTINF:' . $url->time . ',' . $url->author . ' - ' . $url->title . "\n";
             $ret .= $url->url . "\n";
-            $i++;
+            $count++;
         }
 
         return $ret;
@@ -384,13 +384,13 @@ class Stream_Playlist
     {
         $ret = "[playlist]\n";
         $ret .= 'NumberOfEntries=' . count($this->urls) . "\n";
-        $i = 0;
+        $count = 0;
         foreach ($this->urls as $url) {
-            $i++;
-            $ret .= 'File' . $i . '=' . $url->url . "\n";
-            $ret .= 'Title' . $i . '=' . $url->author . ' - ' .
+            $count++;
+            $ret .= 'File' . $count . '=' . $url->url . "\n";
+            $ret .= 'Title' . $count . '=' . $url->author . ' - ' .
                 $url->title . "\n";
-            $ret .= 'Length' . $i . '=' . $url->time . "\n";
+            $ret .= 'Length' . $count . '=' . $url->time . "\n";
         }
 
         $ret .= "Version=2\n";

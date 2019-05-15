@@ -110,8 +110,8 @@ class Repository
         $nameParts = explode('\\', $className);
         $tableName = preg_replace_callback(
                 '/(?<=.)([A-Z])/',
-                function ($m) {
-                    return '_' . strtolower($m[0]);
+                function ($name) {
+                    return '_' . strtolower($name[0]);
                 }, end($nameParts));
 
         return lcfirst($tableName);

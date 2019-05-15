@@ -1372,7 +1372,7 @@ abstract class Catalog extends database_object
         $albums = $this->get_album_ids();
 
         echo "Starting Dump Album Art...\n";
-        $i = 0;
+        $count = 0;
 
         // Run through them and get the art!
         foreach ($albums as $album_id) {
@@ -1419,9 +1419,9 @@ abstract class Catalog extends database_object
                         fwrite($meta_handle, $string);
                         fclose($meta_handle);
                     } // end metadata
-                    $i++;
-                    if (!($i % 100)) {
-                        echo "Written: $i. . .\n";
+                    $count++;
+                    if (!($count % 100)) {
+                        echo "Written: $count. . .\n";
                         debug_event('catalog.class', "$album->name Art written to $file", '5');
                     }
                 } else {

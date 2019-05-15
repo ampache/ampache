@@ -216,17 +216,17 @@ class scrobbler
         ksort($this->queued_tracks);
 
         // Build the query string (encoded per RFC1738 by the call method)
-        $i   = 0;
+        $count   = 0;
         $vars= array();
         foreach ($this->queued_tracks as $track) {
             //construct array of parameters for each song
-            $vars["artist[$i]"]      = $track['artist'];
-            $vars["track[$i]"]       = $track['title'];
-            $vars["timestamp[$i]"]   = $track['time'];
-            $vars["album[$i]"]       = $track['album'];
-            $vars["trackNumber[$i]"] = $track['track'];
-            $vars["duration[$i]"]    = $track['length'];
-            $i++;
+            $vars["artist[$count]"]      = $track['artist'];
+            $vars["track[$count]"]       = $track['title'];
+            $vars["timestamp[$count]"]   = $track['time'];
+            $vars["album[$count]"]       = $track['album'];
+            $vars["trackNumber[$count]"] = $track['track'];
+            $vars["duration[$count]"]    = $track['length'];
+            $count++;
         }
         // Add the method, API and session keys
         $vars['method']  = 'track.scrobble';

@@ -276,7 +276,7 @@ if ($demo_id !== '') {
  * if we are doing random let's pull the random object
  */
 if ($random !== '') {
-    if ($_REQUEST['start'] < 1) {
+    if ((int) Core::get_request('start') < 1) {
         if (isset($_REQUEST['random_type'])) {
             $rtype = $_REQUEST['random_type'];
         } else {
@@ -561,7 +561,7 @@ if ($transcode) {
 if ($transcode) {
     // Content-length guessing if required by the player.
     // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-    if ($_REQUEST['content_length'] == 'required') {
+    if (Core::get_request('content_length') == 'required') {
         $max_bitrate = Stream::get_allowed_bitrate($media);
         if ($media->time > 0 && $max_bitrate > 0) {
             $stream_size = ($media->time * $max_bitrate * 1000) / 8;

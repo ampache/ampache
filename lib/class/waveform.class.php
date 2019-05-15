@@ -253,8 +253,8 @@ class Waveform
                 $bytes = array();
 
                 // get number of bytes depending on bitrate
-                for ($i = 0; $i < $byte; $i++) {
-                    $bytes[$i] = fgetc($handle);
+                for ($count = 0; $count < $byte; $count++) {
+                    $bytes[$count] = fgetc($handle);
                 }
 
                 switch ($byte) {

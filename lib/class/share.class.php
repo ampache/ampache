@@ -94,7 +94,7 @@ class Share extends database_object
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $secret     = '';
-        for ($i = 0; $i < $length; $i++) {
+        for ($count = 0; $count < $length; $count++) {
             $secret .= $characters[rand(0, strlen($characters) - 1)];
         }
 

@@ -296,7 +296,7 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer|string $object_id
      * @param integer|string $tag_id
-     * @param integer|boolean $user
+     * @param integer $user
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user=true)
     {

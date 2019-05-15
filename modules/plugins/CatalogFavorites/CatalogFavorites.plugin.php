@@ -97,7 +97,7 @@ class AmpacheCatalogFavorites
     {
         if (AmpConfig::get('userflags')) {
             $userflags = Userflag::get_latest(null, -1, $this->maxitems);
-            $i         = 0;
+            $count     = 0;
             echo '<div class="home_plugin">';
             UI::show_box_top(T_('Highlight'));
             echo '<table class="tabledata';
@@ -112,7 +112,7 @@ class AmpacheCatalogFavorites
                 $user->format();
 
                 if ($item->id) {
-                    echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="' . ((($i % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
+                    echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
                     echo '<td style="height: auto;">';
                     if ($this->gridview) {
                         echo '<span style="font-weight: bold;">' . $item->f_link . '</span> ';
@@ -146,7 +146,7 @@ class AmpacheCatalogFavorites
                     }
                     echo '</td></tr>';
 
-                    $i++;
+                    $count++;
                 }
             }
             echo '</table>';

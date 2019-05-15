@@ -32,21 +32,21 @@ function split_sql($sql)
     $buffer    = array();
     $ret       = array();
     $in_string = false;
-    for ($i=0; $i < strlen($sql) - 1; $i++) {
-        if ($sql[$i] == ";" && !$in_string) {
-            $ret[] = substr($sql, 0, $i);
-            $sql   = substr($sql, $i + 1);
-            $i     = 0;
+    for ($count=0; $count < strlen($sql) - 1; $count++) {
+        if ($sql[$count] == ";" && !$in_string) {
+            $ret[] = substr($sql, 0, $count);
+            $sql   = substr($sql, $count + 1);
+            $count = 0;
         }
-        if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
+        if ($in_string && ($sql[$count] == $in_string) && $buffer[1] != "\\") {
             $in_string = false;
-        } elseif (!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
-            $in_string = $sql[$i];
+        } elseif (!$in_string && ($sql[$count] == '"' || $sql[$count] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+            $in_string = $sql[$count];
         }
         if (isset($buffer[1])) {
             $buffer[0] = $buffer[1];
         }
-        $buffer[1] = $sql[$i];
+        $buffer[1] = $sql[$count];
     }
     if (!empty($sql)) {
         $ret[] = $sql;
@@ -125,14 +125,14 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
     foreach ($lines as $line) {
         $parts   = explode(' ', $line);
         $p_count = count($parts);
-        for ($i = 0; $i < $p_count; $i++) {
+        for ($count = 0; $count < $p_count; $count++) {
             // Matching url rewriting rule syntax
-            if ($parts[$i] === 'RewriteRule' && $i < ($p_count - 2)) {
-                $reprule = $parts[$i + 2];
+            if ($parts[$count] === 'RewriteRule' && $count < ($p_count - 2)) {
+                $reprule = $parts[$count + 2];
                 if (!empty($web_path) && strpos($reprule, $web_path) !== 0) {
                     $reprule = $web_path . $reprule;
                     if ($fix) {
-                        $parts[$i + 2] = $reprule;
+                        $parts[$count + 2] = $reprule;
                         $line          = implode(' ', $parts);
                     } else {
                         $valid = false;
@@ -245,11 +245,11 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $pieces   = split_sql($query);
         $p_count  = count($pieces);
         $errors   = array();
-        for ($i=0; $i < $p_count; $i++) {
-            $pieces[$i] = trim($pieces[$i]);
-            if (!empty($pieces[$i]) && $pieces[$i] != '#') {
-                if (!$result = Dba::write($pieces[$i])) {
-                    $errors[] = array( Dba::error(), $pieces[$i] );
+        for ($count=0; $count < $p_count; $count++) {
+            $pieces[$count] = trim($pieces[$count]);
+            if (!empty($pieces[$count]) && $pieces[$count] != '#') {
+                if (!$result = Dba::write($pieces[$count])) {
+                    $errors[] = array( Dba::error(), $pieces[$count] );
                 }
             }
         }

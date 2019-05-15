@@ -77,7 +77,7 @@ switch ($action) {
         if ($_REQUEST['catalog_key'] || $_SESSION['catalog'] != 0) {
             $browse->set_filter('catalog', $_REQUEST['catalog_key']);
             $_SESSION['catalog'] = $_REQUEST['catalog_key'];
-        } elseif ($_REQUEST['catalog_key'] == 0) {
+        } elseif ((int) Core::get_request('catalog_key') == 0) {
             $browse->set_filter('catalog', null);
             unset($_SESSION['catalog']);
         }

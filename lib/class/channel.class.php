@@ -551,13 +551,13 @@ class Channel extends database_object implements media, library_item
     /**
      * @param string $x
      */
-    private function strtohex($x)
+    private function strtohex($source)
     {
-        $s='';
-        foreach (str_split($x) as $c) {
-            $s .= sprintf("%02X", ord($c));
+        $string='';
+        foreach (str_split($source) as $char) {
+            $string .= sprintf("%02X", ord($char));
         }
 
-        return($s);
+        return($string);
     }
 } // end of channel class

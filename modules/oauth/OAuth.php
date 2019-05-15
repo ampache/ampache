@@ -122,8 +122,8 @@ abstract class OAuthSignatureMethod
 
         // Avoid a timing leak with a (hopefully) time insensitive compare
         $result = 0;
-        for ($i = 0; $i < strlen($signature); $i++) {
-            $result |= ord($built{$i}) ^ ord($signature{$i});
+        for ($count = 0; $count < strlen($signature); $count++) {
+            $result |= ord($built{$count}) ^ ord($signature{$count});
         }
 
         return $result == 0;
