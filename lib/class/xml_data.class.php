@@ -229,7 +229,7 @@ class XML_Data
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
      */
-    public function output_xml_from_array($array, $callback = false, $type = '')
+    public static function output_xml_from_array($array, $callback = false, $type = '')
     {
         $string = '';
 

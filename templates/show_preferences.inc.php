@@ -27,25 +27,25 @@
 
 ?>
 <?php /* HINT: Username */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $fullname), 'box box_preferences'); ?>
-<?php  if (filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING) != 'account' && filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING) != 'modules') {
-    ?>
+<?php  if (Core::get_request('tab') !== 'account' && Core::get_request('tab') !== 'modules') {
+    debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>
 
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
-<?php show_preference_box($preferences[filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING)]); ?>
+<?php show_preference_box($preferences[$_REQUEST['tab']]); ?>
 <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
     <?php echo Core::form_register('update_preference'); ?>
-    <input type="hidden" name="tab" value="<?php echo scrub_out(filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING)); ?>" />
-    <input type="hidden" name="method" value="<?php echo scrub_out(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING)); ?>" />
+    <input type="hidden" name="tab" value="<?php echo scrub_out(Core::get_request('tab')); ?>" />
+    <input type="hidden" name="method" value="<?php echo scrub_out(Core::get_request('action')); ?>" />
     <?php if (Access::check('interface', '100')) {
         ?>
-        <input type="hidden" name="user_id" value="<?php echo scrub_out(filter_input(INPUT_GET, 'user_id', FILTER_SANITIZE_STRING)); ?>" />
+        <input type="hidden" name="user_id" value="<?php echo scrub_out(Core::get_request('user_id')); ?>" />
     <?php
     } ?>
 </div>
 <?php
 }  // end if not account
-if (filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING) == 'account') {
+if (Core::get_request('tab') === 'account') {
     $client = Core::get_global('user');
     require AmpConfig::get('prefix') . UI::find_template('show_account.inc.php');
 }

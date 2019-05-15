@@ -41,7 +41,7 @@ function get_themes()
 
     $results = array();
     while (($file = readdir($handle)) !== false) {
-        if ((string) $file !== '.' or (string) $file !== '..') {
+        if ((string) $file !== '.' && (string) $file !== '..') {
             debug_event('themes', "Checking $file", 5);
             $cfg = get_theme($file);
             if ($cfg !== null) {

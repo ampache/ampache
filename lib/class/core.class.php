@@ -93,9 +93,20 @@ class Core
      * Return a $GLOBAL variable instead of calling directly
      *
      * @param string $variable
+     * @return string
      */
     public static function get_request($variable)
     {
+        if (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING) !== null) {
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING);
+        }
+        if (filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING) !== null) {
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING);
+        }
+        if ($_REQUEST[$variable] === null) {
+            return '';
+        }
+
         return $_REQUEST[$variable];
     }
 
