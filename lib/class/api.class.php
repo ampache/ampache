@@ -136,7 +136,7 @@ class Api
         $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp']);
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
-            $passphrase = $_POST['auth'];
+            $passphrase = Core::get_post('auth');
         }
         $username = trim($input['user']);
         $user_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);

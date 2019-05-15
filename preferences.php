@@ -31,7 +31,7 @@ $action            = Core::get_request('action');
 // Switch on the actions
 switch ($action) {
     case 'update_preferences':
-        if ($_POST['method'] == 'admin' && !Access::check('interface', '100')) {
+        if (Core::get_post('method') == 'admin' && !Access::check('interface', '100')) {
             UI::access_denied();
 
             return false;
@@ -45,7 +45,7 @@ switch ($action) {
 
         $system = false;
         /* Reset the Theme */
-        if ($_POST['method'] == 'admin') {
+        if (Core::get_post('method') == 'admin') {
             $user_id            = '-1';
             $system             = true;
             $fullname           = T_('Server');
@@ -65,7 +65,7 @@ switch ($action) {
 
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], $system);
 
-        if ($_POST['method'] == 'admin') {
+        if (Core::get_post('method') == 'admin') {
             $notification_text = T_('Server preferences updated successfully');
         } else {
             $notification_text = T_('User preferences updated successfully');
@@ -85,9 +85,9 @@ switch ($action) {
             return false;
         }
 
-        update_preferences($_POST['user_id']);
+        update_preferences(Core::get_post('user_id'));
 
-        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_POST['user_id']));
+        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out(Core::get_post('user_id')));
     break;
     case 'admin':
         // Make sure only admins here

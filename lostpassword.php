@@ -30,13 +30,13 @@ if (!Mailer::is_mail_enabled() || AmpConfig::get('demo_mode')) {
     return false;
 }
 
-$action = (isset($_POST['action'])) ? $_POST['action'] : "";
+$action = Core::get_post('action');
 
 switch ($action) {
     case 'send':
         /* Check for posted email */
         $result = false;
-        if (isset($_POST['email']) && $_POST['email']) {
+        if (isset($_POST['email']) && Core::get_post('email')) {
             /* Get the email address and the current ip*/
             $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
             $current_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') ? filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP) : filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);

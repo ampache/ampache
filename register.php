@@ -44,8 +44,8 @@ $action = Core::get_request('action');
 // Switch on the actions
 switch ($action) {
     case 'validate':
-        $username      = scrub_in($_GET['username']);
-        $validation    = scrub_in($_GET['auth']);
+        $username      = scrub_in(Core::get_get('username'));
+        $validation    = scrub_in(Core::get_get('auth'));
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_activate.inc.php');
     break;
     case 'add_user':
@@ -58,14 +58,14 @@ switch ($action) {
          * possibly by logging them in right then and there with their current info
          * and 'click here to login' would just be a link back to index.php
          */
-        $fullname       = scrub_in($_POST['fullname']);
-        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
-        $email          = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website        = scrub_in($_POST['website']);
-        $pass1          = $_POST['password_1'];
-        $pass2          = $_POST['password_2'];
-        $state          = (string) scrub_in($_POST['state']);
-        $city           = (string) scrub_in($_POST['city']);
+        $fullname       = scrub_in(Core::get_post('fullname'));
+        $username       = scrub_in(Core::get_post('username'));
+        $email          = scrub_in(Core::get_post('email'));
+        $website        = scrub_in(Core::get_post('website'));
+        $pass1          = Core::get_post('password_1');
+        $pass2          = Core::get_post('password_2');
+        $state          = scrub_in(Core::get_post('state'));
+        $city           = scrub_in(Core::get_post('city'));
 
         /* If we're using the captcha stuff */
         if (AmpConfig::get('captcha_public_reg')) {

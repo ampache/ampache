@@ -1136,7 +1136,7 @@ class easy_captcha_utility
     {
 
       #-- load data
-        if ($id = @$_GET[CAPTCHA_PARAM_ID]) {
+        if ($id = Core::get_get(CAPTCHA_PARAM_ID)) {
 
          #-- special case
             if ($id == 'base.js') {

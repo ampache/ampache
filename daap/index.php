@@ -29,7 +29,7 @@ if (!AmpConfig::get('daap_backend')) {
     return false;
 }
 
-$action = $_GET['action'];
+$action = Core::get_get('action');
 
 $headers = apache_request_headers();
 //$daapAccessIndex = $headers['Client-DAAP-Access-Index'];

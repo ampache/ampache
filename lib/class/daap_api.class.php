@@ -239,11 +239,11 @@ class Daap_Api
         } else {
             $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
             $db_results = Dba::read($sql, array(
-                $_GET['session-id']
+                Core::get_get('session-id')
             ));
             
             if (Dba::num_rows($db_results) == 0) {
-                debug_event('daap_api.class', 'Unknown session id `' . $_GET['session-id'] . '`.', '4');
+                debug_event('daap_api.class', 'Unknown session id `' . Core::get_get('session-id') . '`.', '4');
             }
         }
     }
@@ -310,7 +310,7 @@ class Daap_Api
     private static function catalog_songs()
     {
         // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
-        $meta = explode(',', strtolower($_GET['meta']));
+        $meta = explode(',', strtolower(Core::get_get('meta')));
         $o    = self::tlv('dmap.status', 200);
         $o .= self::tlv('dmap.updatetype', 0);
 
@@ -429,7 +429,7 @@ class Daap_Api
                     }
 
                     if ($playlist->id) {
-                        $meta = explode(',', strtolower($_GET['meta']));
+                        $meta = explode(',', strtolower(Core::get_get('meta')));
                         $o    = self::tlv('dmap.status', 200);
                         $o .= self::tlv('dmap.updatetype', 0);
                         $items    = $playlist->get_items();

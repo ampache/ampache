@@ -90,7 +90,7 @@ class Core
 
     /**
      * get_request
-     * Return a $GLOBAL variable instead of calling directly
+     * Return a $REQUEST variable instead of calling directly
      *
      * @param string $variable
      * @return string
@@ -108,6 +108,44 @@ class Core
         }
 
         return $_REQUEST[$variable];
+    }
+
+    /**
+     * get_get
+     * Return a $GET variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_get($variable)
+    {
+        if (filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING) !== null) {
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING);
+        }
+        if ($_GET[$variable] === null) {
+            return '';
+        }
+
+        return $_GET[$variable];
+    }
+
+    /**
+     * get_post
+     * Return a $POST variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_post($variable)
+    {
+        if (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING) !== null) {
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING);
+        }
+        if ($_POST[$variable] === null) {
+            return '';
+        }
+
+        return $_POST[$variable];
     }
 
     /**

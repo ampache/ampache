@@ -75,7 +75,7 @@ $tag_types = array(
 <br /><br /><br />
 <?php
 if (isset($_GET['show_tag'])) {
-            $show_tag = (int) ($_GET['show_tag']); ?>
+            $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {
     <?php echo Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $show_tag, ''); ?>

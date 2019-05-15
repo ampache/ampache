@@ -252,7 +252,7 @@ if (isset($_GET['operation'])) {
     $fs = new fs($rootdir);
     try {
         $rslt = null;
-        switch ($_GET['operation']) {
+        switch (Core::get_get('operation')) {
             case 'get_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
                 $rslt = $fs->lst($node, (isset($_GET['id']) && $_GET['id'] === '#'));
@@ -284,7 +284,7 @@ if (isset($_GET['operation'])) {
                 $rslt = $fs->copy($node, $parn);
                 break;
             default:
-                throw new Exception('Unsupported operation: ' . $_GET['operation']);
+                throw new Exception('Unsupported operation: ' . Core::get_get('operation'));
         }
         header('Content-Type: application/json; charset=utf8');
         echo json_encode($rslt);

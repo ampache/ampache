@@ -42,7 +42,7 @@ switch ($action) {
 
         return false;
     case 'broadcast':
-        $broadcast_id = $_GET['broadcast_id'];
+        $broadcast_id = Core::get_get('broadcast_id');
         if (empty($broadcast_id)) {
             $broadcast_id = Broadcast::create(T_('My Broadcast'));
         }
@@ -56,7 +56,7 @@ switch ($action) {
         }
     break;
     case 'unbroadcast':
-        $broadcast_id = $_GET['broadcast_id'];
+        $broadcast_id = Core::get_get('broadcast_id');
         $broadcast    = new Broadcast($broadcast_id);
         if ($broadcast->id) {
             $broadcast->update_state(false);

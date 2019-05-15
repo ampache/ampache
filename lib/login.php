@@ -57,8 +57,8 @@ if (empty($_REQUEST['step'])) {
             $auth['info']['offset_limit']    = 25;
         } else {
             if ($_POST['username']) {
-                $username = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
-                $password = $_POST['password'];
+                $username = scrub_in(Core::get_post('username'));
+                $password = Core::get_post('password');
             } else {
                 if ($_SERVER['REMOTE_USER']) {
                     $username = $_SERVER['REMOTE_USER'];

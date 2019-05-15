@@ -136,7 +136,7 @@ switch ($action) {
         $pass1          = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING);
         $pass2          = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING);
         $state          = (string) scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING));
-        $city           = (string) scrub_in($_POST['city']);
+        $city           = (string) scrub_in(Core::get_get('city'));
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
             AmpError::add('password', T_("Error Passwords don't match"));

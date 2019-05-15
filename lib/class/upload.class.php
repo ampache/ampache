@@ -55,7 +55,7 @@ class Upload
 
                     $rootdir   = self::get_root($catalog);
                     $targetdir = $rootdir;
-                    $folder    = $_POST['folder'];
+                    $folder    = Core::get_post('folder');
                     if ($folder == '..') {
                         $folder = '';
                     }
@@ -94,7 +94,7 @@ class Upload
                         $options                = array();
                         $options['user_upload'] = Core::get_global('user')->id;
                         if (isset($_POST['license'])) {
-                            $options['license'] = $_POST['license'];
+                            $options['license'] = Core::get_post('license');
                         }
                         $artist_id = (int) ($_REQUEST['artist']);
                         $album_id  = (int) ($_REQUEST['album']);
