@@ -47,7 +47,7 @@ set_time_limit(0);
 
 $media_ids    = array();
 $default_name = "Unknown.zip";
-$object_type  = scrub_in(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS));
+$object_type  = scrub_in(Core::get_request('action'));
 $name         = $default_name;
 
 if ($object_type == 'browse') {
@@ -61,7 +61,7 @@ if (!check_can_zip($object_type)) {
     return false;
 }
 
-if (Core::is_playable_item(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS))) {
+if (Core::is_playable_item(Core::get_request('action'))) {
     $id = $_REQUEST['id'];
     if (!is_array($id)) {
         $id = array($id);

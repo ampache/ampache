@@ -32,7 +32,7 @@ if (!AmpConfig::get('subsonic_backend')) {
 $action = strtolower($_REQUEST['ssaction']);
 // Compatibility reason
 if (empty($action)) {
-    $action = strtolower(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS));
+    $action = strtolower(Core::get_request('action'));
 }
 $f        = $_REQUEST['f'];
 $callback = $_REQUEST['callback'];

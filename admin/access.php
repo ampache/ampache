@@ -102,7 +102,7 @@ switch ($action) {
     case 'show_add_rpc':
     case 'show_add_local':
     case 'show_add_advanced':
-        $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+        $action = Core::get_request('action');
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
     break;
     case 'show_edit_record':

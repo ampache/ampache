@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+$action = Core::get_request('action');
 
 if (!Core::is_session_started()) {
     session_start();

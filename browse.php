@@ -37,7 +37,7 @@ session_start();
 // type we're dealing with so we've got a little switch here that creates the
 // type.. this feels hackish...
 $browse = new Browse();
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+switch (Core::get_request('action')) {
     case 'tag':
     case 'file':
     case 'album':
@@ -59,7 +59,7 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
     case 'pvmsg':
     case 'podcast':
     case 'podcast_episode':
-        $browse->set_type(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS));
+        $browse->set_type(Core::get_request('action'));
         $browse->set_simple_browse(true);
     break;
 } // end switch
@@ -69,7 +69,7 @@ UI::show_header();
 // Browser is able to save page on current session. Only applied to main menus.
 $browse->set_update_session(true);
 
-switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+switch (Core::get_request('action')) {
     case 'file':
     break;
     case 'album':

@@ -49,7 +49,7 @@ $_SESSION['login'] = true;
                 <span><?php echo T_('Registration'); ?>...</span>
             </div>
             <?php
-            $action          = scrub_in(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS));
+            $action          = scrub_in(Core::get_request('action'));
             $fullname        = scrub_in($_REQUEST['fullname']);
             $fullname_public = ($_REQUEST['fullname_public'] === "1");
             $username        = scrub_in($_REQUEST['username']);

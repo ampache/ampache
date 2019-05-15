@@ -23,7 +23,7 @@
 <ul class="sb2" id="sb_home">
     <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse Music'); ?>"><?php echo T_('Music'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_browse_music'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="browse_music" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
         <?php
-        $text = (string) scrub_in(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) . '_ac';
+        $text = (string) scrub_in(Core::get_request('action')) . '_ac';
         if ($text) {
             ${$text} = ' selected="selected"';
         }

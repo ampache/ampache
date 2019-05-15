@@ -24,7 +24,7 @@
 
 require_once 'lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
-if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'delete_playlist') {
+if (Core::get_request('action') == 'delete_playlist') {
     // Check rights
     $playlist = new Playlist($_REQUEST['playlist_id']);
     if ($playlist->has_access()) {

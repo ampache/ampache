@@ -31,7 +31,7 @@ require_once '../lib/init.php';
 
 $results = '';
 
-debug_event('edit.server', 'Called for action: {' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . '}', '5');
+debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', '5');
 
 // Post first
 $type = $_POST['type'];
@@ -59,7 +59,7 @@ $level = '50';
 if ($libitem->get_user_owner() == Core::get_global('user')->id) {
     $level = '25';
 }
-if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'show_edit_playlist') {
+if (Core::get_request('action') == 'show_edit_playlist') {
     $level = '25';
 }
 

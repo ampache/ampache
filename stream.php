@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-if (!filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)) {
+if (!Core::get_request('action')) {
     debug_event('stream', "Asked without action. Exiting...", 5);
 
     return false;
@@ -40,7 +40,7 @@ if (!defined('NO_SESSION')) {
 $media_ids = array();
 $web_path  = AmpConfig::get('web_path');
 
-debug_event('stream', "Asked for {" . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . "}.", 5);
+debug_event('stream', "Asked for {" . Core::get_request('action') . "}.", 5);
 
 $action = Core::get_request('action');
 

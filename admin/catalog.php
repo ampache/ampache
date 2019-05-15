@@ -32,7 +32,7 @@ if (!Access::check('interface', '100')) {
 UI::show_header();
 
 $catalogs = filter_input(INPUT_GET, 'catalogs', FILTER_SANITIZE_SPECIAL_CHARS);
-$action   = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+$action   = Core::get_request('action');
 // If only one catalog, check it is ready.
 if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog' && $action !== 'show_delete_catalog') {
     // If not ready, display the data to make it ready / stop the action.

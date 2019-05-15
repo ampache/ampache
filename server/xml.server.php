@@ -28,7 +28,7 @@ define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
-if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'handshake') {
+if (Core::get_request('action') != 'handshake') {
     set_time_limit(0);
 }
 
@@ -49,8 +49,8 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) and filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'handshake' and filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'ping') {
-    debug_event('Access Denied', 'Invalid Session attempt to API [' . (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) . ']', '3');
+if (!Session::exists('api', $_REQUEST['auth']) and Core::get_request('action') != 'handshake' and Core::get_request('action') != 'ping') {
+    debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', '3');
     ob_end_clean();
     echo XML_Data::error('401', T_('Session Expired'));
 
@@ -61,7 +61,7 @@ if (!Session::exists('api', $_REQUEST['auth']) and filter_input(INPUT_GET, 'acti
 $username = null;
 $apikey   = null;
 
-if ((filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'handshake') && isset($_REQUEST['timestamp'])) {
+if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp'])) {
     $username = $_REQUEST['user'];
 } else {
     $apikey = $_REQUEST['auth'];
@@ -75,7 +75,7 @@ if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
     return false;
 }
 
-if ((filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'handshake') && (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'ping')) {
+if ((Core::get_request('action') != 'handshake') && (Core::get_request('action') != 'ping')) {
     if (isset($_REQUEST['user'])) {
         $GLOBALS['user'] = User::get_from_username($_REQUEST['user']);
     } else {
