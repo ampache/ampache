@@ -455,4 +455,3 @@ class HttpQPlayer
         return $result;
     } // sendCommand
 } // End HttpQPlayer Class
-

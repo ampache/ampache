@@ -94,7 +94,7 @@ class scrobbler
             // If there are paramters for GET request, adding the "?" caracter before
             $params='?' . $params;
         }
-        $target = $this->scheme . '://' . $this->host . $url . $params;
+        $target       = $this->scheme . '://' . $this->host . $url . $params;
         $filepath     = @fopen($target, 'r', false, $context);
         if (!$filepath) {
             debug_event('scrobbler.class', 'Cannot access ' . $target, 1);
