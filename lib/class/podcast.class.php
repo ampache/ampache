@@ -194,6 +194,7 @@ class Podcast extends database_object implements library_item
     public function search_childrens($name)
     {
         debug_event('podcast.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
     

@@ -247,6 +247,7 @@ class Song_Preview extends database_object implements media, playable_item
     public function search_childrens($name)
     {
         debug_event('song_preview.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 

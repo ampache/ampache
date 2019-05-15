@@ -182,6 +182,7 @@ class TVShow_Season extends database_object implements library_item
     public function search_childrens($name)
     {
         debug_event('tvshow_season.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 

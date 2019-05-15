@@ -1144,6 +1144,7 @@ class Art extends database_object
             $release = $mb->lookup('release', $data['mbid'], $includes);
         } catch (Exception $e) {
             debug_event('art.class', "gather_musicbrainz exception: " . $e, 5);
+
             return $images;
         }
 

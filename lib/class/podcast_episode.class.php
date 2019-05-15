@@ -178,6 +178,7 @@ class Podcast_Episode extends database_object implements media, library_item
     public function search_childrens($name)
     {
         debug_event('podcast_episode.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
     

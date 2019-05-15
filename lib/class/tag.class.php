@@ -778,6 +778,7 @@ class Tag extends database_object implements library_item
     public function search_childrens($name)
     {
         debug_event('tag.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 

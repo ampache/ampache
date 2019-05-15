@@ -224,6 +224,7 @@ class TVShow extends database_object implements library_item
     public function search_childrens($name)
     {
         debug_event('tvshow.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
