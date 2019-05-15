@@ -269,7 +269,9 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
   var __reset = function() {
     // Get the widget context.
     var wdg = $(this).data( "MediaTable" );
-    if ( !wdg ) return;
+    if ( !wdg ) {
+        return;
+    }
     
     wdg.$table.find("thead th").each(function(i){
         var $th = $("#" + wdg.id + "-mediaTableCol-" + i);
