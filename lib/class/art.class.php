@@ -1131,7 +1131,7 @@ class Art extends database_object
         }
 
         if ($data['mbid']) {
-            debug_event('art.class', "gather_musicbrainz: Album MBID: " . $data['mbid'], 5);
+            debug_event('art.class', "gather_musicbrainz Album MBID: " . $data['mbid'], 5);
         } else {
             return $images;
         }
@@ -1143,13 +1143,14 @@ class Art extends database_object
         try {
             $release = $mb->lookup('release', $data['mbid'], $includes);
         } catch (Exception $e) {
+            debug_event('art.class', "gather_musicbrainz exception: " . $e, 5);
             return $images;
         }
 
         $asin = $release->asin;
 
         if ($asin) {
-            debug_event('art.class', "gather_musicbrainz: Found ASIN: " . $asin, 5);
+            debug_event('art.class', "gather_musicbrainz Found ASIN: " . $asin, 5);
             $base_urls = array(
                 "01" => "ec1.images-amazon.com",
                 "02" => "ec1.images-amazon.com",
@@ -1160,11 +1161,11 @@ class Art extends database_object
             foreach ($base_urls as $server_num => $base_url) {
                 // to avoid complicating things even further, we only look for large cover art
                 $url = 'http://' . $base_url . '/images/P/' . $asin . '.' . $server_num . '.LZZZZZZZ.jpg';
-                debug_event('art.class', "gather_musicbrainz: Evaluating Amazon URL: " . $url, 5);
+                debug_event('art.class', "gather_musicbrainz Evaluating Amazon URL: " . $url, 5);
                 $request = Requests::get($url, array(), Core::requests_options());
                 if ($request->status_code == 200) {
                     $num_found++;
-                    debug_event('art.class', "gather_musicbrainz: Amazon URL added: " . $url, 5);
+                    debug_event('art.class', "gather_musicbrainz Amazon URL added: " . $url, 5);
                     $images[] = array(
                         'url' => $url,
                         'mime' => 'image/jpeg',
@@ -1239,14 +1240,14 @@ class Art extends database_object
         );
         foreach ($release->relations as $ar) {
             $arurl = $ar->url->resource;
-            debug_event('art.class', "gather_musicbrainz: Found URL AR: " . $arurl, 5);
+            debug_event('art.class', "gather_musicbrainz Found URL AR: " . $arurl, 5);
             foreach ($coverartsites as $casite) {
                 if (strpos($arurl, $casite['domain']) !== false) {
-                    debug_event('art.class', "gather_musicbrainz: Matched coverart site: " . $casite['name'], 5);
+                    debug_event('art.class', "gather_musicbrainz Matched coverart site: " . $casite['name'], 5);
                     if (preg_match($casite['regexp'], $arurl, $matches)) {
                         $num_found++;
                         $url = $casite[imguri];
-                        debug_event('art.class', "gather_musicbrainz: Generated URL added: " . $url, 5);
+                        debug_event('art.class', "gather_musicbrainz Generated URL added: " . $url, 5);
                         $images[] = array(
                             'url' => $url,
                             'mime' => 'image/jpeg',
