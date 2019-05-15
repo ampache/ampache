@@ -10,7 +10,7 @@ var Detector = {
 	workers: !! window.Worker,
 	fileapi: window.File && window.FileReader && window.FileList && window.Blob,
 
-	getWebGLErrorMessage: function () {
+	getWebGLErrorMessage() {
 
 		var element = document.createElement( "div" );
 		element.id = "webgl-error-message";
@@ -40,7 +40,7 @@ var Detector = {
 
 	},
 
-	addGetWebGLMessage: function ( parameters ) {
+	addGetWebGLMessage( parameters ) {
 
 		var parent, id, element;
 

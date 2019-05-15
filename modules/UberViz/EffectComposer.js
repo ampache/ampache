@@ -44,19 +44,19 @@ THREE.EffectComposer.prototype = {
 
 	},
 
-	addPass: function ( pass ) {
+	addPass( pass ) {
 
 		this.passes.push( pass );
 
 	},
 
-	insertPass: function ( pass, index ) {
+	insertPass( pass, index ) {
 
 		this.passes.splice( index, 0, pass );
 
 	},
 
-	render: function ( delta ) {
+	render( delta ) {
 
 		this.writeBuffer = this.renderTarget1;
 		this.readBuffer = this.renderTarget2;
@@ -107,7 +107,7 @@ THREE.EffectComposer.prototype = {
 
 	},
 
-	reset: function ( renderTarget ) {
+	reset( renderTarget ) {
 
 		if ( typeof renderTarget === "undefined" ) {
 
@@ -126,7 +126,7 @@ THREE.EffectComposer.prototype = {
 
 	},
 
-	setSize: function ( width, height ) {
+	setSize( width, height ) {
 
 		var renderTarget = this.renderTarget1.clone();
 
