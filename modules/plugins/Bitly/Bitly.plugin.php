@@ -86,7 +86,7 @@ class AmpacheBitly
     public function shortener($url)
     {
         if (empty($this->bitly_username) || empty($this->bitly_api_key)) {
-            debug_event('bitly.plugin', 'Bit.ly username or api key missing', '3');
+            debug_event('bitly.plugin', 'Bit.ly username or api key missing', 3);
 
             return false;
         }
@@ -95,11 +95,11 @@ class AmpacheBitly
     
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
-            debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, '5');
+            debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
             $request  = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = json_decode($request->body)->data->url;
         } catch (Exception $e) {
-            debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $e->getMessage(), '1');
+            debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $e->getMessage(), 1);
 
             return false;
         }
@@ -120,14 +120,14 @@ class AmpacheBitly
         if (strlen(trim($data['bitly_username']))) {
             $this->bitly_username = trim($data['bitly_username']);
         } else {
-            debug_event('bitly.plugin', 'No Bit.ly username, shortener skipped', '3');
+            debug_event('bitly.plugin', 'No Bit.ly username, shortener skipped', 3);
 
             return false;
         }
         if (strlen(trim($data['bitly_api_key']))) {
             $this->bitly_api_key = trim($data['bitly_api_key']);
         } else {
-            debug_event('bitly.plugin', 'No Bit.ly api key, shortener skipped', '3');
+            debug_event('bitly.plugin', 'No Bit.ly api key, shortener skipped', 3);
 
             return false;
         }

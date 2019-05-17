@@ -44,7 +44,7 @@ class Stream_Playlist
     public function __construct($id = null)
     {
         if ($id != -1) {
-            if ($id) {
+            if ($id !== null) {
                 Stream::set_session($id);
             }
 

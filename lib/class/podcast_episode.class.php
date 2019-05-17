@@ -185,7 +185,7 @@ class Podcast_Episode extends database_object implements media, library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'podcast_episode') {
+        if ($filter_type === null || $filter_type == 'podcast_episode') {
             $medias[] = array(
                 'object_type' => 'podcast_episode',
                 'object_id' => $this->id

@@ -24,10 +24,8 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;

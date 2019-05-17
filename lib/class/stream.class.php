@@ -48,8 +48,8 @@ class Stream
             $data         = array();
             $data['type'] = 'stream';
             // This shouldn't be done here but at backend endpoint side
-            if (isset($_REQUEST['client'])) {
-                $data['agent'] = $_REQUEST['client'];
+            if (Core::get_request('client') !== '') {
+                $data['agent'] = Core::get_request('client');
             }
 
             // Copy session geolocation
@@ -208,7 +208,7 @@ class Stream
 
         foreach ($string_map as $search => $replace) {
             $command = str_replace($search, $replace, $command, $ret);
-            if (!$ret) {
+            if ($ret === null) {
                 debug_event('stream.class', "$search not in transcode command", 5);
             }
         }
@@ -233,7 +233,7 @@ class Stream
             );
             foreach ($string_map as $search => $replace) {
                 $command = str_replace($search, $replace, $command, $ret);
-                if (!$ret) {
+                if ($ret === null) {
                     debug_event('stream.class', "$search not in transcode command", 5);
                 }
             }

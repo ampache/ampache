@@ -94,14 +94,14 @@ class Stats
      * insert
      * This inserts a new record for the specified object
      * with the specified information, amazing!
-     * @param string $type
+     * @param string $input_type
      * @param integer $oid
      * @param integer $user
      */
-    public static function insert($type, $oid, $user, $agent = '', $location, $count_type = 'stream')
+    public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream')
     {
-        if (!self::is_already_inserted($type, $oid, $user)) {
-            $type = self::validate_type($type);
+        if (!self::is_already_inserted($input_type, $oid, $user)) {
+            $type = self::validate_type($input_type);
 
             $latitude  = null;
             $longitude = null;
@@ -125,10 +125,10 @@ class Stats
             }
 
             if (!$db_results) {
-                debug_event('stats.class', 'Unabled to insert statistics:' . $sql, '3');
+                debug_event('stats.class', 'Unabled to insert statistics:' . $sql, 3);
             }
         } else {
-            debug_event('stats.class', 'Statistics insertion ignored due to graceful delay.', '3');
+            debug_event('stats.class', 'Statistics insertion ignored due to graceful delay.', 3);
         }
     } // insert
 
@@ -166,8 +166,8 @@ class Stats
     public static function get_object_count($object_type, $object_id, $threshold = null, $count_type = 'stream')
     {
         $date = '';
-        if ($threshold) {
-            $date = time() - (86400 * $threshold);
+        if ($threshold !== null && $threshold !== '') {
+            $date = time() - (86400 * (int) $threshold);
         }
 
         $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
@@ -230,9 +230,9 @@ class Stats
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarily by the democratic cooldown code
      */
-    public static function get_object_history($user_id = '', $time)
+    public static function get_object_history($user_id, $time)
     {
-        if ($user_id === '') {
+        if (!in_array((string) $user_id, User::get_valid_users())) {
             $user_id = Core::get_global('user')->id;
         }
 
@@ -260,18 +260,22 @@ class Stats
     /**
      * get_top_sql
      * This returns the get_top sql
-     * @param string $type
+     * @param string $input_type
+     * @param string $threshold
+     * @param string $count_type
      * @param integer $user_id
+     * @param boolean $random
+     * @return string
      */
-    public static function get_top_sql($type, $threshold = '', $count_type = 'stream', $user_id = null)
+    public static function get_top_sql($input_type, $threshold = '', $count_type = 'stream', $user_id = null, $random = false)
     {
-        $type = self::validate_type($type);
+        $type = self::validate_type($input_type);
         $sql  = "";
         /* If they don't pass one, then use the preference */
         if (!$threshold) {
             $threshold = AmpConfig::get('stats_threshold');
         }
-        $date = time() - (86400 * $threshold);
+        $date = time() - (86400 * (int) $threshold);
 
         if ($type == 'playlist') {
             $sql = "SELECT `id` as `id`, `last_update` FROM playlist" .
@@ -303,7 +307,11 @@ class Stats
                     " AND `rating`.`user` = " . $user_id . ")";
         }
         $sql .= " AND `count_type` = '" . $count_type . "'";
-        $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
+        if ($random) {
+            $sql .= " GROUP BY object_id ORDER BY RAND() DESC ";
+        } else {
+            $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
+        }
 
         return $sql;
     }
@@ -313,23 +321,28 @@ class Stats
      * This returns the top X for type Y from the
      * last stats_threshold days
      * @param string $type
+     * @param string $count
+     * @param string $threshold
+     * @param string $offset
+     * @param integer $user_id
+     * @param boolean $random
+     * @return array
      */
-    public static function get_top($type, $count = '', $threshold = '', $offset = '', $user_id = null)
+    public static function get_top($type, $count = '', $threshold = '', $offset = '', $user_id = null, $random = false)
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
         }
 
-        $count = (int) ($count);
         if (!$offset) {
             $limit = $count;
         } else {
-            $limit = (int) ($offset) . "," . $count;
+            $limit = $offset . "," . $count;
         }
 
         $sql = '';
         if ($user_id !== null) {
-            $sql = self::get_top_sql($type, $threshold, 'stream', $user_id);
+            $sql = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
         }
         if ($user_id === null) {
             $sql = self::get_top_sql($type, $threshold);
@@ -349,10 +362,11 @@ class Stats
     /**
      * get_recent_sql
      * This returns the get_recent sql
+     * @param string $input_type
      */
-    public static function get_recent_sql($type, $user_id = '')
+    public static function get_recent_sql($input_type, $user_id = '')
     {
-        $type = self::validate_type($type);
+        $type = self::validate_type($input_type);
 
         $user_sql = '';
         if (!empty($user_id)) {
@@ -381,16 +395,16 @@ class Stats
     /**
      * get_recent
      * This returns the recent X for type Y
-     * @param string $type
+     * @param string $input_type
      */
-    public static function get_recent($type, $count = '', $offset = '')
+    public static function get_recent($input_type, $count = '', $offset = '')
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
         }
 
         $count = (int) ($count);
-        $type  = self::validate_type($type);
+        $type  = self::validate_type($input_type);
         if (!$offset) {
             $limit = $count;
         } else {
@@ -411,14 +425,15 @@ class Stats
 
     /**
      * get_user
-     * This gets all stats for atype based on user with thresholds and all
+     * This gets all stats for a type based on user with thresholds and all
      * If full is passed, doesn't limit based on date
+     * @param string $input_count
+     * @param string $input_type
      * @param integer $user
      */
-    public static function get_user($count, $type, $user, $full = '')
+    public static function get_user($input_count, $input_type, $user, $full = '')
     {
-        $count = (int) ($count);
-        $type  = self::validate_type($type);
+        $type  = self::validate_type($input_type);
 
         /* If full then don't limit on date */
         if ($full) {
@@ -431,7 +446,7 @@ class Stats
         //FIXME:: Requires table scan, look at improving
         $sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" .
                 " WHERE object_type = ? AND date >= ? AND user = ?" .
-                " GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
+                " GROUP BY object_id ORDER BY `count` DESC LIMIT $input_count";
         $db_results = Dba::read($sql, array($type, $date, $user));
 
         $results = array();
@@ -447,6 +462,8 @@ class Stats
      * validate_type
      * This function takes a type and returns only those
      * which are allowed, ensures good data gets put into the db
+     * @param string $type
+     * @return string
      */
     public static function validate_type($type)
     {
@@ -470,11 +487,11 @@ class Stats
     /**
      * get_newest_sql
      * This returns the get_newest sql
-     * @param string $type
+     * @param string $input_type
      */
-    public static function get_newest_sql($type, $catalog = 0)
+    public static function get_newest_sql($input_type, $catalog = 0)
     {
-        $type = self::validate_type($type);
+        $type = self::validate_type($input_type);
 
         $base_type = 'song';
 

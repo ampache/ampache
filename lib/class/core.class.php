@@ -119,7 +119,7 @@ class Core
      */
     public static function get_get($variable)
     {
-        if (filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING) !== null) {
+        if (filter_has_var(INPUT_GET, $variable)) {
             return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING);
         }
         if ($_GET[$variable] === null) {
@@ -138,7 +138,7 @@ class Core
      */
     public static function get_post($variable)
     {
-        if (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING) !== null) {
+        if (filter_has_var(INPUT_POST, $variable)) {
             return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING);
         }
         if ($_POST[$variable] === null) {
@@ -234,16 +234,16 @@ class Core
     {
         switch ($type) {
             case 'post':
-                $sid = $_POST['form_validation'];
+                $sid = self::get_post('form_validation');
             break;
             case 'get':
-                $sid = $_GET['form_validation'];
+                $sid = self::get_get('form_validation');
             break;
             case 'cookie':
                 $sid = $_COOKIE['form_validation'];
             break;
             case 'request':
-                $sid = $_REQUEST['form_validation'];
+                $sid = self::get_request('form_validation');
             break;
             default:
                 return false;
@@ -373,18 +373,18 @@ class Core
     {
         $size = filesize($filename);
         if ($size === false) {
-            $fp = fopen($filename, 'rb');
-            if (!$fp) {
+            $filepointer = fopen($filename, 'rb');
+            if (!$filepointer) {
                 return false;
             }
             $offset = PHP_INT_MAX - 1;
             $size   = (float) $offset;
-            if (!fseek($fp, $offset)) {
+            if (!fseek($filepointer, $offset)) {
                 return false;
             }
             $chunksize = 8192;
-            while (!feof($fp)) {
-                $size += strlen(fread($fp, $chunksize));
+            while (!feof($filepointer)) {
+                $size += strlen(fread($filepointer, $chunksize));
             }
         } elseif ($size < 0) {
             // Handle overflowed integer...

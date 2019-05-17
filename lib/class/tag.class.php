@@ -166,7 +166,7 @@ class Tag extends database_object implements library_item
         }
 
         if (!$tag_id) {
-            debug_event('tag.class', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', '1');
+            debug_event('tag.class', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', 1);
 
             return false;
         }
@@ -204,7 +204,7 @@ class Tag extends database_object implements library_item
      */
     public function update(array $data)
     {
-        //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', '5');
+        //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', 5);
         if (!strlen($data['name'])) {
             return false;
         }
@@ -248,7 +248,7 @@ class Tag extends database_object implements library_item
     public function merge($merge_to, $is_persistent)
     {
         if ($this->id != $merge_to) {
-            debug_event('tag.class', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', '5');
+            debug_event('tag.class', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
 
             $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
                    "SELECT ?,`user`,`object_type`,`object_id` " .
@@ -530,9 +530,9 @@ class Tag extends database_object implements library_item
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
-        //debug_event('tag.class', 'Get tags list called...', '5');
+        //debug_event('tag.class', 'Get tags list called...', 5);
         if (parent::is_cached('tags_list', 'no_name')) {
-            //debug_event('tag.class', 'Tags list found into cache memory!', '5');
+            //debug_event('tag.class', 'Tags list found into cache memory!', 5);
             return parent::get_from_cache('tags_list', 'no_name');
         }
 
@@ -574,7 +574,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_display($tags, $link=false, $filter_type='')
     {
-        //debug_event('tag.class', 'Get display tags called...', '5');
+        //debug_event('tag.class', 'Get display tags called...', 5);
         if (!is_array($tags)) {
             return '';
         }
@@ -583,9 +583,9 @@ class Tag extends database_object implements library_item
 
         // Iterate through the tags, format them according to type and element id
         foreach ($tags as $tag_id => $value) {
-            /*debug_event('tag.class', $tag_id, '5');
+            /*debug_event('tag.class', $tag_id, 5);
             foreach ($value as $vid=>$v) {
-                debug_event('tag.class', $vid.' = {'.$v.'}', '5');
+                debug_event('tag.class', $vid.' = {'.$v.'}', 5);
             }*/
             if ($link) {
                 $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . $value['name'] . '">';
@@ -612,7 +612,7 @@ class Tag extends database_object implements library_item
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
-        debug_event('tag.class', 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', '5');
+        debug_event('tag.class', 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
 
         $ctags       = self::get_top_tags($type, $object_id);
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
@@ -624,7 +624,7 @@ class Tag extends database_object implements library_item
             foreach ($ctags as $ctid => $ctv) {
                 if ($ctv['id'] != '') {
                     $ctag = new Tag($ctv['id']);
-                    debug_event('tag.class', 'Processing tag {' . $ctag->name . '}...', '5');
+                    debug_event('tag.class', 'Processing tag {' . $ctag->name . '}...', 5);
                     $found = false;
 
                     foreach ($editedTags as  $tk => $tv) {
@@ -635,11 +635,11 @@ class Tag extends database_object implements library_item
                     }
 
                     if ($found) {
-                        debug_event('tag.class', 'Already found. Do nothing.', '5');
+                        debug_event('tag.class', 'Already found. Do nothing.', 5);
                         unset($editedTags[$tk]);
                     } else {
                         if ($overwrite) {
-                            debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
+                            debug_event('tag.class', 'Not found in the new list. Delete it.', 5);
                             $ctag->remove_map($type, $object_id, false);
                         }
                     }
@@ -650,7 +650,7 @@ class Tag extends database_object implements library_item
         // Look if we need to add some new tags
         foreach ($editedTags as  $tk => $tv) {
             if ($tv != '') {
-                debug_event('tag.class', 'Adding new tag {' . $tv . '}', '5');
+                debug_event('tag.class', 'Adding new tag {' . $tv . '}', 5);
                 self::add($type, $object_id, $tv, false);
             }
         }

@@ -186,7 +186,7 @@ class Userflag extends database_object
                             $plugin->_plugin->set_flag($song, $flagged);
                         }
                     } catch (Exception $e) {
-                        debug_event('userflag.class', 'Stats plugin error: ' . $e->getMessage(), '1');
+                        debug_event('userflag.class', 'Stats plugin error: ' . $e->getMessage(), 1);
                     }
                 }
             }

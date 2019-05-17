@@ -82,14 +82,14 @@ class AmpacheDiscogs
         if (strlen(trim($data['discogs_api_key']))) {
             $this->api_key = trim($data['discogs_api_key']);
         } else {
-            debug_event('discogs.plugin', 'No Discogs api key, metadata plugin skipped', '3');
+            debug_event('discogs.plugin', 'No Discogs api key, metadata plugin skipped', 3);
 
             return false;
         }
         if (strlen(trim($data['discogs_secret_api_key']))) {
             $this->secret = trim($data['discogs_secret_api_key']);
         } else {
-            debug_event('discogs.plugin', 'No Discogs secret, metadata plugin skipped', '3');
+            debug_event('discogs.plugin', 'No Discogs secret, metadata plugin skipped', 3);
 
             return false;
         }
@@ -142,11 +142,11 @@ class AmpacheDiscogs
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('discogs.plugin', 'Getting metadata from Discogs...', '5');
+        debug_event('discogs.plugin', 'Getting metadata from Discogs...', 5);
 
         // TVShow and Movie metadata only
         if (!in_array('music', $gather_types)) {
-            debug_event('discogs.plugin', 'Not a valid media type, skipped.', '5');
+            debug_event('discogs.plugin', 'Not a valid media type, skipped.', 5);
 
             return null;
         }
@@ -173,7 +173,7 @@ class AmpacheDiscogs
                 }
             }
         } catch (Exception $e) {
-            debug_event('discogs.plugin', 'Error getting metadata: ' . $e->getMessage(), '1');
+            debug_event('discogs.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
         
         return $results;

@@ -60,12 +60,12 @@ class Repository
 
     /**
      *
-     * @param type $id
+     * @param type $object_id
      * @return DatabaseObject
      */
-    public function findById($id)
+    public function findById($object_id)
     {
-        $rows = $this->findBy(array('id'), array($id));
+        $rows = $this->findBy(array('id'), array($object_id));
 
         return count($rows) ? reset($rows) : null;
     }
@@ -166,11 +166,11 @@ class Repository
         );
     }
 
-    protected function deleteRecord($id)
+    protected function deleteRecord($object_id)
     {
         $sql = 'DELETE FROM ' . $this->getTableName()
                 . ' WHERE id = ?';
-        \Dba::write($sql, array($id));
+        \Dba::write($sql, array($object_id));
     }
 
     protected function getKeyValuePairs($properties)

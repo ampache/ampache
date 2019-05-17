@@ -24,14 +24,12 @@ define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 
-debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_request('action') . '}', '5');
-
-$action = Core::get_request('action');
+debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'refresh_playlist_medias':
-        $playlist = new Playlist($_REQUEST['id']);
+        $playlist = new Playlist(Core::get_request('id'));
         $playlist->format();
         $object_ids = $playlist->get_items();
         $browse     = new Browse();
@@ -46,7 +44,7 @@ switch ($action) {
         $browse->set_show_header(true);
         $browse->set_type('song');
         $browse->set_simple_browse(true);
-        $browse->set_filter('album', $_REQUEST['id']);
+        $browse->set_filter('album', Core::get_request('id'));
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
         echo "<div id='browse_content_song' class='browse_content'>";

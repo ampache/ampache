@@ -38,11 +38,11 @@ class UPnPDevice
     {
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $descriptionUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = curl_exec($ch);
-        curl_close($ch);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $descriptionUrl);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($curl);
+        curl_close($curl);
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string($response);
@@ -98,17 +98,17 @@ class UPnPDevice
         //debug_event('upnpdevice', 'sendRequestToDevice Body: ' . $body, 5);
         //debug_event('upnpdevice', 'sendRequestToDevice Hdr: ' . print_r($header, true), 5);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $controlUrl);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $controlUrl);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+        $response = curl_exec($curl);
+        curl_close($curl);
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = array();
@@ -193,16 +193,16 @@ class UPnPDevice
         );
         debug_event('upnpdevice', 'Subscribe with: ' . print_r($header, true), 5);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $eventUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, TRUE);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'SUBSCRIBE');
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $eventUrl);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_HEADER, TRUE);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'SUBSCRIBE');
 
-        $response = curl_exec($ch);
-        curl_close( $ch );
+        $response = curl_exec($curl);
+        curl_close( $curl );
         debug_event('upnpdevice', 'Subscribe response: ' . $response, 5);
 
         $lines = explode("\r\n", trim($response));
@@ -243,16 +243,16 @@ class UPnPDevice
 
         debug_event('upnpdevice', 'Unsubscribe from SID: ' . $sid . ' with: ' . "\n" . print_r($header, true), 5);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $eventUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'UNSUBSCRIBE');
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $eventUrl);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'UNSUBSCRIBE');
 
-        $response = curl_exec($ch);
-        curl_close( $ch );
+        $response = curl_exec($curl);
+        curl_close( $curl );
     }
     */
 }

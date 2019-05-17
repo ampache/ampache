@@ -92,7 +92,7 @@ class AmpacheAmazon
         if (strlen(trim($data['amazon_base_url']))) {
             $this->amazon_base_url = trim($data['amazon_base_url']);
         } else {
-            debug_event('amazon.plugin', 'No amazon base url, plugin skipped', '3');
+            debug_event('amazon.plugin', 'No amazon base url, plugin skipped', 3);
 
             return false;
         }
@@ -100,7 +100,7 @@ class AmpacheAmazon
         if (strlen(trim($data['amazon_developer_public_key']))) {
             $this->amazon_developer_public_key = trim($data['amazon_developer_public_key']);
         } else {
-            debug_event('amazon.plugin', 'No amazon developer public key, plugin skipped', '3');
+            debug_event('amazon.plugin', 'No amazon developer public key, plugin skipped', 3);
 
             return false;
         }
@@ -108,7 +108,7 @@ class AmpacheAmazon
         if (strlen(trim($data['amazon_developer_private_api_key']))) {
             $this->amazon_developer_private_api_key = trim($data['amazon_developer_private_api_key']);
         } else {
-            debug_event('amazon.plugin', 'No amazon developer private key, plugin skipped', '3');
+            debug_event('amazon.plugin', 'No amazon developer private key, plugin skipped', 3);
 
             return false;
         }
@@ -179,7 +179,7 @@ class AmpacheAmazon
 
             $search_results  = array_merge($search_results, $raw_results);
             $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-            debug_event('amazon.plugin', "Searched results page " . ($amazon->_currentPage + 1) . "/" . $pages_to_search, '5');
+            debug_event('amazon.plugin', "Searched results page " . ($amazon->_currentPage + 1) . "/" . $pages_to_search, 5);
             $amazon->_currentPage++;
         } while ($amazon->_currentPage < $pages_to_search);
 

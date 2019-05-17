@@ -82,7 +82,7 @@ class AmpacheTvdb
         if (strlen(trim($data['tvdb_api_key']))) {
             $this->api_key = trim($data['tvdb_api_key']);
         } else {
-            debug_event('tvdb.plugin', 'No Tvdb api key, metadata plugin skipped', '3');
+            debug_event('tvdb.plugin', 'No Tvdb api key, metadata plugin skipped', 3);
 
             return false;
         }
@@ -96,11 +96,11 @@ class AmpacheTvdb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('tvdb.plugin', 'Getting metadata from Tvdb...', '5');
+        debug_event('tvdb.plugin', 'Getting metadata from Tvdb...', 5);
 
         // TVShow metadata only
         if (!in_array('tvshow', $gather_types)) {
-            debug_event('tvdb.plugin', 'Not a valid media type, skipped.', '5');
+            debug_event('tvdb.plugin', 'Not a valid media type, skipped.', 5);
 
             return null;
         }
@@ -171,7 +171,7 @@ class AmpacheTvdb
                 }
             }
         } catch (Exception $e) {
-            debug_event('tvdb.plugin', 'Error getting metadata: ' . $e->getMessage(), '1');
+            debug_event('tvdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
         
         return $results;

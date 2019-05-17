@@ -47,28 +47,28 @@ set_time_limit(0);
 
 $media_ids    = array();
 $default_name = "Unknown.zip";
-$object_type  = scrub_in(Core::get_request('action'));
+$object_type  = (string) scrub_in(Core::get_request('action'));
 $name         = $default_name;
 
 if ($object_type == 'browse') {
-    $object_type = $_REQUEST['type'];
+    $object_type = Core::get_request('type');
 }
 
 if (!check_can_zip($object_type)) {
-    debug_event('batch', 'Object type `' . $object_type . '` is not allowed to be zipped.', 1);
+    debug_event('batch', 'Object type `' . $object_type . '` is not allowed to be zipped.', 2);
     UI::access_denied();
 
     return false;
 }
 
 if (Core::is_playable_item(Core::get_request('action'))) {
-    $id = $_REQUEST['id'];
-    if (!is_array($id)) {
-        $id = array($id);
+    $object_id = Core::get_request('id');
+    if (!is_array($object_id)) {
+        $object_id = array($object_id);
     }
     $media_ids = array();
-    foreach ($id as $i) {
-        $libitem = new $object_type($i);
+    foreach ($object_id as $item) {
+        $libitem = new $object_type($item);
         if ($libitem->id) {
             $libitem->format();
             $name      = $libitem->get_fullname();
@@ -76,17 +76,15 @@ if (Core::is_playable_item(Core::get_request('action'))) {
         }
     }
 } else {
-    $action = Core::get_request('action');
-
     // Switch on the actions
-    switch ($action) {
+    switch ($_REQUEST['action']) {
         case 'tmp_playlist':
             $media_ids = Core::get_global('user')->playlist->get_items();
             $name      = Core::get_global('user')->username . ' - Playlist';
         break;
         case 'browse':
-            $id               = (int) scrub_in(filter_input(INPUT_POST, 'browse_id', FILTER_SANITIZE_NUMBER_INT));
-            $browse           = new Browse($id);
+            $object_id        = (int) scrub_in(filter_input(INPUT_POST, 'browse_id', FILTER_SANITIZE_NUMBER_INT));
+            $browse           = new Browse($object_id);
             $browse_media_ids = $browse->get_saved();
             foreach ($browse_media_ids as $media_id) {
                 switch ($object_type) {
@@ -110,7 +108,7 @@ if (Core::is_playable_item(Core::get_request('action'))) {
 }
 
 if (!User::stream_control($media_ids)) {
-    debug_event('batch', 'UI::access_denied: Stream control failed for user ' . Core::get_global('user')->username, '3');
+    debug_event('batch', 'UI::access_denied: Stream control failed for user ' . Core::get_global('user')->username, 3);
     UI::access_denied();
 
     return false;

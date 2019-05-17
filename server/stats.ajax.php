@@ -31,7 +31,7 @@ $results = array();
 $action  = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'geolocation':
         if (AmpConfig::get('geolocation')) {
             if (Core::get_global('user')->id) {

@@ -245,13 +245,12 @@ class WebPlayer
 
             $js[$kmember] = $item->$member;
         }
-        $url = $item->url;
-
         $types = self::get_types($item, $force_type);
 
-        $media   = null;
-        $urlinfo = Stream_URL::parse($url);
-        $url     = $urlinfo['base_url'];
+        $media    = null;
+        $item_url = $item->url;
+        $urlinfo  = Stream_URL::parse($item_url);
+        $url      = $urlinfo['base_url'];
 
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);

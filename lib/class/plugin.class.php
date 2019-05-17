@@ -100,7 +100,7 @@ class Plugin
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
-            debug_event('plugin.class', 'Unable to read plugins directory', '1');
+            debug_event('plugin.class', 'Unable to read plugins directory', 1);
         }
 
         // Recurse the directory

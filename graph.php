@@ -38,10 +38,10 @@ if (!AmpConfig::get('statistical_graphs')) {
     return false;
 }
 
-$type = $_REQUEST['type'];
+$type = Core::get_request('type');
 
 $user_id     = (int) filter_input(INPUT_GET, 'user_id', FILTER_SANITIZE_NUMBER_INT);
-$object_type = (string) scrub_in($_REQUEST['object_type']);
+$object_type = (string) scrub_in(Core::get_request('object_type'));
 if (!Core::is_library_item($object_type)) {
     $object_type = null;
 }

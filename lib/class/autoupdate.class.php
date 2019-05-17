@@ -87,14 +87,14 @@ class AutoUpdate
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
-                debug_event('autoupdate.class', 'Github API request ' . $url . ' failed with http code ' . $request->status_code, '1');
+                debug_event('autoupdate.class', 'Github API request ' . $url . ' failed with http code ' . $request->status_code, 1);
 
                 return null;
             }
 
             return json_decode($request->body);
         } catch (Exception $e) {
-            debug_event('autoupdate.class', 'Request error: ' . $e->getMessage(), '1');
+            debug_event('autoupdate.class', 'Request error: ' . $e->getMessage(), 1);
 
             return null;
         }
@@ -108,7 +108,7 @@ class AutoUpdate
     {
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
-            Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, '1');
+            Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, 1);
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
 
@@ -201,7 +201,7 @@ class AutoUpdate
             return AmpConfig::get('autoupdate_lastversion_new');
         }
 
-        debug_event('autoupdate.class', 'Checking latest version online...', '5');
+        debug_event('autoupdate.class', 'Checking latest version online...', 5);
 
         $available = false;
         $current   = self::get_current_version();

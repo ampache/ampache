@@ -252,6 +252,12 @@ class Song extends database_object implements media, library_item
      * @var string $f_albumartist_link
      */
     public $f_albumartist_link;
+
+    /**
+     * @var string f_year_link
+     */
+    public $f_year_link;
+
     /**
      * @var string $f_tags
      */
@@ -986,7 +992,7 @@ class Song extends database_object implements media, library_item
     public function update(array $data)
     {
         foreach ($data as $key => $value) {
-            debug_event('song.class', $key . '=' . $value, '5');
+            debug_event('song.class', $key . '=' . $value, 5);
 
             switch ($key) {
                 case 'artist_name':
@@ -1472,6 +1478,14 @@ class Song extends database_object implements media, library_item
 
         $this->f_publisher = $this->label;
         $this->f_composer  = $this->composer;
+
+        $year = $this->year;
+        if (!$year) {
+            $year = 0;
+        } else {
+            $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
+        }
+
         
         if (AmpConfig::get('licensing') && $this->license !== null) {
             $license = new License($this->license);
@@ -1800,7 +1814,9 @@ class Song extends database_object implements media, library_item
             }
         }
         $sql .= "ORDER BY `date` DESC ";
-        $sql .= "LIMIT " . (string) (AmpConfig::get('popular_threshold')) . " ";
+        if (AmpConfig::get('popular_threshold')) {
+            $sql .= "LIMIT " . (string) (AmpConfig::get('popular_threshold')) . " ";
+        }
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -1875,7 +1891,7 @@ class Song extends database_object implements media, library_item
             }
         }
 
-        if ($target !== null) {
+        if ($target !== null && $target !== '') {
             debug_event('song.class', 'Explicit format request {' . $target . '}', 5);
         } else {
             if ($target = AmpConfig::get('encode_target_' . $source)) {

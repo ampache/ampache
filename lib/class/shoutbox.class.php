@@ -76,7 +76,7 @@ class Shoutbox
     {
         $types = array('song', 'album', 'artist', 'label');
 
-        if ($object_type != null) {
+        if ($object_type !== null) {
             if (in_array($object_type, $types)) {
                 $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));

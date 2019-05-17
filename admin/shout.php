@@ -30,10 +30,8 @@ if (!Access::check('interface', '100')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'edit_shout':
         $shout = new Shoutbox($_REQUEST['shout_id']);
         if ($shout->id) {

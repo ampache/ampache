@@ -50,13 +50,13 @@ $_SESSION['login'] = true;
             </div>
             <?php
             $action          = scrub_in(Core::get_request('action'));
-            $fullname        = scrub_in($_REQUEST['fullname']);
-            $fullname_public = ($_REQUEST['fullname_public'] === "1");
-            $username        = scrub_in($_REQUEST['username']);
-            $email           = scrub_in($_REQUEST['email']);
-            $website         = scrub_in($_REQUEST['website']);
-            $state           = scrub_in($_REQUEST['state']);
-            $city            = scrub_in($_REQUEST['city']);
+            $fullname        = scrub_in(Core::get_request('fullname'));
+            $fullname_public = (Core::get_request('fullname_public') === "1");
+            $username        = scrub_in(Core::get_request('username'));
+            $email           = scrub_in(Core::get_request('email'));
+            $website         = scrub_in(Core::get_request('website'));
+            $state           = scrub_in(Core::get_request('state'));
+            $city            = scrub_in(Core::get_request('city'));
             ?>
             <div id="registerbox">
                 <form name="update_user" method="post" action="<?php echo $web_path; ?>/register.php" enctype="multipart/form-data">
@@ -77,7 +77,6 @@ $_SESSION['login'] = true;
                     </div>
                     <?php
                     } // end if user_agreement?>
-                    <h3><?php echo T_('User Information'); ?></h3>
                     <div class="registerfield require">
                         <label for="username"><?php echo T_('Username'); ?>:</label>
                         <input type='text' name='username' id='username' value='<?php echo scrub_out((string) $username); ?>' />

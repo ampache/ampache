@@ -31,7 +31,7 @@ $results = array();
 $action  = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'random_albums':
         $albums = Album::get_random(6);
         if (count($albums) and is_array($albums)) {
@@ -159,7 +159,7 @@ switch ($action) {
                 if ($artist->mbid) {
                     $walbums = Wanted::get_missing_albums($artist);
                 } else {
-                    debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', '5');
+                    debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 5);
                 }
             } else {
                 $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
@@ -191,7 +191,7 @@ switch ($action) {
                 $walbum->show_action_buttons();
                 $results['wanted_action_' . $mbid] = ob_get_clean();
             } else {
-                debug_event('index.ajax', 'Already wanted, skipped.', '5');
+                debug_event('index.ajax', 'Already wanted, skipped.', 5);
             }
         }
     break;
@@ -259,7 +259,7 @@ switch ($action) {
     case 'start_channel':
         if (Access::check('interface', '75')) {
             ob_start();
-            $channel = new Channel($_REQUEST['id']);
+            $channel = new Channel(Core::get_request('id'));
             if ($channel->id) {
                 if ($channel->check_channel()) {
                     $channel->stop_channel();
@@ -268,19 +268,19 @@ switch ($action) {
                 sleep(1);
                 echo $channel->get_channel_state();
             }
-            $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
+            $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
         }
     break;
     case 'stop_channel':
         if (Access::check('interface', '75')) {
             ob_start();
-            $channel = new Channel($_REQUEST['id']);
+            $channel = new Channel(Core::get_request('id'));
             if ($channel->id) {
                 $channel->stop_channel();
                 sleep(1);
                 echo $channel->get_channel_state();
             }
-            $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
+            $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
         }
     break;
     case 'slideshow':

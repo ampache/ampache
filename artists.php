@@ -24,10 +24,8 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -49,7 +47,7 @@ switch ($action) {
 
         $artist = new Artist($_REQUEST['artist_id']);
         if (!Catalog::can_remove($artist)) {
-            debug_event('artists', 'Unauthorized to remove the artist `.' . $artist->id . '`.', 1);
+            debug_event('artists', 'Unauthorized to remove the artist `.' . $artist->id . '`.', 2);
             UI::access_denied();
 
             return false;
@@ -71,7 +69,20 @@ switch ($action) {
         }
         $object_type = 'album';
         require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
-        break;
+    break;
+    case 'showyear':
+        $artist = new Artist($_REQUEST['artist']);
+        $artist->format();
+        $year = intval($_REQUEST['year']);
+        if (AmpConfig::get('album_release_type')) {
+            $multi_object_ids = $artist->get_by_year($_REQUEST['catalog'],$year, false, true);
+        } else {
+            $object_ids = $artist->get_by_year($_REQUEST['catalog'], $year);
+        }
+
+        $object_type = 'album';
+        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
+    break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();

@@ -30,14 +30,12 @@ if (!AmpConfig::get('channel')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_create':
-        $type = Channel::format_type($_REQUEST['type']);
+        $type = Channel::format_type(Core::get_request('type'));
         if (!empty($type) && !empty($_REQUEST['id'])) {
-            $object = new $type($_REQUEST['id']);
+            $object = new $type(Core::get_request('id'));
             if ($object->id) {
                 $object->format();
                 require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
@@ -71,9 +69,9 @@ switch ($action) {
 
         return false;
     case 'show_delete':
-        $id = $_REQUEST['id'];
+        $object_id = Core::get_request('id');
 
-        $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($id);
+        $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($object_id);
         show_confirmation(T_('Channel Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_channel');
         UI::show_footer();
 
@@ -85,8 +83,8 @@ switch ($action) {
             return false;
         }
 
-        $id      = $_REQUEST['id'];
-        $channel = new Channel($id);
+        $object_id = Core::get_request('id');
+        $channel   = new Channel($object_id);
         if ($channel->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=channel';
             show_confirmation(T_('Channel Deleted'), T_('The Channel has been deleted'), $next_url);

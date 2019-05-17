@@ -122,8 +122,12 @@ function sort_find_home($song,$sort_pattern,$base) {
         $sort_pattern = preg_replace("/\/?%o\//","",$sort_pattern);
         $first_element = substr($sort_pattern,0,2);
         $element = sort_element_name($first_element);
-        if (!$element) { $alphabet = 'ZZ'; }
-        else {     $alphabet = strtoupper(substr(${$element},0,1)); }
+        if ($element === false) {
+            $alphabet = 'ZZ';
+        }
+        else {
+            $alphabet = strtoupper(substr(${$element},0,1));
+        }
         $alphabet = preg_replace("/[^A-Za-z0-9]/","ZZ",$alphabet);
 
         $home .= "/$alphabet";

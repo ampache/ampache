@@ -28,7 +28,7 @@
                 }
                 echo $libitem->username;
                 if ($libitem->fullname_public || Access::check('interface', 100)) {
-                    echo "(" . $libitem->fullname . ")";
+                    echo " (" . $libitem->fullname . ")";
                 }
             ?>
         </a>

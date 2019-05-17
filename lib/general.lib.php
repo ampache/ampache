@@ -161,7 +161,7 @@ function get_languages()
     $handle    = opendir(AmpConfig::get('prefix') . '/locale');
 
     if (!is_resource($handle)) {
-        debug_event('general.lib', 'Error unable to open locale directory', '1');
+        debug_event('general.lib', 'Error unable to open locale directory', 1);
     }
 
     $results = array();

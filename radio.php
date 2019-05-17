@@ -30,10 +30,8 @@ if (!AmpConfig::get('live_stream')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_create':
         if (!Access::check('interface', 75)) {
             UI::access_denied();

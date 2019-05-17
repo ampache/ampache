@@ -56,7 +56,7 @@ define('TABLE_RENDERED', 1);
                 <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
                     <div class="loginfield" id="usernamefield">
                         <label for="username"><?php echo  T_('Username'); ?>:</label>
-                        <input class="text_input" type="text" id="username" name="username" value="<?php echo scrub_out($_REQUEST['username']); ?>" autofocus />
+                        <input class="text_input" type="text" id="username" name="username" value="<?php echo scrub_out(Core::get_request('username')); ?>" autofocus />
                     </div>
                     <div class="loginfield" id="passwordfield">
                         <label for="password"><?php echo  T_('Password'); ?>:</label>

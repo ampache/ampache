@@ -77,7 +77,7 @@ class Waveform
         if ($song->id) {
             $song->format();
             $waveform = $song->waveform;
-            if (!$waveform) {
+            if ($waveform === null) {
                 $catalog = Catalog::create_from_id($song->catalog);
                 if ($catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
@@ -97,20 +97,20 @@ class Waveform
                                     return null;
                                 }
 
-                                $transcoder = Stream::start_transcode($song, $transcode_to);
-                                $fpointer   = $transcoder['handle'];
-                                if (!is_resource($fpointer)) {
+                                $transcoder  = Stream::start_transcode($song, $transcode_to);
+                                $filepointer = $transcoder['handle'];
+                                if (!is_resource($filepointer)) {
                                     debug_event('waveform.class', "Failed to open " . $song->file . " for waveform.", 3);
 
                                     return null;
                                 }
 
                                 do {
-                                    $buf = fread($fpointer, 2048);
+                                    $buf = fread($filepointer, 2048);
                                     fwrite($tfp, $buf);
-                                } while (!feof($fpointer));
+                                } while (!feof($filepointer));
 
-                                fclose($fpointer);
+                                fclose($filepointer);
                                 fclose($tfp);
 
                                 Stream::kill_process($transcoder);
@@ -122,10 +122,10 @@ class Waveform
                                     throw new \RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked.');
                                 }
                             } else {
-                                debug_event('waveform.class', 'transcode setting to wav required for waveform.', '3');
+                                debug_event('waveform.class', 'transcode setting to wav required for waveform.', 3);
                             }
                         } else {
-                            debug_event('waveform.class', 'tmp_dir_path setting required for waveform.', '3');
+                            debug_event('waveform.class', 'tmp_dir_path setting required for waveform.', 3);
                         }
                     }
                     // Already wav file, no transcode required
@@ -336,7 +336,7 @@ class Waveform
     /**
      * Save waveform to db.
      * @param integer $song_id
-     * @param binary|string $waveform
+     * @param string $waveform
      * @return boolean
      */
     protected static function save_to_db($song_id, $waveform)

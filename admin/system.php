@@ -30,10 +30,8 @@ if (!Access::check('interface', 100) or AmpConfig::get('demo_mode')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     /* This re-generates the config file comparing
      * /config/ampache.cfg to .cfg.dist
      */

@@ -31,6 +31,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <th class="cel_add"></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+            <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
         </tr>
@@ -114,6 +115,7 @@ foreach ($data as $row) {
         </td>
         <td class="cel_album"><?php echo $song->f_album_link; ?></td>
         <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
+        <td class="cel_artist"><?php echo $song->year; ?></td>
         <td class="cel_username">
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
             <?php echo scrub_out($row_user->fullname); ?>

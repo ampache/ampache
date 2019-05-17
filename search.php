@@ -24,17 +24,15 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'search':
         if (Core::get_request('rule_1') != 'missing_artist') {
             $browse = new Browse();
             require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
             require_once AmpConfig::get('prefix') . UI::find_template('show_search_options.inc.php');
             $results = Search::run($_REQUEST);
-            $browse->set_type($_REQUEST['type']);
+            $browse->set_type(Core::get_request('type'));
             $browse->show_objects($results);
             $browse->store();
         } else {

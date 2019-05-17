@@ -173,6 +173,11 @@ class Album extends database_object implements library_item
     public $f_year;
 
     /**
+      * @var string f_year_link
+      */
+    public $f_year_link;
+
+    /**
      *  @var string $f_title
      */
     public $f_title;
@@ -489,7 +494,7 @@ class Album extends database_object implements library_item
             try {
                 Wanted::delete_wanted_release($mbid);
             } catch (Exception $e) {
-                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), '1');
+                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), 2);
             }
         }
 
@@ -638,7 +643,7 @@ class Album extends database_object implements library_item
     /**
      * format
      * This is the format function for this object. It sets cleaned up
-     * album information with the base required
+     * album information with the base required
      * f_link, f_name
      */
     public function format($details = true, $limit_threshold = '')
@@ -691,6 +696,9 @@ class Album extends database_object implements library_item
 
         if (!$this->year) {
             $this->f_year = "N/A";
+        } else {
+            $year              = $this->year;
+            $this->f_year_link = "<a href=\"$web_path/albums.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
         }
 
         $this->f_release_type = ucwords($this->release_type);

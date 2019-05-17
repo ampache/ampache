@@ -105,10 +105,10 @@ class SubsonicClient
                 CURLOPT_FOLLOWLOCATION => 1,
                 CURLOPT_PORT => (int) ($this->_serverPort)
             );
-            $ch = curl_init();
-            curl_setopt_array($ch, $options);
-            $answer = curl_exec($ch);
-            curl_close($ch);
+            $curl = curl_init();
+            curl_setopt_array($curl, $options);
+            $answer = curl_exec($curl);
+            curl_close($curl);
             if ($rawAnswer) {
                 return $answer;
             } else {

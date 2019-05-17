@@ -31,7 +31,7 @@ require_once '../lib/init.php';
 
 $results = '';
 
-debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', '5');
+debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
 // Post first
 $type = $_POST['type'];
@@ -47,7 +47,7 @@ if (empty($type)) {
 }
 
 if (!Core::is_library_item($object_type) && $object_type != 'share') {
-    debug_event('edit.server', 'Type `' . $type . '` is not based on an item library.', '3');
+    debug_event('edit.server', 'Type `' . $type . '` is not based on an item library.', 3);
 
     return false;
 }
@@ -70,10 +70,8 @@ if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
     return false;
 }
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_edit_object':
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_edit_' . $type . '.inc.php');

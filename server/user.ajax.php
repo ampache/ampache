@@ -28,11 +28,10 @@ if (!defined('AJAX_INCLUDE')) {
     return false;
 }
 
-$user_id = (int) ($_REQUEST['user_id']);
-$action  = Core::get_request('action');
+$user_id = (int) (Core::get_request('user_id'));
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'flip_follow':
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
             $fuser = new User($user_id);

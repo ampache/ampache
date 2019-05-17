@@ -32,7 +32,7 @@ if (!Mailer::is_mail_enabled() || AmpConfig::get('demo_mode')) {
 
 $action = Core::get_post('action');
 
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'send':
         /* Check for posted email */
         $result = false;

@@ -111,7 +111,7 @@ class AmpacheGoogleAnalytics
 
         $this->tracking_id = trim($data['googleanalytics_tracking_id']);
         if (!strlen($this->tracking_id)) {
-            debug_event('googleanalytics.plugin', 'No Tracking ID, user field plugin skipped', '3');
+            debug_event('googleanalytics.plugin', 'No Tracking ID, user field plugin skipped', 3);
 
             return false;
         }

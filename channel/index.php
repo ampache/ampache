@@ -33,15 +33,15 @@ ob_end_clean();
 
 set_time_limit(0);
 
-$channel = new Channel($_REQUEST['channel']);
+$channel = new Channel(Core::get_request('channel'));
 if (!$channel->id) {
-    debug_event('channel/index', 'Unknown channel.', '1');
+    debug_event('channel/index', 'Unknown channel.', 1);
 
     return false;
 }
 
 if (!function_exists('curl_version')) {
-    debug_event('channel/index', 'Error: Curl is required for this feature.', '1');
+    debug_event('channel/index', 'Error: Curl is required for this feature.', 2);
 
     return false;
 }
@@ -63,7 +63,7 @@ if ($channel->is_private) {
             if (AmpConfig::get('access_control')) {
                 if (!Access::check_network('stream', Core::get_global('user')->id, '25') and
                     !Access::check_network('network', Core::get_global('user')->id, '25')) {
-                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
+                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", 2);
                     UI::access_denied();
 
                     return false;
@@ -90,8 +90,8 @@ foreach ($headers as $key => $value) {
     $reqheaders[] = $key . ': ' . $value;
 }
 
-$ch = curl_init($url);
-curl_setopt_array($ch, array(
+$curl = curl_init($url);
+curl_setopt_array($curl, array(
     CURLOPT_HTTPHEADER => $reqheaders,
     CURLOPT_HEADER => false,
     CURLOPT_RETURNTRANSFER => false,
@@ -100,8 +100,8 @@ curl_setopt_array($ch, array(
     CURLOPT_NOPROGRESS => false,
     CURLOPT_PROGRESSFUNCTION => 'progress',
 ));
-curl_exec($ch);
-curl_close($ch);
+curl_exec($curl);
+curl_close($curl);
 
 /**
  *
@@ -117,7 +117,7 @@ function progress($totaldownload, $downloaded, $us, $ud)
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
-function output_header($ch, $header)
+function output_header($curl, $header)
 {
     $trimheader = trim($header);
     if (!empty($trimheader)) {

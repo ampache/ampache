@@ -31,9 +31,7 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '
     return false;
 }
 
-$action = Core::get_request('action');
-
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_add_instance':
         // This requires 50 or better
         if (!Access::check('localplay', '75')) {

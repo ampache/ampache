@@ -31,7 +31,7 @@ $results = array();
 $action  = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_add_tag':
 
     break;
@@ -49,7 +49,7 @@ switch ($action) {
 
             return false;
         }
-        debug_event('tag.ajax', 'Adding new tag...', '5');
+        debug_event('tag.ajax', 'Adding new tag...', 5);
         Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), (int) $_GET['tag_id'], false);
     break;
     case 'add_tag_by_name':
@@ -58,7 +58,7 @@ switch ($action) {
 
             return false;
         }
-        debug_event('tag.ajax', 'Adding new tag by name...', '5');
+        debug_event('tag.ajax', 'Adding new tag by name...', 5);
         Tag::add(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['tag_name'], false);
     break;
     case 'delete':
@@ -67,7 +67,7 @@ switch ($action) {
 
             return false;
         }
-        debug_event('tag.ajax', 'Deleting tag...', '5');
+        debug_event('tag.ajax', 'Deleting tag...', 5);
         $tag = new Tag($_GET['tag_id']);
         $tag->delete();
         header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=tag');
@@ -79,7 +79,7 @@ switch ($action) {
 
             return false;
         }
-        debug_event('tag.ajax', 'Removing tag map...', '5');
+        debug_event('tag.ajax', 'Removing tag map...', 5);
         $tag = new Tag($_GET['tag_id']);
         $tag->remove_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), false);
     break;

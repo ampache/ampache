@@ -238,7 +238,7 @@ abstract class Catalog extends database_object
 
         if (!$include) {
             /* Throw Error Here */
-            debug_event('catalog.class', 'Unable to load ' . $type . ' catalog type', '2');
+            debug_event('catalog.class', 'Unable to load ' . $type . ' catalog type', 2);
 
             return false;
         } // include
@@ -250,7 +250,7 @@ abstract class Catalog extends database_object
                 $catalog = new $class_name();
             }
             if (!($catalog instanceof Catalog)) {
-                debug_event('catalog.class', $type . ' not an instance of Catalog abstract, unable to load', '1');
+                debug_event('catalog.class', $type . ' not an instance of Catalog abstract, unable to load', 1);
 
                 return false;
             }
@@ -318,7 +318,7 @@ abstract class Catalog extends database_object
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
-            debug_event('catalog.class', 'Error: Unable to read catalog types directory', '1');
+            debug_event('catalog.class', 'Error: Unable to read catalog types directory', 1);
 
             return array();
         }
@@ -1422,7 +1422,7 @@ abstract class Catalog extends database_object
                     $count++;
                     if (!($count % 100)) {
                         echo "Written: $count. . .\n";
-                        debug_event('catalog.class', "$album->name Art written to $file", '5');
+                        debug_event('catalog.class', "$album->name Art written to $file", 5);
                     }
                 } else {
                     debug_event('catalog.class', "Unable to open $file for writing", 5);
@@ -2050,7 +2050,7 @@ abstract class Catalog extends database_object
                             $file = str_replace("/", DIRECTORY_SEPARATOR, $file);
                         }
                     }
-                    debug_event('catalog.class', 'Add file ' . $file . ' to playlist.', '5');
+                    debug_event('catalog.class', 'Add file ' . $file . ' to playlist.', 5);
 
                     // First, try to found the file as absolute path
                     $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
@@ -2379,7 +2379,7 @@ abstract class Catalog extends database_object
             $options = array();
         }
 
-        switch ($action) {
+        switch ($_REQUEST['action']) {
             case 'add_to_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
             case 'add_to_catalog':

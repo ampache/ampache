@@ -491,7 +491,7 @@ class Graph
 
     public static function display_from_request()
     {
-        $object_type = $_REQUEST['object_type'];
+        $object_type = Core::get_request('object_type');
         $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         
         $libitem  = null;
@@ -506,7 +506,7 @@ class Graph
         if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
-            $user_id      = $_REQUEST['user_id'];
+            $user_id      = Core::get_request('user_id');
             $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
             $f_end_date   = date("Y-m-d H:i", $end_date);
             $start_date   = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);
