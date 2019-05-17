@@ -1480,7 +1480,7 @@ class Song extends database_object implements media, library_item
         $this->f_composer  = $this->composer;
 
         $year = $this->year;
-        if (!$year) {
+        if (!is_integer($year)) {
             $year = 0;
         } else {
             $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
@@ -1718,10 +1718,9 @@ class Song extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param string $player
      * @return string
      */
-    public static function generic_play_url($object_type, $object_id, $additional_params, $player=null, $local=false)
+    public static function generic_play_url($object_type, $object_id, $additional_params, $player='', $local=false)
     {
         $media = new $object_type($object_id);
         if (!$media->id) {
@@ -1749,7 +1748,7 @@ class Song extends database_object implements media, library_item
         $media_name = rawurlencode($media_name);
 
         $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params;
-        if ($player) {
+        if ($player !== '') {
             $url .= "&player=" . $player;
         }
         $url .= "&name=" . $media_name;
@@ -1843,13 +1842,14 @@ class Song extends database_object implements media, library_item
     /**
      * Get stream types for media type.
      * @param string $type
+     * @param string $player
      * @return string
      */
-    public static function get_stream_types_for_type($type, $player = null)
+    public static function get_stream_types_for_type($type, $player = '')
     {
         $types     = array();
         $transcode = AmpConfig::get('transcode_' . $type);
-        if ($player) {
+        if ($player !== '') {
             $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
             if ($player_transcode) {
                 $transcode = $player_transcode;
@@ -2075,7 +2075,7 @@ class Song extends database_object implements media, library_item
         $meta['replaygain_album_gain'] = $this->replaygain_album_gain;
         $meta['replaygain_album_peak'] = $this->replaygain_album_peak;
         $meta['genre']                 = array();
-        if ($this->tags) {
+        if (!empty($this->tags)) {
             foreach ($this->tags as $tag) {
                 if (!in_array($tag['name'], $meta['genre'])) {
                     $meta['genre'][] = $tag['name'];

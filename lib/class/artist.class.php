@@ -262,7 +262,7 @@ class Artist extends database_object implements library_item
     {
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-        if ($catalog) {
+        if ($catalog !== null) {
             $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
@@ -272,15 +272,21 @@ class Artist extends database_object implements library_item
         $results = array();
 
         $sort_type = AmpConfig::get('album_sort');
-        $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
-        if ($sort_type == 'year_asc') {
-            $sql_sort = '`album`.`year` ASC,`album`.`disk`';
-        } elseif ($sort_type == 'year_desc') {
-            $sql_sort = '`album`.`year` DESC,`album`.`disk`';
-        } elseif ($sort_type == 'name_asc') {
-            $sql_sort = '`album`.`name` ASC,`album`.`disk`';
-        } elseif ($sort_type == 'name_desc') {
-            $sql_sort = '`album`.`name` DESC,`album`.`disk`';
+        switch ($sort_type) {
+            case 'year_asc':
+                $sql_sort = '`album`.`year` ASC,`album`.`disk`';
+                break;
+            case 'year_desc':
+                $sql_sort = '`album`.`year` DESC,`album`.`disk`';
+                break;
+            case 'name_asc':
+                $sql_sort = '`album`.`name` ASC,`album`.`disk`';
+                break;
+            case 'name_desc':
+                $sql_sort = '`album`.`name` DESC,`album`.`disk`';
+                break;
+            default:
+                $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         }
 
         if (!$ignoreAlbumGroups) {
@@ -352,15 +358,21 @@ class Artist extends database_object implements library_item
         $results = array();
 
         $sort_type = AmpConfig::get('album_sort');
-        $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
-        if ($sort_type == 'year_asc') {
-            $sql_sort = '`album`.`year` ASC,`album`.`disk`';
-        } elseif ($sort_type == 'year_desc') {
-            $sql_sort = '`album`.`year` DESC,`album`.`disk`';
-        } elseif ($sort_type == 'name_asc') {
-            $sql_sort = '`album`.`name` ASC,`album`.`disk`';
-        } elseif ($sort_type == 'name_desc') {
-            $sql_sort = '`album`.`name` DESC,`album`.`disk`';
+        switch ($sort_type) {
+            case 'year_asc':
+                $sql_sort = '`album`.`year` ASC,`album`.`disk`';
+                break;
+            case 'year_desc':
+                $sql_sort = '`album`.`year` DESC,`album`.`disk`';
+                break;
+            case 'name_asc':
+                $sql_sort = '`album`.`name` ASC,`album`.`disk`';
+                break;
+            case 'name_desc':
+                $sql_sort = '`album`.`name` DESC,`album`.`disk`';
+                break;
+            default:
+                $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         }
 
         if (!$ignoreAlbumGroups) {

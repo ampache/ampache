@@ -229,14 +229,15 @@ function create_preference_input($name, $value)
             $is_democratic = '';
             $is_web_player = '';
             $is_stream     = '';
-            if ($value == 'localplay') {
-                $is_localplay = 'selected="selected"';
-            } elseif ($value == 'democratic') {
-                $is_democratic = 'selected="selected"';
-            } elseif ($value == 'web_player') {
-                $is_web_player = 'selected="selected"';
-            } else {
-                $is_stream = "selected=\"selected\"";
+            switch ($value) {
+                case 'localplay':
+                    $is_localplay = 'selected="selected"';
+                case 'democratic':
+                    $is_democratic = 'selected="selected"';
+                case 'web_player';
+                    $is_web_player = 'selected="selected"';
+                default:
+                    $is_stream = "selected=\"selected\"";
             }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
