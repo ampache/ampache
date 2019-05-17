@@ -292,7 +292,7 @@ class vainfo
 
             return $this->_raw;
         } catch (Exception $e) {
-            debug_event('vainfo.class', "Unable to read file:" . $e->getMessage(), '1');
+            debug_event('vainfo.class', "Unable to read file:" . $e->getMessage(), 1);
         }
     } // read_id3
 
@@ -342,7 +342,7 @@ class vainfo
     public static function clean_tag_info($results, $keys, $filename = null)
     {
         $info = array();
-        //debug_event('vainfo.class', 'Clean tag info: ' . print_r($results, true), '5');
+        //debug_event('vainfo.class', 'Clean tag info: ' . print_r($results, true), 5);
 
         $info['file'] = $filename;
 
@@ -482,16 +482,20 @@ class vainfo
     {
         // There are a few places that the file type can come from, in the end
         // we trust the encoding type.
-        if ($type = $this->_raw['video']['dataformat']) {
-            return $this->_clean_type($type);
+        $video_type = $this->_raw['video']['dataformat'];
+        if ($video_type) {
+            return $this->_clean_type($video_type);
         }
-        if ($type = $this->_raw['audio']['streams']['0']['dataformat']) {
-            return $this->_clean_type($type);
+        $stream_type = $this->_raw['audio']['streams']['0']['dataformat'];
+        if ($stream_type) {
+            return $this->_clean_type($stream_type);
         }
-        if ($type = $this->_raw['audio']['dataformat']) {
-            return $this->_clean_type($type);
+        $audio_type = $this->_raw['audio']['dataformat'];
+        if ($audio_type) {
+            return $this->_clean_type($audio_type);
         }
-        if ($type = $this->_raw['fileformat']) {
+        $type = $this->_raw['fileformat'];
+        if ($type) {
             return $this->_clean_type($type);
         }
 
@@ -697,7 +701,7 @@ class vainfo
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
-                debug_event('vainfo.class', 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, '5');
+                debug_event('vainfo.class', 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, 5);
 
                 return $type;
         }

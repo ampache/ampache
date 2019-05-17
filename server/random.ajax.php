@@ -31,7 +31,7 @@ $results = array();
 $action  = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'song':
         $songs = Random::get_default();
 
@@ -48,7 +48,7 @@ switch ($action) {
     case 'album':
         $album_id = Album::get_random();
 
-        if (!$album_id) {
+        if (empty($album_id)) {
             $results['rfc3514'] = '0x1';
             break;
         }

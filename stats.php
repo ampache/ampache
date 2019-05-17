@@ -28,13 +28,11 @@ define('TABLE_RENDERED', 1);
 // Temporary workaround to avoid sorting on custom base requests
 define('NO_BROWSE_SORTING', true);
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     // Show a Users "Profile" page
     case 'show_user':
-        $client = new User($_REQUEST['user_id']);
+        $client = new User(Core::get_request('user_id'));
         require_once AmpConfig::get('prefix') . UI::find_template('show_user.inc.php');
     break;
     // Show stats
@@ -51,7 +49,7 @@ switch ($action) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_userflag.inc.php');
     break;
     case 'recent':
-        $user_id = $_REQUEST['user_id'];
+        $user_id = Core::get_request('user_id');
         require_once AmpConfig::get('prefix') . UI::find_template('show_recent.inc.php');
     break;
     case 'wanted':

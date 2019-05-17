@@ -42,10 +42,8 @@ $web_path  = AmpConfig::get('web_path');
 
 debug_event('stream', "Asked for {" . Core::get_request('action') . "}.", 5);
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'basket':
         // Pull in our items (multiple types)
         $media_ids = Core::get_global('user')->playlist->get_items();
@@ -79,7 +77,7 @@ switch ($action) {
         } // end switch on type
     break;
     case 'play_item':
-        $object_type = $_REQUEST['object_type'];
+        $object_type = Core::get_request('object_type');
         $object_ids  = explode(',', filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
 
         if (Core::is_playable_item($object_type)) {
@@ -147,11 +145,8 @@ switch ($action) {
     break;
 } // end action switch
 
-// See if we need a special streamtype
-//$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'download':
         $stream_type = 'download';
     break;

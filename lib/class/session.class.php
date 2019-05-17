@@ -250,12 +250,12 @@ class Session
         $db_results = Dba::write($sql, array($key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
-            debug_event('session.class', 'Session creation failed', '1');
+            debug_event('session.class', 'Session creation failed', 1);
 
             return false;
         }
 
-        debug_event('session.class', 'Session created: ' . $key, '5');
+        debug_event('session.class', 'Session created: ' . $key, 5);
 
         return $key;
     }

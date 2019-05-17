@@ -23,7 +23,7 @@
 require_once 'lib/init.php';
 
 if (!Access::check('interface', '25') || !AmpConfig::get('sociable')) {
-    debug_event('pvmsg', 'Access Denied: sociable features are not enabled.', '3');
+    debug_event('pvmsg', 'Access Denied: sociable features are not enabled.', 3);
     UI::access_denied();
 
     return false;
@@ -32,7 +32,7 @@ if (!Access::check('interface', '25') || !AmpConfig::get('sociable')) {
 UI::show_header();
 $action = isset($_REQUEST['action']) ? Core::get_request('action') : '';
 
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_add_message':
         if (isset($_REQUEST['reply_to'])) {
             $pvmsg = new PrivateMsg($_REQUEST['reply_to']);
@@ -82,7 +82,7 @@ switch ($action) {
                 $read = (int) ($_REQUEST['read']) !== 0;
                 $pvmsg->set_is_read($read);
             } else {
-                debug_event('pvmsg', 'Unknown or unauthorized private message `' . $pvmsg->id . '`.', '3');
+                debug_event('pvmsg', 'Unknown or unauthorized private message `' . $pvmsg->id . '`.', 3);
                 UI::access_denied();
 
                 return false;
@@ -117,7 +117,7 @@ switch ($action) {
             if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
                 $pvmsg->delete();
             } else {
-                debug_event('pvmsg', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
+                debug_event('pvmsg', 'Unknown or unauthorized private message #' . $msg_id . '.', 3);
                 UI::access_denied();
 
                 return false;
@@ -137,7 +137,7 @@ switch ($action) {
             }
             require_once AmpConfig::get('prefix') . UI::find_template('show_pvmsg.inc.php');
         } else {
-            debug_event('pvmsg', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
+            debug_event('pvmsg', 'Unknown or unauthorized private message #' . $msg_id . '.', 3);
             UI::access_denied();
 
             return false;

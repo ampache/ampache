@@ -76,8 +76,8 @@ class Subsonic_Api
         if ($encpwd !== false) {
             $hex    = substr($password, 4);
             $decpwd = '';
-            for ($i = 0; $i < strlen($hex); $i += 2) {
-                $decpwd .= chr(hexdec(substr($hex, $i, 2)));
+            for ($count = 0; $count < strlen($hex); $count += 2) {
+                $decpwd .= chr(hexdec(substr($hex, $count, 2)));
             }
             $password = $decpwd;
         }
@@ -85,7 +85,7 @@ class Subsonic_Api
         return $password;
     }
 
-    public static function output_body($ch, $data)
+    public static function output_body($curl, $data)
     {
         echo $data;
         ob_flush();
@@ -93,7 +93,7 @@ class Subsonic_Api
         return strlen($data);
     }
 
-    public static function output_header($ch, $header)
+    public static function output_header($curl, $header)
     {
         $rheader = trim($header);
         $rhpart  = explode(':', $rheader);
@@ -104,7 +104,7 @@ class Subsonic_Api
         } else {
             if (substr($header, 0, 5) === "HTTP/") {
                 // if $header starts with HTTP/ assume it's the status line
-                http_response_code(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+                http_response_code(curl_getinfo($curl, CURLINFO_HTTP_CODE));
             }
         }
 
@@ -135,8 +135,8 @@ class Subsonic_Api
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
 
-            $ch = curl_init($url);
-            curl_setopt_array($ch, array(
+            $curl = curl_init($url);
+            curl_setopt_array($curl, array(
                 CURLOPT_FAILONERROR => true,
                 CURLOPT_HTTPHEADER => $reqheaders,
                 CURLOPT_HEADER => false,
@@ -150,10 +150,10 @@ class Subsonic_Api
                 CURLOPT_SSL_VERIFYHOST => false,
                 CURLOPT_TIMEOUT => 0
             ));
-            if (curl_exec($ch) === false) {
-                debug_event('subsonic_api.class', 'Stream error: ' . curl_error($ch), 1);
+            if (curl_exec($curl) === false) {
+                debug_event('subsonic_api.class', 'Stream error: ' . curl_error($curl), 1);
             }
-            curl_close($ch);
+            curl_close($curl);
         } else {
             // Stream media using http redirect if no curl support
             // Bug fix for android clients looking for /rest/ in destination url
@@ -163,12 +163,12 @@ class Subsonic_Api
         }
     }
 
-    public static function setHeader($f)
+    public static function setHeader($filetype)
     {
-        if (strtolower($f) == "json") {
+        if (strtolower($filetype) == "json") {
             header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
             Subsonic_XML_Data::$enable_json_checks = true;
-        } elseif (strtolower($f) == "jsonp") {
+        } elseif (strtolower($filetype) == "jsonp") {
             header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
             Subsonic_XML_Data::$enable_json_checks = true;
         } else {
@@ -202,9 +202,9 @@ class Subsonic_Api
             } else {
                 $xmlstr = $xml->asXml();
                 //clean illegal XML characters.
-                $xmlstr = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);               // Format xml output
-                $dom    = new DOMDocument();
-                $dom->loadXML($xmlstr, LIBXML_PARSEHUGE);
+                $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);               // Format xml output
+                $dom       = new DOMDocument();
+                $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
                 $dom->formatOutput = true;
                 $output            = $dom->saveXML();
             }
@@ -218,7 +218,7 @@ class Subsonic_Api
      * Because we cannot use only json_encode to respect JSON Subsonic API
      * @param SimpleXMLElement $xml
      */
-    private static function xml2json($xml, $options = array())
+    private static function xml2json($xml, $input_options = array())
     {
         $defaults = array(
             'namespaceSeparator' => ' :', //you may want this to be something other than a colon
@@ -231,7 +231,7 @@ class Subsonic_Api
             'keyReplace' => false, //replace values for above search values (as passed to str_replace())
             'boolean' => true           //replace true and false string with boolean values
         );
-        $options        = array_merge($defaults, $options);
+        $options        = array_merge($defaults, $input_options);
         $namespaces     = $xml->getDocNamespaces();
         $namespaces[''] = null; //add base (empty) namespace
         //get attributes from all namespaces
@@ -348,9 +348,9 @@ class Subsonic_Api
     {
         self::check_version($input);
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addLicense($r);
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addLicense($response);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -489,12 +489,12 @@ class Subsonic_Api
 
         $artist = new Artist(Subsonic_XML_Data::getAmpacheId($artistid));
         if (empty($artist->name)) {
-            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Artist not found.");
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Artist not found.");
         } else {
-            $r = Subsonic_XML_Data::createSuccessResponse();
-            Subsonic_XML_Data::addArtist($r, $artist, true, true);
+            $response = Subsonic_XML_Data::createSuccessResponse();
+            Subsonic_XML_Data::addArtist($response, $artist, true, true);
         }
-        self::apiOutput($input, $r, array('musicFolder', 'child', 'playlist', 'song', 'album'));
+        self::apiOutput($input, $response, array('musicFolder', 'child', 'playlist', 'song', 'album'));
     }
 
     /**
@@ -581,18 +581,18 @@ class Subsonic_Api
                                                 $search['limit']  = $size;
                                                 $search['offset'] = $offset;
                                                 $search['type']   = "album";
-                                                $i                = 0;
+                                                $count            = 0;
                                                 if ($fromYear) {
-                                                    $search['rule_' . $i . '_input']    = $fromYear;
-                                                    $search['rule_' . $i . '_operator'] = 0;
-                                                    $search['rule_' . $i . '']          = "year";
-                                                    ++$i;
+                                                    $search['rule_' . $count . '_input']    = $fromYear;
+                                                    $search['rule_' . $count . '_operator'] = 0;
+                                                    $search['rule_' . $count . '']          = "year";
+                                                    ++$count;
                                                 }
                                                 if ($toYear) {
-                                                    $search['rule_' . $i . '_input']    = $toYear;
-                                                    $search['rule_' . $i . '_operator'] = 1;
-                                                    $search['rule_' . $i . '']          = "year";
-                                                    ++$i;
+                                                    $search['rule_' . $count . '_input']    = $toYear;
+                                                    $search['rule_' . $count . '_operator'] = 1;
+                                                    $search['rule_' . $count . '']          = "year";
+                                                    ++$count;
                                                 }
 
                                                 $query  = new Search(null, 'album');
@@ -658,24 +658,24 @@ class Subsonic_Api
         $search['limit']  = $size;
         $search['random'] = $size;
         $search['type']   = "song";
-        $i                = 0;
+        $count            = 0;
         if ($genre) {
-            $search['rule_' . $i . '_input']    = $genre;
-            $search['rule_' . $i . '_operator'] = 0;
-            $search['rule_' . $i . '']          = "tag";
-            ++$i;
+            $search['rule_' . $count . '_input']    = $genre;
+            $search['rule_' . $count . '_operator'] = 0;
+            $search['rule_' . $count . '']          = "tag";
+            ++$count;
         }
         if ($fromYear) {
-            $search['rule_' . $i . '_input']    = $fromYear;
-            $search['rule_' . $i . '_operator'] = 0;
-            $search['rule_' . $i . '']          = "year";
-            ++$i;
+            $search['rule_' . $count . '_input']    = $fromYear;
+            $search['rule_' . $count . '_operator'] = 0;
+            $search['rule_' . $count . '']          = "year";
+            ++$count;
         }
         if ($toYear) {
-            $search['rule_' . $i . '_input']    = $toYear;
-            $search['rule_' . $i . '_operator'] = 1;
-            $search['rule_' . $i . '']          = "year";
-            ++$i;
+            $search['rule_' . $count . '_input']    = $toYear;
+            $search['rule_' . $count . '_operator'] = 1;
+            $search['rule_' . $count . '']          = "year";
+            ++$count;
         }
         if ($musicFolderId) {
             if (Subsonic_XML_Data::isArtist($musicFolderId)) {
@@ -695,12 +695,12 @@ class Subsonic_Api
                     $ftype    = "catalog";
                 }
             }
-            $search['rule_' . $i . '_input']    = $finput;
-            $search['rule_' . $i . '_operator'] = $operator;
-            $search['rule_' . $i . '']          = $ftype;
-            ++$i;
+            $search['rule_' . $count . '_input']    = $finput;
+            $search['rule_' . $count . '_operator'] = $operator;
+            $search['rule_' . $count . '']          = $ftype;
+            ++$count;
         }
-        if ($i > 0) {
+        if ($count > 0) {
             $songs = Random::advanced("song", $search);
         } else {
             $songs = Random::get_default($size);
@@ -1163,18 +1163,18 @@ class Subsonic_Api
     {
         self::check_version($input, "1.6.0");
 
-        $id     = self::check_parameter($input, 'id');
-        $rating = $input['rating'];
+        $object_id = self::check_parameter($input, 'id');
+        $rating    = $input['rating'];
 
         $robj = null;
-        if (Subsonic_XML_Data::isArtist($id)) {
-            $robj = new Rating(Subsonic_XML_Data::getAmpacheId($id), "artist");
+        if (Subsonic_XML_Data::isArtist($object_id)) {
+            $robj = new Rating(Subsonic_XML_Data::getAmpacheId($object_id), "artist");
         } else {
-            if (Subsonic_XML_Data::isAlbum($id)) {
-                $robj = new Rating(Subsonic_XML_Data::getAmpacheId($id), "album");
+            if (Subsonic_XML_Data::isAlbum($object_id)) {
+                $robj = new Rating(Subsonic_XML_Data::getAmpacheId($object_id), "album");
             } else {
-                if (Subsonic_XML_Data::isSong($id)) {
-                    $robj = new Rating(Subsonic_XML_Data::getAmpacheId($id), "song");
+                if (Subsonic_XML_Data::isSong($object_id)) {
+                    $robj = new Rating(Subsonic_XML_Data::getAmpacheId($object_id), "song");
                 }
             }
         }
@@ -1247,27 +1247,27 @@ class Subsonic_Api
      */
     private static function _setStar($input, $star)
     {
-        $id       = $input['id'];
-        $albumId  = $input['albumId'];
-        $artistId = $input['artistId'];
+        $object_id = $input['id'];
+        $albumId   = $input['albumId'];
+        $artistId  = $input['artistId'];
 
         // Normalize all in one array
         $ids = array();
 
         $response = Subsonic_XML_Data::createSuccessResponse();
-        if ($id) {
-            if (!is_array($id)) {
-                $id = array($id);
+        if ($object_id) {
+            if (!is_array($object_id)) {
+                $object_id = array($object_id);
             }
-            foreach ($id as $i) {
-                $aid = Subsonic_XML_Data::getAmpacheId($i);
-                if (Subsonic_XML_Data::isArtist($i)) {
+            foreach ($object_id as $item) {
+                $aid = Subsonic_XML_Data::getAmpacheId($item);
+                if (Subsonic_XML_Data::isArtist($item)) {
                     $type = 'artist';
                 } else {
-                    if (Subsonic_XML_Data::isAlbum($i)) {
+                    if (Subsonic_XML_Data::isAlbum($item)) {
                         $type = 'album';
                     } else {
-                        if (Subsonic_XML_Data::isSong($i)) {
+                        if (Subsonic_XML_Data::isSong($item)) {
                             $type = 'song';
                         } else {
                             $type = "";
@@ -1281,8 +1281,8 @@ class Subsonic_Api
                 if (!is_array($albumId)) {
                     $albumId = array($albumId);
                 }
-                foreach ($albumId as $i) {
-                    $aid   = Subsonic_XML_Data::getAmpacheId($i);
+                foreach ($albumId as $album) {
+                    $aid   = Subsonic_XML_Data::getAmpacheId($album);
                     $ids[] = array('id' => $aid, 'type' => 'album');
                 }
             } else {
@@ -1290,8 +1290,8 @@ class Subsonic_Api
                     if (!is_array($artistId)) {
                         $artistId = array($artistId);
                     }
-                    foreach ($artistId as $i) {
-                        $aid   = Subsonic_XML_Data::getAmpacheId($i);
+                    foreach ($artistId as $artist) {
+                        $aid   = Subsonic_XML_Data::getAmpacheId($artist);
                         $ids[] = array('id' => $aid, 'type' => 'artist');
                     }
                 } else {
@@ -1300,8 +1300,8 @@ class Subsonic_Api
             }
         }
 
-        foreach ($ids as $i) {
-            $flag = new Userflag($i['id'], $i['type']);
+        foreach ($ids as $object_id) {
+            $flag = new Userflag($object_id['id'], $object_id['type']);
             $flag->set_flag($star);
         }
         self::apiOutput($input, $response);
@@ -1548,21 +1548,21 @@ class Subsonic_Api
     {
         self::check_version($input, "1.1.0");
 
-        $username          = self::check_parameter($input, 'username');
-        $password          = self::check_parameter($input, 'password');
-        $email             = self::check_parameter($input, 'email');
-        $ldapAuthenticated = $input['ldapAuthenticated'];
-        $adminRole         = ($input['adminRole'] == 'true');
+        $username     = self::check_parameter($input, 'username');
+        $password     = self::check_parameter($input, 'password');
+        $email        = self::check_parameter($input, 'email');
+        $adminRole    = ($input['adminRole'] == 'true');
+        $downloadRole = ($input['downloadRole'] == 'true');
+        $uploadRole   = ($input['uploadRole'] == 'true');
+        $coverArtRole = ($input['coverArtRole'] == 'true');
+        $shareRole    = ($input['shareRole'] == 'true');
+        //$ldapAuthenticated = $input['ldapAuthenticated'];
         //$settingsRole = $input['settingsRole'];
         //$streamRole = $input['streamRole'];
         //$jukeboxRole = $input['jukeboxRole'];
-        $downloadRole = ($input['downloadRole'] == 'true');
-        $uploadRole   = ($input['uploadRole'] == 'true');
         //$playlistRole = $input['playlistRole'];
-        $coverArtRole = ($input['coverArtRole'] == 'true');
         //$commentRole = $input['commentRole'];
         //$podcastRole = $input['podcastRole'];
-        $shareRole = ($input['shareRole'] == 'true');
 
         if (Access::check('interface', 100)) {
             $access = 25;
@@ -1575,13 +1575,13 @@ class Subsonic_Api
             $user_id  = User::create($username, $username, $email, null, $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
-                    Preference::update('download', $user_id, '1');
+                    Preference::update('download', $user_id, 1);
                 }
                 if ($uploadRole) {
-                    Preference::update('allow_upload', $user_id, '1');
+                    Preference::update('allow_upload', $user_id, 1);
                 }
                 if ($shareRole) {
-                    Preference::update('share', $user_id, '1');
+                    Preference::update('share', $user_id, 1);
                 }
                 $response = Subsonic_XML_Data::createSuccessResponse();
             } else {
@@ -1628,9 +1628,9 @@ class Subsonic_Api
     {
         self::check_version($input, "1.1.0");
 
-        $username = self::check_parameter($input, 'username');
-        $password = self::check_parameter($input, 'password');
-        $password = self::decrypt_password($password);
+        $username     = self::check_parameter($input, 'username');
+        $inp_pass     = self::check_parameter($input, 'password');
+        $password     = self::decrypt_password($inp_pass);
 
         if (Core::get_global('user')->username == $username || Access::check('interface', 100)) {
             $user = User::get_from_username($username);
@@ -1665,7 +1665,7 @@ class Subsonic_Api
 
         if ($localplay->connect()) {
             $ret = false;
-            switch ($action) {
+            switch ($_REQUEST['action']) {
                 case 'get':
                 case 'status':
                     $ret = true;
@@ -1801,18 +1801,18 @@ class Subsonic_Api
             $search['offset'] = 0;
             $search['type']   = "song";
 
-            $i = 0;
+            $count = 0;
             if ($artist) {
-                $search['rule_' . $i . '_input']    = $artist;
-                $search['rule_' . $i . '_operator'] = 5;
-                $search['rule_' . $i . '']          = "artist";
-                ++$i;
+                $search['rule_' . $count . '_input']    = $artist;
+                $search['rule_' . $count . '_operator'] = 5;
+                $search['rule_' . $count . '']          = "artist";
+                ++$count;
             }
             if ($title) {
-                $search['rule_' . $i . '_input']    = $title;
-                $search['rule_' . $i . '_operator'] = 5;
-                $search['rule_' . $i . '']          = "title";
-                ++$i;
+                $search['rule_' . $count . '_input']    = $title;
+                $search['rule_' . $count . '_operator'] = 5;
+                $search['rule_' . $count . '']          = "title";
+                ++$count;
             }
 
             $query = new Search(null, 'song');
@@ -1881,9 +1881,9 @@ class Subsonic_Api
         if (Subsonic_XML_Data::isArtist($id)) {
             $similars = Recommendation::get_artists_like(Subsonic_XML_Data::getAmpacheId($id));
             if (!empty($similars)) {
-                debug_event('subsonic_api.class', 'Found: ' . count($similars) . ' similar artists', '5');
+                debug_event('subsonic_api.class', 'Found: ' . count($similars) . ' similar artists', 5);
                 foreach ($similars as $similar) {
-                    debug_event('subsonic_api.class', $similar['name'] . ' (id=' . $similar['id'] . ')', '5');
+                    debug_event('subsonic_api.class', $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
                     if ($similar['id']) {
                         $artist = new Artist($similar['id']);
                         // get the songs in a random order for even more chaos

@@ -32,7 +32,7 @@ if (!Mailer::is_mail_enabled() || AmpConfig::get('demo_mode')) {
 
 $action = Core::get_post('action');
 
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'send':
         /* Check for posted email */
         $result = false;
@@ -69,11 +69,7 @@ function send_newpassword($email, $current_ip)
     if ($client->has_access(100)) {
         return false;
     }
-<<<<<<< HEAD
     if ($client && $client->email == $email && Mailer::is_mail_enabled()) {
-=======
-    if ($client && $client->email == $email) {
->>>>>>> 58103d526cbea0d4bc33244f7a5141d27835e744
         $newpassword = generate_password();
         $client->update_password($newpassword);
 

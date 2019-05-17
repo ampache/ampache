@@ -724,7 +724,7 @@ class Art extends database_object
         $source = imagecreatefromstring($image);
 
         if (!$source) {
-            debug_event('art.class', 'Failed to create Image from string - Source Image is damaged / malformed', 1);
+            debug_event('art.class', 'Failed to create Image from string - Source Image is damaged / malformed', 2);
 
             return false;
         }
@@ -766,7 +766,7 @@ class Art extends database_object
         } // resized
 
         if (!isset($mime_type)) {
-            debug_event('art.class', 'Error: No mime type found.', 1);
+            debug_event('art.class', 'Error: No mime type found.', 2);
 
             return false;
         }
@@ -820,7 +820,7 @@ class Art extends database_object
                 $request            = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw                = $request->body;
             } catch (Exception $e) {
-                debug_event('art.class', 'Error getting art: ' . $e->getMessage(), '1');
+                debug_event('art.class', 'Error getting art: ' . $e->getMessage(), 2);
                 $raw = null;
             }
 
@@ -1560,7 +1560,7 @@ class Art extends database_object
                 }
             }
         } catch (Exception $e) {
-            debug_event('art.class', 'Error getting google images: ' . $e->getMessage(), '1');
+            debug_event('art.class', 'Error getting google images: ' . $e->getMessage(), 2);
         }
 
         return $images;

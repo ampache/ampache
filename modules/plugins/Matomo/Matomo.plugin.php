@@ -125,14 +125,14 @@ class AmpacheMatomo
 
         $this->site_id = trim($data['matomo_site_id']);
         if (!strlen($this->site_id)) {
-            debug_event('matomo.plugin', 'No Matomo Site ID, user field plugin skipped', '3');
+            debug_event('matomo.plugin', 'No Matomo Site ID, user field plugin skipped', 3);
 
             return false;
         }
 
         $this->matomo_url = trim($data['matomo_url']);
         if (!strlen($this->matomo_url)) {
-            debug_event('matomo.plugin', 'No Matomo URL, user field plugin skipped', '3');
+            debug_event('matomo.plugin', 'No Matomo URL, user field plugin skipped', 3);
 
             return false;
         }

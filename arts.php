@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
 $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING);
-$object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+$object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 if (!Core::is_library_item($object_type)) {
     UI::access_denied();
 
@@ -44,10 +44,8 @@ if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item
     return false;
 }
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'clear_art':
         $art = new Art($object_id, $object_type);
         $art->reset();
@@ -66,7 +64,7 @@ switch ($action) {
         $image_data = Art::get_from_source($data, $object_type);
 
         // If we got something back insert it
-        if ($image_data) {
+        if ($image_data !== null) {
             $art = new Art($object_id, $object_type);
             $art->insert($image_data, $_FILES['file']['type']);
             show_confirmation(T_('Art Inserted'), '', $burl);
@@ -93,7 +91,7 @@ switch ($action) {
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, $object_type);
 
-            if ($image_data) {
+            if ($image_data !== null) {
                 $art->insert($image_data, $upload['0']['mime']);
                 show_confirmation(T_('Art Inserted'), '', $burl);
                 break;

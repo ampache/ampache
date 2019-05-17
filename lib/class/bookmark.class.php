@@ -52,10 +52,10 @@ class Bookmark extends database_object
             return false;
         }
         
-        if (!$object_type) {
+        if ($object_type === null) {
             $info = $this->get_info($object_id);
         } else {
-            if ($user_id == null) {
+            if ($user_id === null) {
                 $user_id = Core::get_global('user')->id;
             }
 

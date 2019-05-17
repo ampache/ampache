@@ -27,10 +27,8 @@ if (!defined('AJAX_INCLUDE')) {
     return false;
 }
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'search':
         $search = $_REQUEST['search'];
         $target = $_REQUEST['target'];

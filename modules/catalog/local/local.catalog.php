@@ -363,7 +363,7 @@ class Catalog_local extends Catalog
                     $convok = (strcmp($enc_full_file, $full_file) == 0);
                 }
                 if (!$convok) {
-                    debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, '1');
+                    debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
                     /* HINT: FullFile */
                     AmpError::add('catalog_add', sprintf(T_('%s does not match site charset'), $full_file));
 
@@ -378,7 +378,7 @@ class Catalog_local extends Catalog
             } // end if iconv
 
             if ($is_playlist) {
-                debug_event('local.catalog', 'Found playlist file to import: ' . $full_file, '5');
+                debug_event('local.catalog', 'Found playlist file to import: ' . $full_file, 5);
                 $this->_playlists[] = $full_file;
             } // if it's a playlist
 
@@ -854,7 +854,7 @@ class Catalog_local extends Catalog
     {
         $file_date = filemtime($full_file);
         if ($file_date < $this->last_add) {
-            debug_event('local.catalog', 'Skipping ' . $full_file . ' File modify time before last add run', '3');
+            debug_event('local.catalog', 'Skipping ' . $full_file . ' File modify time before last add run', 3);
 
             return true;
         }

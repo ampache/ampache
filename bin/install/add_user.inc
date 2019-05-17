@@ -32,7 +32,7 @@ $prefix = realpath($path . '/../../');
 require_once $prefix . '/lib/init.php';
 
 $options = getopt('e:l:n:p:u:w:');
-if (!$options || !isset($options['u'])) { 
+if (!empty($options) || !isset($options['u'])) { 
     echo "Usage: add_user.inc -u <username> [ -l <access level> ] [ -p <password ] [ -e <email> ] [ -w <website> ] [ -n <name> ]\n";
     exit(1);
 }

@@ -30,14 +30,12 @@ if (!AmpConfig::get('broadcast')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_delete':
-        $id = $_REQUEST['id'];
+        $object_id = Core::get_request('id');
 
-        $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($id);
+        $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($object_id);
         show_confirmation(T_('Broadcast Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_broadcast');
         UI::show_footer();
 
@@ -49,8 +47,8 @@ switch ($action) {
             return false;
         }
 
-        $id        = $_REQUEST['id'];
-        $broadcast = new Broadcast($id);
+        $object_id = Core::get_request('id');
+        $broadcast = new Broadcast($object_id);
         if ($broadcast->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=broadcast';
             show_confirmation(T_('Broadcast Deleted'), T_('The Broadcast has been deleted'), $next_url);

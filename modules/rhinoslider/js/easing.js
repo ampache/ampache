@@ -52,7 +52,7 @@ jQuery.extend( jQuery.easing,
         return -c *(t/=d)*(t-2) + b;
     },
     easeInOutQuad(x, t, b, c, d) {
-        if ((t/=d/2) < 1) return c/2*t*t + b;
+        if ((t/=d/2) < 1) { return c/2*t*t + b; }
         return -c/2 * ((--t)*(t-2) - 1) + b;
     },
     easeInCubic(x, t, b, c, d) {
@@ -120,7 +120,7 @@ jQuery.extend( jQuery.easing,
         return c * Math.sqrt(1 - (t=t/d-1)*t) + b;
     },
     easeInOutCirc(x, t, b, c, d) {
-        if ((t/=d/2) < 1) return -c/2 * (Math.sqrt(1 - t*t) - 1) + b;
+        if ((t/=d/2) < 1) { return -c/2 * (Math.sqrt(1 - t*t) - 1) + b; }
         return c/2 * (Math.sqrt(1 - (t-=2)*t) + 1) + b;
     },
     easeInElastic(x, t, b, c, d) {
@@ -143,7 +143,7 @@ jQuery.extend( jQuery.easing,
         var s=1.70158;var p=0;var a=c;
         if (t===0) {return b;}  if ((t/=d/2)===2) {return b+c;}  if (!p) {p=d*(.3*1.5);}
         if (a < Math.abs(c)) { a=c; var s=p/4; }
-        else var s = p/(2*Math.PI) * Math.asin (c/a);
+        else { var s = p/(2*Math.PI) * Math.asin (c/a); }
         if (t < 1) { return -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b; }
         return a*Math.pow(2,-10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )*.5 + c + b;
     },
@@ -162,7 +162,7 @@ jQuery.extend( jQuery.easing,
     easeInOutBack(x, t, b, c, d, s) {
         if (typeof(s) === "undefined") {
             s = 1.70158;
-        };
+        }
         if ((t/=d/2) < 1) {
             return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
         }
@@ -183,7 +183,9 @@ jQuery.extend( jQuery.easing,
         }
     },
     easeInOutBounce(x, t, b, c, d) {
-        if (t < d/2) return jQuery.easing.easeInBounce (x, t*2, 0, c, d) * .5 + b;
+        if (t < d/2) {
+            return jQuery.easing.easeInBounce (x, t*2, 0, c, d) * .5 + b;
+        }
         return jQuery.easing.easeOutBounce (x, t*2-d, 0, c, d) * .5 + c*.5 + b;
     }
 });

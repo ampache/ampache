@@ -64,10 +64,10 @@ class AmazonSearch
         /* If we have a base url then use it */
         if ($base_url_param != '') {
             $this->base_url = str_replace('http://', '', $base_url_param);
-            debug_event('amazonsearchengine.class', 'Retrieving from ' . $base_url_param . $this->url_suffix, '5');
+            debug_event('amazonsearchengine.class', 'Retrieving from ' . $base_url_param . $this->url_suffix, 5);
         } else {
             $this->base_url = $this->base_url_default;
-            debug_event('amazonsearchengine.class', 'Retrieving from DEFAULT', '5');
+            debug_event('amazonsearchengine.class', 'Retrieving from DEFAULT', 5);
         }
 
         // AWS credentials
@@ -156,7 +156,7 @@ class AmazonSearch
 
         //debug_event('amazonsearchengine.class', $contents, 5);
         if (!xml_parse($this->_parser, $contents)) {
-            debug_event('amazonsearchengine.class', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), '1');
+            debug_event('amazonsearchengine.class', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
         }
 
         xml_parser_free($this->_parser);
@@ -320,7 +320,7 @@ class AmazonSearch
         $contents = $request->body;
 
         if (!xml_parse($this->_parser, $contents)) {
-            debug_event('amazonsearchengine.class', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), '1');
+            debug_event('amazonsearchengine.class', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
         }
 
         xml_parser_free($this->_parser);
@@ -367,7 +367,7 @@ class AmazonSearch
                 $this->_sourceTag = trim($cdata);
                 break;
             case 'TotalPages':
-                debug_event('amazonsearchengine.class', "TotalPages= " . trim($cdata), '5');
+                debug_event('amazonsearchengine.class', "TotalPages= " . trim($cdata), 5);
                 $this->_maxPage = trim($cdata);
                 break;
             default:

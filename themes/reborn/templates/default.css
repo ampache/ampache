@@ -656,6 +656,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar #rb_action li {
     display: inline;
     margin-right: 5px;
+    padding-bottom: 3px
 }
 
 #rightbar li #rb_add, #rightbar li #pl_add {

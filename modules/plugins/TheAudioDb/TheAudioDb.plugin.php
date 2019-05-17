@@ -83,7 +83,7 @@ class AmpacheTheaudiodb
         if (strlen(trim($data['tadb_api_key']))) {
             $this->api_key = trim($data['tadb_api_key']);
         } else {
-            debug_event('theaudiodb.plugin', 'No TheAudioDb api key, metadata plugin skipped', '3');
+            debug_event('theaudiodb.plugin', 'No TheAudioDb api key, metadata plugin skipped', 3);
 
             return false;
         }
@@ -97,11 +97,11 @@ class AmpacheTheaudiodb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('theaudiodb.plugin', 'Getting metadata from TheAudioDb...', '5');
+        debug_event('theaudiodb.plugin', 'Getting metadata from TheAudioDb...', 5);
 
         // Music metadata only
         if (!in_array('music', $gather_types)) {
-            debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', '5');
+            debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
 
             return null;
         }
@@ -156,7 +156,7 @@ class AmpacheTheaudiodb
                 }
             }
         } catch (Exception $e) {
-            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $e->getMessage(), '1');
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
         
         return $results;

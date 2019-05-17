@@ -344,7 +344,7 @@ class UI
         }
 
         require_once AmpConfig::get('prefix') . self::find_template('footer.inc.php');
-        if (isset($_REQUEST['profiling'])) {
+        if (Core::get_request('profiling') !== '') {
             Dba::show_profile();
         }
     }

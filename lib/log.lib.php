@@ -140,6 +140,8 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * log_event. It checks config for debug and debug_level and only
  * calls log event if both requirements are met.
  * @param string $type
+ * @param string $message
+ * @param integer $level
  * @return boolean
  */
 function debug_event($type, $message, $level, $file = '', $username = '')

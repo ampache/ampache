@@ -992,7 +992,7 @@ class Song extends database_object implements media, library_item
     public function update(array $data)
     {
         foreach ($data as $key => $value) {
-            debug_event('song.class', $key . '=' . $value, '5');
+            debug_event('song.class', $key . '=' . $value, 5);
 
             switch ($key) {
                 case 'artist_name':
@@ -1814,7 +1814,9 @@ class Song extends database_object implements media, library_item
             }
         }
         $sql .= "ORDER BY `date` DESC ";
-        $sql .= "LIMIT " . (string) (AmpConfig::get('popular_threshold')) . " ";
+        if (AmpConfig::get('popular_threshold')) {
+            $sql .= "LIMIT " . (string) (AmpConfig::get('popular_threshold')) . " ";
+        }
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -1889,7 +1891,7 @@ class Song extends database_object implements media, library_item
             }
         }
 
-        if ($target !== null) {
+        if ($target !== null && $target !== '') {
             debug_event('song.class', 'Explicit format request {' . $target . '}', 5);
         } else {
             if ($target = AmpConfig::get('encode_target_' . $source)) {

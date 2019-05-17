@@ -39,7 +39,7 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
-debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', '5');
+debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
 $browse = new Browse($browse_id);
 
@@ -54,10 +54,8 @@ if ($_REQUEST['argument']) {
 
 $results = array();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'browse':
         $object_ids = array();
 
@@ -107,7 +105,7 @@ switch ($action) {
         switch ($_REQUEST['type']) {
             case 'playlist':
                 // Check the perms we need to on this
-                $playlist = new Playlist($_REQUEST['id']);
+                $playlist = new Playlist(Core::get_request('id'));
                 if (!$playlist->has_access()) {
                     return false;
                 }
@@ -117,7 +115,7 @@ switch ($action) {
                 $key = 'playlist_row_' . $playlist->id;
             break;
             case 'smartplaylist':
-                $playlist = new Search($_REQUEST['id'], 'song');
+                $playlist = new Search(Core::get_request('id'), 'song');
                 if (!$playlist->has_access()) {
                     return false;
                 }
@@ -128,7 +126,7 @@ switch ($action) {
                 if (!Core::get_global('user')->has_access('75')) {
                     return false;
                 }
-                $radio = new Live_Stream($_REQUEST['id']);
+                $radio = new Live_Stream(Core::get_request('id'));
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
             break;
@@ -209,7 +207,7 @@ switch ($action) {
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'get_share_links':
-        $object_type = $_REQUEST['object_type'];
+        $object_type = Core::get_request('object_type');
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         if (Core::is_library_item($object_type) && $object_id > 0) {

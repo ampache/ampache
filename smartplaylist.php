@@ -37,10 +37,8 @@ if (Core::get_request('action') == 'delete_playlist') {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'create_playlist':
         /* Check rights */
         if (!Access::check('interface', '25')) {

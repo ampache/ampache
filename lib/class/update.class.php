@@ -2648,7 +2648,7 @@ class Update
         require_once AmpConfig::get('prefix') . '/lib/install.lib.php';
 
         if (!install_check_server_apache()) {
-            debug_event('update.class', 'Not using Apache, update 360051 skipped.', '5');
+            debug_event('update.class', 'Not using Apache, update 360051 skipped.', 5);
 
             return true;
         }

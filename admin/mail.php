@@ -30,10 +30,8 @@ if (!Access::check('interface', '75')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'send_mail':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();

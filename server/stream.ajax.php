@@ -34,7 +34,7 @@ $results = array();
 $action  = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'set_play_type':
         // Make sure they have the rights to do this
         if (!Preference::has_access('play_type')) {
@@ -79,7 +79,7 @@ switch ($action) {
     case 'directplay':
 
         debug_event('stream.ajax', 'Play type {' . $_REQUEST['playtype'] . '}', 5);
-        $object_type = $_REQUEST['object_type'];
+        $object_type = Core::get_request('object_type');
         $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         if (is_array($object_id)) {
             $object_id = implode(',', $object_id);

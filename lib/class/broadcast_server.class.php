@@ -159,7 +159,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n";
             }
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', '3');
+            debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -183,7 +183,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n";
             }
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', '3');
+            debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -203,7 +203,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n";
             }
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', '3');
+            debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -222,7 +222,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n";
             }
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', '3');
+            debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -302,7 +302,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n";
             }
         } else {
-            debug_event('broadcast.class', 'Listener unauthorized.', '3');
+            debug_event('broadcast.class', 'Listener unauthorized.', 3);
         }
     }
 

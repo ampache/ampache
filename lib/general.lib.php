@@ -46,11 +46,7 @@ function set_memory_limit($new_limit)
  * or will use a random length between 14-20
  *
  * @param integer $length (optional)
-<<<<<<< HEAD
  * @return string
-=======
- * @return string $password
->>>>>>> 58103d526cbea0d4bc33244f7a5141d27835e744
  */
 function generate_password($length = null)
 {
@@ -165,7 +161,7 @@ function get_languages()
     $handle    = opendir(AmpConfig::get('prefix') . '/locale');
 
     if (!is_resource($handle)) {
-        debug_event('general.lib', 'Error unable to open locale directory', '1');
+        debug_event('general.lib', 'Error unable to open locale directory', 1);
     }
 
     $results = array();

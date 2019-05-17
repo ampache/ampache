@@ -23,11 +23,7 @@
 $prefix = dirname(__FILE__);
 require_once $prefix . '/lib/init-tiny.php';
 
-$action = 'default';
-if (Core::get_request('action')) {
-    $action = Core::get_request('action');
-}
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'config':
         // Check to see if the config file is working now, if so fall
         // through to the default, else show the appropriate template

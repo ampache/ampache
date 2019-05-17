@@ -254,7 +254,7 @@ class Song_Preview extends database_object implements media, playable_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song_preview') {
+        if ($filter_type === null || $filter_type == 'song_preview') {
             $medias[] = array(
                 'object_type' => 'song_preview',
                 'object_id' => $this->id

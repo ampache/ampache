@@ -364,8 +364,8 @@ function check_htaccess_play_writable()
 
 /**
  * debug_result
- *
  * Convenience function to format the output.
+ * @param string|boolean $status
  */
 function debug_result($status = false, $value = null, $comment = '')
 {

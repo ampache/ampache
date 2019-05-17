@@ -26,7 +26,7 @@ require_once 'lib/init.php';
 
 /* Check Perms */
 if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode')) {
-    debug_event('register', 'Error Attempted registration', '1');
+    debug_event('register', 'Error Attempted registration', 2);
     UI::access_denied();
 
     return false;
@@ -39,10 +39,8 @@ if (AmpConfig::get('captcha_public_reg')) {
     require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
 }
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'validate':
         $username      = scrub_in(Core::get_get('username'));
         $validation    = scrub_in(Core::get_get('auth'));

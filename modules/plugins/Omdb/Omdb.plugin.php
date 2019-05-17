@@ -97,11 +97,11 @@ class AmpacheOmdb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('omdb.plugin', 'Getting metadata from Omdb...', '5');
+        debug_event('omdb.plugin', 'Getting metadata from Omdb...', 5);
 
         // TVShow and Movie metadata only
         if (!in_array('tvshow', $gather_types) && !in_array('movie', $gather_types)) {
-            debug_event('omdb.plugin', 'Not a valid media type, skipped.', '5');
+            debug_event('omdb.plugin', 'Not a valid media type, skipped.', 5);
 
             return null;
         }
@@ -156,7 +156,7 @@ class AmpacheOmdb
                 }
             }
         } catch (Exception $e) {
-            debug_event('omdb.plugin', 'Error getting metadata: ' . $e->getMessage(), '1');
+            debug_event('omdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
         
         return $results;

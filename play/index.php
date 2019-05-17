@@ -155,7 +155,7 @@ if (!$share_id) {
 
         /* If the user has been disabled (true value) */
         if (make_bool(Core::get_global('user')->disabled)) {
-            debug_event('play/index', Core::get_global('user')->username . " is currently disabled, stream access denied", '3');
+            debug_event('play/index', Core::get_global('user')->username . " is currently disabled, stream access denied", 3);
             header('HTTP/1.1 403 User Disabled');
 
             return false;
@@ -164,7 +164,7 @@ if (!$share_id) {
         // If require session is set then we need to make sure we're legit
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             if (!AmpConfig::get('require_localnet_session') and Access::check_network('network', Core::get_global('user')->id, '5')) {
-                debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), '5');
+                debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), 4);
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
@@ -210,7 +210,7 @@ if (!$share_id) {
 
 $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
 if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
-    debug_event('play/index', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . Core::get_global('user')->access, '3');
+    debug_event('play/index', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . Core::get_global('user')->access, 3);
     UI::access_denied();
 
     return false;
@@ -223,7 +223,7 @@ if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('stream', Core::get_global('user')->id, '25') and
         !Access::check_network('network', Core::get_global('user')->id, '25')) {
-        debug_event('play/index', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", '3');
+        debug_event('play/index', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", 3);
         UI::access_denied();
 
         return false;
@@ -324,7 +324,7 @@ if ($media->catalog) {
 
     /* If the media is disabled */
     if (isset($media->enabled) && !make_bool($media->enabled)) {
-        debug_event('play/index', "Error: $media->file is currently disabled, song skipped", '5');
+        debug_event('play/index', "Error: $media->file is currently disabled, song skipped", 5);
         // Check to see if this is a democratic playlist, if so remove it completely
         if ($demo_id !== '' && isset($democratic)) {
             $democratic->delete_from_oid($oid, $type);
@@ -402,18 +402,18 @@ if (Core::get_get('action') == 'download' and AmpConfig::get('download')) {
     $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
 
     $browser->downloadHeaders($media_name, $media->mime, false, $media->size);
-    $fp            = fopen(Core::conv_lc_file($media->file), 'rb');
+    $filepointer   = fopen(Core::conv_lc_file($media->file), 'rb');
     $bytesStreamed = 0;
 
-    if (!is_resource($fp)) {
-        debug_event('play/index', "Error: Unable to open $media->file for downloading", '2');
+    if (!is_resource($filepointer)) {
+        debug_event('play/index', "Error: Unable to open $media->file for downloading", 2);
 
         return false;
     }
 
     if (!$share_id) {
         if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-            debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', '5');
+            debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
             $sessionkey = $sid ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
             $location   = Session::get_geolocation($sessionkey);
@@ -423,17 +423,17 @@ if (Core::get_get('action') == 'download' and AmpConfig::get('download')) {
 
     // Check to see if we should be throttling because we can get away with it
     if (AmpConfig::get('rate_limit') > 0) {
-        while (!feof($fp)) {
-            echo fread($fp, round(AmpConfig::get('rate_limit') * 1024));
+        while (!feof($filepointer)) {
+            echo fread($filepointer, round(AmpConfig::get('rate_limit') * 1024));
             $bytesStreamed += round(AmpConfig::get('rate_limit') * 1024);
             flush();
             sleep(1);
         }
     } else {
-        fpassthru($fp);
+        fpassthru($filepointer);
     }
 
-    fclose($fp);
+    fclose($filepointer);
 
     return false;
 } // if they are trying to download and they can
@@ -545,16 +545,16 @@ if ($transcode) {
         }
     }
 
-    $transcoder = Stream::start_transcode($media, $transcode_to, $player, $troptions);
-    $fp         = $transcoder['handle'];
-    $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
+    $transcoder  = Stream::start_transcode($media, $transcode_to, $player, $troptions);
+    $filepointer = $transcoder['handle'];
+    $media_name  = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else {
     if ($cpaction) {
-        $transcoder = $media->run_custom_play_action($cpaction, $transcode_to);
-        $fp         = $transcoder['handle'];
-        $transcode  = true;
+        $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to);
+        $filepointer = $transcoder['handle'];
+        $transcode   = true;
     } else {
-        $fp = fopen(Core::conv_lc_file($media->file), 'rb');
+        $filepointer = fopen(Core::conv_lc_file($media->file), 'rb');
     }
 }
 
@@ -576,7 +576,7 @@ if ($transcode) {
     $stream_size = $media->size;
 }
 
-if (!is_resource($fp)) {
+if (!is_resource($filepointer)) {
     debug_event('play/index', "Failed to open $media->file for streaming", 2);
 
     return false;
@@ -610,7 +610,7 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
             $stream_size = null;
         } else {
             debug_event('play/index', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
-            fseek($fp, $start);
+            fseek($filepointer, $start);
 
             $range = $start . '-' . $end . '/' . $media->size;
             header('HTTP/1.1 206 Partial Content');
@@ -683,7 +683,7 @@ $bytes_streamed = 0;
 
 // Actually do the streaming
 $buf_all = '';
-$r_arr   = array($fp);
+$r_arr   = array($filepointer);
 $w_arr   = $e_arr   = null;
 $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
 if ($status === false) {
@@ -691,7 +691,7 @@ if ($status === false) {
 } elseif ($status > 0) {
     do {
         $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
-        if ($buf = fread($fp, $read_size)) {
+        if ($buf = fread($filepointer, $read_size)) {
             if ($send_all_in_once) {
                 $buf_all .= $buf;
             } else {
@@ -707,7 +707,7 @@ if ($status === false) {
             }
             $bytes_streamed += strlen($buf);
         }
-    } while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+    } while (!feof($filepointer) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
 }
 
 if ($send_all_in_once && connection_status() == 0) {
@@ -724,11 +724,11 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
 }
 
 if ($transcode && isset($transcoder)) {
-    fclose($fp);
+    fclose($filepointer);
 
     Stream::kill_process($transcoder);
 } else {
-    fclose($fp);
+    fclose($filepointer);
 }
 
 debug_event('play/index', 'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size, 5);

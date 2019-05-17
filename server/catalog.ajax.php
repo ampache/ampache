@@ -27,13 +27,11 @@ if (!defined('AJAX_INCLUDE')) {
     return false;
 }
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'flip_state':
         if (!Access::check('interface', '75')) {
-            debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', '1');
+            debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', 1);
 
             return false;
         }

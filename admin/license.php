@@ -30,10 +30,8 @@ if (!Access::check('interface', '100')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'edit':
         if ((filter_has_var(INPUT_POST, 'license_id'))) {
             $license = new License(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING));

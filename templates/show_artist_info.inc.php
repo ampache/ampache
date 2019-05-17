@@ -38,7 +38,7 @@
 } ?>
     <div class="item_properties">
         <?php
-        if ($biography && is_array($biography)) {
+        if (! empty($biography) && is_array($biography)) {
             $dcol = array();
             if ($biography['placeformed']) {
                 $dcol[] = $biography['placeformed'];
@@ -54,7 +54,7 @@
     </div>
 </div>
 <div id="item_summary">
-    <?php if ($biography && is_array($biography)) {
+    <?php if (! empty($biography) && is_array($biography)) {
             ?>
         <?php echo nl2br($biography['summary'], true); ?>
     <?php

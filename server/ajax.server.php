@@ -30,11 +30,11 @@ require_once '../lib/init.php';
 
 xoutput_headers();
 
-$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
+$page = Core::get_request('page');
 
-debug_event('ajax.server', 'Called for page: {' . $page . '}', '5');
+debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
 
-switch ($page) {
+switch ($_REQUEST['page']) {
     case 'stats':
         require_once AmpConfig::get('prefix') . '/server/stats.ajax.php';
 
@@ -100,17 +100,15 @@ switch ($page) {
     break;
 } // end switch on page
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'refresh_rightbar':
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
     case 'current_playlist':
         switch ($_REQUEST['type']) {
             case 'delete':
-                Core::get_global('user')->playlist->delete_track($_REQUEST['id']);
+                Core::get_global('user')->playlist->delete_track(Core::get_request('id'));
             break;
         } // end switch
 
@@ -119,7 +117,7 @@ switch ($action) {
     // Handle the users basketcases...
     case 'basket':
         $object_type = $_REQUEST['type'] ?: $_REQUEST['object_type'];
-        $object_id   = $_REQUEST['id'] ?: $_REQUEST['object_id'];
+        $object_id   = Core::get_request('id') ?: $_REQUEST['object_id'];
 
         if (Core::is_playable_item($object_type)) {
             if (!is_array($object_id)) {
@@ -140,10 +138,10 @@ switch ($action) {
                     }
                 break;
                 case 'album_random':
-                    $data = explode('_', $_REQUEST['type']);
+                    $data = explode('_', Core::get_request('type'));
                     $type = $data['0'];
-                    foreach ($_REQUEST['id'] as $i) {
-                        $object = new $type($i);
+                    foreach ($_REQUEST['id'] as $item) {
+                        $object = new $type($item);
                         $songs  = $object->get_random_songs();
                         foreach ($songs as $song_id) {
                             Core::get_global('user')->playlist->add_object($song_id, 'song');
@@ -152,16 +150,16 @@ switch ($action) {
                 break;
                 case 'artist_random':
                 case 'tag_random':
-                    $data   = explode('_', $_REQUEST['type']);
+                    $data   = explode('_', Core::get_request('type'));
                     $type   = $data['0'];
-                    $object = new $type($_REQUEST['id']);
+                    $object = new $type(Core::get_request('id'));
                     $songs  = $object->get_random_songs();
                     foreach ($songs as $song_id) {
                         Core::get_global('user')->playlist->add_object($song_id, 'song');
                     }
                 break;
                 case 'playlist_random':
-                    $playlist = new Playlist($_REQUEST['id']);
+                    $playlist = new Playlist(Core::get_request('id'));
                     $items    = $playlist->get_random_items();
                     foreach ($items as $item) {
                         Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);

@@ -35,7 +35,7 @@ require_once 'lib/init.php';
 if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
     // Check to see if they've got an interface session or a valid API session, if not GTFO
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
-        debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
+        debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 2);
 
         return false;
     }
@@ -129,7 +129,7 @@ if (!$typeManaged) {
         }
         $image = file_get_contents($defaultimg);
     } else {
-        if (filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_STRING)) {
+        if (filter_has_var(INPUT_GET, 'thumb')) {
             $thumb_data = $art->get_thumb($size);
             $etag .= '-' . filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_STRING);
         }

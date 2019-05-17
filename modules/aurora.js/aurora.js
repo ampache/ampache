@@ -52,13 +52,13 @@ Asset = (function(_super) {
         _this.emit("error", err);
         return _this.stop();
       };
-    })(this));
+    }(this)));
     this.source.on("progress", (function(_this) {
       return function(buffered) {
         _this.buffered = buffered;
         return _this.emit("buffer", _this.buffered);
       };
-    })(this));
+    }(this)));
   }
 
   Asset.fromURL = function(url) {
@@ -110,7 +110,7 @@ Asset = (function(_super) {
           _this.stop();
           return callback(value);
         };
-      })(this));
+      }(this)));
       return this.start();
     }
   };
@@ -158,19 +158,19 @@ Asset = (function(_super) {
         _this.duration = duration;
         return _this.emit("duration", _this.duration);
       };
-    })(this));
+    }(this)));
     this.demuxer.on("metadata", (function(_this) {
       return function(metadata) {
         _this.metadata = metadata;
         return _this.emit("metadata", _this.metadata);
       };
-    })(this));
+    }(this)));
     return this.demuxer.on("error", (function(_this) {
       return function(err) {
         _this.emit("error", err);
         return _this.stop();
       };
-    })(this));
+    }(this)));
   };
 
   Asset.prototype.findDecoder = function(format) {
@@ -190,7 +190,7 @@ Asset = (function(_super) {
         return function(buffer) {
           return _this.emit("data", buffer);
         };
-      })(this));
+      }(this)));
     } else {
       div = Math.pow(2, this.format.bitsPerChannel - 1);
       this.decoder.on("data", (function(_this) {
@@ -203,19 +203,19 @@ Asset = (function(_super) {
           }
           return _this.emit("data", buf);
         };
-      })(this));
+      }(this)));
     }
     this.decoder.on("error", (function(_this) {
       return function(err) {
         _this.emit("error", err);
         return _this.stop();
       };
-    })(this));
+    }(this)));
     this.decoder.on("end", (function(_this) {
       return function() {
         return _this.emit("end");
       };
-    })(this));
+    }(this)));
     this.emit("decodeStart");
     if (this.shouldDecode) {
       return this._decode();
@@ -1396,7 +1396,7 @@ Decoder = (function(_super) {
           return _this.emit("error", error);
         }
       };
-    })(this));
+    }(this)));
     this.demuxer.on("data", (function(_this) {
       return function(chunk) {
         list.append(chunk);
@@ -1404,7 +1404,7 @@ Decoder = (function(_super) {
           return _this.decode();
         }
       };
-    })(this));
+    }(this)));
     this.demuxer.on("end", (function(_this) {
       return function() {
         _this.receivedFinalBuffer = true;
@@ -1412,7 +1412,7 @@ Decoder = (function(_super) {
           return _this.decode();
         }
       };
-    })(this));
+    }(this)));
     this.init();
   }
 
@@ -1662,12 +1662,12 @@ Demuxer = (function(_super) {
         list.append(chunk);
         return _this.readChunk(chunk);
       };
-    })(this));
+    }(this)));
     source.on("error", (function(_this) {
       return function(err) {
         return _this.emit("error", err);
       };
-    })(this));
+    }(this)));
     source.on("end", (function(_this) {
       return function() {
         if (!received) {
@@ -1675,7 +1675,7 @@ Demuxer = (function(_super) {
         }
         return _this.emit("end");
       };
-    })(this));
+    }(this)));
     this.seekPoints = [];
     this.init();
   }
@@ -2106,9 +2106,8 @@ M4ADemuxer = (function(_super) {
     return this.tracks = [];
   };
 
-  atoms = {};
-
-  containers = {};
+  var atoms = {};
+  var containers = {};
 
   atom = function(name, fn) {
     var c, container, _i, _len, _ref;
@@ -2840,7 +2839,7 @@ AudioDevice = (function(_super) {
       return function(buffer) {
         return _this.emit("refill", buffer);
       };
-    })(this));
+    }(this)));
   };
 
   AudioDevice.prototype.stop = function() {
@@ -3412,36 +3411,36 @@ Player = (function(_super) {
         _this.buffered = buffered;
         return _this.emit("buffer", _this.buffered);
       };
-    })(this));
+    }(this)));
     this.asset.on("decodeStart", (function(_this) {
       return function() {
         _this.queue = new Queue(_this.asset);
         return _this.queue.once("ready", _this.startPlaying);
       };
-    })(this));
+    }(this)));
     this.asset.on("format", (function(_this) {
       return function(format) {
         _this.format = format;
         return _this.emit("format", _this.format);
       };
-    })(this));
+    }(this)));
     this.asset.on("metadata", (function(_this) {
       return function(metadata) {
         _this.metadata = metadata;
         return _this.emit("metadata", _this.metadata);
       };
-    })(this));
+    }(this)));
     this.asset.on("duration", (function(_this) {
       return function(duration) {
         _this.duration = duration;
         return _this.emit("duration", _this.duration);
       };
-    })(this));
+    }(this)));
     this.asset.on("error", (function(_this) {
       return function(error) {
         return _this.emit("error", error);
       };
-    })(this));
+    }(this)));
   }
 
   Player.fromURL = function(url) {
@@ -3515,7 +3514,7 @@ Player = (function(_super) {
           return (_ref2 = _this.device) !== null ? _ref2.start() : void 0;
         }
       };
-    })(this));
+    }(this)));
     timestamp = (timestamp / 1000) * this.format.sampleRate;
     timestamp = this.asset.decoder.seek(timestamp);
     this.currentTime = timestamp / this.format.sampleRate * 1000 | 0;
@@ -3533,7 +3532,7 @@ Player = (function(_super) {
         _this.currentTime = currentTime;
         return _this.emit("progress", _this.currentTime);
       };
-    })(this));
+    }(this)));
     this.refill = (function(_this) {
       return function(buffer) {
         var bufferOffset, filter, i, max, _i, _j, _len, _ref;
@@ -3610,7 +3609,7 @@ Queue = (function(_super) {
       return function() {
         return _this.ended = true;
       };
-    })(this));
+    }(this)));
     this.asset.decodePacket();
   }
 

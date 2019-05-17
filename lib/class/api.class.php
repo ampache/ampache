@@ -291,7 +291,7 @@ class Api
             } // match
         } // end while
 
-        debug_event('api.class', 'Login Failed, unable to match passphrase', '1');
+        debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
         echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
@@ -315,7 +315,7 @@ class Api
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event('api.class', 'Ping Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], '5');
+        debug_event('api.class', 'Ping Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
 
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);

@@ -128,13 +128,13 @@ Website: %s
         }
 
         /* Check for existance */
-        $fp = fopen($filename, 'r');
+        $filepointer = fopen($filename, 'r');
 
-        if (!$fp) {
+        if (!$filepointer) {
             return false;
         }
 
-        $data = fread($fp, filesize($filename));
+        $data = fread($filepointer, filesize($filename));
 
         /* Scrub and show */
         echo $data;

@@ -35,7 +35,7 @@ $results     = array();
 $action      = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'delete_vote':
         $democratic->remove_vote($_REQUEST['row_id']);
         $show_browse = true;
@@ -43,7 +43,7 @@ switch ($action) {
     case 'add_vote':
         $democratic->add_vote(array(
             array(
-                'object_type' => $_REQUEST['type'],
+                'object_type' => Core::get_request('type'),
                 'object_id' => filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
             )
         ));

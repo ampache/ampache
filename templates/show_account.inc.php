@@ -135,7 +135,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
     <div class="formValidation">
             <input type="hidden" name="user_id" value="<?php echo scrub_out($client->id); ?>" />
             <?php echo Core::form_register('update_user'); ?>
-            <input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
+            <input type="hidden" name="tab" value="<?php echo scrub_out(Core::get_request('tab')); ?>" />
             <input class="button" type="submit" value="<?php echo T_('Update Account'); ?>" />
     </div>
 </form>

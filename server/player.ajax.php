@@ -32,7 +32,7 @@ $results = array();
 $action  = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_broadcasts':
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_broadcasts_dialog.inc.php');

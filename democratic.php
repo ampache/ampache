@@ -31,10 +31,8 @@ if (!AmpConfig::get('allow_democratic_playback')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'manage':
                 $democratic = Democratic::get_current_playlist();
                 $democratic->set_parent();

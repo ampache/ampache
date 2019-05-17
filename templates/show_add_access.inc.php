@@ -28,7 +28,7 @@
         <tr>
             <td><?php echo T_('Name'); ?>:</td>
             <td colspan="3">
-                <input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
+                <input type="text" name="name" value="<?php echo scrub_out(Core::get_request('name')); ?>" />
             </td>
         </tr>
         <tr>
@@ -95,7 +95,7 @@
                 if ($action == 'show_add_current') {
                     echo scrub_out(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
                 } else {
-                    echo scrub_out($_REQUEST['start']);
+                    echo scrub_out(Core::get_request('start'));
                 } ?>" />
             </td>
             <td>
@@ -105,7 +105,7 @@
                     if ($action == 'show_add_current') {
                         echo scrub_out(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
                     } else {
-                        echo scrub_out($_REQUEST['end']);
+                        echo scrub_out(Core::get_request('end'));
                     } ?>" />
             </td>
         </tr>

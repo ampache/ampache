@@ -37,7 +37,7 @@ session_start();
 // type we're dealing with so we've got a little switch here that creates the
 // type.. this feels hackish...
 $browse = new Browse();
-switch (Core::get_request('action')) {
+switch ($_REQUEST['action']) {
     case 'tag':
     case 'file':
     case 'album':
@@ -69,7 +69,7 @@ UI::show_header();
 // Browser is able to save page on current session. Only applied to main menus.
 $browse->set_update_session(true);
 
-switch (Core::get_request('action')) {
+switch ($_REQUEST['action']) {
     case 'file':
     break;
     case 'album':

@@ -24,10 +24,8 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'add_shout':
         // Must be at least a user to do this
         if (!Access::check('interface', '25')) {
@@ -62,7 +60,7 @@ switch ($action) {
         return false;
     case 'show_add_shout':
         // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'], $_REQUEST['id']);
+        $object = Shoutbox::get_object($_REQUEST['type'], Core::get_request('id'));
 
         if (!$object || !$object->id) {
             AmpError::add('general', T_('Invalid Object Selected'));

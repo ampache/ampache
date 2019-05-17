@@ -417,7 +417,7 @@ class XML_Data
             $tag_string = self::tags_string($artist->tags);
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out($_REQUEST['auth']);
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
 
             // Handle includes
             if (in_array("albums", $include)) {
@@ -485,7 +485,7 @@ class XML_Data
             $rating = new Rating($album_id, 'album');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
 
             $string .= "<album id=\"" . $album->id . "\">\n" .
                     "\t<name><![CDATA[" . $album->name . "]]></name>\n";
@@ -607,7 +607,7 @@ class XML_Data
         }
 
         Song::build_cache($songs);
-        Stream::set_session($_REQUEST['auth']);
+        Stream::set_session(Core::get_request('auth'));
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
@@ -622,7 +622,7 @@ class XML_Data
             $track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string   = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating       = new Rating($song_id, 'song');
-            $art_url      = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url      = Art::url($song->album, 'album', Core::get_request('auth'));
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
                     // Title is an alias for name
@@ -722,7 +722,7 @@ class XML_Data
 
             $rating = new Rating($song->id, 'song');
 
-            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $art_url = Art::url($song->album, 'album', Core::get_request('auth'));
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
                     // Title is an alias for name

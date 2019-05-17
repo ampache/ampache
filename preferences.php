@@ -29,7 +29,7 @@ $notification_text = "";
 $action            = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'update_preferences':
         if (Core::get_post('method') == 'admin' && !Access::check('interface', '100')) {
             UI::access_denied();
@@ -193,9 +193,7 @@ UI::show_header();
 /**
  * switch on the view
  */
-$action = Core::get_request('action');
-
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'confirm':
     case 'grant':
         show_confirmation($title, $text, $next_url, $cancel);

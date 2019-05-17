@@ -27,10 +27,8 @@ if (!defined('AJAX_INCLUDE')) {
     return false;
 }
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'sync':
         if (!Access::check('interface', '75')) {
             debug_event('podcast.ajax', Core::get_global('user')->username . ' attempted to sync podcast', 1);
@@ -47,7 +45,7 @@ switch ($action) {
             }
         } elseif (isset($_REQUEST['podcast_episode_id'])) {
             $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
-            if ($episode->id) {
+            if ($episode->id !== null) {
                 $episode->gather();
             } else {
                 debug_event('podcast.ajax', 'Cannot find podcast episode', 1);

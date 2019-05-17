@@ -30,10 +30,8 @@ if (!Access::check('interface', '100')) {
 
 UI::show_header();
 
-$action = Core::get_request('action');
-
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'find_duplicates':
         $search_type = $_REQUEST['search_type'];
         $duplicates  = Song::find_duplicates($search_type);

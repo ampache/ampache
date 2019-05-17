@@ -31,7 +31,7 @@ $results = array();
 $action  = Core::get_request('action');
 
 // Switch on the actions
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'delete_track':
         // Create the object and remove the track
         $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -56,11 +56,11 @@ switch ($action) {
     case 'append_item':
         // Only song item are supported with playlists
 
-        debug_event('playlist.ajax', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', '5');
+        debug_event('playlist.ajax', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', 5);
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface', '25')) {
-                debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', '1');
+                debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', 1);
                 break;
             }
 
@@ -101,12 +101,12 @@ switch ($action) {
             Ajax::set_include_override(true);
             $playlist->add_medias($medias, true);
             
-            debug_event('playlist.ajax', 'Items added successfully!', '5');
+            debug_event('playlist.ajax', 'Items added successfully!', 5);
             ob_start();
             display_notification(T_('Added to playlist'));
             $results['rfc3514'] = ob_get_clean();
         } else {
-            debug_event('playlist.ajax', 'No item to add. Aborting...', '5');
+            debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
         }
     break;
     default:
