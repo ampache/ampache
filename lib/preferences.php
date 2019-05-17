@@ -234,7 +234,7 @@ function create_preference_input($name, $value)
                     $is_localplay = 'selected="selected"';
                 case 'democratic':
                     $is_democratic = 'selected="selected"';
-                case 'web_player';
+                case 'web_player':
                     $is_web_player = 'selected="selected"';
                 default:
                     $is_stream = "selected=\"selected\"";
