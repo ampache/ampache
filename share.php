@@ -196,9 +196,9 @@ $share->format();
 $share->save_access();
 if ($action == 'download') {
     if ($share->object_type == 'song' || $share->object_type == 'video') {
-        $_REQUEST['action']                            = 'download';
-        Core::get_request('type')                      = $share->object_type;
-        $_REQUEST[$share->object_type . '_id']         = $share->object_id;
+        $_REQUEST['action']                    = 'download';
+        $_REQUEST['type']                      = $share->object_type;
+        $_REQUEST[$share->object_type . '_id'] = $share->object_id;
         require AmpConfig::get('prefix') . '/stream.php';
     } else {
         $_REQUEST['action'] = $share->object_type;
