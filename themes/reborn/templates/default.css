@@ -1067,7 +1067,7 @@ div.box.box_rules {
     background-position: center;
 }
 
-.cel_song, .cel_album, .cel_artist {
+.cel_song, .cel_album, .cel_artist, .cel_year {
     max-width: 350px;
     white-space: normal !important;
     text-overflow: ellipsis;
@@ -1112,7 +1112,7 @@ div.box.box_rules {
     width: 140px;
 }
 
-#now_playing .cel_song, #now_playing .cel_album, #now_playing .cel_artist, #now_playing .cel_video {
+#now_playing .cel_song, #now_playing .cel_album, #now_playing .cel_artist, #now_playing .cel_video, #now_playing .cel_year {
     width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -328,7 +328,86 @@ class Artist extends database_object implements library_item
 
         return $results;
     } // get_albums
+    /**
+     * get_by_year
+     * gets the album ids of albums of the same year
+     * of
+     * @param int|null $catalog
+     * @param int|null $year
+     * @param boolean $ignoreAlbumGroups
+     * @param boolean $group_release_type
+     * @return int[]
+     */
+    public function get_by_year($catalog = null, $year = null, $ignoreAlbumGroups = false, $group_release_type = false)
+    {
+        $catalog_where = "";
+        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+        if ($catalog) {
+            $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
+        }
+        if (AmpConfig::get('catalog_disable')) {
+            $catalog_where .= " AND `catalog`.`enabled` = '1'";
+        }
 
+        $results = array();
+
+        $sort_type = AmpConfig::get('album_sort');
+        $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
+        if ($sort_type == 'year_asc') {
+            $sql_sort = '`album`.`year` ASC,`album`.`disk`';
+        } elseif ($sort_type == 'year_desc') {
+            $sql_sort = '`album`.`year` DESC,`album`.`disk`';
+        } elseif ($sort_type == 'name_asc') {
+            $sql_sort = '`album`.`name` ASC,`album`.`disk`';
+        } elseif ($sort_type == 'name_desc') {
+            $sql_sort = '`album`.`name` DESC,`album`.`disk`';
+        }
+
+        if (!$ignoreAlbumGroups) {
+            $ignoreAlbumGroups = !AmpConfig::get('album_group');
+        }
+
+        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+            "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
+
+        $db_results = Dba::read($sql);
+
+        $mbids = array();
+        while ($r = Dba::fetch_assoc($db_results)) {
+            if ($ignoreAlbumGroups || empty($r['mbid']) || !in_array($r['mbid'], $mbids)) {
+                if ($group_release_type) {
+                    // We assume undefined release type is album
+                    $rtype = $r['release_type'] ?: 'album';
+                    if (!isset($results[$rtype])) {
+                        $results[$rtype] = array();
+                    }
+                    $results[$rtype][] = $r['id'];
+
+                    $sort = AmpConfig::get('album_release_type_sort');
+                    if ($sort) {
+                        $results_sort = array();
+                        $asort        = explode(',', $sort);
+
+                        foreach ($asort as $rtype) {
+                            if (array_key_exists($rtype, $results)) {
+                                $results_sort[$rtype] = $results[$rtype];
+                                unset($results[$rtype]);
+                            }
+                        }
+
+                        $results = array_merge($results_sort, $results);
+                    }
+                } else {
+                    $results[] = $r['id'];
+                }
+                if (!empty($r['mbid'])) {
+                    $mbids[] = $r['mbid'];
+                }
+            }
+        }
+
+        return $results;
+    }// get_albums
     /**
      * get_songs
      * gets the songs for this artist

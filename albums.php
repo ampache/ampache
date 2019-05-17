@@ -68,7 +68,9 @@ switch ($action) {
 
             return false;
         }
-
+        $album = new Album($_REQUEST['album_id']);
+        $album->format();
+        $catalog_id    = $album->get_catalogs();
         $type          = 'album';
         $object_id     = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
         $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
