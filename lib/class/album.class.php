@@ -224,7 +224,7 @@ class Album extends database_object implements library_item
      */
     public function __construct($album_id = null)
     {
-        if ($album_id === null) {
+        if (!$album_id) {
             return false;
         }
 
@@ -410,7 +410,7 @@ class Album extends database_object implements library_item
 
         $owner = $this->get_user_owner();
 
-        return ($owner !== null && $owner === $user);
+        return ($owner && $owner === $user);
     }
 
     /**
@@ -425,14 +425,14 @@ class Album extends database_object implements library_item
      * @param string $album_artist
      * @param string $release_type
      * @param boolean $readonly
-     * @return int|null
+     * @return integer|null
      */
     public static function check($name, $year = 0, $disk = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false)
     {
         $trimmed      = Catalog::trim_prefix(trim($name));
         $name         = $trimmed['string'];
         $prefix       = $trimmed['prefix'];
-        $album_artist = (int) ($album_artist);
+        $album_artist = (int) $album_artist;
         $album_artist = ($album_artist <= 0) ? null : $album_artist;
         $mbid         = empty($mbid) ? null : $mbid;
         $mbid_group   = empty($mbid_group) ? null : $mbid_group;
@@ -457,12 +457,12 @@ class Album extends database_object implements library_item
         } else {
             $sql .= 'AND `album`.`mbid` IS NULL ';
         }
-        if ($prefix !== null) {
+        if ($prefix) {
             $sql .= 'AND `album`.`prefix` = ? ';
             $params[] = $prefix;
         }
 
-        if ($album_artist !== null) {
+        if ($album_artist) {
             $sql .= 'AND `album`.`album_artist` = ? ';
             $params[] = $album_artist;
         }
@@ -498,10 +498,9 @@ class Album extends database_object implements library_item
             }
         }
 
-
         self::$_mapcache[$name][$disk][$mbid][$album_artist] = $album_id;
 
-        return (int) $album_id;
+        return $album_id;
     }
 
     /**
@@ -579,7 +578,7 @@ class Album extends database_object implements library_item
      * get_album_suite
      * gets the album ids with the same musicbrainz identifier
      * @param integer $catalog
-     * return int[]
+     * return integer[]
      */
     public function get_album_suite($catalog = 0)
     {
@@ -790,14 +789,14 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Get all children and sub-children media.
+     * Get all children and sub-childrens media.
      * @param string $filter_type
      * @return array
      */
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type !== null || $filter_type == 'song') {
+        if (!$filter_type || $filter_type == 'song') {
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
                 $medias[] = array(
@@ -905,13 +904,13 @@ class Album extends database_object implements library_item
      * This function takes a key'd array of data and updates this object
      * as needed
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {
         $year         = isset($data['year']) ? $data['year'] : $this->year;
         $artist       = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
-        $album_artist = isset($data['album_artist']) ? (int) ($data['album_artist']) : $this->album_artist;
+        $album_artist = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
         $name         = isset($data['name']) ? $data['name'] : $this->name;
         $disk         = isset($data['disk']) ? $data['disk'] : $this->disk;
         $mbid         = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
@@ -1004,7 +1003,7 @@ class Album extends database_object implements library_item
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
-        if ($current_id === null) {
+        if ($current_id == null) {
             $current_id = $this->id;
         }
 
