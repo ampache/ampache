@@ -30,11 +30,11 @@ require_once '../lib/init.php';
 
 xoutput_headers();
 
-$page = $_REQUEST['page'];
+$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
 
-debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
+debug_event('ajax.server', 'Called for page: {' . $page . '}', '5');
 
-switch ($_REQUEST['page']) {
+switch ($page) {
     case 'stats':
         require_once AmpConfig::get('prefix') . '/server/stats.ajax.php';
 
@@ -100,15 +100,17 @@ switch ($_REQUEST['page']) {
     break;
 } // end switch on page
 
+$action = Core::get_request('action');
+
 // Switch on the actions
-switch ($_REQUEST['action']) {
+switch ($action) {
     case 'refresh_rightbar':
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
     case 'current_playlist':
         switch ($_REQUEST['type']) {
             case 'delete':
-                Core::get_global('user')->playlist->delete_track(Core::get_request('id'));
+                Core::get_global('user')->playlist->delete_track($_REQUEST['id']);
             break;
         } // end switch
 
@@ -117,7 +119,7 @@ switch ($_REQUEST['action']) {
     // Handle the users basketcases...
     case 'basket':
         $object_type = $_REQUEST['type'] ?: $_REQUEST['object_type'];
-        $object_id   = Core::get_request('id') ?: $_REQUEST['object_id'];
+        $object_id   = $_REQUEST['id'] ?: $_REQUEST['object_id'];
 
         if (Core::is_playable_item($object_type)) {
             if (!is_array($object_id)) {
@@ -138,10 +140,10 @@ switch ($_REQUEST['action']) {
                     }
                 break;
                 case 'album_random':
-                    $data = explode('_', Core::get_request('type'));
+                    $data = explode('_', $_REQUEST['type']);
                     $type = $data['0'];
-                    foreach ($_REQUEST['id'] as $item) {
-                        $object = new $type($item);
+                    foreach ($_REQUEST['id'] as $i) {
+                        $object = new $type($i);
                         $songs  = $object->get_random_songs();
                         foreach ($songs as $song_id) {
                             Core::get_global('user')->playlist->add_object($song_id, 'song');
@@ -150,16 +152,16 @@ switch ($_REQUEST['action']) {
                 break;
                 case 'artist_random':
                 case 'tag_random':
-                    $data   = explode('_', Core::get_request('type'));
+                    $data   = explode('_', $_REQUEST['type']);
                     $type   = $data['0'];
-                    $object = new $type(Core::get_request('id'));
+                    $object = new $type($_REQUEST['id']);
                     $songs  = $object->get_random_songs();
                     foreach ($songs as $song_id) {
                         Core::get_global('user')->playlist->add_object($song_id, 'song');
                     }
                 break;
                 case 'playlist_random':
-                    $playlist = new Playlist(Core::get_request('id'));
+                    $playlist = new Playlist($_REQUEST['id']);
                     $items    = $playlist->get_random_items();
                     foreach ($items as $item) {
                         Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
@@ -177,10 +179,10 @@ switch ($_REQUEST['action']) {
     case 'set_rating':
         if (User::is_registered()) {
             ob_start();
-            $rating = new Rating(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['rating_type']);
+            $rating = new Rating(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['rating_type']);
             $rating->set_rating($_GET['rating']);
-            Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['rating_type']);
-            $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . $_GET['rating_type'];
+            Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['rating_type']);
+            $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT) . "_" . $_GET['rating_type'];
             $results[$key] = ob_get_contents();
             ob_end_clean();
         } else {
@@ -191,10 +193,10 @@ switch ($_REQUEST['action']) {
     case 'set_userflag':
         if (User::is_registered()) {
             ob_start();
-            $userflag = new Userflag(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['userflag_type']);
+            $userflag = new Userflag(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['userflag_type']);
             $userflag->set_flag($_GET['userflag']);
-            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['userflag_type']);
-            $key           = "userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . $_GET['userflag_type'];
+            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['userflag_type']);
+            $key           = "userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT) . "_" . $_GET['userflag_type'];
             $results[$key] = ob_get_contents();
             ob_end_clean();
         } else {
@@ -204,13 +206,13 @@ switch ($_REQUEST['action']) {
     case 'action_buttons':
         ob_start();
         if (AmpConfig::get('ratings')) {
-            echo " <div id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING) . "'>";
-            Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING));
+            echo " <div id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING) . "'>";
+            Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING));
             echo "</div> |";
         }
         if (AmpConfig::get('userflags')) {
-            echo " <div id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING) . "'>";
-            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING));
+            echo " <div id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING) . "'>";
+            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING));
             echo "</div>";
         }
         $results['action_buttons'] = ob_get_contents();
