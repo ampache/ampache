@@ -122,7 +122,7 @@ class Catalog_soundcloud extends Catalog
 
     public function perform_ready()
     {
-        $this->authcode = $_REQUEST['authcode'];
+        $this->authcode = Core::get_request('authcode');
         $this->completeAuthToken();
     }
 

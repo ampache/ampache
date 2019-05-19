@@ -77,7 +77,7 @@ switch ($_REQUEST['action']) {
         } // end switch on type
     break;
     case 'play_item':
-        $object_type = Core::get_request('object_type');
+        $object_type = $_REQUEST['object_type'];
         $object_ids  = explode(',', filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
 
         if (Core::is_playable_item($object_type)) {

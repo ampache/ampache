@@ -886,31 +886,31 @@ registration_mandatory_fields = "fullname"
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
 ;;; Audio
-;transcode_m4a      = allowed
-;transcode_flac     = required
-;transcode_mpc      = required
-;transcode_ogg      = required
-;transcode_oga      = required
-;transcode_wav      = required
-;transcode_wma      = required
-;transcode_aif      = required
-;transcode_aiff     = required
-;transcode_ape     = required
-;transcode_shn     = required
-;transcode_mp3      = allowed
+;transcode_m4a  = allowed
+;transcode_flac = required
+;transcode_mpc  = required
+;transcode_ogg  = required
+;transcode_oga  = required
+;transcode_wav  = required
+;transcode_wma  = required
+;transcode_aif  = required
+;transcode_aiff = required
+;transcode_ape  = required
+;transcode_shn  = required
+;transcode_mp3  = allowed
 ;;; Video
-;transcode_avi      = allowed
-;transcode_mkv      = allowed
-;transcode_mpg      = allowed
-;transcode_mpeg     = allowed
-;transcode_m4v      = allowed
-;transcode_mp4      = allowed
-;transcode_mov      = allowed
-;transcode_wmv      = allowed
-;transcode_ogv      = allowed
-;transcode_divx     = allowed
-;transcode_m2ts     = allowed
-;transcode_webm     = allowed
+;transcode_avi  = allowed
+;transcode_mkv  = allowed
+;transcode_mpg  = allowed
+;transcode_mpeg = allowed
+;transcode_m4v  = allowed
+;transcode_mp4  = allowed
+;transcode_mov  = allowed
+;transcode_wmv  = allowed
+;transcode_ogv  = allowed
+;transcode_divx = allowed
+;transcode_m2ts = allowed
+;transcode_webm = allowed
 
 ; Default audio output format
 ; DEFAULT: none

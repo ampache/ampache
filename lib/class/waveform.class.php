@@ -134,7 +134,7 @@ class Waveform
                     }
                 }
 
-                if ($waveform) {
+                if ($waveform !== null) {
                     self::save_to_db($song_id, $waveform);
                 }
             }

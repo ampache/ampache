@@ -150,7 +150,7 @@ function debug_event($type, $message, $level, $file = '', $username = '')
         return false;
     }
 
-    if (!$username && isset($GLOBALS['user'])) {
+    if (!$username && Core::get_global('user')) {
         $username = Core::get_global('user')->username;
     }
 
