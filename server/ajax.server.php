@@ -179,10 +179,10 @@ switch ($action) {
     case 'set_rating':
         if (User::is_registered()) {
             ob_start();
-            $rating = new Rating(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['rating_type']);
+            $rating = new Rating(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['rating_type']);
             $rating->set_rating($_GET['rating']);
-            Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['rating_type']);
-            $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT) . "_" . $_GET['rating_type'];
+            Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['rating_type']);
+            $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . $_GET['rating_type'];
             $results[$key] = ob_get_contents();
             ob_end_clean();
         } else {
@@ -193,10 +193,10 @@ switch ($action) {
     case 'set_userflag':
         if (User::is_registered()) {
             ob_start();
-            $userflag = new Userflag(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['userflag_type']);
+            $userflag = new Userflag(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['userflag_type']);
             $userflag->set_flag($_GET['userflag']);
-            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), $_GET['userflag_type']);
-            $key           = "userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT) . "_" . $_GET['userflag_type'];
+            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['userflag_type']);
+            $key           = "userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . $_GET['userflag_type'];
             $results[$key] = ob_get_contents();
             ob_end_clean();
         } else {
@@ -206,13 +206,13 @@ switch ($action) {
     case 'action_buttons':
         ob_start();
         if (AmpConfig::get('ratings')) {
-            echo " <div id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING) . "'>";
-            Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING));
+            echo " <div id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING) . "'>";
+            Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING));
             echo "</div> |";
         }
         if (AmpConfig::get('userflags')) {
-            echo " <div id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING) . "'>";
-            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING));
+            echo " <div id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING) . "'>";
+            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING));
             echo "</div>";
         }
         $results['action_buttons'] = ob_get_contents();
