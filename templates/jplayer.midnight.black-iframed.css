@@ -110,6 +110,10 @@ div.jp-video-float div.jp-jplayer {
     border-top-right-radius: 15px;
 }
 
+div.jp-video-float  div.jp-gui {
+
+}
+
 div.jp-interface {
 	position: relative;
 	width: 100%;
@@ -172,6 +176,7 @@ div.jp-video div.jp-type-playlist ul.jp-controls {
 div.jp-video ul.jp-controls,
 div.jp-interface ul.jp-controls li {
 	display: inline;
+	float: left;
 }
 
 div.jp-interface ul.jp-controls a {
@@ -425,11 +430,13 @@ div.jp-duration {
 	padding-right: 2px;
 }
 div.jp-current-time {
+	float: left;
 	display: inline;
 	text-align: left;
 	padding-left: 2px;
 }
 div.jp-duration {
+	float: right;
 	display: inline;
 	text-align: right;
 }
@@ -534,6 +541,7 @@ div.waveform a {
     cursor: crosshair;
 }
 .waveform-shouts {
+    float: left;
     display:inline;
 }
 
@@ -606,6 +614,7 @@ div.jp-type-playlist div.jp-playlist a.jp-playlist-current {
 }
 
 div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove {
+	float: right;
 	display: inline;
 	text-align: right;
 	margin-right: 10px;
@@ -616,6 +625,7 @@ div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove:hover {
 	color: #FFF;
 }
 div.jp-type-playlist div.jp-playlist span.jp-free-media {
+	float: right;
 	display: inline;
 	text-align: right;
 	margin-right: 10px;
@@ -668,6 +678,10 @@ div.jp-video-play:hover a.jp-video-play-icon {
 	background: url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 -100px no-repeat;
 }
 
+
+
+
+
 div.jp-jplayer audio,
 div.jp-jplayer {
 	width: 0;
@@ -684,6 +698,10 @@ div.jp-jplayer-audio {
     top: 10px;
     left: 20px;
 }
+
+
+
+
 
 /* @group TOGGLES */
 
@@ -839,6 +857,8 @@ a.jp-shuffle-off:hover {
     margin-right: 2px;
     right:25%;
     font-size: 0.67em;
+    width: 60px;
+    height: 95px;
     text-align: right;
     display: inline;
     opacity: 0.4;
@@ -852,12 +872,18 @@ a.jp-shuffle-off:hover {
     display: inline-block;
 }
 
+.broadcast {
+}
+
 .broadcast-info {
 	display: inline;
 }
 
 .broadcast-action {
 	display: inline;
+}
+
+.slideshow {
 }
 
 #webplayer {

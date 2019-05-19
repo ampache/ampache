@@ -194,6 +194,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     font-size: 15px;
 }
 
+.header-float {
+}
+
 .header-fixed {
     position: fixed;
     top: 0px;
@@ -441,7 +444,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     border: 2px solid;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    border-radius: 2px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -529,6 +531,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     float: left;
     margin: 0px 4px 0px 4px;
     height: 25px;
+}
+
+#sidebar-tabs li.active {
+}
+
+#sidebar-tabs li.active img{
 }
 
 /* Tabs content */
@@ -655,6 +663,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #rightbar #rb_action li {
     display: inline;
+    margin-bottom: 5px;
     margin-right: 5px;
     padding-bottom: 3px
 }
@@ -1152,6 +1161,10 @@ div.box.box_rules {
 .album_group_disks_title {
     float: left;
     margin-right: 30px;
+}
+
+.album_group_disks_actions {
+
 }
 
 /***********************************************

@@ -32,6 +32,9 @@
     color: #eee;
 }
 
+.editdialogstyle.ui-dialog  .ui-dialog-title {
+}
+
 .editdialogstyle.ui-dialog .ui-dialog-content {
     color: #999;
     border: 0;
