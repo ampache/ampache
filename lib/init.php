@@ -263,3 +263,11 @@ $GLOBALS['xmlrpc_internalencoding'] = AmpConfig::get('site_charset');
 if (AmpConfig::get('debug')) {
     error_reporting(E_ALL);
 }
+
+// set a mobile tag so we can change things for mobile in the future
+$_SESSION['mobile'] = false;
+$user_agent         = $_SERVER['HTTP_USER_AGENT'];
+
+if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPad') || strpos($user_agent, 'iPhone'))) {
+    $_SESSION['mobile'] = true;
+}
