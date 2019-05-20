@@ -169,10 +169,10 @@ switch ($_REQUEST['action']) {
         $user->upload_avatar();
 
         switch ($access) {
-            case 5: 
+            case 5:
                 $access = T_('Guest');
                 break;
-            case 25: 
+            case 25:
                 $access = T_('User');
                 break;
             case 100:
