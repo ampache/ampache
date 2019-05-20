@@ -93,7 +93,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                 </form>
             <?php if ($mobile_session) {
                             echo "<div id=\"mobileheader\"><!-- This is the header -->";
-                            echo "<a href=\"" . $web_path . "\"><h1 id=\"headerlogo\"></h1></a>";
+                            echo "<h1 id=\"headerlogo\"></h1>";
                             echo "</div>";
                         } ?>
         <?php
