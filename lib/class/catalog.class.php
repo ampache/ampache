@@ -1772,7 +1772,7 @@ abstract class Catalog extends database_object
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
         // Check for patterns
-        if (!$sort_pattern or !$rename_pattern) {
+        if (!$sort_pattern || !$rename_pattern) {
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }

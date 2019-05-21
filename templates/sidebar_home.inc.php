@@ -103,7 +103,7 @@
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic') ?></a></li>
             <?php
             } ?>
-            <?php if ($server_allow = AmpConfig::get('allow_localplay_playback') and $controller = AmpConfig::get('localplay_controller') and $access_check = Access::check('localplay', '5')) {
+            <?php if ($server_allow = AmpConfig::get('allow_localplay_playback') && $controller = AmpConfig::get('localplay_controller') && $access_check = Access::check('localplay', '5')) {
                 ?>
             <?php
                 // Little bit of work to be done here

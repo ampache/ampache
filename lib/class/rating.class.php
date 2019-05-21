@@ -78,7 +78,7 @@ class Rating extends database_object
      */
     public static function build_cache($type, $ids)
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 

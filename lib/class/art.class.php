@@ -211,7 +211,7 @@ class Art extends database_object
         // the image.
         if (function_exists('ImageCreateFromString')) {
             $image = ImageCreateFromString($source);
-            if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
+            if ($image !== false || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('art.class', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
@@ -722,22 +722,22 @@ class Art extends database_object
         }
 
         // Check and make sure we can resize what you've asked us to
-        if (($type == 'jpg' or $type == 'jpeg') and !(imagetypes() & IMG_JPG)) {
+        if (($type == 'jpg' || $type == 'jpeg') && !(imagetypes() & IMG_JPG)) {
             debug_event('art.class', 'PHP-GD Does not support JPGs - unable to resize', 1);
 
             return false;
         }
-        if ($type == 'png' and !imagetypes() & IMG_PNG) {
+        if ($type == 'png' && !imagetypes() & IMG_PNG) {
             debug_event('art.class', 'PHP-GD Does not support PNGs - unable to resize', 1);
 
             return false;
         }
-        if ($type == 'gif' and !imagetypes() & IMG_GIF) {
+        if ($type == 'gif' && !imagetypes() & IMG_GIF) {
             debug_event('art.class', 'PHP-GD Does not support GIFs - unable to resize', 1);
 
             return false;
         }
-        if ($type == 'bmp' and !imagetypes() & IMG_WBMP) {
+        if ($type == 'bmp' && !imagetypes() & IMG_WBMP) {
             debug_event('art.class', 'PHP-GD Does not support BMPs - unable to resize', 1);
 
             return false;

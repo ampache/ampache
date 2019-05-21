@@ -148,7 +148,7 @@ class Catalog_subsonic extends Catalog
             return false;
         }
         
-        if (!strlen($username) or !strlen($password)) {
+        if (!strlen($username) || !strlen($password)) {
             AmpError::add('general', T_('Error: Username and Password Required for Subsonic Catalogs'));
             
             return false;

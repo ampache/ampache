@@ -323,7 +323,7 @@ class Core
 
         $image = ImageCreateFromString($image_data);
 
-        if (!$image) {
+        if ($image !== false) {
             return array('width' => 0,'height' => 0);
         }
 

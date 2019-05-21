@@ -143,7 +143,7 @@ class captcha
 
 #-- init (triggered if *this* script is called directly)
 if ((basename($_SERVER["SCRIPT_FILENAME"]) == basename(__FILE__))
- or (easy_captcha_utility::canonical_path("http://ignored.xxx/$_SERVER[REQUEST_URI]") == easy_captcha_utility::canonical_path(CAPTCHA_BASE_URL))) {
+ || (easy_captcha_utility::canonical_path("http://ignored.xxx/$_SERVER[REQUEST_URI]") == easy_captcha_utility::canonical_path(CAPTCHA_BASE_URL))) {
     easy_captcha_utility::API();
 }
 
@@ -166,7 +166,7 @@ class easy_captcha
     {
 
       #-- load
-        if (($this->id = $id) or ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID]))) {
+        if (($this->id = $id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID]))) {
             $this->load();
         }
 
@@ -467,7 +467,7 @@ class easy_captcha_fuzzy extends easy_captcha
             $diff    = levenshtein($pw, $input);
             $maxdiff = strlen($pw) * (1 - $this->fuzzy);
 
-            return ($pw == $input) or ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
+            return ($pw == $input) || ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
         }
     }
 }

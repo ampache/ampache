@@ -69,7 +69,7 @@ class Tag extends database_object implements library_item
      */
     public static function build_cache($ids)
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 
@@ -93,7 +93,7 @@ class Tag extends database_object implements library_item
      */
     public static function build_map_cache($type, $ids)
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 

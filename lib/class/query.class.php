@@ -663,7 +663,7 @@ class Query
     public function get_total($objects = null)
     {
         // If they pass something then just return that
-        if (is_array($objects) and !$this->is_simple()) {
+        if (is_array($objects) && !$this->is_simple()) {
             return count($objects);
         }
 
@@ -2328,7 +2328,7 @@ class Query
             $objects = $this->get_saved();
 
             // If there's nothing there don't do anything
-            if (!count($objects) or !is_array($objects)) {
+            if (!count($objects) || !is_array($objects)) {
                 return false;
             }
             $type      = $this->get_type();

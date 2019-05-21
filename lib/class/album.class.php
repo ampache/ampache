@@ -286,7 +286,7 @@ class Album extends database_object implements library_item
     public static function build_cache(array $ids)
     {
         // Nothing to do if they pass us nothing
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 

@@ -598,7 +598,7 @@ class User extends database_object
             AmpError::add('username', T_('Error Username Required'));
         }
 
-        if ($data['password1'] != $data['password2'] and !empty($data['password1'])) {
+        if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {
             AmpError::add('password', T_("Error Passwords don't match"));
         }
 

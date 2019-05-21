@@ -58,7 +58,7 @@ foreach ($data as $line) {
     }
 
     foreach ($unmigratable as $option=>$default) {
-        if (strstr($line,$option) AND !$migrated[$option]) {
+        if (strstr($line,$option) && !$migrated[$option]) {
             $line = $option . " = \"$default\"";
             $migrated[$option] = true;
         }

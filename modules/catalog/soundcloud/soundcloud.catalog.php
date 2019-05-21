@@ -168,7 +168,7 @@ class Catalog_soundcloud extends Catalog
         $userid = $data['userid'];
         $secret = $data['secret'];
 
-        if (!strlen($userid) or !strlen($secret)) {
+        if (!strlen($userid) || !strlen($secret)) {
             AmpError::add('general', T_('Error: UserID and Secret Required for SoundCloud Catalogs'));
 
             return false;
