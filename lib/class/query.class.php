@@ -1012,7 +1012,7 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `playlist` ";
                 break;
                 case 'smartplaylist':
-                    self::set_select('`search`.`id`');
+                    $this->set_select('`search`.`id`');
                     $sql = "SELECT %%SELECT%% FROM `search` ";
                 break;
                 case 'shoutbox':
