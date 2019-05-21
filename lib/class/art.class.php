@@ -107,7 +107,7 @@ class Art extends database_object
      */
     public static function build_cache($object_ids)
     {
-        if (!is_array($object_ids) || !count($object_ids)) {
+        if (!count($object_ids)) {
             return false;
         }
         $uidlist    = '(' . implode(',', $object_ids) . ')';
@@ -236,7 +236,7 @@ class Art extends database_object
     {
         // Get the data either way
         if (!$this->has_db_info()) {
-            return false;
+            return '';
         }
 
         if ($raw || !$this->thumb) {
@@ -595,7 +595,7 @@ class Art extends database_object
      */
     private static function delete_rec_dir($path)
     {
-        debug_event('art.class', 'Deleting ' . $path . ' directory...', 5);
+        debug_event('art.class', 'Deleting ' . (string) $path . ' directory...', 5);
 
         if (Core::is_readable($path)) {
             foreach (scandir($path) as $file) {
@@ -660,7 +660,7 @@ class Art extends database_object
      * Returns the specified resized image.  If the requested size doesn't
      * already exist, create and cache it.
      * @param array $size
-     * @return string
+     * @return array
      */
     public function get_thumb($size)
     {
@@ -702,7 +702,7 @@ class Art extends database_object
      * @param string $image
      * @param array $size
      * @param string $mime
-     * @return string
+     * @return string|boolean
      */
     public function generate_thumb($image, $size, $mime)
     {
@@ -785,9 +785,11 @@ class Art extends database_object
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
             break;
+            default:
+                $mime_type = null;
         } // resized
 
-        if (!isset($mime_type)) {
+        if (!$mime_type) {
             debug_event('art.class', 'Error: No mime type found.', 2);
 
             return false;
@@ -1269,7 +1271,7 @@ class Art extends database_object
                     debug_event('art.class', "gather_musicbrainz Matched coverart site: " . $casite['name'], 5);
                     if (preg_match($casite['regexp'], $arurl, $matches)) {
                         $num_found++;
-                        $url = $casite[imguri];
+                        $url = $casite['imguri'];
                         debug_event('art.class', "gather_musicbrainz Generated URL added: " . $url, 5);
                         $images[] = array(
                             'url' => $url,
