@@ -482,7 +482,7 @@ abstract class Catalog extends database_object
      * @param boolean $value
      * @param integer $catalog_id
      * @param integer $level
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $catalog_id, $level)
     {

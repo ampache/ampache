@@ -1012,7 +1012,7 @@ class Artist extends database_object implements library_item
     /**
      * Update artist associated user.
      * @param integer $user
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function update_artist_user($user)
     {

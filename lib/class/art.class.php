@@ -999,7 +999,7 @@ class Art extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

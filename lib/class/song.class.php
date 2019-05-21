@@ -1367,7 +1367,7 @@ class Song extends database_object implements media, library_item
      * @param integer $song_id
      * @param integer $level
      * @param boolean $check_owner
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
     {
@@ -1401,7 +1401,7 @@ class Song extends database_object implements media, library_item
      * @param integer $song_id
      * @param integer $level
      * @param boolean $check_owner
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false)
     {
@@ -2134,7 +2134,7 @@ class Song extends database_object implements media, library_item
     /**
      * remove_from_disk
      * Remove the song from disk.
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function remove_from_disk()
     {

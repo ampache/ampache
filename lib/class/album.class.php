@@ -1100,7 +1100,7 @@ class Album extends database_object implements library_item
      * Update an album field.
      * @param string $field
      * @param integer $album_id
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function update_field($field, $value, $album_id)
     {

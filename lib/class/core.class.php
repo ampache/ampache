@@ -307,31 +307,31 @@ class Core
      * false on error
      *
      * @param string $image_data
-     * @return array|boolean
+     * @return array
      */
     public static function image_dimensions($image_data)
     {
         if (!function_exists('ImageCreateFromString')) {
-            return false;
+            return array('width' => 0,'height' => 0);
         }
 
         if (empty($image_data)) {
             debug_event('core.class', "Cannot create image from empty data", 2);
 
-            return false;
+            return array('width' => 0,'height' => 0);
         }
 
         $image = ImageCreateFromString($image_data);
 
         if (!$image) {
-            return false;
+            return array('width' => 0,'height' => 0);
         }
 
         $width  = imagesx($image);
         $height = imagesy($image);
 
         if (!$width || !$height) {
-            return false;
+            return array('width' => 0,'height' => 0);
         }
 
         return array('width' => $width,'height' => $height);

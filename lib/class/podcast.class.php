@@ -284,7 +284,7 @@ class Podcast extends database_object implements library_item
     /**
      * create
      * @param array $data
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public static function create(array $data)
     {
