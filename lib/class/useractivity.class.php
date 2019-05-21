@@ -108,9 +108,9 @@ class Useractivity extends database_object
     /**
      * post_activity
      * @param integer $user_id
+     * @param string $action
      * @param string $object_type
      * @param integer $object_id
-     * @param string $action
      */
     public static function post_activity($user_id, $action, $object_type, $object_id)
     {

@@ -70,6 +70,10 @@ class Dba
         return $stmt;
     }
 
+    /**
+     * _query
+     * @return boolean
+     */
     private static function _query($sql, $params)
     {
         $dbh = self::dbh();
@@ -301,6 +305,9 @@ class Dba
         return $dbh;
     }
 
+    /**
+     * _setup_dbh
+     */
     private static function _setup_dbh($dbh, $database)
     {
         if (!$dbh) {

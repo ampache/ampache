@@ -28,106 +28,129 @@ class Artist extends database_object implements library_item
      *  @var int $id
      */
     public $id;
+
     /**
      *  @var string $name
      */
     public $name;
+
     /**
      *  @var string $summary
      */
     public $summary;
+
     /**
      *  @var string $placeformed
      */
     public $placeformed;
+
     /**
      *  @var int $yearformed
      */
     public $yearformed;
+
     /**
      *  @var int $last_update
      */
     public $last_update;
+
     /**
      *  @var int $songs
      */
     public $songs;
+
     /**
      *  @var int $albums
      */
     public $albums;
+
     /**
      *  @var string $prefix
      */
     public $prefix;
+
     /**
      *  @var string $mbid
      */
     public $mbid; // MusicBrainz ID
+
     /**
      *  @var int $catalog_id
      */
     public $catalog_id;
+
     /**
      *  @var int $time
      */
     public $time;
+
     /**
      *  @var int $user
      */
     public $user;
+
     /**
      * @var boolean $manual_update
      */
     public $manual_update;
 
+
     /**
      *  @var array $tags
      */
     public $tags;
+
     /**
      *  @var string $f_tags
      */
     public $f_tags;
+
     /**
      *  @var array $labels
      */
     public $labels;
+
     /**
      *  @var string $f_labels
      */
     public $f_labels;
+
     /**
      *  @var int $object_cnt
      */
     public $object_cnt;
+
     /**
      *  @var string $f_name
      */
     public $f_name;
+
     /**
      *  @var string $f_full_name
      */
     public $f_full_name;
+
     /**
      *  @var string $link
      */
     public $link;
+
     /**
      *  @var string $f_link
      */
     public $f_link;
+
     /**
      *  @var string $f_time
      */
     public $f_time;
-
 
     // Constructed vars
     /**
      *  @var boolean $_fake
      */
     public $_fake = false; // Set if construct_from_array() used
+
     /**
      *  @var array $_mapcache
      */
@@ -334,15 +357,16 @@ class Artist extends database_object implements library_item
 
         return $results;
     } // get_albums
+
     /**
      * get_by_year
      * gets the album ids of albums of the same year
      * of
-     * @param int|null $catalog
-     * @param int|null $year
+     * @param integer|null $catalog
+     * @param integer|null $year
      * @param boolean $ignoreAlbumGroups
      * @param boolean $group_release_type
-     * @return int[]
+     * @return integer[]
      */
     public function get_by_year($catalog = null, $year = null, $ignoreAlbumGroups = false, $group_release_type = false)
     {
@@ -385,15 +409,15 @@ class Artist extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         $mbids = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
-            if ($ignoreAlbumGroups || empty($r['mbid']) || !in_array($r['mbid'], $mbids)) {
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($ignoreAlbumGroups || empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
                 if ($group_release_type) {
                     // We assume undefined release type is album
-                    $rtype = $r['release_type'] ?: 'album';
+                    $rtype = $row['release_type'] ?: 'album';
                     if (!isset($results[$rtype])) {
                         $results[$rtype] = array();
                     }
-                    $results[$rtype][] = $r['id'];
+                    $results[$rtype][] = $row['id'];
 
                     $sort = AmpConfig::get('album_release_type_sort');
                     if ($sort) {
@@ -410,16 +434,17 @@ class Artist extends database_object implements library_item
                         $results = array_merge($results_sort, $results);
                     }
                 } else {
-                    $results[] = $r['id'];
+                    $results[] = $row['id'];
                 }
-                if (!empty($r['mbid'])) {
-                    $mbids[] = $r['mbid'];
+                if (!empty($row['mbid'])) {
+                    $mbids[] = $row['mbid'];
                 }
             }
         }
 
         return $results;
     }// get_albums
+
     /**
      * get_songs
      * gets the songs for this artist
@@ -709,11 +734,20 @@ class Artist extends database_object implements library_item
         return 'default';
     }
 
+    /**
+     * get_description
+     * @return string
+     */
     public function get_description()
     {
         return $this->summary;
     }
 
+    /**
+     * display_art
+     * @param integer $thumb
+     * @param boolean $force
+     */
     public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
@@ -847,7 +881,7 @@ class Artist extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current artist
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {

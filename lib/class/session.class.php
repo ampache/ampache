@@ -524,6 +524,10 @@ class Session
         return Dba::write($sql, array($username, $token, time() + $remember_length));
     }
 
+    /**
+     * auth_remember
+     * @return boolean
+     */
     public static function auth_remember()
     {
         $auth  = false;

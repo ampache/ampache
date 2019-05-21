@@ -422,6 +422,11 @@ class Art extends database_object
         return true;
     } // insert
 
+    /**
+     * check_dimensions
+     * @param array $dimensions
+     * @return boolean
+     */
     public static function check_dimensions($dimensions)
     {
         $width  = (int) ($dimensions['width']);
@@ -474,6 +479,14 @@ class Art extends database_object
         return true;
     }
 
+    /**
+     * get_dir_on_disk
+     * @param string $type
+     * @param string $uid
+     * @param string $kind
+     * @param boolean $autocreate
+     * @return boolean|string
+     */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {
         $path = AmpConfig::get('local_metadata_dir');
@@ -512,6 +525,7 @@ class Art extends database_object
     }
 
     /**
+     * write_to_dir
      * @param string $source
      * @param string $type
      * @param integer $uid
@@ -534,6 +548,7 @@ class Art extends database_object
     }
 
     /**
+     * read_from_dir
      * @param string $type
      * @param integer $uid
      */
@@ -560,6 +575,12 @@ class Art extends database_object
         return $image;
     }
 
+    /**
+     * delete_from_dir
+     * @param string $type
+     * @param string $uid
+     * @param string $kind
+     */
     private static function delete_from_dir($type, $uid, $kind = '')
     {
         if ($type && $uid) {
@@ -569,6 +590,7 @@ class Art extends database_object
     }
 
     /**
+     * delete_rec_dir
      * @param false|string $path
      */
     private static function delete_rec_dir($path)

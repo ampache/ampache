@@ -165,7 +165,11 @@ class Podcast extends database_object implements library_item
         
         return true;
     }
-    
+
+    /**
+     * get_keywords
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords            = array();
@@ -197,7 +201,7 @@ class Podcast extends database_object implements library_item
 
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -224,11 +228,20 @@ class Podcast extends database_object implements library_item
         return 'default';
     }
 
+    /**
+     * get_description
+     * @return string
+     */
     public function get_description()
     {
         return $this->f_description;
     }
-    
+
+    /**
+     * display_art
+     * @param integer $thumb
+     * @param type $force
+     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'podcast') || $force) {
@@ -267,7 +280,12 @@ class Podcast extends database_object implements library_item
         
         return $this->id;
     }
-    
+
+    /**
+     * create
+     * @param array $data
+     * @return boolean
+     */
     public static function create(array $data)
     {
         $feed = $data['feed'];
@@ -353,7 +371,13 @@ class Podcast extends database_object implements library_item
 
         return $db_results;
     }
-    
+
+    /**
+     * add_episodes
+     * @param array $episodes
+     * @param integer $afterdate
+     * @param boolean $gather
+     */
     public function add_episodes($episodes, $afterdate=0, $gather=false)
     {
         foreach ($episodes as $episode) {
@@ -391,7 +415,13 @@ class Podcast extends database_object implements library_item
         }
         $this->update_lastsync(time());
     }
-    
+
+    /**
+     * add_episode
+     * @param SimpleXMLElement $episode
+     * @param integer $afterdate
+     * @return boolean
+     */
     private function add_episode(SimpleXMLElement $episode, $afterdate=0)
     {
         debug_event('podcast.class', 'Adding new episode to podcast ' . $this->id . '...', 4);
@@ -436,6 +466,7 @@ class Podcast extends database_object implements library_item
     }
     
     /**
+     * update_lastsync
      * @param integer $time
      */
     private function update_lastsync($time)
@@ -444,7 +475,12 @@ class Podcast extends database_object implements library_item
 
         return Dba::write($sql, array($time, $this->id));
     }
-    
+
+    /**
+     * sync_episodes
+     * @param boolean $gather
+     * @return boolean
+     */
     public function sync_episodes($gather=false)
     {
         debug_event('podcast.class', 'Syncing feed ' . $this->feed . ' ...', 5);
@@ -466,7 +502,10 @@ class Podcast extends database_object implements library_item
         
         return true;
     }
-    
+
+    /**
+     * remove
+     */
     public function remove()
     {
         $episodes = $this->get_episodes();
@@ -479,7 +518,11 @@ class Podcast extends database_object implements library_item
 
         return Dba::write($sql, array($this->id));
     }
-    
+
+    /**
+     * get_root_path
+     * @return string
+     */
     public function get_root_path()
     {
         $catalog = Catalog::create_from_id($this->catalog);

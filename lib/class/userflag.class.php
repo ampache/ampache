@@ -110,6 +110,7 @@ class Userflag extends database_object
     }
 
     /**
+     * get_flag
      * @param boolean $get_date
      */
     public function get_flag($user_id = null, $get_date = null)
