@@ -178,7 +178,7 @@ class Channel extends database_object implements media, library_item
      * @param string $loop
      * @param string $stream_type
      * @param string $bitrate
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public static function create($name, $description, $url, $object_type, $object_id, $interface, $port, $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate)
     {

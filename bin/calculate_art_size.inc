@@ -42,8 +42,8 @@ while ($row = Dba::fetch_assoc($db_results)) {
     }
 
     $id = $row['id'];
-        $dimensions = Core::image_dimensions($source);
-        if ($dimensions) {
+    $dimensions = Core::image_dimensions($source);
+    if (!empty($dimensions)) {
         $width = (int) $dimensions['width'];
         $height = (int) $dimensions['height'];
         $sql = "Update `image` SET `width`=". $width . ",`height`=".$height." WHERE `id`='".$id."'";

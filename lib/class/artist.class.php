@@ -995,7 +995,7 @@ class Artist extends database_object implements library_item
      * @param string $summary
      * @param string $placeformed
      * @param integer $yearformed
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
     {

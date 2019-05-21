@@ -307,7 +307,7 @@ class Core
      * false on error
      *
      * @param string $image_data
-     * @return array
+     * @return array|boolean
      */
     public static function image_dimensions($image_data)
     {

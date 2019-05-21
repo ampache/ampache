@@ -376,7 +376,7 @@ class Podcast extends database_object implements library_item
      * add_episodes
      * @param SimpleXMLElement $episodes
      * @param integer $afterdate
-     * @param boolean $gather
+     * @param PDOStatement|boolean $gather
      */
     public function add_episodes($episodes, $afterdate=0, $gather=false)
     {
@@ -420,7 +420,7 @@ class Podcast extends database_object implements library_item
      * add_episode
      * @param SimpleXMLElement $episode
      * @param integer $afterdate
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private function add_episode(SimpleXMLElement $episode, $afterdate=0)
     {
@@ -479,7 +479,7 @@ class Podcast extends database_object implements library_item
     /**
      * sync_episodes
      * @param boolean $gather
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function sync_episodes($gather=false)
     {

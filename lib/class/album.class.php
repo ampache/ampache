@@ -1034,7 +1034,7 @@ class Album extends database_object implements library_item
 
     /**
      * remove_from_disk
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function remove_from_disk()
     {
