@@ -211,7 +211,7 @@ class Art extends database_object
         // the image.
         if (function_exists('ImageCreateFromString')) {
             $image = ImageCreateFromString($source);
-            if ($image !== false || imagesx($image) < 5 || imagesy($image) < 5) {
+            if ($image == false || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('art.class', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
