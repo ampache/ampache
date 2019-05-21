@@ -289,7 +289,7 @@ class Art extends database_object
             $size = array('width' => 275, 'height' => 275);
             $data = $this->generate_thumb($this->raw, $size, $this->raw_mime);
             // If it works save it!
-            if ($data) {
+            if (!empty($data)) {
                 $this->save_thumb($data['thumb'], $data['thumb_mime'], $size);
                 $this->thumb      = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
@@ -687,7 +687,7 @@ class Art extends database_object
 
         // If we didn't get a result
         $results = $this->generate_thumb($this->raw, $size, $this->raw_mime);
-        if ($results) {
+        if (!empty($results)) {
             $this->save_thumb($results['thumb'], $results['thumb_mime'], $size);
         }
 
@@ -702,7 +702,7 @@ class Art extends database_object
      * @param string $image
      * @param array $size
      * @param string $mime
-     * @return string|boolean
+     * @return array
      */
     public function generate_thumb($image, $size, $mime)
     {
@@ -712,35 +712,35 @@ class Art extends database_object
         if (!self::test_image($image)) {
             debug_event('art.class', 'Not trying to generate thumbnail, invalid data passed', 1);
 
-            return false;
+            return array();
         }
 
         if (!function_exists('gd_info')) {
             debug_event('art.class', 'PHP-GD Not found - unable to resize art', 1);
 
-            return false;
+            return array();
         }
 
         // Check and make sure we can resize what you've asked us to
         if (($type == 'jpg' || $type == 'jpeg') && !(imagetypes() & IMG_JPG)) {
             debug_event('art.class', 'PHP-GD Does not support JPGs - unable to resize', 1);
 
-            return false;
+            return array();
         }
         if ($type == 'png' && !imagetypes() & IMG_PNG) {
             debug_event('art.class', 'PHP-GD Does not support PNGs - unable to resize', 1);
 
-            return false;
+            return array();
         }
         if ($type == 'gif' && !imagetypes() & IMG_GIF) {
             debug_event('art.class', 'PHP-GD Does not support GIFs - unable to resize', 1);
 
-            return false;
+            return array();
         }
         if ($type == 'bmp' && !imagetypes() & IMG_WBMP) {
             debug_event('art.class', 'PHP-GD Does not support BMPs - unable to resize', 1);
 
-            return false;
+            return array();
         }
 
         $source = imagecreatefromstring($image);
@@ -748,7 +748,7 @@ class Art extends database_object
         if (!$source) {
             debug_event('art.class', 'Failed to create Image from string - Source Image is damaged / malformed', 2);
 
-            return false;
+            return array();
         }
 
         $source_size = array('height' => imagesy($source), 'width' => imagesx($source));
@@ -761,7 +761,7 @@ class Art extends database_object
             imagedestroy($source);
             imagedestroy($thumbnail);
 
-            return false;
+            return array();
         }
         imagedestroy($source);
 
@@ -792,7 +792,7 @@ class Art extends database_object
         if (!$mime_type) {
             debug_event('art.class', 'Error: No mime type found.', 2);
 
-            return false;
+            return array();
         }
 
         $data = ob_get_contents();
@@ -802,7 +802,7 @@ class Art extends database_object
         if (!strlen($data)) {
             debug_event('art.class', 'Unknown Error resizing art', 1);
 
-            return false;
+            return array();
         }
 
         return array('thumb' => $data, 'thumb_mime' => $mime_type);

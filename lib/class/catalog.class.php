@@ -1242,7 +1242,7 @@ abstract class Catalog extends database_object
                 if (AmpConfig::get('resize_images')) {
                     $size  = array('width' => 275, 'height' => 275);
                     $thumb = $art->generate_thumb($image, $size, $result['mime']);
-                    if (is_array($thumb)) {
+                    if (!empty($thumb)) {
                         $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
                     }
                 }
