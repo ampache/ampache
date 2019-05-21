@@ -72,7 +72,7 @@ class Dba
 
     /**
      * _query
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function _query($sql, $params)
     {

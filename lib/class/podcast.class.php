@@ -374,7 +374,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * add_episodes
-     * @param array $episodes
+     * @param SimpleXMLElement $episodes
      * @param integer $afterdate
      * @param boolean $gather
      */

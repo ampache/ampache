@@ -308,7 +308,7 @@ class Channel extends database_object implements media, library_item
     /**
      * get_medias
      * @param string $filter_type
-     * @return string
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
