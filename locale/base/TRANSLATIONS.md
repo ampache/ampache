@@ -2,13 +2,17 @@
 
 The official way to send in translations is via [Transifex](https://www.transifex.com/ampache/ampache/dashboard/).
 
+* The official source language of Ampache is US English.
+* Strings should only be translated where they differ from the source language.
+* If a translation is not available, Ampache will fall back to US English.
+
 ## Introduction
 
 Ampache uses gettext to handle the translation between different languages.
 If you are interested in translating Ampache into a new language or updating
 an existing translation please join us on Transifex.
 
-Benifits to usingthe Transifex platform include:
+Benifits to using the Transifex platform include:
 
 * Everything is managed in a central location.
 * Translations are updated in a single commit without conflicts.
