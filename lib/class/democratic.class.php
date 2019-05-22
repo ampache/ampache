@@ -223,6 +223,7 @@ class Democratic extends Tmp_Playlist
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
      * @param integer $limit
+     * @return array
      */
     public function get_items($limit = null)
     {

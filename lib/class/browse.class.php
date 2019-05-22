@@ -132,7 +132,7 @@ class Browse extends Query
      * and requires the correct template based on the
      * type that we are currently browsing
      *
-     * @param int[] $object_ids
+     * @param integer[]|array $object_ids
      */
     public function show_objects($object_ids = null, $argument = null)
     {

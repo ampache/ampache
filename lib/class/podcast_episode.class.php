@@ -351,7 +351,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @return array
+     * @return string
      */
     public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {

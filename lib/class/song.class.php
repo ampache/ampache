@@ -1744,7 +1744,7 @@ class Song extends database_object implements media, library_item
     {
         $media = new $object_type($object_id);
         if (!$media->id) {
-            return null;
+            return '';
         }
 
         $uid  = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
