@@ -1488,9 +1488,9 @@ abstract class Catalog extends database_object
      * updates a single album,artist,song from the tag data
      * this can be done by 75+
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      */
-    public static function update_single_item($type, $id)
+    public static function update_single_item($type, $object_id)
     {
         // Because single items are large numbers of things too
         set_time_limit(0);
@@ -1499,15 +1499,15 @@ abstract class Catalog extends database_object
 
         switch ($type) {
             case 'album':
-                $album = new Album($id);
+                $album = new Album($object_id);
                 $songs = $album->get_songs();
                 break;
             case 'artist':
-                $artist = new Artist($id);
+                $artist = new Artist($object_id);
                 $songs  = $artist->get_songs();
                 break;
             case 'song':
-                $songs[] = $id;
+                $songs[] = $object_id;
                 break;
         } // end switch type
 
@@ -1810,16 +1810,19 @@ abstract class Catalog extends database_object
 
         return $types;
     }
-    
+
+    /**
+     * clean_empty_albums
+     */
     public static function clean_empty_albums()
     {
         $sql = "SELECT `id` FROM `album` WHERE NOT EXISTS " .
             "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
         $db_results = Dba::read($sql);
         while ($albumid = Dba::fetch_assoc($db_results)) {
-            $id          = $albumid['id'];
+            $object_id   = $albumid['id'];
             $sql         = "DELETE FROM `album` WHERE `id` = ?";
-            $db_results  = Dba::write($sql, array($id));
+            $db_results  = Dba::write($sql, array($object_id));
         }
     }
     

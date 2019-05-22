@@ -1638,26 +1638,26 @@ class Song extends database_object implements media, library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $object_id = null;
+        $type      = null;
 
         if (Art::has_db($this->id, 'song')) {
-            $id   = $this->id;
-            $type = 'song';
+            $object_id = $this->id;
+            $type      = 'song';
         } else {
             if (Art::has_db($this->album, 'album')) {
-                $id   = $this->album;
-                $type = 'album';
+                $object_id = $this->album;
+                $type      = 'album';
             } else {
                 if (Art::has_db($this->artist, 'artist') || $force) {
-                    $id   = $this->artist;
-                    $type = 'artist';
+                    $object_id = $this->artist;
+                    $type      = 'artist';
                 }
             }
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($object_id !== null && $type !== null) {
+            Art::display($type, $object_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

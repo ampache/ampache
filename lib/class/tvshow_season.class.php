@@ -264,8 +264,8 @@ class TVShow_Season extends database_object implements library_item
             return self::$_mapcache[$name]['null'];
         }
 
-        $id     = 0;
-        $exists = false;
+        $object_id = 0;
+        $exists    = false;
 
         if (!$exists) {
             $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
@@ -278,15 +278,15 @@ class TVShow_Season extends database_object implements library_item
             }
 
             if (count($id_array)) {
-                $id     = array_shift($id_array);
-                $exists = true;
+                $object_id = array_shift($id_array);
+                $exists    = true;
             }
         }
 
         if ($exists) {
-            self::$_mapcache[$name]['null'] = $id;
+            self::$_mapcache[$name]['null'] = $object_id;
 
-            return $id;
+            return $object_id;
         }
 
         if ($readonly) {
@@ -300,11 +300,11 @@ class TVShow_Season extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $id = Dba::insert_id();
+        $object_id = Dba::insert_id();
 
-        self::$_mapcache[$name]['null'] = $id;
+        self::$_mapcache[$name]['null'] = $object_id;
 
-        return $id;
+        return $object_id;
     }
 
     /**
