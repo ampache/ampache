@@ -452,7 +452,7 @@ class Label extends database_object implements library_item
 
                 foreach ($editedLabels as  $lk => $lv) {
                     if ($clabel->name == $lv) {
-                        $found = true;
+                        $found   = true;
                         $lstring = $lk;
                         break;
                     }
