@@ -132,6 +132,10 @@ class Video extends database_object implements media, library_item
      */
     public $f_full_title;
     /**
+     * @var string $f_artist_full
+     */
+    public $f_artist_full;
+    /**
      * @var string $f_time
      */
     public $f_time;

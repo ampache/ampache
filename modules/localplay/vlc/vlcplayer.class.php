@@ -519,7 +519,7 @@ class VlcPlayer
                     $current[$tag . '_attr'] = $attributes_data;
                 }
             } else { //If taken, put all things inside a list(array)
-                if (isset($current[$tag][0]) and is_array($current[$tag])) {
+                if (isset($current[$tag][0]) && is_array($current[$tag])) {
                     //If it is already an array...
 
                     // ...push the new element into that array.

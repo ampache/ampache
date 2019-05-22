@@ -163,7 +163,7 @@ if (!$share_id) {
 
         // If require session is set then we need to make sure we're legit
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            if (!AmpConfig::get('require_localnet_session') and Access::check_network('network', Core::get_global('user')->id, '5')) {
+            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
                 debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), 4);
             } else {
                 if (!Session::exists('stream', $sid)) {
@@ -221,7 +221,7 @@ if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
    that they have enough access to play this mojo
 */
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('stream', Core::get_global('user')->id, '25') and
+    if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
         !Access::check_network('network', Core::get_global('user')->id, '25')) {
         debug_event('play/index', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", 3);
         UI::access_denied();
@@ -424,7 +424,7 @@ if (Core::get_get('action') == 'download' and AmpConfig::get('download')) {
     // Check to see if we should be throttling because we can get away with it
     if (AmpConfig::get('rate_limit') > 0) {
         while (!feof($filepointer)) {
-            echo fread($filepointer, round(AmpConfig::get('rate_limit') * 1024));
+            echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit') * 1024)));
             $bytesStreamed += round(AmpConfig::get('rate_limit') * 1024);
             flush();
             sleep(1);

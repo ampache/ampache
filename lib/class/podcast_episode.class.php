@@ -48,6 +48,7 @@ class Podcast_Episode extends database_object implements media, library_item
     public $f_time_h;
     public $f_description;
     public $f_author;
+    public $f_artist_full;
     public $f_category;
     public $f_website;
     public $f_pubdate;
@@ -120,6 +121,7 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_description = scrub_out($this->description);
         $this->f_category    = scrub_out($this->category);
         $this->f_author      = scrub_out($this->author);
+        $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
         $this->f_pubdate     = date("m\/d\/Y - H:i", $this->pubdate);
         $this->f_state       = ucfirst($this->state);

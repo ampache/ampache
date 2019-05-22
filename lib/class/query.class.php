@@ -1335,7 +1335,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ") AND ";
                 break;
                 case 'exact_match':
                     $filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
@@ -1406,7 +1406,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ") AND ";
                 break;
                 case 'exact_match':
                     $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";

@@ -266,7 +266,7 @@ function sort_move_file($song,$fullname) {
         debug_event('sort_files.inc', 'Copied ' . $song->file . ' to ' . $fullname, 5);
 
         /* Look for the folder art and copy that as well */
-        if (!AmpConfig::get('album_art_preferred_filename') OR strstr(AmpConfig::get('album_art_preferred_filename'),"%")) {
+        if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'),"%")) {
             $folder_art     = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
             $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
         }

@@ -170,7 +170,7 @@ function get_languages()
         $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
 
         /* Check to see if it's a directory */
-        if (is_dir($full_file) and substr($file, 0, 1) != '.' && $file != 'base') {
+        if (is_dir($full_file) && substr($file, 0, 1) != '.' && $file != 'base') {
             switch ($file) {
                 case 'af_ZA':
                     $name = 'Afrikaans';
