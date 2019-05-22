@@ -1100,8 +1100,9 @@ class Api
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     $users = $user->get_following();
+                    debug_event('api.class', 'User is following:  ' . print_r($users), 1);
                     ob_end_clean();
-                    echo XML_Data::users($user);
+                    echo XML_Data::users(array($user));
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }

@@ -31,6 +31,9 @@ class Podcast_Episode extends database_object implements media, library_item
     public $source;
     public $size;
     public $time;
+    public $played;
+    public $type;
+    public $mime;
     public $website;
     public $description;
     public $author;
@@ -357,7 +360,7 @@ class Podcast_Episode extends database_object implements media, library_item
     
     /**
      * Get stream types.
-     * @return array
+     * @return string
      */
     public function get_stream_types($player = null)
     {

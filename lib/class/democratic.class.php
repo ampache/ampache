@@ -127,7 +127,7 @@ class Democratic extends Tmp_Playlist
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function set_user_preferences($user = null)
+    public static function set_user_preferences()
     {
         //FIXME: Code in single user stuff
 
@@ -146,9 +146,9 @@ class Democratic extends Tmp_Playlist
 
     /**
      * format
-     * This makes the variables all purrty so that they can be displayed
+     * This makes the variables pretty so that they can be displayed
      */
-    public function format($details = true)
+    public function format()
     {
         $this->f_cooldown    = $this->cooldown . ' ' . T_('minutes');
         $this->f_primary     = $this->primary ? T_('Primary') : '';
@@ -242,7 +242,7 @@ class Democratic extends Tmp_Playlist
             'GROUP BY 1, 2 ' .
             'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), `tmp_playlist_data`.`id` ';
 
-        if ($limit) {
+        if ($limit !== null) {
             $sql .= 'LIMIT ' . (string) ($limit);
         }
 

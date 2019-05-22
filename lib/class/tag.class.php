@@ -210,7 +210,7 @@ class Tag extends database_object implements library_item
         }
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
-        Dba::write($sql, array($data[name], $this->id));
+        Dba::write($sql, array($data['name'], $this->id));
 
         if ($data['edit_tags']) {
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
@@ -383,7 +383,7 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($this->id));
 
         // Call the garbage collector to clean everything
-        self:garbage_collection();
+        self::garbage_collection();
 
         parent::clear_cache();
     }

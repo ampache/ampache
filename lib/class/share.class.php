@@ -178,7 +178,7 @@ class Share extends database_object
         $sql = "SELECT `id` FROM `share` ";
 
         if (!Core::get_global('user')->has_access('75')) {
-            $sql .= "WHERE `user` = '" . scrub_in(Core::get_global('user')->id) . "'";
+            $sql .= "WHERE `user` = '" . (string) Core::get_global('user')->id . "'";
         }
 
         return $sql;

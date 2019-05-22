@@ -375,7 +375,7 @@ class Localplay
     public function volume_set($value)
     {
         /* Make sure it's int and 0 - 100 */
-        $value = int($value);
+        $value = (int) $value;
 
         /* Make sure that it's between 0 and 100 */
         if ($value > 100 || $value < 0) {

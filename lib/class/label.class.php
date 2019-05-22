@@ -124,7 +124,7 @@ class Label extends database_object implements library_item
         foreach ($artists as $artist_id) {
             $medias[] = array(
                 'object_type' => 'artist',
-                'object_id' => $album_id
+                'object_id' => $artist_id
             );
         }
 
@@ -385,6 +385,7 @@ class Label extends database_object implements library_item
 
     /**
      * @param integer $artist_id
+     * @return array
      */
     public static function get_labels($artist_id)
     {
@@ -442,28 +443,28 @@ class Label extends database_object implements library_item
         $clabels      = Label::get_labels($artist_id);
         $editedLabels = explode(",", $labels_comma);
 
-        if (is_array($clabels)) {
-            foreach ($clabels as $clid => $clv) {
-                if ($clid) {
-                    $clabel = new Label($clid);
-                    debug_event('label.class', 'Processing label {' . $clabel->name . '}...', 5);
-                    $found = false;
+        foreach ($clabels as $clid => $clv) {
+            if ($clid) {
+                $clabel = new Label($clid);
+                debug_event('label.class', 'Processing label {' . $clabel->name . '}...', 5);
+                $found   = false;
+                $lstring = '';
 
-                    foreach ($editedLabels as  $lk => $lv) {
-                        if ($clabel->name == $lv) {
-                            $found = true;
-                            break;
-                        }
+                foreach ($editedLabels as  $lk => $lv) {
+                    if ($clabel->name == $lv) {
+                        $found = true;
+                        $lstring = $lk;
+                        break;
                     }
+                }
 
-                    if ($found) {
-                        debug_event('label.class', 'Already found. Do nothing.', 5);
-                        unset($editedLabels[$lk]);
-                    } else {
-                        if ($overwrite) {
-                            debug_event('label.class', 'Not found in the new list. Delete it.', 5);
-                            $clabel->remove_artist_assoc($artist_id);
-                        }
+                if ($found) {
+                    debug_event('label.class', 'Already found. Do nothing.', 5);
+                    unset($editedLabels[$lstring]);
+                } else {
+                    if ($overwrite) {
+                        debug_event('label.class', 'Not found in the new list. Delete it.', 5);
+                        $clabel->remove_artist_assoc($artist_id);
                     }
                 }
             }

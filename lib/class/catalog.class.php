@@ -412,7 +412,7 @@ abstract class Catalog extends database_object
     /**
      * Get enable sql filter;
      * @param string $type
-     * @param integer $id
+     * @param string $id
      * @return string
      */
     public static function get_enable_filter($type, $id)

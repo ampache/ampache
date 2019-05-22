@@ -395,7 +395,7 @@ class Wanted extends database_object
 
         if ($accept) {
             $wantedid = Dba::insert_id();
-            $wanted   = new Wanted($wantedid);
+            $wanted   = new Wanted((int) $wantedid);
             $wanted->accept();
 
             database_object::remove_from_cache('wanted', $wantedid);
@@ -522,7 +522,7 @@ class Wanted extends database_object
         $sql = "SELECT `id` FROM `wanted` ";
 
         if (!Core::get_global('user')->has_access('75')) {
-            $sql .= "WHERE `user` = '" . scrub_in(Core::get_global('user')->id) . "'";
+            $sql .= "WHERE `user` = '" . (string) Core::get_global('user')->id . "'";
         }
 
         return $sql;

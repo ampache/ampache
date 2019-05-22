@@ -174,7 +174,7 @@ class Stream_Playlist
                 $url['url'] = $type::play_url($object->id, $additional_params);
             }
 
-            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : '';
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';

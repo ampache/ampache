@@ -1852,7 +1852,7 @@ class Song extends database_object implements media, library_item
 
     /**
      * Get stream types.
-     * @return array
+     * @return string
      */
     public function get_stream_types($player = null)
     {
