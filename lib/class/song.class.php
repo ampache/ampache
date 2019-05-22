@@ -1852,7 +1852,7 @@ class Song extends database_object implements media, library_item
 
     /**
      * Get stream types.
-     * @return string
+     * @return array
      */
     public function get_stream_types($player = null)
     {
@@ -1863,7 +1863,7 @@ class Song extends database_object implements media, library_item
      * Get stream types for media type.
      * @param string $type
      * @param string $player
-     * @return string
+     * @return array
      */
     public static function get_stream_types_for_type($type, $player = '')
     {
