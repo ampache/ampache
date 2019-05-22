@@ -470,6 +470,9 @@ debug_event('play/index', 'Transcode to {' . $transcode_to . '}', 5);
 if (!$cpaction) {
     $transcode_cfg = AmpConfig::get('transcode');
     $valid_types   = $media->get_stream_types($player);
+    if (!is_array($valid_types)) {
+        $valid_types = array($valid_types);
+    }
     if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
         if ($transcode_to) {
             $transcode = true;

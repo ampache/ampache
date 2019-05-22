@@ -156,6 +156,7 @@ class Dba
      * We force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
+     * @return array
      */
     public static function fetch_assoc($resource, $finish = true)
     {
