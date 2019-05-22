@@ -47,7 +47,7 @@ if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
     $browse->set_show_header($_REQUEST['show_header'] == 'true');
 }
 
-$argument = null;
+$argument = false;
 if ($_REQUEST['argument']) {
     $argument = scrub_in($_REQUEST['argument']);
 }
