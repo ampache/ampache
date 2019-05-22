@@ -45,15 +45,15 @@ switch ($_REQUEST['action']) {
             case 'stream':
             case 'localplay':
             case 'democratic':
-                $key = 'allow_' . $_POST['type'] . '_playback';
+                $key = 'allow_democratic_playback';
                 if (!AmpConfig::get($key)) {
                     $results['rfc3514'] = '0x1';
                     break 2;
                 }
-                $new = $_POST['type'];
+                $new = 'democratic';
             break;
             case 'web_player':
-                $new = $_POST['type'];
+                $new = 'web_player';
                 // Rien a faire
             break;
             default:
