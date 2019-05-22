@@ -154,7 +154,7 @@ class Bookmark extends database_object
 
     public function format()
     {
-        $user   = new User($this->user);
-        $f_user = $user->username;
+        $user         = new User($this->user);
+        $this->f_user = $user->username;
     }
 } //end bookmark class
