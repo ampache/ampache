@@ -586,7 +586,7 @@ class Song extends database_object implements media, library_item
     }
 
     /**
-      * _get_ext_info
+     * _get_ext_info
      * This function gathers information from the song_ext_info table and adds it to the
      * current object
      * @return array
@@ -729,7 +729,12 @@ class Song extends database_object implements media, library_item
 
         return $results;
     }
-    
+
+    /**
+     * find
+     * @param array $data
+     * @return boolean
+     */
     public static function find($data)
     {
         $sql_base = "SELECT `song`.`id` FROM `song`";
@@ -904,6 +909,7 @@ class Song extends database_object implements media, library_item
     } // compare_song_information
 
     /**
+     * compare_media_information
      * @param string[] $string_array
      * @param string[] $skip_array
      */
@@ -970,6 +976,11 @@ class Song extends database_object implements media, library_item
         return $array;
     }
 
+    /**
+     * clean_string_field_value
+     * @param string $value
+     * @return string
+     */
     private static function clean_string_field_value($value)
     {
         $value = trim(stripslashes(preg_replace('/\s+/', ' ', $value)));
@@ -1356,7 +1367,7 @@ class Song extends database_object implements media, library_item
      * @param integer $song_id
      * @param integer $level
      * @param boolean $check_owner
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
     {
@@ -1390,7 +1401,7 @@ class Song extends database_object implements media, library_item
      * @param integer $song_id
      * @param integer $level
      * @param boolean $check_owner
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false)
     {
@@ -1604,6 +1615,10 @@ class Song extends database_object implements media, library_item
         return 'default';
     }
 
+    /**
+     * get_description
+     * @return string
+     */
     public function get_description()
     {
         if (!empty($this->comment)) {
@@ -1616,28 +1631,33 @@ class Song extends database_object implements media, library_item
         return $album->get_description();
     }
 
+    /**
+     * display_art
+     * @param integer $thumb
+     * @param boolean $force
+     */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $object_id = null;
+        $type      = null;
 
         if (Art::has_db($this->id, 'song')) {
-            $id   = $this->id;
-            $type = 'song';
+            $object_id = $this->id;
+            $type      = 'song';
         } else {
             if (Art::has_db($this->album, 'album')) {
-                $id   = $this->album;
-                $type = 'album';
+                $object_id = $this->album;
+                $type      = 'album';
             } else {
                 if (Art::has_db($this->artist, 'artist') || $force) {
-                    $id   = $this->artist;
-                    $type = 'artist';
+                    $object_id = $this->artist;
+                    $type      = 'artist';
                 }
             }
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($object_id !== null && $type !== null) {
+            Art::display($type, $object_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
@@ -1724,7 +1744,7 @@ class Song extends database_object implements media, library_item
     {
         $media = new $object_type($object_id);
         if (!$media->id) {
-            return null;
+            return '';
         }
 
         $uid  = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
@@ -1843,7 +1863,7 @@ class Song extends database_object implements media, library_item
      * Get stream types for media type.
      * @param string $type
      * @param string $player
-     * @return string
+     * @return array
      */
     public static function get_stream_types_for_type($type, $player = '')
     {
@@ -2087,6 +2107,10 @@ class Song extends database_object implements media, library_item
         return $meta;
     }
 
+    /**
+     * getId
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
@@ -2108,7 +2132,9 @@ class Song extends database_object implements media, library_item
     }
 
     /**
+     * remove_from_disk
      * Remove the song from disk.
+     * @return PDOStatement|boolean
      */
     public function remove_from_disk()
     {

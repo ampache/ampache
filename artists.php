@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
     case 'showyear':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
-        $year = intval($_REQUEST['year']);
+        $year = (int) $_REQUEST['year'];
         if (AmpConfig::get('album_release_type')) {
             $multi_object_ids = $artist->get_by_year($_REQUEST['catalog'],$year, false, true);
         } else {

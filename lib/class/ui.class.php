@@ -181,17 +181,23 @@ class UI
         }
 
         switch ($pass) {
-            case 1: $unit = 'kB';
+            case 1:
+                $unit = 'kB';
                 break;
-            case 2: $unit = 'MB';
+            case 2:
+                $unit = 'MB';
                 break;
-            case 3: $unit = 'GB';
+            case 3:
+                $unit = 'GB';
                 break;
-            case 4: $unit = 'TB';
+            case 4:
+                $unit = 'TB';
                 break;
-            case 5: $unit = 'PB';
+            case 5:
+                $unit = 'PB';
                 break;
-            default: $unit = 'B';
+            default:
+                $unit = 'B';
                 break;
         }
 

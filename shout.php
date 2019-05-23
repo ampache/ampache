@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
             unset($_POST['date']);
         }
 
-        if (!Core::is_library_item($_POST['object_type'])) {
+        if (!Core::is_library_item(Core::get_post('object_type'))) {
             UI::access_denied();
 
             return false;

@@ -78,7 +78,7 @@ class Rating extends database_object
      */
     public static function build_cache($type, $ids)
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 
@@ -232,14 +232,15 @@ class Rating extends database_object
     /**
      * set_rating
      * This function sets the rating for the current object.
-     * If no userid is passed in, we use the currently logged in user.
+     * If no user_id is passed in, we use the currently logged in user.
+     * @param string $rating
+     * @return boolean
      */
     public function set_rating($rating, $user_id = null)
     {
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        $user_id = (int) $user_id;
 
         debug_event('rating.class', "Setting rating for $this->type $this->id to $rating", 5);
 
@@ -249,16 +250,16 @@ class Rating extends database_object
                     "`object_id` = ? AND " .
                     "`object_type` = ? AND " .
                     "`user` = ?";
-            $params = array($this->id, $this->type, $user_id);
+            $params = array($this->id, $this->type, (int) $user_id);
         } else {
             $sql = "REPLACE INTO `rating` " .
                     "(`object_id`, `object_type`, `rating`, `user`) " .
                     "VALUES (?, ?, ?, ?)";
-            $params = array($this->id, $this->type, $rating, $user_id);
+            $params = array($this->id, $this->type, $rating, (int) $user_id);
         }
         Dba::write($sql, $params);
 
-        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, $rating);
+        parent::add_to_cache('rating_' . $this->type . '_user' . (int) $user_id, $this->id, $rating);
 
         foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
             $plugin = new Plugin($plugin_name);

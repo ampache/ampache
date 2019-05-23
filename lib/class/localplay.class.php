@@ -357,7 +357,7 @@ class Localplay
     {
         $data = $this->_player->get();
 
-        if (!count($data) or !is_array($data)) {
+        if (!count($data) || !is_array($data)) {
             debug_event('localplay.class', 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
             return array();
@@ -375,10 +375,10 @@ class Localplay
     public function volume_set($value)
     {
         /* Make sure it's int and 0 - 100 */
-        $value = int($value);
+        $value = (int) $value;
 
         /* Make sure that it's between 0 and 100 */
-        if ($value > 100 or $value < 0) {
+        if ($value > 100 || $value < 0) {
             return false;
         }
 

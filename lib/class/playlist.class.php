@@ -46,9 +46,9 @@ class Playlist extends playlist_object
      * This takes a playlist_id as an optional argument and gathers the information
      * if not playlist_id is passed returns false (or if it isn't found
      */
-    public function __construct($id)
+    public function __construct($object_id)
     {
-        $info = $this->get_info($id);
+        $info = $this->get_info($object_id);
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -498,10 +498,10 @@ class Playlist extends playlist_object
      * delete_track
      * this deletes a single track, you specify the playlist_data.id here
      */
-    public function delete_track($id)
+    public function delete_track($object_id)
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
-        Dba::write($sql, array($this->id, $id));
+        Dba::write($sql, array($this->id, $object_id));
         
         $this->update_last_update();
 

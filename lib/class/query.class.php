@@ -663,7 +663,7 @@ class Query
     public function get_total($objects = null)
     {
         // If they pass something then just return that
-        if (is_array($objects) and !$this->is_simple()) {
+        if (is_array($objects) && !$this->is_simple()) {
             return count($objects);
         }
 
@@ -1012,7 +1012,7 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `playlist` ";
                 break;
                 case 'smartplaylist':
-                    self::set_select('`search`.`id`');
+                    $this->set_select('`search`.`id`');
                     $sql = "SELECT %%SELECT%% FROM `search` ";
                 break;
                 case 'shoutbox':
@@ -1335,7 +1335,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ") AND ";
                 break;
                 case 'exact_match':
                     $filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
@@ -1406,7 +1406,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ") AND ";
                 break;
                 case 'exact_match':
                     $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -2328,7 +2328,7 @@ class Query
             $objects = $this->get_saved();
 
             // If there's nothing there don't do anything
-            if (!count($objects) or !is_array($objects)) {
+            if (!count($objects) || !is_array($objects)) {
                 return false;
             }
             $type      = $this->get_type();

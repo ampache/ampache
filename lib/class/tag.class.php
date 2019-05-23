@@ -69,7 +69,7 @@ class Tag extends database_object implements library_item
      */
     public static function build_cache($ids)
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 
@@ -93,7 +93,7 @@ class Tag extends database_object implements library_item
      */
     public static function build_map_cache($type, $ids)
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 
@@ -210,7 +210,7 @@ class Tag extends database_object implements library_item
         }
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
-        Dba::write($sql, array($data[name], $this->id));
+        Dba::write($sql, array($data['name'], $this->id));
 
         if ($data['edit_tags']) {
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
@@ -383,7 +383,7 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($this->id));
 
         // Call the garbage collector to clean everything
-        self:garbage_collection();
+        self::garbage_collection();
 
         parent::clear_cache();
     }
@@ -747,6 +747,10 @@ class Tag extends database_object implements library_item
     {
     }
 
+    /**
+     * get_keywords
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords        = array();
@@ -758,6 +762,7 @@ class Tag extends database_object implements library_item
     }
 
     /**
+     * get_fullname
      * @return string
      */
     public function get_fullname()
@@ -775,6 +780,11 @@ class Tag extends database_object implements library_item
         return array();
     }
 
+    /**
+     * search_childrens
+     * @param string $name
+     * @return array
+     */
     public function search_childrens($name)
     {
         debug_event('tag.class', 'search_childrens ' . $name, 5);
@@ -782,6 +792,11 @@ class Tag extends database_object implements library_item
         return array();
     }
 
+    /**
+     * get_medias
+     * @param string $filter_type
+     * @return array
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -816,23 +831,43 @@ class Tag extends database_object implements library_item
         return null;
     }
 
+    /**
+     * get_default_art_kind
+     * @return string
+     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
+    /**
+     * get_description
+     * @return string
+     */
     public function get_description()
     {
         return null;
     }
 
+    /**
+     * display_art
+     * @param integer $thumb
+     * @param boolean $force
+     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tag') || $force) {
             Art::display('tag', $this->id, $this->get_fullname(), $thumb, null);
         }
     }
-    
+
+    /**
+     * can_edit_tag_map
+     * @param string $object_type
+     * @param integer $object_id
+     * @param string|boolean $user
+     * @return boolean
+     */
     public static function can_edit_tag_map($object_type, $object_id, $user = true)
     {
         if ($user === true) {

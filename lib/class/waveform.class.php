@@ -191,7 +191,6 @@ class Waveform
         $width      = 400;
         $height     = 32;
         $foreground = AmpConfig::get('waveform_color') ?: '#FF0000';
-        $background = '';
         $draw_flat  = true;
 
         // generate foreground color
@@ -231,7 +230,7 @@ class Waveform
         // create original image width based on amount of detail
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
-        $img = imagecreatetruecolor($data_size / $detail, $height);
+        $img = imagecreatetruecolor((int) ($data_size / $detail), $height);
         if ($img === false) {
             debug_event('waveform.class', 'Cannot create image.', 1);
 
@@ -239,15 +238,10 @@ class Waveform
         }
 
         // fill background of image
-        if ($background == "") {
-            // transparent background specified
-            imagesavealpha($img, true);
-            $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
-            imagefill($img, 0, 0, $transparentColor);
-        } else {
-            list($bred, $bgreen, $bblue) = self::html2rgb($background);
-            imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $bred, $bgreen, $bblue));
-        }
+        // transparent background specified
+        imagesavealpha($img, true);
+        $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
+        imagefill($img, 0, 0, $transparentColor);
         while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail == 0) {
                 $bytes = array();
@@ -303,7 +297,7 @@ class Waveform
                 }
             } else {
                 // skip this one due to lack of detail
-                fseek($handle, $ratio + $byte, SEEK_CUR);
+                fseek($handle, (int) ($ratio + $byte), SEEK_CUR);
             }
         }
 
@@ -315,13 +309,15 @@ class Waveform
         if ($width) {
             // resample the image to the proportions defined in the form
             $rimg = imagecreatetruecolor($width, $height);
-            // save alpha from original image
-            imagesavealpha($rimg, true);
-            imagealphablending($rimg, false);
-            // copy to resized
-            imagecopyresampled($rimg, $img, 0, 0, 0, 0, $width, $height, imagesx($img), imagesy($img));
-            imagepng($rimg);
-            imagedestroy($rimg);
+            if ($rimg !== false) {
+                // save alpha from original image
+                imagesavealpha($rimg, true);
+                imagealphablending($rimg, false);
+                // copy to resized
+                imagecopyresampled($rimg, $img, 0, 0, 0, 0, $width, $height, imagesx($img), imagesy($img));
+                imagepng($rimg);
+                imagedestroy($rimg);
+            }
         } else {
             imagepng($img);
         }

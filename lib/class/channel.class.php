@@ -74,6 +74,13 @@ class Channel extends database_object implements media, library_item
         return true;
     } //constructor
 
+    /**
+     * update_start
+     * @param string $start_date
+     * @param string $address
+     * @param string $port
+     * @param string $pid
+     */
     public function update_start($start_date, $address, $port, $pid)
     {
         $sql = "UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `pid` = ?, `listeners` = '0' WHERE `id` = ?";
@@ -85,6 +92,11 @@ class Channel extends database_object implements media, library_item
         $this->pid        = $pid;
     }
 
+    /**
+     * update_listeners
+     * @param integer $listeners
+     * @param boolean $addition
+     */
     public function update_listeners($listeners, $addition=false)
     {
         $sql             = "UPDATE `channel` SET `listeners` = ? ";
@@ -102,7 +114,11 @@ class Channel extends database_object implements media, library_item
         $params[] = $this->id;
         Dba::write($sql, $params);
     }
-
+    
+    /**
+     * get_genre
+     * @return string
+     */
     public function get_genre()
     {
         $tags  = Tag::get_object_tags('channel', $this->id);
@@ -117,6 +133,9 @@ class Channel extends database_object implements media, library_item
         return $genre;
     }
 
+    /**
+     * delete
+     */
     public function delete()
     {
         $sql = "DELETE FROM `channel` WHERE `id` = ?";
@@ -124,6 +143,10 @@ class Channel extends database_object implements media, library_item
         return Dba::write($sql, array($this->id));
     }
 
+    /**
+     * get_next_port
+     * @return integer
+     */
     public static function get_next_port()
     {
         $port       = 8200;
@@ -139,6 +162,24 @@ class Channel extends database_object implements media, library_item
         return $port;
     }
 
+    /**
+     * create
+     * @param string $name
+     * @param string $description
+     * @param string $url
+     * @param string $object_type
+     * @param string $object_id
+     * @param array $interface
+     * @param array $port
+     * @param string $admin_password
+     * @param string $private
+     * @param string $max_listeners
+     * @param string $random
+     * @param string $loop
+     * @param string $stream_type
+     * @param string $bitrate
+     * @return PDOStatement|boolean
+     */
     public static function create($name, $description, $url, $object_type, $object_id, $interface, $port, $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate)
     {
         if (!empty($name)) {
@@ -151,6 +192,11 @@ class Channel extends database_object implements media, library_item
         return false;
     }
 
+    /**
+     * update
+     * @param array $data
+     * @return integer
+     */
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
@@ -165,6 +211,11 @@ class Channel extends database_object implements media, library_item
         return $this->id;
     }
 
+    /**
+     * format_type
+     * @param string $type
+     * @return string
+     */
     public static function format_type($type)
     {
         switch ($type) {
@@ -179,6 +230,9 @@ class Channel extends database_object implements media, library_item
         return $ftype;
     }
 
+    /**
+     * show_action_buttons
+     */
     public function show_action_buttons()
     {
         if ($this->id) {
@@ -191,6 +245,10 @@ class Channel extends database_object implements media, library_item
         }
     }
 
+    /**
+     * format
+     * @param boolean $details
+     */
     public function format($details = true)
     {
         if ($details) {
@@ -199,12 +257,17 @@ class Channel extends database_object implements media, library_item
         }
     }
 
+    /**
+     * get_keywords
+     * @return array
+     */
     public function get_keywords()
     {
         return array();
     }
 
     /**
+     * get_fullname
      * @return string
      */
     public function get_fullname()
@@ -212,16 +275,29 @@ class Channel extends database_object implements media, library_item
         return $this->name;
     }
 
+    /**
+     * get_parent
+     * @return boolean
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * get_childrens
+     * @return array
+     */
     public function get_childrens()
     {
         return array();
     }
 
+    /**
+     * search_childrens
+     * @param string $name
+     * @return array
+     */
     public function search_childrens($name)
     {
         debug_event('channel.class', 'search_childrens ' . $name, 5);
@@ -229,6 +305,11 @@ class Channel extends database_object implements media, library_item
         return array();
     }
 
+    /**
+     * get_medias
+     * @param string $filter_type
+     * @return array
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -242,21 +323,38 @@ class Channel extends database_object implements media, library_item
         return $medias;
     }
 
+    /**
+     * get_user_owner
+     * @return boolean
+     */
     public function get_user_owner()
     {
         return null;
     }
 
+    /**
+     * get_default_art_kind
+     * @return string
+     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
+    /**
+     * get_description
+     * @return string
+     */
     public function get_description()
     {
         return $this->description;
     }
 
+    /**
+     * display_art
+     * @param integer $thumb
+     * @param boolean $force
+     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'channel') || $force) {
@@ -264,6 +362,10 @@ class Channel extends database_object implements media, library_item
         }
     }
 
+    /**
+     * get_target_object
+     * @return \Playlist
+     */
     public function get_target_object()
     {
         $object = null;
@@ -275,6 +377,10 @@ class Channel extends database_object implements media, library_item
         return $object;
     }
 
+    /**
+     * get_stream_url
+     * @return string
+     */
     public function get_stream_url()
     {
         return "http://" . $this->interface . ":" . $this->port . "/stream." . $this->stream_type;
@@ -285,6 +391,10 @@ class Channel extends database_object implements media, library_item
         return AmpConfig::get('web_path') . '/channel/' . $this->id . '/stream.' . $this->stream_type;
     }
 
+    /**
+     * get_channel_list_sql
+     * @return string
+     */
     public static function get_channel_list_sql()
     {
         $sql = "SELECT `id` FROM `channel` ";
@@ -292,6 +402,10 @@ class Channel extends database_object implements media, library_item
         return $sql;
     }
 
+    /**
+     * get_channel_list
+     * @return array
+     */
     public static function get_channel_list()
     {
         $sql        = self::get_channel_list_sql();
@@ -305,11 +419,17 @@ class Channel extends database_object implements media, library_item
         return $results;
     }
 
+    /**
+     * start_channel
+     */
     public function start_channel()
     {
         exec("php " . AmpConfig::get('prefix') . '/bin/channel_run.inc -c ' . $this->id . ' > /dev/null &');
     }
 
+    /**
+     * stop_channel
+     */
     public function stop_channel()
     {
         if ($this->pid) {
@@ -326,6 +446,10 @@ class Channel extends database_object implements media, library_item
         }
     }
 
+    /**
+     * check_channel
+     * @return boolean
+     */
     public function check_channel()
     {
         $check = false;
@@ -340,6 +464,10 @@ class Channel extends database_object implements media, library_item
         return $check;
     }
 
+    /**
+     * get_channel_state
+     * @return string
+     */
     public function get_channel_state()
     {
         if ($this->check_channel()) {
@@ -351,6 +479,9 @@ class Channel extends database_object implements media, library_item
         return $state;
     }
 
+    /**
+     * init_channel_songs
+     */
     protected function init_channel_songs()
     {
         $this->song_pos = 0;
@@ -364,6 +495,9 @@ class Channel extends database_object implements media, library_item
         $this->is_init = true;
     }
 
+    /**
+     * get_chunk
+     */
     public function get_chunk()
     {
         $chunk = null;
@@ -516,6 +650,12 @@ class Channel extends database_object implements media, library_item
         return array();
     }
 
+    /**
+     * play_url
+     * @param integer $oid
+     * @param string $additional_params
+     * @return string
+     */
     public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         $channel = new Channel($oid);
@@ -523,12 +663,20 @@ class Channel extends database_object implements media, library_item
         return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
     }
 
+    /**
+     * get_stream_types
+     * @return array
+     */
     public function get_stream_types($player = null)
     {
         // Transcode is mandatory to keep a consistant stream
         return array('transcode');
     }
 
+    /**
+     * get_stream_name
+     * @return string
+     */
     public function get_stream_name()
     {
         return $this->get_fullname();
@@ -546,9 +694,11 @@ class Channel extends database_object implements media, library_item
 
     public static function garbage_collection()
     {
+        // Do nothing
     }
 
     /**
+     * strtohex
      * @param string $source
      * @return string
      */

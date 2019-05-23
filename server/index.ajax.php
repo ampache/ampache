@@ -34,7 +34,7 @@ $action  = Core::get_request('action');
 switch ($_REQUEST['action']) {
     case 'random_albums':
         $albums = Album::get_random(6);
-        if (count($albums) and is_array($albums)) {
+        if (count($albums) && is_array($albums)) {
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_random_albums.inc.php');
             $results['random_selection'] = ob_get_clean();
@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'random_videos':
         $videos = Video::get_random(6);
-        if (count($videos) and is_array($videos)) {
+        if (count($videos) && is_array($videos)) {
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_random_videos.inc.php');
             $results['random_video_selection'] = ob_get_clean();

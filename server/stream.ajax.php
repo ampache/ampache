@@ -45,15 +45,15 @@ switch ($_REQUEST['action']) {
             case 'stream':
             case 'localplay':
             case 'democratic':
-                $key = 'allow_' . $_POST['type'] . '_playback';
+                $key = 'allow_democratic_playback';
                 if (!AmpConfig::get($key)) {
                     $results['rfc3514'] = '0x1';
                     break 2;
                 }
-                $new = $_POST['type'];
+                $new = 'democratic';
             break;
             case 'web_player':
-                $new = $_POST['type'];
+                $new = 'web_player';
                 // Rien a faire
             break;
             default:
@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
             AmpConfig::set('play_type', $new, true);
         }
 
-        if (($new == 'localplay' and $current != 'localplay') or ($current == 'localplay' and $new != 'localplay')) {
+        if (($new == 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new != 'localplay')) {
             $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
         }
 

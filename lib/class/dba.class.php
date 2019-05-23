@@ -70,6 +70,10 @@ class Dba
         return $stmt;
     }
 
+    /**
+     * _query
+     * @return PDOStatement|boolean
+     */
     private static function _query($sql, $params)
     {
         $dbh = self::dbh();
@@ -152,6 +156,7 @@ class Dba
      * We force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
+     * @return array
      */
     public static function fetch_assoc($resource, $finish = true)
     {
@@ -301,6 +306,9 @@ class Dba
         return $dbh;
     }
 
+    /**
+     * _setup_dbh
+     */
     private static function _setup_dbh($dbh, $database)
     {
         if (!$dbh) {

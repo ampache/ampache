@@ -77,7 +77,7 @@ class Subsonic_Api
             $hex    = substr($password, 4);
             $decpwd = '';
             for ($count = 0; $count < strlen($hex); $count += 2) {
-                $decpwd .= chr(hexdec(substr($hex, $count, 2)));
+                $decpwd .= chr((int) hexdec(substr($hex, $count, 2)));
             }
             $password = $decpwd;
         }
@@ -274,7 +274,7 @@ class Subsonic_Api
                     if (!isset($tagsArray[$childTagName])) {
                         //only entry with this key
 
-                        if (count((int) $childProperties) === 0) {
+                        if (count($childProperties) === 0) {
                             $tagsArray[$childTagName] = (object) $childProperties;
                         } elseif (self::has_Nested_Array($childProperties)) {
                             $tagsArray[$childTagName] = (object) $childProperties;

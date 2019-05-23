@@ -45,7 +45,7 @@ unset($auth);
 
 if (empty($_REQUEST['step'])) {
     /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
-    if (($_POST['username']) ||
+    if ((Core::get_post('username' !== '')) ||
         (in_array('http', AmpConfig::get('auth_methods')) &&
         ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
 
@@ -206,7 +206,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         strpos($_POST['referrer'], 'update.php') === false &&
         strpos($_POST['referrer'], 'activate.php') === false &&
         strpos($_POST['referrer'], 'admin') === false) {
-        header('Location: ' . $_POST['referrer']);
+        header('Location: ' . Core::get_post('referrer'));
 
         return false;
     } // if we've got a referrer

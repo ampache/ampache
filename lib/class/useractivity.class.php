@@ -65,7 +65,7 @@ class Useractivity extends database_object
      */
     public static function build_cache($ids)
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 
@@ -108,9 +108,9 @@ class Useractivity extends database_object
     /**
      * post_activity
      * @param integer $user_id
+     * @param string $action
      * @param string $object_type
      * @param integer $object_id
-     * @param string $action
      */
     public static function post_activity($user_id, $action, $object_type, $object_id)
     {
@@ -129,7 +129,7 @@ class Useractivity extends database_object
             $mbid_album  = $song->album_mbid;
             debug_event('useractivity.class', 'Inserting details for ' . $name_song . ' - ' . $name_artist . ' - ' . $name_album . '.', 5);
 
-            if ($name_song and $name_artist and $name_album) {
+            if ($name_song && $name_artist && $name_album) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
             }
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
@@ -165,7 +165,7 @@ class Useractivity extends database_object
             $mbid_artist  = $album->mbid_group;
             debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
 
-            if ($name_artist and $name_album) {
+            if ($name_artist && $name_album) {
                 debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
 
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_artist, $name_album, $mbid_artist, $mbid_album));

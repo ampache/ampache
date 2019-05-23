@@ -286,7 +286,7 @@ class Album extends database_object implements library_item
     public static function build_cache(array $ids)
     {
         // Nothing to do if they pass us nothing
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 
@@ -382,6 +382,11 @@ class Album extends database_object implements library_item
         return $results;
     } // _get_extra_info
 
+    /**
+     * can_edit
+     * @param integer $user
+     * @return boolean
+     */
     public function can_edit($user = null)
     {
         if (!$user) {
@@ -844,6 +849,10 @@ class Album extends database_object implements library_item
         return 'default';
     }
 
+    /**
+     * get_description
+     * @return string
+     */
     public function get_description()
     {
         // Album description is not supported yet, always return artist description
@@ -852,6 +861,11 @@ class Album extends database_object implements library_item
         return $artist->get_description();
     }
 
+    /**
+     * display_art
+     * @param integer $thumb
+     * @param boolean $force
+     */
     public function display_art($thumb = 2, $force = false)
     {
         $album_id = null;
@@ -1018,6 +1032,10 @@ class Album extends database_object implements library_item
         }
     }
 
+    /**
+     * remove_from_disk
+     * @return PDOStatement|boolean
+     */
     public function remove_from_disk()
     {
         $deleted  = true;
@@ -1082,7 +1100,7 @@ class Album extends database_object implements library_item
      * Update an album field.
      * @param string $field
      * @param integer $album_id
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function update_field($field, $value, $album_id)
     {

@@ -133,7 +133,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Delete the broadcast.
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function delete()
     {

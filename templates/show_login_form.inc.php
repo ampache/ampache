@@ -34,7 +34,12 @@ $web_path = AmpConfig::get('web_path');
 
 $_SESSION['login'] = true;
 define('TABLE_RENDERED', 1);
+$mobile_session = false;
+$user_agent     = $_SERVER['HTTP_USER_AGENT'];
 
+if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
+    $mobile_session = true;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
@@ -48,9 +53,11 @@ define('TABLE_RENDERED', 1);
 
     <body id="loginPage">
         <div id="maincontainer">
-            <div id="header"><!-- This is the header -->
-                <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
-            </div>
+            <?php if (!$mobile_session) {
+    echo "<div id=\"header\"><!-- This is the header -->";
+    echo "<a href=\"" . $web_path . "\"><h1 id=\"headerlogo\"></h1></a>";
+    echo "</div>";
+} ?>
             <div id="loginbox">
                 <h2><?php echo AmpConfig::get('site_title'); ?></h2>
                 <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
@@ -84,6 +91,12 @@ define('TABLE_RENDERED', 1);
                         } // end if allow_public_registration?>
                     </div>
                 </form>
+            <?php if ($mobile_session) {
+                            echo "<div id=\"mobileheader\"><!-- This is the header -->";
+                            echo "<h1 id=\"headerlogo\"></h1>";
+                            echo "</div>";
+                        } ?>
         <?php
         UI::show_footer();
         ?>
+

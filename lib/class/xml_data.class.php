@@ -321,7 +321,7 @@ class XML_Data
         foreach ($array as $key => $value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) and isset($value['<attributes>'])) {
+            if (is_array($value) && isset($value['<attributes>'])) {
                 $attribute = ' ' . $value['<attributes>'];
                 $key       = $value['value'];
             }
@@ -355,7 +355,7 @@ class XML_Data
     {
         $string = "<total_count>" . count($tags) . "</total_count>\n";
 
-        if (count($tags) > self::$limit or self::$offset > 0) {
+        if (count($tags) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $tags = array_splice($tags, self::$offset, self::$limit);
             } else {
@@ -399,7 +399,7 @@ class XML_Data
         }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
 
-        if (count($artists) > self::$limit or self::$offset > 0) {
+        if (count($artists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $artists = array_splice($artists, self::$offset, self::$limit);
             } else {
@@ -468,7 +468,7 @@ class XML_Data
         }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
-        if (count($albums) > self::$limit or self::$offset > 0) {
+        if (count($albums) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $albums = array_splice($albums, self::$offset, self::$limit);
             } else {
@@ -534,7 +534,7 @@ class XML_Data
     {
         $string = "<total_count>" . count($playlists) . "</total_count>\n";
 
-        if (count($playlists) > self::$limit or self::$offset > 0) {
+        if (count($playlists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $playlists = array_slice($playlists, self::$offset, self::$limit);
             } else {
@@ -598,7 +598,7 @@ class XML_Data
     {
         $string = "<total_count>" . count($songs) . "</total_count>\n";
 
-        if (count($songs) > self::$limit or self::$offset > 0) {
+        if (count($songs) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $songs = array_slice($songs, self::$offset, self::$limit);
             } else {
@@ -860,7 +860,7 @@ class XML_Data
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if ($date !== null) {
-            $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
+            $string .= "<pubDate>" . date("r", (int) $date) . "</pubDate>\n";
         }
 
         // Pass it to the keyed array xml function

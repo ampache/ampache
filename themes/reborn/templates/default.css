@@ -223,6 +223,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 64px;
 }
 
+#mobileheader {
+    height: 64px;
+    padding-top: 64px;
+}
+
 #header #headerbox {
     float:left;
     width: 80%;

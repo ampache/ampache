@@ -132,11 +132,12 @@ class Browse extends Query
      * and requires the correct template based on the
      * type that we are currently browsing
      *
-     * @param int[] $object_ids
+     * @param array $object_ids
+     * @param boolean|array $argument
      */
-    public function show_objects($object_ids = null, $argument = null)
+    public function show_objects($object_ids = array(), $argument = false)
     {
-        if ($this->is_simple() || !is_array($object_ids)) {
+        if ($this->is_simple() || !is_array($object_ids) || empty($object_ids)) {
             $object_ids = $this->get_saved();
         } else {
             $this->save_objects($object_ids);

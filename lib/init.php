@@ -203,7 +203,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user']->fullname = $auth['fullname'];
             $GLOBALS['user']->access   = (int) ($auth['access']);
         }
-        if (!Core::get_global('user')->id and !AmpConfig::get('demo_mode')) {
+        if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());
 
             return false;
@@ -262,4 +262,12 @@ $GLOBALS['xmlrpc_internalencoding'] = AmpConfig::get('site_charset');
 // If debug is on GIMMIE DA ERRORS
 if (AmpConfig::get('debug')) {
     error_reporting(E_ALL);
+}
+
+// set a mobile tag so we can change things for mobile in the future
+$_SESSION['mobile'] = false;
+$user_agent         = $_SERVER['HTTP_USER_AGENT'];
+
+if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPad') || strpos($user_agent, 'iPhone'))) {
+    $_SESSION['mobile'] = true;
 }

@@ -98,14 +98,14 @@ function update_preference($user_id, $name, $pref_id, $value)
     $level_check = "level_" . $name;
 
     /* First see if they are an administrator and we are applying this to everything */
-    if (Core::get_global('user')->has_access(100) and make_bool($_REQUEST[$apply_check])) {
+    if (Core::get_global('user')->has_access(100) && make_bool($_REQUEST[$apply_check])) {
         Preference::update_all($pref_id, $value);
 
         return true;
     }
 
     /* Check and see if they are an admin and the level def is set */
-    if (Core::get_global('user')->has_access(100) and make_bool($_REQUEST[$level_check])) {
+    if (Core::get_global('user')->has_access(100) && make_bool($_REQUEST[$level_check])) {
         Preference::update_level($pref_id, $_REQUEST[$level_check]);
     }
 
@@ -232,10 +232,13 @@ function create_preference_input($name, $value)
             switch ($value) {
                 case 'localplay':
                     $is_localplay = 'selected="selected"';
+                    // intentional fallthrough
                 case 'democratic':
                     $is_democratic = 'selected="selected"';
+                    // intentional fallthrough
                 case 'web_player':
                     $is_web_player = 'selected="selected"';
+                    // intentional fallthrough
                 default:
                     $is_stream = "selected=\"selected\"";
             }
@@ -268,9 +271,9 @@ function create_preference_input($name, $value)
         case 'lang':
             $languages = get_languages();
             echo '<select name="' . $name . '">' . "\n";
-            foreach ($languages as $lang => $name) {
+            foreach ($languages as $lang => $tongue) {
                 $selected = ($lang == $value) ? 'selected="selected"' : '';
-                echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
+                echo "\t<option value=\"$lang\" " . $selected . ">$tongue</option>\n";
             } // end foreach
             echo "</select>\n";
         break;

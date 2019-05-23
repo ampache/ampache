@@ -107,7 +107,7 @@ class Art extends database_object
      */
     public static function build_cache($object_ids)
     {
-        if (!is_array($object_ids) || !count($object_ids)) {
+        if (!count($object_ids)) {
             return false;
         }
         $uidlist    = '(' . implode(',', $object_ids) . ')';
@@ -211,7 +211,7 @@ class Art extends database_object
         // the image.
         if (function_exists('ImageCreateFromString')) {
             $image = ImageCreateFromString($source);
-            if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
+            if ($image == false || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('art.class', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
@@ -236,7 +236,7 @@ class Art extends database_object
     {
         // Get the data either way
         if (!$this->has_db_info()) {
-            return false;
+            return '';
         }
 
         if ($raw || !$this->thumb) {
@@ -289,7 +289,7 @@ class Art extends database_object
             $size = array('width' => 275, 'height' => 275);
             $data = $this->generate_thumb($this->raw, $size, $this->raw_mime);
             // If it works save it!
-            if ($data) {
+            if (!empty($data)) {
                 $this->save_thumb($data['thumb'], $data['thumb_mime'], $size);
                 $this->thumb      = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
@@ -422,6 +422,11 @@ class Art extends database_object
         return true;
     } // insert
 
+    /**
+     * check_dimensions
+     * @param array $dimensions
+     * @return boolean
+     */
     public static function check_dimensions($dimensions)
     {
         $width  = (int) ($dimensions['width']);
@@ -474,6 +479,14 @@ class Art extends database_object
         return true;
     }
 
+    /**
+     * get_dir_on_disk
+     * @param string $type
+     * @param string $uid
+     * @param string $kind
+     * @param boolean $autocreate
+     * @return boolean|string
+     */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {
         $path = AmpConfig::get('local_metadata_dir');
@@ -512,6 +525,7 @@ class Art extends database_object
     }
 
     /**
+     * write_to_dir
      * @param string $source
      * @param string $type
      * @param integer $uid
@@ -534,6 +548,7 @@ class Art extends database_object
     }
 
     /**
+     * read_from_dir
      * @param string $type
      * @param integer $uid
      */
@@ -560,6 +575,12 @@ class Art extends database_object
         return $image;
     }
 
+    /**
+     * delete_from_dir
+     * @param string $type
+     * @param string $uid
+     * @param string $kind
+     */
     private static function delete_from_dir($type, $uid, $kind = '')
     {
         if ($type && $uid) {
@@ -569,11 +590,12 @@ class Art extends database_object
     }
 
     /**
+     * delete_rec_dir
      * @param false|string $path
      */
     private static function delete_rec_dir($path)
     {
-        debug_event('art.class', 'Deleting ' . $path . ' directory...', 5);
+        debug_event('art.class', 'Deleting ' . (string) $path . ' directory...', 5);
 
         if (Core::is_readable($path)) {
             foreach (scandir($path) as $file) {
@@ -638,7 +660,7 @@ class Art extends database_object
      * Returns the specified resized image.  If the requested size doesn't
      * already exist, create and cache it.
      * @param array $size
-     * @return string
+     * @return array
      */
     public function get_thumb($size)
     {
@@ -665,7 +687,7 @@ class Art extends database_object
 
         // If we didn't get a result
         $results = $this->generate_thumb($this->raw, $size, $this->raw_mime);
-        if ($results) {
+        if (!empty($results)) {
             $this->save_thumb($results['thumb'], $results['thumb_mime'], $size);
         }
 
@@ -680,7 +702,7 @@ class Art extends database_object
      * @param string $image
      * @param array $size
      * @param string $mime
-     * @return string
+     * @return array
      */
     public function generate_thumb($image, $size, $mime)
     {
@@ -690,35 +712,35 @@ class Art extends database_object
         if (!self::test_image($image)) {
             debug_event('art.class', 'Not trying to generate thumbnail, invalid data passed', 1);
 
-            return false;
+            return array();
         }
 
         if (!function_exists('gd_info')) {
             debug_event('art.class', 'PHP-GD Not found - unable to resize art', 1);
 
-            return false;
+            return array();
         }
 
         // Check and make sure we can resize what you've asked us to
-        if (($type == 'jpg' or $type == 'jpeg') and !(imagetypes() & IMG_JPG)) {
+        if (($type == 'jpg' || $type == 'jpeg') && !(imagetypes() & IMG_JPG)) {
             debug_event('art.class', 'PHP-GD Does not support JPGs - unable to resize', 1);
 
-            return false;
+            return array();
         }
-        if ($type == 'png' and !imagetypes() & IMG_PNG) {
+        if ($type == 'png' && !imagetypes() & IMG_PNG) {
             debug_event('art.class', 'PHP-GD Does not support PNGs - unable to resize', 1);
 
-            return false;
+            return array();
         }
-        if ($type == 'gif' and !imagetypes() & IMG_GIF) {
+        if ($type == 'gif' && !imagetypes() & IMG_GIF) {
             debug_event('art.class', 'PHP-GD Does not support GIFs - unable to resize', 1);
 
-            return false;
+            return array();
         }
-        if ($type == 'bmp' and !imagetypes() & IMG_WBMP) {
+        if ($type == 'bmp' && !imagetypes() & IMG_WBMP) {
             debug_event('art.class', 'PHP-GD Does not support BMPs - unable to resize', 1);
 
-            return false;
+            return array();
         }
 
         $source = imagecreatefromstring($image);
@@ -726,7 +748,7 @@ class Art extends database_object
         if (!$source) {
             debug_event('art.class', 'Failed to create Image from string - Source Image is damaged / malformed', 2);
 
-            return false;
+            return array();
         }
 
         $source_size = array('height' => imagesy($source), 'width' => imagesx($source));
@@ -739,7 +761,7 @@ class Art extends database_object
             imagedestroy($source);
             imagedestroy($thumbnail);
 
-            return false;
+            return array();
         }
         imagedestroy($source);
 
@@ -763,12 +785,14 @@ class Art extends database_object
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
             break;
+            default:
+                $mime_type = null;
         } // resized
 
-        if (!isset($mime_type)) {
+        if (!$mime_type) {
             debug_event('art.class', 'Error: No mime type found.', 2);
 
-            return false;
+            return array();
         }
 
         $data = ob_get_contents();
@@ -778,7 +802,7 @@ class Art extends database_object
         if (!strlen($data)) {
             debug_event('art.class', 'Unknown Error resizing art', 1);
 
-            return false;
+            return array();
         }
 
         return array('thumb' => $data, 'thumb_mime' => $mime_type);
@@ -977,7 +1001,7 @@ class Art extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
@@ -991,7 +1015,7 @@ class Art extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
@@ -1247,7 +1271,7 @@ class Art extends database_object
                     debug_event('art.class', "gather_musicbrainz Matched coverart site: " . $casite['name'], 5);
                     if (preg_match($casite['regexp'], $arurl, $matches)) {
                         $num_found++;
-                        $url = $casite[imguri];
+                        $url = $casite['imguri'];
                         debug_event('art.class', "gather_musicbrainz Generated URL added: " . $url, 5);
                         $images[] = array(
                             'url' => $url,

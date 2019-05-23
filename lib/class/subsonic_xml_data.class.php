@@ -252,15 +252,33 @@ class Subsonic_XML_Data
 
         if (empty($message)) {
             switch ($code) {
-                case self::SSERROR_GENERIC:            $message    = "A generic error."; break;
-                case self::SSERROR_MISSINGPARAM:       $message    = "Required parameter is missing."; break;
-                case self::SSERROR_APIVERSION_CLIENT:  $message    = "Incompatible Subsonic REST protocol version. Client must upgrade."; break;
-                case self::SSERROR_APIVERSION_SERVER:  $message    = "Incompatible Subsonic REST protocol version. Server must upgrade."; break;
-                case self::SSERROR_BADAUTH:            $message    = "Wrong username or password."; break;
-                case self::SSERROR_TOKENAUTHNOTSUPPORTED: $message = "Token authentication not supported."; break;
-                case self::SSERROR_UNAUTHORIZED:       $message    = "User is not authorized for the given operation."; break;
-                case self::SSERROR_TRIAL:              $message    = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details."; break;
-                case self::SSERROR_DATA_NOTFOUND:      $message    = "The requested data was not found."; break;
+                case self::SSERROR_GENERIC:
+                    $message = "A generic error.";
+                    break;
+                case self::SSERROR_MISSINGPARAM:
+                    $message = "Required parameter is missing.";
+                    break;
+                case self::SSERROR_APIVERSION_CLIENT:
+                    $message = "Incompatible Subsonic REST protocol version. Client must upgrade.";
+                    break;
+                case self::SSERROR_APIVERSION_SERVER:
+                    $message = "Incompatible Subsonic REST protocol version. Server must upgrade.";
+                    break;
+                case self::SSERROR_BADAUTH:
+                    $message = "Wrong username or password.";
+                    break;
+                case self::SSERROR_TOKENAUTHNOTSUPPORTED:
+                    $message = "Token authentication not supported.";
+                    break;
+                case self::SSERROR_UNAUTHORIZED:
+                    $message = "User is not authorized for the given operation.";
+                    break;
+                case self::SSERROR_TRIAL:
+                    $message = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.";
+                    break;
+                case self::SSERROR_DATA_NOTFOUND:
+                    $message = "The requested data was not found.";
+                    break;
             }
         }
 
@@ -540,7 +558,7 @@ class Subsonic_XML_Data
         $sqllook         = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
         $db_results      = Dba::read($sqllook, [$catalogId]);
         $resultcheck     = Dba::fetch_assoc($db_results);
-        if ($resultcheck) {
+        if (!empty($resultcheck)) {
             $sql             = 'SELECT `path` FROM ' . 'catalog_' . $resultcheck['catalog_type'] . ' WHERE `catalog_id` = ?';
             $db_results      = Dba::read($sql, [$catalogId]);
             $result          = Dba::fetch_assoc($db_results);

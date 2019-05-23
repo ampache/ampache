@@ -168,12 +168,15 @@ switch ($_REQUEST['action']) {
         $user = new User($user_id);
         $user->upload_avatar();
 
-        if ($access == 5) {
-            $access = T_('Guest');
-        } elseif ($access == 25) {
-            $access = T_('User');
-        } elseif ($access == 100) {
-            $access = T_('Admin');
+        switch ($access) {
+            case 5:
+                $access = T_('Guest');
+                break;
+            case 25:
+                $access = T_('User');
+                break;
+            case 100:
+                $access = T_('Admin');
         }
 
         /* HINT: %1 Username, %2 Access num */

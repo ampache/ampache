@@ -43,7 +43,7 @@ $web_path = AmpConfig::get('web_path');
             <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
             <div>
 <?php
-    if ($validation == User::get_validation($username) and strlen($validation)) {
+    if ($validation == User::get_validation($username) && strlen($validation)) {
         User::activate_user($username); ?>
 <h3><?php echo T_('User Activated'); ?></h3>
 <p>

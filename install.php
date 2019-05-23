@@ -117,8 +117,8 @@ switch ($_REQUEST['action']) {
         $new_user = '';
         $new_pass = '';
         if (Core::get_post('db_user') == 'create_db_user') {
-            $new_user = $_POST['db_username'];
-            $new_pass = $_POST['db_password'];
+            $new_user = Core::get_post('db_username');
+            $new_pass = Core::get_post('db_password');
 
             if (!strlen($new_user) || !strlen($new_pass)) {
                 AmpError::add('general', T_('Error: Ampache SQL Username or Password missing'));
@@ -154,13 +154,13 @@ switch ($_REQUEST['action']) {
 
             $created_config = true;
             if ($write_htaccess_channel || $download_htaccess_channel || $all) {
-                $created_config = $created_config && install_rewrite_rules($htaccess_channel_file, $_POST['web_path'], $download_htaccess_channel);
+                $created_config = $created_config && install_rewrite_rules($htaccess_channel_file, Core::get_post('web_path'), $download_htaccess_channel);
             }
             if ($write_htaccess_rest || $download_htaccess_rest || $all) {
-                $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
+                $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
             }
             if ($write_htaccess_play || $download_htaccess_play || $all) {
-                $created_config = $created_config && install_rewrite_rules($htaccess_play_file, $_POST['web_path'], $download_htaccess_play);
+                $created_config = $created_config && install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
             }
             if ($write || $download || $all) {
                 $created_config = $created_config && install_create_config($download);

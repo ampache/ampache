@@ -412,7 +412,7 @@ abstract class Catalog extends database_object
     /**
      * Get enable sql filter;
      * @param string $type
-     * @param integer $id
+     * @param string $id
      * @return string
      */
     public static function get_enable_filter($type, $id)
@@ -482,7 +482,7 @@ abstract class Catalog extends database_object
      * @param boolean $value
      * @param integer $catalog_id
      * @param integer $level
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $catalog_id, $level)
     {
@@ -1242,7 +1242,7 @@ abstract class Catalog extends database_object
                 if (AmpConfig::get('resize_images')) {
                     $size  = array('width' => 275, 'height' => 275);
                     $thumb = $art->generate_thumb($image, $size, $result['mime']);
-                    if (is_array($thumb)) {
+                    if (!empty($thumb)) {
                         $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
                     }
                 }
@@ -1488,9 +1488,9 @@ abstract class Catalog extends database_object
      * updates a single album,artist,song from the tag data
      * this can be done by 75+
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      */
-    public static function update_single_item($type, $id)
+    public static function update_single_item($type, $object_id)
     {
         // Because single items are large numbers of things too
         set_time_limit(0);
@@ -1499,15 +1499,15 @@ abstract class Catalog extends database_object
 
         switch ($type) {
             case 'album':
-                $album = new Album($id);
+                $album = new Album($object_id);
                 $songs = $album->get_songs();
                 break;
             case 'artist':
-                $artist = new Artist($id);
+                $artist = new Artist($object_id);
                 $songs  = $artist->get_songs();
                 break;
             case 'song':
-                $songs[] = $id;
+                $songs[] = $object_id;
                 break;
         } // end switch type
 
@@ -1772,7 +1772,7 @@ abstract class Catalog extends database_object
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
         // Check for patterns
-        if (!$sort_pattern or !$rename_pattern) {
+        if (!$sort_pattern || !$rename_pattern) {
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }
@@ -1810,16 +1810,19 @@ abstract class Catalog extends database_object
 
         return $types;
     }
-    
+
+    /**
+     * clean_empty_albums
+     */
     public static function clean_empty_albums()
     {
         $sql = "SELECT `id` FROM `album` WHERE NOT EXISTS " .
             "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
         $db_results = Dba::read($sql);
         while ($albumid = Dba::fetch_assoc($db_results)) {
-            $id          = $albumid['id'];
+            $object_id   = $albumid['id'];
             $sql         = "DELETE FROM `album` WHERE `id` = ?";
-            $db_results  = Dba::write($sql, array($id));
+            $db_results  = Dba::write($sql, array($object_id));
         }
     }
     

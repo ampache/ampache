@@ -116,6 +116,14 @@ class Video extends database_object implements media, library_item
      */
     public $tags;
     /**
+     * @var integer $f_release_date
+     */
+    public $update_time;
+    /**
+     * @var integer $f_release_date
+     */
+    public $addition_time;
+    /**
      * @var string $f_title
      */
     public $f_title;
@@ -123,6 +131,10 @@ class Video extends database_object implements media, library_item
      * @var string $f_full_title
      */
     public $f_full_title;
+    /**
+     * @var string $f_artist_full
+     */
+    public $f_artist_full;
     /**
      * @var string $f_time
      */
@@ -215,10 +227,9 @@ class Video extends database_object implements media, library_item
         foreach ($dtypes as $dtype) {
             $sql        = "SELECT `id` FROM `" . strtolower($dtype) . "` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($video_id));
-            if ($results = Dba::fetch_assoc($db_results)) {
-                if ($results['id']) {
-                    return new $dtype($video_id);
-                }
+            $results    = Dba::fetch_assoc($db_results);
+            if ($results['id']) {
+                return new $dtype($video_id);
             }
         }
 
@@ -232,7 +243,7 @@ class Video extends database_object implements media, library_item
      */
     public static function build_cache($ids=array())
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!count($ids)) {
             return false;
         }
 
@@ -575,7 +586,7 @@ class Video extends database_object implements media, library_item
         }
 
         if ($data['art'] && $options['gather_art']) {
-            $art = new Art($vid, 'video');
+            $art = new Art((int) $vid, 'video');
             $art->insert_url($data['art']);
         }
 
