@@ -29,8 +29,8 @@ if (!defined('AJAX_INCLUDE')) {
 
 $results = array();
 $action  = Core::get_request('action');
-// filter album and video of the moment instead of hardcoding
 $moment  = (int) AmpConfig::get('of_the_moment');
+// filter album and video of the moment instead of hardcoding
 if (!$moment > 0) {
     $moment = 6;
 }
