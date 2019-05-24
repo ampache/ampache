@@ -566,9 +566,6 @@ class Update
                          "* Insert some decent SmartLists for a better default experience<br />" .
                          "* Delete plex preferences from the server<br />";
         $version[]     = array('version' => '400000', 'description' => $update_string);
-        
-        $update_string = "- Add 'of_the_moment' preference to Interface settings<br />";
-        $version[]     = array('version' => '400001', 'description' => $update_string);
 
         return $version;
     }
@@ -4157,27 +4154,6 @@ class Update
         $id = Dba::insert_id();
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
-        $retval &= Dba::write($sql, array($id));
-
-        return $retval;
-    }
-
-    /**
-     * update_400001
-     *
-     * Add preference of_the_moment. album/video of the moment length
-     */
-    public static function update_400001()
-    {
-        $retval = true;
-
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`,`subcatagory`) " .
-               "VALUES ('of_the_moment','6','Number of Album/Video of the moment items','100','integer','interface','home')";
-        $retval &= Dba::write($sql);
-
-        $id = Dba::insert_id();
-
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'5')";
         $retval &= Dba::write($sql, array($id));
 
         return $retval;
