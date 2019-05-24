@@ -486,7 +486,9 @@ if (!$cpaction) {
                     $transcode = true;
                     debug_event('play/index', 'Transcoding due to downsample_remote', 5);
                 } else {
-                    if (($bitrate > 0 && ($bitrate * 100) < $media->bitrate) || ($maxbitrate > 0 && ($maxbitrate * 100) < $media->bitrate)) {
+                    $media_bitrate = floor($media->bitrate / 1000);
+                    // debug_event('play', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
+                    if (($bitrate > 0 && ($bitrate) < $media_bitrate) || ($maxbitrate > 0 && ($maxbitrate) < $media_bitrate)) {
                         $transcode = true;
                         debug_event('play/index', 'Transcoding because explicit bitrate request', 5);
                     } else {
