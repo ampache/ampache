@@ -841,7 +841,6 @@ a.jp-shuffle-off:hover {
     font-size: 0.67em;
     text-align: left;
     position: fixed;
-	display: none;
     bottom: 0;
     left: 0;
     z-index: 10000;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,6 +34,7 @@ $_SESSION['login'] = true;
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
     </head>
@@ -48,14 +49,14 @@ $_SESSION['login'] = true;
                 <span><?php echo T_('Registration'); ?>...</span>
             </div>
             <?php
-            $action          = scrub_in($_REQUEST['action']);
-            $fullname        = scrub_in($_REQUEST['fullname']);
-            $fullname_public = ($_REQUEST['fullname_public'] === "1");
-            $username        = scrub_in($_REQUEST['username']);
-            $email           = scrub_in($_REQUEST['email']);
-            $website         = scrub_in($_REQUEST['website']);
-            $state           = scrub_in($_REQUEST['state']);
-            $city            = scrub_in($_REQUEST['city']);
+            $action          = scrub_in(Core::get_request('action'));
+            $fullname        = scrub_in(Core::get_request('fullname'));
+            $fullname_public = (Core::get_request('fullname_public') === "1");
+            $username        = scrub_in(Core::get_request('username'));
+            $email           = scrub_in(Core::get_request('email'));
+            $website         = scrub_in(Core::get_request('website'));
+            $state           = scrub_in(Core::get_request('state'));
+            $city            = scrub_in(Core::get_request('city'));
             ?>
             <div id="registerbox">
                 <form name="update_user" method="post" action="<?php echo $web_path; ?>/register.php" enctype="multipart/form-data">
@@ -76,10 +77,9 @@ $_SESSION['login'] = true;
                     </div>
                     <?php
                     } // end if user_agreement?>
-                    <h3><?php echo T_('User Information'); ?></h3>
                     <div class="registerfield require">
                         <label for="username"><?php echo T_('Username'); ?>:</label>
-                        <input type='text' name='username' id='username' value='<?php echo scrub_out($username); ?>' />
+                        <input type='text' name='username' id='username' value='<?php echo scrub_out((string) $username); ?>' />
                         <?php AmpError::display('username'); ?>
                         <?php AmpError::display('duplicate_user'); ?>
                     </div>
@@ -89,7 +89,7 @@ $_SESSION['login'] = true;
                             echo 'require';
                         } ?>">
                             <label for="fullname"><?php echo T_('Full Name'); ?>:</label>
-                            <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
+                            <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out((string) $fullname); ?>' />
                             <?php AmpError::display('fullname'); ?>
                         </div>
                     <?php
@@ -97,7 +97,7 @@ $_SESSION['login'] = true;
 
                     <div class="registerfield require">
                         <label for="email"><?php echo T_('E-mail'); ?>:</label>
-                        <input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
+                        <input type='text' name='email' id='email' value='<?php echo scrub_out((string) $email); ?>' />
                         <?php AmpError::display('email'); ?>
                     </div>
                     <?php if (in_array('website', $display_fields)) {
@@ -106,7 +106,7 @@ $_SESSION['login'] = true;
                             echo 'require';
                         } ?>">
                             <label for="website"><?php echo T_('Website'); ?>:</label>
-                            <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
+                            <input type='text' name='website' id='website' value='<?php echo scrub_out((string) $website); ?>' />
                             <?php AmpError::display('website'); ?>
                         </div>
                     <?php
@@ -117,7 +117,7 @@ $_SESSION['login'] = true;
                             echo 'require';
                         } ?>">
                             <label for="state"><?php echo T_('State'); ?>:</label>
-                            <input type='text' name='state' id='state' value='<?php echo scrub_out($state); ?>' />
+                            <input type='text' name='state' id='state' value='<?php echo scrub_out((string) $state); ?>' />
                             <?php AmpError::display('state'); ?>
                         </div>
                     <?php
@@ -128,7 +128,7 @@ $_SESSION['login'] = true;
                             echo 'require';
                         } ?>">
                             <label for="city"><?php echo T_('City'); ?>:</label>
-                            <input type='text' name='city' id='city' value='<?php echo scrub_out($city); ?>' />
+                            <input type='text' name='city' id='city' value='<?php echo scrub_out((string) $city); ?>' />
                             <?php AmpError::display('city'); ?>
                         </div>
                     <?php

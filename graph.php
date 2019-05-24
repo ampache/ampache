@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,28 +28,30 @@ require_once 'lib/init.php';
 // Check to see if they've got an interface session or a valid API session, if not GTFO
 if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
     debug_event('graph', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
-    exit;
+
+    return false;
 }
 
 if (!AmpConfig::get('statistical_graphs')) {
     debug_event('graph', 'Access denied, statistical graph disabled.', 1);
-    exit;
+
+    return false;
 }
 
-$type = $_REQUEST['type'];
+$type = Core::get_request('type');
 
-$user_id     = intval($_REQUEST['user_id']);
-$object_type = (string) scrub_in($_REQUEST['object_type']);
+$user_id     = (int) filter_input(INPUT_GET, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+$object_type = (string) scrub_in(Core::get_request('object_type'));
 if (!Core::is_library_item($object_type)) {
     $object_type = null;
 }
-$object_id  = intval($_REQUEST['object_id']);
+$object_id  = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 $start_date = scrub_in($_REQUEST['start_date']);
 $end_date   = scrub_in($_REQUEST['end_date']);
 $zoom       = (string) scrub_in($_REQUEST['zoom']);
 
-$width  = intval($_REQUEST['width']);
-$height = intval($_REQUEST['height']);
+$width  = (int) filter_input(INPUT_GET, 'width', FILTER_SANITIZE_NUMBER_INT);
+$height = (int) filter_input(INPUT_GET, 'height', FILTER_SANITIZE_NUMBER_INT);
 
 $graph = new Graph();
 

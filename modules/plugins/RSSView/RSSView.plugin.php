@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -94,10 +94,10 @@ class AmpacheRSSView
         $xml    = simplexml_load_string($xmlstr);
         if ($xml->channel) {
             UI::show_box_top($xml->channel->title);
-            $i = 0;
+            $count = 0;
             echo '<div class="home_plugin"><table class="tabledata">';
             foreach ($xml->channel->item as $item) {
-                echo '<tr class="' . ((($i % 2) == 0) ? 'even' : 'odd') . '"><td>';
+                echo '<tr class="' . ((($count % 2) == 0) ? 'even' : 'odd') . '"><td>';
                 echo '<div>';
                 echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
                 echo '<div style="float: right;">' . date("Y/m/d H:i:s", strtotime($item->pubDate)) . '</div>';
@@ -110,8 +110,8 @@ class AmpacheRSSView
                 echo '</div>';
                 echo '</td></tr>';
                 
-                $i++;
-                if ($i >= $this->maxitems) {
+                $count++;
+                if ($count >= $this->maxitems) {
                     break;
                 }
             }
@@ -133,11 +133,11 @@ class AmpacheRSSView
         if (strlen(trim($data['rssview_feed_url']))) {
             $this->feed_url = trim($data['rssview_feed_url']);
         } else {
-            debug_event($this->name, 'No rss feed url, home plugin skipped', '3');
+            debug_event('rssview.plugin', 'No rss feed url, home plugin skipped', 3);
 
             return false;
         }
-        $this->maxitems = intval($data['rssview_max_items']);
+        $this->maxitems = (int) ($data['rssview_max_items']);
 
         return true;
     }

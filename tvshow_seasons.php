@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,9 +24,7 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-/**
- * Display Switch
- */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
@@ -49,9 +47,10 @@ switch ($_REQUEST['action']) {
 
         $tvshow_season = new TVShow_Season($_REQUEST['tvshow_season_id']);
         if (!Catalog::can_remove($tvshow_season)) {
-            debug_event('tvshow_season', 'Unauthorized to remove the tvshow `.' . $tvshow_season->id . '`.', 1);
+            debug_event('tvshow_seasons', 'Unauthorized to remove the tvshow `.' . $tvshow_season->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($tvshow_season->remove_from_disk()) {

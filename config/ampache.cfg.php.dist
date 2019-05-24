@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 34
+config_version = 35
 
 ;#########################################################
 ; Path Vars                                              #
@@ -373,6 +373,18 @@ default_auth_level = "guest"
 ; DEFAULT: true
 ratings = "true"
 
+; Enable filtering on browse pages for artists and albums.
+; If you enable this setting the get_random and browse pages
+; will remove artists and albums that are <= to that rating
+; DEFAULT: false
+;rating_browse_filter = "false"
+
+; Set the rating that will be filtered
+; eg. 2 will filter 1 and 2 start albums and artists
+; this setting mus be set for the filter to work
+; DEFAULT: null
+;rating_browse_minimum_stars = 1
+
 ; User flags/favorites
 ; This allows user flags for almost any object in ampache as favorite
 ; POSSIBLE VALUES: false true
@@ -552,7 +564,7 @@ wanted_types = "album,official"
 ; Set this to true to enable channels and the
 ; possibility for users to create channels from playlists
 ; DEFAULT: true
-channel = "true"
+channel = "false"
 
 ; Live Streams
 ; Set this to true to enable live streams (radio) and the
@@ -577,6 +589,35 @@ live_stream = "true"
 ; DEFAULT: 60
 ; Possible Values: Int > 5
 refresh_limit = "60"
+
+; Embedded Now Playing Page
+; Set this to true to enable the embedded now playing page (now_playing.php).
+; This page allows for embedding a now playing badge into a stream
+; or status page. Use with the parameter 'user_id' to filter by a
+; specific user. This page is like rss in that it doesn't require a
+; login to view.
+; DEFAULT: false
+;use_now_playing_embedded = "false"
+
+; Now Playing Refresh Limit
+; This defines the refresh limit in seconds for the
+; now playing embedded page. This (now_playing.php) is not
+; part of the normal application and is designed to be
+; embedded in another app, like a stream or status page.
+; If this value is not valid, automatic refresh will be disabled.
+; DEFAULT: -1
+; Possible Values; Int > 1
+;now_playing_refresh_limit = "-1"
+
+; Now Playing Custom CSS
+; This defines the custom css file for the now playing embedded
+; page. This (now_playing.php) is not part of the normal
+; application and is designed to be embedded in another app, like
+; a stream or status page.
+; If this value is not set, no CSS will be used. Custom CSS can
+; still be applied in the other application, like OBS.
+; DEFAULT: Not enabled
+;now_playing_css_file = "templates/now-playing.css"
 
 ; Footer Statistics
 ; This defines whether statistics (Queries, Cache Hits, Load Time)
@@ -874,31 +915,31 @@ registration_mandatory_fields = "fullname"
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
 ;;; Audio
-;transcode_m4a      = allowed
-;transcode_flac     = required
-;transcode_mpc      = required
-;transcode_ogg      = required
-;transcode_oga      = required
-;transcode_wav      = required
-;transcode_wma      = required
-;transcode_aif      = required
-;transcode_aiff     = required
-;transcode_ape     = required
-;transcode_shn     = required
-;transcode_mp3      = allowed
+;transcode_m4a  = allowed
+;transcode_flac = required
+;transcode_mpc  = required
+;transcode_ogg  = required
+;transcode_oga  = required
+;transcode_wav  = required
+;transcode_wma  = required
+;transcode_aif  = required
+;transcode_aiff = required
+;transcode_ape  = required
+;transcode_shn  = required
+;transcode_mp3  = allowed
 ;;; Video
-;transcode_avi      = allowed
-;transcode_mkv      = allowed
-;transcode_mpg      = allowed
-;transcode_mpeg     = allowed
-;transcode_m4v      = allowed
-;transcode_mp4      = allowed
-;transcode_mov      = allowed
-;transcode_wmv      = allowed
-;transcode_ogv      = allowed
-;transcode_divx     = allowed
-;transcode_m2ts     = allowed
-;transcode_webm     = allowed
+;transcode_avi  = allowed
+;transcode_mkv  = allowed
+;transcode_mpg  = allowed
+;transcode_mpeg = allowed
+;transcode_m4v  = allowed
+;transcode_mp4  = allowed
+;transcode_mov  = allowed
+;transcode_wmv  = allowed
+;transcode_ogv  = allowed
+;transcode_divx = allowed
+;transcode_m2ts = allowed
+;transcode_webm = allowed
 
 ; Default audio output format
 ; DEFAULT: none
@@ -1009,6 +1050,12 @@ encode_ss_duration = "-t %DURATION%"
 ;#########################################################
 ;  Mail Settings                                         #
 ;#########################################################
+
+;Enable or disable email server features
+;otherwise, you can reset your password 
+;and never receive an email with the new one
+;Default: false
+;mail_enable = "false"
 
 ;Method used to send mail
 ;POSSIBLE VALUES: smtp sendmail php

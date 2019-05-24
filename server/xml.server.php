@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@ define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
-if ($_REQUEST['action'] != 'handshake') {
+if (Core::get_request('action') != 'handshake') {
     set_time_limit(0);
 }
 
@@ -39,40 +39,43 @@ header("Content-Disposition: attachment; filename=information.xml");
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
-    debug_event('Access Control', 'Error Attempted to use XML API with Access Control turned off', '3');
+    debug_event('xml.server', 'Error Attempted to use XML API with Access Control turned off', 3);
     echo XML_Data::error('501', T_('Access Control not Enabled'));
-    exit;
+
+    return false;
 }
 
 /**
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
-    debug_event('Access Denied', 'Invalid Session attempt to API [' . $_REQUEST['action'] . ']', '3');
+if (!Session::exists('api', $_REQUEST['auth']) && Core::get_request('action') != 'handshake' and Core::get_request('action') != 'ping') {
+    debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', 3);
     ob_end_clean();
     echo XML_Data::error('401', T_('Session Expired'));
-    exit();
+
+    return false;
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
 $username = null;
 $apikey   = null;
 
-if (($_REQUEST['action'] == 'handshake') && isset($_REQUEST['timestamp'])) {
+if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp'])) {
     $username = $_REQUEST['user'];
 } else {
     $apikey = $_REQUEST['auth'];
 }
 
 if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
-    debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    debug_event('Access Denied', 'Unauthorized access attempt to API [' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', 3);
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
-    exit();
+
+    return false;
 }
 
-if (($_REQUEST['action'] != 'handshake') && ($_REQUEST['action'] != 'ping')) {
+if ((Core::get_request('action') != 'handshake') && (Core::get_request('action') != 'ping')) {
     if (isset($_REQUEST['user'])) {
         $GLOBALS['user'] = User::get_from_username($_REQUEST['user']);
     } else {
@@ -100,7 +103,7 @@ foreach ($methods as $method) {
     if ($_GET['action'] == $method) {
         call_user_func(array('api', $method), $_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
-        exit;
+        return false;
     }
 } // end foreach methods in API
 

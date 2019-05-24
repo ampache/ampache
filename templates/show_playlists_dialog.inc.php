@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@
         </a>
     </li>
 <?php
-    $playlists = Playlist::get_users($GLOBALS['user']->id);
+    $playlists = Playlist::get_users(Core::get_global('user')->id);
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);

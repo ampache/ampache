@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,7 @@
  * Takes an array of media ids and returns an array of the actual filenames
  *
  * @param    array    $media_ids    Media IDs.
+ * @return array
  */
 function get_media_files($media_ids)
 {
@@ -35,13 +36,13 @@ function get_media_files($media_ids)
     foreach ($media_ids as $element) {
         if (is_array($element)) {
             if (isset($element['object_type'])) {
-                $type = $element['object_type'];
-                $id   = $element['object_id'];
+                $type    = $element['object_type'];
+                $mediaid = $element['object_id'];
             } else {
-                $type = array_shift($element);
-                $id   = array_shift($element);
+                $type      = array_shift($element);
+                $mediaid   = array_shift($element);
             }
-            $media = new $type($id);
+            $media = new $type($mediaid);
         } else {
             $media = new Song($element);
         }
@@ -101,6 +102,7 @@ function send_zip($name, $media_files)
  * Check that an object type is allowed to be zipped.
  *
  * @param string $object_type
+ * @return boolean
  */
 function check_can_zip($object_type)
 {

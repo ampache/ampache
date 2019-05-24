@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -123,7 +123,7 @@ class AmpachePaypal
 
         $this->business = trim($data['paypal_business']);
         if (!strlen($this->business)) {
-            debug_event($this->name, 'No Paypal ID, user field plugin skipped', '3');
+            debug_event('paypal.plugin', 'No Paypal ID, user field plugin skipped', 3);
 
             return false;
         }

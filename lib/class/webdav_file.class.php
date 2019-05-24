@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,17 +46,17 @@ class WebDAV_File extends DAV\File
 
     public function get()
     {
-        debug_event('webdav', 'File get', 5);
+        debug_event('webdav_file.class', 'File get', 5);
         // Only media associated to a local catalog is supported
         if ($this->libitem->catalog) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
             if ($catalog->get_type() === 'local') {
                 return fopen($this->libitem->file, 'r');
             } else {
-                debug_event('webdav', 'Catalog associated to the media is not local. This is currently unsupported.', 3);
+                debug_event('webdav_file.class', 'Catalog associated to the media is not local. This is currently unsupported.', 3);
             }
         } else {
-            debug_event('webdav', 'No catalog associated to the media.', 3);
+            debug_event('webdav_file.class', 'No catalog associated to the media.', 3);
         }
 
         return null;

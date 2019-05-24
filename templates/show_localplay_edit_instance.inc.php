@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
-<form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=update_instance&amp;instance=<?php echo intval($_REQUEST['instance']); ?>">
+<form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=update_instance&amp;instance=<?php echo (int) scrub_in(filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
 <table cellpadding="3" cellspacing="0" class="tabledata">
 <?php foreach ($fields as $key => $field) {
     ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -81,7 +81,7 @@ class Ampacheflickr
     {
         $photos = array();
         $url    = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
-        debug_event($this->name, 'Calling ' . $url, '5');
+        debug_event('flickr.plugin', 'Calling ' . $url, 5);
         $request = Requests::get($url, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
@@ -138,7 +138,7 @@ class Ampacheflickr
         if (strlen(trim($data['flickr_api_key']))) {
             $this->api_key = trim($data['flickr_api_key']);
         } else {
-            debug_event($this->name, 'No Flickr api key, photo plugin skipped', '3');
+            debug_event('flickr.plugin', 'No Flickr api key, photo plugin skipped', 3);
 
             return false;
         }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,7 +57,7 @@ if (AmpConfig::get('lastfm_api_key')) {
     <?php
     if (AmpConfig::get('ratings')) {
         ?>
-    <div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">
+    <div id="rating_<?php echo (int) ($artist->id); ?>_artist" style="display:inline;">
         <?php show_rating($artist->id, 'artist'); ?>
     </div>
     <?php
@@ -167,7 +167,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', '50')) {
+        <?php if (($owner_id > 0 && $owner_id === (int) Core::get_global('user')->id) || Access::check('interface', '50')) {
         ?>
             <?php if (AmpConfig::get('statistical_graphs')) {
             ?>

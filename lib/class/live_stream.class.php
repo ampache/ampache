@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -131,13 +131,15 @@ class Live_Stream extends database_object implements media, library_item
 
     public function search_childrens($name)
     {
+        debug_event('live_stream.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'live_stream') {
+        if ($filter_type === null || $filter_type == 'live_stream') {
             $medias[] = array(
                 'object_type' => 'live_stream',
                 'object_id' => $this->id
@@ -151,7 +153,7 @@ class Live_Stream extends database_object implements media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -336,7 +338,7 @@ class Live_Stream extends database_object implements media, library_item
         return $radios;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
     }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,29 +25,31 @@ require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.ph
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 UI::show_header();
 
 $catalogs = $_REQUEST['catalogs'];
+$action   = Core::get_request('action');
 // If only one catalog, check it is ready.
-if (is_array($catalogs) && count($catalogs) == 1 && $_REQUEST['action'] !== 'delete_catalog' && $_REQUEST['action'] !== 'show_delete_catalog') {
+if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog' && $action !== 'show_delete_catalog') {
     // If not ready, display the data to make it ready / stop the action.
     $catalog = Catalog::create_from_id($catalogs[0]);
     if (!$catalog->isReady()) {
         if (!isset($_REQUEST['perform_ready'])) {
             $catalog->show_ready_process();
             UI::show_footer();
-            exit;
+
+            return false;
         } else {
             $catalog->perform_ready();
         }
     }
 }
 
-
-/* Big switch statement to handle various actions */
+// Big switch statement to handle various actions
 switch ($_REQUEST['action']) {
     case 'add_to_all_catalogs':
         catalog_worker('add_to_all_catalogs');
@@ -89,7 +91,8 @@ switch ($_REQUEST['action']) {
 
         if (!Core::form_verify('delete_catalog')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         $deleted = true;
@@ -168,17 +171,18 @@ switch ($_REQUEST['action']) {
 
         ob_end_flush();
 
-        if (!strlen($_POST['type']) || $_POST['type'] == 'none') {
+        if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING) == 'none') {
             AmpError::add('general', T_('Error: Please select a catalog type'));
         }
 
-        if (!strlen($_POST['name'])) {
+        if (!strlen(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING))) {
             AmpError::add('general', T_('Error: Name not specified'));
         }
 
         if (!Core::form_verify('add_catalog', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         // If an error hasn't occured
