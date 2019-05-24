@@ -737,29 +737,30 @@ class Api
 
     /**
      * playlist_edit
+     * MINIMUM_API_VERSION=400001
+     *
      * This modifies name and type of playlist
      * @param array $input
      */
-    
     public static function playlist_edit($input)
     {
         $name = $input['name'];
         $type = $input['type'];
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        
+
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
             $array = [
-            "name" => $name,
-            "pl_type" => $type,
+                "name" => $name,
+                "pl_type" => $type,
             ];
             $playlist->update($array);
             echo XML_Data::single_string('success');
         }
-    }
-    
+    } // playlist_edit
+
     /**
      * playlist_delete
      * MINIMUM_API_VERSION=380001
