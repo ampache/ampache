@@ -29,11 +29,16 @@ if (!defined('AJAX_INCLUDE')) {
 
 $results = array();
 $action  = Core::get_request('action');
+// filter album and video of the moment instead of hardcoding
+$moment  = (int) AmpConfig::get('of_the_moment');
+if (!$moment > 0) {
+    $moment = 6;
+}
 
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'random_albums':
-        $albums = Album::get_random(6);
+        $albums = Album::get_random($moment);
         if (count($albums) && is_array($albums)) {
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_random_albums.inc.php');
@@ -50,7 +55,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'random_videos':
-        $videos = Video::get_random(6);
+        $videos = Video::get_random($moment);
         if (count($videos) && is_array($videos)) {
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_random_videos.inc.php');
