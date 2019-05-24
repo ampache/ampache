@@ -590,6 +590,35 @@ live_stream = "true"
 ; Possible Values: Int > 5
 refresh_limit = "60"
 
+; Embedded Now Playing Page
+; Set this to true to enable the embedded now playing page (now_playing.php).
+; This page allows for embedding a now playing badge into a stream
+; or status page. Use with the parameter 'user_id' to filter by a
+; specific user. This page is like rss in that it doesn't require a
+; login to view.
+; DEFAULT: false
+;use_now_playing_embedded = "false"
+
+; Now Playing Refresh Limit
+; This defines the refresh limit in seconds for the
+; now playing embedded page. This (now_playing.php) is not
+; part of the normal application and is designed to be
+; embedded in another app, like a stream or status page.
+; If this value is not valid, automatic refresh will be disabled.
+; DEFAULT: -1
+; Possible Values; Int > 1
+;now_playing_refresh_limit = "-1"
+
+; Now Playing Custom CSS
+; This defines the custom css file for the now playing embedded
+; page. This (now_playing.php) is not part of the normal
+; application and is designed to be embedded in another app, like
+; a stream or status page.
+; If this value is not set, no CSS will be used. Custom CSS can
+; still be applied in the other application, like OBS.
+; DEFAULT: Not enabled
+;now_playing_css_file = "templates/now-playing.css"
+
 ; Footer Statistics
 ; This defines whether statistics (Queries, Cache Hits, Load Time)
 ; are shown in the page footer.
