@@ -522,6 +522,21 @@ class Subsonic_Api
     }
 
     /**
+     * getVideos
+     * Get all videos.
+     * Takes no parameter.
+     */
+    public static function getvideos($input)
+    {
+        self::check_version($input, "1.7.0");
+
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $videos   = Catalog::get_videos();
+        Subsonic_XML_Data::addVideos($response, $videos);
+        self::apiOutput($input, $response);
+    }
+
+    /**
      * getAlbumList
      * Get a list of random, newest, highest rated etc. albums.
      * Takes the list type with optional size and offset in parameters.
