@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,11 +28,11 @@ define('TABLE_RENDERED', 1);
 // Temporary workaround to avoid sorting on custom base requests
 define('NO_BROWSE_SORTING', true);
 
-/* Switch on the action to be performed */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     // Show a Users "Profile" page
     case 'show_user':
-        $client = new User($_REQUEST['user_id']);
+        $client = new User(Core::get_request('user_id'));
         require_once AmpConfig::get('prefix') . UI::find_template('show_user.inc.php');
     break;
     // Show stats
@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_userflag.inc.php');
     break;
     case 'recent':
-        $user_id = $_REQUEST['user_id'];
+        $user_id = Core::get_request('user_id');
         require_once AmpConfig::get('prefix') . UI::find_template('show_recent.inc.php');
     break;
     case 'wanted':

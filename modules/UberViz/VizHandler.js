@@ -1,3 +1,5 @@
+/* global events, THREE, WhiteRing, Bars, ControlsHandler */
+
 //UberViz VizHandler
 //Handle 3D world
 //Camera movement
@@ -10,7 +12,7 @@
 //TO FILL SCREEN AT Z 0: WIDTH 1840, HEIGHT: 1380
 
 
-var VizHandler = function() {
+var VizHandler = (function() {
 
 	var rendertime = 0; //constantly incrementing value public
 	var camera, scene, renderer;
@@ -33,7 +35,7 @@ var VizHandler = function() {
 		renderer.setSize(FIXED_SIZE_W,FIXED_SIZE_H);
 		renderer.setClearColor ( 0x000000 );
 		renderer.sortObjects = false;
-		$('#viz').append(renderer.domElement);
+		$("#viz").append(renderer.domElement);
 
 		//3D SCENE
 		camera = new THREE.PerspectiveCamera( 70, FIXED_SIZE_W / FIXED_SIZE_H, 1, 3000 );
@@ -115,13 +117,13 @@ var VizHandler = function() {
 				renderW -= 250;
 			}
             
-            $('#viz').css({top:0});
+            $("#viz").css({top:0});
 
 		}else{
 			var renderW = FIXED_SIZE_W;
 			var renderH = FIXED_SIZE_H;
 			//vertically center viz output
-			$('#viz').css({top:window.innerHeight/2 - FIXED_SIZE_H/2});
+			$("#viz").css({top:window.innerHeight/2 - FIXED_SIZE_H/2});
 		}
 
 		camera.aspect = renderW / renderH;
@@ -139,4 +141,4 @@ var VizHandler = function() {
 		onResize: onResize
 	};
 
-}();
+}());

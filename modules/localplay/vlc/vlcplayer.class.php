@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -366,10 +366,10 @@ class VlcPlayer
      */
     private function sendCommand($cmd, $args)
     {
-        $fp = fsockopen($this->host, $this->port, $errno, $errstr);
+        $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
 
-        if (!$fp) {
-            debug_event('vlc', "VlcPlayer: $errstr ($errno)", '1');
+        if (!$fsock) {
+            debug_event('vlcplayer.class', "VlcPlayer: $errstr ($errno)", 1);
 
             return null;
         }
@@ -392,22 +392,22 @@ class VlcPlayer
         
         $msg .= "\r\n";
                        
-        fputs($fp, $msg);
+        fputs($fsock, $msg);
         $data   = '';
         $header = "";
         // here the header is split from the xml to avoid problems
         do {
             // loop until the end of the header
 
-            $header .= fgets($fp);
+            $header .= fgets($fsock);
         } while (strpos($header, "\r\n\r\n") === false);
 
         // now put the body in variable $data
-        while (! feof($fp)) {
-            $data .= fgets($fp);
+        while (! feof($fsock)) {
+            $data .= fgets($fsock);
         }
         
-        fclose($fp);
+        fclose($fsock);
 
         // send to xml parser and make an array
         $result = $this->xmltoarray($data);
@@ -469,7 +469,7 @@ class VlcPlayer
         }
 
         //Set the attributes too.
-        if (isset($attributes) and $get_attributes) {
+        if (isset($attributes) && $get_attributes) {
             foreach ($attributes as $attr => $val) {
                 if ($priority == 'tag') {
                     $attributes_data[$attr] = $val;
@@ -483,7 +483,7 @@ class VlcPlayer
         if ($type == "open") {
             //The starting of the tag '<tag>'
             $parent[$level - 1] = &$current;
-            if (!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
+            if (!is_array($current) || (!in_array($tag, array_keys($current)))) { //Insert New tag
                 $current[$tag] = $result;
                 if ($attributes_data) {
                     $current[$tag . '_attr'] = $attributes_data;
@@ -515,24 +515,24 @@ class VlcPlayer
             if (!isset($current[$tag])) { //New Key
                 $current[$tag]                           = $result;
                 $repeated_tag_index[$tag . '_' . $level] = 1;
-                if ($priority == 'tag' and $attributes_data) {
+                if ($priority == 'tag' && $attributes_data) {
                     $current[$tag . '_attr'] = $attributes_data;
                 }
             } else { //If taken, put all things inside a list(array)
-                if (isset($current[$tag][0]) and is_array($current[$tag])) {
+                if (isset($current[$tag][0]) && is_array($current[$tag])) {
                     //If it is already an array...
 
                     // ...push the new element into that array.
                     $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
                     
-                    if ($priority == 'tag' and $get_attributes and $attributes_data) {
+                    if ($priority == 'tag' && $get_attributes && $attributes_data) {
                         $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                     }
                     $repeated_tag_index[$tag . '_' . $level]++;
                 } else { //If it is not an array...
                     $current[$tag]                           = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
                     $repeated_tag_index[$tag . '_' . $level] = 1;
-                    if ($priority == 'tag' and $get_attributes) {
+                    if ($priority == 'tag' && $get_attributes) {
                         if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well
 
                             $current[$tag]['0_attr'] = $current[$tag . '_attr'];

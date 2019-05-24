@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,20 +35,18 @@ $db_results = Dba::read($sql);
 $results = array();
 
 while ($row = Dba::fetch_assoc($db_results)) {
-    if ($inDisk)
-	    $source = Art::get_from_source(array('file' => Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default').'art-'.$row['size'].'.jpg'), $row['object_type']);
-    else
+    if ($inDisk) {
+        $source = Art::get_from_source(array('file' => Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default') . 'art-' . $row['size'] . '.jpg'), $row['object_type']);
+    } else {
         $source = $row['image'];
+    }
 
     $id = $row['id'];
-        $dimensions = Core::image_dimensions($source);
-        if ($dimensions) {
-        $width = intval($dimensions['width']);
-        $height = intval($dimensions['height']);
+    $dimensions = Core::image_dimensions($source);
+    if (!empty($dimensions)) {
+        $width = (int) $dimensions['width'];
+        $height = (int) $dimensions['height'];
         $sql = "Update `image` SET `width`=". $width . ",`height`=".$height." WHERE `id`='".$id."'";
         Dba::write($sql);
     }
 }
-
-
-?>

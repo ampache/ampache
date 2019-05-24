@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,8 +29,8 @@
         <?php
             $count_temp_playlist = 1;
             if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-                if ($GLOBALS['user']->playlist) {
-                    $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
+                if (Core::get_global('user')->playlist) {
+                    $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
                 }
             }
         ?>
@@ -45,7 +45,7 @@
             echo AmpConfig::get('custom_text_footer');
         } else {
             ?>
-            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2017 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
+            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2019 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
         <?php
         } ?>
         <?php if (AmpConfig::get('show_footer_statistics')) {

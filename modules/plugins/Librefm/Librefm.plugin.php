@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -116,7 +116,7 @@ class Ampachelibrefm
         
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
-            debug_event($this->name, 'Session key missing', '5');
+            debug_event('librefm.plugin', 'Session key missing', 5);
 
             return false;
         }
@@ -128,13 +128,13 @@ class Ampachelibrefm
 
         // Make sure it wasn't within the last min
         if ($diff < 60) {
-            debug_event($this->name, 'Last song played within ' . $diff . ' seconds, not recording stats', '3');
+            debug_event('librefm.plugin', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
 
             return false;
         }
 
         if ($song->time < 30) {
-            debug_event($this->name, 'Song less then 30 seconds not queueing', '3');
+            debug_event('librefm.plugin', 'Song less then 30 seconds not queueing', 3);
 
             return false;
         }
@@ -149,12 +149,12 @@ class Ampachelibrefm
 
         // Go ahead and submit it now
         if (!$scrobbler->submit_tracks()) {
-            debug_event($this->name, 'Error Submit Failed: ' . $scrobbler->error_msg, '3');
+            debug_event('librefm.plugin', 'Error Submit Failed: ' . $scrobbler->error_msg, 3);
 
             return false;
         }
 
-        debug_event($this->name, 'Submission Successful', '5');
+        debug_event('librefm.plugin', 'Submission Successful', 5);
 
         return true;
     } // submit
@@ -167,18 +167,18 @@ class Ampachelibrefm
     {
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
-            debug_event($this->name, 'Session key missing', '5');
+            debug_event('librefm.plugin', 'Session key missing', 5);
 
             return false;
         }
         // Create our scrobbler and then queue it
         $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
         if (!$scrobbler->love($flagged, 'song', $song->f_artist_full, $song->title, $song->f_album_full)) {
-            debug_event($this->name, 'Error Love Failed: ' . $scrobbler->error_msg, '3');
+            debug_event('librefm.plugin', 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
             return false;
         }
-        debug_event($this->name, 'Sent Love Successfully', '5');
+        debug_event('librefm.plugin', 'Sent Love Successfully', 5);
 
         return true;
     } // set_flag
@@ -193,7 +193,7 @@ class Ampachelibrefm
         $scrobbler   = new scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
         if (!$session_key) {
-            debug_event($this->name, 'getSession Failed: ' . $scrobbler->error_msg, '3');
+            debug_event('librefm.plugin', 'getSession Failed: ' . $scrobbler->error_msg, 3);
 
             return false;
         }
@@ -201,7 +201,7 @@ class Ampachelibrefm
 
         // Update the preferences
         Preference::update('librefm_challenge', $user_id, $session_key);
-        debug_event($this->name, 'getSession Successful', '3');
+        debug_event('librefm.plugin', 'getSession Successful', 3);
 
         return true;
     } // get_session
@@ -222,7 +222,7 @@ class Ampachelibrefm
         if (strlen(trim($data['librefm_challenge']))) {
             $this->challenge= trim($data['librefm_challenge']);
         } else {
-            debug_event($this->name, 'No session key, not scrobbling (need to grant Ampache to libre.fm)', '5');
+            debug_event('librefm.plugin', 'No session key, not scrobbling (need to grant Ampache to libre.fm)', 5);
 
             return false;
         }

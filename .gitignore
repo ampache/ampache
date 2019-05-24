@@ -18,7 +18,6 @@
 /lib/vendor/
 /lib/components/
 web.config
-/config/motd.php
 /config/registration_agreement.php
 /.maintenance
 /modules/plugins/ampache-*
@@ -37,3 +36,6 @@ public/
 resources/
 storage/
 vendor/
+core/
+develop/
+master/

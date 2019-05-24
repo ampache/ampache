@@ -1,3 +1,5 @@
+/* global THREE */
+
 ATUtil = {
 	
 	getRandVec3D : function(minVal, maxVal) {
@@ -15,4 +17,4 @@ ATUtil = {
 	norm : function(value , min, max){
 		return (value - min) / (max - min);
 	}
-}
+};

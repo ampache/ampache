@@ -1,3 +1,5 @@
+/* global THREE */
+
 /**
  * @author alteredq / http://alteredqualia.com/
  */
@@ -17,7 +19,7 @@ THREE.MaskPass = function ( scene, camera ) {
 
 THREE.MaskPass.prototype = {
 
-	render: function ( renderer, writeBuffer, readBuffer, delta ) {
+	render( renderer, writeBuffer, readBuffer, delta ) {
 
 		var context = renderer.context;
 
@@ -75,7 +77,7 @@ THREE.ClearMaskPass = function () {
 
 THREE.ClearMaskPass.prototype = {
 
-	render: function ( renderer, writeBuffer, readBuffer, delta ) {
+	render( renderer, writeBuffer, readBuffer, delta ) {
 
 		var context = renderer.context;
 

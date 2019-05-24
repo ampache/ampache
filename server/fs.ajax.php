@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,7 @@ define('AJAX_INCLUDE', '1');
 require_once '../lib/init.php';
 $rootdir = Upload::get_root();
 if (empty($rootdir)) {
-    exit;
+    return false;
 }
 $rootdir .= DIRECTORY_SEPARATOR;
 ini_set('open_basedir', $rootdir);
@@ -58,6 +58,10 @@ class fs
 
         return $id;
     }
+
+    /**
+     * @param string $path
+     */
     protected function id($path)
     {
         $path = $this->real($path);
@@ -248,7 +252,7 @@ if (isset($_GET['operation'])) {
     $fs = new fs($rootdir);
     try {
         $rslt = null;
-        switch ($_GET['operation']) {
+        switch (Core::get_get('operation')) {
             case 'get_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
                 $rslt = $fs->lst($node, (isset($_GET['id']) && $_GET['id'] === '#'));
@@ -259,7 +263,7 @@ if (isset($_GET['operation'])) {
                 break;
             case 'create_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
-                $rslt = $fs->create($node, isset($_GET['text']) ? $_GET['text'] : '', (!isset($_GET['type']) || $_GET['type'] !== 'file'));
+                $rslt = $fs->create($node, isset($_GET['text']) ? $_GET['text'] : '', (!isset($_GET['type']) || filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) !== 'file'));
                 break;
             case 'rename_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
@@ -280,7 +284,7 @@ if (isset($_GET['operation'])) {
                 $rslt = $fs->copy($node, $parn);
                 break;
             default:
-                throw new Exception('Unsupported operation: ' . $_GET['operation']);
+                throw new Exception('Unsupported operation: ' . Core::get_get('operation'));
         }
         header('Content-Type: application/json; charset=utf8');
         echo json_encode($rslt);

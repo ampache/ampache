@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -89,7 +89,7 @@ class AmpacheGoogleMaps
                 $name = $place['results'][0]['formatted_address'];
             }
         } catch (Exception $e) {
-            debug_event('gmaps', 'Error getting location name: ' . $e->getMessage(), 1);
+            debug_event('googlemaps.plugin', 'Error getting location name: ' . $e->getMessage(), 1);
         }
         
         return $name;
@@ -98,7 +98,7 @@ class AmpacheGoogleMaps
     public function display_map($pts)
     {
         if (!$this->api_key) {
-            debug_event('gmaps', 'Missing api key, display map plugin skipped.', 3);
+            debug_event('googlemaps.plugin', 'Missing api key, display map plugin skipped.', 3);
 
             return false;
         }

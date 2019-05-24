@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -143,7 +143,7 @@ require $prefix . '/templates/install_header.inc.php';
             $modes = install_get_transcode_modes();
             foreach ($modes as $mode) {
                 ?>
-            <option value="<?php echo $mode; ?>" <?php if ($_REQUEST['transcode_template'] == $mode) {
+            <option value="<?php echo $mode; ?>" <?php if (Core::get_request('transcode_template') == $mode) {
                     echo 'selected';
                 } ?>><?php echo $mode; ?></option>
         <?php
@@ -174,11 +174,6 @@ require $prefix . '/templates/install_header.inc.php';
         <label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!isset($_REQUEST['backends']) || in_array('subsonic', $_REQUEST['backends'])) {
             echo 'checked';
         } ?>>Subsonic</label>
-    </div>
-    <div class="checkbox-inline">
-        <label><input type="checkbox" name="backends[]" value="plex" <?php if (isset($_REQUEST['backends']) && in_array('plex', $_REQUEST['backends'])) {
-            echo 'checked';
-        } ?>>Plex</label>
     </div>
     <div class="checkbox-inline">
         <label><input type="checkbox" name="backends[]" value="upnp" <?php if (isset($_REQUEST['backends']) && in_array('upnp', $_REQUEST['backends'])) {

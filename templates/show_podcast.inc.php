@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,7 +43,7 @@ UI::show_box_top($podcast->f_title, 'info-box');
     <?php
     if (AmpConfig::get('ratings')) {
         ?>
-    <div id="rating_<?php echo intval($podcast->id); ?>_podcast" style="display:inline;">
+    <div id="rating_<?php echo (int) ($podcast->id); ?>_podcast" style="display:inline;">
         <?php show_rating($podcast->id, 'podcast'); ?>
     </div>
     <?php

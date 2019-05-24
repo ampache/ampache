@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Edit Access Control List')); ?>
-<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo intval($access->id); ?>">
+<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo (int) ($access->id); ?>">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td><?php echo T_('Name'); ?>: </td>

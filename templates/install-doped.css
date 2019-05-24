@@ -26,3 +26,7 @@
 body {
     margin-bottom: 10px;
 }
+.navbar-inverse {
+    background-color: #000;
+    background-image: none;
+}

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,18 +23,20 @@
 $web_path = AmpConfig::get('web_path');
 $thcount  = 8;
 ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="album">
     <thead>
         <tr class="th-top">
+        <div class="even libitem_menu">
             <th class="cel_play essential"></th>
         <?php if (Art::is_enabled()) {
     ++$thcount; ?>
             <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
         <?php
 } ?>
+</div>
             <th class="cel_album essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_artist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Artist'), 'album_sort_artist'); ?></th>
@@ -140,6 +142,6 @@ $thcount  = 8;
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

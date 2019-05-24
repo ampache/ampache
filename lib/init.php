@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,7 +46,7 @@ if (!file_exists($configfile)) {
     $link = $path . '/install.php';
 } else {
     // Make sure the config file is set up and parsable
-    $results = @parse_ini_file($configfile);
+    $results = parse_ini_file($configfile);
 
     if (!count($results)) {
         $link = $path . '/test.php?action=config';
@@ -62,13 +62,14 @@ if (!check_php() || !check_dependencies_folder()) {
 // Do the redirect if we can't continue
 if (!empty($link)) {
     header("Location: $link");
-    exit();
+
+    return false;
 }
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']            = '3.9.1-develop';
-$results['int_config_version'] = '34';
+$results['version']            = '4.0.0-core';
+$results['int_config_version'] = '35';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -156,7 +157,8 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         if (!Session::auth_remember()) {
             Auth::logout($_COOKIE[AmpConfig::get('session_name')]);
-            exit;
+
+            return false;
         }
     }
 
@@ -167,13 +169,14 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
     /* If the user ID doesn't exist deny them */
-    if (!$GLOBALS['user']->id && !AmpConfig::get('demo_mode')) {
+    if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
         Auth::logout(session_id());
-        exit;
+
+        return false;
     }
 
     /* Load preferences and theme */
-    $GLOBALS['user']->update_last_seen();
+    Core::get_global('user')->update_last_seen();
 } elseif (!AmpConfig::get('use_auth')) {
     $auth['success']      = 1;
     $auth['username']     = '-1';
@@ -188,7 +191,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         $GLOBALS['user']           = new User($auth['username']);
         $GLOBALS['user']->username = $auth['username'];
         $GLOBALS['user']->fullname = $auth['fullname'];
-        $GLOBALS['user']->access   = intval($auth['access']);
+        $GLOBALS['user']->access   = (int) ($auth['access']);
     } else {
         Session::check();
         if ($_SESSION['userdata']['username']) {
@@ -198,13 +201,14 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user']->id       = -1;
             $GLOBALS['user']->username = $auth['username'];
             $GLOBALS['user']->fullname = $auth['fullname'];
-            $GLOBALS['user']->access   = intval($auth['access']);
+            $GLOBALS['user']->access   = (int) ($auth['access']);
         }
-        if (!$GLOBALS['user']->id and !AmpConfig::get('demo_mode')) {
+        if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id());
-            exit;
+
+            return false;
         }
-        $GLOBALS['user']->update_last_seen();
+        Core::get_global('user')->update_last_seen();
     }
 }
 // If Auth, but no session is set
@@ -225,12 +229,12 @@ Preference::init();
 // Load gettext mojo
 load_gettext();
 
-$GLOBALS['user']->format(false);
+Core::get_global('user')->format(false);
 
 if (session_id()) {
     Session::extend(session_id());
     // We only need to create the tmp playlist if we have a session
-    $GLOBALS['user']->load_playlist();
+    Core::get_global('user')->load_playlist();
 }
 
 /* Add in some variables for ajax done here because we need the user */
@@ -248,7 +252,8 @@ unset($results);
 if (!defined('OUTDATED_DATABASE_OK')) {
     if (Update::need_update()) {
         header("Location: " . AmpConfig::get('web_path') . "/update.php");
-        exit();
+
+        return false;
     }
 }
 // For the XMLRPC stuff
@@ -257,4 +262,12 @@ $GLOBALS['xmlrpc_internalencoding'] = AmpConfig::get('site_charset');
 // If debug is on GIMMIE DA ERRORS
 if (AmpConfig::get('debug')) {
     error_reporting(E_ALL);
+}
+
+// set a mobile tag so we can change things for mobile in the future
+$_SESSION['mobile'] = false;
+$user_agent         = $_SERVER['HTTP_USER_AGENT'];
+
+if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPad') || strpos($user_agent, 'iPhone'))) {
+    $_SESSION['mobile'] = true;
 }

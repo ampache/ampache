@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,6 +46,22 @@ class Mailer
         // Eh bien.
     } // Constructor
 
+    /*
+     * is_mail_enabled
+     *
+     * Check that the mail feature is enabled
+     * @return boolean
+     */
+    public static function is_mail_enabled()
+    {
+        if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
+            return true;
+        }
+        
+        // by default you actually want people to set up mail first
+        return false;
+    }
+    
     /**
      * validate_address
      *

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,7 +74,7 @@ class Ampache_RSS
             }
 
             XML_Data::set_type('rss');
-            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $this->get_description(), $pub_date);
+            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $pub_date);
 
             return $xml_document;
         }
@@ -234,7 +234,7 @@ class Ampache_RSS
             $song   = new Song($item['object_id']);
             if ($song->enabled) {
                 $song->format();
-                $amount     = intval(time() - $item['date'] + 2);
+                $amount     = (int) (time() - $item['date'] + 2);
                 $final      = '0';
                 $time_place = '0';
                 while ($amount >= 1) {
@@ -286,8 +286,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $album = new Album($id);
+        foreach ($ids as $albumid) {
+            $album = new Album($albumid);
             $album->format();
 
             $xml_array = array('title' => $album->f_name,
@@ -314,8 +314,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $artist = new Artist($id);
+        foreach ($ids as $artistid) {
+            $artist = new Artist($artistid);
             $artist->format();
 
             $xml_array = array('title' => $artist->f_name,
@@ -342,8 +342,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $shout = new Shoutbox($id);
+        foreach ($ids as $shoutid) {
+            $shout = new Shoutbox($shoutid);
             $shout->format();
             $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
             if ($object !== null) {

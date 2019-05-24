@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
     case 'pvmsg':
     case 'podcast':
     case 'podcast_episode':
-        $browse->set_type($_REQUEST['action']);
+        $browse->set_type(Core::get_request('action'));
         $browse->set_simple_browse(true);
     break;
 } // end switch
@@ -198,9 +198,9 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('creation_date', 'DESC');
         $folder = $_REQUEST['folder'];
         if ($folder === "sent") {
-            $browse->set_filter('user', $GLOBALS['user']->id);
+            $browse->set_filter('user', Core::get_global('user')->id);
         } else {
-            $browse->set_filter('to_user', $GLOBALS['user']->id);
+            $browse->set_filter('to_user', Core::get_global('user')->id);
         }
         $browse->update_browse_from_session();
         $browse->show_objects();

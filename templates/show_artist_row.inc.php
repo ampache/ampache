@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,7 +41,7 @@ if (Art::is_enabled()) {
         $name = scrub_out($libitem->full_name); ?>
 <td class="cel_cover">
     <?php
-    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
+    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
         Art::display('artist', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <?php

@@ -1,10 +1,12 @@
+/* global THREE */
+
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
 THREE.ShaderPass = function ( shader, textureID ) {
 
-	this.textureID = ( textureID !== undefined ) ? textureID : "tDiffuse";
+	this.textureID = ( typeof textureID !== "undefined" ) ? textureID : "tDiffuse";
 
 	this.uniforms = THREE.UniformsUtils.clone( shader.uniforms );
 
@@ -26,7 +28,7 @@ THREE.ShaderPass = function ( shader, textureID ) {
 
 THREE.ShaderPass.prototype = {
 
-	render: function ( renderer, writeBuffer, readBuffer, delta ) {
+	render( renderer, writeBuffer, readBuffer, delta ) {
 
 		if ( this.uniforms[ this.textureID ] ) {
 

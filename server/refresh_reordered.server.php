@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,12 +24,12 @@ define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 
-debug_event('refresh_reordered.server.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
+debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
-/* Switch on the action passed in */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'refresh_playlist_medias':
-        $playlist = new Playlist($_REQUEST['id']);
+        $playlist = new Playlist(Core::get_request('id'));
         $playlist->format();
         $object_ids = $playlist->get_items();
         $browse     = new Browse();
@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
         $browse->set_show_header(true);
         $browse->set_type('song');
         $browse->set_simple_browse(true);
-        $browse->set_filter('album', $_REQUEST['id']);
+        $browse->set_filter('album', Core::get_request('id'));
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
         echo "<div id='browse_content_song' class='browse_content'>";
