@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
         $libitem->format();
 
         xoutput_headers();
-        $results['id'] = $new_id;
+        $results = array('id' => $new_id);
         echo xoutput_from_array($results);
 
         return false;
