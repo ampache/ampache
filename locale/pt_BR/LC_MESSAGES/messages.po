@@ -7,14 +7,14 @@
 # Carlos Alexandre <karuvuariyo@gmail.com>, 2015
 # Ione Souza Junior <junior@ionixjunior.com.br>, 2015-2016
 # Manuel <psyvirusx@gmail.com>, 2017
-# Paulo Schopf, 2017-2018
+# Paulo Schopf, 2017-2019
 # Wellington Oliveira dos Santos <welblade@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2018-11-11 18:58+0000\n"
+"POT-Creation-Date: 2019-05-26 15:10+0200\n"
+"PO-Revision-Date: 2019-03-19 21:30+0000\n"
 "Last-Translator: Paulo Schopf\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/ampache/ampache/"
 "language/pt_BR/)\n"
@@ -737,7 +737,7 @@ msgstr "ERRO: Iconv é necessário para esta funcionalidade, saindo"
 #: ../../bin/fix_filenames.inc:51
 #, php-format
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
@@ -3318,7 +3318,7 @@ msgstr "ERRO"
 msgid "WARNING"
 msgstr "AVISO"
 
-#: ../../lib/general.lib.php:213
+#: ../../lib/general.lib.php:210
 #, php-format
 msgid "Unknown %s"
 msgstr "%s desconhecido"
@@ -3667,24 +3667,16 @@ msgstr "Ligado"
 msgid "Off"
 msgstr "Desligado"
 
-#: ../../lostpassword.php:39
-msgid "Password has been sent"
-msgstr "A senha foi enviada"
-
-#: ../../lostpassword.php:41
-msgid "Password has not been sent"
-msgstr "A senha não foi enviada"
-
-#: ../../lostpassword.php:60
+#: ../../lostpassword.php:71
 msgid "Lost Password"
 msgstr "Esqueci a senha"
 
-#: ../../lostpassword.php:64
+#: ../../lostpassword.php:75
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
 msgstr "Um usuário de %s solicitou uma redefinição de senha para '%s'."
 
-#: ../../lostpassword.php:66
+#: ../../lostpassword.php:77
 #, php-format
 msgid "The password has been set to: %s"
 msgstr "A senha foi definida como: %s"
@@ -8665,7 +8657,7 @@ msgstr "Não foi possível excluir este vídeo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 18:02:37 CEST
+# Last Update: 17.03.2019 12:16:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

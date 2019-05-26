@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2019-02-24 21:46+0000\n"
+"POT-Creation-Date: 2019-05-26 15:10+0200\n"
+"PO-Revision-Date: 2019-03-27 11:51+0000\n"
 "Last-Translator: Maciej Bator\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/ampache/ampache/"
 "language/pl_PL/)\n"
@@ -742,7 +742,7 @@ msgstr "BŁĄD: Ta funkcjonalność wymaga Iconv, rezygnacja"
 #: ../../bin/fix_filenames.inc:51
 #, php-format
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
@@ -3333,7 +3333,7 @@ msgstr "BŁĄD"
 msgid "WARNING"
 msgstr "OSTRZEŻENIE"
 
-#: ../../lib/general.lib.php:213
+#: ../../lib/general.lib.php:210
 #, php-format
 msgid "Unknown %s"
 msgstr "Nieznany %s"
@@ -3680,24 +3680,16 @@ msgstr "Włączone"
 msgid "Off"
 msgstr "Wyłączone"
 
-#: ../../lostpassword.php:39
-msgid "Password has been sent"
-msgstr "Hasło zostało wysłane"
-
-#: ../../lostpassword.php:41
-msgid "Password has not been sent"
-msgstr "Hasło nie zostało wysłane"
-
-#: ../../lostpassword.php:60
+#: ../../lostpassword.php:71
 msgid "Lost Password"
 msgstr "Nie pamiętam hasła"
 
-#: ../../lostpassword.php:64
+#: ../../lostpassword.php:75
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
 msgstr "Użytkownik z %s zażądał zresetowania hasła dla \"%s\"."
 
-#: ../../lostpassword.php:66
+#: ../../lostpassword.php:77
 #, php-format
 msgid "The password has been set to: %s"
 msgstr "Hasło zostało ustawione na: %s"
@@ -8685,7 +8677,7 @@ msgstr "Nie można usunąć tego wideo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 18:02:37 CEST
+# Last Update: 17.03.2019 12:16:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Alexander Son <soneus72@snu.ac.kr>, 2019
 # Sunghun Park <shpark.x1@gmail.com>, 2017
 # Sunghun Park <shpark.x1@gmail.com>, 2017
 # 유영재 <yjsoft@yjsoft.pe.kr>, 2018
@@ -10,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2018-10-26 15:36+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"POT-Creation-Date: 2019-05-26 15:10+0200\n"
+"PO-Revision-Date: 2019-04-04 08:34+0000\n"
+"Last-Translator: Alexander Son <soneus72@snu.ac.kr>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/ampache/ampache/"
 "language/ko_KR/)\n"
 "Language: ko_KR\n"
@@ -252,7 +253,7 @@ msgstr ""
 
 #: ../../admin/system.php:51
 msgid "Database Charset Updated"
-msgstr ""
+msgstr "데이타베이스 문자 설정이 수정되었습니다"
 
 #: ../../admin/system.php:51
 msgid ""
@@ -280,7 +281,7 @@ msgstr "오류 사용자 이름이 이미 존재합니다"
 #: ../../admin/users.php:71 ../../admin/users.php:137
 #: ../../lib/class/user.class.php:601
 msgid "Error Passwords don't match"
-msgstr ""
+msgstr "오류 암호가 일치하지 않습니다"
 
 #: ../../admin/users.php:76 ../../admin/users.php:151 ../../register.php:95
 msgid "Invalid email address"
@@ -292,7 +293,7 @@ msgstr ""
 
 #: ../../admin/users.php:114
 msgid "updated"
-msgstr ""
+msgstr "수정됨"
 
 #: ../../admin/users.php:163 ../../register.php:150
 msgid "Error: Insert Failed"
@@ -404,7 +405,7 @@ msgstr "새 API 키 생성"
 
 #: ../../admin/users.php:252
 msgid "Confirm API Key Generation"
-msgstr ""
+msgstr "API 키 생성 확인"
 
 #: ../../admin/users.php:268
 msgid "API Key Generated"
@@ -522,7 +523,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:80
 msgid "Importing playlist/s"
-msgstr ""
+msgstr "연주 목록 가져오는 중"
 
 #: ../../bin/catalog_update.inc:84
 msgid "Database table optimization"
@@ -571,7 +572,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:201
 msgid "- Catalog Update Help -"
-msgstr ""
+msgstr "- 카탈로그 수정 도움말 - "
 
 #: ../../bin/catalog_update.inc:203
 msgid ""
@@ -599,7 +600,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:217
 msgid "Temporarily deactivates PHP memory limit."
-msgstr ""
+msgstr "일시적으로 PHP 메모리 제한을 사용할 수 없습니다"
 
 #: ../../bin/catalog_update.inc:219
 msgid "Cleans catalogs from orphaned entries."
@@ -621,7 +622,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:227
 msgid "Imports playlists."
-msgstr ""
+msgstr "연주 목록 가져오기."
 
 #: ../../bin/catalog_update.inc:229
 msgid "Optimizes Database Tables."
@@ -832,7 +833,7 @@ msgstr ""
 
 #: ../../bin/install/install_db.inc:89
 msgid "Database creation failed"
-msgstr ""
+msgstr "데이타베이스 생성 실패"
 
 #: ../../bin/install/install_db.inc:101
 msgid "Config file creation failed"
@@ -860,7 +861,7 @@ msgstr ""
 
 #: ../../bin/print_tags.inc:37
 msgid "File not found."
-msgstr ""
+msgstr "파일이 없습니다"
 
 #: ../../bin/print_tags.inc:43
 #, php-format
@@ -3247,7 +3248,7 @@ msgstr ""
 msgid "WARNING"
 msgstr ""
 
-#: ../../lib/general.lib.php:213
+#: ../../lib/general.lib.php:210
 #, php-format
 msgid "Unknown %s"
 msgstr ""
@@ -3588,24 +3589,16 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: ../../lostpassword.php:39
-msgid "Password has been sent"
-msgstr ""
-
-#: ../../lostpassword.php:41
-msgid "Password has not been sent"
-msgstr ""
-
-#: ../../lostpassword.php:60
+#: ../../lostpassword.php:71
 msgid "Lost Password"
 msgstr ""
 
-#: ../../lostpassword.php:64
+#: ../../lostpassword.php:75
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
 msgstr ""
 
-#: ../../lostpassword.php:66
+#: ../../lostpassword.php:77
 #, php-format
 msgid "The password has been set to: %s"
 msgstr ""
@@ -5336,7 +5329,7 @@ msgstr ""
 
 #: ../../templates/show_add_upload.inc.php:224
 msgid "Browse"
-msgstr ""
+msgstr "탐색하기"
 
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
@@ -5345,7 +5338,7 @@ msgstr ""
 #: ../../templates/show_add_user.inc.php:80
 #: ../../templates/show_edit_user.inc.php:104
 msgid "User Access Level"
-msgstr ""
+msgstr "사용자 접근 수준"
 
 #: ../../templates/show_add_user.inc.php:105
 #: ../../templates/sidebar_admin.inc.php:33
@@ -5356,25 +5349,25 @@ msgstr ""
 #: ../../templates/show_album.inc.php:50 ../../templates/show_artist.inc.php:43
 #: ../../templates/show_label.inc.php:35 ../../templates/show_song.inc.php:153
 msgid "Search on Google ..."
-msgstr ""
+msgstr "구글에서 찾기 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:46
 #: ../../templates/show_album.inc.php:51 ../../templates/show_artist.inc.php:44
 #: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:154
 msgid "Search on DuckDuckGo ..."
-msgstr ""
+msgstr "덕덕고에서 찾기 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:47
 #: ../../templates/show_album.inc.php:52 ../../templates/show_artist.inc.php:45
 #: ../../templates/show_label.inc.php:37
 msgid "Search on Wikipedia ..."
-msgstr ""
+msgstr "위키피디아에서 찾기 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:48
 #: ../../templates/show_album.inc.php:53 ../../templates/show_artist.inc.php:46
 #: ../../templates/show_label.inc.php:38 ../../templates/show_song.inc.php:155
 msgid "Search on Last.fm ..."
-msgstr ""
+msgstr "라스트에프엠에서 찾기 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:59
 #: ../../templates/show_album.inc.php:100
@@ -5488,7 +5481,7 @@ msgstr ""
 
 #: ../../templates/show_album.inc.php:207
 msgid "Edit Album"
-msgstr ""
+msgstr "앨범 편집하기"
 
 #: ../../templates/show_albums.inc.php:35
 #: ../../templates/show_albums.inc.php:109
@@ -5607,7 +5600,7 @@ msgstr ""
 #: ../../templates/show_now_playing_row.inc.php:83
 #: ../../templates/show_now_playing_row.inc.php:89
 msgid "Loading..."
-msgstr ""
+msgstr "불러 오는 중 ..."
 
 #: ../../templates/show_artist.inc.php:101
 #: ../../templates/show_artist.inc.php:103
@@ -5630,7 +5623,7 @@ msgstr ""
 #: ../../templates/show_tvshow_season.inc.php:61
 #: ../../templates/show_tvshow_season.inc.php:62
 msgid "Play all"
-msgstr ""
+msgstr "전부 듣기"
 
 #: ../../templates/show_artist.inc.php:124
 #: ../../templates/show_artist.inc.php:125
@@ -5738,14 +5731,14 @@ msgstr ""
 #: ../../templates/show_channel_row.inc.php:37
 #: ../../templates/show_search_row.inc.php:46
 msgid "Yes"
-msgstr ""
+msgstr "예"
 
 #: ../../templates/show_broadcast_row.inc.php:33
 #: ../../templates/show_channel_row.inc.php:36
 #: ../../templates/show_channel_row.inc.php:37
 #: ../../templates/show_search_row.inc.php:46
 msgid "No"
-msgstr ""
+msgstr "아니오"
 
 #: ../../templates/show_broadcasts_dialog.inc.php:39
 msgid "New broadcast"
@@ -5756,7 +5749,7 @@ msgstr ""
 #: ../../templates/show_edit_channel_row.inc.php:88
 #: ../../templates/show_song.inc.php:151
 msgid "Genre"
-msgstr ""
+msgstr "장르"
 
 #: ../../templates/show_broadcasts.inc.php:33
 msgid "Started"
@@ -6410,7 +6403,7 @@ msgstr ""
 
 #: ../../templates/show_export.inc.php:59
 msgid "Export"
-msgstr ""
+msgstr "내보내기"
 
 #: ../../templates/show_gather_art.inc.php:23
 msgid "Art Search"
@@ -6454,19 +6447,19 @@ msgstr ""
 
 #: ../../templates/show_graphs.inc.php:60
 msgid "Zoom"
-msgstr ""
+msgstr "확대"
 
 #: ../../templates/show_graphs.inc.php:66
 msgid "Month"
-msgstr ""
+msgstr "월"
 
 #: ../../templates/show_graphs.inc.php:67
 msgid "Day"
-msgstr ""
+msgstr "일"
 
 #: ../../templates/show_graphs.inc.php:68
 msgid "Hour"
-msgstr ""
+msgstr "시"
 
 #: ../../templates/show_highest.inc.php:23
 #: ../../templates/show_newest.inc.php:23
@@ -6474,7 +6467,7 @@ msgstr ""
 #: ../../templates/show_recent.inc.php:23
 #: ../../templates/sidebar_home.inc.php:128
 msgid "Information"
-msgstr ""
+msgstr "정보"
 
 #: ../../templates/show_html5_player_headers.inc.php:222
 msgid "Your browser doesn't support this feature."
@@ -6631,7 +6624,7 @@ msgstr ""
 
 #: ../../templates/show_install_check.inc.php:60
 msgid "ampache.cfg.php is writable"
-msgstr ""
+msgstr "ampache.cfg.php 는 쓰기 가능하다"
 
 #: ../../templates/show_install_check.inc.php:62
 msgid ""
@@ -6669,19 +6662,19 @@ msgstr ""
 #: ../../templates/show_install_config.inc.php:80
 #: ../../templates/show_install.inc.php:56
 msgid "MySQL Hostname"
-msgstr ""
+msgstr "MySQL 호스트명"
 
 #: ../../templates/show_install_config.inc.php:86
 msgid "MySQL Port (optional)"
-msgstr ""
+msgstr "MySQL 포트(선택사항)"
 
 #: ../../templates/show_install_config.inc.php:92
 msgid "MySQL Username"
-msgstr ""
+msgstr "MySQL 사용자명"
 
 #: ../../templates/show_install_config.inc.php:98
 msgid "MySQL Password"
-msgstr ""
+msgstr "MySQL 암호"
 
 #: ../../templates/show_install_config.inc.php:108
 msgid "Installation type"
@@ -6745,7 +6738,7 @@ msgstr ""
 
 #: ../../templates/show_install_config.inc.php:138
 msgid "Template Configuration"
-msgstr ""
+msgstr "템플릿 설정"
 
 #: ../../templates/show_install_config.inc.php:155
 msgid ""
@@ -7624,7 +7617,7 @@ msgstr ""
 
 #: ../../templates/show_shared_objects.inc.php:30
 msgid "Last Visit"
-msgstr ""
+msgstr "마지막 방문"
 
 #: ../../templates/show_shared_objects.inc.php:31
 msgid "Counter"
@@ -7681,7 +7674,7 @@ msgstr ""
 
 #: ../../templates/show_song_row.inc.php:95
 msgid "Song Information"
-msgstr ""
+msgstr "곡 정보"
 
 #: ../../templates/show_song_row.inc.php:115
 msgid "Song edit"
@@ -7697,7 +7690,7 @@ msgstr ""
 
 #: ../../templates/show_stats.inc.php:31
 msgid "Connected Users"
-msgstr ""
+msgstr "연결된 사용자들"
 
 #: ../../templates/show_stats.inc.php:32
 msgid "Total Users"
@@ -7733,11 +7726,11 @@ msgstr ""
 
 #: ../../templates/show_test.inc.php:51
 msgid "Web Installation"
-msgstr ""
+msgstr "웹 설치"
 
 #: ../../templates/show_test_table.inc.php:24
 msgid "PHP version"
-msgstr ""
+msgstr "PHP 버전"
 
 #: ../../templates/show_test_table.inc.php:29
 msgid ""
@@ -7747,7 +7740,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:33
 msgid "Dependencies"
-msgstr ""
+msgstr "의존성"
 
 #: ../../templates/show_test_table.inc.php:38
 msgid "This tests whether Ampache dependencies are installed."
@@ -7782,7 +7775,7 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:66
 msgid "PHP PDO extension"
-msgstr ""
+msgstr "PHP PDO 확장"
 
 #: ../../templates/show_test_table.inc.php:71
 msgid ""
@@ -8337,7 +8330,7 @@ msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:41
 msgid "Account"
-msgstr ""
+msgstr "계정"
 
 #: ../../tvshow_seasons.php:38 ../../tvshow_seasons.php:58
 #: ../../tvshow_seasons.php:60
@@ -8413,7 +8406,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 18:02:37 CEST
+# Last Update: 17.03.2019 12:16:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8629,7 +8622,7 @@ msgstr ""
 
 #: Database preference table id 109
 msgid "Top menu"
-msgstr ""
+msgstr "탑 메뉴"
 
 #: Database preference table id 110
 msgid "Clear democratic votes of expired user sessions"
@@ -8814,7 +8807,7 @@ msgstr ""
 
 #: Database preference table id 164
 msgid "Amazon base url"
-msgstr ""
+msgstr "아마존 기본 url"
 
 #: Database preference table id 165
 msgid "Amazon max results pages"
@@ -8822,11 +8815,11 @@ msgstr ""
 
 #: Database preference table id 166
 msgid "Amazon Access Key ID"
-msgstr ""
+msgstr "아마존 접근 키 ID"
 
 #: Database preference table id 167
 msgid "Amazon Secret Access Key"
-msgstr ""
+msgstr "아마존 비밀 접근 키"
 
 #: Database preference table id 168
 msgid "Amazon associate tag"
@@ -8846,7 +8839,7 @@ msgstr ""
 
 #: Database preference subcategory table id 154
 msgid "theme"
-msgstr ""
+msgstr "주제"
 
 #: Database preference subcategory table id 155
 msgid "custom"
@@ -8854,4 +8847,4 @@ msgstr ""
 
 #: Database preference subcategory table id 164
 msgid "amazon"
-msgstr ""
+msgstr "아마존"
