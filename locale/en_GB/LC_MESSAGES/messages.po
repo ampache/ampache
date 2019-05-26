@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# lachlan <lachlan.00@gmail.com>, 2019
 # Manuel <psyvirusx@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2018-10-26 15:36+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"POT-Creation-Date: 2019-05-26 15:10+0200\n"
+"PO-Revision-Date: 2019-05-17 22:59+0000\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/ampache/"
 "ampache/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -192,7 +193,7 @@ msgstr ""
 
 #: ../../admin/modules.php:61
 msgid "Failed to enable the module, Catalog Error"
-msgstr ""
+msgstr "Failed to enable the module, Catalogue Error"
 
 #: ../../admin/modules.php:70
 msgid "Module enabled"
@@ -208,7 +209,7 @@ msgstr ""
 
 #: ../../admin/modules.php:105
 msgid "Failed to disable module, Catalog Error"
-msgstr ""
+msgstr "Failed to disable the module, Catalogue Error"
 
 #: ../../admin/modules.php:128
 msgid "Unable to Install Plugin"
@@ -498,11 +499,11 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:56
 msgid "Setting catalog name"
-msgstr ""
+msgstr "Setting catalogue name"
 
 #: ../../bin/catalog_update.inc:60
 msgid "Setting catalog type"
-msgstr ""
+msgstr "Setting catalogue type"
 
 #: ../../bin/catalog_update.inc:64
 msgid "Cleaning catalog/s"
@@ -578,6 +579,8 @@ msgid ""
 "Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-"
 "a|-g|-i|-o]"
 msgstr ""
+"Usage: catalog_update.inc [-n CATALOGUE NAME] [-t CATALOGUE TYPE] [-h|-m|-c|-"
+"v|-a|-g|-i|-o]"
 
 #: ../../bin/catalog_update.inc:207
 msgid ""
@@ -591,11 +594,11 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:213
 msgid "Name of Catalog (Optional)"
-msgstr ""
+msgstr "Name of Catalogue (Optional)"
 
 #: ../../bin/catalog_update.inc:215
 msgid "Type of Catalog (Optional)"
-msgstr ""
+msgstr "Type of Catalogue (Optional)"
 
 #: ../../bin/catalog_update.inc:217
 msgid "Temporarily deactivates PHP memory limit."
@@ -1597,7 +1600,7 @@ msgstr ""
 
 #: ../../lib/class/browse.class.php:240
 msgid "Playlist Medias"
-msgstr ""
+msgstr "Playlist Media"
 
 #: ../../lib/class/browse.class.php:244
 msgid "Current Playlist"
@@ -1747,8 +1750,8 @@ msgstr ""
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Catalogue Clean Done. %dfile(s) removed."
+msgstr[1] "Catalogue Clean Done. %d files removed."
 
 #: ../../lib/class/catalog.class.php:1869
 #, php-format
@@ -1768,6 +1771,8 @@ msgid ""
 "This subdirectory is not part of an existing catalog. Update cannot be "
 "processed."
 msgstr ""
+"This subdirectory is not part of an existing catalogue. Update cannot be "
+"processed."
 
 #: ../../lib/class/channel.class.php:186
 msgid "Start Channel"
@@ -1813,7 +1818,7 @@ msgstr ""
 #: ../../templates/show_edit_user.inc.php:112
 #: ../../templates/show_preference_box.inc.php:82
 msgid "Catalog Manager"
-msgstr ""
+msgstr "Catalogue Manager"
 
 #: ../../lib/class/label.class.php:153 ../../lib/class/search.class.php:260
 #: ../../templates/show_edit_song_row.inc.php:81
@@ -1845,7 +1850,7 @@ msgstr ""
 
 #: ../../lib/class/live_stream.class.php:253
 msgid "Invalid Catalog"
-msgstr ""
+msgstr "Invalid Catalogue"
 
 #: ../../lib/class/localplay.class.php:632
 msgid "Paused"
@@ -1884,11 +1889,11 @@ msgstr ""
 
 #: ../../lib/class/podcast.class.php:279
 msgid "Target catalog required"
-msgstr ""
+msgstr "Target catalogue required"
 
 #: ../../lib/class/podcast.class.php:283
 msgid "Wrong target catalog type"
-msgstr ""
+msgstr "Wrong catalogue type"
 
 #: ../../lib/class/podcast.class.php:303
 msgid "Cannot access the feed."
@@ -2147,7 +2152,7 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:142
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
-msgstr ""
+msgstr "Favourites"
 
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
@@ -2192,7 +2197,7 @@ msgstr ""
 #: ../../templates/show_add_podcast.inc.php:34
 #: ../../templates/show_export.inc.php:32
 msgid "Catalog"
-msgstr ""
+msgstr "Catalogue"
 
 #: ../../lib/class/search.class.php:429 ../../lib/ui.lib.php:135
 #: ../../templates/show_manage_democratic.inc.php:26
@@ -2465,7 +2470,7 @@ msgstr ""
 
 #: ../../lib/class/useractivity.class.php:219
 msgid "favorited"
-msgstr ""
+msgstr "favourited"
 
 #: ../../lib/class/useractivity.class.php:222
 msgid "started to follow"
@@ -3255,7 +3260,7 @@ msgstr ""
 msgid "WARNING"
 msgstr ""
 
-#: ../../lib/general.lib.php:213
+#: ../../lib/general.lib.php:210
 #, php-format
 msgid "Unknown %s"
 msgstr ""
@@ -3549,7 +3554,7 @@ msgstr ""
 
 #: ../../lib/ui.lib.php:144 ../../lib/ui.lib.php:148
 msgid "Admin-Catalog"
-msgstr ""
+msgstr "Admin-Catalogue"
 
 #: ../../lib/ui.lib.php:152
 msgid "Admin-User Management"
@@ -3596,24 +3601,16 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: ../../lostpassword.php:39
-msgid "Password has been sent"
-msgstr ""
-
-#: ../../lostpassword.php:41
-msgid "Password has not been sent"
-msgstr ""
-
-#: ../../lostpassword.php:60
+#: ../../lostpassword.php:71
 msgid "Lost Password"
 msgstr ""
 
-#: ../../lostpassword.php:64
+#: ../../lostpassword.php:75
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
 msgstr ""
 
-#: ../../lostpassword.php:66
+#: ../../lostpassword.php:77
 #, php-format
 msgid "The password has been set to: %s"
 msgstr ""
@@ -3647,7 +3644,7 @@ msgstr ""
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:163
 #, php-format
 msgid "Error: Catalog with %s already exists"
-msgstr ""
+msgstr "Error: Catalogue with %s already exists"
 
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:87
 msgid "Beets Server URI"
@@ -3711,6 +3708,7 @@ msgstr ""
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:181
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr ""
+"Error: API Key, Secret and Access Token Required for Dropbox Catalogues"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:188
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:492
@@ -3729,7 +3727,7 @@ msgstr ""
 #: ../../modules/catalog/seafile/seafile.catalog.php:267
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
-msgstr ""
+msgstr "Catalogue Update Finished. Total Media: [%s]"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:261
 #: ../../modules/catalog/seafile/seafile.catalog.php:270
@@ -3765,7 +3763,7 @@ msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:182
 msgid "Error: Defined Path is inside an existing catalog"
-msgstr ""
+msgstr "Error: Defined Path is inside and existing catalogue"
 
 #: ../../modules/catalog/local/local.catalog.php:190
 #, php-format
@@ -3811,6 +3809,8 @@ msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
 "Second: [%s]"
 msgstr ""
+"Catalogue Update Finished. Total Time: [%s] Total Media: [%s] Media Per "
+"Second: [%s]"
 
 #: ../../modules/catalog/local/local.catalog.php:575
 #, php-format
@@ -3819,7 +3819,7 @@ msgstr ""
 
 #: ../../modules/catalog/local/local.catalog.php:604
 msgid "Catalog Root unreadable, stopping clean"
-msgstr ""
+msgstr "Catalogue Root unreadable, stopping clean"
 
 #: ../../modules/catalog/local/local.catalog.php:630
 msgid "All files would be removed. Doing nothing"
@@ -3854,7 +3854,7 @@ msgstr ""
 
 #: ../../modules/catalog/remote/remote.catalog.php:150
 msgid "Error: Username and Password Required for Remote Catalogs"
-msgstr ""
+msgstr "Error: Username and Password Required for Remote Catalogues"
 
 #: ../../modules/catalog/remote/remote.catalog.php:181
 msgid "Running Remote Update"
@@ -3867,11 +3867,11 @@ msgstr ""
 #: ../../modules/catalog/remote/remote.catalog.php:245
 #, php-format
 msgid "%u remote catalog(s) found (%u songs)"
-msgstr ""
+msgstr "%u remote catalogue(s) found (%u songs)"
 
 #: ../../modules/catalog/remote/remote.catalog.php:281
 msgid "Completed updating remote catalog(s)."
-msgstr ""
+msgstr "Completed updating remote catalogue(s)."
 
 #: ../../modules/catalog/seafile/SeafileAdapter.php:45
 msgid "Could not authenticate with Seafile"
@@ -3906,6 +3906,7 @@ msgstr ""
 msgid ""
 "After creating the catalog, you must 'Make it ready' on the catalog table."
 msgstr ""
+"After creating the catalogue, you must 'Make it ready' on the catalog table."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:122
 msgid "Server URI"
@@ -3987,7 +3988,7 @@ msgstr ""
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:172
 msgid "Error: UserID and Secret Required for SoundCloud Catalogs"
-msgstr ""
+msgstr "Error: UserID and Secret Required for SoundCloud Catalogues"
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:238
 msgid "Running SoundCloud Remote Update"
@@ -3995,7 +3996,7 @@ msgstr ""
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:308
 msgid "Completed updating SoundCloud catalog(s)."
-msgstr ""
+msgstr "Completed updating SoundCloud catalogue(s)."
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:308
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:271
@@ -4028,7 +4029,7 @@ msgstr ""
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:152
 msgid "Error: Username and Password Required for Subsonic Catalogs"
-msgstr ""
+msgstr "Error: Username and Password Required for Subsonic Catalogues"
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:185
 msgid "Running Subsonic Remote Update"
@@ -4036,7 +4037,7 @@ msgstr ""
 
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:271
 msgid "Completed updating Subsonic catalog(s)."
-msgstr ""
+msgstr "Completed updating Subsonic catalogue(s)."
 
 #: ../../modules/localplay/httpq/httpq.controller.php:196
 #: ../../modules/localplay/mpd/mpd.controller.php:225
@@ -4370,6 +4371,8 @@ msgid ""
 "No catalog configured yet. To start streaming your media, you now need to %s "
 "add a catalog %s"
 msgstr ""
+"No catalogue configured yet. To start streaming your media, you now need to "
+"%s add a catalogue %s"
 
 #: ../../server/player.ajax.php:43
 #: ../../templates/show_html5_player.inc.php:474
@@ -4975,7 +4978,7 @@ msgstr ""
 #: ../../templates/show_add_catalog.inc.php:26
 #: ../../templates/sidebar_admin.inc.php:26
 msgid "Add a Catalog"
-msgstr ""
+msgstr "Add a Catalogue"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
@@ -4985,7 +4988,7 @@ msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
-msgstr ""
+msgstr "Catalogue Name"
 
 #: ../../templates/show_add_catalog.inc.php:37
 #: ../../templates/show_edit_catalog.inc.php:31
@@ -5030,7 +5033,7 @@ msgstr ""
 #: ../../templates/show_add_catalog.inc.php:48
 #: ../../templates/show_edit_catalog.inc.php:42
 msgid "Catalog Type"
-msgstr ""
+msgstr "Catalogue Type"
 
 #: ../../templates/show_add_catalog.inc.php:52
 msgid "Filename Pattern"
@@ -5073,7 +5076,7 @@ msgstr ""
 
 #: ../../templates/show_add_catalog.inc.php:96
 msgid "Add Catalog"
-msgstr ""
+msgstr "Add Catalogue"
 
 #: ../../templates/show_add_channel.inc.php:23
 msgid "Create Channel"
@@ -5259,7 +5262,7 @@ msgstr ""
 #: ../../templates/show_adds_catalog.inc.php:25
 #, php-format
 msgid "Starting New Media Search on %s catalog"
-msgstr ""
+msgstr "Starting New Media Search on %scatalogue "
 
 #: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_run_add_catalog.inc.php:25
@@ -5831,7 +5834,7 @@ msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:51
 msgid "No catalog found"
-msgstr ""
+msgstr "No catalogue found"
 
 #: ../../templates/show_catalog_types.inc.php:31
 #: ../../templates/show_catalog_types.inc.php:69
@@ -5875,13 +5878,13 @@ msgstr ""
 
 #: ../../templates/show_clean_catalog.inc.php:23
 msgid "Clean Catalog"
-msgstr ""
+msgstr "Clean Catalogue"
 
 #. HINT: Catalog Name
 #: ../../templates/show_clean_catalog.inc.php:25
 #, php-format
 msgid "Cleaning the %s Catalog"
-msgstr ""
+msgstr "Cleaning the %s Catalogue"
 
 #: ../../templates/show_clean_catalog.inc.php:27
 msgid "Checking"
@@ -6275,7 +6278,7 @@ msgstr ""
 
 #: ../../templates/show_edit_catalog.inc.php:63
 msgid "Save Catalog Settings"
-msgstr ""
+msgstr "Save Catalogue Settings"
 
 #: ../../templates/show_edit_license.inc.php:23
 msgid "Configure License"
@@ -6411,7 +6414,7 @@ msgstr ""
 #: ../../templates/show_export.inc.php:28
 #: ../../templates/sidebar_admin.inc.php:49
 msgid "Export Catalog"
-msgstr ""
+msgstr "Export Catalogue"
 
 #: ../../templates/show_export.inc.php:49
 msgid "Format"
@@ -7086,7 +7089,7 @@ msgstr ""
 #: ../../templates/show_manage_catalogs.inc.php:23
 #: ../../templates/sidebar_admin.inc.php:27
 msgid "Show Catalogs"
-msgstr ""
+msgstr "Show Catalogues"
 
 #: ../../templates/show_manage_catalogs.inc.php:27
 msgid "Gather All Art"
@@ -7261,7 +7264,7 @@ msgstr ""
 #: ../../templates/show_playlists.inc.php:39
 #: ../../templates/show_playlists.inc.php:93
 msgid "# Medias"
-msgstr ""
+msgstr "# Media<div><br data-mce-bogus=\"1\"></div>"
 
 #: ../../templates/show_playlists.inc.php:40
 #: ../../templates/show_playlists.inc.php:94
@@ -7676,7 +7679,7 @@ msgstr ""
 
 #: ../../templates/show_song.inc.php:160
 msgid "Catalog Number"
-msgstr ""
+msgstr "Catalogue Number"
 
 #: ../../templates/show_song.inc.php:164
 msgid "ReplayGain Track Gain"
@@ -7724,11 +7727,11 @@ msgstr ""
 
 #: ../../templates/show_stats.inc.php:38 ../../templates/show_stats.inc.php:77
 msgid "Catalog Size"
-msgstr ""
+msgstr "Catalogue Size"
 
 #: ../../templates/show_stats.inc.php:39
 msgid "Catalog Time"
-msgstr ""
+msgstr "Catalogue Time"
 
 #: ../../templates/show_tagcloud.inc.php:60
 msgid "Tag edit"
@@ -8065,7 +8068,7 @@ msgstr ""
 
 #: ../../templates/show_userflag.inc.php:23
 msgid "User Favorites"
-msgstr ""
+msgstr "User Favourites"
 
 #: ../../templates/show_user.inc.php:54
 msgid "Display Name"
@@ -8157,13 +8160,13 @@ msgstr ""
 
 #: ../../templates/show_verify_catalog.inc.php:23
 msgid "Verify Catalog"
-msgstr ""
+msgstr "Verify Catalogue"
 
 #. HINT: Catalog Name
 #: ../../templates/show_verify_catalog.inc.php:25
 #, php-format
 msgid "Updating the %s catalog"
-msgstr ""
+msgstr "Updating the %s catalogue "
 
 #: ../../templates/show_verify_catalog.inc.php:27
 msgid "Verified"
@@ -8340,7 +8343,7 @@ msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:27
 msgid "Catalog Modules"
-msgstr ""
+msgstr "Catalogue Modules"
 
 #: ../../templates/sidebar_modules.inc.php:28
 msgid "Available Plugins"
@@ -8432,7 +8435,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 18:02:37 CEST
+# Last Update: 17.03.2019 12:16:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8660,7 +8663,7 @@ msgstr ""
 
 #: Database preference table id 112
 msgid "Uploads catalog destination"
-msgstr ""
+msgstr "Uploads catalogue destination"
 
 #: Database preference table id 113
 msgid "Allow users to upload media"
@@ -8778,7 +8781,7 @@ msgstr ""
 
 #: Database preference table id 145
 msgid "Theme color"
-msgstr ""
+msgstr "Theme colour"
 
 #: Database preference table id 146
 msgid "Disable custom metadata fields (ctrl / shift click to select multiple)"
@@ -8804,7 +8807,7 @@ msgstr ""
 
 #: Database preference table id 151
 msgid "Rename uploaded file according to catalog pattern"
-msgstr ""
+msgstr "Rename uploaded file according to catalogue pattern"
 
 #: Database preference table id 152
 msgid "Check library item at import time and don't import duplicates"
@@ -8861,7 +8864,7 @@ msgstr ""
 
 #: Database preference subcategory table id 152
 msgid "catalog"
-msgstr ""
+msgstr "catalogue"
 
 #: Database preference subcategory table id 154
 msgid "theme"

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2019-02-12 15:41+0000\n"
+"POT-Creation-Date: 2019-05-26 15:10+0200\n"
+"PO-Revision-Date: 2019-03-21 13:12+0000\n"
 "Last-Translator: simon511000 <simonledoux012345@gmail.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/ampache/ampache/"
 "language/fr_FR/)\n"
@@ -744,7 +744,7 @@ msgstr "ERREUR : Iconv nécessaire pour cette fonctionnalité, fermeture."
 #: ../../bin/fix_filenames.inc:51
 #, php-format
 msgid "%s"
-msgstr ""
+msgstr "1%s"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
@@ -3333,7 +3333,7 @@ msgstr "ERREUR"
 msgid "WARNING"
 msgstr "AVERTISSEMENT"
 
-#: ../../lib/general.lib.php:213
+#: ../../lib/general.lib.php:210
 #, php-format
 msgid "Unknown %s"
 msgstr "%s inconnu"
@@ -3684,25 +3684,17 @@ msgstr "Actif"
 msgid "Off"
 msgstr "Inactif"
 
-#: ../../lostpassword.php:39
-msgid "Password has been sent"
-msgstr "Le mot de passe a été envoyé"
-
-#: ../../lostpassword.php:41
-msgid "Password has not been sent"
-msgstr "Le mot de passe n'a pas été envoyé"
-
-#: ../../lostpassword.php:60
+#: ../../lostpassword.php:71
 msgid "Lost Password"
 msgstr "Mot de passe oublié"
 
-#: ../../lostpassword.php:64
+#: ../../lostpassword.php:75
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
 msgstr ""
 "L'utilisateur %s a demandé une réinitilisation du mot de passe pour '%s'."
 
-#: ../../lostpassword.php:66
+#: ../../lostpassword.php:77
 #, php-format
 msgid "The password has been set to: %s"
 msgstr "Le mot de passe a été défini comme : %s"
@@ -8706,7 +8698,7 @@ msgstr "Vous ne pouvez pas supprimer cette vidéo."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 18:02:37 CEST
+# Last Update: 17.03.2019 12:16:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
