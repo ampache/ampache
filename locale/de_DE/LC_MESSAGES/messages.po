@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2018-10-26 20:01+0000\n"
+"POT-Creation-Date: 2019-05-26 15:10+0200\n"
+"PO-Revision-Date: 2019-05-17 22:02+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/ampache/ampache/"
 "language/de_DE/)\n"
@@ -3338,7 +3338,7 @@ msgstr "FEHLER"
 msgid "WARNING"
 msgstr "WARNUNG"
 
-#: ../../lib/general.lib.php:213
+#: ../../lib/general.lib.php:210
 #, php-format
 msgid "Unknown %s"
 msgstr "Unbekannt %s"
@@ -3702,26 +3702,18 @@ msgstr "An"
 msgid "Off"
 msgstr "Aus"
 
-#: ../../lostpassword.php:39
-msgid "Password has been sent"
-msgstr "Das Passwort wurde versendet"
-
-#: ../../lostpassword.php:41
-msgid "Password has not been sent"
-msgstr "Das Passwort wurde nicht versandt"
-
-#: ../../lostpassword.php:60
+#: ../../lostpassword.php:71
 msgid "Lost Password"
 msgstr "Passwort vergessen?"
 
-#: ../../lostpassword.php:64
+#: ../../lostpassword.php:75
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
 msgstr ""
 "Ein Benutzer mit der IP: %s hat ein zurücksetzen des Passwortes für '%s' "
 "angefragt."
 
-#: ../../lostpassword.php:66
+#: ../../lostpassword.php:77
 #, php-format
 msgid "The password has been set to: %s"
 msgstr "Das Passwort wurde in %s geändert"
@@ -8739,7 +8731,7 @@ msgstr "Ich kann dieses Video nicht löschen."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 18:02:37 CEST
+# Last Update: 17.03.2019 12:16:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
