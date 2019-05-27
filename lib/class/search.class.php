@@ -757,7 +757,7 @@ class Search extends playlist_object
             $value  = trim($value);
 
             if ($prefix == 'rule' && strlen($value)) {
-                $request[$key] = Dba::escape(filter_var($value, FILTER_SANITIZE_STRING));
+                $request[$key] = Dba::escape(filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             }
         }
 
@@ -1173,7 +1173,7 @@ class Search extends playlist_object
                 }
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
-            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -1332,7 +1332,7 @@ class Search extends playlist_object
                 }
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
-            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -1466,7 +1466,7 @@ class Search extends playlist_object
                 }
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
-            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -1768,7 +1768,7 @@ class Search extends playlist_object
                 }
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
-            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -1829,7 +1829,7 @@ class Search extends playlist_object
                 }
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
-            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
             $where[] = "`playlist`.`type` = 'public'";
@@ -1902,7 +1902,7 @@ class Search extends playlist_object
                 }
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
-            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -1954,7 +1954,7 @@ class Search extends playlist_object
                 }
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
-            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
