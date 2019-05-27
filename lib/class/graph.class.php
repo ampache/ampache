@@ -24,7 +24,6 @@ class Graph
 {
     public function __construct()
     {
-
         return true;
     }
 
