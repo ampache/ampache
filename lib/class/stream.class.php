@@ -140,7 +140,7 @@ class Stream
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
-        debug_event('stream.class', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, true) . '}...', 5);
+        debug_event('stream.class', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, false) . '}...', 4);
 
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
@@ -166,7 +166,7 @@ class Stream
             $bit_rate = self::validate_bitrate($media->bitrate / 1000);
         }
 
-        debug_event('stream.class', 'Final transcode bitrate is ' . $bit_rate, 5);
+        debug_event('stream.class', 'Final transcode bitrate is ' . $bit_rate, 4);
 
         $song_file = scrub_arg($media->file);
 

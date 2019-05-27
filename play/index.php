@@ -458,13 +458,16 @@ debug_event('play/index', 'Playing file (' . $media->file . '}...', 5);
 debug_event('play/index', 'Media type {' . $media->type . '}', 5);
 
 $cpaction = $_REQUEST['custom_play_action'];
+if ($cpaction) {
+    debug_event('play/index', 'Custom play action {' . $cpaction . '}', 5);
+}
 // Determine whether to transcode
 $transcode = false;
 // transcode_to should only have an effect if the media is the wrong format
 $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
-
-debug_event('play/index', 'Custom play action {' . $cpaction . '}', 5);
-debug_event('play/index', 'Transcode to {' . $transcode_to . '}', 5);
+if ($transcode_to) {
+    debug_event('play/index', 'Transcode to {' . $transcode_to . '}', 5);
+}
 
 // If custom play action, do not try to transcode
 if (!$cpaction) {
