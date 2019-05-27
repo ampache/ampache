@@ -44,7 +44,6 @@
         "symfony/routing": "^3.0",
         "symfony/http-foundation": "^3.0",
         "symfony/process": "^3.0",
-        "szymach/c-pchart": "2.*",
         "evenement/evenement": "2.*",
         "happyworm/jplayer": "2.*",
         "needim/noty": "2.3.*",

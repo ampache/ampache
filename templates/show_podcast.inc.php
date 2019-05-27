@@ -77,16 +77,7 @@ UI::show_box_top($podcast->f_title, 'info-box');
         <?php
     } ?>
         <?php if (Access::check('interface', '50')) {
-        ?>
-        <?php if (AmpConfig::get('statistical_graphs')) {
-            ?>
-            <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo T_('Graphs'); ?></a>
-            </li>
-        <?php
-        } ?>
-    <?php if (AmpConfig::get('use_rss')) {
+        if (AmpConfig::get('use_rss')) {
             ?>
         <li>
             <?php echo Ampache_RSS::get_display('podcast', T_('Podcast'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
