@@ -111,7 +111,7 @@ class Search extends playlist_object
             'name' => 'contain',
             'description' => T_('contains'),
             'sql' => 'LIKE',
-            'preg_match' => array('/^/','/$/'),
+            'preg_match' => array('/^/', '/$/'),
             'preg_replace' => array('%', '%')
         );
 
@@ -119,7 +119,7 @@ class Search extends playlist_object
             'name' => 'notcontain',
             'description' => T_('does not contain'),
             'sql' => 'NOT LIKE',
-            'preg_match' => array('/^/','/$/'),
+            'preg_match' => array('/^/', '/$/'),
             'preg_replace' => array('%', '%')
         );
 
@@ -1290,7 +1290,7 @@ class Search extends playlist_object
         }
 
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
@@ -1425,7 +1425,7 @@ class Search extends playlist_object
             $table['object_count'] .= "`object_count`.`object_id`=`artist`.`id`";
         }
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
@@ -1728,7 +1728,7 @@ class Search extends playlist_object
         }
 
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
@@ -1790,7 +1790,7 @@ class Search extends playlist_object
         }
 
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
@@ -1865,7 +1865,7 @@ class Search extends playlist_object
         }
 
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(

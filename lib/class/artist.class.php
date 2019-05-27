@@ -163,7 +163,7 @@ class Artist extends database_object implements library_item
      * @param integer|null $id
      * @param integer $catalog_init
      */
-    public function __construct($id=null, $catalog_init=0)
+    public function __construct($id = null, $catalog_init = 0)
     {
         /* If they failed to pass in an id, just run for it */
         if ($id === null) {
@@ -221,7 +221,7 @@ class Artist extends database_object implements library_item
      * @param boolean $extra
      * @return boolean
      */
-    public static function build_cache($ids, $extra=false, $limit_threshold = '')
+    public static function build_cache($ids, $extra = false, $limit_threshold = '')
     {
         if (!is_array($ids) || !count($ids)) {
             return false;
@@ -504,7 +504,7 @@ class Artist extends database_object implements library_item
      * @param integer $catalog
      * @return array
      */
-    private function _get_extra_info($catalog=0, $limit_threshold ='')
+    private function _get_extra_info($catalog = 0, $limit_threshold = '')
     {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('artist_extra', $this->id)) {
@@ -525,15 +525,14 @@ class Artist extends database_object implements library_item
 
             $db_results = Dba::read($sql, $params);
             $row        = Dba::fetch_assoc($db_results);
-            
-            
+
             // Get associated information from first song only
             $sql = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $sql .= $sqlw . "LIMIT 1";
-            
+
             $db_results = Dba::read($sql, $params);
             $row        = array_merge($row, Dba::fetch_assoc($db_results));
-            
+
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
             }

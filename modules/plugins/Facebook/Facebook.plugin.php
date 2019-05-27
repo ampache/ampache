@@ -29,7 +29,7 @@ class AmpacheFacebook
     public $version     = '000001';
     public $min_ampache = '370027';
     public $max_ampache = '999999';
-    
+
     /**
      * Constructor
      * This function does nothing...
@@ -72,10 +72,10 @@ class AmpacheFacebook
     {
         $share = "https://www.facebook.com/sharer/sharer.php";
         $share .= "?u=" . rawurlencode($url);
-        
+
         return $share;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
@@ -85,7 +85,7 @@ class AmpacheFacebook
     {
         $user->set_preferences();
         $data = $user->prefs;
-        
+
         return true;
     } // load
 }

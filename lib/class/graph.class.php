@@ -30,7 +30,7 @@ class Graph
 
         return true;
     }
-    
+
     /**
      * @param string $field
      * @param string $zoom
@@ -493,7 +493,7 @@ class Graph
     {
         $object_type = Core::get_request('object_type');
         $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-        
+
         $libitem  = null;
         $owner_id = 0;
         if ($object_id) {
@@ -502,7 +502,7 @@ class Graph
                 $owner_id = $libitem->get_user_owner();
             }
         }
-        
+
         if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {

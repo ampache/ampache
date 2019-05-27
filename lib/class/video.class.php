@@ -203,7 +203,7 @@ class Video extends database_object implements media, library_item
         if ($id === null) {
             return false;
         }
-        
+
         // Load the data from the database
         $info = $this->get_info($id, 'video');
         foreach ($info as $key => $value) {
@@ -241,7 +241,7 @@ class Video extends database_object implements media, library_item
      * Build a cache based on the array of ids passed, saves lots of little queries
      * @param int[] $ids
      */
-    public static function build_cache($ids=array())
+    public static function build_cache($ids = array())
     {
         if (!count($ids)) {
             return false;
@@ -449,7 +449,7 @@ class Video extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false)
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
     {
         return Song::generic_play_url('video', $oid, $additional_params, $player, $local);
     }
@@ -469,7 +469,7 @@ class Video extends database_object implements media, library_item
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return Song::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
@@ -766,8 +766,8 @@ class Video extends database_object implements media, library_item
     {
         // Remove some stuff we don't care about
         unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
-        $string_array = array('title','tags');
-        $skip_array   = array('id','tag_id','mime','object_cnt');
+        $string_array = array('title', 'tags');
+        $skip_array   = array('id', 'tag_id', 'mime', 'object_cnt');
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     } // compare_video_information

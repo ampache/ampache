@@ -336,14 +336,14 @@ class Recommendation
      * Returns artist information
      * @param integer $artist_id
      */
-    public static function get_artist_info($artist_id, $fullname='')
+    public static function get_artist_info($artist_id, $fullname = '')
     {
         $artist = null;
         if ($artist_id) {
             $artist = new Artist($artist_id);
             $artist->format();
             $fullname = $artist->f_full_name;
-            
+
             // Data newer than 6 months, use it
             if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
                 $results                = array();
@@ -355,7 +355,7 @@ class Recommendation
                 $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
                 $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto']   = $results['largephoto'];
-            
+
                 return $results;
             }
         }

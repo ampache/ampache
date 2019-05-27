@@ -101,7 +101,7 @@ class Catalog_local extends Catalog
 
     public function catalog_fields()
     {
-        $fields['path']      = array('description' => T_('Path'),'type' => 'text');
+        $fields['path']      = array('description' => T_('Path'), 'type' => 'text');
 
         return $fields;
     }
@@ -850,7 +850,7 @@ class Catalog_local extends Catalog
      * check_local_mp3
      * Checks the song to see if it's there already returns true if found, false if not
      */
-    public function check_local_mp3($full_file, $gather_type='')
+    public function check_local_mp3($full_file, $gather_type = '')
     {
         $file_date = filemtime($full_file);
         if ($file_date < $this->last_add) {

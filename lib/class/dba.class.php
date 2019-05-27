@@ -400,7 +400,7 @@ class Dba
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
      */
-    public static function dbh($database='')
+    public static function dbh($database = '')
     {
         if (!$database) {
             $database = AmpConfig::get('database_name');

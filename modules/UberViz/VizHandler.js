@@ -74,14 +74,11 @@ var VizHandler = (function() {
 		//SET ACTIVE VIZ HERE
 		activeViz = [Bars,WhiteRing];
 
-
-
 		activeVizCount = activeViz.length;
 		for ( var j = 0; j < activeVizCount; j ++ ) {
 			activeViz[j].init();
 		}
 
-		
 	}
 
 	function update() {
@@ -99,7 +96,6 @@ var VizHandler = (function() {
 
 
 		// renderer.render( scene, camera );
-		
 
 	}
 
@@ -116,7 +112,7 @@ var VizHandler = (function() {
 			if (ControlsHandler.vizParams.showControls){
 				renderW -= 250;
 			}
-            
+
             $("#viz").css({top:0});
 
 		}else{

@@ -37,7 +37,7 @@ class Bookmark extends database_object
     public $comment;
     public $creation_date;
     public $update_date;
-    
+
     public $f_user;
 
     /**
@@ -51,7 +51,7 @@ class Bookmark extends database_object
         if (!$object_id) {
             return false;
         }
-        
+
         if ($object_type === null) {
             $info = $this->get_info($object_id);
         } else {
@@ -68,12 +68,12 @@ class Bookmark extends database_object
 
             $info = Dba::fetch_assoc($db_results);
         }
-        
+
         // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-            
+
         return true;
     }
 
@@ -99,23 +99,23 @@ class Bookmark extends database_object
             }
         }
     }
-    
+
     public static function get_bookmarks_ids($user = null)
     {
         $ids = array();
         if ($user == null) {
             $user = Core::get_global('user');
         }
-        
+
         $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($user->id));
         while ($results = Dba::fetch_assoc($db_results)) {
             $ids[] = $results['id'];
         }
-        
+
         return $ids;
     }
-    
+
     public static function get_bookmarks($user = null)
     {
         $bookmarks = array();
@@ -126,25 +126,25 @@ class Bookmark extends database_object
 
         return $bookmarks;
     }
-    
+
     public static function create(array $data)
     {
         $user     = $data['user'] ?: Core::get_global('user')->id;
         $position = $data['position'] ?: 0;
         $comment  = scrub_in($data['comment']);
-        
+
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), time()));
     }
-    
+
     public function update($position)
     {
         $sql = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($position, time(), $this->id));
     }
-    
+
     public function remove()
     {
         $sql = "DELETE FROM `bookmark` WHERE `id` = ?";

@@ -60,7 +60,7 @@
         foreach ($object_ids as $playlist_id) {
             $libitem = new Playlist($playlist_id);
             $libitem->format();
-            
+
             // Don't show empty playlist if not admin or the owner
             if (Access::check('interface', '100') || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) {
                 ?>

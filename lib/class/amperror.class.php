@@ -57,7 +57,7 @@ class AmpError
      * This is a public static function it adds a new error message to the array
      * It can optionally clobber rather then adding to the error message
      */
-    public static function add($name, $message, $clobber=0)
+    public static function add($name, $message, $clobber = 0)
     {
         // Make sure its set first
         if (!isset(AmpError::$errors[$name])) {

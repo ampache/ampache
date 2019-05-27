@@ -99,7 +99,7 @@ class fs
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 $res[] = array('text' => $item, 'children' => true,  'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
             } else {
-                //$res[] = array('text' => $item, 'children' => false, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'type' => 'file', 'icon' => 'file file-'.substr($item, strrpos($item,'.') + 1));
+                //$res[] = array('text' => $item, 'children' => false, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'type' => 'file', 'icon' => 'file file-'.substr($item, strrpos($item, '.') + 1));
             }
         }
         if ($with_root && $this->id($dir) === '/') {
@@ -149,7 +149,7 @@ class fs
                 case 'gif':
                 case 'png':
                 case 'bmp':
-                    $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64,'.base64_encode(file_get_contents($dir));
+                    $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64, '.base64_encode(file_get_contents($dir));
                     break;*/
                 default:
                     $dat['content'] = 'File not recognized: ' . $this->id($dir);

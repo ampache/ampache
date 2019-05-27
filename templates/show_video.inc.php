@@ -38,7 +38,7 @@ if (!$gart) {
 <div class="subtitles">
 <?php echo T_('Subtitle'); ?>:
 <select name="subtitle" id="play_setting_subtitle">
-    <option value=''><?php echo T_("None"); ?></option>
+    <option value= ''><?php echo T_("None"); ?></option>
 <?php
 $subtitles = $video->get_subtitles();
     foreach ($subtitles as $subtitle) {

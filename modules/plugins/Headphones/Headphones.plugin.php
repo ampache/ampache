@@ -72,7 +72,7 @@ class AmpacheHeadphones
     {
         Preference::delete('headphones_api_url');
         Preference::delete('headphones_api_key');
-        
+
         return true;
     } // uninstall
 
@@ -92,25 +92,25 @@ class AmpacheHeadphones
     public function process_wanted($wanted)
     {
         set_time_limit(0);
-        
+
         $artist     = new Artist($wanted->artist);
         if (empty($artist->mbid)) {
             debug_event('headphones.plugin', 'Artist `' . $artist->name . '` doesn\'t have MusicBrainz Id. Skipped.', 3);
 
             return false;
         }
-        
+
         $headartist = json_decode($this->headphones_call('getArtist', array(
             'id' => $artist->mbid
         )));
-        
+
         // No artist info, need to add artist to Headphones first. Can be long!
         if (count($headartist->artist) == 0) {
             $this->headphones_call('addArtist', array(
                 'id' => $artist->mbid
             ));
         }
-        
+
         return ($this->headphones_call('queueAlbum', array(
             'id' => $wanted->mbid
         )) == 'OK');
@@ -123,12 +123,12 @@ class AmpacheHeadphones
 
             return false;
         }
-    
+
         $url = $this->api_url . '/api?apikey=' . $this->api_key . '&cmd=' . $command;
         foreach ($params as $key => $value) {
             $url .= '&' . $key . '=' . urlencode($value);
         }
-        
+
         debug_event('headphones.plugin', 'Headphones api call: ' . $url, 5);
         try {
             // We assume Headphone server is local, don't use proxy here
@@ -140,10 +140,10 @@ class AmpacheHeadphones
 
             return false;
         }
-        
+
         return $request->body;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes

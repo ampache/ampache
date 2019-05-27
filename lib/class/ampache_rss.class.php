@@ -118,7 +118,7 @@ class Ampache_RSS
      */
     public static function validate_type($type)
     {
-        $valid_types = array('now_playing','recently_played','latest_album','latest_artist','latest_shout','podcast');
+        $valid_types = array('now_playing', 'recently_played', 'latest_album', 'latest_artist', 'latest_shout', 'podcast');
 
         if (!in_array($type, $valid_types)) {
             return 'now_playing';
@@ -135,7 +135,7 @@ class Ampache_RSS
      * @param array|null $params
      * @return string
      */
-    public static function get_display($type='now_playing', $title = '', $params = null)
+    public static function get_display($type = 'now_playing', $title = '', $params = null)
     {
         // Default to now playing
         $type = self::validate_type($type);

@@ -49,7 +49,7 @@ class Upnp_Api
     private function __construct()
     {
     }
-    
+
     public static function get_uuidStr()
     {
         // Create uuid based on host
@@ -72,7 +72,7 @@ class Upnp_Api
         usleep($delay * 1000);
     }
 
-    public static function sddpSend($delay=15, $host="239.255.255.250", $port=1900, $prefix="NT")
+    public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT")
     {
         $strHeader  = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
@@ -81,7 +81,7 @@ class Upnp_Api
         $strHeader .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         $strHeader .= 'NTS: ssdp:alive' . "\r\n";
         $uuidStr = self::get_uuidStr();
-        
+
         $rootDevice = $prefix . ': upnp:rootdevice' . "\r\n";
         $rootDevice .= 'USN: uuid:' . $uuidStr . '::upnp:rootdevice' . "\r\n" . "\r\n";
         $buf = $strHeader . $rootDevice;
@@ -446,7 +446,7 @@ class Upnp_Api
                     break;
                 }
             break;
-            
+
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
@@ -470,7 +470,7 @@ class Upnp_Api
                     break;
                 }
             break;
-            
+
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
@@ -484,7 +484,7 @@ class Upnp_Api
                             'upnp:class' => 'object.container',
                         );
                     break;
-                
+
                     case 2:
                         $podcast = new Podcast($pathreq[1]);
                         if ($podcast->id) {
@@ -492,7 +492,7 @@ class Upnp_Api
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
                     break;
-                    
+
                     case 3:
                         $episode = new Podcast_Episode($pathreq[2]);
                         if ($episode->id !== null) {
@@ -667,7 +667,7 @@ class Upnp_Api
                     break;
                 }
             break;
-            
+
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1: // Get radios list
@@ -681,7 +681,7 @@ class Upnp_Api
                     break;
                 }
             break;
-            
+
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1: // Get podcasts list
@@ -1095,7 +1095,7 @@ class Upnp_Api
             'description' => self::_replaceSpecialSymbols($song->comment),
         );
     }
-    
+
     /**
      * @param Live_Stream $radio
      * @param string $parent
@@ -1178,7 +1178,7 @@ class Upnp_Api
             'duration' => $video->f_time_h . '.0',
         );
     }
-    
+
     /**
      * @param string $parent
      * @return array
@@ -1194,7 +1194,7 @@ class Upnp_Api
             'upnp:class' => 'object.container',
         );
     }
-    
+
     /**
      * @param Podcast_Episode $episode
      * @param string $parent
@@ -1282,7 +1282,7 @@ class Upnp_Api
             'vbs' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
             'mod' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
             'mkv' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-matroska:*',),
-            '3g2' => array('class' => 'object.item.videoItem','mime' => 'http-get:*:video/mp4:*',),
+            '3g2' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
             '3gp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
         );
     }

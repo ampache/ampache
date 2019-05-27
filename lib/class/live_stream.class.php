@@ -60,7 +60,7 @@ class Live_Stream extends database_object implements media, library_item
      *  @var string $f_name
      */
     public $f_name;
-    
+
     /**
      *  @var string $f_link
      */
@@ -194,14 +194,14 @@ class Live_Stream extends database_object implements media, library_item
             AmpError::add('general', T_('Name Required'));
         }
 
-        $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp','rtmp');
+        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
         $elements = explode(":", $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('general', T_('Invalid URL must be mms:// , https:// or http://'));
         }
-        
+
         if (!empty($data['site_url'])) {
             $elements = explode(":", $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
@@ -234,14 +234,14 @@ class Live_Stream extends database_object implements media, library_item
             AmpError::add('codec', T_('Codec (eg. MP3, OGG...) Required'));
         }
 
-        $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp','rtmp');
+        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
         $elements = explode(":", $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('url', T_('Invalid URL must be http:// or https://'));
         }
-        
+
         if (!empty($data['site_url'])) {
             $elements = explode(":", $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
@@ -292,7 +292,7 @@ class Live_Stream extends database_object implements media, library_item
      * play_url
      * This is needed by the media interface
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false, $sid='', $force_http='')
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
     {
         $radio = new Live_Stream($oid);
 
@@ -309,7 +309,7 @@ class Live_Stream extends database_object implements media, library_item
      *
      * This will probably never be implemented
      */
-    public function get_transcode_settings($target = null, $player = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return false;
     }

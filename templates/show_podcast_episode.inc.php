@@ -129,7 +129,7 @@
     if ($episode->time > 0) {
         $songprops[gettext_noop('Length')]           = $episode->f_time;
     }
-    
+
     if (!empty($episode->file)) {
         $songprops[gettext_noop('File')] = $episode->file;
         $songprops[gettext_noop('Size')] = $episode->f_size;

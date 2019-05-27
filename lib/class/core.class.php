@@ -312,29 +312,29 @@ class Core
     public static function image_dimensions($image_data)
     {
         if (!function_exists('ImageCreateFromString')) {
-            return array('width' => 0,'height' => 0);
+            return array('width' => 0, 'height' => 0);
         }
 
         if (empty($image_data)) {
             debug_event('core.class', "Cannot create image from empty data", 2);
 
-            return array('width' => 0,'height' => 0);
+            return array('width' => 0, 'height' => 0);
         }
 
         $image = ImageCreateFromString($image_data);
 
         if ($image == false) {
-            return array('width' => 0,'height' => 0);
+            return array('width' => 0, 'height' => 0);
         }
 
         $width  = imagesx($image);
         $height = imagesy($image);
 
         if (!$width || !$height) {
-            return array('width' => 0,'height' => 0);
+            return array('width' => 0, 'height' => 0);
         }
 
-        return array('width' => $width,'height' => $height);
+        return array('width' => $width, 'height' => $height);
     } // image_dimensions
 
     /*
@@ -487,7 +487,7 @@ class Core
 
         return $options;
     }
-    
+
     /**
      * get_tmp_dir
      *
@@ -511,7 +511,7 @@ class Core
                 }
             }
         }
-        
+
         return $tmp_dir;
     }
 } // Core

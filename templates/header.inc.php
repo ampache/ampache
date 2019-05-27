@@ -328,14 +328,14 @@ $_SESSION['login'] = false;
                 var iinfo = item.attr('id').split('_', 2);
                 var object_type = iinfo[0];
                 var object_id = iinfo[1];
-                
+
                 if (action !== undefined && action !== '') {
                     ajaxPut(jsAjaxUrl + action + '&object_type=' + object_type + '&object_id=' + object_id);
                 } else {
                     showPlaylistDialog(this, object_type, object_id);
                 }
             }
-            
+
             $.contextMenu({
                 selector: ".libitem_menu",
                 items: {
@@ -438,7 +438,7 @@ $_SESSION['login'] = false;
                         <span><?php echo T_('Favorites') ?></span>
                     </a>
                 </div>
-                
+
                 <?php
                     }
                     if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) {
@@ -514,7 +514,7 @@ $_SESSION['login'] = false;
             <div id="ajax-loading">Loading . . .</div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
-            
+
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php

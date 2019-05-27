@@ -33,7 +33,7 @@ class Stream_Playlist
     public $id;
     public $urls  = array();
     public $user;
-    
+
     public $title;
 
     /**
@@ -90,8 +90,8 @@ class Stream_Playlist
                 $values[]  = $url->$field;
             }
         }
-        $sql .= '(' . implode(', ', $fields) . ') ';
-        $sql .= 'VALUES(' . implode(', ', $holders) . ')';
+        $sql .= '(' . implode(',', $fields) . ') ';
+        $sql .= 'VALUES(' . implode(',', $holders) . ')';
 
         return Dba::write($sql, $values);
     }
@@ -109,7 +109,7 @@ class Stream_Playlist
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
      */
-    public static function media_to_urlarray($media, $additional_params='')
+    public static function media_to_urlarray($media, $additional_params = '')
     {
         $urls = array();
         foreach ($media as $medium) {
@@ -121,17 +121,17 @@ class Stream_Playlist
 
         return $urls;
     }
-    
+
     /**
      * media_to_url
      */
-    public static function media_to_url($media, $additional_params='', $urltype='web')
+    public static function media_to_url($media, $additional_params = '', $urltype = 'web')
     {
         $type      = $media['object_type'];
         $object_id = $media['object_id'];
         $object    = new $type($object_id);
         $object->format();
-        
+
         if ($media['custom_play_action']) {
             $additional_params .= "&custom_play_action=" . $media['custom_play_action'];
         }
@@ -139,21 +139,21 @@ class Stream_Playlist
         if ($_SESSION['iframe']['subtitle']) {
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
-        
+
         return self::media_object_to_url($object, $additional_params, $urltype);
     }
-    
+
     /**
      * media_object_to_url
      */
-    public static function media_object_to_url($object, $additional_params='', $urltype='web')
+    public static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
     {
         $surl = null;
         $url  = array();
-        
+
         $type        = strtolower(get_class($object));
         $url['type'] = $type;
-        
+
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
         if (!isset($object->enabled) || make_bool($object->enabled)) {
@@ -225,7 +225,7 @@ class Stream_Playlist
 
             $surl = new Stream_URL($url);
         }
-        
+
         return $surl;
     }
 
@@ -364,7 +364,7 @@ class Stream_Playlist
 
         $count = 0;
         foreach ($this->urls as $url) {
-            $ret .= '#EXTINF:' . $url->time . ',' . $url->author . ' - ' . $url->title . "\n";
+            $ret .= '#EXTINF:' . $url->time . ', ' . $url->author . ' - ' . $url->title . "\n";
             $ret .= $url->url . "\n";
             $count++;
         }
@@ -531,7 +531,7 @@ class Stream_Playlist
 
         return $ret;
     }
-    
+
     public function create_hls()
     {
         echo $this->get_hls_string();

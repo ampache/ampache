@@ -26,7 +26,7 @@ var AudioHandler = (function() {
     var msecsFirst = 0;
     var msecsPrevious = 0;
     var msecsAvg = 633; //time between beats (msec)
-    
+
     var timer;
     var gotBeat = false;
 
@@ -48,12 +48,12 @@ var AudioHandler = (function() {
     var freqByteData; //bars - bar data is from 0 - 256 in 512 bins. no sound is 0;
     var timeByteData; //waveform - waveform data is from 0-256 for 512 bins. no sound is 128.
     var levelsCount = 16; //should be factor of 512
-    
+
     var binCount; //512
     var levelBins;
 
     var isPlayingAudio = false;
-    
+
     var beatCutOff = 0;
     var beatTime = 0;
 
@@ -73,13 +73,13 @@ var AudioHandler = (function() {
         events.on("update", update);
 
         processor = audioContext.createScriptProcessor(2048 , 1 , 1 );
-        
+
         analyser = audioContext.createAnalyser();
         analyser.smoothingTimeConstant = 0.3; //smooths out bar chart movement over time
         analyser.fftSize = 1024;
         analyser.connect(audioContext.destination);
         binCount = analyser.frequencyBinCount; // = 512
-        
+
         initEqualizer();
 
         levelBins = Math.floor(binCount / levelsCount); //number of bins in each level
@@ -112,14 +112,12 @@ var AudioHandler = (function() {
         msecsAvg = 640;
         timer = setInterval(onBMPBeat,msecsAvg);
 
-
-
     }
-    
+
     function initEqualizer() {
         gainNode = audioContext.createGain();
         gainNode.gain.value = 1;
-        
+
         filter1 = audioContext.createBiquadFilter();
         filter1.type = 5;
         filter1.gain.value = null;
@@ -149,7 +147,7 @@ var AudioHandler = (function() {
         filter5.gain.value = 0;
         filter5.Q.value = 1;  // Change Filter type to test
         filter5.frequency.value = 6000;  // Change frequency to test
-        
+
         var sliderParams80Hz = {
             "orientation": "vertical",
             "range": "min",
@@ -176,7 +174,7 @@ var AudioHandler = (function() {
             "step": 0.01,
             "slide": function(event, ui) {  
                 filter2.gain.value = ui.value;
-         
+
              },
             "stop": function(event, ui) {
                 console.log(filter2.gain.value);
@@ -248,7 +246,7 @@ var AudioHandler = (function() {
         isPlayingAudio = true;
         //startViz();
     }
-    
+
     function loadMediaSource(mediaElement) {
         if (typeof mediaElement !== "undefined") {
             if (mediaSource === null) {
@@ -314,7 +312,7 @@ var AudioHandler = (function() {
             //GoldShapes.onBPMBeat();
             gotBeat = false;
         //}
-        
+
     }
 
 
@@ -347,8 +345,6 @@ var AudioHandler = (function() {
             }
             levelsData[i] = sum / levelBins/256 * ControlsHandler.audioParams.volSens; //freqData maxs at 256
 
-
-
             //adjust for the fact that lower levels are percieved more quietly
             //make lower levels smaller
             //levelsData[i] *=  1 + (i/levelsCount)/2; //??????
@@ -360,7 +356,7 @@ var AudioHandler = (function() {
         for(var j = 0; j < levelsCount; j++) {
             sum += levelsData[j];
         }
-        
+
         volume = sum / levelsCount;
 
         // high = Math.max(high,level);

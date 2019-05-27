@@ -154,7 +154,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     // You really don't want to store the avatar
     //   in the SESSION.
     unset($_SESSION['userdata']['avatar']);
-    
+
     // Record the IP of this person!
     if (AmpConfig::get('track_user_ip')) {
         $user->insert_ip_history();

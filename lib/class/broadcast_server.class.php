@@ -388,7 +388,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param string $cmd
      * @param string $value
      */
-    protected function broadcastMessage($clients, $cmd, $value='')
+    protected function broadcastMessage($clients, $cmd, $value = '')
     {
         $msg = $cmd . ':' . $value . ';';
         foreach ($clients as $client) {

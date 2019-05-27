@@ -58,7 +58,7 @@ class Metadata extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
      * @var string
      */
     protected $type;
-    
+
     /**
      *
      * @var array Stores relation between SQL field name and repository class name so we

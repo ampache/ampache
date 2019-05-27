@@ -270,7 +270,7 @@ class AutoUpdate
         ob_flush();
         self::get_latest_version(true);
     }
-    
+
     /**
      * Update project dependencies.
      */

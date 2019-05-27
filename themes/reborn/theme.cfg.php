@@ -25,12 +25,12 @@ name = "Reborn"
 
 ; Theme CSS Bases
 ; Structure: [css_path]|[media_type]
-; Multiples bases must be separated with ','
+; Multiples bases must be separated with ', '
 base = "default.css|screen"
 
 ; Theme CSS Colors
 ; Structure: [name]
-; Multiples colors must be separated with ','
+; Multiples colors must be separated with ', '
 ; Example: "Dark,Blue,Red"
 colors = "Dark,Light"
 

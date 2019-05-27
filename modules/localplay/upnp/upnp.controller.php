@@ -186,7 +186,7 @@ class AmpacheUPnP extends localplay_controller
     * get_instance
     * This returns a single instance and all it's variables
     */
-    public function get_instance($instance='')
+    public function get_instance($instance = '')
     {
         $instance = $instance ? $instance : AmpConfig::get('upnp_active');
 
@@ -201,7 +201,7 @@ class AmpacheUPnP extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      */
-    public function set_active_instance($uid, $user_id='')
+    public function set_active_instance($uid, $user_id = '')
     {
         // Not an admin? bubkiss!
         if (!Core::get_global('user')->has_access('100')) {

@@ -113,7 +113,7 @@ class Tag extends database_object implements library_item
         $tag_map = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[$row['object_id']][$row['tag_id']] = array('user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']);
-            $tag_map[$row['object_id']]              = array('id' => $row['id'],'tag_id' => $row['tag_id'],'user' => $row['user'],'object_type' => $type,'object_id' => $row['object_id']);
+            $tag_map[$row['object_id']]              = array('id' => $row['id'], 'tag_id' => $row['tag_id'], 'user' => $row['user'], 'object_type' => $type, 'object_id' => $row['object_id']);
         }
 
         // Run through our original ids as we also want to cache NULL
@@ -136,7 +136,7 @@ class Tag extends database_object implements library_item
      * and map, or just the mapping
      * @param string $type
      */
-    public static function add($type, $id, $value, $user=true)
+    public static function add($type, $id, $value, $user = true)
     {
         if (!Core::is_library_item($type)) {
             return false;
@@ -214,8 +214,8 @@ class Tag extends database_object implements library_item
 
         if ($data['edit_tags']) {
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
-            $filterunder = str_replace('_', ',', $filterfolk);
-            $filter      = str_replace(';', ',', $filterunder);
+            $filterunder = str_replace('_',', ', $filterfolk);
+            $filter      = str_replace(';',', ', $filterunder);
             $tag_names   = explode(',', $filter);
             foreach ($tag_names as $tag) {
                 $merge_to = self::construct_from_name($tag);
@@ -298,7 +298,7 @@ class Tag extends database_object implements library_item
      * @param integer|string $tag_id
      * @param integer $user
      */
-    public static function add_tag_map($type, $object_id, $tag_id, $user=true)
+    public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
@@ -307,7 +307,7 @@ class Tag extends database_object implements library_item
         } else {
             $uid = (int) ($user);
         }
-        
+
         $tag_id = (int) ($tag_id);
         if (!Core::is_library_item($type)) {
             debug_event('tag.class', $type . " is not a library item.", 3);
@@ -492,7 +492,7 @@ class Tag extends database_object implements library_item
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      */
-    public static function get_tag_objects($type, $tag_id, $count='', $offset='')
+    public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
         if (!Core::is_library_item($type)) {
             return false;
@@ -502,7 +502,7 @@ class Tag extends database_object implements library_item
         if ($count) {
             $limit_sql = "LIMIT ";
             if ($offset) {
-                $limit_sql .= (string) ($offset) . ',';
+                $limit_sql .= (string) ($offset) . ', ';
             }
             $limit_sql .= (string) ($count);
         }
@@ -572,7 +572,7 @@ class Tag extends database_object implements library_item
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
      */
-    public static function get_display($tags, $link=false, $filter_type='')
+    public static function get_display($tags, $link = false, $filter_type = '')
     {
         //debug_event('tag.class', 'Get display tags called...', 5);
         if (!is_array($tags)) {
@@ -616,8 +616,8 @@ class Tag extends database_object implements library_item
 
         $ctags       = self::get_top_tags($type, $object_id);
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
-        $filterunder = str_replace('_', ',', $filterfolk);
-        $filter      = str_replace(';', ',', $filterunder);
+        $filterunder = str_replace('_',', ', $filterfolk);
+        $filter      = str_replace(';',', ', $filterunder);
         $editedTags  = explode(",", $filter);
 
         if (is_array($ctags)) {
@@ -668,8 +668,8 @@ class Tag extends database_object implements library_item
             $taglist = $tags;
         } else {
             $filterfolk       = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
-            $filterunder      = str_replace('_', ',', $filterfolk);
-            $filter           = str_replace(';', ',', $filterunder);
+            $filterunder      = str_replace('_',', ', $filterfolk);
+            $filter           = str_replace(';',', ', $filterunder);
             $taglist          = explode(",", $filter);
         }
 
@@ -691,10 +691,10 @@ class Tag extends database_object implements library_item
      * This returns the count for the all objects associated with this tag
      * If a type is specific only counts for said type are returned
      */
-    public function count($type='', $user_id = 0)
+    public function count($type = '', $user_id = 0)
     {
         $params = array($this->id);
-        
+
         $filter_sql = "";
         if ($user_id > 0) {
             $filter_sql = " AND `user` = ?";
@@ -723,7 +723,7 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer $object_id
      */
-    public function remove_map($type, $object_id, $user=true)
+    public function remove_map($type, $object_id, $user = true)
     {
         if (!Core::is_library_item($type)) {
             return false;
@@ -877,22 +877,22 @@ class Tag extends database_object implements library_item
         } else {
             $uid = (int) ($user);
         }
-        
+
         if ($uid > 0) {
             return Access::check('interface', '25');
         }
-        
+
         if (Access::check('interface', '75')) {
             return true;
         }
-        
+
         if (Core::is_library_item($object_type)) {
             $libitem = new $object_type($object_id);
             $owner   = $libitem->get_user_owner();
 
             return ($owner !== null && $owner == $uid);
         }
-        
+
         return false;
     }
 } // end of Tag class

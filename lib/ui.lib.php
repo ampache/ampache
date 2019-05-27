@@ -404,7 +404,7 @@ function show_tvshow_season_select($name, $season_id, $allow_add=false, $video_i
  * @param string $name
  * @param integer $catalog_id
  */
-function show_catalog_select($name, $catalog_id, $style='', $allow_none=false, $filter_type='')
+function show_catalog_select($name, $catalog_id, $style= '', $allow_none=false, $filter_type= '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
@@ -480,7 +480,7 @@ function show_license_select($name, $license_id=0, $song_id=0)
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_user_select($name, $selected='', $style='')
+function show_user_select($name, $selected= '', $style= '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('All') . "</option>\n";
@@ -506,7 +506,7 @@ function show_user_select($name, $selected='', $style='')
  * show_playlist_select
  * This one is for playlists!
  */
-function show_playlist_select($name, $selected='', $style='')
+function show_playlist_select($name, $selected= '', $style= '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('None') . "</option>\n";

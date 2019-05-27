@@ -1253,12 +1253,12 @@ class Api
         $type      = 'song';
         $user      = new User($user_id);
         $valid     = in_array($user->id, User::get_valid_users());
-        
+
         // validate supplied user
         if (!$valid) {
             echo XML_Data::error('404', T_('User_id not found.'));
         }
-        
+
         // validate client string or fall back to 'api'
         if ($input['client']) {
             $agent = $input['client'];

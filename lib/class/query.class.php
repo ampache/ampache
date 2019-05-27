@@ -763,7 +763,7 @@ class Query
      * @param string $sort
      * @param string $order
      */
-    public function set_sort($sort, $order='')
+    public function set_sort($sort, $order = '')
     {
         // If it's not in our list, smeg off!
         if (!in_array($sort, self::$allowed_sorts[$this->get_type()])) {
@@ -1191,7 +1191,7 @@ class Query
         }
 
         $sql = rtrim($sql, 'ORDER BY ');
-        $sql = rtrim($sql, ',');
+        $sql = rtrim($sql, ', ');
 
         return $sql;
     } // get_sort_sql
@@ -1207,7 +1207,7 @@ class Query
             return '';
         }
 
-        $sql = ' LIMIT ' . (string) ($this->get_start()) . ',' . (string) ($this->get_offset());
+        $sql = ' LIMIT ' . (string) ($this->get_start()) . ', ' . (string) ($this->get_offset());
 
         return $sql;
     } // get_limit_sql
@@ -2338,7 +2338,7 @@ class Query
                 $object_id = Dba::escape($object_id);
                 $where_sql .= "'$object_id',";
             }
-            $where_sql = rtrim($where_sql, ',');
+            $where_sql = rtrim($where_sql, ', ');
 
             $where_sql .= ")";
 
