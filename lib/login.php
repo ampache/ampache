@@ -206,7 +206,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         strpos($_POST['referrer'], 'update.php') === false &&
         strpos($_POST['referrer'], 'activate.php') === false &&
         strpos($_POST['referrer'], 'admin') === false) {
-        header('Location: ' . Core::get_post('referrer'));
+        header('Location: ' . $_POST['referrer']);
 
         return false;
     } // if we've got a referrer
