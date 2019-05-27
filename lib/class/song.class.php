@@ -1491,7 +1491,7 @@ class Song extends database_object implements media, library_item
         $this->f_composer  = $this->composer;
 
         $year = $this->year;
-        if (!is_integer($year)) {
+        if (!is_integer((int) $year)) {
             $year = 0;
         } else {
             $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
