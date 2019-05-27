@@ -1,6 +1,35 @@
 CHANGELOG
 =========
 
+CURRENT PROGRESS IN THE CORE BRANCH
+
+4.0.0-CORE
+----------
+- Remove plex, seafile, dropbox, googleplus plugins
+- Remove all plex code
+- Remove message of the day
+- Don't allow lost password reset for Admin users
+- Don't allow emails until mail_enable is true
+- No video, no channels in new installs
+- Include smartlists in the API playlist calls.
+- Default fallback user avatar when none found
+- Added a $_SESSION['mobile'] variable to allow changing pages for mobile devices.
+- Viewport settings for mobile devices
+- Format the input fields. (you get a datetime picker on mobile!)
+- Login screen moves the logo to the bottom on mobile like cockpit does! (makes typing easier on a touch screen)
+- Load webplayer to stop popup preferences hiding the window
+- Hide video in search/stats if not enabled
+- Use a random cover for playlist art
+- Move some $_GET, POST, $_REQUEST calls to Core
+- JavaScript and Ajax updates
+- Code documentation and bug hunting
+- Fixed setting button requiring two single clicks to open. (Thanks for this 2016 pull @AshotN)
+- Lots of code tweaks to make things more uniform and readable.
+- Add now_playing.php to allow badges for currently playing tracks.
+- Add year information and links to the data rows and interface
+- Default to mashup for artists and albums
+- Add rating_browse_filter, rating_browse_minimum_stars to filter based on a star rating.
+
 3.9.1
 ----------
 - Fixed Beets catalog creation and updating.
