@@ -1487,12 +1487,8 @@ class Song extends database_object implements media, library_item
         $this->f_publisher = $this->label;
         $this->f_composer  = $this->composer;
 
-        $year = $this->year;
-        if (!is_integer((int) $year)) {
-            $year = 0;
-        } else {
-            $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
-        }
+        $year              = (int) $this->year;
+        $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
 
         if (AmpConfig::get('licensing') && $this->license !== null) {
             $license = new License($this->license);
