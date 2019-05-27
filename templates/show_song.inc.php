@@ -109,8 +109,6 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
-        <?php if (($song->user_upload > 0 && $song->user_upload == Core::get_global('user')->id) || Access::check('interface', '50')) {
-    } ?>
         <?php if (Access::check('interface', '50') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) {
         ?>
             <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_' . $song->id ?>', '<?php echo T_('Edit') ?>', '')">
