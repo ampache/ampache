@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
             }
         } // if they have to agree to something
 
-        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)) {
+        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
             AmpError::add('username', T_("You did not enter a username"));
         }
 

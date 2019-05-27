@@ -171,11 +171,11 @@ switch ($_REQUEST['action']) {
 
         ob_end_flush();
 
-        if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING) == 'none') {
+        if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'none') {
             AmpError::add('general', T_('Error: Please select a catalog type'));
         }
 
-        if (!strlen(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING))) {
+        if (!strlen(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) {
             AmpError::add('general', T_('Error: Name not specified'));
         }
 

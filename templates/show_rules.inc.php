@@ -28,7 +28,7 @@ if ($playlist) {
 $logic_operator = strtolower($logic_operator);
 ?>
 <script type="text/javascript" src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script type="text/javascript" src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING)) : 'song'; ?>"></script>
+<script type="text/javascript" src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>"></script>
 
 <?php UI::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata" cellpadding="3" cellspacing="0">
@@ -63,7 +63,7 @@ $logic_operator = strtolower($logic_operator);
 if ($playlist) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING));
+    $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
     $mysearch->parse_rules(Search::clean_request($_REQUEST));
     $out = $mysearch->to_js();
 }

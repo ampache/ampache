@@ -60,7 +60,7 @@ if (!Art::is_valid_type($type)) {
 
 /* Decide what size this image is */
 $size = Art::get_thumb_size(filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT));
-$kind = filter_has_var(INPUT_GET, 'kind') ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING) : 'default';
+$kind = filter_has_var(INPUT_GET, 'kind') ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : 'default';
 
 $image       = '';
 $mime        = '';
@@ -68,7 +68,7 @@ $filename    = '';
 $etag        = '';
 $typeManaged = false;
 if (filter_has_var(INPUT_GET, 'type')) {
-    switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING)) {
+    switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
         case 'popup':
             $typeManaged = true;
             require_once AmpConfig::get('prefix') . UI::find_template('show_big_art.inc.php');
@@ -131,7 +131,7 @@ if (!$typeManaged) {
     } else {
         if (filter_has_var(INPUT_GET, 'thumb')) {
             $thumb_data = $art->get_thumb($size);
-            $etag .= '-' . filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_STRING);
+            $etag .= '-' . filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
         $mime  = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;

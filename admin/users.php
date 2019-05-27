@@ -45,15 +45,15 @@ switch ($_REQUEST['action']) {
 
         /* Clean up the variables */
         $user_id         = (int) filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
-        $username        = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
-        $fullname        = scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING));
+        $username        = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $fullname        = scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $email           = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website         = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING));
-        $access          = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING));
-        $pass1           = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING);
-        $pass2           = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING);
-        $state           = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING));
-        $city            = scrub_in(filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING));
+        $website         = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $access          = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $pass1           = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $pass2           = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $state           = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $city            = scrub_in(filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $fullname_public = filter_has_var(INPUT_POST, 'fullname_public');
 
         /* Setup the temp user */
@@ -126,14 +126,14 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
-        $fullname       = scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING));
+        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $fullname       = scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $email          = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website        = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING));
-        $access         = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING));
-        $pass1          = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING);
-        $pass2          = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING);
-        $state          = (string) scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING));
+        $website        = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $access         = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $pass1          = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $pass2          = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $state          = (string) scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $city           = (string) scrub_in(Core::get_get('city'));
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {

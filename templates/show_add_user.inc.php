@@ -29,7 +29,7 @@
                 <?php echo  T_('Username'); ?>: *
             </td>
             <td>
-                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)); ?>" />
+                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
                 <?php AmpError::display('username'); ?>
             </td>
         </tr>
