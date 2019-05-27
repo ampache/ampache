@@ -34,7 +34,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'edit':
         if ((filter_has_var(INPUT_POST, 'license_id'))) {
-            $license = new License(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING));
+            $license = new License(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             if ($license->id) {
                 $license->update($_POST);
             }

@@ -309,7 +309,7 @@ class Daap_Api
     
     private static function catalog_songs()
     {
-        // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+        // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $meta      = explode(',', strtolower(Core::get_get('meta')));
         $output    = self::tlv('dmap.status', 200);
         $output .= self::tlv('dmap.updatetype', 0);

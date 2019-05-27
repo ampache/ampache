@@ -4,14 +4,14 @@
 #
 # Translators:
 # Yuki Yamada <lz.yamada@gmail.com>, 2016
-# 西原 芳郎 <trasha@spage.jp>, 2018
+# Nishihara Yoshirou, 2018-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2018-10-26 15:36+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"POT-Creation-Date: 2019-05-26 15:10+0200\n"
+"PO-Revision-Date: 2019-04-14 15:49+0000\n"
+"Last-Translator: Nishihara Yoshirou\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/ampache/ampache/"
 "language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -1266,7 +1266,7 @@ msgstr "現在の演奏曲"
 #: ../../templates/show_recently_played.inc.php:24
 #: ../../templates/show_user.inc.php:114
 msgid "Recently Played"
-msgstr "最近再生したもの"
+msgstr "最近再生した曲"
 
 #: ../../lib/class/ampache_rss.class.php:94 ../../templates/header.inc.php:43
 msgid "Newest Albums"
@@ -3303,7 +3303,7 @@ msgstr "ERROR"
 msgid "WARNING"
 msgstr "WARNING"
 
-#: ../../lib/general.lib.php:213
+#: ../../lib/general.lib.php:210
 #, php-format
 msgid "Unknown %s"
 msgstr "不明 %s"
@@ -3649,24 +3649,16 @@ msgstr "オン"
 msgid "Off"
 msgstr "オフ"
 
-#: ../../lostpassword.php:39
-msgid "Password has been sent"
-msgstr "パスワードを送信しました"
-
-#: ../../lostpassword.php:41
-msgid "Password has not been sent"
-msgstr "パスワードは送信されませんでした"
-
-#: ../../lostpassword.php:60
+#: ../../lostpassword.php:71
 msgid "Lost Password"
 msgstr "パスワードをなくしました"
 
-#: ../../lostpassword.php:64
+#: ../../lostpassword.php:75
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
 msgstr "%sからユーザは「%s：のパスワードリセットのリクエストをしました。"
 
-#: ../../lostpassword.php:66
+#: ../../lostpassword.php:77
 #, php-format
 msgid "The password has been set to: %s"
 msgstr "パスワードを%sへ設定しました"
@@ -5063,8 +5055,8 @@ msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"以下のフォームではローカルパス(例 /data/music)かURLのどちらかをリモートの"
-"Ampatcheに入れます(例 http://theoherampache.com)"
+"以下のフォームではローカルパス(例 /data/music)か別のAmpatcheのURL(例 http://"
+"theoherampache.com)のどちらかを入力してください"
 
 #: ../../templates/show_add_catalog.inc.php:34
 msgid "Catalog Name"
@@ -5127,7 +5119,7 @@ msgstr "フォルダパターン"
 #: ../../templates/show_add_catalog.inc.php:56
 #: ../../templates/show_edit_catalog.inc.php:53
 msgid "(no leading or ending '/')"
-msgstr "(先頭がない又は「/」で終わっている)"
+msgstr "(先頭または末尾を '/' にしない)"
 
 #: ../../templates/show_add_catalog.inc.php:60
 #: ../../templates/show_catalog_row.inc.php:47
@@ -5704,12 +5696,12 @@ msgstr "読み込み中..."
 #: ../../templates/show_artist.inc.php:101
 #: ../../templates/show_artist.inc.php:103
 msgid "Show all"
-msgstr "すべて見る"
+msgstr "すべて表示"
 
 #: ../../templates/show_artist.inc.php:109
 #: ../../templates/show_artist.inc.php:111
 msgid "Show albums"
-msgstr "アルバムを見る"
+msgstr "アルバムを表示"
 
 #: ../../templates/show_artist.inc.php:118
 #: ../../templates/show_artist.inc.php:119
@@ -6618,7 +6610,7 @@ msgstr "プレイリストをインポート"
 #: ../../templates/show_index.inc.php:50
 #: ../../templates/show_random_albums.inc.php:26
 msgid "Albums of the Moment"
-msgstr "現在のアルバム"
+msgstr "ランダムなアルバム"
 
 #: ../../templates/show_index.inc.php:59
 #: ../../templates/show_random_videos.inc.php:26
@@ -7181,7 +7173,7 @@ msgstr "歌詞が見つかりません"
 
 #: ../../templates/show_lyrics.inc.php:64
 msgid "Show more"
-msgstr "さらに見る"
+msgstr "さらに表示"
 
 #: ../../templates/show_mail_users.inc.php:24
 msgid "Send E-mail to Users"
@@ -7218,7 +7210,7 @@ msgstr "全アートを収集"
 
 #: ../../templates/show_manage_catalogs.inc.php:30
 msgid "Show disabled songs"
-msgstr "無効になっている曲を見る"
+msgstr "無効になっている曲を表示"
 
 #: ../../templates/show_manage_catalogs.inc.php:33
 msgid "Add to All"
@@ -8562,7 +8554,7 @@ msgstr "TV番組を削除できません"
 
 #: ../../tvshows.php:81
 msgid "Show TV Shows starting with"
-msgstr "次で始まるTV番組を見る"
+msgstr "次で始まるTV番組を表示"
 
 #: ../../update.php:81
 #, php-format
@@ -8604,7 +8596,7 @@ msgstr "この動画を削除できません"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 18:02:37 CEST
+# Last Update: 17.03.2019 12:16:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8716,11 +8708,11 @@ msgstr "アルバムのデフォルトソート"
 
 #: Database preference table id 84
 msgid "Show # played"
-msgstr "見る # 再生済み"
+msgstr "再生回数を表示"
 
 #: Database preference table id 85
 msgid "Show current song in Web player page title"
-msgstr "現在の曲をウェブプレーヤーページのタイトルで見る"
+msgstr "現在の曲をウェブプレーヤーページのタイトルで表示"
 
 #: Database preference table id 86
 msgid "Use SubSonic backend"
@@ -8888,19 +8880,19 @@ msgstr "ダイレクト再生の最大メディア数制限"
 
 #: Database preference table id 125
 msgid "Show Albums of the moment at home page"
-msgstr "現在のアルバムをホームページで見る"
+msgstr "ランダムなアルバムをホームページで表示する"
 
 #: Database preference table id 126
 msgid "Show Videos of the moment at home page"
-msgstr "現在の動画をホームページで見る"
+msgstr "現在の動画をホームページで表示"
 
 #: Database preference table id 127
 msgid "Show Recently Played at home page"
-msgstr "最近の再生をホームページで見る"
+msgstr "最近の再生した曲をホームページで表示"
 
 #: Database preference table id 128
 msgid "Show Now Playing at home page"
-msgstr "現在の再生をホームページで見る"
+msgstr "現在の再生中の曲をホームページで表示"
 
 #: Database preference table id 129
 msgid "Custom logo url"
@@ -8989,7 +8981,7 @@ msgstr "インポート時にライブラリアイテムをチェックして重
 
 #: Database preference table id 153
 msgid "Show filter box on browse"
-msgstr "フィルタボックスをブラウザで見る"
+msgstr "フィルタボックスをブラウザで表示"
 
 #: Database preference table id 154
 msgid "Light sidebar by default"

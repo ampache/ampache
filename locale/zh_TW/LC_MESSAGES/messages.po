@@ -4,14 +4,14 @@
 #
 # Translators:
 # Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
-# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018
+# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-03-17 12:16+0100\n"
-"PO-Revision-Date: 2018-10-26 15:36+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
+"POT-Creation-Date: 2019-05-26 15:10+0200\n"
+"PO-Revision-Date: 2019-05-14 11:23+0000\n"
+"Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ampache/ampache/"
 "language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -497,11 +497,11 @@ msgstr "暫時停用 PHP 的記憶體限制"
 
 #: ../../bin/catalog_update.inc:56
 msgid "Setting catalog name"
-msgstr ""
+msgstr "正在設定目錄名稱"
 
 #: ../../bin/catalog_update.inc:60
 msgid "Setting catalog type"
-msgstr ""
+msgstr "正在設定目錄類型"
 
 #: ../../bin/catalog_update.inc:64
 msgid "Cleaning catalog/s"
@@ -577,6 +577,8 @@ msgid ""
 "Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-"
 "a|-g|-i|-o]"
 msgstr ""
+"用法：catalog_update.inc [-n 目錄名稱] [-t 目錄類型] [-h|-m|-c|-v|-a|-g|-i|-"
+"o]"
 
 #: ../../bin/catalog_update.inc:207
 msgid ""
@@ -586,15 +588,15 @@ msgstr "預設行為是除了停用 PHP 記憶體限制以外，執行所有動�
 
 #: ../../bin/catalog_update.inc:211
 msgid "This help message"
-msgstr ""
+msgstr "此說明訊息"
 
 #: ../../bin/catalog_update.inc:213
 msgid "Name of Catalog (Optional)"
-msgstr ""
+msgstr "目錄名稱 (可不填)"
 
 #: ../../bin/catalog_update.inc:215
 msgid "Type of Catalog (Optional)"
-msgstr ""
+msgstr "目錄類型 (可不填)"
 
 #: ../../bin/catalog_update.inc:217
 msgid "Temporarily deactivates PHP memory limit."
@@ -713,12 +715,12 @@ msgstr "刪除中：%s"
 
 #: ../../bin/fix_filenames.inc:42
 msgid "ERROR: Iconv required for this functionality, quitting"
-msgstr ""
+msgstr "錯誤：此功能需要 Iconv，正在結束"
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
@@ -900,7 +902,7 @@ msgstr "php print_tags.inc <檔名>"
 #: ../../bin/sort_files.inc:61
 #, php-format
 msgid "Starting Catalog: %s"
-msgstr ""
+msgstr "正在開始處理目錄：%s"
 
 #: ../../bin/sort_files.inc:75
 msgid "Moving File..."
@@ -961,7 +963,7 @@ msgstr "錯誤：無法寫入資料夾 %s"
 
 #: ../../bin/write_playlists.inc:96
 msgid "This will dump a collection of playlists files based on type"
-msgstr ""
+msgstr "這會根據類型來傾印一組播放清單檔案"
 
 #: ../../bin/write_playlists.inc:97
 msgid "Types:"
@@ -1068,7 +1070,7 @@ msgstr "IP 位址版本不符"
 
 #: ../../lib/class/access.class.php:222
 msgid "Duplicate ACL defined"
-msgstr ""
+msgstr "定義了重複的存取控制清單"
 
 #: ../../lib/class/access.class.php:466 ../../lib/class/access.class.php:488
 #: ../../lib/ui.lib.php:480 ../../templates/browse_filters.inc.php:89
@@ -1743,7 +1745,7 @@ msgstr "不需更新"
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
-msgstr[0] ""
+msgstr[0] "目錄清理完成。已移除 %d 個檔案。"
 
 #: ../../lib/class/catalog.class.php:1869
 #, php-format
@@ -1956,7 +1958,7 @@ msgstr ""
 
 #: ../../lib/class/query.class.php:100
 msgid "Browse not found or expired, try reloading the page"
-msgstr ""
+msgstr "找不到此瀏覽或是已逾期，請試著重新載入網頁"
 
 #: ../../lib/class/registration.class.php:53
 #, php-format
@@ -2165,12 +2167,12 @@ msgstr "年"
 
 #: ../../lib/class/search.class.php:296
 msgid "Length (in minutes)"
-msgstr "長度(分鐘)"
+msgstr "長度 (分鐘)"
 
 #: ../../lib/class/search.class.php:304 ../../lib/class/search.class.php:521
 #: ../../lib/class/search.class.php:618
 msgid "Rating (Average)"
-msgstr ""
+msgstr "評價 (平均)"
 
 #: ../../lib/class/search.class.php:322 ../../templates/header.inc.php:437
 #: ../../templates/sidebar_home.inc.php:142
@@ -2181,7 +2183,7 @@ msgstr "我的最愛"
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
 msgid "Rating (Mine)"
-msgstr ""
+msgstr "評價 (我的)"
 
 #: ../../lib/class/search.class.php:349 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:119
@@ -2208,7 +2210,7 @@ msgstr "位元率"
 #: ../../lib/class/search.class.php:382 ../../lib/class/search.class.php:556
 #: ../../lib/class/search.class.php:635
 msgid "My Last Play"
-msgstr ""
+msgstr "我的上次播放"
 
 #: ../../lib/class/search.class.php:389 ../../templates/show_album.inc.php:83
 #: ../../templates/show_artist.inc.php:78
@@ -3293,7 +3295,7 @@ msgstr "錯誤"
 msgid "WARNING"
 msgstr "警告"
 
-#: ../../lib/general.lib.php:213
+#: ../../lib/general.lib.php:210
 #, php-format
 msgid "Unknown %s"
 msgstr "未知的 %s"
@@ -3587,27 +3589,27 @@ msgstr "偏好設定"
 
 #: ../../lib/ui.lib.php:144 ../../lib/ui.lib.php:148
 msgid "Admin-Catalog"
-msgstr ""
+msgstr "管理員-目錄"
 
 #: ../../lib/ui.lib.php:152
 msgid "Admin-User Management"
-msgstr ""
+msgstr "管理員-使用者"
 
 #: ../../lib/ui.lib.php:156
 msgid "Admin-Mail Users"
-msgstr ""
+msgstr "管理員-寄信給使用者"
 
 #: ../../lib/ui.lib.php:160
 msgid "Admin-Manage Access Lists"
-msgstr ""
+msgstr "管理員-管理存取控制清單"
 
 #: ../../lib/ui.lib.php:164
 msgid "Admin-Site Preferences"
-msgstr "管理界面偏好設定"
+msgstr "管理員-站台偏好設定"
 
 #: ../../lib/ui.lib.php:168
 msgid "Admin-Manage Modules"
-msgstr ""
+msgstr "管理員-管理模組"
 
 #: ../../lib/ui.lib.php:172 ../../templates/sidebar_home.inc.php:24
 msgid "Browse Music"
@@ -3634,24 +3636,16 @@ msgstr "開"
 msgid "Off"
 msgstr "關"
 
-#: ../../lostpassword.php:39
-msgid "Password has been sent"
-msgstr "密碼已被寄送"
-
-#: ../../lostpassword.php:41
-msgid "Password has not been sent"
-msgstr "密碼沒有被寄送"
-
-#: ../../lostpassword.php:60
+#: ../../lostpassword.php:71
 msgid "Lost Password"
 msgstr "忘記密碼"
 
-#: ../../lostpassword.php:64
+#: ../../lostpassword.php:75
 #, php-format
 msgid "A user from %s has requested a password reset for '%s'."
 msgstr "一個來自 %s 的使用者要求重設「%s」的密碼。"
 
-#: ../../lostpassword.php:66
+#: ../../lostpassword.php:77
 #, php-format
 msgid "The password has been set to: %s"
 msgstr "密碼已被寄送到：%s"
@@ -3701,11 +3695,11 @@ msgstr "前往 https://www.dropbox.com/developers/apps/create"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:74
 msgid "Select 'Dropbox API app'"
-msgstr "選擇 'Dropbox API app'"
+msgstr "選擇「Dropbox API app」"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:75
 msgid "Select 'Full Dropbox'"
-msgstr ""
+msgstr "選擇「Full Dropbox」"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:76
 msgid "Give a name to your application and create it"
@@ -3713,28 +3707,28 @@ msgstr "為您的應用程式命名並建立它"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:77
 msgid "Click the 'Generate' button to create an Access Token"
-msgstr ""
+msgstr "按下「Generate」按鈕來產生存取金鑰"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:78
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
-msgstr ""
+msgstr "複製您的 App key、App secret 與 Access Token 到下方的欄位。"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:117
 #: ../../templates/show_account.inc.php:101
 #: ../../templates/show_edit_user.inc.php:132
 msgid "API Key"
-msgstr "API 金鑰"
+msgstr "API Key"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:118
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:108
 #: ../../templates/show_add_share.inc.php:35
 msgid "Secret"
-msgstr "密鑰"
+msgstr "Secret"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:119
 msgid "Access Token"
-msgstr ""
+msgstr "Access Token"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:120
 #: ../../modules/catalog/local/local.catalog.php:104
@@ -3744,20 +3738,20 @@ msgstr "路徑"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:121
 msgid "Get chunked files on analyze"
-msgstr ""
+msgstr "當分析時取得檔案塊"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:181
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr ""
+msgstr "錯誤：Dropbox 目錄需要 API Key、Secret 與 Access Token"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:188
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:492
 msgid "Invalid \"API key\", \"secret\", or \"access token\": "
-msgstr ""
+msgstr "無效的「API key」、「secret」或「access token」："
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:197
 msgid "Invalid \"dropbox-path\": "
-msgstr ""
+msgstr "無效的「dropbox-path」："
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:236
 msgid "Running Dropbox Remote Update"
@@ -3778,20 +3772,20 @@ msgstr "沒有媒體被更新，您是否輸入正確的樣板？"
 #: ../../modules/catalog/seafile/seafile.catalog.php:378
 #, php-format
 msgid "Updated song \"%s\""
-msgstr ""
+msgstr "更新歌曲「%s」"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:481
 #: ../../modules/catalog/seafile/seafile.catalog.php:381
 #, php-format
 msgid "Song up to date: \"%s\""
-msgstr ""
+msgstr "歌曲已更新：「%s」"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:485
 #: ../../modules/catalog/seafile/seafile.catalog.php:385
 #: ../../modules/catalog/seafile/seafile.catalog.php:443
 #, php-format
 msgid "Removing song \"%s\""
-msgstr ""
+msgstr "移除歌曲「%s」"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:521
 msgid "API Error: cannot connect to Dropbox."
@@ -3913,7 +3907,7 @@ msgstr "已完成更新遠端目錄。"
 
 #: ../../modules/catalog/seafile/SeafileAdapter.php:45
 msgid "Could not authenticate with Seafile"
-msgstr ""
+msgstr "無法透過 Seafile 認證"
 
 #: ../../modules/catalog/seafile/SeafileAdapter.php:124
 #, php-format
@@ -4602,7 +4596,7 @@ msgstr "Ampache"
 msgid ""
 "The following error has occured, you will automaticly be redirected after 10 "
 "seconds."
-msgstr ""
+msgstr "發生以下錯誤，而您會在 10 秒後被自動重新導向。"
 
 #: ../../templates/error_page.inc.php:53
 msgid "Error messages"
@@ -5827,7 +5821,7 @@ msgstr "找不到廣播"
 
 #: ../../templates/show_catalog_row.inc.php:36
 msgid "Make it ready ..."
-msgstr ""
+msgstr "讓他準備好⋯"
 
 #: ../../templates/show_catalog_row.inc.php:44
 msgid "Verify"
@@ -5849,7 +5843,7 @@ msgstr "更新"
 
 #: ../../templates/show_catalog_row.inc.php:52
 msgid "Go"
-msgstr ""
+msgstr "前往"
 
 #: ../../templates/show_catalogs.inc.php:30
 #: ../../templates/show_catalogs.inc.php:60
@@ -6295,11 +6289,11 @@ msgstr "新增標籤到內含歌曲"
 
 #: ../../templates/show_edit_artist_row.inc.php:47
 msgid "Place Formed"
-msgstr ""
+msgstr "成立地點"
 
 #: ../../templates/show_edit_artist_row.inc.php:51
 msgid "Year Formed"
-msgstr ""
+msgstr "成立年份"
 
 #: ../../templates/show_edit_artist_row.inc.php:68
 msgid "Overwrite tags of sub albums and sub songs"
@@ -6440,7 +6434,7 @@ msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:154
 msgid "This Affects all non-Admin accounts"
-msgstr ""
+msgstr "這會影響所有非管理員的帳號"
 
 #: ../../templates/show_edit_user.inc.php:166
 msgid "Update User"
@@ -7565,7 +7559,7 @@ msgstr[0] "%d0 年前"
 
 #: ../../templates/show_recently_played.inc.php:152
 msgid "No recently played items found"
-msgstr ""
+msgstr "找不到最近播放過的項目"
 
 #: ../../templates/show_recommended_artists.inc.php:88
 msgid "No similar artist found"
@@ -8514,7 +8508,7 @@ msgstr "無法刪除此視訊。"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 26.10.2018 18:02:37 CEST
+# Last Update: 17.03.2019 12:16:09 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -8698,7 +8692,7 @@ msgstr ""
 
 #: Database preference table id 101
 msgid "Enable url rewriting"
-msgstr ""
+msgstr "啟用網址改寫"
 
 #: Database preference table id 102
 msgid "Allow Share"

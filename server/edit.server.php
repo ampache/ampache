@@ -36,12 +36,12 @@ debug_event('edit.server', 'Called for action: {' . Core::get_request('action') 
 // Post first
 $type = $_POST['type'];
 if (empty($type)) {
-    $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+    $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 }
 $object_id = $_GET['id'];
 
 if (empty($type)) {
-    $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING);
+    $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 } else {
     $object_type = implode('_', explode('_', $type, -1));
 }
@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
         $libitem->format();
 
         xoutput_headers();
-        $results['id'] = $new_id;
+        $results = array('id' => $new_id);
         echo xoutput_from_array($results);
 
         return false;

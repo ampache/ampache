@@ -22,20 +22,20 @@
 
 UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 ?>
-<form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING)) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellpadding="3" cellspacing="0">
     <tr id="search_location">
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) !== 'song') {
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'song') {
     ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php
 } else {
         echo T_('Songs');
     } ?></td>
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) !== 'album') {
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'album') {
         ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php
     } else {
         echo T_('Albums');
     } ?></td>
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) !== 'artist') {
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'artist') {
         ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php
     } else {
         echo T_('Artists');
@@ -44,7 +44,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
         ?>
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) != 'video') {
             ?>
-            <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) !== 'video') {
+            <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') {
                 ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php
             } else {
                 echo T_('Videos');
@@ -81,7 +81,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 
 <div class="formValidation">
             <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
-<?php if (((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING) == 'song' || ! (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING)) && Access::check('interface', 25)) {
+<?php if (((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'song' || ! (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) && Access::check('interface', 25)) {
         ?>
         <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
 <?php

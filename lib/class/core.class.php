@@ -97,11 +97,11 @@ class Core
      */
     public static function get_request($variable)
     {
-        if (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING) !== null) {
-            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING);
+        if (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== null) {
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
-        if (filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING) !== null) {
-            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING);
+        if (filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== null) {
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
         if ($_REQUEST[$variable] === null) {
             return '';
@@ -120,7 +120,7 @@ class Core
     public static function get_get($variable)
     {
         if (filter_has_var(INPUT_GET, $variable)) {
-            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING);
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
         if ($_GET[$variable] === null) {
             return '';
@@ -139,7 +139,7 @@ class Core
     public static function get_post($variable)
     {
         if (filter_has_var(INPUT_POST, $variable)) {
-            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING);
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
         if ($_POST[$variable] === null) {
             return '';

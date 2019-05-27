@@ -790,6 +790,7 @@ class Api
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
             $playlist->delete_track_number($track);
+            $playlist->regenerate_track_numbers();
             echo XML_Data::single_string('success');
         }
     } // playlist_remove_song
