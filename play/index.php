@@ -76,7 +76,7 @@ if (AmpConfig::get('transcode_player_customize')) {
 }
 $share_id         = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
 $subtitle         = '';
-$send_all_in_once = false;
+$send_all_in_once = AmpConfig::get('send_full_stream');
 
 if (!$type) {
     $type = 'song';
