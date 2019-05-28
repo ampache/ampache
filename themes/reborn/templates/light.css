@@ -24,7 +24,7 @@
 ***********************************************/
 
 body {
-    color: #666;
+    color: #000;
     background-color: #fff;
     height: 90%;
 }
@@ -137,7 +137,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .formValidation input {
-    color: #000;
+    color: #fff;
 }
 
 #loginPage span.error {
@@ -147,7 +147,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #footer {
-    color: #888;
+    color: #000;
 }
 
 #loginPage #footer a {
@@ -233,11 +233,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    color: #666;
+    color: #000;
 }
 
 #rightbar #rb_current_playlist li {
-    color: #666;
+    color: #000;
 }
 
 #rightbar #rb_current_playlist li a {
@@ -281,15 +281,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    color: #666;
+    color: #000;
 }
 
 .list-header, .list-header a {
-    color: #999;
+    color: #000;
 }
 
 .list-header a:hover, .list-header a:focus {
-    color: #fff;
+    color: #52aae4;
 }
 
 span.page-nb {
@@ -297,11 +297,11 @@ span.page-nb {
  }
 
 table.tabledata {
-    color: #666;
+    color: #000;
 }
 
 table.tabledata a {
-    color: #666;
+    color: #000;
 }
 
 #catalog_type_fields table.tabledata a {
@@ -328,7 +328,7 @@ table.tabledata tfoot .th-bottom {
 }
 
 table.tabledata th a {
-    color: #1990db;
+    color: #000;
 }
 
 table.tabledata tr:hover, table.tabledata tr:focus {
@@ -493,7 +493,7 @@ dl.media_details dt {
 }
 
 #ampache_link {
-	color: #555;
+	color: #000;
 }
 
 /***********************************************
@@ -549,7 +549,7 @@ div.jp-playlist li {
 .jscroll-next {
     border-color: #ccc;
     background-color: #eee;
-    color: #999;
+    color: #000;
 }
 
 .missing_album {
@@ -595,4 +595,3 @@ a.option-list:hover {
 #tabs li.tab_active a {
 	color: #000;
 }
-
