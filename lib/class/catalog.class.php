@@ -1234,10 +1234,6 @@ abstract class Catalog extends database_object
         $results = $art->gather($options);
 
         foreach ($results as $result) {
-            // Skip searching for art that is already in the DB
-            if (Art::has_db($result, type)) {
-                break;
-            }
             // Pull the string representation from the source
             $image = Art::get_from_source($result, $type);
             if (strlen($image) > '5') {
@@ -1320,12 +1316,15 @@ abstract class Catalog extends database_object
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
-                $this->gather_art_item($key, $objectid);
+                // Skip searching for art that is already in the DB
+                if (!Art::has_db($objectid, $key)) {
+                    $this->gather_art_item($key, $objectid);
 
-                // Stupid little cutesie thing
-                $search_count++;
-                if (UI::check_ticker()) {
-                    UI::update_text('count_art_' . $this->id, $search_count);
+                    // Stupid little cutesie thing
+                    $search_count++;
+                    if (UI::check_ticker()) {
+                        UI::update_text('count_art_' . $this->id, $search_count);
+                    }
                 }
             }
         }
