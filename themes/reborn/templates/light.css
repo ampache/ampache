@@ -162,15 +162,19 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Sidebar
 ***********************************************/
 #sidebar {
-    color: #666;
+    color: #E3E3E3;
 }
 
 #sidebar-header {
-    background-color: #f8f8f8;
+    background-color: #F8F8F8;
     border-color: #d8d8d8;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
+}
+
+#sidebar-header {
+    color: #000;
 }
 
 #sidebar-header:hover {
@@ -187,7 +191,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 /* Tabs content */
 #sidebar-page {
-    background-color: #f8f8f8;
+    background-color: #F8F8F8;
     border-color: #d8d8d8;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -204,7 +208,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-tabs .sb2 li ul li a {
-	color: #999;
+	color: #000;
 }
 
 #sidebar-tabs .sb2 li ul li a:hover {
@@ -224,7 +228,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
                   Rightbar
 ***********************************************/
 #rightbar {
-    background-color: #f8f8f8;
+    background-color: #F8F8F8;
     border-color: #d8d8d8;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -272,7 +276,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Content
 ***********************************************/
 #content {
-    background-color: #f8f8f8;
+    background-color: #F8F8F8;
     border-color: #d8d8d8;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -498,7 +502,7 @@ dl.media_details dt {
 div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
-	color: #999;
+	color: #000;
 	border: 1px solid #F8F8F8;
 }
 
@@ -508,7 +512,7 @@ div.jp-video div.jp-interface {
 
 div.jp-title,
 div.jp-playlist {
-	background-color: #CCC;
+	background-color: #D4D4D4;
 	border-top: 1px solid #F8F8F8;
 }
 
@@ -522,11 +526,11 @@ div.jp-playlist {
 }
 
 div.playing_title a {
-	color: #999;
+	color: #000;
 }
 
 div.playing_artist a {
-	color: #999;
+	color: #000;
 }
 
 div.jp-interface {
@@ -569,7 +573,7 @@ div.jp-playlist li {
 }
 
 span.item-count {
-	color: #999;
+	color: #000;
 }
 
 a.option-list:hover {
@@ -591,3 +595,4 @@ a.option-list:hover {
 #tabs li.tab_active a {
 	color: #000;
 }
+

@@ -602,14 +602,12 @@ div.jp-type-playlist div.jp-playlist li.jp-playlist-current {
 	padding-left: 20px;
 }
 div.jp-type-playlist div.jp-playlist a {
-	color: #BBB;
 	text-decoration: none;
 }
 div.jp-type-playlist div.jp-playlist a:hover {
 	color: #FFF;
 }
 div.jp-type-playlist div.jp-playlist a.jp-playlist-current {
-	color: #FFF;
 	font-weight: bold;
 }
 
@@ -638,7 +636,6 @@ div.jp-type-playlist div.jp-playlist span.jp-free-media a:hover{
 }
 span.jp-artist {
 	font-size: .8em;
-	color: #666;
 }
 
 /* @end */
@@ -896,3 +893,4 @@ a.jp-shuffle-off:hover {
 }
 
 /* @end */
+
