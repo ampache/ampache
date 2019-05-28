@@ -202,6 +202,7 @@ class Subsonic_XML_Data
     {
         $response = self::createResponse($version);
         $response->addAttribute('status', 'failed');
+        debug_event('subsonic_xml_data.class', 'API auth fail: ' . $version, 5);
 
         return $response;
     }
@@ -209,6 +210,7 @@ class Subsonic_XML_Data
     public static function createSuccessResponse($version = '')
     {
         $response = self::createResponse($version);
+        debug_event('subsonic_xml_data.class', 'API auth success: ' . $version, 5);
 
         return $response;
     }

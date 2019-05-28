@@ -1234,6 +1234,10 @@ abstract class Catalog extends database_object
         $results = $art->gather($options);
 
         foreach ($results as $result) {
+            // Skip searching for art that is already in the DB
+            if (Art::has_db($result, type)) {
+                break;
+            }
             // Pull the string representation from the source
             $image = Art::get_from_source($result, $type);
             if (strlen($image) > '5') {
