@@ -90,7 +90,7 @@ if (empty($results['local_web_path'])) {
 }
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
 
-$results['web_path']  = $http_type . $results['http_host'] .
+$results['web_path'] = $http_type . $results['http_host'] .
     (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
     $results['web_path'];
 
@@ -107,10 +107,10 @@ if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) 
 }
 
 /* Variables needed for Auth class */
-$results['cookie_path']        = $results['raw_web_path'];
-$results['cookie_domain']      = $results['http_port'];
-$results['cookie_life']        = $results['session_cookielife'];
-$results['cookie_secure']      = $results['session_cookiesecure'];
+$results['cookie_path']   = $results['raw_web_path'];
+$results['cookie_domain'] = $results['http_port'];
+$results['cookie_life']   = $results['session_cookielife'];
+$results['cookie_secure'] = $results['session_cookiesecure'];
 
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
