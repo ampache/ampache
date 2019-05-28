@@ -791,14 +791,18 @@ abstract class Catalog extends database_object
      * get_album_ids
      *
      * This returns an array of ids of albums that have songs in this
-     * catalog
+     * catalog's
+     * @param string $filter
      * @return integer[]
      */
-    public function get_album_ids()
+    public function get_album_ids($filter = '')
     {
         $results = array();
 
         $sql        = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
+        if ($filter === 'art') {
+            $sql .= ' AND `song`.`album` NOT IN (SELECT `object_id` FROM `image` WHERE `object_type` = \'album\')';
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -933,13 +937,17 @@ abstract class Catalog extends database_object
      *
      * This returns an array of ids of artist that have songs in this
      * catalog
+     * @param string $filter
      * @return integer[]
      */
-    public function get_artist_ids()
+    public function get_artist_ids($filter = '')
     {
         $results = array();
 
         $sql        = 'SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `song`.`catalog` = ?';
+        if ($filter === 'art') {
+            $sql .= ' AND `song`.`artist` NOT IN (SELECT `object_id` FROM `image` WHERE `object_type` = \'artist\')';
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1269,7 +1277,7 @@ abstract class Catalog extends database_object
      * gather_art
      *
      * This runs through all of the albums and finds art for them
-     * This runs through all of the needs art albums and trys
+     * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
      * @param int[]|null $songs
      * @param int[]|null $videos
@@ -1290,8 +1298,8 @@ abstract class Catalog extends database_object
         $search_count = 0;
         $searches     = array();
         if ($songs == null) {
-            $searches['album']  = $this->get_album_ids();
-            $searches['artist'] = $this->get_artist_ids();
+            $searches['album']  = $this->get_album_ids('art');
+            $searches['artist'] = $this->get_artist_ids('art');
         } else {
             $searches['album']  = array();
             $searches['artist'] = array();
