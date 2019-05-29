@@ -133,7 +133,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #loginbox, #registerPage #registerbox {
-    color: #fff;
+    color: #000;
 }
 
 #loginPage #loginbox div, #registerPage #registerbox div {
@@ -148,7 +148,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #loginbox #remembermefield {
-    color: #eee;
+    color: #000;
 }
 
 .formValidation input {
