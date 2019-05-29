@@ -321,7 +321,6 @@ class Artist extends database_object implements library_item
         if (!$ignoreAlbumGroups) {
             $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
-
         }
 
         $db_results = Dba::read($sql);
@@ -413,7 +412,6 @@ class Artist extends database_object implements library_item
         if (!$ignoreAlbumGroups) {
             $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
-
         }
 
         $db_results = Dba::read($sql);
