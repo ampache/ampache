@@ -240,7 +240,7 @@ class Artist extends database_object implements library_item
         if ($extra) {
             $sql = "SELECT `song`.`artist`, COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 
-            debug_event("artist.class", "build_cache sql: " . $sql, "6");
+            debug_event("artist.class", "build_cache sql: " . $sql, 5);
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -318,6 +318,11 @@ class Artist extends database_object implements library_item
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
+        if (!$ignoreAlbumGroups) {
+            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+                    "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
+
+        }
 
         $db_results = Dba::read($sql);
 
@@ -405,6 +410,11 @@ class Artist extends database_object implements library_item
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
+        if (!$ignoreAlbumGroups) {
+            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+                    "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
+
+        }
 
         $db_results = Dba::read($sql);
 
