@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
 
             return false;
         }
-        
+
         if (isset($_REQUEST['podcast_id'])) {
             $podcast = new Podcast($_REQUEST['podcast_id']);
             if ($podcast->id) {

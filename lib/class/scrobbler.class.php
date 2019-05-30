@@ -34,7 +34,7 @@ class scrobbler
      * Constructor
      * This is the constructer it takes a username and password
      */
-    public function __construct($api_key, $scheme='https', $host='', $challenge='', $secret='')
+    public function __construct($api_key, $scheme = 'https', $host = '', $challenge = '', $secret = '')
     {
         $this->error_msg     = '';
         $this->challenge     = $challenge;
@@ -50,7 +50,7 @@ class scrobbler
      * Provide the API signature for calling Last.fm / Libre.fm services
      * It is the md5 of the <name><value> of all parameter plus API's secret
      */
-    public function get_api_sig($vars=null)
+    public function get_api_sig($vars = null)
     {
         ksort($vars);
         $sig = '';
@@ -69,7 +69,7 @@ class scrobbler
      * It need the method (GET/POST), the url and the parameters
      * @param string $url
      */
-    public function call_url($url, $method='GET', $vars=null)
+    public function call_url($url, $method = 'GET', $vars = null)
     {
         // Encode parameters per RFC1738
         $params=http_build_query($vars);
@@ -87,7 +87,7 @@ class scrobbler
             $opts['http']['content']  = $params;
             $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
             $opts['http']['header'][] = 'Content-length: ' . strlen($params);
-            $params                   ='';
+            $params                   = '';
         }
         $context = stream_context_create($opts);
         if ($params != '') {
@@ -131,7 +131,7 @@ class scrobbler
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
      */
-    public function get_session_key($token=null)
+    public function get_session_key($token = null)
     {
         if ($token !== null) {
             $vars = array(

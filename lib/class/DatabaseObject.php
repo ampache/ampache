@@ -90,7 +90,7 @@ abstract class DatabaseObject
             }
         }
     }
-    
+
     protected function fromCamelCase($properties)
     {
         $data = array();

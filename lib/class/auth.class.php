@@ -48,7 +48,7 @@ class Auth
      * @param string $key
      * @param boolean $relogin
      */
-    public static function logout($key='', $relogin = true)
+    public static function logout($key = '', $relogin = true)
     {
         // If no key is passed try to find the session id
         $key = $key ? $key : session_id();

@@ -161,13 +161,13 @@ class Localplay
                 debug_event('localplay.class', $file . ' is not a directory.', 3);
                 continue;
             }
-            
+
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $file . '.controller.php')) {
                 debug_event('localplay.class', 'Missing class for ' . $file, 3);
                 continue;
             }
-            
+
             $results[] = $file;
         } // end while
 

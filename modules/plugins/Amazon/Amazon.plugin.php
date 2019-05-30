@@ -29,13 +29,13 @@ class AmpacheAmazon
     public $version        = '000001';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
-    
+
     public $amazon_base_url;
     public $amazon_max_results_pages;
     public $amazon_developer_public_key;
     public $amazon_developer_private_api_key;
     public $amazon_developer_associate_tag;
-    
+
     /**
      * Constructor
      * This function does nothing
@@ -60,7 +60,7 @@ class AmpacheAmazon
         Preference::insert('amazon_developer_public_key', 'Amazon Access Key ID', '', '75', 'string', 'plugins', $this->name);
         Preference::insert('amazon_developer_private_api_key', 'Amazon Secret Access Key', '', '75', 'string', 'plugins', $this->name);
         Preference::insert('amazon_developer_associate_tag', 'Amazon associate tag', '', '75', 'string', 'plugins', $this->name);
-        
+
         return true;
     } // install
 
@@ -75,7 +75,7 @@ class AmpacheAmazon
         Preference::delete('amazon_developer_public_key');
         Preference::delete('amazon_developer_private_api_key');
         Preference::delete('amazon_developer_associate_tag');
-    
+
         return true;
     } // uninstall
 
@@ -96,7 +96,7 @@ class AmpacheAmazon
 
             return false;
         }
-        
+
         if (strlen(trim($data['amazon_developer_public_key']))) {
             $this->amazon_developer_public_key = trim($data['amazon_developer_public_key']);
         } else {
@@ -104,7 +104,7 @@ class AmpacheAmazon
 
             return false;
         }
-        
+
         if (strlen(trim($data['amazon_developer_private_api_key']))) {
             $this->amazon_developer_private_api_key = trim($data['amazon_developer_private_api_key']);
         } else {
@@ -112,19 +112,19 @@ class AmpacheAmazon
 
             return false;
         }
-        
+
         if (strlen(trim($data['amazon_max_results_pages']))) {
             $this->amazon_max_results_pages = trim($data['amazon_max_results_pages']);
         } else {
             $this->amazon_max_results_pages = 1;
         }
-        
+
         if (strlen(trim($data['amazon_developer_associate_tag']))) {
             $this->amazon_developer_associate_tag = trim($data['amazon_developer_associate_tag']);
         } else {
             $this->amazon_developer_associate_tag = '';
         }
-        
+
         return true;
     } // load
 
@@ -141,7 +141,7 @@ class AmpacheAmazon
             'MediumImage',
             'SmallImage'
         );
-        
+
         $mediaType = ($type == 'album' || $type == 'artist') ? 'Music' : 'Video';
 
         // Prevent the script from timing out

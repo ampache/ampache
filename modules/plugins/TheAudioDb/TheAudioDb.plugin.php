@@ -29,7 +29,7 @@ class AmpacheTheaudiodb
     public $version        = '000002';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
-    
+
     // These are internal settings used by this class, run this->load to
     // fill them out
     private $api_key;
@@ -55,7 +55,7 @@ class AmpacheTheaudiodb
 
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
         Preference::insert('tadb_api_key', 'TheAudioDb api key', '41214789306c4690752dfb', '75', 'string', 'plugins', $this->name);
-        
+
         return true;
     } // install
 
@@ -66,7 +66,7 @@ class AmpacheTheaudiodb
     public function uninstall()
     {
         Preference::delete('tadb_api_key');
-        
+
         return true;
     } // uninstall
 
@@ -87,7 +87,7 @@ class AmpacheTheaudiodb
 
             return false;
         }
-        
+
         return true;
     } // load
 
@@ -120,7 +120,7 @@ class AmpacheTheaudiodb
                         $release = $albums->album[0];
                     }
                 }
-                
+
                 if ($release) {
                     $results['art']   = $release->strAlbumThumb;
                     $results['title'] = $release->strAlbum;
@@ -158,7 +158,7 @@ class AmpacheTheaudiodb
         } catch (Exception $e) {
             debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
-        
+
         return $results;
     } // get_metadata
 
@@ -168,7 +168,7 @@ class AmpacheTheaudiodb
 
         return Art::gather_metadata_plugin($this, $type, $options);
     }
-    
+
     private function api_call($func)
     {
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
@@ -181,32 +181,32 @@ class AmpacheTheaudiodb
 
         return json_decode($request->body);
     }
-    
+
     private function search_artists($name)
     {
         return $this->api_call('search.php?s=' . rawurlencode($name));
     }
-    
+
     private function get_artist($mbid)
     {
         return $this->api_call('artist-mb.php?i=' . $mbid);
     }
-    
+
     private function search_album($artist, $album)
     {
         return $this->api_call('searchalbum.php?s=' . rawurlencode($artist) . '&a=' . rawurlencode($album));
     }
-    
+
     private function get_album($mbid)
     {
         return $this->api_call('album-mb.php?i=' . $mbid);
     }
-    
+
     private function search_track($artist, $title)
     {
         return $this->api_call('searchtrack.php?s=' . rawurlencode($artist) . '&t=' . rawurlencode($title));
     }
-    
+
     private function get_track($mbid)
     {
         return $this->api_call('track-mb.php?i=' . $mbid);

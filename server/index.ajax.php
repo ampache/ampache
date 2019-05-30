@@ -295,7 +295,7 @@ switch ($_REQUEST['action']) {
             $fsname = 'fslider_' . time();
             echo "<div id='" . $fsname . "'>";
             foreach ($images as $image) {
-                echo "<img src='" . $image['url'] . "' alt='' onclick='update_action();' />";
+                echo "<img src='" . $image['url'] . "' alt= '' onclick='update_action();' />";
             }
             echo "</div>";
             $results['fslider'] = ob_get_clean();

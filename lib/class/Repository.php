@@ -32,7 +32,7 @@ use Lib\Interfaces\Model;
 class Repository
 {
     protected $modelClassName;
-    
+
     /**
      *
      * @var array Stores relation between SQL field name and class name so we
@@ -231,7 +231,7 @@ class Repository
             }
             $sql .= implode(' and ', $sqlParts);
         }
-        
+
         return $sql;
     }
 

@@ -98,7 +98,7 @@ $(function () {
                 'default' : { 'icon' : 'folder' },
                 'file' : { 'valid_children' : [], 'icon' : 'file' }
             },
-            'plugins' : ['state','dnd','sort','types','contextmenu','unique']
+            'plugins' : ['state', 'dnd', 'sort', 'types', 'contextmenu', 'unique']
         })
         .on('delete_node.jstree', function (e, data) {
             $.get('<?php echo $ajaxfs; ?>?operation=delete_node', { 'id' : data.node.id })

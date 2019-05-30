@@ -5,6 +5,12 @@ CURRENT PROGRESS IN THE CORE BRANCH
 
 4.0.0-CORE
 ----------
+- Resolve CVE-2019-12385 for the SQL Injection
+- Resolve CVE-2019-12386 for the persistent XSS
+- Remove charts/graphs that use non-free graph library pchart
+- Ignore items with existing art in the database when gathering.
+- Update the CSS theme colors and structure.
+- Light theme updated.
 - Remove plex, seafile, dropbox, googleplus plugins
 - Remove all plex code
 - Remove message of the day
@@ -29,6 +35,7 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Add year information and links to the data rows and interface
 - Default to mashup for artists and albums
 - Add rating_browse_filter, rating_browse_minimum_stars to filter based on a star rating.
+- Add send_full_stream to config, to allow pushing the full track instead of segmenting
 
 3.9.1
 ----------

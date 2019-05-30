@@ -39,7 +39,7 @@ class Podcast_Episode extends database_object implements media, library_item
     public $author;
     public $category;
     public $pubdate;
-    
+
     public $catalog;
     public $f_title;
     public $f_file;
@@ -57,7 +57,7 @@ class Podcast_Episode extends database_object implements media, library_item
     public $f_link;
     public $f_podcast;
     public $f_podcast_link;
-    
+
     /**
      * Constructor
      *
@@ -99,7 +99,7 @@ class Podcast_Episode extends database_object implements media, library_item
     {
         Dba::write('DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL');
     }
-    
+
     /**
      * get_catalogs
      *
@@ -110,7 +110,7 @@ class Podcast_Episode extends database_object implements media, library_item
     {
         return array($this->catalog);
     }
-    
+
     /**
      * format
      * this function takes the object and reformats some values
@@ -125,7 +125,7 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_website     = scrub_out($this->website);
         $this->f_pubdate     = date("m\/d\/Y - H:i", $this->pubdate);
         $this->f_state       = ucfirst($this->state);
-        
+
         // Format the Time
         $min            = floor($this->time / 60);
         $sec            = sprintf("%02d", ($this->time % 60));
@@ -136,10 +136,10 @@ class Podcast_Episode extends database_object implements media, library_item
         // Format the Size
         $this->f_size = UI::format_bytes($this->size);
         $this->f_file = $this->f_title . '.' . $this->type;
-        
+
         $this->link   = AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
-        
+
         if ($details) {
             $podcast = new Podcast($this->podcast);
             $podcast->format();
@@ -148,10 +148,10 @@ class Podcast_Episode extends database_object implements media, library_item
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
         }
-        
+
         return true;
     }
-    
+
     public function get_keywords()
     {
         $keywords            = array();
@@ -164,7 +164,7 @@ class Podcast_Episode extends database_object implements media, library_item
 
         return $keywords;
     }
-    
+
     public function get_fullname()
     {
         return $this->f_title;
@@ -174,7 +174,7 @@ class Podcast_Episode extends database_object implements media, library_item
     {
         return array('object_type' => 'podcast', 'object_id' => $this->podcast);
     }
-    
+
     public function get_childrens()
     {
         return array();
@@ -186,7 +186,7 @@ class Podcast_Episode extends database_object implements media, library_item
 
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -199,7 +199,7 @@ class Podcast_Episode extends database_object implements media, library_item
 
         return $medias;
     }
-    
+
     public function get_user_owner()
     {
         return null;
@@ -214,7 +214,7 @@ class Podcast_Episode extends database_object implements media, library_item
     {
         return $this->f_description;
     }
-    
+
     public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
@@ -234,7 +234,7 @@ class Podcast_Episode extends database_object implements media, library_item
             Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
         }
     }
-    
+
     /**
      * update
      * This takes a key'd array of data and updates the current podcast episode
@@ -246,7 +246,7 @@ class Podcast_Episode extends database_object implements media, library_item
         $description    = isset($data['description']) ? $data['description'] : $this->description;
         $author         = isset($data['author']) ? $data['author'] : $this->author;
         $category       = isset($data['category']) ? $data['category'] : $this->category;
-        
+
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
         Dba::write($sql, array($title, $website, $description, $author, $category, $this->id));
 
@@ -255,10 +255,10 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->description = $description;
         $this->author      = $author;
         $this->category    = $category;
-        
+
         return $this->id;
     }
-    
+
     /**
      * set_played
      * this checks to see if the current object has been played
@@ -332,18 +332,18 @@ class Podcast_Episode extends database_object implements media, library_item
     {
         return $this->f_podcast . " - " . $this->f_title;
     }
-    
+
     /**
      * Get transcode settings.
      * @param string $target
      * @param array $options
      * @return array|boolean
      */
-    public function get_transcode_settings($target = null, $player = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return Song::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
-    
+
     /**
      * play_url
      * This function takes all the song information and correctly formats a
@@ -355,11 +355,11 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false)
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
     {
         return Song::generic_play_url('podcast_episode', $oid, $additional_params, $player, $local);
     }
-    
+
     /**
      * Get stream types.
      * @return string
@@ -368,22 +368,22 @@ class Podcast_Episode extends database_object implements media, library_item
     {
         return Song::get_stream_types_for_type($this->type, $player);
     }
-    
+
     public function remove()
     {
         debug_event('podcast_episode.class', 'Removing podcast episode ' . $this->id, 5);
-        
+
         if (AmpConfig::get('delete_from_disk') && !empty($this->file)) {
             if (!unlink($this->file)) {
                 debug_event('podcast_episode.class', 'Cannot delete file ' . $this->file, 3);
             }
         }
-        
+
         $sql = "DELETE FROM `podcast_episode` WHERE `id` = ?";
 
         return Dba::write($sql, array($this->id));
     }
-    
+
     /**
      * @param string $state
      */
@@ -393,7 +393,7 @@ class Podcast_Episode extends database_object implements media, library_item
 
         return Dba::write($sql, array($state, $this->id));
     }
-    
+
     public function gather()
     {
         if (!empty($this->source)) {
@@ -406,7 +406,7 @@ class Podcast_Episode extends database_object implements media, library_item
                 if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
                     debug_event('podcast_episode.class', 'Download completed.', 4);
                     $this->file = $file;
-                    
+
                     $vainfo = new vainfo($this->file);
                     $vainfo->get_info();
                     $key   = vainfo::get_tag_type($vainfo->tags);
@@ -427,7 +427,7 @@ class Podcast_Episode extends database_object implements media, library_item
             debug_event('podcast_episode.class', 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
         }
     }
-    
+
     /**
      * type_to_mime
      *

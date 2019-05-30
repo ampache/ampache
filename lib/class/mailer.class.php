@@ -57,11 +57,11 @@ class Mailer
         if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
             return true;
         }
-        
+
         // by default you actually want people to set up mail first
         return false;
     }
-    
+
     /**
      * validate_address
      *
@@ -128,7 +128,7 @@ class Mailer
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('id' => $row['id'],'fullname' => $row['fullname'],'email' => $row['email']);
+            $results[] = array('id' => $row['id'], 'fullname' => $row['fullname'], 'email' => $row['email']);
         }
 
         return $results;

@@ -227,7 +227,7 @@ abstract class Catalog extends database_object
      * @param integer $id
      * @return Catalog|null
      */
-    public static function create_catalog_type($type, $id=0)
+    public static function create_catalog_type($type, $id = 0)
     {
         if (!$type) {
             return false;
@@ -532,7 +532,7 @@ abstract class Catalog extends database_object
      * of what you find
      * @return integer[]
      */
-    public static function get_catalogs($filter_type='')
+    public static function get_catalogs($filter_type = '')
     {
         $params     = array();
         $sql        = "SELECT `id` FROM `catalog` ";
@@ -762,7 +762,7 @@ abstract class Catalog extends database_object
      * @param integer|null $user_id
      * @return string
      */
-    public static function get_uploads_sql($type, $user_id=null)
+    public static function get_uploads_sql($type, $user_id = null)
     {
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
@@ -791,14 +791,18 @@ abstract class Catalog extends database_object
      * get_album_ids
      *
      * This returns an array of ids of albums that have songs in this
-     * catalog
+     * catalog's
+     * @param string $filter
      * @return integer[]
      */
-    public function get_album_ids()
+    public function get_album_ids($filter = '')
     {
         $results = array();
 
         $sql        = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
+        if ($filter === 'art') {
+            $sql .= ' AND `song`.`album` NOT IN (SELECT `object_id` FROM `image` WHERE `object_type` = \'album\')';
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -933,13 +937,17 @@ abstract class Catalog extends database_object
      *
      * This returns an array of ids of artist that have songs in this
      * catalog
+     * @param string $filter
      * @return integer[]
      */
-    public function get_artist_ids()
+    public function get_artist_ids($filter = '')
     {
         $results = array();
 
         $sql        = 'SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `song`.`catalog` = ?';
+        if ($filter === 'art') {
+            $sql .= ' AND `song`.`artist` NOT IN (SELECT `object_id` FROM `image` WHERE `object_type` = \'artist\')';
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1269,7 +1277,7 @@ abstract class Catalog extends database_object
      * gather_art
      *
      * This runs through all of the albums and finds art for them
-     * This runs through all of the needs art albums and trys
+     * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
      * @param int[]|null $songs
      * @param int[]|null $videos
@@ -1290,8 +1298,8 @@ abstract class Catalog extends database_object
         $search_count = 0;
         $searches     = array();
         if ($songs == null) {
-            $searches['album']  = $this->get_album_ids();
-            $searches['artist'] = $this->get_artist_ids();
+            $searches['album']  = $this->get_album_ids('art');
+            $searches['artist'] = $this->get_artist_ids('art');
         } else {
             $searches['album']  = array();
             $searches['artist'] = array();
@@ -1316,12 +1324,15 @@ abstract class Catalog extends database_object
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
-                $this->gather_art_item($key, $objectid);
+                // Skip searching for art that is already in the DB
+                if (!Art::has_db($objectid, $key)) {
+                    $this->gather_art_item($key, $objectid);
 
-                // Stupid little cutesie thing
-                $search_count++;
-                if (UI::check_ticker()) {
-                    UI::update_text('count_art_' . $this->id, $search_count);
+                    // Stupid little cutesie thing
+                    $search_count++;
+                    if (UI::check_ticker()) {
+                        UI::update_text('count_art_' . $this->id, $search_count);
+                    }
                 }
             }
         }
@@ -1541,7 +1552,7 @@ abstract class Catalog extends database_object
      * @param string $rename_pattern
      * @return array
      */
-    public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern='', $rename_pattern='')
+    public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern = '', $rename_pattern = '')
     {
         debug_event('catalog.class', 'Reading tags from ' . $media->file, 5);
 
@@ -1825,7 +1836,6 @@ abstract class Catalog extends database_object
             $db_results  = Dba::write($sql, array($object_id));
         }
     }
-    
 
     /**
      * clean_catalog
@@ -1847,7 +1857,7 @@ abstract class Catalog extends database_object
 
         $dead_total = $this->clean_catalog_proc();
         self::clean_empty_albums();
-        
+
         debug_event('catalog.class', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
@@ -1998,7 +2008,7 @@ abstract class Catalog extends database_object
      * @param string $title
      * @param string $file
      */
-    public static function check_title($title, $file='')
+    public static function check_title($title, $file = '')
     {
         if (strlen(trim($title)) < 1) {
             $title = Dba::escape($file);
@@ -2221,7 +2231,7 @@ abstract class Catalog extends database_object
             return false;
         }
         self::clean_empty_albums();
-        
+
         $sql        = "DELETE FROM `video` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, array($catalog_id));
 

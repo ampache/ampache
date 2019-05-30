@@ -136,7 +136,7 @@ class UPnPDevice
             debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code OK - Create response', 5);
         }
         */
-        
+
         return $response;
     }
 
@@ -165,7 +165,7 @@ class UPnPDevice
         $args     = array( 'InstanceID' => $id );
         $response = $this->sendRequestToDevice($command, $args, $type);
 
-        ///$response = \Format::forge($response,'xml:ns')->to_array();
+        ///$response = \Format::forge($response, 'xml:ns')->to_array();
         ///return $response['s:Body']['u:' . $command . 'Response'];
 
         return $response;

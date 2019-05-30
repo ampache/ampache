@@ -58,7 +58,7 @@ class Plugin
             } else {
                 $name = 'ampache-' . strtolower($cname);
             }
-            
+
             /* Require the file we want */
             if (!include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
                 debug_event('plugin.class', 'Cannot include plugin `' . $cname . '`.', 1);
@@ -85,7 +85,7 @@ class Plugin
      * get_plugins
      * This returns an array of plugin names
      */
-    public static function get_plugins($type='')
+    public static function get_plugins($type = '')
     {
         // make static cache for optimization when multiple call
         static $plugins_list = array();
@@ -113,20 +113,20 @@ class Plugin
                 debug_event('plugin.class', $file . ' is not a directory.', 3);
                 continue;
             }
-            
+
             // If directory name start with ampache-, this is an external plugin and some parsing is required
             if (strpos($file, "ampache-") === 0) {
                 $cfile = ucfirst(substr($file, 8));
             } else {
                 $cfile = $file;
             }
-            
+
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $cfile . '.plugin.php')) {
                 debug_event('plugin.class', 'Missing class for ' . $cfile, 3);
                 continue;
             }
-            
+
             if ($type != '') {
                 $plugin = new Plugin($cfile);
                 if (! Plugin::is_installed($plugin->_plugin->name)) {

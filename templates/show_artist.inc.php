@@ -167,18 +167,6 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (($owner_id > 0 && $owner_id === (int) Core::get_global('user')->id) || Access::check('interface', '50')) {
-        ?>
-            <?php if (AmpConfig::get('statistical_graphs')) {
-            ?>
-                <li>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo T_('Graphs'); ?></a>
-                </li>
-            <?php
-        } ?>
-        <?php
-    } ?>
         <?php if ($artist->can_edit()) {
         ?>
             <?php if (AmpConfig::get('allow_upload')) {

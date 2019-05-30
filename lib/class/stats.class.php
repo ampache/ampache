@@ -537,7 +537,7 @@ class Stats
         if (!$offset) {
             $limit = $count;
         } else {
-            $limit = $offset . ',' . $count;
+            $limit = $offset . ', ' . $count;
         }
 
         $sql = self::get_newest_sql($type, $catalog);

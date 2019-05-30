@@ -180,7 +180,7 @@ class Waveform
 
             return null;
         }
-        
+
         if (!check_php_gd()) {
             debug_event('waveform.class', 'GD extension must be loaded', 1);
 

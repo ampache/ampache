@@ -305,6 +305,9 @@ class Access
 
                     return false;
                 }
+                if (!Core::get_global('user')) {
+                    return false;
+                }
                 if (AmpConfig::get('allow_zip_download') && Core::get_global('user')->has_access('5')) {
                     return make_bool(AmpConfig::get('download'));
                 }

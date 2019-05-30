@@ -232,7 +232,7 @@ class Art extends database_object
      * @param boolean $raw
      * @return string
      */
-    public function get($raw=false)
+    public function get($raw = false)
     {
         // Get the data either way
         if (!$this->has_db_info()) {
@@ -437,7 +437,7 @@ class Art extends database_object
             $maxw = AmpConfig::get('album_art_max_width');
             $minh = AmpConfig::get('album_art_min_height');
             $maxh = AmpConfig::get('album_art_max_height');
-            
+
             // setup 'defaults' if config was not set
             if (empty($minw)) {
                 $minw = 0;
@@ -675,7 +675,7 @@ class Art extends database_object
             } else {
                 $image = $results['image'];
             }
-            
+
             if ($image != null) {
                 return array(
                     'thumb' => (AmpConfig::get('album_art_store_disk')) ? self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind) : $results['image'],
@@ -888,7 +888,7 @@ class Art extends database_object
      * @param integer|null $thumb
      * @return string
      */
-    public static function url($uid, $type, $sid=null, $thumb=null)
+    public static function url($uid, $type, $sid = null, $thumb = null)
     {
         if (!self::is_valid_type($type)) {
             return null;
@@ -962,7 +962,7 @@ class Art extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('album', 'artist','tvshow','tvshow_season','video','user','live_stream');
+        $types = array('album', 'artist', 'tvshow', 'tvshow_season', 'video', 'user', 'live_stream');
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {
@@ -1106,7 +1106,7 @@ class Art extends database_object
 
             // Add the results we got to the current set
             $results = array_merge($results, (array) $data);
-        
+
             debug_event('art.class', 'results:' . json_encode($results), 3);
 
             if ($limit && count($results) >= $limit) {
@@ -1573,7 +1573,7 @@ class Art extends database_object
                     if (preg_match('~[^png|^jpg|^jpeg|^jif|^bmp]~', $test)) {
                         $results['extension']  = 'jpg';
                     }
-                        
+
                     $mime = 'image/';
                     $mime .= isset($results['extension']) ? $results['extension'] : 'jpeg';
 
@@ -1621,7 +1621,7 @@ class Art extends database_object
             if (!$xalbum) {
                 return array();
             }
-            
+
             $coverart = (array) $xalbum->image;
             if (empty($coverart)) {
                 return array();
@@ -1854,13 +1854,13 @@ class Art extends database_object
             }
         }
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
-        
+
         if ($size['height'] >= 150) {
             echo "<div class=\"item_art_play\">";
             echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' . $object_id);
             echo "</div>";
         }
-        
+
         if ($prettyPhoto) {
             $libitem = new $object_type($object_id);
             echo "<div class=\"item_art_actions\">";
@@ -1875,7 +1875,7 @@ class Art extends database_object
             }
             echo"</div>";
         }
-        
+
         echo "</a>\n";
         echo "</div>";
 

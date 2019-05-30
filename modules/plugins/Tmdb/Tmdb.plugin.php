@@ -29,7 +29,7 @@ class AmpacheTmdb
     public $version        = '000003';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
-    
+
     // These are internal settings used by this class, run this->load to
     // fill them out
     private $api_key;
@@ -54,7 +54,7 @@ class AmpacheTmdb
         }
 
         Preference::insert('tmdb_api_key', 'Tmdb api key', '', '75', 'string', 'plugins', $this->name);
-        
+
         return true;
     } // install
 
@@ -65,7 +65,7 @@ class AmpacheTmdb
     public function uninstall()
     {
         Preference::delete('tmdb_api_key');
-        
+
         return true;
     } // uninstall
 
@@ -86,7 +86,7 @@ class AmpacheTmdb
 
             return false;
         }
-        
+
         return true;
     } // load
 
@@ -104,16 +104,16 @@ class AmpacheTmdb
 
             return null;
         }
-        
+
         try {
             $token            = new \Tmdb\ApiToken($this->api_key);
             $client           = new \Tmdb\Client($token);
             $configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
             $config           = $configRepository->load();
             $imageHelper      = new \Tmdb\Helper\ImageHelper($config);
-            
+
             $title = $media_info['original_name'] ?: $media_info['title'];
-            
+
             $results = array();
             if (in_array('movie', $gather_types)) {
                 if (!empty($media_info['title'])) {
@@ -138,7 +138,7 @@ class AmpacheTmdb
                     }
                 }
             }
-            
+
             if (in_array('tvshow', $gather_types)) {
                 if (!empty($media_info['tvshow'])) {
                     $apires = $client->getSearchApi()->searchTv($media_info['tvshow']);
@@ -189,7 +189,7 @@ class AmpacheTmdb
         } catch (Exception $e) {
             debug_event('tmdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
-        
+
         return $results;
     } // get_metadata
 
@@ -199,7 +199,7 @@ class AmpacheTmdb
 
         return Art::gather_metadata_plugin($this, $type, $options);
     }
-    
+
     private static function get_genres($release)
     {
         $genres = array();

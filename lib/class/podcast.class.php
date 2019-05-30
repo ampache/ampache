@@ -34,7 +34,7 @@ class Podcast extends database_object implements library_item
     public $generator;
     public $lastbuilddate;
     public $lastsync;
-    
+
     public $episodes;
     public $f_title;
     public $f_description;
@@ -50,7 +50,7 @@ class Podcast extends database_object implements library_item
      * Podcast
      * Takes the ID of the podcast and pulls the info from the db
      */
-    public function __construct($podcast_id='')
+    public function __construct($podcast_id = '')
     {
         /* If they failed to pass in an id, just run for it */
         if (!$podcast_id) {
@@ -75,7 +75,7 @@ class Podcast extends database_object implements library_item
     public static function garbage_collection()
     {
     }
-    
+
     /**
      * get_catalogs
      *
@@ -86,7 +86,7 @@ class Podcast extends database_object implements library_item
     {
         return array($this->catalog);
     }
-    
+
     /**
      * get_episodes
      * gets all episodes for this podcast
@@ -158,11 +158,11 @@ class Podcast extends database_object implements library_item
         $this->f_lastsync      = date("m\/d\/Y - H:i", $this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
-        
+
         if ($details) {
             $this->_get_extra_info();
         }
-        
+
         return true;
     }
 
@@ -179,7 +179,7 @@ class Podcast extends database_object implements library_item
 
         return $keywords;
     }
-    
+
     public function get_fullname()
     {
         return $this->f_title;
@@ -189,7 +189,7 @@ class Podcast extends database_object implements library_item
     {
         return null;
     }
-    
+
     public function get_childrens()
     {
         return array('podcast_episode' => $this->get_episodes());
@@ -217,7 +217,7 @@ class Podcast extends database_object implements library_item
 
         return $medias;
     }
-    
+
     public function get_user_owner()
     {
         return null;
@@ -248,7 +248,7 @@ class Podcast extends database_object implements library_item
             Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
-    
+
     /**
      * update
      * This takes a key'd array of data and updates the current podcast
@@ -261,13 +261,13 @@ class Podcast extends database_object implements library_item
         $description    = isset($data['description']) ? scrub_in($data['description']) : $this->description;
         $generator      = isset($data['generator']) ? scrub_in($data['generator']) : $this->generator;
         $copyright      = isset($data['copyright']) ? scrub_in($data['copyright']) : $this->copyright;
-        
+
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             debug_event('podcast.class', 'Podcast update canceled, bad feed url.', 1);
 
             return $this->id;
         }
-        
+
         $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
         Dba::write($sql, array($feed, $title, $website, $description, $generator, $copyright, $this->id));
 
@@ -277,7 +277,7 @@ class Podcast extends database_object implements library_item
         $this->description = $description;
         $this->generator   = $generator;
         $this->copyright   = $copyright;
-        
+
         return $this->id;
     }
 
@@ -293,7 +293,7 @@ class Podcast extends database_object implements library_item
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             AmpError::add('feed', T_('Wrong feed url'));
         }
-        
+
         $catalog_id = (int) ($data['catalog']);
         if ($catalog_id <= 0) {
             AmpError::add('catalog', T_('Target catalog required'));
@@ -303,11 +303,11 @@ class Podcast extends database_object implements library_item
                 AmpError::add('catalog', T_('Wrong target catalog type'));
             }
         }
-        
+
         if (AmpError::occurred()) {
             return false;
         }
-        
+
         $title         = T_('Unknown');
         $website       = null;
         $description   = null;
@@ -317,7 +317,7 @@ class Podcast extends database_object implements library_item
         $lastbuilddate = 0;
         $episodes      = array();
         $arturl        = '';
-        
+
         $xmlstr = file_get_contents($feed);
         if ($xmlstr === false) {
             AmpError::add('feed', T_('Cannot access the feed.'));
@@ -336,19 +336,19 @@ class Podcast extends database_object implements library_item
                 if ($lastbuilddatestr) {
                     $lastbuilddate = strtotime($lastbuilddatestr);
                 }
-                
+
                 if ($xml->channel->image) {
                     $arturl = $xml->channel->image->url;
                 }
-                
+
                 $episodes = $xml->channel->item;
             }
         }
-        
+
         if (AmpError::occurred()) {
             return false;
         }
-        
+
         $sql        = "INSERT INTO `podcast` (`feed`, `catalog`, `title`, `website`, `description`, `language`, `copyright`, `generator`, `lastbuilddate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($feed, $catalog_id, $title, $website, $description, $language, $copyright, $generator, $lastbuilddate));
         if ($db_results) {
@@ -378,12 +378,12 @@ class Podcast extends database_object implements library_item
      * @param integer $afterdate
      * @param PDOStatement|boolean $gather
      */
-    public function add_episodes($episodes, $afterdate=0, $gather=false)
+    public function add_episodes($episodes, $afterdate = 0, $gather = false)
     {
         foreach ($episodes as $episode) {
             $this->add_episode($episode, $afterdate);
         }
-        
+
         // Select episodes to download
         $dlnb = AmpConfig::get('podcast_new_download');
         if ($dlnb != 0) {
@@ -422,7 +422,7 @@ class Podcast extends database_object implements library_item
      * @param integer $afterdate
      * @return PDOStatement|boolean
      */
-    private function add_episode(SimpleXMLElement $episode, $afterdate=0)
+    private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
     {
         debug_event('podcast.class', 'Adding new episode to podcast ' . $this->id . '...', 4);
 
@@ -464,7 +464,7 @@ class Podcast extends database_object implements library_item
             return true;
         }
     }
-    
+
     /**
      * update_lastsync
      * @param integer $time
@@ -481,10 +481,10 @@ class Podcast extends database_object implements library_item
      * @param boolean $gather
      * @return PDOStatement|boolean
      */
-    public function sync_episodes($gather=false)
+    public function sync_episodes($gather = false)
     {
         debug_event('podcast.class', 'Syncing feed ' . $this->feed . ' ...', 5);
-        
+
         $xmlstr = file_get_contents($this->feed);
         if ($xmlstr === false) {
             debug_event('podcast.class', 'Cannot access feed ' . $this->feed, 1);
@@ -499,7 +499,7 @@ class Podcast extends database_object implements library_item
         }
 
         $this->add_episodes($xml->channel->item, $this->lastsync, $gather);
-        
+
         return true;
     }
 
@@ -513,7 +513,7 @@ class Podcast extends database_object implements library_item
             $episode = new Podcast_Episode($episode_id);
             $episode->remove();
         }
-        
+
         $sql = "DELETE FROM `podcast` WHERE `id` = ?";
 
         return Dba::write($sql, array($this->id));
@@ -531,7 +531,7 @@ class Podcast extends database_object implements library_item
 
             return '';
         }
-        
+
         $dirname = $this->title;
 
         return $catalog->path . DIRECTORY_SEPARATOR . $dirname;

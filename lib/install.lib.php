@@ -32,7 +32,7 @@ function split_sql($sql)
     $buffer    = array();
     $ret       = array();
     $in_string = false;
-    for ($count=0; $count < strlen($sql) - 1; $count++) {
+    for ($count = 0; $count < strlen($sql) - 1; $count++) {
         if ($sql[$count] == ";" && !$in_string) {
             $ret[] = substr($sql, 0, $count);
             $sql   = substr($sql, $count + 1);
@@ -52,7 +52,7 @@ function split_sql($sql)
         $ret[] = $sql;
     }
 
-    return($ret);
+    return ($ret);
 } // split_sql
 
 /**
@@ -63,21 +63,21 @@ function split_sql($sql)
  */
 function install_check_status($configfile)
 {
-    /*
-      Check and see if the config file exists
-      if it does they can't use the web interface
-      to install ampache.
-    */
+    /**
+     * Check and see if the config file exists
+     * if it does they can't use the web interface
+     * to install ampache.
+     */
     if (!file_exists($configfile)) {
         return true;
     } else {
         //AmpError::add('general', T_('Config file already exists, install is probably completed'));
     }
 
-    /*
-      Check and see if they've got _any_ account
-      if they don't then they're cool
-    */
+    /**
+     * Check and see if they've got _any_ account
+     * if they don't then they're cool
+     */
     $results = parse_ini_file($configfile);
     AmpConfig::set_by_array($results, true);
 
@@ -228,7 +228,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     if (strlen($db_user) && strlen($db_pass)) {
         $db_host = AmpConfig::get('database_hostname');
         $sql     = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
-            "'" . Dba::escape($db_user) . "'";
+                    "'" . Dba::escape($db_user) . "'";
         if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
             $sql .= "@'localhost'";
         }
@@ -246,11 +246,11 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $pieces   = split_sql($query);
         $p_count  = count($pieces);
         $errors   = array();
-        for ($count=0; $count < $p_count; $count++) {
+        for ($count = 0; $count < $p_count; $count++) {
             $pieces[$count] = trim($pieces[$count]);
             if (!empty($pieces[$count]) && $pieces[$count] != '#') {
                 if (!$result = Dba::write($pieces[$count])) {
-                    $errors[] = array( Dba::error(), $pieces[$count] );
+                    $errors[] = array(Dba::error(), $pieces[$count]);
                 }
             }
         }

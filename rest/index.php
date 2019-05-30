@@ -143,7 +143,7 @@ foreach ($query as $param) {
     list($name, $value) = explode('=', $param);
     $decname            = urldecode($name);
     $decvalue           = urldecode($value);
-    
+
     // workaround for clementine/Qt5 bug
     // see https://github.com/clementine-player/Clementine/issues/6080
     $matches = array();
@@ -179,7 +179,7 @@ foreach ($methods as $method) {
 
     // If the method is the same as the action being called
     // Then let's call this function!
-    
+
     if ($action == $method) {
         call_user_func(array('subsonic_api', $method), $params);
         // We only allow a single function to be called, and we assume it's cleaned up!

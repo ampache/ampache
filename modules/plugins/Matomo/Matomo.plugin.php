@@ -109,7 +109,7 @@ class AmpacheMatomo
         echo "g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);\n";
         echo "})();\n";
         echo "</script>\n";
-        echo "<noscript><p><img src='" . scrub_out($this->matomo_url) . "matomo.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt='' /></p></noscript>\n";
+        echo "<noscript><p><img src='" . scrub_out($this->matomo_url) . "matomo.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt= '' /></p></noscript>\n";
         echo "<!-- End Matomo Code -->\n";
     }
 

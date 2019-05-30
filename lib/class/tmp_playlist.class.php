@@ -46,7 +46,7 @@ class Tmp_Playlist extends database_object
      * information.  If no playlist_id is passed or the requested one isn't
      * found, return false.
      */
-    public function __construct($playlist_id='')
+    public function __construct($playlist_id = '')
     {
         if (!$playlist_id) {
             return false;

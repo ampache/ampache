@@ -221,7 +221,7 @@ SimplexNoise.prototype.noise4d = function( x, y, z, w ) {
     var grad4 = this.grad4;
     var simplex = this.simplex;
     var perm = this.perm;
-    
+
    // The skewing and unskewing factors are hairy again for the 4D case
    var F4 = (Math.sqrt(5.0)-1.0)/4.0;
    var G4 = (5.0-Math.sqrt(5.0))/20.0;

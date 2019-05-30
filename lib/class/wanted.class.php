@@ -91,7 +91,7 @@ class Wanted extends database_object
      * Constructor
      * @param integer $id
      */
-    public function __construct($id=0)
+    public function __construct($id = 0)
     {
         if (!$id) {
             return true;
@@ -115,7 +115,7 @@ class Wanted extends database_object
      * @param string $mbid
      * @return array
      */
-    public static function get_missing_albums($artist, $mbid='')
+    public static function get_missing_albums($artist, $mbid = '')
     {
         $mb       = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array(

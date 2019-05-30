@@ -104,8 +104,8 @@ class Catalog_soundcloud extends Catalog
 
     public function catalog_fields()
     {
-        $fields['userid']      = array('description' => T_('User ID'),'type' => 'text');
-        $fields['secret']      = array('description' => T_('Secret'),'type' => 'password');
+        $fields['userid']      = array('description' => T_('User ID'), 'type' => 'text');
+        $fields['secret']      = array('description' => T_('Secret'), 'type' => 'password');
 
         return $fields;
     }

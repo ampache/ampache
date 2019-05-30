@@ -24,7 +24,7 @@
  */
 class UPnPPlaylist
 {
-    private $_deviceGUID = "";
+    private $_deviceGUID = '';
     private $_songs;
     private $_current = 0;
 

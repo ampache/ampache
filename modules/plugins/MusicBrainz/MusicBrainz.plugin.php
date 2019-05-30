@@ -80,7 +80,7 @@ class AmpacheMusicBrainz
         if (!in_array('music', $gather_types)) {
             return null;
         }
-    
+
         if (!$mbid = $song_info['mb_trackid']) {
             return null;
         }

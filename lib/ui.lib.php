@@ -6,7 +6,7 @@
  * things like a confirmation box, etc and so forth
  *
  */
- 
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -38,7 +38,7 @@
  * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
  * @return    void
  */
-function show_confirmation($title, $text, $next_url, $cancel=0, $form_name='confirmation', $visible=true)
+function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = 'confirmation', $visible = true)
 {
     if (substr_count($next_url, AmpConfig::get('web_path'))) {
         $path = $next_url;
@@ -124,68 +124,68 @@ function get_location()
 
     switch ($location['page']) {
         case 'index.php':
-            $location['title']     = T_('Home');
+            $location['title'] = T_('Home');
             break;
         case 'upload.php':
-            $location['title']     = T_('Upload');
+            $location['title'] = T_('Upload');
             break;
         case 'localplay.php':
-            $location['title']     = T_('Local Play');
+            $location['title'] = T_('Local Play');
             break;
         case 'randomplay.php':
-            $location['title']     = T_('Random Play');
+            $location['title'] = T_('Random Play');
             break;
         case 'playlist.php':
-            $location['title']     = T_('Playlist');
+            $location['title'] = T_('Playlist');
             break;
         case 'search.php':
-            $location['title']     = T_('Search');
+            $location['title'] = T_('Search');
             break;
         case 'preferences.php':
-            $location['title']     = T_('Preferences');
+            $location['title'] = T_('Preferences');
             break;
         case 'admin/index.php':
-            $location['title']      = T_('Admin-Catalog');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Catalog');
+            $location['section'] = 'admin';
             break;
         case 'admin/catalog.php':
-            $location['title']      = T_('Admin-Catalog');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Catalog');
+            $location['section'] = 'admin';
             break;
         case 'admin/users.php':
-            $location['title']      = T_('Admin-User Management');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-User Management');
+            $location['section'] = 'admin';
             break;
         case 'admin/mail.php':
-            $location['title']      = T_('Admin-Mail Users');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Mail Users');
+            $location['section'] = 'admin';
             break;
         case 'admin/access.php':
-            $location['title']      = T_('Admin-Manage Access Lists');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Manage Access Lists');
+            $location['section'] = 'admin';
             break;
         case 'admin/preferences.php':
-            $location['title']      = T_('Admin-Site Preferences');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Site Preferences');
+            $location['section'] = 'admin';
             break;
         case 'admin/modules.php':
-            $location['title']      = T_('Admin-Manage Modules');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Manage Modules');
+            $location['section'] = 'admin';
             break;
         case 'browse.php':
-            $location['title']      = T_('Browse Music');
-            $location['section']    = 'browse';
+            $location['title']   = T_('Browse Music');
+            $location['section'] = 'browse';
             break;
         case 'albums.php':
-            $location['title']      = T_('Albums');
-            $location['section']    = 'browse';
+            $location['title']   = T_('Albums');
+            $location['section'] = 'browse';
             break;
         case 'artists.php':
-            $location['title']      = T_('Artists');
-            $location['section']    = 'browse';
+            $location['title']   = T_('Artists');
+            $location['section'] = 'browse';
             break;
         case 'stats.php':
-            $location['title']    = T_('Statistics');
+            $location['title'] = T_('Statistics');
             break;
         default:
             $location['title'] = '';
@@ -209,7 +209,7 @@ function show_preference_box($preferences)
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_album_select($name, $album_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
+function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
 {
     static $album_id_cnt = 0;
 
@@ -267,7 +267,7 @@ function show_album_select($name, $album_id=0, $allow_add=false, $song_id=0, $al
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  */
-function show_artist_select($name, $artist_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
+function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -320,7 +320,7 @@ function show_artist_select($name, $artist_id=0, $allow_add=false, $song_id=0, $
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
  */
-function show_tvshow_select($name, $tvshow_id=0, $allow_add=false, $season_id=0, $allow_none=false)
+function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
 {
     static $tvshow_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -356,7 +356,7 @@ function show_tvshow_select($name, $tvshow_id=0, $allow_add=false, $season_id=0,
     echo "</select>\n";
 } // show_tvshow_select
 
-function show_tvshow_season_select($name, $season_id, $allow_add=false, $video_id=0, $allow_none=false)
+function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
 {
     if (!$season_id) {
         return false;
@@ -404,12 +404,12 @@ function show_tvshow_season_select($name, $season_id, $allow_add=false, $video_i
  * @param string $name
  * @param integer $catalog_id
  */
-function show_catalog_select($name, $catalog_id, $style='', $allow_none=false, $filter_type='')
+function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
-    $params     = array();
-    $sql        = "SELECT `id`, `name` FROM `catalog` ";
+    $params = array();
+    $sql    = "SELECT `id`, `name` FROM `catalog` ";
     if (!empty($filter_type)) {
         $sql .= "WHERE `gather_types` = ?";
         $params[] = $filter_type;
@@ -438,7 +438,7 @@ function show_catalog_select($name, $catalog_id, $style='', $allow_none=false, $
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_license_select($name, $license_id=0, $song_id=0)
+function show_license_select($name, $license_id = 0, $song_id = 0)
 {
     static $license_id_cnt = 0;
 
@@ -480,7 +480,7 @@ function show_license_select($name, $license_id=0, $song_id=0)
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_user_select($name, $selected='', $style='')
+function show_user_select($name, $selected = '', $style = '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('All') . "</option>\n";
@@ -506,7 +506,7 @@ function show_user_select($name, $selected='', $style='')
  * show_playlist_select
  * This one is for playlists!
  */
-function show_playlist_select($name, $selected='', $style='')
+function show_playlist_select($name, $selected = '', $style = '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('None') . "</option>\n";
@@ -574,36 +574,36 @@ function json_from_array($array, $callback = false, $type = '')
 function xml_get_header($type)
 {
     switch ($type) {
-    case 'itunes':
-        $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
-        "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-        "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-        "<plist version=\"1.0\">\n" .
-        "<dict>\n" .
-        "       <key>Major Version</key><integer>1</integer>\n" .
-        "       <key>Minor Version</key><integer>1</integer>\n" .
-        "       <key>Application Version</key><string>7.0.2</string>\n" .
-        "       <key>Features</key><integer>1</integer>\n" .
-        "       <key>Show Content Ratings</key><true/>\n" .
-        "       <key>Tracks</key>\n" .
-        "       <dict>\n";
+        case 'itunes':
+            $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
+                "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
+                "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
+                "<plist version=\"1.0\">\n" .
+                "<dict>\n" .
+                "       <key>Major Version</key><integer>1</integer>\n" .
+                "       <key>Minor Version</key><integer>1</integer>\n" .
+                "       <key>Application Version</key><string>7.0.2</string>\n" .
+                "       <key>Features</key><integer>1</integer>\n" .
+                "       <key>Show Content Ratings</key><true/>\n" .
+                "       <key>Tracks</key>\n" .
+                "       <dict>\n";
 
-        return $header;
-    case 'xspf':
-        $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
+            return $header;
+        case 'xspf':
+            $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
             "<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->";
             "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n " .
             "<title>Ampache XSPF Playlist</title>\n" .
             "<creator>" . AmpConfig::get('site_title') . "</creator>\n" .
             "<annotation>" . AmpConfig::get('site_title') . "</annotation>\n" .
             "<info>" . AmpConfig::get('web_path') . "</info>\n" .
-            "<trackList>\n\n\n\n";
+                "<trackList>\n\n\n\n";
 
-        return $header;
-    default:
-        $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+            return $header;
+        default:
+            $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
-        return $header;
+            return $header;
     }
 } //xml_get_header
 
@@ -615,20 +615,20 @@ function xml_get_header($type)
 function xml_get_footer($type)
 {
     switch ($type) {
-    case 'itunes':
-        $footer = "      </dict>\n" .
-        "</dict>\n" .
-        "</plist>\n";
+        case 'itunes':
+            $footer = "      </dict>\n" .
+                "</dict>\n" .
+                "</plist>\n";
 
-        return $footer;
-    case 'xspf':
-        $footer = "      </trackList>\n" .
-              "</playlist>\n";
+            return $footer;
+        case 'xspf':
+            $footer = "      </trackList>\n" .
+                "</playlist>\n";
 
-        return $footer;
-    default:
+            return $footer;
+        default:
 
-    break;
+            break;
     }
 } // xml_get_footer
 

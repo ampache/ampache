@@ -82,7 +82,7 @@ class Browse extends Query
 
     /**
      * get_supplemental_objects
-     * This returns an array of 'class','id' for additional objects that
+     * This returns an array of 'class', 'id' for additional objects that
      * need to be created before we start this whole browsing thing.
      *
      * @return array
@@ -470,7 +470,7 @@ class Browse extends Query
     {
         return $this->_state['use_pages'];
     }
-    
+
     /**
      *
      * @param boolean $grid_view
@@ -482,7 +482,7 @@ class Browse extends Query
         }
         $this->_state['grid_view'] = $grid_view;
     }
-    
+
     /**
      *
      * @return boolean
@@ -502,7 +502,7 @@ class Browse extends Query
             $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
         }
         $this->_state['use_alpha'] = $use_alpha;
-        
+
         if ($use_alpha) {
             if (count($this->_state['filter']) == 0) {
                 $this->set_filter('regex_match', '^A');
@@ -574,7 +574,7 @@ class Browse extends Query
     {
         return $this->_state['threshold'];
     }
-    
+
     /**
      *
      * @return string

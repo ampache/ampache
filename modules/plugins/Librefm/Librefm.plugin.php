@@ -113,7 +113,7 @@ class Ampachelibrefm
         if (strtolower(get_class($song)) != 'song') {
             return false;
         }
-        
+
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
             debug_event('librefm.plugin', 'Session key missing', 5);
@@ -214,7 +214,7 @@ class Ampachelibrefm
     public function load($user)
     {
         $this->api_key=AmpConfig::get('lastfm_api_key');
-        $this->secret ='';
+        $this->secret = '';
         $user->set_preferences();
         $data          = $user->prefs;
         $this->user_id = $user->id;

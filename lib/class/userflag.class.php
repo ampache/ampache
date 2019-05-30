@@ -167,7 +167,7 @@ class Userflag extends database_object
             "(`object_id`, `object_type`, `user`, `date`) " .
             "VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $user_id, time());
-            
+
             Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
         }
         Dba::write($sql, $params);
@@ -202,7 +202,7 @@ class Userflag extends database_object
      * @param string|null $type
      * @param string $user_id
      */
-    public static function get_latest_sql($type, $user_id=null)
+    public static function get_latest_sql($type, $user_id = null)
     {
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
@@ -240,7 +240,7 @@ class Userflag extends database_object
      * @param string $type
      * @param string $user_id
      */
-    public static function get_latest($type=null, $user_id=null, $count='', $offset='')
+    public static function get_latest($type = null, $user_id = null, $count = '', $offset = '')
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
