@@ -35,6 +35,7 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Add year information and links to the data rows and interface
 - Default to mashup for artists and albums
 - Add rating_browse_filter, rating_browse_minimum_stars to filter based on a star rating.
+- Add send_full_stream to config, to allow pushing the full track instead of segmenting
 
 3.9.1
 ----------
