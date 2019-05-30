@@ -158,7 +158,7 @@ class Artist extends database_object implements library_item
 
     /**
      * Artist
-     * Artist class, for modifing a artist
+     * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
      * @param integer|null $id
      * @param integer $catalog_init
