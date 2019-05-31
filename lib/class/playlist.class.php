@@ -91,8 +91,11 @@ class Playlist extends playlist_object
     /**
      * get_playlists
      * Returns a list of playlists accessible by the user.
+     * @param boolean $incl_public
+     * @param int $user_id
+     * @return array
      */
-    public static function get_playlists($incl_public = true, $user_id = null)
+    public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '')
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
@@ -106,12 +109,17 @@ class Playlist extends playlist_object
         }
 
         if ($incl_public) {
+            $sql .= " WHERE `type` = 'public'";
             if (count($params) > 0) {
-                $sql .= ' OR ';
-            } else {
-                $sql .= ' WHERE ';
+                $sql .= " OR `type` = 'public'";
             }
-            $sql .= "`type` = 'public'";
+        }
+        
+        if ($playlist_name !== '') {
+            $sql .= " WHERE `name` = '" . $playlist_name . "'";
+            if (count($params) > 0) {
+                $sql .= " OR `name` = '" . $playlist_name . "'";
+            }
         }
         $sql .= ' ORDER BY `name`';
 
@@ -437,8 +445,8 @@ class Playlist extends playlist_object
          */
         $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($this->id));
-        $data       = Dba::fetch_assoc($db_results);
-        $base_track = $data['track'] ?: 0;
+        $track_data = Dba::fetch_assoc($db_results);
+        $base_track = $track_data['track'] ?: 0;
         debug_event('playlist.class', 'Adding Media; Track number: ' . $base_track, 5);
 
         $count = 0;
