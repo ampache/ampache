@@ -333,5 +333,6 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #notification-content {
-	margin-left: 10px;
+    color: #fff;
+    margin-left: 10px;
 }
