@@ -109,19 +109,22 @@ class Playlist extends playlist_object
         }
 
         if ($incl_public) {
-            $sql .= " WHERE `type` = 'public'";
             if (count($params) > 0) {
                 $sql .= " OR `type` = 'public'";
+            } else {
+                $sql .= " WHERE `type` = 'public'";
             }
         }
         
         if ($playlist_name !== '') {
-            $sql .= " WHERE `name` = '" . $playlist_name . "'";
-            if (count($params) > 0) {
+            if (count($params) > 0 || $incl_public) {
                 $sql .= " OR `name` = '" . $playlist_name . "'";
+            } else {
+                $sql .= " WHERE `name` = '" . $playlist_name . "'";
             }
         }
         $sql .= ' ORDER BY `name`';
+        debug_event('playlist.class', 'get_playlists query: ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
