@@ -2117,13 +2117,16 @@ abstract class Catalog extends database_object
 
             /* Recreate the Playlist; checking for current items. */
             $playlist  = new Playlist($playlist_id);
-            $new_songs = array_diff($songs, $current_songs);
+            $new_songs = $songs;
+            if (count($current_songs)) {
+                $new_songs = array_diff($songs, $current_songs);
+            }
             $playlist->add_songs($new_songs, true);
 
             return array(
                 'success' => true,
                 'id' => $playlist_id,
-                'count' => count($songs)
+                'count' => count($new_songs)
             );
         }
 
