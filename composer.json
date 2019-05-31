@@ -46,7 +46,7 @@
         "symfony/process": "^3.0",
         "evenement/evenement": "2.*",
         "happyworm/jplayer": "2.*",
-        "needim/noty": "2.3.*",
+        "needim/noty": "2.4.*",
         "openid/php-openid": "2.*",
         "sabre/dav": "3.*.*",
         "maennchen/zipstream-php": "0.4.*",
