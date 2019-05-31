@@ -258,13 +258,12 @@ class Playlist extends playlist_object
      * This is called by the batch script, because we can't pass in Dynamic objects they pulled once and then their
      * target song.id is pushed into the array
      */
-    public static function get_songs()
+    public function get_songs()
     {
         $results = array();
 
-        $playlist_id = $this->id;
         $sql         = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
-        $db_results  = Dba::read($sql, array($playlist_id));
+        $db_results  = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
