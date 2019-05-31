@@ -115,10 +115,10 @@ class Playlist extends playlist_object
                 $sql .= " WHERE `type` = 'public'";
             }
         }
-        
+
         if ($playlist_name !== '') {
             if (count($params) > 0 || $incl_public) {
-                $sql .= " OR `name` = '" . $playlist_name . "'";
+                $sql .= " AND `name` = '" . $playlist_name . "'";
             } else {
                 $sql .= " WHERE `name` = '" . $playlist_name . "'";
             }

@@ -2101,11 +2101,13 @@ abstract class Catalog extends database_object
                 // New playlist
                 $playlist_id   = Playlist::create($name, 'public');
                 $current_songs = array();
+                $playlist      = new Playlist($playlist_id);
             } else {
                 // Existing playlist
                 $playlist_id    = $playlist_search[0];
-                $existing_plist = new Playlist($playlist_id);
-                $current_songs  = $existing_plist->get_items();
+                $playlist       = new Playlist($playlist_id);
+                $current_songs  = $playlist->get_songs();
+                debug_event('catalog.class', "import_playlist playlist has " . (string) count($current_songs) . " songs", 5);
             }
 
             if (!$playlist_id) {
@@ -2116,10 +2118,10 @@ abstract class Catalog extends database_object
             }
 
             /* Recreate the Playlist; checking for current items. */
-            $playlist  = new Playlist($playlist_id);
             $new_songs = $songs;
             if (count($current_songs)) {
                 $new_songs = array_diff($songs, $current_songs);
+                debug_event('catalog.class', "import_playlist filtered existing playlist " . $playlist . ", found " . count($new_songs) . " new songs", 5);
             }
             $playlist->add_songs($new_songs, true);
 
