@@ -258,7 +258,7 @@ class Playlist extends playlist_object
      * This is called by the batch script, because we can't pass in Dynamic objects they pulled once and then their
      * target song.id is pushed into the array
      */
-    public function get_songs()
+    public static function get_songs()
     {
         $results = array();
 

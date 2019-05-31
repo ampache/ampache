@@ -286,7 +286,7 @@ function sort_move_file($song,$fullname) {
         $new_sum = Core::get_filesize($fullname);
         $old_sum = Core::get_filesize($song->file);
 
-        if ($new_sum != $old_sum OR !$new_sum) {
+        if ($new_sum != $old_sum || !$new_sum) {
             printf (T_('Error: Size Inconsistency, not deleting %s'), $song->file);
             echo "\n";
             return false;

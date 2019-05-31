@@ -252,7 +252,7 @@ class Session
         if (!$db_results) {
             debug_event('session.class', 'Session creation failed', 1);
 
-            return false;
+            return '';
         }
 
         debug_event('session.class', 'Session created: ' . $key, 5);

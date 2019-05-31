@@ -85,7 +85,7 @@ if (count($options) == 0) {
             $optimizetables = 1;
         }
 }
-if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
+if (count($_SERVER['argv']) != 1 && $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
     usage();
     return false;
 }

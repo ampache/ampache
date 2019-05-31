@@ -107,6 +107,7 @@ switch ($_REQUEST['action']) {
 
             return false;
         }
+        // intentional fall through
     case 'show_add_label':
         if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');

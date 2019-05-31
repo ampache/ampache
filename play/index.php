@@ -396,7 +396,7 @@ $browser = new Horde_Browser();
 /* If they are just trying to download make sure they have rights
  * and then present them with the download file
  */
-if (Core::get_get('action') == 'download' and AmpConfig::get('download')) {
+if (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
     debug_event('play/index', 'Downloading file...', 5);
     // STUPID IE
     $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);

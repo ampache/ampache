@@ -636,7 +636,7 @@ class Tag extends database_object implements library_item
 
                     if ($found) {
                         debug_event('tag.class', 'Already found. Do nothing.', 5);
-                        unset($editedTags[$tk]);
+                        unset($editedTags[$ctag->name]);
                     } else {
                         if ($overwrite) {
                             debug_event('tag.class', 'Not found in the new list. Delete it.', 5);
