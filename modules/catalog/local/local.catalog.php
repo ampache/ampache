@@ -462,6 +462,7 @@ class Catalog_local extends Catalog
             if ($options['parse_playlist'] && count($this->_playlists)) {
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
+                    debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
                     $result = $this->import_playlist($full_file);
                     if ($result['success']) {
                         $file = basename($full_file);

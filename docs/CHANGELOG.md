@@ -30,6 +30,7 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - JavaScript and Ajax updates
 - Code documentation and bug hunting
 - Fixed setting button requiring two single clicks to open. (Thanks for this 2016 pull @AshotN)
+- Fixed import_playlist code. Do not recreate existing playlists and don't imports existing songs.
 - Lots of code tweaks to make things more uniform and readable.
 - Add now_playing.php to allow badges for currently playing tracks.
 - Add year information and links to the data rows and interface

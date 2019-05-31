@@ -2095,7 +2095,20 @@ abstract class Catalog extends database_object
 
         if (count($songs)) {
             $name        = $pinfo['extension'] . " - " . $pinfo['filename'];
-            $playlist_id = Playlist::create($name, 'public');
+            // Search for existing playlist
+            $playlist_search = Playlist::get_playlists(true, null, $name);
+            if (empty($playlist_search)) {
+                // New playlist
+                $playlist_id   = Playlist::create($name, 'public');
+                $current_songs = array();
+                $playlist      = new Playlist($playlist_id);
+            } else {
+                // Existing playlist
+                $playlist_id    = $playlist_search[0];
+                $playlist       = new Playlist($playlist_id);
+                $current_songs  = $playlist->get_songs();
+                debug_event('catalog.class', "import_playlist playlist has " . (string) count($current_songs) . " songs", 5);
+            }
 
             if (!$playlist_id) {
                 return array(
@@ -2104,14 +2117,18 @@ abstract class Catalog extends database_object
                 );
             }
 
-            /* Recreate the Playlist */
-            $playlist = new Playlist($playlist_id);
-            $playlist->add_songs($songs, true);
+            /* Recreate the Playlist; checking for current items. */
+            $new_songs = $songs;
+            if (count($current_songs)) {
+                $new_songs = array_diff($songs, $current_songs);
+                debug_event('catalog.class', "import_playlist filtered existing playlist, found " . count($new_songs) . " new songs", 5);
+            }
+            $playlist->add_songs($new_songs, true);
 
             return array(
                 'success' => true,
                 'id' => $playlist_id,
-                'count' => count($songs)
+                'count' => count($new_songs)
             );
         }
 
