@@ -114,17 +114,6 @@ class Useractivity extends database_object
      */
     public static function post_activity($user_id, $action, $object_type, $object_id)
     {
-        // Before we start let's pull the last song submitted by this user
-        $previous = Stats::get_last_song($user_id);
-
-        $diff = time() - $previous['date'];
-
-        // Make sure it wasn't within the last min
-        if ($diff < 5) {
-            debug_event('useractivity.class', 'Last song played within ' . (string) $diff . ' seconds, not recording stats', 3);
-
-            return false;
-        }
         if ($object_type === 'song') {
             // insert fields to be more like last.fm activity stats
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`," .
