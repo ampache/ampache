@@ -2105,7 +2105,7 @@ abstract class Catalog extends database_object
                 // Existing playlist
                 $playlist_id    = $playlist_search[0];
                 $existing_plist = new Playlist($playlist_id);
-                $current_songs  = $existing_plist::get_items();
+                $current_songs  = $existing_plist->get_items();
             }
 
             if (!$playlist_id) {
