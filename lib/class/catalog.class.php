@@ -2098,9 +2098,14 @@ abstract class Catalog extends database_object
             // Search for existing playlist
             $playlist_search = Playlist::get_playlists(true, null, $name);
             if (empty($playlist_search)) {
-                $playlist_id = Playlist::create($name, 'public');
+                // New playlist
+                $playlist_id   = Playlist::create($name, 'public');
+                $current_songs = array();
             } else {
-                $playlist_id = $playlist_search[0];
+                // Existing playlist
+                $playlist_id    = $playlist_search[0];
+                $existing_plist = new Playlist($playlist_id);
+                $current_songs  = $existing_plist::get_items();
             }
 
             if (!$playlist_id) {
@@ -2112,8 +2117,7 @@ abstract class Catalog extends database_object
 
             /* Recreate the Playlist; checking for current items. */
             $playlist  = new Playlist($playlist_id);
-            $current   = $playlist::get_items();
-            $new_songs = array_diff($songs, $current);
+            $new_songs = array_diff($songs, $current_songs);
             $playlist->add_songs($new_songs, true);
 
             return array(
