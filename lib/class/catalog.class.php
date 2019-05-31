@@ -2099,8 +2099,7 @@ abstract class Catalog extends database_object
             $playlist_search = Playlist::get_playlists(true, null, $name);
             if (empty($playlist_search)) {
                 $playlist_id = Playlist::create($name, 'public');
-            }
-            else {
+            } else {
                 $playlist_id = $playlist_search[0];
             }
 

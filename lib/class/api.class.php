@@ -1345,14 +1345,14 @@ class Api
      *
      * @param array $input
      */
-    public static function catalog_action($input) {
+    public static function catalog_action($input)
+    {
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog && ((string) $input['task'] === 'add_to_catalog' || (string) $input['task'] === 'clean_catalog')) {
             $catalog->process_action($input['task'], (int) $input['catalog']);
             echo XML_Data::single_string('successfull started: ' . (string) $input['task']);
-        }
-        else {
+        } else {
             echo XML_Data::error('401', T_('Bad information in the call to catalog_action.'));
         }
     }
