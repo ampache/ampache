@@ -90,7 +90,7 @@ if (count($_SERVER['argv']) != 1 && $artadd != 1 && $catclean != 1 && $catverify
     return false;
 }
 
-if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0) {    //didn't pass any clean/verify/add arguments
+if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0 && $plimp == 0) {    //didn't pass any clean/verify/add arguments
     $catclean = 1;     //set them all to on
     $catverify = 1;
     $catadd = 1;
