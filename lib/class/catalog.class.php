@@ -2121,7 +2121,7 @@ abstract class Catalog extends database_object
             $new_songs = $songs;
             if (count($current_songs)) {
                 $new_songs = array_diff($songs, $current_songs);
-                debug_event('catalog.class', "import_playlist filtered existing playlist " . $playlist . ", found " . count($new_songs) . " new songs", 5);
+                debug_event('catalog.class', "import_playlist filtered existing playlist, found " . count($new_songs) . " new songs", 5);
             }
             $playlist->add_songs($new_songs, true);
 
