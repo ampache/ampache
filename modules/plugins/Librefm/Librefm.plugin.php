@@ -127,7 +127,7 @@ class Ampachelibrefm
         $diff = time() - $previous['date'];
 
         // Make sure it wasn't within the last min
-        if ($diff < 60) {
+        if ($diff < 15) {
             debug_event('librefm.plugin', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
 
             return false;
