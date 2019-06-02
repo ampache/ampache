@@ -39,6 +39,7 @@ class Podcast_Episode extends database_object implements media, library_item
     public $author;
     public $category;
     public $pubdate;
+    public $enabled;
 
     public $catalog;
     public $f_title;
@@ -77,9 +78,10 @@ class Podcast_Episode extends database_object implements media, library_item
                 $this->$key = $value;
             }
             if (!empty($this->file)) {
-                $data       = pathinfo($this->file);
-                $this->type = strtolower($data['extension']);
-                $this->mime = Song::type_to_mime($this->type);
+                $data          = pathinfo($this->file);
+                $this->type    = strtolower($data['extension']);
+                $this->mime    = Song::type_to_mime($this->type);
+                $this->enabled = true;
             }
         } else {
             $this->id = null;
