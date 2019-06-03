@@ -93,7 +93,7 @@ class Broadcast_Server implements MessageComponentInterface
                             $this->notifySongPosition($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_PLAYER_PLAY:
-                            $this->notifyPlayerPlay($from, (int) $cmdinfo[1]);
+                            $this->notifyPlayerPlay($from, $cmdinfo[1]);
                         break;
                         case self::BROADCAST_ENDED:
                             $this->notifyEnded($from);
